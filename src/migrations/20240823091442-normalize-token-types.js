@@ -1,6 +1,6 @@
 'use strict';
 
-exports.up = (db, cb) => {
+exports.up = function (db, cb) {
     db.runSql(
         `
         UPDATE api_tokens

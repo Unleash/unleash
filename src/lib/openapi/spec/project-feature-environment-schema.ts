@@ -1,7 +1,7 @@
 import type { FromSchema } from 'json-schema-to-ts';
 
 export const projectFeatureEnvironmentSchema = {
-    $id: '#/components/schemas/featureEnvironmentSchema',
+    $id: '#/components/schemas/projectFeatureEnvironmentSchema',
     type: 'object',
     additionalProperties: false,
     required: [

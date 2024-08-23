@@ -188,7 +188,7 @@ Now, let’s add the Unleash client to our Rails controller, grab the feature fl
 ```ruby
 class PostsController < ApplicationController
   def index
-    is_top3 = UNLEASH.is_enabled('top-3', @unleash_context)
+    is_top3 = UNLEASH.is_enabled?('top-3', @unleash_context)
     @posts = is_top3 ? Post.order(created_at: :desc).limit(3) : Post.all
   end
 

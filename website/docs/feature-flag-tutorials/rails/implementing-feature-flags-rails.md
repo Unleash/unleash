@@ -150,7 +150,7 @@ First, install the `unleash` gem.
 gem install unleash
 ```
 
-Then, in `config/initializers/unleash.rb`, add the following:
+Then, create `config/initializers/unleash.rb`, and add the following:
 
 ```ruby
 Unleash.configure do |config|
@@ -166,7 +166,7 @@ UNLEASH = Unleash::Client.new
 
 You can check our [API tokens and client keys documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more information.
 
-Then, in `app/controllers/application_controller.rb`:
+Then, in `app/controllers/application_controller.rb`, add the following method:
 
 ```ruby
   before_action :set_unleash_context

@@ -51,7 +51,6 @@ export const archivedFeatureSchema = {
         archivedAt: {
             type: 'string',
             format: 'date-time',
-            nullable: true,
             example: '2023-01-29T15:21:39.975Z',
             description: 'The date the feature was archived',
         },

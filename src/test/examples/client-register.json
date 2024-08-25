@@ -1,8 +1,0 @@
-{
-  "appName": "appName",
-  "instanceId": "instanceId",
-  "sdkVersion": "test:123",
-  "strategies": ["default", "some-strategy-1"],
-  "started": "2016-11-03T07:16:43.572Z",
-  "interval": 10000
-}

@@ -27,7 +27,7 @@ For this tutorial, you'll need the following:
 -   Git
 -   Docker and Docker Compose
 
-![architecture diagram for our implementation](./diagram.png)
+![architecture diagram for our implementation](../rails/diagram.png)
 
 The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. There are also [API commands available](https://docs.getunleash.io/reference/api/unleash) to perform the same actions straight from your CLI or server-side app.
 
@@ -69,7 +69,7 @@ Click the 'New feature flag' button to create a new feature flag.
 
 Call it `top-3` and enable it in the `development` environment.
 
-![A feature flag called `top-3` is now visible.](./enable-ff.png)
+![A feature flag called `top-3` is now visible.](../rails/enable-ff.png)
 
 Everything's now set up on the Unleash side. Let's set up the Django application.
 
@@ -98,7 +98,7 @@ python manage.py runserver
 
 Go to [http://localhost:8000](http://localhost:8000) and check that you see the following:
 
-![A blog app with a list of posts](./blog-app.png)
+![A blog app with a list of posts](../rails/blog-app.png)
 
 ## 4. Restrict the number of posts
 

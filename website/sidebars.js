@@ -127,13 +127,13 @@ module.exports = {
                                 },
                                 {
                                     type: 'doc',
-                                    label: 'Django tutorial',
-                                    id: 'feature-flag-tutorials/rails/implementing-feature-flags-rails',
+                                    label: 'Django Tutorial',
+                                    id: 'feature-flag-tutorials/django/implementing-feature-flags-django',
                                 },
                                 {
                                     type: 'doc',
                                     label: 'Django Examples',
-                                    id: 'feature-flag-tutorials/python/django-examples',
+                                    id: 'feature-flag-tutorials/django/django-examples',
                                 },
                             ],
                         },
@@ -172,7 +172,7 @@ module.exports = {
                                 },
                                 {
                                     type: 'doc',
-                                    label: 'Rails tutorial',
+                                    label: 'Rails Tutorial',
                                     id: 'feature-flag-tutorials/rails/implementing-feature-flags-rails',
                                 },
                                 {

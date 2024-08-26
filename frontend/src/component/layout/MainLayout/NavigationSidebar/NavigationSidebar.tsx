@@ -52,6 +52,16 @@ export const StretchContainer = styled(Box)(({ theme }) => ({
     overflowAnchor: 'none',
 }));
 
+// This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.
+const StickyContainer = styled(Box)(({ theme }) => ({
+    position: 'sticky',
+    paddingBottom: theme.spacing(1.5),
+    paddingTop: theme.spacing(1),
+    bottom: theme.spacing(0),
+    backgroundColor: theme.palette.background.paper,
+    borderTop: `2px solid ${theme.palette.divider}`,
+}));
+
 export const NavigationSidebar = () => {
     const { routes } = useRoutes();
 
@@ -140,12 +150,14 @@ export const NavigationSidebar = () => {
             {/* this will push the show/hide to the bottom on short nav list */}
             <Box sx={{ flex: 1 }} />
 
-            <ShowHide
-                mode={mode}
-                onChange={() => {
-                    setMode(mode === 'full' ? 'mini' : 'full');
-                }}
-            />
+            <StickyContainer>
+                <ShowHide
+                    mode={mode}
+                    onChange={() => {
+                        setMode(mode === 'full' ? 'mini' : 'full');
+                    }}
+                />
+            </StickyContainer>
         </StretchContainer>
     );
 };

@@ -15,47 +15,35 @@ const ShowHideRow = styled(Box, {
     cursor: 'pointer',
 }));
 
-// This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.
-const StickyContainer = styled(Box)(({ theme }) => ({
-    position: 'sticky',
-    paddingBottom: theme.spacing(1.5),
-    paddingTop: theme.spacing(1),
-    bottom: theme.spacing(0),
-    backgroundColor: theme.palette.background.paper,
-    borderTop: `2px solid ${theme.palette.divider}`,
-}));
-
 export const ShowHide: FC<{ mode: NavigationMode; onChange: () => void }> = ({
     mode,
     onChange,
 }) => {
     return (
-        <StickyContainer>
-            <ShowHideRow onClick={onChange} mode={mode}>
-                {mode === 'full' && (
-                    <Box
-                        sx={(theme) => ({
-                            color: theme.palette.neutral.main,
-                            fontSize: 'small',
-                        })}
-                    >
-                        Hide (⌘ + B)
-                    </Box>
+        <ShowHideRow onClick={onChange} mode={mode}>
+            {mode === 'full' && (
+                <Box
+                    sx={(theme) => ({
+                        color: theme.palette.neutral.main,
+                        fontSize: 'small',
+                    })}
+                >
+                    Hide (⌘ + B)
+                </Box>
+            )}
+            <IconButton>
+                {mode === 'full' ? (
+                    <HideIcon color='primary' />
+                ) : (
+                    <Tooltip title='Expand (⌘ + B)' placement='right'>
+                        <ExpandIcon
+                            data-testid='expand-navigation'
+                            color='primary'
+                        />
+                    </Tooltip>
                 )}
-                <IconButton>
-                    {mode === 'full' ? (
-                        <HideIcon color='primary' />
-                    ) : (
-                        <Tooltip title='Expand (⌘ + B)' placement='right'>
-                            <ExpandIcon
-                                data-testid='expand-navigation'
-                                color='primary'
-                            />
-                        </Tooltip>
-                    )}
-                </IconButton>
-            </ShowHideRow>
-        </StickyContainer>
+            </IconButton>
+        </ShowHideRow>
     );
 };
 

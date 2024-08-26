@@ -16,7 +16,7 @@ const ShowHideRow = styled(Box, {
 }));
 
 // This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.
-const ShowHideContainer = styled(Box)(({ theme }) => ({
+const StickyContainer = styled(Box)(({ theme }) => ({
     position: 'sticky',
     paddingBottom: theme.spacing(1.5),
     paddingTop: theme.spacing(1),
@@ -30,7 +30,7 @@ export const ShowHide: FC<{ mode: NavigationMode; onChange: () => void }> = ({
     onChange,
 }) => {
     return (
-        <ShowHideContainer>
+        <StickyContainer>
             <ShowHideRow onClick={onChange} mode={mode}>
                 {mode === 'full' && (
                     <Box
@@ -55,7 +55,7 @@ export const ShowHide: FC<{ mode: NavigationMode; onChange: () => void }> = ({
                     )}
                 </IconButton>
             </ShowHideRow>
-        </ShowHideContainer>
+        </StickyContainer>
     );
 };
 

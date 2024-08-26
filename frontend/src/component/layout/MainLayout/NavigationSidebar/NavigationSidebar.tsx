@@ -83,7 +83,6 @@ export const NavigationSidebar = () => {
 
     return (
         <StretchContainer>
-            <NewInUnleash mode={mode} onMiniModeClick={() => setMode('full')} />
             <PrimaryNavigationList
                 mode={mode}
                 onClick={setActiveItem}
@@ -151,6 +150,10 @@ export const NavigationSidebar = () => {
             <Box sx={{ flex: 1 }} />
 
             <StickyContainer>
+                <NewInUnleash
+                    mode={mode}
+                    onMiniModeClick={() => setMode('full')}
+                />
                 <ShowHide
                     mode={mode}
                     onChange={() => {

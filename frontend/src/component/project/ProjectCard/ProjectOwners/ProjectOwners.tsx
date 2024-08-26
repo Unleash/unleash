@@ -94,11 +94,7 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
                 show={
                     <StyledOwnerName>
                         <StyledHeader>Owner</StyledHeader>
-                        <StyledUserName>
-                            {/* {users[0]?.name} */}
-                            {/* FIXME: mock */}
-                            Salvador Felipe Jacinto Dalí y Domenech
-                        </StyledUserName>
+                        <StyledUserName>{users[0]?.name}</StyledUserName>
                     </StyledOwnerName>
                 }
             />

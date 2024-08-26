@@ -14,6 +14,7 @@ import { FavoriteAction } from './ProjectCardFooter/FavoriteAction/FavoriteActio
 import { Box, styled } from '@mui/material';
 import { flexColumn } from 'themes/themeStyles';
 import TimeAgo from 'component/common/TimeAgo/TimeAgo';
+import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen';
 
 interface IProjectCardProps {
     name: string;
@@ -26,6 +27,7 @@ interface IProjectCardProps {
     mode: string;
     owners?: ProjectSchemaOwners;
     lastUpdatedAt?: Date;
+    lastReportedFlagUsage?: Date;
 }
 
 const StyledUpdated = styled('span')(({ theme }) => ({
@@ -56,6 +58,7 @@ export const ProjectCard = ({
     favorite = false,
     owners,
     lastUpdatedAt,
+    lastReportedFlagUsage,
 }: IProjectCardProps) => (
     <StyledProjectCard onMouseEnter={onHover}>
         <StyledProjectCardBody>
@@ -89,43 +92,15 @@ export const ProjectCard = ({
                 <div>
                     <div>
                         <StyledCount>{featureCount}</StyledCount> flag
-                        {featureCount > 1 ? 's' : ''}
+                        {featureCount === 1 ? '' : 's'}
                     </div>
                     <div>
                         <StyledCount>{health}%</StyledCount> health
                     </div>
                 </div>
-                <div>test</div>
-                {/* <div>
-                    <StyledParagraphInfo data-loading>
-                        {featureCount}
-                    </StyledParagraphInfo>
-                    <p data-loading>{featureCount === 1 ? 'flag' : 'flags'}</p>
-                </div>
-                <ConditionallyRender
-                    condition={id !== DEFAULT_PROJECT_ID}
-                    show={
-                        <div>
-                            <StyledParagraphInfo data-loading>
-                                {memberCount}
-                            </StyledParagraphInfo>
-                            <p data-loading>
-                                {memberCount === 1 ? 'member' : 'members'}
-                            </p>
-                        </div>
-                    }
-                />
-                <div>
-                    <StyledParagraphInfo data-loading>
-                        {health}%
-                    </StyledParagraphInfo>
-                    <p data-loading>healthy</p>
-                </div> */}
+                <ProjectLastSeen date={lastReportedFlagUsage} />
             </StyledInfo>
         </StyledProjectCardBody>
-        <ProjectCardFooter id={id} owners={owners}>
-            {/* TODO members */}
-            members
-        </ProjectCardFooter>
+        <ProjectCardFooter id={id} owners={owners} memberCount={memberCount} />
     </StyledProjectCard>
 );

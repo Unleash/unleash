@@ -147,7 +147,7 @@ You’ll need 2 things:
 First, install the `unleash` gem.
 
 ```sh
-gem install unleash
+bundle add unleash
 ```
 
 Then, create `config/initializers/unleash.rb`, and add the following:

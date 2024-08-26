@@ -127,7 +127,12 @@ module.exports = {
                                 },
                                 {
                                     type: 'doc',
-                                    label: 'Django',
+                                    label: 'Django tutorial',
+                                    id: 'feature-flag-tutorials/rails/implementing-feature-flags-rails',
+                                },
+                                {
+                                    type: 'doc',
+                                    label: 'Django Examples',
                                     id: 'feature-flag-tutorials/python/django-examples',
                                 },
                             ],
@@ -162,22 +167,17 @@ module.exports = {
                             items: [
                                 {
                                     type: 'doc',
-                                    label: 'Examples',
+                                    label: 'Ruby Examples',
                                     id: 'feature-flag-tutorials/ruby/ruby-examples',
                                 },
-                            ],
-                        },
-                        {
-                            type: 'category',
-                            label: 'Ruby on Rails',
-                            link: {
-                                type: 'doc',
-                                id: 'feature-flag-tutorials/rails/implementing-feature-flags-rails',
-                            },
-                            items: [
                                 {
                                     type: 'doc',
-                                    label: 'Examples',
+                                    label: 'Rails tutorial',
+                                    id: 'feature-flag-tutorials/rails/implementing-feature-flags-rails',
+                                },
+                                {
+                                    type: 'doc',
+                                    label: 'Rails Examples',
                                     id: 'feature-flag-tutorials/rails/rails-examples',
                                 },
                             ],

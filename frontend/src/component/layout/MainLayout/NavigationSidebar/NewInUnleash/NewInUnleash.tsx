@@ -18,11 +18,16 @@ import { NewInUnleashItem } from './NewInUnleashItem';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
+    margin: theme.spacing(2, 0, 1, 0),
     borderRadius: theme.shape.borderRadiusMedium,
     [theme.breakpoints.down('lg')]: {
         margin: theme.spacing(2),
         marginBottom: theme.spacing(1),
     },
+}));
+
+const StyledListItem = styled(ListItem)(({ theme }) => ({
+    margin: theme.spacing(1, 0, 1, 0),
 }));
 
 const StyledNewInUnleashHeader = styled('p')(({ theme }) => ({
@@ -106,7 +111,7 @@ export const NewInUnleash = ({
 
     if (mode === 'mini' && onMiniModeClick) {
         return (
-            <ListItem disablePadding onClick={onMiniModeClick}>
+            <StyledListItem disablePadding onClick={onMiniModeClick}>
                 <StyledMiniItemButton dense>
                     <Tooltip title='New in Unleash' placement='right'>
                         <StyledMiniItemIcon>
@@ -119,7 +124,7 @@ export const NewInUnleash = ({
                         </StyledMiniItemIcon>
                     </Tooltip>
                 </StyledMiniItemButton>
-            </ListItem>
+            </StyledListItem>
         );
     }
 

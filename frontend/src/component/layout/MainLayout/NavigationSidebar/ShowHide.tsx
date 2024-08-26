@@ -13,16 +13,16 @@ const ShowHideRow = styled(Box, {
     alignItems: 'center',
     padding: theme.spacing(0, 1, 0, mode === 'mini' ? 1.5 : 2),
     cursor: 'pointer',
-    position: 'sticky',
-    bottom: theme.spacing(2),
-    width: '100%',
 }));
 
 // This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.
 const ShowHideContainer = styled(Box)(({ theme }) => ({
-    flexGrow: 1,
-    display: 'flex',
-    alignItems: 'end',
+    position: 'sticky',
+    paddingBottom: theme.spacing(1.5),
+    paddingTop: theme.spacing(1),
+    bottom: theme.spacing(0),
+    backgroundColor: theme.palette.background.paper,
+    borderTop: `2px solid ${theme.palette.divider}`,
 }));
 
 export const ShowHide: FC<{ mode: NavigationMode; onChange: () => void }> = ({

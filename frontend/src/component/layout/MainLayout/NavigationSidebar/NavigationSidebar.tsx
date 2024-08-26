@@ -137,6 +137,9 @@ export const NavigationSidebar = () => {
                 />
             )}
 
+            {/* this will push the show/hide to the bottom on short nav list */}
+            <Box sx={{ flex: 1 }} />
+
             <ShowHide
                 mode={mode}
                 onChange={() => {

@@ -8,17 +8,17 @@ Hello! In this tutorial, we’ll show you how to add feature flags to your Ruby 
 
 In a classic tutorial fashion, we’ll add feature flags to a blog app made with Ruby on Rails. We’ll use feature flags to decide how many blog posts to show on the index page.
 
-- [Prerequisites](#prerequisites)
-- [1. Best practices for back-end apps with Unleash](#1-best-practices-for-back-end-apps-with-unleash)
-- [2. Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
-- [3. Setup the Rails app](#3-setup-the-rails-app)
-    - [Install dependencies](#install-dependencies)
-    - [Setup DB](#setup-db)
-    - [Run the server](#run-the-server)
-- [4. Restrict the number of posts](#4-restrict-the-number-of-posts)
-- [5. Add Unleash to your Rails app](#5-add-unleash-to-your-rails-app)
-- [6. Verify the toggle experience](#6-verify-the-toggle-experience)
-- [Conclusion](#conclusion)
+-   [Prerequisites](#prerequisites)
+-   [1. Best practices for back-end apps with Unleash](#1-best-practices-for-back-end-apps-with-unleash)
+-   [2. Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
+-   [3. Setup the Rails app](#3-setup-the-rails-app)
+    -   [Install dependencies](#install-dependencies)
+    -   [Setup DB](#setup-db)
+    -   [Run the server](#run-the-server)
+-   [4. Restrict the number of posts](#4-restrict-the-number-of-posts)
+-   [5. Add Unleash to your Rails app](#5-add-unleash-to-your-rails-app)
+-   [6. Verify the toggle experience](#6-verify-the-toggle-experience)
+-   [Conclusion](#conclusion)
 
 ## Prerequisites
 
@@ -154,10 +154,11 @@ Then, create `config/initializers/unleash.rb`, and add the following:
 
 ```ruby
 Unleash.configure do |config|
-  config.app_name = Rails.application.class.parent.to_s
+  config.app_name = Rails.application.class.module_parent_name
   config.url      = 'http://localhost:4242/api/'
   # config.instance_id = "#{Socket.gethostname}"
   config.logger   = Rails.logger
+  config.custom_http_headers = {'Authorization': '<YOUR_API_TOKEN>'}
 end
 
 UNLEASH = Unleash::Client.new

@@ -38,20 +38,13 @@ const useOwnersMap = () => {
     };
 };
 
-const StyledUserName = styled('span')(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
-    alignSelf: 'end',
-    lineHeight: 1,
-    lineClamp: `1`,
-    WebkitLineClamp: 1,
-    display: '-webkit-box',
-    boxOrient: 'vertical',
+const StyledUserName = styled('p')(({ theme }) => ({
+    fontSize: theme.typography.body1.fontSize,
+    margin: theme.spacing(0, 0, 0.5, 0),
+    overflowX: 'hidden',
     textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    alignItems: 'flex-start',
-    WebkitBoxOrient: 'vertical',
-    wordBreak: 'break-word',
-    maxWidth: '100%',
+    textWrap: 'nowrap',
+    alignSelf: 'end',
 }));
 
 const StyledContainer = styled('div')(() => ({
@@ -59,25 +52,18 @@ const StyledContainer = styled('div')(() => ({
     flexDirection: 'column',
 }));
 
-const StyledOwnerName = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(0.25),
-    margin: theme.spacing(0, 0, 0, 1),
-}));
-
-const StyledHeader = styled('span')(({ theme }) => ({
-    // margin: theme.spacing(0, 0, 0, 1),
-    lineHeight: 1,
-    fontSize: theme.fontSizes.smallerBody,
-    color: theme.palette.text.secondary,
+const StyledHeader = styled('h3')(({ theme }) => ({
+    margin: theme.spacing(0, 0, 1),
+    fontSize: theme.typography.caption.fontSize,
+    color: theme.palette.text.primary,
     fontWeight: theme.typography.fontWeightRegular,
 }));
 
 const StyledWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1.5, 0, 1.5, 2),
+    padding: theme.spacing(1.5, 0, 2.5, 3),
     display: 'flex',
     alignItems: 'center',
+    minWidth: 0,
 }));
 
 export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
@@ -85,22 +71,17 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
     const users = owners.map(ownersMap);
 
     return (
-        <StyledWrapper data-testid='test'>
+        <StyledWrapper>
             <StyledContainer>
-                <AvatarGroup users={users} avatarLimit={4} />
+                <StyledHeader>
+                    {owners.length === 1 ? 'Owner' : 'Owners'}
+                </StyledHeader>
+                <AvatarGroup users={users} avatarLimit={8} />
             </StyledContainer>
             <ConditionallyRender
                 condition={owners.length === 1}
-                show={
-                    <StyledOwnerName>
-                        <StyledHeader>Owner</StyledHeader>
-                        <StyledUserName>
-                            {/* {users[0]?.name} */}
-                            {/* FIXME: mock */}
-                            Salvador Felipe Jacinto Dalí y Domenech
-                        </StyledUserName>
-                    </StyledOwnerName>
-                }
+                show={<StyledUserName>{users[0]?.name}</StyledUserName>}
+                elseShow={<div />}
             />
         </StyledWrapper>
     );

@@ -3,8 +3,12 @@ import type { FC } from 'react';
 import { Box, styled } from '@mui/material';
 import {
     type IProjectOwnersProps,
-    ProjectOwners,
-} from '../ProjectOwners/ProjectOwners';
+    ProjectOwners as LegacyProjectOwners,
+} from '../ProjectOwners/LegacyProjectOwners';
+import { ProjectOwners } from '../ProjectOwners/ProjectOwners';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ProjectMembers } from '../ProjectMembers/ProjectMembers';
 
 interface IProjectCardFooterProps {
     id: string;
@@ -32,10 +36,25 @@ export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
     owners,
     disabled = false,
 }) => {
+    const projectListImprovementsEnabled = useUiFlag('projectListImprovements');
+
     return (
         <StyledFooter disabled={disabled}>
-            <ProjectOwners owners={owners} />
-            {children}
+            <ConditionallyRender
+                condition={Boolean(projectListImprovementsEnabled)}
+                show={<ProjectOwners owners={owners} />}
+                elseShow={<LegacyProjectOwners owners={owners} />}
+            />
+            <ConditionallyRender
+                condition={Boolean(projectListImprovementsEnabled)}
+                show={
+                    <ProjectMembers
+                        // count={}
+                        members={[]}
+                    />
+                }
+                elseShow={children}
+            />
         </StyledFooter>
     );
 };

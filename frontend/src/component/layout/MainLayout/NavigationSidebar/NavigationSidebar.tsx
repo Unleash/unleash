@@ -59,7 +59,7 @@ const StickyContainer = styled(Box)(({ theme }) => ({
     paddingTop: theme.spacing(1),
     bottom: theme.spacing(0),
     backgroundColor: theme.palette.background.paper,
-    borderTop: `2px solid ${theme.palette.divider}`,
+    borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
 export const NavigationSidebar = () => {

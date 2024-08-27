@@ -12,7 +12,6 @@ import {
     styled,
 } from '@mui/material';
 import Signals from '@mui/icons-material/Sensors';
-import { useNavigate } from 'react-router-dom';
 import type { NavigationMode } from 'component/layout/MainLayout/NavigationSidebar/NavigationMode';
 import { NewInUnleashItem } from './NewInUnleashItem';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -71,7 +70,9 @@ type NewItem = {
     label: string;
     icon: ReactNode;
     link: string;
+    docsLink: string;
     show: boolean;
+    longDescription: ReactNode;
 };
 
 interface INewInUnleashProps {
@@ -86,7 +87,6 @@ export const NewInUnleash = ({
     onMiniModeClick,
 }: INewInUnleashProps) => {
     const { trackEvent } = usePlausibleTracker();
-    const navigate = useNavigate();
     const [seenItems, setSeenItems] = useLocalStorageState(
         'new-in-unleash-seen:v1',
         new Set(),
@@ -99,7 +99,35 @@ export const NewInUnleash = ({
             label: 'Signals & Actions',
             icon: <StyledSignalsIcon />,
             link: '/integrations/signals',
+            docsLink: 'https://docs.getunleash.io/reference/signals',
             show: isEnterprise() && signalsEnabled,
+            longDescription: (
+                <>
+                    <p>
+                        It allows you to respond to events in your real-time
+                        monitoring system by automating tasks such as disabling
+                        a beta feature in response to an increase in errors or a
+                        drop in conversion rates.
+                    </p>
+
+                    <p>
+                        <ul>
+                            <li>
+                                <b>Signal endpoints</b> are used to send signals
+                                to Unleash. This allows you to integrate Unleash
+                                with any external tool.
+                            </li>
+
+                            <li>
+                                <b>Actions</b>, which are configured inside
+                                projects, allow you to react to those signals
+                                and enable or disable flags based on certain
+                                conditions.
+                            </li>
+                        </ul>
+                    </p>
+                </>
+            ),
         },
     ];
 
@@ -135,31 +163,32 @@ export const NewInUnleash = ({
                 New in Unleash
             </StyledNewInUnleashHeader>
             <StyledNewInUnleashList>
-                {visibleItems.map(({ label, icon, link }) => (
-                    <NewInUnleashItem
-                        key={label}
-                        icon={icon}
-                        onClick={() => {
-                            trackEvent('new-in-unleash-click', {
-                                props: {
-                                    label,
-                                },
-                            });
-                            navigate(link);
-                            onItemClick?.();
-                        }}
-                        onDismiss={() => {
-                            trackEvent('new-in-unleash-dismiss', {
-                                props: {
-                                    label,
-                                },
-                            });
-                            setSeenItems(new Set([...seenItems, label]));
-                        }}
-                    >
-                        {label}
-                    </NewInUnleashItem>
-                ))}
+                {visibleItems.map(
+                    ({ label, icon, link, longDescription, docsLink }) => (
+                        <NewInUnleashItem
+                            onClick={() => {
+                                trackEvent('new-in-unleash-click', {
+                                    props: {
+                                        label,
+                                    },
+                                });
+                            }}
+                            onDismiss={() => {
+                                trackEvent('new-in-unleash-dismiss', {
+                                    props: {
+                                        label,
+                                    },
+                                });
+                                setSeenItems(new Set([...seenItems, label]));
+                            }}
+                            label={label}
+                            icon={icon}
+                            link={link}
+                            longDescription={longDescription}
+                            docsLink={docsLink}
+                        />
+                    ),
+                )}
             </StyledNewInUnleashList>
         </StyledNewInUnleash>
     );

@@ -1,12 +1,14 @@
-import type { ReactNode } from 'react';
+import type * as React from 'react';
+import { type ReactNode, useState } from 'react';
 import {
     IconButton,
     ListItem,
     ListItemButton,
-    Tooltip,
     styled,
+    Tooltip,
 } from '@mui/material';
 import Close from '@mui/icons-material/Close';
+import { NewInUnleashTooltip } from './NewInUnleashTooltip';
 
 const StyledItemButton = styled(ListItemButton)(({ theme }) => ({
     justifyContent: 'space-between',
@@ -30,37 +32,74 @@ interface INewInUnleashItemProps {
     icon: ReactNode;
     onClick: () => void;
     onDismiss: () => void;
-    children: ReactNode;
+    label: string;
+    longDescription: ReactNode;
+    link: string;
+    docsLink: string;
 }
+
+const useTooltip = () => {
+    const [open, setOpen] = useState(false);
+
+    const handleTooltipClose = () => {
+        setOpen(false);
+    };
+
+    const handleTooltipOpen = () => {
+        setOpen(true);
+    };
+
+    return { open, handleTooltipOpen, handleTooltipClose };
+};
 
 export const NewInUnleashItem = ({
     icon,
     onClick,
     onDismiss,
-    children,
+    label,
+    longDescription,
+    link,
+    docsLink,
 }: INewInUnleashItemProps) => {
+    const { open, handleTooltipOpen, handleTooltipClose } = useTooltip();
+
     const onDismissClick = (e: React.MouseEvent) => {
         e.stopPropagation();
         onDismiss();
     };
 
     return (
-        <ListItem disablePadding onClick={onClick}>
-            <StyledItemButton>
-                <StyledItemButtonContent>
-                    {icon}
-                    {children}
-                </StyledItemButtonContent>
-                <Tooltip title='Dismiss' arrow>
-                    <StyledItemButtonClose
-                        aria-label='dismiss'
-                        onClick={onDismissClick}
-                        size='small'
-                    >
-                        <Close fontSize='inherit' />
-                    </StyledItemButtonClose>
-                </Tooltip>
-            </StyledItemButton>
+        <ListItem
+            disablePadding
+            onClick={() => {
+                onClick();
+                handleTooltipOpen();
+            }}
+        >
+            <NewInUnleashTooltip
+                open={open}
+                onClose={handleTooltipClose}
+                title={label}
+                longDescription={longDescription}
+                link={link}
+                docsLink={docsLink}
+            >
+                <StyledItemButton>
+                    <StyledItemButtonContent>
+                        {icon}
+                        {label}
+                    </StyledItemButtonContent>
+                    <Tooltip title='Dismiss' arrow>
+                        <StyledItemButtonClose
+                            aria-label='dismiss'
+                            onClick={onDismissClick}
+                            size='small'
+                        >
+                            <Close fontSize='inherit' />
+                        </StyledItemButtonClose>
+                    </Tooltip>
+                </StyledItemButton>
+            </NewInUnleashTooltip>
         </ListItem>
     );
 };

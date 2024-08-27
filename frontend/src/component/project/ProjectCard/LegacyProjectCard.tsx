@@ -9,7 +9,7 @@ import {
     StyledParagraphInfo,
     StyledProjectCardBody,
     StyledIconBox,
-} from './NewProjectCard.styles';
+} from './ProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
 import type { ProjectSchemaOwners } from 'openapi';

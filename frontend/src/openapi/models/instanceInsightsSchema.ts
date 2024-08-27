@@ -7,7 +7,6 @@ import type { InstanceInsightsSchemaEnvironmentTypeTrendsItem } from './instance
 import type { InstanceInsightsSchemaFlagTrendsItem } from './instanceInsightsSchemaFlagTrendsItem';
 import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from './instanceInsightsSchemaMetricsSummaryTrendsItem';
 import type { InstanceInsightsSchemaProjectFlagTrendsItem } from './instanceInsightsSchemaProjectFlagTrendsItem';
-import type { InstanceInsightsSchemaUsers } from './instanceInsightsSchemaUsers';
 import type { InstanceInsightsSchemaUserTrendsItem } from './instanceInsightsSchemaUserTrendsItem';
 
 /**
@@ -22,8 +21,6 @@ export interface InstanceInsightsSchema {
     metricsSummaryTrends: InstanceInsightsSchemaMetricsSummaryTrendsItem[];
     /** How number of flags per project changed over time */
     projectFlagTrends: InstanceInsightsSchemaProjectFlagTrendsItem[];
-    /** High level user count statistics */
-    users: InstanceInsightsSchemaUsers;
     /** How number of users changed over time */
     userTrends: InstanceInsightsSchemaUserTrendsItem[];
 }

@@ -15,7 +15,6 @@ type ProjectMembersProps = {
 
 const StyledContainer = styled('div')(({ theme }) => ({
     ...flexColumn,
-    // justifyContent: 'flex-end',
     alignItems: 'flex-end',
     padding: theme.spacing(0, 2, 0, 1),
     minWidth: 95,

@@ -105,7 +105,7 @@ const StageBox = styled(Box, {
 const ColorFill = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
-    borderRadius: theme.spacing(0, 0, 1, 1), // has to match the parent tooltip container
+    borderRadius: `0 0 ${theme.shape.borderRadiusMedium}px ${theme.shape.borderRadiusMedium}px`, // has to match the parent tooltip container
     margin: theme.spacing(-1, -1.5), // has to match the parent tooltip container
     padding: theme.spacing(2, 3),
 }));

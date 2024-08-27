@@ -16,7 +16,7 @@ import { ReactComponent as UnleashLogo } from 'assets/img/logoWithWhiteText.svg'
 const Header = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
-    borderRadius: theme.spacing(1, 1, 0, 0), // has to match the parent tooltip container
+    borderRadius: `${theme.shape.borderRadiusMedium}px ${theme.shape.borderRadiusMedium}px 0 0`, // has to match the parent tooltip container
     margin: theme.spacing(-1, -1.5), // has to match the parent tooltip container
     padding: theme.spacing(2, 3),
     display: 'flex',
@@ -39,9 +39,10 @@ const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
     '&:hover, &:focus': {
         textDecoration: 'underline',
     },
-    '& svg': {
-        fontSize: theme.spacing(2.25),
-    },
+}));
+
+const StyledOpenInNew = styled(OpenInNew)(({ theme }) => ({
+    fontSize: theme.spacing(2.25),
 }));
 
 const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
@@ -100,7 +101,8 @@ export const NewInUnleashTooltip: FC<{
                                     rel='noopener noreferrer'
                                     target='_blank'
                                 >
-                                    <OpenInNew /> Read more in our documentation
+                                    <StyledOpenInNew /> Read more in our
+                                    documentation
                                 </StyledLink>
                             </ReadMore>
                             <Button

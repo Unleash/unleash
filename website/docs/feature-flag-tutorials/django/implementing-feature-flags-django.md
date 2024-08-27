@@ -73,7 +73,7 @@ Call it `top-3` and enable it in the `development` environment.
 
 Everything's now set up on the Unleash side. Let's set up the Django application.
 
-## 3. Setup the Django app
+## 3. Set up the Django app
 
 Let's clone a basic blog repository and get it up and running. We don't want to waste time setting up a Django codebase from scratch.
 

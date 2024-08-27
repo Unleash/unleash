@@ -14,13 +14,17 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     justifyContent: 'start',
 }));
 
-const StyledAvatar = (component: typeof UserAvatar) =>
+const StyledAvatar = (
+    component: typeof UserAvatar,
+    margin = -1,
+    hover = true,
+) =>
     styled(component)(({ theme }) => ({
         outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
         margin: 0,
-        marginLeft: theme.spacing(-1),
+        marginLeft: theme.spacing(margin),
         '&:hover': {
-            outlineColor: theme.palette.primary.main,
+            outlineColor: hover ? theme.palette.primary.main : undefined,
         },
     }));
 
@@ -34,13 +38,17 @@ type AvatarGroupProps = {
     avatarLimit?: number;
     AvatarComponent?: typeof UserAvatar;
     className?: string;
+    margin?: number;
+    hover?: boolean;
 };
 
 export const AvatarGroup = ({
     AvatarComponent,
+    margin,
+    hover,
     ...props
 }: AvatarGroupProps) => {
-    const Avatar = StyledAvatar(AvatarComponent ?? UserAvatar);
+    const Avatar = StyledAvatar(AvatarComponent ?? UserAvatar, margin, hover);
 
     return <AvatarGroupInner AvatarComponent={Avatar} {...props} />;
 };

@@ -91,6 +91,7 @@ export const ProjectGroup = ({
                                         (project: IProjectCard) => (
                                             <ProjectCard
                                                 data-loading
+                                                createdAt={project.createdAt}
                                                 key={project.id}
                                                 name={project.name}
                                                 id={project.id}

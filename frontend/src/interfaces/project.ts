@@ -6,7 +6,7 @@ import type { ProjectMode } from 'component/project/Project/hooks/useProjectEnte
 export interface IProjectCard {
     name: string;
     id: string;
-    createdAt?: string;
+    createdAt: string;
     health?: number;
     description?: string;
     featureCount?: number;

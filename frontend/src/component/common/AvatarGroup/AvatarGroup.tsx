@@ -14,7 +14,7 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     justifyContent: 'start',
 }));
 
-const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
+export const AvatarComponent = styled(UserAvatar)(({ theme }) => ({
     outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
     margin: 0,
     marginLeft: theme.spacing(-1),
@@ -36,11 +36,11 @@ type AvatarGroupProps = {
     className?: string;
 };
 
-export const AvatarGroup = ({
-    AvatarComponent = StyledUserAvatar,
-    ...props
-}: AvatarGroupProps) => (
-    <AvatarGroupInner AvatarComponent={AvatarComponent} {...props} />
+export const AvatarGroup = ({ ...props }: AvatarGroupProps) => (
+    <AvatarGroupInner
+        AvatarComponent={props.AvatarComponent ?? AvatarComponent}
+        {...props}
+    />
 );
 
 type AvatarGroupInnerProps = Omit<AvatarGroupProps, 'AvatarComponent'> & {

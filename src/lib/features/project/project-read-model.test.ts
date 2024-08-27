@@ -4,6 +4,7 @@ import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle
 import type {
     IEventStore,
     IFlagResolver,
+    ILastSeenStore,
     IProjectReadModel,
     IProjectStore,
 } from '../../types';
@@ -15,6 +16,7 @@ let flagStore: IFeatureToggleStore;
 let projectStore: IProjectStore;
 let eventStore: IEventStore;
 let projectReadModel: IProjectReadModel;
+let lastSeenStore: ILastSeenStore;
 
 const alwaysOnFlagResolver = {
     isEnabled() {
@@ -32,6 +34,7 @@ beforeAll(async () => {
     projectStore = db.stores.projectStore;
     eventStore = db.stores.eventStore;
     flagStore = db.stores.featureToggleStore;
+    lastSeenStore = db.stores.lastSeenStore;
 });
 
 afterAll(async () => {
@@ -148,7 +151,7 @@ test('it uses the last flag metrics received for lastReportedFlagUsage', async (
 
     await flagStore.create(projectId, { name: flagName, createdByUserId: 1 });
 
-    await flagStore.setLastSeen([
+    await lastSeenStore.setLastSeen([
         { featureName: flagName, environment: 'development' },
     ]);
 

@@ -41,7 +41,7 @@ export const ProjectMembers: FC<ProjectMembersProps> = ({
 }) => {
     return (
         <StyledContainer>
-            <StyledDescription>
+            <StyledDescription data-loading>
                 {count} member
                 {count === 1 ? '' : 's'}
             </StyledDescription>
@@ -49,8 +49,6 @@ export const ProjectMembers: FC<ProjectMembersProps> = ({
                 users={members}
                 avatarLimit={4}
                 AvatarComponent={AvatarComponent}
-                margin={-0.5}
-                hover={false}
             />
         </StyledContainer>
     );

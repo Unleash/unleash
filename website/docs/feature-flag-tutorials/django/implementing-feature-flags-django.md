@@ -23,7 +23,7 @@ In a classic tutorial fashion, we’ll add feature flags to a blog app made with
 
 For this tutorial, you'll need the following:
 
--   Django
+-   Python3.10+
 -   Git
 -   Docker and Docker Compose
 

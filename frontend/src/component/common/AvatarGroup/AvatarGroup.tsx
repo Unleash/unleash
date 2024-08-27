@@ -14,21 +14,21 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     justifyContent: 'start',
 }));
 
-const StyledAvatar = (component: typeof UserAvatar) =>
-    styled(component)(({ theme }) => ({
-        outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
-        margin: 0,
-        marginLeft: theme.spacing(-1),
-        '&:hover': {
-            outlineColor: theme.palette.primary.main,
-        },
-    }));
+export const AvatarComponent = styled(UserAvatar)(({ theme }) => ({
+    outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
+    margin: 0,
+    marginLeft: theme.spacing(-1),
+    '&:hover': {
+        outlineColor: theme.palette.primary.main,
+    },
+}));
 
 type User = {
     name: string;
     description?: string;
     imageUrl?: string;
 };
+
 type AvatarGroupProps = {
     users: User[];
     avatarLimit?: number;
@@ -36,14 +36,12 @@ type AvatarGroupProps = {
     className?: string;
 };
 
-export const AvatarGroup = ({
-    AvatarComponent,
-    ...props
-}: AvatarGroupProps) => {
-    const Avatar = StyledAvatar(AvatarComponent ?? UserAvatar);
-
-    return <AvatarGroupInner AvatarComponent={Avatar} {...props} />;
-};
+export const AvatarGroup = ({ ...props }: AvatarGroupProps) => (
+    <AvatarGroupInner
+        AvatarComponent={props.AvatarComponent ?? AvatarComponent}
+        {...props}
+    />
+);
 
 type AvatarGroupInnerProps = Omit<AvatarGroupProps, 'AvatarComponent'> & {
     AvatarComponent: typeof UserAvatar;

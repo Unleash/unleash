@@ -70,6 +70,11 @@ export class ProjectReadModel implements IProjectReadModel {
         let projects = this.db(TABLE)
             .leftJoin('features', 'features.project', 'projects.id')
             .leftJoin(
+                'last_seen_at_metrics',
+                'features.name',
+                'last_seen_at_metrics.feature_name',
+            )
+            .leftJoin(
                 'project_settings',
                 'project_settings.project',
                 'projects.id',
@@ -99,7 +104,7 @@ export class ProjectReadModel implements IProjectReadModel {
             this.db.raw(
                 'projects.id, projects.name, projects.description, projects.health, projects.created_at, ' +
                     'count(DISTINCT features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
-                    'MAX(features.last_seen_at) AS last_usage,' +
+                    'MAX(last_seen_at_metrics.last_seen_at) AS last_usage, ' +
                     'MAX(events.created_at) AS last_updated',
             ),
             'project_settings.project_mode',

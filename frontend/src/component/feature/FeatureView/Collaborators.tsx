@@ -8,6 +8,14 @@ import { Link } from 'react-router-dom';
 const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
     width: theme.spacing(3),
     height: theme.spacing(3),
+    outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
+    '&:hover': {
+        outlineColor: theme.palette.primary.main,
+    },
+}));
+
+const StyledGroupAvatar = styled(StyledAvatar)(({ theme }) => ({
+    marginLeft: theme.spacing(-1),
 }));
 
 const SectionContainer = styled('div')(({ theme }) => ({
@@ -50,7 +58,7 @@ const CollaboratorList: FC<{ collaborators: Collaborator[] }> = ({
             <StyledAvatarGroup
                 users={collaborators}
                 avatarLimit={6}
-                AvatarComponent={StyledAvatar}
+                AvatarComponent={StyledGroupAvatar}
             />
         </SectionContainer>
     );

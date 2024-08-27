@@ -14,44 +14,34 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     justifyContent: 'start',
 }));
 
-const StyledAvatar = (
-    component: typeof UserAvatar,
-    margin = -1,
-    hover = true,
-) =>
-    styled(component)(({ theme }) => ({
-        outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
-        margin: 0,
-        marginLeft: theme.spacing(margin),
-        '&:hover': {
-            outlineColor: hover ? theme.palette.primary.main : undefined,
-        },
-    }));
+const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
+    outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
+    margin: 0,
+    marginLeft: theme.spacing(-1),
+    '&:hover': {
+        outlineColor: theme.palette.primary.main,
+    },
+}));
 
 type User = {
     name: string;
     description?: string;
     imageUrl?: string;
 };
+
 type AvatarGroupProps = {
     users: User[];
     avatarLimit?: number;
     AvatarComponent?: typeof UserAvatar;
     className?: string;
-    margin?: number;
-    hover?: boolean;
 };
 
 export const AvatarGroup = ({
-    AvatarComponent,
-    margin,
-    hover,
+    AvatarComponent = StyledUserAvatar,
     ...props
-}: AvatarGroupProps) => {
-    const Avatar = StyledAvatar(AvatarComponent ?? UserAvatar, margin, hover);
-
-    return <AvatarGroupInner AvatarComponent={Avatar} {...props} />;
-};
+}: AvatarGroupProps) => (
+    <AvatarGroupInner AvatarComponent={AvatarComponent} {...props} />
+);
 
 type AvatarGroupInnerProps = Omit<AvatarGroupProps, 'AvatarComponent'> & {
     AvatarComponent: typeof UserAvatar;

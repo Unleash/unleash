@@ -4,7 +4,6 @@
  * See `gen:api` script in package.json
  */
 import type { InstanceInsightsSchemaEnvironmentTypeTrendsItem } from './instanceInsightsSchemaEnvironmentTypeTrendsItem';
-import type { InstanceInsightsSchemaFlags } from './instanceInsightsSchemaFlags';
 import type { InstanceInsightsSchemaFlagTrendsItem } from './instanceInsightsSchemaFlagTrendsItem';
 import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from './instanceInsightsSchemaMetricsSummaryTrendsItem';
 import type { InstanceInsightsSchemaProjectFlagTrendsItem } from './instanceInsightsSchemaProjectFlagTrendsItem';
@@ -18,7 +17,7 @@ export interface InstanceInsightsSchema {
     /** How updates per environment type changed over time */
     environmentTypeTrends: InstanceInsightsSchemaEnvironmentTypeTrendsItem[];
     /** High level flag count statistics */
-    flags: InstanceInsightsSchemaFlags;
+    // flags: InstanceInsightsSchemaFlags;
     /** How number of flags changed over time */
     flagTrends: InstanceInsightsSchemaFlagTrendsItem[];
     /** How metrics data per project changed over time */

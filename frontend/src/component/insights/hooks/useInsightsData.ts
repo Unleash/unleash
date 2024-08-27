@@ -37,7 +37,6 @@ export const useInsightsData = (
             groupedProjectsData,
             metricsData,
             groupedMetricsData,
-            users: instanceInsights.users,
             environmentTypeTrends: instanceInsights.environmentTypeTrends,
             summary,
             allMetricsDatapoints,

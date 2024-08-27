@@ -31,7 +31,7 @@ export const useInsights = (
     return {
         insights: data || {
             users: { total: 0, inactive: 0, active: 0 },
-            flags: { total: 0 },
+            // flags: { total: 0 },
             userTrends: [],
             flagTrends: [],
             projectFlagTrends: [],

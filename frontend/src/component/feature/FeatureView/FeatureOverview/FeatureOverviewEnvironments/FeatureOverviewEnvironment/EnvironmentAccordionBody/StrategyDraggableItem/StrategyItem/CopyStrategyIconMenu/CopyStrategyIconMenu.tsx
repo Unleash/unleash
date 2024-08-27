@@ -70,9 +70,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         if (isChangeRequestConfigured(targetEnvironment)) {
             await onChangeRequestAddStrategy(
                 targetEnvironment,
-                {
-                    ...strategyCopy,
-                },
+                strategyCopy,
                 environmentId,
             );
             return;

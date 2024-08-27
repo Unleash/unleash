@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectCard } from '../NewProjectCard/NewProjectCard';
+import { ProjectCard as LegacyProjectCard } from '../ProjectCard/LegacyProjectCard';
 
 import type { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';
@@ -40,7 +40,7 @@ export const ProjectGroup = <T extends { id: string }>({
     loading,
     searchValue,
     placeholder = 'No projects available.',
-    ProjectCardComponent = ProjectCard,
+    ProjectCardComponent = LegacyProjectCard,
     link = true,
 }: ProjectGroupProps<T>) => {
     return (
@@ -82,7 +82,7 @@ export const ProjectGroup = <T extends { id: string }>({
                                 <>
                                     {loadingData.map(
                                         (project: IProjectCard) => (
-                                            <ProjectCard
+                                            <LegacyProjectCard
                                                 data-loading
                                                 onHover={() => {}}
                                                 key={project.id}

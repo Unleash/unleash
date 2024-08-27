@@ -11,7 +11,7 @@ import { ProjectGroup } from './ProjectGroup';
 import {
     ProjectArchiveCard,
     type ProjectArchiveCardProps,
-} from '../NewProjectCard/ProjectArchiveCard';
+} from '../ProjectCard/ProjectArchiveCard';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ReviveProjectDialog } from './ReviveProjectDialog/ReviveProjectDialog';
 import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue';

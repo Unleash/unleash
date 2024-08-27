@@ -12,7 +12,7 @@ In a classic tutorial fashion, we’ll add feature flags to a blog app made with
 -   [1. Best practices for back-end apps with Unleash](#1-best-practices-for-back-end-apps-with-unleash)
 -   [2. Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
 -   [3. Setup the Django app](#3-setup-the-django-app)
-    -   [Setup/seed the database](#setupseed-the-database)
+    -   [Set up and seed the database](#set-up-and-seed-the-database)
     -   [Run the server](#run-the-server)
 -   [4. Restrict the number of posts](#4-restrict-the-number-of-posts)
 -   [5. Add Unleash to your Django app](#5-add-unleash-to-your-django-app)

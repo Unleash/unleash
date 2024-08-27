@@ -82,7 +82,7 @@ git clone https://github.com/alvinometric/django-basic-blog
 cd django-basic-blog
 ```
 
-#### Setup/seed the database
+#### Set up and seed the database
 
 This repository uses SQLite, so no additional dependencies or migrations are required.
 

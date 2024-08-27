@@ -36,6 +36,7 @@ interface INewInUnleashItemProps {
     longDescription: ReactNode;
     link: string;
     docsLink: string;
+    preview?: ReactNode;
 }
 
 const useTooltip = () => {
@@ -60,6 +61,7 @@ export const NewInUnleashItem = ({
     longDescription,
     link,
     docsLink,
+    preview,
 }: INewInUnleashItemProps) => {
     const { open, handleTooltipOpen, handleTooltipClose } = useTooltip();
 
@@ -83,6 +85,7 @@ export const NewInUnleashItem = ({
                 longDescription={longDescription}
                 link={link}
                 docsLink={docsLink}
+                preview={preview}
             >
                 <StyledItemButton>
                     <StyledItemButtonContent>

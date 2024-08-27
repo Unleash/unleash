@@ -41,20 +41,22 @@ export const StyledDivHeader = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-export const StyledCardTitle = styled('h3')(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightRegular,
-    fontSize: theme.typography.body1.fontSize,
-    lineClamp: '2',
-    WebkitLineClamp: 2,
-    lineHeight: '1.2',
-    display: '-webkit-box',
-    boxOrient: 'vertical',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    alignItems: 'flex-start',
-    WebkitBoxOrient: 'vertical',
-    wordBreak: 'break-word',
-}));
+export const StyledCardTitle = styled('h3')<{ lines?: number }>(
+    ({ theme, lines = 2 }) => ({
+        fontWeight: theme.typography.fontWeightRegular,
+        fontSize: theme.typography.body1.fontSize,
+        lineClamp: `${lines}`,
+        WebkitLineClamp: lines,
+        lineHeight: '1.2',
+        display: '-webkit-box',
+        boxOrient: 'vertical',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        alignItems: 'flex-start',
+        WebkitBoxOrient: 'vertical',
+        wordBreak: 'break-word',
+    }),
+);
 
 export const StyledBox = styled(Box)(() => ({
     ...flexRow,

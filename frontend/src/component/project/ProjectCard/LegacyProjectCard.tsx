@@ -12,21 +12,10 @@ import {
 } from './ProjectCard.styles';
 import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
-import type { ProjectSchemaOwners } from 'openapi';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import { FavoriteAction } from './ProjectCardFooter/FavoriteAction/FavoriteAction';
-
-interface IProjectCardProps {
-    name: string;
-    featureCount: number;
-    health: number;
-    memberCount?: number;
-    id: string;
-    onHover: () => void;
-    favorite?: boolean;
-    mode: string;
-    owners?: ProjectSchemaOwners;
-}
+import { FavoriteAction } from './FavoriteAction/FavoriteAction';
+import type { IProjectCard } from 'interfaces/project';
+import { Box } from '@mui/material';
 
 export const ProjectCard = ({
     name,
@@ -38,7 +27,7 @@ export const ProjectCard = ({
     mode,
     favorite = false,
     owners,
-}: IProjectCardProps) => (
+}: IProjectCard) => (
     <StyledProjectCard onMouseEnter={onHover}>
         <StyledProjectCardBody>
             <StyledDivHeader>
@@ -79,7 +68,9 @@ export const ProjectCard = ({
             </StyledDivInfo>
         </StyledProjectCardBody>
         <ProjectCardFooter id={id} owners={owners}>
-            <FavoriteAction id={id} isFavorite={favorite} />
+            <Box sx={(theme) => ({ margin: theme.spacing(1, 2, 0, 0) })}>
+                <FavoriteAction id={id} isFavorite={favorite} />
+            </Box>
         </ProjectCardFooter>
     </StyledProjectCard>
 );

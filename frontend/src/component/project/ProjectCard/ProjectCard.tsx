@@ -12,7 +12,7 @@ import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { FavoriteAction } from './FavoriteAction/FavoriteAction';
 import { Box, styled } from '@mui/material';
 import { flexColumn } from 'themes/themeStyles';
-import TimeAgo from 'component/common/TimeAgo/TimeAgo';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen';
 import type { IProjectCard } from 'interfaces/project';
 

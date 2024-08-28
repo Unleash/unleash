@@ -5,7 +5,7 @@ import { ReactComponent as UsageLine } from 'assets/icons/usage-line.svg';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
 import { StyledIconWrapper } from 'component/feature/FeatureView/FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 import { flexRow } from 'themes/themeStyles';
-import TimeAgo from 'component/common/TimeAgo/TimeAgo';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 type ProjectLastSeenProps = {

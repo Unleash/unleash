@@ -232,11 +232,12 @@ class UserStore implements IUserStore {
     }
 
     async successfullyLogin(user: User): Promise<void> {
+        const currentDate = new Date();
         return this.buildSelectUser(user).update({
             login_attempts: 0,
-            seen_at: new Date(),
+            seen_at: currentDate,
             first_seen_at: this.db.raw('COALESCE(first_seen_at, ?)', [
-                new Date(),
+                currentDate,
             ]),
         });
     }

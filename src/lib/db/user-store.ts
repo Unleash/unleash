@@ -22,6 +22,7 @@ const USER_COLUMNS_PUBLIC = [
     'email',
     'image_url',
     'seen_at',
+    'first_seen_at',
     'is_service',
     'scim_id',
 ];
@@ -58,6 +59,7 @@ const rowToUser = (row) => {
         imageUrl: emptify(row.image_url),
         loginAttempts: row.login_attempts,
         seenAt: row.seen_at,
+        firstSeenAt: row.first_seen_at,
         createdAt: row.created_at,
         isService: row.is_service,
         scimId: row.scim_id,
@@ -233,6 +235,9 @@ class UserStore implements IUserStore {
         return this.buildSelectUser(user).update({
             login_attempts: 0,
             seen_at: new Date(),
+            first_seen_at: this.db.raw('COALESCE(first_seen_at, ?)', [
+                new Date(),
+            ]),
         });
     }
 

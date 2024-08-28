@@ -11,6 +11,7 @@ export interface UserData {
     email?: string;
     imageUrl?: string;
     seenAt?: Date;
+    firstSeenAt?: Date;
     loginAttempts?: number;
     createdAt?: Date;
     isService?: boolean;
@@ -24,6 +25,7 @@ export interface IUser {
     email?: string;
     inviteLink?: string;
     seenAt?: Date;
+    firstSeenAt?: Date;
     createdAt?: Date;
     permissions: string[];
     loginAttempts?: number;
@@ -75,6 +77,7 @@ export default class User implements IUser {
         username,
         imageUrl,
         seenAt,
+        firstSeenAt,
         loginAttempts,
         createdAt,
         isService,
@@ -93,6 +96,7 @@ export default class User implements IUser {
         this.email = email!;
         this.imageUrl = imageUrl || this.generateImageUrl();
         this.seenAt = seenAt;
+        this.firstSeenAt = firstSeenAt;
         this.loginAttempts = loginAttempts;
         this.createdAt = createdAt;
         this.accountType = isService ? 'Service Account' : 'User';

@@ -63,7 +63,7 @@ export const featureSearchQueryParameters = [
         schema: {
             type: 'string',
             pattern:
-                '^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):(?:\\s*[^,:]+:[^,:]+\\s*)(?:,\\s*[^,:]+:[^,:]+\\s*)*$',
+                '^(INCLUDE|DO_NOT_INCLUDE|INCLUDE_ALL_OF|INCLUDE_ANY_OF|EXCLUDE_IF_ANY_OF|EXCLUDE_ALL):([^:,]+:.+?)(,\\s*[^:,]+:.+?)*$',
             example: 'INCLUDE:simple:my_tag',
         },
         description:

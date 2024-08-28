@@ -70,7 +70,6 @@ const StyledOwnerName = styled('div')(({ theme }) => ({
 }));
 
 const StyledHeader = styled('span')(({ theme }) => ({
-    // margin: theme.spacing(0, 0, 0, 1),
     lineHeight: 1,
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,

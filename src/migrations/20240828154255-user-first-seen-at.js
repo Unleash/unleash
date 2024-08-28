@@ -3,7 +3,7 @@
 exports.up = function (db, cb) {
     db.runSql(
         `
-            ALTER TABLE users ADD COLUMN first_seen_at timestamp without time zone;
+            ALTER TABLE users ADD COLUMN first_seen_at TIMESTAMP WITHOUT TIME ZONE;
         `,
         cb,
     );

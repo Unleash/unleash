@@ -56,7 +56,6 @@ process.nextTick(async () => {
                         projectListImprovements: true,
                         useProjectReadModel: true,
                         addonUsageMetrics: true,
-                        timeAgoRefactor: true,
                     },
                 },
                 authentication: {

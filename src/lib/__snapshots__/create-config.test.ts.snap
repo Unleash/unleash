@@ -147,7 +147,6 @@ exports[`should create default config 1`] = `
       "showInactiveUsers": false,
       "signals": false,
       "strictSchemaValidation": false,
-      "timeAgoRefactor": false,
       "useMemoizedActiveTokens": false,
       "useProjectReadModel": false,
       "userAccessUIEnabled": false,

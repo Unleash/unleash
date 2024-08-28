@@ -1,7 +1,5 @@
 import { useEffect, useState, type FC } from 'react';
 import { formatDistanceToNow, secondsToMilliseconds } from 'date-fns';
-import { default as LegacyTimeAgo } from 'react-timeago';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 type TimeAgoProps = {
     date: Date | number | string | null | undefined;
@@ -17,18 +15,7 @@ const formatTimeAgo = (date: string | number | Date) =>
         .replace('about ', '')
         .replace('less than a minute ago', '< 1 minute ago');
 
-export const TimeAgo: FC<TimeAgoProps> = ({ ...props }) => {
-    const { date, fallback, refresh } = props;
-    const timeAgoRefactorEnabled = useUiFlag('timeAgoRefactor');
-
-    if (timeAgoRefactorEnabled) return <NewTimeAgo {...props} />;
-    if (!date) return fallback;
-    return (
-        <LegacyTimeAgo key={`${date}`} date={new Date(date)} live={refresh} />
-    );
-};
-
-export const NewTimeAgo: FC<TimeAgoProps> = ({
+export const TimeAgo: FC<TimeAgoProps> = ({
     date,
     fallback = '',
     refresh = true,
@@ -69,5 +56,3 @@ export const NewTimeAgo: FC<TimeAgoProps> = ({
         <time dateTime={state.dateTime.toISOString()}>{state.description}</time>
     );
 };
-
-export default TimeAgo;

@@ -1,6 +1,6 @@
 import { vi } from 'vitest';
 import { act, render, screen } from '@testing-library/react';
-import { NewTimeAgo as TimeAgo } from './TimeAgo';
+import { TimeAgo } from './TimeAgo';
 
 const h = 3_600_000 as const;
 const min = 60_000 as const;

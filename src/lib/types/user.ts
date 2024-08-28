@@ -62,6 +62,8 @@ export default class User implements IUser {
 
     seenAt?: Date;
 
+    firstSeenAt?: Date;
+
     loginAttempts?: number;
 
     createdAt?: Date;

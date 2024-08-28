@@ -69,6 +69,7 @@ const StyledSignalsIcon = styled(Signals)(({ theme }) => ({
 
 type NewItem = {
     label: string;
+    summary: string;
     icon: ReactNode;
     link: string;
     docsLink: string;
@@ -99,6 +100,7 @@ export const NewInUnleash = ({
     const items: NewItem[] = [
         {
             label: 'Signals & Actions',
+            summary: 'Listen to signals via Webhooks',
             icon: <StyledSignalsIcon />,
             preview: <SignalsPreview />,
             link: '/integrations/signals',
@@ -174,6 +176,7 @@ export const NewInUnleash = ({
                         longDescription,
                         docsLink,
                         preview,
+                        summary,
                     }) => (
                         <NewInUnleashItem
                             onClick={() => {
@@ -197,6 +200,7 @@ export const NewInUnleash = ({
                             preview={preview}
                             longDescription={longDescription}
                             docsLink={docsLink}
+                            summary={summary}
                         />
                     ),
                 )}

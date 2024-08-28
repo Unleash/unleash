@@ -6,22 +6,25 @@ import {
     ListItemButton,
     styled,
     Tooltip,
+    Typography,
 } from '@mui/material';
 import Close from '@mui/icons-material/Close';
 import { NewInUnleashTooltip } from './NewInUnleashTooltip';
 
 const StyledItemButton = styled(ListItemButton)(({ theme }) => ({
-    justifyContent: 'space-between',
     outline: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(1),
-}));
-
-const StyledItemButtonContent = styled('div')(({ theme }) => ({
+    width: '100%',
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'start',
     gap: theme.spacing(1),
     fontSize: theme.fontSizes.smallBody,
+}));
+
+const LabelWithSummary = styled('div')(({ theme }) => ({
+    flex: 1,
+    maxWidth: theme.spacing(24),
 }));
 
 const StyledItemButtonClose = styled(IconButton)(({ theme }) => ({
@@ -37,6 +40,7 @@ interface INewInUnleashItemProps {
     link: string;
     docsLink: string;
     preview?: ReactNode;
+    summary: string;
 }
 
 const useTooltip = () => {
@@ -62,6 +66,7 @@ export const NewInUnleashItem = ({
     link,
     docsLink,
     preview,
+    summary,
 }: INewInUnleashItemProps) => {
     const { open, handleTooltipOpen, handleTooltipClose } = useTooltip();
 
@@ -88,11 +93,14 @@ export const NewInUnleashItem = ({
                 preview={preview}
             >
                 <StyledItemButton>
-                    <StyledItemButtonContent>
-                        {icon}
-                        {label}
-                    </StyledItemButtonContent>
-                    <Tooltip title='Dismiss' arrow>
+                    {icon}
+                    <LabelWithSummary>
+                        <Typography fontWeight='bold' fontSize='small'>
+                            {label}
+                        </Typography>
+                        <Typography fontSize='small'>{summary}</Typography>
+                    </LabelWithSummary>
+                    <Tooltip title='Dismiss' arrow sx={{ marginLeft: 'auto' }}>
                         <StyledItemButtonClose
                             aria-label='dismiss'
                             onClick={onDismissClick}

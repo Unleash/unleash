@@ -50,7 +50,7 @@ export const StretchContainer = styled(Box)(({ theme }) => ({
     gap: theme.spacing(2),
     zIndex: 1,
     overflowAnchor: 'none',
-    maxWidth: theme.spacing(37),
+    maxWidth: theme.spacing(40),
 }));
 
 // This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.

@@ -24,7 +24,6 @@ const StyledItemButton = styled(ListItemButton)(({ theme }) => ({
 
 const LabelWithSummary = styled('div')(({ theme }) => ({
     flex: 1,
-    maxWidth: theme.spacing(24),
 }));
 
 const StyledItemButtonClose = styled(IconButton)(({ theme }) => ({

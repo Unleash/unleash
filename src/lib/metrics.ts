@@ -428,9 +428,9 @@ export default class MetricsMonitor {
                 eventBus.on(
                     events.STAGE_ENTERED,
                     (entered: { stage: string; feature: string }) => {
-                        featureLifecycleStageEnteredCounter
-                            .labels({ stage: entered.stage })
-                            .inc();
+                        featureLifecycleStageEnteredCounter.increment({
+                            stage: entered.stage,
+                        });
                     },
                 );
 
@@ -440,9 +440,7 @@ export default class MetricsMonitor {
                         resource,
                         limit,
                     }: { resource: string; limit: number }) => {
-                        exceedsLimitErrorCounter
-                            .labels({ resource, limit })
-                            .inc();
+                        exceedsLimitErrorCounter.increment({ resource, limit });
                     },
                 );
 
@@ -862,16 +860,16 @@ export default class MetricsMonitor {
             });
         });
         eventStore.on(PROJECT_CREATED, () => {
-            projectActionsCounter.labels({ action: PROJECT_CREATED }).inc();
+            projectActionsCounter.increment({ action: PROJECT_CREATED });
         });
         eventStore.on(PROJECT_ARCHIVED, () => {
-            projectActionsCounter.labels({ action: PROJECT_ARCHIVED }).inc();
+            projectActionsCounter.increment({ action: PROJECT_ARCHIVED });
         });
         eventStore.on(PROJECT_REVIVED, () => {
-            projectActionsCounter.labels({ action: PROJECT_REVIVED }).inc();
+            projectActionsCounter.increment({ action: PROJECT_REVIVED });
         });
         eventStore.on(PROJECT_DELETED, () => {
-            projectActionsCounter.labels({ action: PROJECT_DELETED }).inc();
+            projectActionsCounter.increment({ action: PROJECT_DELETED });
         });
 
         const logger = config.getLogger('metrics.ts');

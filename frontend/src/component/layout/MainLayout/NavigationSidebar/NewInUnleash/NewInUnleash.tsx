@@ -15,6 +15,7 @@ import Signals from '@mui/icons-material/Sensors';
 import type { NavigationMode } from 'component/layout/MainLayout/NavigationSidebar/NavigationMode';
 import { NewInUnleashItem } from './NewInUnleashItem';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { ReactComponent as SignalsPreview } from 'assets/img/signals.svg';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0, 1, 0),
@@ -73,6 +74,7 @@ type NewItem = {
     docsLink: string;
     show: boolean;
     longDescription: ReactNode;
+    preview?: ReactNode;
 };
 
 interface INewInUnleashProps {
@@ -98,6 +100,7 @@ export const NewInUnleash = ({
         {
             label: 'Signals & Actions',
             icon: <StyledSignalsIcon />,
+            preview: <SignalsPreview />,
             link: '/integrations/signals',
             docsLink: 'https://docs.getunleash.io/reference/signals',
             show: isEnterprise() && signalsEnabled,
@@ -164,7 +167,14 @@ export const NewInUnleash = ({
             </StyledNewInUnleashHeader>
             <StyledNewInUnleashList>
                 {visibleItems.map(
-                    ({ label, icon, link, longDescription, docsLink }) => (
+                    ({
+                        label,
+                        icon,
+                        link,
+                        longDescription,
+                        docsLink,
+                        preview,
+                    }) => (
                         <NewInUnleashItem
                             onClick={() => {
                                 trackEvent('new-in-unleash-click', {
@@ -184,6 +194,7 @@ export const NewInUnleash = ({
                             label={label}
                             icon={icon}
                             link={link}
+                            preview={preview}
                             longDescription={longDescription}
                             docsLink={docsLink}
                         />

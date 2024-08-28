@@ -1,5 +1,7 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+// TODO: Requires manual intervention
+// Currently Gitar does not cleanup generated files
 exports[`returns all baseRoutes 1`] = `
 [
   {

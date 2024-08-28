@@ -7,13 +7,16 @@ export interface IProjectCard {
     name: string;
     id: string;
     createdAt: string;
-    health: number;
-    description: string;
-    featureCount: number;
-    mode: string;
+    health?: number;
+    description?: string;
+    featureCount?: number;
+    mode?: string;
     memberCount?: number;
+    onHover?: () => void;
     favorite?: boolean;
     owners?: ProjectSchema['owners'];
+    lastUpdatedAt?: Date;
+    lastReportedFlagUsage?: Date;
 }
 
 export type FeatureNamingType = {

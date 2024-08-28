@@ -34,7 +34,6 @@ export type ProjectArchiveCardProps = {
     id: string;
     name: string;
     archivedAt?: string;
-    archivedFeaturesCount?: number;
     onRevive: () => void;
     onDelete: () => void;
     mode?: string;
@@ -45,7 +44,6 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
     id,
     name,
     archivedAt,
-    archivedFeaturesCount,
     onRevive,
     onDelete,
     mode,

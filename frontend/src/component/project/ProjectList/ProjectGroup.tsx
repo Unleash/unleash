@@ -2,11 +2,13 @@ import type { ComponentType } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ProjectCard as LegacyProjectCard } from '../ProjectCard/LegacyProjectCard';
+import { ProjectCard as NewProjectCard } from '../ProjectCard/ProjectCard';
 
 import type { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';
 import { TablePlaceholder } from 'component/common/Table';
 import { styled, Typography } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -24,25 +26,30 @@ const StyledCardLink = styled(Link)(({ theme }) => ({
     pointer: 'cursor',
 }));
 
-type ProjectGroupProps<T extends { id: string } = IProjectCard> = {
+type ProjectGroupProps = {
     sectionTitle?: string;
-    projects: T[];
+    projects: IProjectCard[];
     loading: boolean;
     searchValue: string;
     placeholder?: string;
-    ProjectCardComponent?: ComponentType<T & any>;
+    ProjectCardComponent?: ComponentType<IProjectCard & any>;
     link?: boolean;
 };
 
-export const ProjectGroup = <T extends { id: string }>({
+export const ProjectGroup = ({
     sectionTitle,
     projects,
     loading,
     searchValue,
     placeholder = 'No projects available.',
-    ProjectCardComponent = LegacyProjectCard,
+    ProjectCardComponent,
     link = true,
-}: ProjectGroupProps<T>) => {
+}: ProjectGroupProps) => {
+    const projectListImprovementsEnabled = useUiFlag('projectListImprovements');
+    const ProjectCard =
+        ProjectCardComponent ??
+        (projectListImprovementsEnabled ? NewProjectCard : LegacyProjectCard);
+
     return (
         <article>
             <ConditionallyRender
@@ -82,9 +89,9 @@ export const ProjectGroup = <T extends { id: string }>({
                                 <>
                                     {loadingData.map(
                                         (project: IProjectCard) => (
-                                            <LegacyProjectCard
+                                            <ProjectCard
                                                 data-loading
-                                                onHover={() => {}}
+                                                createdAt={project.createdAt}
                                                 key={project.id}
                                                 name={project.name}
                                                 id={project.id}
@@ -99,21 +106,17 @@ export const ProjectGroup = <T extends { id: string }>({
                             )}
                             elseShow={() => (
                                 <>
-                                    {projects.map((project: T) =>
+                                    {projects.map((project) =>
                                         link ? (
                                             <StyledCardLink
                                                 key={project.id}
                                                 to={`/projects/${project.id}`}
                                             >
-                                                <ProjectCardComponent
-                                                    onHover={() => {}}
-                                                    {...project}
-                                                />
+                                                <ProjectCard {...project} />
                                             </StyledCardLink>
                                         ) : (
-                                            <ProjectCardComponent
+                                            <ProjectCard
                                                 key={project.id}
-                                                onHover={() => {}}
                                                 {...project}
                                             />
                                         ),

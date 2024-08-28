@@ -41,16 +41,20 @@ export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
     );
 };
 
-export const StretchContainer = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(2),
-    alignSelf: 'stretch',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(2),
-    zIndex: 1,
-    overflowAnchor: 'none',
-}));
+export const StretchContainer = styled(Box)<{ mode: string }>(
+    ({ theme, mode }) => ({
+        backgroundColor: theme.palette.background.paper,
+        padding: theme.spacing(2),
+        alignSelf: 'stretch',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: theme.spacing(2),
+        zIndex: 1,
+        overflowAnchor: 'none',
+        minWidth: mode === 'full' ? theme.spacing(40) : 'auto',
+        width: mode === 'full' ? theme.spacing(40) : 'auto',
+    }),
+);
 
 // This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.
 const StickyContainer = styled(Box)(({ theme }) => ({
@@ -82,7 +86,7 @@ export const NavigationSidebar = () => {
     }, [initialPathname]);
 
     return (
-        <StretchContainer>
+        <StretchContainer mode={mode}>
             <PrimaryNavigationList
                 mode={mode}
                 onClick={setActiveItem}

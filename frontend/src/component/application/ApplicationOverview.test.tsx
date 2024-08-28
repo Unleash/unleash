@@ -14,9 +14,7 @@ const setupApi = (application: ApplicationOverviewSchema) => {
         application,
     );
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            timeAgoRefactor: true,
-        },
+        flags: {},
     });
 };
 

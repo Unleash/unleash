@@ -307,6 +307,12 @@ export default class MetricsMonitor {
             help: 'Duration of feature lifecycle stages',
         });
 
+        const onboardingDuration = createGauge({
+            name: 'onboarding_duration',
+            labelNames: ['event'],
+            help: 'firstLogin, secondLogin, firstFeatureFlag, firstPreLive, firstLive from first user creation',
+        });
+
         const featureLifecycleStageCountByProject = createGauge({
             name: 'feature_lifecycle_stage_count_by_project',
             help: 'Count features in a given stage by project id',
@@ -388,6 +394,7 @@ export default class MetricsMonitor {
                     largestProjectEnvironments,
                     largestFeatureEnvironments,
                     deprecatedTokens,
+                    onboardingMetrics,
                 ] = await Promise.all([
                     stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
                     stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
@@ -402,6 +409,9 @@ export default class MetricsMonitor {
                         1,
                     ),
                     stores.apiTokenStore.countDeprecatedTokens(),
+                    flagResolver.isEnabled('onboardingMetrics')
+                        ? stores.onboardingReadModel.getInstanceOnboardingMetrics()
+                        : Promise.resolve({}),
                 ]);
 
                 featureFlagsTotal.reset();
@@ -528,6 +538,16 @@ export default class MetricsMonitor {
                         })
                         .set(featureEnvironment.size);
                 }
+
+                Object.keys(onboardingMetrics).forEach((key) => {
+                    if (Number.isInteger(onboardingMetrics[key])) {
+                        onboardingDuration
+                            .labels({
+                                event: key,
+                            })
+                            .set(onboardingMetrics[key]);
+                    }
+                });
 
                 for (const [resource, limit] of Object.entries(
                     config.resourceLimits,

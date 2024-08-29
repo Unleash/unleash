@@ -43,7 +43,6 @@ export type IFlagKey =
     | 'estimateTrafficDataCost'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
-    | 'checkEdgeValidTokensFromCache'
     | 'userAccessUIEnabled'
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'

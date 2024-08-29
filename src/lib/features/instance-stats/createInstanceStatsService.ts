@@ -51,7 +51,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getLogger,
         flagResolver,
     );
-    const userStore = new UserStore(db, getLogger);
+    const userStore = new UserStore(db, getLogger, flagResolver);
     const projectStore = new ProjectStore(
         db,
         eventBus,

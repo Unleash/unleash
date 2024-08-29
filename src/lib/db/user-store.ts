@@ -11,6 +11,7 @@ import type {
     IUserUpdateFields,
 } from '../types/stores/user-store';
 import type { Db } from './db';
+import type { IFlagResolver } from '../types';
 
 const TABLE = 'users';
 const PASSWORD_HASH_TABLE = 'used_passwords';
@@ -25,8 +26,6 @@ const USER_COLUMNS_PUBLIC = [
     'is_service',
     'scim_id',
 ];
-
-const USED_PASSWORDS = ['user_id', 'password_hash', 'used_at'];
 
 const USER_COLUMNS = [...USER_COLUMNS_PUBLIC, 'login_attempts', 'created_at'];
 
@@ -69,9 +68,12 @@ class UserStore implements IUserStore {
 
     private logger: Logger;
 
-    constructor(db: Db, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
         this.db = db;
         this.logger = getLogger('user-store.ts');
+        this.flagResolver = flagResolver;
     }
 
     async getPasswordsPreviouslyUsed(userId: number): Promise<string[]> {
@@ -230,10 +232,19 @@ class UserStore implements IUserStore {
     }
 
     async successfullyLogin(user: User): Promise<void> {
-        return this.buildSelectUser(user).update({
+        const currentDate = new Date();
+        const updateQuery = this.buildSelectUser(user).update({
             login_attempts: 0,
-            seen_at: new Date(),
+            seen_at: currentDate,
         });
+        if (this.flagResolver.isEnabled('onboardingMetrics')) {
+            updateQuery.update({
+                first_seen_at: this.db.raw('COALESCE(first_seen_at, ?)', [
+                    currentDate,
+                ]),
+            });
+        }
+        return updateQuery;
     }
 
     async deleteAll(): Promise<void> {

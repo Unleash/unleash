@@ -3,7 +3,7 @@ import { safeRegExp } from '@server/util/escape-regex';
 import type { IProjectCard } from 'interfaces/project';
 import type { sortKeys } from '../ProjectsListSort/ProjectsListSort';
 
-export const useProjectsSort = (
+export const useProjectsSearchAndSort = (
     projects: IProjectCard[],
     query?: string | null,
     sortBy?: (typeof sortKeys)[number] | null,

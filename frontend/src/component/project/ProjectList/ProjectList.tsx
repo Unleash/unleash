@@ -17,7 +17,7 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { ProjectList as LegacyProjectList } from './LegacyProjectList';
 import { ProjectCreationButton } from './ProjectCreationButton/ProjectCreationButton';
 import { useGroupedProjects } from './hooks/useGroupedProjects';
-import { useProjectsSort } from './hooks/useProjectsSort';
+import { useProjectsSearchAndSort } from './hooks/useProjectsSearchAndSort';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -45,7 +45,11 @@ const NewProjectList = () => {
         [setState],
     );
 
-    const sortedProjects = useProjectsSort(projects, state.query, state.sortBy);
+    const sortedProjects = useProjectsSearchAndSort(
+        projects,
+        state.query,
+        state.sortBy,
+    );
     const groupedProjects = useGroupedProjects(sortedProjects, myProjects);
 
     const projectCount =

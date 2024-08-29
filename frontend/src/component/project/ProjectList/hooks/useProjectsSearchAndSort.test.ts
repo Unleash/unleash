@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useProjectsSort } from './useProjectsSort';
+import { useProjectsSearchAndSort } from './useProjectsSearchAndSort';
 import type { IProjectCard } from 'interfaces/project';
 
 const projects: IProjectCard[] = [
@@ -51,9 +51,9 @@ const projects: IProjectCard[] = [
     },
 ];
 
-describe('useProjectsSort', () => {
+describe('useProjectsSearchAndSort', () => {
     it('should handle projects with no sorting key (default behavior)', () => {
-        const { result } = renderHook(() => useProjectsSort(projects));
+        const { result } = renderHook(() => useProjectsSearchAndSort(projects));
 
         expect(
             result.current.map(
@@ -72,7 +72,7 @@ describe('useProjectsSort', () => {
 
     it('should return projects sorted by creation date in descending order', () => {
         const { result } = renderHook(() =>
-            useProjectsSort(projects, undefined, 'created'),
+            useProjectsSearchAndSort(projects, undefined, 'created'),
         );
 
         expect(
@@ -92,7 +92,7 @@ describe('useProjectsSort', () => {
 
     it('should return projects sorted by last updated date in descending order', () => {
         const { result } = renderHook(() =>
-            useProjectsSort(projects, undefined, 'updated'),
+            useProjectsSearchAndSort(projects, undefined, 'updated'),
         );
 
         expect(
@@ -112,7 +112,7 @@ describe('useProjectsSort', () => {
 
     it('should return projects sorted by last reported flag usage in descending order', () => {
         const { result } = renderHook(() =>
-            useProjectsSort(projects, undefined, 'seen'),
+            useProjectsSearchAndSort(projects, undefined, 'seen'),
         );
 
         expect(
@@ -132,7 +132,7 @@ describe('useProjectsSort', () => {
 
     it('should filter projects by query and return sorted by name', () => {
         const { result } = renderHook(() =>
-            useProjectsSort(projects, 'e', 'name'),
+            useProjectsSearchAndSort(projects, 'e', 'name'),
         );
 
         expect(
@@ -150,14 +150,16 @@ describe('useProjectsSort', () => {
 
     it('should handle query that does not match any projects', () => {
         const { result } = renderHook(() =>
-            useProjectsSort(projects, 'Nonexistent'),
+            useProjectsSearchAndSort(projects, 'Nonexistent'),
         );
 
         expect(result.current).toEqual([]);
     });
 
     it('should handle query that matches some projects', () => {
-        const { result } = renderHook(() => useProjectsSort(projects, 'R'));
+        const { result } = renderHook(() =>
+            useProjectsSearchAndSort(projects, 'R'),
+        );
 
         expect(
             result.current.map(
@@ -175,7 +177,7 @@ describe('useProjectsSort', () => {
     it('should be able to deal with date', () => {
         const hook = renderHook(
             (sortBy: string) =>
-                useProjectsSort(
+                useProjectsSearchAndSort(
                     [
                         {
                             name: 'Project A',

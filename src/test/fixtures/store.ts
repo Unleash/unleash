@@ -52,6 +52,7 @@ import { FakeFeatureLifecycleReadModel } from '../../lib/features/feature-lifecy
 import { FakeLargestResourcesReadModel } from '../../lib/features/metrics/sizes/fake-largest-resources-read-model';
 import { FakeFeatureCollaboratorsReadModel } from '../../lib/features/feature-toggle/fake-feature-collaborators-read-model';
 import { createFakeProjectReadModel } from '../../lib/features/project/createProjectReadModel';
+import { FakeOnboardingReadModel } from '../../lib/features/onboarding/fake-onboarding-read-model';
 
 const db = {
     select: () => ({
@@ -109,6 +110,7 @@ const createStores: () => IUnleashStores = () => {
         featureLifecycleStore: new FakeFeatureLifecycleStore(),
         featureStrategiesReadModel: new FakeFeatureStrategiesReadModel(),
         featureLifecycleReadModel: new FakeFeatureLifecycleReadModel(),
+        onboardingReadModel: new FakeOnboardingReadModel(),
         largestResourcesReadModel: new FakeLargestResourcesReadModel(),
         integrationEventsStore: {} as IntegrationEventsStore,
         featureCollaboratorsReadModel: new FakeFeatureCollaboratorsReadModel(),

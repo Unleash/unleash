@@ -219,4 +219,35 @@ describe('useProjectsSearchAndSort', () => {
             'Project A',
         ]);
     });
+
+    it('should use createdAt if lastUpdatedAt is not available', () => {
+        const { result } = renderHook(
+            (sortBy: string) =>
+                useProjectsSearchAndSort(
+                    [
+                        {
+                            name: 'Project A',
+                            id: '1',
+                            createdAt: '2024-01-01',
+                            lastUpdatedAt: '2024-01-02',
+                        },
+                        {
+                            name: 'Project B',
+                            id: '2',
+                            createdAt: '2024-02-01',
+                        },
+                    ],
+                    undefined,
+                    sortBy as any,
+                ),
+            {
+                initialProps: 'updated',
+            },
+        );
+
+        expect(result.current.map((project) => project.name)).toEqual([
+            'Project B',
+            'Project A',
+        ]);
+    });
 });

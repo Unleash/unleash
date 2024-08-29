@@ -60,6 +60,7 @@ const StyledUserName = styled('span')(({ theme }) => ({
 const StyledContainer = styled('div')(() => ({
     display: 'flex',
     flexDirection: 'column',
+    borderRadius: '50%',
 }));
 
 const StyledOwnerName = styled('div')(({ theme }) => ({
@@ -74,6 +75,7 @@ const StyledHeader = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
     fontWeight: theme.typography.fontWeightRegular,
+    marginRight: 'auto',
 }));
 
 const StyledWrapper = styled('div')(({ theme }) => ({
@@ -92,10 +94,10 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
 
     return (
         <StyledWrapper data-testid='test'>
-            <StyledContainer>
+            <StyledContainer data-loading>
                 <AvatarGroup
                     users={users}
-                    avatarLimit={4}
+                    avatarLimit={6}
                     AvatarComponent={StyledAvatarComponent}
                 />
             </StyledContainer>
@@ -103,8 +105,10 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
                 condition={owners.length === 1}
                 show={
                     <StyledOwnerName>
-                        <StyledHeader>Owner</StyledHeader>
-                        <StyledUserName>{users[0]?.name}</StyledUserName>
+                        <StyledHeader data-loading>Owner</StyledHeader>
+                        <StyledUserName data-loading>
+                            {users[0]?.name}
+                        </StyledUserName>
                     </StyledOwnerName>
                 }
             />

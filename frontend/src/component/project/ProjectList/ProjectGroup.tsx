@@ -1,4 +1,4 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ProjectCard as LegacyProjectCard } from '../ProjectCard/LegacyProjectCard';
@@ -10,6 +10,26 @@ import { TablePlaceholder } from 'component/common/Table';
 import { styled, Typography } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { flexColumn } from 'themes/themeStyles';
+
+const StyledContainer = styled('article')(({ theme }) => ({
+    ...flexColumn,
+    gap: theme.spacing(2),
+}));
+
+const StyledHeaderContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column-reverse',
+    gap: theme.spacing(2),
+    [theme.breakpoints.up('md')]: {
+        flexDirection: 'row',
+        alignItems: 'flex-end',
+    },
+}));
+
+const StyledHeaderTitle = styled('div')(() => ({
+    flexGrow: 0,
+}));
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -29,6 +49,8 @@ const StyledCardLink = styled(Link)(({ theme }) => ({
 
 type ProjectGroupProps = {
     sectionTitle?: string;
+    sectionSubtitle?: string;
+    HeaderActions?: ReactNode;
     projects: IProjectCard[];
     loading: boolean;
     /**
@@ -42,6 +64,8 @@ type ProjectGroupProps = {
 
 export const ProjectGroup = ({
     sectionTitle,
+    sectionSubtitle,
+    HeaderActions,
     projects,
     loading,
     searchValue,
@@ -56,19 +80,31 @@ export const ProjectGroup = ({
     const { searchQuery } = useSearchHighlightContext();
 
     return (
-        <article>
-            <ConditionallyRender
-                condition={Boolean(sectionTitle)}
-                show={
-                    <Typography
-                        component='h2'
-                        variant='h3'
-                        sx={(theme) => ({ marginBottom: theme.spacing(2) })}
-                    >
-                        {sectionTitle}
-                    </Typography>
-                }
-            />
+        <StyledContainer>
+            <StyledHeaderContainer>
+                <StyledHeaderTitle>
+                    <ConditionallyRender
+                        condition={Boolean(sectionTitle)}
+                        show={
+                            <Typography component='h2' variant='h2'>
+                                {sectionTitle}
+                            </Typography>
+                        }
+                    />
+                    <ConditionallyRender
+                        condition={
+                            Boolean(sectionSubtitle) &&
+                            projectListImprovementsEnabled
+                        }
+                        show={
+                            <Typography variant='body2' color='text.secondary'>
+                                {sectionSubtitle}
+                            </Typography>
+                        }
+                    />
+                </StyledHeaderTitle>
+                {HeaderActions}
+            </StyledHeaderContainer>
             <ConditionallyRender
                 condition={projects.length < 1 && !loading}
                 show={
@@ -104,6 +140,12 @@ export const ProjectGroup = ({
                                                 memberCount={2}
                                                 health={95}
                                                 featureCount={4}
+                                                owners={[
+                                                    {
+                                                        ownerType: 'user',
+                                                        name: 'Loading data',
+                                                    },
+                                                ]}
                                             />
                                         ),
                                     )}
@@ -132,6 +174,6 @@ export const ProjectGroup = ({
                     </StyledGridContainer>
                 }
             />
-        </article>
+        </StyledContainer>
     );
 };

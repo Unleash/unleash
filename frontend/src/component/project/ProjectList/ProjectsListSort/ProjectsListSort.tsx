@@ -5,7 +5,7 @@ import { styled } from '@mui/material';
 const StyledWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
-    margin: theme.spacing(0, 0, -4, 0),
+    flex: 1,
 }));
 
 const StyledContainer = styled('div')(() => ({
@@ -21,7 +21,7 @@ const options: Array<{
 }> = [
     { key: 'name', label: 'Project name' },
     { key: 'created', label: 'Recently created' },
-    { key: 'updated', label: 'Recently updated' },
+    { key: 'updated', label: 'Last updated' },
     { key: 'seen', label: 'Last usage reported' },
 ];
 

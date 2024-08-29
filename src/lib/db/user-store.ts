@@ -27,7 +27,7 @@ const USER_COLUMNS_PUBLIC = [
     'scim_id',
 ];
 
-const EXPERIMENTAL_COLUMNS = ['first_seen_at'];
+const USER_ONBOARDING_COLUMNS = ['first_seen_at'];
 
 const USER_COLUMNS = [...USER_COLUMNS_PUBLIC, 'login_attempts', 'created_at'];
 
@@ -84,11 +84,11 @@ class UserStore implements IUserStore {
         if (this.flagResolver.isEnabled('onboardingMetrics')) {
             this.EXPERIMENTAL_USER_COLUMNS_PUBLIC = [
                 ...USER_COLUMNS_PUBLIC,
-                ...EXPERIMENTAL_COLUMNS,
+                ...USER_ONBOARDING_COLUMNS,
             ];
             this.EXPERIMENTAL_USER_COLUMNS = [
                 ...USER_COLUMNS,
-                ...EXPERIMENTAL_COLUMNS,
+                ...USER_ONBOARDING_COLUMNS,
             ];
         }
     }

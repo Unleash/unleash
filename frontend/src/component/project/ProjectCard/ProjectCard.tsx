@@ -39,6 +39,7 @@ const StyledHeader = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     display: 'flex',
     width: '100%',
+    alignItems: 'center',
 }));
 
 export const ProjectCard = ({

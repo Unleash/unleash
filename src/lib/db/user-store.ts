@@ -23,7 +23,6 @@ const USER_COLUMNS_PUBLIC = [
     'email',
     'image_url',
     'seen_at',
-    'first_seen_at',
     'is_service',
     'scim_id',
 ];

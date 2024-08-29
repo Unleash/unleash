@@ -11,7 +11,7 @@ import type {
     IUserUpdateFields,
 } from '../types/stores/user-store';
 import type { Db } from './db';
-import type FlagResolver from '../util/flag-resolver';
+import type { IFlagResolver } from '../types';
 
 const TABLE = 'users';
 const PASSWORD_HASH_TABLE = 'used_passwords';
@@ -23,12 +23,11 @@ const USER_COLUMNS_PUBLIC = [
     'email',
     'image_url',
     'seen_at',
-    'first_seen_at',
     'is_service',
     'scim_id',
 ];
 
-const USED_PASSWORDS = ['user_id', 'password_hash', 'used_at'];
+const EXPERIMENTAL_COLUMNS = ['first_seen_at'];
 
 const USER_COLUMNS = [...USER_COLUMNS_PUBLIC, 'login_attempts', 'created_at'];
 
@@ -72,12 +71,26 @@ class UserStore implements IUserStore {
 
     private logger: Logger;
 
-    private flagResolver: FlagResolver;
+    private flagResolver: IFlagResolver;
 
-    constructor(db: Db, getLogger: LogProvider, flagResolver: FlagResolver) {
+    private EXPERIMENTAL_USER_COLUMNS_PUBLIC = USER_COLUMNS_PUBLIC;
+    private EXPERIMENTAL_USER_COLUMNS = USER_COLUMNS;
+
+    constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
         this.db = db;
         this.logger = getLogger('user-store.ts');
         this.flagResolver = flagResolver;
+
+        if (this.flagResolver.isEnabled('onboardingMetrics')) {
+            this.EXPERIMENTAL_USER_COLUMNS_PUBLIC = [
+                ...USER_COLUMNS_PUBLIC,
+                ...EXPERIMENTAL_COLUMNS,
+            ];
+            this.EXPERIMENTAL_USER_COLUMNS = [
+                ...USER_COLUMNS,
+                ...EXPERIMENTAL_COLUMNS,
+            ];
+        }
     }
 
     async getPasswordsPreviouslyUsed(userId: number): Promise<string[]> {
@@ -114,7 +127,7 @@ class UserStore implements IUserStore {
     async insert(user: ICreateUser): Promise<User> {
         const rows = await this.db(TABLE)
             .insert(mapUserToColumns(user))
-            .returning(USER_COLUMNS);
+            .returning(this.EXPERIMENTAL_USER_COLUMNS);
         return rowToUser(rows[0]);
     }
 
@@ -162,13 +175,15 @@ class UserStore implements IUserStore {
     }
 
     async getAll(): Promise<User[]> {
-        const users = await this.activeUsers().select(USER_COLUMNS);
+        const users = await this.activeUsers().select(
+            this.EXPERIMENTAL_USER_COLUMNS,
+        );
         return users.map(rowToUser);
     }
 
     async search(query: string): Promise<User[]> {
         const users = await this.activeUsers()
-            .select(USER_COLUMNS_PUBLIC)
+            .select(this.EXPERIMENTAL_USER_COLUMNS_PUBLIC)
             .where('name', 'ILIKE', `%${query}%`)
             .orWhere('username', 'ILIKE', `${query}%`)
             .orWhere('email', 'ILIKE', `${query}%`);
@@ -177,13 +192,15 @@ class UserStore implements IUserStore {
 
     async getAllWithId(userIdList: number[]): Promise<User[]> {
         const users = await this.activeUsers()
-            .select(USER_COLUMNS_PUBLIC)
+            .select(this.EXPERIMENTAL_USER_COLUMNS_PUBLIC)
             .whereIn('id', userIdList);
         return users.map(rowToUser);
     }
 
     async getByQuery(idQuery: IUserLookup): Promise<User> {
-        const row = await this.buildSelectUser(idQuery).first(USER_COLUMNS);
+        const row = await this.buildSelectUser(idQuery).first(
+            this.EXPERIMENTAL_USER_COLUMNS,
+        );
         return rowToUser(row);
     }
 
@@ -237,13 +254,18 @@ class UserStore implements IUserStore {
 
     async successfullyLogin(user: User): Promise<void> {
         const currentDate = new Date();
-        return this.buildSelectUser(user).update({
+        const updateQuery = this.buildSelectUser(user).update({
             login_attempts: 0,
             seen_at: currentDate,
-            first_seen_at: this.db.raw('COALESCE(first_seen_at, ?)', [
-                currentDate,
-            ]),
         });
+        if (this.flagResolver.isEnabled('onboardingMetrics')) {
+            updateQuery.update({
+                first_seen_at: this.db.raw('COALESCE(first_seen_at, ?)', [
+                    currentDate,
+                ]),
+            });
+        }
+        return updateQuery;
     }
 
     async deleteAll(): Promise<void> {

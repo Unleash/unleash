@@ -7,7 +7,9 @@ let stores: IUnleashStores;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('user_store_serial', getLogger);
+    db = await dbInit('user_store_serial', getLogger, {
+        experimental: { flags: { onboardingMetrics: true } },
+    });
     stores = db.stores;
 });
 

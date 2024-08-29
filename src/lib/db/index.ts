@@ -88,7 +88,7 @@ export const createStores = (
             config.flagResolver,
         ),
         settingStore: new SettingStore(db, getLogger),
-        userStore: new UserStore(db, getLogger),
+        userStore: new UserStore(db, getLogger, config.flagResolver),
         accountStore: new AccountStore(db, getLogger),
         projectStore: new ProjectStore(
             db,

@@ -109,7 +109,7 @@ class UserStore implements IUserStore {
 
     async insert(user: ICreateUser): Promise<User> {
         const rows = await this.db(TABLE)
-            .insert(mapUserToColumns(user))
+            .insert({ ...mapUserToColumns(user), created_at: new Date() })
             .returning(USER_COLUMNS);
         return rowToUser(rows[0]);
     }

@@ -312,6 +312,11 @@ export default class MetricsMonitor {
             labelNames: ['event'],
             help: 'firstLogin, secondLogin, firstFeatureFlag, firstPreLive, firstLive from first user creation',
         });
+        const projectOnboardingDuration = createGauge({
+            name: 'project_onboarding_duration',
+            labelNames: ['event', 'project'],
+            help: 'firstFeatureFlag, firstPreLive, firstLive from project creation',
+        });
 
         const featureLifecycleStageCountByProject = createGauge({
             name: 'feature_lifecycle_stage_count_by_project',
@@ -394,7 +399,8 @@ export default class MetricsMonitor {
                     largestProjectEnvironments,
                     largestFeatureEnvironments,
                     deprecatedTokens,
-                    onboardingMetrics,
+                    instanceOnboardingMetrics,
+                    projectsOnboardingMetrics,
                 ] = await Promise.all([
                     stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
                     stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
@@ -412,6 +418,9 @@ export default class MetricsMonitor {
                     flagResolver.isEnabled('onboardingMetrics')
                         ? stores.onboardingReadModel.getInstanceOnboardingMetrics()
                         : Promise.resolve({}),
+                    flagResolver.isEnabled('onboardingMetrics')
+                        ? stores.onboardingReadModel.getProjectsOnboardingMetrics()
+                        : Promise.resolve([]),
                 ]);
 
                 featureFlagsTotal.reset();
@@ -539,15 +548,26 @@ export default class MetricsMonitor {
                         .set(featureEnvironment.size);
                 }
 
-                Object.keys(onboardingMetrics).forEach((key) => {
-                    if (Number.isInteger(onboardingMetrics[key])) {
+                Object.keys(instanceOnboardingMetrics).forEach((key) => {
+                    if (Number.isInteger(instanceOnboardingMetrics[key])) {
                         onboardingDuration
                             .labels({
                                 event: key,
                             })
-                            .set(onboardingMetrics[key]);
+                            .set(instanceOnboardingMetrics[key]);
                     }
                 });
+                projectsOnboardingMetrics.forEach(
+                    ({ project, ...projectMetrics }) => {
+                        Object.keys(projectMetrics).forEach((key) => {
+                            if (Number.isInteger(projectMetrics[key])) {
+                                projectOnboardingDuration
+                                    .labels({ event: key, project })
+                                    .set(projectMetrics[key]);
+                            }
+                        });
+                    },
+                );
 
                 for (const [resource, limit] of Object.entries(
                     config.resourceLimits,

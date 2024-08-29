@@ -73,24 +73,24 @@ class UserStore implements IUserStore {
 
     private flagResolver: IFlagResolver;
 
-    private EXPERIMENTAL_USER_COLUMNS_PUBLIC = USER_COLUMNS_PUBLIC;
-    private EXPERIMENTAL_USER_COLUMNS = USER_COLUMNS;
-
     constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
         this.db = db;
         this.logger = getLogger('user-store.ts');
         this.flagResolver = flagResolver;
+    }
 
+    private async getExperimentalUserColumnsPublic(): Promise<string[]> {
         if (this.flagResolver.isEnabled('onboardingMetrics')) {
-            this.EXPERIMENTAL_USER_COLUMNS_PUBLIC = [
-                ...USER_COLUMNS_PUBLIC,
-                ...USER_ONBOARDING_COLUMNS,
-            ];
-            this.EXPERIMENTAL_USER_COLUMNS = [
-                ...USER_COLUMNS,
-                ...USER_ONBOARDING_COLUMNS,
-            ];
+            return [...USER_COLUMNS_PUBLIC, ...USER_ONBOARDING_COLUMNS];
         }
+        return USER_COLUMNS_PUBLIC;
+    }
+
+    private async getExperimentalUserColumns(): Promise<string[]> {
+        if (this.flagResolver.isEnabled('onboardingMetrics')) {
+            return [...USER_COLUMNS, ...USER_ONBOARDING_COLUMNS];
+        }
+        return USER_COLUMNS;
     }
 
     async getPasswordsPreviouslyUsed(userId: number): Promise<string[]> {
@@ -127,7 +127,7 @@ class UserStore implements IUserStore {
     async insert(user: ICreateUser): Promise<User> {
         const rows = await this.db(TABLE)
             .insert(mapUserToColumns(user))
-            .returning(this.EXPERIMENTAL_USER_COLUMNS);
+            .returning(await this.getExperimentalUserColumns());
         return rowToUser(rows[0]);
     }
 
@@ -176,14 +176,14 @@ class UserStore implements IUserStore {
 
     async getAll(): Promise<User[]> {
         const users = await this.activeUsers().select(
-            this.EXPERIMENTAL_USER_COLUMNS,
+            await this.getExperimentalUserColumns(),
         );
         return users.map(rowToUser);
     }
 
     async search(query: string): Promise<User[]> {
         const users = await this.activeUsers()
-            .select(this.EXPERIMENTAL_USER_COLUMNS_PUBLIC)
+            .select(this.getExperimentalUserColumnsPublic())
             .where('name', 'ILIKE', `%${query}%`)
             .orWhere('username', 'ILIKE', `${query}%`)
             .orWhere('email', 'ILIKE', `${query}%`);
@@ -192,14 +192,14 @@ class UserStore implements IUserStore {
 
     async getAllWithId(userIdList: number[]): Promise<User[]> {
         const users = await this.activeUsers()
-            .select(this.EXPERIMENTAL_USER_COLUMNS_PUBLIC)
+            .select(this.getExperimentalUserColumnsPublic())
             .whereIn('id', userIdList);
         return users.map(rowToUser);
     }
 
     async getByQuery(idQuery: IUserLookup): Promise<User> {
         const row = await this.buildSelectUser(idQuery).first(
-            this.EXPERIMENTAL_USER_COLUMNS,
+            await this.getExperimentalUserColumns(),
         );
         return rowToUser(row);
     }

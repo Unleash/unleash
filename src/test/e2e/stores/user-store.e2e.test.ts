@@ -7,9 +7,7 @@ let stores: IUnleashStores;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('user_store_serial', getLogger, {
-        experimental: { flags: { onboardingMetrics: true } },
-    });
+    db = await dbInit('user_store_serial', getLogger);
     stores = db.stores;
 });
 
@@ -108,22 +106,6 @@ test('should reset user after successful login', async () => {
 
     expect(storedUser.loginAttempts).toBe(0);
     expect(storedUser.seenAt! >= user.seenAt!).toBe(true);
-});
-
-test('should track and keep first login', async () => {
-    const store = stores.userStore;
-    const user = await store.insert({ email: 'firstlogin@mail.com' });
-    await store.successfullyLogin(user);
-
-    const storedUser = await store.getByQuery(user);
-
-    expect(storedUser.seenAt).toEqual(storedUser.firstSeenAt);
-
-    await store.successfullyLogin(user);
-
-    const newLoginUser = await store.getByQuery(user);
-
-    expect(storedUser.seenAt).toEqual(newLoginUser.firstSeenAt);
 });
 
 test('should only update specified fields on user', async () => {

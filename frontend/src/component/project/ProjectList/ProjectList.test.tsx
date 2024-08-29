@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { ProjectList } from './LegacyProjectList';
+import { ProjectList } from './ProjectList';
 import { screen, waitFor } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { CREATE_PROJECT } from '../../providers/AccessProvider/permissions';

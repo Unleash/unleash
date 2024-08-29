@@ -129,8 +129,6 @@ export class SegmentService implements ISegmentService {
     }
 
     async validateSegmentLimit() {
-        if (!this.flagResolver.isEnabled('resourceLimits')) return;
-
         const limit = this.resourceLimits.segments;
 
         const segmentCount = await this.segmentStore.count();
@@ -154,7 +152,7 @@ export class SegmentService implements ISegmentService {
         await this.eventService.storeEvent(
             new SegmentCreatedEvent({
                 data: segment,
-                project: segment.project || 'no-project',
+                project: segment.project,
                 auditUser,
             }),
         );

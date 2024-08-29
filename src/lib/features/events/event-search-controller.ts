@@ -19,7 +19,7 @@ import { normalizeQueryParams } from '../../features/feature-search/search-utils
 import Controller from '../../routes/controller';
 import type { IAuthRequest } from '../../server-impl';
 import type { IEvent } from '../../types';
-import { anonymiseKeys } from '../../util';
+import { anonymiseKeys, extractUserIdFromUser } from '../../util';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;
@@ -67,6 +67,7 @@ export default class EventSearchController extends Controller {
         req: IAuthRequest<any, any, any, EventSearchQueryParameters>,
         res: Response<EventSearchResponseSchema>,
     ): Promise<void> {
+        const { user } = req;
         const { normalizedLimit, normalizedOffset } = normalizeQueryParams(
             req.query,
             {
@@ -75,11 +76,14 @@ export default class EventSearchController extends Controller {
             },
         );
 
-        const { events, totalEvents } = await this.eventService.searchEvents({
-            ...req.query,
-            offset: normalizedOffset,
-            limit: normalizedLimit,
-        });
+        const { events, totalEvents } = await this.eventService.searchEvents(
+            {
+                ...req.query,
+                offset: normalizedOffset,
+                limit: normalizedLimit,
+            },
+            extractUserIdFromUser(user),
+        );
 
         this.openApiService.respondWithValidation(
             200,

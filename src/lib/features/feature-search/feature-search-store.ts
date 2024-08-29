@@ -604,11 +604,11 @@ const applyMultiQueryParams = (
 ): void => {
     queryParams.forEach((param) => {
         const values = param.values.map((val) =>
-            (Array.isArray(fields) ? val.split(':') : [val]).map((s) =>
-                s.trim(),
-            ),
+            (Array.isArray(fields)
+                ? val.split(/:(.+)/).filter(Boolean)
+                : [val]
+            ).map((s) => s.trim()),
         );
-
         const baseSubQuery = createBaseQuery(values);
 
         switch (param.operator) {

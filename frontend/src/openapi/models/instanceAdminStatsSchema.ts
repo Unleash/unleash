@@ -92,4 +92,20 @@ export interface InstanceAdminStatsSchema {
     versionEnterprise?: string;
     /** The version of Unleash OSS that is bundled in this instance */
     versionOSS?: string;
+
+    /** A breakdown of API tokens that exist in this instance */
+    apiTokens: {
+        client: number;
+        admin: number;
+        frontend: number;
+    };
+
+    // The highest number of strategies used on a single feature flag in a single environment.
+    maxEnvironmentStrategies: number;
+
+    // The highest number of constraints used on a single strategy.
+    maxConstraints: number;
+
+    // The highest number of constraint values used on a single constraint.
+    maxConstraintValues: number;
 }

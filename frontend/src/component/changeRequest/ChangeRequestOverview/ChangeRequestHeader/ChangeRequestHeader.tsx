@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import { type FC, useState } from 'react';
 import { Typography, Tooltip } from '@mui/material';
-import TimeAgo from 'react-timeago';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { ChangeRequestStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestStatusBadge';
 import {
@@ -38,12 +38,7 @@ export const ChangeRequestHeader: FC<{ changeRequest: ChangeRequestType }> = ({
                         margin: theme.spacing('auto', 0, 'auto', 2),
                     })}
                 >
-                    Created{' '}
-                    <TimeAgo
-                        minPeriod={60}
-                        date={new Date(changeRequest.createdAt)}
-                    />{' '}
-                    by
+                    Created <TimeAgo date={changeRequest.createdAt} /> by
                 </Typography>
                 <Box
                     sx={(theme) => ({

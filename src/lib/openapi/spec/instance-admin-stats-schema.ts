@@ -34,7 +34,7 @@ export const instanceAdminStatsSchema = {
             example: '5.1.7',
         },
         users: {
-            type: 'number',
+            type: 'integer',
             description: 'The number of users this instance has',
             example: 8,
             minimum: 0,
@@ -45,14 +45,14 @@ export const instanceAdminStatsSchema = {
                 'The number client metrics buckets records recorded in the previous day. # features * # apps * # envs * # hours with metrics',
             properties: {
                 enabledCount: {
-                    type: 'number',
+                    type: 'integer',
                     description:
                         'The number of enabled/disabled metrics buckets recorded in the previous day',
                     example: 10,
                     minimum: 0,
                 },
                 variantCount: {
-                    type: 'number',
+                    type: 'integer',
                     description:
                         'The number of variant metrics buckets recorded in the previous day',
                     example: 10,
@@ -66,28 +66,28 @@ export const instanceAdminStatsSchema = {
                 'The number of active users in the last 7, 30 and 90 days',
             properties: {
                 last7: {
-                    type: 'number',
+                    type: 'integer',
                     description:
                         'The number of active users in the last 7 days',
                     example: 5,
                     minimum: 0,
                 },
                 last30: {
-                    type: 'number',
+                    type: 'integer',
                     description:
                         'The number of active users in the last 30 days',
                     example: 10,
                     minimum: 0,
                 },
                 last60: {
-                    type: 'number',
+                    type: 'integer',
                     description:
                         'The number of active users in the last 60 days',
                     example: 12,
                     minimum: 0,
                 },
                 last90: {
-                    type: 'number',
+                    type: 'integer',
                     description:
                         'The number of active users in the last 90 days',
                     example: 15,
@@ -101,21 +101,21 @@ export const instanceAdminStatsSchema = {
                 'The number of changes to the production environment in the last 30, 60 and 90 days',
             properties: {
                 last30: {
-                    type: 'number',
+                    type: 'integer',
                     description:
                         'The number of changes in production in the last 30 days',
                     example: 10,
                     minimum: 0,
                 },
                 last60: {
-                    type: 'number',
+                    type: 'integer',
                     description:
                         'The number of changes in production in the last 60 days',
                     example: 12,
                     minimum: 0,
                 },
                 last90: {
-                    type: 'number',
+                    type: 'integer',
                     description:
                         'The number of changes in production in the last 90 days',
                     example: 15,
@@ -124,50 +124,50 @@ export const instanceAdminStatsSchema = {
             },
         },
         featureToggles: {
-            type: 'number',
+            type: 'integer',
             description: 'The number of feature-toggles this instance has',
             example: 47,
             minimum: 0,
         },
         projects: {
-            type: 'number',
+            type: 'integer',
             description: 'The number of projects defined in this instance.',
             example: 3,
             minimum: 0,
         },
         contextFields: {
-            type: 'number',
+            type: 'integer',
             description:
                 'The number of context fields defined in this instance.',
             example: 7,
             minimum: 0,
         },
         roles: {
-            type: 'number',
+            type: 'integer',
             description: 'The number of roles defined in this instance',
             example: 5,
             minimum: 0,
         },
         groups: {
-            type: 'number',
+            type: 'integer',
             description: 'The number of groups defined in this instance',
             example: 12,
             minimum: 0,
         },
         environments: {
-            type: 'number',
+            type: 'integer',
             description: 'The number of environments defined in this instance',
             example: 3,
             minimum: 0,
         },
         segments: {
-            type: 'number',
+            type: 'integer',
             description: 'The number of segments defined in this instance',
             example: 19,
             minimum: 0,
         },
         strategies: {
-            type: 'number',
+            type: 'integer',
             description: 'The number of strategies defined in this instance',
             example: 8,
             minimum: 0,
@@ -200,7 +200,7 @@ export const instanceAdminStatsSchema = {
                         example: '30d',
                     },
                     count: {
-                        type: 'number',
+                        type: 'integer',
                         description:
                             'The number of client applications that have been observed in this period',
                         example: 1,
@@ -209,16 +209,61 @@ export const instanceAdminStatsSchema = {
             },
         },
         featureExports: {
-            type: 'number',
+            type: 'integer',
             description: 'The number of export operations on this instance',
             example: 0,
             minimum: 0,
         },
         featureImports: {
-            type: 'number',
+            type: 'integer',
             description: 'The number of import operations on this instance',
             example: 0,
             minimum: 0,
+        },
+        apiTokens: {
+            type: 'object',
+            description: 'The number of API tokens in Unleash, split by type',
+            properties: {
+                admin: {
+                    type: 'integer',
+                    description: 'The number of admin tokens.',
+                    minimum: 0,
+                    example: 5,
+                },
+                client: {
+                    type: 'integer',
+                    description: 'The number of client tokens.',
+                    minimum: 0,
+                    example: 5,
+                },
+                frontend: {
+                    type: 'integer',
+                    description: 'The number of frontend tokens.',
+                    minimum: 0,
+                    example: 5,
+                },
+            },
+        },
+        maxEnvironmentStrategies: {
+            type: 'integer',
+            minimum: 0,
+            example: 3,
+            description:
+                'The highest number of strategies used on a single feature flag in a single environment.',
+        },
+        maxConstraints: {
+            type: 'integer',
+            minimum: 0,
+            example: 4,
+            description:
+                'The highest number of constraints used on a single strategy.',
+        },
+        maxConstraintValues: {
+            type: 'integer',
+            minimum: 0,
+            example: 17,
+            description:
+                'The highest number of constraint values used on a single constraint.',
         },
         sum: {
             type: 'string',

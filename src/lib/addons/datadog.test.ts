@@ -10,6 +10,7 @@ import DatadogAddon from './datadog';
 
 import noLogger from '../../test/fixtures/no-logger';
 import {
+    type IFlagKey,
     serializeDates,
     type IAddonConfig,
     type IFlagResolver,
@@ -24,7 +25,8 @@ const ARGS: IAddonConfig = {
     getLogger: noLogger,
     unleashUrl: 'http://some-url.com',
     integrationEventsService: {} as IntegrationEventsService,
-    flagResolver: {} as IFlagResolver,
+    flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
+    eventBus: {} as any,
 };
 
 jest.mock(

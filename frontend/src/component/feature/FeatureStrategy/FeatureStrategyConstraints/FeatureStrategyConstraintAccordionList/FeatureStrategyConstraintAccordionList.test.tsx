@@ -10,9 +10,6 @@ const LIMIT = 5;
 
 const setupApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            resourceLimits: true,
-        },
         resourceLimits: {
             constraints: LIMIT,
         },

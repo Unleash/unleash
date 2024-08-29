@@ -1,6 +1,5 @@
 import type {
     IEnvironmentProjectLink,
-    IProjectMembersCount,
     ProjectModeCount,
 } from './project-store';
 import type {
@@ -47,6 +46,7 @@ export interface IProjectHealthUpdate {
 
 export interface IProjectQuery {
     id?: string;
+    archived?: boolean;
 }
 
 export type ProjectEnvironment = {
@@ -99,8 +99,9 @@ export interface IProjectStore extends Store<IProject, string> {
 
     getProjectsByUser(userId: number): Promise<string[]>;
 
-    getMembersCount(): Promise<IProjectMembersCount[]>;
-
+    /**
+     * @deprecated Use the appropriate method in the project read model instead.
+     */
     getProjectsWithCounts(
         query?: IProjectQuery,
         userId?: number,
@@ -138,4 +139,5 @@ export interface IProjectStore extends Store<IProject, string> {
     ): Promise<IProjectApplications>;
 
     archive(projectId: string): Promise<void>;
+    revive(projectId: string): Promise<void>;
 }

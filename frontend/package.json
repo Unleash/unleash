@@ -64,7 +64,6 @@
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "7.7.20",
     "@types/react-test-renderer": "18.3.0",
-    "@types/react-timeago": "4.1.7",
     "@types/semver": "7.5.8",
     "@types/uuid": "^9.0.0",
     "@uiw/codemirror-theme-duotone": "4.23.0",
@@ -111,7 +110,6 @@
     "react-router-dom": "6.16.0",
     "react-table": "7.8.0",
     "react-test-renderer": "18.3.1",
-    "react-timeago": "7.2.0",
     "sass": "1.77.8",
     "semver": "7.6.3",
     "swr": "2.2.5",
@@ -119,7 +117,7 @@
     "typescript": "5.4.5",
     "use-query-params": "^2.2.1",
     "vanilla-jsoneditor": "^0.23.0",
-    "vite": "5.3.5",
+    "vite": "5.4.0",
     "vite-plugin-env-compatible": "2.0.1",
     "vite-plugin-svgr": "3.3.0",
     "vite-tsconfig-paths": "4.3.2",
@@ -133,7 +131,7 @@
     "@codemirror/state": "6.4.1",
     "@xmldom/xmldom": "^0.8.4",
     "json5": "^2.2.2",
-    "vite": "5.3.5",
+    "vite": "5.4.0",
     "semver": "7.6.3",
     "ws": "^8.18.0",
     "@types/react": "18.3.3"
@@ -157,5 +155,8 @@
       "last 1 safari version"
     ]
   },
-  "packageManager": "yarn@4.3.1"
+  "packageManager": "yarn@4.3.1",
+  "dependencies": {
+    "json-2-csv": "^5.5.5"
+  }
 }

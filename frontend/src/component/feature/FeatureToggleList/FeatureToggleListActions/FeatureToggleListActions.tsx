@@ -11,7 +11,6 @@ import {
     Typography,
 } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import FileDownload from '@mui/icons-material/FileDownload';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -20,6 +19,7 @@ import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { useCreateFeaturePath } from 'component/feature/CreateFeatureButton/useCreateFeaturePath';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import IosShare from '@mui/icons-material/IosShare';
 
 const StyledActions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -138,7 +138,7 @@ export const FeatureToggleListActions: FC<IFeatureFlagListActions> = ({
                                 }}
                             >
                                 <ListItemIcon>
-                                    <FileDownload />
+                                    <IosShare />
                                 </ListItemIcon>
                                 <ListItemText>
                                     <Typography variant='body2'>

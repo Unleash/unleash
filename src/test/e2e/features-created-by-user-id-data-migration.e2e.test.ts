@@ -1,7 +1,10 @@
 import type { EventEmitter } from 'stream';
-import { createFeatureToggleService } from '../../lib/features';
+import {
+    createEventsService,
+    createFeatureToggleService,
+} from '../../lib/features';
 import { FEATURES_CREATED_BY_PROCESSED } from '../../lib/metric-events';
-import { EventService, type FeatureToggleService } from '../../lib/services';
+import type { EventService, FeatureToggleService } from '../../lib/services';
 import {
     ADMIN_TOKEN_USER,
     type IUnleashConfig,
@@ -29,7 +32,7 @@ beforeAll(async () => {
 
     service = createFeatureToggleService(db.rawDatabase, config);
 
-    eventService = new EventService(stores, config);
+    eventService = createEventsService(db.rawDatabase, config);
 });
 
 afterAll(async () => {

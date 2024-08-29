@@ -50,7 +50,12 @@ test('creates new feature flag with createdBy', async () => {
             next();
         });
     };
-    const { request, destroy } = await setupAppWithCustomAuth(stores, preHook);
+    const { request, destroy } = await setupAppWithCustomAuth(
+        stores,
+        preHook,
+        {},
+        db.rawDatabase,
+    );
 
     // create flag
     await request

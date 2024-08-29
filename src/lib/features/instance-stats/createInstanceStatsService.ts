@@ -40,6 +40,8 @@ import FakeSettingStore from '../../../test/fixtures/fake-setting-store';
 import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
+import { FeatureStrategiesReadModel } from '../feature-toggle/feature-strategies-read-model';
+import { FakeFeatureStrategiesReadModel } from '../feature-toggle/fake-feature-strategies-read-model';
 
 export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     const { eventBus, getLogger, flagResolver } = config;
@@ -49,7 +51,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getLogger,
         flagResolver,
     );
-    const userStore = new UserStore(db, getLogger);
+    const userStore = new UserStore(db, getLogger, flagResolver);
     const projectStore = new ProjectStore(
         db,
         eventBus,
@@ -89,6 +91,8 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getLogger,
         flagResolver,
     );
+
+    const featureStrategiesReadModel = new FeatureStrategiesReadModel(db);
     const instanceStatsServiceStores = {
         featureToggleStore,
         userStore,
@@ -104,6 +108,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         eventStore,
         apiTokenStore,
         clientMetricsStoreV2,
+        featureStrategiesReadModel,
     };
     const featureStrategiesStore = new FeatureStrategyStore(
         db,
@@ -151,6 +156,7 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
     const eventStore = new FakeEventStore();
     const apiTokenStore = new FakeApiTokenStore();
     const clientMetricsStoreV2 = new FakeClientMetricsStoreV2();
+    const featureStrategiesReadModel = new FakeFeatureStrategiesReadModel();
 
     const instanceStatsServiceStores = {
         featureToggleStore,
@@ -167,6 +173,7 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         eventStore,
         apiTokenStore,
         clientMetricsStoreV2,
+        featureStrategiesReadModel,
     };
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const versionServiceStores = {

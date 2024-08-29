@@ -84,19 +84,13 @@ export type UiFlags = {
     disableShowContextFieldSelectionValues?: boolean;
     projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
-    scimApi?: boolean;
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
     navigationSidebar?: boolean;
-    commandBarUI?: boolean;
     flagCreator?: boolean;
-    resourceLimits?: boolean;
-    insightsV2?: boolean;
-    integrationEvents?: boolean;
-    improveCreateFlagFlow?: boolean;
     newEventSearch?: boolean;
-    changeRequestPlayground?: boolean;
     archiveProjects?: boolean;
+    projectListImprovements?: boolean;
 };
 
 export interface IVersionInfo {

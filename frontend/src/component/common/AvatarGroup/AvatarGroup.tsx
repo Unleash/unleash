@@ -4,6 +4,7 @@ import type { IGroupUser } from 'interfaces/group';
 import { useMemo } from 'react';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar'; // usage
 import { objectId } from 'utils/objectId';
+import millify from 'millify';
 
 const StyledAvatars = styled('div')(({ theme }) => ({
     display: 'inline-flex',
@@ -13,21 +14,21 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     justifyContent: 'start',
 }));
 
-const StyledAvatar = (component: typeof UserAvatar) =>
-    styled(component)(({ theme }) => ({
-        outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
-        margin: 0,
-        marginLeft: theme.spacing(-1),
-        '&:hover': {
-            outlineColor: theme.palette.primary.main,
-        },
-    }));
+export const AvatarComponent = styled(UserAvatar)(({ theme }) => ({
+    outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
+    margin: 0,
+    marginLeft: theme.spacing(-1),
+    '&:hover': {
+        outlineColor: theme.palette.primary.main,
+    },
+}));
 
 type User = {
     name: string;
     description?: string;
     imageUrl?: string;
 };
+
 type AvatarGroupProps = {
     users: User[];
     avatarLimit?: number;
@@ -35,18 +36,18 @@ type AvatarGroupProps = {
     className?: string;
 };
 
-export const AvatarGroup = ({
-    AvatarComponent,
-    ...props
-}: AvatarGroupProps) => {
-    const Avatar = StyledAvatar(AvatarComponent ?? UserAvatar);
-
-    return <AvatarGroupInner AvatarComponent={Avatar} {...props} />;
-};
+export const AvatarGroup = ({ ...props }: AvatarGroupProps) => (
+    <AvatarGroupInner
+        AvatarComponent={props.AvatarComponent ?? AvatarComponent}
+        {...props}
+    />
+);
 
 type AvatarGroupInnerProps = Omit<AvatarGroupProps, 'AvatarComponent'> & {
     AvatarComponent: typeof UserAvatar;
 };
+
+const MAX_OVERFLOW_DISPLAY_NUMBER = 99;
 
 const AvatarGroupInner = ({
     users = [],
@@ -73,16 +74,22 @@ const AvatarGroupInner = ({
         [users],
     );
 
+    const overflow = users.length - avatarLimit;
+
     return (
         <StyledAvatars className={className}>
             {shownUsers.map((user) => (
                 <AvatarComponent key={objectId(user)} user={user} />
             ))}
             <ConditionallyRender
-                condition={users.length > avatarLimit}
+                condition={overflow > 0}
                 show={
-                    <AvatarComponent>
-                        +{users.length - shownUsers.length}
+                    <AvatarComponent
+                        user={{
+                            username: `Total: ${millify(users.length)}`,
+                        }}
+                    >
+                        +{Math.min(overflow, MAX_OVERFLOW_DISPLAY_NUMBER)}
                     </AvatarComponent>
                 }
             />

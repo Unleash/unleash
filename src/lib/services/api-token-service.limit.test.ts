@@ -7,9 +7,7 @@ import { createFakeApiTokenService } from '../features/api-tokens/createApiToken
 const createServiceWithLimit = (limit: number) => {
     const config: IUnleashConfig = createTestConfig({
         experimental: {
-            flags: {
-                resourceLimits: true,
-            },
+            flags: {},
         },
     });
     config.resourceLimits.apiTokens = limit;

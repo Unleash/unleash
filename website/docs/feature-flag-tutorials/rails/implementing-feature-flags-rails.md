@@ -150,27 +150,44 @@ First, install the `unleash` gem.
 gem install unleash
 ```
 
-Now you can initialize your Unleash client as follows:
+Then, create `config/initializers/unleash.rb`, and add the following:
 
 ```ruby
-@unleash = Unleash::Client.new(app_name: 'rails-blog', url: 'http://localhost:4242/api/', custom_http_headers: {
-  'Authorization': 'YOUR_API_KEY'
-})
+Unleash.configure do |config|
+  config.app_name = Rails.application.class.module_parent_name
+  config.url      = 'http://localhost:4242/api/'
+  # config.instance_id = "#{Socket.gethostname}"
+  config.logger   = Rails.logger
+  config.custom_http_headers = {'Authorization': '<YOUR_API_TOKEN>'}
+end
+
+UNLEASH = Unleash::Client.new
+
 ```
 
 You can check our [API tokens and client keys documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more information.
 
+Then, in `app/controllers/application_controller.rb`, add the following method:
+
+```ruby
+  before_action :set_unleash_context
+
+  private
+  def set_unleash_context
+    @unleash_context = Unleash::Context.new(
+      session_id: session.id,
+      remote_address: request.remote_ip,
+      user_id: session[:user_id]
+    )
+  end
+```
+
 Now, let’s add the Unleash client to our Rails controller, grab the feature flag from our local instance, and update our conditional statement. Don't forget to also update the config with your API key.
 
 ```ruby
-require 'unleash'
-
 class PostsController < ApplicationController
   def index
-    @unleash = Unleash::Client.new(app_name: 'rails-blog', url: 'http://localhost:4242/api/', custom_http_headers: {
-      'Authorization': 'YOUR_API_KEY'
-      })
-    is_top3 = @unleash.is_enabled('top-3')
+    is_top3 = UNLEASH.is_enabled?('top-3', @unleash_context)
     @posts = is_top3 ? Post.order(created_at: :desc).limit(3) : Post.all
   end
 

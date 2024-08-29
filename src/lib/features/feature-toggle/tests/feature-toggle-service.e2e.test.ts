@@ -23,9 +23,13 @@ import {
     PermissionError,
 } from '../../../error';
 import type { ISegmentService } from '../../segment/segment-service-interface';
-import { createFeatureToggleService, createSegmentService } from '../..';
+import {
+    createEventsService,
+    createFeatureToggleService,
+    createSegmentService,
+} from '../..';
 import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper';
-import { EventService } from '../../../services';
+import type { EventService } from '../../../services';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -60,7 +64,7 @@ beforeAll(async () => {
 
     service = createFeatureToggleService(db.rawDatabase, config);
 
-    eventService = new EventService(stores, config);
+    eventService = createEventsService(db.rawDatabase, config);
 });
 
 afterAll(async () => {
@@ -809,4 +813,52 @@ test('Should not allow to revive flags to archived projects', async () => {
             `Active project with id archivedProjectWithFlag does not exist`,
         ),
     );
+});
+
+test('Should enable disabled strategies on feature environment enabled', async () => {
+    const flagName = 'enableThisFlag';
+    const project = 'default';
+    const environment = 'default';
+    const shouldActivateDisabledStrategies = true;
+    await service.createFeatureToggle(
+        project,
+        {
+            name: flagName,
+        },
+        TEST_AUDIT_USER,
+    );
+    const config: Omit<FeatureStrategySchema, 'id'> = {
+        name: 'default',
+        constraints: [
+            { contextName: 'userId', operator: 'IN', values: ['1', '1'] },
+        ],
+        parameters: { param: 'a' },
+        variants: [
+            {
+                name: 'a',
+                weight: 100,
+                weightType: 'variable',
+                stickiness: 'random',
+            },
+        ],
+        disabled: true,
+    };
+    const createdConfig = await service.createStrategy(
+        config,
+        { projectId: project, featureName: flagName, environment },
+        TEST_AUDIT_USER,
+    );
+
+    await service.updateEnabled(
+        project,
+        flagName,
+        environment,
+        true,
+        TEST_AUDIT_USER,
+        { email: 'test@example.com' } as User,
+        shouldActivateDisabledStrategies,
+    );
+
+    const strategy = await service.getStrategy(createdConfig.id);
+    expect(strategy).toMatchObject({ ...config, disabled: false });
 });

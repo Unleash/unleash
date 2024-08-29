@@ -86,27 +86,13 @@ export default class RegisterController extends Controller {
         return ['default'];
     }
 
-    private extractProjectFromRequest(
-        req: IAuthRequest<unknown, void, ClientApplicationSchema>,
-    ) {
-        const token = req.get('Authorisation') || req.headers.authorization;
-        if (token) {
-            return token.split(':')[0];
-        }
-        return 'default';
-    }
-
     async registerClientApplication(
         req: IAuthRequest<unknown, void, ClientApplicationSchema>,
         res: Response<void>,
     ): Promise<void> {
         const { body: data, ip: clientIp, user } = req;
         data.environment = this.resolveEnvironment(user, data);
-        if (this.flagResolver.isEnabled('parseProjectFromSession')) {
-            data.projects = this.resolveProject(user);
-        } else {
-            data.project = this.extractProjectFromRequest(req);
-        }
+        data.projects = this.resolveProject(user);
 
         await this.clientInstanceService.registerClient(data, clientIp);
         res.header('X-Unleash-Version', version).status(202).end();

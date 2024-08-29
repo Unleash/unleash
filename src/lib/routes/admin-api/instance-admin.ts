@@ -5,7 +5,6 @@ import type { IUnleashServices } from '../../types/services';
 import type { IUnleashConfig } from '../../types/option';
 import Controller from '../controller';
 import { NONE } from '../../types/permissions';
-import type { UiConfigSchema } from '../../openapi/spec/ui-config-schema';
 import type {
     InstanceStatsService,
     InstanceStatsSigned,
@@ -15,6 +14,8 @@ import {
     createCsvResponseSchema,
     createResponseSchema,
 } from '../../openapi/util/create-response-schema';
+import type { InstanceAdminStatsSchema } from '../../openapi';
+import { serializeDates } from '../../types';
 
 class InstanceAdminController extends Controller {
     private instanceStatsService: InstanceStatsService;
@@ -125,20 +126,35 @@ class InstanceAdminController extends Controller {
                 variantCount: 100,
                 enabledCount: 200,
             },
+            maxEnvironmentStrategies: 20,
+            maxConstraints: 17,
+            maxConstraintValues: 123,
         };
     }
 
+    private serializeStats(
+        instanceStats: InstanceStatsSigned,
+    ): InstanceAdminStatsSchema {
+        const apiTokensObj = Object.fromEntries(
+            instanceStats.apiTokens.entries(),
+        );
+        return serializeDates({
+            ...instanceStats,
+            apiTokens: apiTokensObj,
+        });
+    }
+
     async getStatistics(
-        req: AuthedRequest,
-        res: Response<InstanceStatsSigned>,
+        _: AuthedRequest,
+        res: Response<InstanceAdminStatsSchema>,
     ): Promise<void> {
         const instanceStats = await this.instanceStatsService.getSignedStats();
-        res.json(instanceStats);
+        res.json(this.serializeStats(instanceStats));
     }
 
     async getStatisticsCSV(
-        req: AuthedRequest,
-        res: Response<UiConfigSchema>,
+        _: AuthedRequest,
+        res: Response<InstanceAdminStatsSchema>,
     ): Promise<void> {
         const instanceStats = await this.instanceStatsService.getSignedStats();
         const fileName = `unleash-${
@@ -146,7 +162,7 @@ class InstanceAdminController extends Controller {
         }-${Date.now()}.csv`;
 
         const json2csvParser = new Parser();
-        const csv = json2csvParser.parse(instanceStats);
+        const csv = json2csvParser.parse(this.serializeStats(instanceStats));
 
         res.contentType('csv');
         res.attachment(fileName);

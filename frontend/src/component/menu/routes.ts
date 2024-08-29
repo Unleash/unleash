@@ -9,13 +9,13 @@ import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
 import { ProjectListNew } from 'component/project/ProjectList/ProjectList';
+import { ArchiveProjectList } from 'component/project/ProjectList/ArchiveProjectList';
 import RedirectArchive from 'component/archive/RedirectArchive';
 import CreateEnvironment from 'component/environments/CreateEnvironment/CreateEnvironment';
 import EditEnvironment from 'component/environments/EditEnvironment/EditEnvironment';
 import { EditContext } from 'component/context/EditContext/EditContext';
 import EditTagType from 'component/tags/EditTagType/EditTagType';
 import CreateTagType from 'component/tags/CreateTagType/CreateTagType';
-import CreateFeature from 'component/feature/CreateFeature/CreateFeature';
 import EditFeature from 'component/feature/EditFeature/EditFeature';
 import ContextList from 'component/context/ContextList/ContextList/ContextList';
 import { CreateIntegration } from 'component/integrations/CreateIntegration/CreateIntegration';
@@ -102,14 +102,6 @@ export const routes: IRoute[] = [
         menu: {},
     },
     {
-        path: '/projects/:projectId/create-toggle',
-        parent: '/projects/:projectId/features',
-        title: 'Create feature flag',
-        component: CreateFeature,
-        type: 'protected',
-        menu: {},
-    },
-    {
         path: '/projects/:projectId/*',
         parent: '/projects',
         title: ':projectId',
@@ -124,6 +116,13 @@ export const routes: IRoute[] = [
         component: ProjectListNew,
         type: 'protected',
         menu: { mobile: true },
+    },
+    {
+        path: '/projects-archive',
+        title: 'Projects archive',
+        component: ArchiveProjectList,
+        type: 'protected',
+        menu: {},
     },
 
     // Features

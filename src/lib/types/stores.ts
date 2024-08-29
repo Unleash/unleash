@@ -48,6 +48,8 @@ import { IFeatureLifecycleReadModel } from '../features/feature-lifecycle/featur
 import { ILargestResourcesReadModel } from '../features/metrics/sizes/largest-resources-read-model-type';
 import type { IntegrationEventsStore } from '../features/integration-events/integration-events-store';
 import { IFeatureCollaboratorsReadModel } from '../features/feature-toggle/types/feature-collaborators-read-model-type';
+import type { IProjectReadModel } from '../features/project/project-read-model-type';
+import { IOnboardingReadModel } from '../features/onboarding/onboarding-read-model-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -100,6 +102,8 @@ export interface IUnleashStores {
     largestResourcesReadModel: ILargestResourcesReadModel;
     integrationEventsStore: IntegrationEventsStore;
     featureCollaboratorsReadModel: IFeatureCollaboratorsReadModel;
+    projectReadModel: IProjectReadModel;
+    onboardingReadModel: IOnboardingReadModel;
 }
 
 export {
@@ -150,5 +154,7 @@ export {
     IFeatureLifecycleReadModel,
     ILargestResourcesReadModel,
     IFeatureCollaboratorsReadModel,
+    IOnboardingReadModel,
     type IntegrationEventsStore,
+    type IProjectReadModel,
 };

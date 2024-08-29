@@ -25,10 +25,7 @@ export const useInsightsData = (
     );
     const groupedMetricsData = useGroupedProjectTrends(metricsData);
 
-    const summary = useFilteredFlagsSummary(
-        projectsData,
-        instanceInsights.users,
-    );
+    const summary = useFilteredFlagsSummary(projectsData);
 
     return useMemo(
         () => ({
@@ -37,7 +34,6 @@ export const useInsightsData = (
             groupedProjectsData,
             metricsData,
             groupedMetricsData,
-            users: instanceInsights.users,
             environmentTypeTrends: instanceInsights.environmentTypeTrends,
             summary,
             allMetricsDatapoints,

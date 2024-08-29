@@ -3,6 +3,7 @@ import SlackAppAddon from './slack-app';
 import { type ChatPostMessageArguments, ErrorCode } from '@slack/web-api';
 import {
     type IAddonConfig,
+    type IFlagKey,
     type IFlagResolver,
     serializeDates,
     SYSTEM_USER_ID,
@@ -28,7 +29,8 @@ const ARGS: IAddonConfig = {
     getLogger,
     unleashUrl: 'http://some-url.com',
     integrationEventsService: {} as IntegrationEventsService,
-    flagResolver: {} as IFlagResolver,
+    flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
+    eventBus: {} as any,
 };
 
 let postMessage = jest.fn().mockImplementation((options) => {

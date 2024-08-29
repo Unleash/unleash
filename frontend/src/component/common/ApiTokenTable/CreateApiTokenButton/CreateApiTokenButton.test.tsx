@@ -11,12 +11,7 @@ const setupApi = ({
     apiTokenLimit,
 }: { apiTokenCount: number; apiTokenLimit: number }) => {
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            resourceLimits: true,
-        },
-        resourceLimits: {
-            apiTokens: apiTokenLimit,
-        },
+        resourceLimits: { apiTokens: apiTokenLimit },
     });
 
     testServerRoute(server, '/api/admin/api-tokens', {

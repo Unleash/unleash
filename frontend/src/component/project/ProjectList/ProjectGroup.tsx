@@ -1,11 +1,14 @@
+import type { ComponentType } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectCard } from '../NewProjectCard/NewProjectCard';
+import { ProjectCard as LegacyProjectCard } from '../ProjectCard/LegacyProjectCard';
+import { ProjectCard as NewProjectCard } from '../ProjectCard/ProjectCard';
 
 import type { IProjectCard } from 'interfaces/project';
 import loadingData from './loadingData';
 import { TablePlaceholder } from 'component/common/Table';
 import { styled, Typography } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -23,12 +26,30 @@ const StyledCardLink = styled(Link)(({ theme }) => ({
     pointer: 'cursor',
 }));
 
-export const ProjectGroup: React.FC<{
+type ProjectGroupProps = {
     sectionTitle?: string;
     projects: IProjectCard[];
     loading: boolean;
     searchValue: string;
-}> = ({ sectionTitle, projects, loading, searchValue }) => {
+    placeholder?: string;
+    ProjectCardComponent?: ComponentType<IProjectCard & any>;
+    link?: boolean;
+};
+
+export const ProjectGroup = ({
+    sectionTitle,
+    projects,
+    loading,
+    searchValue,
+    placeholder = 'No projects available.',
+    ProjectCardComponent,
+    link = true,
+}: ProjectGroupProps) => {
+    const projectListImprovementsEnabled = useUiFlag('projectListImprovements');
+    const ProjectCard =
+        ProjectCardComponent ??
+        (projectListImprovementsEnabled ? NewProjectCard : LegacyProjectCard);
+
     return (
         <article>
             <ConditionallyRender
@@ -56,9 +77,7 @@ export const ProjectGroup: React.FC<{
                             </TablePlaceholder>
                         }
                         elseShow={
-                            <TablePlaceholder>
-                                No projects available.
-                            </TablePlaceholder>
+                            <TablePlaceholder>{placeholder}</TablePlaceholder>
                         }
                     />
                 }
@@ -72,7 +91,7 @@ export const ProjectGroup: React.FC<{
                                         (project: IProjectCard) => (
                                             <ProjectCard
                                                 data-loading
-                                                onHover={() => {}}
+                                                createdAt={project.createdAt}
                                                 key={project.id}
                                                 name={project.name}
                                                 id={project.id}
@@ -87,28 +106,21 @@ export const ProjectGroup: React.FC<{
                             )}
                             elseShow={() => (
                                 <>
-                                    {projects.map((project: IProjectCard) => (
-                                        <StyledCardLink
-                                            key={project.id}
-                                            to={`/projects/${project.id}`}
-                                        >
+                                    {projects.map((project) =>
+                                        link ? (
+                                            <StyledCardLink
+                                                key={project.id}
+                                                to={`/projects/${project.id}`}
+                                            >
+                                                <ProjectCard {...project} />
+                                            </StyledCardLink>
+                                        ) : (
                                             <ProjectCard
-                                                onHover={() => {}}
-                                                name={project.name}
-                                                mode={project.mode}
-                                                memberCount={
-                                                    project.memberCount ?? 0
-                                                }
-                                                health={project.health}
-                                                id={project.id}
-                                                featureCount={
-                                                    project.featureCount
-                                                }
-                                                isFavorite={project.favorite}
-                                                owners={project.owners}
+                                                key={project.id}
+                                                {...project}
                                             />
-                                        </StyledCardLink>
-                                    ))}
+                                        ),
+                                    )}
                                 </>
                             )}
                         />

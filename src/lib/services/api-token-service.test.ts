@@ -6,6 +6,7 @@ import {
     API_TOKEN_CREATED,
     API_TOKEN_DELETED,
     API_TOKEN_UPDATED,
+    SYSTEM_USER,
     TEST_AUDIT_USER,
 } from '../types';
 import { addDays, minutesToMilliseconds, subDays } from 'date-fns';
@@ -215,4 +216,56 @@ describe('API token getTokenWithCache', () => {
         }
         expect(apiTokenStoreGet).toHaveBeenCalledTimes(1);
     });
+});
+
+test('normalizes api token type casing to lowercase', async () => {
+    const config: IUnleashConfig = createTestConfig();
+    const { apiTokenStore, apiTokenService, environmentStore } =
+        createFakeApiTokenService(config);
+
+    await environmentStore.create({
+        name: 'default',
+        enabled: true,
+        type: 'test',
+        sortOrder: 1,
+    });
+
+    const apiTokenStoreInsert = jest.spyOn(apiTokenStore, 'insert');
+
+    await apiTokenService.createApiTokenWithProjects(
+        {
+            environment: 'default',
+            // @ts-ignore
+            type: 'CLIENT',
+            projects: [],
+            tokenName: 'uppercase-token',
+        },
+        SYSTEM_USER,
+    );
+
+    await apiTokenService.createApiTokenWithProjects(
+        {
+            environment: 'default',
+            // @ts-ignore
+            type: 'client',
+            projects: [],
+            tokenName: 'lowercase-token',
+        },
+        SYSTEM_USER,
+    );
+
+    expect(apiTokenStoreInsert).toHaveBeenCalledWith(
+        expect.objectContaining({
+            type: 'client',
+        }),
+    );
+
+    expect(apiTokenStoreInsert).not.toHaveBeenCalledWith(
+        expect.objectContaining({
+            type: 'CLIENT',
+        }),
+    );
+
+    const tokens = await apiTokenStore.getAll();
+    expect(tokens.every((token) => token.type === 'client')).toBeTruthy();
 });

@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { FeatureSchemaCollaborators } from './featureSchemaCollaborators';
 import type { FeatureSchemaCreatedBy } from './featureSchemaCreatedBy';
 import type { FeatureSchemaDependenciesItem } from './featureSchemaDependenciesItem';
 import type { FeatureEnvironmentSchema } from './featureEnvironmentSchema';
@@ -24,6 +25,8 @@ export interface FeatureSchema {
     archivedAt?: string | null;
     /** The list of child feature names. This is an experimental field and may change. */
     children?: string[];
+    /** Information related to users who have made changes to this feature flage. */
+    collaborators?: FeatureSchemaCollaborators;
     /**
      * The date the feature was created
      * @nullable

@@ -1,34 +1,97 @@
 import type { EventSearchQueryParameters } from '../../../../lib/openapi/spec/event-search-query-parameters';
 import dbInit, { type ITestDb } from '../../helpers/database-init';
 
-import { FEATURE_CREATED } from '../../../../lib/types';
-import { EventService } from '../../../../lib/services';
-import EventEmitter from 'events';
-import getLogger from '../../../fixtures/no-logger';
 import {
-    type IUnleashTest,
-    setupAppWithCustomConfig,
-} from '../../helpers/test-helper';
+    FEATURE_CREATED,
+    type IUnleashConfig,
+    type IUnleashStores,
+    RoleName,
+    USER_CREATED,
+} from '../../../../lib/types';
+import type { AccessService, EventService } from '../../../../lib/services';
+import getLogger from '../../../fixtures/no-logger';
+import { type IUnleashTest, setupAppWithAuth } from '../../helpers/test-helper';
+import { createEventsService } from '../../../../lib/features';
+import { createTestConfig } from '../../../config/test-config';
+import type { IRole } from '../../../../lib/types/stores/access-store';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let eventService: EventService;
 const TEST_USER_ID = -9999;
+const regularUserName = 'import-user';
+const adminUserName = 'admin-user';
+
+const config: IUnleashConfig = createTestConfig();
+let adminRole: IRole;
+let stores: IUnleashStores;
+let accessService: AccessService;
+
+const loginRegularUser = () =>
+    app.request
+        .post(`/auth/demo/login`)
+        .send({
+            email: `${regularUserName}@getunleash.io`,
+        })
+        .expect(200);
+
+const loginAdminUser = () =>
+    app.request
+        .post(`/auth/demo/login`)
+        .send({
+            email: `${adminUserName}@getunleash.io`,
+        })
+        .expect(200);
+
+const createUserEditorAccess = async (name, email) => {
+    const { userStore } = stores;
+    const user = await userStore.insert({
+        name,
+        email,
+    });
+    return user;
+};
+
+const createUserAdminAccess = async (name, email) => {
+    const { userStore } = stores;
+    const user = await userStore.insert({
+        name,
+        email,
+    });
+    await accessService.addUserToRole(user.id, adminRole.id, 'default');
+    return user;
+};
 
 beforeAll(async () => {
     db = await dbInit('event_search', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    stores = db.stores;
+    app = await setupAppWithAuth(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 
-    eventService = new EventService(db.stores, {
-        getLogger,
-        eventBus: new EventEmitter(),
-    });
+    eventService = createEventsService(db.rawDatabase, config);
+
+    accessService = app.services.accessService;
+
+    const roles = await accessService.getRootRoles();
+    adminRole = roles.find((role) => role.name === RoleName.ADMIN)!;
+
+    await createUserEditorAccess(
+        regularUserName,
+        `${regularUserName}@getunleash.io`,
+    );
+    await createUserAdminAccess(
+        adminUserName,
+        `${adminUserName}@getunleash.io`,
+    );
 });
 
 afterAll(async () => {
@@ -37,6 +100,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+    await loginAdminUser();
     await db.stores.featureToggleStore.deleteAll();
     await db.stores.segmentStore.deleteAll();
     await db.stores.eventStore.deleteAll();
@@ -182,19 +246,21 @@ test('should filter events by type', async () => {
 test('should filter events by created by', async () => {
     await eventService.storeEvent({
         type: FEATURE_CREATED,
+        project: 'default',
         createdBy: 'admin1@example.com',
-        createdByUserId: TEST_USER_ID,
+        createdByUserId: TEST_USER_ID + 1,
         ip: '127.0.0.1',
     });
 
     await eventService.storeEvent({
         type: FEATURE_CREATED,
+        project: 'default',
         createdBy: 'admin2@example.com',
         createdByUserId: TEST_USER_ID,
         ip: '127.0.0.1',
     });
 
-    const { body } = await searchEvents({ createdBy: 'IS:admin2@example.com' });
+    const { body } = await searchEvents({ createdBy: `IS:${TEST_USER_ID}` });
 
     expect(body).toMatchObject({
         events: [
@@ -311,8 +377,7 @@ test('should filter events by feature using IS_ANY_OF', async () => {
     });
 
     await eventService.storeEvent({
-        type: FEATURE_CREATED,
-        project: 'default',
+        type: USER_CREATED,
         featureName: 'my_feature_b',
         createdBy: 'test-user',
         createdByUserId: TEST_USER_ID,
@@ -335,7 +400,7 @@ test('should filter events by feature using IS_ANY_OF', async () => {
     expect(body).toMatchObject({
         events: [
             {
-                type: 'feature-created',
+                type: 'user-created',
                 featureName: 'my_feature_b',
             },
             {
@@ -385,6 +450,66 @@ test('should filter events by project using IS_ANY_OF', async () => {
             {
                 type: 'feature-created',
                 project: 'project_a',
+            },
+        ],
+        total: 2,
+    });
+});
+
+test('should not show user creation events for non-admins', async () => {
+    await loginRegularUser();
+    await eventService.storeEvent({
+        type: USER_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body } = await searchEvents({});
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                type: FEATURE_CREATED,
+            },
+        ],
+        total: 1,
+    });
+});
+
+test('should show user creation events for admins', async () => {
+    await eventService.storeEvent({
+        type: USER_CREATED,
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { body } = await searchEvents({});
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                type: FEATURE_CREATED,
+            },
+            {
+                type: USER_CREATED,
             },
         ],
         total: 2,

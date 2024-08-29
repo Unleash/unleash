@@ -30,12 +30,11 @@ import {
     type FeatureEnvironmentSchema,
     featureSchema,
     type FeatureSchema,
-    featuresSchema,
-    type FeaturesSchema,
     featureStrategySchema,
     type FeatureStrategySchema,
     getStandardResponses,
-    type ParametersSchema,
+    projectFeaturesSchema,
+    type ProjectFeaturesSchema,
     type SetStrategySortOrderSchema,
     type TagsBulkAddSchema,
     type TagSchema,
@@ -421,7 +420,7 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     operationId: 'getFeatures',
                     responses: {
-                        200: createResponseSchema('featuresSchema'),
+                        200: createResponseSchema('projectFeaturesSchema'),
                         ...getStandardResponses(400, 401, 403),
                     },
                 }),
@@ -606,7 +605,7 @@ export default class ProjectFeaturesController extends Controller {
 
     async getFeatures(
         req: IAuthRequest<ProjectParam, any, any, AdminFeaturesQuerySchema>,
-        res: Response<FeaturesSchema>,
+        res: Response<ProjectFeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
         const query = await this.prepQuery(req.query, projectId);
@@ -617,7 +616,7 @@ export default class ProjectFeaturesController extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            featuresSchema.$id,
+            projectFeaturesSchema.$id,
             { version: 2, features: serializeDates(features) },
         );
     }
@@ -1154,15 +1153,5 @@ export default class ProjectFeaturesController extends Controller {
             req.audit,
         );
         res.status(200).end();
-    }
-
-    async getStrategyParameters(
-        req: Request<StrategyIdParams, any, any, any>,
-        res: Response<ParametersSchema>,
-    ): Promise<void> {
-        this.logger.info('Getting strategy parameters');
-        const { strategyId } = req.params;
-        const strategy = await this.featureService.getStrategy(strategyId);
-        res.status(200).json(strategy.parameters);
     }
 }

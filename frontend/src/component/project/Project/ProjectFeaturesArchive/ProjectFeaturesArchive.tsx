@@ -6,7 +6,7 @@ import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview
 export const ProjectFeaturesArchive = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectOverviewNameOrId(projectId);
-    usePageTitle(`Project archive – ${projectName}`);
+    usePageTitle(`Project archived flags – ${projectName}`);
 
     return <ProjectFeaturesArchiveTable projectId={projectId} />;
 };

@@ -15,7 +15,11 @@ import type ResetTokenService from './reset-token-service';
 import NotFoundError from '../error/notfound-error';
 import OwaspValidationError from '../error/owasp-validation-error';
 import type { EmailService } from './email-service';
-import type { IAuthOption, IUnleashConfig } from '../types/option';
+import type {
+    IAuthOption,
+    IUnleashConfig,
+    UsernameAdminUser,
+} from '../types/option';
 import type SessionService from './session-service';
 import type { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
@@ -86,6 +90,8 @@ class UserService {
 
     private baseUriPath: string;
 
+    readonly unleashUrl: string;
+
     constructor(
         stores: Pick<IUnleashStores, 'userStore'>,
         {
@@ -111,16 +117,10 @@ class UserService {
         this.sessionService = services.sessionService;
         this.settingService = services.settingService;
 
-        if (authentication.createAdminUser !== false) {
-            process.nextTick(() =>
-                this.initAdminUser({
-                    createAdminUser: authentication.createAdminUser,
-                    initialAdminUser: authentication.initialAdminUser,
-                }),
-            );
-        }
+        process.nextTick(() => this.initAdminUser(authentication));
 
         this.baseUriPath = server.baseUriPath || '';
+        this.unleashUrl = server.unleashUrl;
     }
 
     validatePassword(password: string): boolean {
@@ -134,33 +134,31 @@ class UserService {
         }
     }
 
-    async initAdminUser(
-        initialAdminUserConfig: Pick<
-            IAuthOption,
-            'createAdminUser' | 'initialAdminUser'
-        >,
-    ): Promise<void> {
-        let username: string;
-        let password: string;
+    async initAdminUser({
+        createAdminUser,
+        initialAdminUser,
+    }: Pick<
+        IAuthOption,
+        'createAdminUser' | 'initialAdminUser'
+    >): Promise<void> {
+        if (!createAdminUser) return Promise.resolve();
 
-        if (
-            initialAdminUserConfig.createAdminUser !== false &&
-            initialAdminUserConfig.initialAdminUser
-        ) {
-            username = initialAdminUserConfig.initialAdminUser.username;
-            password = initialAdminUserConfig.initialAdminUser.password;
-        } else {
-            username = 'admin';
-            password = 'unleash4all';
-        }
+        return this.initAdminUsernameUser(initialAdminUser);
+    }
+
+    async initAdminUsernameUser(
+        usernameAdminUser?: UsernameAdminUser,
+    ): Promise<void> {
+        const username = usernameAdminUser?.username || 'admin';
+        const password = usernameAdminUser?.password || 'unleash4all';
 
         const userCount = await this.store.count();
 
-        if (userCount === 0 && username && password) {
+        if (userCount === 0) {
             // create default admin user
             try {
                 this.logger.info(
-                    `Creating default user '${username}' with password '${password}'`,
+                    `Creating default admin user, with username '${username}' and password '${password}'`,
                 );
                 const user = await this.store.insert({
                     username,
@@ -259,6 +257,58 @@ class UserService {
         );
 
         return userCreated;
+    }
+
+    async newUserInviteLink(
+        user: IUserWithRootRole,
+        auditUser: IAuditUser = SYSTEM_USER_AUDIT,
+    ): Promise<string> {
+        const passwordAuthSettings =
+            await this.settingService.getWithDefault<SimpleAuthSettings>(
+                simpleAuthSettingsKey,
+                { disabled: false },
+            );
+
+        let inviteLink = this.unleashUrl;
+        if (!passwordAuthSettings.disabled) {
+            const inviteUrl = await this.resetTokenService.createNewUserUrl(
+                user.id,
+                auditUser.username,
+            );
+            inviteLink = inviteUrl.toString();
+        }
+        return inviteLink;
+    }
+
+    async sendWelcomeEmail(
+        user: IUserWithRootRole,
+        inviteLink: string,
+    ): Promise<boolean> {
+        let emailSent = false;
+        const emailConfigured = this.emailService.configured();
+
+        if (emailConfigured && user.email) {
+            try {
+                await this.emailService.sendGettingStartedMail(
+                    user.name || '',
+                    user.email,
+                    this.unleashUrl,
+                    inviteLink,
+                );
+                emailSent = true;
+            } catch (e) {
+                this.logger.warn(
+                    'email was configured, but sending failed due to: ',
+                    e,
+                );
+            }
+        } else {
+            this.logger.warn(
+                'email was not sent to the user because email configuration is lacking',
+            );
+        }
+
+        return emailSent;
     }
 
     async updateUser(

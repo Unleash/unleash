@@ -1,6 +1,5 @@
 import {
     AccessService,
-    EventService,
     FeatureToggleService,
     GroupService,
 } from '../../services';
@@ -51,7 +50,10 @@ import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
 } from '../dependent-features/createDependentFeaturesService';
-import { createEventsService } from '../events/createEventsService';
+import {
+    createEventsService,
+    createFakeEventsService,
+} from '../events/createEventsService';
 import { EventEmitter } from 'stream';
 import { FeatureLifecycleReadModel } from '../feature-lifecycle/feature-lifecycle-read-model';
 import { FakeFeatureLifecycleReadModel } from '../feature-lifecycle/fake-feature-lifecycle-read-model';
@@ -176,10 +178,7 @@ export const createFakeFeatureToggleService = (config: IUnleashConfig) => {
     const featureTagStore = new FakeFeatureTagStore();
     const roleStore = new FakeRoleStore();
     const environmentStore = new FakeEnvironmentStore();
-    const eventService = new EventService(
-        { eventStore, featureTagStore },
-        { getLogger, eventBus: new EventEmitter() },
-    );
+    const eventService = createFakeEventsService(config);
     const groupService = new GroupService(
         { groupStore, accountStore },
         { getLogger },

@@ -5,6 +5,7 @@ import {
 } from '../../helpers/test-helper';
 import getLogger from '../../../fixtures/no-logger';
 import type { IUnleashStores } from '../../../../lib/types';
+import { ApiTokenType } from '../../../../lib/types/models/api-token';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -47,6 +48,43 @@ test('should return instance statistics', async () => {
         });
 });
 
+test('api tokens are serialized correctly', async () => {
+    await app.services.apiTokenService.createApiTokenWithProjects({
+        tokenName: 'admin',
+        type: ApiTokenType.ADMIN,
+        environment: '*',
+        projects: ['*'],
+    });
+    await app.services.apiTokenService.createApiTokenWithProjects({
+        tokenName: 'frontend',
+        type: ApiTokenType.FRONTEND,
+        environment: 'default',
+        projects: ['*'],
+    });
+    await app.services.apiTokenService.createApiTokenWithProjects({
+        tokenName: 'client',
+        type: ApiTokenType.CLIENT,
+        environment: 'default',
+        projects: ['*'],
+    });
+
+    const { body } = await app.request
+        .get('/api/admin/instance-admin/statistics')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject({
+        apiTokens: { client: 1, admin: 1, frontend: 1 },
+    });
+
+    const { text: csv } = await app.request
+        .get('/api/admin/instance-admin/statistics/csv')
+        .expect('Content-Type', /text\/csv/)
+        .expect(200);
+
+    expect(csv).toMatch(/{""client"":1,""admin"":1,""frontend"":1}/);
+});
+
 test('should return instance statistics with correct number of projects', async () => {
     await stores.projectStore.create({
         id: 'test',
@@ -77,7 +115,7 @@ test('should return signed instance statistics', async () => {
         });
 });
 
-test('should return instance statistics as CVS', async () => {
+test('should return instance statistics as CSV', async () => {
     await stores.featureToggleStore.create('default', {
         name: 'TestStats2',
         createdByUserId: 9999,
@@ -94,4 +132,17 @@ test('should return instance statistics as CVS', async () => {
 
     expect(res.text).toMatch(/featureToggles/);
     expect(res.text).toMatch(/"sum"/);
+});
+
+test('contains new max* properties', async () => {
+    const { body } = await app.request
+        .get('/api/admin/instance-admin/statistics')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject({
+        maxEnvironmentStrategies: 0,
+        maxConstraints: 0,
+        maxConstraintValues: 0,
+    });
 });

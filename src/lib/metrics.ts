@@ -19,6 +19,10 @@ import {
     CLIENT_METRICS,
     CLIENT_REGISTER,
     PROJECT_ENVIRONMENT_REMOVED,
+    PROJECT_CREATED,
+    PROJECT_ARCHIVED,
+    PROJECT_REVIVED,
+    PROJECT_DELETED,
 } from './types/events';
 import type { IUnleashConfig } from './types/option';
 import type { ISettingStore, IUnleashStores } from './types/stores';
@@ -303,6 +307,12 @@ export default class MetricsMonitor {
             help: 'Duration of feature lifecycle stages',
         });
 
+        const onboardingDuration = createGauge({
+            name: 'onboarding_duration',
+            labelNames: ['event'],
+            help: 'firstLogin, secondLogin, firstFeatureFlag, firstPreLive, firstLive from first user creation',
+        });
+
         const featureLifecycleStageCountByProject = createGauge({
             name: 'feature_lifecycle_stage_count_by_project',
             help: 'Count features in a given stage by project id',
@@ -313,6 +323,12 @@ export default class MetricsMonitor {
             name: 'feature_lifecycle_stage_entered',
             help: 'Count how many features entered a given stage',
             labelNames: ['stage'],
+        });
+
+        const projectActionsCounter = createCounter({
+            name: 'project_actions_count',
+            help: 'Count project actions',
+            labelNames: ['action'],
         });
 
         const projectEnvironmentsDisabled = createCounter({
@@ -350,13 +366,19 @@ export default class MetricsMonitor {
         const requestOriginCounter = createCounter({
             name: 'request_origin_counter',
             help: 'Number of authenticated requests, including origin information.',
-            labelNames: ['type', 'method'],
+            labelNames: ['type', 'method', 'source'],
         });
 
         const resourceLimit = createGauge({
             name: 'resource_limit',
             help: 'The maximum number of resources allowed.',
             labelNames: ['resource'],
+        });
+
+        const addonEventsHandledCounter = createCounter({
+            name: 'addon_events_handled',
+            help: 'Events handled by addons and the result.',
+            labelNames: ['result', 'destination'],
         });
 
         async function collectStaticCounters() {
@@ -372,6 +394,7 @@ export default class MetricsMonitor {
                     largestProjectEnvironments,
                     largestFeatureEnvironments,
                     deprecatedTokens,
+                    onboardingMetrics,
                 ] = await Promise.all([
                     stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
                     stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
@@ -386,6 +409,9 @@ export default class MetricsMonitor {
                         1,
                     ),
                     stores.apiTokenStore.countDeprecatedTokens(),
+                    flagResolver.isEnabled('onboardingMetrics')
+                        ? stores.onboardingReadModel.getInstanceOnboardingMetrics()
+                        : Promise.resolve({}),
                 ]);
 
                 featureFlagsTotal.reset();
@@ -412,9 +438,9 @@ export default class MetricsMonitor {
                 eventBus.on(
                     events.STAGE_ENTERED,
                     (entered: { stage: string; feature: string }) => {
-                        featureLifecycleStageEnteredCounter
-                            .labels({ stage: entered.stage })
-                            .inc();
+                        featureLifecycleStageEnteredCounter.increment({
+                            stage: entered.stage,
+                        });
                     },
                 );
 
@@ -424,9 +450,7 @@ export default class MetricsMonitor {
                         resource,
                         limit,
                     }: { resource: string; limit: number }) => {
-                        exceedsLimitErrorCounter
-                            .labels({ resource, limit })
-                            .inc();
+                        exceedsLimitErrorCounter.increment({ resource, limit });
                     },
                 );
 
@@ -514,6 +538,16 @@ export default class MetricsMonitor {
                         })
                         .set(featureEnvironment.size);
                 }
+
+                Object.keys(onboardingMetrics).forEach((key) => {
+                    if (Number.isInteger(onboardingMetrics[key])) {
+                        onboardingDuration
+                            .labels({
+                                event: key,
+                            })
+                            .set(onboardingMetrics[key]);
+                    }
+                });
 
                 for (const [resource, limit] of Object.entries(
                     config.resourceLimits,
@@ -715,9 +749,9 @@ export default class MetricsMonitor {
         events.onMetricEvent(
             eventBus,
             events.REQUEST_ORIGIN,
-            ({ type, method }) => {
+            ({ type, method, source }) => {
                 if (flagResolver.isEnabled('originMiddleware')) {
-                    requestOriginCounter.increment({ type, method });
+                    requestOriginCounter.increment({ type, method, source });
                 }
             },
         );
@@ -845,6 +879,18 @@ export default class MetricsMonitor {
                 environmentType: 'n/a',
             });
         });
+        eventStore.on(PROJECT_CREATED, () => {
+            projectActionsCounter.increment({ action: PROJECT_CREATED });
+        });
+        eventStore.on(PROJECT_ARCHIVED, () => {
+            projectActionsCounter.increment({ action: PROJECT_ARCHIVED });
+        });
+        eventStore.on(PROJECT_REVIVED, () => {
+            projectActionsCounter.increment({ action: PROJECT_REVIVED });
+        });
+        eventStore.on(PROJECT_DELETED, () => {
+            projectActionsCounter.increment({ action: PROJECT_DELETED });
+        });
 
         const logger = config.getLogger('metrics.ts');
         eventBus.on(CLIENT_METRICS, (metrics: IClientMetricsEnv[]) => {
@@ -904,6 +950,10 @@ export default class MetricsMonitor {
 
         eventStore.on(PROJECT_ENVIRONMENT_REMOVED, ({ project }) => {
             projectEnvironmentsDisabled.increment({ project_id: project });
+        });
+
+        eventBus.on(events.ADDON_EVENTS_HANDLED, ({ result, destination }) => {
+            addonEventsHandledCounter.increment({ result, destination });
         });
 
         await this.configureDbMetrics(

@@ -8,7 +8,6 @@ import type {
 import NotFoundError from '../../lib/error/notfound-error';
 import type {
     IEnvironmentProjectLink,
-    IProjectMembersCount,
     ProjectModeCount,
 } from '../../lib/features/project/project-store';
 import type { CreateFeatureStrategySchema } from '../../lib/openapi';
@@ -16,6 +15,7 @@ import type {
     IProjectApplicationsSearchParams,
     IProjectHealthUpdate,
     IProjectInsert,
+    IProjectQuery,
     ProjectEnvironment,
 } from '../../lib/features/project/project-store-type';
 
@@ -48,9 +48,15 @@ export default class FakeProjectStore implements IProjectStore {
         this.projectEnvironment.set(id, environments);
     }
 
-    async getProjectsWithCounts(): Promise<IProjectWithCount[]> {
+    async getProjectsWithCounts(
+        query?: IProjectQuery,
+    ): Promise<IProjectWithCount[]> {
         return this.projects
-            .filter((project) => project.archivedAt !== null)
+            .filter((project) =>
+                query?.archived
+                    ? project.archivedAt !== null
+                    : project.archivedAt === null,
+            )
             .map((project) => {
                 return {
                     ...project,
@@ -105,7 +111,8 @@ export default class FakeProjectStore implements IProjectStore {
     destroy(): void {}
 
     async count(): Promise<number> {
-        return this.projects.length;
+        return this.projects.filter((project) => project.archivedAt === null)
+            .length;
     }
 
     async get(key: string): Promise<IProject> {
@@ -117,7 +124,7 @@ export default class FakeProjectStore implements IProjectStore {
     }
 
     async getAll(): Promise<IProject[]> {
-        return this.projects;
+        return this.projects.filter((project) => project.archivedAt === null);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -157,10 +164,6 @@ export default class FakeProjectStore implements IProjectStore {
         this.projects.find(
             (project) => project.id === healthUpdate.id,
         )!.health = healthUpdate.health;
-    }
-
-    getMembersCount(): Promise<IProjectMembersCount[]> {
-        throw new Error('Method not implemented.');
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -231,6 +234,12 @@ export default class FakeProjectStore implements IProjectStore {
             project.id === id
                 ? { ...project, archivedAt: new Date() }
                 : project,
+        );
+    }
+
+    async revive(id: string): Promise<void> {
+        this.projects = this.projects.map((project) =>
+            project.id === id ? { ...project, archivedAt: null } : project,
         );
     }
 }

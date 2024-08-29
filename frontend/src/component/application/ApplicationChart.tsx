@@ -13,7 +13,7 @@ import CheckCircle from '@mui/icons-material/CheckCircle';
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import Flag from '@mui/icons-material/Flag';
 import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
-import TimeAgo from 'react-timeago';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { getApplicationIssues } from './ApplicationIssues/ApplicationIssues';
 
@@ -305,16 +305,9 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                         <tr>
                                             <StyledCell>Last seen:</StyledCell>
                                             <StyledCell>
-                                                {environment.lastSeen && (
-                                                    <TimeAgo
-                                                        minPeriod={60}
-                                                        date={
-                                                            new Date(
-                                                                environment.lastSeen,
-                                                            )
-                                                        }
-                                                    />
-                                                )}
+                                                <TimeAgo
+                                                    date={environment.lastSeen}
+                                                />
                                             </StyledCell>
                                         </tr>
                                     </tbody>

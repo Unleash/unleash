@@ -1,7 +1,7 @@
 import { ArchiveTable } from './ArchiveTable';
 import { render } from 'utils/testRenderer';
 import { useState } from 'react';
-import { screen, fireEvent } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
     DELETE_FEATURE,
@@ -63,8 +63,11 @@ const setupApi = () => {
         200,
     );
 
-    testServerRoute(server, '/api/admin/ui-config', {
+    testServerRoute(server, '/api/admin/projects/default/overview', {
         environment: 'Open Source',
+    });
+    testServerRoute(server, '/api/admin/ui-config', {
+        archivedAt: null,
     });
 };
 
@@ -94,6 +97,9 @@ test('should show confirm dialog when reviving flag', async () => {
     await screen.findByText('Revive feature flag?');
     const reviveFlagsButton = screen.getByRole('button', {
         name: /Revive feature flag/i,
+    });
+    await waitFor(async () => {
+        expect(reviveFlagsButton).toBeEnabled();
     });
     fireEvent.click(reviveFlagsButton);
 

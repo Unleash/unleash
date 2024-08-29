@@ -2,6 +2,91 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.1.11] - 2024-08-21
+
+### Bug Fixes
+
+- Enable disabled strategies keeps settings ([#7952](https://github.com/Unleash/unleash/issues/7952))
+
+
+## [6.1.10] - 2024-08-16
+
+### Bug Fixes
+
+- Orphaned token label patch ([#7903](https://github.com/Unleash/unleash/issues/7903))
+
+
+## [6.1.9] - 2024-08-14
+
+### Bug Fixes
+
+- Add collaborators to ignored props for feature diff notif ([#7877](https://github.com/Unleash/unleash/issues/7877))
+
+
+### Features
+
+- Allow editing root role/description on SCIM group ([#7874](https://github.com/Unleash/unleash/issues/7874))
+
+
+## [6.1.8] - 2024-08-14
+
+### Bug Fixes
+
+- Change request enabled check should ignore disabled envs ([#7869](https://github.com/Unleash/unleash/issues/7869)) ([#7876](https://github.com/Unleash/unleash/issues/7876))
+
+
+## [6.1.7] - 2024-08-14
+
+### Bug Fixes
+
+- Messed up on merge-conflicts
+
+
+## [6.1.6] - 2024-08-14
+
+### Features
+
+- Update feature completed payload to have boolean instead of string ([#7855](https://github.com/Unleash/unleash/issues/7855))
+
+
+### Miscellaneous Tasks
+
+- Split send welcome email ([#7795](https://github.com/Unleash/unleash/issues/7795)) ([#7867](https://github.com/Unleash/unleash/issues/7867))
+
+
+## [6.1.5] - 2024-08-13
+
+### Bug Fixes
+
+- SCIM UI flag removal ([#7856](https://github.com/Unleash/unleash/issues/7856))
+
+
+## [6.1.4] - 2024-08-13
+
+### Bug Fixes
+
+- Don't show link stubs in slack notifications ([#7810](https://github.com/Unleash/unleash/issues/7810)) ([#7850](https://github.com/Unleash/unleash/issues/7850))
+
+
+### Fix
+
+- Time to production ([#7835](https://github.com/Unleash/unleash/issues/7835)) ([#7848](https://github.com/Unleash/unleash/issues/7848))
+
+
+### Miscellaneous Tasks
+
+- Cherry-pick SCIM flag removal ([#7851](https://github.com/Unleash/unleash/issues/7851))
+
+
+## [6.1.3] - 2024-08-13
+
+### Bug Fixes
+
+- Don't always fetch all flags on project flag screen ([#7834](https://github.com/Unleash/unleash/issues/7834))
+
+- Display feature naming patterns in dialog ([#7837](https://github.com/Unleash/unleash/issues/7837))
+
+
 ## [6.1.2] - 2024-08-08
 
 ### Bug Fixes

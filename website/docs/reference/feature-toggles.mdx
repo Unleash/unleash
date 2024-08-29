@@ -12,7 +12,7 @@ Each feature flag has the following configuration options
 | --- | --- | --- | --- |
 | name | Yes | N/A | The feature flag's name. Must be URL-friendly according to [section 2.3 of RFC 3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) and must be unique within your Unleash instance. Must be between 1 and 100 characters long, inclusive. |
 | feature flag type | Yes | Release | The [feature flag's type](../reference/feature-toggle-types.md). |
-| project | Yes | The [default project](../reference/projects.md#the-default-project). When created from a project page in the admin UI, that project will be the default value instead. | The [project](../reference/projects.md) that should contain the feature flag. |
+| project | Yes | The [default project](../reference/projects.md). When created from a project page in the admin UI, that project will be the default value instead. | The [project](../reference/projects.md) that should contain the feature flag. |
 | description | No | N/A | A description of the feature flag's purpose. |
 | enable impression data | Yes | No | Whether to enable [impression data](../reference/impression-data.md) for this flag or not. |
 
@@ -20,7 +20,7 @@ Each feature flag has the following configuration options
 
 You probably won't want to use the same configuration to enable a flag in development as you do in production. That's why feature flags have different activation strategy configurations for each environment.
 
-You can enable and disable a flag independently in each of the [project's environments](../reference/projects.md#projects-and-environments). When you disable a flag in an environment, it will always evaluate to false in that environment. When you enable a flag in an environment, the flag will evaluate to true or false depending on its activation strategies.
+You can enable and disable a flag independently in each of the [project's environments](../reference/projects.md). When you disable a flag in an environment, it will always evaluate to false in that environment. When you enable a flag in an environment, the flag will evaluate to true or false depending on its activation strategies.
 
 Refer to the [documentation on environments](../reference/environments.md) for more details on how environments work.
 

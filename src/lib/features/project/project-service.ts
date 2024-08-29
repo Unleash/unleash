@@ -32,7 +32,6 @@ import {
     type IProjectRoleUsage,
     type IProjectStore,
     type IProjectUpdate,
-    type IProjectWithCount,
     type IUnleashConfig,
     type IUnleashStores,
     MOVE_FEATURE_TOGGLE,
@@ -47,12 +46,14 @@ import {
     ProjectGroupAddedEvent,
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
+    ProjectRevivedEvent,
     ProjectUpdatedEvent,
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
     ProjectUserUpdateRoleEvent,
     RoleName,
     SYSTEM_USER_ID,
+    type IProjectReadModel,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -86,6 +87,7 @@ import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/api-token-service';
+import type { TransitionalProjectData } from './project-read-model-type';
 
 type Days = number;
 type Count = number;
@@ -160,6 +162,8 @@ export default class ProjectService {
 
     private eventBus: EventEmitter;
 
+    private projectReadModel: IProjectReadModel;
+
     constructor(
         {
             projectStore,
@@ -171,6 +175,7 @@ export default class ProjectService {
             featureEnvironmentStore,
             accountStore,
             projectStatsStore,
+            projectReadModel,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -182,6 +187,7 @@ export default class ProjectService {
             | 'featureEnvironmentStore'
             | 'accountStore'
             | 'projectStatsStore'
+            | 'projectReadModel'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -213,16 +219,18 @@ export default class ProjectService {
         this.isEnterprise = config.isEnterprise;
         this.resourceLimits = config.resourceLimits;
         this.eventBus = config.eventBus;
+        this.projectReadModel = projectReadModel;
     }
 
     async getProjects(
         query?: IProjectQuery,
         userId?: number,
-    ): Promise<IProjectWithCount[]> {
-        const projects = await this.projectStore.getProjectsWithCounts(
-            query,
-            userId,
-        );
+    ): Promise<TransitionalProjectData[]> {
+        const getProjects = this.flagResolver.isEnabled('useProjectReadModel')
+            ? () => this.projectReadModel.getProjectsForAdminUi(query, userId)
+            : () => this.projectStore.getProjectsWithCounts(query, userId);
+
+        const projects = await getProjects();
 
         if (userId) {
             const projectAccess =
@@ -242,8 +250,8 @@ export default class ProjectService {
     }
 
     async addOwnersToProjects(
-        projects: IProjectWithCount[],
-    ): Promise<IProjectWithCount[]> {
+        projects: TransitionalProjectData[],
+    ): Promise<TransitionalProjectData[]> {
         const anonymizeProjectOwners = this.flagResolver.isEnabled(
             'anonymizeProjectOwners',
         );
@@ -317,8 +325,6 @@ export default class ProjectService {
     }
 
     async validateProjectLimit() {
-        if (!this.flagResolver.isEnabled('resourceLimits')) return;
-
         const limit = Math.max(this.resourceLimits.projects, 1);
         const projectCount = await this.projectStore.count();
 
@@ -619,6 +625,19 @@ export default class ProjectService {
 
         await this.eventService.storeEvent(
             new ProjectArchivedEvent({
+                project: id,
+                auditUser,
+            }),
+        );
+    }
+
+    async reviveProject(id: string, auditUser: IAuditUser): Promise<void> {
+        await this.validateProjectLimit();
+
+        await this.projectStore.revive(id);
+
+        await this.eventService.storeEvent(
+            new ProjectRevivedEvent({
                 project: id,
                 auditUser,
             }),
@@ -1501,6 +1520,9 @@ export default class ProjectService {
             health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,
+            ...(this.flagResolver.isEnabled('archiveProjects')
+                ? { archivedAt: project.archivedAt }
+                : {}),
             createdAt: project.createdAt,
             environments,
             featureTypeCounts,

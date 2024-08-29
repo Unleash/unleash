@@ -14,14 +14,18 @@ const testUser = { name: 'test', id: -9999 } as User;
 
 beforeAll(async () => {
     db = await dbInit('feature_304_api_client', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
-                optimal304: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                    optimal304: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
     await app.services.featureToggleService.createFeatureToggle(
         'default',
         {

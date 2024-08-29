@@ -27,7 +27,7 @@ const StyledApiError = styled(ApiError)(({ theme }) => ({
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(4),
+    gap: theme.spacing(6),
 }));
 
 const NewProjectList = () => {
@@ -124,21 +124,27 @@ const NewProjectList = () => {
                         />
                     )}
                 />
-                <ProjectsListSort
-                    sortBy={state.sortBy}
-                    setSortBy={(sortBy) =>
-                        setState({ sortBy: sortBy as typeof state.sortBy })
-                    }
-                />
                 <SearchHighlightProvider value={state.query || ''}>
                     <ProjectGroup
                         sectionTitle='My projects'
+                        sectionSubtitle='Favorite projects, projects you own or projects you are a member of.'
+                        HeaderActions={
+                            <ProjectsListSort
+                                sortBy={state.sortBy}
+                                setSortBy={(sortBy) =>
+                                    setState({
+                                        sortBy: sortBy as typeof state.sortBy,
+                                    })
+                                }
+                            />
+                        }
                         loading={loading}
                         projects={groupedProjects.myProjects}
                     />
 
                     <ProjectGroup
                         sectionTitle='Other projects'
+                        sectionSubtitle='Projects in Unleash that you have access to.'
                         loading={loading}
                         projects={groupedProjects.otherProjects}
                     />

@@ -1,7 +1,6 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     StyledProjectCard,
-    StyledDivHeader,
     StyledCardTitle,
     StyledProjectCardBody,
     StyledIconBox,
@@ -28,11 +27,19 @@ const StyledCount = styled('strong')(({ theme }) => ({
 }));
 
 const StyledInfo = styled('div')(({ theme }) => ({
-    display: 'flex',
+    display: 'grid',
+    gridTemplate: '1rem 1rem / 1fr 1fr',
+    gridAutoFlow: 'column',
+    alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: theme.spacing(1),
     fontSize: theme.fontSizes.smallerBody,
-    alignItems: 'flex-end',
+}));
+
+const StyledHeader = styled('div')(({ theme }) => ({
+    gap: theme.spacing(1),
+    display: 'flex',
+    width: '100%',
 }));
 
 export const ProjectCard = ({
@@ -53,7 +60,7 @@ export const ProjectCard = ({
     return (
         <StyledProjectCard onMouseEnter={onHover}>
             <StyledProjectCardBody>
-                <StyledDivHeader>
+                <StyledHeader>
                     <StyledIconBox>
                         <ProjectIcon />
                     </StyledIconBox>
@@ -80,18 +87,19 @@ export const ProjectCard = ({
                     </Box>
                     <ProjectModeBadge mode={mode} />
                     <FavoriteAction id={id} isFavorite={favorite} />
-                </StyledDivHeader>
+                </StyledHeader>
                 <StyledInfo>
                     <div>
-                        <div>
-                            <StyledCount>{featureCount}</StyledCount> flag
-                            {featureCount === 1 ? '' : 's'}
-                        </div>
-                        <div>
-                            <StyledCount>{health}%</StyledCount> health
-                        </div>
+                        <StyledCount>{featureCount}</StyledCount> flag
+                        {featureCount === 1 ? '' : 's'}
                     </div>
-                    <ProjectLastSeen date={lastReportedFlagUsage} />
+                    <div>
+                        <StyledCount>{health}%</StyledCount> health
+                    </div>
+                    <div />
+                    <div>
+                        <ProjectLastSeen date={lastReportedFlagUsage} />
+                    </div>
                 </StyledInfo>
             </StyledProjectCardBody>
             <ProjectCardFooter

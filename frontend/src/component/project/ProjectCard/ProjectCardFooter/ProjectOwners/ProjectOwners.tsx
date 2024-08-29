@@ -95,7 +95,7 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
             <StyledContainer>
                 <AvatarGroup
                     users={users}
-                    avatarLimit={4}
+                    avatarLimit={8}
                     AvatarComponent={StyledAvatarComponent}
                 />
             </StyledContainer>

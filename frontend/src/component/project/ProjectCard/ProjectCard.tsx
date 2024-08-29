@@ -89,15 +89,15 @@ export const ProjectCard = ({
                     <FavoriteAction id={id} isFavorite={favorite} />
                 </StyledHeader>
                 <StyledInfo>
-                    <div>
+                    <div data-loading>
                         <StyledCount>{featureCount}</StyledCount> flag
                         {featureCount === 1 ? '' : 's'}
                     </div>
-                    <div>
+                    <div data-loading>
                         <StyledCount>{health}%</StyledCount> health
                     </div>
                     <div />
-                    <div>
+                    <div data-loading>
                         <ProjectLastSeen date={lastReportedFlagUsage} />
                     </div>
                 </StyledInfo>

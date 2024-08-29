@@ -18,7 +18,10 @@ export const ProjectArchiveLink: FC = () => {
     if (isSmallScreen) {
         return (
             <Tooltip arrow title='See archived projects'>
-                <IconButton onClick={() => navigate('/projects-archive')}>
+                <IconButton
+                    onClick={() => navigate('/projects-archive')}
+                    data-loading
+                >
                     <ArchiveIcon />
                 </IconButton>
             </Tooltip>
@@ -26,7 +29,7 @@ export const ProjectArchiveLink: FC = () => {
     }
     return (
         <>
-            <Link component={RouterLink} to='/projects-archive'>
+            <Link component={RouterLink} to='/projects-archive' data-loading>
                 Archived projects
             </Link>
             <PageHeader.Divider />

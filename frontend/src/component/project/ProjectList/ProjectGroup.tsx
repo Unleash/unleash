@@ -140,6 +140,12 @@ export const ProjectGroup = ({
                                                 memberCount={2}
                                                 health={95}
                                                 featureCount={4}
+                                                owners={[
+                                                    {
+                                                        ownerType: 'user',
+                                                        name: 'Loading data',
+                                                    },
+                                                ]}
                                             />
                                         ),
                                     )}

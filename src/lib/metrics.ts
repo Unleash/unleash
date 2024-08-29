@@ -310,7 +310,7 @@ export default class MetricsMonitor {
         const onboardingDuration = createGauge({
             name: 'onboarding_duration',
             labelNames: ['event'],
-            help: 'First login, second login, first flag, first metrics from first user creation',
+            help: 'firstLogin, secondLogin, firstFeatureFlag, firstPreLive, firstLive from first user creation',
         });
 
         const featureLifecycleStageCountByProject = createGauge({

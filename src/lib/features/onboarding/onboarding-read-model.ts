@@ -60,15 +60,6 @@ export class OnboardingReadModel implements IOnboardingReadModel {
         const firstPreLive = firstPreLiveResult?.created_at;
         const firstLive = firstLiveResult?.created_at;
 
-        console.log(
-            createdAt,
-            firstLogin,
-            secondLogin,
-            firstInitial,
-            firstPreLive,
-            firstLive,
-        );
-
         const firstLoginDiff = calculateTimeDifferenceInMinutes(
             createdAt,
             firstLogin,

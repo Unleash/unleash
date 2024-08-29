@@ -1,5 +1,5 @@
 import { render } from 'utils/testRenderer';
-import { ProjectListNew } from './ProjectList';
+import { ProjectList } from './LegacyProjectList';
 import { screen, waitFor } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { CREATE_PROJECT } from '../../providers/AccessProvider/permissions';
@@ -21,7 +21,7 @@ const setupApi = () => {
 
 test('Enabled new project button when version and permission allow for it and limit is reached', async () => {
     setupApi();
-    render(<ProjectListNew />, {
+    render(<ProjectList />, {
         permissions: [{ permission: CREATE_PROJECT }],
     });
 

@@ -9,6 +9,7 @@ import loadingData from './loadingData';
 import { TablePlaceholder } from 'component/common/Table';
 import { styled, Typography } from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -30,7 +31,10 @@ type ProjectGroupProps = {
     sectionTitle?: string;
     projects: IProjectCard[];
     loading: boolean;
-    searchValue: string;
+    /**
+     * @deprecated remove with projectListImprovements
+     */
+    searchValue?: string;
     placeholder?: string;
     ProjectCardComponent?: ComponentType<IProjectCard & any>;
     link?: boolean;
@@ -49,6 +53,7 @@ export const ProjectGroup = ({
     const ProjectCard =
         ProjectCardComponent ??
         (projectListImprovementsEnabled ? NewProjectCard : LegacyProjectCard);
+    const { searchQuery } = useSearchHighlightContext();
 
     return (
         <article>
@@ -68,11 +73,11 @@ export const ProjectGroup = ({
                 condition={projects.length < 1 && !loading}
                 show={
                     <ConditionallyRender
-                        condition={searchValue?.length > 0}
+                        condition={(searchValue || searchQuery)?.length > 0}
                         show={
                             <TablePlaceholder>
                                 No projects found matching &ldquo;
-                                {searchValue}
+                                {searchValue || searchQuery}
                                 &rdquo;
                             </TablePlaceholder>
                         }

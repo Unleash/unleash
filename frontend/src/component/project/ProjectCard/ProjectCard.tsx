@@ -15,6 +15,8 @@ import { flexColumn } from 'themes/themeStyles';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen';
 import type { IProjectCard } from 'interfaces/project';
+import { Highlighter } from 'component/common/Highlighter/Highlighter';
+import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 
 const StyledUpdated = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -45,48 +47,58 @@ export const ProjectCard = ({
     owners,
     lastUpdatedAt,
     lastReportedFlagUsage,
-}: IProjectCard) => (
-    <StyledProjectCard onMouseEnter={onHover}>
-        <StyledProjectCardBody>
-            <StyledDivHeader>
-                <StyledIconBox>
-                    <ProjectIcon />
-                </StyledIconBox>
-                <Box
-                    data-loading
-                    sx={(theme) => ({
-                        ...flexColumn,
-                        margin: theme.spacing(1, 'auto', 1, 0),
-                    })}
-                >
-                    <StyledCardTitle lines={1} sx={{ margin: 0 }}>
-                        {name}
-                    </StyledCardTitle>
-                    <ConditionallyRender
-                        condition={Boolean(lastUpdatedAt)}
-                        show={
-                            <StyledUpdated>
-                                Updated <TimeAgo date={lastUpdatedAt} />
-                            </StyledUpdated>
-                        }
-                    />
-                </Box>
-                <ProjectModeBadge mode={mode} />
-                <FavoriteAction id={id} isFavorite={favorite} />
-            </StyledDivHeader>
-            <StyledInfo>
-                <div>
+}: IProjectCard) => {
+    const { searchQuery } = useSearchHighlightContext();
+
+    return (
+        <StyledProjectCard onMouseEnter={onHover}>
+            <StyledProjectCardBody>
+                <StyledDivHeader>
+                    <StyledIconBox>
+                        <ProjectIcon />
+                    </StyledIconBox>
+                    <Box
+                        data-loading
+                        sx={(theme) => ({
+                            ...flexColumn,
+                            margin: theme.spacing(1, 'auto', 1, 0),
+                        })}
+                    >
+                        <StyledCardTitle lines={1} sx={{ margin: 0 }}>
+                            <Highlighter search={searchQuery}>
+                                {name}
+                            </Highlighter>
+                        </StyledCardTitle>
+                        <ConditionallyRender
+                            condition={Boolean(lastUpdatedAt)}
+                            show={
+                                <StyledUpdated>
+                                    Updated <TimeAgo date={lastUpdatedAt} />
+                                </StyledUpdated>
+                            }
+                        />
+                    </Box>
+                    <ProjectModeBadge mode={mode} />
+                    <FavoriteAction id={id} isFavorite={favorite} />
+                </StyledDivHeader>
+                <StyledInfo>
                     <div>
-                        <StyledCount>{featureCount}</StyledCount> flag
-                        {featureCount === 1 ? '' : 's'}
+                        <div>
+                            <StyledCount>{featureCount}</StyledCount> flag
+                            {featureCount === 1 ? '' : 's'}
+                        </div>
+                        <div>
+                            <StyledCount>{health}%</StyledCount> health
+                        </div>
                     </div>
-                    <div>
-                        <StyledCount>{health}%</StyledCount> health
-                    </div>
-                </div>
-                <ProjectLastSeen date={lastReportedFlagUsage} />
-            </StyledInfo>
-        </StyledProjectCardBody>
-        <ProjectCardFooter id={id} owners={owners} memberCount={memberCount} />
-    </StyledProjectCard>
-);
+                    <ProjectLastSeen date={lastReportedFlagUsage} />
+                </StyledInfo>
+            </StyledProjectCardBody>
+            <ProjectCardFooter
+                id={id}
+                owners={owners}
+                memberCount={memberCount}
+            />
+        </StyledProjectCard>
+    );
+};

@@ -4,8 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import ApiError from 'component/common/ApiError/ApiError';
-import { Link, styled, useMediaQuery } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { styled, useMediaQuery } from '@mui/material';
 import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
@@ -18,6 +17,7 @@ import { ProjectList as LegacyProjectList } from './LegacyProjectList';
 import { ProjectCreationButton } from './ProjectCreationButton/ProjectCreationButton';
 import { useGroupedProjects } from './hooks/useGroupedProjects';
 import { useProjectsSearchAndSort } from './hooks/useProjectsSearchAndSort';
+import { ProjectArchiveLink } from './ProjectArchiveLink/ProjectArchiveLink';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -77,19 +77,10 @@ const NewProjectList = () => {
                                     </>
                                 }
                             />
+
                             <ConditionallyRender
                                 condition={Boolean(archiveProjectsEnabled)}
-                                show={
-                                    <>
-                                        <Link
-                                            component={RouterLink}
-                                            to='/projects-archive'
-                                        >
-                                            Archived projects
-                                        </Link>
-                                        <PageHeader.Divider />
-                                    </>
-                                }
+                                show={<ProjectArchiveLink />}
                             />
                             <ProjectCreationButton
                                 isDialogOpen={Boolean(state.create)}

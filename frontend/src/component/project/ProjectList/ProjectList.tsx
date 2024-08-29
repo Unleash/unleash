@@ -41,7 +41,7 @@ const NewProjectList = () => {
     const myProjects = new Set(useProfile().profile?.projects || []);
 
     const setSearchValue = useCallback(
-        (value: string) => setState({ query: value }),
+        (value: string) => setState({ query: value || undefined }),
         [setState],
     );
 

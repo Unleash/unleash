@@ -34,7 +34,7 @@ const usePersistentSearchParams = <T extends QueryParamConfigMap>(
 export const usePersistentTableState = <T extends QueryParamConfigMap>(
     key: string,
     queryParamsDefinition: T,
-    notPersistentParams: string[] = ['offset'],
+    excludedFromStorage: string[] = ['offset'],
 ) => {
     const updateStoredParams = usePersistentSearchParams(
         key,
@@ -86,7 +86,7 @@ export const usePersistentTableState = <T extends QueryParamConfigMap>(
     useEffect(() => {
         const filteredTableState = Object.fromEntries(
             Object.entries(orderedTableState).filter(
-                ([key]) => !notPersistentParams.includes(key),
+                ([key]) => !excludedFromStorage.includes(key),
             ),
         );
         updateStoredParams(filteredTableState);

@@ -244,7 +244,7 @@ class UserStore implements IUserStore {
                 ]),
             });
         }
-        return await updateQuery;
+        return updateQuery;
     }
 
     async deleteAll(): Promise<void> {

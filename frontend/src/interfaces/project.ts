@@ -6,7 +6,7 @@ import type { ProjectMode } from 'component/project/Project/hooks/useProjectEnte
 export interface IProjectCard {
     name: string;
     id: string;
-    createdAt: string;
+    createdAt: string | Date;
     health?: number;
     description?: string;
     featureCount?: number;
@@ -15,8 +15,8 @@ export interface IProjectCard {
     onHover?: () => void;
     favorite?: boolean;
     owners?: ProjectSchema['owners'];
-    lastUpdatedAt?: Date;
-    lastReportedFlagUsage?: Date;
+    lastUpdatedAt?: Date | string;
+    lastReportedFlagUsage?: Date | string;
 }
 
 export type FeatureNamingType = {

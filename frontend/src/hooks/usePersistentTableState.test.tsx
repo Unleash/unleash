@@ -9,12 +9,18 @@ import { FilterItemParam } from '../utils/serializeQueryParams';
 type TestComponentProps = {
     keyName: string;
     queryParamsDefinition: Record<string, any>;
+    nonPersistentParams?: string[];
 };
 
-function TestComponent({ keyName, queryParamsDefinition }: TestComponentProps) {
+function TestComponent({
+    keyName,
+    queryParamsDefinition,
+    nonPersistentParams,
+}: TestComponentProps) {
     const [tableState, setTableState] = usePersistentTableState(
         keyName,
         queryParamsDefinition,
+        nonPersistentParams,
     );
 
     return (

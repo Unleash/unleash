@@ -8,7 +8,7 @@ import { EEA, P } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
-import { ProjectListNew } from 'component/project/ProjectList/ProjectList';
+import { ProjectList } from 'component/project/ProjectList/ProjectList';
 import { ArchiveProjectList } from 'component/project/ProjectList/ArchiveProjectList';
 import RedirectArchive from 'component/archive/RedirectArchive';
 import CreateEnvironment from 'component/environments/CreateEnvironment/CreateEnvironment';
@@ -113,7 +113,7 @@ export const routes: IRoute[] = [
     {
         path: '/projects',
         title: 'Projects',
-        component: ProjectListNew,
+        component: ProjectList,
         type: 'protected',
         menu: { mobile: true },
     },

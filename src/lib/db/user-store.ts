@@ -11,7 +11,7 @@ import type {
     IUserUpdateFields,
 } from '../types/stores/user-store';
 import type { Db } from './db';
-import type FlagResolver from '../util/flag-resolver';
+import type { IFlagResolver } from '../types';
 
 const TABLE = 'users';
 const PASSWORD_HASH_TABLE = 'used_passwords';
@@ -69,9 +69,9 @@ class UserStore implements IUserStore {
 
     private logger: Logger;
 
-    private flagResolver: FlagResolver;
+    private flagResolver: IFlagResolver;
 
-    constructor(db: Db, getLogger: LogProvider, flagResolver: FlagResolver) {
+    constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
         this.db = db;
         this.logger = getLogger('user-store.ts');
         this.flagResolver = flagResolver;

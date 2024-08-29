@@ -11,7 +11,6 @@ export interface UserData {
     email?: string;
     imageUrl?: string;
     seenAt?: Date;
-    firstSeenAt?: Date;
     loginAttempts?: number;
     createdAt?: Date;
     isService?: boolean;
@@ -25,7 +24,6 @@ export interface IUser {
     email?: string;
     inviteLink?: string;
     seenAt?: Date;
-    firstSeenAt?: Date;
     createdAt?: Date;
     permissions: string[];
     loginAttempts?: number;
@@ -61,8 +59,6 @@ export default class User implements IUser {
     imageUrl: string;
 
     seenAt?: Date;
-
-    firstSeenAt?: Date;
 
     loginAttempts?: number;
 

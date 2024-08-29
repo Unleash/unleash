@@ -409,7 +409,9 @@ export default class MetricsMonitor {
                         1,
                     ),
                     stores.apiTokenStore.countDeprecatedTokens(),
-                    stores.onboardingReadModel.getInstanceOnboardingMetrics(),
+                    flagResolver.isEnabled('onboardingMetrics')
+                        ? stores.onboardingReadModel.getInstanceOnboardingMetrics()
+                        : Promise.resolve({}),
                 ]);
 
                 featureFlagsTotal.reset();

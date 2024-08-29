@@ -16,6 +16,11 @@ export const useProjectsSearchAndSort = (
                 : projects
         )
             .sort((a, b) => {
+                const aVal = `${a.name || ''}`.toLowerCase();
+                const bVal = `${b.name || ''}`.toLowerCase();
+                return aVal?.localeCompare(bVal);
+            })
+            .sort((a, b) => {
                 if (sortBy === 'created') {
                     const aVal = new Date(a.createdAt || 0);
                     const bVal = new Date(b.createdAt || 0);
@@ -23,8 +28,8 @@ export const useProjectsSearchAndSort = (
                 }
 
                 if (sortBy === 'updated') {
-                    const aVal = new Date(a.lastUpdatedAt || 0);
-                    const bVal = new Date(b.lastUpdatedAt || 0);
+                    const aVal = new Date(a.lastUpdatedAt || a.createdAt || 0);
+                    const bVal = new Date(b.lastUpdatedAt || b.createdAt || 0);
                     return bVal?.getTime() - aVal?.getTime();
                 }
 
@@ -34,9 +39,7 @@ export const useProjectsSearchAndSort = (
                     return bVal?.getTime() - aVal?.getTime();
                 }
 
-                const aVal = `${a.name || ''}`.toLowerCase();
-                const bVal = `${b.name || ''}`.toLowerCase();
-                return aVal?.localeCompare(bVal);
+                return 0;
             })
             .sort((a, b) => {
                 if (a?.favorite && !b?.favorite) {

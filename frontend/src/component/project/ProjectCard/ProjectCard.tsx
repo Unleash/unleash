@@ -1,4 +1,3 @@
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     StyledProjectCard,
     StyledCardTitle,
@@ -52,6 +51,7 @@ export const ProjectCard = ({
     mode,
     favorite = false,
     owners,
+    createdAt,
     lastUpdatedAt,
     lastReportedFlagUsage,
 }: IProjectCard) => {
@@ -76,14 +76,10 @@ export const ProjectCard = ({
                                 {name}
                             </Highlighter>
                         </StyledCardTitle>
-                        <ConditionallyRender
-                            condition={Boolean(lastUpdatedAt)}
-                            show={
-                                <StyledUpdated>
-                                    Updated <TimeAgo date={lastUpdatedAt} />
-                                </StyledUpdated>
-                            }
-                        />
+                        <StyledUpdated>
+                            Updated{' '}
+                            <TimeAgo date={lastUpdatedAt || createdAt} />
+                        </StyledUpdated>
                     </Box>
                     <ProjectModeBadge mode={mode} />
                     <FavoriteAction id={id} isFavorite={favorite} />

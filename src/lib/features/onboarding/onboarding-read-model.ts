@@ -2,15 +2,9 @@ import type { Db } from '../../db/db';
 import type {
     IOnboardingReadModel,
     InstanceOnboarding,
+    ProjectOnboarding,
 } from './onboarding-read-model-type';
 import { millisecondsToMinutes } from 'date-fns';
-
-interface IOnboardingUser {
-    first_login: string;
-}
-const parseStringToNumber = (value: string): number | null => {
-    return Number.isNaN(Number(value)) ? null : Number(value);
-};
 
 const calculateTimeDifferenceInMinutes = (date1?: Date, date2?: Date) => {
     if (date1 && date2) {
@@ -88,5 +82,49 @@ export class OnboardingReadModel implements IOnboardingReadModel {
             firstPreLive: firstPreLiveDiff,
             firstLive: firstLiveDiff,
         };
+    }
+
+    async getProjectsOnboardingMetrics(): Promise<Array<ProjectOnboarding>> {
+        const lifecycleResults = await this.db('projects')
+            .join('features', 'projects.id', 'features.project')
+            .join(
+                'feature_lifecycles',
+                'features.name',
+                'feature_lifecycles.feature',
+            )
+            .select('projects.id as project_id')
+            .select('projects.created_at as project_created_at')
+            .select(
+                this.db.raw(
+                    ` MIN(CASE WHEN feature_lifecycles.stage = 'initial' THEN feature_lifecycles.created_at ELSE NULL END) AS first_initial`,
+                ),
+            )
+            .select(
+                this.db.raw(
+                    `MIN(CASE WHEN feature_lifecycles.stage = 'pre-live' THEN feature_lifecycles.created_at ELSE NULL END) AS first_pre_live`,
+                ),
+            )
+            .select(
+                this.db.raw(
+                    `MIN(CASE WHEN feature_lifecycles.stage = 'live' THEN feature_lifecycles.created_at ELSE NULL END) AS first_live`,
+                ),
+            )
+            .groupBy('projects.id');
+
+        return lifecycleResults.map((result) => ({
+            project: result.project_id,
+            firstFeatureFlag: calculateTimeDifferenceInMinutes(
+                result.project_created_at,
+                result.first_initial,
+            ),
+            firstPreLive: calculateTimeDifferenceInMinutes(
+                result.project_created_at,
+                result.first_pre_live,
+            ),
+            firstLive: calculateTimeDifferenceInMinutes(
+                result.project_created_at,
+                result.first_live,
+            ),
+        }));
     }
 }

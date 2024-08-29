@@ -37,6 +37,7 @@ beforeEach(async () => {
 });
 
 test('can get onboarding durations', async () => {
+    jest.useFakeTimers();
     const initialResult =
         await onboardingReadModel.getInstanceOnboardingMetrics();
     expect(initialResult).toMatchObject({
@@ -56,7 +57,7 @@ test('can get onboarding durations', async () => {
         firstLogin: 0,
         secondLogin: null,
     });
-    jest.useFakeTimers();
+
     jest.advanceTimersByTime(minutesToMilliseconds(10));
 
     const secondUser = await userStore.insert({});
@@ -103,4 +104,16 @@ test('can get onboarding durations', async () => {
         firstPreLive: 30,
         firstLive: 40,
     });
+
+    const projectOnboardingResult =
+        await onboardingReadModel.getProjectsOnboardingMetrics();
+
+    expect(projectOnboardingResult).toMatchObject([
+        {
+            project: 'default',
+            firstFeatureFlag: 20,
+            firstPreLive: 30,
+            firstLive: 40,
+        },
+    ]);
 });

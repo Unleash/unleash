@@ -13,7 +13,7 @@ import type { FC } from 'react';
 export const ProjectArchiveLink: FC = () => {
     const navigate = useNavigate();
     const theme = useTheme();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     if (isSmallScreen) {
         return (

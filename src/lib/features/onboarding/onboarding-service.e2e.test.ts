@@ -2,13 +2,24 @@ import type { IUnleashStores } from '../../../lib/types';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { minutesToMilliseconds } from 'date-fns';
+import { OnboardingService } from './onboarding-service';
+import { createTestConfig } from '../../../test/config/test-config';
 
 let db: ITestDb;
 let stores: IUnleashStores;
+let onboardService: OnboardingService;
 
 beforeAll(async () => {
     db = await dbInit('onboarding_store', getLogger);
+    const config = createTestConfig({
+        experimental: { flags: { onboardingMetrics: true } },
+    });
     stores = db.stores;
+    const { userStore, onboardingStore, projectReadModel } = stores;
+    onboardService = new OnboardingService(
+        { onboardingStore, userStore, projectReadModel },
+        config,
+    );
 });
 
 afterAll(async () => {
@@ -22,7 +33,7 @@ beforeEach(async () => {
 test('Storing onboarding events', async () => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date());
-    const { userStore, onboardingStore, featureToggleStore, projectStore } =
+    const { userStore, featureToggleStore, projectStore, projectReadModel } =
         stores;
     const user = await userStore.insert({});
     await projectStore.create({ id: 'test_project', name: 'irrelevant' });
@@ -32,23 +43,23 @@ test('Storing onboarding events', async () => {
     });
 
     jest.advanceTimersByTime(minutesToMilliseconds(1));
-    await onboardingStore.insert({ type: 'first-user-login' });
+    await onboardService.insert({ type: 'first-user-login' });
     jest.advanceTimersByTime(minutesToMilliseconds(1));
-    await onboardingStore.insert({ type: 'second-user-login' });
+    await onboardService.insert({ type: 'second-user-login' });
     jest.advanceTimersByTime(minutesToMilliseconds(1));
-    await onboardingStore.insert({ type: 'flag-created', flag: 'test' });
-    await onboardingStore.insert({ type: 'flag-created', flag: 'test' });
-    await onboardingStore.insert({ type: 'flag-created', flag: 'invalid' });
+    await onboardService.insert({ type: 'flag-created', flag: 'test' });
+    await onboardService.insert({ type: 'flag-created', flag: 'test' });
+    await onboardService.insert({ type: 'flag-created', flag: 'invalid' });
     jest.advanceTimersByTime(minutesToMilliseconds(1));
-    await onboardingStore.insert({ type: 'pre-live', flag: 'test' });
-    await onboardingStore.insert({ type: 'pre-live', flag: 'test' });
-    await onboardingStore.insert({ type: 'pre-live', flag: 'invalid' });
+    await onboardService.insert({ type: 'pre-live', flag: 'test' });
+    await onboardService.insert({ type: 'pre-live', flag: 'test' });
+    await onboardService.insert({ type: 'pre-live', flag: 'invalid' });
     jest.advanceTimersByTime(minutesToMilliseconds(1));
-    await onboardingStore.insert({ type: 'live', flag: 'test' });
+    await onboardService.insert({ type: 'live', flag: 'test' });
     jest.advanceTimersByTime(minutesToMilliseconds(1));
-    await onboardingStore.insert({ type: 'live', flag: 'test' });
+    await onboardService.insert({ type: 'live', flag: 'test' });
     jest.advanceTimersByTime(minutesToMilliseconds(1));
-    await onboardingStore.insert({ type: 'live', flag: 'invalid' });
+    await onboardService.insert({ type: 'live', flag: 'invalid' });
 
     const { rows: instanceEvents } = await db.rawDatabase.raw(
         'SELECT * FROM onboarding_events_instance',

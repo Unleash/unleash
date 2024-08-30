@@ -1,12 +1,16 @@
-export type SharedEvent =
-    | { type: 'flag-created'; flag: string }
-    | { type: 'pre-live'; flag: string }
-    | { type: 'live'; flag: string };
+export type ProjectEvent =
+    | { type: 'flag-created'; project: string; timeToEvent: number }
+    | { type: 'pre-live'; project: string; timeToEvent: number }
+    | { type: 'live'; project: string; timeToEvent: number };
 export type InstanceEvent =
-    | { type: 'first-user-login' }
-    | { type: 'second-user-login' };
-export type OnboardingEvent = SharedEvent | InstanceEvent;
+    | { type: 'flag-created'; timeToEvent: number }
+    | { type: 'pre-live'; timeToEvent: number }
+    | { type: 'live'; timeToEvent: number }
+    | { type: 'first-user-login'; timeToEvent: number }
+    | { type: 'second-user-login'; timeToEvent: number };
 
 export interface IOnboardingStore {
-    insert(event: OnboardingEvent): Promise<void>;
+    insertProjectEvent(event: ProjectEvent): Promise<void>;
+
+    insertInstanceEvent(event: InstanceEvent): Promise<void>;
 }

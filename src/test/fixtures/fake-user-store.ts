@@ -17,6 +17,22 @@ class UserStoreMock implements IUserStore {
         this.previousPasswords = new Map();
     }
 
+    async getFirstUserDate(): Promise<Date | null> {
+        if (this.data.length === 0) {
+            return null;
+        }
+        const oldestUser = this.data.reduce((oldest, user) => {
+            if (!user.createdAt) {
+                return oldest;
+            }
+            return !oldest.createdAt || user.createdAt < oldest.createdAt
+                ? user
+                : oldest;
+        }, this.data[0]);
+
+        return oldestUser.createdAt || null;
+    }
+
     getPasswordsPreviouslyUsed(userId: number): Promise<string[]> {
         return Promise.resolve(this.previousPasswords.get(userId) || []);
     }

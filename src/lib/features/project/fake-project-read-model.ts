@@ -5,6 +5,12 @@ import type {
 } from './project-read-model-type';
 
 export class FakeProjectReadModel implements IProjectReadModel {
+    getFeatureProject(): Promise<string | null> {
+        return Promise.resolve(null);
+    }
+    getProjectCreationTime(): Promise<Date | null> {
+        return Promise.resolve(null);
+    }
     getProjectsForAdminUi(): Promise<ProjectForUi[]> {
         return Promise.resolve([]);
     }

@@ -34,6 +34,7 @@ export interface IUserStore extends Store<IUser, number> {
         disallowNPreviousPasswords: number,
     ): Promise<void>;
     getPasswordsPreviouslyUsed(userId: number): Promise<string[]>;
+    getFirstUserDate(): Promise<Date | null>;
     incLoginAttempts(user: IUser): Promise<void>;
     successfullyLogin(user: IUser): Promise<number>;
     count(): Promise<number>;

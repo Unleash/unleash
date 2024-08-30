@@ -1,48 +1,45 @@
 import type { Db } from '../../db/db';
 import type {
+    InstanceEvent,
     IOnboardingStore,
-    OnboardingEvent,
-    SharedEvent,
+    ProjectEvent,
 } from './onboarding-store-type';
-import { millisecondsToSeconds } from 'date-fns';
 
-type DBInstanceType = {
-    event:
-        | 'first-user-login'
-        | 'second-user-login'
-        | 'first-flag'
-        | 'first-pre-live'
-        | 'first-live';
-    time_to_event: number;
-};
-
-type DBProjectType = {
-    event: 'firstFlag' | 'firstPreLive' | 'firstLive';
+export type DBProjectEvent = {
+    event: 'first-flag' | 'first-pre-live' | 'first-live';
     time_to_event: number;
     project: string;
 };
 
-const translateEvent = (
-    event: OnboardingEvent['type'],
-): DBInstanceType['event'] => {
-    if (event === 'flag-created') {
-        return 'first-flag';
-    }
-    if (event === 'pre-live') {
-        return 'first-pre-live';
-    }
-    if (event === 'live') {
-        return 'first-live';
-    }
-    return event as DBInstanceType['event'];
+export type DBInstanceEvent =
+    | {
+          event: 'first-flag' | 'first-pre-live' | 'first-live';
+          time_to_event: number;
+          project?: string;
+      }
+    | {
+          event: 'first-user-login' | 'second-user-login';
+          time_to_event: number;
+      };
+
+const projectEventLookup: Record<
+    ProjectEvent['type'],
+    DBProjectEvent['event']
+> = {
+    'flag-created': 'first-flag',
+    'pre-live': 'first-pre-live',
+    live: 'first-live',
 };
 
-const calculateTimeDifferenceInSeconds = (date1?: Date, date2?: Date) => {
-    if (date1 && date2) {
-        const diffInMilliseconds = date2.getTime() - date1.getTime();
-        return millisecondsToSeconds(diffInMilliseconds);
-    }
-    return null;
+const instanceEventLookup: Record<
+    InstanceEvent['type'],
+    DBInstanceEvent['event']
+> = {
+    'flag-created': 'first-flag',
+    'pre-live': 'first-pre-live',
+    live: 'first-live',
+    'first-user-login': 'first-user-login',
+    'second-user-login': 'second-user-login',
 };
 
 export class OnboardingStore implements IOnboardingStore {
@@ -52,85 +49,24 @@ export class OnboardingStore implements IOnboardingStore {
         this.db = db;
     }
 
-    async insert(event: OnboardingEvent): Promise<void> {
-        await this.insertInstanceEvent(event);
-        if (
-            event.type !== 'first-user-login' &&
-            event.type !== 'second-user-login'
-        ) {
-            await this.insertProjectEvent(event);
-        }
+    async insertInstanceEvent(event: InstanceEvent): Promise<void> {
+        await this.db('onboarding_events_instance')
+            .insert({
+                event: instanceEventLookup[event.type],
+                time_to_event: event.timeToEvent,
+            })
+            .onConflict()
+            .ignore();
     }
 
-    private async insertInstanceEvent(event: OnboardingEvent): Promise<void> {
-        const dbEvent = translateEvent(event.type);
-        const exists = await this.db<DBInstanceType>(
-            'onboarding_events_instance',
-        )
-            .where({ event: dbEvent })
-            .first();
-
-        if (exists) return;
-
-        const firstInstanceUser = await this.db('users')
-            .select('created_at')
-            .orderBy('created_at', 'asc')
-            .first();
-
-        if (!firstInstanceUser) return;
-
-        const timeToEvent = calculateTimeDifferenceInSeconds(
-            firstInstanceUser.created_at,
-            new Date(),
-        );
-        if (timeToEvent === null) return;
-
-        await this.db('onboarding_events_instance').insert({
-            event: dbEvent,
-            time_to_event: timeToEvent,
-        });
-    }
-
-    private async insertProjectEvent(event: SharedEvent): Promise<void> {
-        const dbEvent = translateEvent(event.type) as DBProjectType['event'];
-
-        const projectRow = await this.db<{ project: string; name: string }>(
-            'features',
-        )
-            .select('project')
-            .where({ name: event.flag })
-            .first();
-
-        if (!projectRow) return;
-
-        const project = projectRow.project;
-
-        const exists = await this.db('onboarding_events_project')
-            .where({ event: dbEvent, project })
-            .first();
-
-        if (exists) return;
-
-        const projectCreatedAt = await this.db<{
-            created_at: Date;
-            id: string;
-        }>('projects')
-            .select('created_at')
-            .where({ id: project })
-            .first();
-
-        if (!projectCreatedAt) return;
-
-        const timeToEvent = calculateTimeDifferenceInSeconds(
-            projectCreatedAt.created_at,
-            new Date(),
-        );
-        if (timeToEvent === null) return;
-
-        await this.db<DBProjectType>('onboarding_events_project').insert({
-            event: dbEvent,
-            time_to_event: timeToEvent,
-            project: project,
-        });
+    async insertProjectEvent(event: ProjectEvent): Promise<void> {
+        await this.db<DBProjectEvent>('onboarding_events_project')
+            .insert({
+                event: projectEventLookup[event.type],
+                time_to_event: event.timeToEvent,
+                project: event.project,
+            })
+            .onConflict()
+            .ignore();
     }
 }

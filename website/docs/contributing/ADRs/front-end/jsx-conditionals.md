@@ -4,7 +4,7 @@ title: "ADR: Use of conditionals in JSX (deprecation of `<ConditionallyRender />
 
 ## Background
 
-Using the `&&` operator in React can lead to unexpected rendering behavior when dealing with certain falsy values. In our codebase, the `<ConditionallyRender />` component has been used to render React elements based on a boolean condition. It has certain drawbacks. This is why we would like to replace it with ternary operator.
+Using the `&&` operator in React can lead to unexpected rendering behavior when dealing with certain falsy values. In our codebase, the `<ConditionallyRender />` component has been used to render React elements based on a boolean condition. However, it has certain drawbacks, which is why we would like to replace it with the ternary operator.
 
 ### Pitfalls of `&&` operator
 

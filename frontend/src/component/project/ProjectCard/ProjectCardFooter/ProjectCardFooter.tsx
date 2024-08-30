@@ -8,8 +8,6 @@ import {
 import { ProjectOwners } from './ProjectOwners/ProjectOwners';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectMembers } from './ProjectMembers/ProjectMembers';
-import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 
 interface IProjectCardFooterProps {
     id?: string;
@@ -17,7 +15,6 @@ interface IProjectCardFooterProps {
     children?: React.ReactNode;
     disabled?: boolean;
     owners: IProjectOwnersProps['owners'];
-    memberCount?: number;
 }
 
 const StyledFooter = styled(Box)<{ disabled: boolean }>(
@@ -38,7 +35,6 @@ export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
     children,
     owners,
     disabled = false,
-    memberCount,
 }) => {
     const projectListImprovementsEnabled = useUiFlag('projectListImprovements');
 
@@ -49,14 +45,7 @@ export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
                 show={<ProjectOwners owners={owners} />}
                 elseShow={<LegacyProjectOwners owners={owners} />}
             />
-            <ConditionallyRender
-                condition={
-                    Boolean(projectListImprovementsEnabled) &&
-                    id !== DEFAULT_PROJECT_ID
-                }
-                show={<ProjectMembers count={memberCount} members={[]} />}
-                elseShow={children}
-            />
+            {children}
         </StyledFooter>
     );
 };

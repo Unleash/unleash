@@ -100,5 +100,5 @@ export const StyledIconBox = styled(Box)(({ theme }) => ({
 
 export const StyledActions = styled(Box)(({ theme }) => ({
     display: 'flex',
-    marginRight: theme.spacing(2),
+    margin: theme.spacing(0.5),
 }));

@@ -67,9 +67,6 @@ It's easier to spot nested ternaries, then nested `<ConditionallyRender />` elem
 </div>
 ```
 
-#### Minor performance hit
-<!-- TODO: PoC -->
-
 ## Options considered
 
 To avoid these issues, safer alternatives to the `&&` operator can be used:
@@ -104,6 +101,8 @@ This is what we will use from now onwards.
 Positive: The codebase will become more type-safe and easier to understand.
 
 Negative: We import `<ConditionallyRender />` in almost 400 files. Significant refactoring effort is required.
+
+Performance: There was no measurable performance difference between code with and without this component. This was tested on production bundle, on the features search (table) and projects list pages.
 
 ## Migration plan
 

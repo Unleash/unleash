@@ -50,7 +50,7 @@ export const Test: FC<{ maybeString?: string }> = ({ maybeString }) => (
 ```
 
 #### Obfuscation of code smells and code cruft
-Nested ternaries are easier to spot then nested `<ConditionallyRender />` elements.
+Nested ternaries are easier to spot than nested `<ConditionallyRender />` elements.
 
 ```tsx
 <div>

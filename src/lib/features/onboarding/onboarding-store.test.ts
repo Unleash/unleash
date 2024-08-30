@@ -32,17 +32,17 @@ test('Storing onboarding events', async () => {
     });
 
     jest.advanceTimersByTime(minutesToMilliseconds(1));
-    await onboardingStore.insert({ type: 'firstUserLogin' });
+    await onboardingStore.insert({ type: 'first-user-login' });
     jest.advanceTimersByTime(minutesToMilliseconds(1));
-    await onboardingStore.insert({ type: 'secondUserLogin' });
+    await onboardingStore.insert({ type: 'second-user-login' });
     jest.advanceTimersByTime(minutesToMilliseconds(1));
-    await onboardingStore.insert({ type: 'flagCreated', flag: 'test' });
-    await onboardingStore.insert({ type: 'flagCreated', flag: 'test' });
-    await onboardingStore.insert({ type: 'flagCreated', flag: 'invalid' });
+    await onboardingStore.insert({ type: 'flag-created', flag: 'test' });
+    await onboardingStore.insert({ type: 'flag-created', flag: 'test' });
+    await onboardingStore.insert({ type: 'flag-created', flag: 'invalid' });
     jest.advanceTimersByTime(minutesToMilliseconds(1));
-    await onboardingStore.insert({ type: 'preLive', flag: 'test' });
-    await onboardingStore.insert({ type: 'preLive', flag: 'test' });
-    await onboardingStore.insert({ type: 'preLive', flag: 'invalid' });
+    await onboardingStore.insert({ type: 'pre-live', flag: 'test' });
+    await onboardingStore.insert({ type: 'pre-live', flag: 'test' });
+    await onboardingStore.insert({ type: 'pre-live', flag: 'invalid' });
     jest.advanceTimersByTime(minutesToMilliseconds(1));
     await onboardingStore.insert({ type: 'live', flag: 'test' });
     jest.advanceTimersByTime(minutesToMilliseconds(1));
@@ -54,19 +54,23 @@ test('Storing onboarding events', async () => {
         'SELECT * FROM onboarding_events_instance',
     );
     expect(instanceEvents).toMatchObject([
-        { event: 'firstUserLogin', time_to_event: 60 },
-        { event: 'secondUserLogin', time_to_event: 120 },
-        { event: 'firstFlag', time_to_event: 180 },
-        { event: 'firstPreLive', time_to_event: 240 },
-        { event: 'firstLive', time_to_event: 300 },
+        { event: 'first-user-login', time_to_event: 60 },
+        { event: 'second-user-login', time_to_event: 120 },
+        { event: 'first-flag', time_to_event: 180 },
+        { event: 'first-pre-live', time_to_event: 240 },
+        { event: 'first-live', time_to_event: 300 },
     ]);
 
     const { rows: projectEvents } = await db.rawDatabase.raw(
         'SELECT * FROM onboarding_events_project',
     );
     expect(projectEvents).toMatchObject([
-        { event: 'firstFlag', time_to_event: 180, project: 'test_project' },
-        { event: 'firstPreLive', time_to_event: 240, project: 'test_project' },
-        { event: 'firstLive', time_to_event: 300, project: 'test_project' },
+        { event: 'first-flag', time_to_event: 180, project: 'test_project' },
+        {
+            event: 'first-pre-live',
+            time_to_event: 240,
+            project: 'test_project',
+        },
+        { event: 'first-live', time_to_event: 300, project: 'test_project' },
     ]);
 });

@@ -8,11 +8,11 @@ import { millisecondsToSeconds } from 'date-fns';
 
 type DBInstanceType = {
     event:
-        | 'firstUserLogin'
-        | 'secondUserLogin'
-        | 'firstFlag'
-        | 'firstPreLive'
-        | 'firstLive';
+        | 'first-user-login'
+        | 'second-user-login'
+        | 'first-flag'
+        | 'first-pre-live'
+        | 'first-live';
     time_to_event: number;
 };
 
@@ -25,14 +25,14 @@ type DBProjectType = {
 const translateEvent = (
     event: OnboardingEvent['type'],
 ): DBInstanceType['event'] => {
-    if (event === 'flagCreated') {
-        return 'firstFlag';
+    if (event === 'flag-created') {
+        return 'first-flag';
     }
-    if (event === 'preLive') {
-        return 'firstPreLive';
+    if (event === 'pre-live') {
+        return 'first-pre-live';
     }
     if (event === 'live') {
-        return 'firstLive';
+        return 'first-live';
     }
     return event as DBInstanceType['event'];
 };
@@ -55,8 +55,8 @@ export class OnboardingStore implements IOnboardingStore {
     async insert(event: OnboardingEvent): Promise<void> {
         await this.insertInstanceEvent(event);
         if (
-            event.type !== 'firstUserLogin' &&
-            event.type !== 'secondUserLogin'
+            event.type !== 'first-user-login' &&
+            event.type !== 'second-user-login'
         ) {
             await this.insertProjectEvent(event);
         }

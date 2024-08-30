@@ -33,10 +33,12 @@ export class OnboardingService {
             if (!this.flagResolver.isEnabled('onboardingMetrics')) return;
 
             if (event.loginOrder === 0) {
-                await this.onboardingStore.insert({ type: 'firstUserLogin' });
+                await this.onboardingStore.insert({ type: 'first-user-login' });
             }
             if (event.loginOrder === 1) {
-                await this.onboardingStore.insert({ type: 'secondUserLogin' });
+                await this.onboardingStore.insert({
+                    type: 'second-user-login',
+                });
             }
         });
         this.eventBus.on(STAGE_ENTERED, async (stage: NewStage) => {
@@ -44,12 +46,12 @@ export class OnboardingService {
 
             if (stage.stage === 'initial') {
                 await this.onboardingStore.insert({
-                    type: 'flagCreated',
+                    type: 'flag-created',
                     flag: stage.feature,
                 });
             } else if (stage.stage === 'pre-live') {
                 await this.onboardingStore.insert({
-                    type: 'preLive',
+                    type: 'pre-live',
                     flag: stage.feature,
                 });
             } else if (stage.stage === 'live') {

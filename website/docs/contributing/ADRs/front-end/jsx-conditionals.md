@@ -16,7 +16,7 @@ While most truthy and falsy values behave as expected with the `&&` operator, ce
 {arr?.length && <p>❔</p>} // can render `0`
 ```
 
-These issues can cause bugs in components that conditionally render UI elements based on numeric values or other potentially falsy conditions. For this reason we use a wrapper.
+These issues can cause bugs in components that conditionally render UI elements based on numeric values or other potentially falsy conditions. For this reason, we use a wrapper.
 
 ```tsx
 <ConditionallyRender
@@ -72,7 +72,7 @@ Nested ternaries are easier to spot than nested `<ConditionallyRender />` elemen
 To avoid these issues, safer alternatives to the `&&` operator can be used:
 
 ### **Convert to boolean**
-We could try to explicitly converts the condition to a boolean, ensuring that only `true` or `false` determine the rendering.
+We could try to explicitly convert the condition to a boolean, ensuring that only `true` or `false` determine the rendering.
 
 ```tsx
 {Boolean(NaN) && <p>❔</p>}  // Won't render anything
@@ -106,9 +106,9 @@ Performance: There was no measurable performance difference between code with an
 
 ## Migration plan
 
-1. Mark `<ConditionallyRender />` as deprecated in the codebase with a clear JSDoc comment
+1. Mark `<ConditionallyRender />` as deprecated in the codebase with a clear JSDoc comment.
 
-2. Automated refactoring with AST (Abstract Syntax Tree)
+2. Automated refactoring with AST (Abstract Syntax Tree):
 There already is a script developed that can convert files between `ConditionallyRender` and ternary syntax. It uses jscodeshift, a library. It will be put in `frontend/scripts/transform.js`.
 
 3. Each change will have to be reviewed. The order of refactoring should be:

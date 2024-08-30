@@ -43,6 +43,8 @@ import type EventService from '../features/events/event-service';
 import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../types';
 import { PasswordPreviouslyUsedError } from '../error/password-previously-used';
 import { RateLimitError } from '../error/rate-limit-error';
+import type EventEmitter from 'events';
+import { USER_LOGIN } from '../metric-events';
 
 export interface ICreateUser {
     name?: string;
@@ -76,6 +78,8 @@ class UserService {
 
     private eventService: EventService;
 
+    private eventBus: EventEmitter;
+
     private accessService: AccessService;
 
     private resetTokenService: ResetTokenService;
@@ -98,7 +102,11 @@ class UserService {
             server,
             getLogger,
             authentication,
-        }: Pick<IUnleashConfig, 'getLogger' | 'authentication' | 'server'>,
+            eventBus,
+        }: Pick<
+            IUnleashConfig,
+            'getLogger' | 'authentication' | 'server' | 'eventBus'
+        >,
         services: {
             accessService: AccessService;
             resetTokenService: ResetTokenService;
@@ -110,6 +118,7 @@ class UserService {
     ) {
         this.logger = getLogger('service/user-service.js');
         this.store = stores.userStore;
+        this.eventBus = eventBus;
         this.eventService = services.eventService;
         this.accessService = services.accessService;
         this.resetTokenService = services.resetTokenService;
@@ -390,7 +399,8 @@ class UserService {
         if (user && passwordHash) {
             const match = await bcrypt.compare(password, passwordHash);
             if (match) {
-                await this.store.successfullyLogin(user);
+                const loginOrder = await this.store.successfullyLogin(user);
+                this.eventBus.emit(USER_LOGIN, { loginOrder });
                 return user;
             }
         }
@@ -443,13 +453,15 @@ class UserService {
                 throw e;
             }
         }
-        await this.store.successfullyLogin(user);
+        const loginOrder = await this.store.successfullyLogin(user);
+        this.eventBus.emit(USER_LOGIN, { loginOrder });
         return user;
     }
 
     async loginDemoAuthDefaultAdmin(): Promise<IUser> {
         const user = await this.store.getByQuery({ id: 1 });
-        await this.store.successfullyLogin(user);
+        const loginOrder = await this.store.successfullyLogin(user);
+        this.eventBus.emit(USER_LOGIN, { loginOrder });
         return user;
     }
 

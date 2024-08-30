@@ -302,7 +302,7 @@ class ProjectStore implements IProjectStore {
         project: IProjectInsert & IProjectSettings,
     ): Promise<IProject> {
         const row = await this.db(TABLE)
-            .insert(this.fieldToRow(project))
+            .insert({ ...this.fieldToRow(project), created_at: new Date() })
             .returning('*');
         const settingsRow = await this.db(SETTINGS_TABLE)
             .insert({

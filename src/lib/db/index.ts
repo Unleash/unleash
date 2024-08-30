@@ -53,6 +53,7 @@ import { IntegrationEventsStore } from '../features/integration-events/integrati
 import { FeatureCollaboratorsReadModel } from '../features/feature-toggle/feature-collaborators-read-model';
 import { createProjectReadModel } from '../features/project/createProjectReadModel';
 import { OnboardingReadModel } from '../features/onboarding/onboarding-read-model';
+import { OnboardingStore } from '../features/onboarding/onboarding-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -173,6 +174,7 @@ export const createStores = (
         featureLifecycleStore: new FeatureLifecycleStore(db),
         featureStrategiesReadModel: new FeatureStrategiesReadModel(db),
         onboardingReadModel: new OnboardingReadModel(db),
+        onboardingStore: new OnboardingStore(db),
         featureLifecycleReadModel: new FeatureLifecycleReadModel(
             db,
             config.flagResolver,

@@ -13,7 +13,7 @@ While most truthy and falsy values behave as expected with the `&&` operator, ce
 ```tsx
 {NaN && <p>❔</p>} // will render `NaN`
 {0 && <p>❔</p>} // will render `0`
-{arr?.length && <p>❔</p>} // can render `0` ❗
+{arr?.length && <p>❔</p>} // can render `0`
 ```
 
 These issues can cause bugs in components that conditionally render UI elements based on numeric values or other potentially falsy conditions. For this reason we use a wrapper.
@@ -88,16 +88,35 @@ This approach explicitly converts the condition to a boolean value using `Boolea
 The ternary operator is a more explicit and safer approach. This will cover some cases where we have to return `null` or `undefined`.
 
 ``` tsx
-{NaN ? <p>👍</p> : null}  // ✅ Won't render anything
+{NaN ? <p>👍</p> : null}  // Won't render anything
 ```
 
 It also plays nicely with TypeScript.
 
 ```tsx
 export const Test: FC<{ maybeString?: string }> = ({ maybeString }) =>
-    maybeString ? <SubComponent text={maybeString} /> : null; // ✅
+    maybeString ? <SubComponent text={maybeString} /> : null;
 ```
-
 
 This is what we will use from now onwards.
 
+## Consequences
+Positive: The codebase will become more type-safe and easier to understand.
+
+Negative: We import `<ConditionallyRender />` in almost 400 files. Significant refactoring effort is required.
+
+## Migration plan
+
+1. Mark <ConditionallyRender /> as deprecated in the codebase with a clear JSDoc comment.
+
+2. Automated refactoring with AST (Abstract Syntax Tree)
+There already is a script developed that can convert files between `ConditionallyRender` and ternary syntax. It is using jscodeshift, an  library. It will be put in `frontend/scripts/transform.js`.
+
+3. Each change will have to be reviewed. The order of refactoring should be:
+    1. New features that are behind feature flags.
+    2. Non-critical or not in demand pages, like new signals or feedback component.
+    3. Less complex pages, for example in `/src/component/admin`.
+    4. More complex and critical pages, like strategy editing.
+    5. Utilities and components used in many places (`/src/component/common`).
+
+3. Once all instances of <ConditionallyRender /> have been refactored, remove the component from the codebase.

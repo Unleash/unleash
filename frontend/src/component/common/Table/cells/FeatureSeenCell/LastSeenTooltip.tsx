@@ -85,9 +85,7 @@ export const LastSeenTooltip = ({
             </StyledDescriptionHeader>
             <ConditionallyRender
                 condition={
-                    Boolean(environments) &&
-                    Boolean(environmentsHaveLastSeen) &&
-                    false
+                    Boolean(environments) && Boolean(environmentsHaveLastSeen)
                 }
                 show={
                     <StyledListContainer>

@@ -108,10 +108,11 @@ class UserStoreMock implements IUserStore {
         return Promise.resolve();
     }
 
-    async successfullyLogin(user: User): Promise<void> {
+    async successfullyLogin(user: User): Promise<number> {
         if (!this.exists(user.id)) {
             throw new Error('No such user');
         }
+        return 0;
     }
 
     buildSelectUser(): any {

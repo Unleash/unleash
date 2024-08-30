@@ -129,7 +129,6 @@ exports[`returns all baseRoutes 1`] = `
     "menu": {
       "mobile": true,
     },
-    "notFlag": "killInsightsUI",
     "path": "/insights",
     "title": "Insights",
     "type": "protected",

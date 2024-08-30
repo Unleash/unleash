@@ -1,5 +1,5 @@
 ---
-title: "ADR: Deprecation of `<ConditionallyRender />` Component"
+title: "ADR: Use of conditionals in JSX (deprecation of `<ConditionallyRender />`)"
 ---
 
 ## Background

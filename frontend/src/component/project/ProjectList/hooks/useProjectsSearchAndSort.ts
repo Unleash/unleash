@@ -39,9 +39,17 @@ export const useProjectsSearchAndSort = (
                     return bVal?.getTime() - aVal?.getTime();
                 }
 
+                if (sortBy === 'archived') {
+                    const aVal = new Date(a.archivedAt || 0);
+                    const bVal = new Date(b.archivedAt || 0);
+                    return bVal?.getTime() - aVal?.getTime();
+                }
+
                 return 0;
             })
             .sort((a, b) => {
+                if (sortBy === 'archived') return 0;
+
                 if (a?.favorite && !b?.favorite) {
                     return -1;
                 }

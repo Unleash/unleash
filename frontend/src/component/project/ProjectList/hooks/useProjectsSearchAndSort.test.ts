@@ -250,4 +250,46 @@ describe('useProjectsSearchAndSort', () => {
             'Project A',
         ]);
     });
+
+    it('should not put favorites first if sorting by `archived`', () => {
+        const { result } = renderHook(() =>
+            useProjectsSearchAndSort(
+                [
+                    {
+                        name: 'A',
+                        id: '1',
+                        createdAt: '2024-01-01',
+                        favorite: false,
+                        archivedAt: '2024-02-03',
+                    },
+                    {
+                        name: 'B',
+                        id: '2',
+                        createdAt: '2024-01-02',
+                        archivedAt: '2024-02-01',
+                    },
+                    {
+                        name: 'C',
+                        id: '3',
+                        createdAt: '2024-01-04',
+                        archivedAt: '2024-02-02',
+                        favorite: true,
+                    },
+                ],
+                undefined,
+                'archived',
+            ),
+        );
+
+        expect(
+            result.current.map(
+                (project) =>
+                    `${project.name} - ${project.archivedAt}${project.favorite ? ' - favorite' : ''}`,
+            ),
+        ).toEqual([
+            'A - 2024-02-03',
+            'C - 2024-02-02 - favorite',
+            'B - 2024-02-01',
+        ]);
+    });
 });

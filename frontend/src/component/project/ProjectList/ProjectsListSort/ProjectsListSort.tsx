@@ -13,7 +13,13 @@ const StyledContainer = styled('div')(() => ({
     width: '100%',
 }));
 
-export const sortKeys = ['name', 'created', 'updated', 'seen'] as const;
+export const sortKeys = [
+    'name',
+    'created',
+    'updated',
+    'seen',
+    'archived',
+] as const;
 
 const options: Array<{
     key: (typeof sortKeys)[number];

@@ -7,6 +7,7 @@ export interface IProjectCard {
     name: string;
     id: string;
     createdAt: string | Date;
+    archivedAt?: string | Date;
     health?: number;
     description?: string;
     featureCount?: number;

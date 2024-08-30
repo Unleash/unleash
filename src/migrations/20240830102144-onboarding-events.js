@@ -15,7 +15,6 @@ exports.up = function (db, cb) {
                project VARCHAR(255) REFERENCES projects(id) ON DELETE CASCADE,
                PRIMARY KEY (event, project)
             );
-
         `,
         cb,
     );

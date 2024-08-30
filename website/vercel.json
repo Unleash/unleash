@@ -24,7 +24,7 @@
         }
       ],
       "destination": "https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices",
-      "permanent": true
+      "permanent": false
     },
     {
       "source": "/unleash-client-python(/?)/:path",

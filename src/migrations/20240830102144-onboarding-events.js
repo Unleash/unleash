@@ -12,7 +12,7 @@ exports.up = function (db, cb) {
             CREATE TABLE onboarding_events_project (
                event VARCHAR(255) NOT NULL,
                time_to_event INTEGER NOT NULL,
-               project VARCHAR(255) REFERENCES projects(id) ON DELETE CASCADE,
+               project VARCHAR(255) NOT NULL REFERENCES projects(id) ON DELETE CASCADE,
                PRIMARY KEY (event, project)
             );
         `,

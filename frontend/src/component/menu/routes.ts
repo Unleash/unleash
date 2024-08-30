@@ -151,7 +151,6 @@ export const routes: IRoute[] = [
         component: Insights,
         type: 'protected',
         menu: { mobile: true },
-        notFlag: 'killInsightsUI',
         enterprise: true,
     },
 

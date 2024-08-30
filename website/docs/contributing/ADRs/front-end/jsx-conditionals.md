@@ -4,7 +4,7 @@ title: "ADR: Deprecation of `<ConditionallyRender />` Component"
 
 ## Background
 
-Using the `&&` operator in React can lead to unexpected rendering behavior when dealing with certain falsy values. In our codebase, the `<ConditionallyRender />` component has been used to render React elements based on a boolean condition. It has some certain drawbacks, and that's why we would like to replace it with ternary operator.
+Using the `&&` operator in React can lead to unexpected rendering behavior when dealing with certain falsy values. In our codebase, the `<ConditionallyRender />` component has been used to render React elements based on a boolean condition. It has certain drawbacks. This is why we would like to replace it with ternary operator.
 
 ### Pitfalls of `&&` operator
 
@@ -50,7 +50,7 @@ export const Test: FC<{ maybeString?: string }> = ({ maybeString }) => (
 ```
 
 #### Obfuscation of code smells and code cruft
-It's easier to spot nested ternaries, then nested `<ConditionallyRender />` elements.
+Nested ternaries are easier to spot then nested `<ConditionallyRender />` elements.
 
 ```tsx
 <div>
@@ -72,17 +72,17 @@ It's easier to spot nested ternaries, then nested `<ConditionallyRender />` elem
 To avoid these issues, safer alternatives to the `&&` operator can be used:
 
 ### **Convert to boolean**
-This approach explicitly converts the condition to a boolean value using `Boolean(expression)` or `!!expression`, ensuring that only `true` or `false` determine the rendering.
+We could try to explicitly converts the condition to a boolean, ensuring that only `true` or `false` determine the rendering.
 
 ```tsx
 {Boolean(NaN) && <p>❔</p>}  // Won't render anything
 {!!0 && <p>❔</p>}           // Also safe
 ```
 
-❌ **Unfortunately** Biome (linter we use) does not include rules to automatically enforce safer usage of the `&&` operator, as ESLint did.
+**Unfortunately** Biome (linter we use) does not include rules to automatically enforce safer usage of the `&&` operator, as ESLint did.
 
 ### Ternary Operator
-The ternary operator is a more explicit and safer approach. This will cover some cases where we have to return `null` or `undefined`.
+The ternary operator is a more explicit and safer approach. This covers cases where we need to return `null` or `undefined`.
 
 ``` tsx
 {NaN ? <p>👍</p> : null}  // Won't render anything
@@ -100,16 +100,16 @@ This is what we will use from now onwards.
 ## Consequences
 Positive: The codebase will become more type-safe and easier to understand.
 
-Negative: We import `<ConditionallyRender />` in almost 400 files. Significant refactoring effort is required.
+Negative: The `<ConditionallyRender />` component is imported in nearly 400 files. Significant refactoring effort is required.
 
 Performance: There was no measurable performance difference between code with and without this component. This was tested on production bundle, on the features search (table) and projects list pages.
 
 ## Migration plan
 
-1. Mark <ConditionallyRender /> as deprecated in the codebase with a clear JSDoc comment.
+1. Mark `<ConditionallyRender />` as deprecated in the codebase with a clear JSDoc comment
 
 2. Automated refactoring with AST (Abstract Syntax Tree)
-There already is a script developed that can convert files between `ConditionallyRender` and ternary syntax. It is using jscodeshift, an  library. It will be put in `frontend/scripts/transform.js`.
+There already is a script developed that can convert files between `ConditionallyRender` and ternary syntax. It uses jscodeshift, an  library. It will be put in `frontend/scripts/transform.js`.
 
 3. Each change will have to be reviewed. The order of refactoring should be:
     1. New features that are behind feature flags.
@@ -118,4 +118,4 @@ There already is a script developed that can convert files between `Conditionall
     4. More complex and critical pages, like strategy editing.
     5. Utilities and components used in many places (`/src/component/common`).
 
-3. Once all instances of <ConditionallyRender /> have been refactored, remove the component from the codebase.
+3. Once all instances of `<ConditionallyRender />` have been refactored, remove the component from the codebase.

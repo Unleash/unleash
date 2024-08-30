@@ -21,8 +21,7 @@ export const ApiDetails = (props: IApiDetailsProps): ReactElement => {
     return (
         <section title='API details'>
             <FooterTitle>
-                {name} {version}
-                {buildInfo}
+                {name} {version} {buildInfo}
                 <ConditionallyRender
                     condition={Boolean(environment)}
                     show={<small> ({environment})</small>}

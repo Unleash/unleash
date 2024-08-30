@@ -37,7 +37,6 @@ export interface IProjectReadModel {
     getProjectsForInsights(
         query?: IProjectQuery,
     ): Promise<ProjectForInsights[]>;
-    getProjectCreationTime(project: string): Promise<Date | null>;
     getFeatureProject(
         featureName: string,
     ): Promise<{ project: string; createdAt: Date } | null>;

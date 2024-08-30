@@ -109,7 +109,7 @@ Performance: There was no measurable performance difference between code with an
 1. Mark `<ConditionallyRender />` as deprecated in the codebase with a clear JSDoc comment
 
 2. Automated refactoring with AST (Abstract Syntax Tree)
-There already is a script developed that can convert files between `ConditionallyRender` and ternary syntax. It uses jscodeshift, an  library. It will be put in `frontend/scripts/transform.js`.
+There already is a script developed that can convert files between `ConditionallyRender` and ternary syntax. It uses jscodeshift, a library. It will be put in `frontend/scripts/transform.js`.
 
 3. Each change will have to be reviewed. The order of refactoring should be:
     1. New features that are behind feature flags.

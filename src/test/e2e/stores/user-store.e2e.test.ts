@@ -17,6 +17,10 @@ afterAll(async () => {
     await db.destroy();
 });
 
+beforeEach(async () => {
+    await stores.userStore.deleteAll();
+});
+
 test('should have no users', async () => {
     const users = await stores.userStore.getAll();
     expect(users).toEqual([]);

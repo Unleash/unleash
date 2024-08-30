@@ -14,7 +14,7 @@ import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { formatDateYMDHM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { parseISO } from 'date-fns';
-import { Box, Link, styled, Tooltip, Typography } from '@mui/material';
+import { Box, Link, styled, Tooltip } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import {
     DELETE_PROJECT,
@@ -50,6 +50,12 @@ const StyledTitle = styled(StyledCardTitle)(({ theme }) => ({
     margin: 0,
 }));
 
+const StyledContent = styled('div')(({ theme }) => ({
+    ...flexRow,
+    fontSize: theme.fontSizes.smallerBody,
+    justifyContent: 'space-between',
+}));
+
 export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
     id,
     name,
@@ -80,7 +86,7 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                     </StyledBox>
                     <ProjectModeBadge mode={mode} />
                 </StyledDivHeader>
-                <Typography component='div' fontSize='smaller'>
+                <StyledContent>
                     <Tooltip
                         title={
                             archivedAt
@@ -110,7 +116,7 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                     >
                         <p>View archived flags</p>
                     </Link>
-                </Typography>
+                </StyledContent>
             </StyledProjectCardBody>
             <ProjectCardFooter id={id} disabled owners={owners}>
                 <StyledActions>

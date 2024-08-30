@@ -231,20 +231,36 @@ class UserStore implements IUserStore {
         return this.buildSelectUser(user).increment('login_attempts', 1);
     }
 
-    async successfullyLogin(user: User): Promise<void> {
+    async successfullyLogin(user: User): Promise<number> {
         const currentDate = new Date();
         const updateQuery = this.buildSelectUser(user).update({
             login_attempts: 0,
             seen_at: currentDate,
         });
+
+        let firstLoginOrder = 0;
+
         if (this.flagResolver.isEnabled('onboardingMetrics')) {
-            updateQuery.update({
-                first_seen_at: this.db.raw('COALESCE(first_seen_at, ?)', [
-                    currentDate,
-                ]),
-            });
+            const existingUser =
+                await this.buildSelectUser(user).first('first_seen_at');
+
+            if (!existingUser.first_seen_at) {
+                const countEarlierUsers = await this.db(TABLE)
+                    .whereNotNull('first_seen_at')
+                    .andWhere('first_seen_at', '<', currentDate)
+                    .count('*')
+                    .then((res) => Number(res[0].count));
+
+                firstLoginOrder = countEarlierUsers;
+
+                await updateQuery.update({
+                    first_seen_at: currentDate,
+                });
+            }
         }
-        return updateQuery;
+
+        await updateQuery;
+        return firstLoginOrder;
     }
 
     async deleteAll(): Promise<void> {

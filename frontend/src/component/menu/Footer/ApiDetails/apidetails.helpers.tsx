@@ -15,7 +15,8 @@ export const formatCurrentVersion = (
     const [version, buildNumber] = (
         current?.enterprise ||
         current?.oss ||
-        uiConfig.version
+        uiConfig.version ||
+        ''
     ).split('+');
     return {
         name: uiConfig.name,

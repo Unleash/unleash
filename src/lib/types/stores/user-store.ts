@@ -35,7 +35,7 @@ export interface IUserStore extends Store<IUser, number> {
     ): Promise<void>;
     getPasswordsPreviouslyUsed(userId: number): Promise<string[]>;
     incLoginAttempts(user: IUser): Promise<void>;
-    successfullyLogin(user: IUser): Promise<void>;
+    successfullyLogin(user: IUser): Promise<number>;
     count(): Promise<number>;
     countServiceAccounts(): Promise<number>;
 }

@@ -171,16 +171,18 @@ export const GroupCard = ({
                                     </Tooltip>
                                 ))}
                                 elseShow={
-                                    <Tooltip
-                                        title='This group is not used in any project'
-                                        arrow
-                                        describeChild
-                                    >
-                                        <ConditionallyRender
-                                            condition={!group.rootRole}
-                                            show={<Badge>Not used</Badge>}
-                                        />
-                                    </Tooltip>
+                                    <ConditionallyRender
+                                        condition={!group.rootRole}
+                                        show={
+                                            <Tooltip
+                                                title='This group is not used in any project'
+                                                arrow
+                                                describeChild
+                                            >
+                                                <Badge>Not used</Badge>
+                                            </Tooltip>
+                                        }
+                                    />
                                 }
                             />
                         </ProjectBadgeContainer>

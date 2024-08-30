@@ -79,7 +79,7 @@ We could try to explicitly converts the condition to a boolean, ensuring that on
 {!!0 && <p>❔</p>}           // Also safe
 ```
 
-**Unfortunately** Biome (linter we use) does not include rules to automatically enforce safer usage of the `&&` operator, as ESLint did.
+**Unfortunately** Biome (the linter we use) does not include rules to automatically enforce a safer usage of the `&&` operator, as ESLint did.
 
 ### Ternary Operator
 The ternary operator is a more explicit and safer approach. This covers cases where we need to return `null` or `undefined`.

@@ -29,7 +29,7 @@ const Actions = styled('div')(({ theme }) => ({
 
 const ActionBox = styled('div')(({ theme }) => ({
     flexBasis: '50%',
-    padding: theme.spacing(3, 2, 10, 8),
+    padding: theme.spacing(3, 2, 6, 8),
     display: 'flex',
     gap: theme.spacing(3),
     flexDirection: 'column',

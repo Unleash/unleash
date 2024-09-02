@@ -91,3 +91,9 @@ website/.yarn/*
 !website/.yarn/sdks
 !website/.yarn/versions
 
+
+# Ignore Gradle project-specific cache directory
+.gradle
+
+# Ignore Gradle build output directory
+build

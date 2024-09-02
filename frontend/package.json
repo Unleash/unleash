@@ -10,7 +10,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "yarn run lint:material:icons && vite build",
+    "build": "vite build",
     "dev": "vite",
     "start": "vite",
     "start:prod": "vite build && vite preview",

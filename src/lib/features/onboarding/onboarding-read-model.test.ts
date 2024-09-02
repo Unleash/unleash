@@ -1,28 +1,19 @@
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
-import type {
-    IFeatureLifecycleStore,
-    IFeatureToggleStore,
-    IUserStore,
-} from '../../types';
+import type { IOnboardingStore } from '../../types';
 import { OnboardingReadModel } from './onboarding-read-model';
 import type { IOnboardingReadModel } from './onboarding-read-model-type';
-import { minutesToMilliseconds } from 'date-fns';
 
 let db: ITestDb;
 let onboardingReadModel: IOnboardingReadModel;
-let userStore: IUserStore;
-let lifecycleStore: IFeatureLifecycleStore;
-let featureToggleStore: IFeatureToggleStore;
+let onBoardingStore: IOnboardingStore;
 
 beforeAll(async () => {
     db = await dbInit('onboarding_read_model', getLogger, {
         experimental: { flags: { onboardingMetrics: true } },
     });
     onboardingReadModel = new OnboardingReadModel(db.rawDatabase);
-    userStore = db.stores.userStore;
-    lifecycleStore = db.stores.featureLifecycleStore;
-    featureToggleStore = db.stores.featureToggleStore;
+    onBoardingStore = db.stores.onboardingStore;
 });
 
 afterAll(async () => {
@@ -31,13 +22,9 @@ afterAll(async () => {
     }
 });
 
-beforeEach(async () => {
-    await userStore.deleteAll();
-    jest.useRealTimers();
-});
+beforeEach(async () => {});
 
-test('can get onboarding durations', async () => {
-    jest.useFakeTimers();
+test('can get instance onboarding durations', async () => {
     const initialResult =
         await onboardingReadModel.getInstanceOnboardingMetrics();
     expect(initialResult).toMatchObject({
@@ -48,8 +35,10 @@ test('can get onboarding durations', async () => {
         firstLive: null,
     });
 
-    const firstUser = await userStore.insert({});
-    await userStore.successfullyLogin(firstUser);
+    await onBoardingStore.insertInstanceEvent({
+        type: 'first-user-login',
+        timeToEvent: 0,
+    });
 
     const firstLoginResult =
         await onboardingReadModel.getInstanceOnboardingMetrics();
@@ -58,42 +47,25 @@ test('can get onboarding durations', async () => {
         secondLogin: null,
     });
 
-    jest.advanceTimersByTime(minutesToMilliseconds(10));
-
-    const secondUser = await userStore.insert({});
-    await userStore.successfullyLogin(secondUser);
-
-    jest.advanceTimersByTime(minutesToMilliseconds(10));
-
-    await featureToggleStore.create('default', {
-        name: 'test',
-        createdByUserId: secondUser.id,
+    await onBoardingStore.insertInstanceEvent({
+        type: 'second-user-login',
+        timeToEvent: 10,
     });
 
-    await lifecycleStore.insert([
-        {
-            feature: 'test',
-            stage: 'initial',
-        },
-    ]);
+    await onBoardingStore.insertInstanceEvent({
+        type: 'flag-created',
+        timeToEvent: 20,
+    });
 
-    jest.advanceTimersByTime(minutesToMilliseconds(10));
+    await onBoardingStore.insertInstanceEvent({
+        type: 'pre-live',
+        timeToEvent: 30,
+    });
 
-    await lifecycleStore.insert([
-        {
-            feature: 'test',
-            stage: 'pre-live',
-        },
-    ]);
-
-    jest.advanceTimersByTime(minutesToMilliseconds(10));
-
-    await lifecycleStore.insert([
-        {
-            feature: 'test',
-            stage: 'live',
-        },
-    ]);
+    await onBoardingStore.insertInstanceEvent({
+        type: 'live',
+        timeToEvent: 40,
+    });
 
     const secondLoginResult =
         await onboardingReadModel.getInstanceOnboardingMetrics();
@@ -103,6 +75,26 @@ test('can get onboarding durations', async () => {
         firstFeatureFlag: 20,
         firstPreLive: 30,
         firstLive: 40,
+    });
+});
+
+test('can get instance onboarding durations', async () => {
+    await onBoardingStore.insertProjectEvent({
+        project: 'default',
+        type: 'flag-created',
+        timeToEvent: 20,
+    });
+
+    await onBoardingStore.insertProjectEvent({
+        project: 'default',
+        type: 'pre-live',
+        timeToEvent: 30,
+    });
+
+    await onBoardingStore.insertProjectEvent({
+        project: 'default',
+        type: 'live',
+        timeToEvent: 40,
     });
 
     const projectOnboardingResult =

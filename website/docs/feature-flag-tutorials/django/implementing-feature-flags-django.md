@@ -100,7 +100,7 @@ from .models import Post
 
 def post_list(request):
     is_top3 = True
-    posts = Post.objects.order_by('-created_at')[:3] if is_top3 else Post.objects.all()
+    posts = Post.objects.order_by('-published_at')[:3] if is_top3 else Post.objects.all()
     return render(request, 'blog/post_list.html', {'posts': posts})
 ```
 

@@ -29,6 +29,7 @@ export interface ProjectSchema {
     defaultStickiness?: string;
     /**
      * Additional information about the project
+     * @deprecated
      * @nullable
      */
     description?: string | null;

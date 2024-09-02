@@ -398,7 +398,7 @@ export const createServices = (
 
     const onboardingService = db
         ? createOnboardingService(config)(db)
-        : createFakeOnboardingService(config);
+        : createFakeOnboardingService(config).onboardingService;
     onboardingService.listen();
 
     return {

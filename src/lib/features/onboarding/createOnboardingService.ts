@@ -31,9 +31,7 @@ export const createOnboardingService =
         return onboardingService;
     };
 
-export const createFakeOnboardingService = (
-    config: IUnleashConfig,
-): OnboardingService => {
+export const createFakeOnboardingService = (config: IUnleashConfig) => {
     const onboardingStore = new FakeOnboardingStore();
     const projectReadModel = new FakeProjectReadModel();
     const userStore = new FakeUserStore();
@@ -46,5 +44,5 @@ export const createFakeOnboardingService = (
         config,
     );
 
-    return onboardingService;
+    return { onboardingService, projectReadModel, userStore, onboardingStore };
 };

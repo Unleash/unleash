@@ -69,4 +69,11 @@ export class OnboardingStore implements IOnboardingStore {
             .onConflict()
             .ignore();
     }
+
+    async deleteAll(): Promise<void> {
+        await Promise.all([
+            this.db('onboarding_events_project').del(),
+            this.db('onboarding_events_instance').del(),
+        ]);
+    }
 }

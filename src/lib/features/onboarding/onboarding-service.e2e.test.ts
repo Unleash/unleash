@@ -1,13 +1,19 @@
-import type { IUnleashStores } from '../../../lib/types';
+import type { IOnboardingReadModel, IUnleashStores } from '../../../lib/types';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { minutesToMilliseconds } from 'date-fns';
-import { OnboardingService } from './onboarding-service';
+import type { OnboardingService } from './onboarding-service';
 import { createTestConfig } from '../../../test/config/test-config';
+import { createOnboardingService } from './createOnboardingService';
+import type EventEmitter from 'events';
+import { STAGE_ENTERED, USER_LOGIN } from '../../metric-events';
+import { OnboardingReadModel } from './onboarding-read-model';
 
 let db: ITestDb;
 let stores: IUnleashStores;
 let onboardingService: OnboardingService;
+let eventBus: EventEmitter;
+let onboardingReadModel: IOnboardingReadModel;
 
 beforeAll(async () => {
     db = await dbInit('onboarding_store', getLogger);
@@ -15,11 +21,10 @@ beforeAll(async () => {
         experimental: { flags: { onboardingMetrics: true } },
     });
     stores = db.stores;
-    const { userStore, onboardingStore, projectReadModel } = stores;
-    onboardingService = new OnboardingService(
-        { onboardingStore, userStore, projectReadModel },
-        config,
-    );
+    eventBus = config.eventBus;
+    onboardingService = createOnboardingService(config)(db.rawDatabase);
+    onboardingService.listen();
+    onboardingReadModel = new OnboardingReadModel(db.rawDatabase);
 });
 
 afterAll(async () => {
@@ -27,6 +32,9 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+    await stores.featureToggleStore.deleteAll();
+    await stores.projectStore.deleteAll();
+    await stores.onboardingStore.deleteAll();
     jest.useRealTimers();
 });
 
@@ -83,5 +91,57 @@ test('Storing onboarding events', async () => {
             project: 'test_project',
         },
         { event: 'first-live', time_to_event: 300, project: 'test_project' },
+    ]);
+});
+
+const reachedOnboardingEvents = (count: number) => {
+    let processedOnboardingEvents = 0;
+    return new Promise((resolve) => {
+        eventBus.on('onboarding-event', () => {
+            processedOnboardingEvents += 1;
+            if (processedOnboardingEvents === count) resolve('done');
+        });
+    });
+};
+
+test('Reacting to events', async () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date());
+    const { userStore, featureToggleStore, projectStore, projectReadModel } =
+        stores;
+    const user = await userStore.insert({});
+    await projectStore.create({ id: 'test_project', name: 'irrelevant' });
+    await featureToggleStore.create('test_project', {
+        name: 'test',
+        createdByUserId: user.id,
+    });
+    jest.advanceTimersByTime(minutesToMilliseconds(1));
+
+    eventBus.emit(USER_LOGIN, { loginOrder: 0 });
+    eventBus.emit(USER_LOGIN, { loginOrder: 1 });
+    eventBus.emit(STAGE_ENTERED, { stage: 'initial', feature: 'test' });
+    eventBus.emit(STAGE_ENTERED, { stage: 'pre-live', feature: 'test' });
+    eventBus.emit(STAGE_ENTERED, { stage: 'live', feature: 'test' });
+    await reachedOnboardingEvents(5);
+
+    const instanceMetrics =
+        await onboardingReadModel.getInstanceOnboardingMetrics();
+    const projectMetrics =
+        await onboardingReadModel.getProjectsOnboardingMetrics();
+
+    expect(instanceMetrics).toMatchObject({
+        firstLogin: 60,
+        secondLogin: 60,
+        firstFeatureFlag: 60,
+        firstPreLive: 60,
+        firstLive: 60,
+    });
+    expect(projectMetrics).toMatchObject([
+        {
+            project: 'test_project',
+            firstFeatureFlag: 60,
+            firstPreLive: 60,
+            firstLive: 60,
+        },
     ]);
 });

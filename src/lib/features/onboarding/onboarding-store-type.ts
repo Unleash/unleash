@@ -13,4 +13,6 @@ export interface IOnboardingStore {
     insertProjectEvent(event: ProjectEvent): Promise<void>;
 
     insertInstanceEvent(event: InstanceEvent): Promise<void>;
+
+    deleteAll(): Promise<void>;
 }

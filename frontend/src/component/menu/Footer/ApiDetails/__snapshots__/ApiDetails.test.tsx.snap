@@ -11,12 +11,9 @@ exports[`renders correctly with empty version 1`] = `
       >
         Unleash
          
+        test
          
-        <small>
-           (
-          test
-          )
-        </small>
+         
       </h2>
       <br />
       <small>
@@ -46,13 +43,10 @@ exports[`renders correctly with ui-config 1`] = `
       >
         Unleash
          
+        test
+         
         1.1.0
          
-        <small>
-           (
-          test
-          )
-        </small>
       </h2>
       <br />
       <small>
@@ -81,6 +75,7 @@ exports[`renders correctly with versionInfo 1`] = `
         class="css-gtu1fw"
       >
         Unleash
+         
          
         1.2.3
          
@@ -117,6 +112,7 @@ exports[`renders correctly without uiConfig 1`] = `
         class="css-gtu1fw"
       >
         Unleash
+         
          
         1.1.0
          

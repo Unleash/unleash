@@ -6,6 +6,12 @@ describe('feature', () => {
     const projectName = `unleash-e2e-project-${randomId}`;
 
     before(() => {
+        Cypress.automation('remote:debugger:protocol', {
+            command: 'Emulation.setLocaleOverride',
+            params: {
+                locale: 'en-US',
+            },
+        });
         cy.runBefore();
         cy.login_UI();
         cy.createProject_API(projectName);

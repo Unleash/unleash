@@ -47,6 +47,18 @@ const calculateTrafficDataCost = (trafficData: number) => {
 const padMonth = (month: number): string =>
     month < 10 ? `0${month}` : `${month}`;
 
+const safeLocaleString = (date: Date): string => {
+    try {
+        return date.toLocaleString('en-US', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        });
+    } catch (e) {
+        console.error(`Invalid toLocaleString locale: en-US, date: ${date}`, e);
+        return '';
+    }
+};
 export const toSelectablePeriod = (
     date: Date,
     label?: string,
@@ -60,9 +72,7 @@ export const toSelectablePeriod = (
         year,
         month,
         dayCount,
-        label:
-            label ||
-            date.toLocaleString('en-US', { month: 'long', year: 'numeric' }),
+        label: label || safeLocaleString(date),
     };
 };
 

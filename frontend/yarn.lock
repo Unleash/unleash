@@ -7141,7 +7141,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"millify@npm:^6.0.0":
+"millify@npm:^6.1.0":
   version: 6.1.0
   resolution: "millify@npm:6.1.0"
   dependencies:
@@ -9825,7 +9825,7 @@ __metadata:
     lodash.isequal: "npm:^4.5.0"
     lodash.mapvalues: "npm:^4.6.0"
     lodash.omit: "npm:4.5.0"
-    millify: "npm:^6.0.0"
+    millify: "npm:^6.1.0"
     msw: "npm:2.3.5"
     orval: "npm:^6.17.0"
     pkginfo: "npm:0.4.1"

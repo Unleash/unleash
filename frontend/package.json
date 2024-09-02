@@ -92,7 +92,7 @@
     "lodash.isequal": "^4.5.0",
     "lodash.mapvalues": "^4.6.0",
     "lodash.omit": "4.5.0",
-    "millify": "^6.0.0",
+    "millify": "^6.1.0",
     "msw": "2.3.5",
     "pkginfo": "0.4.1",
     "plausible-tracker": "0.3.9",

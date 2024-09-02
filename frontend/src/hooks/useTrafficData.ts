@@ -62,7 +62,7 @@ export const toSelectablePeriod = (
         dayCount,
         label:
             label ||
-            "date.toLocaleString('en-US', { month: 'long', year: 'numeric' })",
+            date.toLocaleString('en-US', { month: 'long', year: 'numeric' }),
     };
 };
 

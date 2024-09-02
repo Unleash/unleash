@@ -7,7 +7,6 @@ export const archivedFeaturesSchema = {
     additionalProperties: false,
     required: ['version', 'features'],
     description: 'A list of archived features',
-    deprecated: true,
     properties: {
         version: {
             type: 'integer',

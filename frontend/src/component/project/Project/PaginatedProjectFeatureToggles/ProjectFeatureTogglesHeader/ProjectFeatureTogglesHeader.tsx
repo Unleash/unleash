@@ -41,7 +41,7 @@ const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
 
-const FlagCreationButton: FC = () => {
+export const FlagCreationButton: FC = () => {
     const [searchParams] = useSearchParams();
     const projectId = useRequiredPathParam('projectId');
     const showCreateDialog = Boolean(searchParams.get('create'));

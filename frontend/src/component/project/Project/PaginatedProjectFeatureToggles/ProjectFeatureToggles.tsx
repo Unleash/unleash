@@ -39,6 +39,7 @@ import {
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch';
 import { AvatarCell } from './AvatarCell';
+import { ProjectOnboarding } from './ProjectOnboarding/ProjectOnboarding';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -381,6 +382,8 @@ export const ProjectFeatureToggles = ({
     );
 
     const selectedData = useSelectedData(features, rowSelection);
+
+    if (total !== 0) return <ProjectOnboarding projectId={projectId} />;
 
     return (
         <>

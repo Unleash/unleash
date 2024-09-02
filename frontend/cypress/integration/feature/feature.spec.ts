@@ -56,15 +56,18 @@ describe('feature', () => {
         );
     });
 
-    it(`can add, update and delete a gradual rollout strategy to the development environment (${projectName} ${featureToggleName})`, () => {
-        cy.log('Add a gradual rollout strategy to the development environment');
+    it(`can add a gradual rollout strategy to the development environment (${projectName} ${featureToggleName})`, () => {
         cy.addFlexibleRolloutStrategyToFeature_UI({
             featureToggleName,
             project: projectName,
         });
+    });
 
+    it(`can update a gradual rollout strategy to the development environment (${projectName} ${featureToggleName})`, () => {
         cy.updateFlexibleRolloutStrategy_UI(featureToggleName, projectName);
+    });
 
+    it(`can delete a gradual rollout strategy to the development environment (${projectName} ${featureToggleName})`, () => {
         cy.deleteFeatureStrategy_UI(featureToggleName, false, projectName);
     });
 });

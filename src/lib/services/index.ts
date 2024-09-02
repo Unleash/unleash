@@ -141,6 +141,11 @@ import {
     createFakePlaygroundService,
     createPlaygroundService,
 } from '../features/playground/createPlaygroundService';
+import {
+    createFakeOnboardingService,
+    createOnboardingService,
+} from '../features/onboarding/createOnboardingService';
+import { OnboardingService } from '../features/onboarding/onboarding-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -391,6 +396,11 @@ export const createServices = (
     const featureLifecycleService = transactionalFeatureLifecycleService;
     featureLifecycleService.listen();
 
+    const onboardingService = db
+        ? createOnboardingService(config)(db)
+        : createFakeOnboardingService(config);
+    onboardingService.listen();
+
     return {
         accessService,
         accountService,
@@ -453,6 +463,7 @@ export const createServices = (
         featureLifecycleService,
         transactionalFeatureLifecycleService,
         integrationEventsService,
+        onboardingService,
     };
 };
 
@@ -502,4 +513,5 @@ export {
     JobService,
     FeatureLifecycleService,
     IntegrationEventsService,
+    OnboardingService,
 };

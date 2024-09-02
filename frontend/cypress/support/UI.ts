@@ -153,7 +153,6 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
     );
     cy.wait(500);
     //  Takes a bit to load the screen - this will wait until it finds it or fail
-    console.log('Waiting for strategy to load');
     cy.get('[data-testid=FLEXIBLE_STRATEGY_STICKINESS_ID]');
     if (ENTERPRISE) {
         cy.get('[data-testid=ADD_CONSTRAINT_ID]').click();

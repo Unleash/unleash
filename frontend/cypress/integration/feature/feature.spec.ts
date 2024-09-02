@@ -29,8 +29,8 @@ describe('feature', () => {
             }
         });
 
-        // cy.deleteFeature_API(featureToggleName, projectName);
-        // cy.deleteProject_API(projectName);
+        cy.deleteFeature_API(featureToggleName, projectName);
+        cy.deleteProject_API(projectName);
     });
 
     beforeEach(() => {

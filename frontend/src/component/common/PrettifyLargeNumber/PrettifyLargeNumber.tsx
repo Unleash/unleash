@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import millify from 'millify';
 import { Tooltip } from '@mui/material';
 import { LARGE_NUMBER_PRETTIFIED } from 'utils/testIds';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
@@ -31,7 +32,7 @@ export const PrettifyLargeNumber: FC<IPrettifyLargeNumberProps> = ({
     if (value < threshold) {
         prettyValue = value.toLocaleString();
     } else {
-        prettyValue = `${value}`;
+        prettyValue = millify(value, { precision });
         showTooltip = true;
     }
 

@@ -3,7 +3,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 export const projectSchema = {
     $id: '#/components/schemas/projectSchema',
     type: 'object',
-    // additionalProperties: false, // todo: re-enable when flag projectListImprovements is removed
+    additionalProperties: false,
     required: ['id', 'name'],
     description:
         'A definition of the project used for projects listing purposes',
@@ -68,6 +68,13 @@ export const projectSchema = {
             description: 'When this project was last updated.',
             example: '2023-07-28T12:12:28Z',
         },
+        lastUpdatedAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            description: 'When this project was last updated.',
+            example: '2023-07-28T12:12:28Z',
+        },
         archivedAt: {
             type: 'string',
             format: 'date-time',
@@ -101,6 +108,14 @@ export const projectSchema = {
             example: 10,
             description:
                 'The average time from when a feature was created to when it was enabled in the "production" environment during the current window',
+        },
+        lastReportedFlagUsage: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            description:
+                'Across all flags in your project this is the last time usage metrics where reported from connected applications.',
+            example: '2023-07-28T12:12:28Z',
         },
         owners: {
             description:

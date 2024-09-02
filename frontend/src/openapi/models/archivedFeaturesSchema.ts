@@ -3,15 +3,14 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchema } from './featureSchema';
+import type { ArchivedFeatureSchema } from './archivedFeatureSchema';
 
 /**
- * A list of features
- * @deprecated
+ * A list of archived features
  */
-export interface FeaturesSchema {
+export interface ArchivedFeaturesSchema {
     /** A list of features */
-    features: FeatureSchema[];
+    features: ArchivedFeatureSchema[];
     /** The version of the feature's schema */
     version: number;
 }

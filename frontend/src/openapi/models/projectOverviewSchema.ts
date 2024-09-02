@@ -14,6 +14,11 @@ import type { ProjectStatsSchema } from './projectStatsSchema';
  */
 export interface ProjectOverviewSchema {
     /**
+     * When the project was archived.
+     * @nullable
+     */
+    archivedAt?: string | null;
+    /**
      * When the project was created.
      * @nullable
      */

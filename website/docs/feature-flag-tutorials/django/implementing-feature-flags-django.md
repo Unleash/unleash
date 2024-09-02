@@ -126,6 +126,8 @@ pip install UnleashClient
 Then, create `blog/unleash_client.py`, and add the following:
 
 ```python
+# You DO NOT want to do this in a production environment
+# Rather, you would create a singleton that is shared across your application
 from UnleashClient import UnleashClient
 
 unleash_client = UnleashClient(
@@ -141,9 +143,6 @@ Then, in `blog/views.py`, update the `post_list` view:
 ```python
 from django.shortcuts import render
 from .models import Post
-
-# You DO NOT want to do this in a production environment
-# Rather, you would create a singleton that is shared across your application
 from .unleash_client import unleash_client
 
 def post_list(request):

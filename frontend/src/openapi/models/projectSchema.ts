@@ -15,14 +15,21 @@ export interface ProjectSchema {
      * @nullable
      */
     archivedAt?: string | null;
-    /** The average time from when a feature was created to when it was enabled in the "production" environment during the current window */
+    /**
+     * The average time from when a feature was created to when it was enabled in the "production" environment during the current window
+     * @deprecated
+     */
     avgTimeToProduction?: number;
     /** When this project was created. */
     createdAt?: string;
-    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
+    /**
+     * A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy
+     * @deprecated
+     */
     defaultStickiness?: string;
     /**
      * Additional information about the project
+     * @deprecated
      * @nullable
      */
     description?: string | null;
@@ -42,12 +49,19 @@ export interface ProjectSchema {
     name: string;
     /** The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead. */
     owners?: ProjectSchemaOwners;
-    /** The number of potentially stale features this project has */
+    /**
+     * The number of potentially stale features this project has
+     * @deprecated
+     */
     potentiallyStaleFeatureCount?: number;
-    /** The number of stale features this project has */
+    /**
+     * The number of stale features this project has
+     * @deprecated
+     */
     staleFeatureCount?: number;
     /**
      * When this project was last updated.
+     * @deprecated
      * @nullable
      */
     updatedAt?: string | null;

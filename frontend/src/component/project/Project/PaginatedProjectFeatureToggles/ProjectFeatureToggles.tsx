@@ -40,7 +40,7 @@ import {
 } from './useProjectFeatureSearch';
 import { AvatarCell } from './AvatarCell';
 import { ProjectOnboarding } from './ProjectOnboarding/ProjectOnboarding';
-import { useUiFlag } from '../../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { styled } from '@mui/material';
 
 interface IPaginatedProjectFeatureTogglesProps {

@@ -1,8 +1,8 @@
 import { styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import { CREATE_FEATURE } from '../../../../providers/AccessProvider/permissions';
+import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { FlagCreationButton } from '../ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader';
-import ResponsiveButton from '../../../../common/ResponsiveButton/ResponsiveButton';
+import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 
 interface IWelcomeToProjectProps {
     projectId: string;

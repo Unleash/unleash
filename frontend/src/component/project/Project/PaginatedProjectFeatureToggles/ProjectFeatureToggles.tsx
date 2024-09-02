@@ -62,7 +62,7 @@ const Container = styled('div')(({ theme }) => ({
 export const ProjectFeatureToggles = ({
     environments,
 }: IPaginatedProjectFeatureTogglesProps) => {
-    const onboardinUIEnabled = useUiFlag('onboardingUI');
+    const onboardingUIEnabled = useUiFlag('onboardingUI');
     const projectId = useRequiredPathParam('projectId');
 
     const {
@@ -395,7 +395,7 @@ export const ProjectFeatureToggles = ({
     return (
         <Container>
             <ConditionallyRender
-                condition={onboardinUIEnabled}
+                condition={onboardingUIEnabled}
                 show={<ProjectOnboarding projectId={projectId} />}
             />
             <PageContent

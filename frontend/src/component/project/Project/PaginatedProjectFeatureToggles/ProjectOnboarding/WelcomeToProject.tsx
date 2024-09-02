@@ -89,7 +89,7 @@ export const WelcomeToProject = ({ projectId }: IWelcomeToProjectProps) => {
                     </Typography>
                     <ResponsiveButton
                         onClick={() => {}}
-                        maxWidth='960px'
+                        maxWidth='200px'
                         projectId={projectId}
                         Icon={Add}
                         disabled={true}

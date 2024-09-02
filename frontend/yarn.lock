@@ -7141,14 +7141,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"millify@npm:^6.1.0":
-  version: 6.1.0
-  resolution: "millify@npm:6.1.0"
+"millify@npm:^5.0.1":
+  version: 5.0.1
+  resolution: "millify@npm:5.0.1"
   dependencies:
     yargs: "npm:^17.0.1"
   bin:
     millify: bin/millify
-  checksum: 10c0/a73fc2fdfaf07d5759913427b1f9d2db7fc3cb7cbc085ed9cf94bdd6425d8d4e0feb8a2a2497edfc5d6afe995bbb97237b4f6460c24cb7f4a2785bc1fb99131f
+  checksum: 10c0/f9fb2e901a5047c4d46bb250c050398574d918be88c6e543bb2c58710919470318e91d6ba9152b926126189dc48c8f9c4cc8283aaee4f381ec0dc5512df643f8
   languageName: node
   linkType: hard
 
@@ -9825,7 +9825,7 @@ __metadata:
     lodash.isequal: "npm:^4.5.0"
     lodash.mapvalues: "npm:^4.6.0"
     lodash.omit: "npm:4.5.0"
-    millify: "npm:^6.1.0"
+    millify: "npm:^5.0.1"
     msw: "npm:2.3.5"
     orval: "npm:^6.17.0"
     pkginfo: "npm:0.4.1"

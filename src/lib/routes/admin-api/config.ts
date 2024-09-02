@@ -25,8 +25,6 @@ import type { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema'
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import type { FrontendApiService } from '../../services';
 import type MaintenanceService from '../../features/maintenance/maintenance-service';
-import memoizee from 'memoizee';
-import { minutesToMilliseconds } from 'date-fns';
 import type ClientInstanceService from '../../features/metrics/instance/instance-service';
 
 class ConfigController extends Controller {
@@ -41,8 +39,6 @@ class ConfigController extends Controller {
     private clientInstanceService: ClientInstanceService;
 
     private maintenanceService: MaintenanceService;
-
-    private usesOldEdgeFunction: () => Promise<boolean>;
 
     private readonly openApiService: OpenApiService;
 
@@ -75,18 +71,6 @@ class ConfigController extends Controller {
         this.frontendApiService = frontendApiService;
         this.maintenanceService = maintenanceService;
         this.clientInstanceService = clientInstanceService;
-        this.usesOldEdgeFunction = memoizee(
-            async () =>
-                this.clientInstanceService.usesSdkOlderThan(
-                    'unleash-edge',
-                    '19.1.3',
-                ),
-            {
-                promise: true,
-                maxAge: minutesToMilliseconds(10),
-            },
-        );
-
         this.route({
             method: 'get',
             path: '',
@@ -129,17 +113,14 @@ class ConfigController extends Controller {
         req: AuthedRequest,
         res: Response<UiConfigSchema>,
     ): Promise<void> {
-        const [
-            frontendSettings,
-            simpleAuthSettings,
-            maintenanceMode,
-            usesOldEdge,
-        ] = await Promise.all([
-            this.frontendApiService.getFrontendSettings(false),
-            this.settingService.get<SimpleAuthSettings>(simpleAuthSettingsKey),
-            this.maintenanceService.isMaintenanceMode(),
-            this.usesOldEdgeFunction(),
-        ]);
+        const [frontendSettings, simpleAuthSettings, maintenanceMode] =
+            await Promise.all([
+                this.frontendApiService.getFrontendSettings(false),
+                this.settingService.get<SimpleAuthSettings>(
+                    simpleAuthSettingsKey,
+                ),
+                this.maintenanceService.isMaintenanceMode(),
+            ]);
 
         const disablePasswordAuth =
             simpleAuthSettings?.disabled ||
@@ -152,9 +133,6 @@ class ConfigController extends Controller {
         const flags = {
             ...this.config.ui.flags,
             ...expFlags,
-            displayUpgradeEdgeBanner:
-                usesOldEdge ||
-                this.config.flagResolver.isEnabled('displayEdgeBanner'),
         };
 
         const response: UiConfigSchema = {

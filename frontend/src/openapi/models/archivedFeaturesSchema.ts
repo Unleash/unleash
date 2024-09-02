@@ -7,7 +7,6 @@ import type { ArchivedFeatureSchema } from './archivedFeatureSchema';
 
 /**
  * A list of archived features
- * @deprecated
  */
 export interface ArchivedFeaturesSchema {
     /** A list of features */

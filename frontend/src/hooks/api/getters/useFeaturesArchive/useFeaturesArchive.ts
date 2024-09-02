@@ -23,7 +23,7 @@ export const useFeaturesArchive = (projectId?: string) => {
     );
 
     return {
-        archivedFeatures: data?.features || [],
+        archivedFeatures: data?.features,
         refetchArchived: mutate,
         loading: isLoading,
         error,

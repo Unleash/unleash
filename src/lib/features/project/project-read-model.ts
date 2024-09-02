@@ -62,6 +62,22 @@ export class ProjectReadModel implements IProjectReadModel {
         this.flagResolver = flagResolver;
     }
 
+    async getFeatureProject(
+        featureName: string,
+    ): Promise<{ project: string; createdAt: Date } | null> {
+        const result = await this.db<{ project: string; created_at: Date }>(
+            'features',
+        )
+            .join('projects', 'features.project', '=', 'projects.id')
+            .select('features.project', 'projects.created_at')
+            .where('features.name', featureName)
+            .first();
+
+        if (!result) return null;
+
+        return { project: result.project, createdAt: result.created_at };
+    }
+
     async getProjectsForAdminUi(
         query?: IProjectQuery,
         userId?: number,

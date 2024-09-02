@@ -50,6 +50,7 @@ import type { IntegrationEventsStore } from '../features/integration-events/inte
 import { IFeatureCollaboratorsReadModel } from '../features/feature-toggle/types/feature-collaborators-read-model-type';
 import type { IProjectReadModel } from '../features/project/project-read-model-type';
 import { IOnboardingReadModel } from '../features/onboarding/onboarding-read-model-type';
+import { IOnboardingStore } from '../features/onboarding/onboarding-store-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -104,6 +105,7 @@ export interface IUnleashStores {
     featureCollaboratorsReadModel: IFeatureCollaboratorsReadModel;
     projectReadModel: IProjectReadModel;
     onboardingReadModel: IOnboardingReadModel;
+    onboardingStore: IOnboardingStore;
 }
 
 export {
@@ -157,4 +159,5 @@ export {
     IOnboardingReadModel,
     type IntegrationEventsStore,
     type IProjectReadModel,
+    IOnboardingStore,
 };

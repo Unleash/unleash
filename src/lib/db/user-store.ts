@@ -298,6 +298,15 @@ class UserStore implements IUserStore {
         const row = await this.activeUsers().where({ id }).first();
         return rowToUser(row);
     }
+
+    async getFirstUserDate(): Promise<Date | null> {
+        const firstInstanceUser = await this.db('users')
+            .select('created_at')
+            .orderBy('created_at', 'asc')
+            .first();
+
+        return firstInstanceUser ? firstInstanceUser.created_at : null;
+    }
 }
 
 module.exports = UserStore;

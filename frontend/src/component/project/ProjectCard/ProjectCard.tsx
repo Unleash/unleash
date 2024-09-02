@@ -15,6 +15,9 @@ import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen';
 import type { IProjectCard } from 'interfaces/project';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { ProjectMembers } from './ProjectCardFooter/ProjectMembers/ProjectMembers';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 
 const StyledUpdated = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -99,11 +102,12 @@ export const ProjectCard = ({
                     </div>
                 </StyledInfo>
             </StyledProjectCardBody>
-            <ProjectCardFooter
-                id={id}
-                owners={owners}
-                memberCount={memberCount}
-            />
+            <ProjectCardFooter id={id} owners={owners}>
+                <ConditionallyRender
+                    condition={id !== DEFAULT_PROJECT_ID}
+                    show={<ProjectMembers count={memberCount} members={[]} />}
+                />
+            </ProjectCardFooter>
         </StyledProjectCard>
     );
 };

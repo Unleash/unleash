@@ -1,10 +1,8 @@
 import type { FC } from 'react';
 import {
     StyledProjectCard,
-    StyledDivHeader,
     StyledBox,
     StyledCardTitle,
-    StyledDivInfo,
     StyledProjectCardBody,
     StyledIconBox,
     StyledActions,
@@ -16,8 +14,7 @@ import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { formatDateYMDHM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { parseISO } from 'date-fns';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Box, Link, Tooltip } from '@mui/material';
+import { Box, Link, styled, Tooltip } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import {
     DELETE_PROJECT,
@@ -29,6 +26,7 @@ import Delete from '@mui/icons-material/Delete';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
+import { flexRow } from 'themes/themeStyles';
 
 export type ProjectArchiveCardProps = {
     id: string;
@@ -39,6 +37,24 @@ export type ProjectArchiveCardProps = {
     mode?: string;
     owners?: ProjectSchemaOwners;
 };
+
+export const StyledDivHeader = styled('div')(({ theme }) => ({
+    ...flexRow,
+    width: '100%',
+    gap: theme.spacing(1),
+    minHeight: theme.spacing(6),
+    marginBottom: theme.spacing(1),
+}));
+
+const StyledTitle = styled(StyledCardTitle)(({ theme }) => ({
+    margin: 0,
+}));
+
+const StyledContent = styled('div')(({ theme }) => ({
+    ...flexRow,
+    fontSize: theme.fontSizes.smallerBody,
+    justifyContent: 'space-between',
+}));
 
 export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
     id,
@@ -61,49 +77,46 @@ export const ProjectArchiveCard: FC<ProjectArchiveCardProps> = ({
                     </StyledIconBox>
                     <StyledBox data-loading>
                         <Tooltip title={`id: ${id}`} arrow>
-                            <StyledCardTitle>
+                            <StyledTitle>
                                 <Highlighter search={searchQuery}>
                                     {name}
                                 </Highlighter>
-                            </StyledCardTitle>
+                            </StyledTitle>
                         </Tooltip>
                     </StyledBox>
                     <ProjectModeBadge mode={mode} />
                 </StyledDivHeader>
-                <StyledDivInfo>
-                    <ConditionallyRender
-                        condition={Boolean(archivedAt)}
-                        show={
-                            <Tooltip
-                                title={formatDateYMDHM(
-                                    parseISO(archivedAt as string),
-                                    locationSettings.locale,
-                                )}
-                                arrow
-                            >
-                                <Box
-                                    sx={(theme) => ({
-                                        color: theme.palette.text.secondary,
-                                    })}
-                                >
-                                    <p data-loading>
-                                        Archived:{' '}
-                                        <TimeAgo
-                                            date={archivedAt}
-                                            refresh={false}
-                                        />
-                                    </p>
-                                </Box>
-                            </Tooltip>
+                <StyledContent>
+                    <Tooltip
+                        title={
+                            archivedAt
+                                ? formatDateYMDHM(
+                                      parseISO(archivedAt as string),
+                                      locationSettings.locale,
+                                  )
+                                : undefined
                         }
-                    />
+                        arrow
+                        placement='top'
+                    >
+                        <Box
+                            sx={(theme) => ({
+                                color: theme.palette.text.secondary,
+                            })}
+                        >
+                            <p data-loading>
+                                Archived:{' '}
+                                <TimeAgo date={archivedAt} refresh={false} />
+                            </p>
+                        </Box>
+                    </Tooltip>
                     <Link
                         component={RouterLink}
                         to={`/archive?search=project%3A${encodeURI(id)}`}
                     >
                         <p>View archived flags</p>
                     </Link>
-                </StyledDivInfo>
+                </StyledContent>
             </StyledProjectCardBody>
             <ProjectCardFooter id={id} disabled owners={owners}>
                 <StyledActions>

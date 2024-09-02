@@ -89,7 +89,7 @@ export const NetworkTrafficUsagePlanSummary = ({
                                                 : 'neutral'
                                         }
                                     >
-                                        {usageTotal.toLocaleString()} requests
+                                        {usageTotal} requests
                                     </Badge>
                                 </StyledNumbersDiv>
                             </RowContainer>
@@ -101,8 +101,7 @@ export const NetworkTrafficUsagePlanSummary = ({
                                     <RowContainer>
                                         Included in your plan monthly
                                         <StyledNumbersDiv>
-                                            {includedTraffic.toLocaleString()}{' '}
-                                            requests
+                                            {includedTraffic} requests
                                         </StyledNumbersDiv>
                                     </RowContainer>
                                 </StyledCardDescription>
@@ -130,7 +129,7 @@ export const NetworkTrafficUsagePlanSummary = ({
                                         </Link>
                                         )
                                         <StyledNumbersDiv>
-                                            {overages.toLocaleString()} requests
+                                            {overages} requests
                                         </StyledNumbersDiv>
                                     </RowContainer>
                                     <RowContainer>

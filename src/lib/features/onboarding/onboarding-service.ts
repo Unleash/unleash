@@ -96,6 +96,7 @@ export class OnboardingService {
         if ('flag' in event) {
             await this.insertProjectEvent(event);
         }
+        this.eventBus.emit('onboarding-event');
     }
 
     private async insertInstanceEvent(event: {

@@ -59,7 +59,7 @@ export const ChangeRequestStatusBadge: VFC<IChangeRequestStatusBadgeProps> = ({
             );
         case 'Scheduled': {
             const { schedule } = changeRequest;
-            const scheduledAt = new Date(schedule.scheduledAt);
+            const scheduledAt = new Date(schedule.scheduledAt).toLocaleString();
 
             const { color, icon, tooltipTitle } = (() => {
                 switch (schedule.status) {

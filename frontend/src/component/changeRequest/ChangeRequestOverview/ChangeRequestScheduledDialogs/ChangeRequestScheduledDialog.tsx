@@ -52,7 +52,7 @@ export const ChangeRequestScheduledDialog: FC<
                 There is a scheduled time to apply these changes set for{' '}
                 <strong>
                     <br />
-                    {`${new Date(scheduledTime)}`}
+                    {`${new Date(scheduledTime).toLocaleString()}`}
                 </strong>
             </StyledAlert>
             <Typography variant={'body1'}>{message}</Typography>

@@ -87,7 +87,7 @@ export const ScheduleChangeRequestDialog: FC<
                         setError(undefined);
                         if (date < new Date()) {
                             setError(
-                                `The time you provided (${date}) is not valid because it's in the past. Please select a time in the future.`,
+                                `The time you provided (${date.toLocaleString()}) is not valid because it's in the past. Please select a time in the future.`,
                             );
                         }
                         setSelectedDate(date);

@@ -39,6 +39,7 @@ import {
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch';
 import { AvatarCell } from './AvatarCell';
+import { ConnectSDKDialog } from '../../../onboarding/ConnectSDKDialog';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -475,6 +476,13 @@ export const ProjectFeatureToggles = ({
                     {rowActionsDialogs}
 
                     {featureToggleModals}
+
+                    <ConnectSDKDialog
+                        open={false}
+                        onClose={() => {}}
+                        project={projectId}
+                        environments={environments}
+                    />
                 </div>
             </PageContent>
             <BatchSelectionActionsBar count={selectedData.length}>

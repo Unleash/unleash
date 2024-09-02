@@ -21,6 +21,9 @@ jobs:
         uses: actions/checkout@v4
       - name: Run Cypress
         uses: cypress-io/github-action@v6
+        env:
+          # DEBUG: '@cypress/github-action'
+          DEBUG: 'cypress:*'
         with:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all

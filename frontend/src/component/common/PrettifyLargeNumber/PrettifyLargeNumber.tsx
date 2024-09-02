@@ -29,7 +29,7 @@ export const PrettifyLargeNumber: FC<IPrettifyLargeNumberProps> = ({
     let showTooltip = false;
 
     if (value < threshold) {
-        prettyValue = `${value}`;
+        prettyValue = value.toLocaleString();
     } else {
         prettyValue = `${value}`;
         showTooltip = true;
@@ -43,7 +43,7 @@ export const PrettifyLargeNumber: FC<IPrettifyLargeNumberProps> = ({
         <ConditionallyRender
             condition={showTooltip}
             show={
-                <Tooltip title={`${value}`} arrow>
+                <Tooltip title={value.toLocaleString()} arrow>
                     {valueSpan}
                 </Tooltip>
             }

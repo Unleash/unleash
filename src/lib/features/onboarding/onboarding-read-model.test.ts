@@ -1,19 +1,11 @@
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
-import type {
-    IFeatureLifecycleStore,
-    IFeatureToggleStore,
-    IOnboardingStore,
-    IUserStore,
-} from '../../types';
+import type { IOnboardingStore } from '../../types';
 import { OnboardingReadModel } from './onboarding-read-model';
 import type { IOnboardingReadModel } from './onboarding-read-model-type';
 
 let db: ITestDb;
 let onboardingReadModel: IOnboardingReadModel;
-let userStore: IUserStore;
-let lifecycleStore: IFeatureLifecycleStore;
-let featureToggleStore: IFeatureToggleStore;
 let onBoardingStore: IOnboardingStore;
 
 beforeAll(async () => {
@@ -21,9 +13,6 @@ beforeAll(async () => {
         experimental: { flags: { onboardingMetrics: true } },
     });
     onboardingReadModel = new OnboardingReadModel(db.rawDatabase);
-    userStore = db.stores.userStore;
-    lifecycleStore = db.stores.featureLifecycleStore;
-    featureToggleStore = db.stores.featureToggleStore;
     onBoardingStore = db.stores.onboardingStore;
 });
 
@@ -33,10 +22,7 @@ afterAll(async () => {
     }
 });
 
-beforeEach(async () => {
-    await userStore.deleteAll();
-    jest.useRealTimers();
-});
+beforeEach(async () => {});
 
 test('can get instance onboarding durations', async () => {
     const initialResult =

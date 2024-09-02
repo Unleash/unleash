@@ -1,4 +1,4 @@
-import { type FC, useEffect, useMemo, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -16,7 +16,7 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ReviveProjectDialog } from './ReviveProjectDialog/ReviveProjectDialog';
 import { DeleteProjectDialogue } from '../Project/DeleteProject/DeleteProjectDialogue';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { safeRegExp } from '@server/util/escape-regex';
+import { useProjectsSearchAndSort } from './hooks/useProjectsSearchAndSort';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -86,14 +86,10 @@ export const ArchiveProjectList: FC = () => {
         />
     );
 
-    const filteredProjects = useMemo(
-        () =>
-            searchValue
-                ? projects.filter((project) =>
-                      safeRegExp(searchValue, 'i').test(project.name),
-                  )
-                : projects,
-        [projects, searchValue],
+    const filteredProjects = useProjectsSearchAndSort(
+        projects,
+        searchValue,
+        'archived',
     );
 
     return (

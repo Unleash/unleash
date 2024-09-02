@@ -22,10 +22,9 @@ jobs:
       - name: Run Cypress
         uses: cypress-io/github-action@v6
         env:
-          # DEBUG: '@cypress/github-action'
           DEBUG: 'cypress:*'
-          CYPRESS_RECORD_KEY: f4265c61-c7ca-4188-9e02-8958afa98cbc
-          CYPRESS_PROJECT_ID: f4265c61
+          CYPRESS_RECORD_KEY: 'f4265c61-c7ca-4188-9e02-8958afa98cbc'
+          CYPRESS_PROJECT_ID: 'rgvk8h'
         with:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all

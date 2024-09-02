@@ -151,7 +151,7 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
     cy.visit(
         `/projects/${projectName}/features/${featureToggleName}/strategies/create?environmentId=${env}&strategyName=flexibleRollout`,
     );
-    cy.wait(10000);
+    cy.wait(500);
     //  Takes a bit to load the screen - this will wait until it finds it or fail
     console.log('Waiting for strategy to load');
     cy.get('[data-testid=FLEXIBLE_STRATEGY_STICKINESS_ID]');

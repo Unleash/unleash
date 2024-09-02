@@ -4,7 +4,6 @@ import type { IGroupUser } from 'interfaces/group';
 import { useMemo } from 'react';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar'; // usage
 import { objectId } from 'utils/objectId';
-import millify from 'millify';
 
 const StyledAvatars = styled('div')(({ theme }) => ({
     display: 'inline-flex',
@@ -86,7 +85,7 @@ const AvatarGroupInner = ({
                 show={
                     <AvatarComponent
                         user={{
-                            username: `Total: ${millify(users.length)}`,
+                            username: `Total: ${users.length}`,
                         }}
                     >
                         +{Math.min(overflow, MAX_OVERFLOW_DISPLAY_NUMBER)}

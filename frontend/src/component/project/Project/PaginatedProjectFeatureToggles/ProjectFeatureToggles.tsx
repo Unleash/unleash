@@ -40,6 +40,8 @@ import {
 } from './useProjectFeatureSearch';
 import { AvatarCell } from './AvatarCell';
 import { ProjectOnboarding } from './ProjectOnboarding/ProjectOnboarding';
+import { useUiFlag } from '../../../../hooks/useUiFlag';
+import { styled } from '@mui/material';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -51,9 +53,16 @@ const formatEnvironmentColumnId = (environment: string) =>
 const columnHelper = createColumnHelper<FeatureSearchResponseSchema>();
 const getRowId = (row: { name: string }) => row.name;
 
+const Container = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
+
 export const ProjectFeatureToggles = ({
     environments,
 }: IPaginatedProjectFeatureTogglesProps) => {
+    const onboardinUIEnabled = useUiFlag('onboardingUI');
     const projectId = useRequiredPathParam('projectId');
 
     const {
@@ -383,10 +392,12 @@ export const ProjectFeatureToggles = ({
 
     const selectedData = useSelectedData(features, rowSelection);
 
-    if (total !== 0) return <ProjectOnboarding projectId={projectId} />;
-
     return (
-        <>
+        <Container>
+            <ConditionallyRender
+                condition={onboardinUIEnabled}
+                show={<ProjectOnboarding projectId={projectId} />}
+            />
             <PageContent
                 disableLoading
                 disablePadding
@@ -489,6 +500,6 @@ export const ProjectFeatureToggles = ({
                     onChange={refetch}
                 />
             </BatchSelectionActionsBar>
-        </>
+        </Container>
     );
 };

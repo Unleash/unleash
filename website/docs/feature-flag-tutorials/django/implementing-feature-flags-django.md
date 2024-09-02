@@ -8,17 +8,6 @@ Hello! In this tutorial, we’ll show you how to add feature flags to your Djang
 
 In a classic tutorial fashion, we’ll add feature flags to a blog app made with Django. We’ll use feature flags to decide how many blog posts to show on the index page.
 
--   [Prerequisites](#prerequisites)
--   [1. Best practices for back-end apps with Unleash](#1-best-practices-for-back-end-apps-with-unleash)
--   [2. Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
--   [3. Set up the Django app](#3-set-up-the-django-app)
-    -   [Set up and seed the database](#set-up-and-seed-the-database)
-    -   [Run the server](#run-the-server)
--   [4. Restrict the number of posts](#4-restrict-the-number-of-posts)
--   [5. Add Unleash to your Django app](#5-add-unleash-to-your-django-app)
--   [6. Verify the toggle experience](#6-verify-the-toggle-experience)
--   [Conclusion](#conclusion)
-
 ## Prerequisites
 
 For this tutorial, you'll need the following:
@@ -29,20 +18,9 @@ For this tutorial, you'll need the following:
 
 ![architecture diagram for our implementation](../rails/diagram.png)
 
-The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. For server-side applications or automated scripts, Unleash exposes an [API]((https://docs.getunleash.io/reference/api/unleash)) defined by an OpenAPI specification, allowing you to perform these actions programmatically.
+The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. For server-side applications or automated scripts, Unleash exposes an [API](<(https://docs.getunleash.io/reference/api/unleash)>) defined by an OpenAPI specification, allowing you to perform these actions programmatically.
 
-## 1. Best practices for back-end apps with Unleash
-
-Django is a back-end framework, so there are special considerations to plan around when implementing feature flags.
-
-Most importantly, you must:
-
--   Limit feature flag payloads for scalability, security, and efficiency
--   Use graceful degradation where possible to improve the resiliency of your architecture
-
-For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
-
-## 2. Install a local feature flag provider
+## 1. Install a local feature flag provider
 
 In this section, we'll install Unleash, run the instance locally, log in, and create a feature flag. If you prefer, you can use other tools instead of Unleash, but you'll need to update the code accordingly. The basic steps will probably be the same.
 
@@ -73,13 +51,21 @@ Call it `top-3` and enable it in the `development` environment.
 
 Everything's now set up on the Unleash side. Let's set up the Django application.
 
-## 3. Set up the Django app
+## 2. Set up the Django app
 
 Let's clone a basic blog repository and get it up and running. We don't want to waste time setting up a Django codebase from scratch.
 
 ```sh
 git clone https://github.com/alvinometric/django-basic-blog
 cd django-basic-blog
+```
+
+After that, set up a virtual environment and install Django.
+
+```sh
+python3 -m venv venv
+source venv/bin/activate
+pip install django
 ```
 
 #### Set up and seed the database
@@ -100,7 +86,7 @@ Go to [http://localhost:8000](http://localhost:8000) and check that you see the 
 
 ![A blog app with a list of posts](../rails/blog-app.png)
 
-## 4. Restrict the number of posts
+## 3. Restrict the number of posts
 
 Right now all the blog posts are displayed on the index page. We want to use a feature flag to change that and restrict it to the 3 most recent posts.
 
@@ -122,7 +108,7 @@ We're using the flag in the views rather than the template, but you could also d
 
 Reload your browser and you should see only the 3 most recent posts.
 
-## 5. Add Unleash to your Django app
+## 4. Add Unleash to your Django app
 
 Now, let's connect our project to Unleash so that you can toggle the feature flag at runtime. If you wanted to, you could also do a gradual rollout, and use it for A/B testing or more advanced functionality.
 
@@ -155,12 +141,16 @@ Then, in `blog/views.py`, update the `post_list` view:
 ```python
 from django.shortcuts import render
 from .models import Post
+
+# You DO NOT want to do this in a production environment
+# Rather, you would create a singleton that is shared across your application
 from .unleash_client import unleash_client
 
 def post_list(request):
-    is_top3 = unleash_client.is_enabled("top-3")
-    all_posts = Post.objects.all().order_by('-published_date')
-    posts = all_posts[:3] if is_top3 else all_posts
+    if  unleash_client.is_enabled("top-3"):
+        posts = Post.objects.order_by('-published_date')[:3]
+    else:
+        posts = Post.objects.order_by('-published_date')
     return render(request, 'blog/post_list.html', {'posts': posts})
 ```
 
@@ -169,8 +159,6 @@ def post_list(request):
 Reload your browser and check that you see three blog posts displayed. Turn off the flag in your Unleash instance and reload the page. You should see all the blog posts again.
 
 See additional use cases in our [Python SDK documentation](https://docs.getunleash.io/reference/sdks/python).
-
-> **Note:** An update to a feature flag may take 30 seconds to propagate.
 
 ## Conclusion
 

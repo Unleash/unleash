@@ -2,7 +2,7 @@ import { type FC, useContext, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type { IProjectCard } from 'interfaces/project';
+import type { ProjectSchema } from 'openapi';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import AccessContext from 'contexts/AccessContext';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -169,7 +169,7 @@ export const ProjectList = () => {
 
     const ProjectGroupComponent = (props: {
         sectionTitle?: string;
-        projects: IProjectCard[];
+        projects: ProjectSchema[];
     }) => {
         return (
             <ProjectGroup

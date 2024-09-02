@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import { safeRegExp } from '@server/util/escape-regex';
-import type { IProjectCard } from 'interfaces/project';
 import type { sortKeys } from '../ProjectsListSort/ProjectsListSort';
+import type { ProjectSchema } from 'openapi';
 
 export const useProjectsSearchAndSort = (
-    projects: IProjectCard[],
+    projects: ProjectSchema[],
     query?: string | null,
     sortBy?: (typeof sortKeys)[number] | null,
 ) =>

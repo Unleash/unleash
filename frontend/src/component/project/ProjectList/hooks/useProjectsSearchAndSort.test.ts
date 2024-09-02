@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react';
 import { useProjectsSearchAndSort } from './useProjectsSearchAndSort';
-import type { IProjectCard } from 'interfaces/project';
+import type { ProjectSchema } from 'openapi';
 
-const projects: IProjectCard[] = [
+const projects: ProjectSchema[] = [
     {
         name: 'A - Eagle',
         id: '1',

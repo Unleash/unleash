@@ -16,13 +16,13 @@ const Container = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-const TopBox = styled('div')(({ theme }) => ({
+const TitleBox = styled('div')(({ theme }) => ({
     padding: theme.spacing(2, 7, 2, 7),
     borderBottom: '1px solid',
     borderColor: theme.palette.divider,
 }));
 
-const BottomBox = styled('div')(({ theme }) => ({
+const Actions = styled('div')(({ theme }) => ({
     display: 'flex',
     flexGrow: 1,
 }));
@@ -57,15 +57,15 @@ const CircleContainer = styled('span')(({ theme }) => ({
 export const WelcomeToProject = ({ projectId }: IWelcomeToProjectProps) => {
     return (
         <Container>
-            <TopBox>
+            <TitleBox>
                 <Typography fontWeight='bold'>
                     Welcome to your project
                 </Typography>
                 <Typography variant='body2'>
                     Complete the steps below to start working with this project
                 </Typography>
-            </TopBox>
-            <BottomBox>
+            </TitleBox>
+            <Actions>
                 <ActionBox>
                     <TitleContainer>
                         <CircleContainer>1</CircleContainer>
@@ -98,7 +98,7 @@ export const WelcomeToProject = ({ projectId }: IWelcomeToProjectProps) => {
                         Connect SDK
                     </ResponsiveButton>
                 </ActionBox>
-            </BottomBox>
+            </Actions>
         </Container>
     );
 };

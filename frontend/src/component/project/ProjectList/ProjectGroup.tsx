@@ -3,8 +3,7 @@ import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ProjectCard as LegacyProjectCard } from '../ProjectCard/LegacyProjectCard';
 import { ProjectCard as NewProjectCard } from '../ProjectCard/ProjectCard';
-
-import type { IProjectCard } from 'interfaces/project';
+import type { ProjectSchema } from 'openapi';
 import loadingData from './loadingData';
 import { TablePlaceholder } from 'component/common/Table';
 import { styled, Typography } from '@mui/material';
@@ -51,14 +50,14 @@ type ProjectGroupProps = {
     sectionTitle?: string;
     sectionSubtitle?: string;
     HeaderActions?: ReactNode;
-    projects: IProjectCard[];
+    projects: ProjectSchema[];
     loading: boolean;
     /**
      * @deprecated remove with projectListImprovements
      */
     searchValue?: string;
     placeholder?: string;
-    ProjectCardComponent?: ComponentType<IProjectCard & any>;
+    ProjectCardComponent?: ComponentType<ProjectSchema & any>;
     link?: boolean;
 };
 
@@ -129,7 +128,7 @@ export const ProjectGroup = ({
                             show={() => (
                                 <>
                                     {loadingData.map(
-                                        (project: IProjectCard) => (
+                                        (project: ProjectSchema) => (
                                             <ProjectCard
                                                 data-loading
                                                 createdAt={project.createdAt}

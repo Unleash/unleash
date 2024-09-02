@@ -1,8 +1,8 @@
 import { renderHook } from '@testing-library/react';
 import { useProjectsSearchAndSort } from './useProjectsSearchAndSort';
-import type { IProjectCard } from 'interfaces/project';
+import type { ProjectSchema } from 'openapi';
 
-const projects: IProjectCard[] = [
+const projects: ProjectSchema[] = [
     {
         name: 'A - Eagle',
         id: '1',
@@ -174,7 +174,7 @@ describe('useProjectsSearchAndSort', () => {
         ]);
     });
 
-    it('should be able to deal with date', () => {
+    it('should be able to deal with updates', () => {
         const hook = renderHook(
             (sortBy: string) =>
                 useProjectsSearchAndSort(
@@ -189,9 +189,9 @@ describe('useProjectsSearchAndSort', () => {
                         {
                             name: 'Project B',
                             id: '2',
-                            createdAt: new Date('2024-02-01'),
-                            lastUpdatedAt: new Date('2024-02-10'),
-                            lastReportedFlagUsage: new Date('2024-02-15'),
+                            createdAt: '2024-02-01',
+                            lastUpdatedAt: '2024-02-10',
+                            lastReportedFlagUsage: '2024-02-15',
                         },
                     ],
                     undefined,

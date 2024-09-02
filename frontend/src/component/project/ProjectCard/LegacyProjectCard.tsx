@@ -14,7 +14,7 @@ import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { FavoriteAction } from './FavoriteAction/FavoriteAction';
-import type { IProjectCard } from 'interfaces/project';
+import type { ProjectSchema } from 'openapi';
 import { Box } from '@mui/material';
 
 export const ProjectCard = ({
@@ -27,7 +27,7 @@ export const ProjectCard = ({
     mode,
     favorite = false,
     owners,
-}: IProjectCard) => (
+}: ProjectSchema & { onHover?: () => void }) => (
     <StyledProjectCard onMouseEnter={onHover}>
         <StyledProjectCardBody>
             <StyledDivHeader>

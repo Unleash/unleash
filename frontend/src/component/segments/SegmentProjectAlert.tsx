@@ -1,6 +1,6 @@
 import { Alert, styled } from '@mui/material';
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
-import type { IProjectCard } from 'interfaces/project';
+import type { ProjectSchema } from 'openapi';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { Link } from 'react-router-dom';
 import { formatStrategyName } from 'utils/strategyNames';
@@ -22,14 +22,14 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 }));
 
 interface ISegmentProjectAlertProps {
-    projects: IProjectCard[];
+    projects: ProjectSchema[];
     strategies: (
         | IFeatureStrategy
         | ChangeRequestUpdatedStrategy
         | ChangeRequestNewStrategy
     )[];
     projectsUsed: string[];
-    availableProjects: IProjectCard[];
+    availableProjects: ProjectSchema[];
 }
 
 export const SegmentProjectAlert = ({

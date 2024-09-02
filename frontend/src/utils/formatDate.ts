@@ -3,7 +3,7 @@ export const formatDateYMDHMS = (
     locale?: string,
 ): string => {
     try {
-        return new Date(date).toLocaleString(locale ?? 'en-US', {
+        return new Date(date).toLocaleString(locale, {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
@@ -26,7 +26,7 @@ export const formatDateYMDHM = (
     timeZone?: string,
 ): string => {
     try {
-        return new Date(date).toLocaleString(locale ?? 'en-US', {
+        return new Date(date).toLocaleString(locale, {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
@@ -49,7 +49,7 @@ export const formatDateYMD = (
     timeZone?: string,
 ): string => {
     try {
-        return new Date(date).toLocaleString(locale ?? 'en-US', {
+        return new Date(date).toLocaleString(locale, {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
@@ -69,7 +69,7 @@ export const formatDateHM = (
     locale: string,
 ): string => {
     try {
-        return new Date(date).toLocaleString(locale ?? 'en-US', {
+        return new Date(date).toLocaleString(locale, {
             hour: '2-digit',
             minute: '2-digit',
         });

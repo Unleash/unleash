@@ -43,7 +43,7 @@ Feature flags give you more control over what is released, to whom, and when. Th
 
 ### Level up your QA
 
-Feature flags are a powerful tool for quality assurance (QA) as they allow you to test features under specific conditions that you define. This testing happens within the full context of your live product, as your users would experience it. That is because with trunk-based development, if it's been coded, the feature exists in production. However, feature flags enable you to make a feature visible only to those users you want.
+Feature flags are a powerful tool for quality assurance (QA) as they allow you to test features under specific conditions that you define. This testing happens within the full context of your live product, as your users would experience it. That is because with trunk-based development, once a feature is coded, it exists in production. However, feature flags enable you to make a feature visible only to those users you want.
 
 ### Reduce risk
 
@@ -143,7 +143,7 @@ Contrary to the short-lived nature of most feature flags, kill switches are inhe
 - **Benefits**: Thorough validation of changes in a live environment without disrupting the user experience.
 - **Lifespan**: Short-lived; a few days to a couple of weeks.
 
-Ops flags manage a system’s technical aspects that do not directly influence user-visible features but are crucial for the application’s underlying stability and performance. For example, transitioning from one library version to another, where operational flags can toggle between the old and new implementations to ensure the update does not adversely affect the system. By enabling real-time switching between different operational states or configurations, these flags allow for thorough validation of changes in a live environment without disrupting the user experience.
+Operational flags manage a system’s technical aspects that do not directly influence user-visible features but are crucial for the application’s underlying stability and performance. For example, transitioning from one library version to another, where operational flags can toggle between the old and new implementations to ensure the update does not adversely affect the system. By enabling real-time switching between different operational states or configurations, these flags allow for thorough validation of changes in a live environment without disrupting the user experience.
 
 Operational flags should be short-lived, existing only long enough to confirm that a change, such as a library update, is stable and does not introduce regressions. Once the new state is validated, the flag should be promptly retired to avoid accumulating technical debt. Avoid using operational flags as a solution for long-term configuration management; see our [Best practices for building and scaling feature flags](../feature-flags/feature-flag-best-practices.md) guide to learn more.
 

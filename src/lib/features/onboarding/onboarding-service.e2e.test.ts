@@ -35,7 +35,58 @@ beforeEach(async () => {
     await stores.featureToggleStore.deleteAll();
     await stores.projectStore.deleteAll();
     await stores.onboardingStore.deleteAll();
+    await stores.userStore.deleteAll();
     jest.useRealTimers();
+});
+
+test('Default project should take first user created instead of project created as start time', async () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date());
+    const { userStore, featureToggleStore, projectStore, projectReadModel } =
+        stores;
+
+    // default projects are created in advance and should be ignored
+    await projectStore.create({ id: 'default', name: 'irrelevant' });
+
+    jest.advanceTimersByTime(minutesToMilliseconds(1));
+    const user = await userStore.insert({});
+    await featureToggleStore.create('default', {
+        name: 'test-default',
+        createdByUserId: user.id,
+    });
+
+    jest.advanceTimersByTime(minutesToMilliseconds(1));
+    await onboardingService.insert({
+        type: 'flag-created',
+        flag: 'test-default',
+    });
+    await onboardingService.insert({ type: 'pre-live', flag: 'test-default' });
+    await onboardingService.insert({ type: 'live', flag: 'test-default' });
+
+    const { rows: projectEvents } = await db.rawDatabase.raw(
+        'SELECT * FROM onboarding_events_project',
+    );
+    expect(projectEvents).toMatchObject([
+        { event: 'first-flag', time_to_event: 60, project: 'default' },
+        {
+            event: 'first-pre-live',
+            time_to_event: 60,
+            project: 'default',
+        },
+        { event: 'first-live', time_to_event: 60, project: 'default' },
+    ]);
+});
+
+test('Ignore system user in onboarding events', async () => {
+    // system users are not counted towards onboarding metrics
+    await db.rawDatabase.raw('INSERT INTO users (is_system) VALUES (true)');
+
+    await onboardingService.insert({ type: 'first-user-login' });
+
+    const { rows: instanceEvents } = await db.rawDatabase.raw(
+        'SELECT * FROM onboarding_events_instance',
+    );
+    expect(instanceEvents).toMatchObject([]);
 });
 
 test('Storing onboarding events', async () => {

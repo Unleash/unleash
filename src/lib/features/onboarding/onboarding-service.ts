@@ -124,8 +124,15 @@ export class OnboardingService {
         );
         if (!project) return;
 
+        const startDate =
+            project.project === 'default'
+                ? await this.userStore.getFirstUserDate()
+                : project.createdAt || null;
+
+        if (!startDate) return;
+
         const timeToEvent = millisecondsToSeconds(
-            new Date().getTime() - project.createdAt.getTime(),
+            Date.now() - startDate.getTime(),
         );
         await this.onboardingStore.insertProjectEvent({
             type: event.type,

@@ -302,6 +302,7 @@ class UserStore implements IUserStore {
     async getFirstUserDate(): Promise<Date | null> {
         const firstInstanceUser = await this.db('users')
             .select('created_at')
+            .where('is_system', '=', false)
             .orderBy('created_at', 'asc')
             .first();
 

@@ -1,11 +1,11 @@
-import type { IProjectCard } from 'interfaces/project';
+import type { ProjectSchema } from 'openapi';
 
 export const groupProjects = (
     myProjectIds: Set<string>,
-    filteredProjects: IProjectCard[],
+    filteredProjects: ProjectSchema[],
 ) => {
-    const mine: IProjectCard[] = [];
-    const other: IProjectCard[] = [];
+    const mine: ProjectSchema[] = [];
+    const other: ProjectSchema[] = [];
 
     for (const project of filteredProjects) {
         if (project.favorite || myProjectIds.has(project.id)) {

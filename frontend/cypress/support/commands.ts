@@ -28,6 +28,7 @@ import {
 
 Cypress.on('window:before:load', (window) => {
     Object.defineProperty(window.navigator, 'language', { value: 'en' });
+    Object.defineProperty(window.navigator, 'languages', { value: ['en'] });
 });
 Cypress.Commands.add('runBefore', runBefore);
 Cypress.Commands.add('login_UI', login_UI);

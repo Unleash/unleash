@@ -15,6 +15,8 @@ import type {
 } from './onboarding-store-type';
 import { isBefore, millisecondsToSeconds } from 'date-fns';
 
+const START_ONBOARDING_TRACKING_DATE = new Date(2024, 8, 3);
+
 export class OnboardingService {
     private flagResolver: IFlagResolver;
 
@@ -96,7 +98,7 @@ export class OnboardingService {
         // the time we introduced onboarding tracking
         if (
             firstInstanceUserDate &&
-            isBefore(firstInstanceUserDate, new Date(2024, 8, 3))
+            isBefore(firstInstanceUserDate, START_ONBOARDING_TRACKING_DATE)
         )
             return;
 

@@ -18,6 +18,7 @@ import { ArcherContainer, ArcherElement } from 'react-archer';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
+import { parseToken } from './parseToken';
 
 interface IConnectSDKDialogProps {
     open: boolean;
@@ -131,25 +132,6 @@ const SecretExplanationDescription = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.fontSizes.smallBody,
 }));
-
-function splitToken(
-    token?: string,
-): { project: string; environment: string; secret: string } | null {
-    if (!token) return null;
-
-    const [project, rest] = token.split(':', 2);
-    const [environment, secret] = rest.split('.', 2);
-
-    if (project && environment && secret) {
-        return {
-            project,
-            environment,
-            secret,
-        };
-    }
-
-    return null;
-}
 
 const ConceptsDefinitions = () => (
     <ConceptsDefinitionsWrapper>
@@ -337,7 +319,7 @@ export const ConnectSDKDialog = ({
     const currentEnvironmentToken = tokens.find(
         (token) => token.environment === environment,
     );
-    const parsedToken = splitToken(currentEnvironmentToken?.secret);
+    const parsedToken = parseToken(currentEnvironmentToken?.secret);
 
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));

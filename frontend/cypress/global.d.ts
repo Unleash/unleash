@@ -55,7 +55,7 @@ declare namespace Cypress {
         // STRATEGY
         addUserIdStrategyToFeature_UI(
             featureName: string,
-            projectName?: string,
+            projectName: string,
         ): Chainable;
         addFlexibleRolloutStrategyToFeature_UI(
             options: AddFlexibleRolloutStrategyOptions,

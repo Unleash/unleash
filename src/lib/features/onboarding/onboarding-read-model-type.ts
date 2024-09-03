@@ -3,7 +3,7 @@ import type { ProjectOverviewSchema } from '../../openapi';
 export type OnboardingStatus = ProjectOverviewSchema['onboardingStatus'];
 
 /**
- * All the values are in minutes
+ * All the values are in seconds
  */
 export type InstanceOnboarding = {
     firstLogin: number | null;
@@ -14,7 +14,7 @@ export type InstanceOnboarding = {
 };
 
 /**
- * All the values are in minutes
+ * All the values are in seconds
  */
 export type ProjectOnboarding = {
     project: string;

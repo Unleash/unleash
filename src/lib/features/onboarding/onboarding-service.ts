@@ -122,19 +122,17 @@ export class OnboardingService {
         const project = await this.projectReadModel.getFeatureProject(
             event.flag,
         );
-        let startDate: Date | null;
-        if (project?.project === 'default') {
-            const firstInstanceUserDate =
-                await this.userStore.getFirstUserDate();
-            startDate = firstInstanceUserDate;
-        } else {
-            startDate = project?.createdAt || null;
-        }
+        if (!project) return;
 
-        if (!project || !startDate) return;
+        const startDate =
+            project.project === 'default'
+                ? await this.userStore.getFirstUserDate()
+                : project.createdAt || null;
+
+        if (!startDate) return;
 
         const timeToEvent = millisecondsToSeconds(
-            new Date().getTime() - startDate.getTime(),
+            Date.now() - startDate.getTime(),
         );
         await this.onboardingStore.insertProjectEvent({
             type: event.type,

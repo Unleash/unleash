@@ -42,7 +42,7 @@ import { AvatarCell } from './AvatarCell';
 import { ProjectOnboarding } from './ProjectOnboarding/ProjectOnboarding';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { styled } from '@mui/material';
-import { ConnectSDKDialog } from '../../../onboarding/ConnectSDKDialog';
+import { ConnectSdkDialog } from '../../../onboarding/ConnectSdkDialog';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -491,8 +491,8 @@ export const ProjectFeatureToggles = ({
 
                     {featureToggleModals}
 
-                    <ConnectSDKDialog
-                        open={false}
+                    <ConnectSdkDialog
+                        open={true}
                         onClose={() => {}}
                         project={projectId}
                         environments={environments}

@@ -6,7 +6,9 @@ import {
     useMediaQuery,
     useTheme,
 } from '@mui/material';
-import { GenrateApiKeyConcepts, GeneratApiKey } from './GenerateApiKey';
+import { GenrateApiKeyConcepts, GenerateApiKey } from './GenerateApiKey';
+import { useState } from 'react';
+import { SelectSdk } from './SelectSdk';
 
 interface IConnectSDKDialogProps {
     open: boolean;
@@ -53,7 +55,12 @@ const NextStepSectionSpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3, 8, 3, 8),
 }));
 
-export const ConnectSDKDialog = ({
+type OnboardingStage =
+    | { name: 'select-sdk' }
+    | { name: 'generate-api-key'; sdkType: 'CLIENT' | 'FRONTEND' }
+    | { name: 'test-connection' };
+
+export const ConnectSdkDialog = ({
     open,
     onClose,
     environments,
@@ -61,23 +68,31 @@ export const ConnectSDKDialog = ({
 }: IConnectSDKDialogProps) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+    const [stage, setStage] = useState<OnboardingStage>({ name: 'select-sdk' });
 
     return (
         <StyledDialog open={open} onClose={onClose}>
             <Box sx={{ display: 'flex' }}>
                 <ConnectSdk>
-                    <GeneratApiKey
-                        environments={environments}
-                        project={project}
-                    />
-                    <Navigation>
-                        <NextStepSectionSpacedContainer>
-                            <Button variant='text' color='inherit'>
-                                Back
-                            </Button>
-                            <Button variant='contained'>Next</Button>
-                        </NextStepSectionSpacedContainer>
-                    </Navigation>
+                    {stage.name === 'select-sdk' ? <SelectSdk /> : null}
+                    {stage.name === 'generate-api-key' ? (
+                        <GenerateApiKey
+                            environments={environments}
+                            project={project}
+                            sdkType={stage.sdkType}
+                        />
+                    ) : null}
+
+                    {stage.name === 'generate-api-key' ? (
+                        <Navigation>
+                            <NextStepSectionSpacedContainer>
+                                <Button variant='text' color='inherit'>
+                                    Back
+                                </Button>
+                                <Button variant='contained'>Next</Button>
+                            </NextStepSectionSpacedContainer>
+                        </Navigation>
+                    ) : null}
                 </ConnectSdk>
 
                 {isLargeScreen ? <GenrateApiKeyConcepts /> : null}

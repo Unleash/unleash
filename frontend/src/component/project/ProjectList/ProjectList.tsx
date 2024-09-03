@@ -18,6 +18,7 @@ import { ProjectCreationButton } from './ProjectCreationButton/ProjectCreationBu
 import { useGroupedProjects } from './hooks/useGroupedProjects';
 import { useProjectsSearchAndSort } from './hooks/useProjectsSearchAndSort';
 import { ProjectArchiveLink } from './ProjectArchiveLink/ProjectArchiveLink';
+import { EventTimeline } from 'component/common/EventTimeline/EventTimeline';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -28,6 +29,12 @@ const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(6),
+}));
+
+const StyledEventTimelineContainer = styled('div')(({ theme }) => ({
+    marginBottom: theme.spacing(4),
+    display: 'flex',
+    justifyContent: 'center',
 }));
 
 const NewProjectList = () => {
@@ -58,90 +65,95 @@ const NewProjectList = () => {
             : projects.length;
 
     return (
-        <PageContent
-            isLoading={loading}
-            header={
-                <PageHeader
-                    title={`Projects (${projectCount})`}
-                    actions={
-                        <>
-                            <ConditionallyRender
-                                condition={!isSmallScreen}
-                                show={
-                                    <>
-                                        <Search
-                                            initialValue={state.query || ''}
-                                            onChange={setSearchValue}
-                                        />
-                                        <PageHeader.Divider />
-                                    </>
-                                }
-                            />
+        <>
+            <StyledEventTimelineContainer>
+                <EventTimeline />
+            </StyledEventTimelineContainer>
+            <PageContent
+                isLoading={loading}
+                header={
+                    <PageHeader
+                        title={`Projects (${projectCount})`}
+                        actions={
+                            <>
+                                <ConditionallyRender
+                                    condition={!isSmallScreen}
+                                    show={
+                                        <>
+                                            <Search
+                                                initialValue={state.query || ''}
+                                                onChange={setSearchValue}
+                                            />
+                                            <PageHeader.Divider />
+                                        </>
+                                    }
+                                />
 
-                            <ConditionallyRender
-                                condition={Boolean(archiveProjectsEnabled)}
-                                show={<ProjectArchiveLink />}
-                            />
-                            <ProjectCreationButton
-                                isDialogOpen={Boolean(state.create)}
-                                setIsDialogOpen={(create) =>
-                                    setState({
-                                        create: create ? 'true' : undefined,
-                                    })
-                                }
-                            />
-                        </>
-                    }
-                >
-                    <ConditionallyRender
-                        condition={isSmallScreen}
-                        show={
-                            <Search
-                                initialValue={state.query || ''}
-                                onChange={setSearchValue}
-                            />
+                                <ConditionallyRender
+                                    condition={Boolean(archiveProjectsEnabled)}
+                                    show={<ProjectArchiveLink />}
+                                />
+                                <ProjectCreationButton
+                                    isDialogOpen={Boolean(state.create)}
+                                    setIsDialogOpen={(create) =>
+                                        setState({
+                                            create: create ? 'true' : undefined,
+                                        })
+                                    }
+                                />
+                            </>
                         }
-                    />
-                </PageHeader>
-            }
-        >
-            <StyledContainer>
-                <ConditionallyRender
-                    condition={error}
-                    show={() => (
-                        <StyledApiError
-                            onClick={refetch}
-                            text='Error fetching projects'
+                    >
+                        <ConditionallyRender
+                            condition={isSmallScreen}
+                            show={
+                                <Search
+                                    initialValue={state.query || ''}
+                                    onChange={setSearchValue}
+                                />
+                            }
                         />
-                    )}
-                />
-                <SearchHighlightProvider value={state.query || ''}>
-                    <ProjectGroup
-                        sectionTitle='My projects'
-                        sectionSubtitle='Favorite projects, projects you own or projects you are a member of.'
-                        HeaderActions={
-                            <ProjectsListSort
-                                sortBy={state.sortBy}
-                                setSortBy={(sortBy) =>
-                                    setState({
-                                        sortBy: sortBy as typeof state.sortBy,
-                                    })
-                                }
+                    </PageHeader>
+                }
+            >
+                <StyledContainer>
+                    <ConditionallyRender
+                        condition={error}
+                        show={() => (
+                            <StyledApiError
+                                onClick={refetch}
+                                text='Error fetching projects'
                             />
-                        }
-                        loading={loading}
-                        projects={groupedProjects.myProjects}
+                        )}
                     />
+                    <SearchHighlightProvider value={state.query || ''}>
+                        <ProjectGroup
+                            sectionTitle='My projects'
+                            sectionSubtitle='Favorite projects, projects you own or projects you are a member of.'
+                            HeaderActions={
+                                <ProjectsListSort
+                                    sortBy={state.sortBy}
+                                    setSortBy={(sortBy) =>
+                                        setState({
+                                            sortBy: sortBy as typeof state.sortBy,
+                                        })
+                                    }
+                                />
+                            }
+                            loading={loading}
+                            projects={groupedProjects.myProjects}
+                        />
 
-                    <ProjectGroup
-                        sectionTitle='Other projects'
-                        sectionSubtitle='Projects in Unleash that you have access to.'
-                        loading={loading}
-                        projects={groupedProjects.otherProjects}
-                    />
-                </SearchHighlightProvider>
-            </StyledContainer>
-        </PageContent>
+                        <ProjectGroup
+                            sectionTitle='Other projects'
+                            sectionSubtitle='Projects in Unleash that you have access to.'
+                            loading={loading}
+                            projects={groupedProjects.otherProjects}
+                        />
+                    </SearchHighlightProvider>
+                </StyledContainer>
+            </PageContent>
+        </>
     );
 };
 

@@ -6,7 +6,6 @@ import {
     type IOnboardingStore,
     SYSTEM_USER,
 } from '../../types';
-import { OnboardingReadModel } from './onboarding-read-model';
 import type { IOnboardingReadModel } from './onboarding-read-model-type';
 
 let db: ITestDb;
@@ -19,7 +18,7 @@ beforeAll(async () => {
     db = await dbInit('onboarding_read_model', getLogger, {
         experimental: { flags: { onboardingMetrics: true } },
     });
-    onboardingReadModel = new OnboardingReadModel(db.rawDatabase);
+    onboardingReadModel = db.stores.onboardingReadModel;
     onBoardingStore = db.stores.onboardingStore;
     featureToggleStore = db.stores.featureToggleStore;
     lastSeenStore = db.stores.lastSeenStore;

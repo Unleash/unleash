@@ -7,7 +7,6 @@ import { createTestConfig } from '../../../test/config/test-config';
 import { createOnboardingService } from './createOnboardingService';
 import type EventEmitter from 'events';
 import { STAGE_ENTERED, USER_LOGIN } from '../../metric-events';
-import { OnboardingReadModel } from './onboarding-read-model';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -24,7 +23,7 @@ beforeAll(async () => {
     eventBus = config.eventBus;
     onboardingService = createOnboardingService(config)(db.rawDatabase);
     onboardingService.listen();
-    onboardingReadModel = new OnboardingReadModel(db.rawDatabase);
+    onboardingReadModel = db.stores.onboardingReadModel;
 });
 
 afterAll(async () => {

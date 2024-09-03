@@ -94,7 +94,7 @@ export const theme = {
             contrastText: colors.grey[50], // Color used for content when primary.main is used as a background
         },
         secondary: {
-            // Used for purple badges and puple light elements
+            // Used for purple badges and purple light elements
             main: colors.purple[800],
             light: colors.purple[50],
             dark: colors.purple[900], // Color used for text
@@ -150,7 +150,7 @@ export const theme = {
             default: colors.grey[50],
             application: colors.grey[300],
             sidebar: colors.purple[800],
-            alternative: colors.purple[800], // used on the dark theme to shwitch primary main to a darker shade
+            alternative: colors.purple[800], // used on the dark theme to switch primary main to a darker shade
             elevation1: colors.grey[100],
             elevation2: colors.grey[200],
         },

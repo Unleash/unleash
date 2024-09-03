@@ -9,9 +9,6 @@ describe('feature', () => {
         cy.runBefore();
         cy.login_UI();
         cy.createProject_API(projectName);
-        cy.intercept('GET', '/**', (req) => {
-            req.headers['accept-language'] = 'en-US';
-        });
     });
 
     after(() => {

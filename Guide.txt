@@ -1,0 +1,54 @@
+This is a test to indicate the proof of changes pulled and combined branch having proof of request for merging for UECS2363 Assignment 2.
+This is a guide on managing a central repository. 
+
+Step 1: Fork and Clone the repository to your local machine. 
+1. Navigate to https://github.com/Unleash/unleash. 
+2. Click on the ‘Fork’ button to create a copy of the repository. 
+3. Copy the repository URL. First, since some files in the repository have paths that exceed the maximum path length limit in Windows, we must use “git config --system core.longpaths true” to allow for smooth copy. Then, open the command prompt and run the clone command. Replace ‘your-name’ with your own Github username. 
+$ git config --system core.longpaths true 
+$ git clone https://github.com/your-name/unleash.git 
+
+4. Navigate to the cloned directory. 
+$ cd unleash 
+
+Step 2. Create new branches 
+1. Create and switch to a new branch. We will be naming it the branch ‘test’. 
+$ git branch test 
+$ git add . 
+$ git checkout test 
+
+
+2. Check the current branch. 
+$ git branch
+
+3. Check Current Remote and Change the URL for ‘origin’. 
+$ git remote -v 
+$ git remote set-url origin https://github.com/Unleash/unleash.git
+
+Step 3. Make changes and commit. 
+1.  Create txt file and put ‘info’ in it. ‘info’ is random sentences. 
+$ echo ‘info’ > test1.txt 
+
+2. Add files to the staging area and commit the changes. 
+$ git add . 
+$ git commit -m "Added txt file" 
+
+Step 4. Push changes to GitHub 
+1. Push the branch and verify the push in Github. 
+$ git push origin test 
+
+Step 5. Integrating changes from different users 
+1. Add the original repository as a remote. 
+$ git remote add upstream https://github.com/Unleash/unleash.git 
+
+2. Fetch the latest changes. 
+$ git fetch upstream 
+
+3. Merge the updates into your branch.
+$ git merge upstream/test 
+
+4. Resolves conflict and commit the changes 
+$ git add resolved-file.js $ git commit -m "Resolved conflicts" 
+
+5. Push the merged branch. 
+$ git push origin test

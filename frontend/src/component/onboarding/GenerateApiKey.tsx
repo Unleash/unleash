@@ -260,15 +260,17 @@ export const GenrateApiKeyConcepts = () => (
     </ConceptsDefinitionsWrapper>
 );
 
-interface GeneratApiKeyProps {
+interface GenerateApiKeyProps {
     project: string;
     environments: string[];
+    sdkType: 'CLIENT' | 'FRONTEND';
 }
 
-export const GeneratApiKey = ({
+export const GenerateApiKey = ({
     environments,
     project,
-}: GeneratApiKeyProps) => {
+    sdkType,
+}: GenerateApiKeyProps) => {
     const [environment, setEnvironment] = useState('');
 
     useEffect(() => {
@@ -291,7 +293,7 @@ export const GeneratApiKey = ({
             await createToken(
                 {
                     environment,
-                    type: 'CLIENT',
+                    type: sdkType,
                     projects: [project],
                     username: `api-key-${project}-${environment}`,
                 },

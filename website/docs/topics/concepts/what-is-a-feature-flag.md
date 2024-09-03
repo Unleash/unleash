@@ -8,19 +8,19 @@ import Figure from '@site/src/components/Figure/Figure.tsx'
 
 Feature flags allow you to release, test, and manage features and functionality across your application without changing the source code. Organizations use added control and flexibility to deliver more and higher quality features with reduced cost, time, and risk.
 
-In this guide, we’ll introduce you to the basic facts about feature flags and why so many dev teams choose them.
+In this guide, we’ll introduce you to the basics of feature flags and why so many development teams choose them.
 
 ## Why developers use feature flags
 
-In 2014, [Ivar Østhus](https://www.linkedin.com/in/ivarconr/overlay/about-this-profile/), our CTO was working as a software developer at FINN.no, Norway’s largest online marketplace. Getting new features into production was a pain, so, as a developer, he looked around and wondered if he could write some code to make it easier. His initial goal was to protect features under development, allowing his team to transition to [trunk-based development](https://www.getunleash.io/blog/how-to-implement-trunk-based-development-a-practical-guide)—a practice recommended by the [State of DevOps Report](https://cloud.google.com/devops/state-of-devops).
+In 2014, [Ivar Østhus](https://www.linkedin.com/in/ivarconr/overlay/about-this-profile/), our CTO, was working as a software developer at FINN.no, Norway’s largest online marketplace. Getting new features into production was a pain, so, as a developer, he looked around and wondered if he could write some code to make it easier. His initial goal was to protect features under development, allowing his team to transition to [trunk-based development](https://www.getunleash.io/blog/how-to-implement-trunk-based-development-a-practical-guide)—a practice recommended by the [State of DevOps Report](https://cloud.google.com/devops/state-of-devops).
 
-In 2014, his team had embraced agility with an automated delivery pipeline which made fixing bugs a breeze, but frequent feature releases? Not so much. Building features takes time, and waiting weeks for production testing felt wasteful.
+At the time, his team had embraced agility with an automated delivery pipeline which made fixing bugs a breeze, but frequent feature releases? Not so much. Building features takes time, and waiting weeks for production testing felt wasteful.
 The team used feature branches, a common approach, to isolate unfinished features. However, this created a tangled web of problems:
 - **Limited feedback**: Getting stakeholder input required manually deploying test environments for each branch, a cumbersome process.
 - **Merge mayhem**: Conflicts became a constant headache, delaying progress.
 - **Production mystery**: Would a change actually work in production with production data? Were there any edge cases they had not considered?
 
-Frustrated by the slow pace and the additional complexity of feature branches, Ivar explored ways to streamline it through code and ended up creating Unleash, a popular open-source feature flag solution that solves these problems by decoupling code deployments and feature releases.
+Frustrated by the slow pace and the additional complexity of feature branches, Ivar explored ways to streamline it through code and ended up creating [Unleash](https://github.com/Unleash/unleash), a popular open-source feature flag solution that solves these problems by decoupling code deployments and feature releases.
 
 
 ## What is a feature flag?
@@ -35,7 +35,7 @@ The control that feature flags allow means that they’re already becoming a pop
 
 ## Benefits of feature flags
 
-With an understanding of what feature flags are, let’s look at a few benefits of using feature flags, such as ...
+With an understanding of what feature flags are, let’s look at the key benefits of using feature flags, such as improved user experience, faster release cycles, and more effective testing and experimentation.
 
 ### Improve user experience
 
@@ -139,9 +139,9 @@ Contrary to the short-lived nature of most feature flags, kill switches are inhe
 - **Benefits**: Thorough validation of changes in a live environment without disrupting the user experience.
 - **Lifespan**: Short-lived; a few days to a couple of weeks.
 
-Ops flags manage a system’s technical aspects that do not directly influence user-visible features, but are crucial for the application’s underlying stability and performance. For example, transitioning from one library version to another, where operational flags can toggle between the old and new implementations to ensure the update does not adversely affect the system. By enabling real-time switching between different operational states or configurations, these flags allow for thorough validation of changes in a live environment without disrupting the user experience.
+Ops flags manage a system’s technical aspects that do not directly influence user-visible features but are crucial for the application’s underlying stability and performance. For example, transitioning from one library version to another, where operational flags can toggle between the old and new implementations to ensure the update does not adversely affect the system. By enabling real-time switching between different operational states or configurations, these flags allow for thorough validation of changes in a live environment without disrupting the user experience.
 
-Operational flags should be short-lived, existing only long enough to confirm that a change, such as a library update, is stable and does not introduce regressions. Once the new state is validated, the flag should be promptly retired to avoid accumulating technical debt. Avoid using operational flags as a solution for long-term configuration management; see our [Best practices for building and scaling feature flags](/feature-flags/feature-flag-best-practices) to learn more.
+Operational flags should be short-lived, existing only long enough to confirm that a change, such as a library update, is stable and does not introduce regressions. Once the new state is validated, the flag should be promptly retired to avoid accumulating technical debt. Avoid using operational flags as a solution for long-term configuration management; see our [Best practices for building and scaling feature flags](../feature-flags/feature-flag-best-practices.md) guide to learn more.
 
 
 ### Permission flags
@@ -157,28 +157,33 @@ Permissioning toggles allow for features to be selectively enabled for different
 Next, let's look at some of the common use cases for feature flags, such as progressive rollouts, A/B testings, kill switches, and more.
 
 ### Progressive rollouts
-Progressive rollouts of features (where new functionality is gradually exposed to a broader audience based on successful interim outcomes) are much better than all-or-nothing releases. This phased approach allows for collecting valuable user feedback and performance data at each stage, enabling fine-tuning or course corrections as needed. 
 
-For example, a cloud storage service might initially introduce a new file-sharing interface to a small percentage of users, expanding the rollout as confidence in the feature’s stability and usability grows. The alternative is super long testing cycles that any developer will tell you will still miss some bugs. It is much better to ship code quickly and start with a small audience that you can validate before rolling out more broadly.
+Progressive rollouts of features—where new functionality is gradually exposed to a broader audience based on successful interim outcomes—are much better than all-or-nothing releases. This phased approach allows for collecting valuable user feedback and performance data at each stage, enabling fine-tuning or course corrections as needed. 
+
+For example, a cloud storage service might initially introduce a new file-sharing interface to a small percentage of users, expanding the rollout as confidence in the feature’s stability and usability grows. The alternative is super long testing cycles that might still miss some bugs. It is much better to ship code quickly and start with a small audience that you can validate before rolling out more broadly.
 
 ### A/B testing​
+
 Feature flags facilitate A/B testing by allowing different user segments to experience an app without a particular feature, or different variants of a feature. By directing different user segments to experience variant features, data can be gathered to inform which version effectively achieves the desired objectives. 
 
 An online bookstore, for instance, could test two different landing page designs to identify which one yields a higher engagement rate or increases sales, thereby making data-driven decisions to enhance user experience and business outcomes.
 
 ### Kill switches
-Feature flags can be used to quickly disable a feature as needed using tools such as a kill switch. This minimizes the impact on both users and the organization deploying the feature.
 
-To implement kill switches, a good general practice is to wrap your flaky feature in an inverted feature flag. Your application should assume that the feature is working as expected so long as the feature flag is disabled. When you disable a flag by default, your application will still have the feature enabled. This is in case it can’t fetch the latest version of the feature flag. If you detect any problems with the integration, you can then easily turn on the kill switch. The feature will then turn off the feature flag.
+Feature flags can be used to quickly disable a feature as needed, minimizing the impact on both users and the organization deploying the feature.
+
+To implement kill switches, a good general practice is to wrap your flaky feature in an inverted feature flag. Your application should assume that the feature is working as expected as long as the feature flag is disabled. When you disable a flag by default, your application will still have the feature enabled, even if it can’t fetch the latest version of the feature flag. If you detect any problems with the integration, you can then easily turn on the kill switch, which will then turn off the feature.
 
 ### Rollbacks
+
 Feature flags enable rapid rollbacks of features that are causing issues or not performing as expected. Instead of redeploying the entire application, teams can simply disable the problematic feature, reducing downtime and mitigating risk. Imagine a scenario where a new image compression algorithm is causing longer page load times; a feature flag can quickly disable this algorithm, reverting to the previous state while the issue is investigated.
 
 
 ### Trunk-based development​
+
 Trunk-based development is a software development strategy where all developers commit code changes to a single shared branch, known as the “trunk” or “mainline,” rather than working in separate branches for extended periods. Feature flags support trunk-based development by allowing features to be integrated into the main codebase without being immediately visible to users. This encourages continuous integration and reduces the complexity associated with long-lived feature branches.
 
-Developers have shifted towards trunk-based development for several reasons, primarily driven by the need for faster, more efficient, and more reliable software delivery processes. Feature flags can help by allowing teams to merge code for incomplete features into the trunk without exposing these features to all users. This way, you can continue developing and testing in production-like environments without affecting end-user experience.
+Developers have shifted towards trunk-based development for several reasons, primarily driven by the need for faster, more efficient, and more reliable software delivery processes. Feature flags allow teams to merge code for incomplete features into the trunk without exposing these features to all users. This way, you can continue developing and testing in production-like environments without affecting end-user experience.
 
 
 ### Feature management​
@@ -195,12 +200,12 @@ Feature flags can be managed in environments that require strict compliance with
 
 ## Applying feature flag best practices with Unleash
 
-The risk and cost of building software the old way are too high. When developers are forced to use tools and processes they hate, like infrequent high-stakes releases based on complex branching strategies, innovation is reduced by 50%. Additionally, once code deployed this way is released, rolling back is difficult and time-consuming if and when an issue is discovered. On average, application downtime costs organizations $400,000 per hour, and more than half of organizations face unexpected downtime every two months. 
+The risk and cost of building software the old way are too high. When developers are forced to use tools and processes they hate, like infrequent high-stakes releases based on complex branching strategies, innovation is reduced by 50%. Additionally, when code is deployed and released in this manner, rolling back after discovering an issue can be difficult and time-consuming. On average, application downtime costs organizations $400,000 per hour, and more than half of organizations face unexpected downtime every two months. 
 
-Unleash is on a mission to make developers’ lives easier. Individual developers love Unleash because it removes the pain of testing and deploying new features so they have more time and energy to innovate. Unleash is trusted by thousands of companies in production including Visa, Wayfair, Lloyd’s Banking Group, and Samsung. While we serve the needs of some of the world’s largest and most security-conscious organizations, we are also rated the “Easiest Feature Management system to use” by G2. 
+Unleash is on a mission to make developers’ lives easier. Individual developers love Unleash because it removes the pain of testing and deploying new features so they have more time and energy to innovate. Unleash is trusted by thousands of companies in production including Visa, Wayfair, Lloyd’s Banking Group, and Samsung. While we serve the needs of some of the world’s largest and most security-conscious organizations, we are also rated the *Easiest to Use in Feature Management software* by G2. 
 
 If you want to learn more about how to implement feature flags at scale, check out the following resources:
 - [Feature Flag Tutorials](/feature-flag-tutorials)
-- [Best practices for using feature flags at scale](/feature-flags/best-practices-using-feature-flags-at-scale)
-- [Best practices for building and scaling feature flags](/feature-flags/feature-flag-best-practices)
+- [Best practices for using feature flags at scale](../feature-flags/best-practices-using-feature-flags-at-scale.md)
+- [Best practices for building and scaling feature flags](../feature-flags/feature-flag-best-practices.md)
 - [Try Unleash for Free](https://www.getunleash.io/pricing)

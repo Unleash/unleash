@@ -64,7 +64,7 @@ $ git merge upstream/test
 
 4. Resolves conflict and commit the changes
 $ git add resolved-file.js
-$ git commit -m "Resolved merge conflicts"
+$ git commit -m "Resolved conflicts"
 
 
 5. Push the merged branch.

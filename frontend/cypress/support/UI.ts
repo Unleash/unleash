@@ -125,7 +125,22 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
     const env = environment || 'development';
     const defaultStickiness = stickiness || 'default';
 
-    cy.visit(`/projects/${projectName}/features/${featureToggleName}`);
+    cy.visit(`/projects/${projectName}/features/${featureToggleName}`, {
+        onBeforeLoad(win) {
+            Object.defineProperty(win.navigator, 'language', {
+                value: 'en-US',
+            });
+            Object.defineProperty(win.navigator, 'languages', {
+                value: ['en'],
+            });
+            Object.defineProperty(win.navigator, 'accept_languages', {
+                value: ['en'],
+            });
+        },
+        headers: {
+            'Accept-Language': 'en',
+        },
+    });
 
     cy.intercept(
         'POST',
@@ -150,6 +165,22 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
 
     cy.visit(
         `/projects/${projectName}/features/${featureToggleName}/strategies/create?environmentId=${env}&strategyName=flexibleRollout`,
+        {
+            onBeforeLoad(win) {
+                Object.defineProperty(win.navigator, 'language', {
+                    value: 'en-US',
+                });
+                Object.defineProperty(win.navigator, 'languages', {
+                    value: ['en'],
+                });
+                Object.defineProperty(win.navigator, 'accept_languages', {
+                    value: ['en'],
+                });
+            },
+            headers: {
+                'Accept-Language': 'en',
+            },
+        },
     );
     cy.wait(500);
     //  Takes a bit to load the screen - this will wait until it finds it or fail
@@ -169,6 +200,22 @@ export const updateFlexibleRolloutStrategy_UI = (
     const project = projectName || 'default';
     cy.visit(
         `/projects/${project}/features/${featureToggleName}/strategies/edit?environmentId=development&strategyId=${strategyId}`,
+        {
+            onBeforeLoad(win) {
+                Object.defineProperty(win.navigator, 'language', {
+                    value: 'en-US',
+                });
+                Object.defineProperty(win.navigator, 'languages', {
+                    value: ['en'],
+                });
+                Object.defineProperty(win.navigator, 'accept_languages', {
+                    value: ['en'],
+                });
+            },
+            headers: {
+                'Accept-Language': 'en',
+            },
+        },
     );
 
     cy.wait(500);
@@ -226,7 +273,22 @@ export const deleteFeatureStrategy_UI = (
             });
         },
     ).as('deleteUserStrategy');
-    cy.visit(`/projects/${project}/features/${featureToggleName}`);
+    cy.visit(`/projects/${project}/features/${featureToggleName}`, {
+        onBeforeLoad(win) {
+            Object.defineProperty(win.navigator, 'language', {
+                value: 'en-US',
+            });
+            Object.defineProperty(win.navigator, 'languages', {
+                value: ['en'],
+            });
+            Object.defineProperty(win.navigator, 'accept_languages', {
+                value: ['en'],
+            });
+        },
+        headers: {
+            'Accept-Language': 'en',
+        },
+    });
     cy.get('[data-testid=FEATURE_ENVIRONMENT_ACCORDION_development]').click();
     cy.get('[data-testid=STRATEGY_REMOVE_MENU_BTN]').first().click();
     cy.get('[data-testid=STRATEGY_FORM_REMOVE_ID]').first().click();
@@ -242,6 +304,22 @@ export const addUserIdStrategyToFeature_UI = (
     const project = projectName || 'default';
     cy.visit(
         `/projects/${project}/features/${featureToggleName}/strategies/create?environmentId=development&strategyName=userWithId`,
+        {
+            onBeforeLoad(win) {
+                Object.defineProperty(win.navigator, 'language', {
+                    value: 'en-US',
+                });
+                Object.defineProperty(win.navigator, 'languages', {
+                    value: ['en'],
+                });
+                Object.defineProperty(win.navigator, 'accept_languages', {
+                    value: ['en'],
+                });
+            },
+            headers: {
+                'Accept-Language': 'en',
+            },
+        },
     );
 
     if (ENTERPRISE) {

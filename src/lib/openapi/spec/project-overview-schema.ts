@@ -19,7 +19,7 @@ export const projectOverviewSchema = {
     $id: '#/components/schemas/projectOverviewSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['version', 'name'],
+    required: ['version', 'name', 'onboardingStatus'],
     description:
         'A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.',
     properties: {
@@ -134,6 +134,41 @@ export const projectOverviewSchema = {
             example: true,
             description:
                 '`true` if the project was favorited, otherwise `false`.',
+        },
+        onboardingStatus: {
+            type: 'object',
+            oneOf: [
+                {
+                    type: 'object',
+                    properties: {
+                        status: {
+                            type: 'string',
+                            enum: ['onboarding-started', 'onboarded'],
+                            example: 'onboarding-started',
+                        },
+                    },
+                    required: ['status'],
+                    additionalProperties: false,
+                },
+                {
+                    type: 'object',
+                    properties: {
+                        status: {
+                            type: 'string',
+                            enum: ['first-flag-created'],
+                            example: 'first-flag-created',
+                        },
+                        feature: {
+                            type: 'string',
+                            description: 'The name of the feature flag',
+                            example: 'my-feature-flag',
+                        },
+                    },
+                    required: ['status', 'feature'],
+                    additionalProperties: false,
+                },
+            ],
+            description: 'The current onboarding status of the project.',
         },
     },
     components: {

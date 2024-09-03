@@ -52,6 +52,10 @@ import {
     createFakeProjectReadModel,
     createProjectReadModel,
 } from './createProjectReadModel';
+import {
+    createFakeOnboardingReadModel,
+    createOnboardingReadModel,
+} from '../onboarding/createOnboardingReadModel';
 
 export const createProjectService = (
     db: Db,
@@ -130,6 +134,8 @@ export const createProjectService = (
         config.flagResolver,
     );
 
+    const onboardingReadModel = createOnboardingReadModel(db);
+
     return new ProjectService(
         {
             projectStore,
@@ -142,6 +148,7 @@ export const createProjectService = (
             projectOwnersReadModel,
             projectFlagCreatorsReadModel,
             projectReadModel,
+            onboardingReadModel,
         },
         config,
         accessService,
@@ -197,6 +204,8 @@ export const createFakeProjectService = (
 
     const projectReadModel = createFakeProjectReadModel();
 
+    const onboardingReadModel = createFakeOnboardingReadModel();
+
     return new ProjectService(
         {
             projectStore,
@@ -209,6 +218,7 @@ export const createFakeProjectService = (
             accountStore,
             projectStatsStore,
             projectReadModel,
+            onboardingReadModel,
         },
         config,
         accessService,

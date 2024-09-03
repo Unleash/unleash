@@ -52,8 +52,8 @@ import { LargestResourcesReadModel } from '../features/metrics/sizes/largest-res
 import { IntegrationEventsStore } from '../features/integration-events/integration-events-store';
 import { FeatureCollaboratorsReadModel } from '../features/feature-toggle/feature-collaborators-read-model';
 import { createProjectReadModel } from '../features/project/createProjectReadModel';
-import { OnboardingReadModel } from '../features/onboarding/onboarding-read-model';
 import { OnboardingStore } from '../features/onboarding/onboarding-store';
+import { createOnboardingReadModel } from '../features/onboarding/createOnboardingReadModel';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -173,7 +173,7 @@ export const createStores = (
         projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(db),
         featureLifecycleStore: new FeatureLifecycleStore(db),
         featureStrategiesReadModel: new FeatureStrategiesReadModel(db),
-        onboardingReadModel: new OnboardingReadModel(db),
+        onboardingReadModel: createOnboardingReadModel(db),
         onboardingStore: new OnboardingStore(db),
         featureLifecycleReadModel: new FeatureLifecycleReadModel(
             db,

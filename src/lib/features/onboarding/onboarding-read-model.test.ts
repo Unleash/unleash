@@ -1,19 +1,27 @@
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
-import type { IOnboardingStore } from '../../types';
-import { OnboardingReadModel } from './onboarding-read-model';
+import {
+    type IFeatureToggleStore,
+    type ILastSeenStore,
+    type IOnboardingStore,
+    SYSTEM_USER,
+} from '../../types';
 import type { IOnboardingReadModel } from './onboarding-read-model-type';
 
 let db: ITestDb;
 let onboardingReadModel: IOnboardingReadModel;
 let onBoardingStore: IOnboardingStore;
+let featureToggleStore: IFeatureToggleStore;
+let lastSeenStore: ILastSeenStore;
 
 beforeAll(async () => {
     db = await dbInit('onboarding_read_model', getLogger, {
         experimental: { flags: { onboardingMetrics: true } },
     });
-    onboardingReadModel = new OnboardingReadModel(db.rawDatabase);
+    onboardingReadModel = db.stores.onboardingReadModel;
     onBoardingStore = db.stores.onboardingStore;
+    featureToggleStore = db.stores.featureToggleStore;
+    lastSeenStore = db.stores.lastSeenStore;
 });
 
 afterAll(async () => {
@@ -108,4 +116,40 @@ test('can get instance onboarding durations', async () => {
             firstLive: 40,
         },
     ]);
+});
+
+test('can get project onboarding status', async () => {
+    const onboardingStartedResult =
+        await onboardingReadModel.getOnboardingStatusForProject('default');
+
+    expect(onboardingStartedResult).toMatchObject({
+        status: 'onboarding-started',
+    });
+
+    await featureToggleStore.create('default', {
+        name: 'my-flag',
+        createdByUserId: SYSTEM_USER.id,
+    });
+
+    const firstFlagResult =
+        await onboardingReadModel.getOnboardingStatusForProject('default');
+
+    expect(firstFlagResult).toMatchObject({
+        status: 'first-flag-created',
+        feature: 'my-flag',
+    });
+
+    await lastSeenStore.setLastSeen([
+        {
+            environment: 'default',
+            featureName: 'my-flag',
+        },
+    ]);
+
+    const onboardedResult =
+        await onboardingReadModel.getOnboardingStatusForProject('default');
+
+    expect(onboardedResult).toMatchObject({
+        status: 'onboarded',
+    });
 });

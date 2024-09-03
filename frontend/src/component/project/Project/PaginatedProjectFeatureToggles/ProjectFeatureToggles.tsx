@@ -492,7 +492,7 @@ export const ProjectFeatureToggles = ({
                     {featureToggleModals}
 
                     <ConnectSdkDialog
-                        open={true}
+                        open={false}
                         onClose={() => {}}
                         project={projectId}
                         environments={environments}

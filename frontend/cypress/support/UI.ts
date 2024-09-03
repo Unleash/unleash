@@ -137,9 +137,6 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
                 value: ['en'],
             });
         },
-        headers: {
-            'Accept-Language': 'en',
-        },
     });
 
     cy.intercept(
@@ -177,9 +174,6 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
                     value: ['en'],
                 });
             },
-            headers: {
-                'Accept-Language': 'en',
-            },
         },
     );
     cy.wait(500);
@@ -211,9 +205,6 @@ export const updateFlexibleRolloutStrategy_UI = (
                 Object.defineProperty(win.navigator, 'accept_languages', {
                     value: ['en'],
                 });
-            },
-            headers: {
-                'Accept-Language': 'en',
             },
         },
     );
@@ -285,9 +276,6 @@ export const deleteFeatureStrategy_UI = (
                 value: ['en'],
             });
         },
-        headers: {
-            'Accept-Language': 'en',
-        },
     });
     cy.get('[data-testid=FEATURE_ENVIRONMENT_ACCORDION_development]').click();
     cy.get('[data-testid=STRATEGY_REMOVE_MENU_BTN]').first().click();
@@ -315,9 +303,6 @@ export const addUserIdStrategyToFeature_UI = (
                 Object.defineProperty(win.navigator, 'accept_languages', {
                     value: ['en'],
                 });
-            },
-            headers: {
-                'Accept-Language': 'en',
             },
         },
     );

@@ -2,10 +2,6 @@ import { Button, styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 
 import type React from 'react';
-import { newOperators } from 'constants/operators';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { oneOf } from 'utils/oneOf';
-import { OperatorUpgradeAlert } from 'component/common/OperatorUpgradeAlert/OperatorUpgradeAlert';
 
 interface IConstraintAccordionBody {
     localConstraint: IConstraint;
@@ -49,13 +45,7 @@ export const ConstraintAccordionEditBody: React.FC<
 > = ({ localConstraint, children, triggerTransition, setAction, onSubmit }) => {
     return (
         <>
-            <StyledInputContainer>
-                <ConditionallyRender
-                    condition={oneOf(newOperators, localConstraint.operator)}
-                    show={<OperatorUpgradeAlert />}
-                />
-                {children}
-            </StyledInputContainer>
+            <StyledInputContainer>{children}</StyledInputContainer>
             <StyledButtonContainer>
                 <StyledInputButtonContainer>
                     <StyledLeftButton

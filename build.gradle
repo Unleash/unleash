@@ -10,13 +10,13 @@ task runDocker(type: Exec) {
 
 task runYarnInstall(type: Exec) {
     // Path to the Yarn executable in the project
-    def yarnPath = 'C:/unleash-main/.yarn/releases/yarn-4.3.1.cjs'
+    def yarnPath = './.yarn/releases/yarn-4.3.1.cjs'
 
     // Command to run Yarn install
     commandLine 'node', yarnPath, 'install'
 
     // Set the working directory to where your package.json is located
-    workingDir 'C:/unleash'
+    workingDir '.'
 
     // Print command output for debugging
     standardOutput = System.out
@@ -25,13 +25,13 @@ task runYarnInstall(type: Exec) {
 
 task runYarnInstallFrontEnd(type: Exec) {
     // Path to the Yarn executable in the project
-    def yarnPath = 'C:/unleash-main/.yarn/releases/yarn-4.3.1.cjs'
+    def yarnPath = './.yarn/releases/yarn-4.3.1.cjs'
 
     // Command to run Yarn install
     commandLine 'node', yarnPath, 'install'
 
     // Set the working directory to where your package.json is located
-    workingDir 'C:/unleash/frontend'
+    workingDir './frontend'
 
     // Print command output for debugging
     standardOutput = System.out
@@ -58,13 +58,13 @@ task executeDatabase(type: Exec){
 
 task runBuild(type: Exec) {
     // Path to the Yarn executable in the project
-    def yarnPath = 'C:/unleash-main/.yarn/releases/yarn-4.3.1.cjs'
+    def yarnPath = './.yarn/releases/yarn-4.3.1.cjs'
 
-    // Command to run Yarn in order to build the application
+    // Command to run Yarn install
     commandLine 'node', yarnPath, 'build'
 
     // Set the working directory to where your package.json is located
-    workingDir 'C:/unleash'
+    workingDir '.'
 
     // Print command output for debugging
     standardOutput = System.out
@@ -73,13 +73,13 @@ task runBuild(type: Exec) {
 
 task runUnleash(type: Exec) {
     // Path to the Yarn executable in the project
-    def yarnPath = 'C:/unleash-main/.yarn/releases/yarn-4.3.1.cjs'
+    def yarnPath = './.yarn/releases/yarn-4.3.1.cjs'
 
-    // Command to run the application
+    // Command to run Yarn install
     commandLine 'node', yarnPath, 'dev'
 
     // Set the working directory to where your package.json is located
-    workingDir 'C:/unleash'
+    workingDir '.'
 
     // Print command output for debugging
     standardOutput = System.out

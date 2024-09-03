@@ -16,8 +16,8 @@ import CodeIcon from '@mui/icons-material/Code';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import { ArcherContainer, ArcherElement } from 'react-archer';
 import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
-import { formatUnknownError } from '../../utils/formatUnknownError';
-import useToast from '../../hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import useToast from 'hooks/useToast';
 
 interface IConnectSDKDialogProps {
     open: boolean;
@@ -26,7 +26,7 @@ interface IConnectSDKDialogProps {
     environments: string[];
 }
 
-const ConceptsDefinitions = styled('div')(({ theme }) => ({
+const ConceptsDefinitionsWrapper = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.sidebar,
     padding: theme.spacing(6),
     flex: 0,
@@ -151,8 +151,8 @@ function splitToken(
     return null;
 }
 
-const StaticConceptsDefinitions = () => (
-    <ConceptsDefinitions>
+const ConceptsDefinitions = () => (
+    <ConceptsDefinitionsWrapper>
         <ConceptItem>
             <StyledProjectIcon />
             <Box>
@@ -188,7 +188,7 @@ const StaticConceptsDefinitions = () => (
                 </ConceptDetails>
             </Box>
         </ConceptItem>
-    </ConceptsDefinitions>
+    </ConceptsDefinitionsWrapper>
 );
 
 const TokenExplanationBox = styled(Box)(({ theme }) => ({
@@ -429,7 +429,7 @@ export const ConnectSDKDialog = ({
                     </NextStepSection>
                 </APIKeyGeneration>
 
-                {isLargeScreen ? <StaticConceptsDefinitions /> : null}
+                {isLargeScreen ? <ConceptsDefinitions /> : null}
             </Box>
         </StyledDialog>
     );

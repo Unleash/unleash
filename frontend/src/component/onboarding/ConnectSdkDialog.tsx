@@ -7,8 +7,8 @@ import {
     useTheme,
 } from '@mui/material';
 import { GenrateApiKeyConcepts, GenerateApiKey } from './GenerateApiKey';
-import { useState } from 'react';
-import { SelectSdk } from './SelectSdk';
+import { useEffect, useState } from 'react';
+import { type Sdk, SelectSdk } from './SelectSdk';
 
 interface IConnectSDKDialogProps {
     open: boolean;
@@ -57,7 +57,7 @@ const NextStepSectionSpacedContainer = styled('div')(({ theme }) => ({
 
 type OnboardingStage =
     | { name: 'select-sdk' }
-    | { name: 'generate-api-key'; sdkType: 'CLIENT' | 'FRONTEND' }
+    | { name: 'generate-api-key' }
     | { name: 'test-connection' };
 
 export const ConnectSdkDialog = ({
@@ -68,25 +68,48 @@ export const ConnectSdkDialog = ({
 }: IConnectSDKDialogProps) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
+    const [sdk, setSdk] = useState<Sdk | null>(null);
+    const [env, setEnv] = useState<string | null>(null);
     const [stage, setStage] = useState<OnboardingStage>({ name: 'select-sdk' });
+
+    useEffect(() => {
+        if (environments.length > 0) {
+            setEnv(environments[0]);
+        }
+    }, [JSON.stringify(environments)]);
 
     return (
         <StyledDialog open={open} onClose={onClose}>
             <Box sx={{ display: 'flex' }}>
                 <ConnectSdk>
-                    {stage.name === 'select-sdk' ? <SelectSdk /> : null}
-                    {stage.name === 'generate-api-key' ? (
+                    {stage.name === 'select-sdk' ? (
+                        <SelectSdk
+                            onSelect={(sdk) => {
+                                setSdk(sdk);
+                                setStage({ name: 'generate-api-key' });
+                            }}
+                        />
+                    ) : null}
+                    {stage.name === 'generate-api-key' && sdk && env ? (
                         <GenerateApiKey
                             environments={environments}
+                            environment={env}
                             project={project}
-                            sdkType={stage.sdkType}
+                            sdkType={sdk.type}
+                            onEnvSelect={setEnv}
                         />
                     ) : null}
 
                     {stage.name === 'generate-api-key' ? (
                         <Navigation>
                             <NextStepSectionSpacedContainer>
-                                <Button variant='text' color='inherit'>
+                                <Button
+                                    variant='text'
+                                    color='inherit'
+                                    onClick={() => {
+                                        setStage({ name: 'select-sdk' });
+                                    }}
+                                >
                                     Back
                                 </Button>
                                 <Button variant='contained'>Next</Button>

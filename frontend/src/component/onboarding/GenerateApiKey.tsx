@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useProjectApiTokens } from '../../hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import useProjectApiTokensApi from '../../hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 import { parseToken } from './parseToken';
@@ -263,26 +262,22 @@ export const GenrateApiKeyConcepts = () => (
 interface GenerateApiKeyProps {
     project: string;
     environments: string[];
-    sdkType: 'CLIENT' | 'FRONTEND';
+    environment: string;
+    sdkType: 'client' | 'frontend';
+    onEnvSelect: (env: string) => void;
 }
 
 export const GenerateApiKey = ({
     environments,
+    environment,
     project,
     sdkType,
+    onEnvSelect,
 }: GenerateApiKeyProps) => {
-    const [environment, setEnvironment] = useState('');
-
-    useEffect(() => {
-        if (environments.length > 0) {
-            setEnvironment(environments[0]);
-        }
-    }, [JSON.stringify(environments)]);
-
     const { tokens, refetch: refreshTokens } = useProjectApiTokens(project);
     const { createToken, loading: creatingToken } = useProjectApiTokensApi();
     const currentEnvironmentToken = tokens.find(
-        (token) => token.environment === environment,
+        (token) => token.environment === environment && token.type === sdkType,
     );
     const parsedToken = parseToken(currentEnvironmentToken?.secret);
 
@@ -318,7 +313,7 @@ export const GenerateApiKey = ({
                     <ChooseEnvironment
                         environments={environments}
                         currentEnvironment={environment}
-                        onSelect={setEnvironment}
+                        onSelect={onEnvSelect}
                     />
                 ) : null}
             </Box>

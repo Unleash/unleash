@@ -69,12 +69,12 @@ export const ConnectSdkDialog = ({
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
     const [sdk, setSdk] = useState<Sdk | null>(null);
-    const [env, setEnv] = useState<string | null>(null);
+    const [environment, setEnvironment] = useState<string | null>(null);
     const [stage, setStage] = useState<OnboardingStage>({ name: 'select-sdk' });
 
     useEffect(() => {
         if (environments.length > 0) {
-            setEnv(environments[0]);
+            setEnvironment(environments[0]);
         }
     }, [JSON.stringify(environments)]);
 
@@ -90,13 +90,13 @@ export const ConnectSdkDialog = ({
                             }}
                         />
                     ) : null}
-                    {stage.name === 'generate-api-key' && sdk && env ? (
+                    {stage.name === 'generate-api-key' && sdk && environment ? (
                         <GenerateApiKey
                             environments={environments}
-                            environment={env}
+                            environment={environment}
                             project={project}
                             sdkType={sdk.type}
-                            onEnvSelect={setEnv}
+                            onEnvSelect={setEnvironment}
                         />
                     ) : null}
 

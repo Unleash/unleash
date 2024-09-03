@@ -54,6 +54,7 @@ import {
     RoleName,
     SYSTEM_USER_ID,
     type IProjectReadModel,
+    type IOnboardingReadModel,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -164,6 +165,8 @@ export default class ProjectService {
 
     private projectReadModel: IProjectReadModel;
 
+    private onboardingReadModel: IOnboardingReadModel;
+
     constructor(
         {
             projectStore,
@@ -176,6 +179,7 @@ export default class ProjectService {
             accountStore,
             projectStatsStore,
             projectReadModel,
+            onboardingReadModel,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -188,6 +192,7 @@ export default class ProjectService {
             | 'accountStore'
             | 'projectStatsStore'
             | 'projectReadModel'
+            | 'onboardingReadModel'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -220,6 +225,7 @@ export default class ProjectService {
         this.resourceLimits = config.resourceLimits;
         this.eventBus = config.eventBus;
         this.projectReadModel = projectReadModel;
+        this.onboardingReadModel = onboardingReadModel;
     }
 
     async getProjects(
@@ -1491,6 +1497,7 @@ export default class ProjectService {
             members,
             favorite,
             projectStats,
+            onboardingStatus,
         ] = await Promise.all([
             this.projectStore.get(projectId),
             this.projectStore.getEnvironmentsForProject(projectId),
@@ -1507,6 +1514,7 @@ export default class ProjectService {
                   })
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
+            this.onboardingReadModel.getOnboardingStatusForProject(projectId),
         ]);
 
         return {
@@ -1524,6 +1532,7 @@ export default class ProjectService {
                 ? { archivedAt: project.archivedAt }
                 : {}),
             createdAt: project.createdAt,
+            onboardingStatus,
             environments,
             featureTypeCounts,
             members,

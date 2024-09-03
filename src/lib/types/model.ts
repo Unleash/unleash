@@ -4,7 +4,10 @@ import type { IRole } from './stores/access-store';
 import type { IUser } from './user';
 import type { ALL_OPERATORS } from '../util';
 import type { IProjectStats } from '../features/project/project-service';
-import type { CreateFeatureStrategySchema } from '../openapi';
+import type {
+    CreateFeatureStrategySchema,
+    ProjectOverviewSchema,
+} from '../openapi';
 import type { ProjectEnvironment } from '../features/project/project-store-type';
 import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-search-environment-schema';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
@@ -313,6 +316,7 @@ export interface IProjectOverview {
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
     defaultStickiness: string;
+    onboardingStatus: ProjectOverviewSchema['onboardingStatus'];
 }
 
 export interface IProjectHealthReport extends IProjectHealth {

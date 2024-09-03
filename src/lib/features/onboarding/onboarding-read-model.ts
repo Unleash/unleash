@@ -3,6 +3,7 @@ import type {
     IOnboardingReadModel,
     InstanceOnboarding,
     ProjectOnboarding,
+    OnboardingStatus,
 } from './onboarding-read-model-type';
 
 const instanceEventLookup = {
@@ -77,5 +78,31 @@ export class OnboardingReadModel implements IOnboardingReadModel {
         });
 
         return projects;
+    }
+
+    async getOnboardingStatusForProject(
+        projectId: string,
+    ): Promise<OnboardingStatus> {
+        const feature = await this.db('features')
+            .select('name')
+            .where('project', projectId)
+            .first();
+
+        if (!feature) {
+            return { status: 'onboarding-started' };
+        }
+
+        const lastSeen = await this.db('last_seen_at_metrics as lsm')
+            .select('lsm.feature_name')
+            .innerJoin('features as f', 'f.name', 'lsm.feature_name')
+            .innerJoin('projects as p', 'p.id', 'f.project')
+            .where('p.id', projectId)
+            .first();
+
+        if (lastSeen) {
+            return { status: 'onboarded' };
+        } else {
+            return { status: 'first-flag-created', feature: feature.name };
+        }
     }
 }

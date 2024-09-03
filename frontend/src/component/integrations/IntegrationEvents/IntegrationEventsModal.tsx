@@ -65,7 +65,7 @@ export const IntegrationEventsModal = ({
     const navigate = useNavigate();
     const { locationSettings } = useLocationSettings();
     const { integrationEvents, hasMore, loadMore, loading } =
-        useIntegrationEvents(addon?.id, 20, {
+        useIntegrationEvents(open ? addon?.id : undefined, 20, {
             refreshInterval: 5000,
         });
 

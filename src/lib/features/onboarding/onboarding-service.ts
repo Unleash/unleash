@@ -13,7 +13,7 @@ import type {
     IOnboardingStore,
     ProjectEvent,
 } from './onboarding-store-type';
-import { millisecondsToSeconds } from 'date-fns';
+import { isBefore, millisecondsToSeconds } from 'date-fns';
 
 export class OnboardingService {
     private flagResolver: IFlagResolver;
@@ -92,18 +92,28 @@ export class OnboardingService {
             | { flag: string; type: ProjectEvent['type'] }
             | { type: 'first-user-login' | 'second-user-login' },
     ): Promise<void> {
-        await this.insertInstanceEvent(event);
+        const firstInstanceUserDate = await this.userStore.getFirstUserDate();
+        // the time we introduced onboarding tracking
+        if (
+            firstInstanceUserDate &&
+            isBefore(firstInstanceUserDate, new Date(2024, 8, 3))
+        )
+            return;
+
+        await this.insertInstanceEvent(event, firstInstanceUserDate);
         if ('flag' in event) {
-            await this.insertProjectEvent(event);
+            await this.insertProjectEvent(event, firstInstanceUserDate);
         }
         this.eventBus.emit('onboarding-event');
     }
 
-    private async insertInstanceEvent(event: {
-        flag?: string;
-        type: InstanceEvent['type'];
-    }): Promise<void> {
-        const firstInstanceUserDate = await this.userStore.getFirstUserDate();
+    private async insertInstanceEvent(
+        event: {
+            flag?: string;
+            type: InstanceEvent['type'];
+        },
+        firstInstanceUserDate: Date | null,
+    ): Promise<void> {
         if (!firstInstanceUserDate) return;
 
         const timeToEvent = millisecondsToSeconds(
@@ -115,10 +125,13 @@ export class OnboardingService {
         });
     }
 
-    private async insertProjectEvent(event: {
-        flag: string;
-        type: ProjectEvent['type'];
-    }): Promise<void> {
+    private async insertProjectEvent(
+        event: {
+            flag: string;
+            type: ProjectEvent['type'];
+        },
+        firstInstanceUserDate: Date | null,
+    ): Promise<void> {
         const project = await this.projectReadModel.getFeatureProject(
             event.flag,
         );
@@ -126,7 +139,7 @@ export class OnboardingService {
 
         const startDate =
             project.project === 'default'
-                ? await this.userStore.getFirstUserDate()
+                ? firstInstanceUserDate
                 : project.createdAt || null;
 
         if (!startDate) return;

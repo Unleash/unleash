@@ -76,6 +76,21 @@ test('Default project should take first user created instead of project created 
     ]);
 });
 
+test('Ignore events for existing customers', async () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date(2024, 8, 2)); // day before we added metrics
+    const { userStore } = stores;
+    await userStore.insert({});
+
+    jest.setSystemTime(new Date());
+    await onboardingService.insert({ type: 'first-user-login' });
+
+    const { rows: instanceEvents } = await db.rawDatabase.raw(
+        'SELECT * FROM onboarding_events_instance',
+    );
+    expect(instanceEvents).toMatchObject([]);
+});
+
 test('Ignore system user in onboarding events', async () => {
     // system users are not counted towards onboarding metrics
     await db.rawDatabase.raw('INSERT INTO users (is_system) VALUES (true)');

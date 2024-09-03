@@ -146,7 +146,7 @@ from .models import Post
 from .unleash_client import unleash_client
 
 def post_list(request):
-    if  unleash_client.is_enabled("top-3"):
+    if unleash_client.is_enabled("top-3"):
         posts = Post.objects.order_by('-published_date')[:3]
     else:
         posts = Post.objects.order_by('-published_date')

@@ -21,8 +21,7 @@ exports.down = function (db, cb) {
         `
         DELETE FROM role_permission
         WHERE role_id = (SELECT id FROM roles WHERE name = 'Editor')
-        AND permission = 'UPDATE_FEATURE_DEPENDENCY'
-        AND EXISTS (SELECT 1 FROM roles WHERE name = 'Editor');
+        AND permission = 'UPDATE_FEATURE_DEPENDENCY';
         `,
         cb
     );

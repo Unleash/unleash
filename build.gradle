@@ -1,0 +1,58 @@
+
+apply plugin: 'java'
+apply plugin:'jacoco'
+jacoco {
+    toolVersion = "0.8.7"
+}
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+group = 'lib'
+version = 'V1'
+
+
+repositories {
+    mavenCentral()
+}
+
+
+dependencies {
+    testImplementation 'junit:junit:4.13.2'
+}
+
+
+test {
+    // Specify the directory containing test classes
+    testClassesDirs = sourceSets.test.output.classesDirs
+
+
+    // Optionally configure test options
+    testLogging {
+        // Configure which events to log during test execution
+        events 'passed', 'skipped', 'failed'
+    }
+    finalizedBy jacocoTestReport
+}
+
+
+ jar {
+    manifest {
+        attributes 'Main-Class': 'lib.*'        
+    }
+
+
+    from sourceSets.main.output  // Include compiled classes in the JAR
+    archiveBaseName = 'unleash-test'  // Name of the JAR file
+    destinationDirectory = file('build/libs')  // Output directory for the JAR file
+}
+
+
+jacocoTestReport {
+    dependsOn test
+    reports {
+        xml.required = true
+        html.required = true
+    }
+}
+

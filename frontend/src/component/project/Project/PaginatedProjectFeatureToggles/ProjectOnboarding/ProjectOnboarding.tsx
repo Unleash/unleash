@@ -3,6 +3,7 @@ import { WelcomeToProject } from './WelcomeToProject';
 
 interface IProjectOnboardingProps {
     projectId: string;
+    setConnectSdkOpen: (open: boolean) => void;
 }
 
 const Container = styled('div')(({ theme }) => ({
@@ -18,10 +19,16 @@ const SdkExample = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-export const ProjectOnboarding = ({ projectId }: IProjectOnboardingProps) => {
+export const ProjectOnboarding = ({
+    projectId,
+    setConnectSdkOpen,
+}: IProjectOnboardingProps) => {
     return (
         <Container>
-            <WelcomeToProject projectId={projectId} />
+            <WelcomeToProject
+                projectId={projectId}
+                setConnectSdkOpen={setConnectSdkOpen}
+            />
             <SdkExample>View SDK example</SdkExample>
         </Container>
     );

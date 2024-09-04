@@ -17,7 +17,12 @@ test('Project can start onboarding', async () => {
         <Routes>
             <Route
                 path={'/projects/:projectId'}
-                element={<WelcomeToProject projectId={projectId} />}
+                element={
+                    <WelcomeToProject
+                        projectId={projectId}
+                        setConnectSdkOpen={() => {}}
+                    />
+                }
             />
         </Routes>,
         {
@@ -39,7 +44,12 @@ test('Project can connect SDK', async () => {
         <Routes>
             <Route
                 path={'/projects/:projectId'}
-                element={<WelcomeToProject projectId={projectId} />}
+                element={
+                    <WelcomeToProject
+                        projectId={projectId}
+                        setConnectSdkOpen={() => {}}
+                    />
+                }
             />
         </Routes>,
         {

@@ -42,7 +42,7 @@ import { AvatarCell } from './AvatarCell';
 import { ProjectOnboarding } from './ProjectOnboarding/ProjectOnboarding';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { styled } from '@mui/material';
-import useProjectOverview from '../../../../hooks/api/getters/useProjectOverview/useProjectOverview';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConnectSdkDialog } from '../../../onboarding/ConnectSdkDialog';
 
 interface IPaginatedProjectFeatureTogglesProps {

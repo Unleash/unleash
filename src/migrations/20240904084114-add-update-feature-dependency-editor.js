@@ -7,9 +7,9 @@ exports.up = function (db, cb) {
         AND EXISTS (SELECT 1 FROM roles WHERE name = 'Editor')
         AND NOT EXISTS (
             SELECT 1
-            FROM role_permission rp
-            WHERE rp.role_id = (SELECT id FROM roles WHERE name = 'Editor')
-            AND rp.permission = 'UPDATE_FEATURE_DEPENDENCY'
+            FROM role_permission
+            WHERE role_permission.role_id = (SELECT id FROM roles WHERE name = 'Editor')
+            AND role_permission.permission = 'UPDATE_FEATURE_DEPENDENCY'
         );
         `,
         cb

@@ -16,18 +16,14 @@ import rust from 'assets/icons/sdks/Logo-rust.svg';
 import svelte from 'assets/icons/sdks/Logo-svelte.svg';
 import vue from 'assets/icons/sdks/Logo-vue.svg';
 import { formatAssetPath } from 'utils/formatPath';
+import { SectionHeader } from './SharedComponents';
+import type { ClientSdkName, Sdk, ServerSdkName } from './sharedTypes';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8, 8, 8),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
-}));
-
-const PrimarySectionHeader = styled('div')(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightBold,
-    marginBottom: theme.spacing(1),
-    fontSize: theme.typography.body1.fontSize,
 }));
 
 const SecondarySectionHeader = styled('div')(({ theme }) => ({
@@ -71,7 +67,7 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     boxShadow: theme.shadows[2],
 }));
 
-const serverSdks = [
+const serverSdks: { name: ServerSdkName; icon: string }[] = [
     { name: 'Node', icon: node },
     { name: 'Golang', icon: go },
     { name: 'Ruby', icon: ruby },
@@ -82,7 +78,7 @@ const serverSdks = [
     { name: 'Python', icon: python },
 ];
 
-const clientSdks = [
+const clientSdks: { name: ClientSdkName; icon: string }[] = [
     { name: 'Javascript', icon: javascript },
     { name: 'React', icon: react },
     { name: 'Vue', icon: vue },
@@ -92,8 +88,6 @@ const clientSdks = [
     { name: 'Flutter', icon: flutter },
 ];
 
-type SdkType = 'client' | 'frontend';
-export type Sdk = { name: string; type: SdkType };
 interface ISelectSdkProps {
     onSelect: (sdk: Sdk) => void;
 }
@@ -102,7 +96,7 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
         <SpacedContainer>
             <Typography variant='h2'>Connect an SDK to Unleash</Typography>
             <Box sx={{ mt: 4 }}>
-                <PrimarySectionHeader>Select SDK</PrimarySectionHeader>
+                <SectionHeader>Select SDK</SectionHeader>
                 <SecondarySectionHeader>
                     Server side SDKs
                 </SecondarySectionHeader>
@@ -155,5 +149,3 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
         </SpacedContainer>
     );
 };
-
-export const SelectSdkConcepts = () => {};

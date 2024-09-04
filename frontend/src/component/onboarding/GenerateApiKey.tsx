@@ -1,8 +1,8 @@
-import { useProjectApiTokens } from '../../hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
-import useProjectApiTokensApi from '../../hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
+import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
+import useProjectApiTokensApi from 'hooks/api/actions/useProjectApiTokensApi/useProjectApiTokensApi';
 import { parseToken } from './parseToken';
-import useToast from '../../hooks/useToast';
-import { formatUnknownError } from '../../utils/formatUnknownError';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 import {
     Box,
     Button,
@@ -15,6 +15,7 @@ import { SingleSelectConfigButton } from '../common/DialogFormTemplate/ConfigBut
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { ArcherContainer, ArcherElement } from 'react-archer';
 import { useEffect } from 'react';
+import { SectionHeader } from './SharedComponents';
 
 const ChooseEnvironment = ({
     environments,
@@ -77,12 +78,6 @@ const TokenExplanationBox = styled(Box)(({ theme }) => ({
     alignItems: 'flex-start',
     marginTop: theme.spacing(8),
     flexWrap: 'wrap',
-}));
-
-const SectionHeader = styled('div')(({ theme }) => ({
-    fontWeight: theme.typography.fontWeightBold,
-    marginBottom: theme.spacing(1),
-    fontSize: theme.typography.body1.fontSize,
 }));
 
 const SectionDescription = styled('p')(({ theme }) => ({

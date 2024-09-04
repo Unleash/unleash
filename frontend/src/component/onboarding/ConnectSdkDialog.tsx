@@ -8,8 +8,15 @@ import {
 } from '@mui/material';
 import { GenerateApiKey } from './GenerateApiKey';
 import { useEffect, useState } from 'react';
-import { type Sdk, SelectSdk } from './SelectSdk';
-import { GenrateApiKeyConcepts, SelectSdkConcepts } from './UnleashConcepts';
+import { SelectSdk } from './SelectSdk';
+import {
+    ConceptsDefinitionsWrapper,
+    GenrateApiKeyConcepts,
+    SelectSdkConcepts,
+} from './UnleashConcepts';
+import { TestSdkConnection } from './TestSdkConnection';
+
+import type { Sdk } from './sharedTypes';
 
 interface IConnectSDKDialogProps {
     open: boolean;
@@ -107,7 +114,9 @@ export const ConnectSdkDialog = ({
                             }}
                         />
                     ) : null}
-                    {isTestConnectionStage ? <div>Last stage</div> : null}
+                    {isTestConnectionStage ? (
+                        <TestSdkConnection sdk={sdk} apiKey={apiKey} />
+                    ) : null}
 
                     {stage === 'generate-api-key' ? (
                         <Navigation>
@@ -162,6 +171,9 @@ export const ConnectSdkDialog = ({
                 ) : null}
                 {isLargeScreen && isGenerateApiKeyStage ? (
                     <GenrateApiKeyConcepts />
+                ) : null}
+                {isLargeScreen && isTestConnectionStage ? (
+                    <ConceptsDefinitionsWrapper />
                 ) : null}
             </Box>
         </StyledDialog>

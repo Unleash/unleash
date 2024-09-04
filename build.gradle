@@ -1,4 +1,92 @@
 
+
+plugins {
+    id 'base'
+}
+
+task runDocker(type: Exec) {
+    description = 'Run Docker File'
+    commandLine 'docker', 'compose', 'up', '-d'
+}
+
+task runYarnInstall(type: Exec) {
+    // Path to the Yarn executable in the project
+    def yarnPath = './.yarn/releases/yarn-4.3.1.cjs'
+
+    // Command to run Yarn install
+    commandLine 'node', yarnPath, 'install'
+
+    // Set the working directory to where your package.json is located
+    workingDir '.'
+
+    // Print command output for debugging
+    standardOutput = System.out
+    errorOutput = System.err
+}
+
+task runYarnInstallFrontEnd(type: Exec) {
+    // Path to the Yarn executable in the project
+    def yarnPath = './.yarn/releases/yarn-4.3.1.cjs'
+
+    // Command to run Yarn install
+    commandLine 'node', yarnPath, 'install'
+
+    // Set the working directory to where your package.json is located
+    workingDir './frontend'
+
+    // Print command output for debugging
+    standardOutput = System.out
+    errorOutput = System.err
+}
+
+task runDatabase(type: Exec) {
+    description = 'Create a new database for the project'
+    commandLine 'docker', 'run',
+        '-e', 'POSTGRES_USER=unleash_user',
+        '-e', 'POSTGRES_PASSWORD=password',
+        '-e', 'POSTGRES_DB=unleash',
+        '--name', 'postgres',
+        '-p', '5432:5432',
+        '-d',
+        'postgres'
+}
+
+
+task executeDatabase(type: Exec){
+    description = 'Run the database'
+    commandLine 'docker', 'start', 'postgres'
+}
+
+task runBuild(type: Exec) {
+    // Path to the Yarn executable in the project
+    def yarnPath = './.yarn/releases/yarn-4.3.1.cjs'
+
+    // Command to run Yarn install
+    commandLine 'node', yarnPath, 'build'
+
+    // Set the working directory to where your package.json is located
+    workingDir '.'
+
+    // Print command output for debugging
+    standardOutput = System.out
+    errorOutput = System.err
+}
+
+task runUnleash(type: Exec) {
+    // Path to the Yarn executable in the project
+    def yarnPath = './.yarn/releases/yarn-4.3.1.cjs'
+
+    // Command to run Yarn install
+    commandLine 'node', yarnPath, 'dev'
+
+    // Set the working directory to where your package.json is located
+    workingDir '.'
+
+    // Print command output for debugging
+    standardOutput = System.out
+    errorOutput = System.err
+}
+=======
 apply plugin: 'java'
 apply plugin:'jacoco'
 jacoco {
@@ -55,4 +143,5 @@ jacocoTestReport {
         html.required = true
     }
 }
+
 

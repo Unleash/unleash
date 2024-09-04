@@ -195,7 +195,7 @@ export class SegmentsController extends Controller {
                 openApiService.validPath({
                     summary: 'Update segment by id',
                     description:
-                        'Updates the content of the segment with the provided payload. Any fields not specified will be left untouched.',
+                        'Updates the content of the segment with the provided payload. Requires `name` and `constraints` to be present. If `project` is not present, it will be set to `null`. Any other fields not specified will be left untouched.',
                     tags: ['Segments'],
                     operationId: 'updateSegment',
                     requestBody: createRequestSchema('upsertSegmentSchema'),

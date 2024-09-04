@@ -15,6 +15,7 @@ import ruby from 'assets/icons/sdks/Logo-ruby.svg';
 import rust from 'assets/icons/sdks/Logo-rust.svg';
 import svelte from 'assets/icons/sdks/Logo-svelte.svg';
 import vue from 'assets/icons/sdks/Logo-vue.svg';
+import { formatAssetPath } from 'utils/formatPath';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8, 8, 8),
@@ -108,7 +109,7 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
                 <SdkListSection>
                     {serverSdks.map((sdk) => (
                         <SdkTile>
-                            <StyledAvatar src={sdk.icon} />
+                            <StyledAvatar src={formatAssetPath(sdk.icon)} />
                             <SdkTileContent>
                                 <b>{sdk.name}</b>{' '}
                                 <Link
@@ -132,7 +133,7 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
                 <SdkListSection>
                     {clientSdks.map((sdk) => (
                         <SdkTile>
-                            <StyledAvatar src={sdk.icon} />
+                            <StyledAvatar src={formatAssetPath(sdk.icon)} />
                             <SdkTileContent>
                                 <b>{sdk.name}</b>{' '}
                                 <Link

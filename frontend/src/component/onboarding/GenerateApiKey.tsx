@@ -14,6 +14,7 @@ import {
 import { SingleSelectConfigButton } from '../common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { ArcherContainer, ArcherElement } from 'react-archer';
+import { useEffect } from 'react';
 
 const ChooseEnvironment = ({
     environments,
@@ -159,11 +160,11 @@ const TokenExplanation = ({
                             </SecretExplanationDescription>
                         </ArcherElement>
                         <ArcherElement
-                            id='secreat-description'
+                            id='secret-description'
                             relations={[
                                 {
                                     targetId: 'secret',
-                                    targetAnchor: 'bottom',
+                                    targetAnchor: 'right',
                                     sourceAnchor: 'top',
                                 },
                             ]}
@@ -185,6 +186,7 @@ interface GenerateApiKeyProps {
     environment: string;
     sdkType: 'client' | 'frontend';
     onEnvSelect: (env: string) => void;
+    onApiKey: (apiKey: string | null) => void;
 }
 
 export const GenerateApiKey = ({
@@ -193,12 +195,18 @@ export const GenerateApiKey = ({
     project,
     sdkType,
     onEnvSelect,
+    onApiKey,
 }: GenerateApiKeyProps) => {
     const { tokens, refetch: refreshTokens } = useProjectApiTokens(project);
     const { createToken, loading: creatingToken } = useProjectApiTokensApi();
     const currentEnvironmentToken = tokens.find(
         (token) => token.environment === environment && token.type === sdkType,
     );
+
+    useEffect(() => {
+        onApiKey(currentEnvironmentToken?.secret || null);
+    }, [currentEnvironmentToken]);
+
     const parsedToken = parseToken(currentEnvironmentToken?.secret);
 
     const { setToastApiError } = useToast();

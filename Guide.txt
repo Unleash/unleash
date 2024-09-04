@@ -31,7 +31,7 @@ $ echo ‘info’ > test1.txt
 
 2. Add files to the staging area and commit the changes. 
 $ git add . 
-$ git commit -m "Added txt file" 
+$ git commit -m Added txt file 
 
 Step 4. Push changes to GitHub 
 1. Push the branch and verify the push in Github. 
@@ -48,7 +48,7 @@ $ git fetch upstream
 $ git merge upstream/test 
 
 4. Resolves conflict and commit the changes 
-$ git add resolved-file.js $ git commit -m "Resolved conflicts" 
+$ git add resolved-file.js $ git commit -m Resolved conflicts 
 
 5. Push the merged branch. 
 $ git push origin test

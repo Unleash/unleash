@@ -1,5 +1,20 @@
-import { Box, Link, styled, Typography } from '@mui/material';
+import { Avatar, Box, Link, styled, Typography } from '@mui/material';
 import type { FC } from 'react';
+import android from 'assets/icons/sdks/Logo-android.svg';
+import dotnet from 'assets/icons/sdks/Logo-net.svg';
+import flutter from 'assets/icons/sdks/Logo-flutter.svg';
+import go from 'assets/icons/sdks/Logo-go.svg';
+import swift from 'assets/icons/sdks/Logo-swift.svg';
+import java from 'assets/icons/sdks/Logo-java.svg';
+import javascript from 'assets/icons/sdks/Logo-javascript.svg';
+import node from 'assets/icons/sdks/Logo-node.svg';
+import php from 'assets/icons/sdks/Logo-php.svg';
+import python from 'assets/icons/sdks/Logo-python.svg';
+import react from 'assets/icons/sdks/Logo-react.svg';
+import ruby from 'assets/icons/sdks/Logo-ruby.svg';
+import rust from 'assets/icons/sdks/Logo-rust.svg';
+import svelte from 'assets/icons/sdks/Logo-svelte.svg';
+import vue from 'assets/icons/sdks/Logo-vue.svg';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8, 8, 8),
@@ -9,57 +24,71 @@ const SpacedContainer = styled('div')(({ theme }) => ({
 }));
 
 const PrimarySectionHeader = styled('div')(({ theme }) => ({
-    fontWeight: theme.fontWeight.bold,
+    fontWeight: theme.typography.fontWeightBold,
     marginBottom: theme.spacing(1),
-    fontSize: theme.fontSizes.bodySize,
+    fontSize: theme.typography.body1.fontSize,
 }));
 
 const SecondarySectionHeader = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(2),
-    fontSize: theme.fontSizes.bodySize,
+    fontSize: theme.typography.body1.fontSize,
 }));
 
 const SdkListSection = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation1,
     borderRadius: theme.shape.borderRadius,
-    padding: theme.spacing(3, 6),
+    padding: theme.spacing(6),
     display: 'flex',
-    gap: theme.spacing(2),
+    columnGap: theme.spacing(2),
+    rowGap: theme.spacing(5),
     alignItems: 'center',
     justifyContent: 'flex-start',
     flexWrap: 'wrap',
 }));
 
 const SdkTile = styled('div')(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.typography.body2.fontSize,
     backgroundColor: theme.palette.common.white,
     borderRadius: theme.shape.borderRadius,
-    padding: theme.spacing(2),
+    padding: theme.spacing(2, 3),
+    width: '170px',
+    position: 'relative',
+}));
+
+const SdkTileContent = styled('div')(() => ({
     display: 'flex',
     justifyContent: 'space-between',
-    width: '170px',
+}));
+
+const StyledAvatar = styled(Avatar)(({ theme }) => ({
+    position: 'absolute',
+    width: theme.spacing(4),
+    height: theme.spacing(4),
+    top: theme.spacing(-2.75),
+    left: theme.spacing(2),
+    boxShadow: theme.shadows[2],
 }));
 
 const serverSdks = [
-    { name: 'Node' },
-    { name: 'Golang' },
-    { name: 'Ruby' },
-    { name: 'PHP' },
-    { name: 'Rust' },
-    { name: 'DotNet' },
-    { name: 'Java' },
-    { name: 'Python' },
+    { name: 'Node', icon: node },
+    { name: 'Golang', icon: go },
+    { name: 'Ruby', icon: ruby },
+    { name: 'PHP', icon: php },
+    { name: 'Rust', icon: rust },
+    { name: 'DotNet', icon: dotnet },
+    { name: 'Java', icon: java },
+    { name: 'Python', icon: python },
 ];
 
 const clientSdks = [
-    { name: 'Javascript' },
-    { name: 'React' },
-    { name: 'Vue' },
-    { name: 'Svelte' },
-    { name: 'Swift' },
-    { name: 'Android' },
-    { name: 'Flutter' },
+    { name: 'Javascript', icon: javascript },
+    { name: 'React', icon: react },
+    { name: 'Vue', icon: vue },
+    { name: 'Svelte', icon: svelte },
+    { name: 'Swift', icon: swift },
+    { name: 'Android', icon: android },
+    { name: 'Flutter', icon: flutter },
 ];
 
 type SdkType = 'client' | 'frontend';
@@ -79,15 +108,21 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
                 <SdkListSection>
                     {serverSdks.map((sdk) => (
                         <SdkTile>
-                            <b>{sdk.name}</b>{' '}
-                            <Link
-                                onClick={() =>
-                                    onSelect({ name: sdk.name, type: 'client' })
-                                }
-                                component='button'
-                            >
-                                Select
-                            </Link>
+                            <StyledAvatar src={sdk.icon} />
+                            <SdkTileContent>
+                                <b>{sdk.name}</b>{' '}
+                                <Link
+                                    onClick={() =>
+                                        onSelect({
+                                            name: sdk.name,
+                                            type: 'client',
+                                        })
+                                    }
+                                    component='button'
+                                >
+                                    Select
+                                </Link>
+                            </SdkTileContent>
                         </SdkTile>
                     ))}
                 </SdkListSection>
@@ -97,18 +132,21 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
                 <SdkListSection>
                     {clientSdks.map((sdk) => (
                         <SdkTile>
-                            <b>{sdk.name}</b>{' '}
-                            <Link
-                                onClick={() =>
-                                    onSelect({
-                                        name: sdk.name,
-                                        type: 'frontend',
-                                    })
-                                }
-                                component='button'
-                            >
-                                Select
-                            </Link>
+                            <StyledAvatar src={sdk.icon} />
+                            <SdkTileContent>
+                                <b>{sdk.name}</b>{' '}
+                                <Link
+                                    onClick={() =>
+                                        onSelect({
+                                            name: sdk.name,
+                                            type: 'frontend',
+                                        })
+                                    }
+                                    component='button'
+                                >
+                                    Select
+                                </Link>
+                            </SdkTileContent>
                         </SdkTile>
                     ))}
                 </SdkListSection>

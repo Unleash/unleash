@@ -3,7 +3,7 @@ import { ProjectIcon } from '../common/ProjectIcon/ProjectIcon';
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import CodeIcon from '@mui/icons-material/Code';
 
-const ConceptsDefinitionsWrapper = styled('div')(({ theme }) => ({
+export const ConceptsDefinitionsWrapper = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.sidebar,
     padding: theme.spacing(12, 6, 6, 6),
     flex: 0,

@@ -198,6 +198,7 @@ export class SegmentsController extends Controller {
                         'Updates the content of the segment with the provided payload. Any fields not specified will be left untouched.',
                     tags: ['Segments'],
                     operationId: 'updateSegment',
+                    requestBody: createRequestSchema('upsertSegmentSchema'),
                     responses: {
                         204: emptyResponse,
                         ...getStandardResponses(400, 401, 403, 409, 415),

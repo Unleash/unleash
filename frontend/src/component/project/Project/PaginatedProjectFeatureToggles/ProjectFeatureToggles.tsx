@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -67,6 +67,7 @@ export const ProjectFeatureToggles = ({
     const onboardingUIEnabled = useUiFlag('onboardingUI');
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
+    const [connectSdkOpen, setConnectSdkOpen] = useState(false);
 
     const {
         features,
@@ -402,7 +403,12 @@ export const ProjectFeatureToggles = ({
                     onboardingUIEnabled &&
                     project.onboardingStatus.status !== 'onboarded'
                 }
-                show={<ProjectOnboarding projectId={projectId} />}
+                show={
+                    <ProjectOnboarding
+                        projectId={projectId}
+                        setConnectSdkOpen={setConnectSdkOpen}
+                    />
+                }
             />
             <PageContent
                 disableLoading
@@ -497,7 +503,7 @@ export const ProjectFeatureToggles = ({
                     {featureToggleModals}
 
                     <ConnectSdkDialog
-                        open={false}
+                        open={connectSdkOpen}
                         onClose={() => {}}
                         project={projectId}
                         environments={environments}

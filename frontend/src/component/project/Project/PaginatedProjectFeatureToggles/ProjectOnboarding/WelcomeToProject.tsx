@@ -12,6 +12,7 @@ import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 
 interface IWelcomeToProjectProps {
     projectId: string;
+    setConnectSdkOpen: (open: boolean) => void;
 }
 
 interface IExistingFlagsProps {
@@ -81,7 +82,10 @@ const StyledLink = styled(Link)({
     justifyContent: 'center',
 });
 
-export const WelcomeToProject = ({ projectId }: IWelcomeToProjectProps) => {
+export const WelcomeToProject = ({
+    projectId,
+    setConnectSdkOpen,
+}: IWelcomeToProjectProps) => {
     const { project } = useProjectOverview(projectId);
     const isFirstFlagCreated =
         project.onboardingStatus.status === 'first-flag-created';
@@ -117,7 +121,9 @@ export const WelcomeToProject = ({ projectId }: IWelcomeToProjectProps) => {
                         We have not detected any connected SDKs on this project.
                     </Typography>
                     <ResponsiveButton
-                        onClick={() => {}}
+                        onClick={() => {
+                            setConnectSdkOpen(true);
+                        }}
                         maxWidth='200px'
                         projectId={projectId}
                         Icon={Add}

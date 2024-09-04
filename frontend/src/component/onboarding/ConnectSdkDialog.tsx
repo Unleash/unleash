@@ -71,6 +71,12 @@ export const ConnectSdkDialog = ({
     const [apiKey, setApiKey] = useState<string | null>(null);
     const [stage, setStage] = useState<OnboardingStage>('select-sdk');
 
+    const isSelectSdkStage = stage === 'select-sdk';
+    const isGenerateApiKeyStage =
+        stage === 'generate-api-key' && sdk && environment;
+    const isTestConnectionStage =
+        stage === 'test-connection' && sdk && environment && apiKey;
+
     useEffect(() => {
         if (environments.length > 0) {
             setEnvironment(environments[0]);
@@ -81,7 +87,7 @@ export const ConnectSdkDialog = ({
         <StyledDialog open={open} onClose={onClose}>
             <Box sx={{ display: 'flex' }}>
                 <ConnectSdk>
-                    {stage === 'select-sdk' ? (
+                    {isSelectSdkStage ? (
                         <SelectSdk
                             onSelect={(sdk) => {
                                 setSdk(sdk);
@@ -89,7 +95,7 @@ export const ConnectSdkDialog = ({
                             }}
                         />
                     ) : null}
-                    {stage === 'generate-api-key' && sdk && environment ? (
+                    {isGenerateApiKeyStage ? (
                         <GenerateApiKey
                             environments={environments}
                             environment={environment}
@@ -101,12 +107,7 @@ export const ConnectSdkDialog = ({
                             }}
                         />
                     ) : null}
-                    {stage === 'test-connection' &&
-                    sdk &&
-                    environment &&
-                    apiKey ? (
-                        <div>Last stage</div>
-                    ) : null}
+                    {isTestConnectionStage ? <div>Last stage</div> : null}
 
                     {stage === 'generate-api-key' ? (
                         <Navigation>
@@ -131,7 +132,7 @@ export const ConnectSdkDialog = ({
                             </NextStepSectionSpacedContainer>
                         </Navigation>
                     ) : null}
-                    {stage === 'test-connection' ? (
+                    {isTestConnectionStage ? (
                         <Navigation>
                             <NextStepSectionSpacedContainer>
                                 <Button
@@ -156,10 +157,10 @@ export const ConnectSdkDialog = ({
                     ) : null}
                 </ConnectSdk>
 
-                {isLargeScreen && stage === 'select-sdk' ? (
+                {isLargeScreen && isSelectSdkStage ? (
                     <SelectSdkConcepts />
                 ) : null}
-                {isLargeScreen && stage === 'generate-api-key' ? (
+                {isLargeScreen && isGenerateApiKeyStage ? (
                     <GenrateApiKeyConcepts />
                 ) : null}
             </Box>

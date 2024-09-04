@@ -7,7 +7,6 @@ import {
     Box,
     Button,
     styled,
-    type Theme,
     Typography,
     useMediaQuery,
     useTheme,
@@ -15,8 +14,6 @@ import {
 import { SingleSelectConfigButton } from '../common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { ArcherContainer, ArcherElement } from 'react-archer';
-import { ProjectIcon } from '../common/ProjectIcon/ProjectIcon';
-import CodeIcon from '@mui/icons-material/Code';
 
 const ChooseEnvironment = ({
     environments,
@@ -100,43 +97,6 @@ const SpacedContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(3),
 }));
 
-const ConceptsDefinitionsWrapper = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.background.sidebar,
-    padding: theme.spacing(6),
-    flex: 0,
-    minWidth: '400px',
-}));
-
-const ConceptDetails = styled('p')(({ theme }) => ({
-    color: theme.palette.primary.contrastText,
-    fontSize: theme.typography.caption.fontSize,
-    marginBottom: theme.spacing(2),
-}));
-
-const IconStyle = ({ theme }: { theme: Theme }) => ({
-    color: theme.palette.primary.contrastText,
-    fontSize: theme.typography.body2.fontSize,
-    marginTop: theme.spacing(0.5),
-});
-
-const StyledProjectIcon = styled(ProjectIcon)(IconStyle);
-const StyledEnvironmentsIcon = styled(EnvironmentsIcon)(IconStyle);
-const StyledCodeIcon = styled(CodeIcon)(IconStyle);
-
-const ConceptItem = styled('div')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(1.5),
-    alignItems: 'flex-start',
-    marginTop: theme.spacing(3),
-}));
-
-const ConceptSummary = styled('div')(({ theme }) => ({
-    color: theme.palette.primary.contrastText,
-    fontSize: theme.typography.body2.fontSize,
-    fontWeight: theme.typography.fontWeightBold,
-    marginBottom: theme.spacing(2),
-}));
-
 const TokenExplanation = ({
     project,
     environment,
@@ -218,46 +178,6 @@ const TokenExplanation = ({
         </ArcherContainer>
     );
 };
-
-export const GenrateApiKeyConcepts = () => (
-    <ConceptsDefinitionsWrapper>
-        <ConceptItem>
-            <StyledProjectIcon />
-            <Box>
-                <ConceptSummary>Flags live in projects</ConceptSummary>
-                <ConceptDetails>
-                    Projects are containers for feature flags. When you create a
-                    feature flag it will belong to the project you create it in.
-                </ConceptDetails>
-            </Box>
-        </ConceptItem>
-        <ConceptItem>
-            <StyledEnvironmentsIcon />
-            <Box>
-                <ConceptSummary>
-                    Flags have configuration in environments
-                </ConceptSummary>
-                <ConceptDetails>
-                    In Unleash you can have multiple environments. Each feature
-                    flag will have different configuration in every environment.
-                </ConceptDetails>
-            </Box>
-        </ConceptItem>
-        <ConceptItem>
-            <StyledCodeIcon />
-            <Box>
-                <ConceptSummary>
-                    SDKs connect to Unleash to retrieve configuration
-                </ConceptSummary>
-                <ConceptDetails>
-                    When you connect an SDK to Unleash it will use the API key
-                    to deduce which feature flags to retrieve and from which
-                    environment to retrieve configuration.
-                </ConceptDetails>
-            </Box>
-        </ConceptItem>
-    </ConceptsDefinitionsWrapper>
-);
 
 interface GenerateApiKeyProps {
     project: string;

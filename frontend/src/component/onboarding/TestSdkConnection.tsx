@@ -1,7 +1,8 @@
 import type { FC } from 'react';
 import { Box, styled, Typography } from '@mui/material';
-import { type Sdk, type SdkName, SectionHeader } from './SharedComponents';
-import useUiConfig from '../../hooks/api/getters/useUiConfig/useUiConfig';
+import { SectionHeader } from './SharedComponents';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import type { Sdk, SdkName } from './sharedTypes';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8, 8, 8),

@@ -15,7 +15,8 @@ import {
     SelectSdkConcepts,
 } from './UnleashConcepts';
 import { TestSdkConnection } from './TestSdkConnection';
-import type { Sdk } from './SharedComponents';
+
+import type { Sdk } from './sharedTypes';
 
 interface IConnectSDKDialogProps {
     open: boolean;

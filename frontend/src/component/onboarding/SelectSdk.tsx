@@ -16,12 +16,8 @@ import rust from 'assets/icons/sdks/Logo-rust.svg';
 import svelte from 'assets/icons/sdks/Logo-svelte.svg';
 import vue from 'assets/icons/sdks/Logo-vue.svg';
 import { formatAssetPath } from 'utils/formatPath';
-import {
-    type ClientSdkName,
-    type Sdk,
-    SectionHeader,
-    type ServerSdkName,
-} from './SharedComponents';
+import { SectionHeader } from './SharedComponents';
+import type { ClientSdkName, Sdk, ServerSdkName } from './sharedTypes';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8, 8, 8),

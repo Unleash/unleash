@@ -2,14 +2,15 @@ import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { getProjectOverviewFetcher } from './getProjectOverviewFetcher';
 import type { IProjectOverview } from 'interfaces/project';
+import type { ProjectOverviewSchema } from '../../../../openapi';
 
-const fallbackProject: IProjectOverview = {
+const fallbackProject: ProjectOverviewSchema = {
     featureTypeCounts: [],
     environments: [],
     name: '',
     health: 0,
     members: 0,
-    version: '1',
+    version: 1,
     description: 'Default',
     favorite: false,
     mode: 'open',
@@ -24,11 +25,14 @@ const fallbackProject: IProjectOverview = {
         projectActivityPastWindow: 0,
         projectMembersAddedCurrentWindow: 0,
     },
+    onboardingStatus: {
+        status: 'onboarded',
+    },
 };
 
 const useProjectOverview = (id: string, options: SWRConfiguration = {}) => {
     const { KEY, fetcher } = getProjectOverviewFetcher(id);
-    const { data, error, mutate } = useSWR<IProjectOverview>(
+    const { data, error, mutate } = useSWR<ProjectOverviewSchema>(
         KEY,
         fetcher,
         options,

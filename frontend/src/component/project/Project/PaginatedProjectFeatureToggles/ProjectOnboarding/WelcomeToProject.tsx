@@ -1,10 +1,21 @@
-import { styled, Typography } from '@mui/material';
+import { styled, Typography, useTheme } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { FlagCreationButton } from '../ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
+import { Link } from 'react-router-dom';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 
 interface IWelcomeToProjectProps {
+    projectId: string;
+}
+
+interface IExistingFlagsProps {
+    featureId: string;
     projectId: string;
 }
 
@@ -54,7 +65,18 @@ const CircleContainer = styled('span')(({ theme }) => ({
     borderRadius: '50%',
 }));
 
+const StyledLink = styled(Link)({
+    fontWeight: 'bold',
+    textDecoration: 'none',
+    display: 'flex',
+    justifyContent: 'center',
+});
+
 export const WelcomeToProject = ({ projectId }: IWelcomeToProjectProps) => {
+    const { project } = useProjectOverview(projectId);
+    const isFirstFlagCreated =
+        project.onboardingStatus.status === 'first-flag-created';
+
     return (
         <Container>
             <TitleBox>
@@ -67,17 +89,15 @@ export const WelcomeToProject = ({ projectId }: IWelcomeToProjectProps) => {
             </TitleBox>
             <Actions>
                 <ActionBox>
-                    <TitleContainer>
-                        <CircleContainer>1</CircleContainer>
-                        Create a feature flag
-                    </TitleContainer>
-                    <Typography>
-                        <div>
-                            The project currently holds no feature toggles.
-                        </div>
-                        <div>Create a feature flag to get started.</div>
-                    </Typography>
-                    <FlagCreationButton />
+                    {project.onboardingStatus.status ===
+                    'first-flag-created' ? (
+                        <ExistingFlag
+                            projectId={projectId}
+                            featureId={project.onboardingStatus.feature}
+                        />
+                    ) : (
+                        <CreateFlag />
+                    )}
                 </ActionBox>
                 <ActionBox>
                     <TitleContainer>
@@ -92,7 +112,7 @@ export const WelcomeToProject = ({ projectId }: IWelcomeToProjectProps) => {
                         maxWidth='200px'
                         projectId={projectId}
                         Icon={Add}
-                        disabled={true}
+                        disabled={!isFirstFlagCreated}
                         permission={CREATE_FEATURE}
                     >
                         Connect SDK
@@ -100,5 +120,70 @@ export const WelcomeToProject = ({ projectId }: IWelcomeToProjectProps) => {
                 </ActionBox>
             </Actions>
         </Container>
+    );
+};
+
+const CreateFlag = () => {
+    return (
+        <>
+            <TitleContainer>
+                <CircleContainer>1</CircleContainer>
+                Create a feature flag
+            </TitleContainer>
+            <Typography>
+                <div>The project currently holds no feature toggles.</div>
+                <div>Create a feature flag to get started.</div>
+            </Typography>
+            <FlagCreationButton />
+        </>
+    );
+};
+
+const ExistingFlag = ({ featureId, projectId }: IExistingFlagsProps) => {
+    const theme = useTheme();
+    const { feature } = useFeature(projectId, featureId);
+    const { featureTypes } = useFeatureTypes();
+    const IconComponent = getFeatureTypeIcons(feature.type);
+    const typeName = featureTypes.find(
+        (featureType) => featureType.id === feature.type,
+    )?.name;
+    const typeTitle = `${typeName || feature.type} flag`;
+
+    return (
+        <>
+            <TitleContainer>
+                <CircleContainer
+                    sx={{
+                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.background.paper,
+                    }}
+                >
+                    ✓
+                </CircleContainer>
+                Create a feature flag
+            </TitleContainer>
+            <TitleContainer>
+                <HtmlTooltip arrow title={typeTitle} describeChild>
+                    <CircleContainer
+                        sx={{
+                            backgroundColor: theme.palette.primary.main,
+                            color: theme.palette.background.paper,
+                            borderRadius: '20%',
+                        }}
+                    >
+                        <IconComponent />
+                    </CircleContainer>
+                </HtmlTooltip>
+                <StyledLink
+                    to={`/projects/${projectId}/features/${feature.name}`}
+                >
+                    {feature.name}
+                </StyledLink>
+            </TitleContainer>
+            <Typography>
+                Your project is not yet connected to any SDK. In order to start
+                using your feature flag connect an SDK to the project.
+            </Typography>
+        </>
     );
 };

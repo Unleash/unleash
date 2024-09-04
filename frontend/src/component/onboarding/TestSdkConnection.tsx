@@ -83,7 +83,7 @@ export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
                 <p>2. Initialize the SDK</p>
                 <StyledCodeBlock>
                     {filledCodeSnippet}
-                    <CopyToClipboard title='Copy command' arrow>
+                    <CopyToClipboard title='Copy snippet' arrow>
                         <IconButton
                             onClick={onCopyToClipboard(filledCodeSnippet)}
                             size='small'

@@ -21,6 +21,9 @@ test('Show outdated SDKs and apps using them', async () => {
                 count: 57,
             },
         ],
+        onboardingStatus: {
+            status: 'onboarded',
+        },
     });
     render(
         <Routes>

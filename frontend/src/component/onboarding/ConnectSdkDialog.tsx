@@ -101,7 +101,10 @@ export const ConnectSdkDialog = ({
                             }}
                         />
                     ) : null}
-                    {stage === 'test-connection' && sdk && environment ? (
+                    {stage === 'test-connection' &&
+                    sdk &&
+                    environment &&
+                    apiKey ? (
                         <div>Last stage</div>
                     ) : null}
 

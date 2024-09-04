@@ -6,9 +6,10 @@ import {
     useMediaQuery,
     useTheme,
 } from '@mui/material';
-import { GenrateApiKeyConcepts, GenerateApiKey } from './GenerateApiKey';
+import { GenerateApiKey } from './GenerateApiKey';
 import { useEffect, useState } from 'react';
 import { type Sdk, SelectSdk } from './SelectSdk';
+import { GenrateApiKeyConcepts, SelectSdkConcepts } from './UnleashConcepts';
 
 interface IConnectSDKDialogProps {
     open: boolean;
@@ -38,7 +39,7 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const Navigation = styled('div')(({ theme }) => ({
-    marginTop: 'auto',
+    marginTop: theme.spacing(16),
     borderTop: `1px solid ${theme.palette.divider}}`,
     display: 'flex',
     justifyContent: 'flex-end',
@@ -118,7 +119,12 @@ export const ConnectSdkDialog = ({
                     ) : null}
                 </ConnectSdk>
 
-                {isLargeScreen ? <GenrateApiKeyConcepts /> : null}
+                {isLargeScreen && stage.name === 'select-sdk' ? (
+                    <SelectSdkConcepts />
+                ) : null}
+                {isLargeScreen && stage.name === 'generate-api-key' ? (
+                    <GenrateApiKeyConcepts />
+                ) : null}
             </Box>
         </StyledDialog>
     );

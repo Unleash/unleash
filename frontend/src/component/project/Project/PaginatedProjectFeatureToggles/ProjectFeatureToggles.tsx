@@ -42,6 +42,7 @@ import { AvatarCell } from './AvatarCell';
 import { ProjectOnboarding } from './ProjectOnboarding/ProjectOnboarding';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { styled } from '@mui/material';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConnectSdkDialog } from '../../../onboarding/ConnectSdkDialog';
 
 interface IPaginatedProjectFeatureTogglesProps {
@@ -65,6 +66,7 @@ export const ProjectFeatureToggles = ({
 }: IPaginatedProjectFeatureTogglesProps) => {
     const onboardingUIEnabled = useUiFlag('onboardingUI');
     const projectId = useRequiredPathParam('projectId');
+    const { project } = useProjectOverview(projectId);
 
     const {
         features,
@@ -396,7 +398,10 @@ export const ProjectFeatureToggles = ({
     return (
         <Container>
             <ConditionallyRender
-                condition={onboardingUIEnabled}
+                condition={
+                    onboardingUIEnabled &&
+                    project.onboardingStatus.status !== 'onboarded'
+                }
                 show={<ProjectOnboarding projectId={projectId} />}
             />
             <PageContent

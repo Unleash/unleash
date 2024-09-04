@@ -1,4 +1,4 @@
-import type { ProjectStatsSchema } from 'openapi';
+import type { ProjectOverviewSchema, ProjectStatsSchema } from 'openapi';
 import type { IFeatureFlagListItem } from './featureToggle';
 import type { ProjectEnvironmentType } from 'component/project/Project/ProjectFeatureToggles/hooks/useEnvironmentsRef';
 import type { ProjectMode } from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
@@ -47,6 +47,7 @@ export interface IProjectOverview {
     featureLimit?: number;
     featureNaming?: FeatureNamingType;
     archivedAt?: Date;
+    onboardingStatus: ProjectOverviewSchema['onboardingStatus'];
 }
 
 export interface IProjectHealthReport extends IProject {

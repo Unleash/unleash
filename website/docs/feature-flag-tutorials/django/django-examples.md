@@ -3,7 +3,7 @@ title: Django Feature Flag Examples
 slug: /feature-flag-tutorials/django/examples
 ---
 
-In our [Python feature flag tutorial](/feature-flag-tutorials/python), we implemented a simple feature flag that could be turned on and off. In the real world, many feature flag use cases have more nuance than this. This document will walk you through some common examples of using feature flags in Django with some of those more advanced use cases in mind.
+In our [Django feature flag tutorial](/feature-flag-tutorials/django), we implemented a simple feature flag that could be turned on and off. In the real world, many feature flag use cases have more nuance than this. This document will walk you through some common examples of using feature flags in Django with some of those more advanced use cases in mind.
 
 We built multiple features into Unleash, an open-source feature flag platform, to address the complexities of releasing code and managing feature flags along the way. This tutorial will explore the following:
 

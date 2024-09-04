@@ -55,7 +55,7 @@ const TitleContainer = styled('div')(({ theme }) => ({
     fontWeight: 'bold',
 }));
 
-const CircleContainer = styled('span')(({ theme }) => ({
+const NeutralCircleContainer = styled('span')(({ theme }) => ({
     width: '28px',
     height: '28px',
     display: 'flex',
@@ -63,6 +63,15 @@ const CircleContainer = styled('span')(({ theme }) => ({
     justifyContent: 'center',
     backgroundColor: theme.palette.neutral.border,
     borderRadius: '50%',
+}));
+
+const MainCircleContainer = styled(NeutralCircleContainer)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.background.paper,
+}));
+
+const TypeCircleContainer = styled(MainCircleContainer)(({ theme }) => ({
+    borderRadius: '20%',
 }));
 
 const StyledLink = styled(Link)({
@@ -101,7 +110,7 @@ export const WelcomeToProject = ({ projectId }: IWelcomeToProjectProps) => {
                 </ActionBox>
                 <ActionBox>
                     <TitleContainer>
-                        <CircleContainer>2</CircleContainer>
+                        <NeutralCircleContainer>2</NeutralCircleContainer>
                         Connect an SDK
                     </TitleContainer>
                     <Typography>
@@ -127,7 +136,7 @@ const CreateFlag = () => {
     return (
         <>
             <TitleContainer>
-                <CircleContainer>1</CircleContainer>
+                <NeutralCircleContainer>1</NeutralCircleContainer>
                 Create a feature flag
             </TitleContainer>
             <Typography>
@@ -152,27 +161,14 @@ const ExistingFlag = ({ featureId, projectId }: IExistingFlagsProps) => {
     return (
         <>
             <TitleContainer>
-                <CircleContainer
-                    sx={{
-                        backgroundColor: theme.palette.primary.main,
-                        color: theme.palette.background.paper,
-                    }}
-                >
-                    ✓
-                </CircleContainer>
+                <MainCircleContainer>✓</MainCircleContainer>
                 Create a feature flag
             </TitleContainer>
             <TitleContainer>
                 <HtmlTooltip arrow title={typeTitle} describeChild>
-                    <CircleContainer
-                        sx={{
-                            backgroundColor: theme.palette.primary.main,
-                            color: theme.palette.background.paper,
-                            borderRadius: '20%',
-                        }}
-                    >
+                    <TypeCircleContainer>
                         <IconComponent />
-                    </CircleContainer>
+                    </TypeCircleContainer>
                 </HtmlTooltip>
                 <StyledLink
                     to={`/projects/${projectId}/features/${feature.name}`}

@@ -89,6 +89,7 @@ import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/api-token-service';
 import type { TransitionalProjectData } from './project-read-model-type';
+import { canGrantProjectRole } from './can-grant-project-access';
 
 type Days = number;
 type Count = number;
@@ -946,9 +947,24 @@ export default class ProjectService {
         ) {
             return true;
         }
-        return rolesBeingAdded.every((roleId) =>
-            userRoles.some((userRole) => userRole.id === roleId),
+
+        const rolesToBeAssignedData = await Promise.all(
+            rolesBeingAdded.map((role) => this.accessService.getRole(role)),
         );
+        const rolesToBeAssignedPermissions = rolesToBeAssignedData.flatMap(
+            (role) => role.permissions,
+        );
+
+        this.logger.info("USER PERMISSIONS AND ASSIGNED PERMISSIONS", userPermissions, rolesToBeAssignedPermissions);
+
+        return canGrantProjectRole(
+            userPermissions,
+            rolesToBeAssignedPermissions,
+        );
+
+        // return rolesBeingAdded.every((roleId) =>
+        //     userRoles.some((userRole) => userRole.id === roleId),
+        // );
     }
 
     async addAccess(

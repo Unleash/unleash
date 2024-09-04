@@ -1,4 +1,4 @@
-import type { IProjectWithCount, ProjectMode } from '../../types';
+import type { IPermission, IProjectWithCount, ProjectMode } from '../../types';
 import type { IProjectQuery } from './project-store-type';
 
 export type ProjectForUi = {

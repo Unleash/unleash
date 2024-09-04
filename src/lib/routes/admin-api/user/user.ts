@@ -174,10 +174,7 @@ class UserController extends Controller {
     ): Promise<void> {
         const { projectId } = req.query;
         if (projectId) {
-            const roles = await this.accessService.getAllProjectRolesForUser(
-                req.user.id,
-                projectId,
-            );
+            const roles = await this.accessService.getProjectRoles();
             this.openApiService.respondWithValidation(
                 200,
                 res,

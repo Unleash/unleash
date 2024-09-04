@@ -132,6 +132,7 @@ export const ConnectSdkDialog = ({
                                 </Button>
                                 <Button
                                     variant='contained'
+                                    disabled={!apiKey}
                                     onClick={() => {
                                         setStage('test-connection');
                                     }}

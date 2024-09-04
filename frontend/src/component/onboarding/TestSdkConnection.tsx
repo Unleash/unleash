@@ -5,7 +5,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { Sdk } from './sharedTypes';
 import { codeSnippets, installCommands } from './sdkSnippets';
 import copy from 'copy-to-clipboard';
-import useToast from '../../hooks/useToast';
+import useToast from 'hooks/useToast';
 import CopyIcon from '@mui/icons-material/FileCopy';
 
 const SpacedContainer = styled('div')(({ theme }) => ({

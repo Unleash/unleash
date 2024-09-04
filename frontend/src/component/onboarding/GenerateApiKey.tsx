@@ -70,7 +70,7 @@ const SecretExplanationDescription = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
     flex: 1,
     color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.typography.body2.fontSize,
 }));
 
 const TokenExplanationBox = styled(Box)(({ theme }) => ({
@@ -82,14 +82,14 @@ const TokenExplanationBox = styled(Box)(({ theme }) => ({
 }));
 
 const SectionHeader = styled('div')(({ theme }) => ({
-    fontWeight: theme.fontWeight.bold,
+    fontWeight: theme.typography.fontWeightBold,
     marginBottom: theme.spacing(1),
-    fontSize: theme.fontSizes.bodySize,
+    fontSize: theme.typography.body1.fontSize,
 }));
 
 const SectionDescription = styled('p')(({ theme }) => ({
     color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.typography.body2.fontSize,
     marginBottom: theme.spacing(2),
 }));
 
@@ -109,13 +109,13 @@ const ConceptsDefinitionsWrapper = styled('div')(({ theme }) => ({
 
 const ConceptDetails = styled('p')(({ theme }) => ({
     color: theme.palette.primary.contrastText,
-    fontSize: theme.fontSizes.smallerBody,
+    fontSize: theme.typography.caption.fontSize,
     marginBottom: theme.spacing(2),
 }));
 
 const IconStyle = ({ theme }: { theme: Theme }) => ({
     color: theme.palette.primary.contrastText,
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.typography.body2.fontSize,
     marginTop: theme.spacing(0.5),
 });
 
@@ -132,8 +132,8 @@ const ConceptItem = styled('div')(({ theme }) => ({
 
 const ConceptSummary = styled('div')(({ theme }) => ({
     color: theme.palette.primary.contrastText,
-    fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.fontWeight.bold,
+    fontSize: theme.typography.body2.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
     marginBottom: theme.spacing(2),
 }));
 

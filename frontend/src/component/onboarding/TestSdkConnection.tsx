@@ -20,9 +20,10 @@ import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import CopyIcon from '@mui/icons-material/FileCopy';
 import { formatAssetPath } from '../../utils/formatPath';
+import { Stepper } from './Stepper';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
-    padding: theme.spacing(5, 8, 8, 8),
+    padding: theme.spacing(5, 8, 2, 8),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
@@ -37,6 +38,7 @@ const StyledCodeBlock = styled('pre')(({ theme }) => ({
     wordBreak: 'break-all',
     whiteSpace: 'pre-wrap',
     position: 'relative',
+    maxHeight: theme.spacing(34),
 }));
 
 const CopyToClipboard = styled(Tooltip)(({ theme }) => ({
@@ -114,7 +116,8 @@ export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
     return (
         <SpacedContainer>
             <Typography variant='h2'>Connect an SDK to Unleash</Typography>
-            <Box sx={{ mt: 4 }}>
+            <Stepper active={2} steps={3} />
+            <Box sx={{ mt: 2 }}>
                 <ChangeSdk>
                     {sdkIcon ? (
                         <Avatar

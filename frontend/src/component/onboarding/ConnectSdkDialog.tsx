@@ -121,6 +121,9 @@ export const ConnectSdkDialog = ({
                             sdk={sdk}
                             apiKey={apiKey}
                             feature={feature}
+                            onSdkChange={() => {
+                                setStage('select-sdk');
+                            }}
                         />
                     ) : null}
 

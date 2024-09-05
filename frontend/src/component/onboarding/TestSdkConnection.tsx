@@ -1,8 +1,16 @@
 import type { FC } from 'react';
-import { Box, IconButton, styled, Tooltip, Typography } from '@mui/material';
+import {
+    Avatar,
+    Box,
+    IconButton,
+    Link,
+    styled,
+    Tooltip,
+    Typography,
+} from '@mui/material';
 import { SectionHeader } from './SharedComponents';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import type { Sdk } from './sharedTypes';
+import { allSdks, type Sdk } from './sharedTypes';
 import {
     checkFlagCodeSnippets,
     initializeCodeSnippets,
@@ -11,6 +19,7 @@ import {
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import CopyIcon from '@mui/icons-material/FileCopy';
+import { formatAssetPath } from '../../utils/formatPath';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8, 8, 8),
@@ -58,15 +67,26 @@ const CopyBlock: FC<{ title: string; code: string }> = ({ title, code }) => {
     );
 };
 
+const ChangeSdk = styled('div')(({ theme }) => ({
+    display: 'inline-flex',
+    gap: theme.spacing(3),
+    padding: theme.spacing(1, 2),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    marginBottom: theme.spacing(3),
+}));
+
 interface ITestSdkConnectionProps {
     sdk: Sdk;
     apiKey: string;
     feature: string;
+    onSdkChange: () => void;
 }
 export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
     sdk,
     apiKey,
     feature,
+    onSdkChange,
 }) => {
     const { uiConfig } = useUiConfig();
 
@@ -89,11 +109,24 @@ export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
         '<YOUR_FLAG>',
         feature,
     );
+    const sdkIcon = allSdks.find((item) => item.name === sdk.name)?.icon;
 
     return (
         <SpacedContainer>
             <Typography variant='h2'>Connect an SDK to Unleash</Typography>
             <Box sx={{ mt: 4 }}>
+                <ChangeSdk>
+                    {sdkIcon ? (
+                        <Avatar
+                            variant='circular'
+                            src={formatAssetPath(sdkIcon)}
+                            alt={sdk.name}
+                        />
+                    ) : null}
+                    <Link onClick={onSdkChange} component='button'>
+                        Change SDK
+                    </Link>
+                </ChangeSdk>
                 <SectionHeader>Setup the SDK</SectionHeader>
                 <p>1. Install the SDK</p>
                 <CopyBlock title='Copy command' code={installCommand} />

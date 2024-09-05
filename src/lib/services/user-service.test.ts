@@ -71,8 +71,6 @@ describe('Default admin initialization', () => {
     const DEFAULT_ADMIN_PASSWORD = 'unleash4all';
     const CUSTOM_ADMIN_USERNAME = 'custom-admin';
     const CUSTOM_ADMIN_PASSWORD = 'custom-password';
-    const CUSTOM_ADMIN_NAME = 'Custom Admin';
-    const CUSTOM_ADMIN_EMAIL = 'custom-admin@getunleash.io';
 
     let userService: UserService;
     const sendGettingStartedMailMock = jest.fn();

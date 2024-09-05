@@ -36,13 +36,6 @@ If you'd like the default admin user to be created with a different username and
 - `UNLEASH_DEFAULT_ADMIN_USERNAME`
 - `UNLEASH_DEFAULT_ADMIN_PASSWORD`
 
-Alternatively, you can provide a name and email address for the initial admin user:
-
-- `UNLEASH_DEFAULT_ADMIN_NAME`
-- `UNLEASH_DEFAULT_ADMIN_EMAIL`
-
-Unleash will then create the admin account using the provided name and email address. Instead of setting an initial password during account creation, an email will be sent to the specified address with a link for the new admin user to securely set their password.
-
 The way of defining these variables may vary depending on how you run Unleash.
 
 

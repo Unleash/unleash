@@ -317,8 +317,8 @@ const defaultVersionOption: IVersionOption = {
 };
 
 const parseEnvVarInitialAdminUser = (): UsernameAdminUser | undefined => {
-    const username = process.env.INITIAL_ADMIN_USER_USERNAME;
-    const password = process.env.INITIAL_ADMIN_USER_PASSWORD;
+    const username = process.env.UNLEASH_DEFAULT_ADMIN_USERNAME;
+    const password = process.env.UNLEASH_DEFAULT_ADMIN_PASSWORD;
     return username && password ? { username, password } : undefined;
 };
 

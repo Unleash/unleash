@@ -12,15 +12,17 @@ In this guide, we’ll introduce you to the basics of feature flags and why so m
 
 ## Why developers use feature flags
 
-In 2014, [Ivar Østhus](https://www.linkedin.com/in/ivarconr/overlay/about-this-profile/), our CTO, was working as a software developer at FINN.no, Norway’s largest online marketplace. Getting new features into production was a pain, so, as a developer, he looked around and wondered if he could write some code to make it easier. His initial goal was to protect features under development, allowing his team to transition to [trunk-based development](https://www.getunleash.io/blog/how-to-implement-trunk-based-development-a-practical-guide)—a practice recommended by the [State of DevOps Report](https://cloud.google.com/devops/state-of-devops).
+*The story of how Unleash began by [Ivar Østhus](https://www.linkedin.com/in/ivarconr/overlay/about-this-profile/)*
 
-At the time, his team had embraced agility with an automated delivery pipeline which made fixing bugs a breeze, but frequent feature releases? Not so much. Building features takes time, and waiting weeks for production testing felt wasteful.
-The team used feature branches, a common approach, to isolate unfinished features. However, this created a tangled web of problems:
-- **Limited feedback**: Getting stakeholder input required manually deploying test environments for each branch, a cumbersome process.
-- **Merge mayhem**: Conflicts became a constant headache, delaying progress.
-- **Production mystery**: Would a change actually work in production with production data? Were there any edge cases they had not considered?
-
-Frustrated by the slow pace and the additional complexity of feature branches, Ivar explored ways to streamline the development process through code and ended up creating [Unleash](https://github.com/Unleash/unleash), a popular open-source feature flag solution that solves these problems by decoupling code deployments and feature releases.
+> In 2014, I was working as a software developer at FINN.no, Norway’s largest online marketplace. Getting new features into production was a pain, so, as a developer, I looked around and wondered if I could write some code to make it easier. My initial goal was to protect features under development, allowing our team to transition to [trunk-based development](https://www.getunleash.io/blog/how-to-implement-trunk-based-development-a-practical-guide)—a practice recommended according to the [State of DevOps Report](https://www.getunleash.io/blog/guide-to-feature-flags#:~:text=State%20of%20DevOps%20Report).
+>
+> Even back at that time, we embraced agility with an automated delivery pipeline which made fixing bugs a breeze, but frequent feature releases? Not so much. Building features takes time, and waiting weeks for production testing felt wasteful.
+> We used feature branches, a common approach, to isolate unfinished features. However, this created a tangled web of problems:
+> - **Limited feedback**: Getting stakeholder input required manually deploying test environments for each branch, a cumbersome process.
+> - **Merge mayhem**: Conflicts became a constant headache, delaying progress.
+> - **Production mystery**: Would a change actually work in production with production data? Were there any edge cases we had not considered?
+> 
+> Frustrated by the slow pace and the additional complexity of feature branches, I explored ways to streamline the development process through code. This is how I ended up creating [Unleash](https://github.com/Unleash/unleash), a popular open-source feature flag solution that solves these problems by decoupling code deployments and feature releases.
 
 
 ## What is a feature flag?
@@ -31,7 +33,7 @@ Feature flags enable you to release and test new features by making them availab
 
 The control that feature flags allow means that they’re already becoming a popular superpower in feature lifecycle management. Combined with feature management platforms and processes, they can enable a cultural shift within organizations towards more agile and experimental development and ways of serving users.
 
-![Diagram demonstrating the relationship between a CI/CD pipeline, an application, and its feature flags](/img/how-feature-flags-work-diagram.png).
+![Diagram demonstrating the relationship between a CI/CD pipeline, an application, and its feature flags](/img/how-feature-flags-work.png).
 
 ## Benefits of feature flags
 
@@ -84,7 +86,7 @@ However, feature flags can still provide significant benefits even if your organ
 
 Feature flags enable development teams to manage features in a dynamic, flexible, and controlled manner. Like any tool, you need to use them the right way—you don’t want to build a spaceship out of bricks.
 
-<Figure caption="Source: https://imgs.xkcd.com/comics/the_wrong_stuff.png" img="/img/xkcd-comic-feature-flags.png"/>
+<Figure caption="Source: https://imgs.xkcd.com/comics/the_wrong_stuff.png" img="/img/xkcd-comic-spaceship.png"/>
 
 
 Feature flags are integrated into the software development lifecycle, allowing developers to introduce code conditionality. This conditionality determines whether specific code blocks execute, enabling or disabling features without requiring code deployments. 
@@ -204,7 +206,7 @@ Feature flags can be managed in environments that require strict compliance with
 
 ## Applying feature flag best practices with Unleash
 
-The risk and cost of building software the old way are too high. When developers are forced to use tools and processes they hate, like infrequent high-stakes releases based on complex branching strategies, innovation is reduced by 50%. Additionally, when code is deployed and released in this manner, rolling back after discovering an issue can be difficult and time-consuming. On average, application downtime costs organizations $400,000 per hour, and more than half of organizations face unexpected downtime every two months. 
+The risk and cost of building software the old way are too high. When developers are forced to use tools and processes they hate, like infrequent high-stakes releases based on complex branching strategies, innovation is [reduced by 50%](https://www.microsoft.com/en-us/research/publication/devex-in-action-a-study-of-its-tangible-impacts/). Additionally, when code is deployed and released in this manner, rolling back after discovering an issue can be difficult and time-consuming. On average, application downtime costs organizations [$400,000 per hour](https://www.ibm.com/downloads/cas/L57KW7ND), and more than half of organizations face unexpected downtime every two months. 
 
 Unleash is on a mission to make developers’ lives easier. Individual developers love Unleash because it removes the pain of testing and deploying new features so they have more time and energy to innovate. Unleash is trusted by thousands of companies in production including Visa, Wayfair, Lloyd’s Banking Group, and Samsung. While we serve the needs of some of the world’s largest and most security-conscious organizations, we are also rated the *Easiest to Use in Feature Management software* by G2. 
 

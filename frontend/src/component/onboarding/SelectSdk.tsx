@@ -126,7 +126,7 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
                 </SecondarySectionHeader>
                 <SdkListSection>
                     {clientSdks.map((sdk) => (
-                        <SdkTile>
+                        <SdkTile key={sdk.name}>
                             <StyledAvatar src={formatAssetPath(sdk.icon)} />
                             <SdkTileContent>
                                 <b>{sdk.name}</b>{' '}

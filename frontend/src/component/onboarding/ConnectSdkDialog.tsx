@@ -173,6 +173,8 @@ export const ConnectSdkDialog = ({
                 {isLargeScreen && isTestConnectionStage ? (
                     <ConnectionInformation
                         projectId={project}
+                        sdk={sdk.name}
+                        environment={environment}
                         onConnection={onClose}
                     />
                 ) : null}

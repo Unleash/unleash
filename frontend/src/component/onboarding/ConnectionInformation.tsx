@@ -1,6 +1,6 @@
 import { styled, Typography, useTheme } from '@mui/material';
-import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
-import { WhitePulsingAvatar } from '../project/Project/Import/PulsingAvatar';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { WhitePulsingAvatar } from 'component/common/PulsingAvatar/PulsingAvatar';
 import Pending from '@mui/icons-material/Pending';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useEffect } from 'react';
@@ -8,6 +8,8 @@ import { useEffect } from 'react';
 interface IConnectionInformationProps {
     onConnection: () => void;
     projectId: string;
+    sdk: string;
+    environment: string;
 }
 export const Container = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.sidebar,
@@ -51,6 +53,8 @@ export const ConnectionStatus = styled('div')(({ theme }) => ({
 export const ConnectionInformation = ({
     onConnection,
     projectId,
+    sdk,
+    environment,
 }: IConnectionInformationProps) => {
     const theme = useTheme();
     const { project } = useProjectOverview(projectId, {
@@ -73,13 +77,13 @@ export const ConnectionInformation = ({
                     <Typography fontWeight='bold' variant='body2'>
                         Environment
                     </Typography>
-                    <Typography variant='body2'>Development</Typography>
+                    <Typography variant='body2'>{environment}</Typography>
                 </Info>
                 <Info>
                     <Typography fontWeight='bold' variant='body2'>
                         SDK
                     </Typography>
-                    <Typography variant='body2'>NodeJS</Typography>
+                    <Typography variant='body2'>{sdk}</Typography>
                 </Info>
             </SdkInfo>
             <ConnectionStatus>

@@ -67,7 +67,7 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     boxShadow: theme.shadows[2],
 }));
 
-const serverSdks: { name: ServerSdkName; icon: string }[] = [
+export const serverSdks: { name: ServerSdkName; icon: string }[] = [
     { name: 'Node', icon: node },
     { name: 'Golang', icon: go },
     { name: 'Ruby', icon: ruby },
@@ -78,7 +78,7 @@ const serverSdks: { name: ServerSdkName; icon: string }[] = [
     { name: 'Python', icon: python },
 ];
 
-const clientSdks: { name: ClientSdkName; icon: string }[] = [
+export const clientSdks: { name: ClientSdkName; icon: string }[] = [
     { name: 'Javascript', icon: javascript },
     { name: 'React', icon: react },
     { name: 'Vue', icon: vue },

@@ -32,6 +32,7 @@ const TitleBox = styled('div')(({ theme }) => ({
     padding: theme.spacing(2, 7, 2, 7),
     borderBottom: '1px solid',
     borderColor: theme.palette.divider,
+    minHeight: '80px',
 }));
 
 const Actions = styled('div')(({ theme }) => ({

@@ -3,7 +3,11 @@ import { Box, IconButton, styled, Tooltip, Typography } from '@mui/material';
 import { SectionHeader } from './SharedComponents';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { Sdk } from './sharedTypes';
-import { codeSnippets, installCommands } from './sdkSnippets';
+import {
+    checkFlagCodeSnippets,
+    initializeCodeSnippets,
+    installCommands,
+} from './sdkSnippets';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import CopyIcon from '@mui/icons-material/FileCopy';
@@ -32,29 +36,7 @@ const CopyToClipboard = styled(Tooltip)(({ theme }) => ({
     right: theme.spacing(1),
 }));
 
-interface ITestSdkConnectionProps {
-    sdk: Sdk;
-    apiKey: string;
-}
-export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
-    sdk,
-    apiKey,
-}) => {
-    const { uiConfig } = useUiConfig();
-    const { setToastData } = useToast();
-
-    const clientApiUrl = `${uiConfig.unleashUrl}/api/`;
-    const frontendApiUrl = `${uiConfig.unleashUrl}/api/frontend/`;
-    const apiUrl = sdk.type === 'client' ? clientApiUrl : frontendApiUrl;
-    const codeSnippet =
-        codeSnippets[sdk.name] || `No snippet found for the ${sdk.name} SDK`;
-    const installCommand =
-        installCommands[sdk.name] ||
-        `No install command found for the ${sdk.name} SDK`;
-    const filledCodeSnippet = codeSnippet
-        .replace('<YOUR_API_TOKEN>', apiKey)
-        .replace('<YOUR_API_URL>', apiUrl);
-
+const CopyBlock: FC<{ title: string; code: string }> = ({ title, code }) => {
     const onCopyToClipboard = (data: string) => () => {
         copy(data);
         setToastData({
@@ -62,6 +44,51 @@ export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
             title: 'Copied to clipboard',
         });
     };
+    const { setToastData } = useToast();
+
+    return (
+        <StyledCodeBlock>
+            {code}
+            <CopyToClipboard title={title} arrow>
+                <IconButton onClick={onCopyToClipboard(code)} size='small'>
+                    <CopyIcon />
+                </IconButton>
+            </CopyToClipboard>
+        </StyledCodeBlock>
+    );
+};
+
+interface ITestSdkConnectionProps {
+    sdk: Sdk;
+    apiKey: string;
+    feature: string;
+}
+export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
+    sdk,
+    apiKey,
+    feature,
+}) => {
+    const { uiConfig } = useUiConfig();
+
+    const clientApiUrl = `${uiConfig.unleashUrl}/api/`;
+    const frontendApiUrl = `${uiConfig.unleashUrl}/api/frontend/`;
+    const apiUrl = sdk.type === 'client' ? clientApiUrl : frontendApiUrl;
+    const initializeCodeSnippet =
+        initializeCodeSnippets[sdk.name] ||
+        `No snippet found for the ${sdk.name} SDK`;
+    const installCommand =
+        installCommands[sdk.name] ||
+        `No install command found for the ${sdk.name} SDK`;
+    const filledInitializeCodeSnippet = initializeCodeSnippet
+        .replace('<YOUR_API_TOKEN>', apiKey)
+        .replace('<YOUR_API_URL>', apiUrl);
+    const checkFlagCodeSnippet =
+        checkFlagCodeSnippets[sdk.name] ||
+        `No snippet found for the ${sdk.name} SDK`;
+    const filledCheckFlagCodeSnippet = checkFlagCodeSnippet.replace(
+        '<YOUR_FLAG>',
+        feature,
+    );
 
     return (
         <SpacedContainer>
@@ -69,29 +96,17 @@ export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
             <Box sx={{ mt: 4 }}>
                 <SectionHeader>Setup the SDK</SectionHeader>
                 <p>1. Install the SDK</p>
-                <StyledCodeBlock>
-                    {installCommand}
-                    <CopyToClipboard title='Copy command' arrow>
-                        <IconButton
-                            onClick={onCopyToClipboard(installCommand)}
-                            size='small'
-                        >
-                            <CopyIcon />
-                        </IconButton>
-                    </CopyToClipboard>
-                </StyledCodeBlock>
+                <CopyBlock title='Copy command' code={installCommand} />
                 <p>2. Initialize the SDK</p>
-                <StyledCodeBlock>
-                    {filledCodeSnippet}
-                    <CopyToClipboard title='Copy snippet' arrow>
-                        <IconButton
-                            onClick={onCopyToClipboard(filledCodeSnippet)}
-                            size='small'
-                        >
-                            <CopyIcon />
-                        </IconButton>
-                    </CopyToClipboard>
-                </StyledCodeBlock>
+                <CopyBlock
+                    title='Copy snippet'
+                    code={filledInitializeCodeSnippet}
+                />
+                <p>3. Check feature status</p>
+                <CopyBlock
+                    title='Copy snippet'
+                    code={filledCheckFlagCodeSnippet}
+                />
             </Box>
         </SpacedContainer>
     );

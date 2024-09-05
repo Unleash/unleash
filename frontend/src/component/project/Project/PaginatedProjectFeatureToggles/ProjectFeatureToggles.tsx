@@ -502,14 +502,17 @@ export const ProjectFeatureToggles = ({
 
                     {featureToggleModals}
 
-                    <ConnectSdkDialog
-                        open={connectSdkOpen}
-                        onClose={() => {
-                            setConnectSdkOpen(false);
-                        }}
-                        project={projectId}
-                        environments={environments}
-                    />
+                    {'feature' in project.onboardingStatus ? (
+                        <ConnectSdkDialog
+                            open={connectSdkOpen}
+                            onClose={() => {
+                                setConnectSdkOpen(false);
+                            }}
+                            project={projectId}
+                            environments={environments}
+                            feature={project.onboardingStatus.feature}
+                        />
+                    ) : null}
                 </div>
             </PageContent>
             <BatchSelectionActionsBar count={selectedData.length}>

@@ -185,6 +185,23 @@ describe('Default admin initialization', () => {
             'The combination of password and username you provided is invalid',
         );
     });
+
+    test('Should use the correct environment variables when initializing the default admin account', async () => {
+        jest.resetModules();
+
+        process.env.UNLEASH_DEFAULT_ADMIN_USERNAME = CUSTOM_ADMIN_USERNAME;
+        process.env.UNLEASH_DEFAULT_ADMIN_PASSWORD = CUSTOM_ADMIN_PASSWORD;
+
+        const createTestConfig =
+            require('../../test/config/test-config').createTestConfig;
+
+        const config = createTestConfig();
+
+        expect(config.authentication.initialAdminUser).toStrictEqual({
+            username: CUSTOM_ADMIN_USERNAME,
+            password: CUSTOM_ADMIN_PASSWORD,
+        });
+    });
 });
 
 test('Should be a valid password', async () => {

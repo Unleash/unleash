@@ -1,5 +1,5 @@
-import { IPermission } from '../../types';
-import { IUserPermission } from '../../types/stores/access-store';
+import type { IPermission } from '../../types';
+import type { IUserPermission } from '../../types/stores/access-store';
 
 export const canGrantProjectRole = (
     granterPermissions: IUserPermission[],

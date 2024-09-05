@@ -1,4 +1,4 @@
-import type { IFlagResolver, IPermission } from '../../types';
+import type { IFlagResolver } from '../../types';
 import { Knex } from 'knex';
 import type { Db } from '../../db/db';
 import type {

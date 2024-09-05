@@ -2,12 +2,12 @@ import { styled, Typography, useTheme } from '@mui/material';
 import { ConditionallyRender } from '../common/ConditionallyRender/ConditionallyRender';
 import { WhitePulsingAvatar } from '../project/Project/Import/PulsingAvatar';
 import Pending from '@mui/icons-material/Pending';
-import { useRequiredPathParam } from '../../hooks/useRequiredPathParam';
-import useProjectOverview from '../../hooks/api/getters/useProjectOverview/useProjectOverview';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useEffect } from 'react';
 
 interface IConnectionInformationProps {
     onConnection: () => void;
+    projectId: string;
 }
 export const Container = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.sidebar,
@@ -50,10 +50,10 @@ export const ConnectionStatus = styled('div')(({ theme }) => ({
 
 export const ConnectionInformation = ({
     onConnection,
+    projectId,
 }: IConnectionInformationProps) => {
     const theme = useTheme();
-    const id = useRequiredPathParam('projectId');
-    const { project } = useProjectOverview(id, {
+    const { project } = useProjectOverview(projectId, {
         refreshInterval: 1000,
     });
 

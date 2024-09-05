@@ -171,7 +171,10 @@ export const ConnectSdkDialog = ({
                     <GenerateApiKeyConcepts />
                 ) : null}
                 {isLargeScreen && isTestConnectionStage ? (
-                    <ConnectionInformation onConnection={onClose} />
+                    <ConnectionInformation
+                        projectId={project}
+                        onConnection={onClose}
+                    />
                 ) : null}
             </Box>
         </StyledDialog>

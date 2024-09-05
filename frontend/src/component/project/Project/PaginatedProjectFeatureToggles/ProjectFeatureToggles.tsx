@@ -509,6 +509,7 @@ export const ProjectFeatureToggles = ({
                         }}
                         project={projectId}
                         environments={environments}
+                        feature={project.onboardingStatus.feature}
                     />
                 </div>
             </PageContent>

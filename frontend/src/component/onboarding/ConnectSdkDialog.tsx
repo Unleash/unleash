@@ -23,6 +23,7 @@ interface IConnectSDKDialogProps {
     onClose: () => void;
     project: string;
     environments: string[];
+    feature: string;
 }
 
 const ConnectSdk = styled('main')(({ theme }) => ({
@@ -70,6 +71,7 @@ export const ConnectSdkDialog = ({
     onClose,
     environments,
     project,
+    feature,
 }: IConnectSDKDialogProps) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
@@ -115,7 +117,11 @@ export const ConnectSdkDialog = ({
                         />
                     ) : null}
                     {isTestConnectionStage ? (
-                        <TestSdkConnection sdk={sdk} apiKey={apiKey} />
+                        <TestSdkConnection
+                            sdk={sdk}
+                            apiKey={apiKey}
+                            feature={feature}
+                        />
                     ) : null}
 
                     {stage === 'generate-api-key' ? (

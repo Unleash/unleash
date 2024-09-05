@@ -46,7 +46,7 @@ const SdkListSection = styled('div')(({ theme }) => ({
 
 const SdkTile = styled('div')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: theme.palette.background.default,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(2, 3),
     width: '170px',

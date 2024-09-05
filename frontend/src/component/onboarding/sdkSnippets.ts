@@ -20,12 +20,15 @@ dotnet add package Newtonsoft.Json`,
     Vue: 'npm install @unleash/proxy-client-vue',
     Svelte: 'npm install @unleash/proxy-client-svelte',
     Swift: 'https://github.com/Unleash/unleash-proxy-client-swift',
-    Android:
-        'implementation("io.getunleash:unleash-android:${unleash.sdk.version}")',
+    Android: `implementation("io.getunleash:unleash-android:\${unleash.sdk.version}")
+
+// enabled required permissions
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />`,
     Flutter: 'flutter pub add unleash_proxy_client_flutter',
 };
 
-export const codeSnippets: Record<SdkName, string> = {
+export const initializeCodeSnippets: Record<SdkName, string> = {
     Node: `import { initialize } from 'unleash-client';
 
 const unleash = initialize({
@@ -180,4 +183,26 @@ final unleash = UnleashClient(
     url: Uri.parse('<YOUR_API_URL>'),
     clientKey: '<YOUR_API_TOKEN>',
     appName: 'unleash-onboarding-flutter');`,
+};
+
+// TODO: add idiomatic way of checking flag status that will populate metrics
+export const checkFlagCodeSnippets: Record<SdkName, string> = {
+    Node: `setInterval(() => {
+  console.log('Is enabled', unleash.isEnabled('<YOUR_FLAG>'));
+}, 1000);
+`,
+    Golang: ``,
+    Ruby: ``,
+    PHP: ``,
+    Rust: ``,
+    DotNet: ``,
+    Java: ``,
+    Python: ``,
+    Javascript: ``,
+    React: ``,
+    Vue: ``,
+    Svelte: ``,
+    Swift: ``,
+    Android: ``,
+    Flutter: ``,
 };

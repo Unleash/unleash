@@ -179,6 +179,7 @@ export const NewInUnleash = ({
                         summary,
                     }) => (
                         <NewInUnleashItem
+                            key={label}
                             onClick={() => {
                                 trackEvent('new-in-unleash-click', {
                                     props: {

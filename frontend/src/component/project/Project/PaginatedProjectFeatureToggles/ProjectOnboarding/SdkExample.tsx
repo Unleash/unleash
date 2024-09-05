@@ -2,7 +2,7 @@ import { type SelectChangeEvent, styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Select from 'component/common/select';
 import { useState } from 'react';
-import { clientSdks, serverSdks } from '../../../../onboarding/SelectSdk';
+import { allSdks } from '../../../../onboarding/sharedTypes';
 
 const Container = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -34,8 +34,6 @@ const StyledLink = styled(Link)({
 });
 
 export const SdkExample = () => {
-    const allSdks = [...serverSdks, ...clientSdks];
-
     const sdkOptions = allSdks.map((sdk) => ({
         key: sdk.name,
         label: sdk.name,

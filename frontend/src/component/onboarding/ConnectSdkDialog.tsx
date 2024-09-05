@@ -9,14 +9,11 @@ import {
 import { GenerateApiKey } from './GenerateApiKey';
 import { useEffect, useState } from 'react';
 import { SelectSdk } from './SelectSdk';
-import {
-    ConceptsDefinitionsWrapper,
-    GenrateApiKeyConcepts,
-    SelectSdkConcepts,
-} from './UnleashConcepts';
+import { GenerateApiKeyConcepts, SelectSdkConcepts } from './UnleashConcepts';
 import { TestSdkConnection } from './TestSdkConnection';
 
 import type { Sdk } from './sharedTypes';
+import { ConnectionInformation } from './ConnectionInformation';
 
 interface IConnectSDKDialogProps {
     open: boolean;
@@ -180,10 +177,15 @@ export const ConnectSdkDialog = ({
                     <SelectSdkConcepts />
                 ) : null}
                 {isLargeScreen && isGenerateApiKeyStage ? (
-                    <GenrateApiKeyConcepts />
+                    <GenerateApiKeyConcepts />
                 ) : null}
                 {isLargeScreen && isTestConnectionStage ? (
-                    <ConceptsDefinitionsWrapper />
+                    <ConnectionInformation
+                        projectId={project}
+                        sdk={sdk.name}
+                        environment={environment}
+                        onConnection={onClose}
+                    />
                 ) : null}
             </Box>
         </StyledDialog>

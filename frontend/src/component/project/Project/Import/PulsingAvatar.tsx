@@ -18,3 +18,26 @@ export const PulsingAvatar = styled(Avatar, {
     },
     animation: active ? 'pulse 2s infinite' : '',
 }));
+
+/**
+ * Temporary component until we decide how all the colors will look like
+ * Then we can use PulsingAvatar with a color prop perhaps
+ */
+export const WhitePulsingAvatar = styled(Avatar, {
+    shouldForwardProp: (prop) => prop !== 'active',
+})<{ active: boolean }>(({ theme, active }) => ({
+    transition: 'background-color 0.5s ease',
+    color: theme.palette.primary.main,
+    backgroundColor: active
+        ? theme.palette.background.default
+        : theme.palette.divider,
+    '@keyframes pulse': {
+        '0%': {
+            boxShadow: `0 0 0 0px ${alpha(theme.palette.background.default, 0.7)}`,
+        },
+        '100%': {
+            boxShadow: `0 0 0 20px ${alpha(theme.palette.background.default, 0.0)}`,
+        },
+    },
+    animation: active ? 'pulse 2s infinite' : '',
+}));

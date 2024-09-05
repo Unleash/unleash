@@ -40,7 +40,7 @@ const ConceptSummary = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-export const GenrateApiKeyConcepts = () => (
+export const GenerateApiKeyConcepts = () => (
     <ConceptsDefinitionsWrapper>
         <ConceptItem>
             <StyledProjectIcon />

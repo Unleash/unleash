@@ -1,8 +1,8 @@
 import { type SelectChangeEvent, styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Select from 'component/common/select';
-import { OFFICIAL_SDKS } from '../../../../integrations/IntegrationList/AvailableIntegrations/SDKs';
 import { useState } from 'react';
+import { clientSdks, serverSdks } from '../../../../onboarding/SelectSdk';
 
 const Container = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -34,13 +34,14 @@ const StyledLink = styled(Link)({
 });
 
 export const SdkExample = () => {
-    const SDK_OPTIONS = OFFICIAL_SDKS.map((sdk) => ({
+    const allSdks = [...serverSdks, ...clientSdks];
+
+    const sdkOptions = allSdks.map((sdk) => ({
         key: sdk.name,
-        label: sdk.displayName,
+        label: sdk.name,
     }));
-    const [selectedSdk, setSelectedSdk] = useState<string>(
-        OFFICIAL_SDKS[0].name,
-    );
+
+    const [selectedSdk, setSelectedSdk] = useState<string>(sdkOptions[0].key);
 
     const onChange = (event: SelectChangeEvent) => {
         setSelectedSdk(event.target.value);
@@ -58,7 +59,7 @@ export const SdkExample = () => {
                 <Select
                     id='sdk-select'
                     name='sdk'
-                    options={SDK_OPTIONS}
+                    options={sdkOptions}
                     value={selectedSdk}
                     onChange={onChange}
                     style={{

@@ -43,7 +43,6 @@ const useOwnersMap = () => {
 
 const StyledUserName = styled('span')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
-    alignSelf: 'end',
     lineHeight: 1,
     lineClamp: `1`,
     WebkitLineClamp: 1,

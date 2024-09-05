@@ -22,6 +22,7 @@ export const PulsingAvatar = styled(Avatar, {
 /**
  * Temporary component until we decide how all the colors will look like
  * Then we can use PulsingAvatar with a color prop perhaps
+ * PulsingAvatar was not working nicely on purple background
  */
 export const WhitePulsingAvatar = styled(Avatar, {
     shouldForwardProp: (prop) => prop !== 'active',

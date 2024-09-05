@@ -1,6 +1,6 @@
 import { type SelectChangeEvent, styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import Select from '../../../../common/select';
+import Select from 'component/common/select';
 import { OFFICIAL_SDKS } from '../../../../integrations/IntegrationList/AvailableIntegrations/SDKs';
 import { useState } from 'react';
 

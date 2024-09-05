@@ -1,9 +1,10 @@
 import { Avatar, Box, Link, styled, Typography } from '@mui/material';
 import type { FC } from 'react';
 import { formatAssetPath } from 'utils/formatPath';
-import { SectionHeader } from './SharedComponents';
+import { SectionHeader, StepperBox } from './SharedComponents';
 import { clientSdks, type Sdk, serverSdks } from './sharedTypes';
 import { Stepper } from './Stepper';
+import { Badge } from '../common/Badge/Badge';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8, 8, 8),
@@ -60,7 +61,11 @@ export const SelectSdk: FC<ISelectSdkProps> = ({ onSelect }) => {
     return (
         <SpacedContainer>
             <Typography variant='h2'>Connect an SDK to Unleash</Typography>
-            <Stepper active={0} steps={3} />
+            <StepperBox>
+                <Stepper active={0} steps={3} />
+                <Badge color='secondary'>1/3 - Choose SDK</Badge>
+            </StepperBox>
+
             <Box sx={{ mt: 2 }}>
                 <SectionHeader>Select SDK</SectionHeader>
                 <SecondarySectionHeader>

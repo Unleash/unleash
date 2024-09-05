@@ -8,7 +8,7 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { SectionHeader } from './SharedComponents';
+import { SectionHeader, StepperBox } from './SharedComponents';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { allSdks, type Sdk } from './sharedTypes';
 import {
@@ -21,6 +21,7 @@ import useToast from 'hooks/useToast';
 import CopyIcon from '@mui/icons-material/FileCopy';
 import { formatAssetPath } from '../../utils/formatPath';
 import { Stepper } from './Stepper';
+import { Badge } from '../common/Badge/Badge';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8, 2, 8),
@@ -116,7 +117,10 @@ export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
     return (
         <SpacedContainer>
             <Typography variant='h2'>Connect an SDK to Unleash</Typography>
-            <Stepper active={2} steps={3} />
+            <StepperBox>
+                <Stepper active={2} steps={3} />
+                <Badge color='secondary'>3/3 - Test connection</Badge>
+            </StepperBox>
             <Box sx={{ mt: 2 }}>
                 <ChangeSdk>
                     {sdkIcon ? (

@@ -4,7 +4,6 @@ import type { FC } from 'react';
 const StepContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
-    marginTop: theme.spacing(2),
 }));
 
 const Step = styled('div')(({ theme }) => ({

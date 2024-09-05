@@ -15,8 +15,9 @@ import { SingleSelectConfigButton } from '../common/DialogFormTemplate/ConfigBut
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { ArcherContainer, ArcherElement } from 'react-archer';
 import { useEffect } from 'react';
-import { SectionHeader } from './SharedComponents';
+import { SectionHeader, StepperBox } from './SharedComponents';
 import { Stepper } from './Stepper';
+import { Badge } from '../common/Badge/Badge';
 
 const ChooseEnvironment = ({
     environments,
@@ -227,7 +228,10 @@ export const GenerateApiKey = ({
     return (
         <SpacedContainer>
             <Typography variant='h2'>Connect an SDK to Unleash</Typography>
-            <Stepper active={1} steps={3} />
+            <StepperBox>
+                <Stepper active={1} steps={3} />
+                <Badge color='secondary'>2/3 - Generate API Key</Badge>
+            </StepperBox>
             <Box sx={{ mt: 2 }}>
                 <SectionHeader>Environment</SectionHeader>
                 <SectionDescription>

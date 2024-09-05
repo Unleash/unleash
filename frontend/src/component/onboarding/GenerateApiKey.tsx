@@ -16,6 +16,7 @@ import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { ArcherContainer, ArcherElement } from 'react-archer';
 import { useEffect } from 'react';
 import { SectionHeader } from './SharedComponents';
+import { Stepper } from './Stepper';
 
 const ChooseEnvironment = ({
     environments,
@@ -226,7 +227,8 @@ export const GenerateApiKey = ({
     return (
         <SpacedContainer>
             <Typography variant='h2'>Connect an SDK to Unleash</Typography>
-            <Box sx={{ mt: 4 }}>
+            <Stepper active={1} steps={3} />
+            <Box sx={{ mt: 2 }}>
                 <SectionHeader>Environment</SectionHeader>
                 <SectionDescription>
                     The environment SDK will connect to in order to retrieve

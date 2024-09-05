@@ -47,7 +47,6 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 const Navigation = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(16),
     borderTop: `1px solid ${theme.palette.divider}}`,
     display: 'flex',
     justifyContent: 'flex-end',

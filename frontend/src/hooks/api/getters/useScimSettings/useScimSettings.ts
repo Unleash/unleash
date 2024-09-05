@@ -9,13 +9,11 @@ const ENDPOINT = 'api/admin/scim-settings';
 export type ScimSettings = {
     enabled: boolean;
     hasToken: boolean;
-    assumeControlOfExisting: boolean;
 };
 
 const DEFAULT_DATA: ScimSettings = {
     enabled: false,
     hasToken: false,
-    assumeControlOfExisting: false,
 };
 
 export const useScimSettings = () => {

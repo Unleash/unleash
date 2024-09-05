@@ -955,16 +955,10 @@ export default class ProjectService {
             (role) => role.permissions,
         );
 
-        this.logger.info("USER PERMISSIONS AND ASSIGNED PERMISSIONS", userPermissions, rolesToBeAssignedPermissions);
-
         return canGrantProjectRole(
             userPermissions,
             rolesToBeAssignedPermissions,
         );
-
-        // return rolesBeingAdded.every((roleId) =>
-        //     userRoles.some((userRole) => userRole.id === roleId),
-        // );
     }
 
     async addAccess(

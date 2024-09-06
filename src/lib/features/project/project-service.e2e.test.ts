@@ -321,6 +321,27 @@ test('should archive project', async () => {
     expect(archivedProject).toMatchObject({ archivedAt: expect.any(Date) });
 });
 
+test('archive project removes it from user projects', async () => {
+    const project = {
+        id: 'test-user-archive',
+        name: 'New project',
+        description: 'Blah',
+        mode: 'open' as const,
+        defaultStickiness: 'default',
+    };
+    await projectService.createProject(project, user, TEST_AUDIT_USER);
+
+    const userProjectsBeforeArchive = await projectService.getProjectsByUser(
+        user.id,
+    );
+    expect(userProjectsBeforeArchive).toEqual(['test-user-archive']);
+
+    await projectService.archiveProject(project.id, TEST_AUDIT_USER);
+
+    const userProjects = await projectService.getProjectsByUser(user.id);
+    expect(userProjects).toEqual([]);
+});
+
 test('should revive project', async () => {
     const project = {
         id: 'test-revive',

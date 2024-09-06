@@ -100,7 +100,7 @@ client = UnleashClient(
     custom_headers={'Authorization': '<YOUR_API_TOKEN>"'})
 
 client.initialize_client()`,
-    Javascript: `import { UnleashClient } from 'unleash-proxy-client';
+    JavaScript: `import { UnleashClient } from 'unleash-proxy-client';
 
 const unleash = new UnleashClient({
     url: '<YOUR_API_URL>',

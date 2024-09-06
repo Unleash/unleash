@@ -45,7 +45,6 @@ export type IFlagKey =
     | 'userAccessUIEnabled'
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
-    | 'outdatedSdksBanner'
     | 'responseTimeMetricsFix'
     | 'disableShowContextFieldSelectionValues'
     | 'projectOverviewRefactorFeedback'
@@ -179,10 +178,6 @@ const flags: IFlags = {
     ),
     adminTokenKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
-        false,
-    ),
-    outdatedSdksBanner: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OUTDATED_SDKS_BANNER,
         false,
     ),
     feedbackComments: {

@@ -187,18 +187,18 @@ final unleash = UnleashClient(
 
 // TODO: add idiomatic way of checking flag status that will populate metrics
 export const checkFlagCodeSnippets: Record<SdkName, string> = {
-    Node: `setInterval(() => {
+    'Node.js': `setInterval(() => {
   console.log('Is enabled', unleash.isEnabled('<YOUR_FLAG>'));
 }, 1000);
 `,
-    Golang: ``,
+    Go: ``,
     Ruby: ``,
     PHP: ``,
     Rust: ``,
-    DotNet: ``,
+    '.NET': ``,
     Java: ``,
     Python: ``,
-    Javascript: ``,
+    JavaScript: ``,
     React: ``,
     Vue: ``,
     Svelte: ``,

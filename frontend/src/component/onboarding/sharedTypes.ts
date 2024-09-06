@@ -23,7 +23,6 @@ export type ServerSdkName =
     | 'Ruby'
     | 'PHP'
     | 'Rust'
-    | 'DotNet'
     | 'Java'
     | 'Python';
 export type ClientSdkName =

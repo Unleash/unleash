@@ -6,7 +6,7 @@ import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useEffect, useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { PROJECT_DEFAULT_STRATEGY_WRITE } from 'component/providers/AccessProvider/permissions';
 import type { IStrategy } from 'interfaces/strategy';
 import { useRequiredQueryParam } from 'hooks/useRequiredQueryParam';
 import type { ISegment } from 'interfaces/segment';
@@ -154,7 +154,7 @@ const EditDefaultStrategy = () => {
                 environmentId={environmentId}
                 onSubmit={onSubmit}
                 loading={loading}
-                permission={UPDATE_FEATURE_STRATEGY}
+                permission={PROJECT_DEFAULT_STRATEGY_WRITE}
                 errors={errors}
                 isChangeRequest={false}
             />

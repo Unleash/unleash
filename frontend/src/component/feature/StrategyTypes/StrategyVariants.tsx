@@ -27,7 +27,15 @@ export const StrategyVariants: FC<{
     projectId: string;
     environment: string;
     editable?: boolean;
-}> = ({ strategy, setStrategy, projectId, environment, editable }) => {
+    permission?: string | string[];
+}> = ({
+    strategy,
+    setStrategy,
+    projectId,
+    environment,
+    editable,
+    permission = UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
+}) => {
     const { trackEvent } = usePlausibleTracker();
     const [variantsEdit, setVariantsEdit] = useState<IFeatureVariantEdit[]>([]);
     const theme = useTheme();
@@ -153,7 +161,7 @@ export const StrategyVariants: FC<{
             <PermissionButton
                 onClick={addVariant}
                 variant='outlined'
-                permission={UPDATE_FEATURE_ENVIRONMENT_VARIANTS}
+                permission={permission}
                 projectId={projectId}
                 environmentId={environment}
                 data-testid='ADD_STRATEGY_VARIANT_BUTTON'

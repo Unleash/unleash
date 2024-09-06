@@ -11,6 +11,7 @@ import {
     PROJECT_DEFAULT_STRATEGY_WRITE,
     UPDATE_PROJECT,
 } from '@server/types/permissions';
+import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
 
 interface ProjectEnvironmentDefaultStrategyProps {
     environment: ProjectEnvironmentType;
@@ -81,6 +82,10 @@ const ProjectEnvironmentDefaultStrategy = ({
                 }
             >
                 <StrategyExecution strategy={strategy} />
+
+                {strategy.variants && strategy.variants.length > 0 ? (
+                    <SplitPreviewSlider variants={strategy.variants} />
+                ) : null}
             </StrategyItemContainer>
         </>
     );

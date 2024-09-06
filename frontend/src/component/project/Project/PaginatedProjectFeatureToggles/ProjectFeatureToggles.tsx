@@ -114,6 +114,11 @@ export const ProjectFeatureToggles = ({
 
     const isPlaceholder = Boolean(initialLoad || (loading && total));
 
+    const onboardingStarted =
+        onboardingUIEnabled && project.onboardingStatus.status !== 'onboarded';
+    const hasMultipleFeaturesOrNotOnboarding =
+        (total !== undefined && total > 1) || !onboardingStarted;
+
     const columns = useMemo(
         () => [
             columnHelper.display({
@@ -399,10 +404,7 @@ export const ProjectFeatureToggles = ({
     return (
         <Container>
             <ConditionallyRender
-                condition={
-                    onboardingUIEnabled &&
-                    project.onboardingStatus.status !== 'onboarded'
-                }
+                condition={onboardingStarted}
                 show={
                     <ProjectOnboarding
                         projectId={projectId}
@@ -411,7 +413,7 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <ConditionallyRender
-                condition={total !== undefined && total > 1}
+                condition={hasMultipleFeaturesOrNotOnboarding}
                 show={
                     <PageContent
                         disableLoading
@@ -515,22 +517,21 @@ export const ProjectFeatureToggles = ({
                             {rowActionsDialogs}
 
                             {featureToggleModals}
-
-                            {'feature' in project.onboardingStatus ? (
-                                <ConnectSdkDialog
-                                    open={connectSdkOpen}
-                                    onClose={() => {
-                                        setConnectSdkOpen(false);
-                                    }}
-                                    project={projectId}
-                                    environments={environments}
-                                    feature={project.onboardingStatus.feature}
-                                />
-                            ) : null}
                         </div>
                     </PageContent>
                 }
             />
+            {'feature' in project.onboardingStatus ? (
+                <ConnectSdkDialog
+                    open={connectSdkOpen}
+                    onClose={() => {
+                        setConnectSdkOpen(false);
+                    }}
+                    project={projectId}
+                    environments={environments}
+                    feature={project.onboardingStatus.feature}
+                />
+            ) : null}
             <BatchSelectionActionsBar count={selectedData.length}>
                 <ProjectFeaturesBatchActions
                     selectedIds={Object.keys(rowSelection)}

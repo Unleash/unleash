@@ -37,7 +37,7 @@ const unleash = initialize({
   customHeaders: { Authorization: '<YOUR_API_TOKEN>' },
 });
 `,
-    Golang: `import (
+    Go: `import (
     "github.com/Unleash/unleash-client-go/v3"
 )
 

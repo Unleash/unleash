@@ -4,6 +4,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import type { ITooltipResolverProps } from '../TooltipResolver/TooltipResolver';
+import type { OverridableStringUnion } from '@mui/types';
+import type { ButtonPropsVariantOverrides } from '@mui/material/Button/Button';
 
 interface IResponsiveButtonProps {
     Icon: React.ElementType;
@@ -15,6 +17,10 @@ interface IResponsiveButtonProps {
     projectId?: string;
     environmentId?: string;
     maxWidth: string;
+    variant?: OverridableStringUnion<
+        'text' | 'outlined' | 'contained',
+        ButtonPropsVariantOverrides
+    >;
     className?: string;
     children?: React.ReactNode;
 }
@@ -29,6 +35,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
     environmentId,
     projectId,
     endIcon,
+    variant,
     ...rest
 }) => {
     const smallScreen = useMediaQuery(`(max-width:${maxWidth})`);
@@ -55,7 +62,7 @@ const ResponsiveButton: React.FC<IResponsiveButtonProps> = ({
                     permission={permission}
                     projectId={projectId}
                     color='primary'
-                    variant='contained'
+                    variant={variant}
                     disabled={disabled}
                     environmentId={environmentId}
                     endIcon={endIcon}

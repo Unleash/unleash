@@ -29,12 +29,13 @@ dotnet add package Newtonsoft.Json`,
 };
 
 export const initializeCodeSnippets: Record<SdkName, string> = {
-    Node: `import { initialize } from 'unleash-client';
+    Node: `const { initialize } = require('unleash-client');
 
 const unleash = initialize({
   url: '<YOUR_API_URL>',
   appName: 'unleash-onboarding-node',
   customHeaders: { Authorization: '<YOUR_API_TOKEN>' },
+  metricsInterval: 5000,
 });
 `,
     Golang: `import (

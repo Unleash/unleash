@@ -1,12 +1,12 @@
 import type { SdkName } from './sharedTypes';
 
 export const installCommands: Record<SdkName, string> = {
-    Node: ' npm install unleash-client',
-    Golang: 'go get github.com/Unleash/unleash-client-go/v3',
+    'Node.js': ' npm install unleash-client',
+    Go: 'go get github.com/Unleash/unleash-client-go/v3',
     Ruby: 'gem install unleash',
     PHP: 'composer require unleash/client',
     Rust: 'cargo add unleash-client',
-    DotNet: `dotnet add package unleash.client
+    '.NET': `dotnet add package unleash.client
 // If you do not have a json library in your project:
 dotnet add package Newtonsoft.Json`,
     Java: `<dependency>
@@ -15,7 +15,7 @@ dotnet add package Newtonsoft.Json`,
     <version>Latest version here</version>
 </dependency>`,
     Python: 'pip install UnleashClient',
-    Javascript: 'npm install unleash-proxy-client',
+    JavaScript: 'npm install unleash-proxy-client',
     React: 'npm install @unleash/proxy-client-react unleash-proxy-client',
     Vue: 'npm install @unleash/proxy-client-vue',
     Svelte: 'npm install @unleash/proxy-client-svelte',
@@ -29,7 +29,7 @@ dotnet add package Newtonsoft.Json`,
 };
 
 export const initializeCodeSnippets: Record<SdkName, string> = {
-    Node: `import { initialize } from 'unleash-client';
+    'Node.js': `import { initialize } from 'unleash-client';
 
 const unleash = initialize({
   url: '<YOUR_API_URL>',

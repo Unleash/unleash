@@ -5,6 +5,7 @@ import {
     type IUnleashServices,
     serializeDates,
     UPDATE_PROJECT,
+    PROJECT_DEFAULT_STRATEGY_WRITE,
 } from '../../types';
 import type { Logger } from '../../logger';
 import type EnvironmentService from './environment-service';
@@ -105,7 +106,7 @@ export default class EnvironmentsController extends Controller {
             method: 'post',
             path: `${PREFIX}/:environment/default-strategy`,
             handler: this.updateDefaultStrategyForProjectEnvironment,
-            permission: UPDATE_PROJECT,
+            permission: [UPDATE_PROJECT, PROJECT_DEFAULT_STRATEGY_WRITE],
             middleware: [
                 openApiService.validPath({
                     tags: ['Projects'],

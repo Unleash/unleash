@@ -941,12 +941,20 @@ export default class ProjectService {
             userAddingAccess.id,
             projectId,
         );
+
         if (
             this.isAdmin(userAddingAccess.id, userRoles) ||
             this.isProjectOwner(userRoles, projectId)
         ) {
             return true;
         }
+
+        // Users may have access to multiple projects, so we need to filter out the permissions based on this project.
+        // Since the project roles are just collections of permissions that are not tied to a project in the database
+        // not filtering here might lead to false positives as they may have the permission in another project.
+        const filteredUserPermissions = userPermissions.filter(
+            (permission) => permission.project === projectId,
+        );
 
         const rolesToBeAssignedData = await Promise.all(
             rolesBeingAdded.map((role) => this.accessService.getRole(role)),
@@ -956,7 +964,7 @@ export default class ProjectService {
         );
 
         return canGrantProjectRole(
-            userPermissions,
+            filteredUserPermissions,
             rolesToBeAssignedPermissions,
         );
     }

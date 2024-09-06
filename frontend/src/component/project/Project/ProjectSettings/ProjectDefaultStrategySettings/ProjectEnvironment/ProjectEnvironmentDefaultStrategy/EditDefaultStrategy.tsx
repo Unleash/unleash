@@ -19,6 +19,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ProjectDefaultStrategyForm } from './ProjectDefaultStrategyForm';
 import type { CreateFeatureStrategySchema } from 'openapi';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { UPDATE_PROJECT } from '@server/types/permissions';
 
 export const useDefaultStrategy = (
     projectId: string,
@@ -154,7 +155,7 @@ const EditDefaultStrategy = () => {
                 environmentId={environmentId}
                 onSubmit={onSubmit}
                 loading={loading}
-                permission={PROJECT_DEFAULT_STRATEGY_WRITE}
+                permission={[PROJECT_DEFAULT_STRATEGY_WRITE, UPDATE_PROJECT]}
                 errors={errors}
                 isChangeRequest={false}
             />

@@ -13,7 +13,10 @@ import { createRequestSchema } from '../../../openapi/util/create-request-schema
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { meSchema, type MeSchema } from '../../../openapi/spec/me-schema';
 import { serializeDates } from '../../../types/serialize-dates';
-import type { IUserPermission } from '../../../types/stores/access-store';
+import type {
+    IRole,
+    IUserPermission,
+} from '../../../types/stores/access-store';
 import type { PasswordSchema } from '../../../openapi/spec/password-schema';
 import {
     emptyResponse,
@@ -28,6 +31,7 @@ import {
     rolesSchema,
     type RolesSchema,
 } from '../../../openapi/spec/roles-schema';
+import type { IFlagResolver } from '../../../types';
 
 class UserController extends Controller {
     private accessService: AccessService;
@@ -41,6 +45,8 @@ class UserController extends Controller {
     private openApiService: OpenApiService;
 
     private projectService: ProjectService;
+
+    private flagResolver: IFlagResolver;
 
     constructor(
         config: IUnleashConfig,
@@ -68,6 +74,7 @@ class UserController extends Controller {
         this.userSplashService = userSplashService;
         this.openApiService = openApiService;
         this.projectService = projectService;
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'get',
@@ -174,7 +181,15 @@ class UserController extends Controller {
     ): Promise<void> {
         const { projectId } = req.query;
         if (projectId) {
-            const roles = await this.accessService.getProjectRoles();
+            let roles: IRole[];
+            if (this.flagResolver.isEnabled('projectRoleAssignment')) {
+                roles = await this.accessService.getProjectRoles();
+            } else {
+                roles = await this.accessService.getAllProjectRolesForUser(
+                    req.user.id,
+                    projectId,
+                );
+            }
             this.openApiService.respondWithValidation(
                 200,
                 res,

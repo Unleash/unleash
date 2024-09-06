@@ -17,16 +17,16 @@ import flutter from '../../assets/icons/sdks/Logo-flutter.svg';
 export type SdkType = 'client' | 'frontend';
 export type Sdk = { name: SdkName; type: SdkType };
 export type ServerSdkName =
-    | 'Node'
-    | 'Golang'
+    | 'Node.js'
+    | 'Go'
+    | '.NET'
     | 'Ruby'
     | 'PHP'
     | 'Rust'
-    | 'DotNet'
     | 'Java'
     | 'Python';
 export type ClientSdkName =
-    | 'Javascript'
+    | 'JavaScript'
     | 'React'
     | 'Vue'
     | 'Svelte'
@@ -36,17 +36,17 @@ export type ClientSdkName =
 export type SdkName = ServerSdkName | ClientSdkName;
 
 export const serverSdks: { name: ServerSdkName; icon: string }[] = [
-    { name: 'Node', icon: node },
-    { name: 'Golang', icon: go },
+    { name: 'Node.js', icon: node },
+    { name: 'Go', icon: go },
     { name: 'Ruby', icon: ruby },
     { name: 'PHP', icon: php },
     { name: 'Rust', icon: rust },
-    { name: 'DotNet', icon: dotnet },
+    { name: '.NET', icon: dotnet },
     { name: 'Java', icon: java },
     { name: 'Python', icon: python },
 ];
 export const clientSdks: { name: ClientSdkName; icon: string }[] = [
-    { name: 'Javascript', icon: javascript },
+    { name: 'JavaScript', icon: javascript },
     { name: 'React', icon: react },
     { name: 'Vue', icon: vue },
     { name: 'Svelte', icon: svelte },

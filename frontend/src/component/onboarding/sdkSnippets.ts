@@ -1,12 +1,12 @@
 import type { SdkName } from './sharedTypes';
 
 export const installCommands: Record<SdkName, string> = {
-    Node: ' npm install unleash-client',
-    Golang: 'go get github.com/Unleash/unleash-client-go/v3',
+    'Node.js': ' npm install unleash-client',
+    Go: 'go get github.com/Unleash/unleash-client-go/v3',
     Ruby: 'gem install unleash',
     PHP: 'composer require unleash/client',
     Rust: 'cargo add unleash-client',
-    DotNet: `dotnet add package unleash.client
+    '.NET': `dotnet add package unleash.client
 // If you do not have a json library in your project:
 dotnet add package Newtonsoft.Json`,
     Java: `<dependency>
@@ -15,7 +15,7 @@ dotnet add package Newtonsoft.Json`,
     <version>Latest version here</version>
 </dependency>`,
     Python: 'pip install UnleashClient',
-    Javascript: 'npm install unleash-proxy-client',
+    JavaScript: 'npm install unleash-proxy-client',
     React: 'npm install @unleash/proxy-client-react unleash-proxy-client',
     Vue: 'npm install @unleash/proxy-client-vue',
     Svelte: 'npm install @unleash/proxy-client-svelte',
@@ -29,7 +29,7 @@ dotnet add package Newtonsoft.Json`,
 };
 
 export const initializeCodeSnippets: Record<SdkName, string> = {
-    Node: `const { initialize } = require('unleash-client');
+    'Node.js': `const { initialize } = require('unleash-client');
 
 const unleash = initialize({
   url: '<YOUR_API_URL>',
@@ -38,7 +38,7 @@ const unleash = initialize({
   metricsInterval: 5000,
 });
 `,
-    Golang: `import (
+    Go: `import (
     "github.com/Unleash/unleash-client-go/v3"
 )
 
@@ -74,7 +74,7 @@ $unleash = UnleashBuilder::create()
         "<YOUR_API_TOKEN>",
     )?;
 client.register().await?;`,
-    DotNet: `using Unleash;
+    '.NET': `using Unleash;
 var settings = new UnleashSettings()
 {
     AppName = "unleash-onboarding-dotnet",
@@ -100,7 +100,7 @@ client = UnleashClient(
     custom_headers={'Authorization': '<YOUR_API_TOKEN>"'})
 
 client.initialize_client()`,
-    Javascript: `import { UnleashClient } from 'unleash-proxy-client';
+    JavaScript: `import { UnleashClient } from 'unleash-proxy-client';
 
 const unleash = new UnleashClient({
     url: '<YOUR_API_URL>',
@@ -188,18 +188,18 @@ final unleash = UnleashClient(
 
 // TODO: add idiomatic way of checking flag status that will populate metrics
 export const checkFlagCodeSnippets: Record<SdkName, string> = {
-    Node: `setInterval(() => {
+    'Node.js': `setInterval(() => {
   console.log('Is enabled', unleash.isEnabled('<YOUR_FLAG>'));
 }, 1000);
 `,
-    Golang: ``,
+    Go: ``,
     Ruby: ``,
     PHP: ``,
     Rust: ``,
-    DotNet: ``,
+    '.NET': ``,
     Java: ``,
     Python: ``,
-    Javascript: ``,
+    JavaScript: ``,
     React: ``,
     Vue: ``,
     Svelte: ``,

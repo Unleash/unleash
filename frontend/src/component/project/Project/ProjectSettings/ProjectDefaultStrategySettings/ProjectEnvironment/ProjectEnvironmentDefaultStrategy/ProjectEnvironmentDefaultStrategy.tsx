@@ -8,6 +8,7 @@ import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview
 import type { ProjectEnvironmentType } from 'interfaces/environments';
 import { useMemo } from 'react';
 import type { CreateFeatureStrategySchema } from 'openapi';
+import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
 
 interface ProjectEnvironmentDefaultStrategyProps {
     environment: ProjectEnvironmentType;
@@ -75,6 +76,10 @@ const ProjectEnvironmentDefaultStrategy = ({
                 }
             >
                 <StrategyExecution strategy={strategy} />
+
+                {strategy.variants && strategy.variants.length > 0 ? (
+                    <SplitPreviewSlider variants={strategy.variants} />
+                ) : null}
             </StrategyItemContainer>
         </>
     );

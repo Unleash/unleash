@@ -107,9 +107,7 @@ export const ConnectSdkDialog = ({
                             project={project}
                             sdkType={sdk.type}
                             onEnvSelect={setEnvironment}
-                            onApiKey={(apiKey) => {
-                                setApiKey(apiKey);
-                            }}
+                            onApiKey={setApiKey}
                         />
                     ) : null}
                     {isTestConnectionStage ? (

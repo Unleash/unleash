@@ -579,7 +579,7 @@ describe('Managing Project access', () => {
             email: 'some_other_project_admin@example.com',
         });
         const projectCustomer = await stores.userStore.insert({
-            name: 'Some Used to prove that you can not assign a role you do not have via setRolesForGroupproject customer',
+            name: 'Some project customer',
             email: 'some_project_customer@example.com',
         });
         const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);

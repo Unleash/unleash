@@ -952,21 +952,27 @@ export default class ProjectService {
         // Users may have access to multiple projects, so we need to filter out the permissions based on this project.
         // Since the project roles are just collections of permissions that are not tied to a project in the database
         // not filtering here might lead to false positives as they may have the permission in another project.
-        const filteredUserPermissions = userPermissions.filter(
-            (permission) => permission.project === projectId,
-        );
+        if (this.flagResolver.isEnabled('projectRoleAssignment')) {
+            const filteredUserPermissions = userPermissions.filter(
+                (permission) => permission.project === projectId,
+            );
 
-        const rolesToBeAssignedData = await Promise.all(
-            rolesBeingAdded.map((role) => this.accessService.getRole(role)),
-        );
-        const rolesToBeAssignedPermissions = rolesToBeAssignedData.flatMap(
-            (role) => role.permissions,
-        );
+            const rolesToBeAssignedData = await Promise.all(
+                rolesBeingAdded.map((role) => this.accessService.getRole(role)),
+            );
+            const rolesToBeAssignedPermissions = rolesToBeAssignedData.flatMap(
+                (role) => role.permissions,
+            );
 
-        return canGrantProjectRole(
-            filteredUserPermissions,
-            rolesToBeAssignedPermissions,
-        );
+            return canGrantProjectRole(
+                filteredUserPermissions,
+                rolesToBeAssignedPermissions,
+            );
+        } else {
+            return rolesBeingAdded.every((roleId) =>
+                userRoles.some((userRole) => userRole.id === roleId),
+            );
+        }
     }
 
     async addAccess(

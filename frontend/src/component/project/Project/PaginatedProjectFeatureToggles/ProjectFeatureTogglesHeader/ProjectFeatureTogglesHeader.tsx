@@ -26,6 +26,8 @@ import { useFeedback } from 'component/feedbackNew/useFeedback';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { CreateFeatureDialog } from './CreateFeatureDialog';
 import IosShare from '@mui/icons-material/IosShare';
+import type { OverridableStringUnion } from '@mui/types';
+import type { ButtonPropsVariantOverrides } from '@mui/material/Button/Button';
 
 interface IProjectFeatureTogglesHeaderProps {
     isLoading?: boolean;
@@ -37,11 +39,22 @@ interface IProjectFeatureTogglesHeaderProps {
     actions?: ReactNode;
 }
 
+interface IFlagCreationButtonProps {
+    text?: string;
+    variant?: OverridableStringUnion<
+        'text' | 'outlined' | 'contained',
+        ButtonPropsVariantOverrides
+    >;
+}
+
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
 
-export const FlagCreationButton: FC = () => {
+export const FlagCreationButton = ({
+    variant,
+    text = 'New feature flag',
+}: IFlagCreationButtonProps) => {
     const [searchParams] = useSearchParams();
     const projectId = useRequiredPathParam('projectId');
     const showCreateDialog = Boolean(searchParams.get('create'));
@@ -56,10 +69,11 @@ export const FlagCreationButton: FC = () => {
                 Icon={Add}
                 projectId={projectId}
                 disabled={loading}
+                variant={variant}
                 permission={CREATE_FEATURE}
                 data-testid='NAVIGATE_TO_CREATE_FEATURE'
             >
-                New feature flag
+                {text}
             </StyledResponsiveButton>
             <CreateFeatureDialog
                 open={openCreateDialog}

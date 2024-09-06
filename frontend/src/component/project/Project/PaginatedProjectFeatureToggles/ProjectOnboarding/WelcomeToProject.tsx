@@ -1,4 +1,4 @@
-import { styled, Typography, useTheme } from '@mui/material';
+import { styled, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { FlagCreationButton } from '../ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader';
@@ -76,12 +76,23 @@ const TypeCircleContainer = styled(MainCircleContainer)(({ theme }) => ({
     borderRadius: '20%',
 }));
 
-const StyledLink = styled(Link)({
+const FlagLink = styled(Link)({
     fontWeight: 'bold',
     textDecoration: 'none',
     display: 'flex',
     justifyContent: 'center',
 });
+
+const ExistingFlagContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+    height: '100%',
+}));
+
+const FlagCreationContainer = styled('div')(({ theme }) => ({
+    marginTop: 'auto',
+}));
 
 export const WelcomeToProject = ({
     projectId,
@@ -119,7 +130,9 @@ export const WelcomeToProject = ({
                         Connect an SDK
                     </TitleContainer>
                     <Typography>
-                        We have not detected any connected SDKs on this project.
+                        Your project is not yet connected to any SDK. In order
+                        to start using your feature flag connect an SDK to the
+                        project.
                     </Typography>
                     <ResponsiveButton
                         onClick={() => {
@@ -150,13 +163,12 @@ const CreateFlag = () => {
                 <div>The project currently holds no feature toggles.</div>
                 <div>Create a feature flag to get started.</div>
             </Typography>
-            <FlagCreationButton />
+            <FlagCreationButton text='Create flag' />
         </>
     );
 };
 
 const ExistingFlag = ({ featureId, projectId }: IExistingFlagsProps) => {
-    const theme = useTheme();
     const { feature } = useFeature(projectId, featureId);
     const { featureTypes } = useFeatureTypes();
     const IconComponent = getFeatureTypeIcons(feature.type);
@@ -166,7 +178,7 @@ const ExistingFlag = ({ featureId, projectId }: IExistingFlagsProps) => {
     const typeTitle = `${typeName || feature.type} flag`;
 
     return (
-        <>
+        <ExistingFlagContainer>
             <TitleContainer>
                 <MainCircleContainer>✓</MainCircleContainer>
                 Create a feature flag
@@ -177,16 +189,21 @@ const ExistingFlag = ({ featureId, projectId }: IExistingFlagsProps) => {
                         <IconComponent />
                     </TypeCircleContainer>
                 </HtmlTooltip>
-                <StyledLink
+                <FlagLink
                     to={`/projects/${projectId}/features/${feature.name}`}
                 >
                     {feature.name}
-                </StyledLink>
+                </FlagLink>
+                <Link to={`/projects/${projectId}/features/${feature.name}`}>
+                    view flag
+                </Link>
             </TitleContainer>
-            <Typography>
-                Your project is not yet connected to any SDK. In order to start
-                using your feature flag connect an SDK to the project.
-            </Typography>
-        </>
+            <FlagCreationContainer>
+                <FlagCreationButton
+                    variant='outlined'
+                    text='Create a new flag'
+                />
+            </FlagCreationContainer>
+        </ExistingFlagContainer>
     );
 };

@@ -13,9 +13,7 @@ const setupApi = (outdatedSdks: OutdatedSdksSchema) => {
         outdatedSdks,
     );
     testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            outdatedSdksBanner: true,
-        },
+        flags: {},
     });
 };
 

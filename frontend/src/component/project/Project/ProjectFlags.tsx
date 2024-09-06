@@ -9,8 +9,6 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { ProjectOverviewChangeRequests } from './ProjectOverviewChangeRequests';
 import { OutdatedSdksBanner } from '../../banners/OutdatedSdksBanner/OutdatedSdksBanner';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 
 const refreshInterval = 15 * 1000;
 
@@ -39,8 +37,6 @@ const ProjectOverview: FC = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectOverviewNameOrId(projectId);
 
-    const outdatedSdksBannerEnabled = useUiFlag('outdatedSdksBanner');
-
     const { project } = useProjectOverview(projectId, {
         refreshInterval,
     });
@@ -55,10 +51,7 @@ const ProjectOverview: FC = () => {
         <StyledContainer key={projectId}>
             <StyledContentContainer>
                 <ProjectOverviewChangeRequests project={projectId} />
-                <ConditionallyRender
-                    condition={outdatedSdksBannerEnabled}
-                    show={<OutdatedSdksBanner project={projectId} />}
-                />
+                <OutdatedSdksBanner project={projectId} />
 
                 <StyledProjectToggles>
                     <ProjectFeatureToggles

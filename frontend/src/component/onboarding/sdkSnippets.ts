@@ -74,7 +74,7 @@ $unleash = UnleashBuilder::create()
         "<YOUR_API_TOKEN>",
     )?;
 client.register().await?;`,
-    DotNet: `using Unleash;
+    '.NET': `using Unleash;
 var settings = new UnleashSettings()
 {
     AppName = "unleash-onboarding-dotnet",

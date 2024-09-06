@@ -10,7 +10,7 @@ const setupApi = () => {
     testServerRoute(server, '/api/admin/projects/default/api-tokens', {
         tokens: [
             {
-                environment: 'development',
+                environment: 'production',
                 type: 'client',
                 secret: 'default:development.5c4150866d',
             },
@@ -24,7 +24,7 @@ const setupApi = () => {
     });
 };
 
-test('Onboarding for SDK with existing key', async () => {
+test('Onboarding for SDK', async () => {
     setupApi();
     // on smaller screens we don't show concepts definitions
     resizeScreen(2000);
@@ -34,7 +34,7 @@ test('Onboarding for SDK with existing key', async () => {
             project='default'
             onClose={() => {}}
             open={true}
-            environments={['development', 'productions']}
+            environments={['development', 'production']}
             feature='featureA'
         />,
     );
@@ -51,7 +51,13 @@ test('Onboarding for SDK with existing key', async () => {
     screen.getByText('API Key');
     screen.getByText('Flags live in projects');
     screen.getByText('development');
+    await screen.findByText('Generate API Key');
 
+    const envWithoutKey = screen.getByText('development');
+    fireEvent.click(envWithoutKey);
+
+    const envWithKey = screen.getByText('production');
+    fireEvent.click(envWithKey);
     await screen.findByText('The API key secret');
     await screen.findByText('5c4150866d');
 

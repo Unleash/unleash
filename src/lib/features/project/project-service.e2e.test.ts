@@ -865,8 +865,8 @@ describe('Managing Project access', () => {
             ),
         );
     });
+});
 
-   
 test('should add admin users to the project', async () => {
     const project = {
         id: 'add-admin-users',

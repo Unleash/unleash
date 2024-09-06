@@ -12,7 +12,8 @@ In this guide, we’ll introduce you to the basics of feature flags and why so m
 
 ## Why developers use feature flags
 
-*The story of how Unleash began by [Ivar Østhus](https://www.linkedin.com/in/ivarconr/overlay/about-this-profile/)*
+*The easiest way to explain why developers use feature flags is to understand the story of why [Ivar Østhus](https://github.com/ivarconr), 
+ our CTO, created the Unleash feature flag service in the first place. Here's Ivar in his own words:*
 
 > In 2014, I was working as a software developer at FINN.no, Norway’s largest online marketplace. Getting new features into production was a pain, so, as a developer, I looked around and wondered if I could write some code to make it easier. My initial goal was to protect features under development, allowing our team to transition to [trunk-based development](https://www.getunleash.io/blog/how-to-implement-trunk-based-development-a-practical-guide)—a practice recommended according to the [State of DevOps Report](https://www.getunleash.io/blog/guide-to-feature-flags#:~:text=State%20of%20DevOps%20Report).
 >
@@ -29,7 +30,7 @@ In this guide, we’ll introduce you to the basics of feature flags and why so m
 
 A feature flag is a software engineering technique that turns features or functionality on or off without modifying the source code or requiring a redeploy. It’s also referred to as feature toggles, switches, flippers, or bits.
 
-Feature flags enable you to release and test new features by making them available to a specific group of users, or no users at all, with the power to immediately turn it off without any risk to the rest of your application.
+Feature flags enable you to release and test new features by making them available to a specific group of users, or no users at all, with the power to immediately turn them off without any risk to the rest of your application.
 
 The control that feature flags allow means that they’re already becoming a popular superpower in feature lifecycle management. Combined with feature management platforms and processes, they can enable a cultural shift within organizations towards more agile and experimental development and ways of serving users.
 
@@ -57,7 +58,7 @@ Moreover, feature flags enable quick mitigation of issues by allowing teams to i
 
 Feature flags significantly accelerate operational release cycles by enabling rapid release, testing, and rollback of features. This speed allows teams to adopt a more action-oriented and experimental approach, quickly iterating on new ideas without the risk of complex code integrations or burdensome deployments. Even when multiple teams are working on overlapping components of complex applications, feature flags streamline the process by reducing dependencies and conflicts.
 
-Additionally, automated feature flags can dynamically enable or disable features based on user behavior or system events, further speeding up the adaptation process. By embracing a CI/CD (continuous integration and continuous deployment) workflow with feature flags, teams can deliver improvements to their applications more frequently and reliably, ensuring a faster, more agile development cycle.
+Additionally, automated feature flags can [dynamically enable or disable features based on user behavior or system events](../../reference/actions.md), further speeding up the adaptation process. By embracing a CI/CD (continuous integration and continuous deployment) workflow with feature flags, teams can deliver improvements to their applications more frequently and reliably, ensuring a faster, more agile development cycle.
 
 ### Enable testing and experimenting
 
@@ -178,7 +179,7 @@ An online bookstore, for instance, could test two different landing page designs
 
 Feature flags can be used to quickly disable a feature as needed, minimizing the impact on both users and the organization deploying the feature.
 
-To implement kill switches, a good general practice is to wrap your flaky feature in an inverted feature flag. Your application should assume that the feature is working as expected as long as the feature flag is disabled. When you disable a flag by default, your application will still have the feature enabled, even if it can’t fetch the latest version of the feature flag. If you detect any problems with the integration, you can then easily turn on the kill switch, which will then turn off the feature.
+To implement kill switches, a good general practice is to wrap your flaky feature in an inverted feature flag. Your application should assume that the feature is working as expected as long as the feature flag is disabled. When you disable a flag by default, your application will still have the feature enabled. This is in case it can’t fetch the latest version of the feature flag. If you detect any problems with the integration, you can then easily turn on the kill switch, which will then turn off the feature.
 
 ### Rollbacks
 

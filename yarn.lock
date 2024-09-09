@@ -4274,11 +4274,11 @@ __metadata:
   linkType: hard
 
 "express-rate-limit@npm:^7.3.1":
-  version: 7.3.1
-  resolution: "express-rate-limit@npm:7.3.1"
+  version: 7.4.0
+  resolution: "express-rate-limit@npm:7.4.0"
   peerDependencies:
     express: 4 || 5 || ^5.0.0-beta.1
-  checksum: 10c0/3b6b8f673a75bb525cc5d2d79e3d84b8cb57414458cee5e0692c7f2550888cbd59542fe12f3ffdb8001619122bc3583a8fa5419716c441ccecb8e6e96fcc75f0
+  checksum: 10c0/f6ceb7278f8f0af2ad3a7d6a7e791d29cd278366e107aa98cc16e93b95c5b4e35b749bb2a24454d9d54069b204fa6c26a49075672b63341ad948339fe3d797d3
   languageName: node
   linkType: hard
 

@@ -89,6 +89,7 @@ import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/api-token-service';
 import type { TransitionalProjectData } from './project-read-model-type';
+import { canGrantProjectRole } from './can-grant-project-role';
 
 type Days = number;
 type Count = number;
@@ -940,15 +941,38 @@ export default class ProjectService {
             userAddingAccess.id,
             projectId,
         );
+
         if (
             this.isAdmin(userAddingAccess.id, userRoles) ||
             this.isProjectOwner(userRoles, projectId)
         ) {
             return true;
         }
-        return rolesBeingAdded.every((roleId) =>
-            userRoles.some((userRole) => userRole.id === roleId),
-        );
+
+        // Users may have access to multiple projects, so we need to filter out the permissions based on this project.
+        // Since the project roles are just collections of permissions that are not tied to a project in the database
+        // not filtering here might lead to false positives as they may have the permission in another project.
+        if (this.flagResolver.isEnabled('projectRoleAssignment')) {
+            const filteredUserPermissions = userPermissions.filter(
+                (permission) => permission.project === projectId,
+            );
+
+            const rolesToBeAssignedData = await Promise.all(
+                rolesBeingAdded.map((role) => this.accessService.getRole(role)),
+            );
+            const rolesToBeAssignedPermissions = rolesToBeAssignedData.flatMap(
+                (role) => role.permissions,
+            );
+
+            return canGrantProjectRole(
+                filteredUserPermissions,
+                rolesToBeAssignedPermissions,
+            );
+        } else {
+            return rolesBeingAdded.every((roleId) =>
+                userRoles.some((userRole) => userRole.id === roleId),
+            );
+        }
     }
 
     async addAccess(

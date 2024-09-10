@@ -89,7 +89,7 @@ import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/api-token-service';
 import type { TransitionalProjectData } from './project-read-model-type';
-import { canGrantProjectRole } from './can-grant-project-access';
+import { canGrantProjectRole } from './can-grant-project-role';
 
 type Days = number;
 type Count = number;

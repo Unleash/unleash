@@ -1,4 +1,4 @@
-import { canGrantProjectRole } from './can-grant-project-access';
+import { canGrantProjectRole } from './can-grant-project-role';
 
 describe('canGrantProjectRole', () => {
     test('should return true if the granter has all the permissions the receiver needs', () => {

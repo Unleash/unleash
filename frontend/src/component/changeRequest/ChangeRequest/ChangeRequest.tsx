@@ -6,6 +6,7 @@ import { FeatureChange } from './Changes/Change/FeatureChange';
 import { ChangeActions } from './Changes/Change/ChangeActions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { SegmentChange } from './Changes/Change/SegmentChange';
+import { AIChangeRequestDescription } from './Changes/Change/AIChangeRequestDescription';
 
 interface IChangeRequestProps {
     changeRequest: ChangeRequestType;
@@ -61,6 +62,7 @@ export const ChangeRequest: VFC<IChangeRequestProps> = ({
                     onNavigate={onNavigate}
                     conflict={feature.conflict}
                 >
+                    <AIChangeRequestDescription changes={feature.changes} />
                     {feature.changes.map((change, index) => (
                         <FeatureChange
                             key={index}

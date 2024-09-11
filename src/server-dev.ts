@@ -57,6 +57,7 @@ process.nextTick(async () => {
                         addonUsageMetrics: true,
                         onboardingMetrics: true,
                         onboardingUI: true,
+                        unleashAI: true,
                     },
                 },
                 authentication: {

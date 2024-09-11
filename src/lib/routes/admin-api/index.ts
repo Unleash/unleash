@@ -35,6 +35,8 @@ import { SegmentsController } from '../../features/segment/segment-controller';
 import { InactiveUsersController } from '../../users/inactive/inactive-users-controller';
 import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller';
 import { SearchApi } from './search';
+import { conditionalMiddleware } from '../../middleware';
+import { AIController } from '../../features/ai/ai-controller';
 
 export class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -163,6 +165,14 @@ export class AdminApi extends Controller {
         this.app.use(
             '/record-ui-error',
             new UiObservabilityController(config, services).router,
+        );
+
+        this.app.use(
+            '/ai',
+            conditionalMiddleware(
+                () => config.flagResolver.isEnabled('unleashAI'),
+                new AIController(config, services).router,
+            ),
         );
     }
 }

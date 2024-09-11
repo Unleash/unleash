@@ -146,6 +146,7 @@ import {
     createOnboardingService,
 } from '../features/onboarding/createOnboardingService';
 import { OnboardingService } from '../features/onboarding/onboarding-service';
+import { AIService } from '../features/ai/ai-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -401,6 +402,10 @@ export const createServices = (
         : createFakeOnboardingService(config).onboardingService;
     onboardingService.listen();
 
+    const aiService = new AIService(config, {
+        featureToggleService: featureToggleServiceV2,
+    });
+
     return {
         accessService,
         accountService,
@@ -464,6 +469,7 @@ export const createServices = (
         transactionalFeatureLifecycleService,
         integrationEventsService,
         onboardingService,
+        aiService,
     };
 };
 
@@ -514,4 +520,5 @@ export {
     FeatureLifecycleService,
     IntegrationEventsService,
     OnboardingService,
+    AIService,
 };

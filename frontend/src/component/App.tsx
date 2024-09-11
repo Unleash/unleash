@@ -21,6 +21,7 @@ import { InternalBanners } from './banners/internalBanners/InternalBanners';
 import { ExternalBanners } from './banners/externalBanners/ExternalBanners';
 import { LicenseBanner } from './banners/internalBanners/LicenseBanner';
 import { Demo } from './demo/Demo';
+import { AIChat } from './common/AI/AIChat';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -97,6 +98,8 @@ export const App = () => {
                                     </Routes>
 
                                     <FeedbackNPS openUrl='http://feedback.unleash.run' />
+
+                                    <AIChat />
 
                                     <SplashPageRedirect />
                                 </StyledContainer>

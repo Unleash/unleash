@@ -155,7 +155,8 @@ export const CommandBar = () => {
             query.length !== 0 &&
             mappedProjects.length === 0 &&
             mappedPages.length === 0 &&
-            searchedFlagCount === 0;
+            searchedFlagCount === 0 &&
+            !query.startsWith('#');
         if (noResultsFound) {
             trackEvent('command-bar', {
                 props: {
@@ -286,6 +287,10 @@ export const CommandBar = () => {
             hideSuggestions();
         }
     };
+
+    const AIPrompt = (searchString || '').startsWith('#')
+        ? (searchString as unknown as string).split('#')[1].trim()
+        : undefined;
 
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>

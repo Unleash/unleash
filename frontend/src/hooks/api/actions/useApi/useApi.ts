@@ -245,6 +245,61 @@ const useAPI = ({
         [handleResponses],
     );
 
+    const makeStreamingRequest = useCallback(
+        async (
+            apiCaller: () => Promise<Response>,
+            onData: (chunk: string) => void,
+            requestId: string,
+        ) => {
+            setLoading(true);
+            try {
+                const res = await apiCaller();
+                if (!res.body) {
+                    throw new Error(
+                        'Streaming request failed: No body returned',
+                    );
+                }
+
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder('utf-8');
+                let done = false;
+                let buffer = '';
+
+                while (!done) {
+                    const { value, done: readerDone } = await reader.read();
+                    done = readerDone;
+
+                    buffer += decoder.decode(value, { stream: true });
+
+                    const lines = buffer.split('\n');
+
+                    buffer = lines.pop() || '';
+
+                    for (const line of lines) {
+                        if (line.startsWith('data:')) {
+                            const cleanChunk = line.replace('data: ', '');
+                            onData(cleanChunk);
+                        }
+                    }
+                }
+
+                if (buffer.trim() !== '') {
+                    if (buffer.startsWith('data:')) {
+                        const cleanChunk = buffer.replace('data: ', '');
+                        onData(cleanChunk);
+                    }
+                }
+
+                setLoading(false);
+                return res;
+            } catch (e) {
+                setLoading(false);
+                throw e;
+            }
+        },
+        [],
+    );
+
     const makeLightRequest = useCallback(
         async (
             apiCaller: () => Promise<Response>,
@@ -294,6 +349,7 @@ const useAPI = ({
     return {
         loading,
         makeRequest: isDevelopment ? makeRequestWithTimer : makeRequest,
+        makeStreamingRequest,
         makeLightRequest: isDevelopment
             ? makeLightRequestWithTimer
             : makeLightRequest,

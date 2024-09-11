@@ -14,6 +14,7 @@ export * from './advanced-playground-environment-feature-schema';
 export * from './advanced-playground-feature-schema';
 export * from './advanced-playground-request-schema';
 export * from './advanced-playground-response-schema';
+export * from './ai-prompt-schema';
 export * from './api-token-schema';
 export * from './api-tokens-schema';
 export * from './application-environment-instances-schema';

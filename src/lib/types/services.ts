@@ -56,6 +56,7 @@ import type { JobService } from '../features/scheduler/job-service';
 import type { FeatureLifecycleService } from '../features/feature-lifecycle/feature-lifecycle-service';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
 import type { OnboardingService } from '../features/onboarding/onboarding-service';
+import type { AIService } from '../features/ai/ai-service';
 
 export interface IUnleashServices {
     accessService: AccessService;
@@ -123,4 +124,5 @@ export interface IUnleashServices {
     transactionalFeatureLifecycleService: WithTransactional<FeatureLifecycleService>;
     integrationEventsService: IntegrationEventsService;
     onboardingService: OnboardingService;
+    aiService: AIService;
 }

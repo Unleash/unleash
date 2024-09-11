@@ -77,7 +77,7 @@ export const ProjectFeatureToggles = ({
         initialLoad,
         tableState,
         setTableState,
-    } = useProjectFeatureSearch(projectId);
+    } = useProjectFeatureSearch(projectId, undefined, 1000);
 
     const { onFlagTypeClick, onTagClick, onAvatarClick } =
         useProjectFeatureSearchActions(tableState, setTableState);

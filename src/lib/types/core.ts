@@ -37,7 +37,7 @@ export const ADMIN_TOKEN_USER: Omit<IUser, 'email'> = {
     imageUrl: '',
     isAPI: true,
     name: 'Unleash Admin Token',
-    permissions: [],
+    permissions: ['ADMIN'],
     username: 'unleash_admin_token',
 };
 

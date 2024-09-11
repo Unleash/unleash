@@ -2612,6 +2612,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/chroma-js@npm:^2.4.3":
+  version: 2.4.4
+  resolution: "@types/chroma-js@npm:2.4.4"
+  checksum: 10c0/8acd341c523fc960686ed9e60f23ae643da35bddf012b4b18cb0d941ee3bf82087262245ffa8c886ea31571cd5dc6eb553e849fab3c0509ea2c3a045a246178c
+  languageName: node
+  linkType: hard
+
 "@types/cookie@npm:^0.6.0":
   version: 0.6.0
   resolution: "@types/cookie@npm:0.6.0"
@@ -3817,6 +3824,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chroma-js@npm:^2.4.2":
+  version: 2.6.0
+  resolution: "chroma-js@npm:2.6.0"
+  checksum: 10c0/6e17f43246f9b3eba8a9db67f5ee9a2d0ef1360077211887da09ec1f0934bb98a358eefaf021003c0bd47cbab540f573a373f362d6b2ba04d0e80ab7677e1640
+  languageName: node
+  linkType: hard
+
 "ci-info@npm:^3.2.0":
   version: 3.9.0
   resolution: "ci-info@npm:3.9.0"
@@ -4301,6 +4315,13 @@ __metadata:
   dependencies:
     "@babel/runtime": "npm:^7.21.0"
   checksum: 10c0/e4b521fbf22bc8c3db332bbfb7b094fd3e7627de0259a9d17c7551e2d2702608a7307a449206065916538e384f37b181565447ce2637ae09828427aed9cb5581
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^3.6.0":
+  version: 3.6.0
+  resolution: "date-fns@npm:3.6.0"
+  checksum: 10c0/0b5fb981590ef2f8e5a3ba6cd6d77faece0ea7f7158948f2eaae7bbb7c80a8f63ae30b01236c2923cf89bb3719c33aeb150c715ea4fe4e86e37dcf06bed42fb6
   languageName: node
   linkType: hard
 
@@ -8095,6 +8116,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-activity-calendar@npm:^2.5.1":
+  version: 2.5.1
+  resolution: "react-activity-calendar@npm:2.5.1"
+  dependencies:
+    "@types/chroma-js": "npm:^2.4.3"
+    chroma-js: "npm:^2.4.2"
+    date-fns: "npm:^3.6.0"
+  peerDependencies:
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: 10c0/9814d265a23cec6499e7a23d1f0f8477a9d74da0f1ebf5c4ef2c2e4dd53de623e539a6240c22cad50b35741b4c318e8d030bf65b76ec6d58b8a05e46d956a7e5
+  languageName: node
+  linkType: hard
+
 "react-archer@npm:4.4.0":
   version: 4.4.0
   resolution: "react-archer@npm:4.4.0"
@@ -8166,6 +8201,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-error-boundary@npm:^4.0.12":
+  version: 4.0.13
+  resolution: "react-error-boundary@npm:4.0.13"
+  dependencies:
+    "@babel/runtime": "npm:^7.12.5"
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: 10c0/6f3e0e4d7669f680ccf49c08c9571519c6e31f04dcfc30a765a7136c7e6fbbbe93423dd5a9fce12107f8166e54133e9dd5c2079a00c7a38201ac811f7a28b8e7
+  languageName: node
+  linkType: hard
+
 "react-fast-compare@npm:^2.0.4":
   version: 2.0.4
   resolution: "react-fast-compare@npm:2.0.4"
@@ -8186,6 +8232,19 @@ __metadata:
     react: 15 - 18
     react-dom: 15 - 18
   checksum: 10c0/3fa58e968a405fb95a004897ed19c87b4991e52ebd45d837b8577eb9175ddc1dfab223bb653a0fa73ffc22fc2b2a30f2d07e924f41f41a040299793e4d2decd4
+  languageName: node
+  linkType: hard
+
+"react-github-calendar@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "react-github-calendar@npm:4.3.0"
+  dependencies:
+    react-activity-calendar: "npm:^2.5.1"
+    react-error-boundary: "npm:^4.0.12"
+  peerDependencies:
+    react: ^17.0.0 || ^18.0.0
+    react-dom: ^17.0.0 || ^18.0.0
+  checksum: 10c0/7c7517b5166e6945bc44865c34ebe3fdf3c71627faf07ebdc0fb2edacb94ee073b1172241037a7d9c3473d5922ce606df713fe857678a9896103c80ea914395f
   languageName: node
   linkType: hard
 
@@ -9832,6 +9891,7 @@ __metadata:
     react-dom: "npm:18.3.1"
     react-dropzone: "npm:14.2.3"
     react-error-boundary: "npm:3.1.4"
+    react-github-calendar: "npm:^4.3.0"
     react-hooks-global-state: "npm:2.1.0"
     react-joyride: "npm:^2.5.3"
     react-markdown: "npm:^8.0.4"

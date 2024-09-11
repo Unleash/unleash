@@ -18,6 +18,7 @@ import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { WidgetTitle } from './components/WidgetTitle/WidgetTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import type { ThemeInput } from 'react-activity-calendar';
 
 export interface IChartsProps {
     flagTrends: InstanceInsightsSchema['flagTrends'];
@@ -120,12 +121,24 @@ export const InsightsCharts: FC<IChartsProps> = ({
             : flagsPerUserCalculation.toFixed(2);
     }
 
+    const explicitTheme: ThemeInput = {
+        light: ['#f0f0f0', '#c4edde', '#7ac7c4', '#f73859', '#384259'],
+        dark: ['#383838', '#4D455D', '#7DB9B6', '#F5E9CF', '#E96479'],
+    };
+
     return (
         <StyledContainer>
             <ConditionallyRender
                 condition={showAllProjects}
                 show={
                     <>
+                        <StyledWidget>
+                            Contribs
+                            <ActivityCalendar
+                                data={data}
+                                theme={explicitTheme}
+                            />
+                        </StyledWidget>
                         <StyledWidget>
                             <StyledWidgetStats>
                                 <WidgetTitle title='Total users' />

@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
+import ActivityCalendar, { type ThemeInput } from 'react-activity-calendar';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -121,6 +122,28 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
         setLocationSettings({ locale });
     };
 
+    const explicitTheme: ThemeInput = {
+        light: ['#f1f0fc', '#ceccfd', '#8982ff', '#6c65e5', '#615bc2'],
+        dark: ['#f1f0fc', '#ceccfd', '#8982ff', '#6c65e5', '#615bc2'],
+    };
+
+    // const {events} = useEventSearch({});
+
+    // const data = events.map(event => ({data: event.createdAt, }))
+
+    const data = [
+        {
+            date: '2022-12-14',
+            count: 2,
+            level: 1,
+        },
+        {
+            date: '2024-06-22',
+            count: 16,
+            level: 3,
+        },
+    ];
+
     return (
         <>
             <StyledHeader>
@@ -133,6 +156,8 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                 </StyledInfo>
             </StyledHeader>
             <PageContent>
+                <ActivityCalendar data={data} theme={explicitTheme} />
+                <StyledDivider />
                 <StyledSectionLabel>Access</StyledSectionLabel>
                 <StyledAccess>
                     <Box sx={{ width: '50%' }}>

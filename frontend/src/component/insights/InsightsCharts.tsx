@@ -98,41 +98,45 @@ type Output = { date: string; count: number; level: number };
 function transformData(inputData: Input[]): Output[] {
     const resultMap: Record<string, number> = {};
 
+    // Step 1: Count the occurrences of each date
     inputData.forEach((item) => {
-        // Parse the string as a Date and format it as 'YYYY-MM-DD'
         const formattedDate = new Date(item.createdAt)
             .toISOString()
             .split('T')[0];
-
-        // If the date already exists in the map, increment its count
-        if (resultMap[formattedDate]) {
-            resultMap[formattedDate]++;
-        } else {
-            // Otherwise, initialize it with a count of 1
-            resultMap[formattedDate] = 1;
-        }
+        resultMap[formattedDate] = (resultMap[formattedDate] || 0) + 1;
     });
 
-    // Calculate the max count, excluding zero
-    const maxCount = Math.max(...Object.values(resultMap));
+    // Step 2: Get all counts, sort them, and find the cut-off values for percentiles
+    const counts = Object.values(resultMap).sort((a, b) => a - b);
 
-    // Define a function to calculate the level based on count
-    const calculateLevel = (count: number): number => {
-        if (count === 0) {
-            return 0; // Separate bucket for zero
-        }
-        const bucketSize = maxCount / 4; // Divide non-zero counts into 4 levels
-        return Math.min(Math.ceil(count / bucketSize), 4); // Ensure max level is 4
+    const percentile = (percent: number) => {
+        const index = Math.floor((percent / 100) * counts.length);
+        return counts[index] || counts[counts.length - 1];
     };
 
-    // Convert the map back to an array of objects with 'date', 'count', and 'level'
+    const thresholds = [
+        percentile(25), // 25th percentile
+        percentile(50), // 50th percentile
+        percentile(75), // 75th percentile
+        percentile(100), // 100th percentile
+    ];
+
+    // Step 3: Assign a level based on the percentile thresholds
+    const calculateLevel = (count: number): number => {
+        if (count <= thresholds[0]) return 1; // 1-25%
+        if (count <= thresholds[1]) return 2; // 26-50%
+        if (count <= thresholds[2]) return 3; // 51-75%
+        return 4; // 76-100%
+    };
+
+    // Step 4: Convert the map back to an array and assign levels
     return Object.entries(resultMap)
         .map(([date, count]) => ({
             date,
             count,
             level: calculateLevel(count),
         }))
-        .reverse();
+        .reverse(); // Optional: reverse the order if needed
 }
 
 export const InsightsCharts: FC<IChartsProps> = ({
@@ -166,8 +170,8 @@ export const InsightsCharts: FC<IChartsProps> = ({
     }
 
     const explicitTheme: ThemeInput = {
-        light: ['#f0f0f0', '#c4edde', '#7ac7c4', '#f73859', '#384259'],
-        dark: ['#383838', '#4D455D', '#7DB9B6', '#F5E9CF', '#E96479'],
+        light: ['#f1f0fc', '#ceccfd', '#8982ff', '#6c65e5', '#615bc2'],
+        dark: ['#f1f0fc', '#ceccfd', '#8982ff', '#6c65e5', '#615bc2'],
     };
 
     const { events } = useEventSearch({ limit: '1000' });

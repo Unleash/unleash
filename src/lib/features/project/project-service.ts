@@ -966,12 +966,11 @@ export default class ProjectService {
 
             this.logger.info('-----------');
             this.logger.info(
-                'filteredUserPermissions',
-                filteredUserPermissions,
+                `filteredUserPermissions:  ${JSON.stringify(filteredUserPermissions, null, 2)}`,
             );
             this.logger.info(
-                'rolesToBeAssignedPermissions',
-                rolesToBeAssignedPermissions,
+                `rolesToBeAssignedPermissions,
+                ${JSON.stringify(rolesToBeAssignedPermissions, null, 2)}`,
             );
             this.logger.info('-----------');
 

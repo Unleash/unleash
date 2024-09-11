@@ -245,20 +245,25 @@ export const InsightsCharts: FC<IChartsProps> = ({
                 condition={showAllProjects}
                 show={
                     <>
-                        <StyledWidget sx={{ p: 3 }}>
-                            <ActivityCalendar
-                                theme={explicitTheme}
-                                data={data}
-                                maxLevel={4}
-                                showWeekdayLabels={true}
-                                renderBlock={(block, activity) => (
-                                    <Tooltip
-                                        title={`${activity.count} activities on ${activity.date}`}
-                                    >
-                                        {block}
-                                    </Tooltip>
-                                )}
-                            />
+                        <StyledWidget>
+                            <StyledWidgetStats>
+                                <WidgetTitle title='Total activity' />
+                            </StyledWidgetStats>
+                            <StyledChartContainer sx={{ pl: 6 }}>
+                                <ActivityCalendar
+                                    theme={explicitTheme}
+                                    data={data}
+                                    maxLevel={4}
+                                    showWeekdayLabels={true}
+                                    renderBlock={(block, activity) => (
+                                        <Tooltip
+                                            title={`${activity.count} activities on ${activity.date}`}
+                                        >
+                                            {block}
+                                        </Tooltip>
+                                    )}
+                                />
+                            </StyledChartContainer>
                         </StyledWidget>
                         <StyledWidget>
                             <StyledWidgetStats>

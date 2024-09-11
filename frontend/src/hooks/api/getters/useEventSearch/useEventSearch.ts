@@ -3,7 +3,6 @@ import { useCallback, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import type { EventSearchResponseSchema, SearchEventsParams } from 'openapi';
-import { useClearSWRCache } from 'hooks/useClearSWRCache';
 
 type UseEventSearchOutput = {
     loading: boolean;
@@ -59,8 +58,8 @@ const createEventSearch = () => {
     ): UseEventSearchOutput => {
         const { KEY, fetcher } = getEventSearchFetcher(params);
         const swrKey = `${cachePrefix}${KEY}`;
-        const cacheId = params.project || '';
-        useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
+        const cacheId = `${params.project} ${params.offset}` || '||';
+        // useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
 
         useEffect(() => {
             initCache(params.project || '');

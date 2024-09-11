@@ -174,42 +174,71 @@ export const InsightsCharts: FC<IChartsProps> = ({
         dark: ['#f1f0fc', '#ceccfd', '#8982ff', '#6c65e5', '#615bc2'],
     };
 
-    const { events } = useEventSearch({ limit: '1000' });
+    const { events } = useEventSearch({
+        limit: '1000',
+        from: 'IS:2024-01-01',
+        ...(showAllProjects
+            ? {}
+            : { project: `IS_ANY_OF:${projects.join(',')}` }),
+    });
     const { events: events1 } = useEventSearch({
         limit: '1000',
         offset: '1000',
         from: 'IS:2024-01-01',
+        ...(showAllProjects
+            ? {}
+            : { project: `IS_ANY_OF:${projects.join(',')}` }),
     });
     const { events: events2 } = useEventSearch({
         limit: '1000',
         offset: '2000',
         from: 'IS:2024-01-01',
+        ...(showAllProjects
+            ? {}
+            : { project: `IS_ANY_OF:${projects.join(',')}` }),
     });
     const { events: events3 } = useEventSearch({
         limit: '1000',
         offset: '3000',
         from: 'IS:2024-01-01',
+        ...(showAllProjects
+            ? {}
+            : { project: `IS_ANY_OF:${projects.join(',')}` }),
     });
     const { events: events4 } = useEventSearch({
         limit: '1000',
         offset: '4000',
         from: 'IS:2024-01-01',
+        ...(showAllProjects
+            ? {}
+            : { project: `IS_ANY_OF:${projects.join(',')}` }),
     });
     const { events: events5 } = useEventSearch({
         limit: '1000',
         offset: '5000',
         from: 'IS:2024-01-01',
+        ...(showAllProjects
+            ? {}
+            : { project: `IS_ANY_OF:${projects.join(',')}` }),
     });
     const { events: events6 } = useEventSearch({
         limit: '1000',
         offset: '6000',
         from: 'IS:2024-01-01',
+        ...(showAllProjects
+            ? {}
+            : { project: `IS_ANY_OF:${projects.join(',')}` }),
     });
     const { events: events7 } = useEventSearch({
         limit: '1000',
         offset: '7000',
         from: 'IS:2024-01-01',
+        ...(showAllProjects
+            ? {}
+            : { project: `IS_ANY_OF:${projects.join(',')}` }),
     });
+
+    console.log('events', events);
 
     let data = transformData([
         ...events,
@@ -286,6 +315,26 @@ export const InsightsCharts: FC<IChartsProps> = ({
                 }
                 elseShow={
                     <>
+                        <StyledWidget>
+                            <StyledWidgetStats>
+                                <WidgetTitle title='Total activity' />
+                            </StyledWidgetStats>
+                            <StyledChartContainer sx={{ pl: 6 }}>
+                                <ActivityCalendar
+                                    theme={explicitTheme}
+                                    data={data}
+                                    maxLevel={4}
+                                    showWeekdayLabels={true}
+                                    renderBlock={(block, activity) => (
+                                        <Tooltip
+                                            title={`${activity.count} activities on ${activity.date}`}
+                                        >
+                                            {block}
+                                        </Tooltip>
+                                    )}
+                                />
+                            </StyledChartContainer>
+                        </StyledWidget>
                         <StyledWidget>
                             <StyledWidgetStats>
                                 <WidgetTitle

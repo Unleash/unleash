@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.1] - 2024-09-11
+
+### Bug Fixes
+
+- Invert logic ([#8135](https://github.com/Unleash/unleash/issues/8135)) ([#8136](https://github.com/Unleash/unleash/issues/8136))
+
+
 ## [6.2.0] - 2024-09-05
 
 ### ADR

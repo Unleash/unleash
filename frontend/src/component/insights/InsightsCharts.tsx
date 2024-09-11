@@ -178,38 +178,37 @@ export const InsightsCharts: FC<IChartsProps> = ({
     const { events: events1 } = useEventSearch({
         limit: '1000',
         offset: '1000',
+        from: 'IS:2024-01-01',
     });
     const { events: events2 } = useEventSearch({
         limit: '1000',
         offset: '2000',
+        from: 'IS:2024-01-01',
     });
     const { events: events3 } = useEventSearch({
         limit: '1000',
         offset: '3000',
+        from: 'IS:2024-01-01',
     });
     const { events: events4 } = useEventSearch({
         limit: '1000',
         offset: '4000',
+        from: 'IS:2024-01-01',
     });
     const { events: events5 } = useEventSearch({
         limit: '1000',
         offset: '5000',
+        from: 'IS:2024-01-01',
     });
     const { events: events6 } = useEventSearch({
         limit: '1000',
         offset: '6000',
+        from: 'IS:2024-01-01',
     });
     const { events: events7 } = useEventSearch({
         limit: '1000',
         offset: '7000',
-    });
-    const { events: events8 } = useEventSearch({
-        limit: '1000',
-        offset: '8000',
-    });
-    const { events: events9 } = useEventSearch({
-        limit: '1000',
-        offset: '9000',
+        from: 'IS:2024-01-01',
     });
 
     let data = transformData([
@@ -221,8 +220,6 @@ export const InsightsCharts: FC<IChartsProps> = ({
         ...events5,
         ...events6,
         ...events7,
-        ...events8,
-        ...events9,
     ]);
     data =
         data.length > 0

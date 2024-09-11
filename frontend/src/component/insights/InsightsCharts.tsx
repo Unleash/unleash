@@ -19,7 +19,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { WidgetTitle } from './components/WidgetTitle/WidgetTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ActivityCalendar, { type ThemeInput } from 'react-activity-calendar';
-import { useEvents } from 'hooks/api/getters/useEvents/useEvents';
+import { useEventSearch } from '../../hooks/api/getters/useEventSearch/useEventSearch';
 
 export interface IChartsProps {
     flagTrends: InstanceInsightsSchema['flagTrends'];
@@ -126,11 +126,13 @@ function transformData(inputData: Input[]): Output[] {
     };
 
     // Convert the map back to an array of objects with 'date', 'count', and 'level'
-    return Object.entries(resultMap).map(([date, count]) => ({
-        date,
-        count,
-        level: calculateLevel(count),
-    }));
+    return Object.entries(resultMap)
+        .map(([date, count]) => ({
+            date,
+            count,
+            level: calculateLevel(count),
+        }))
+        .reverse();
 }
 
 export const InsightsCharts: FC<IChartsProps> = ({
@@ -168,7 +170,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
         dark: ['#383838', '#4D455D', '#7DB9B6', '#F5E9CF', '#E96479'],
     };
 
-    const { events } = useEvents();
+    const { events } = useEventSearch({ limit: '1000' });
 
     let data = transformData(events);
     data =

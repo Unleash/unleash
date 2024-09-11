@@ -58,7 +58,8 @@ const createEventSearch = () => {
     ): UseEventSearchOutput => {
         const { KEY, fetcher } = getEventSearchFetcher(params);
         const swrKey = `${cachePrefix}${KEY}`;
-        const cacheId = `${params.project} ${params.offset}` || '||';
+
+        const cacheId = params.project || '';
         // useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
 
         useEffect(() => {

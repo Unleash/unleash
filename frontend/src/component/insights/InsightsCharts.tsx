@@ -95,7 +95,7 @@ const StyledChartContainer = styled(Box)(({ theme }) => ({
 type Input = { createdAt: string };
 type Output = { date: string; count: number; level: number };
 
-function transformData(inputData: Input[]): Output[] {
+export function transformData(inputData: Input[]): Output[] {
     const resultMap: Record<string, number> = {};
 
     // Step 1: Count the occurrences of each date

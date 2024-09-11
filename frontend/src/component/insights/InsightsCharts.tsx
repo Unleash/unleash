@@ -18,7 +18,7 @@ import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { WidgetTitle } from './components/WidgetTitle/WidgetTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import type { ThemeInput } from 'react-activity-calendar';
+import ActivityCalendar, { type ThemeInput } from 'react-activity-calendar';
 
 export interface IChartsProps {
     flagTrends: InstanceInsightsSchema['flagTrends'];
@@ -126,6 +126,23 @@ export const InsightsCharts: FC<IChartsProps> = ({
         dark: ['#383838', '#4D455D', '#7DB9B6', '#F5E9CF', '#E96479'],
     };
 
+    // const {events} = useEventSearch({});
+
+    // const data = events.map(event => ({data: event.createdAt, }))
+
+    const data = [
+        {
+            date: '2022-12-14',
+            count: 2,
+            level: 1,
+        },
+        {
+            date: '2024-06-22',
+            count: 16,
+            level: 3,
+        },
+    ];
+
     return (
         <StyledContainer>
             <ConditionallyRender
@@ -133,7 +150,6 @@ export const InsightsCharts: FC<IChartsProps> = ({
                 show={
                     <>
                         <StyledWidget>
-                            Contribs
                             <ActivityCalendar
                                 data={data}
                                 theme={explicitTheme}

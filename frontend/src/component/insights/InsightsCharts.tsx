@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Box, Paper, styled } from '@mui/material';
+import { Box, Paper, Tooltip, styled } from '@mui/material';
 import { UserStats } from './componentsStat/UserStats/UserStats';
 import { UsersChart } from './componentsChart/UsersChart/UsersChart';
 import { UsersPerProjectChart } from './componentsChart/UsersPerProjectChart/UsersPerProjectChart';
@@ -19,6 +19,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { WidgetTitle } from './components/WidgetTitle/WidgetTitle';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import ActivityCalendar, { type ThemeInput } from 'react-activity-calendar';
+import { useEvents } from 'hooks/api/getters/useEvents/useEvents';
 
 export interface IChartsProps {
     flagTrends: InstanceInsightsSchema['flagTrends'];
@@ -91,6 +92,47 @@ const StyledChartContainer = styled(Box)(({ theme }) => ({
     padding: theme.spacing(3),
 }));
 
+type Input = { createdAt: string };
+type Output = { date: string; count: number; level: number };
+
+function transformData(inputData: Input[]): Output[] {
+    const resultMap: Record<string, number> = {};
+
+    inputData.forEach((item) => {
+        // Parse the string as a Date and format it as 'YYYY-MM-DD'
+        const formattedDate = new Date(item.createdAt)
+            .toISOString()
+            .split('T')[0];
+
+        // If the date already exists in the map, increment its count
+        if (resultMap[formattedDate]) {
+            resultMap[formattedDate]++;
+        } else {
+            // Otherwise, initialize it with a count of 1
+            resultMap[formattedDate] = 1;
+        }
+    });
+
+    // Calculate the max count, excluding zero
+    const maxCount = Math.max(...Object.values(resultMap));
+
+    // Define a function to calculate the level based on count
+    const calculateLevel = (count: number): number => {
+        if (count === 0) {
+            return 0; // Separate bucket for zero
+        }
+        const bucketSize = maxCount / 4; // Divide non-zero counts into 4 levels
+        return Math.min(Math.ceil(count / bucketSize), 4); // Ensure max level is 4
+    };
+
+    // Convert the map back to an array of objects with 'date', 'count', and 'level'
+    return Object.entries(resultMap).map(([date, count]) => ({
+        date,
+        count,
+        level: calculateLevel(count),
+    }));
+}
+
 export const InsightsCharts: FC<IChartsProps> = ({
     projects,
     summary,
@@ -126,22 +168,26 @@ export const InsightsCharts: FC<IChartsProps> = ({
         dark: ['#383838', '#4D455D', '#7DB9B6', '#F5E9CF', '#E96479'],
     };
 
-    // const {events} = useEventSearch({});
+    const { events } = useEvents();
 
-    // const data = events.map(event => ({data: event.createdAt, }))
+    let data = transformData(events);
+    data =
+        data.length > 0
+            ? data
+            : [
+                  {
+                      date: '2022-12-14',
+                      count: 2,
+                      level: 1,
+                  },
+                  {
+                      date: '2024-06-22',
+                      count: 16,
+                      level: 3,
+                  },
+              ];
 
-    const data = [
-        {
-            date: '2022-12-14',
-            count: 2,
-            level: 1,
-        },
-        {
-            date: '2024-06-22',
-            count: 16,
-            level: 3,
-        },
-    ];
+    console.log(data);
 
     return (
         <StyledContainer>
@@ -149,10 +195,18 @@ export const InsightsCharts: FC<IChartsProps> = ({
                 condition={showAllProjects}
                 show={
                     <>
-                        <StyledWidget>
+                        <StyledWidget sx={{ p: 3 }}>
                             <ActivityCalendar
-                                data={data}
                                 theme={explicitTheme}
+                                data={data}
+                                maxLevel={4}
+                                renderBlock={(block, activity) => (
+                                    <Tooltip
+                                        title={`${activity.count} activities on ${activity.date}`}
+                                    >
+                                        {block}
+                                    </Tooltip>
+                                )}
                             />
                         </StyledWidget>
                         <StyledWidget>

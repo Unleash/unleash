@@ -772,7 +772,8 @@ describe('Managing Project access', () => {
             ),
         );
     });
-    test('Users can not assign roles they do not have to a user through explicit roles endpoint', async () => {
+
+    test('Users can not assign roles where they do not hold the same permissions', async () => {
         const project = {
             id: 'user_fail_assign_to_user',
             name: 'user_fail_assign_to_user',
@@ -780,64 +781,83 @@ describe('Managing Project access', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
+
+        const auditUser = extractAuditInfoFromUser(user);
         await projectService.createProject(project, user, auditUser);
         const projectUser = await stores.userStore.insert({
             name: 'Some project user',
             email: 'fail_assign_role_to_user@example.com',
         });
-        const projectAuditUser = extractAuditInfoFromUser(projectUser);
         const secondUser = await stores.userStore.insert({
             name: 'Some other user',
             email: 'otheruser_no_roles@example.com',
         });
-        const customRole = await stores.roleStore.create({
-            name: 'role_that_noone_has',
-            roleType: 'custom',
-            description:
-                'Used to prove that you can not assign a role you do not have via setRolesForUser',
-        });
+
+        const customRoleUserAccess = await accessService.createRole(
+            {
+                name: 'Project-permissions-lead',
+                description: 'Role',
+                permissions: [
+                    {
+                        name: 'PROJECT_USER_ACCESS_WRITE',
+                    },
+                ],
+                createdByUserId: SYSTEM_USER_ID,
+            },
+            SYSTEM_USER_AUDIT,
+        );
+
+        const customRoleUpdateEnvironments = await accessService.createRole(
+            {
+                name: 'Project Lead',
+                description: 'Role',
+                permissions: [
+                    {
+                        name: 'UPDATE_FEATURE_ENVIRONMENT',
+                        environment: 'production',
+                    },
+                    {
+                        name: 'CREATE_FEATURE_STRATEGY',
+                        environment: 'production',
+                    },
+                ],
+                createdByUserId: SYSTEM_USER_ID,
+            },
+            SYSTEM_USER_AUDIT,
+        );
+
+        await projectService.setRolesForUser(
+            project.id,
+            projectUser.id,
+            [customRoleUserAccess.id],
+            auditUser,
+        );
+
+        const auditProjectUser = extractAuditInfoFromUser(projectUser);
+
         await expect(
             projectService.setRolesForUser(
                 project.id,
                 secondUser.id,
-                [customRole.id],
-                projectAuditUser,
+                [customRoleUpdateEnvironments.id],
+                auditProjectUser,
             ),
         ).rejects.toThrow(
             new InvalidOperationError(
                 'User tried to assign a role they did not have access to',
             ),
         );
-    });
-    test('Users can not assign roles they do not have to a group through explicit roles endpoint', async () => {
-        const project = {
-            id: 'user_fail_assign_to_group',
-            name: 'user_fail_assign_to_group',
-            description: '',
-            mode: 'open' as const,
-            defaultStickiness: 'clientId',
-        };
-        await projectService.createProject(project, user, auditUser);
-        const projectUser = await stores.userStore.insert({
-            name: 'Some project user',
-            email: 'fail_assign_role_to_group@example.com',
-        });
-        const projectAuditUser = extractAuditInfoFromUser(projectUser);
+
         const group = await stores.groupStore.create({
             name: 'Some group_awaiting_role',
         });
-        const customRole = await stores.roleStore.create({
-            name: 'role_that_noone_has_fail_assign_group',
-            roleType: 'custom',
-            description:
-                'Used to prove that you can not assign a role you do not have via setRolesForGroup',
-        });
-        return expect(
+
+        await expect(
             projectService.setRolesForGroup(
                 project.id,
                 group.id,
-                [customRole.id],
-                projectAuditUser,
+                [customRoleUpdateEnvironments.id],
+                auditProjectUser,
             ),
         ).rejects.toThrow(
             new InvalidOperationError(

@@ -3,6 +3,7 @@ lerna-debug
 npm-debug
 .DS_Store
 /dist
+.vscode
 
 # Logs
 logs

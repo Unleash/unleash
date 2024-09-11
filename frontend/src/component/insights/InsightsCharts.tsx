@@ -175,8 +175,55 @@ export const InsightsCharts: FC<IChartsProps> = ({
     };
 
     const { events } = useEventSearch({ limit: '1000' });
+    const { events: events1 } = useEventSearch({
+        limit: '1000',
+        offset: '1000',
+    });
+    const { events: events2 } = useEventSearch({
+        limit: '1000',
+        offset: '2000',
+    });
+    const { events: events3 } = useEventSearch({
+        limit: '1000',
+        offset: '3000',
+    });
+    const { events: events4 } = useEventSearch({
+        limit: '1000',
+        offset: '4000',
+    });
+    const { events: events5 } = useEventSearch({
+        limit: '1000',
+        offset: '5000',
+    });
+    const { events: events6 } = useEventSearch({
+        limit: '1000',
+        offset: '6000',
+    });
+    const { events: events7 } = useEventSearch({
+        limit: '1000',
+        offset: '7000',
+    });
+    const { events: events8 } = useEventSearch({
+        limit: '1000',
+        offset: '8000',
+    });
+    const { events: events9 } = useEventSearch({
+        limit: '1000',
+        offset: '9000',
+    });
 
-    let data = transformData(events);
+    let data = transformData([
+        ...events,
+        ...events1,
+        ...events2,
+        ...events3,
+        ...events4,
+        ...events5,
+        ...events6,
+        ...events7,
+        ...events8,
+        ...events9,
+    ]);
     data =
         data.length > 0
             ? data
@@ -206,6 +253,7 @@ export const InsightsCharts: FC<IChartsProps> = ({
                                 theme={explicitTheme}
                                 data={data}
                                 maxLevel={4}
+                                showWeekdayLabels={true}
                                 renderBlock={(block, activity) => (
                                     <Tooltip
                                         title={`${activity.count} activities on ${activity.date}`}

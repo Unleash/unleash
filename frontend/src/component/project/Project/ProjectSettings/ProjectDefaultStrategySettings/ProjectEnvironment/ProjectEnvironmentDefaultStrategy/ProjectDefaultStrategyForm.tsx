@@ -21,11 +21,15 @@ import { FeatureStrategyConstraints } from 'component/feature/FeatureStrategy/Fe
 import { FeatureStrategyType } from 'component/feature/FeatureStrategy/FeatureStrategyType/FeatureStrategyType';
 import { FeatureStrategyTitle } from 'component/feature/FeatureStrategy/FeatureStrategyForm/FeatureStrategyTitle/FeatureStrategyTitle';
 import { StrategyVariants } from 'component/feature/StrategyTypes/StrategyVariants';
+import {
+    PROJECT_DEFAULT_STRATEGY_WRITE,
+    UPDATE_PROJECT,
+} from '@server/types/permissions';
 
 interface IProjectDefaultStrategyFormProps {
     projectId: string;
     environmentId: string;
-    permission: string;
+    permission: string | string[];
     onSubmit: () => void;
     onCancel?: () => void;
     loading: boolean;
@@ -186,6 +190,10 @@ export const ProjectDefaultStrategyForm = ({
                         setStrategy={setStrategy}
                         environment={environmentId}
                         projectId={projectId}
+                        permission={[
+                            PROJECT_DEFAULT_STRATEGY_WRITE,
+                            UPDATE_PROJECT,
+                        ]}
                     />
                 }
             />

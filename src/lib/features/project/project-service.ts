@@ -964,16 +964,6 @@ export default class ProjectService {
                 (role) => role.permissions,
             );
 
-            this.logger.info('-----------');
-            this.logger.info(
-                `filteredUserPermissions:  ${JSON.stringify(filteredUserPermissions, null, 2)}`,
-            );
-            this.logger.info(
-                `rolesToBeAssignedPermissions,
-                ${JSON.stringify(rolesToBeAssignedPermissions, null, 2)}`,
-            );
-            this.logger.info('-----------');
-
             return canGrantProjectRole(
                 filteredUserPermissions,
                 rolesToBeAssignedPermissions,

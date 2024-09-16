@@ -1,6 +1,6 @@
 ARG NODE_VERSION=20.16.0-alpine
 
-FROM node:$NODE_VERSION as builder
+FROM node:$NODE_VERSION AS builder
 
 WORKDIR /unleash
 
@@ -21,9 +21,9 @@ RUN yarn workspaces focus -A --production
 
 FROM node:$NODE_VERSION
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
-ENV TZ UTC
+ENV TZ=UTC
 
 WORKDIR /unleash
 

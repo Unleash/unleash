@@ -1,7 +1,7 @@
 ---
 title: How to add SSO with SAML 2.0 and Microsoft Entra ID
 slug: 'how-to/how-to-add-sso-azure-saml'
-description: 'Configure Microsoft Entra ID (formerly known as Azure AD) SSO with SAML 2.0 for your Unleash instance.'
+description: 'Configure Microsoft Entra ID SSO with SAML 2.0 for your Unleash instance.'
 ---
 
 import Figure from '@site/src/components/Figure/Figure.tsx'
@@ -12,14 +12,14 @@ import Figure from '@site/src/components/Figure/Figure.tsx'
 
 :::
 
-This guide walks you through setting up single sign-on (SSO) using SAML 2.0, with [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) as the identity provider (IdP). Unleash also supports a variety of identity providers and protocols; visit our [reference documentation](../reference/sso.md) to explore other options.
+This guide walks you through setting up single sign-on (SSO) using SAML 2.0, with [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) as the identity provider (IdP). Unleash supports a variety of identity providers and protocols; visit our [reference documentation](../reference/sso.md) to explore other options.
 
 ## Prerequisites
 
 To follow along, you'll need:
 
 - An Unleash instance with administrator access.
-- Microsoft Entra access for the Azure instance you want to integrate with.
+- Microsoft Entra access for the instance you want to integrate with.
 
 ## Create an enterprise application in Microsoft Entra ID
 
@@ -34,12 +34,10 @@ To create a new enterprise application in Microsoft Entra, do the following:
 
 To configure SSO for the new application, do the following:
 1. In the overview page of the application, go to **Manage > Single sign-on** and click **SAML**.
-2. In **Basic SAML Configuration**, click **Edit**.
+2. In the **Basic SAML Configuration** section, click **Edit**.
 3. Click **Add identifier** and enter the Unleash identifier. For hosted instances, that is `https://<region>.app.unleash-hosted.com/<your_unleash_instance_name>`.
 4. Click **Add reply URL** and enter the URL shown in the Unleash Admin UI at **Admin > Single sign-on > SAML 2.0**. For example, `<your_unleash_url>/auth/saml/callback`.
 5. Click **Save**.
-
-<Figure caption="Edit the SAML configuration in Microsoft Entra admib center." img="/img/microsoft-entra-admin-center.png" />
 
 ### Manage attributes and claims
 
@@ -50,24 +48,37 @@ To confirm attributes and claims for the new application, do the following:
 4. For **Source**, select **Attribute** and for **Source attribute** select `user.mail`.
 5. Click **Save**.
 
+<Figure caption="Edit the SAML configuration in Microsoft Entra admin center." img="/img/microsoft-entra-admin-center.png" />
+
+
 ### Save SAML certificate, identifier, and login URL
 
 Save the following information from the single sign-on page for your application:
-1. **SAML certificate**: go to **SAML Certificates > Federation Metadata XML** and click **Download**.
-   1. Open the file and copy the contents between the `X509Certificate` tag. 
-2. **Login URL**: go to **Set up {your-application-name}** and copy and save **Login URL**. For example: `https://login.microsoftonline.com/<your_identifier>/saml2`.
-3. **Microsoft Entra Identifier**: go to **Set up {your-application-name}** and copy and save **Microsoft Entra Identifier**. For example: `https://sts.windows.net/<your_identifier>/`
+- [SAML certificate](#saml-certificate)
+- [Login URL](#login-url)
+- [Microsoft Entra Identifier](#microsoft-entra-identifier)
+
+#### SAML certificate
+To save the SAML certificate, go to the single sign-on settings of your application. In **SAML Certificates > Federation Metadata XML**, click **Download**. Open the file and copy the contents between the `X509Certificate` tag. 
 
 <Figure caption="Save the X509 Certificate from the SAML certificate XML file. The example has been redacted." img="/img/x509cert.png" />
+
+#### Login URL
+To find your login URL, go to the single sign-on settings of your application. In the **Set up {your-application-name}** section, copy and save **Login URL**. For example: `https://login.microsoftonline.com/<your_identifier>/saml2`.
+
+#### Microsoft Entra identifier
+
+To find your Microsoft Entra identifier, go to the single sign-on settings of your application. In the **Set up {your-application-name}** section, copy and save **Microsoft Entra Identifier**. For example: `https://sts.windows.net/<your_identifier>/`
+
 
 ## Configure the SAML 2.0 provider in Unleash
 
 To finalize the configuration, do the following:
 
 1. In the Unleash Admin UI, go to **Admin > Single sign-on> SAML 2.0**.
-2. In **Entity ID**, enter your **Microsoft Entra Identifier**.
-3. In **Single sign-on URL**, enter your **Login URL**.
-4. In **X.509 Certificate**, [enter your **SAML certificate**](#save-saml-certificate-identifier-and-login-url).
+2. In **Entity ID**, enter your [Microsoft Entra identifier](#microsoft-entra-identifier).
+3. In **Single sign-on URL**, enter your [Login URL](#login-url).
+4. In **X.509 Certificate**, [enter your SAML certificate](#saml-certificate).
 5. Optional: To automatically create users for first-time sign-ins, select **Auto-create users**. Select a default root role new users should have, and configure the list of valid email domains.
 6. Click **Save**.
 
@@ -87,7 +98,7 @@ To create the group in Microsoft Entra, do the following:
 3. In the **Advanced options** click **Customize the name of the group claim**, and enter a name.
 4. Click **Save**.
 
-:::info
+:::info Note
 Microsoft Entra limits the number of groups emitted in a SAML response to 150, including nested groups. If you have users who are present in more than 150 groups, add a filter in the advanced section of group claims to ensure the response only includes the groups you want to send to Unleash.
 :::
 

@@ -40,6 +40,8 @@ const unleash = initialize({
 `,
     Go: `import (
     "github.com/Unleash/unleash-client-go/v3"
+    "net/http"
+    "time"
 )
 
 func init() {
@@ -48,6 +50,7 @@ func init() {
         unleash.WithAppName("unleash-onboarding-golang"),
         unleash.WithUrl("<YOUR_API_URL>"),
         unleash.WithCustomHeaders(http.Header{"Authorization": {"<YOUR_API_TOKEN>"}}),
+        unleash.WithMetricsInterval(5*time.Second),
     )
 }`,
     Ruby: `Unleash.configure do |config|
@@ -192,7 +195,13 @@ export const checkFlagCodeSnippets: Record<SdkName, string> = {
   console.log('Is enabled', unleash.isEnabled('<YOUR_FLAG>'));
 }, 1000);
 `,
-    Go: ``,
+    Go: `func main() {
+    for {
+        unleash.IsEnabled("<YOUR_FLAG>")
+        time.Sleep(time.Second)
+    }
+}, 1000);
+`,
     Ruby: ``,
     PHP: ``,
     Rust: ``,

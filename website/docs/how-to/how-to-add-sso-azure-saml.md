@@ -42,7 +42,7 @@ To configure SSO for the new application, do the following:
 ### Manage attributes and claims
 
 To confirm attributes and claims for the new application, do the following:
-1. In the single sign-on page for your application, go to **Attributes & Claims** and click **Edit**.
+1. In the single sign-on settings of your application, go to **Attributes & Claims** and click **Edit**.
 2. Go to **Required claim** and click **Unique User Identifier (Name ID)**.
 3. For **Name identifier format**, select **Email address**.
 4. For **Source**, select **Attribute** and for **Source attribute** select `user.mail`.
@@ -53,7 +53,7 @@ To confirm attributes and claims for the new application, do the following:
 
 ### Save SAML certificate, identifier, and login URL
 
-Save the following information from the single sign-on page for your application:
+Save the following information from the single sign-on settings of your application:
 - [SAML certificate](#saml-certificate)
 - [Login URL](#login-url)
 - [Microsoft Entra Identifier](#microsoft-entra-identifier)

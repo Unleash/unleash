@@ -18,8 +18,8 @@ This guide walks you through setting up single sign-on (SSO) using SAML 2.0, wit
 
 To follow along, you'll need:
 
-- An Unleash instance with administrator access.
-- Microsoft Entra access for the instance you want to integrate with.
+- An Unleash instance with [Admin access](../reference/rbac.md).
+- Access to Microsoft Entra as at least a [Cloud Application Administrator](https://learn.microsoft.com/en-us/entra/identity/role-based-access-control/permissions-reference#cloud-application-administrator).
 
 ## Create an enterprise application in Microsoft Entra ID
 
@@ -90,7 +90,7 @@ To test that things are working as expected, log out of Unleash and verify that 
 
 ## Enable group syncing
 
-Optionally, you can sync groups from Microsoft Entra ID to Unleash to [map them to groups in Unleash](../how-to/how-to-set-up-group-sso-sync.md).
+Optionally, you can sync groups from Microsoft Entra ID to Unleash to [map them to groups in Unleash](./how-to-set-up-group-sso-sync.md).
 
 To create the group in Microsoft Entra, do the following:
 1. In the Microsoft Entra admin center, go to the single sign-on settings of your application, and select **Attributes & Claims**.

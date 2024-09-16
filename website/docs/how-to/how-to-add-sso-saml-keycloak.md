@@ -49,7 +49,7 @@ Navigate to “Realm Settings” and open the “SAML 2.0 Identity Provider Meta
 
 ### Step 4: Configure SAML 2.0 Authentication provider in Unleash {#step-3}
 
-Go back to Unleash Admin Dashboard and navigate to Admin Menu > Single-Sign-On > SAML. Fill in the values captured in the step 3.
+Go back to Unleash Admin Dashboard and navigate to `Admin Menu -> Single-Sign-On -> SAML`. Fill in the values captured in the step 3.
 
 - Entity ID (3b a)
 - Single Sing-On URL (3a b)

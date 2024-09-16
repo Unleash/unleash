@@ -1,130 +1,97 @@
 ---
-title: How to add SSO with SAML 2.0 Azure
+title: How to add SSO with SAML 2.0 and Microsoft Entra ID
+slug: 'how-to/how-to-add-sso-azure-saml'
+description: 'Configure Microsoft Entra ID (formerly known as Azure AD) SSO with SAML 2.0 for your Unleash instance.'
 ---
 
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
-:::info Availability
+:::note Availability
 
-The **Single-Sign-On capability** is only available for customers on the Enterprise subscription. Check out the [Unleash plans](https://www.getunleash.io/plans) for details.
-
-:::
-
-## Introduction {#introduction}
-
-This guides shows you how to use [Unleash's Single-Sign-On (SSO) integration](../reference/sso.md) with SAML 2.0 and how to connect it to Azure Active Directory as an ID provider (IdP).
-
-## Basic configuration
-
-### Prerequisites
-
-This guide expects you to already have:
-
-- Administrator access to the Unleash instance you want to configure
-- Azure AD access for your Azure instance
-
-### Step 1: Create an Enterprise Application within Azure AD {#step-1}
-
-**a) Sign in to your Azure AD and create a new Enterprise Application**.
-
-<Figure caption="In the Azure directory overview, use the add button and select the enterprise application option." img="/img/sso-azure-saml-add-enterprise-app.png"/>
-
-**b) In the Azure AD gallery, select the option to create your own application.**
-
-![The Azure AD gallery. The "create your own application" button is highlighted.](/img/sso-azure-saml-create-own-app.png)
-
-**c) Next, provide the application with a name. When asked what you're looking to do with the application, select the "Integrate any other application you don't find in the gallery (Non-gallery)" option.**
-
-![Azure application creation form. The name is set to "UnleashSSO" and the "non-gallery" option is selected.](/img/sso-azure-saml-name-app.png)
-
-### Step 2: Configure SSO via SAML in Azure AD {#step-2}
-
-**a) On the single sign-on page ("single sign-on" in the side bar), select the "SAML" option**
-
-![Azure: SSO method selection page](/img/sso-azure-saml-saml-choice.png)
-
-**b) Section 1: Basic SAML Configuration {#basic-saml-configuration}**
-
-When configuring SSO with SAML, you'll need to add an **identifier** and a **reply URL**.
-The **identifier** is your Unleash URL. (For hosted instances, that's usually `https://<region>.app.unleash-hosted.com/<instanceName>`).
-
-The **reply URL** is the Unleash callback URL. The Unleash callback URL is available on the Unleash SSO configuration page, and is typically your Unleash URL followed by `/auth/saml/callback`.
-
-![Azure: The basic SAML configuration form with example values filled out for the required fields.](/img/sso-azure-saml-section-one.png)
-
-**c) Section 2: Attributes & Claims {#attributes-and-claims}**
-
-1. Set the "name identifier format" to "Email address".
-2. Select "attribute" as the source.
-3. Enter "user.mail" in the source attribute field.
-
-Optionally, you can also provide a first name and a last name. If provided, these will be used to enrich the data in Unleash.
-
-![Azure: The manage claim form with email configuration filled out](/img/sso-azure-saml-unique-id-email-id.png)
-![Azure: The list of claims used by the SAML setup, including the optional claims for given name and surname](/img/sso-azure-saml-attributes-claim.png)
-
-:::info URLs and formats
-
-Make sure to replace URLs with the public URL for your Unleash instance. This will require correct region prefix and the instance name.
-
-The correct format is: https://**[region]**.app.unleash-hosted.com/**[instanceName]**/auth/saml/callback
+**Plan**: [Enterprise](https://www.getunleash.io/pricing)
 
 :::
 
-**d) Sections 3 and 4: Azure AD setup details {#azure-details}**
+This guide walks you through setting up single sign-on (SSO) using SAML 2.0, with [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) as the identity provider (IdP). Unleash also supports a variety of identity providers and protocols; visit our [reference documentation](../reference/sso.md) to explore other options.
 
-You will need some details from section 3 and 4 of the SAML setup form to configure the integration within Unleash. These details are:
-- Azure AD Identifier (from section 4)
-- Login URL (from section 4)
-- X.509 Certificate (in the Federation Metadata XML from section 3)
+## Prerequisites
 
-<Figure caption="Section 3 contains a download link for the Federation Metadata XML file. Section 4 lists the Azure AD identifier and the login URL" img="/img/sso-azure-saml-azure-details.png"/>
-<Figure caption="Within the Federation Metadata XML file, find the `X509Certificate` tag. You'll need the content within that tag." img="/img/sso-azure-saml-x509cert.png"/>
+To follow along, you'll need:
 
-### Step 3: Configure SAML 2.0 provider in Unleash {#step-3}
+- An Unleash instance with administrator access.
+- Microsoft Entra access for the Azure instance you want to integrate with.
 
-In order to configure SSO with SAML with your Unleash enterprise you should navigate to the Single-Sign-On configuration section and choose the "SAML 2.0" tab.
+## Create an enterprise application in Microsoft Entra ID
 
-![Unleash: sso-config screen](/img/sso-configure-saml.png)
+To create a new enterprise application in Microsoft Entra, do the following:
+1. In the Microsoft Entra admin center, go to **Identity > Applications > Enterprise applications** and click **New application**.
+2. In the Microsoft Entra Gallery, click **Create your own application**.
+3. Enter an app name, select the **Integrate any other application you don't find in the gallery** option, and click **Create**.
 
-Use the values from the [previous section](#azure-details) to fill out the form:
-1. In the entity ID field, add the **Azure AD identifier**. It should look a little like this `https://sts.windows.net/**[identifier]**`.
-2. In the single sign-on URL field, add the **login URL**. It should look something like `https://login.microsoftonline.com/**[identifier]**/saml2`
-3. In the X.509 certificate field, add the content of the `X509Certificate` tag from the **federation metadata XML**.
+## Configure SAML SSO for the application
 
-Optionally, you may also choose to “Auto-create users”. This will make Unleash automatically create new users on the fly the first time they sign-in to Unleash with the given SSO provider (JIT). If you decide to automatically create users in Unleash you must also provide a list of valid email domains separated by commas. You must also decide which root Unleash role they will be assigned. Without this enabled you will need to manually add users to Unleash before SSO will work for their accounts and Unleash.
+### Add SAML configuration
 
-![Unleash: SAML 2.0 filled out with entity ID, Single Sign-On URL, and X.509 certificate and auto-creating users for users with the '@getunleash.ai' and '@getunleash.io' emaiil domains.](/img/sso-azure-saml-unleash-config.png)
+To configure SSO for the new application, do the following:
+1. In the overview page of the application, go to **Manage > Single sign-on** and click **SAML**.
+2. In **Basic SAML Configuration**, click **Edit**.
+3. Click **Add identifier** and enter the Unleash identifier. For hosted instances, that is `https://<region>.app.unleash-hosted.com/<your_unleash_instance_name>`.
+4. Click **Add reply URL** and enter the URL shown in the Unleash Admin UI at **Admin > Single sign-on > SAML 2.0**. For example, `<your_unleash_url>/auth/saml/callback`.
+5. Click **Save**.
 
-### Validate {#validation}
+<Figure caption="Edit the SAML configuration in Microsoft Entra admib center." img="/img/microsoft-entra-admin-center.png" />
 
-If everything is set up correctly, you should now be able to sign in with the SAML 2.0 option. You can verify that this works by logging out of Unleash: the login screen should give you the option to sign in with SAML 2.0.
+### Manage attributes and claims
 
-You can also test the integration in Azure by using the "test single sign on" step in the SAML setup wizard.
+To confirm attributes and claims for the new application, do the following:
+1. In the single sign-on page for your application, go to **Attributes & Claims** and click **Edit**.
+2. Go to **Required claim** and click **Unique User Identifier (Name ID)**.
+3. For **Name identifier format**, select **Email address**.
+4. For **Source**, select **Attribute** and for **Source attribute** select `user.mail`.
+5. Click **Save**.
 
-<Figure caption="The SAML setup wizard contains a step that lets you test your SAML 2.0 integration. You can use this to verify that everything is configured correctly within Azure." img="/img/sso-azure-saml-test-user.png"/>
+### Save SAML certificate, identifier, and login URL
 
-### Group Syncing {#group-syncing}
+Save the following information from the single sign-on page for your application:
+1. **SAML certificate**: go to **SAML Certificates > Federation Metadata XML** and click **Download**.
+   1. Open the file and copy the contents between the `X509Certificate` tag. 
+2. **Login URL**: go to **Set up {your-application-name}** and copy and save **Login URL**. For example: `https://login.microsoftonline.com/<your_identifier>/saml2`.
+3. **Microsoft Entra Identifier**: go to **Set up {your-application-name}** and copy and save **Microsoft Entra Identifier**. For example: `https://sts.windows.net/<your_identifier>/`
 
-Optionally, you can sync groups from Azure AD to Unleash to [map them to groups in Unleash](../how-to/how-to-set-up-group-sso-sync.md).
+<Figure caption="Save the X509 Certificate from the SAML certificate XML file. The example has been redacted." img="/img/x509cert.png" />
 
-**a) Add a group claim in Azure**
-In section 2 (Attributes and claims) of the Azure SAML set-up, select the option to "Add a group claim".
+## Configure the SAML 2.0 provider in Unleash
 
-Check the box to "Customize the name of the group claim" and update the "Name" to something simple, such as "groups".
+To finalize the configuration, do the following:
 
-Azure AD only supports sending a maximum of 150 groups in the SAML response. If you're using Azure AD and have users that are present in more than 150 groups, you'll need to add a filter in this section to the group claim to ensure that only the groups you want to sync are sent to Unleash.
+1. In the Unleash Admin UI, go to **Admin > Single sign-on> SAML 2.0**.
+2. In **Entity ID**, enter your **Microsoft Entra Identifier**.
+3. In **Single sign-on URL**, enter your **Login URL**.
+4. In **X.509 Certificate**, [enter your **SAML certificate**](#save-saml-certificate-identifier-and-login-url).
+5. Optional: To automatically create users for first-time sign-ins, select **Auto-create users**. Select a default root role new users should have, and configure the list of valid email domains.
+6. Click **Save**.
 
-![Azure: section 2, attributes and claims, adding a group claim with the name 'group'](/img/sso-azure-saml-group-setup.png)
+<Figure caption="Configure SAML 2.0 in Unleash." img="/img/saml2.0.png" />
 
+## Test your configuration
 
-**b) Unleash SSO Setup**
-In the Unleash Admin SSO section, enable the option to "Enable Group Syncing".
+To test that things are working as expected, log out of Unleash and verify that the login screen gives you the option to sign in with SAML 2.0. You can also test the integration in Microsoft Entra in the single sign-on settings of your application.
 
-Add the same "Name" you used from the previous section (eg. "groups") as the "Group Field JSON Path".
+## Enable group syncing
 
-![Unleash: SAML 2.0 SSO setup, enabled group syncing with the Group Field JSON Path as 'groups'](/img/sso-azure-saml-unleash-group-settings.png)
+Optionally, you can sync groups from Microsoft Entra ID to Unleash to [map them to groups in Unleash](../how-to/how-to-set-up-group-sso-sync.md).
 
-**Note that Azure only supports sending up to 150 groups.** If you have more groups than this, you can setup a filter in Azure to only send the relevant groups to Unleash.
+To create the group in Microsoft Entra, do the following:
+1. In the Microsoft Entra admin center, go to the single sign-on settings of your application, and select **Attributes & Claims**.
+2. Click **Add a group claim** and select **Groups assigned to the application**.
+3. In the **Advanced options** click **Customize the name of the group claim**, and enter a name.
+4. Click **Save**.
 
-![Unleash: SAML 2.0 setup, filtering groups by name ](/img/sso-azure-saml-group-filtering.png)
+:::info
+Microsoft Entra limits the number of groups emitted in a SAML response to 150, including nested groups. If you have users who are present in more than 150 groups, add a filter in the advanced section of group claims to ensure the response only includes the groups you want to send to Unleash.
+:::
+
+To enable group syncing in Unleash, do the following:
+1. In the Unleash Admin UI, go to **Admin > Single sign-on > SAML 2.0**.
+2. Select **Enable Group Syncing** and add the name in your group in Group Field JSON Path.
+3. Click **Save**.

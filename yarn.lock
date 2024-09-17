@@ -2144,10 +2144,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/mime@npm:3.0.4":
-  version: 3.0.4
-  resolution: "@types/mime@npm:3.0.4"
-  checksum: 10c0/db478bc0f99e40f7b3e01d356a9bdf7817060808a294978111340317bcd80ca35382855578c5b60fbc84ae449674bd9bb38427b18417e1f8f19e4f72f8b242cd
+"@types/mime@npm:4.0.0":
+  version: 4.0.0
+  resolution: "@types/mime@npm:4.0.0"
+  dependencies:
+    mime: "npm:*"
+  checksum: 10c0/c544ca670c2cb53b96c7e4a1b4ecfdf3777dad4b74f7bb305680eed82c753a7ccfdf03c8b06c9fba48bb10d2a96ae95c9a4007b6c83bc5fdc9cfa7250c07b85b
   languageName: node
   linkType: hard
 
@@ -6821,6 +6823,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mime@npm:*, mime@npm:^4.0.4":
+  version: 4.0.4
+  resolution: "mime@npm:4.0.4"
+  bin:
+    mime: bin/cli.js
+  checksum: 10c0/3046e425ed616613af8c7f4b268ff33ab564baeb24a117ef00475cbb23fbae91369ff2d9918cc6408162b0016bde34ea8cc4041b830fc2c45a8ecaf5b7e3e26f
+  languageName: node
+  linkType: hard
+
 "mime@npm:1.6.0":
   version: 1.6.0
   resolution: "mime@npm:1.6.0"
@@ -6836,15 +6847,6 @@ __metadata:
   bin:
     mime: cli.js
   checksum: 10c0/a7f2589900d9c16e3bdf7672d16a6274df903da958c1643c9c45771f0478f3846dcb1097f31eb9178452570271361e2149310931ec705c037210fc69639c8e6c
-  languageName: node
-  linkType: hard
-
-"mime@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "mime@npm:3.0.0"
-  bin:
-    mime: cli.js
-  checksum: 10c0/402e792a8df1b2cc41cb77f0dcc46472b7944b7ec29cb5bbcd398624b6b97096728f1239766d3fdeb20551dd8d94738344c195a6ea10c4f906eb0356323b0531
   languageName: node
   linkType: hard
 
@@ -9936,9 +9938,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unleash-client@npm:5.6.1":
-  version: 5.6.1
-  resolution: "unleash-client@npm:5.6.1"
+"unleash-client@npm:6.1.1":
+  version: 6.1.1
+  resolution: "unleash-client@npm:6.1.1"
   dependencies:
     http-proxy-agent: "npm:^7.0.2"
     https-proxy-agent: "npm:^7.0.5"
@@ -9946,7 +9948,7 @@ __metadata:
     make-fetch-happen: "npm:^13.0.1"
     murmurhash3js: "npm:^3.0.1"
     semver: "npm:^7.6.2"
-  checksum: 10c0/5a1bda38ebb03ed7cc13981d400bab23442703e01be6ae05bf30925491948d264ab0f368ae11103c6bbdcf3e494a26ab215bb23c8aa2fdf66345393e7444cb69
+  checksum: 10c0/ff1a5d5d047f05de3581320fbe3af2c796a9bd1578ea5546730883217f35f1462bd89ebf558038b69fdb6a1594031d08c720f7a4c29bf985532bd035f334d989
   languageName: node
   linkType: hard
 
@@ -9972,7 +9974,7 @@ __metadata:
     "@types/lodash.groupby": "npm:4.6.9"
     "@types/make-fetch-happen": "npm:10.0.4"
     "@types/memoizee": "npm:0.4.11"
-    "@types/mime": "npm:3.0.4"
+    "@types/mime": "npm:4.0.0"
     "@types/mustache": "npm:^4.2.5"
     "@types/node": "npm:20.16.3"
     "@types/nodemailer": "npm:6.4.15"
@@ -10033,7 +10035,7 @@ __metadata:
     log4js: "npm:^6.0.0"
     make-fetch-happen: "npm:^13.0.0"
     memoizee: "npm:^0.4.17"
-    mime: "npm:^3.0.0"
+    mime: "npm:^4.0.4"
     murmurhash3js: "npm:^3.0.1"
     mustache: "npm:^4.1.0"
     nock: "npm:13.5.5"
@@ -10049,7 +10051,7 @@ __metadata:
     proxyquire: "npm:2.1.3"
     response-time: "npm:^2.3.2"
     sanitize-filename: "npm:^1.6.3"
-    semver: "npm:^7.6.2"
+    semver: "npm:^7.6.3"
     serve-favicon: "npm:^2.5.0"
     slug: "npm:^9.0.0"
     source-map-support: "npm:0.5.21"
@@ -10061,7 +10063,7 @@ __metadata:
     tsc-watch: "npm:6.2.0"
     type-is: "npm:^1.6.18"
     typescript: "npm:5.4.5"
-    unleash-client: "npm:5.6.1"
+    unleash-client: "npm:6.1.1"
     uuid: "npm:^9.0.0"
     wait-on: "npm:^7.2.0"
   languageName: unknown

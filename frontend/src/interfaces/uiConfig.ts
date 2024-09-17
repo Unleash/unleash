@@ -90,6 +90,7 @@ export type UiFlags = {
     archiveProjects?: boolean;
     projectListImprovements?: boolean;
     onboardingUI?: boolean;
+    eventTimeline?: boolean;
 };
 
 export interface IVersionInfo {

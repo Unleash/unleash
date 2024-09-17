@@ -4267,10 +4267,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debounce@npm:2.1.0":
-  version: 2.1.0
-  resolution: "debounce@npm:2.1.0"
-  checksum: 10c0/15ef40fc5c402053ca5ab1b2c23cf25eb8f2f3246977793846561b0c87321cbb627075897f69bbcffa5a5a7d07c161c9ba0bfcb4a80ee6898844c5b11bf1a76e
+"debounce@npm:2.1.1":
+  version: 2.1.1
+  resolution: "debounce@npm:2.1.1"
+  checksum: 10c0/2d33b118cbcd19dc85146a0020a849a2b67abfe20030bca283786b5110da922995f7228a551df4b77e8fee9f40673ccc63c509593a470ab061c548f94442989d
   languageName: node
   linkType: hard
 
@@ -9777,7 +9777,7 @@ __metadata:
     cypress-vite: "npm:^1.4.0"
     date-fns: "npm:2.30.0"
     date-fns-tz: "npm:^2.0.0"
-    debounce: "npm:2.1.0"
+    debounce: "npm:2.1.1"
     deep-diff: "npm:1.0.2"
     dequal: "npm:2.0.3"
     fast-json-patch: "npm:3.1.1"

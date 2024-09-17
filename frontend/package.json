@@ -81,7 +81,7 @@
     "cypress-vite": "^1.4.0",
     "date-fns": "2.30.0",
     "date-fns-tz": "^2.0.0",
-    "debounce": "2.1.0",
+    "debounce": "2.1.1",
     "deep-diff": "1.0.2",
     "dequal": "2.0.3",
     "fast-json-patch": "3.1.1",

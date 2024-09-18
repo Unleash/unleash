@@ -51,8 +51,8 @@ const Placeholder = styled('li')({
 });
 
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
-    const { isEnterprise } = useUiConfig();
-    const eventTimeline = useUiFlag('eventTimeline') && isEnterprise();
+    const { isOss, isEnterprise } = useUiConfig();
+    const eventTimeline = useUiFlag('eventTimeline') && !isOss();
     const showFilters = useUiFlag('newEventSearch') && isEnterprise();
     const {
         events,

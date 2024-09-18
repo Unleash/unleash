@@ -13,7 +13,7 @@ const StyledEvent = styled('div', {
     alignItems: 'center',
     justifyContent: 'center',
     left: position,
-    transform: 'translateX(-100%)',
+    transform: 'translateX(-50%)',
     padding: theme.spacing(0, 0.25),
     zIndex: 1,
 }));

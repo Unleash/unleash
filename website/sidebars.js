@@ -99,6 +99,23 @@ module.exports = {
                     items: [
                         {
                             type: 'category',
+                            label: 'Use Cases',
+                            collapsed: true,
+                            link: {
+                                type: 'generated-index',
+                                title: 'Use Cases',
+                                slug: 'use-cases',
+                            },
+                            items: [
+                                {
+                                    type: 'doc',
+                                    label: 'Gradual Rollout',
+                                    id: 'feature-flag-tutorials/use-cases/gradual-rollout', 
+                                },
+                            ],
+                        },
+                        {
+                            type: 'category',
                             label: 'React',
                             link: {
                                 type: 'doc',

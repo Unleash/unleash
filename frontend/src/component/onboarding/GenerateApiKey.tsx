@@ -66,7 +66,7 @@ const SecretExplanation = styled('div')(({ theme }) => ({
 }));
 
 const SecretExplanationDescription = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.background.paper,
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(2),
     flex: 1,

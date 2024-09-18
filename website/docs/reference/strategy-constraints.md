@@ -3,12 +3,9 @@ title: Strategy Constraints
 ---
 import VideoContent from '@site/src/components/VideoContent.jsx'
 
-:::info Availability
+:::note Availability
 
-Before Unleash 4.16, strategy constraints were only available to Unleash Pro and Enterprise users. From 4.16 onwards, they're **available to everyone**.
-
-
-Unleash 4.9 introduced a more comprehensive set of constraint operators. These require that both Unleash *and* your client SDK of choice support them. See the [SDK compatibility table](../reference/sdks/index.md#strategy-constraints) for more information. Prior to Unleash 4.9, the only available operators were `IN` and `NOT_IN`.
+**Version**: `4.16+`
 
 :::
 
@@ -78,8 +75,7 @@ To clarify, here's a few example strategy constraints and what they do:
 In this section, `<context-field>` is used as a placeholder for an arbitrary context field. With the exception of the `currentTime` field, you can use any context field in its place.
 :::
 
-Unleash currently supports 15 different constraint operators.
-The operators can be grouped into four different categories based on their method of comparison.
+Unleash supports a wide range of constraint operators. `IN` and `NOT_IN` are basic operators that are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](../reference/sdks/index.md#strategy-constraints).
 
 ### Constraint negation / inversion {#constraint-negation}
 

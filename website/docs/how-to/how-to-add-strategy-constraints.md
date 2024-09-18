@@ -2,9 +2,9 @@
 title: How to add strategy constraints
 ---
 
-:::info Availability
+:::note Availability
 
-Before Unleash 4.16, strategy constraints were only available to Unleash Pro and Enterprise users. From 4.16 onwards, they're **available to everyone**.
+**Version**: `4.16+`
 
 :::
 

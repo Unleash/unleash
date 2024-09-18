@@ -2,9 +2,9 @@
 title: Service Accounts
 ---
 
-:::info Availability
+:::note Availability
 
-Service accounts is an enterprise feature available from Unleash 4.21 onwards.
+**Version**: `4.21+`
 
 :::
 

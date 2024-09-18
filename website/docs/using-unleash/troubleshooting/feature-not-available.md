@@ -6,9 +6,9 @@ Occasionally, users might come across a situation where a documented Unleash fea
 
 You can usually find availability information in the feature's documentation page, displayed in a box like this:
 
-:::info Availability
+:::note Availability
 
-**Cool new feature** was introduced as a beta feature in **Unleash 5.5** and is only available in Unleash Enterprise. We plan to make this feature generally available to all Enterprise users in **Unleash 5.6**.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.21+`
 
 :::
 

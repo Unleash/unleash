@@ -2,9 +2,9 @@
 title: Feature Lifecycle
 ---
 
-:::info Availability
+:::note Availability
 
-Feature lifecycle is currently in beta
+**Version**: `5.12+` in BETA
 
 :::
 

@@ -2,11 +2,13 @@
 title: Actions
 ---
 
-:::info Availability
+:::note Availability
 
-Actions were introduced as a beta feature in **Unleash 5.11** and are only available in Unleash Enterprise.
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.11+`
 
 :::
+
 ## Overview
 
 Actions allow you to configure automated actions to be executed based on signals received from an external system.

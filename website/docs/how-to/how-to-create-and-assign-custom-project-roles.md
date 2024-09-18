@@ -4,9 +4,9 @@ title: How to create and assign custom project roles
 
 import VideoContent from '@site/src/components/VideoContent.jsx'
 
-:::info availability
+:::note Availability
 
-Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.6+`
 
 :::
 
@@ -32,9 +32,9 @@ It takes about three steps to create custom project roles:
 
 ## Assigning custom project roles
 
-:::info Multiple project roles
+:::note Availability
 
-Multiple project roles is an enterprise feature available from **Unleash 5.6** onwards. See [multiple project roles](../reference/rbac.md#multiple-project-roles) for more info.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.6+`.
 
 :::
 

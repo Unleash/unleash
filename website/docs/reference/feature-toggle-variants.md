@@ -9,10 +9,9 @@ If you'd like to keep the old variants in your hosted instance [contact us](http
 
 :::
 
-:::info Availability
+:::note Availability
 
-**Feature flag variants** were first introduced in Unleash 3.2.
-In Unleash 4.21, variants were updated to be **environment-dependent**, meaning the same feature could have different variant configurations in different environments.
+**Version**: `3.2+`
 
 :::
 
@@ -22,7 +21,7 @@ Variants facilitate A/B testing and experimentation by letting you create contro
 
 ## What are variants?
 
-Whenever you create a feature flag, you can assign it any number of _variants_. This is commonly done in cases where you want to serve your users different versions of a feature to see which performs better. A feature can have different variants in each of its environments.
+Whenever you create a feature flag, you can assign it any number of _variants_. This is commonly done in cases where you want to serve your users different versions of a feature to see which performs better. A feature can have different variants in each of its environments as of version 4.21.
 
 A variant has four components that define it:
 - a **name**:

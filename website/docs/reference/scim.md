@@ -3,9 +3,9 @@ id: scim
 title: Provisioning
 ---
 
-:::info Availability
+:::note Availability
 
-Provisioning is only available in Unleash Enterprise. This feature is in beta, please reach out to us if you'd like this feature enabled in your Unleash instance.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.1+` in BETA
 
 :::
 

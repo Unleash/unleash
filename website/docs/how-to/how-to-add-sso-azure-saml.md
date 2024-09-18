@@ -4,9 +4,9 @@ title: How to add SSO with SAML 2.0 Azure
 
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
-:::info Availability
+:::note Availability
 
-The **Single-Sign-On capability** is only available for customers on the Enterprise subscription. Check out the [Unleash plans](https://www.getunleash.io/plans) for details.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing)
 
 :::
 

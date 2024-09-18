@@ -2,7 +2,13 @@
 title: Email service
 ---
 
-New since Unleash v4.0.0 is an email service allowing us to send reset password and welcome mails to new users. In order for this to work you'll need to tell unleash what SMTP service you'd like to send mails from.
+:::note Availability
+
+**Version**: `4+`
+
+:::
+
+Email service allows you to send password reset and welcome mails to new users. In order for this to work you'll need to tell unleash what SMTP service you'd like to send mails from.
 
 If the service is not configured you'll see a log line every time you add a new user saying
 

@@ -23,7 +23,7 @@ const StyledTimelineContainer = styled('div')(({ theme }) => ({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
-    padding: theme.spacing(1, 0),
+    padding: theme.spacing(1.5, 0),
 }));
 
 const StyledTimeline = styled('div')(({ theme }) => ({
@@ -47,7 +47,7 @@ const StyledMarker = styled('div')(({ theme }) => ({
 }));
 
 const StyledMiddleMarker = styled(StyledMarker)(({ theme }) => ({
-    top: theme.spacing(-1.5),
+    top: theme.spacing(-2),
 }));
 
 const StyledMarkerLabel = styled('div')(({ theme }) => ({

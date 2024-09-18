@@ -1,4 +1,4 @@
-import { Switch, FormControlLabel, useMediaQuery } from '@mui/material';
+import { Switch, FormControlLabel, useMediaQuery, Box } from '@mui/material';
 import EventJson from 'component/events/EventJson/EventJson';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -136,7 +136,18 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
         <>
             <ConditionallyRender
                 condition={eventTimeline}
-                show={<EventTimeline />}
+                show={
+                    <Box
+                        sx={(theme) => ({
+                            borderRadius: theme.shape.borderRadius,
+                            padding: theme.spacing(2),
+                            marginBottom: theme.spacing(2),
+                            backgroundColor: theme.palette.background.paper,
+                        })}
+                    >
+                        <EventTimeline />
+                    </Box>
+                }
             />
             <PageContent
                 bodyClass={'no-padding'}

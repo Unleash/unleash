@@ -258,9 +258,8 @@ export const GenerateApiKey = ({
                 ) : (
                     <SectionDescription>
                         You currently have no active API keys for this
-                        project/environment combination. Generate
-                        an API key to proceed with connecting your
-                        SDK.
+                        project/environment combination. Generate an API key to
+                        proceed with connecting your SDK.
                     </SectionDescription>
                 )}
                 {parsedToken ? (

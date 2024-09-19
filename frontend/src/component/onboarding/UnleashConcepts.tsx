@@ -59,8 +59,8 @@ export const GenerateApiKeyConcepts = () => (
                     Flags have configuration in environments
                 </ConceptSummary>
                 <ConceptDetails>
-                    You can have multiple environments, and each feature flag has a
-                    different configuration per environment.
+                    You can have multiple environments, and each feature flag
+                    has a different configuration per environment.
                 </ConceptDetails>
             </Box>
         </ConceptItem>
@@ -71,9 +71,9 @@ export const GenerateApiKeyConcepts = () => (
                     SDKs connect to Unleash to retrieve configuration
                 </ConceptSummary>
                 <ConceptDetails>
-                    When you connect an SDK to Unleash, it uses the API key
-                    to identify which feature flags and configuration to
-                    retrieve from each environment.
+                    When you connect an SDK to Unleash, it uses the API key to
+                    identify which feature flags and configuration to retrieve
+                    from each environment.
                 </ConceptDetails>
             </Box>
         </ConceptItem>

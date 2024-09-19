@@ -1,4 +1,4 @@
-import { Switch, FormControlLabel, useMediaQuery } from '@mui/material';
+import { Switch, FormControlLabel, useMediaQuery, Box } from '@mui/material';
 import EventJson from 'component/events/EventJson/EventJson';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -15,6 +15,7 @@ import { useEventLogSearch } from './useEventLogSearch';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 import { EventActions } from './EventActions';
 import useLoading from 'hooks/useLoading';
+import { EventTimeline } from '../EventTimeline/EventTimeline';
 
 interface IEventLogProps {
     title: string;
@@ -50,7 +51,8 @@ const Placeholder = styled('li')({
 });
 
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
-    const { isEnterprise } = useUiConfig();
+    const { isOss, isEnterprise } = useUiConfig();
+    const eventTimeline = useUiFlag('eventTimeline') && !isOss();
     const showFilters = useUiFlag('newEventSearch') && isEnterprise();
     const {
         events,
@@ -131,55 +133,72 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     };
 
     return (
-        <PageContent
-            bodyClass={'no-padding'}
-            header={
-                <PageHeader
-                    title={`${title} (${total})`}
-                    actions={
-                        <>
-                            {showDataSwitch}
-                            <EventActions events={events} />
-                            {!isSmallScreen && searchInputField}
-                        </>
-                    }
-                >
-                    {isSmallScreen && searchInputField}
-                </PageHeader>
-            }
-        >
-            <EventResultWrapper ref={ref} withFilters={showFilters}>
+        <>
+            <ConditionallyRender
+                condition={eventTimeline}
+                show={
+                    <Box
+                        sx={(theme) => ({
+                            borderRadius: theme.shape.borderRadius,
+                            padding: theme.spacing(2),
+                            marginBottom: theme.spacing(2),
+                            backgroundColor: theme.palette.background.paper,
+                        })}
+                    >
+                        <EventTimeline />
+                    </Box>
+                }
+            />
+            <PageContent
+                bodyClass={'no-padding'}
+                header={
+                    <PageHeader
+                        title={`${title} (${total})`}
+                        actions={
+                            <>
+                                {showDataSwitch}
+                                <EventActions events={events} />
+                                {!isSmallScreen && searchInputField}
+                            </>
+                        }
+                    >
+                        {isSmallScreen && searchInputField}
+                    </PageHeader>
+                }
+            >
+                <EventResultWrapper ref={ref} withFilters={showFilters}>
+                    <ConditionallyRender
+                        condition={showFilters}
+                        show={
+                            <StyledFilters
+                                logType={
+                                    project
+                                        ? 'project'
+                                        : feature
+                                          ? 'flag'
+                                          : 'global'
+                                }
+                                state={filterState}
+                                onChange={setTableState}
+                            />
+                        }
+                    />
+                    {resultComponent()}
+                </EventResultWrapper>
                 <ConditionallyRender
-                    condition={showFilters}
+                    condition={total > 25}
                     show={
-                        <StyledFilters
-                            logType={
-                                project
-                                    ? 'project'
-                                    : feature
-                                      ? 'flag'
-                                      : 'global'
-                            }
-                            state={filterState}
-                            onChange={setTableState}
+                        <StickyPaginationBar
+                            totalItems={total}
+                            pageSize={pagination.pageSize}
+                            pageIndex={pagination.currentPage}
+                            fetchPrevPage={pagination.prevPage}
+                            fetchNextPage={pagination.nextPage}
+                            setPageLimit={pagination.setPageLimit}
                         />
                     }
                 />
-                {resultComponent()}
-            </EventResultWrapper>
-            <ConditionallyRender
-                condition={total > 25}
-                show={
-                    <StickyPaginationBar
-                        totalItems={total}
-                        pageSize={pagination.pageSize}
-                        pageIndex={pagination.currentPage}
-                        fetchPrevPage={pagination.prevPage}
-                        fetchNextPage={pagination.nextPage}
-                        setPageLimit={pagination.setPageLimit}
-                    />
-                }
-            />
-        </PageContent>
+            </PageContent>
+        </>
     );
 };

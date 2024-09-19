@@ -7304,9 +7304,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:2.4.4":
-  version: 2.4.4
-  resolution: "msw@npm:2.4.4"
+"msw@npm:2.4.5":
+  version: 2.4.5
+  resolution: "msw@npm:2.4.5"
   dependencies:
     "@bundled-es-modules/cookie": "npm:^2.0.0"
     "@bundled-es-modules/statuses": "npm:^1.0.1"
@@ -7332,7 +7332,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10c0/0be51fbd6ef1b4fd8906353b6e40473f9466ea7ef9cc805e49c5937886721db20801b2322535b456d523040c012afb34e0e76a5beaa4891cbdde2408d2652094
+  checksum: 10c0/62db15411bd8ef5e7f40d2b4cf50176550a569c686307fab5f230b7d1fa2306d4b3bcad5077e2279e54f629607abc511a6f71fa012de167b29a08bb32b8894b1
   languageName: node
   linkType: hard
 
@@ -9802,7 +9802,7 @@ __metadata:
     lodash.mapvalues: "npm:^4.6.0"
     lodash.omit: "npm:4.5.0"
     millify: "npm:^6.0.0"
-    msw: "npm:2.4.4"
+    msw: "npm:2.4.5"
     orval: "npm:^6.17.0"
     pkginfo: "npm:0.4.1"
     plausible-tracker: "npm:0.3.9"

@@ -23,11 +23,11 @@ In order to set up a gradual rollout, you will need:
 
 -   A place to host a feature flag management service
 -   An API Token
--   An application & an Unleash SDK
+-   An application connected to an Unleash SDK
 
 In order to set up your systems to create and manage a gradual rollout, you’ll need to decide where to host a feature flag management service. This is a critical component of creating features that will hide behind a feature flag for a gradual rollout. There are two primary options for deciding where to host a service:
 
--   Self-hosted: Deploy Unleash on your infrastructure (e.g., Docker, Kubernetes).
+-   Self-hosted: Deploy Unleash on your infrastructure (e.g., Docker, Kubernetes)
 -   Hosted by Unleash
 
 Follow our documentation on [Self-Hosting with Unleash](/using-unleash/deploy/getting-started) to get started using your infrastructure. Alternatively, read our [Quickstart documentation](/quickstart) if you’d like your project to be hosted by Unleash.
@@ -56,7 +56,7 @@ Your new feature flag has been created and is ready to be used. Upon returning t
 
 Next, we will configure the gradual rollout strategy for your new flag.
 
-## Implementing Gradual Rollout Activation Strategy
+## Implementing a Gradual Rollout Activation Strategy
 
 An important Unleash concept that enables developers to perform a gradual rollout is an [activation strategy](/reference/activation-strategies). An activation strategy defines who will be exposed to a particular flag or flags. Unleash comes pre-configured with multiple activation strategies that let you enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
 
@@ -69,7 +69,7 @@ Activation strategies are defined on the server. For server-side SDKs, activatio
 You can configure your gradual rollout strategy using the following parameters in Unleash:
 
 -   **rollout percentage** (0-100%) determines the number of users you want to enable the feature flag for
--   **stickiness** is how Unleash guarantees that the same user gets the same features every time. Stickiness is useful when you want to show a feature to only a subset of users. The same `userId` and the same rollout percentage should give predictable results. Configuration that should be supported:
+-   **stickiness** is how Unleash guarantees that the same user gets the same features every time. Stickiness is useful when you want to show a feature to only a subset of users. The same `userId` and the same rollout percentage should give predictable results. Paramers that are supported:
     -   **default** - Unleash chooses the first value present on the context in defined order `userId`, `sessionId`, `random`.
     -   **userId** - guaranteed to be sticky on `userId`. If `userId` is not present, the behavior would be `false`
     -   **sessionId** - guaranteed to be sticky on `sessionId`. If `sessionId` not present the behavior would be `false`.
@@ -79,7 +79,7 @@ You can configure your gradual rollout strategy using the following parameters i
 
 ![Image of a gradual rollout form in Unleash](/img/tutorial-grad-rollout-form.png)
 
-There are two more advanced extensions of the gradual rollout strategy that you will see available to customize in the gradual rollout form:
+There are two more advanced extensions of the gradual rollout strategy that you can customize in the gradual rollout form:
 
 -   [Strategy Constraints](/reference/strategy-constraints)
 -   [Strategy Variants](/reference/strategy-variants)
@@ -162,7 +162,7 @@ After you have implemented a gradual rollout strategy, we recommend managing the
 
 Read our documentation on how to effectively manage [feature flags at scale](/topics/feature-flags/best-practices-using-feature-flags-at-scale) while reducing security risks. Let’s walk through these recommended Unleash features in the subsequent sections.
 
-### Application Metrics
+### Reviewing Application Metrics
 
 [Unleash metrics](/reference/api/unleash/metrics) are a great way to understand user traffic. With your application using feature flags, you can review:
 

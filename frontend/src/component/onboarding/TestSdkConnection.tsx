@@ -142,7 +142,7 @@ export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
                     title='Copy snippet'
                     code={filledInitializeCodeSnippet}
                 />
-                <p>3. Check feature status</p>
+                <p>3. Check feature flag status</p>
                 <CopyBlock
                     title='Copy snippet'
                     code={filledCheckFlagCodeSnippet}

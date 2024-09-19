@@ -119,7 +119,7 @@ const variantRowReducerV2 = (acc, tokenRow) => {
         };
     }
     if (variant) {
-        acc[key].variants[variant] = count;
+        acc[key].variants[variant] = Number(count);
     }
 
     return acc;

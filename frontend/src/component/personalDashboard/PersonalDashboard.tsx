@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import type { Theme } from '@mui/material/styles/createTheme';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import { useState } from 'react';
+import { type FC, useState } from 'react';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import LinkIcon from '@mui/icons-material/Link';
 
@@ -72,7 +72,7 @@ export const StyledCardTitle = styled('div')<{ lines?: number }>(
 );
 
 const ActiveProjectDetails: FC<{
-    project: { flags: number; members: number; helath: number };
+    project: { flags: number; members: number; health: number };
 }> = ({ project }) => {
     return (
         <Box sx={{ display: 'flex', gap: 2 }}>
@@ -118,8 +118,8 @@ export const PersonalDashboard = () => {
         health: 100,
     }));
 
-    const [activeProject, setActiveProject] = useState<string>(
-        projects[0]?.name || 'default',
+    const [activeProject, setActiveProject] = useState<string | null>(
+        projects[0]?.name,
     );
 
     return (

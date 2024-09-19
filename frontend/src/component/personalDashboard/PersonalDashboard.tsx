@@ -1,21 +1,22 @@
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import {
-    Grid,
-    Paper,
-    styled,
-    Typography,
     Box,
+    IconButton,
+    Link,
     List,
     ListItem,
     ListItemButton,
-    Link,
-    IconButton,
+    styled,
+    Typography,
+    Grid,
 } from '@mui/material';
 import type { Theme } from '@mui/material/styles/createTheme';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import { type FC, useState } from 'react';
+import { type FC, useEffect, useState } from 'react';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import LinkIcon from '@mui/icons-material/Link';
+import { Badge } from '../common/Badge/Badge';
+import { ConnectSDK, CreateFlag } from './ConnectSDK';
 
 const ScreenExplanation = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -29,10 +30,9 @@ const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const Projects = styled(Paper)(({ theme }) => ({
+const ProjectsGrid = styled(Grid)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
-    boxShadow: 'none',
-    padding: theme.spacing(4),
 }));
 
 const ProjectBox = styled(Box)(({ theme }) => ({
@@ -104,13 +104,15 @@ const ActiveProjectDetails: FC<{
     );
 };
 
-export const PersonalDashboard = () => {
-    const { user } = useAuthUser();
+const SpacedGrid = styled(Grid)(({ theme }) => ({
+    padding: theme.spacing(4),
+    border: `0.5px solid ${theme.palette.divider}`,
+}));
 
-    const name = user?.name;
-
+const useProjects = () => {
     const myProjects = useProfile().profile?.projects || [];
 
+    // TODO: add real data for flags/members/health
     const projects = myProjects.map((project) => ({
         name: project,
         flags: 0,
@@ -118,9 +120,23 @@ export const PersonalDashboard = () => {
         health: 100,
     }));
 
-    const [activeProject, setActiveProject] = useState<string | null>(
-        projects[0]?.name,
-    );
+    const [activeProject, setActiveProject] = useState(projects[0]?.name);
+
+    useEffect(() => {
+        if (!activeProject && projects.length > 0) {
+            setActiveProject(projects[0].name);
+        }
+    }, [JSON.stringify(projects)]);
+
+    return { projects, activeProject, setActiveProject };
+};
+
+export const PersonalDashboard = () => {
+    const { user } = useAuthUser();
+
+    const name = user?.name;
+
+    const { projects, activeProject, setActiveProject } = useProjects();
 
     return (
         <div>
@@ -132,72 +148,88 @@ export const PersonalDashboard = () => {
                 most of Unleash
             </ScreenExplanation>
             <StyledHeaderTitle>Your resources</StyledHeaderTitle>
-            <Projects>
-                <Grid container spacing={2} columns={{ lg: 12 }}>
-                    <Grid item lg={3}>
-                        <Typography variant='h3'>My projects</Typography>
-                    </Grid>
-                    <Grid item lg={4} />
-                    <Grid item lg={5} />
-                    <Grid item lg={3}>
-                        <List
-                            disablePadding={true}
-                            sx={{ maxHeight: '400px', overflow: 'auto' }}
-                        >
-                            {projects.map((project) => {
-                                return (
-                                    <ListItem
-                                        disablePadding={true}
-                                        sx={{ mb: 1 }}
+            <ProjectsGrid container columns={{ lg: 12, md: 1 }}>
+                <SpacedGrid item lg={4} md={1}>
+                    <Typography variant='h3'>My projects</Typography>
+                </SpacedGrid>
+                <SpacedGrid
+                    item
+                    lg={8}
+                    md={1}
+                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                >
+                    <Badge color='warning'>Setup incomplete</Badge>
+                </SpacedGrid>
+                <SpacedGrid item lg={4} md={1}>
+                    <List
+                        disablePadding={true}
+                        sx={{ maxHeight: '400px', overflow: 'auto' }}
+                    >
+                        {projects.map((project) => {
+                            return (
+                                <ListItem
+                                    key={project.name}
+                                    disablePadding={true}
+                                    sx={{ mb: 1 }}
+                                >
+                                    <ListItemButton
+                                        sx={projectStyle}
+                                        selected={
+                                            project.name === activeProject
+                                        }
+                                        onClick={() =>
+                                            setActiveProject(project.name)
+                                        }
                                     >
-                                        <ListItemButton
-                                            sx={projectStyle}
-                                            selected={
-                                                project.name === activeProject
-                                            }
-                                            onClick={() =>
-                                                setActiveProject(project.name)
-                                            }
-                                        >
-                                            <ProjectBox>
-                                                <ProjectIcon color='primary' />
-                                                <StyledCardTitle>
-                                                    {project.name}
-                                                </StyledCardTitle>
-                                                <IconButton
-                                                    component={Link}
-                                                    href={`projects/${project.name}`}
-                                                    size='small'
-                                                    sx={{ ml: 'auto' }}
-                                                >
-                                                    <LinkIcon
-                                                        titleAccess={`projects/${project.name}`}
-                                                    />
-                                                </IconButton>
-                                            </ProjectBox>
-                                            {project.name === activeProject ? (
-                                                <ActiveProjectDetails
-                                                    project={project}
+                                        <ProjectBox>
+                                            <ProjectIcon color='primary' />
+                                            <StyledCardTitle>
+                                                {project.name}
+                                            </StyledCardTitle>
+                                            <IconButton
+                                                component={Link}
+                                                href={`projects/${project.name}`}
+                                                size='small'
+                                                sx={{ ml: 'auto' }}
+                                            >
+                                                <LinkIcon
+                                                    titleAccess={`projects/${project.name}`}
                                                 />
-                                            ) : null}
-                                        </ListItemButton>
-                                    </ListItem>
-                                );
-                            })}
-                        </List>
-                    </Grid>
-                    <Grid item lg={4}>
-                        Connect an SDK
-                    </Grid>
-                    <Grid item lg={5}>
-                        Create a feature toggle
-                    </Grid>
-                    <Grid item lg={3} />
-                    <Grid item lg={9}>
-                        Your role in this project
-                    </Grid>
-                </Grid>
-            </Projects>
+                                            </IconButton>
+                                        </ProjectBox>
+                                        {project.name === activeProject ? (
+                                            <ActiveProjectDetails
+                                                project={project}
+                                            />
+                                        ) : null}
+                                    </ListItemButton>
+                                </ListItem>
+                            );
+                        })}
+                    </List>
+                </SpacedGrid>
+                <SpacedGrid item lg={4} md={1}>
+                    {activeProject ? (
+                        <CreateFlag project={activeProject} />
+                    ) : null}
+                </SpacedGrid>
+                <SpacedGrid item lg={4} md={1}>
+                    {activeProject ? (
+                        <ConnectSDK project={activeProject} />
+                    ) : null}
+                </SpacedGrid>
+                <SpacedGrid item lg={4} md={1} />
+                <SpacedGrid
+                    item
+                    lg={8}
+                    md={1}
+                    sx={{ display: 'flex', gap: 1, alignItems: 'center' }}
+                >
+                    <span>Your roles in this project:</span>{' '}
+                    <Badge color='secondary'>Member</Badge>{' '}
+                    <Badge color='secondary'>Another</Badge>
+                </SpacedGrid>
+            </ProjectsGrid>
         </div>
     );
 };

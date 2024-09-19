@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.4] - 2024-09-19
+
+### Miscellaneous Tasks
+
+- Make count column bigint. ([#8183](https://github.com/Unleash/unleash/issues/8183)) ([#8184](https://github.com/Unleash/unleash/issues/8184))
+
+
 ## [6.2.3] - 2024-09-18
 
 ### Bug Fixes

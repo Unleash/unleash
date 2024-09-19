@@ -8,9 +8,14 @@ import {
     List,
     ListItem,
     ListItemButton,
+    Link,
+    IconButton,
 } from '@mui/material';
 import type { Theme } from '@mui/material/styles/createTheme';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import { useState } from 'react';
+import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
+import LinkIcon from '@mui/icons-material/Link';
 
 const ScreenExplanation = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -30,6 +35,13 @@ const Projects = styled(Paper)(({ theme }) => ({
     padding: theme.spacing(4),
 }));
 
+const ProjectBox = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+    alignItems: 'center',
+    width: '100%',
+}));
+
 const projectStyle = (theme: Theme) => ({
     borderRadius: theme.spacing(0.5),
     borderLeft: `${theme.spacing(0.5)} solid transparent`,
@@ -42,10 +54,73 @@ const projectStyle = (theme: Theme) => ({
     gap: theme.spacing(1),
 });
 
+export const StyledCardTitle = styled('div')<{ lines?: number }>(
+    ({ theme, lines = 2 }) => ({
+        fontWeight: theme.typography.fontWeightRegular,
+        fontSize: theme.typography.body1.fontSize,
+        lineClamp: `${lines}`,
+        WebkitLineClamp: lines,
+        lineHeight: '1.2',
+        display: '-webkit-box',
+        boxOrient: 'vertical',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        alignItems: 'flex-start',
+        WebkitBoxOrient: 'vertical',
+        wordBreak: 'break-word',
+    }),
+);
+
+const ActiveProjectDetails: FC<{
+    project: { flags: number; members: number; helath: number };
+}> = ({ project }) => {
+    return (
+        <Box sx={{ display: 'flex', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <Typography variant='subtitle2' color='primary'>
+                    {project.flags}
+                </Typography>
+                <Typography variant='caption' color='text.secondary'>
+                    flags
+                </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <Typography variant='subtitle2' color='primary'>
+                    {project.members}
+                </Typography>
+                <Typography variant='caption' color='text.secondary'>
+                    members
+                </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                <Typography variant='subtitle2' color='primary'>
+                    {project.health}%
+                </Typography>
+                <Typography variant='caption' color='text.secondary'>
+                    health
+                </Typography>
+            </Box>
+        </Box>
+    );
+};
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
 
     const name = user?.name;
+
+    const myProjects = useProfile().profile?.projects || [];
+
+    const projects = myProjects.map((project) => ({
+        name: project,
+        flags: 0,
+        members: 1,
+        health: 100,
+    }));
+
+    const [activeProject, setActiveProject] = useState<string>(
+        projects[0]?.name || 'default',
+    );
 
     return (
         <div>
@@ -65,61 +140,50 @@ export const PersonalDashboard = () => {
                     <Grid item lg={4} />
                     <Grid item lg={5} />
                     <Grid item lg={3}>
-                        <List disablePadding={true}>
-                            <ListItem disablePadding={true}>
-                                <ListItemButton
-                                    sx={projectStyle}
-                                    selected={true}
-                                >
-                                    <Box sx={{ display: 'flex', gap: 2 }}>
-                                        <ProjectIcon color='primary' /> Default
-                                    </Box>
-                                    <Box sx={{ display: 'flex', gap: 2 }}>
-                                        <Box>
-                                            <Typography
-                                                variant='subtitle2'
-                                                color='primary'
-                                            >
-                                                0
-                                            </Typography>
-                                            <Typography
-                                                variant='caption'
-                                                color='text.secondary'
-                                            >
-                                                flags
-                                            </Typography>
-                                        </Box>
-                                        <Box>
-                                            <Typography
-                                                variant='subtitle2'
-                                                color='primary'
-                                            >
-                                                1
-                                            </Typography>
-                                            <Typography
-                                                variant='caption'
-                                                color='text.secondary'
-                                            >
-                                                members
-                                            </Typography>
-                                        </Box>
-                                        <Box>
-                                            <Typography
-                                                variant='subtitle2'
-                                                color='primary'
-                                            >
-                                                100%
-                                            </Typography>
-                                            <Typography
-                                                variant='caption'
-                                                color='text.secondary'
-                                            >
-                                                health
-                                            </Typography>
-                                        </Box>
-                                    </Box>
-                                </ListItemButton>
-                            </ListItem>
+                        <List
+                            disablePadding={true}
+                            sx={{ maxHeight: '400px', overflow: 'auto' }}
+                        >
+                            {projects.map((project) => {
+                                return (
+                                    <ListItem
+                                        disablePadding={true}
+                                        sx={{ mb: 1 }}
+                                    >
+                                        <ListItemButton
+                                            sx={projectStyle}
+                                            selected={
+                                                project.name === activeProject
+                                            }
+                                            onClick={() =>
+                                                setActiveProject(project.name)
+                                            }
+                                        >
+                                            <ProjectBox>
+                                                <ProjectIcon color='primary' />
+                                                <StyledCardTitle>
+                                                    {project.name}
+                                                </StyledCardTitle>
+                                                <IconButton
+                                                    component={Link}
+                                                    href={`projects/${project.name}`}
+                                                    size='small'
+                                                    sx={{ ml: 'auto' }}
+                                                >
+                                                    <LinkIcon
+                                                        titleAccess={`projects/${project.name}`}
+                                                    />
+                                                </IconButton>
+                                            </ProjectBox>
+                                            {project.name === activeProject ? (
+                                                <ActiveProjectDetails
+                                                    project={project}
+                                                />
+                                            ) : null}
+                                        </ListItemButton>
+                                    </ListItem>
+                                );
+                            })}
                         </List>
                     </Grid>
                     <Grid item lg={4}>

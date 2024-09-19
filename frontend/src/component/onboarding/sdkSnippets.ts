@@ -221,7 +221,7 @@ export const checkFlagCodeSnippets: Record<SdkName, string> = {
     Java: ``,
     Python: `try:
     while True:
-        print(client.is_enabled("dEE"))
+        print(client.is_enabled("<YOUR_FLAG>"))
         time.sleep(1)
 except KeyboardInterrupt:
     client.destroy()`,

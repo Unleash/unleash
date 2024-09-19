@@ -99,11 +99,13 @@ var settings = new UnleashSettings()
 
 Unleash unleash = new DefaultUnleash(config);`,
     Python: `from UnleashClient import UnleashClient
+import time
 
 client = UnleashClient(
     url="<YOUR_API_URL>",
     app_name="unleash-onboarding-python",
-    custom_headers={'Authorization': '<YOUR_API_TOKEN>"'})
+    refresh_interval=5,
+    custom_headers={'Authorization': '<YOUR_API_TOKEN>'})
 
 client.initialize_client()`,
     JavaScript: `import { UnleashClient } from 'unleash-proxy-client';
@@ -217,7 +219,12 @@ export const checkFlagCodeSnippets: Record<SdkName, string> = {
     Rust: ``,
     '.NET': ``,
     Java: ``,
-    Python: ``,
+    Python: `try:
+    while True:
+        print(client.is_enabled("dEE"))
+        time.sleep(1)
+except KeyboardInterrupt:
+    client.destroy()`,
     JavaScript: ``,
     React: ``,
     Vue: ``,

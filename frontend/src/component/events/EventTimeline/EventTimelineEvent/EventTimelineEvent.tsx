@@ -6,7 +6,7 @@ import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
-import GroupsIcon from '@mui/icons-material/Groups';
+import SegmentsIcon from '@mui/icons-material/DonutLargeOutlined';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 
 type DefaultEventVariant = 'secondary';
@@ -32,6 +32,7 @@ const StyledEventCircle = styled('div', {
     width: theme.spacing(3),
     borderRadius: '50%',
     backgroundColor: theme.palette[variant].light,
+    border: `1px solid ${theme.palette[variant].main}`,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -60,7 +61,7 @@ const getEventIcon = (type: EventSchemaType) => {
         return <FlagOutlinedIcon />;
     }
     if (type.startsWith('segment-')) {
-        return <GroupsIcon />;
+        return <SegmentsIcon />;
     }
 
     return <QuestionMarkIcon />;

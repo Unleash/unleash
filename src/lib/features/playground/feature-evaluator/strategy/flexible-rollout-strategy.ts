@@ -10,7 +10,7 @@ const STICKINESS = {
 
 export default class FlexibleRolloutStrategy extends Strategy {
     private randomGenerator: Function = () =>
-        `${Math.round(Math.random() * 100) + 1}`;
+        `${Math.round(Math.random() * 10_000) + 1}`;
 
     constructor(radnomGenerator?: Function) {
         super('flexibleRollout');

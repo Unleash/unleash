@@ -99,7 +99,7 @@ var settings = new UnleashSettings()
 
 Unleash unleash = new DefaultUnleash(config);`,
     Python: `from UnleashClient import UnleashClient
-import time
+import asyncio
 
 client = UnleashClient(
     url="<YOUR_API_URL>",
@@ -219,12 +219,9 @@ export const checkFlagCodeSnippets: Record<SdkName, string> = {
     Rust: ``,
     '.NET': ``,
     Java: ``,
-    Python: `try:
-    while True:
-        print(client.is_enabled("<YOUR_FLAG>"))
-        time.sleep(1)
-except KeyboardInterrupt:
-    client.destroy()`,
+    Python: `while True:
+    print(client.is_enabled("<YOUR_FLAG>"))
+    asyncio.run(asyncio.sleep(1))`,
     JavaScript: ``,
     React: ``,
     Vue: ``,

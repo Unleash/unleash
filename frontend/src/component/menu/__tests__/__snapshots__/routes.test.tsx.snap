@@ -11,6 +11,15 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
+    "component": [Function],
+    "menu": {
+      "mobile": true,
+    },
+    "path": "/personal",
+    "title": "Personal Dashboard",
+    "type": "protected",
+  },
+  {
     "component": {
       "$$typeof": Symbol(react.lazy),
       "_init": [Function],

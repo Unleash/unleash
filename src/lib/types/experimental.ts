@@ -64,7 +64,8 @@ export type IFlagKey =
     | 'onboardingMetrics'
     | 'onboardingUI'
     | 'projectRoleAssignment'
-    | 'eventTimeline';
+    | 'eventTimeline'
+    | 'personalDashboardUI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -315,6 +316,10 @@ const flags: IFlags = {
     ),
     eventTimeline: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EVENT_TIMELINE,
+        false,
+    ),
+    personalDashboardUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PERSONAL_DASHBOARD_UI,
         false,
     ),
 };

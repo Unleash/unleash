@@ -18,6 +18,8 @@ import LinkIcon from '@mui/icons-material/Link';
 import { Badge } from '../common/Badge/Badge';
 import { ConnectSDK, CreateFlag } from './ConnectSDK';
 import { PlaceholderFlagMetricsChart } from './FlagMetricsChart';
+import { WelcomeDialog } from './WelcomeDialog';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
 
 const ScreenExplanation = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -139,6 +141,10 @@ export const PersonalDashboard = () => {
 
     const { projects, activeProject, setActiveProject } = useProjects();
 
+    const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
+        'seen' | 'not_seen'
+    >('welcome-dialog:v1', 'not_seen');
+
     return (
         <div>
             <Typography component='h2' variant='h2'>
@@ -247,6 +253,10 @@ export const PersonalDashboard = () => {
                     <PlaceholderFlagMetricsChart />
                 </SpacedGridItem>
             </ContentGrid>
+            <WelcomeDialog
+                open={welcomeDialog !== 'seen'}
+                onClose={() => setWelcomeDialog('seen')}
+            />
         </div>
     );
 };

@@ -116,6 +116,8 @@ export const ProjectFeatureToggles = ({
 
     const isOnboarded =
         onboardingUIEnabled && project.onboardingStatus.status === 'onboarded';
+    const isNotOnboarded =
+        onboardingUIEnabled && project.onboardingStatus.status !== 'onboarded';
     const hasFeaturesOrOnboarded =
         (total !== undefined && total > 0) || isOnboarded;
 
@@ -404,7 +406,7 @@ export const ProjectFeatureToggles = ({
     return (
         <Container>
             <ConditionallyRender
-                condition={!isOnboarded}
+                condition={isNotOnboarded}
                 show={
                     <ProjectOnboarding
                         projectId={projectId}

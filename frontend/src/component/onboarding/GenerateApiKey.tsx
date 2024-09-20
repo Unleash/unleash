@@ -35,7 +35,7 @@ const ChooseEnvironment = ({
     return (
         <SingleSelectConfigButton
             tooltip={{ header: '' }}
-            description='Select the environment where API key will be created'
+            description='Select the environment where the API key will be created'
             options={environments.map((environment) => ({
                 label: environment,
                 value: environment,
@@ -137,7 +137,7 @@ const TokenExplanation = ({
                             ]}
                         >
                             <SecretExplanationDescription>
-                                The project this API key will retrieve feature
+                                The project this API key can retrieve feature
                                 flags from
                             </SecretExplanationDescription>
                         </ArcherElement>
@@ -152,7 +152,7 @@ const TokenExplanation = ({
                             ]}
                         >
                             <SecretExplanationDescription>
-                                The environment the API key will retrieve
+                                The environment this API key can retrieve
                                 feature flag configuration from
                             </SecretExplanationDescription>
                         </ArcherElement>
@@ -235,7 +235,7 @@ export const GenerateApiKey = ({
             <Box sx={{ mt: 2 }}>
                 <SectionHeader>Environment</SectionHeader>
                 <SectionDescription>
-                    The environment SDK will connect to in order to retrieve
+                    The environment the SDK connects to to retrieve
                     configuration.
                 </SectionDescription>
                 {environments.length > 0 ? (
@@ -258,9 +258,8 @@ export const GenerateApiKey = ({
                 ) : (
                     <SectionDescription>
                         You currently have no active API keys for this
-                        project/environment combination. You'll need to generate
-                        and API key in order to proceed with connecting your
-                        SDK.
+                        project/environment combination. Generate an API key to
+                        proceed with connecting your SDK.
                     </SectionDescription>
                 )}
                 {parsedToken ? (

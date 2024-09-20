@@ -130,9 +130,8 @@ export const WelcomeToProject = ({
                         Connect an SDK
                     </TitleContainer>
                     <Typography>
-                        Your project is not yet connected to any SDK. In order
-                        to start using your feature flag connect an SDK to the
-                        project.
+                        Your project is not yet connected to any SDK. To start
+                        using your feature flag, connect an SDK to the project.
                     </Typography>
                     <ResponsiveButton
                         onClick={() => {
@@ -160,8 +159,8 @@ const CreateFlag = () => {
                 Create a feature flag
             </TitleContainer>
             <Typography>
-                <div>The project currently holds no feature toggles.</div>
-                <div>Create a feature flag to get started.</div>
+                <div>The project currently holds no feature flags.</div>
+                <div>Create one to get started.</div>
             </Typography>
             <FlagCreationButton text='Create flag' />
         </>

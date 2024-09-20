@@ -47,8 +47,8 @@ export const GenerateApiKeyConcepts = () => (
             <Box>
                 <ConceptSummary>Flags live in projects</ConceptSummary>
                 <ConceptDetails>
-                    Projects are containers for feature flags. When you create a
-                    feature flag it will belong to the project you create it in.
+                    Projects are containers for feature flags. Each flag belongs
+                    to the project where you create it.
                 </ConceptDetails>
             </Box>
         </ConceptItem>
@@ -59,8 +59,8 @@ export const GenerateApiKeyConcepts = () => (
                     Flags have configuration in environments
                 </ConceptSummary>
                 <ConceptDetails>
-                    In Unleash you can have multiple environments. Each feature
-                    flag will have different configuration in every environment.
+                    You can have multiple environments, and each feature flag
+                    has a different configuration per environment.
                 </ConceptDetails>
             </Box>
         </ConceptItem>
@@ -71,9 +71,9 @@ export const GenerateApiKeyConcepts = () => (
                     SDKs connect to Unleash to retrieve configuration
                 </ConceptSummary>
                 <ConceptDetails>
-                    When you connect an SDK to Unleash it will use the API key
-                    to deduce which feature flags to retrieve and from which
-                    environment to retrieve configuration.
+                    When you connect an SDK to Unleash, it uses the API key to
+                    identify which feature flags and configuration to retrieve
+                    from each environment.
                 </ConceptDetails>
             </Box>
         </ConceptItem>
@@ -87,7 +87,7 @@ export const SelectSdkConcepts = () => (
             <Box>
                 <ConceptSummary>SDKs and Unleash</ConceptSummary>
                 <ConceptDetails>
-                    SDKs serve to bind your application to Unleash. The SDK will
+                    SDKs serve to bind your application to Unleash. The SDK can
                     connect to Unleash via HTTP and retrieve feature flag
                     configuration that is then cached in your application.
                     Making sure none of your application data ever leaves your

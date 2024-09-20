@@ -29,7 +29,7 @@ test('Project can start onboarding', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    await screen.findByText('The project currently holds no feature toggles.');
+    await screen.findByText('The project currently holds no feature flags.');
 });
 
 test('Project can connect SDK', async () => {
@@ -57,6 +57,6 @@ test('Project can connect SDK', async () => {
         },
     );
     await screen.findByText(
-        'Your project is not yet connected to any SDK. In order to start using your feature flag connect an SDK to the project.',
+        'Your project is not yet connected to any SDK. To start using your feature flag, connect an SDK to the project.',
     );
 });

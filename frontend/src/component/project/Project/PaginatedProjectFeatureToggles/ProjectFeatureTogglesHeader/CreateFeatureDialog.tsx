@@ -40,6 +40,8 @@ import { useFlagLimits } from './useFlagLimits';
 interface ICreateFeatureDialogProps {
     open: boolean;
     onClose: () => void;
+    skipNavigationOnComplete?: boolean;
+    onSuccess?: () => void;
 }
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -78,17 +80,28 @@ const configButtonData = {
 export const CreateFeatureDialog = ({
     open,
     onClose,
+    onSuccess,
+    skipNavigationOnComplete,
 }: ICreateFeatureDialogProps) => {
     if (open) {
         // wrap the inner component so that we only fetch data etc
         // when the dialog is actually open.
-        return <CreateFeatureDialogContent open={open} onClose={onClose} />;
+        return (
+            <CreateFeatureDialogContent
+                open={open}
+                onClose={onClose}
+                skipNavigationOnComplete={skipNavigationOnComplete}
+                onSuccess={onSuccess}
+            />
+        );
     }
 };
 
 const CreateFeatureDialogContent = ({
     open,
     onClose,
+    skipNavigationOnComplete,
+    onSuccess,
 }: ICreateFeatureDialogProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { setShowFeedback } = useContext(UIContext);
@@ -153,13 +166,17 @@ const CreateFeatureDialogContent = ({
             const payload = getTogglePayload();
             try {
                 await createFeatureToggle(project, payload);
-                navigate(`/projects/${project}/features/${name}`);
+                if (!skipNavigationOnComplete) {
+                    navigate(`/projects/${project}/features/${name}`);
+                }
                 setToastData({
                     title: 'Flag created successfully',
                     text: 'Now you can start using your flag.',
                     confetti: true,
                     type: 'success',
                 });
+                onClose();
+                onSuccess?.();
                 setShowFeedback(true);
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));

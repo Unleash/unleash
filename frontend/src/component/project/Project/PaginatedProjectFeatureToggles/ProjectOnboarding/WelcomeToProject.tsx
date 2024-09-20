@@ -4,19 +4,13 @@ import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { FlagCreationButton } from '../ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
-import { Link } from 'react-router-dom';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 
 interface IWelcomeToProjectProps {
     projectId: string;
     setConnectSdkOpen: (open: boolean) => void;
 }
 
-interface IExistingFlagsProps {
-    featureId: string;
+interface ICreateFlagProps {
     projectId: string;
 }
 
@@ -72,17 +66,6 @@ const MainCircleContainer = styled(NeutralCircleContainer)(({ theme }) => ({
     color: theme.palette.background.paper,
 }));
 
-const TypeCircleContainer = styled(MainCircleContainer)(({ theme }) => ({
-    borderRadius: '20%',
-}));
-
-const FlagLink = styled(Link)({
-    fontWeight: 'bold',
-    textDecoration: 'none',
-    display: 'flex',
-    justifyContent: 'center',
-});
-
 const ExistingFlagContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -90,15 +73,22 @@ const ExistingFlagContainer = styled('div')(({ theme }) => ({
     height: '100%',
 }));
 
-const FlagCreationContainer = styled('div')(({ theme }) => ({
-    marginTop: 'auto',
+const SuccessContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+
+    fontSize: theme.spacing(1.75),
+    fontWeight: 'bold',
+    backgroundColor: theme.palette.success.light,
+    borderRadius: theme.shape.borderRadiusLarge,
+    padding: theme.spacing(2, 2, 2, 2),
 }));
 
 export const WelcomeToProject = ({
     projectId,
     setConnectSdkOpen,
 }: IWelcomeToProjectProps) => {
-    const { project } = useProjectOverview(projectId);
+    const { project, refetch } = useProjectOverview(projectId);
     const isFirstFlagCreated =
         project.onboardingStatus.status === 'first-flag-created';
 
@@ -116,12 +106,9 @@ export const WelcomeToProject = ({
                 <ActionBox>
                     {project.onboardingStatus.status ===
                     'first-flag-created' ? (
-                        <ExistingFlag
-                            projectId={projectId}
-                            featureId={project.onboardingStatus.feature}
-                        />
+                        <ExistingFlag />
                     ) : (
-                        <CreateFlag />
+                        <CreateFlag projectId={projectId} />
                     )}
                 </ActionBox>
                 <ActionBox>
@@ -151,7 +138,8 @@ export const WelcomeToProject = ({
     );
 };
 
-const CreateFlag = () => {
+const CreateFlag = ({ projectId }: ICreateFlagProps) => {
+    const { refetch } = useProjectOverview(projectId);
     return (
         <>
             <TitleContainer>
@@ -162,47 +150,30 @@ const CreateFlag = () => {
                 <div>The project currently holds no feature flags.</div>
                 <div>Create one to get started.</div>
             </Typography>
-            <FlagCreationButton text='Create flag' />
+            <FlagCreationButton
+                text='Create flag'
+                skipNavigationOnComplete={true}
+                onSuccess={refetch}
+            />
         </>
     );
 };
 
-const ExistingFlag = ({ featureId, projectId }: IExistingFlagsProps) => {
-    const { feature } = useFeature(projectId, featureId);
-    const { featureTypes } = useFeatureTypes();
-    const IconComponent = getFeatureTypeIcons(feature.type);
-    const typeName = featureTypes.find(
-        (featureType) => featureType.id === feature.type,
-    )?.name;
-    const typeTitle = `${typeName || feature.type} flag`;
-
+const ExistingFlag = () => {
     return (
         <ExistingFlagContainer>
             <TitleContainer>
                 <MainCircleContainer>✓</MainCircleContainer>
                 Create a feature flag
             </TitleContainer>
-            <TitleContainer>
-                <HtmlTooltip arrow title={typeTitle} describeChild>
-                    <TypeCircleContainer>
-                        <IconComponent />
-                    </TypeCircleContainer>
-                </HtmlTooltip>
-                <FlagLink
-                    to={`/projects/${projectId}/features/${feature.name}`}
-                >
-                    {feature.name}
-                </FlagLink>
-                <Link to={`/projects/${projectId}/features/${feature.name}`}>
-                    view flag
-                </Link>
-            </TitleContainer>
-            <FlagCreationContainer>
-                <FlagCreationButton
-                    variant='outlined'
-                    text='Create a new flag'
-                />
-            </FlagCreationContainer>
+            <SuccessContainer>
+                <Typography fontWeight='bold' variant='body2'>
+                    Congratulations! You have created your first flag
+                </Typography>
+                <Typography variant='body2'>
+                    Click into the flag below to customize the flag further
+                </Typography>
+            </SuccessContainer>
         </ExistingFlagContainer>
     );
 };

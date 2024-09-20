@@ -41,14 +41,16 @@ To configure SSO for the new application, do the following:
 
 ### Manage attributes and claims
 
-To confirm attributes and claims for the new application, do the following:
+To configure attributes and claims for the new application, do the following:
 1. In the single sign-on settings of your application, go to **Attributes & Claims** and click **Edit**.
 2. Go to **Required claim** and click **Unique User Identifier (Name ID)**.
 3. For **Name identifier format**, select **Email address**.
 4. For **Source**, select **Attribute** and for **Source attribute** select `user.mail`.
 5. Click **Save**.
 
-<Figure caption="Edit the SAML configuration in Microsoft Entra admin center." img="/img/microsoft-entra-admin-center.png" />
+To populate the first and last names of users in Unleash, configure two additional claims with attributes `user.givenname` and `user.surname` with no namespace.
+
+<Figure caption="Edit the SAML configuration in Microsoft Entra admin center." img="/img/microsoft-entra-claims.png" />
 
 
 ### Save SAML certificate, identifier, and login URL

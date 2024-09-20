@@ -51,7 +51,6 @@ process.nextTick(async () => {
                         enableLegacyVariants: false,
                         extendedMetrics: true,
                         originMiddleware: true,
-                        newEventSearch: true,
                         projectListImprovements: true,
                         useProjectReadModel: true,
                         addonUsageMetrics: true,

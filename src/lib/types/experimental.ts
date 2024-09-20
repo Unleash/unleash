@@ -57,7 +57,6 @@ export type IFlagKey =
     | 'removeUnsafeInlineStyleSrc'
     | 'originMiddleware'
     | 'newEventSearch'
-    | 'archiveProjects'
     | 'projectListImprovements'
     | 'useProjectReadModel'
     | 'addonUsageMetrics'
@@ -284,10 +283,6 @@ const flags: IFlags = {
     ),
     newEventSearch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_EVENT_SEARCH,
-        false,
-    ),
-    archiveProjects: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_PROJECTS,
         false,
     ),
     projectListImprovements: parseEnvVarBoolean(

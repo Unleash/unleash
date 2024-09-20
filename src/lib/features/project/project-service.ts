@@ -500,14 +500,12 @@ export default class ProjectService {
     }
 
     private async validateActiveProject(projectId: string) {
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            const hasActiveProject =
-                await this.projectStore.hasActiveProject(projectId);
-            if (!hasActiveProject) {
-                throw new NotFoundError(
-                    `Active project with id ${projectId} does not exist`,
-                );
-            }
+        const hasActiveProject =
+            await this.projectStore.hasActiveProject(projectId);
+        if (!hasActiveProject) {
+            throw new NotFoundError(
+                `Active project with id ${projectId} does not exist`,
+            );
         }
     }
 
@@ -1552,9 +1550,7 @@ export default class ProjectService {
             health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,
-            ...(this.flagResolver.isEnabled('archiveProjects')
-                ? { archivedAt: project.archivedAt }
-                : {}),
+            archivedAt: project.archivedAt,
             createdAt: project.createdAt,
             onboardingStatus,
             environments,

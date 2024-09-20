@@ -87,7 +87,6 @@ export type UiFlags = {
     navigationSidebar?: boolean;
     flagCreator?: boolean;
     newEventSearch?: boolean;
-    archiveProjects?: boolean;
     projectListImprovements?: boolean;
     onboardingUI?: boolean;
     eventTimeline?: boolean;

@@ -1,9 +1,32 @@
+import { styled } from '@mui/material';
+import { Markdown } from 'component/common/Markdown/Markdown';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import type { EventSchema } from 'openapi';
 import { formatDateYMDHMS } from 'utils/formatDate';
+import type { EnrichedEvent } from '../../EventTimeline';
+
+const StyledTooltipHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: theme.spacing(1),
+    gap: theme.spacing(2),
+    flexWrap: 'wrap',
+}));
+
+const StyledTooltipTitle = styled('div')(({ theme }) => ({
+    fontWeight: theme.fontWeight.bold,
+    fontSize: theme.fontSizes.smallBody,
+    wordBreak: 'break-word',
+    flex: 1,
+}));
+
+const StyledDateTime = styled('div')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    whiteSpace: 'nowrap',
+}));
 
 interface IEventTimelineEventTooltipProps {
-    event: EventSchema;
+    event: EnrichedEvent;
 }
 
 export const EventTimelineEventTooltip = ({
@@ -15,36 +38,13 @@ export const EventTimelineEventTooltip = ({
         locationSettings?.locale,
     );
 
-    if (event.type === 'feature-environment-enabled') {
-        return (
-            <div>
-                <small>{eventDateTime}</small>
-                <p>
-                    {event.createdBy} enabled {event.featureName} for the{' '}
-                    {event.environment} environment in project {event.project}
-                </p>
-            </div>
-        );
-    }
-    if (event.type === 'feature-environment-disabled') {
-        return (
-            <div>
-                <small>{eventDateTime}</small>
-                <p>
-                    {event.createdBy} disabled {event.featureName} for the{' '}
-                    {event.environment} environment in project {event.project}
-                </p>
-            </div>
-        );
-    }
-
     return (
-        <div>
-            <div>{eventDateTime}</div>
-            <div>{event.createdBy}</div>
-            <div>{event.type}</div>
-            <div>{event.featureName}</div>
-            <div>{event.environment}</div>
-        </div>
+        <>
+            <StyledTooltipHeader>
+                <StyledTooltipTitle>{event.label}</StyledTooltipTitle>
+                <StyledDateTime>{eventDateTime}</StyledDateTime>
+            </StyledTooltipHeader>
+            <Markdown>{event.description}</Markdown>
+        </>
     );
 };

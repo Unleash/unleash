@@ -92,6 +92,17 @@ export const eventSchema = {
             nullable: true,
             description: 'Any tags related to the event, if applicable.',
         },
+        label: {
+            type: 'string',
+            nullable: true,
+            description: 'A concise, human-readable name for the event.',
+        },
+        description: {
+            type: 'string',
+            nullable: true,
+            description:
+                'A detailed description of the event, formatted in markdown.',
+        },
     },
     components: {
         schemas: {

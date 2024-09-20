@@ -1,4 +1,4 @@
-import type { EventSchema, EventSchemaType } from 'openapi';
+import type { EventSchemaType } from 'openapi';
 import { styled } from '@mui/material';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { EventTimelineEventTooltip } from './EventTimelineEventTooltip/EventTimelineEventTooltip';
@@ -8,6 +8,7 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import SegmentsIcon from '@mui/icons-material/DonutLargeOutlined';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
+import type { EnrichedEvent } from '../EventTimeline';
 
 type DefaultEventVariant = 'secondary';
 type CustomEventVariant = 'success' | 'neutral';
@@ -76,7 +77,7 @@ const customEventVariants: Partial<
 };
 
 interface IEventTimelineEventProps {
-    event: EventSchema;
+    event: EnrichedEvent;
     startDate: Date;
     endDate: Date;
 }
@@ -97,6 +98,7 @@ export const EventTimelineEvent = ({
         <StyledEvent position={position}>
             <HtmlTooltip
                 title={<EventTimelineEventTooltip event={event} />}
+                maxWidth={320}
                 arrow
             >
                 <StyledEventCircle variant={variant}>

@@ -374,6 +374,11 @@ export interface IEvent extends Omit<IBaseEvent, 'ip'> {
     createdAt: Date;
 }
 
+export interface IEnrichedEvent extends IEvent {
+    label: string;
+    description: string;
+}
+
 export interface IEventList {
     totalEvents: number;
     events: IEvent[];

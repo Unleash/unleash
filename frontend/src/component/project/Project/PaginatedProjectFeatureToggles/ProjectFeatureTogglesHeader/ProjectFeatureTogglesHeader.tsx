@@ -45,6 +45,8 @@ interface IFlagCreationButtonProps {
         'text' | 'outlined' | 'contained',
         ButtonPropsVariantOverrides
     >;
+    skipNavigationOnComplete?: boolean;
+    onSuccess?: () => void;
 }
 
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
@@ -54,6 +56,8 @@ const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
 export const FlagCreationButton = ({
     variant,
     text = 'New feature flag',
+    skipNavigationOnComplete,
+    onSuccess,
 }: IFlagCreationButtonProps) => {
     const [searchParams] = useSearchParams();
     const projectId = useRequiredPathParam('projectId');
@@ -78,6 +82,8 @@ export const FlagCreationButton = ({
             <CreateFeatureDialog
                 open={openCreateDialog}
                 onClose={() => setOpenCreateDialog(false)}
+                skipNavigationOnComplete={skipNavigationOnComplete}
+                onSuccess={onSuccess}
             />
         </>
     );

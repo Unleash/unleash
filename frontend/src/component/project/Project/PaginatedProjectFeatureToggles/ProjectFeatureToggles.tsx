@@ -114,10 +114,10 @@ export const ProjectFeatureToggles = ({
 
     const isPlaceholder = Boolean(initialLoad || (loading && total));
 
-    const onboardingStarted =
-        onboardingUIEnabled && project.onboardingStatus.status !== 'onboarded';
-    const hasMultipleFeaturesOrNotOnboarding =
-        (total !== undefined && total > 1) || !onboardingStarted;
+    const isOnboarded =
+        onboardingUIEnabled && project.onboardingStatus.status === 'onboarded';
+    const hasFeaturesOrOnboarded =
+        (total !== undefined && total > 0) || isOnboarded;
 
     const columns = useMemo(
         () => [
@@ -404,7 +404,7 @@ export const ProjectFeatureToggles = ({
     return (
         <Container>
             <ConditionallyRender
-                condition={onboardingStarted}
+                condition={!isOnboarded}
                 show={
                     <ProjectOnboarding
                         projectId={projectId}
@@ -413,7 +413,7 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <ConditionallyRender
-                condition={hasMultipleFeaturesOrNotOnboarding}
+                condition={hasFeaturesOrOnboarded}
                 show={
                     <PageContent
                         disableLoading

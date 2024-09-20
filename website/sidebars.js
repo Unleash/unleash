@@ -116,16 +116,28 @@ module.exports = {
                         },
                         {
                             type: 'category',
-                            label: 'React',
+                            label: 'Languages and Frameworks',
+                            collapsed: true,
                             link: {
-                                type: 'doc',
-                                id: 'feature-flag-tutorials/react/implementing-feature-flags',
+                                type: 'generated-index',
+                                title: 'Languages and Frameworks',
+                                slug: 'languages-and-frameworks',
                             },
                             items: [
                                 {
-                                    type: 'doc',
-                                    label: 'Examples',
-                                    id: 'feature-flag-tutorials/react/examples',
+                                    type: 'category',
+                                    label: 'React',
+                                    link: {
+                                        type: 'doc',
+                                        id: 'feature-flag-tutorials/react/implementing-feature-flags',
+                                    },
+                                    items: [
+                                        {
+                                            type: 'doc',
+                                            label: 'Examples',
+                                            id: 'feature-flag-tutorials/react/examples',
+                                        },
+                                    ],
                                 },
                             ],
                         },

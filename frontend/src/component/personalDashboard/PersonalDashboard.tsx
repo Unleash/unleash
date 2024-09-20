@@ -1,6 +1,7 @@
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import {
     Box,
+    Grid,
     IconButton,
     Link,
     List,
@@ -8,7 +9,6 @@ import {
     ListItemButton,
     styled,
     Typography,
-    Grid,
 } from '@mui/material';
 import type { Theme } from '@mui/material/styles/createTheme';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
@@ -17,6 +17,7 @@ import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import LinkIcon from '@mui/icons-material/Link';
 import { Badge } from '../common/Badge/Badge';
 import { ConnectSDK, CreateFlag } from './ConnectSDK';
+import { PlaceholderFlagMetricsChart } from './FlagMetricsChart';
 
 const ScreenExplanation = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -30,7 +31,7 @@ const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const ProjectsGrid = styled(Grid)(({ theme }) => ({
+const ContentGrid = styled(Grid)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
 }));
@@ -104,7 +105,7 @@ const ActiveProjectDetails: FC<{
     );
 };
 
-const SpacedGrid = styled(Grid)(({ theme }) => ({
+const SpacedGridItem = styled(Grid)(({ theme }) => ({
     padding: theme.spacing(4),
     border: `0.5px solid ${theme.palette.divider}`,
 }));
@@ -148,19 +149,19 @@ export const PersonalDashboard = () => {
                 most of Unleash
             </ScreenExplanation>
             <StyledHeaderTitle>Your resources</StyledHeaderTitle>
-            <ProjectsGrid container columns={{ lg: 12, md: 1 }}>
-                <SpacedGrid item lg={4} md={1}>
+            <ContentGrid container columns={{ lg: 12, md: 1 }}>
+                <SpacedGridItem item lg={4} md={1}>
                     <Typography variant='h3'>My projects</Typography>
-                </SpacedGrid>
-                <SpacedGrid
+                </SpacedGridItem>
+                <SpacedGridItem
                     item
                     lg={8}
                     md={1}
                     sx={{ display: 'flex', justifyContent: 'flex-end' }}
                 >
                     <Badge color='warning'>Setup incomplete</Badge>
-                </SpacedGrid>
-                <SpacedGrid item lg={4} md={1}>
+                </SpacedGridItem>
+                <SpacedGridItem item lg={4} md={1}>
                     <List
                         disablePadding={true}
                         sx={{ maxHeight: '400px', overflow: 'auto' }}
@@ -207,19 +208,19 @@ export const PersonalDashboard = () => {
                             );
                         })}
                     </List>
-                </SpacedGrid>
-                <SpacedGrid item lg={4} md={1}>
+                </SpacedGridItem>
+                <SpacedGridItem item lg={4} md={1}>
                     {activeProject ? (
                         <CreateFlag project={activeProject} />
                     ) : null}
-                </SpacedGrid>
-                <SpacedGrid item lg={4} md={1}>
+                </SpacedGridItem>
+                <SpacedGridItem item lg={4} md={1}>
                     {activeProject ? (
                         <ConnectSDK project={activeProject} />
                     ) : null}
-                </SpacedGrid>
-                <SpacedGrid item lg={4} md={1} />
-                <SpacedGrid
+                </SpacedGridItem>
+                <SpacedGridItem item lg={4} md={1} />
+                <SpacedGridItem
                     item
                     lg={8}
                     md={1}
@@ -228,8 +229,24 @@ export const PersonalDashboard = () => {
                     <span>Your roles in this project:</span>{' '}
                     <Badge color='secondary'>Member</Badge>{' '}
                     <Badge color='secondary'>Another</Badge>
-                </SpacedGrid>
-            </ProjectsGrid>
+                </SpacedGridItem>
+            </ContentGrid>
+            <ContentGrid container columns={{ lg: 12, md: 1 }} sx={{ mt: 2 }}>
+                <SpacedGridItem item lg={4} md={1}>
+                    <Typography variant='h3'>My feature flags</Typography>
+                </SpacedGridItem>
+                <SpacedGridItem item lg={8} md={1} />
+                <SpacedGridItem item lg={4} md={1}>
+                    <Typography>
+                        You have not created or favorited any feature flags.
+                        Once you do, the will show up here.
+                    </Typography>
+                </SpacedGridItem>
+                <SpacedGridItem item lg={8} md={1}>
+                    <Typography sx={{ mb: 4 }}>Feature flag metrics</Typography>
+                    <PlaceholderFlagMetricsChart />
+                </SpacedGridItem>
+            </ContentGrid>
         </div>
     );
 };

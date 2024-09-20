@@ -53,7 +53,7 @@ const Placeholder = styled('li')({
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const { isOss, isEnterprise } = useUiConfig();
     const eventTimeline = useUiFlag('eventTimeline') && !isOss();
-    const showFilters = useUiFlag('newEventSearch') && isEnterprise();
+    const showFilters = isEnterprise();
     const {
         events,
         total,

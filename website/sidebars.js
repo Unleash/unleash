@@ -110,7 +110,7 @@ module.exports = {
                                 {
                                     type: 'doc',
                                     label: 'Gradual Rollout',
-                                    id: 'feature-flag-tutorials/use-cases/gradual-rollout', 
+                                    id: 'feature-flag-tutorials/use-cases/gradual-rollout',
                                 },
                             ],
                         },

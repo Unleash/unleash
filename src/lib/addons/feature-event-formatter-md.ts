@@ -82,7 +82,7 @@ export enum LinkStyle {
     MD = 1,
 }
 
-const bold = (text?: string) => (text ? `**${text}**` : '');
+export const bold = (text?: string) => (text ? `**${text}**` : '');
 
 const EVENT_MAP: Record<string, IEventData> = {
     [ADDON_CONFIG_CREATED]: {

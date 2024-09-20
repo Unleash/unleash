@@ -10,6 +10,7 @@ import {
 } from '../types';
 import type { IntegrationEventsService } from '../services';
 import type { Logger } from '../logger';
+import { bold } from './feature-event-formatter-md';
 
 const slackApiCalls: ChatPostMessageArguments[] = [];
 
@@ -271,8 +272,7 @@ describe('SlackAppAddon', () => {
             event: serializeDates(eventWith2Tags),
             details: {
                 channels: ['general', 'another-channel-1', 'another-channel-2'],
-                message:
-                    '*some@user.com* enabled *<http://some-url.com/projects/default/features/some-toggle|some-toggle>* for the *development* environment in project *<http://some-url.com/projects/default|default>*',
+                message: `${bold('some@user.com')} enabled ${bold('<http://some-url.com/projects/default/features/some-toggle|some-toggle>')} for the ${bold('development')} environment in project ${bold('<http://some-url.com/projects/default|default>')}`,
             },
         });
     });

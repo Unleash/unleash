@@ -2,7 +2,7 @@
 title: How to create and display banners
 ---
 
-:::info Availability
+:::note Availability
 
 **Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.7+`
 

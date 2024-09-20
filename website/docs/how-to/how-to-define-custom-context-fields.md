@@ -2,7 +2,7 @@
 title: How to define custom context fields
 ---
 
-:::info Availability
+:::note Availability
 
 **Version**: `4.16+`
 

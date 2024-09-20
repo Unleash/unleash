@@ -2,7 +2,7 @@
 title: How to create and assign custom root roles
 ---
 
-:::info Availability
+:::note Availability
 
 **Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.4+`
 

@@ -95,13 +95,12 @@ export const eventSchema = {
         label: {
             type: 'string',
             nullable: true,
-            description: 'A concise, human-readable name for the event.',
+            description: 'The concise, human-readable name of the event.',
         },
-        description: {
+        summary: {
             type: 'string',
             nullable: true,
-            description:
-                'A detailed description of the event, formatted in markdown.',
+            description: 'A markdown-formatted summary of the event.',
         },
     },
     components: {

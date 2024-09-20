@@ -112,13 +112,13 @@ export default class EventSearchController extends Controller {
     enrichEvents(events: IEvent[]): IEvent[] | IEnrichedEvent[] {
         if (this.flagResolver.isEnabled('eventTimeline')) {
             return events.map((event) => {
-                const { label, text: description } =
+                const { label, text: summary } =
                     this.msgFormatter.format(event);
 
                 return {
                     ...event,
                     label,
-                    description,
+                    summary,
                 };
             });
         }

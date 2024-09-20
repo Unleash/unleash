@@ -376,7 +376,7 @@ export interface IEvent extends Omit<IBaseEvent, 'ip'> {
 
 export interface IEnrichedEvent extends IEvent {
     label: string;
-    description: string;
+    summary: string;
 }
 
 export interface IEventList {

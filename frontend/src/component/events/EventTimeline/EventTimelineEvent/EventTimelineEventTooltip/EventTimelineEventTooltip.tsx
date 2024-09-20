@@ -44,7 +44,7 @@ export const EventTimelineEventTooltip = ({
                 <StyledTooltipTitle>{event.label}</StyledTooltipTitle>
                 <StyledDateTime>{eventDateTime}</StyledDateTime>
             </StyledTooltipHeader>
-            <Markdown>{event.description}</Markdown>
+            <Markdown>{event.summary}</Markdown>
         </>
     );
 };

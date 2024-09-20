@@ -13,7 +13,7 @@ import {
 
 export type EnrichedEvent = EventSchema & {
     label: string;
-    description: string;
+    summary: string;
 };
 
 const StyledRow = styled('div')({

@@ -20,5 +20,5 @@ Unleash enterprise supports multiple authentication providers.
 - [OpenID Connect with Okta](../how-to/how-to-add-sso-open-id-connect.md)
 - [SAML 2.0 with Okta](../how-to/how-to-add-sso-saml.md)
 - [SAML 2.0 with Keycloak](../how-to/how-to-add-sso-saml-keycloak.md)
-- [SAML 2.0 with Azure](../how-to/how-to-add-sso-azure-saml.md)
+- [SAML 2.0 with Microsoft Entra ID](../how-to/how-to-add-sso-azure-saml.md)
 - [Google Authentication](../how-to/how-to-add-sso-google.md) (deprecated)

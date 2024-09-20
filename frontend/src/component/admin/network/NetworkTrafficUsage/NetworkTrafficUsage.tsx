@@ -165,7 +165,6 @@ export const NetworkTrafficUsage: VFC = () => {
             theme,
             (tooltipItems: any) => {
                 const periodItem = record[period];
-                console.log(periodItem, includedTraffic);
                 const tooltipDate = new Date(
                     periodItem.year,
                     periodItem.month,

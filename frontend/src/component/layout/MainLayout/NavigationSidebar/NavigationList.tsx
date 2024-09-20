@@ -165,7 +165,7 @@ export const PrimaryNavigationList: FC<{
             {personalDashboardUIEnabled ? (
                 <DynamicListItem
                     href='/personal'
-                    text='Personal Dahsboard'
+                    text='Personal Dashboard'
                     onClick={() => onClick('/personal')}
                     selected={activeItem === '/personal'}
                 >

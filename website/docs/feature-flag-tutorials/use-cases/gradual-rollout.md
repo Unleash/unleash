@@ -15,18 +15,7 @@ The key benefits of gradual rollouts are that you can experiment rapidly on a co
 
 ## How to Perform a Gradual Rollout with Unleash
 
-In order to set up a gradual rollout, you will need:
-
--   A place to host a feature flag management service
--   An API Token
--   An application connected to an Unleash SDK
-
-In order to set up your systems to create and manage a gradual rollout, you’ll need to decide where to host a feature flag management service. This is a critical component of creating features that will hide behind a feature flag for a gradual rollout. There are two primary options for deciding where to host a service:
-
--   Self-hosted: Deploy Unleash on your infrastructure (e.g., Docker, Kubernetes)
--   Hosted by Unleash
-
-Follow our documentation on [Self-Hosting with Unleash](/using-unleash/deploy/getting-started) to get started using your infrastructure. Alternatively, read our [Quickstart documentation](/quickstart) if you’d like your project to be hosted by Unleash.
+To follow along with this tutorial, you will need an Unleash instance. Follow our documentation on [Self-Hosting with Unleash](/using-unleash/deploy/getting-started) to get started using your infrastructure. Alternatively, read our [Quickstart documentation](/quickstart) if you’d like your project to be hosted by Unleash.
 
 With Unleash set up, you can use your application to talk to Unleash through one of our SDKs.
 
@@ -84,13 +73,7 @@ Constraints and variants are not required for a gradual rollout. These additiona
 
 [Strategy variants](/reference/strategy-variants) can expose a particular version of a feature to select user bases when a flag is enabled. From there, a way to use the variants is to view the performance metrics and see which is more efficient. We can create several variations of this feature to release to users and gather performance metrics to determine which one yields better results.
 
-![List of activation strategies](/img/tutorial-activation-strategies-list.png)
-
-In the diagram above, we list and describe all the activation strategies Unleash offers. The default strategy and gradual rollout strategy are the only two that support _both_ variants and constraints. The remaining stategies can only add constraints.
-
-For gradual rollouts, _strategy constraints_ are most applicable for more granular conditions of a feature release.
-
-In the next section, we’ll explore how to apply a strategy constraint on top of a gradual rollout for more advanced use cases.
+For gradual rollouts, _strategy constraints_ are most applicable for more granular conditions of a feature release. In the next section, we’ll explore how to apply a strategy constraint on top of a gradual rollout for more advanced use cases.
 
 ## Applying Strategy Constraints
 

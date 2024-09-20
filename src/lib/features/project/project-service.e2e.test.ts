@@ -83,7 +83,7 @@ beforeAll(async () => {
     const config = createTestConfig({
         getLogger,
         experimental: {
-            flags: { archiveProjects: true, useProjectReadModel: true },
+            flags: { useProjectReadModel: true },
         },
     });
     eventService = createEventsService(db.rawDatabase, config);

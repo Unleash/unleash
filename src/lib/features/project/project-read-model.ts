@@ -104,12 +104,10 @@ export class ProjectReadModel implements IProjectReadModel {
             })
             .orderBy('projects.name', 'asc');
 
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            if (query?.archived === true) {
-                projects = projects.whereNot(`${TABLE}.archived_at`, null);
-            } else {
-                projects = projects.where(`${TABLE}.archived_at`, null);
-            }
+        if (query?.archived === true) {
+            projects = projects.whereNot(`${TABLE}.archived_at`, null);
+        } else {
+            projects = projects.where(`${TABLE}.archived_at`, null);
         }
 
         if (query?.id) {
@@ -126,9 +124,7 @@ export class ProjectReadModel implements IProjectReadModel {
             'project_settings.project_mode',
         ] as (string | Raw<any>)[];
 
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            selectColumns.push(`${TABLE}.archived_at`);
-        }
+        selectColumns.push(`${TABLE}.archived_at`);
 
         let groupByColumns = ['projects.id', 'project_settings.project_mode'];
 
@@ -179,12 +175,10 @@ export class ProjectReadModel implements IProjectReadModel {
             .leftJoin('project_stats', 'project_stats.project', 'projects.id')
             .orderBy('projects.name', 'asc');
 
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            if (query?.archived === true) {
-                projects = projects.whereNot(`${TABLE}.archived_at`, null);
-            } else {
-                projects = projects.where(`${TABLE}.archived_at`, null);
-            }
+        if (query?.archived === true) {
+            projects = projects.whereNot(`${TABLE}.archived_at`, null);
+        } else {
+            projects = projects.where(`${TABLE}.archived_at`, null);
         }
 
         if (query?.id) {
@@ -201,9 +195,7 @@ export class ProjectReadModel implements IProjectReadModel {
             'project_stats.avg_time_to_prod_current_window',
         ] as (string | Raw<any>)[];
 
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            selectColumns.push(`${TABLE}.archived_at`);
-        }
+        selectColumns.push(`${TABLE}.archived_at`);
 
         const groupByColumns = [
             'projects.id',

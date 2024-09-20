@@ -9,10 +9,6 @@ A **gradual rollout** is a controlled release strategy where a new feature is fi
 
 By exposing the new feature to a limited audience, potential issues, bugs, or performance bottlenecks can be detected and addressed early on, preventing widespread impact.
 
-This diagram below scopes out the process and structure of a gradual rollout implementation using Unleash. In this use case tutorial, you'll learn the recommended method of configuring a gradual rollout with your application and Unleash.
-
-![A breakdown of the entire scope of implementing a gradual rollout.](/img/tutorial-gradual-rollout-diagram.png)
-
 Developers also use gradual rollouts to gather user feedback. Early adopters provide valuable insights into user experience, usability, and feature effectiveness, enabling rapid improvements. Gradual rollouts are also significant for testing in production. Real-world usage patterns and performance can be monitored closely, helping to ensure the new release is ready for a broader user base.
 
 The key benefits of gradual rollouts are that you can experiment rapidly on a controlled group and roll back quickly if the experiment goes wrong. This reduces the risk of failure, improves software quality, improves user experience, and optimizes resource utilization.

@@ -1251,7 +1251,8 @@ class FeatureToggleService {
         await this.validateName(value.name);
         await this.validateFeatureFlagNameAgainstPattern(value.name, projectId);
 
-        let projectExists = await this.projectStore.hasActiveProject(projectId);
+        const projectExists =
+            await this.projectStore.hasActiveProject(projectId);
 
         if (await this.projectStore.isFeatureLimitReached(projectId)) {
             throw new InvalidOperationError(

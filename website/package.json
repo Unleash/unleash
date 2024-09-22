@@ -74,7 +74,7 @@
     "babel-loader": "9.1.3",
     "enhanced-resolve": "5.17.1",
     "react-router": "6.26.2",
-    "replace-in-file": "7.2.0",
+    "replace-in-file": "8.2.0",
     "typescript": "5.4.5"
   },
   "packageManager": "yarn@4.4.1"

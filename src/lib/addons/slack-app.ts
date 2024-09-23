@@ -104,8 +104,11 @@ export default class SlackAppAddon extends Addon {
                 this.accessToken = accessToken;
             }
 
-            const { text, url } = this.msgFormatter.format(event);
-            message = text.substring(0, 3000);
+            const { text: formattedMessage, url } =
+                this.msgFormatter.format(event);
+            const maxLength = 3000;
+            const text = formattedMessage.substring(0, maxLength);
+            message = `${formattedMessage}${text.length < formattedMessage.length ? ` (trimmed to ${maxLength} characters)` : ''}`;
 
             const blocks: (Block | KnownBlock)[] = [
                 {
@@ -138,7 +141,7 @@ export default class SlackAppAddon extends Addon {
             const requests = channels.map((name) => {
                 return this.slackClient!.chat.postMessage({
                     channel: name,
-                    text,
+                    text: text,
                     blocks,
                     unfurl_links: false,
                 });

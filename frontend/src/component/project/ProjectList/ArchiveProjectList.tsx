@@ -140,7 +140,6 @@ export const ArchiveProjectList: FC = () => {
                 <SearchHighlightProvider value={searchValue}>
                     <ProjectGroup
                         loading={loading}
-                        searchValue={searchValue}
                         projects={filteredProjects}
                         placeholder='No archived projects found'
                         ProjectCardComponent={ProjectCard}

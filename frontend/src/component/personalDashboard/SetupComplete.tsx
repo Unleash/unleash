@@ -27,8 +27,7 @@ export const SetupComplete: FC<{ project: string }> = ({ project }) => {
             </TitleContainer>
             <Typography>
                 This project already has connected SDKs and existing feature
-                flags. You can set up another SDK locally, or if your codebase
-                has an existing setup, there is no need to take further action.
+                flags.
             </Typography>
 
             <Typography>

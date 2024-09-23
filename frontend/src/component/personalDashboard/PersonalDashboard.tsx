@@ -20,6 +20,8 @@ import { ConnectSDK, CreateFlag } from './ConnectSDK';
 import { PlaceholderFlagMetricsChart } from './FlagMetricsChart';
 import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { SetupComplete } from './SetupComplete';
 
 const ScreenExplanation = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -141,6 +143,15 @@ export const PersonalDashboard = () => {
 
     const { projects, activeProject, setActiveProject } = useProjects();
 
+    const { project: activeProjectOverview, loading } =
+        useProjectOverview(activeProject);
+
+    const onboardingCompleted = Boolean(
+        !loading &&
+            activeProject &&
+            activeProjectOverview?.onboardingStatus.status === 'onboarded',
+    );
+
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'seen' | 'not_seen'
     >('welcome-dialog:v1', 'not_seen');
@@ -216,7 +227,9 @@ export const PersonalDashboard = () => {
                     </List>
                 </SpacedGridItem>
                 <SpacedGridItem item lg={4} md={1}>
-                    {activeProject ? (
+                    {onboardingCompleted ? (
+                        <SetupComplete project={activeProject} />
+                    ) : activeProject ? (
                         <CreateFlag project={activeProject} />
                     ) : null}
                 </SpacedGridItem>

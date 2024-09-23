@@ -149,7 +149,7 @@ module.exports = {
                                     items: [
                                         {
                                             type: 'doc',
-                                            label: 'Examples',
+                                            label: 'Python Examples',
                                             id: 'feature-flag-tutorials/python/examples',
                                         },
                                         {

@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import type { Logger, LogProvider } from '../../logger';
 
 import NotFoundError from '../../error/notfound-error';
@@ -9,7 +8,6 @@ import type {
     IProjectApplication,
     IProjectApplications,
     IProjectUpdate,
-    IProjectWithCount,
     ProjectMode,
 } from '../../types';
 import type {
@@ -27,7 +25,6 @@ import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
 import type EventEmitter from 'events';
 import type { Db } from '../../db/db';
-import Raw = Knex.Raw;
 import type { CreateFeatureStrategySchema } from '../../openapi';
 import { applySearchFilters } from '../feature-search/search-utils';
 
@@ -115,119 +112,6 @@ class ProjectStore implements IProjectStore {
         );
         const { present } = result.rows[0];
         return present;
-    }
-
-    async getProjectsWithCounts(
-        query?: IProjectQuery,
-        userId?: number,
-    ): Promise<IProjectWithCount[]> {
-        const projectTimer = this.timer('getProjectsWithCount');
-        let projects = this.db(TABLE)
-            .leftJoin('features', 'features.project', 'projects.id')
-            .leftJoin(
-                'project_settings',
-                'project_settings.project',
-                'projects.id',
-            )
-            .leftJoin('project_stats', 'project_stats.project', 'projects.id')
-            .orderBy('projects.name', 'asc');
-
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            if (query?.archived === true) {
-                projects = projects.whereNot(`${TABLE}.archived_at`, null);
-            } else {
-                projects = projects.where(`${TABLE}.archived_at`, null);
-            }
-        }
-
-        if (query?.id) {
-            projects = projects.where(`${TABLE}.id`, query.id);
-        }
-
-        let selectColumns = [
-            this.db.raw(
-                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.created_at, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null and features.stale IS TRUE) AS stale_feature_count, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count',
-            ),
-            'project_settings.default_stickiness',
-            'project_settings.project_mode',
-            'project_stats.avg_time_to_prod_current_window',
-        ] as (string | Raw<any>)[];
-
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            selectColumns.push(`${TABLE}.archived_at`);
-        }
-
-        let groupByColumns = [
-            'projects.id',
-            'project_settings.default_stickiness',
-            'project_settings.project_mode',
-            'project_stats.avg_time_to_prod_current_window',
-        ];
-
-        if (userId) {
-            projects = projects.leftJoin(`favorite_projects`, function () {
-                this.on('favorite_projects.project', 'projects.id').andOnVal(
-                    'favorite_projects.user_id',
-                    '=',
-                    userId,
-                );
-            });
-            selectColumns = [
-                ...selectColumns,
-                this.db.raw(
-                    'favorite_projects.project is not null as favorite',
-                ),
-            ];
-            groupByColumns = [...groupByColumns, 'favorite_projects.project'];
-        }
-
-        const projectAndFeatureCount = await projects
-            .select(selectColumns)
-            .groupBy(groupByColumns);
-
-        const projectsWithFeatureCount = projectAndFeatureCount.map(
-            this.mapProjectWithCountRow,
-        );
-        projectTimer();
-        const memberTimer = this.timer('getMemberCount');
-
-        const memberCount = await this.getMembersCount();
-        memberTimer();
-        const memberMap = new Map<string, number>(
-            memberCount.map((c) => [c.project, Number(c.count)]),
-        );
-
-        return projectsWithFeatureCount.map((projectWithCount) => {
-            return {
-                ...projectWithCount,
-                memberCount: memberMap.get(projectWithCount.id) || 0,
-            };
-        });
-    }
-
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    mapProjectWithCountRow(row): IProjectWithCount {
-        return {
-            name: row.name,
-            id: row.id,
-            description: row.description,
-            health: row.health,
-            favorite: row.favorite,
-            featureCount: Number(row.number_of_features) || 0,
-            staleFeatureCount: Number(row.stale_feature_count) || 0,
-            potentiallyStaleFeatureCount:
-                Number(row.potentially_stale_feature_count) || 0,
-            memberCount: Number(row.number_of_users) || 0,
-            updatedAt: row.updated_at,
-            createdAt: row.created_at,
-            archivedAt: row.archived_at,
-            mode: row.project_mode || 'open',
-            defaultStickiness: row.default_stickiness || 'default',
-            avgTimeToProduction: row.avg_time_to_prod_current_window || 0,
-        };
     }
 
     async getAll(query: IProjectQuery = {}): Promise<IProject[]> {

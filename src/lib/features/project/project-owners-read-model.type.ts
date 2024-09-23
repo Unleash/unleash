@@ -1,4 +1,4 @@
-import type { TransitionalProjectData } from './project-read-model-type';
+import type { ProjectForUi } from './project-read-model-type';
 
 export type SystemOwner = { ownerType: 'system' };
 export type UserProjectOwner = {
@@ -17,13 +17,13 @@ type ProjectOwners =
 
 export type ProjectOwnersDictionary = Record<string, ProjectOwners>;
 
-export type IProjectForUiWithOwners = TransitionalProjectData & {
+export type IProjectForUiWithOwners = ProjectForUi & {
     owners: ProjectOwners;
 };
 
 export interface IProjectOwnersReadModel {
     addOwners(
-        projects: TransitionalProjectData[],
+        projects: ProjectForUi[],
         anonymizeProjectOwners?: boolean,
     ): Promise<IProjectForUiWithOwners[]>;
 }

@@ -13,7 +13,6 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectsListSort } from './ProjectsListSort/ProjectsListSort';
 import { useProjectsListState } from './hooks/useProjectsListState';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { ProjectList as LegacyProjectList } from './LegacyProjectList';
 import { ProjectCreationButton } from './ProjectCreationButton/ProjectCreationButton';
 import { useGroupedProjects } from './hooks/useGroupedProjects';
 import { useProjectsSearchAndSort } from './hooks/useProjectsSearchAndSort';
@@ -146,11 +145,5 @@ const NewProjectList = () => {
 };
 
 export const ProjectList: FC = () => {
-    const projectListImprovementsEnabled = useUiFlag('projectListImprovements');
-
-    if (projectListImprovementsEnabled) {
-        return <NewProjectList />;
-    }
-
-    return <LegacyProjectList />;
+    return <NewProjectList />;
 };

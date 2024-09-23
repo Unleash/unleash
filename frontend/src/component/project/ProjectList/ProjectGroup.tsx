@@ -1,13 +1,11 @@
 import type { ComponentType, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectCard as LegacyProjectCard } from '../ProjectCard/LegacyProjectCard';
 import { ProjectCard as NewProjectCard } from '../ProjectCard/ProjectCard';
 import type { ProjectSchema } from 'openapi';
 import loadingData from './loadingData';
 import { TablePlaceholder } from 'component/common/Table';
 import { styled, Typography } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { flexColumn } from 'themes/themeStyles';
 
@@ -72,10 +70,7 @@ export const ProjectGroup = ({
     ProjectCardComponent,
     link = true,
 }: ProjectGroupProps) => {
-    const projectListImprovementsEnabled = useUiFlag('projectListImprovements');
-    const ProjectCard =
-        ProjectCardComponent ??
-        (projectListImprovementsEnabled ? NewProjectCard : LegacyProjectCard);
+    const ProjectCard = ProjectCardComponent ?? NewProjectCard;
     const { searchQuery } = useSearchHighlightContext();
 
     return (
@@ -91,10 +86,7 @@ export const ProjectGroup = ({
                         }
                     />
                     <ConditionallyRender
-                        condition={
-                            Boolean(sectionSubtitle) &&
-                            projectListImprovementsEnabled
-                        }
+                        condition={Boolean(sectionSubtitle)}
                         show={
                             <Typography variant='body2' color='text.secondary'>
                                 {sectionSubtitle}

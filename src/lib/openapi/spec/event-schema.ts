@@ -96,13 +96,13 @@ export const eventSchema = {
             type: 'string',
             nullable: true,
             description:
-                '**[Experimental]**. The concise, human-readable name of the event.',
+                '**[Experimental]** The concise, human-readable name of the event.',
         },
         summary: {
             type: 'string',
             nullable: true,
             description:
-                '**[Experimental]**. A markdown-formatted summary of the event.',
+                '**[Experimental]** A markdown-formatted summary of the event.',
         },
     },
     components: {

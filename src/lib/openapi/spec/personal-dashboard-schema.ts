@@ -3,7 +3,7 @@ import type { FromSchema } from 'json-schema-to-ts';
 export const personalDashboardSchema = {
     $id: '#/components/schemas/personalDashboardSchema',
     type: 'object',
-    description: 'Project and flags relevant to the use',
+    description: 'Project and flags relevant to the user',
     additionalProperties: false,
     required: ['projects', 'flags'],
     properties: {

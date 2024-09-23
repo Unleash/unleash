@@ -18,7 +18,7 @@ const ActionBox = styled('article')(({ theme }) => ({
     flexDirection: 'column',
 }));
 
-export const SetupComplete: FC<{ project: string }> = ({ project }) => {
+export const ProjectSetupComplete: FC<{ project: string }> = ({ project }) => {
     return (
         <ActionBox>
             <TitleContainer>

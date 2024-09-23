@@ -40,9 +40,9 @@ export default class PersonalDashboardController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Unstable'],
-                    summary: 'Get personal dashboard information',
+                    summary: 'Get personal dashboard',
                     description:
-                        'All projects and flags that are relevant to the user.',
+                        'Return all projects and flags that are relevant to the user.',
                     operationId: 'getPersonalDashboard',
                     responses: {
                         200: createResponseSchema('personalDashboardSchema'),

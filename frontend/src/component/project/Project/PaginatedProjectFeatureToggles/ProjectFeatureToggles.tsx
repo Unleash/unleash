@@ -33,7 +33,7 @@ import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
 import { TableEmptyState } from './TableEmptyState/TableEmptyState';
 import { useRowActions } from './hooks/useRowActions';
 import { useSelectedData } from './hooks/useSelectedData';
-import { FeatureOverviewCell } from '../../../common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
+import { FeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import {
     useProjectFeatureSearch,
     useProjectFeatureSearchActions,
@@ -44,7 +44,7 @@ import { styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConnectSdkDialog } from '../../../onboarding/ConnectSdkDialog';
 import { ProjectOnboarding } from './ProjectOnboarding/ProjectOnboarding';
-import { useLocalStorageState } from '../../../../hooks/useLocalStorageState';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];

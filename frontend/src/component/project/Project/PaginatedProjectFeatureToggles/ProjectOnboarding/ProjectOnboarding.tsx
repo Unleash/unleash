@@ -115,7 +115,7 @@ export const ProjectOnboarding = ({
                         Welcome to your project
                     </Typography>
                     <Tooltip title='Close' arrow>
-                        <IconButton onClick={closeOnboardingFlow} size='large'>
+                        <IconButton onClick={closeOnboardingFlow} size='small'>
                             <CloseIcon />
                         </IconButton>
                     </Tooltip>

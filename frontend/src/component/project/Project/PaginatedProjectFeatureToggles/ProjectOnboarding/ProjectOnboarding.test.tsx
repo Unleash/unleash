@@ -21,6 +21,7 @@ test('Project can start onboarding', async () => {
                     <ProjectOnboarding
                         projectId={projectId}
                         setConnectSdkOpen={() => {}}
+                        setOnboardingFlow={() => {}}
                     />
                 }
             />
@@ -48,6 +49,7 @@ test('Project can connect SDK', async () => {
                     <ProjectOnboarding
                         projectId={projectId}
                         setConnectSdkOpen={() => {}}
+                        setOnboardingFlow={() => {}}
                     />
                 }
             />

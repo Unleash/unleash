@@ -300,29 +300,29 @@ export const PersonalDashboard = () => {
                     <Typography variant='h3'>My feature flags</Typography>
                 </SpacedGridItem>
                 <SpacedGridItem item lg={8} md={1} />
-                <SpacedGridItem
-                    item
-                    lg={4}
-                    md={1}
-                    sx={{ maxHeight: '400px', overflow: 'auto' }}
-                >
+                <SpacedGridItem item lg={4} md={1}>
                     {personalDashboard && personalDashboard.flags.length > 0 ? (
-                        personalDashboard.flags.map((flag) => {
-                            return (
+                        <List
+                            disablePadding={true}
+                            sx={{ maxHeight: '400px', overflow: 'auto' }}
+                        >
+                            {personalDashboard.flags.map((flag) => (
                                 <FlagListItem
+                                    key={flag.name}
                                     flag={flag}
                                     selected={flag.name === activeFlag}
                                     onClick={() => setActiveFlag(flag.name)}
                                 />
-                            );
-                        })
+                            ))}
+                        </List>
                     ) : (
                         <Typography>
                             You have not created or favorited any feature flags.
-                            Once you do, the will show up here.
+                            Once you do, they will show up here.
                         </Typography>
                     )}
                 </SpacedGridItem>
+
                 <SpacedGridItem item lg={8} md={1}>
                     <Typography sx={{ mb: 4 }}>Feature flag metrics</Typography>
                     <PlaceholderFlagMetricsChart />

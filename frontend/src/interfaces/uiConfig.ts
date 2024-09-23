@@ -86,7 +86,6 @@ export type UiFlags = {
     enableLegacyVariants?: boolean;
     navigationSidebar?: boolean;
     flagCreator?: boolean;
-    archiveProjects?: boolean;
     onboardingUI?: boolean;
     eventTimeline?: boolean;
     personalDashboardUI?: boolean;

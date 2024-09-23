@@ -35,7 +35,6 @@ const NewProjectList = () => {
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
     const [state, setState] = useProjectsListState();
-    const archiveProjectsEnabled = useUiFlag('archiveProjects');
 
     const myProjects = new Set(useProfile().profile?.projects || []);
 
@@ -77,10 +76,7 @@ const NewProjectList = () => {
                                 }
                             />
 
-                            <ConditionallyRender
-                                condition={Boolean(archiveProjectsEnabled)}
-                                show={<ProjectArchiveLink />}
-                            />
+                            <ProjectArchiveLink />
                             <ProjectCreationButton
                                 isDialogOpen={Boolean(state.create)}
                                 setIsDialogOpen={(create) =>

@@ -122,9 +122,8 @@ export class ProjectReadModel implements IProjectReadModel {
                     'MAX(events.created_at) AS last_updated',
             ),
             'project_settings.project_mode',
+            'projects.archived_at',
         ] as (string | Raw<any>)[];
-
-        selectColumns.push(`${TABLE}.archived_at`);
 
         let groupByColumns = ['projects.id', 'project_settings.project_mode'];
 
@@ -193,9 +192,8 @@ export class ProjectReadModel implements IProjectReadModel {
                     'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count',
             ),
             'project_stats.avg_time_to_prod_current_window',
+            'projects.archived_at',
         ] as (string | Raw<any>)[];
-
-        selectColumns.push(`${TABLE}.archived_at`);
 
         const groupByColumns = [
             'projects.id',

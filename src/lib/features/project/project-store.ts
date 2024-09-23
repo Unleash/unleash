@@ -152,9 +152,8 @@ class ProjectStore implements IProjectStore {
             'project_settings.default_stickiness',
             'project_settings.project_mode',
             'project_stats.avg_time_to_prod_current_window',
+            'projects.archived_at',
         ] as (string | Raw<any>)[];
-
-        selectColumns.push(`${TABLE}.archived_at`);
 
         let groupByColumns = [
             'projects.id',
@@ -241,8 +240,7 @@ class ProjectStore implements IProjectStore {
     }
 
     async get(id: string): Promise<IProject> {
-        let extraColumns: string[] = [];
-        extraColumns = ['archived_at'];
+        const extraColumns: string[] = ['archived_at'];
 
         return this.db
             .first([...COLUMNS, ...SETTINGS_COLUMNS, ...extraColumns])

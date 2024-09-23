@@ -8,6 +8,6 @@
  * Does the server allow username/password authentication
  */
 export interface PasswordAuthSchema {
-    /** Is username/password authentication enabled */
-    enabled?: boolean;
+    /** Is username/password authentication disabled */
+    disabled?: boolean;
 }

@@ -33,17 +33,18 @@ import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
 import { TableEmptyState } from './TableEmptyState/TableEmptyState';
 import { useRowActions } from './hooks/useRowActions';
 import { useSelectedData } from './hooks/useSelectedData';
-import { FeatureOverviewCell } from '../../../common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
+import { FeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import {
     useProjectFeatureSearch,
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch';
 import { AvatarCell } from './AvatarCell';
-import { ProjectOnboarding } from './ProjectOnboarding/ProjectOnboarding';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConnectSdkDialog } from '../../../onboarding/ConnectSdkDialog';
+import { ProjectOnboarding } from './ProjectOnboarding/ProjectOnboarding';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -114,12 +115,19 @@ export const ProjectFeatureToggles = ({
 
     const isPlaceholder = Boolean(initialLoad || (loading && total));
 
+    const [onboardingFlow, setOnboardingFlow] = useLocalStorageState<
+        'visible' | 'closed'
+    >(`onboarding-flow:v1-${projectId}`, 'visible');
+
     const notOnboarding =
         !onboardingUIEnabled ||
         (onboardingUIEnabled &&
-            project.onboardingStatus.status === 'onboarded');
+            project.onboardingStatus.status === 'onboarded') ||
+        onboardingFlow === 'closed';
     const isOnboarding =
-        onboardingUIEnabled && project.onboardingStatus.status !== 'onboarded';
+        onboardingUIEnabled &&
+        project.onboardingStatus.status !== 'onboarded' &&
+        onboardingFlow === 'visible';
     const showFeaturesTable =
         (total !== undefined && total > 0) || notOnboarding;
 
@@ -413,6 +421,7 @@ export const ProjectFeatureToggles = ({
                     <ProjectOnboarding
                         projectId={projectId}
                         setConnectSdkOpen={setConnectSdkOpen}
+                        setOnboardingFlow={setOnboardingFlow}
                     />
                 }
             />

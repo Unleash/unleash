@@ -50,10 +50,6 @@ type ProjectGroupProps = {
     HeaderActions?: ReactNode;
     projects: ProjectSchema[];
     loading: boolean;
-    /**
-     * @deprecated remove with projectListImprovements
-     */
-    searchValue?: string;
     placeholder?: string;
     ProjectCardComponent?: ComponentType<ProjectSchema & any>;
     link?: boolean;
@@ -65,7 +61,6 @@ export const ProjectGroup = ({
     HeaderActions,
     projects,
     loading,
-    searchValue,
     placeholder = 'No projects available.',
     ProjectCardComponent,
     link = true,
@@ -100,11 +95,11 @@ export const ProjectGroup = ({
                 condition={projects.length < 1 && !loading}
                 show={
                     <ConditionallyRender
-                        condition={(searchValue || searchQuery)?.length > 0}
+                        condition={searchQuery?.length > 0}
                         show={
                             <TablePlaceholder>
                                 No projects found matching &ldquo;
-                                {searchValue || searchQuery}
+                                {searchQuery}
                                 &rdquo;
                             </TablePlaceholder>
                         }

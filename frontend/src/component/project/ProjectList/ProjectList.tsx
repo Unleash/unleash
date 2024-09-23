@@ -1,4 +1,4 @@
-import { type FC, useCallback } from 'react';
+import { useCallback } from 'react';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -9,7 +9,6 @@ import theme from 'themes/theme';
 import { Search } from 'component/common/Search/Search';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { ProjectGroup } from './ProjectGroup';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { ProjectsListSort } from './ProjectsListSort/ProjectsListSort';
 import { useProjectsListState } from './hooks/useProjectsListState';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
@@ -29,7 +28,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(6),
 }));
 
-const NewProjectList = () => {
+export const ProjectList = () => {
     const { projects, loading, error, refetch } = useProjects();
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
@@ -138,8 +137,4 @@ const NewProjectList = () => {
             </StyledContainer>
         </PageContent>
     );
-};
-
-export const ProjectList: FC = () => {
-    return <NewProjectList />;
 };

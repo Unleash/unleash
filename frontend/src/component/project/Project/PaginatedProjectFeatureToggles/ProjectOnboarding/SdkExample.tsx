@@ -4,28 +4,13 @@ import Select from 'component/common/select';
 import { useState } from 'react';
 import { allSdks } from '../../../../onboarding/sharedTypes';
 
-const Container = styled('div')(({ theme }) => ({
+const TitleContainer = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'column',
-    backgroundColor: theme.palette.background.paper,
-    flexBasis: '30%',
-    borderRadius: theme.shape.borderRadiusLarge,
-}));
-
-const TitleBox = styled('div')(({ theme }) => ({
-    padding: theme.spacing(2, 7, 2, 7),
-    borderBottom: '1px solid',
-    borderColor: theme.palette.divider,
-    minHeight: '80px',
+    flexDirection: 'row',
+    gap: theme.spacing(2),
     alignItems: 'center',
-    display: 'flex',
-}));
-
-const ContentBox = styled('div')(({ theme }) => ({
-    padding: theme.spacing(3, 2, 6, 8),
-    display: 'flex',
-    gap: theme.spacing(3),
-    flexDirection: 'column',
+    fontSize: theme.spacing(1.75),
+    fontWeight: 'bold',
 }));
 
 const StyledLink = styled(Link)({
@@ -45,27 +30,22 @@ export const SdkExample = () => {
         setSelectedSdk(event.target.value);
     };
     return (
-        <Container>
-            <TitleBox>
-                <Typography fontWeight='bold'>View SDK Example</Typography>
-            </TitleBox>
-
-            <ContentBox>
-                <Typography>
-                    See an example implementation of your preferred SDK.
-                </Typography>
-                <Select
-                    id='sdk-select'
-                    name='sdk'
-                    options={sdkOptions}
-                    value={selectedSdk}
-                    onChange={onChange}
-                    style={{
-                        width: '60%',
-                    }}
-                />
-                <StyledLink to={``}>Go to example</StyledLink>
-            </ContentBox>
-        </Container>
+        <>
+            <TitleContainer>View SDK Example</TitleContainer>
+            <Typography>
+                Choose your preferred SDK to view an example
+            </Typography>
+            <Select
+                id='sdk-select'
+                name='sdk'
+                options={sdkOptions}
+                value={selectedSdk}
+                onChange={onChange}
+                style={{
+                    width: '60%',
+                }}
+            />
+            <StyledLink to={``}>Go to example</StyledLink>
+        </>
     );
 };

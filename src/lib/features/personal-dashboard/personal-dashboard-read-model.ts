@@ -30,7 +30,7 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
                 this.select('name', 'type', 'project', 'created_at')
                     .from('features')
                     .where('features.created_by_user_id', userId)
-                    .whereNull('features.archived_at'); // Ensuring archived_at is null in the features table
+                    .whereNull('features.archived_at');
             })
             .orderBy('created_at', 'desc')
             .limit(100);

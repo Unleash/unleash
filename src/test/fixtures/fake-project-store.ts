@@ -3,7 +3,6 @@ import type {
     IProject,
     IProjectApplications,
     IProjectStore,
-    IProjectWithCount,
 } from '../../lib/types';
 import NotFoundError from '../../lib/error/notfound-error';
 import type {
@@ -15,7 +14,6 @@ import type {
     IProjectApplicationsSearchParams,
     IProjectHealthUpdate,
     IProjectInsert,
-    IProjectQuery,
     ProjectEnvironment,
 } from '../../lib/features/project/project-store-type';
 
@@ -46,27 +44,6 @@ export default class FakeProjectStore implements IProjectStore {
         const environments = this.projectEnvironment.get(id) || new Set();
         environments.add(environment);
         this.projectEnvironment.set(id, environments);
-    }
-
-    async getProjectsWithCounts(
-        query?: IProjectQuery,
-    ): Promise<IProjectWithCount[]> {
-        return this.projects
-            .filter((project) =>
-                query?.archived
-                    ? project.archivedAt !== null
-                    : project.archivedAt === null,
-            )
-            .map((project) => {
-                return {
-                    ...project,
-                    memberCount: 0,
-                    featureCount: 0,
-                    staleFeatureCount: 0,
-                    potentiallyStaleFeatureCount: 0,
-                    avgTimeToProduction: 0,
-                };
-            });
     }
 
     private createInternal(project: IProjectInsert): IProject {

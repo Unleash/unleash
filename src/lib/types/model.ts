@@ -574,17 +574,6 @@ export interface ICustomRole extends IRole {
     description: string;
 }
 
-// @deprecated Remove with flag useProjectReadModel
-export interface IProjectWithCount extends IProject {
-    featureCount: number;
-    staleFeatureCount: number;
-    potentiallyStaleFeatureCount: number;
-    memberCount: number;
-    favorite?: boolean;
-    avgTimeToProduction: number;
-    archivedAt?: Date;
-}
-
 export interface IClientSegment {
     id: number;
     constraints: IConstraint[];

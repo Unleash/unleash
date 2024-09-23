@@ -56,7 +56,6 @@ export type IFlagKey =
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
     | 'originMiddleware'
-    | 'useProjectReadModel'
     | 'addonUsageMetrics'
     | 'onboardingMetrics'
     | 'onboardingUI'
@@ -277,10 +276,6 @@ const flags: IFlags = {
     ),
     originMiddleware: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ORIGIN_MIDDLEWARE,
-        false,
-    ),
-    useProjectReadModel: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_USE_PROJECT_READ_MODEL,
         false,
     ),
     addonUsageMetrics: parseEnvVarBoolean(

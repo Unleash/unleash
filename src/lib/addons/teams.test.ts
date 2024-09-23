@@ -18,7 +18,6 @@ import {
     SYSTEM_USER_ID,
 } from '../types';
 import type { IntegrationEventsService } from '../services';
-import { bold } from './feature-event-formatter-md';
 
 let fetchRetryCalls: any[];
 const registerEventMock = jest.fn();
@@ -232,7 +231,7 @@ describe('Teams integration', () => {
                     summary: 'Message',
                     sections: [
                         {
-                            activityTitle: `${bold(event.createdBy)} disabled ${bold(`[${event.featureName}](${ARGS.unleashUrl}/projects/${event.project}/features/${event.featureName})`)} for the ${bold(event.environment)} environment in project ${bold(`[${event.project}](${ARGS.unleashUrl}/projects/${event.project})`)}`,
+                            activityTitle: `*${event.createdBy}* disabled *[${event.featureName}](${ARGS.unleashUrl}/projects/${event.project}/features/${event.featureName})* for the *${event.environment}* environment in project *[${event.project}](${ARGS.unleashUrl}/projects/${event.project})*`,
                             activitySubtitle: `Unleash notification update`,
                             facts: [
                                 {

@@ -82,8 +82,6 @@ export enum LinkStyle {
     MD = 1,
 }
 
-export const bold = (text?: string) => (text ? `**${text}**` : '');
-
 const EVENT_MAP: Record<string, IEventData> = {
     [ADDON_CONFIG_CREATED]: {
         label: 'Integration configuration created',
@@ -396,19 +394,17 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
             const text = `#${changeRequestId}`;
             const featureLink = this.generateFeatureLink(event);
             const featureText = featureLink
-                ? ` for feature flag ${bold(featureLink)}`
+                ? ` for feature flag *${featureLink}*`
                 : '';
             const environmentText = environment
-                ? ` in the ${bold(environment)} environment`
+                ? ` in the *${environment}* environment`
                 : '';
             const projectLink = this.generateProjectLink(event);
-            const projectText = project
-                ? ` in project ${bold(projectLink)}`
-                : '';
+            const projectText = project ? ` in project *${projectLink}*` : '';
             if (this.linkStyle === LinkStyle.SLACK) {
-                return `${bold(`<${url}|${text}>`)}${featureText}${environmentText}${projectText}`;
+                return `*<${url}|${text}>*${featureText}${environmentText}${projectText}`;
             } else {
-                return `${bold(`[${text}](${url})`)}${featureText}${environmentText}${projectText}`;
+                return `*[${text}](${url})*${featureText}${environmentText}${projectText}`;
             }
         }
     }
@@ -474,9 +470,9 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                             event,
                         );
                     default:
-                        return `by updating strategy ${bold(
-                            this.getStrategyTitle(event),
-                        )} in ${bold(environment)}`;
+                        return `by updating strategy *${this.getStrategyTitle(
+                            event,
+                        )}* in *${environment}*`;
                 }
             };
 
@@ -526,9 +522,9 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         const strategySpecificText = [usersText, constraintText, segmentsText]
             .filter((x) => x.length)
             .join(';');
-        return `by updating strategy ${bold(
-            this.getStrategyTitle(event),
-        )} in ${bold(environment)}${strategySpecificText}`;
+        return `by updating strategy *${this.getStrategyTitle(
+            event,
+        )}* in *${environment}*${strategySpecificText}`;
     }
 
     private flexibleRolloutStrategyChangeText(event: IEvent) {
@@ -574,9 +570,9 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         ]
             .filter((txt) => txt.length)
             .join(';');
-        return `by updating strategy ${bold(
-            this.getStrategyTitle(event),
-        )} in ${bold(environment)}${strategySpecificText}`;
+        return `by updating strategy *${this.getStrategyTitle(
+            event,
+        )}* in *${environment}*${strategySpecificText}`;
     }
 
     private defaultStrategyChangeText(event: IEvent) {
@@ -592,9 +588,9 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         const strategySpecificText = [constraintText, segmentsText]
             .filter((txt) => txt.length)
             .join(';');
-        return `by updating strategy ${bold(
-            this.getStrategyTitle(event),
-        )} in ${bold(environment)}${strategySpecificText}`;
+        return `by updating strategy *${this.getStrategyTitle(
+            event,
+        )}* in *${environment}*${strategySpecificText}`;
     }
 
     private constraintChangeText(
@@ -665,7 +661,7 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
     format(event: IEvent): IFormattedEventData {
         const { createdBy, type } = event;
         const { action, path } = EVENT_MAP[type] || {
-            action: `triggered ${bold(type)}`,
+            action: `triggered *${type}*`,
         };
 
         const context = {

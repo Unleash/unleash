@@ -10,11 +10,16 @@ import {
     type TimeSpanOption,
     timeSpanOptions,
 } from './EventTimelineHeader/EventTimelineHeader';
+import type { ISignal } from 'interfaces/signal';
 
 export type EnrichedEvent = EventSchema & {
     label: string;
     summary: string;
 };
+
+export type TimelineEvent = EnrichedEvent | ISignal;
+
+export type TimelineEventGroup = TimelineEvent[];
 
 const StyledRow = styled('div')({
     display: 'flex',

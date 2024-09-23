@@ -8,7 +8,8 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import SegmentsIcon from '@mui/icons-material/DonutLargeOutlined';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
-import type { EnrichedEvent } from '../EventTimeline';
+import type { TimelineEvent, TimelineEventGroup } from '../EventTimeline';
+import type { ISignal } from 'interfaces/signal';
 
 type DefaultEventVariant = 'secondary';
 type CustomEventVariant = 'success' | 'neutral';
@@ -77,16 +78,30 @@ const customEventVariants: Partial<
 };
 
 interface IEventTimelineEventProps {
-    event: EnrichedEvent;
+    event: TimelineEvent | TimelineEventGroup;
     startDate: Date;
     endDate: Date;
 }
+
+const isSignal = (
+    event: TimelineEvent | TimelineEventGroup,
+): event is ISignal => {
+    return !Array.isArray(event) && 'source' in event;
+};
 
 export const EventTimelineEvent = ({
     event,
     startDate,
     endDate,
 }: IEventTimelineEventProps) => {
+    if (Array.isArray(event)) {
+        return null;
+    }
+
+    if (isSignal(event)) {
+        return null;
+    }
+
     const timelineDuration = endDate.getTime() - startDate.getTime();
     const eventTime = new Date(event.createdAt).getTime();
 

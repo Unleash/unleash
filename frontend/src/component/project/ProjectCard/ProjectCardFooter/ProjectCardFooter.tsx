@@ -1,7 +1,7 @@
 import type React from 'react';
 import type { FC } from 'react';
 import { Box, styled } from '@mui/material';
-import { type IProjectOwnersProps } from '../LegacyProjectOwners/LegacyProjectOwners';
+import type { IProjectOwnersProps } from '../LegacyProjectOwners/LegacyProjectOwners';
 import { ProjectOwners } from './ProjectOwners/ProjectOwners';
 
 interface IProjectCardFooterProps {

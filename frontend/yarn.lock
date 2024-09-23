@@ -1398,7 +1398,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.35.3":
+"@mswjs/interceptors@npm:^0.35.6":
   version: 0.35.8
   resolution: "@mswjs/interceptors@npm:0.35.8"
   dependencies:
@@ -7304,15 +7304,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:2.4.6":
-  version: 2.4.6
-  resolution: "msw@npm:2.4.6"
+"msw@npm:2.4.7":
+  version: 2.4.7
+  resolution: "msw@npm:2.4.7"
   dependencies:
     "@bundled-es-modules/cookie": "npm:^2.0.0"
     "@bundled-es-modules/statuses": "npm:^1.0.1"
     "@bundled-es-modules/tough-cookie": "npm:^0.1.6"
     "@inquirer/confirm": "npm:^3.0.0"
-    "@mswjs/interceptors": "npm:^0.35.3"
+    "@mswjs/interceptors": "npm:^0.35.6"
     "@open-draft/until": "npm:^2.1.0"
     "@types/cookie": "npm:^0.6.0"
     "@types/statuses": "npm:^2.0.4"
@@ -7332,7 +7332,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10c0/afcef1863842e4f70158e4973e7a827a01b0e20b37e373a9c43b847a81772c5cb8bdee4a5bad739f5c90063e84367b2282a58c2ab409072cccc88c8fc06ad27f
+  checksum: 10c0/d0aa43aab753d98c1953b083f9fab168e9a7375a4afb66b93332196efbaada82e02ead7807a958ce12a5a1204084e05eb0023cee6020b49e4d0de5b4b91f9ab7
   languageName: node
   linkType: hard
 
@@ -9802,7 +9802,7 @@ __metadata:
     lodash.mapvalues: "npm:^4.6.0"
     lodash.omit: "npm:4.5.0"
     millify: "npm:^6.0.0"
-    msw: "npm:2.4.6"
+    msw: "npm:2.4.7"
     orval: "npm:^6.17.0"
     pkginfo: "npm:0.4.1"
     plausible-tracker: "npm:0.3.9"

@@ -43,10 +43,10 @@ export default class SlackAppAddon extends Addon {
 
     constructor(args: IAddonConfig) {
         super(slackAppDefinition, args);
-        this.msgFormatter = new FeatureEventFormatterMd(
-            args.unleashUrl,
-            LinkStyle.SLACK,
-        );
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: args.unleashUrl,
+            linkStyle: LinkStyle.SLACK,
+        });
         this.flagResolver = args.flagResolver;
     }
 

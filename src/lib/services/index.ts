@@ -146,6 +146,9 @@ import {
     createOnboardingService,
 } from '../features/onboarding/createOnboardingService';
 import { OnboardingService } from '../features/onboarding/onboarding-service';
+import { PersonalDashboardService } from '../features/personal-dashboard/personal-dashboard-service';
+import { PersonalDashboardReadModel } from '../features/personal-dashboard/personal-dashboard-read-model';
+import { FakePersonalDashboardReadModel } from '../features/personal-dashboard/fake-personal-dashboard-read-model';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -401,6 +404,12 @@ export const createServices = (
         : createFakeOnboardingService(config).onboardingService;
     onboardingService.listen();
 
+    const personalDashboardService = new PersonalDashboardService(
+        db
+            ? new PersonalDashboardReadModel(db)
+            : new FakePersonalDashboardReadModel(),
+    );
+
     return {
         accessService,
         accountService,
@@ -464,6 +473,7 @@ export const createServices = (
         transactionalFeatureLifecycleService,
         integrationEventsService,
         onboardingService,
+        personalDashboardService,
     };
 };
 
@@ -514,4 +524,5 @@ export {
     FeatureLifecycleService,
     IntegrationEventsService,
     OnboardingService,
+    PersonalDashboardService,
 };

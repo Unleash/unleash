@@ -1,7 +1,7 @@
 import { render } from 'utils/testRenderer';
 import { Route, Routes } from 'react-router-dom';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
-import { WelcomeToProject } from './WelcomeToProject';
+import { ProjectOnboarding } from './ProjectOnboarding';
 import { screen } from '@testing-library/react';
 
 const server = testServerSetup();
@@ -18,7 +18,7 @@ test('Project can start onboarding', async () => {
             <Route
                 path={'/projects/:projectId'}
                 element={
-                    <WelcomeToProject
+                    <ProjectOnboarding
                         projectId={projectId}
                         setConnectSdkOpen={() => {}}
                     />
@@ -45,7 +45,7 @@ test('Project can connect SDK', async () => {
             <Route
                 path={'/projects/:projectId'}
                 element={
-                    <WelcomeToProject
+                    <ProjectOnboarding
                         projectId={projectId}
                         setConnectSdkOpen={() => {}}
                     />

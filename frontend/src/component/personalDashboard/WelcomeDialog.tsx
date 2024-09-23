@@ -5,6 +5,7 @@ import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText
 import { ThemeMode } from '../common/ThemeMode/ThemeMode';
 import onboardingConcepts from 'assets/img/onboardingConcepts.png';
 import { ScreenReaderOnly } from '../common/ScreenReaderOnly/ScreenReaderOnly';
+import { formatAssetPath } from 'utils/formatPath';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -69,7 +70,7 @@ export const WelcomeDialog: FC<IWelcomeDialogProps> = ({ open, onClose }) => {
                     </Typography>{' '}
                     in order to work effectively with Unleash
                 </Box>
-                <StyledImg src={onboardingConcepts} />
+                <StyledImg src={formatAssetPath(onboardingConcepts)} />
                 <ScreenReaderOnly>
                     <h2>Environments</h2>
                     <p>

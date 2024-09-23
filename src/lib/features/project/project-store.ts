@@ -121,9 +121,7 @@ class ProjectStore implements IProjectStore {
             .where(query)
             .orderBy('name', 'asc');
 
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            projects = projects.where(`${TABLE}.archived_at`, null);
-        }
+        projects = projects.where(`${TABLE}.archived_at`, null);
 
         const rows = await projects;
 
@@ -131,10 +129,7 @@ class ProjectStore implements IProjectStore {
     }
 
     async get(id: string): Promise<IProject> {
-        let extraColumns: string[] = [];
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            extraColumns = ['archived_at'];
-        }
+        const extraColumns: string[] = ['archived_at'];
 
         return this.db
             .first([...COLUMNS, ...SETTINGS_COLUMNS, ...extraColumns])
@@ -518,8 +513,7 @@ class ProjectStore implements IProjectStore {
     async getApplicationsByProject(
         params: IProjectApplicationsSearchParams,
     ): Promise<IProjectApplications> {
-        const { project, limit, sortOrder, sortBy, searchParams, offset } =
-            params;
+        const { project, limit, sortOrder, searchParams, offset } = params;
         const validatedSortOrder =
             sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
         const query = this.db
@@ -625,9 +619,7 @@ class ProjectStore implements IProjectStore {
     async count(): Promise<number> {
         let count = this.db.from(TABLE).count('*');
 
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            count = count.where(`${TABLE}.archived_at`, null);
-        }
+        count = count.where(`${TABLE}.archived_at`, null);
 
         return count.then((res) => Number(res[0].count));
     }
@@ -650,9 +642,7 @@ class ProjectStore implements IProjectStore {
                 this.db.raw(`COALESCE(${SETTINGS_TABLE}.project_mode, 'open')`),
             );
 
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            query = query.where(`${TABLE}.archived_at`, null);
-        }
+        query = query.where(`${TABLE}.archived_at`, null);
 
         const result: ProjectModeCount[] = await query;
 

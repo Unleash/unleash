@@ -104,12 +104,10 @@ export class ProjectReadModel implements IProjectReadModel {
             })
             .orderBy('projects.name', 'asc');
 
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            if (query?.archived === true) {
-                projects = projects.whereNot(`${TABLE}.archived_at`, null);
-            } else {
-                projects = projects.where(`${TABLE}.archived_at`, null);
-            }
+        if (query?.archived === true) {
+            projects = projects.whereNot(`${TABLE}.archived_at`, null);
+        } else {
+            projects = projects.where(`${TABLE}.archived_at`, null);
         }
 
         if (query?.id) {
@@ -124,11 +122,8 @@ export class ProjectReadModel implements IProjectReadModel {
                     'MAX(events.created_at) AS last_updated',
             ),
             'project_settings.project_mode',
+            'projects.archived_at',
         ] as (string | Raw<any>)[];
-
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            selectColumns.push(`${TABLE}.archived_at`);
-        }
 
         let groupByColumns = ['projects.id', 'project_settings.project_mode'];
 
@@ -179,12 +174,10 @@ export class ProjectReadModel implements IProjectReadModel {
             .leftJoin('project_stats', 'project_stats.project', 'projects.id')
             .orderBy('projects.name', 'asc');
 
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            if (query?.archived === true) {
-                projects = projects.whereNot(`${TABLE}.archived_at`, null);
-            } else {
-                projects = projects.where(`${TABLE}.archived_at`, null);
-            }
+        if (query?.archived === true) {
+            projects = projects.whereNot(`${TABLE}.archived_at`, null);
+        } else {
+            projects = projects.where(`${TABLE}.archived_at`, null);
         }
 
         if (query?.id) {
@@ -199,11 +192,8 @@ export class ProjectReadModel implements IProjectReadModel {
                     'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count',
             ),
             'project_stats.avg_time_to_prod_current_window',
+            'projects.archived_at',
         ] as (string | Raw<any>)[];
-
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            selectColumns.push(`${TABLE}.archived_at`);
-        }
 
         const groupByColumns = [
             'projects.id',

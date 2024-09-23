@@ -11,7 +11,7 @@ import type { Response } from 'express';
 import type { IAuthRequest } from '../../routes/unleash-types';
 import type { PersonalDashboardService } from './personal-dashboard-service';
 
-const PATH = '/';
+const PATH = '';
 
 export default class PersonalDashboardController extends Controller {
     private openApiService: OpenApiService;

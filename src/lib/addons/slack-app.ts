@@ -105,7 +105,7 @@ export default class SlackAppAddon extends Addon {
             }
 
             const { text, url } = this.msgFormatter.format(event);
-            message = text;
+            message = text.substring(0, 3000);
 
             const blocks: (Block | KnownBlock)[] = [
                 {

@@ -1616,38 +1616,39 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@slack/logger@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "@slack/logger@npm:3.0.0"
+"@slack/logger@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@slack/logger@npm:4.0.0"
   dependencies:
-    "@types/node": "npm:>=12.0.0"
-  checksum: 10c0/af6394486be633ec86660b0cc980222f8371fc79f15a649aebc4df358fd6da35ef98c088c709626262c26d67d039e98a34fb52d3739f91817e3aae0099e491be
+    "@types/node": "npm:>=18.0.0"
+  checksum: 10c0/32c4b1f3b4a832a506b7661855d1da88eae307334563916b7513748171545a120abaaca5146a8beed1130b44c9e92f37511010b1205710baa778f5626cc2f7fa
   languageName: node
   linkType: hard
 
-"@slack/types@npm:^2.11.0":
-  version: 2.11.0
-  resolution: "@slack/types@npm:2.11.0"
-  checksum: 10c0/b93b36b17b40d737f0c1c7da504dd5bab8ef84ff1b59378a72bcfc0d58ccf1f0f82ea22a3c3850cbbe1d8572e0724aa96282a390b794834d7a65d763ae13e5e1
+"@slack/types@npm:^2.9.0":
+  version: 2.14.0
+  resolution: "@slack/types@npm:2.14.0"
+  checksum: 10c0/2d45b36ee128e202b8b864fa35f5752c9f811a433d598461de83c47bf5fc5c1f45678825b4185007d8151ebb8b0ce00e6541780f4f3af5698855aebfc6550fb8
   languageName: node
   linkType: hard
 
-"@slack/web-api@npm:^6.10.0":
-  version: 6.12.1
-  resolution: "@slack/web-api@npm:6.12.1"
+"@slack/web-api@npm:^7.3.4":
+  version: 7.5.0
+  resolution: "@slack/web-api@npm:7.5.0"
   dependencies:
-    "@slack/logger": "npm:^3.0.0"
-    "@slack/types": "npm:^2.11.0"
-    "@types/is-stream": "npm:^1.1.0"
-    "@types/node": "npm:>=12.0.0"
+    "@slack/logger": "npm:^4.0.0"
+    "@slack/types": "npm:^2.9.0"
+    "@types/node": "npm:>=18.0.0"
+    "@types/retry": "npm:0.12.0"
     axios: "npm:^1.7.4"
-    eventemitter3: "npm:^3.1.0"
-    form-data: "npm:^2.5.0"
+    eventemitter3: "npm:^5.0.1"
+    form-data: "npm:^4.0.0"
     is-electron: "npm:2.2.2"
-    is-stream: "npm:^1.1.0"
-    p-queue: "npm:^6.6.1"
-    p-retry: "npm:^4.0.0"
-  checksum: 10c0/43301aa33cd2cb062b3e725ba1af836521e747d43bb713280e3b00b645b7a9d04bfa997836e1a40170db2b4356e627a22c6dd84c897df8712d87bd515047160a
+    is-stream: "npm:^2"
+    p-queue: "npm:^6"
+    p-retry: "npm:^4"
+    retry: "npm:^0.13.1"
+  checksum: 10c0/067af68cb4aa823a13c328ae6db60ad22e41a97cdc2b69836176980a3075026c563f131b62f50ca9176481a0f6a4667e969fef783c63ea9cc1f206104fd20177
   languageName: node
   linkType: hard
 
@@ -1992,15 +1993,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/is-stream@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "@types/is-stream@npm:1.1.0"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10c0/88e3ec1868b3568576f1a194beda9a5a2d5fff24824d6793e316d7efe64dc597eb48d2f0b110512752c1248ceae806305a9d52308cf053f2170d0fd74f7dee8a
-  languageName: node
-  linkType: hard
-
 "@types/istanbul-lib-coverage@npm:*, @types/istanbul-lib-coverage@npm:^2.0.0, @types/istanbul-lib-coverage@npm:^2.0.1":
   version: 2.0.4
   resolution: "@types/istanbul-lib-coverage@npm:2.0.4"
@@ -2138,7 +2130,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=12.0.0":
+"@types/node@npm:*":
   version: 20.11.17
   resolution: "@types/node@npm:20.11.17"
   dependencies:
@@ -2153,6 +2145,15 @@ __metadata:
   dependencies:
     undici-types: "npm:~6.19.2"
   checksum: 10c0/907c01d58ae36695fbed0b101e7a14cc2e0c5b9b2ba7904ef21cef093e4aac0649ac2a7a283fc94e19311dd0551d778445dd45fcf2d8bd45c494c9ecd802de69
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:>=18.0.0":
+  version: 22.5.5
+  resolution: "@types/node@npm:22.5.5"
+  dependencies:
+    undici-types: "npm:~6.19.2"
+  checksum: 10c0/ead9495cfc6b1da5e7025856dcce2591e9bae635357410c0d2dd619fce797d2a1d402887580ca4b336cb78168b195224869967de370a23f61663cf1e4836121c
   languageName: node
   linkType: hard
 
@@ -4110,13 +4111,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eventemitter3@npm:^3.1.0":
-  version: 3.1.2
-  resolution: "eventemitter3@npm:3.1.2"
-  checksum: 10c0/c67262eccbf85848b7cc6d4abb6c6e34155e15686db2a01c57669fd0d44441a574a19d44d25948b442929e065774cbe5003d8e77eed47674fbf876ac77887793
-  languageName: node
-  linkType: hard
-
 "eventemitter3@npm:^4.0.4":
   version: 4.0.7
   resolution: "eventemitter3@npm:4.0.7"
@@ -4522,17 +4516,6 @@ __metadata:
   version: 0.6.1
   resolution: "forever-agent@npm:0.6.1"
   checksum: 10c0/364f7f5f7d93ab661455351ce116a67877b66f59aca199559a999bd39e3cfadbfbfacc10415a915255e2210b30c23febe9aec3ca16bf2d1ff11c935a1000e24c
-  languageName: node
-  linkType: hard
-
-"form-data@npm:^2.5.0":
-  version: 2.5.1
-  resolution: "form-data@npm:2.5.1"
-  dependencies:
-    asynckit: "npm:^0.4.0"
-    combined-stream: "npm:^1.0.6"
-    mime-types: "npm:^2.1.12"
-  checksum: 10c0/7e8fb913b84a7ac04074781a18d0f94735bbe82815ff35348803331f6480956ff0035db5bcf15826edee09fe01e665cfac664678f1526646a6374ee13f960e56
   languageName: node
   linkType: hard
 
@@ -5329,14 +5312,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-stream@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "is-stream@npm:1.1.0"
-  checksum: 10c0/b8ae7971e78d2e8488d15f804229c6eed7ed36a28f8807a1815938771f4adff0e705218b7dab968270433f67103e4fef98062a0beea55d64835f705ee72c7002
-  languageName: node
-  linkType: hard
-
-"is-stream@npm:^2.0.0":
+"is-stream@npm:^2, is-stream@npm:^2.0.0":
   version: 2.0.1
   resolution: "is-stream@npm:2.0.1"
   checksum: 10c0/7c284241313fc6efc329b8d7f08e16c0efeb6baab1b4cd0ba579eb78e5af1aa5da11e68559896a2067cd6c526bd29241dda4eb1225e627d5aa1a89a76d4635a5
@@ -7296,7 +7272,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-queue@npm:^6.6.1":
+"p-queue@npm:^6":
   version: 6.6.2
   resolution: "p-queue@npm:6.6.2"
   dependencies:
@@ -7306,7 +7282,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"p-retry@npm:^4.0.0":
+"p-retry@npm:^4":
   version: 4.6.2
   resolution: "p-retry@npm:4.6.2"
   dependencies:
@@ -9427,7 +9403,7 @@ __metadata:
     "@babel/core": "npm:7.25.2"
     "@biomejs/biome": "npm:^1.8.3"
     "@cyclonedx/yarn-plugin-cyclonedx": "npm:^1.0.0-rc.7"
-    "@slack/web-api": "npm:^6.10.0"
+    "@slack/web-api": "npm:^7.3.4"
     "@swc/core": "npm:1.7.26"
     "@swc/jest": "npm:0.2.36"
     "@types/bcryptjs": "npm:2.4.6"

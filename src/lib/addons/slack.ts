@@ -79,7 +79,7 @@ export default class SlackAddon extends Addon {
             const body = {
                 username,
                 icon_emoji: emojiIcon, // eslint-disable-line camelcase
-                text,
+                text: text.substring(0, 3000),
                 channel: `#${channel}`,
                 attachments: [
                     {

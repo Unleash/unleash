@@ -141,7 +141,7 @@ export default class SlackAppAddon extends Addon {
             const requests = channels.map((name) => {
                 return this.slackClient!.chat.postMessage({
                     channel: name,
-                    text: text,
+                    text,
                     blocks,
                     unfurl_links: false,
                 });

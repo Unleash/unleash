@@ -17,7 +17,6 @@ import {
     SYSTEM_USER_ID,
 } from '../types';
 import type { IntegrationEventsService } from '../services';
-import { bold } from './feature-event-formatter-md';
 
 let fetchRetryCalls: any[] = [];
 const registerEventMock = jest.fn();
@@ -339,7 +338,8 @@ describe('Slack integration', () => {
                 url: parameters.url,
                 channels: ['general'],
                 username: 'Unleash',
-                message: `${bold('some@user.com')} disabled ${bold('<http://some-url.com/projects/default/features/some-toggle|some-toggle>')} for the ${bold('development')} environment in project ${bold('<http://some-url.com/projects/default|default>')}`,
+                message:
+                    '*some@user.com* disabled *<http://some-url.com/projects/default/features/some-toggle|some-toggle>* for the *development* environment in project *<http://some-url.com/projects/default|default>*',
             },
         });
     });

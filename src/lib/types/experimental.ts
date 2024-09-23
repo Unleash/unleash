@@ -58,7 +58,6 @@ export type IFlagKey =
     | 'originMiddleware'
     | 'archiveProjects'
     | 'projectListImprovements'
-    | 'useProjectReadModel'
     | 'addonUsageMetrics'
     | 'onboardingMetrics'
     | 'onboardingUI'
@@ -287,10 +286,6 @@ const flags: IFlags = {
     ),
     projectListImprovements: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_LIST_IMPROVEMENTS,
-        false,
-    ),
-    useProjectReadModel: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_USE_PROJECT_READ_MODEL,
         false,
     ),
     addonUsageMetrics: parseEnvVarBoolean(

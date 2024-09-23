@@ -233,9 +233,8 @@ export default class ProjectService {
         query?: IProjectQuery,
         userId?: number,
     ): Promise<TransitionalProjectData[]> {
-        const getProjects = this.flagResolver.isEnabled('useProjectReadModel')
-            ? () => this.projectReadModel.getProjectsForAdminUi(query, userId)
-            : () => this.projectStore.getProjectsWithCounts(query, userId);
+        const getProjects = () =>
+            this.projectReadModel.getProjectsForAdminUi(query, userId);
 
         const projects = await getProjects();
 

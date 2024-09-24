@@ -110,16 +110,14 @@ const MainLayoutContentContainer = styled('div')(({ theme }) => ({
 const timelineAnimations = {
     start: {
         maxHeight: 0,
-        opacity: 0,
-        transition: 'max-height 0.5s ease-in-out, opacity 0.5s ease-in-out',
+        overflow: 'hidden',
+        transition: 'max-height 0.3s ease-in-out',
     },
     enter: {
-        maxHeight: '100vh',
-        opacity: 1,
+        maxHeight: '105px',
     },
     leave: {
         maxHeight: 0,
-        opacity: 0,
     },
 };
 
@@ -130,6 +128,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
+        const eventTimeline = useUiFlag('eventTimeline');
         const [showTimeline, setShowTimeline] = useState(false);
 
         const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
@@ -150,7 +149,12 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             setShowTimeline={setShowTimeline}
                         />
                     }
-                    elseShow={<OldHeader />}
+                    elseShow={
+                        <OldHeader
+                            showTimeline={showTimeline}
+                            setShowTimeline={setShowTimeline}
+                        />
+                    }
                 />
 
                 <SkipNavTarget />
@@ -186,7 +190,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 }}
                             >
                                 <AnimateOnMount
-                                    mounted={showTimeline}
+                                    mounted={eventTimeline && showTimeline}
                                     start={timelineAnimations.start}
                                     enter={timelineAnimations.enter}
                                     leave={timelineAnimations.leave}

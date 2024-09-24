@@ -62,3 +62,7 @@ cypress/screenshots/*
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+
+# vite
+.vite

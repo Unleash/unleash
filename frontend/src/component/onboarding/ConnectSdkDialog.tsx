@@ -7,13 +7,15 @@ import {
     useTheme,
 } from '@mui/material';
 import { GenerateApiKey } from './GenerateApiKey';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { SelectSdk } from './SelectSdk';
 import { GenerateApiKeyConcepts, SelectSdkConcepts } from './UnleashConcepts';
-import { TestSdkConnection } from './TestSdkConnection';
+
+const TestSdkConnection = lazy(() => import('./TestSdkConnection'));
 
 import type { Sdk } from './sharedTypes';
 import { ConnectionInformation } from './ConnectionInformation';
+import Loader from 'component/common/Loader/Loader';
 
 interface IConnectSDKDialogProps {
     open: boolean;
@@ -111,14 +113,16 @@ export const ConnectSdkDialog = ({
                         />
                     ) : null}
                     {isTestConnectionStage ? (
-                        <TestSdkConnection
-                            sdk={sdk}
-                            apiKey={apiKey}
-                            feature={feature}
-                            onSdkChange={() => {
-                                setStage('select-sdk');
-                            }}
-                        />
+                        <Suspense fallback={<Loader />}>
+                            <TestSdkConnection
+                                sdk={sdk}
+                                apiKey={apiKey}
+                                feature={feature}
+                                onSdkChange={() => {
+                                    setStage('select-sdk');
+                                }}
+                            />
+                        </Suspense>
                     ) : null}
 
                     {stage === 'generate-api-key' ? (

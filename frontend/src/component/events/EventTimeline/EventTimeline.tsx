@@ -1,15 +1,10 @@
 import { styled } from '@mui/material';
 import type { EventSchema, EventSchemaType } from 'openapi';
-import { useState } from 'react';
 import { startOfDay, sub } from 'date-fns';
-import type { IEnvironment } from 'interfaces/environments';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import { EventTimelineEvent } from './EventTimelineEvent/EventTimelineEvent';
-import {
-    EventTimelineHeader,
-    type TimeSpanOption,
-    timeSpanOptions,
-} from './EventTimelineHeader/EventTimelineHeader';
+import { EventTimelineHeader } from './EventTimelineHeader/EventTimelineHeader';
+import { useEventTimeline } from './useEventTimeline';
 
 export type EnrichedEvent = EventSchema & {
     label: string;
@@ -88,10 +83,8 @@ const RELEVANT_EVENT_TYPES: EventSchemaType[] = [
 const toISODateString = (date: Date) => date.toISOString().split('T')[0];
 
 export const EventTimeline = () => {
-    const [timeSpan, setTimeSpan] = useState<TimeSpanOption>(
-        timeSpanOptions[0],
-    );
-    const [environment, setEnvironment] = useState<IEnvironment | undefined>();
+    const { timeSpan, environment, setTimeSpan, setEnvironment } =
+        useEventTimeline();
 
     const endDate = new Date();
     const startDate = sub(endDate, timeSpan.value);

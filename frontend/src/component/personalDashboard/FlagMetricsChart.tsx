@@ -11,7 +11,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { Bar } from 'react-chartjs-2';
 import useTheme from '@mui/material/styles/useTheme';
 import { type FC, useEffect, useMemo, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { FeatureMetricsHours } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsHours/FeatureMetricsHours';
 import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
 import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
@@ -97,7 +97,7 @@ const useMetricsEnvironments = (project: string) => {
 
 const useFlagMetrics = (
     flagName: string,
-    environment: string,
+    environment: string | null,
     hoursBack: number,
 ) => {
     const { featureMetrics: metrics = [] } = useFeatureMetricsRaw(
@@ -136,7 +136,7 @@ const useFlagMetrics = (
 const EnvironmentSelect: FC<{
     activeEnvironments: { name: string }[];
     environment: string;
-    setEnvironment: () => void;
+    setEnvironment: (environment: string | null) => void;
 }> = ({ activeEnvironments, environment, setEnvironment }) => {
     return (
         <GeneralSelect
@@ -172,12 +172,13 @@ export const FlagMetricsChart: FC<{
     return (
         <>
             <MetricsSelectors>
-                <EnvironmentSelect
-                    project={flag.project}
-                    environment={environment}
-                    setEnvironment={setEnvironment}
-                    activeEnvironments={activeEnvironments}
-                />
+                {environment ? (
+                    <EnvironmentSelect
+                        environment={environment}
+                        setEnvironment={setEnvironment}
+                        activeEnvironments={activeEnvironments}
+                    />
+                ) : null}
                 <FeatureMetricsHours
                     hoursBack={hoursBack}
                     setHoursBack={setHoursBack}

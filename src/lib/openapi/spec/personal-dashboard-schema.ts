@@ -47,7 +47,12 @@ export const personalDashboardSchema = {
                                 },
                                 type: {
                                     type: 'string',
-                                    enum: ['custom', 'project'],
+                                    enum: [
+                                        'custom',
+                                        'project',
+                                        'root',
+                                        'custom-root',
+                                    ],
                                     example: 'project',
                                     description: 'The type of the role',
                                 },

@@ -23,7 +23,7 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
             .join('role_user', 'projects.id', 'role_user.project')
             .join('roles', 'role_user.role_id', 'roles.id')
             .where('role_user.user_id', userId)
-            .whereNull('project.archived_at')
+            .whereNull('projects.archived_at')
             .select(
                 'projects.name',
                 'projects.id',
@@ -31,12 +31,9 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
                 'roles.name as roleName',
                 'roles.type as roleType',
             )
-            .orderBy('projects.name', 'desc')
             .limit(100);
 
-        console.log(result);
-
-        return result.reduce((acc, row) => {
+        const dict = result.reduce((acc, row) => {
             if (acc[row.id]) {
                 acc[row.id].roles.push({
                     id: row.roleId,
@@ -58,6 +55,10 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
             }
             return acc;
         }, {});
+
+        const projectList: PersonalProject[] = Object.values(dict);
+        projectList.sort((a, b) => a.name.localeCompare(b.name));
+        return projectList;
     }
 
     async getPersonalFeatures(userId: number): Promise<PersonalFeature[]> {

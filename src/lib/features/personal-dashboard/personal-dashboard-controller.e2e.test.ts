@@ -99,33 +99,42 @@ test('should return personal dashboard with membered projects', async () => {
         user1,
     );
 
-    // Add user 1 as an owner of project C
-    await app.services.projectService.addAccess(
-        projectC.id,
-        [4],
-        [],
-        [user1.id],
-        user2,
-    );
-
     const { body } = await app.request.get(`/api/admin/personal-dashboard`);
 
     expect(body).toMatchObject({
         projects: [
             {
+                name: 'Default',
+                id: 'default',
+                roles: [
+                    {
+                        name: 'Editor',
+                        id: 2,
+                        type: 'root',
+                    },
+                ],
+            },
+            {
                 name: projectA.name,
                 id: projectA.id,
-                owners: [{ id: user1.id, name: user1.email, imageUrl: '' }],
-                roles: ['member'],
+                roles: [
+                    {
+                        name: 'Member',
+                        id: 5,
+                        type: 'project',
+                    },
+                ],
             },
             {
                 name: projectC.name,
                 id: projectC.id,
-                owners: [
-                    { id: user2.id, name: user2.email, imageUrl: '' },
-                    { id: user1.id, name: user1.email, imageUrl: '' },
+                roles: [
+                    {
+                        name: 'Owner',
+                        id: 4,
+                        type: 'project',
+                    },
                 ],
-                roles: ['owner'],
             },
         ],
     });

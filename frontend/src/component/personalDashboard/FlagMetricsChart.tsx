@@ -85,6 +85,7 @@ const useMetricsEnvironments = (project: string) => {
     );
 
     useEffect(() => {
+        if (environment) return;
         if (firstProductionEnvironment) {
             setEnvironment(firstProductionEnvironment.name);
         } else if (activeEnvironments.length > 0) {

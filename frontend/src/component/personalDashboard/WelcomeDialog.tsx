@@ -74,16 +74,19 @@ export const WelcomeDialog: FC<IWelcomeDialogProps> = ({ open, onClose }) => {
                 <ScreenReaderOnly>
                     <h2>Environments</h2>
                     <p>
-                        Unleash comes with two default environments. Feature
-                        flags exist across all environments but can have
-                        different configurations in each.
+                        Environments represent different stages in your
+                        development lifecycle. Unleash comes with two
+                        preconfigured environments. Feature flags exist across
+                        all environments but can have different configurations
+                        in each.
                     </p>
                     <h2>Projects</h2>
                     <p>
-                        Feature flags live inside projects. When SDKs connect to
-                        Unleash they use the combination of environment and
-                        project to retrieve the correct configuration. Projects
-                        also control who can access a feature flag.
+                        Projects help you organize feature flags and define what
+                        users and applications have access to them. When SDKs
+                        connect to Unleash they use the combination of
+                        environment and project to retrieve feature flag
+                        configurations.
                     </p>
                     <h2>Feature flags</h2>
                     <p>

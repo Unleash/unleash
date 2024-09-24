@@ -12,7 +12,7 @@ dotnet add package Newtonsoft.Json`,
     Java: `<dependency>
     <groupId>io.getunleash</groupId>
     <artifactId>unleash-client-java</artifactId>
-    <version>Latest version here</version>
+    <version>LATEST</version>
 </dependency>`,
     Python: 'pip install UnleashClient',
     JavaScript: 'npm install unleash-proxy-client',
@@ -95,6 +95,7 @@ var settings = new UnleashSettings()
         .instanceId("unleash-onboarding-instance")
         .unleashAPI("<YOUR_API_URL>")
         .apiKey("<YOUR_API_TOKEN>")
+        .sendMetricsInterval(5)
         .build();
 
 Unleash unleash = new DefaultUnleash(config);`,
@@ -218,7 +219,11 @@ export const checkFlagCodeSnippets: Record<SdkName, string> = {
 `,
     Rust: ``,
     '.NET': ``,
-    Java: ``,
+    Java: `while (true) {
+    boolean featureEnabled = unleash.isEnabled("<YOUR_FLAG>");
+    System.out.println("Feature enabled: " + featureEnabled);
+    Thread.sleep(1000);
+}`,
     Python: `while True:
     print(client.is_enabled("<YOUR_FLAG>"))
     asyncio.run(asyncio.sleep(1))`,

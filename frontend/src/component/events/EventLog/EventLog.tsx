@@ -1,4 +1,4 @@
-import { Switch, FormControlLabel, useMediaQuery, Box } from '@mui/material';
+import { Switch, FormControlLabel, useMediaQuery } from '@mui/material';
 import EventJson from 'component/events/EventJson/EventJson';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -9,13 +9,11 @@ import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/system';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { EventLogFilters } from './EventLogFilters';
 import { useEventLogSearch } from './useEventLogSearch';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
 import { EventActions } from './EventActions';
 import useLoading from 'hooks/useLoading';
-import { EventTimeline } from '../EventTimeline/EventTimeline';
 
 interface IEventLogProps {
     title: string;
@@ -51,8 +49,7 @@ const Placeholder = styled('li')({
 });
 
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
-    const { isOss, isEnterprise } = useUiConfig();
-    const eventTimeline = useUiFlag('eventTimeline') && !isOss();
+    const { isEnterprise } = useUiConfig();
     const showFilters = isEnterprise();
     const {
         events,
@@ -134,21 +131,6 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
 
     return (
         <>
-            <ConditionallyRender
-                condition={eventTimeline}
-                show={
-                    <Box
-                        sx={(theme) => ({
-                            borderRadius: theme.shape.borderRadius,
-                            padding: theme.spacing(2),
-                            marginBottom: theme.spacing(2),
-                            backgroundColor: theme.palette.background.paper,
-                        })}
-                    >
-                        <EventTimeline />
-                    </Box>
-                }
-            />
             <PageContent
                 bodyClass={'no-padding'}
                 header={

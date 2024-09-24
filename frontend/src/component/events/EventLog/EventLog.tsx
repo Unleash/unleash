@@ -9,7 +9,6 @@ import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/system';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { EventLogFilters } from './EventLogFilters';
 import { useEventLogSearch } from './useEventLogSearch';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
@@ -50,8 +49,7 @@ const Placeholder = styled('li')({
 });
 
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
-    const { isOss, isEnterprise } = useUiConfig();
-    const eventTimeline = useUiFlag('eventTimeline') && !isOss();
+    const { isEnterprise } = useUiConfig();
     const showFilters = isEnterprise();
     const {
         events,

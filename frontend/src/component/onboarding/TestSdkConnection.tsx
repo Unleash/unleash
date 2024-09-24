@@ -19,23 +19,38 @@ import { Stepper } from './Stepper';
 import { Badge } from '../common/Badge/Badge';
 import { Markdown } from 'component/common/Markdown/Markdown';
 import type { CodeComponent } from 'react-markdown/lib/ast-to-react';
+import android from './snippets/android.md?raw';
+import go from './snippets/go.md?raw';
+import javascript from './snippets/javascript.md?raw';
+import nodejs from './snippets/nodejs.md?raw';
+import python from './snippets/python.md?raw';
+import ruby from './snippets/ruby.md?raw';
+import svelte from './snippets/svelte.md?raw';
+import vue from './snippets/vue.md?raw';
+import flutter from './snippets/flutter.md?raw';
+import java from './snippets/java.md?raw';
+import dotnet from './snippets/dotnet.md?raw';
+import php from './snippets/php.md?raw';
+import react from './snippets/react.md?raw';
+import rust from './snippets/rust.md?raw';
+import swift from './snippets/swift.md?raw';
 
 const snippets: Record<SdkName, string> = {
-    Android: (await import(`./snippets/android.md?raw`)).default,
-    Go: (await import(`./snippets/go.md?raw`)).default,
-    JavaScript: (await import(`./snippets/javascript.md?raw`)).default,
-    'Node.js': (await import(`./snippets/nodejs.md?raw`)).default,
-    Python: (await import(`./snippets/python.md?raw`)).default,
-    Ruby: (await import(`./snippets/ruby.md?raw`)).default,
-    Svelte: (await import(`./snippets/svelte.md?raw`)).default,
-    Vue: (await import(`./snippets/vue.md?raw`)).default,
-    Flutter: (await import(`./snippets/flutter.md?raw`)).default,
-    Java: (await import(`./snippets/java.md?raw`)).default,
-    '.NET': (await import(`./snippets/dotnet.md?raw`)).default,
-    PHP: (await import(`./snippets/php.md?raw`)).default,
-    React: (await import(`./snippets/react.md?raw`)).default,
-    Rust: (await import(`./snippets/rust.md?raw`)).default,
-    Swift: (await import(`./snippets/swift.md?raw`)).default,
+    Android: android,
+    Go: go,
+    JavaScript: javascript,
+    'Node.js': nodejs,
+    Python: python,
+    Ruby: ruby,
+    Svelte: svelte,
+    Vue: vue,
+    Flutter: flutter,
+    Java: java,
+    '.NET': dotnet,
+    PHP: php,
+    React: react,
+    Rust: rust,
+    Swift: swift,
 };
 
 const SpacedContainer = styled('div')(({ theme }) => ({

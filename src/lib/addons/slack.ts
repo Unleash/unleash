@@ -73,8 +73,9 @@ export default class SlackAddon extends Addon {
             }
         }
 
-        const { text, url: featureLink } = this.msgFormatter.format(event);
-
+        const { text: formattedMessage, url: featureLink } =
+            this.msgFormatter.format(event);
+        const text = formattedMessage.substring(0, 3000);
         const requests = slackChannels.map((channel) => {
             const body = {
                 username,

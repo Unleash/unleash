@@ -13,7 +13,7 @@ export const personalDashboardSchema = {
             items: {
                 type: 'object',
                 additionalProperties: false,
-                required: ['id', 'name', 'roles'],
+                required: ['id', 'name', 'roles', 'owners'],
                 properties: {
                     id: {
                         type: 'string',

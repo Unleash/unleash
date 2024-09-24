@@ -180,10 +180,7 @@ export const PersonalDashboard = () => {
     const { personalDashboard } = usePersonalDashboard();
     const [activeFlag, setActiveFlag] = useState<string | null>(null);
     useEffect(() => {
-        if (
-            personalDashboard?.flags.length &&
-            personalDashboard?.flags.length > 0
-        ) {
+        if (personalDashboard?.flags.length) {
             setActiveFlag(personalDashboard.flags[0].name);
         }
     }, [JSON.stringify(personalDashboard)]);

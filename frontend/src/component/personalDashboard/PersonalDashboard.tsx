@@ -17,13 +17,17 @@ import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import LinkIcon from '@mui/icons-material/Link';
 import { Badge } from '../common/Badge/Badge';
 import { ConnectSDK, CreateFlag } from './ConnectSDK';
-import { PlaceholderFlagMetricsChart } from './FlagMetricsChart';
+import {
+    FlagMetricsChart,
+    PlaceholderFlagMetricsChart,
+} from './FlagMetricsChart';
 import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectSetupComplete } from './ProjectSetupComplete';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
+import type { PersonalDashboardSchema } from '../../openapi';
 
 const ScreenExplanation = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -178,10 +182,12 @@ export const PersonalDashboard = () => {
     const { projects, activeProject, setActiveProject } = useProjects();
 
     const { personalDashboard } = usePersonalDashboard();
-    const [activeFlag, setActiveFlag] = useState<string | null>(null);
+    const [activeFlag, setActiveFlag] = useState<
+        PersonalDashboardSchema['flags'][0] | null
+    >(null);
     useEffect(() => {
         if (personalDashboard?.flags.length) {
-            setActiveFlag(personalDashboard.flags[0].name);
+            setActiveFlag(personalDashboard.flags[0]);
         }
     }, [JSON.stringify(personalDashboard)]);
 
@@ -307,8 +313,8 @@ export const PersonalDashboard = () => {
                                 <FlagListItem
                                     key={flag.name}
                                     flag={flag}
-                                    selected={flag.name === activeFlag}
-                                    onClick={() => setActiveFlag(flag.name)}
+                                    selected={flag.name === activeFlag?.name}
+                                    onClick={() => setActiveFlag(flag)}
                                 />
                             ))}
                         </List>
@@ -321,8 +327,11 @@ export const PersonalDashboard = () => {
                 </SpacedGridItem>
 
                 <SpacedGridItem item lg={8} md={1}>
-                    <Typography sx={{ mb: 4 }}>Feature flag metrics</Typography>
-                    <PlaceholderFlagMetricsChart />
+                    {activeFlag ? (
+                        <FlagMetricsChart flag={activeFlag} />
+                    ) : (
+                        <PlaceholderFlagMetricsChart />
+                    )}
                 </SpacedGridItem>
             </ContentGrid>
             <WelcomeDialog

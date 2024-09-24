@@ -3,7 +3,7 @@ import GeneralSelect, {
     type IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useEffect } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledTitle = styled('h2')(({ theme }) => ({
@@ -17,6 +17,7 @@ const StyledTitle = styled('h2')(({ theme }) => ({
 interface IFeatureMetricsHoursProps {
     hoursBack: number;
     setHoursBack: (value: number) => void;
+    label?: ReactNode;
 }
 
 export const FEATURE_METRIC_HOURS_BACK_DEFAULT = 48;
@@ -24,6 +25,7 @@ export const FEATURE_METRIC_HOURS_BACK_DEFAULT = 48;
 export const FeatureMetricsHours = ({
     hoursBack,
     setHoursBack,
+    label = <StyledTitle>Period</StyledTitle>,
 }: IFeatureMetricsHoursProps) => {
     const { trackEvent } = usePlausibleTracker();
 
@@ -55,7 +57,7 @@ export const FeatureMetricsHours = ({
 
     return (
         <div>
-            <StyledTitle>Period</StyledTitle>
+            {label}
             <GeneralSelect
                 name='feature-metrics-period'
                 id='feature-metrics-period'

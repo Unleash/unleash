@@ -2,7 +2,6 @@ import {
     BarElement,
     CategoryScale,
     Chart as ChartJS,
-    type ChartOptions,
     Legend,
     LinearScale,
     Title,
@@ -10,10 +9,20 @@ import {
 } from 'chart.js';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { Bar } from 'react-chartjs-2';
-import type { Theme } from '@mui/material/styles/createTheme';
 import useTheme from '@mui/material/styles/useTheme';
-import { useMemo } from 'react';
-import { formatTickValue } from 'component/common/Chart/formatTickValue';
+import { type FC, useEffect, useMemo, useState } from 'react';
+import { Box, Typography } from '@mui/material';
+import { FeatureMetricsHours } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsHours/FeatureMetricsHours';
+import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
+import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
+import { useFeatureMetricsRaw } from 'hooks/api/getters/useFeatureMetricsRaw/useFeatureMetricsRaw';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { createChartData } from './createChartData';
+import { aggregateFeatureMetrics } from '../feature/FeatureView/FeatureMetrics/aggregateFeatureMetrics';
+import {
+    createBarChartOptions,
+    createPlaceholderBarChartOptions,
+} from './createChartOptions';
 
 const defaultYes = [
     45_000_000, 28_000_000, 28_000_000, 25_000_000, 50_000_000, 27_000_000,
@@ -30,7 +39,7 @@ const defaultNo = [
     3_000_000, 8_000_000, 2_000_000,
 ];
 
-const data = {
+const placeholderData = {
     labels: Array.from({ length: 30 }, (_, i) => i + 1),
     datasets: [
         {
@@ -48,70 +57,140 @@ const data = {
     ],
 };
 
-const createBarChartOptions = (theme: Theme): ChartOptions<'bar'> => ({
-    plugins: {
-        legend: {
-            position: 'bottom',
-            labels: {
-                color: theme.palette.text.primary,
-                pointStyle: 'circle',
-                usePointStyle: true,
-                boxHeight: 6,
-                padding: 15,
-                boxPadding: 5,
-            },
-        },
-        tooltip: {
-            enabled: false,
-        },
-    },
-    responsive: true,
-    scales: {
-        x: {
-            stacked: true,
-            ticks: {
-                color: theme.palette.text.secondary,
-            },
-            grid: {
-                display: false,
-            },
-        },
-        y: {
-            stacked: true,
-            ticks: {
-                color: theme.palette.text.secondary,
-                maxTicksLimit: 5,
-                callback: formatTickValue,
-            },
-            grid: {
-                drawBorder: false,
-            },
-        },
-    },
-    elements: {
-        bar: {
-            borderRadius: 5,
-        },
-    },
-    interaction: {
-        mode: 'index',
-        intersect: false,
-    },
-});
-
 export const PlaceholderFlagMetricsChart = () => {
     const theme = useTheme();
 
     const options = useMemo(() => {
-        return createBarChartOptions(theme);
+        return createPlaceholderBarChartOptions(theme);
     }, [theme]);
 
     return (
-        <Bar
-            data={data}
-            options={options}
-            aria-label='A bar chart with a single feature flag exposure metrics'
+        <>
+            <Typography sx={{ mb: 4 }}>Feature flag metrics</Typography>
+            <Bar
+                data={placeholderData}
+                options={options}
+                aria-label='A placeholder bar chart with a single feature flag exposure metrics'
+            />
+        </>
+    );
+};
+
+const useMetricsEnvironments = (project: string) => {
+    const [environment, setEnvironment] = useState<string | null>(null);
+    const { environments } = useProjectEnvironments(project);
+    const activeEnvironments = environments.filter((env) => env.enabled);
+    const firstProductionEnvironment = activeEnvironments.find(
+        (env) => env.type === 'production',
+    );
+
+    useEffect(() => {
+        if (firstProductionEnvironment) {
+            setEnvironment(firstProductionEnvironment.name);
+        } else if (activeEnvironments.length > 0) {
+            setEnvironment(activeEnvironments[0].name);
+        }
+    }, [JSON.stringify(activeEnvironments)]);
+
+    return { environment, setEnvironment, activeEnvironments };
+};
+
+const useFlagMetrics = (
+    flagName: string,
+    environment: string,
+    hoursBack: number,
+) => {
+    const { featureMetrics: metrics = [] } = useFeatureMetricsRaw(
+        flagName,
+        hoursBack,
+    );
+    const sortedMetrics = useMemo(() => {
+        return [...metrics].sort((metricA, metricB) => {
+            return metricA.timestamp.localeCompare(metricB.timestamp);
+        });
+    }, [metrics]);
+    const filteredMetrics = useMemo(() => {
+        return aggregateFeatureMetrics(
+            sortedMetrics?.filter(
+                (metric) => environment === metric.environment,
+            ),
+        ).map((metric) => ({
+            ...metric,
+            appName: 'all selected',
+        }));
+    }, [sortedMetrics, environment]);
+
+    const data = useMemo(() => {
+        return createChartData(filteredMetrics);
+    }, [filteredMetrics]);
+
+    const theme = useTheme();
+    const { locationSettings } = useLocationSettings();
+    const options = useMemo(() => {
+        return createBarChartOptions(theme, hoursBack, locationSettings);
+    }, [theme, hoursBack, locationSettings]);
+
+    return { data, options };
+};
+
+const EnvironmentSelect: FC<{
+    activeEnvironments: { name: string }[];
+    environment: string;
+    setEnvironment: () => void;
+}> = ({ activeEnvironments, environment, setEnvironment }) => {
+    return (
+        <GeneralSelect
+            name='feature-environments'
+            id='feature-environments'
+            options={activeEnvironments.map((env) => ({
+                key: env.name,
+                label: env.name,
+            }))}
+            value={String(environment)}
+            onChange={setEnvironment}
         />
+    );
+};
+
+const MetricsSelectors = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(2),
+    mb: theme.spacing(6),
+}));
+
+export const FlagMetricsChart: FC<{
+    flag: { name: string; project: string };
+}> = ({ flag }) => {
+    const [hoursBack, setHoursBack] = useState(48);
+
+    const { environment, setEnvironment, activeEnvironments } =
+        useMetricsEnvironments(flag.project);
+
+    const { data, options } = useFlagMetrics(flag.name, environment, hoursBack);
+
+    return (
+        <>
+            <MetricsSelectors>
+                <EnvironmentSelect
+                    project={flag.project}
+                    environment={environment}
+                    setEnvironment={setEnvironment}
+                    activeEnvironments={activeEnvironments}
+                />
+                <FeatureMetricsHours
+                    hoursBack={hoursBack}
+                    setHoursBack={setHoursBack}
+                    label={null}
+                />
+            </MetricsSelectors>
+
+            <Bar
+                data={data}
+                options={options}
+                aria-label='A bar chart with a single feature flag exposure metrics'
+            />
+        </>
     );
 };
 

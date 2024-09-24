@@ -109,12 +109,13 @@ client = UnleashClient(
     custom_headers={'Authorization': '<YOUR_API_TOKEN>'})
 
 client.initialize_client()`,
-    JavaScript: `import { UnleashClient } from 'unleash-proxy-client';
+    JavaScript: `const { UnleashClient } = require('unleash-proxy-client');
 
 const unleash = new UnleashClient({
     url: '<YOUR_API_URL>',
     clientKey: '<YOUR_API_TOKEN>',
     appName: 'unleash-onboarding-javascript',
+    refreshInterval: 5000,
 });
 
 // Start the background polling
@@ -227,7 +228,9 @@ export const checkFlagCodeSnippets: Record<SdkName, string> = {
     Python: `while True:
     print(client.is_enabled("<YOUR_FLAG>"))
     asyncio.run(asyncio.sleep(1))`,
-    JavaScript: ``,
+    JavaScript: `setInterval(() => {
+    console.log('Is enabled', unleash.isEnabled('<YOUR_FLAG>'));
+}, 1000);`,
     React: ``,
     Vue: ``,
     Svelte: ``,

@@ -12,15 +12,11 @@ import {
 } from '@mui/material';
 import type { Theme } from '@mui/material/styles/createTheme';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import { type FC, useEffect, useState } from 'react';
+import React, { type FC, useEffect, useState } from 'react';
 import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import LinkIcon from '@mui/icons-material/Link';
 import { Badge } from '../common/Badge/Badge';
 import { ConnectSDK, CreateFlag } from './ConnectSDK';
-import {
-    FlagMetricsChart,
-    PlaceholderFlagMetricsChart,
-} from './FlagMetricsChart';
 import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
@@ -341,3 +337,14 @@ export const PersonalDashboard = () => {
         </div>
     );
 };
+
+const FlagMetricsChart = React.lazy(() =>
+    import('./FlagMetricsChart').then((module) => ({
+        default: module.FlagMetricsChart,
+    })),
+);
+const PlaceholderFlagMetricsChart = React.lazy(() =>
+    import('./FlagMetricsChart').then((module) => ({
+        default: module.PlaceholderFlagMetricsChart,
+    })),
+);

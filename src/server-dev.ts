@@ -54,6 +54,7 @@ process.nextTick(async () => {
                         addonUsageMetrics: true,
                         onboardingMetrics: true,
                         onboardingUI: true,
+                        personalDashboardUI: true,
                     },
                 },
                 authentication: {

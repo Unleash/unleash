@@ -1,6 +1,9 @@
 import { IconButton, styled, Tooltip, Typography } from '@mui/material';
 import Add from '@mui/icons-material/Add';
-import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import {
+    UPDATE_PROJECT,
+    CREATE_PROJECT_API_TOKEN,
+} from 'component/providers/AccessProvider/permissions';
 import { FlagCreationButton } from '../ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
@@ -150,7 +153,7 @@ export const ProjectOnboarding = ({
                         projectId={projectId}
                         Icon={Add}
                         disabled={!isFirstFlagCreated}
-                        permission={CREATE_FEATURE}
+                        permission={[UPDATE_PROJECT, CREATE_PROJECT_API_TOKEN]}
                     >
                         Connect SDK
                     </ResponsiveButton>

@@ -7304,9 +7304,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:2.4.7":
-  version: 2.4.7
-  resolution: "msw@npm:2.4.7"
+"msw@npm:2.4.8":
+  version: 2.4.8
+  resolution: "msw@npm:2.4.8"
   dependencies:
     "@bundled-es-modules/cookie": "npm:^2.0.0"
     "@bundled-es-modules/statuses": "npm:^1.0.1"
@@ -7321,7 +7321,7 @@ __metadata:
     headers-polyfill: "npm:^4.0.2"
     is-node-process: "npm:^1.2.0"
     outvariant: "npm:^1.4.2"
-    path-to-regexp: "npm:^6.2.0"
+    path-to-regexp: "npm:^6.3.0"
     strict-event-emitter: "npm:^0.5.1"
     type-fest: "npm:^4.9.0"
     yargs: "npm:^17.7.2"
@@ -7332,7 +7332,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10c0/d0aa43aab753d98c1953b083f9fab168e9a7375a4afb66b93332196efbaada82e02ead7807a958ce12a5a1204084e05eb0023cee6020b49e4d0de5b4b91f9ab7
+  checksum: 10c0/33a8c5697f7cb003a2af33ff6b259eaf7babf180fadf0697d107d0856ab0d2ff1a80d319e788d9127f289ff091334bee589f348180a1fdd0914bf8c4725830dc
   languageName: node
   linkType: hard
 
@@ -7800,7 +7800,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-to-regexp@npm:^6.2.0":
+"path-to-regexp@npm:^6.3.0":
   version: 6.3.0
   resolution: "path-to-regexp@npm:6.3.0"
   checksum: 10c0/73b67f4638b41cde56254e6354e46ae3a2ebc08279583f6af3d96fe4664fc75788f74ed0d18ca44fa4a98491b69434f9eee73b97bb5314bd1b5adb700f5c18d6
@@ -9802,7 +9802,7 @@ __metadata:
     lodash.mapvalues: "npm:^4.6.0"
     lodash.omit: "npm:4.5.0"
     millify: "npm:^6.0.0"
-    msw: "npm:2.4.7"
+    msw: "npm:2.4.8"
     orval: "npm:^6.17.0"
     pkginfo: "npm:0.4.1"
     plausible-tracker: "npm:0.3.9"

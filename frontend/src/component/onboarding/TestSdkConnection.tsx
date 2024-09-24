@@ -10,18 +10,33 @@ import {
 } from '@mui/material';
 import { SectionHeader, StepperBox } from './SharedComponents';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { allSdks, type Sdk } from './sharedTypes';
-import {
-    checkFlagCodeSnippets,
-    initializeCodeSnippets,
-    installCommands,
-} from './sdkSnippets';
+import { allSdks, type SdkName, type Sdk } from './sharedTypes';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';
 import CopyIcon from '@mui/icons-material/FileCopy';
 import { formatAssetPath } from '../../utils/formatPath';
 import { Stepper } from './Stepper';
 import { Badge } from '../common/Badge/Badge';
+import { Markdown } from 'component/common/Markdown/Markdown';
+import type { CodeComponent } from 'react-markdown/lib/ast-to-react';
+
+const snippets: Record<SdkName, string> = {
+    Android: (await import(`./snippets/android.md?raw`)).default,
+    Go: (await import(`./snippets/go.md?raw`)).default,
+    JavaScript: (await import(`./snippets/javascript.md?raw`)).default,
+    'Node.js': (await import(`./snippets/nodejs.md?raw`)).default,
+    Python: (await import(`./snippets/python.md?raw`)).default,
+    Ruby: (await import(`./snippets/ruby.md?raw`)).default,
+    Svelte: (await import(`./snippets/svelte.md?raw`)).default,
+    Vue: (await import(`./snippets/vue.md?raw`)).default,
+    Flutter: (await import(`./snippets/flutter.md?raw`)).default,
+    Java: (await import(`./snippets/java.md?raw`)).default,
+    '.NET': (await import(`./snippets/dotnet.md?raw`)).default,
+    PHP: (await import(`./snippets/php.md?raw`)).default,
+    React: (await import(`./snippets/react.md?raw`)).default,
+    Rust: (await import(`./snippets/rust.md?raw`)).default,
+    Swift: (await import(`./snippets/swift.md?raw`)).default,
+};
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8, 2, 8),
@@ -79,12 +94,21 @@ const ChangeSdk = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(3),
 }));
 
+const CodeRenderer: CodeComponent = ({ inline = false, children }) => {
+    if (!inline && typeof children?.[0] === 'string') {
+        return <CopyBlock code={children[0]} title='Copy code' />;
+    }
+
+    return <code>{children}</code>;
+};
+
 interface ITestSdkConnectionProps {
     sdk: Sdk;
     apiKey: string;
     feature: string;
     onSdkChange: () => void;
 }
+
 export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
     sdk,
     apiKey,
@@ -93,26 +117,15 @@ export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
 }) => {
     const { uiConfig } = useUiConfig();
 
+    const sdkIcon = allSdks.find((item) => item.name === sdk.name)?.icon;
     const clientApiUrl = `${uiConfig.unleashUrl}/api/`;
     const frontendApiUrl = `${uiConfig.unleashUrl}/api/frontend/`;
     const apiUrl = sdk.type === 'client' ? clientApiUrl : frontendApiUrl;
-    const initializeCodeSnippet =
-        initializeCodeSnippets[sdk.name] ||
-        `No snippet found for the ${sdk.name} SDK`;
-    const installCommand =
-        installCommands[sdk.name] ||
-        `No install command found for the ${sdk.name} SDK`;
-    const filledInitializeCodeSnippet = initializeCodeSnippet
+
+    const snippet = (snippets[sdk.name] || '')
         .replace('<YOUR_API_TOKEN>', apiKey)
-        .replace('<YOUR_API_URL>', apiUrl);
-    const checkFlagCodeSnippet =
-        checkFlagCodeSnippets[sdk.name] ||
-        `No snippet found for the ${sdk.name} SDK`;
-    const filledCheckFlagCodeSnippet = checkFlagCodeSnippet.replace(
-        '<YOUR_FLAG>',
-        feature,
-    );
-    const sdkIcon = allSdks.find((item) => item.name === sdk.name)?.icon;
+        .replace('<YOUR_API_URL>', apiUrl)
+        .replaceAll('<YOUR_FLAG>', feature);
 
     return (
         <SpacedContainer>
@@ -135,19 +148,13 @@ export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
                     </Link>
                 </ChangeSdk>
                 <SectionHeader>Setup the SDK</SectionHeader>
-                <p>1. Install the SDK</p>
-                <CopyBlock title='Copy command' code={installCommand} />
-                <p>2. Initialize the SDK</p>
-                <CopyBlock
-                    title='Copy snippet'
-                    code={filledInitializeCodeSnippet}
-                />
-                <p>3. Check feature flag status</p>
-                <CopyBlock
-                    title='Copy snippet'
-                    code={filledCheckFlagCodeSnippet}
-                />
+                <Markdown components={{ code: CodeRenderer }}>
+                    {snippet}
+                </Markdown>
             </Box>
         </SpacedContainer>
     );
 };
+
+// Use a default export for lazy-loading
+export default TestSdkConnection;

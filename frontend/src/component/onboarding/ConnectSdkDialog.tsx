@@ -7,10 +7,11 @@ import {
     useTheme,
 } from '@mui/material';
 import { GenerateApiKey } from './GenerateApiKey';
-import { useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { SelectSdk } from './SelectSdk';
 import { GenerateApiKeyConcepts, SelectSdkConcepts } from './UnleashConcepts';
-import { TestSdkConnection } from './TestSdkConnection';
+
+const TestSdkConnection = lazy(() => import('./TestSdkConnection'));
 
 import type { Sdk } from './sharedTypes';
 import { ConnectionInformation } from './ConnectionInformation';

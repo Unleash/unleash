@@ -23,6 +23,7 @@ import {
     createPlaceholderBarChartOptions,
 } from './createChartOptions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { customHighlightPlugin } from '../common/Chart/customHighlightPlugin';
 
 const defaultYes = [
     45_000_000, 28_000_000, 28_000_000, 25_000_000, 50_000_000, 27_000_000,
@@ -79,7 +80,10 @@ export const PlaceholderFlagMetricsChart = () => {
 const useMetricsEnvironments = (project: string, flagName: string) => {
     const [environment, setEnvironment] = useState<string | null>(null);
     const { feature } = useFeature(project, flagName);
-    const activeEnvironments = feature.environments;
+    const activeEnvironments = feature.environments.map((env) => ({
+        name: env.name,
+        type: env.type,
+    }));
     const firstProductionEnvironment = activeEnvironments.find(
         (env) => env.type === 'production',
     );
@@ -90,7 +94,7 @@ const useMetricsEnvironments = (project: string, flagName: string) => {
         } else if (activeEnvironments.length > 0) {
             setEnvironment(activeEnvironments[0].name);
         }
-    }, [flagName]);
+    }, [flagName, JSON.stringify(activeEnvironments)]);
 
     return { environment, setEnvironment, activeEnvironments };
 };
@@ -188,6 +192,7 @@ export const FlagMetricsChart: FC<{
 
             <Bar
                 data={data}
+                plugins={[customHighlightPlugin(30, 0)]}
                 options={options}
                 aria-label='A bar chart with a single feature flag exposure metrics'
             />

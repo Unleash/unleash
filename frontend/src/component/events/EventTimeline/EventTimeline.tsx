@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import type { EventSchemaType } from 'openapi';
+import type { EventSchema, EventSchemaType } from 'openapi';
 import { useState } from 'react';
 import { startOfDay, sub } from 'date-fns';
 import type { IEnvironment } from 'interfaces/environments';
@@ -10,6 +10,11 @@ import {
     type TimeSpanOption,
     timeSpanOptions,
 } from './EventTimelineHeader/EventTimelineHeader';
+
+export type EnrichedEvent = EventSchema & {
+    label: string;
+    summary: string;
+};
 
 const StyledRow = styled('div')({
     display: 'flex',
@@ -91,7 +96,7 @@ export const EventTimeline = () => {
     const endDate = new Date();
     const startDate = sub(endDate, timeSpan.value);
 
-    const { events } = useEventSearch(
+    const { events: baseEvents } = useEventSearch(
         {
             from: `IS:${toISODateString(startOfDay(startDate))}`,
             to: `IS:${toISODateString(endDate)}`,
@@ -99,6 +104,8 @@ export const EventTimeline = () => {
         },
         { refreshInterval: 10 * 1000 },
     );
+
+    const events = baseEvents as EnrichedEvent[];
 
     const filteredEvents = events.filter(
         (event) =>

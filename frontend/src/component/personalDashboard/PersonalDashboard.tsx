@@ -22,6 +22,8 @@ import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectSetupComplete } from './ProjectSetupComplete';
+import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
+import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 
 const ScreenExplanation = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -136,12 +138,52 @@ const useProjects = () => {
     return { projects, activeProject, setActiveProject };
 };
 
+const FlagListItem: FC<{
+    flag: { name: string; project: string; type: string };
+    selected: boolean;
+    onClick: () => void;
+}> = ({ flag, selected, onClick }) => {
+    const IconComponent = getFeatureTypeIcons(flag.type);
+    return (
+        <ListItem key={flag.name} disablePadding={true} sx={{ mb: 1 }}>
+            <ListItemButton
+                sx={projectStyle}
+                selected={selected}
+                onClick={onClick}
+            >
+                <ProjectBox>
+                    <IconComponent color='primary' />
+                    <StyledCardTitle>{flag.name}</StyledCardTitle>
+                    <IconButton
+                        component={Link}
+                        href={`projects/${flag.project}/features/${flag.name}`}
+                        size='small'
+                        sx={{ ml: 'auto' }}
+                    >
+                        <LinkIcon
+                            titleAccess={`projects/${flag.project}/features/${flag.name}`}
+                        />
+                    </IconButton>
+                </ProjectBox>
+            </ListItemButton>
+        </ListItem>
+    );
+};
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
 
     const name = user?.name;
 
     const { projects, activeProject, setActiveProject } = useProjects();
+
+    const { personalDashboard } = usePersonalDashboard();
+    const [activeFlag, setActiveFlag] = useState<string | null>(null);
+    useEffect(() => {
+        if (personalDashboard?.flags.length) {
+            setActiveFlag(personalDashboard.flags[0].name);
+        }
+    }, [JSON.stringify(personalDashboard)]);
 
     const { project: activeProjectOverview, loading } =
         useProjectOverview(activeProject);
@@ -256,11 +298,28 @@ export const PersonalDashboard = () => {
                 </SpacedGridItem>
                 <SpacedGridItem item lg={8} md={1} />
                 <SpacedGridItem item lg={4} md={1}>
-                    <Typography>
-                        You have not created or favorited any feature flags.
-                        Once you do, the will show up here.
-                    </Typography>
+                    {personalDashboard && personalDashboard.flags.length > 0 ? (
+                        <List
+                            disablePadding={true}
+                            sx={{ maxHeight: '400px', overflow: 'auto' }}
+                        >
+                            {personalDashboard.flags.map((flag) => (
+                                <FlagListItem
+                                    key={flag.name}
+                                    flag={flag}
+                                    selected={flag.name === activeFlag}
+                                    onClick={() => setActiveFlag(flag.name)}
+                                />
+                            ))}
+                        </List>
+                    ) : (
+                        <Typography>
+                            You have not created or favorited any feature flags.
+                            Once you do, they will show up here.
+                        </Typography>
+                    )}
                 </SpacedGridItem>
+
                 <SpacedGridItem item lg={8} md={1}>
                     <Typography sx={{ mb: 4 }}>Feature flag metrics</Typography>
                     <PlaceholderFlagMetricsChart />

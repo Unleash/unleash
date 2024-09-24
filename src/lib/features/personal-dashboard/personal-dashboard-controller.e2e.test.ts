@@ -55,9 +55,9 @@ test('should return personal dashboard with own flags and favorited flags', asyn
     expect(body).toMatchObject({
         projects: [],
         flags: [
-            { name: 'my_feature_c' },
-            { name: 'my_feature_d' },
-            { name: 'other_feature_b' },
+            { name: 'my_feature_d', type: 'release', project: 'default' },
+            { name: 'my_feature_c', type: 'release', project: 'default' },
+            { name: 'other_feature_b', type: 'release', project: 'default' },
         ],
     });
 });

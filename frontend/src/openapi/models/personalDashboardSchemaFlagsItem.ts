@@ -7,4 +7,6 @@
 export type PersonalDashboardSchemaFlagsItem = {
     /** The name of the flag */
     name: string;
+    project: string;
+    type: string;
 };

@@ -25,7 +25,9 @@ export default class TeamsAddon extends Addon {
 
     constructor(args: IAddonConfig) {
         super(teamsDefinition, args);
-        this.msgFormatter = new FeatureEventFormatterMd(args.unleashUrl);
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: args.unleashUrl,
+        });
         this.flagResolver = args.flagResolver;
     }
 

@@ -10,7 +10,6 @@ import {
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
-    LinkStyle,
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
@@ -38,10 +37,9 @@ export default class DatadogAddon extends Addon {
 
     constructor(config: IAddonConfig) {
         super(definition, config);
-        this.msgFormatter = new FeatureEventFormatterMd(
-            config.unleashUrl,
-            LinkStyle.MD,
-        );
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: config.unleashUrl,
+        });
         this.flagResolver = config.flagResolver;
     }
 

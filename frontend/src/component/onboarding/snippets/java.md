@@ -3,7 +3,7 @@
 <dependency>
     <groupId>io.getunleash</groupId>
     <artifactId>unleash-client-java</artifactId>
-    <version>Latest version here</version>
+    <version>LATEST</version>
 </dependency>
 ```
 
@@ -14,7 +14,17 @@ UnleashConfig config = UnleashConfig.builder()
     .instanceId("unleash-onboarding-instance")
     .unleashAPI("<YOUR_API_URL>")
     .apiKey("<YOUR_API_TOKEN>")
+    .sendMetricsInterval(5)
     .build();
 
 Unleash unleash = new DefaultUnleash(config);
+```
+
+3\. Check feature flag status
+```java
+while (true) {
+    boolean featureEnabled = unleash.isEnabled("<YOUR_FLAG>");
+    System.out.println("Feature enabled: " + featureEnabled);
+    Thread.sleep(1000);
+}
 ```

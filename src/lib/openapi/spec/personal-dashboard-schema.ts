@@ -36,6 +36,16 @@ export const personalDashboardSchema = {
                         example: 'my-flag',
                         description: 'The name of the flag',
                     },
+                    project: {
+                        type: 'string',
+                        example: 'my-project-id',
+                        description: 'The id of the feature project',
+                    },
+                    type: {
+                        type: 'string',
+                        example: 'release',
+                        description: 'The type of the feature flag',
+                    },
                 },
             },
             description: 'A list of flags a user created or favorited',

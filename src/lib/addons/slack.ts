@@ -30,10 +30,10 @@ export default class SlackAddon extends Addon {
 
     constructor(args: IAddonConfig) {
         super(slackDefinition, args);
-        this.msgFormatter = new FeatureEventFormatterMd(
-            args.unleashUrl,
-            LinkStyle.SLACK,
-        );
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: args.unleashUrl,
+            linkStyle: LinkStyle.SLACK,
+        });
         this.flagResolver = args.flagResolver;
     }
 
@@ -73,8 +73,10 @@ export default class SlackAddon extends Addon {
             }
         }
 
-        const { text, url: featureLink } = this.msgFormatter.format(event);
-
+        const { text: formattedMessage, url: featureLink } =
+            this.msgFormatter.format(event);
+        const maxLength = 3000;
+        const text = formattedMessage.substring(0, maxLength);
         const requests = slackChannels.map((channel) => {
             const body = {
                 username,
@@ -148,7 +150,7 @@ export default class SlackAddon extends Addon {
                 url,
                 channels: slackChannels,
                 username,
-                message: text,
+                message: `${formattedMessage}${text.length < formattedMessage.length ? ` (trimmed to ${maxLength} characters)` : ''}`,
             },
         });
     }

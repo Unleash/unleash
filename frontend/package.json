@@ -59,7 +59,7 @@
     "@types/lodash.mapvalues": "^4.6.9",
     "@types/lodash.omit": "4.5.9",
     "@types/node": "^20.12.12",
-    "@types/react": "18.3.5",
+    "@types/react": "18.3.6",
     "@types/react-dom": "18.3.0",
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "7.7.20",
@@ -93,7 +93,7 @@
     "lodash.mapvalues": "^4.6.0",
     "lodash.omit": "4.5.0",
     "millify": "^6.0.0",
-    "msw": "2.4.7",
+    "msw": "2.4.8",
     "pkginfo": "0.4.1",
     "plausible-tracker": "0.3.9",
     "prop-types": "15.8.1",
@@ -134,7 +134,7 @@
     "vite": "5.4.6",
     "semver": "7.6.3",
     "ws": "^8.18.0",
-    "@types/react": "18.3.5"
+    "@types/react": "18.3.6"
   },
   "jest": {
     "moduleNameMapper": {

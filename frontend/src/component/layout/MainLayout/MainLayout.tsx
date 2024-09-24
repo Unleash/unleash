@@ -1,4 +1,4 @@
-import { forwardRef, type ReactNode } from 'react';
+import { forwardRef, useState, type ReactNode } from 'react';
 import { Box, Grid, styled, useMediaQuery, useTheme } from '@mui/material';
 import Header from 'component/menu/Header/Header';
 import OldHeader from 'component/menu/Header/OldHeader';
@@ -17,6 +17,8 @@ import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
+import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -61,7 +63,6 @@ const OldMainLayoutContent = styled(Grid)(({ theme }) => ({
 
 const NewMainLayoutContent = styled(Grid)(({ theme }) => ({
     minWidth: 0, // this is a fix for overflowing flex
-    width: '100%',
     maxWidth: '1512px',
     margin: '0 auto',
     paddingLeft: theme.spacing(2),
@@ -106,6 +107,22 @@ const MainLayoutContentContainer = styled('div')(({ theme }) => ({
     zIndex: 200,
 }));
 
+const timelineAnimations = {
+    start: {
+        maxHeight: 0,
+        opacity: 0,
+        transition: 'max-height 0.5s ease-in-out, opacity 0.5s ease-in-out',
+    },
+    enter: {
+        maxHeight: '100vh',
+        opacity: 1,
+    },
+    leave: {
+        maxHeight: 0,
+        opacity: 0,
+    },
+};
+
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
         const { uiConfig } = useUiConfig();
@@ -113,6 +130,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
+        const [showTimeline, setShowTimeline] = useState(false);
 
         const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
         const StyledMainLayoutContent = sidebarNavigationEnabled
@@ -126,7 +144,12 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                 <SkipNavLink />
                 <ConditionallyRender
                     condition={sidebarNavigationEnabled}
-                    show={<Header />}
+                    show={
+                        <Header
+                            showTimeline={showTimeline}
+                            setShowTimeline={setShowTimeline}
+                        />
+                    }
                     elseShow={<OldHeader />}
                 />
 
@@ -154,18 +177,39 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 show={<NavigationSidebar />}
                             />
 
-                            <StyledMainLayoutContent
-                                item
-                                xs={12}
-                                sm={12}
-                                my={2}
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    flexGrow: 1,
+                                    minWidth: 0,
+                                }}
                             >
-                                <MainLayoutContentContainer ref={ref}>
-                                    <BreadcrumbNav />
-                                    <Proclamation toast={uiConfig.toast} />
-                                    {children}
-                                </MainLayoutContentContainer>
-                            </StyledMainLayoutContent>
+                                <AnimateOnMount
+                                    mounted={showTimeline}
+                                    start={timelineAnimations.start}
+                                    enter={timelineAnimations.enter}
+                                    leave={timelineAnimations.leave}
+                                >
+                                    <Box
+                                        sx={(theme) => ({
+                                            padding: theme.spacing(2),
+                                            backgroundColor:
+                                                theme.palette.background.paper,
+                                        })}
+                                    >
+                                        <EventTimeline />
+                                    </Box>
+                                </AnimateOnMount>
+
+                                <StyledMainLayoutContent>
+                                    <MainLayoutContentContainer ref={ref}>
+                                        <BreadcrumbNav />
+                                        <Proclamation toast={uiConfig.toast} />
+                                        {children}
+                                    </MainLayoutContentContainer>
+                                </StyledMainLayoutContent>
+                            </Box>
                         </Box>
 
                         <ThemeMode

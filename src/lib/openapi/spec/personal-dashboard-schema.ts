@@ -1,5 +1,4 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { projectSchema } from './project-schema';
 
 export const personalDashboardSchema = {
     $id: '#/components/schemas/personalDashboardSchema',
@@ -13,7 +12,7 @@ export const personalDashboardSchema = {
             items: {
                 type: 'object',
                 additionalProperties: false,
-                required: ['id', 'name', 'roles', 'owners'],
+                required: ['id', 'name', 'roles'],
                 properties: {
                     id: {
                         type: 'string',
@@ -25,7 +24,6 @@ export const personalDashboardSchema = {
                         example: 'My Project',
                         description: 'The name of the project',
                     },
-                    owners: projectSchema.properties.owners,
                     roles: {
                         type: 'array',
                         description:

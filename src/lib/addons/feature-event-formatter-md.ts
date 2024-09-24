@@ -356,7 +356,6 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
 
         Mustache.escape = (text) => text;
 
-        const label = EVENT_MAP[type]?.label || type;
         const text = Mustache.render(action, context);
         const url = path
             ? `${this.unleashUrl}${Mustache.render(path, context)}`

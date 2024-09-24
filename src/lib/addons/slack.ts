@@ -75,7 +75,8 @@ export default class SlackAddon extends Addon {
 
         const { text: formattedMessage, url: featureLink } =
             this.msgFormatter.format(event);
-        const text = formattedMessage.substring(0, 3000);
+        const maxLength = 3000;
+        const text = formattedMessage.substring(0, maxLength);
         const requests = slackChannels.map((channel) => {
             const body = {
                 username,
@@ -149,7 +150,7 @@ export default class SlackAddon extends Addon {
                 url,
                 channels: slackChannels,
                 username,
-                message: text,
+                message: `${formattedMessage}${text.length < formattedMessage.length ? ` (trimmed to ${maxLength} characters)` : ''}`,
             },
         });
     }

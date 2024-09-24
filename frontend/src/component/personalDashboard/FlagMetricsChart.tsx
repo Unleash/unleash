@@ -14,7 +14,6 @@ import { type FC, useEffect, useMemo, useState } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import { FeatureMetricsHours } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsHours/FeatureMetricsHours';
 import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
-import { useProjectEnvironments } from 'hooks/api/getters/useProjectEnvironments/useProjectEnvironments';
 import { useFeatureMetricsRaw } from 'hooks/api/getters/useFeatureMetricsRaw/useFeatureMetricsRaw';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { createChartData } from './createChartData';
@@ -23,6 +22,7 @@ import {
     createBarChartOptions,
     createPlaceholderBarChartOptions,
 } from './createChartOptions';
+import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 const defaultYes = [
     45_000_000, 28_000_000, 28_000_000, 25_000_000, 50_000_000, 27_000_000,
@@ -76,22 +76,21 @@ export const PlaceholderFlagMetricsChart = () => {
     );
 };
 
-const useMetricsEnvironments = (project: string) => {
+const useMetricsEnvironments = (project: string, flagName: string) => {
     const [environment, setEnvironment] = useState<string | null>(null);
-    const { environments } = useProjectEnvironments(project);
-    const activeEnvironments = environments.filter((env) => env.enabled);
+    const { feature } = useFeature(project, flagName);
+    const activeEnvironments = feature.environments;
     const firstProductionEnvironment = activeEnvironments.find(
         (env) => env.type === 'production',
     );
 
     useEffect(() => {
-        if (environment) return;
         if (firstProductionEnvironment) {
             setEnvironment(firstProductionEnvironment.name);
         } else if (activeEnvironments.length > 0) {
             setEnvironment(activeEnvironments[0].name);
         }
-    }, [JSON.stringify(activeEnvironments)]);
+    }, [flagName]);
 
     return { environment, setEnvironment, activeEnvironments };
 };
@@ -166,7 +165,7 @@ export const FlagMetricsChart: FC<{
     const [hoursBack, setHoursBack] = useState(48);
 
     const { environment, setEnvironment, activeEnvironments } =
-        useMetricsEnvironments(flag.project);
+        useMetricsEnvironments(flag.project, flag.name);
 
     const { data, options } = useFlagMetrics(flag.name, environment, hoursBack);
 

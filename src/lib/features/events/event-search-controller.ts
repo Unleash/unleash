@@ -47,9 +47,10 @@ export default class EventSearchController extends Controller {
         this.eventService = eventService;
         this.flagResolver = config.flagResolver;
         this.openApiService = openApiService;
-        this.msgFormatter = new FeatureEventFormatterMd(
-            config.server.unleashUrl,
-        );
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: config.server.unleashUrl,
+            formatStyle: 'markdown',
+        });
 
         this.route({
             method: 'get',

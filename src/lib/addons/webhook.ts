@@ -11,7 +11,6 @@ import type { IntegrationEventState } from '../features/integration-events/integ
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
-    LinkStyle,
 } from './feature-event-formatter-md';
 import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
@@ -31,10 +30,9 @@ export default class Webhook extends Addon {
 
     constructor(args: IAddonConfig) {
         super(definition, args);
-        this.msgFormatter = new FeatureEventFormatterMd(
-            args.unleashUrl,
-            LinkStyle.MD,
-        );
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: args.unleashUrl,
+        });
         this.flagResolver = args.flagResolver;
     }
 

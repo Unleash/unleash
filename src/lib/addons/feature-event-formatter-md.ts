@@ -1,72 +1,11 @@
 import Mustache from 'mustache';
 import {
-    ADDON_CONFIG_CREATED,
-    ADDON_CONFIG_DELETED,
-    ADDON_CONFIG_UPDATED,
-    API_TOKEN_CREATED,
-    API_TOKEN_DELETED,
-    CHANGE_ADDED,
-    CHANGE_DISCARDED,
-    CHANGE_EDITED,
-    CHANGE_REQUEST_APPLIED,
-    CHANGE_REQUEST_APPROVAL_ADDED,
-    CHANGE_REQUEST_APPROVED,
-    CHANGE_REQUEST_CANCELLED,
-    CHANGE_REQUEST_CREATED,
-    CHANGE_REQUEST_DISCARDED,
-    CHANGE_REQUEST_REJECTED,
-    CHANGE_REQUEST_SENT_TO_REVIEW,
-    CONTEXT_FIELD_CREATED,
-    CONTEXT_FIELD_DELETED,
-    CONTEXT_FIELD_UPDATED,
     FEATURE_ARCHIVED,
-    FEATURE_CREATED,
-    FEATURE_DELETED,
-    FEATURE_ENVIRONMENT_DISABLED,
-    FEATURE_ENVIRONMENT_ENABLED,
-    FEATURE_ENVIRONMENT_VARIANTS_UPDATED,
-    FEATURE_METADATA_UPDATED,
-    FEATURE_POTENTIALLY_STALE_ON,
-    FEATURE_PROJECT_CHANGE,
-    FEATURE_REVIVED,
-    FEATURE_STALE_OFF,
-    FEATURE_STALE_ON,
-    FEATURE_STRATEGY_ADD,
-    FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
-    FEATURE_TAGGED,
-    FEATURE_UNTAGGED,
-    GROUP_CREATED,
-    GROUP_DELETED,
-    GROUP_UPDATED,
     type IConstraint,
     type IEvent,
-    BANNER_CREATED,
-    BANNER_DELETED,
-    BANNER_UPDATED,
-    PROJECT_CREATED,
-    PROJECT_DELETED,
-    SEGMENT_CREATED,
-    SEGMENT_DELETED,
-    SEGMENT_UPDATED,
-    SERVICE_ACCOUNT_CREATED,
-    SERVICE_ACCOUNT_DELETED,
-    SERVICE_ACCOUNT_UPDATED,
-    USER_CREATED,
-    USER_DELETED,
-    USER_UPDATED,
-    CHANGE_REQUEST_SCHEDULED,
-    CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
-    CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
-    CHANGE_REQUEST_SCHEDULE_SUSPENDED,
-    FEATURE_COMPLETED,
 } from '../types';
-
-interface IEventData {
-    label: string;
-    action: string;
-    path?: string;
-}
+import { EVENT_MAP } from './feature-event-formatter-md-events';
 
 interface IFormattedEventData {
     label: string;
@@ -82,307 +21,40 @@ export enum LinkStyle {
     MD = 1,
 }
 
-const EVENT_MAP: Record<string, IEventData> = {
-    [ADDON_CONFIG_CREATED]: {
-        label: 'Integration configuration created',
-        action: '*{{user}}* created a new *{{event.data.provider}}* integration configuration',
-        path: '/integrations',
-    },
-    [ADDON_CONFIG_DELETED]: {
-        label: 'Integration configuration deleted',
-        action: '*{{user}}* deleted a *{{event.preData.provider}}* integration configuration',
-        path: '/integrations',
-    },
-    [ADDON_CONFIG_UPDATED]: {
-        label: 'Integration configuration updated',
-        action: '*{{user}}* updated a *{{event.preData.provider}}* integration configuration',
-        path: '/integrations',
-    },
-    [API_TOKEN_CREATED]: {
-        label: 'API token created',
-        action: '*{{user}}* created API token *{{event.data.username}}*',
-        path: '/admin/api',
-    },
-    [API_TOKEN_DELETED]: {
-        label: 'API token deleted',
-        action: '*{{user}}* deleted API token *{{event.preData.username}}*',
-        path: '/admin/api',
-    },
-    [CHANGE_ADDED]: {
-        label: 'Change added',
-        action: '*{{user}}* added a change to change request {{changeRequest}}',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_DISCARDED]: {
-        label: 'Change discarded',
-        action: '*{{user}}* discarded a change in change request {{changeRequest}}',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_EDITED]: {
-        label: 'Change edited',
-        action: '*{{user}}* edited a change in change request {{changeRequest}}',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_REQUEST_APPLIED]: {
-        label: 'Change request applied',
-        action: '*{{user}}* applied change request {{changeRequest}}',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_REQUEST_APPROVAL_ADDED]: {
-        label: 'Change request approval added',
-        action: '*{{user}}* added an approval to change request {{changeRequest}}',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_REQUEST_APPROVED]: {
-        label: 'Change request approved',
-        action: '*{{user}}* approved change request {{changeRequest}}',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_REQUEST_CANCELLED]: {
-        label: 'Change request cancelled',
-        action: '*{{user}}* cancelled change request {{changeRequest}}',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_REQUEST_CREATED]: {
-        label: 'Change request created',
-        action: '*{{user}}* created change request {{changeRequest}}',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_REQUEST_DISCARDED]: {
-        label: 'Change request discarded',
-        action: '*{{user}}* discarded change request {{changeRequest}}',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_REQUEST_REJECTED]: {
-        label: 'Change request rejected',
-        action: '*{{user}}* rejected change request {{changeRequest}}',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_REQUEST_SENT_TO_REVIEW]: {
-        label: 'Change request sent to review',
-        action: '*{{user}}* sent to review change request {{changeRequest}}',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_REQUEST_SCHEDULED]: {
-        label: 'Change request scheduled',
-        action: '*{{user}}* scheduled change request {{changeRequest}} to be applied at {{event.data.scheduledDate}} in project *{{event.project}}*',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS]: {
-        label: 'Scheduled change request applied successfully',
-        action: '*Successfully* applied the scheduled change request {{changeRequest}} by *{{user}}* in project *{{event.project}}*.',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE]: {
-        label: 'Scheduled change request failed',
-        action: '*Failed* to apply the scheduled change request {{changeRequest}} by *{{user}}* in project *{{event.project}}*.',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CHANGE_REQUEST_SCHEDULE_SUSPENDED]: {
-        label: 'Change request suspended',
-        action: 'Change request {{changeRequest}} was suspended for the following reason: {{event.data.reason}}',
-        path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
-    },
-    [CONTEXT_FIELD_CREATED]: {
-        label: 'Context field created',
-        action: '*{{user}}* created context field *{{event.data.name}}*',
-        path: '/context',
-    },
-    [CONTEXT_FIELD_DELETED]: {
-        label: 'Context field deleted',
-        action: '*{{user}}* deleted context field *{{event.preData.name}}*',
-        path: '/context',
-    },
-    [CONTEXT_FIELD_UPDATED]: {
-        label: 'Context field updated',
-        action: '*{{user}}* updated context field *{{event.preData.name}}*',
-        path: '/context',
-    },
-    [FEATURE_ARCHIVED]: {
-        label: 'Flag archived',
-        action: '*{{user}}* archived *{{event.featureName}}* in project *{{project}}*',
-        path: '/projects/{{event.project}}/archive',
-    },
-    [FEATURE_CREATED]: {
-        label: 'Flag created',
-        action: '*{{user}}* created *{{feature}}* in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_DELETED]: {
-        label: 'Flag deleted',
-        action: '*{{user}}* deleted *{{event.featureName}}* in project *{{project}}*',
-        path: '/projects/{{event.project}}',
-    },
-    [FEATURE_ENVIRONMENT_DISABLED]: {
-        label: 'Flag disabled',
-        action: '*{{user}}* disabled *{{feature}}* for the *{{event.environment}}* environment in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_ENVIRONMENT_ENABLED]: {
-        label: 'Flag enabled',
-        action: '*{{user}}* enabled *{{feature}}* for the *{{event.environment}}* environment in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_ENVIRONMENT_VARIANTS_UPDATED]: {
-        label: 'Flag variants updated',
-        action: '*{{user}}* updated variants for *{{feature}}* for the *{{event.environment}}* environment in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}/variants',
-    },
-    [FEATURE_METADATA_UPDATED]: {
-        label: 'Flag metadata updated',
-        action: '*{{user}}* updated *{{feature}}* metadata in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_COMPLETED]: {
-        label: 'Flag marked as completed',
-        action: '*{{feature}}* was marked as completed in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_POTENTIALLY_STALE_ON]: {
-        label: 'Flag potentially stale',
-        action: '*{{feature}}* was marked as potentially stale in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_PROJECT_CHANGE]: {
-        label: 'Flag moved to a new project',
-        action: '*{{user}}* moved *{{feature}}* from *{{event.data.oldProject}}* to *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_REVIVED]: {
-        label: 'Flag revived',
-        action: '*{{user}}* revived *{{feature}}* in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_STALE_OFF]: {
-        label: 'Flag stale marking removed',
-        action: '*{{user}}* removed the stale marking on *{{feature}}* in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_STALE_ON]: {
-        label: 'Flag marked as stale',
-        action: '*{{user}}* marked *{{feature}}* as stale in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_STRATEGY_ADD]: {
-        label: 'Flag strategy added',
-        action: '*{{user}}* added strategy *{{strategyTitle}}* to *{{feature}}* for the *{{event.environment}}* environment in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_STRATEGY_REMOVE]: {
-        label: 'Flag strategy removed',
-        action: '*{{user}}* removed strategy *{{strategyTitle}}* from *{{feature}}* for the *{{event.environment}}* environment in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_STRATEGY_UPDATE]: {
-        label: 'Flag strategy updated',
-        action: '*{{user}}* updated *{{feature}}* in project *{{project}}* {{strategyChangeText}}',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_TAGGED]: {
-        label: 'Flag tagged',
-        action: '*{{user}}* tagged *{{feature}}* with *{{event.data.type}}:{{event.data.value}}* in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [FEATURE_UNTAGGED]: {
-        label: 'Flag untagged',
-        action: '*{{user}}* untagged *{{feature}}* with *{{event.preData.type}}:{{event.preData.value}}* in project *{{project}}*',
-        path: '/projects/{{event.project}}/features/{{event.featureName}}',
-    },
-    [GROUP_CREATED]: {
-        label: 'Group created',
-        action: '*{{user}}* created group *{{event.data.name}}*',
-        path: '/admin/groups',
-    },
-    [GROUP_DELETED]: {
-        label: 'Group deleted',
-        action: '*{{user}}* deleted group *{{event.preData.name}}*',
-        path: '/admin/groups',
-    },
-    [GROUP_UPDATED]: {
-        label: 'Group updated',
-        action: '*{{user}}* updated group *{{event.preData.name}}*',
-        path: '/admin/groups',
-    },
-    [BANNER_CREATED]: {
-        label: 'Banner created',
-        action: '*{{user}}* created banner *{{event.data.message}}*',
-        path: '/admin/message-banners',
-    },
-    [BANNER_DELETED]: {
-        label: 'Banner deleted',
-        action: '*{{user}}* deleted banner *{{event.preData.message}}*',
-        path: '/admin/message-banners',
-    },
-    [BANNER_UPDATED]: {
-        label: 'Banner updated',
-        action: '*{{user}}* updated banner *{{event.preData.message}}*',
-        path: '/admin/message-banners',
-    },
-    [PROJECT_CREATED]: {
-        label: 'Project created',
-        action: '*{{user}}* created project *{{project}}*',
-        path: '/projects',
-    },
-    [PROJECT_DELETED]: {
-        label: 'Project deleted',
-        action: '*{{user}}* deleted project *{{event.project}}*',
-        path: '/projects',
-    },
-    [SEGMENT_CREATED]: {
-        label: 'Segment created',
-        action: '*{{user}}* created segment *{{event.data.name}}*',
-        path: '/segments',
-    },
-    [SEGMENT_DELETED]: {
-        label: 'Segment deleted',
-        action: '*{{user}}* deleted segment *{{event.preData.name}}*',
-        path: '/segments',
-    },
-    [SEGMENT_UPDATED]: {
-        label: 'Segment updated',
-        action: '*{{user}}* updated segment *{{event.preData.name}}*',
-        path: '/segments',
-    },
-    [SERVICE_ACCOUNT_CREATED]: {
-        label: 'Service account created',
-        action: '*{{user}}* created service account *{{event.data.name}}*',
-        path: '/admin/service-accounts',
-    },
-    [SERVICE_ACCOUNT_DELETED]: {
-        label: 'Service account deleted',
-        action: '*{{user}}* deleted service account *{{event.preData.name}}*',
-        path: '/admin/service-accounts',
-    },
-    [SERVICE_ACCOUNT_UPDATED]: {
-        label: 'Service account updated',
-        action: '*{{user}}* updated service account *{{event.preData.name}}*',
-        path: '/admin/service-accounts',
-    },
-    [USER_CREATED]: {
-        label: 'User created',
-        action: '*{{user}}* created user *{{event.data.name}}*',
-        path: '/admin/users',
-    },
-    [USER_DELETED]: {
-        label: 'User deleted',
-        action: '*{{user}}* deleted user *{{event.preData.name}}*',
-        path: '/admin/users',
-    },
-    [USER_UPDATED]: {
-        label: 'User updated',
-        action: '*{{user}}* updated user *{{event.preData.name}}*',
-        path: '/admin/users',
-    },
-};
+type FormatStyle = 'simple' | 'markdown';
 
+interface IFeatureEventFormatterMdArgs {
+    unleashUrl: string;
+    linkStyle?: LinkStyle;
+    formatStyle?: FormatStyle;
+}
+
+// This is not only formatting feature events. And it's also not only for (proper) markdown. We should probably revisit this sometime in the future and try to split it / refactor it.
 export class FeatureEventFormatterMd implements FeatureEventFormatter {
     private readonly unleashUrl: string;
 
     private readonly linkStyle: LinkStyle;
 
-    constructor(unleashUrl: string, linkStyle: LinkStyle = LinkStyle.MD) {
+    private readonly formatStyle: FormatStyle;
+
+    constructor({
+        unleashUrl,
+        linkStyle = LinkStyle.MD,
+        formatStyle = 'simple',
+    }: IFeatureEventFormatterMdArgs) {
         this.unleashUrl = unleashUrl;
         this.linkStyle = linkStyle;
+        this.formatStyle = formatStyle;
+    }
+
+    /**
+     * Returns the bold marker based on formatStyle, or wraps text with bold markers.
+     * @param text Optional text to wrap with bold markers.
+     * @returns Bold marker or bolded text.
+     */
+    bold(text?: string): string {
+        const boldChar = this.formatStyle === 'simple' ? '*' : '**';
+        return text ? `${boldChar}${text}${boldChar}` : boldChar;
     }
 
     generateChangeRequestLink(event: IEvent): string | undefined {
@@ -394,17 +66,19 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
             const text = `#${changeRequestId}`;
             const featureLink = this.generateFeatureLink(event);
             const featureText = featureLink
-                ? ` for feature flag *${featureLink}*`
+                ? ` for feature flag ${this.bold(featureLink)}`
                 : '';
             const environmentText = environment
-                ? ` in the *${environment}* environment`
+                ? ` in the ${this.bold(environment)} environment`
                 : '';
             const projectLink = this.generateProjectLink(event);
-            const projectText = project ? ` in project *${projectLink}*` : '';
+            const projectText = project
+                ? ` in project ${this.bold(projectLink)}`
+                : '';
             if (this.linkStyle === LinkStyle.SLACK) {
-                return `*<${url}|${text}>*${featureText}${environmentText}${projectText}`;
+                return `${this.bold(`<${url}|${text}>`)}${featureText}${environmentText}${projectText}`;
             } else {
-                return `*[${text}](${url})*${featureText}${environmentText}${projectText}`;
+                return `${this.bold(`[${text}](${url})`)}${featureText}${environmentText}${projectText}`;
             }
         }
     }
@@ -470,9 +144,9 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
                             event,
                         );
                     default:
-                        return `by updating strategy *${this.getStrategyTitle(
-                            event,
-                        )}* in *${environment}*`;
+                        return `by updating strategy ${this.bold(
+                            this.getStrategyTitle(event),
+                        )} in ${this.bold(environment)}`;
                 }
             };
 
@@ -522,9 +196,9 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         const strategySpecificText = [usersText, constraintText, segmentsText]
             .filter((x) => x.length)
             .join(';');
-        return `by updating strategy *${this.getStrategyTitle(
-            event,
-        )}* in *${environment}*${strategySpecificText}`;
+        return `by updating strategy ${this.bold(
+            this.getStrategyTitle(event),
+        )} in ${this.bold(environment)}${strategySpecificText}`;
     }
 
     private flexibleRolloutStrategyChangeText(event: IEvent) {
@@ -570,9 +244,9 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         ]
             .filter((txt) => txt.length)
             .join(';');
-        return `by updating strategy *${this.getStrategyTitle(
-            event,
-        )}* in *${environment}*${strategySpecificText}`;
+        return `by updating strategy ${this.bold(
+            this.getStrategyTitle(event),
+        )} in ${this.bold(environment)}${strategySpecificText}`;
     }
 
     private defaultStrategyChangeText(event: IEvent) {
@@ -588,9 +262,9 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
         const strategySpecificText = [constraintText, segmentsText]
             .filter((txt) => txt.length)
             .join(';');
-        return `by updating strategy *${this.getStrategyTitle(
-            event,
-        )}* in *${environment}*${strategySpecificText}`;
+        return `by updating strategy ${this.bold(
+            this.getStrategyTitle(event),
+        )} in ${this.bold(environment)}${strategySpecificText}`;
     }
 
     private constraintChangeText(
@@ -660,8 +334,13 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
 
     format(event: IEvent): IFormattedEventData {
         const { createdBy, type } = event;
-        const { action, path } = EVENT_MAP[type] || {
-            action: `triggered *${type}*`,
+        const { label, action, path } = EVENT_MAP[type] || {
+            label: type,
+            action: `${this.bold(createdBy)} triggered ${this.bold(type)}`,
+        };
+
+        const formatting = {
+            b: this.bold(),
         };
 
         const context = {
@@ -672,11 +351,11 @@ export class FeatureEventFormatterMd implements FeatureEventFormatter {
             changeRequest: this.generateChangeRequestLink(event),
             feature: this.generateFeatureLink(event),
             project: this.generateProjectLink(event),
+            ...formatting,
         };
 
         Mustache.escape = (text) => text;
 
-        const label = EVENT_MAP[type]?.label || type;
         const text = Mustache.render(action, context);
         const url = path
             ? `${this.unleashUrl}${Mustache.render(path, context)}`

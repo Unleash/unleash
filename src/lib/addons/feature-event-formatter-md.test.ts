@@ -575,7 +575,9 @@ const testCases: [string, IEvent][] = [
 
 testCases.forEach(([description, event]) =>
     test(`Should format specialised text for events ${description}`, () => {
-        const formatter = new FeatureEventFormatterMd('unleashUrl');
+        const formatter = new FeatureEventFormatterMd({
+            unleashUrl: 'unleashUrl',
+        });
         const formattedEvent = formatter.format(event);
         expect(formattedEvent).toMatchSnapshot();
     }),

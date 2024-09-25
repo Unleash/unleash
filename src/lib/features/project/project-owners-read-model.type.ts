@@ -11,7 +11,7 @@ export type GroupProjectOwner = {
     ownerType: 'group';
     name: string;
 };
-type ProjectOwners =
+export type ProjectOwners =
     | [SystemOwner]
     | Array<UserProjectOwner | GroupProjectOwner>;
 

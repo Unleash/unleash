@@ -1,3 +1,5 @@
+import type { ProjectOwners } from '../project/project-owners-read-model.type';
+
 export type PersonalFeature = { name: string; type: string; project: string };
 export type PersonalProject = {
     name: string;
@@ -7,6 +9,7 @@ export type PersonalProject = {
         id: number;
         type: 'custom' | 'project' | 'root' | 'custom-root';
     }[];
+    owners: ProjectOwners;
 };
 
 export interface IPersonalDashboardReadModel {

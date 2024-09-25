@@ -80,7 +80,6 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
             (project: IntermediateProjectResult) => {
                 const roles = Object.values(project.roles);
                 roles.sort((a, b) => a.id - b.id);
-
                 return {
                     ...project,
                     roles,

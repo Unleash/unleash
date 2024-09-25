@@ -401,7 +401,7 @@ const CompletedStageDescription: FC<{
 }) => {
     return (
         <ConditionallyRender
-            condition={!isSafeToArchive(environments)}
+            condition={isSafeToArchive(environments)}
             show={
                 <SafeToArchive
                     onArchive={onArchive}

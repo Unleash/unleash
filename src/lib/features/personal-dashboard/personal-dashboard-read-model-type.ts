@@ -9,6 +9,8 @@ export type PersonalProject = {
         id: number;
         type: 'custom' | 'project' | 'root' | 'custom-root';
     }[];
+};
+export type PersonalProjectWithOwners = PersonalProject & {
     owners: ProjectOwners;
 };
 

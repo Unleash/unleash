@@ -150,6 +150,7 @@ import { PersonalDashboardService } from '../features/personal-dashboard/persona
 import { PersonalDashboardReadModel } from '../features/personal-dashboard/personal-dashboard-read-model';
 import { FakePersonalDashboardReadModel } from '../features/personal-dashboard/fake-personal-dashboard-read-model';
 import { ProjectOwnersReadModel } from '../features/project/project-owners-read-model';
+import { FakeProjectOwnersReadModel } from '../features/project/fake-project-owners-read-model';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -407,8 +408,10 @@ export const createServices = (
 
     const personalDashboardService = new PersonalDashboardService(
         db
-            ? new PersonalDashboardReadModel(db, new ProjectOwnersReadModel(db))
+            ? new PersonalDashboardReadModel(db)
             : new FakePersonalDashboardReadModel(),
+
+        db ? new ProjectOwnersReadModel(db) : new FakeProjectOwnersReadModel(),
     );
 
     return {

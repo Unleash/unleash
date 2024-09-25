@@ -1,5 +1,4 @@
 import type { Db } from '../../db/db';
-import type { IProjectOwnersReadModel } from '../project/project-owners-read-model.type';
 import type {
     IPersonalDashboardReadModel,
     PersonalFeature,
@@ -15,11 +14,8 @@ type IntermediateProjectResult = Omit<PersonalProject, 'roles'> & {
 export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
     private db: Db;
 
-    private projectOwnersReadModel: IProjectOwnersReadModel;
-
-    constructor(db: Db, ProjectOwnersReadModel: IProjectOwnersReadModel) {
+    constructor(db: Db) {
         this.db = db;
-        this.projectOwnersReadModel = ProjectOwnersReadModel;
     }
 
     async getPersonalProjects(userId: number): Promise<PersonalProject[]> {
@@ -92,10 +88,7 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
             },
         );
         projectList.sort((a, b) => a.name.localeCompare(b.name));
-        const withOwners =
-            await this.projectOwnersReadModel.addOwners(projectList);
-
-        return withOwners;
+        return projectList;
     }
 
     async getPersonalFeatures(userId: number): Promise<PersonalFeature[]> {

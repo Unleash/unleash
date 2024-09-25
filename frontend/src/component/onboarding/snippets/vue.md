@@ -12,8 +12,6 @@ npm install @unleash/proxy-client-vue
         url: '<YOUR_API_URL>',
         clientKey: '<YOUR_API_TOKEN>',
         appName: 'unleash-onboarding-vue',
-        refreshInterval: 5, // Use >15s in production
-        metricsInterval: 5, // Use >15s in production
     }
 </script>
 

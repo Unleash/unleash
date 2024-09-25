@@ -70,6 +70,8 @@ export const ProjectFeatureToggles = ({
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
 
+    console.log('connectSdkOpen', connectSdkOpen);
+
     const {
         features,
         total,
@@ -534,17 +536,19 @@ export const ProjectFeatureToggles = ({
                     </PageContent>
                 }
             />
-            {'feature' in project.onboardingStatus ? (
-                <ConnectSdkDialog
-                    open={connectSdkOpen}
-                    onClose={() => {
-                        setConnectSdkOpen(false);
-                    }}
-                    project={projectId}
-                    environments={environments}
-                    feature={project.onboardingStatus.feature}
-                />
-            ) : null}
+            <ConnectSdkDialog
+                open={connectSdkOpen}
+                onClose={() => {
+                    setConnectSdkOpen(false);
+                }}
+                project={projectId}
+                environments={environments}
+                feature={
+                    'feature' in project.onboardingStatus
+                        ? project.onboardingStatus.feature
+                        : undefined
+                }
+            />
             <BatchSelectionActionsBar count={selectedData.length}>
                 <ProjectFeaturesBatchActions
                     selectedIds={Object.keys(rowSelection)}

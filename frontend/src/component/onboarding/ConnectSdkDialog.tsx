@@ -7,7 +7,7 @@ import {
     useTheme,
 } from '@mui/material';
 import { GenerateApiKey } from './GenerateApiKey';
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { lazy, useEffect, useState } from 'react';
 import { SelectSdk } from './SelectSdk';
 import { GenerateApiKeyConcepts, SelectSdkConcepts } from './UnleashConcepts';
 
@@ -15,14 +15,15 @@ const TestSdkConnection = lazy(() => import('./TestSdkConnection'));
 
 import type { Sdk } from './sharedTypes';
 import { ConnectionInformation } from './ConnectionInformation';
-import Loader from 'component/common/Loader/Loader';
+import { SdkConnection } from './SdkConnection';
+import useProjectOverview from '../../hooks/api/getters/useProjectOverview/useProjectOverview';
 
 interface IConnectSDKDialogProps {
     open: boolean;
     onClose: () => void;
     project: string;
     environments: string[];
-    feature: string;
+    feature?: string;
 }
 
 const ConnectSdk = styled('main')(({ theme }) => ({
@@ -68,7 +69,7 @@ export const ConnectSdkDialog = ({
     open,
     onClose,
     environments,
-    project,
+    project: projectId,
     feature,
 }: IConnectSDKDialogProps) => {
     const theme = useTheme();
@@ -77,12 +78,17 @@ export const ConnectSdkDialog = ({
     const [environment, setEnvironment] = useState<string | null>(null);
     const [apiKey, setApiKey] = useState<string | null>(null);
     const [stage, setStage] = useState<OnboardingStage>('select-sdk');
+    const { project } = useProjectOverview(projectId, {
+        refreshInterval: 1000,
+    });
 
     const isSelectSdkStage = stage === 'select-sdk';
     const isGenerateApiKeyStage =
         stage === 'generate-api-key' && sdk && environment;
     const isTestConnectionStage =
         stage === 'test-connection' && sdk && environment && apiKey;
+
+    const onboarded = project.onboardingStatus.status === 'onboarded';
 
     useEffect(() => {
         if (environments.length > 0) {
@@ -106,23 +112,21 @@ export const ConnectSdkDialog = ({
                         <GenerateApiKey
                             environments={environments}
                             environment={environment}
-                            project={project}
+                            project={projectId}
                             sdkType={sdk.type}
                             onEnvSelect={setEnvironment}
                             onApiKey={setApiKey}
                         />
                     ) : null}
                     {isTestConnectionStage ? (
-                        <Suspense fallback={<Loader />}>
-                            <TestSdkConnection
-                                sdk={sdk}
-                                apiKey={apiKey}
-                                feature={feature}
-                                onSdkChange={() => {
-                                    setStage('select-sdk');
-                                }}
-                            />
-                        </Suspense>
+                        <SdkConnection
+                            apiKey={apiKey}
+                            sdk={sdk}
+                            feature={feature}
+                            onSdkChange={() => {
+                                setStage('select-sdk');
+                            }}
+                        />
                     ) : null}
 
                     {stage === 'generate-api-key' ? (
@@ -152,22 +156,25 @@ export const ConnectSdkDialog = ({
                     {isTestConnectionStage ? (
                         <Navigation>
                             <NextStepSectionSpacedContainer>
-                                <Button
-                                    variant='text'
-                                    color='inherit'
-                                    onClick={() => {
-                                        setStage('generate-api-key');
-                                    }}
-                                >
-                                    Back
-                                </Button>
+                                {!onboarded ? (
+                                    <Button
+                                        variant='text'
+                                        color='inherit'
+                                        onClick={() => {
+                                            setStage('generate-api-key');
+                                        }}
+                                    >
+                                        Back
+                                    </Button>
+                                ) : null}
+
                                 <Button
                                     variant='contained'
                                     onClick={() => {
                                         onClose();
                                     }}
                                 >
-                                    Finish
+                                    Next
                                 </Button>
                             </NextStepSectionSpacedContainer>
                         </Navigation>
@@ -182,10 +189,9 @@ export const ConnectSdkDialog = ({
                 ) : null}
                 {isLargeScreen && isTestConnectionStage ? (
                     <ConnectionInformation
-                        projectId={project}
+                        projectId={projectId}
                         sdk={sdk.name}
                         environment={environment}
-                        onConnection={onClose}
                     />
                 ) : null}
             </Box>

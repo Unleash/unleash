@@ -1,4 +1,4 @@
-import { forwardRef, useState, type ReactNode } from 'react';
+import { forwardRef, type ReactNode } from 'react';
 import { Box, Grid, styled, useMediaQuery, useTheme } from '@mui/material';
 import Header from 'component/menu/Header/Header';
 import OldHeader from 'component/menu/Header/OldHeader';
@@ -17,8 +17,8 @@ import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
-import AnimateOnMount from 'component/common/AnimateOnMount/AnimateOnMount';
+import { useEventTimeline } from 'component/events/EventTimeline/useEventTimeline';
+import { MainLayoutEventTimeline } from './MainLayoutEventTimeline';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -107,29 +107,16 @@ const MainLayoutContentContainer = styled('div')(({ theme }) => ({
     zIndex: 200,
 }));
 
-const timelineAnimations = {
-    start: {
-        maxHeight: 0,
-        overflow: 'hidden',
-        transition: 'max-height 0.3s ease-in-out',
-    },
-    enter: {
-        maxHeight: '105px',
-    },
-    leave: {
-        maxHeight: 0,
-    },
-};
-
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
-        const { uiConfig } = useUiConfig();
+        const { uiConfig, isOss } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
-        const eventTimeline = useUiFlag('eventTimeline');
-        const [showTimeline, setShowTimeline] = useState(false);
+        const eventTimeline = useUiFlag('eventTimeline') && !isOss();
+        const { open: showTimeline, setOpen: setShowTimeline } =
+            useEventTimeline();
 
         const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
         const StyledMainLayoutContent = sidebarNavigationEnabled
@@ -189,22 +176,9 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     minWidth: 0,
                                 }}
                             >
-                                <AnimateOnMount
-                                    mounted={eventTimeline && showTimeline}
-                                    start={timelineAnimations.start}
-                                    enter={timelineAnimations.enter}
-                                    leave={timelineAnimations.leave}
-                                >
-                                    <Box
-                                        sx={(theme) => ({
-                                            padding: theme.spacing(2),
-                                            backgroundColor:
-                                                theme.palette.background.paper,
-                                        })}
-                                    >
-                                        <EventTimeline />
-                                    </Box>
-                                </AnimateOnMount>
+                                <MainLayoutEventTimeline
+                                    open={eventTimeline && showTimeline}
+                                />
 
                                 <StyledMainLayoutContent>
                                     <MainLayoutContentContainer ref={ref}>

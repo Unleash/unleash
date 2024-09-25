@@ -24,6 +24,7 @@ import { ProjectSetupComplete } from './ProjectSetupComplete';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import type { PersonalDashboardSchema } from '../../openapi';
+import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 
 const ScreenExplanation = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -177,7 +178,8 @@ export const PersonalDashboard = () => {
 
     const { projects, activeProject, setActiveProject } = useProjects();
 
-    const { personalDashboard } = usePersonalDashboard();
+    const { personalDashboard, refetch: refetchDashboard } =
+        usePersonalDashboard();
     const [activeFlag, setActiveFlag] = useState<
         PersonalDashboardSchema['flags'][0] | null
     >(null);
@@ -298,7 +300,20 @@ export const PersonalDashboard = () => {
                 <SpacedGridItem item lg={4} md={1}>
                     <Typography variant='h3'>My feature flags</Typography>
                 </SpacedGridItem>
-                <SpacedGridItem item lg={8} md={1} />
+                <SpacedGridItem
+                    item
+                    lg={8}
+                    md={1}
+                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                >
+                    {activeFlag ? (
+                        <FlagExposure
+                            project={activeFlag.project}
+                            flagName={activeFlag.name}
+                            onArchive={refetchDashboard}
+                        />
+                    ) : null}
+                </SpacedGridItem>
                 <SpacedGridItem item lg={4} md={1}>
                     {personalDashboard && personalDashboard.flags.length > 0 ? (
                         <List

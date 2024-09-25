@@ -5,6 +5,7 @@ import {
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 import type { IUser } from '../../types';
+import { randomId } from '../../util';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -38,6 +39,7 @@ afterAll(async () => {
 
 beforeEach(async () => {
     await db.stores.featureToggleStore.deleteAll();
+    await db.stores.userStore.deleteAll();
 });
 
 test('should return personal dashboard with own flags and favorited flags', async () => {
@@ -135,6 +137,54 @@ test('should return personal dashboard with membered projects', async () => {
     });
 });
 
-test('should return projects where users are part of a group', () => {
-    // TODO
+test('should return projects where users are part of a group', async () => {
+    const { body: user1 } = await loginUser('user1@test.com');
+    const projectA = await createProject(randomId(), user1);
+
+    const { body: user2 } = await loginUser('user2@test.com');
+
+    const group = await app.services.groupService.createGroup(
+        {
+            name: 'groupA',
+            users: [{ user: user2 }],
+        },
+        user1,
+    );
+
+    await app.services.projectService.addAccess(
+        projectA.id,
+        [4], // owner role
+        [group.id],
+        [],
+        user1,
+    );
+
+    const { body } = await app.request.get(`/api/admin/personal-dashboard`);
+
+    expect(body).toMatchObject({
+        projects: [
+            {
+                name: 'Default',
+                id: 'default',
+                roles: [
+                    {
+                        name: 'Editor',
+                        id: 2,
+                        type: 'root',
+                    },
+                ],
+            },
+            {
+                name: projectA.name,
+                id: projectA.id,
+                roles: [
+                    {
+                        name: 'Owner',
+                        id: 4,
+                        type: 'project',
+                    },
+                ],
+            },
+        ],
+    });
 });

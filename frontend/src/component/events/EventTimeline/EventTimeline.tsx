@@ -2,14 +2,18 @@ import { styled } from '@mui/material';
 import type { EventSchema, EventSchemaType } from 'openapi';
 import { startOfDay, sub } from 'date-fns';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
-import { EventTimelineEvent } from './EventTimelineEvent/EventTimelineEvent';
+import { EventTimelineEventGroup } from './EventTimelineEventGroup/EventTimelineEventGroup';
 import { EventTimelineHeader } from './EventTimelineHeader/EventTimelineHeader';
 import { useEventTimeline } from './useEventTimeline';
+import { useMemo } from 'react';
 
 export type EnrichedEvent = EventSchema & {
     label: string;
     summary: string;
+    timestamp: number;
 };
+
+export type TimelineEventGroup = EnrichedEvent[];
 
 const StyledRow = styled('div')({
     display: 'flex',
@@ -88,6 +92,8 @@ export const EventTimeline = () => {
 
     const endDate = new Date();
     const startDate = sub(endDate, timeSpan.value);
+    const endTime = endDate.getTime();
+    const startTime = startDate.getTime();
 
     const { events: baseEvents } = useEventSearch(
         {
@@ -98,19 +104,52 @@ export const EventTimeline = () => {
         { refreshInterval: 10 * 1000 },
     );
 
-    const events = baseEvents as EnrichedEvent[];
+    const events = useMemo(() => {
+        return baseEvents.map((event) => ({
+            ...event,
+            timestamp: new Date(event.createdAt).getTime(),
+        }));
+    }, [baseEvents]) as EnrichedEvent[];
 
     const filteredEvents = events.filter(
         (event) =>
-            new Date(event.createdAt).getTime() >= startDate.getTime() &&
-            new Date(event.createdAt).getTime() <= endDate.getTime() &&
-            RELEVANT_EVENT_TYPES.includes(event.type) &&
+            event.timestamp >= startTime &&
+            event.timestamp <= endTime &&
             (!event.environment ||
                 !environment ||
                 event.environment === environment.name),
     );
 
-    const sortedEvents = [...filteredEvents].reverse();
+    const sortedEvents = filteredEvents.reverse();
+
+    const timespanInMs = endTime - startTime;
+    const groupingThresholdInMs = useMemo(
+        () => timespanInMs * 0.02,
+        [timespanInMs],
+    );
+
+    const groups = useMemo(
+        () =>
+            sortedEvents.reduce((groups: TimelineEventGroup[], event) => {
+                if (groups.length === 0) {
+                    groups.push([event]);
+                } else {
+                    const lastGroup = groups[groups.length - 1];
+                    const lastEventInGroup = lastGroup[lastGroup.length - 1];
+
+                    if (
+                        event.timestamp - lastEventInGroup.timestamp <=
+                        groupingThresholdInMs
+                    ) {
+                        lastGroup.push(event);
+                    } else {
+                        groups.push([event]);
+                    }
+                }
+                return groups;
+            }, []),
+        [sortedEvents, groupingThresholdInMs],
+    );
 
     return (
         <>
@@ -126,10 +165,10 @@ export const EventTimeline = () => {
             <StyledTimelineContainer>
                 <StyledTimeline />
                 <StyledStart />
-                {sortedEvents.map((event) => (
-                    <EventTimelineEvent
-                        key={event.id}
-                        event={event}
+                {groups.map((group) => (
+                    <EventTimelineEventGroup
+                        key={group[0].id}
+                        group={group}
                         startDate={startDate}
                         endDate={endDate}
                     />

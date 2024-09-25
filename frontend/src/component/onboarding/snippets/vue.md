@@ -4,20 +4,38 @@ npm install @unleash/proxy-client-vue
 ```
 
 2\. Initialize Unleash
-```js
-import { createApp } from 'vue'
-import { plugin as unleashPlugin } from '@unleash/proxy-client-vue'
-// import the root component App from a single-file component.
-import App from './App.vue'
+```vue
+<script setup lang="ts">
+import HelloWorld from './components/HelloWorld.vue'
+import { FlagProvider } from '@unleash/proxy-client-vue'
 
 const config = {
   url: '<YOUR_API_URL>',
   clientKey: '<YOUR_API_TOKEN>',
-  refreshInterval: 15,
   appName: 'unleash-onboarding-vue',
+  refreshInterval: 5, // Use >15s for production
+  metricsInterval: 5, // Use >15s for production
 }
+</script>
 
-const app = createApp(App)
-app.use(unleashPlugin, { config })
-app.mount('#app')
+<template>
+  <FlagProvider :config="config">
+    <!-- <YourComponent /> -->
+  </FlagProvider>
+</template>
+```
+
+3\. Check feature flag status
+```vue
+<script setup lang="ts">
+import { useFlag } from '@unleash/proxy-client-vue'
+
+const enabled = useFlag('example-flag')
+</script>
+
+<template>
+  <div>
+    {{ enabled ? 'Feature is enabled!' : 'Feature is disabled!' }}
+  </div>
+</template>
 ```

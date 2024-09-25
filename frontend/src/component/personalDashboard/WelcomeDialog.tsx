@@ -76,9 +76,7 @@ export const WelcomeDialog: FC<IWelcomeDialogProps> = ({ open, onClose }) => {
                     <p>
                         Environments represent different stages in your
                         development lifecycle. Unleash comes with two
-                        preconfigured environments. Feature flags exist across
-                        all environments but can have different configurations
-                        in each.
+                        preconfigured environments.
                     </p>
                     <h2>Projects</h2>
                     <p>

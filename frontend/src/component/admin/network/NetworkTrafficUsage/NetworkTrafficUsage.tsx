@@ -292,7 +292,7 @@ export const NetworkTrafficUsage: VFC = () => {
                         <Grid item xs={12} md={2}>
                             <Bar
                                 data={data}
-                                plugins={[customHighlightPlugin]}
+                                plugins={[customHighlightPlugin()]}
                                 options={options}
                                 aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
                             />

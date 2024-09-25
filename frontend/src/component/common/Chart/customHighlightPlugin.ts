@@ -1,9 +1,8 @@
 import type { Chart } from 'chart.js';
 
-export const customHighlightPlugin = {
+export const customHighlightPlugin = (width = 46, bottomOverflow = 34) => ({
     id: 'customLine',
     beforeDraw: (chart: Chart) => {
-        const width = 46;
         if (chart.tooltip?.opacity && chart.tooltip.x) {
             const x = chart.tooltip.caretX;
             const yAxis = chart.scales.y;
@@ -22,11 +21,11 @@ export const customHighlightPlugin = {
                 x - width / 2,
                 yAxis.top,
                 width,
-                yAxis.bottom - yAxis.top + 34,
+                yAxis.bottom - yAxis.top + bottomOverflow,
                 5,
             );
             ctx.fill();
             ctx.restore();
         }
     },
-};
+});

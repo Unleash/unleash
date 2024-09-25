@@ -82,6 +82,11 @@ export const createBarChartOptions = (
     return {
         plugins: {
             legend: plugins?.legend,
+            // required to avoid the highlight plugin highlighting empty annotation
+            annotation: {
+                clip: false,
+                annotations: {},
+            },
             tooltip: {
                 backgroundColor: theme.palette.background.paper,
                 titleColor: theme.palette.text.primary,

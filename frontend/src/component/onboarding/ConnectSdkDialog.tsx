@@ -16,7 +16,7 @@ const TestSdkConnection = lazy(() => import('./TestSdkConnection'));
 import type { Sdk } from './sharedTypes';
 import { ConnectionInformation } from './ConnectionInformation';
 import { SdkConnection } from './SdkConnection';
-import useProjectOverview from '../../hooks/api/getters/useProjectOverview/useProjectOverview';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 interface IConnectSDKDialogProps {
     open: boolean;

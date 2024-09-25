@@ -22,7 +22,21 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
         }>('projects')
             .join('role_user', 'projects.id', 'role_user.project')
             .join('roles', 'role_user.role_id', 'roles.id')
+            // Join group_user to find groups the user is a member of
+            .leftJoin('group_user', 'group_user.user_id', userId)
+            // Join group_role to find roles that groups have in projects
+            .leftJoin(
+                'group_role',
+                'group_role.group_id',
+                'group_user.group_id',
+            )
+            .leftJoin(
+                'roles as group_roles',
+                'group_role.role_id',
+                'group_roles.id',
+            )
             .where('role_user.user_id', userId)
+            .orWhere('group_user.user_id', userId) // Include user's group memberships
             .whereNull('projects.archived_at')
             .select(
                 'projects.name',
@@ -35,28 +49,37 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
 
         const dict = result.reduce((acc, row) => {
             if (acc[row.id]) {
-                acc[row.id].roles.push({
+                acc[row.id].roles[row.roleId] = {
                     id: row.roleId,
                     name: row.roleName,
                     type: row.roleType,
-                });
+                };
             } else {
                 acc[row.id] = {
                     id: row.id,
                     name: row.name,
-                    roles: [
-                        {
+                    roles: {
+                        [row.roleId]: {
                             id: row.roleId,
                             name: row.roleName,
                             type: row.roleType,
                         },
-                    ],
+                    },
                 };
             }
             return acc;
         }, {});
 
-        const projectList: PersonalProject[] = Object.values(dict);
+        const projectList: PersonalProject[] = Object.values(dict).map(
+            (project) => {
+                const roles = Object.values(project.roles);
+                roles.sort((a, b) => a.id - b.id);
+                return {
+                    ...project,
+                    roles,
+                };
+            },
+        );
         projectList.sort((a, b) => a.name.localeCompare(b.name));
         return projectList;
     }

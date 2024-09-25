@@ -139,7 +139,7 @@ test('should return personal dashboard with membered projects', async () => {
 
 test('should return projects where users are part of a group', async () => {
     const { body: user1 } = await loginUser('user1@test.com');
-    const projectA = await createProject(randomId(), user1);
+    const projectA = await createProject(`x${randomId()}`, user1);
 
     const { body: user2 } = await loginUser('user2@test.com');
 
@@ -148,6 +148,14 @@ test('should return projects where users are part of a group', async () => {
             name: 'groupA',
             users: [{ user: user2 }],
         },
+        user1,
+    );
+
+    await app.services.projectService.addAccess(
+        projectA.id,
+        [5], // member role
+        [],
+        [user2.id],
         user1,
     );
 
@@ -181,6 +189,11 @@ test('should return projects where users are part of a group', async () => {
                     {
                         name: 'Owner',
                         id: 4,
+                        type: 'project',
+                    },
+                    {
+                        name: 'Member',
+                        id: 5,
                         type: 'project',
                     },
                 ],

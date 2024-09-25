@@ -8,13 +8,16 @@ import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import SegmentsIcon from '@mui/icons-material/DonutLargeOutlined';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
-import type { EnrichedEvent } from '../EventTimeline';
+import type { TimelineEvent, TimelineEventGroup } from '../EventTimeline';
+import type { ISignal } from 'interfaces/signal';
+import { EventTimelineGroup } from './EventTimelineGroup';
+import { EventTimelineSignal } from './EventTimelineSignal';
 
 type DefaultEventVariant = 'secondary';
 type CustomEventVariant = 'success' | 'neutral';
 type EventVariant = DefaultEventVariant | CustomEventVariant;
 
-const StyledEvent = styled('div', {
+export const StyledEvent = styled('div', {
     shouldForwardProp: (prop) => prop !== 'position',
 })<{ position: string }>(({ position }) => ({
     position: 'absolute',
@@ -26,11 +29,11 @@ const StyledEvent = styled('div', {
     zIndex: 1,
 }));
 
-const StyledEventCircle = styled('div', {
+export const StyledEventCircle = styled('div', {
     shouldForwardProp: (prop) => prop !== 'variant',
 })<{ variant: EventVariant }>(({ theme, variant }) => ({
-    height: theme.spacing(3),
-    width: theme.spacing(3),
+    height: theme.spacing(3.75),
+    width: theme.spacing(3.75),
     borderRadius: '50%',
     backgroundColor: theme.palette[variant].light,
     border: `1px solid ${theme.palette[variant].main}`,
@@ -48,7 +51,7 @@ const StyledEventCircle = styled('div', {
     },
 }));
 
-const getEventIcon = (type: EventSchemaType) => {
+export const getEventIcon = (type: EventSchemaType) => {
     if (type === 'feature-environment-enabled') {
         return <ToggleOnIcon />;
     }
@@ -68,7 +71,7 @@ const getEventIcon = (type: EventSchemaType) => {
     return <QuestionMarkIcon />;
 };
 
-const customEventVariants: Partial<
+export const customEventVariants: Partial<
     Record<EventSchemaType, CustomEventVariant>
 > = {
     'feature-environment-enabled': 'success',
@@ -76,21 +79,28 @@ const customEventVariants: Partial<
     'feature-archived': 'neutral',
 };
 
-interface IEventTimelineEventProps {
-    event: EnrichedEvent;
-    startDate: Date;
-    endDate: Date;
+export interface IEventTimelineEventProps {
+    event: TimelineEvent | TimelineEventGroup;
+    position: string;
 }
+
+export const isSignal = (
+    event: TimelineEvent | TimelineEventGroup,
+): event is ISignal => {
+    return !Array.isArray(event) && 'source' in event;
+};
 
 export const EventTimelineEvent = ({
     event,
-    startDate,
-    endDate,
+    position,
 }: IEventTimelineEventProps) => {
-    const timelineDuration = endDate.getTime() - startDate.getTime();
-    const eventTime = new Date(event.createdAt).getTime();
+    if (Array.isArray(event)) {
+        return <EventTimelineGroup event={event} position={position} />;
+    }
 
-    const position = `${((eventTime - startDate.getTime()) / timelineDuration) * 100}%`;
+    if (isSignal(event)) {
+        return <EventTimelineSignal event={event} position={position} />;
+    }
 
     const variant = customEventVariants[event.type] || 'secondary';
 

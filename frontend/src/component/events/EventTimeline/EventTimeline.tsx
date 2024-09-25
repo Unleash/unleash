@@ -10,11 +10,16 @@ import {
     type TimeSpanOption,
     timeSpanOptions,
 } from './EventTimelineHeader/EventTimelineHeader';
+import type { ISignal } from 'interfaces/signal';
 
 export type EnrichedEvent = EventSchema & {
     label: string;
     summary: string;
 };
+
+export type TimelineEvent = EnrichedEvent | ISignal;
+
+export type TimelineEventGroup = TimelineEvent[];
 
 const StyledRow = styled('div')({
     display: 'flex',
@@ -86,6 +91,7 @@ const RELEVANT_EVENT_TYPES: EventSchemaType[] = [
 ];
 
 const toISODateString = (date: Date) => date.toISOString().split('T')[0];
+const TIME_GROUPING_SIZE = 2;
 
 export const EventTimeline = () => {
     const [timeSpan, setTimeSpan] = useState<TimeSpanOption>(
@@ -95,6 +101,19 @@ export const EventTimeline = () => {
 
     const endDate = new Date();
     const startDate = sub(endDate, timeSpan.value);
+    const timelineDuration = endDate.getTime() - startDate.getTime();
+    const timeGroups = 100 / TIME_GROUPING_SIZE;
+    const groups = new Array(timeGroups).fill(0).map((_, i) => {
+        const from = i * TIME_GROUPING_SIZE;
+        const to = from + TIME_GROUPING_SIZE;
+        const position = from + TIME_GROUPING_SIZE / 2;
+        return {
+            from,
+            to,
+            position,
+            events: [] as { position: number; event: EnrichedEvent }[],
+        };
+    });
 
     const { events: baseEvents } = useEventSearch(
         {
@@ -117,7 +136,35 @@ export const EventTimeline = () => {
                 event.environment === environment.name),
     );
 
-    const sortedEvents = [...filteredEvents].reverse();
+    filteredEvents.forEach((event) => {
+        const eventTime = new Date(event.createdAt).getTime();
+        const position =
+            ((eventTime - startDate.getTime()) / timelineDuration) * 100;
+        const grp = groups.find(
+            (group) => group && group.from <= position && group.to > position,
+        );
+        grp?.events.push({ position, event });
+    });
+
+    const mappedEvents = groups
+        .filter((group) => group.events.length > 0)
+        .map((group) => {
+            return group.events.length === 1
+                ? {
+                      id: group.events[0].event.id,
+                      position: group.events[0].position,
+                      event: group.events[0].event,
+                  }
+                : {
+                      position: group.position,
+                      id: group.events[0].event.id,
+                      events: group.events.map(
+                          (ev) => ev.event,
+                      ) as TimelineEventGroup,
+                  };
+        });
+
+    const sortedEvents = [...mappedEvents].reverse();
 
     return (
         <>
@@ -133,12 +180,11 @@ export const EventTimeline = () => {
             <StyledTimelineContainer>
                 <StyledTimeline />
                 <StyledStart />
-                {sortedEvents.map((event) => (
+                {sortedEvents.map((entry) => (
                     <EventTimelineEvent
-                        key={event.id}
-                        event={event}
-                        startDate={startDate}
-                        endDate={endDate}
+                        key={entry.id}
+                        event={entry.event ?? entry.events}
+                        position={`${entry.position}%`}
                     />
                 ))}
                 <StyledEnd />

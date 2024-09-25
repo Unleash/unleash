@@ -30,7 +30,7 @@ npm install @unleash/proxy-client-svelte
 ```svelte
 <script lang="ts">
 	import { useFlag } from '@unleash/proxy-client-svelte';
-	const enabled = useFlag('example-flag');
+	const enabled = useFlag('<YOUR_FLAG>');
 </script>
 
 <section>

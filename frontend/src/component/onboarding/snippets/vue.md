@@ -28,7 +28,7 @@ npm install @unleash/proxy-client-vue
 ```vue
 <script setup lang="ts">
     import { useFlag } from '@unleash/proxy-client-vue'
-    const enabled = useFlag('example-flag')
+    const enabled = useFlag('<YOUR_FLAG>')
 </script>
 
 <template>

@@ -1,6 +1,7 @@
 import type {
     IPersonalDashboardReadModel,
     PersonalFeature,
+    PersonalProject,
 } from './personal-dashboard-read-model-type';
 
 export class PersonalDashboardService {
@@ -12,5 +13,9 @@ export class PersonalDashboardService {
 
     getPersonalFeatures(userId: number): Promise<PersonalFeature[]> {
         return this.personalDashboardReadModel.getPersonalFeatures(userId);
+    }
+
+    getPersonalProjects(userId: number): Promise<PersonalProject[]> {
+        return this.personalDashboardReadModel.getPersonalProjects(userId);
     }
 }

@@ -4,6 +4,7 @@ import {
     setupAppWithAuth,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
+import type { IUser } from '../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -53,11 +54,87 @@ test('should return personal dashboard with own flags and favorited flags', asyn
     const { body } = await app.request.get(`/api/admin/personal-dashboard`);
 
     expect(body).toMatchObject({
-        projects: [],
         flags: [
             { name: 'my_feature_d', type: 'release', project: 'default' },
             { name: 'my_feature_c', type: 'release', project: 'default' },
             { name: 'other_feature_b', type: 'release', project: 'default' },
         ],
     });
+});
+
+const createProject = async (name: string, user: IUser) => {
+    const auditUser = {
+        id: 1,
+        username: 'audit user',
+        ip: '127.0.0.1',
+    };
+    const project = await app.services.projectService.createProject(
+        {
+            name,
+        },
+        user,
+        auditUser,
+    );
+    return project;
+};
+
+test('should return personal dashboard with membered projects', async () => {
+    const { body: user1 } = await loginUser('user1@test.com');
+    const projectA = await createProject('Project A', user1);
+    await createProject('Project B', user1);
+
+    const { body: user2 } = await loginUser('user2@test.com');
+    const projectC = await createProject('Project C', user2);
+
+    await app.services.projectService.addAccess(
+        projectA.id,
+        [5], // member role
+        [],
+        [user2.id],
+        user1,
+    );
+
+    const { body } = await app.request.get(`/api/admin/personal-dashboard`);
+
+    expect(body).toMatchObject({
+        projects: [
+            {
+                name: 'Default',
+                id: 'default',
+                roles: [
+                    {
+                        name: 'Editor',
+                        id: 2,
+                        type: 'root',
+                    },
+                ],
+            },
+            {
+                name: projectA.name,
+                id: projectA.id,
+                roles: [
+                    {
+                        name: 'Member',
+                        id: 5,
+                        type: 'project',
+                    },
+                ],
+            },
+            {
+                name: projectC.name,
+                id: projectC.id,
+                roles: [
+                    {
+                        name: 'Owner',
+                        id: 4,
+                        type: 'project',
+                    },
+                ],
+            },
+        ],
+    });
+});
+
+test('should return projects where users are part of a group', () => {
+    // TODO
 });

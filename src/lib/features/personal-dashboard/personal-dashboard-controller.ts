@@ -63,11 +63,14 @@ export default class PersonalDashboardController extends Controller {
             user.id,
         );
 
+        const projects =
+            await this.personalDashboardService.getPersonalProjects(user.id);
+
         this.openApiService.respondWithValidation(
             200,
             res,
             personalDashboardSchema.$id,
-            { projects: [], flags },
+            { projects, flags },
         );
     }
 }

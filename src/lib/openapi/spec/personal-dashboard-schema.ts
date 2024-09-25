@@ -12,12 +12,52 @@ export const personalDashboardSchema = {
             items: {
                 type: 'object',
                 additionalProperties: false,
-                required: ['id'],
+                required: ['id', 'name', 'roles'],
                 properties: {
                     id: {
                         type: 'string',
                         example: 'my-project-id',
                         description: 'The id of the project',
+                    },
+                    name: {
+                        type: 'string',
+                        example: 'My Project',
+                        description: 'The name of the project',
+                    },
+                    roles: {
+                        type: 'array',
+                        description:
+                            'The list of roles that the user has in this project.',
+                        minItems: 1,
+                        items: {
+                            type: 'object',
+                            description: 'An Unleash role.',
+                            additionalProperties: false,
+                            required: ['name', 'id', 'type'],
+                            properties: {
+                                name: {
+                                    type: 'string',
+                                    example: 'Owner',
+                                    description: 'The name of the role',
+                                },
+                                id: {
+                                    type: 'integer',
+                                    example: 4,
+                                    description: 'The id of the role',
+                                },
+                                type: {
+                                    type: 'string',
+                                    enum: [
+                                        'custom',
+                                        'project',
+                                        'root',
+                                        'custom-root',
+                                    ],
+                                    example: 'project',
+                                    description: 'The type of the role',
+                                },
+                            },
+                        },
                     },
                 },
             },

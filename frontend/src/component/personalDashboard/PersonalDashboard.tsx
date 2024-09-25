@@ -176,8 +176,6 @@ export const PersonalDashboard = () => {
 
     const name = user?.name;
 
-    const { projects, activeProject, setActiveProject } = useProjects();
-
     const { personalDashboard, refetch: refetchDashboard } =
         usePersonalDashboard();
     const [activeFlag, setActiveFlag] = useState<
@@ -189,8 +187,18 @@ export const PersonalDashboard = () => {
         }
     }, [JSON.stringify(personalDashboard)]);
 
-    const { project: activeProjectOverview, loading } =
-        useProjectOverview(activeProject);
+    const [activeProject, setActiveProject] = useState<
+        PersonalDashboardSchema['projects'][0] | null
+    >(null);
+    useEffect(() => {
+        if (personalDashboard?.projects.length) {
+            setActiveProject(personalDashboard.projects[0]);
+        }
+    }, [JSON.stringify(personalDashboard)]);
+
+    const { project: activeProjectOverview, loading } = useProjectOverview(
+        activeProject?.id || '',
+    );
 
     const onboardingCompleted = Boolean(
         !loading &&
@@ -229,7 +237,7 @@ export const PersonalDashboard = () => {
                         disablePadding={true}
                         sx={{ maxHeight: '400px', overflow: 'auto' }}
                     >
-                        {projects.map((project) => {
+                        {personalDashboard?.projects.map((project) => {
                             return (
                                 <ListItem
                                     key={project.name}
@@ -239,10 +247,10 @@ export const PersonalDashboard = () => {
                                     <ListItemButton
                                         sx={projectStyle}
                                         selected={
-                                            project.name === activeProject
+                                            project.id === activeProject?.id
                                         }
                                         onClick={() =>
-                                            setActiveProject(project.name)
+                                            setActiveProject(project)
                                         }
                                     >
                                         <ProjectBox>
@@ -261,9 +269,10 @@ export const PersonalDashboard = () => {
                                                 />
                                             </IconButton>
                                         </ProjectBox>
-                                        {project.name === activeProject ? (
+                                        {project.id === activeProject?.id ? (
                                             <ActiveProjectDetails
-                                                project={project}
+                                                // @ts-ignore
+                                                project={activeProjectOverview}
                                             />
                                         ) : null}
                                     </ListItemButton>
@@ -274,14 +283,14 @@ export const PersonalDashboard = () => {
                 </SpacedGridItem>
                 <SpacedGridItem item lg={4} md={1}>
                     {onboardingCompleted ? (
-                        <ProjectSetupComplete project={activeProject} />
+                        <ProjectSetupComplete project={activeProject!.id} />
                     ) : activeProject ? (
-                        <CreateFlag project={activeProject} />
+                        <CreateFlag project={activeProject!.id} />
                     ) : null}
                 </SpacedGridItem>
                 <SpacedGridItem item lg={4} md={1}>
                     {activeProject ? (
-                        <ConnectSDK project={activeProject} />
+                        <ConnectSDK project={activeProject!.id} />
                     ) : null}
                 </SpacedGridItem>
                 <SpacedGridItem item lg={4} md={1} />
@@ -291,9 +300,16 @@ export const PersonalDashboard = () => {
                     md={1}
                     sx={{ display: 'flex', gap: 1, alignItems: 'center' }}
                 >
-                    <span>Your roles in this project:</span>{' '}
-                    <Badge color='secondary'>Member</Badge>{' '}
-                    <Badge color='secondary'>Another</Badge>
+                    {activeProject ? (
+                        <>
+                            <span>Your roles in this project:</span>
+                            {activeProject.roles.map((role) => (
+                                <Badge key={role.id} color='secondary'>
+                                    {role.name}
+                                </Badge>
+                            ))}
+                        </>
+                    ) : null}
                 </SpacedGridItem>
             </ContentGrid>
             <ContentGrid container columns={{ lg: 12, md: 1 }} sx={{ mt: 2 }}>

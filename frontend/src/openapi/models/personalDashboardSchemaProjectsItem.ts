@@ -4,7 +4,32 @@
  * See `gen:api` script in package.json
  */
 
+export type SystemOwner = { ownerType: 'system' };
+export type UserProjectOwner = {
+    ownerType: 'user';
+    name: string;
+    email?: string;
+    imageUrl?: string;
+};
+export type GroupProjectOwner = {
+    ownerType: 'group';
+    name: string;
+};
+export type ProjectOwners =
+    | [SystemOwner]
+    | Array<UserProjectOwner | GroupProjectOwner>;
+
 export type PersonalDashboardSchemaProjectsItem = {
     /** The id of the project */
     id: string;
+    /** The name of the project */
+    name: string;
+    /** The roles you have in the project */
+    roles: {
+        id: number;
+        name: string;
+        type: string;
+    }[];
+    /** The owners of the project */
+    owners: ProjectOwners;
 };

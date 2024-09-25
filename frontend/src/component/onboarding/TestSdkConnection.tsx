@@ -141,6 +141,8 @@ export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
         .replace('<YOUR_API_TOKEN>', apiKey)
         .replace('<YOUR_API_URL>', apiUrl)
         .replaceAll('<YOUR_FLAG>', feature);
+    const [connectSnippet, _productionSnippet, _otherResourcesSnippet] =
+        snippet.split('---\n');
 
     return (
         <SpacedContainer>
@@ -164,7 +166,7 @@ export const TestSdkConnection: FC<ITestSdkConnectionProps> = ({
                 </ChangeSdk>
                 <SectionHeader>Setup the SDK</SectionHeader>
                 <Markdown components={{ code: CodeRenderer }}>
-                    {snippet}
+                    {connectSnippet}
                 </Markdown>
             </Box>
         </SpacedContainer>

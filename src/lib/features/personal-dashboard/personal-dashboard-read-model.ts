@@ -5,6 +5,12 @@ import type {
     PersonalProject,
 } from './personal-dashboard-read-model-type';
 
+type IntermediateProjectResult = Omit<PersonalProject, 'roles'> & {
+    roles: {
+        [id: number]: { id: number; name: string; type: string };
+    };
+};
+
 export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
     private db: Db;
 
@@ -71,13 +77,13 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
         }, {});
 
         const projectList: PersonalProject[] = Object.values(dict).map(
-            (project) => {
+            (project: IntermediateProjectResult) => {
                 const roles = Object.values(project.roles);
                 roles.sort((a, b) => a.id - b.id);
                 return {
                     ...project,
                     roles,
-                };
+                } as PersonalProject;
             },
         );
         projectList.sort((a, b) => a.name.localeCompare(b.name));

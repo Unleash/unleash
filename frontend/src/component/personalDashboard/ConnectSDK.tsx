@@ -36,8 +36,8 @@ export const CreateFlag: FC<{ project: string }> = ({ project }) => {
                 Create a feature flag
             </TitleContainer>
             <div>
-                <div>The project currently holds no feature toggles.</div>
-                <div>Create a feature flag to get started.</div>
+                <p>The project currently holds no feature toggles.</p>
+                <p>Create a feature flag to get started.</p>
             </div>
             <div>
                 <Button href={`projects/${project}`} variant='contained'>
@@ -57,11 +57,11 @@ export const ConnectSDK: FC<{ project: string }> = ({ project }) => {
                 Connect an SDK
             </TitleContainer>
             <div>
-                <div>Your project is not yet connected to any SDK.</div>
-                <div>
+                <p>Your project is not yet connected to any SDK.</p>
+                <p>
                     In order to start using your feature flag connect an SDK to
                     the project.
-                </div>
+                </p>
             </div>
             <div>
                 <Button href={`projects/${project}`} variant='contained'>

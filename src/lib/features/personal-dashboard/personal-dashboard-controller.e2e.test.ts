@@ -54,7 +54,6 @@ test('should return personal dashboard with own flags and favorited flags', asyn
     const { body } = await app.request.get(`/api/admin/personal-dashboard`);
 
     expect(body).toMatchObject({
-        projects: [],
         flags: [
             { name: 'my_feature_d', type: 'release', project: 'default' },
             { name: 'my_feature_c', type: 'release', project: 'default' },

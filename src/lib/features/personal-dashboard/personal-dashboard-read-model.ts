@@ -22,21 +22,28 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
         }>('projects')
             .join('role_user', 'projects.id', 'role_user.project')
             .join('roles', 'role_user.role_id', 'roles.id')
-            // Join group_user to find groups the user is a member of
-            .leftJoin('group_user', 'group_user.user_id', userId)
-            // Join group_role to find roles that groups have in projects
+            // Join group_user to find groups the user is a member of, passing userId as a value
+            .leftJoin('group_user', (join) => {
+                join.on('group_user.user_id', '=', this.db.raw('?', [userId]));
+            }) // Join group_role to find roles that groups have in projects
             .leftJoin(
                 'group_role',
                 'group_role.group_id',
                 'group_user.group_id',
             )
+            // Join roles for group roles
             .leftJoin(
                 'roles as group_roles',
                 'group_role.role_id',
                 'group_roles.id',
             )
-            .where('role_user.user_id', userId)
-            .orWhere('group_user.user_id', userId) // Include user's group memberships
+            // Group the OR conditions for role_user and group_user within the WHERE clause
+            .where(function () {
+                this.where('role_user.user_id', userId).orWhere(
+                    'group_user.user_id',
+                    userId,
+                );
+            })
             .whereNull('projects.archived_at')
             .select(
                 'projects.name',

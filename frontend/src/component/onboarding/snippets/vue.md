@@ -6,16 +6,15 @@ npm install @unleash/proxy-client-vue
 2\. Initialize Unleash
 ```vue
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import { FlagProvider } from '@unleash/proxy-client-vue'
+    import { FlagProvider } from '@unleash/proxy-client-vue'
 
-const config = {
-  url: '<YOUR_API_URL>',
-  clientKey: '<YOUR_API_TOKEN>',
-  appName: 'unleash-onboarding-vue',
-  refreshInterval: 5, // Use >15s for production
-  metricsInterval: 5, // Use >15s for production
-}
+    const config = {
+        url: '<YOUR_API_URL>',
+        clientKey: '<YOUR_API_TOKEN>',
+        appName: 'unleash-onboarding-vue',
+        refreshInterval: 5, // Use >15s in production
+        metricsInterval: 5, // Use >15s in production
+    }
 </script>
 
 <template>
@@ -28,9 +27,8 @@ const config = {
 3\. Check feature flag status
 ```vue
 <script setup lang="ts">
-import { useFlag } from '@unleash/proxy-client-vue'
-
-const enabled = useFlag('example-flag')
+    import { useFlag } from '@unleash/proxy-client-vue'
+    const enabled = useFlag('example-flag')
 </script>
 
 <template>

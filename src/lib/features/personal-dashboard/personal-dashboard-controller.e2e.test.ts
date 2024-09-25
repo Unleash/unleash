@@ -79,20 +79,16 @@ const createProject = async (name: string, user: IUser) => {
 };
 
 test('should return personal dashboard with membered projects', async () => {
-    // create project A with user 1
-    // create project B with user 1
     const { body: user1 } = await loginUser('user1@test.com');
     const projectA = await createProject('Project A', user1);
     await createProject('Project B', user1);
 
-    // create project C with user 2
     const { body: user2 } = await loginUser('user2@test.com');
     const projectC = await createProject('Project C', user2);
 
-    // Add user 2 as a member of project A
     await app.services.projectService.addAccess(
         projectA.id,
-        [5],
+        [5], // member role
         [],
         [user2.id],
         user1,

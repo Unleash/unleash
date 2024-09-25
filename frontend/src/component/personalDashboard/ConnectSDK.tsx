@@ -1,4 +1,4 @@
-import { Button, styled, Typography } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import type { FC } from 'react';
 
 const TitleContainer = styled('div')(({ theme }) => ({
@@ -35,10 +35,10 @@ export const CreateFlag: FC<{ project: string }> = ({ project }) => {
                 <NeutralCircleContainer>1</NeutralCircleContainer>
                 Create a feature flag
             </TitleContainer>
-            <Typography>
-                <div>The project currently holds no feature toggles.</div>
-                <div>Create a feature flag to get started.</div>
-            </Typography>
+            <div>
+                <p>The project currently holds no feature toggles.</p>
+                <p>Create a feature flag to get started.</p>
+            </div>
             <div>
                 <Button href={`projects/${project}`} variant='contained'>
                     Go to project
@@ -56,10 +56,13 @@ export const ConnectSDK: FC<{ project: string }> = ({ project }) => {
                 <NeutralCircleContainer>2</NeutralCircleContainer>
                 Connect an SDK
             </TitleContainer>
-            <Typography>
-                Your project is not yet connected to any SDK. In order to start
-                using your feature flag connect an SDK to the project.
-            </Typography>
+            <div>
+                <p>Your project is not yet connected to any SDK.</p>
+                <p>
+                    In order to start using your feature flag connect an SDK to
+                    the project.
+                </p>
+            </div>
             <div>
                 <Button href={`projects/${project}`} variant='contained'>
                     Go to project

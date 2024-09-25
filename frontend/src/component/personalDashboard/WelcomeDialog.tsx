@@ -10,8 +10,8 @@ import { formatAssetPath } from 'utils/formatPath';
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
         borderRadius: theme.shape.borderRadiusLarge,
-        maxWidth: theme.spacing(140),
-        width: '100%',
+        width: '65vw',
+        maxWidth: '1800px',
         backgroundColor: 'transparent',
     },
     padding: 0,

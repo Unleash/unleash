@@ -4,11 +4,10 @@ import { anonymise, generateImageUrl } from '../../util';
 import type {
     GroupProjectOwner,
     IProjectOwnersReadModel,
-    IProjectForUiWithOwners,
     ProjectOwnersDictionary,
     UserProjectOwner,
+    ProjectOwners,
 } from './project-owners-read-model.type';
-import type { ProjectForUi } from './project-read-model-type';
 
 const T = {
     ROLE_USER: 'role_user',
@@ -17,6 +16,10 @@ const T = {
     USERS: 'users',
 };
 
+type WithProjectOwners<T extends { id: string }> = (T & {
+    owners: ProjectOwners;
+})[];
+
 export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
     private db: Db;
 
@@ -24,10 +27,10 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
         this.db = db;
     }
 
-    static addOwnerData(
-        projects: ProjectForUi[],
+    static addOwnerData<T extends { id: string }>(
+        projects: T[],
         owners: ProjectOwnersDictionary,
-    ): IProjectForUiWithOwners[] {
+    ): WithProjectOwners<T> {
         return projects.map((project) => ({
             ...project,
             owners: owners[project.id] || [{ ownerType: 'system' }],
@@ -138,10 +141,10 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
         return dict;
     }
 
-    async addOwners(
-        projects: ProjectForUi[],
+    async addOwners<T extends { id: string }>(
+        projects: T[],
         anonymizeProjectOwners: boolean = false,
-    ): Promise<IProjectForUiWithOwners[]> {
+    ): Promise<WithProjectOwners<T>> {
         const owners = await this.getAllProjectOwners(anonymizeProjectOwners);
 
         return ProjectOwnersReadModel.addOwnerData(projects, owners);

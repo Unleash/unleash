@@ -63,7 +63,10 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
 
             const data: UserProjectOwner = {
                 ownerType: 'user',
-                name: user?.name || user?.username,
+                name:
+                    user?.name ||
+                    user?.username ||
+                    processSensitiveData(user?.email),
                 email: processSensitiveData(user?.email),
                 imageUrl: generateImageUrl(user),
             };

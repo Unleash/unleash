@@ -6,7 +6,7 @@ import type {
     IProjectOwnersReadModel,
     ProjectOwnersDictionary,
     UserProjectOwner,
-    ProjectOwners,
+    WithProjectOwners,
 } from './project-owners-read-model.type';
 
 const T = {
@@ -15,10 +15,6 @@ const T = {
     ROLES: 'roles',
     USERS: 'users',
 };
-
-type WithProjectOwners<T extends { id: string }> = (T & {
-    owners: ProjectOwners;
-})[];
 
 export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
     private db: Db;

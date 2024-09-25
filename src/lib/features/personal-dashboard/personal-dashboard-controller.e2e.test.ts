@@ -110,6 +110,7 @@ test('should return personal dashboard with membered projects', async () => {
                         type: 'root',
                     },
                 ],
+                owners: [],
             },
             {
                 name: projectA.name,
@@ -121,6 +122,7 @@ test('should return personal dashboard with membered projects', async () => {
                         type: 'project',
                     },
                 ],
+                owners: [],
             },
             {
                 name: projectC.name,
@@ -132,6 +134,7 @@ test('should return personal dashboard with membered projects', async () => {
                         type: 'project',
                     },
                 ],
+                owners: [],
             },
         ],
     });
@@ -181,6 +184,7 @@ test('should return projects where users are part of a group', async () => {
                         type: 'root',
                     },
                 ],
+                owners: [],
             },
             {
                 name: projectA.name,
@@ -197,6 +201,7 @@ test('should return projects where users are part of a group', async () => {
                         type: 'project',
                     },
                 ],
+                owners: [],
             },
         ],
     });

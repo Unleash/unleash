@@ -7,14 +7,34 @@ dotnet add package Newtonsoft.Json
 
 2\. Initialize Unleash
 ```csharp
+using System;
 using Unleash;
-var settings = new UnleashSettings()
+using Unleash.ClientFactory;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+public class Program
 {
-    AppName = "unleash-onboarding-dotnet",
-    UnleashApi = new Uri("<YOUR_API_URL>"),
-    CustomHttpHeaders = new Dictionary<string, string>()
+    public static async Task Main()
     {
-      {"Authorization","<YOUR_API_TOKEN>" }
+        var settings = new UnleashSettings()
+        {
+            AppName = "codesandbox-csharp",
+            UnleashApi = new Uri("<YOUR_API_URL>"),
+            SendMetricsInterval = TimeSpan.FromSeconds(1),
+            CustomHttpHeaders = new Dictionary<string, string>()
+            {
+                {"Authorization", "<YOUR_API_TOKEN>"}
+            }
+        };
+
+        var unleash =  new DefaultUnleash(settings);
+        var flag = "example-flag";
+
+        while (true) {
+            Console.WriteLine($"'{flag}' is enabled: {unleash.IsEnabled(flag)}");
+            await Task.Delay(1000);
+        }
     }
-};
+}
 ```

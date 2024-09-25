@@ -22,8 +22,5 @@ export type IProjectForUiWithOwners = ProjectForUi & {
 };
 
 export interface IProjectOwnersReadModel {
-    addOwners(
-        projects: ProjectForUi[],
-        anonymizeProjectOwners?: boolean,
-    ): Promise<IProjectForUiWithOwners[]>;
+    addOwners(projects: ProjectForUi[]): Promise<IProjectForUiWithOwners[]>;
 }

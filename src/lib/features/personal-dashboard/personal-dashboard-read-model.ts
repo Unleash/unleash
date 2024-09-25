@@ -35,12 +35,8 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
                 'group_role.role_id',
                 'group_roles.id',
             )
-            .where(function () {
-                this.where('role_user.user_id', userId).orWhere(
-                    'group_user.user_id',
-                    userId,
-                );
-            })
+            .where('role_user.user_id', userId)
+            .orWhere('group_user.user_id', userId)
             .whereNull('projects.archived_at')
             .select(
                 'projects.name',

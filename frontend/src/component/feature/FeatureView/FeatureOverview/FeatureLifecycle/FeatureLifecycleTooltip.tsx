@@ -25,7 +25,6 @@ import { isSafeToArchive } from './isSafeToArchive';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { formatDistanceToNow, parseISO } from 'date-fns';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const TimeLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -96,7 +95,7 @@ const StageBox = styled(Box, {
         ...(active && {
             backgroundColor: theme.palette.primary.light,
             color: theme.palette.primary.contrastText,
-            fontWeight: theme.fontWeight.bold,
+            fontWeight: theme.typography.fontWeightBold,
             borderRadius: theme.spacing(0.5),
         }),
     },
@@ -247,17 +246,16 @@ const PreLiveStageDescription: FC<{ children?: React.ReactNode }> = ({
 const BoldTitle = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
-    fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.fontWeight.bold,
+    fontSize: theme.typography.body2.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
 const LiveStageDescription: FC<{
     onComplete: () => void;
     loading: boolean;
     children?: React.ReactNode;
-}> = ({ children, onComplete, loading }) => {
-    const projectId = useRequiredPathParam('projectId');
-
+    project: string;
+}> = ({ children, onComplete, loading, project }) => {
     return (
         <>
             <BoldTitle>Is this feature complete?</BoldTitle>
@@ -276,7 +274,7 @@ const LiveStageDescription: FC<{
                 size='small'
                 onClick={onComplete}
                 disabled={loading}
-                projectId={projectId}
+                projectId={project}
             >
                 Mark completed
             </PermissionButton>
@@ -294,9 +292,8 @@ const SafeToArchive: FC<{
     onArchive: () => void;
     onUncomplete: () => void;
     loading: boolean;
-}> = ({ onArchive, onUncomplete, loading }) => {
-    const projectId = useRequiredPathParam('projectId');
-
+    project: string;
+}> = ({ onArchive, onUncomplete, loading, project }) => {
     return (
         <>
             <BoldTitle>Safe to archive</BoldTitle>
@@ -324,7 +321,7 @@ const SafeToArchive: FC<{
                     size='small'
                     onClick={onUncomplete}
                     disabled={loading}
-                    projectId={projectId}
+                    projectId={project}
                 >
                     Revert to live
                 </PermissionButton>
@@ -335,7 +332,7 @@ const SafeToArchive: FC<{
                     size='small'
                     sx={{ mb: 2 }}
                     onClick={onArchive}
-                    projectId={projectId}
+                    projectId={project}
                 >
                     Archive feature
                 </PermissionButton>
@@ -393,7 +390,15 @@ const CompletedStageDescription: FC<{
         lastSeenAt: string;
     }>;
     children?: React.ReactNode;
-}> = ({ children, environments, onArchive, onUncomplete, loading }) => {
+    project: string;
+}> = ({
+    children,
+    environments,
+    onArchive,
+    onUncomplete,
+    loading,
+    project,
+}) => {
     return (
         <ConditionallyRender
             condition={isSafeToArchive(environments)}
@@ -402,6 +407,7 @@ const CompletedStageDescription: FC<{
                     onArchive={onArchive}
                     onUncomplete={onUncomplete}
                     loading={loading}
+                    project={project}
                 />
             }
             elseShow={
@@ -432,11 +438,20 @@ const FormatElapsedTime: FC<{
 export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
+    project: string;
     onArchive: () => void;
     onComplete: () => void;
     onUncomplete: () => void;
     loading: boolean;
-}> = ({ children, stage, onArchive, onComplete, onUncomplete, loading }) => (
+}> = ({
+    children,
+    stage,
+    project,
+    onArchive,
+    onComplete,
+    onUncomplete,
+    loading,
+}) => (
     <HtmlTooltip
         maxHeight={800}
         maxWidth={350}
@@ -482,6 +497,7 @@ export const FeatureLifecycleTooltip: FC<{
                         <LiveStageDescription
                             onComplete={onComplete}
                             loading={loading}
+                            project={project}
                         >
                             <Environments environments={stage.environments} />
                         </LiveStageDescription>
@@ -492,6 +508,7 @@ export const FeatureLifecycleTooltip: FC<{
                             onArchive={onArchive}
                             onUncomplete={onUncomplete}
                             loading={loading}
+                            project={project}
                         >
                             <Environments environments={stage.environments} />
                         </CompletedStageDescription>

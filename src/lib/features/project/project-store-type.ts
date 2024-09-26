@@ -96,8 +96,6 @@ export interface IProjectStore extends Store<IProject, string> {
         date: string,
     ): Promise<number>;
 
-    getProjectsByUser(userId: number): Promise<string[]>;
-
     count(): Promise<number>;
 
     getAll(query?: IProjectQuery): Promise<IProject[]>;

@@ -68,7 +68,7 @@ export default class PersonalDashboardController extends Controller {
                     operationId: 'getPersonalDashboardProjectDetails',
                     responses: {
                         200: createResponseSchema(
-                            'personalDashboardProjectSchema',
+                            'personalDashboardProjectDetailsSchema',
                         ),
                         ...getStandardResponses(401, 403, 404),
                     },

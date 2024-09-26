@@ -70,8 +70,6 @@ export const ProjectFeatureToggles = ({
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
 
-    console.log('connectSdkOpen', connectSdkOpen);
-
     const {
         features,
         total,

@@ -16,7 +16,7 @@ We have created a set of ADRs to help guide the development of the backend:
 Before developing on this project you will need two things:
 
 - PostgreSQL 13.0+
-- Node.js 20.x or newer
+- Node.js v20.0+
 
 ```sh
 corepack enable

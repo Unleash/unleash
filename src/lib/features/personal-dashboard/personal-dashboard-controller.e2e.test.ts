@@ -175,3 +175,15 @@ test('should return projects where users are part of a group', async () => {
         ],
     });
 });
+
+test('should return personal dashboard project details', async () => {
+    await loginUser('new_user@test.com');
+    const { body } = await app.request.get(
+        `/api/admin/personal-dashboard/default`,
+    );
+
+    expect(body).toMatchObject({
+        owners: [{}],
+        roles: [{}],
+    });
+});

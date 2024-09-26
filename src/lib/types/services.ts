@@ -58,6 +58,7 @@ import type { IntegrationEventsService } from '../features/integration-events/in
 import type { OnboardingService } from '../features/onboarding/onboarding-service';
 
 export interface IUnleashServices {
+    transactionalAccessService: WithTransactional<AccessService>;
     accessService: AccessService;
     accountService: AccountService;
     addonService: AddonService;

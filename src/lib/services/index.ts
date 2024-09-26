@@ -1,4 +1,5 @@
 import type {
+    IUnleash,
     IUnleashConfig,
     IUnleashServices,
     IUnleashStores,
@@ -65,12 +66,14 @@ import ConfigurationRevisionService from '../features/feature-toggle/configurati
 import {
     createEnvironmentService,
     createEventsService,
+    createFakeAccessService,
     createFakeEnvironmentService,
     createFakeEventsService,
     createFakeProjectService,
     createFeatureLifecycleService,
     createFeatureToggleService,
     createProjectService,
+    curriedCreateAccessService,
 } from '../features';
 import EventAnnouncerService from './event-announcer-service';
 import { createGroupService } from '../features/group/createGroupService';
@@ -166,6 +169,11 @@ export const createServices = (
         groupService,
         eventService,
     );
+
+    const transactionalAccessService = db
+        ? withTransactional(curriedCreateAccessService(config), db)
+        : withFakeTransactional(createFakeAccessService(config).accessService);
+
     const apiTokenService = db
         ? createApiTokenService(db, config)
         : createFakeApiTokenService(config).apiTokenService;
@@ -403,6 +411,7 @@ export const createServices = (
 
     return {
         accessService,
+        transactionalAccessService,
         accountService,
         addonService,
         eventAnnouncerService,

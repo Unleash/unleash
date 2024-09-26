@@ -1,4 +1,4 @@
-import type { Db, IUnleashConfig } from '../../server-impl';
+import type { Db, IUnleashConfig, Knex } from '../../server-impl';
 import GroupStore from '../../db/group-store';
 import { AccountStore } from '../../db/account-store';
 import RoleStore from '../../db/role-store';
@@ -17,6 +17,11 @@ import {
     createFakeEventsService,
 } from '../events/createEventsService';
 
+// We need this function to satisfy the type expectations of withTransactional
+export const curriedCreateAccessService =
+    (config: IUnleashConfig) => (db: Knex) =>
+        createAccessService(db, config);
+
 export const createAccessService = (
     db: Db,
     config: IUnleashConfig,
@@ -33,6 +38,7 @@ export const createAccessService = (
         { getLogger },
         eventService,
     );
+
     return new AccessService(
         { accessStore, accountStore, roleStore, environmentStore },
         { getLogger },

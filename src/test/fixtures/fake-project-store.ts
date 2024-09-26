@@ -143,11 +143,6 @@ export default class FakeProjectStore implements IProjectStore {
         )!.health = healthUpdate.health;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getProjectsByUser(userId: number): Promise<string[]> {
-        return Promise.resolve([]);
-    }
-
     addEnvironmentToProjects(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environment: string,

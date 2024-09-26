@@ -13,7 +13,6 @@ import {
 import type { Theme } from '@mui/material/styles/createTheme';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import React, { type FC, useEffect, useState } from 'react';
-import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import LinkIcon from '@mui/icons-material/Link';
 import { Badge } from '../common/Badge/Badge';
 import { ConnectSDK, CreateFlag } from './ConnectSDK';
@@ -23,7 +22,10 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 import { ProjectSetupComplete } from './ProjectSetupComplete';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
-import type { PersonalDashboardSchema } from '../../openapi';
+import type {
+    PersonalDashboardSchema,
+    PersonalDashboardSchemaProjectsItem,
+} from '../../openapi';
 import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
 
@@ -81,13 +83,13 @@ export const StyledCardTitle = styled('div')<{ lines?: number }>(
 );
 
 const ActiveProjectDetails: FC<{
-    project: { flags: number; members: number; health: number };
+    project: PersonalDashboardSchemaProjectsItem;
 }> = ({ project }) => {
     return (
         <Box sx={{ display: 'flex', gap: 2 }}>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Typography variant='subtitle2' color='primary'>
-                    {project.flags}
+                    {project.featureCount}
                 </Typography>
                 <Typography variant='caption' color='text.secondary'>
                     flags
@@ -95,7 +97,7 @@ const ActiveProjectDetails: FC<{
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                 <Typography variant='subtitle2' color='primary'>
-                    {project.members}
+                    {project.memberCount}
                 </Typography>
                 <Typography variant='caption' color='text.secondary'>
                     members
@@ -118,17 +120,7 @@ const SpacedGridItem = styled(Grid)(({ theme }) => ({
     border: `0.5px solid ${theme.palette.divider}`,
 }));
 
-const useProjects = () => {
-    const myProjects = useProfile().profile?.projects || [];
-
-    // TODO: add real data for flags/members/health
-    const projects = myProjects.map((project) => ({
-        name: project,
-        flags: 0,
-        members: 1,
-        health: 100,
-    }));
-
+const useProjects = (projects: PersonalDashboardSchemaProjectsItem[]) => {
     const [activeProject, setActiveProject] = useState(projects[0]?.name);
 
     useEffect(() => {
@@ -177,8 +169,6 @@ export const PersonalDashboard = () => {
 
     const name = user?.name;
 
-    const { projects, activeProject, setActiveProject } = useProjects();
-
     const { personalDashboard, refetch: refetchDashboard } =
         usePersonalDashboard();
     const [activeFlag, setActiveFlag] = useState<
@@ -188,7 +178,11 @@ export const PersonalDashboard = () => {
         if (personalDashboard?.flags.length) {
             setActiveFlag(personalDashboard.flags[0]);
         }
-    }, [JSON.stringify(personalDashboard)]);
+    }, [JSON.stringify(personalDashboard?.flags)]);
+
+    const { projects, activeProject, setActiveProject } = useProjects(
+        personalDashboard?.projects || [],
+    );
 
     const { project: activeProjectOverview, loading } =
         useProjectOverview(activeProject);

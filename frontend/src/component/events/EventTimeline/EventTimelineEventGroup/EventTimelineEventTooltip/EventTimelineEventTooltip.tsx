@@ -1,7 +1,11 @@
 import { styled } from '@mui/material';
 import { Markdown } from 'component/common/Markdown/Markdown';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { formatDateYMDHMS } from 'utils/formatDate';
+import {
+    formatDateHMS,
+    formatDateYMDHMS,
+    formatDateYMD,
+} from 'utils/formatDate';
 import type { TimelineEventGroup } from '../../EventTimeline';
 import { EventTimelineEventCircle } from '../EventTimelineEventCircle';
 
@@ -22,6 +26,11 @@ const StyledTooltipTitle = styled('div')(({ theme }) => ({
 }));
 
 const StyledDateTime = styled('div')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    whiteSpace: 'nowrap',
+}));
+
+const StyledDate = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     whiteSpace: 'nowrap',
 }));
@@ -75,7 +84,7 @@ export const EventTimelineEventTooltip = ({
     }
 
     const firstEvent = group[0];
-    const eventDateTime = formatDateYMDHMS(
+    const eventDate = formatDateYMD(
         firstEvent.createdAt,
         locationSettings?.locale,
     );
@@ -86,12 +95,20 @@ export const EventTimelineEventTooltip = ({
                 <StyledTooltipTitle>
                     {group.length} events occurred
                 </StyledTooltipTitle>
-                <StyledDateTime>{eventDateTime}</StyledDateTime>
+                <StyledDate>{eventDate}</StyledDate>
             </StyledTooltipHeader>
             {group.map((event) => (
                 <StyledTooltipItem key={event.id}>
                     <StyledEventTimelineEventCircle group={[event]} />
-                    <Markdown>{event.summary}</Markdown>
+                    <div>
+                        <StyledDate>
+                            {formatDateHMS(
+                                event.createdAt,
+                                locationSettings?.locale,
+                            )}
+                        </StyledDate>
+                        <Markdown>{event.summary}</Markdown>
+                    </div>
                 </StyledTooltipItem>
             ))}
         </>

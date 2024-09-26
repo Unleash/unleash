@@ -49,3 +49,14 @@ export const formatDateHM = (
         minute: '2-digit',
     });
 };
+
+export const formatDateHMS = (
+    date: number | string | Date,
+    locale: string,
+): string => {
+    return new Date(date).toLocaleString(locale, {
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+    });
+};

@@ -19,6 +19,7 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 interface IConnectSDKDialogProps {
     open: boolean;
     onClose: () => void;
+    onFinish: () => void;
     project: string;
     environments: string[];
     feature?: string;
@@ -66,6 +67,7 @@ type OnboardingStage = 'select-sdk' | 'generate-api-key' | 'test-connection';
 export const ConnectSdkDialog = ({
     open,
     onClose,
+    onFinish,
     environments,
     project: projectId,
     feature,
@@ -76,6 +78,7 @@ export const ConnectSdkDialog = ({
     const [environment, setEnvironment] = useState<string | null>(null);
     const [apiKey, setApiKey] = useState<string | null>(null);
     const [stage, setStage] = useState<OnboardingStage>('select-sdk');
+
     const { project } = useProjectOverview(projectId, {
         refreshInterval: 1000,
     });
@@ -166,12 +169,7 @@ export const ConnectSdkDialog = ({
                                     </Button>
                                 ) : null}
 
-                                <Button
-                                    variant='contained'
-                                    onClick={() => {
-                                        onClose();
-                                    }}
-                                >
+                                <Button variant='contained' onClick={onFinish}>
                                     Next
                                 </Button>
                             </NextStepSectionSpacedContainer>

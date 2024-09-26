@@ -1,34 +1,22 @@
 import type { EventSchemaType } from 'openapi';
-import { styled } from '@mui/material';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { EventTimelineEventTooltip } from './EventTimelineEventTooltip/EventTimelineEventTooltip';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
 import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import SegmentsIcon from '@mui/icons-material/DonutLargeOutlined';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
-import type { EnrichedEvent } from '../EventTimeline';
+import { styled } from '@mui/material';
+import type { TimelineEventGroup } from '../EventTimeline';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import type { HTMLAttributes } from 'react';
 
 type DefaultEventVariant = 'secondary';
 type CustomEventVariant = 'success' | 'neutral';
 type EventVariant = DefaultEventVariant | CustomEventVariant;
 
-const StyledEvent = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'position',
-})<{ position: string }>(({ position }) => ({
-    position: 'absolute',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    left: position,
-    transform: 'translateX(-50%)',
-    zIndex: 1,
-}));
-
 const StyledEventCircle = styled('div', {
     shouldForwardProp: (prop) => prop !== 'variant',
-})<{ variant: EventVariant }>(({ theme, variant }) => ({
+})<{ variant?: EventVariant }>(({ theme, variant = 'secondary' }) => ({
     height: theme.spacing(3),
     width: theme.spacing(3),
     borderRadius: '50%',
@@ -76,35 +64,31 @@ const customEventVariants: Partial<
     'feature-archived': 'neutral',
 };
 
-interface IEventTimelineEventProps {
-    event: EnrichedEvent;
-    startDate: Date;
-    endDate: Date;
+interface IEventTimelineEventCircleProps
+    extends HTMLAttributes<HTMLDivElement> {
+    group: TimelineEventGroup;
 }
 
-export const EventTimelineEvent = ({
-    event,
-    startDate,
-    endDate,
-}: IEventTimelineEventProps) => {
-    const timelineDuration = endDate.getTime() - startDate.getTime();
-    const eventTime = new Date(event.createdAt).getTime();
+export const EventTimelineEventCircle = ({
+    group,
+    ...props
+}: IEventTimelineEventCircleProps) => {
+    if (group.length === 1) {
+        const event = group[0];
 
-    const position = `${((eventTime - startDate.getTime()) / timelineDuration) * 100}%`;
-
-    const variant = customEventVariants[event.type] || 'secondary';
+        return (
+            <StyledEventCircle
+                variant={customEventVariants[event.type]}
+                {...props}
+            >
+                {getEventIcon(event.type)}
+            </StyledEventCircle>
+        );
+    }
 
     return (
-        <StyledEvent position={position}>
-            <HtmlTooltip
-                title={<EventTimelineEventTooltip event={event} />}
-                maxWidth={320}
-                arrow
-            >
-                <StyledEventCircle variant={variant}>
-                    {getEventIcon(event.type)}
-                </StyledEventCircle>
-            </HtmlTooltip>
-        </StyledEvent>
+        <StyledEventCircle {...props}>
+            <MoreHorizIcon />
+        </StyledEventCircle>
     );
 };

@@ -15,8 +15,8 @@ We have created a set of ADRs to help guide the development of the backend:
 
 Before developing on this project you will need two things:
 
-- PostgreSQL 14.x or newer
-- Node.js 20.x or newer
+- PostgreSQL 13.0+
+- Node.js v20.0+
 
 ```sh
 corepack enable
@@ -26,9 +26,9 @@ yarn dev
 
 ## PostgreSQL {#postgresql}
 
-To run and develop unleash, you need to have PostgreSQL database (PostgreSQL v14.x or newer) locally.
+To run and develop Unleash, you need to have PostgreSQL v13.0+ locally.
 
-Unleash currently also work with PostgreSQL v14+, but this might change in a future feature release, and we have stopped running automatic integration tests below PostgreSQL v12. The current recommendation is to use a role with Owner privileges since Unleash uses Postgres functions to simplify our database usage.
+Unleash currently also works with PostgreSQL v13.0+, but this might change in a future feature release, and we have stopped running automatic integration tests below PostgreSQL v13. The current recommendation is to use a role with Owner privileges since Unleash uses Postgres functions to simplify our database usage.
 
 ### Create a local unleash databases in postgres {#create-a-local-unleash-databases-in-postgres}
 

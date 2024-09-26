@@ -2,7 +2,7 @@
 title: Database Setup
 ---
 
-To run Unleash you need to have PostgreSQL database (PostgreSQL v14.x or newer).
+To run Unleash you need to have PostgreSQL v13.0+.
 
 1. Create a local unleash databases in PostgreSQL
 

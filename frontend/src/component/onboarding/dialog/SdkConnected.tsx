@@ -4,7 +4,7 @@ import { SectionHeader, StepperBox } from './SharedComponents';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { Sdk } from './sharedTypes';
 import { Stepper } from './Stepper';
-import { Badge } from '../common/Badge/Badge';
+import { Badge } from 'component/common/Badge/Badge';
 import { Markdown } from 'component/common/Markdown/Markdown';
 import { CodeRenderer, codeRenderSnippets } from './CodeRenderer';
 

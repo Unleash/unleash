@@ -3,9 +3,9 @@ import { Avatar, Box, Link, styled, Typography } from '@mui/material';
 import { SectionHeader, StepperBox } from './SharedComponents';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { allSdks, type Sdk } from './sharedTypes';
-import { formatAssetPath } from '../../utils/formatPath';
+import { formatAssetPath } from 'utils/formatPath';
 import { Stepper } from './Stepper';
-import { Badge } from '../common/Badge/Badge';
+import { Badge } from 'component/common/Badge/Badge';
 import { Markdown } from 'component/common/Markdown/Markdown';
 import { CodeRenderer, codeRenderSnippets } from './CodeRenderer';
 

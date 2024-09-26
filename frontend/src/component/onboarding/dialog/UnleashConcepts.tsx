@@ -1,5 +1,5 @@
 import { Box, styled, type Theme } from '@mui/material';
-import { ProjectIcon } from '../common/ProjectIcon/ProjectIcon';
+import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import CodeIcon from '@mui/icons-material/Code';
 

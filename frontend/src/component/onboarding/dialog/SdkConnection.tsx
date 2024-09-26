@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import Loader from '../common/Loader/Loader';
+import Loader from 'component/common/Loader/Loader';
 import TestSdkConnection from './TestSdkConnection';
 import type { Sdk } from './sharedTypes';
 import { SdkConnected } from './SdkConnected';

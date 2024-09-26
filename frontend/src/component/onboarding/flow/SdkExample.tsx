@@ -1,8 +1,8 @@
 import { type SelectChangeEvent, styled, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
-import Select from 'component/common/select';
+import Select from '../../common/select';
 import { useState } from 'react';
-import { allSdks } from '../../../../onboarding/sharedTypes';
+import { allSdks } from '../dialog/sharedTypes';
 
 const TitleContainer = styled('div')(({ theme }) => ({
     display: 'flex',

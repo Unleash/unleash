@@ -24,15 +24,13 @@ setInterval(() => {
 
 ---
 ```js
-const { UnleashClient } = require('unleash-proxy-client');
+const { initialize } = require('unleash-client');
 
-const unleash = new UnleashClient({
-  url: '<YOUR_API_URL>',
-  appName: 'unleash-onboarding-node',
-  customHeaders: { Authorization: process.env.UNLEASH_API_KEY  },
+const unleash = initialize({
+    url: '<YOUR_API_URL>',
+    appName: 'unleash-onboarding-node',
+    customHeaders: { Authorization: process.env.UNLEASH_API_KEY  },
 });
-
-unleash.start();
 ```
 
 ---

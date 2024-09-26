@@ -28,15 +28,11 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
         }>('projects')
             .join('role_user', 'projects.id', 'role_user.project')
             .join('roles', 'role_user.role_id', 'roles.id')
-            .leftJoin('group_user', (join) => {
+            .join('group_user', (join) => {
                 join.on('group_user.user_id', '=', this.db.raw('?', [userId]));
             })
-            .leftJoin(
-                'group_role',
-                'group_role.group_id',
-                'group_user.group_id',
-            )
-            .leftJoin(
+            .join('group_role', 'group_role.group_id', 'group_user.group_id')
+            .join(
                 'roles as group_roles',
                 'group_role.role_id',
                 'group_roles.id',

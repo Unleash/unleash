@@ -117,7 +117,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
-        const eventTimeline = useUiFlag('eventTimeline'); // && !isOss();
+        const eventTimeline = useUiFlag('eventTimeline') && !isOss();
         const { open: showTimeline, setOpen: setShowTimeline } =
             useEventTimeline();
 

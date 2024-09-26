@@ -7,7 +7,7 @@ import {
     useTheme,
 } from '@mui/material';
 import { GenerateApiKey } from './GenerateApiKey';
-import { lazy, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SelectSdk } from './SelectSdk';
 import { GenerateApiKeyConcepts, SelectSdkConcepts } from './UnleashConcepts';
 

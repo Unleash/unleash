@@ -13,7 +13,6 @@ import {
 import type { Theme } from '@mui/material/styles/createTheme';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import React, { type FC, useEffect, useState } from 'react';
-import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import LinkIcon from '@mui/icons-material/Link';
 import { Badge } from '../common/Badge/Badge';
 import { ConnectSDK, CreateFlag } from './ConnectSDK';
@@ -117,28 +116,6 @@ const SpacedGridItem = styled(Grid)(({ theme }) => ({
     padding: theme.spacing(4),
     border: `0.5px solid ${theme.palette.divider}`,
 }));
-
-const useProjects = () => {
-    const myProjects = useProfile().profile?.projects || [];
-
-    // TODO: add real data for flags/members/health
-    const projects = myProjects.map((project) => ({
-        name: project,
-        flags: 0,
-        members: 1,
-        health: 100,
-    }));
-
-    const [activeProject, setActiveProject] = useState(projects[0]?.name);
-
-    useEffect(() => {
-        if (!activeProject && projects.length > 0) {
-            setActiveProject(projects[0].name);
-        }
-    }, [JSON.stringify(projects)]);
-
-    return { projects, activeProject, setActiveProject };
-};
 
 const FlagListItem: FC<{
     flag: { name: string; project: string; type: string };

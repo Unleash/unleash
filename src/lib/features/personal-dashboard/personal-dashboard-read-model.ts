@@ -116,4 +116,55 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
             project: row.project,
         }));
     }
+
+    async enrichProjectIds(
+        userId: number,
+        projectIds: string[],
+    ): Promise<PersonalProject[]> {
+        const T = {
+            ROLE_USER: 'role_user',
+            ROLES: 'roles',
+            GROUPS: 'groups',
+            GROUP_ROLE: 'group_role',
+            GROUP_USER: 'group_user',
+            ROLE_PERMISSION: 'role_permission',
+            PERMISSIONS: 'permissions',
+            PERMISSION_TYPES: 'permission_types',
+            CHANGE_REQUEST_SETTINGS: 'change_request_settings',
+            PERSONAL_ACCESS_TOKENS: 'personal_access_tokens',
+            PUBLIC_SIGNUP_TOKENS_USER: 'public_signup_tokens_user',
+        };
+
+        const roles = await this.db
+            .select(['id', 'name', 'type', 'project', 'description'])
+            .from(T.ROLES)
+            .innerJoin(`${T.ROLE_USER} as ru`, 'ru.role_id', 'id')
+            .where('ru.user_id', '=', userId)
+            .andWhere((builder) => {
+                builder
+                    .whereIn('ru.project', projectIds)
+                    .orWhere('type', '=', 'root');
+            })
+            .union([
+                this.db
+                    .select(['id', 'name', 'type', 'project', 'description'])
+                    .from(T.ROLES)
+                    .innerJoin(`${T.GROUP_ROLE} as gr`, 'gr.role_id', 'id')
+                    .innerJoin(
+                        `${T.GROUP_USER} as gu`,
+                        'gu.group_id',
+                        'gr.group_id',
+                    )
+                    .where('gu.user_id', '=', userId)
+                    .andWhere((builder) => {
+                        builder
+                            .whereIn('gr.project', projectIds)
+                            .orWhere('type', '=', 'root');
+                    }),
+            ]);
+
+        console.log(roles);
+
+        return [];
+    }
 }

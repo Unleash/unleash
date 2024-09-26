@@ -17,4 +17,9 @@ export type PersonalProjectWithOwners = PersonalProject & {
 export interface IPersonalDashboardReadModel {
     getPersonalFeatures(userId: number): Promise<PersonalFeature[]>;
     getPersonalProjects(userId: number): Promise<PersonalProject[]>;
+
+    enrichProjectIds(
+        userId: number,
+        projectIds: string[],
+    ): Promise<PersonalProject[]>;
 }

@@ -1,12 +1,10 @@
 import { styled, Typography, useTheme } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { WhitePulsingAvatar } from 'component/common/PulsingAvatar/PulsingAvatar';
 import Pending from '@mui/icons-material/Pending';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { useEffect } from 'react';
+import Check from '@mui/icons-material/Check';
 
 interface IConnectionInformationProps {
-    onConnection: () => void;
     projectId: string;
     sdk: string;
     environment: string;
@@ -50,8 +48,16 @@ export const ConnectionStatus = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
+export const StyledCheck = styled(Check)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    backgroundColor: theme.palette.background.paper,
+    borderRadius: '50%',
+    padding: theme.spacing(1),
+    width: '80px',
+    height: '80px',
+}));
+
 export const ConnectionInformation = ({
-    onConnection,
     projectId,
     sdk,
     environment,
@@ -62,12 +68,6 @@ export const ConnectionInformation = ({
     });
 
     const onboarded = project.onboardingStatus.status === 'onboarded';
-
-    useEffect(() => {
-        if (onboarded) {
-            onConnection();
-        }
-    }, [onboarded]);
 
     return (
         <Container>
@@ -86,28 +86,38 @@ export const ConnectionInformation = ({
                     <Typography variant='body2'>{sdk}</Typography>
                 </Info>
             </SdkInfo>
-            <ConnectionStatus>
-                <Typography fontWeight='bold' variant='body2'>
-                    Connection status
-                </Typography>
-                <Typography sx={{ mb: theme.spacing(4) }} variant='body2'>
-                    Waiting for SDK data...
-                </Typography>
-                <ConditionallyRender
-                    condition={true}
-                    show={
-                        <WhitePulsingAvatar
-                            sx={{
-                                width: 80,
-                                height: 80,
-                            }}
-                            active={true}
-                        >
-                            <Pending fontSize='large' />
-                        </WhitePulsingAvatar>
-                    }
-                />
-            </ConnectionStatus>
+            {onboarded ? (
+                <ConnectionStatus>
+                    <Typography fontWeight='bold' variant='body2'>
+                        Connection status
+                    </Typography>
+                    <Typography sx={{ mb: theme.spacing(4) }} variant='body2'>
+                        Connected
+                    </Typography>
+                    <StyledCheck />
+                    <Typography sx={{ mb: theme.spacing(4) }} variant='body2'>
+                        We received metrics from your application!
+                    </Typography>
+                </ConnectionStatus>
+            ) : (
+                <ConnectionStatus>
+                    <Typography fontWeight='bold' variant='body2'>
+                        Connection status
+                    </Typography>
+                    <Typography sx={{ mb: theme.spacing(4) }} variant='body2'>
+                        Waiting for SDK data...
+                    </Typography>
+                    <WhitePulsingAvatar
+                        sx={{
+                            width: 80,
+                            height: 80,
+                        }}
+                        active={true}
+                    >
+                        <Pending fontSize='large' />
+                    </WhitePulsingAvatar>
+                </ConnectionStatus>
+            )}
         </Container>
     );
 };

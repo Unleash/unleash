@@ -37,4 +37,5 @@ export interface IProjectReadModel {
     getFeatureProject(
         featureName: string,
     ): Promise<{ project: string; createdAt: Date } | null>;
+    getProjectsByUser(userId: number): Promise<string[]>;
 }

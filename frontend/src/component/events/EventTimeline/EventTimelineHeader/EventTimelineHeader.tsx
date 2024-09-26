@@ -3,6 +3,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import type { IEnvironment } from 'interfaces/environments';
 import { useEffect, useMemo } from 'react';
+import { type TimeSpanOption, timeSpanOptions } from '../useEventTimeline';
 
 const StyledCol = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -21,62 +22,6 @@ const StyledFilter = styled(TextField)(({ theme }) => ({
         '& > fieldset': { borderColor: 'transparent' },
     },
 }));
-
-export type TimeSpanOption = {
-    key: string;
-    label: string;
-    value: Duration;
-    markers: string[];
-};
-
-export const timeSpanOptions: TimeSpanOption[] = [
-    {
-        key: '30m',
-        label: 'last 30 min',
-        value: { minutes: 30 },
-        markers: ['30 min ago'],
-    },
-    {
-        key: '1h',
-        label: 'last hour',
-        value: { hours: 1 },
-        markers: ['1 hour ago', '30 min ago'],
-    },
-    {
-        key: '3h',
-        label: 'last 3 hours',
-        value: { hours: 3 },
-        markers: ['3 hours ago', '2 hours ago', '1 hour ago'],
-    },
-    {
-        key: '12h',
-        label: 'last 12 hours',
-        value: { hours: 12 },
-        markers: ['12 hours ago', '9 hours ago', '6 hours ago', '3 hours ago'],
-    },
-    {
-        key: '24h',
-        label: 'last 24 hours',
-        value: { hours: 24 },
-        markers: [
-            '24 hours ago',
-            '18 hours ago',
-            '12 hours ago',
-            '6 hours ago',
-        ],
-    },
-    {
-        key: '48h',
-        label: 'last 48 hours',
-        value: { hours: 48 },
-        markers: [
-            '48 hours ago',
-            '36 hours ago',
-            '24 hours ago',
-            '12 hours ago',
-        ],
-    },
-];
 
 interface IEventTimelineHeaderProps {
     totalEvents: number;
@@ -101,7 +46,7 @@ export const EventTimelineHeader = ({
     );
 
     useEffect(() => {
-        if (activeEnvironments.length > 0) {
+        if (activeEnvironments.length > 0 && !environment) {
             const defaultEnvironment =
                 activeEnvironments.find(({ type }) => type === 'production') ||
                 activeEnvironments[0];

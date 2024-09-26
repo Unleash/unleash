@@ -43,6 +43,7 @@ export const FeatureLifecycle: FC<{
     return currentStage ? (
         <FeatureLifecycleTooltip
             stage={currentStage!}
+            project={feature.project}
             onArchive={onArchive}
             onComplete={onComplete}
             onUncomplete={onUncompleteHandler}

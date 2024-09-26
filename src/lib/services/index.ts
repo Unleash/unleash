@@ -149,6 +149,8 @@ import { OnboardingService } from '../features/onboarding/onboarding-service';
 import { PersonalDashboardService } from '../features/personal-dashboard/personal-dashboard-service';
 import { PersonalDashboardReadModel } from '../features/personal-dashboard/personal-dashboard-read-model';
 import { FakePersonalDashboardReadModel } from '../features/personal-dashboard/fake-personal-dashboard-read-model';
+import { ProjectOwnersReadModel } from '../features/project/project-owners-read-model';
+import { FakeProjectOwnersReadModel } from '../features/project/fake-project-owners-read-model';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -408,6 +410,8 @@ export const createServices = (
         db
             ? new PersonalDashboardReadModel(db)
             : new FakePersonalDashboardReadModel(),
+
+        db ? new ProjectOwnersReadModel(db) : new FakeProjectOwnersReadModel(),
     );
 
     return {

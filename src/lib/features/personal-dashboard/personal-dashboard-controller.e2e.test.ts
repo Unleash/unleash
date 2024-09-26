@@ -110,6 +110,11 @@ test('should return personal dashboard with membered projects', async () => {
                         type: 'root',
                     },
                 ],
+                owners: [
+                    {
+                        ownerType: 'system',
+                    },
+                ],
             },
             {
                 name: projectA.name,
@@ -121,6 +126,15 @@ test('should return personal dashboard with membered projects', async () => {
                         type: 'project',
                     },
                 ],
+                owners: [
+                    {
+                        email: 'user1@test.com',
+                        imageUrl:
+                            'https://gravatar.com/avatar/a8cc79d8407a64b0d8982df34e3525afd298a479fe68f300651380730dbf23e9?s=42&d=retro&r=g',
+                        name: 'user1@test.com',
+                        ownerType: 'user',
+                    },
+                ],
             },
             {
                 name: projectC.name,
@@ -130,6 +144,15 @@ test('should return personal dashboard with membered projects', async () => {
                         name: 'Owner',
                         id: 4,
                         type: 'project',
+                    },
+                ],
+                owners: [
+                    {
+                        email: 'user2@test.com',
+                        imageUrl:
+                            'https://gravatar.com/avatar/706150f3ef810ea66acb30c6d55f1a7e545338747072609e47df71c7c7ccc6a4?s=42&d=retro&r=g',
+                        name: 'user2@test.com',
+                        ownerType: 'user',
                     },
                 ],
             },
@@ -181,6 +204,11 @@ test('should return projects where users are part of a group', async () => {
                         type: 'root',
                     },
                 ],
+                owners: [
+                    {
+                        ownerType: 'system',
+                    },
+                ],
             },
             {
                 name: projectA.name,
@@ -195,6 +223,19 @@ test('should return projects where users are part of a group', async () => {
                         name: 'Member',
                         id: 5,
                         type: 'project',
+                    },
+                ],
+                owners: [
+                    {
+                        email: 'user1@test.com',
+                        imageUrl:
+                            'https://gravatar.com/avatar/a8cc79d8407a64b0d8982df34e3525afd298a479fe68f300651380730dbf23e9?s=42&d=retro&r=g',
+                        name: 'user1@test.com',
+                        ownerType: 'user',
+                    },
+                    {
+                        name: 'groupA',
+                        ownerType: 'group',
                     },
                 ],
             },

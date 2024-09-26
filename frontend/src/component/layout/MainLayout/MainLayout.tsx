@@ -67,6 +67,9 @@ const NewMainLayoutContent = styled(Grid)(({ theme }) => ({
     margin: '0 auto',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
+    [theme.breakpoints.up(1856)]: {
+        width: '100%',
+    },
     [theme.breakpoints.down(1856)]: {
         marginLeft: theme.spacing(7),
         marginRight: theme.spacing(7),

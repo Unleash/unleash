@@ -1,5 +1,5 @@
 import type { ProjectMode } from '../../types';
-import type { IProjectQuery } from './project-store-type';
+import type { IProjectQuery, IProjectsQuery } from './project-store-type';
 
 export type ProjectForUi = {
     id: string;
@@ -28,7 +28,7 @@ export type ProjectForInsights = {
 
 export interface IProjectReadModel {
     getProjectsForAdminUi(
-        query?: IProjectQuery,
+        query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]>;
     getProjectsForInsights(
@@ -37,4 +37,5 @@ export interface IProjectReadModel {
     getFeatureProject(
         featureName: string,
     ): Promise<{ project: string; createdAt: Date } | null>;
+    getProjectsByUser(userId: number): Promise<string[]>;
 }

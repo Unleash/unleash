@@ -6,7 +6,7 @@ import type {
     ProjectForInsights,
     ProjectForUi,
 } from './project-read-model-type';
-import type { IProjectQuery } from './project-store-type';
+import type { IProjectQuery, IProjectsQuery } from './project-store-type';
 import metricsHelper from '../../util/metrics-helper';
 import type EventEmitter from 'events';
 import type { IProjectMembersCount } from './project-store';
@@ -79,7 +79,7 @@ export class ProjectReadModel implements IProjectReadModel {
     }
 
     async getProjectsForAdminUi(
-        query?: IProjectQuery,
+        query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
         const projectTimer = this.timer('getProjectsForAdminUi');
@@ -112,6 +112,9 @@ export class ProjectReadModel implements IProjectReadModel {
 
         if (query?.id) {
             projects = projects.where(`${TABLE}.id`, query.id);
+        }
+        if (query?.ids) {
+            projects = projects.whereIn(`${TABLE}.id`, query.ids);
         }
 
         let selectColumns = [
@@ -248,5 +251,37 @@ export class ProjectReadModel implements IProjectReadModel {
 
         memberTimer();
         return members;
+    }
+
+    async getProjectsByUser(userId: number): Promise<string[]> {
+        const projects = await this.db
+            .from((db) => {
+                db.select('role_user.project')
+                    .from('role_user')
+                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
+                    .leftJoin('projects', 'role_user.project', 'projects.id')
+                    .where('user_id', userId)
+                    .andWhere('projects.archived_at', null)
+                    .union((queryBuilder) => {
+                        queryBuilder
+                            .select('group_role.project')
+                            .from('group_role')
+                            .leftJoin(
+                                'group_user',
+                                'group_user.group_id',
+                                'group_role.group_id',
+                            )
+                            .leftJoin(
+                                'projects',
+                                'group_role.project',
+                                'projects.id',
+                            )
+                            .where('group_user.user_id', userId)
+                            .andWhere('projects.archived_at', null);
+                    })
+                    .as('query');
+            })
+            .pluck('project');
+        return projects;
     }
 }

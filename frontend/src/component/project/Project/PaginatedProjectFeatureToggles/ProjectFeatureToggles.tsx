@@ -42,8 +42,8 @@ import { AvatarCell } from './AvatarCell';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { ConnectSdkDialog } from '../../../onboarding/ConnectSdkDialog';
-import { ProjectOnboarding } from './ProjectOnboarding/ProjectOnboarding';
+import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog';
+import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 
 interface IPaginatedProjectFeatureTogglesProps {
@@ -534,17 +534,19 @@ export const ProjectFeatureToggles = ({
                     </PageContent>
                 }
             />
-            {'feature' in project.onboardingStatus ? (
-                <ConnectSdkDialog
-                    open={connectSdkOpen}
-                    onClose={() => {
-                        setConnectSdkOpen(false);
-                    }}
-                    project={projectId}
-                    environments={environments}
-                    feature={project.onboardingStatus.feature}
-                />
-            ) : null}
+            <ConnectSdkDialog
+                open={connectSdkOpen}
+                onClose={() => {
+                    setConnectSdkOpen(false);
+                }}
+                project={projectId}
+                environments={environments}
+                feature={
+                    'feature' in project.onboardingStatus
+                        ? project.onboardingStatus.feature
+                        : undefined
+                }
+            />
             <BatchSelectionActionsBar count={selectedData.length}>
                 <ProjectFeaturesBatchActions
                     selectedIds={Object.keys(rowSelection)}

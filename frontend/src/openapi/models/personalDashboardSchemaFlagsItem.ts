@@ -7,6 +7,8 @@
 export type PersonalDashboardSchemaFlagsItem = {
     /** The name of the flag */
     name: string;
+    /** The id of the feature project */
     project: string;
+    /** The type of the feature flag */
     type: string;
 };

@@ -48,6 +48,10 @@ export interface IProjectQuery {
     archived?: boolean;
 }
 
+export interface IProjectsQuery {
+    ids?: string[];
+}
+
 export type ProjectEnvironment = {
     environment: string;
     changeRequestEnabled?: boolean;
@@ -95,8 +99,6 @@ export interface IProjectStore extends Store<IProject, string> {
         projectId: string,
         date: string,
     ): Promise<number>;
-
-    getProjectsByUser(userId: number): Promise<string[]>;
 
     count(): Promise<number>;
 

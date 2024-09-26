@@ -1,13 +1,12 @@
 import type {
     IProjectOwnersReadModel,
-    IProjectForUiWithOwners,
+    WithProjectOwners,
 } from './project-owners-read-model.type';
-import type { ProjectForUi } from './project-read-model-type';
 
 export class FakeProjectOwnersReadModel implements IProjectOwnersReadModel {
-    async addOwners(
-        projects: ProjectForUi[],
-    ): Promise<IProjectForUiWithOwners[]> {
+    async addOwners<T extends { id: string }>(
+        projects: T[],
+    ): Promise<WithProjectOwners<T>> {
         return projects.map((project) => ({
             ...project,
             owners: [{ ownerType: 'system' }],

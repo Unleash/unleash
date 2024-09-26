@@ -4,7 +4,7 @@ import { formatAssetPath } from 'utils/formatPath';
 import { SectionHeader, StepperBox } from './SharedComponents';
 import { clientSdks, type Sdk, serverSdks } from './sharedTypes';
 import { Stepper } from './Stepper';
-import { Badge } from '../common/Badge/Badge';
+import { Badge } from 'component/common/Badge/Badge';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(5, 8, 8, 8),

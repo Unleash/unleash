@@ -83,6 +83,7 @@ import type {
     IProjectApplicationsSearchParams,
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
+    IProjectsQuery,
 } from './project-store-type';
 import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
@@ -230,13 +231,13 @@ export default class ProjectService {
     }
 
     async getProjects(
-        query?: IProjectQuery,
+        query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
-        const getProjects = () =>
-            this.projectReadModel.getProjectsForAdminUi(query, userId);
-
-        const projects = await getProjects();
+        const projects = await this.projectReadModel.getProjectsForAdminUi(
+            query,
+            userId,
+        );
 
         if (userId) {
             const projectAccess =
@@ -258,13 +259,7 @@ export default class ProjectService {
     async addOwnersToProjects(
         projects: ProjectForUi[],
     ): Promise<ProjectForUi[]> {
-        const anonymizeProjectOwners = this.flagResolver.isEnabled(
-            'anonymizeProjectOwners',
-        );
-        return this.projectOwnersReadModel.addOwners(
-            projects,
-            anonymizeProjectOwners,
-        );
+        return this.projectOwnersReadModel.addOwners(projects);
     }
 
     async getProject(id: string): Promise<IProject> {
@@ -1344,7 +1339,7 @@ export default class ProjectService {
     }
 
     async getProjectsByUser(userId: number): Promise<string[]> {
-        return this.projectStore.getProjectsByUser(userId);
+        return this.projectReadModel.getProjectsByUser(userId);
     }
 
     async getProjectRoleUsage(roleId: number): Promise<IProjectRoleUsage[]> {

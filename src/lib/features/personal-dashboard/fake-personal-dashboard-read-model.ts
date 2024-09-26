@@ -1,7 +1,7 @@
 import type {
+    BasePersonalProject,
     IPersonalDashboardReadModel,
     PersonalFeature,
-    PersonalProject,
 } from './personal-dashboard-read-model-type';
 
 export class FakePersonalDashboardReadModel
@@ -11,7 +11,7 @@ export class FakePersonalDashboardReadModel
         return [];
     }
 
-    async getPersonalProjects(userId: number): Promise<PersonalProject[]> {
+    async getPersonalProjects(userId: number): Promise<BasePersonalProject[]> {
         return [];
     }
 }

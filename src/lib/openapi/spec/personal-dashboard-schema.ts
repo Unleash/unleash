@@ -13,7 +13,13 @@ export const personalDashboardSchema = {
             items: {
                 type: 'object',
                 additionalProperties: false,
-                required: ['id', 'name', 'roles'],
+                required: [
+                    'id',
+                    'name',
+                    'health',
+                    'memberCount',
+                    'featureCount',
+                ],
                 properties: {
                     id: {
                         type: 'string',
@@ -24,6 +30,22 @@ export const personalDashboardSchema = {
                         type: 'string',
                         example: 'My Project',
                         description: 'The name of the project',
+                    },
+                    health: {
+                        type: 'number',
+                        example: 50,
+                        description:
+                            "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100",
+                    },
+                    memberCount: {
+                        type: 'number',
+                        example: 4,
+                        description: 'The number of members this project has',
+                    },
+                    featureCount: {
+                        type: 'number',
+                        example: 10,
+                        description: 'The number of features this project has',
                     },
                     owners: projectSchema.properties.owners,
                     roles: {

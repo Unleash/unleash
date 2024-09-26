@@ -97,6 +97,33 @@ test('should accept empty permissions', async () => {
     });
 });
 
+test('should not accept empty names', async () => {
+    const { accessService } = getSetup();
+    const withWhitespaceName: IRoleValidation = {
+        name: '    ',
+        description: 'description',
+        permissions: [],
+    };
+
+    await expect(
+        accessService.validateRole(withWhitespaceName),
+    ).rejects.toThrow('"name" is not allowed to be empty');
+});
+
+test('should trim leading and trailing whitespace from names', async () => {
+    const { accessService } = getSetup();
+    const withUntrimmedName: IRoleValidation = {
+        name: '   untrimmed ',
+        description: 'description',
+        permissions: [],
+    };
+    expect(await accessService.validateRole(withUntrimmedName)).toEqual({
+        name: 'untrimmed',
+        description: 'description',
+        permissions: [],
+    });
+});
+
 test('should complete environment field of permissions when not present', async () => {
     const { accessService } = getSetup();
     const withoutEnvironmentInPermissions: IRoleValidation = {

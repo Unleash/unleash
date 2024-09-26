@@ -2,7 +2,7 @@ import { IconButton, styled, Tooltip, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Check from '@mui/icons-material/Check';
 import People from '@mui/icons-material/People';
-import { MenuBook } from '@mui/icons-material';
+import MenuBook from '@mui/icons-material/MenuBook';
 import { Link } from 'react-router-dom';
 
 interface IProjectOnboardedProps {

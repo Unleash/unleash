@@ -38,12 +38,12 @@ const StyledDate = styled('div')(({ theme }) => ({
 const StyledTooltipItem = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
-    marginBottom: theme.spacing(1),
+    marginBottom: theme.spacing(2),
 }));
 
 const StyledEventTimelineEventCircle = styled(EventTimelineEventCircle)(
     ({ theme }) => ({
-        marginTop: theme.spacing(0.5),
+        marginTop: theme.spacing(0.125),
         height: theme.spacing(2.5),
         width: theme.spacing(2.5),
         transition: 'none',

@@ -1,16 +1,12 @@
 import { styled } from '@mui/material';
-import type { ProjectOwners } from '../../openapi';
 import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
 import { Badge } from 'component/common/Badge/Badge';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import type { ProjectSchemaOwners } from 'openapi';
 
 type Props = {
-    roles: {
-        id: number;
-        name: string;
-        type: string;
-    }[];
-    owners: ProjectOwners;
+    roles: string[];
+    owners: ProjectSchemaOwners;
 };
 
 const Wrapper = styled('div')(({ theme }) => ({
@@ -26,16 +22,8 @@ const InfoSection = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-// copied from frontend/src/component/project/ProjectCard/ProjectCardFooter/ProjectOwners/ProjectOwners.tsx; consider refactoring
 const mapOwners =
-    (unleashUrl?: string) =>
-    (
-        owner: ProjectOwners[number],
-    ): {
-        name: string;
-        imageUrl?: string;
-        email?: string;
-    } => {
+    (unleashUrl?: string) => (owner: ProjectSchemaOwners[number]) => {
         if (owner.ownerType === 'user') {
             return {
                 name: owner.name,
@@ -62,8 +50,8 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
             <InfoSection>
                 <span>Your roles in this project:</span>
                 {roles.map((role) => (
-                    <Badge key={role.id} color='secondary'>
-                        {role.name}
+                    <Badge key={role} color='secondary'>
+                        {role}
                     </Badge>
                 ))}
             </InfoSection>

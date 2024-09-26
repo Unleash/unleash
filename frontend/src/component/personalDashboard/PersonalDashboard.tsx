@@ -13,6 +13,7 @@ import {
 import type { Theme } from '@mui/material/styles/createTheme';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import React, { type FC, useEffect, useState } from 'react';
+import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import LinkIcon from '@mui/icons-material/Link';
 import { Badge } from '../common/Badge/Badge';
 import { ConnectSDK, CreateFlag } from './ConnectSDK';
@@ -117,6 +118,28 @@ const SpacedGridItem = styled(Grid)(({ theme }) => ({
     border: `0.5px solid ${theme.palette.divider}`,
 }));
 
+const useProjects = () => {
+    const myProjects = useProfile().profile?.projects || [];
+
+    // TODO: add real data for flags/members/health
+    const projects = myProjects.map((project) => ({
+        name: project,
+        flags: 0,
+        members: 1,
+        health: 100,
+    }));
+
+    const [activeProject, setActiveProject] = useState(projects[0]?.name);
+
+    useEffect(() => {
+        if (!activeProject && projects.length > 0) {
+            setActiveProject(projects[0].name);
+        }
+    }, [JSON.stringify(projects)]);
+
+    return { projects, activeProject, setActiveProject };
+};
+
 const FlagListItem: FC<{
     flag: { name: string; project: string; type: string };
     selected: boolean;
@@ -154,6 +177,8 @@ export const PersonalDashboard = () => {
 
     const name = user?.name;
 
+    const { projects, activeProject, setActiveProject } = useProjects();
+
     const { personalDashboard, refetch: refetchDashboard } =
         usePersonalDashboard();
     const [activeFlag, setActiveFlag] = useState<
@@ -165,18 +190,8 @@ export const PersonalDashboard = () => {
         }
     }, [JSON.stringify(personalDashboard)]);
 
-    const [activeProject, setActiveProject] = useState<
-        PersonalDashboardSchema['projects'][0] | null
-    >(null);
-    useEffect(() => {
-        if (personalDashboard?.projects.length) {
-            setActiveProject(personalDashboard.projects[0]);
-        }
-    }, [JSON.stringify(personalDashboard)]);
-
-    const { project: activeProjectOverview, loading } = useProjectOverview(
-        activeProject?.id || '',
-    );
+    const { project: activeProjectOverview, loading } =
+        useProjectOverview(activeProject);
 
     const onboardingCompleted = Boolean(
         !loading &&
@@ -215,7 +230,7 @@ export const PersonalDashboard = () => {
                         disablePadding={true}
                         sx={{ maxHeight: '400px', overflow: 'auto' }}
                     >
-                        {personalDashboard?.projects.map((project) => {
+                        {projects.map((project) => {
                             return (
                                 <ListItem
                                     key={project.name}
@@ -225,10 +240,10 @@ export const PersonalDashboard = () => {
                                     <ListItemButton
                                         sx={projectStyle}
                                         selected={
-                                            project.id === activeProject?.id
+                                            project.name === activeProject
                                         }
                                         onClick={() =>
-                                            setActiveProject(project)
+                                            setActiveProject(project.name)
                                         }
                                     >
                                         <ProjectBox>
@@ -247,10 +262,9 @@ export const PersonalDashboard = () => {
                                                 />
                                             </IconButton>
                                         </ProjectBox>
-                                        {project.id === activeProject?.id ? (
+                                        {project.name === activeProject ? (
                                             <ActiveProjectDetails
-                                                // @ts-ignore
-                                                project={activeProjectOverview}
+                                                project={project}
                                             />
                                         ) : null}
                                     </ListItemButton>
@@ -261,24 +275,24 @@ export const PersonalDashboard = () => {
                 </SpacedGridItem>
                 <SpacedGridItem item lg={4} md={1}>
                     {onboardingCompleted ? (
-                        <ProjectSetupComplete project={activeProject!.id} />
+                        <ProjectSetupComplete project={activeProject} />
                     ) : activeProject ? (
-                        <CreateFlag project={activeProject!.id} />
+                        <CreateFlag project={activeProject} />
                     ) : null}
                 </SpacedGridItem>
                 <SpacedGridItem item lg={4} md={1}>
                     {activeProject ? (
-                        <ConnectSDK project={activeProject!.id} />
+                        <ConnectSDK project={activeProject} />
                     ) : null}
                 </SpacedGridItem>
                 <SpacedGridItem item lg={4} md={1} />
                 <SpacedGridItem item lg={8} md={1}>
                     {activeProject ? (
                         <RoleAndOwnerInfo
-                            roles={activeProject.roles}
-                            owners={activeProject.owners}
+                            roles={['owner', 'custom']}
+                            owners={[{ ownerType: 'system' }]}
                         />
-                    ) : null}
+                    ) : null}{' '}
                 </SpacedGridItem>
             </ContentGrid>
             <ContentGrid container columns={{ lg: 12, md: 1 }} sx={{ mt: 2 }}>

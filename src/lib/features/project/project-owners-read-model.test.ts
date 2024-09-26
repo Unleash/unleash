@@ -361,25 +361,4 @@ describe('integration tests', () => {
             { name: projectIdB, owners: [{ ownerType: 'user' }] },
         ]);
     });
-
-    test('anonymizes emails when asked to', async () => {
-        const projectId = randomId();
-        await db.stores.projectStore.create({ id: projectId, name: projectId });
-
-        await db.stores.accessStore.addUserToRole(
-            owner.id,
-            ownerRoleId,
-            projectId,
-        );
-
-        const owners = await readModel.getAllProjectOwners(true);
-        expect(owners).toMatchObject({
-            [projectId]: [
-                {
-                    name: 'Owner Name',
-                    email: expect.stringMatching(/@unleash.run$/),
-                },
-            ],
-        });
-    });
 });

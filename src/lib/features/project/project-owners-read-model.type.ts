@@ -28,6 +28,5 @@ export type WithProjectOwners<T extends { id: string }> = (T & {
 export interface IProjectOwnersReadModel {
     addOwners<T extends { id: string }>(
         projects: T[],
-        anonymizeProjectOwners?: boolean,
     ): Promise<WithProjectOwners<T>>;
 }

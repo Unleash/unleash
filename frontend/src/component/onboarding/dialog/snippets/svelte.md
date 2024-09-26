@@ -5,18 +5,37 @@ npm install @unleash/proxy-client-svelte
 
 2\. Initialize Unleash
 ```svelte
-<script lang="ts">
-    import { FlagProvider } from '@unleash/proxy-client-svelte';
+<script>
+	import { FlagProvider } from '@unleash/proxy-client-svelte';
 
-    const config = {
+	const config = {
         url: '<YOUR_API_URL>',
         clientKey: '<YOUR_API_TOKEN>',
-        refreshInterval: 15,
         appName: 'unleash-onboarding-svelte'
-    };
+        refreshInterval: 5,
+        metricsInterval: 5,
+	};
 </script>
 
-<FlagProvider {config}>
-    <App />
-</FlagProvider>
+<div class="app">
+	<FlagProvider {config}>
+		<main>
+			<slot />
+		</main>
+	</FlagProvider>
+</div>
+```
+
+3\. Check feature flag status
+```svelte
+<script lang="ts">
+	import { useFlag } from '@unleash/proxy-client-svelte';
+	const enabled = useFlag('<YOUR_FLAG>');
+</script>
+
+<section>
+    <p>
+        {$enabled ? 'Feature is enabled!' : 'Feature is disabled!'}
+    </p>
+</section>
 ```

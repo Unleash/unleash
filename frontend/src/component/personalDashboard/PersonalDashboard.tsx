@@ -292,7 +292,7 @@ export const PersonalDashboard = () => {
                             roles={['owner', 'custom']}
                             owners={[{ ownerType: 'system' }]}
                         />
-                    ) : null}{' '}
+                    ) : null}
                 </SpacedGridItem>
             </ContentGrid>
             <ContentGrid container columns={{ lg: 12, md: 1 }} sx={{ mt: 2 }}>

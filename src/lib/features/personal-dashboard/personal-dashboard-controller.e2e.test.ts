@@ -103,58 +103,22 @@ test('should return personal dashboard with membered projects', async () => {
             {
                 name: 'Default',
                 id: 'default',
-                roles: [
-                    {
-                        name: 'Editor',
-                        id: 2,
-                        type: 'root',
-                    },
-                ],
-                owners: [
-                    {
-                        ownerType: 'system',
-                    },
-                ],
+                health: 100,
+                memberCount: 0,
+                featureCount: 0,
             },
             {
                 name: projectA.name,
                 id: projectA.id,
-                roles: [
-                    {
-                        name: 'Member',
-                        id: 5,
-                        type: 'project',
-                    },
-                ],
-                owners: [
-                    {
-                        email: 'user1@test.com',
-                        imageUrl:
-                            'https://gravatar.com/avatar/a8cc79d8407a64b0d8982df34e3525afd298a479fe68f300651380730dbf23e9?s=42&d=retro&r=g',
-                        name: 'user1@test.com',
-                        ownerType: 'user',
-                    },
-                ],
+                health: 100,
+                memberCount: 2,
+                featureCount: 0,
             },
             {
                 name: projectC.name,
                 id: projectC.id,
-                roles: [
-                    {
-                        name: 'Owner',
-                        id: 4,
-                        type: 'project',
-                    },
-                ],
-                owners: [
-                    {
-                        email: 'user2@test.com',
-                        imageUrl:
-                            'https://gravatar.com/avatar/706150f3ef810ea66acb30c6d55f1a7e545338747072609e47df71c7c7ccc6a4?s=42&d=retro&r=g',
-                        name: 'user2@test.com',
-                        ownerType: 'user',
-                    },
-                ],
+                memberCount: 1,
+                featureCount: 0,
             },
         ],
     });
@@ -197,47 +161,16 @@ test('should return projects where users are part of a group', async () => {
             {
                 name: 'Default',
                 id: 'default',
-                roles: [
-                    {
-                        name: 'Editor',
-                        id: 2,
-                        type: 'root',
-                    },
-                ],
-                owners: [
-                    {
-                        ownerType: 'system',
-                    },
-                ],
+                health: 100,
+                memberCount: 0,
+                featureCount: 0,
             },
             {
                 name: projectA.name,
                 id: projectA.id,
-                roles: [
-                    {
-                        name: 'Owner',
-                        id: 4,
-                        type: 'project',
-                    },
-                    {
-                        name: 'Member',
-                        id: 5,
-                        type: 'project',
-                    },
-                ],
-                owners: [
-                    {
-                        email: 'user1@test.com',
-                        imageUrl:
-                            'https://gravatar.com/avatar/a8cc79d8407a64b0d8982df34e3525afd298a479fe68f300651380730dbf23e9?s=42&d=retro&r=g',
-                        name: 'user1@test.com',
-                        ownerType: 'user',
-                    },
-                    {
-                        name: 'groupA',
-                        ownerType: 'group',
-                    },
-                ],
+                health: 100,
+                memberCount: 2,
+                featureCount: 0,
             },
         ],
     });

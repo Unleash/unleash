@@ -1,5 +1,6 @@
 import type { Db } from '../../db/db';
 import type {
+    BasePersonalProject,
     IPersonalDashboardReadModel,
     PersonalFeature,
     PersonalProject,
@@ -18,7 +19,7 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
         this.db = db;
     }
 
-    async getPersonalProjects(userId: number): Promise<PersonalProject[]> {
+    async getPersonalProjects(userId: number): Promise<BasePersonalProject[]> {
         const result = await this.db<{
             name: string;
             id: string;

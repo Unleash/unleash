@@ -23,6 +23,10 @@ const StyledFilter = styled(TextField)(({ theme }) => ({
     },
 }));
 
+const StyledTimelineEventsCount = styled('span')(({ theme }) => ({
+    marginTop: theme.spacing(0.25),
+}));
+
 interface IEventTimelineHeaderProps {
     totalEvents: number;
     timeSpan: TimeSpanOption;
@@ -57,10 +61,10 @@ export const EventTimelineHeader = ({
     return (
         <>
             <StyledCol>
-                <span>
+                <StyledTimelineEventsCount>
                     {totalEvents} event
                     {totalEvents === 1 ? '' : 's'}
-                </span>
+                </StyledTimelineEventsCount>
                 <StyledFilter
                     select
                     size='small'

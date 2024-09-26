@@ -48,6 +48,10 @@ export interface IProjectQuery {
     archived?: boolean;
 }
 
+export interface IProjectsQuery {
+    ids?: string[];
+}
+
 export type ProjectEnvironment = {
     environment: string;
     changeRequestEnabled?: boolean;

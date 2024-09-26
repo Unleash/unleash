@@ -48,7 +48,7 @@ const StyledEventTimelineEventCircle = styled(EventTimelineEventCircle)(
         width: theme.spacing(2.5),
         transition: 'none',
         '& > svg': {
-            height: theme.spacing(2),
+            height: theme.spacing(1.75),
         },
         '&:hover': {
             transform: 'none',

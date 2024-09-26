@@ -21,7 +21,7 @@ const Wrapper = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
 }));
 
-const RoleInfo = styled('div')(({ theme }) => ({
+const InfoSection = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
 }));
@@ -59,18 +59,18 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
     const mappedOwners = owners.map(mapOwners(uiConfig.unleashUrl));
     return (
         <Wrapper>
-            <RoleInfo>
+            <InfoSection>
                 <span>Your roles in this project:</span>
                 {roles.map((role) => (
                     <Badge key={role.id} color='secondary'>
                         {role.name}
                     </Badge>
                 ))}
-            </RoleInfo>
-            <RoleInfo>
+            </InfoSection>
+            <InfoSection>
                 <span>Project owner{owners.length > 1 ? 's' : ''}</span>
                 <AvatarGroup users={mappedOwners} avatarLimit={3} />
-            </RoleInfo>
+            </InfoSection>
         </Wrapper>
     );
 };

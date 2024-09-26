@@ -133,6 +133,7 @@ export * from './patch-schema';
 export * from './patches-schema';
 export * from './pats-schema';
 export * from './permission-schema';
+export * from './personal-dashboard-project-details-schema';
 export * from './personal-dashboard-schema';
 export * from './playground-constraint-schema';
 export * from './playground-feature-schema';

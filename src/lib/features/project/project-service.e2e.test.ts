@@ -152,6 +152,11 @@ test('should create new project', async () => {
     expect(project.name).toEqual(ret.name);
     expect(project.description).toEqual(ret.description);
     expect(ret.createdAt).toBeTruthy();
+
+    const projectsById = await projectService.getProjects({ id: 'test' });
+    const projectsByIds = await projectService.getProjects({ ids: ['test'] });
+    expect(projectsById).toMatchObject([{ id: 'test' }]);
+    expect(projectsByIds).toMatchObject([{ id: 'test' }]);
 });
 
 test('should create new private project', async () => {

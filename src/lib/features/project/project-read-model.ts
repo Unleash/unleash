@@ -6,7 +6,7 @@ import type {
     ProjectForInsights,
     ProjectForUi,
 } from './project-read-model-type';
-import type { IProjectQuery } from './project-store-type';
+import type { IProjectQuery, IProjectsQuery } from './project-store-type';
 import metricsHelper from '../../util/metrics-helper';
 import type EventEmitter from 'events';
 import type { IProjectMembersCount } from './project-store';
@@ -79,7 +79,7 @@ export class ProjectReadModel implements IProjectReadModel {
     }
 
     async getProjectsForAdminUi(
-        query?: IProjectQuery,
+        query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
         const projectTimer = this.timer('getProjectsForAdminUi');
@@ -112,6 +112,9 @@ export class ProjectReadModel implements IProjectReadModel {
 
         if (query?.id) {
             projects = projects.where(`${TABLE}.id`, query.id);
+        }
+        if (query?.ids) {
+            projects = projects.whereIn(`${TABLE}.id`, query.ids);
         }
 
         let selectColumns = [

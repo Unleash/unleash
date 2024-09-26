@@ -83,6 +83,7 @@ import type {
     IProjectApplicationsSearchParams,
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
+    IProjectsQuery,
 } from './project-store-type';
 import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
@@ -230,13 +231,13 @@ export default class ProjectService {
     }
 
     async getProjects(
-        query?: IProjectQuery,
+        query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
-        const getProjects = () =>
-            this.projectReadModel.getProjectsForAdminUi(query, userId);
-
-        const projects = await getProjects();
+        const projects = await this.projectReadModel.getProjectsForAdminUi(
+            query,
+            userId,
+        );
 
         if (userId) {
             const projectAccess =

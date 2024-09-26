@@ -71,7 +71,7 @@ export const personalDashboardSchema = {
             items: {
                 type: 'object',
                 additionalProperties: false,
-                required: ['name'],
+                required: ['name', 'project', 'type'],
                 properties: {
                     name: {
                         type: 'string',

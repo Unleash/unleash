@@ -58,7 +58,7 @@ Cypress.Commands.add(
     updateFlexibleRolloutStrategy_UI,
 );
 Cypress.Commands.add('createEnvironment_API', createEnvironment_API);
-Cypress.Commands.overwrite('visit', (originalFn, options) => {
+Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
     if (!options.headers) {
         options.headers = {};
     }
@@ -66,5 +66,5 @@ Cypress.Commands.overwrite('visit', (originalFn, options) => {
     // Add the x-vercel-skip-toolbar header. See: https://vercel.com/docs/workflow-collaboration/vercel-toolbar/managing-toolbar#disable-toolbar-for-automation
     options.headers['x-vercel-skip-toolbar'] = '1';
 
-    return originalFn(options);
+    return originalFn(url, options);
 });

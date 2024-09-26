@@ -25,6 +25,7 @@ import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/use
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import type { PersonalDashboardSchema } from '../../openapi';
 import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
+import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
 
 const ScreenExplanation = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -285,15 +286,13 @@ export const PersonalDashboard = () => {
                     ) : null}
                 </SpacedGridItem>
                 <SpacedGridItem item lg={4} md={1} />
-                <SpacedGridItem
-                    item
-                    lg={8}
-                    md={1}
-                    sx={{ display: 'flex', gap: 1, alignItems: 'center' }}
-                >
-                    <span>Your roles in this project:</span>{' '}
-                    <Badge color='secondary'>Member</Badge>{' '}
-                    <Badge color='secondary'>Another</Badge>
+                <SpacedGridItem item lg={8} md={1}>
+                    {activeProject ? (
+                        <RoleAndOwnerInfo
+                            roles={['owner', 'custom']}
+                            owners={[{ ownerType: 'system' }]}
+                        />
+                    ) : null}
                 </SpacedGridItem>
             </ContentGrid>
             <ContentGrid container columns={{ lg: 12, md: 1 }} sx={{ mt: 2 }}>

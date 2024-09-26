@@ -58,7 +58,7 @@ Cypress.Commands.add(
     updateFlexibleRolloutStrategy_UI,
 );
 Cypress.Commands.add('createEnvironment_API', createEnvironment_API);
-Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
+Cypress.Commands.overwrite('visit', (originalFn, url, options = {}) => {
     if (!options.headers) {
         options.headers = {};
     }

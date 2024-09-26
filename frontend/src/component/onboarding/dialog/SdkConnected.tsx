@@ -9,12 +9,20 @@ import { Markdown } from 'component/common/Markdown/Markdown';
 import { CodeRenderer, codeRenderSnippets } from './CodeRenderer';
 
 const SpacedContainer = styled('div')(({ theme }) => ({
-    padding: theme.spacing(5, 8, 2, 8),
+    padding: theme.spacing(5, 8),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(3),
     fontSize: theme.typography.body2.fontSize,
+    flexGrow: 1,
 }));
+
+const ParagraphRenderer: FC<{ children: any }> = ({ children }) => (
+    <Typography variant='body2'>{children}</Typography>
+);
+const H3Renderer: FC<{ children: any }> = ({ children }) => (
+    <SectionHeader>{children}</SectionHeader>
+);
 
 interface ISdkConnectedProps {
     sdk: Sdk;
@@ -42,27 +50,30 @@ export const SdkConnected: FC<ISdkConnectedProps> = ({ sdk }) => {
                 <Stepper active={2} steps={3} />
                 <Badge color='secondary'>3/3 - Test connection</Badge>
             </StepperBox>
-            <Box sx={{ mt: 2 }}>
-                <SectionHeader>Production settings</SectionHeader>
-                <Typography variant='body2'>
-                    In order to validate the connection, we changed some
-                    settings that you might want to revert. We recommend the
-                    following default settings.
-                </Typography>
-                <Markdown components={{ code: CodeRenderer }}>
+            <Box>
+                <Markdown
+                    components={{
+                        code: CodeRenderer,
+                        p: ParagraphRenderer,
+                        h3: H3Renderer,
+                    }}
+                >
                     {productionSnippet}
                 </Markdown>
             </Box>
-            <Box>
-                <SectionHeader>Additional resources</SectionHeader>
-                <Typography variant='body2'>
-                    Now that we’ve validated the connection, you might want to
-                    look into more advanced use cases and examples:
-                </Typography>
-                <Markdown components={{ code: CodeRenderer }}>
-                    {otherResourcesSnippet}
-                </Markdown>
-            </Box>
+            {otherResourcesSnippet ? (
+                <Box>
+                    <Markdown
+                        components={{
+                            code: CodeRenderer,
+                            p: ParagraphRenderer,
+                            h3: H3Renderer,
+                        }}
+                    >
+                        {otherResourcesSnippet}
+                    </Markdown>
+                </Box>
+            ) : null}
         </SpacedContainer>
     );
 };

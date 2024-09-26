@@ -1,15 +1,18 @@
 1\. Install the SDK
+
 ```gradle
 implementation("io.getunleash:unleash-android:1")
 ```
 
 2\. Enable required [permissions](https://developer.android.com/guide/topics/manifest/uses-permission-element)
+
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
 2\. Initialize Unleash in your application
+
 ```kotlin
 class MyApplication: Application() {
     val unleash: Unleash by lazy {
@@ -32,6 +35,7 @@ class MyApplication: Application() {
 ```
 
 3\. Check flag status
+
 ```kotlin
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,3 +61,9 @@ class MainActivity : ComponentActivity() {
 
 ---
 
+### Additional resources
+
+Now that we’ve validated the connection, you might want to look into more advanced use cases and examples:
+
+- [SDK repository with documentation and example](https://github.com/Unleash/unleash-android)
+- [Android SDK basic example](hhttps://github.com/Unleash/unleash-sdk-examples/tree/main/Android)

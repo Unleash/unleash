@@ -1,5 +1,8 @@
 import { Grid, Typography, styled } from '@mui/material';
 import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
+import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import type { ProjectSchemaOwners } from 'openapi';
 
 const ContentGrid = styled(Grid)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -38,7 +41,46 @@ const ActionBox = styled('div')(({ theme }) => ({
     flexDirection: 'column',
 }));
 
+const mapOwners =
+    (unleashUrl?: string) => (owner: ProjectSchemaOwners[number]) => {
+        if (owner.ownerType === 'user') {
+            return {
+                name: owner.name,
+                imageUrl: owner.imageUrl || undefined,
+                email: owner.email || undefined,
+            };
+        }
+        if (owner.ownerType === 'group') {
+            return {
+                name: owner.name,
+            };
+        }
+        return {
+            name: 'System',
+            imageUrl: `${unleashUrl}/logo-unleash.png`,
+        };
+    };
+
 export const ContentGridNoProjects = () => {
+    const { projects } = useProjects();
+    const { uiConfig } = useUiConfig();
+
+    const owners = projects.reduce(
+        (acc, project) => {
+            for (const owner of project.owners ?? []) {
+                if (owner.ownerType === 'user') {
+                    acc[owner.email || owner.name] = owner;
+                }
+            }
+            return acc;
+        },
+        {} as Record<string, ProjectSchemaOwners[number]>,
+    );
+
+    const mappedOwners = Object.values(owners).map(
+        mapOwners(uiConfig.unleashUrl),
+    );
+
     return (
         <ContentGrid container columns={{ lg: 12, md: 1 }}>
             <SpacedGridItem item lg={4} md={1}>
@@ -78,22 +120,7 @@ export const ContentGridNoProjects = () => {
                     </TitleContainer>
                     <div>
                         <p>Project owners in Unleash:</p>
-                        <AvatarGroup
-                            users={[
-                                {
-                                    name: 'John Doe',
-                                    email: '',
-                                },
-                                {
-                                    name: 'Ash',
-                                    email: '',
-                                },
-                                {
-                                    name: 'Sam',
-                                    email: '',
-                                },
-                            ]}
-                        />
+                        <AvatarGroup users={mappedOwners} avatarLimit={9} />
                     </div>
                 </ActionBox>
             </SpacedGridItem>

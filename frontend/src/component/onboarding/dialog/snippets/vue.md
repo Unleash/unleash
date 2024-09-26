@@ -4,17 +4,18 @@ npm install @unleash/proxy-client-vue
 ```
 
 2\. Initialize Unleash
+
 ```js
-import { createApp } from 'vue'
+import { createApp } from 'frontend/src/component/onboarding/dialog/snippets/vue'
 import { plugin as unleashPlugin } from '@unleash/proxy-client-vue'
 // import the root component App from a single-file component.
 import App from './App.vue'
 
 const config = {
-  url: '<YOUR_API_URL>',
-  clientKey: '<YOUR_API_TOKEN>',
-  refreshInterval: 15,
-  appName: 'unleash-onboarding-vue',
+    url: '<YOUR_API_URL>',
+    clientKey: '<YOUR_API_TOKEN>',
+    refreshInterval: 15,
+    appName: 'unleash-onboarding-vue',
 }
 
 const app = createApp(App)

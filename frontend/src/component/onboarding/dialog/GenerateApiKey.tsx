@@ -11,13 +11,13 @@ import {
     useMediaQuery,
     useTheme,
 } from '@mui/material';
-import { SingleSelectConfigButton } from '../common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
+import { SingleSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/SingleSelectConfigButton';
 import EnvironmentsIcon from '@mui/icons-material/CloudCircle';
 import { ArcherContainer, ArcherElement } from 'react-archer';
 import { useEffect } from 'react';
 import { SectionHeader, StepperBox } from './SharedComponents';
 import { Stepper } from './Stepper';
-import { Badge } from '../common/Badge/Badge';
+import { Badge } from 'component/common/Badge/Badge';
 
 const ChooseEnvironment = ({
     environments,

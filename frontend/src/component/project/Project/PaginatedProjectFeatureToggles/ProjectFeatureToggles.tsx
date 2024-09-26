@@ -42,8 +42,8 @@ import { AvatarCell } from './AvatarCell';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { ConnectSdkDialog } from '../../../onboarding/ConnectSdkDialog';
-import { ProjectOnboarding } from './ProjectOnboarding/ProjectOnboarding';
+import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog';
+import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 
 interface IPaginatedProjectFeatureTogglesProps {

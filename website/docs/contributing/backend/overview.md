@@ -26,7 +26,7 @@ yarn dev
 
 ## PostgreSQL {#postgresql}
 
-To run and develop unleash, you need to have PostgreSQL database (PostgreSQL v13.x or newer) locally.
+To run and develop Unleash, you need to have PostgreSQL v13.0+ locally.
 
 Unleash currently also work with PostgreSQL v13+, but this might change in a future feature release, and we have stopped running automatic integration tests below PostgreSQL v13. The current recommendation is to use a role with Owner privileges since Unleash uses Postgres functions to simplify our database usage.
 

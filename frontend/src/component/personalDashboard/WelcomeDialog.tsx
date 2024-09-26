@@ -75,29 +75,28 @@ export const WelcomeDialog: FC<IWelcomeDialogProps> = ({ open, onClose }) => {
                     <h2>Environments</h2>
                     <p>
                         Environments represent different stages in your
-                        development lifecycle. Unleash comes with two
-                        preconfigured environments.
+                        development lifecycle. The default environments are
+                        development and production.
                     </p>
                     <h2>Projects</h2>
                     <p>
-                        Projects help you organize feature flags and define what
-                        users and applications have access to them. When SDKs
-                        connect to Unleash they use the combination of
-                        environment and project to retrieve feature flag
-                        configurations.
+                        Projects help you organize feature flags and define
+                        access for users and applications. SDKs use a
+                        combination of environment and project to retrieve
+                        feature flag configurations.
                     </p>
                     <h2>Feature flags</h2>
                     <p>
-                        Flags live inside a project and exist across all its
-                        environments. Flags can have a unique configuration in
-                        each environment enabled for their project.
+                        Feature flags exist within a project and have distinct
+                        configurations for each of the project's active
+                        environments.
                     </p>
                     <h2>Activation strategy</h2>
                     <p>
                         Activation strategies are rulesets that determine if a
-                        feature flag should be enabled in a specific
-                        environment. You can configure multiple activation
-                        strategies per environment.
+                        feature flag is enabled in a specific environment. You
+                        can configure multiple activation strategies per
+                        environment.
                     </p>
                 </ScreenReaderOnly>
                 <Button variant='contained' onClick={onClose}>

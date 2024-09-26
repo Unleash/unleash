@@ -15,7 +15,7 @@ We have created a set of ADRs to help guide the development of the backend:
 
 Before developing on this project you will need two things:
 
-- PostgreSQL 13.x+
+- PostgreSQL 13.0+
 - Node.js 20.x or newer
 
 ```sh

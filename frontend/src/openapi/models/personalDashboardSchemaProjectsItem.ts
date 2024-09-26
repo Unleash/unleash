@@ -7,8 +7,14 @@ import type { PersonalDashboardSchemaProjectsItemOwners } from './personalDashbo
 import type { PersonalDashboardSchemaProjectsItemRolesItem } from './personalDashboardSchemaProjectsItemRolesItem';
 
 export type PersonalDashboardSchemaProjectsItem = {
+    /** The number of features this project has */
+    featureCount: number;
+    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */
+    health: number;
     /** The id of the project */
     id: string;
+    /** The number of members this project has */
+    memberCount: number;
     /** The name of the project */
     name: string;
     /** The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead. */
@@ -17,5 +23,5 @@ export type PersonalDashboardSchemaProjectsItem = {
      * The list of roles that the user has in this project.
      * @minItems 1
      */
-    roles: PersonalDashboardSchemaProjectsItemRolesItem[];
+    roles?: PersonalDashboardSchemaProjectsItemRolesItem[];
 };

@@ -9,7 +9,7 @@ interface IConnectionInformationProps {
     sdk: string;
     environment: string;
 }
-export const Container = styled('div')(({ theme }) => ({
+const Container = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.sidebar,
     padding: theme.spacing(6, 9, 6, 9),
     minWidth: '400px',
@@ -18,14 +18,14 @@ export const Container = styled('div')(({ theme }) => ({
     color: theme.palette.primary.contrastText,
 }));
 
-export const Title = styled(Typography)(({ theme }) => ({
+const Title = styled(Typography)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     fontWeight: theme.typography.fontWeightBold,
 }));
 
-export const SdkInfo = styled('div')(({ theme }) => ({
+const SdkInfo = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
     padding: theme.spacing(4, 0, 12, 0),
@@ -33,13 +33,13 @@ export const SdkInfo = styled('div')(({ theme }) => ({
     fontSize: theme.spacing(1),
 }));
 
-export const Info = styled('div')(({ theme }) => ({
+const Info = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     flexDirection: 'column',
 }));
 
-export const ConnectionStatus = styled('div')(({ theme }) => ({
+const ConnectionStatus = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     display: 'flex',
@@ -48,7 +48,7 @@ export const ConnectionStatus = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
-export const StyledCheck = styled(Check)(({ theme }) => ({
+const StyledCheck = styled(Check)(({ theme }) => ({
     color: theme.palette.primary.main,
     backgroundColor: theme.palette.background.paper,
     borderRadius: '50%',

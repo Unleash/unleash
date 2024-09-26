@@ -36,6 +36,7 @@ test('Onboarding for SDK', async () => {
             open={true}
             environments={['development', 'production']}
             feature='featureA'
+            onFinish={() => {}}
         />,
     );
 

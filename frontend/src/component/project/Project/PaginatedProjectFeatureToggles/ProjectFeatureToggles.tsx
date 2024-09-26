@@ -45,6 +45,7 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
+import { ProjectOnboarded } from 'component/onboarding/flow/ProjectOnboarded';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -118,6 +119,9 @@ export const ProjectFeatureToggles = ({
     const [onboardingFlow, setOnboardingFlow] = useLocalStorageState<
         'visible' | 'closed'
     >(`onboarding-flow:v1-${projectId}`, 'visible');
+    const [setupCompletedState, setSetupCompletedState] = useLocalStorageState<
+        'hide-setup' | 'show-setup'
+    >(`onboarding-state:v1-${projectId}`, 'hide-setup');
 
     const notOnboarding =
         !onboardingUIEnabled ||
@@ -426,6 +430,17 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <ConditionallyRender
+                condition={setupCompletedState === 'show-setup'}
+                show={
+                    <ProjectOnboarded
+                        projectId={projectId}
+                        onClose={() => {
+                            setSetupCompletedState('hide-setup');
+                        }}
+                    />
+                }
+            />
+            <ConditionallyRender
                 condition={showFeaturesTable}
                 show={
                     <PageContent
@@ -538,6 +553,10 @@ export const ProjectFeatureToggles = ({
                 open={connectSdkOpen}
                 onClose={() => {
                     setConnectSdkOpen(false);
+                }}
+                onFinish={() => {
+                    setConnectSdkOpen(false);
+                    setSetupCompletedState('show-setup');
                 }}
                 project={projectId}
                 environments={environments}

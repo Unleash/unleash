@@ -51,28 +51,6 @@ const TitleContainer = styled('div')(({ theme }) => ({
     fontWeight: 'bold',
 }));
 
-const NeutralCircleContainer = styled('span')(({ theme }) => ({
-    width: '28px',
-    height: '28px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.palette.neutral.border,
-    borderRadius: '50%',
-}));
-
-const MainCircleContainer = styled(NeutralCircleContainer)(({ theme }) => ({
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.background.paper,
-}));
-
-const ExistingFlagContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(3),
-    height: '100%',
-}));
-
 const Title = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',

@@ -11,8 +11,6 @@ import { lazy, useEffect, useState } from 'react';
 import { SelectSdk } from './SelectSdk';
 import { GenerateApiKeyConcepts, SelectSdkConcepts } from './UnleashConcepts';
 
-const TestSdkConnection = lazy(() => import('./TestSdkConnection'));
-
 import type { Sdk } from './sharedTypes';
 import { ConnectionInformation } from './ConnectionInformation';
 import { SdkConnection } from './SdkConnection';

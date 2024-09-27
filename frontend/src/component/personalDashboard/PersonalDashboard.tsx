@@ -28,6 +28,7 @@ import type {
 } from '../../openapi';
 import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
+import { ContentGridNoProjects } from './ContentGridNoProjects';
 
 const ScreenExplanation = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -197,6 +198,8 @@ export const PersonalDashboard = () => {
         'seen' | 'not_seen'
     >('welcome-dialog:v1', 'not_seen');
 
+    const noProjects = projects.length === 0;
+
     return (
         <div>
             <Typography component='h2' variant='h2'>
@@ -207,88 +210,102 @@ export const PersonalDashboard = () => {
                 most of Unleash
             </ScreenExplanation>
             <StyledHeaderTitle>Your resources</StyledHeaderTitle>
-            <ContentGrid container columns={{ lg: 12, md: 1 }}>
-                <SpacedGridItem item lg={4} md={1}>
-                    <Typography variant='h3'>My projects</Typography>
-                </SpacedGridItem>
-                <SpacedGridItem
-                    item
-                    lg={8}
-                    md={1}
-                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
-                >
-                    <Badge color='warning'>Setup incomplete</Badge>
-                </SpacedGridItem>
-                <SpacedGridItem item lg={4} md={1}>
-                    <List
-                        disablePadding={true}
-                        sx={{ maxHeight: '400px', overflow: 'auto' }}
+            {noProjects ? (
+                <ContentGridNoProjects
+                    owners={[{ ownerType: 'system' }]}
+                    admins={[
+                        { name: 'admin' },
+                        {
+                            name: 'Christopher Tompkins',
+                            imageUrl:
+                                'https://avatars.githubusercontent.com/u/1010371?v=4',
+                        },
+                    ]}
+                />
+            ) : (
+                <ContentGrid container columns={{ lg: 12, md: 1 }}>
+                    <SpacedGridItem item lg={4} md={1}>
+                        <Typography variant='h3'>My projects</Typography>
+                    </SpacedGridItem>
+                    <SpacedGridItem
+                        item
+                        lg={8}
+                        md={1}
+                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
                     >
-                        {projects.map((project) => {
-                            return (
-                                <ListItem
-                                    key={project.name}
-                                    disablePadding={true}
-                                    sx={{ mb: 1 }}
-                                >
-                                    <ListItemButton
-                                        sx={projectStyle}
-                                        selected={
-                                            project.name === activeProject
-                                        }
-                                        onClick={() =>
-                                            setActiveProject(project.name)
-                                        }
+                        <Badge color='warning'>Setup incomplete</Badge>
+                    </SpacedGridItem>
+                    <SpacedGridItem item lg={4} md={1}>
+                        <List
+                            disablePadding={true}
+                            sx={{ maxHeight: '400px', overflow: 'auto' }}
+                        >
+                            {projects.map((project) => {
+                                return (
+                                    <ListItem
+                                        key={project.name}
+                                        disablePadding={true}
+                                        sx={{ mb: 1 }}
                                     >
-                                        <ProjectBox>
-                                            <ProjectIcon color='primary' />
-                                            <StyledCardTitle>
-                                                {project.name}
-                                            </StyledCardTitle>
-                                            <IconButton
-                                                component={Link}
-                                                href={`projects/${project.name}`}
-                                                size='small'
-                                                sx={{ ml: 'auto' }}
-                                            >
-                                                <LinkIcon
-                                                    titleAccess={`projects/${project.name}`}
+                                        <ListItemButton
+                                            sx={projectStyle}
+                                            selected={
+                                                project.name === activeProject
+                                            }
+                                            onClick={() =>
+                                                setActiveProject(project.name)
+                                            }
+                                        >
+                                            <ProjectBox>
+                                                <ProjectIcon color='primary' />
+                                                <StyledCardTitle>
+                                                    {project.name}
+                                                </StyledCardTitle>
+                                                <IconButton
+                                                    component={Link}
+                                                    href={`projects/${project.name}`}
+                                                    size='small'
+                                                    sx={{ ml: 'auto' }}
+                                                >
+                                                    <LinkIcon
+                                                        titleAccess={`projects/${project.name}`}
+                                                    />
+                                                </IconButton>
+                                            </ProjectBox>
+                                            {project.name === activeProject ? (
+                                                <ActiveProjectDetails
+                                                    project={project}
                                                 />
-                                            </IconButton>
-                                        </ProjectBox>
-                                        {project.name === activeProject ? (
-                                            <ActiveProjectDetails
-                                                project={project}
-                                            />
-                                        ) : null}
-                                    </ListItemButton>
-                                </ListItem>
-                            );
-                        })}
-                    </List>
-                </SpacedGridItem>
-                <SpacedGridItem item lg={4} md={1}>
-                    {onboardingCompleted ? (
-                        <ProjectSetupComplete project={activeProject} />
-                    ) : activeProject ? (
-                        <CreateFlag project={activeProject} />
-                    ) : null}
-                </SpacedGridItem>
-                <SpacedGridItem item lg={4} md={1}>
-                    {activeProject ? (
-                        <ConnectSDK project={activeProject} />
-                    ) : null}
-                </SpacedGridItem>
-                <SpacedGridItem item lg={4} md={1} />
-                <SpacedGridItem item lg={8} md={1}>
-                    {activeProject ? (
-                        <RoleAndOwnerInfo
-                            roles={['owner', 'custom']}
-                            owners={[{ ownerType: 'system' }]}
-                        />
-                    ) : null}
-                </SpacedGridItem>
-            </ContentGrid>
+                                            ) : null}
+                                        </ListItemButton>
+                                    </ListItem>
+                                );
+                            })}
+                        </List>
+                    </SpacedGridItem>
+                    <SpacedGridItem item lg={4} md={1}>
+                        {onboardingCompleted ? (
+                            <ProjectSetupComplete project={activeProject} />
+                        ) : activeProject ? (
+                            <CreateFlag project={activeProject} />
+                        ) : null}
+                    </SpacedGridItem>
+                    <SpacedGridItem item lg={4} md={1}>
+                        {activeProject ? (
+                            <ConnectSDK project={activeProject} />
+                        ) : null}
+                    </SpacedGridItem>
+                    <SpacedGridItem item lg={4} md={1} />
+                    <SpacedGridItem item lg={8} md={1}>
+                        {activeProject ? (
+                            <RoleAndOwnerInfo
+                                roles={['owner', 'custom']}
+                                owners={[{ ownerType: 'system' }]}
+                            />
+                        ) : null}
+                    </SpacedGridItem>
+                </ContentGrid>
+            )}
             <ContentGrid container columns={{ lg: 12, md: 1 }} sx={{ mt: 2 }}>
                 <SpacedGridItem item lg={4} md={1}>
                     <Typography variant='h3'>My feature flags</Typography>

@@ -40,6 +40,7 @@ afterAll(async () => {
 beforeEach(async () => {
     await db.stores.featureToggleStore.deleteAll();
     await db.stores.userStore.deleteAll();
+    await db.stores.eventStore.deleteAll();
 });
 
 test('should return personal dashboard with own flags and favorited flags', async () => {
@@ -171,6 +172,47 @@ test('should return projects where users are part of a group', async () => {
                 health: 100,
                 memberCount: 2,
                 featureCount: 0,
+            },
+        ],
+    });
+});
+
+test('should return personal dashboard project details', async () => {
+    await loginUser('new_user@test.com');
+
+    await app.createFeature('log_feature_a');
+    await app.createFeature('log_feature_b');
+    await app.createFeature('log_feature_c');
+
+    const { body } = await app.request.get(
+        `/api/admin/personal-dashboard/default`,
+    );
+
+    expect(body).toMatchObject({
+        owners: [{}],
+        roles: [{}],
+        latestEvents: [
+            {
+                createdBy: 'new_user@test.com',
+                summary: expect.stringContaining(
+                    '**new_user@test.com** created **[log_feature_c]',
+                ),
+            },
+            {
+                createdBy: 'new_user@test.com',
+                summary: expect.stringContaining(
+                    '**new_user@test.com** created **[log_feature_b]',
+                ),
+            },
+            {
+                createdBy: 'new_user@test.com',
+                summary: expect.stringContaining(
+                    '**new_user@test.com** created **[log_feature_a]',
+                ),
+            },
+            {
+                createdBy: 'unleash_system_user',
+                summary: '**unleash_system_user** created user ****',
             },
         ],
     });

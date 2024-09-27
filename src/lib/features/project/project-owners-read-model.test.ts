@@ -374,7 +374,7 @@ describe('integration tests', () => {
         const projectA = await createProject();
         const projectB = await createProject();
         const projectC = await createProject();
-        const projectD = await createProject();
+        await createProject(); // <- no owner
 
         await db.stores.accessStore.addUserToRole(
             owner.id,

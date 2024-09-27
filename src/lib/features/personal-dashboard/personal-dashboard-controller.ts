@@ -59,18 +59,17 @@ export default class PersonalDashboardController extends Controller {
     ): Promise<void> {
         const user = req.user;
 
-        const flags = await this.personalDashboardService.getPersonalFeatures(
-            user.id,
-        );
-
-        const projects =
-            await this.personalDashboardService.getPersonalProjects(user.id);
+        const [flags, projects, projectOwners] = await Promise.all([
+            this.personalDashboardService.getPersonalFeatures(user.id),
+            this.personalDashboardService.getPersonalProjects(user.id),
+            this.personalDashboardService.getProjectOwners(user.id),
+        ]);
 
         this.openApiService.respondWithValidation(
             200,
             res,
             personalDashboardSchema.$id,
-            { projects, flags },
+            { projects, flags, projectOwners },
         );
     }
 }

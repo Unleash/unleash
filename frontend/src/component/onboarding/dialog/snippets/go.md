@@ -17,7 +17,7 @@ func init() {
         unleash.WithAppName("unleash-onboarding-golang"),
         unleash.WithUrl("<YOUR_API_URL>"),
         unleash.WithCustomHeaders(http.Header{"Authorization": {"<YOUR_API_TOKEN>"}}),
-m?J/'\;[:        unleash.WithMetricsInterval(5*time.Second),
+        unleash.WithMetricsInterval(5*time.Second),
     )
 }
 

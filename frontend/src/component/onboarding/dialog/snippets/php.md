@@ -24,3 +24,16 @@ while (true) {
     sleep(1);
 }
 ```
+---
+```php
+$unleash = UnleashBuilder::create()
+    ->withAppName('unleash-onboarding-php')
+    ->withAppUrl('<YOUR_API_URL>')
+    ->withHeader('Authorization', getenv('UNLEASH_API_TOKEN'))
+    ->withInstanceId('unleash-onboarding-instance')
+    ->build();
+```
+
+---
+- [SDK repository with documentation](https://github.com/Unleash/unleash-client-php)
+- [PHP SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/PHP)

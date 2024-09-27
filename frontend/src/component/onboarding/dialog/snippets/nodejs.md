@@ -32,5 +32,5 @@ const unleash = initialize({
 
 ---
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-node)
-- [Node.js SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/JavaScript)
+- [Node.js SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/NodeJS)
 - [Node.js SDK tutorial](https://dev.to/reeshee/how-to-implement-feature-flags-in-nodejs-using-unleash-3907)

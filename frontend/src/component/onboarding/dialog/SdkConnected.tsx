@@ -45,9 +45,9 @@ export const SdkConnected: FC<ISdkConnectedProps> = ({ sdk }) => {
             <Box sx={{ mt: 2 }}>
                 <SectionHeader>Production settings</SectionHeader>
                 <Typography variant='body2'>
-                    In order to validate the connection, we changed some
-                    settings that you might want to revert. We recommend the
-                    following default settings.
+                    We updated the Unleash code snippet to be production-ready.
+                    We recommend applying the following new settings to avoid
+                    exposing the API key and to follow best practices.
                 </Typography>
                 <Markdown components={{ code: CodeRenderer }}>
                     {productionSnippet}

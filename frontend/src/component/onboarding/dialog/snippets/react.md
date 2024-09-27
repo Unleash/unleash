@@ -36,3 +36,17 @@ const TestComponent = () => {
   return enabled ? 'Flag is enabled' : 'Flag is disabled'
 };
 ```
+---
+```jsx
+const config = {
+  url: '<YOUR_API_URL>', 
+  clientKey: process.env.UNLEASH_API_TOKEN,
+  appName: 'unleash-onboarding-react',
+};
+```
+
+---
+- [SDK repository with documentation](https://github.com/Unleash/proxy-client-react)
+- [React SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/React)
+- [https://docs.getunleash.io/feature-flag-tutorials/react](https://docs.getunleash.io/feature-flag-tutorials/react)
+

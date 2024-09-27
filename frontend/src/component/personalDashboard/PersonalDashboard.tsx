@@ -178,12 +178,7 @@ export const PersonalDashboard = () => {
 
     const name = user?.name;
 
-    const {
-        // projects,
-        activeProject,
-        setActiveProject,
-    } = useProjects();
-    const projects = [];
+    const { projects, activeProject, setActiveProject } = useProjects();
 
     const { personalDashboard, refetch: refetchDashboard } =
         usePersonalDashboard();

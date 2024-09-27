@@ -60,10 +60,6 @@ class MainActivity : ComponentActivity() {
 ```
 
 ---
-
-### Additional resources
-
-Now that we’ve validated the connection, you might want to look into more advanced use cases and examples:
-
+---
 - [SDK repository with documentation and example](https://github.com/Unleash/unleash-android)
 - [Android SDK basic example](hhttps://github.com/Unleash/unleash-sdk-examples/tree/main/Android)

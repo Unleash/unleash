@@ -3,7 +3,7 @@
 gem install unleash
 ```
 
-2\. Initialize Unleash
+2\. Run Unleash
 ```rb
 require 'unleash'
 
@@ -15,10 +15,7 @@ require 'unleash'
   refresh_interval: 3, # In production use interval of >15s
   metrics_interval: 3, # In production use interval of >15s
 )
-```
 
-3\. Check feature flag status
-```rb
 while true
   if @unleash.is_enabled?("<YOUR_FLAG>")
     puts "Flag is enabled"

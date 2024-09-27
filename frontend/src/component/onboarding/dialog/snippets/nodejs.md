@@ -3,7 +3,7 @@
 npm install unleash-client
 ```
 
-2\. Initialize Unleash
+2\. Run Unleash
 ```js
 const { initialize } = require('unleash-client');
 
@@ -13,10 +13,7 @@ const unleash = initialize({
   customHeaders: { Authorization: '<YOUR_API_TOKEN>' },
   metricsInterval: 5000,
 });
-```
 
-3\. Check feature flag status
-```js
 setInterval(() => {
   console.log('Is enabled', unleash.isEnabled('<YOUR_FLAG>'));
 }, 1000);

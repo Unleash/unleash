@@ -113,14 +113,14 @@ export default class DatadogAddon extends Addon {
             state = 'failed';
             const failedMessage = `Datadog Events API request failed with status code: ${res.status}.`;
             stateDetails.push(failedMessage);
-            if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-                this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                    result: state,
-                    destination: 'datadog',
-                });
-            }
-
             this.logger.warn(failedMessage);
+        }
+
+        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
+            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+                result: state,
+                destination: 'datadog',
+            });
         }
 
         this.registerEvent({

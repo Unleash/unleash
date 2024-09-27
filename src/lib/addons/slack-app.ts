@@ -179,6 +179,9 @@ export default class SlackAppAddon extends Addon {
             stateDetails.push(eventErrorMessage);
             this.logger.warn(eventErrorMessage);
             const errorMessage = this.parseError(error);
+            stateDetails.push(errorMessage);
+            this.logger.warn(errorMessage, error);
+        } finally {
             if (this.flagResolver.isEnabled('addonUsageMetrics')) {
                 this.eventBus.emit(ADDON_EVENTS_HANDLED, {
                     result: state,
@@ -186,9 +189,6 @@ export default class SlackAppAddon extends Addon {
                 });
             }
 
-            stateDetails.push(errorMessage);
-            this.logger.warn(errorMessage, error);
-        } finally {
             this.registerEvent({
                 integrationId,
                 state,

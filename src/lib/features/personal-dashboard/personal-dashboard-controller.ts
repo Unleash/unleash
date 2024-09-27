@@ -104,11 +104,17 @@ export default class PersonalDashboardController extends Controller {
     ): Promise<void> {
         const user = req.user;
 
+        const projectDetails =
+            await this.personalDashboardService.getPersonalProjectDetails(
+                req.params.projectId,
+            );
+
         this.openApiService.respondWithValidation(
             200,
             res,
             personalDashboardProjectDetailsSchema.$id,
             {
+                ...projectDetails,
                 owners: [{ ownerType: 'user', name: 'placeholder' }],
                 roles: [{ name: 'placeholder', id: 0, type: 'project' }],
             },

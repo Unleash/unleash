@@ -3,7 +3,7 @@
 pip install UnleashClient
 ```
 
-2\. Initialize Unleash
+2\. Run Unleash
 ```python
 from UnleashClient import UnleashClient
 import asyncio
@@ -15,10 +15,7 @@ client = UnleashClient(
     custom_headers={'Authorization': '<YOUR_API_TOKEN>'})
 
 client.initialize_client()
-```
 
-3\. Check feature flag status
-```python
 while True:
     print(client.is_enabled("<YOUR_FLAG>"))
     asyncio.run(asyncio.sleep(1))

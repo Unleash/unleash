@@ -4,7 +4,7 @@
 https://github.com/Unleash/unleash-proxy-client-swift.git
 ```
 
-2\. Initialize Unleash
+2\. Run Unleash
 ```swift
 import Foundation
 import UnleashProxyClientSwift
@@ -17,10 +17,7 @@ var unleash = UnleashProxyClientSwift.UnleashClient(
    context: [:])
 
 unleash.start()
-```
 
-3\. Check feature flag status
-```swift
 Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
     print("Is enabled", unleash.isEnabled(name: "<YOUR_FLAG>"))
 }

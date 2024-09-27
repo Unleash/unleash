@@ -7,7 +7,7 @@
 </dependency>
 ```
 
-2\. Initialize Unleash
+2\. Run Unleash
 ```java
 UnleashConfig config = UnleashConfig.builder()
     .appName("unleash-onboarding-java")
@@ -18,10 +18,7 @@ UnleashConfig config = UnleashConfig.builder()
     .build();
 
 Unleash unleash = new DefaultUnleash(config);
-```
 
-3\. Check feature flag status
-```java
 while (true) {
     boolean featureEnabled = unleash.isEnabled("<YOUR_FLAG>");
     System.out.println("Feature enabled: " + featureEnabled);

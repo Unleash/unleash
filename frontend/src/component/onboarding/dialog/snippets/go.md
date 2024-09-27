@@ -3,7 +3,7 @@
 go get github.com/Unleash/unleash-client-go/v3
 ```
 
-2\. Initialize Unleash
+2\. Run Unleash
 ```go
 import (
     "github.com/Unleash/unleash-client-go/v3"
@@ -20,10 +20,7 @@ func init() {
         unleash.WithMetricsInterval(5*time.Second),
     )
 }
-```
 
-3\. Check feature flag status
-```go
 func main() {
     for {
         unleash.IsEnabled("<YOUR_FLAG>")

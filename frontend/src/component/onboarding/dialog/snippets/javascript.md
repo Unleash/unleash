@@ -3,7 +3,7 @@
 npm install unleash-proxy-client
 ```
 
-2\. Initialize Unleash
+2\. Run Unleash
 ```js
 const { UnleashClient } = require('unleash-proxy-client');
 
@@ -15,10 +15,7 @@ const unleash = new UnleashClient({
 });
 
 unleash.start();
-```
 
-3\. Check feature flag status
-```js
 setInterval(() => {
     console.log('Is enabled', unleash.isEnabled('<YOUR_FLAG>'));
 }, 1000);

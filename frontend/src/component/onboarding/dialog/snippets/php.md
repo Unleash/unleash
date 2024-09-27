@@ -18,10 +18,7 @@ $unleash = UnleashBuilder::create()
     ->withInstanceId('unleash-onboarding-instance')
     ->withMetricsInterval(5000)
     ->build();
-```
 
-3\. Check feature flag status
-```php
 while (true) {
     echo 'Feature flag is:  ' . $unleash->isEnabled('<YOUR_FLAG>') . PHP_EOL;
     sleep(1);

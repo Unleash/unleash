@@ -1,6 +1,6 @@
 import { Grid, Typography, styled } from '@mui/material';
 import { AvatarGroupFromOwners } from 'component/common/AvatarGroupFromOwners/AvatarGroupFromOwners';
-import useProjects from 'hooks/api/getters/useProjects/useProjects';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import type { ProjectSchemaOwners } from 'openapi';
 import { Link } from 'react-router-dom';
 
@@ -33,7 +33,7 @@ const NeutralCircleContainer = styled('span')(({ theme }) => ({
     borderRadius: '50%',
 }));
 
-const ActionBox = styled('div')(({ theme }) => ({
+const GridContent = styled('div')(({ theme }) => ({
     flexBasis: '50%',
     padding: theme.spacing(4, 2),
     display: 'flex',
@@ -41,36 +41,41 @@ const ActionBox = styled('div')(({ theme }) => ({
     flexDirection: 'column',
 }));
 
-export const ContentGridNoProjects = () => {
-    const { projects } = useProjects();
+const BoxMainContent = styled('article')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(2),
+}));
 
-    const owners = projects.reduce(
-        (acc, project) => {
-            for (const owner of project.owners ?? []) {
-                if (owner.ownerType === 'user') {
-                    acc[owner.email || owner.name] = owner;
-                }
-            }
-            return acc;
-        },
-        {} as Record<string, ProjectSchemaOwners[number]>,
-    );
+const AdminList = styled('ul')(({ theme }) => ({
+    padding: 0,
+    'li + li': {
+        marginTop: theme.spacing(2),
+    },
+}));
 
+const AdminListItem = styled('li')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row',
+    gap: theme.spacing(2),
+}));
+
+type Props = {
+    owners: ProjectSchemaOwners;
+    admins: { name: string; imageUrl?: string }[];
+};
+
+export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
     return (
         <ContentGrid container columns={{ lg: 12, md: 1 }}>
             <SpacedGridItem item lg={4} md={1}>
                 <Typography variant='h3'>My projects</Typography>
             </SpacedGridItem>
-            <SpacedGridItem
-                item
-                lg={8}
-                md={1}
-                sx={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
+            <SpacedGridItem item lg={8} md={1}>
                 <Typography>Potential next steps</Typography>
             </SpacedGridItem>
             <SpacedGridItem item lg={4} md={1}>
-                <ActionBox>
+                <GridContent>
                     <Typography>
                         You don't currently have access to any projects in the
                         system.
@@ -83,34 +88,46 @@ export const ContentGridNoProjects = () => {
                         . Alternatively, you can review the available projects
                         in the system and ask the owner for access.
                     </Typography>
-                </ActionBox>
+                </GridContent>
             </SpacedGridItem>
             <SpacedGridItem item lg={4} md={1}>
-                <ActionBox>
+                <GridContent>
                     <TitleContainer>
                         <NeutralCircleContainer>1</NeutralCircleContainer>
                         Contact Unleash admin
                     </TitleContainer>
-                    <div>
-                        <p>Your Unleash administrator is:</p>
-                        <p>... someone, I guess? </p>
-                    </div>
-                </ActionBox>
+                    <BoxMainContent>
+                        <p>
+                            Your Unleash administrator
+                            {admins.length > 1 ? 's are' : ' is'}:
+                        </p>
+                        <AdminList>
+                            {admins.map((admin) => (
+                                <AdminListItem>
+                                    <UserAvatar
+                                        sx={{
+                                            margin: 0,
+                                        }}
+                                        user={admin}
+                                    />
+                                    <Typography>{admin.name}</Typography>
+                                </AdminListItem>
+                            ))}
+                        </AdminList>
+                    </BoxMainContent>
+                </GridContent>
             </SpacedGridItem>
             <SpacedGridItem item lg={4} md={1}>
-                <ActionBox>
+                <GridContent>
                     <TitleContainer>
                         <NeutralCircleContainer>2</NeutralCircleContainer>
                         Ask a project owner to add you to their project
                     </TitleContainer>
-                    <div>
+                    <BoxMainContent>
                         <p>Project owners in Unleash:</p>
-                        <AvatarGroupFromOwners
-                            users={Object.values(owners)}
-                            avatarLimit={9}
-                        />
-                    </div>
-                </ActionBox>
+                        <AvatarGroupFromOwners users={owners} avatarLimit={9} />
+                    </BoxMainContent>
+                </GridContent>
             </SpacedGridItem>
             <SpacedGridItem item lg={4} md={1} />
             <SpacedGridItem item lg={8} md={1} />

@@ -11,7 +11,7 @@ Feature flags are a great way to run A/B tests to decouple them from your code, 
 
 ## How to Perform A/B Testing with Unleash
 
-To follow along with this tutorial, you will need an Unleash instance. Follow our documentation on [Self-Hosting with Unleash](/using-unleash/deploy/getting-started) to get started using your infrastructure. Alternatively, read our [Quickstart documentation](/quickstart) if you’d like your project to be hosted by Unleash.
+To follow along with this tutorial, you will need an Unleash instance. If you’d prefer to self-host Unleash, read our [Quick Start documentation](/reference/quickstart). Alternatively, if you’d like your project to be hosted by Unleash, go to [www.getunleash.io](https://www.getunleash.io/pricing?_gl=1*1ytmg93*_gcl_au*MTY3MTQxNjM4OS4xNzIxOTEwNTY5*_ga*OTkzMjI0MDMwLjE3MDYxNDc3ODM.*_ga_492KEZQRT8*MTcyNzQzNTQwOS4yMzcuMS4xNzI3NDM1NDExLjU4LjAuMA).
 
 With Unleash set up, you can use your application to talk to Unleash through one of our SDKs.
 
@@ -33,7 +33,7 @@ Read our docs on [Projects](/reference/projects) to learn more about how to conf
 
 Once you have completed the form, you can click ‘Create feature flag’.
 
-Your new feature flag has been created and is ready to be used. Upon returning to your project’s view, enable the flag for your development environment, which makes it accessible to use in your app.
+Your new feature flag has been created and is ready to be used. Upon returning to your projects view, enable the flag for your development environment, which makes it accessible to use in your app.
 
 ![Enable the development environment for your feature flag for use in your application.](/img/tutorial-enable-dev-env.png)
 
@@ -69,11 +69,11 @@ A variant has four components that define it:
 -   **name**: This must be unique among the strategy's variants. When working with a feature with variants in a client, you will typically use the variant's name to find out which variant it is.
 -   **weight**: The weight is the likelihood of any one user getting this specific variant. See the weights section for more info.
 -   **value**
--   **(optional) payload**: A variant can also have an associated payload. Use this to deliver more data or context. See the payload section for a more details.
+-   **(optional) payload**: A variant can also have an associated payload. Use this to deliver more data or context. See the payload section for more details.
 
 While teams may have different goals for measuring performance, Unleash enables you to configure a strategy for the feature variants within your application/service and the platform.
 
-## A/B Testing with Enterprise Security in Mind
+## A/B Testing with Enterprise Security Automation
 
 For large-scale organizations, managing feature flags across many teams can be complex and challenging. Unleash was architected for your feature flag management to be scalable and traceable for enterprises, which boosts overall internal security posture while delivering software efficiently.
 
@@ -89,9 +89,13 @@ Read our documentation on how to effectively manage [feature flags at scale](/to
 
 Once you have created a feature flag and configured your A/B test, you can use Unleash to collect insights about the ongoing results of the test. One way to collect this data is through enabling [impression data](/reference/impression-data#impression-event-data) per feature flag. Impression data contains information about a specific feature flag activation check. It’s important to review data from an A/B test, as this could inform you on how (and if) users interact with the feature you have released.
 
+Strategy variants are meant to work with impression data. You get the name of the variant to your analytics which allows you a better understanding of what happened, rather than seeing a simple true/false from your logs.
+
 To enable impression data for your flag, navigate to your feature flag form and turn the toggle on.
 
 Next, in your application code, use the SDK to capture the impression events as they are being emitted in real time. Follow [language and framework-specific tutorials](/languages-and-frameworks) to learn how to capture the events and send them to data analytics and warehouse platforms of your choice.
+
+Now that the application is capturing impression events, you can configure the correct data fields and formatting to send to any analytics tool or data warehouse you use.
 
 #### Collect Event Type Data
 

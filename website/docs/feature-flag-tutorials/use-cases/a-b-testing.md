@@ -11,7 +11,7 @@ Feature flags are a great way to run A/B tests to decouple them from your code, 
 
 ## How to Perform A/B Testing with Unleash
 
-To follow along with this tutorial, you will need an Unleash instance. If you’d prefer to self-host Unleash, read our [Quick Start documentation](/reference/quickstart). Alternatively, if you’d like your project to be hosted by Unleash, go to [www.getunleash.io](https://www.getunleash.io/pricing?_gl=1*1ytmg93*_gcl_au*MTY3MTQxNjM4OS4xNzIxOTEwNTY5*_ga*OTkzMjI0MDMwLjE3MDYxNDc3ODM.*_ga_492KEZQRT8*MTcyNzQzNTQwOS4yMzcuMS4xNzI3NDM1NDExLjU4LjAuMA).
+To follow along with this tutorial, you will need an Unleash instance. If you’d prefer to self-host Unleash, read our [Quick Start documentation](/quickstart). Alternatively, if you’d like your project to be hosted by Unleash, go to [www.getunleash.io](https://www.getunleash.io/pricing?_gl=1*1ytmg93*_gcl_au*MTY3MTQxNjM4OS4xNzIxOTEwNTY5*_ga*OTkzMjI0MDMwLjE3MDYxNDc3ODM.*_ga_492KEZQRT8*MTcyNzQzNTQwOS4yMzcuMS4xNzI3NDM1NDExLjU4LjAuMA).
 
 With Unleash set up, you can use your application to talk to Unleash through one of our SDKs.
 

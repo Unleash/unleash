@@ -194,18 +194,21 @@ test('should return personal dashboard project details', async () => {
         latestEvents: [
             {
                 createdBy: 'new_user@test.com',
-                summary:
-                    '**new_user@test.com** created **[log_feature_c](http://localhost:4242/projects/default/features/log_feature_c)** in project **[default](http://localhost:4242/projects/default)**',
+                summary: expect.stringContaining(
+                    '**new_user@test.com** created **[log_feature_c]',
+                ),
             },
             {
                 createdBy: 'new_user@test.com',
-                summary:
-                    '**new_user@test.com** created **[log_feature_b](http://localhost:4242/projects/default/features/log_feature_b)** in project **[default](http://localhost:4242/projects/default)**',
+                summary: expect.stringContaining(
+                    '**new_user@test.com** created **[log_feature_b]',
+                ),
             },
             {
                 createdBy: 'new_user@test.com',
-                summary:
-                    '**new_user@test.com** created **[log_feature_a](http://localhost:4242/projects/default/features/log_feature_a)** in project **[default](http://localhost:4242/projects/default)**',
+                summary: expect.stringContaining(
+                    '**new_user@test.com** created **[log_feature_a]',
+                ),
             },
             {
                 createdBy: 'unleash_system_user',

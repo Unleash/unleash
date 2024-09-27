@@ -66,8 +66,8 @@ export class PersonalDashboardService {
         projectId: string,
     ): Promise<PersonalProjectDetails> {
         const recentEvents = await this.eventStore.searchEvents(
-            { project: projectId, limit: 4, offset: 0 },
-            [],
+            { limit: 4, offset: 0 },
+            [{ field: 'project', operator: 'IS', values: [projectId] }],
         );
 
         const formattedEvents = recentEvents.map((event) => ({

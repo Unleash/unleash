@@ -244,7 +244,7 @@ export const PersonalDashboard = () => {
                             {projects.map((project) => {
                                 return (
                                     <ListItem
-                                        key={project.name}
+                                        key={project.id}
                                         disablePadding={true}
                                         sx={{ mb: 1 }}
                                     >
@@ -264,12 +264,12 @@ export const PersonalDashboard = () => {
                                                 </StyledCardTitle>
                                                 <IconButton
                                                     component={Link}
-                                                    href={`projects/${project.name}`}
+                                                    href={`projects/${project.id}`}
                                                     size='small'
                                                     sx={{ ml: 'auto' }}
                                                 >
                                                     <LinkIcon
-                                                        titleAccess={`projects/${project.name}`}
+                                                        titleAccess={`projects/${project.id}`}
                                                     />
                                                 </IconButton>
                                             </ProjectBox>

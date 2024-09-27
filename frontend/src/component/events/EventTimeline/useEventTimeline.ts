@@ -64,7 +64,7 @@ type EventTimelineState = {
 };
 
 const defaultState: EventTimelineState = {
-    open: true,
+    open: false,
     timeSpan: timeSpanOptions[0],
 };
 

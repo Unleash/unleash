@@ -1,10 +1,17 @@
-import { Box } from '@mui/material';
+import { Box, styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { useEffect, useState } from 'react';
 
 interface IMainLayoutEventTimelineProps {
     open: boolean;
 }
+
+const StyledEventTimelineWrapper = styled(Box)(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    height: '105px',
+    overflow: 'hidden',
+}));
 
 export const MainLayoutEventTimeline = ({
     open,
@@ -16,9 +23,8 @@ export const MainLayoutEventTimeline = ({
     }, []);
 
     return (
-        <Box
+        <StyledEventTimelineWrapper
             sx={{
-                overflow: 'hidden',
                 transition: isInitialLoad
                     ? 'none'
                     : 'max-height 0.3s ease-in-out',
@@ -31,8 +37,11 @@ export const MainLayoutEventTimeline = ({
                     backgroundColor: theme.palette.background.paper,
                 })}
             >
-                <EventTimeline />
+                <ConditionallyRender
+                    condition={open}
+                    show={<EventTimeline />}
+                />
             </Box>
-        </Box>
+        </StyledEventTimelineWrapper>
     );
 };

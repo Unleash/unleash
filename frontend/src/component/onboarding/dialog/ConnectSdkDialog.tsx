@@ -170,7 +170,7 @@ export const ConnectSdkDialog = ({
                                 ) : null}
 
                                 <Button variant='contained' onClick={onFinish}>
-                                    Next
+                                    Complete
                                 </Button>
                             </NextStepSectionSpacedContainer>
                         </Navigation>

@@ -131,14 +131,14 @@ export default class SlackAddon extends Addon {
             state = 'successWithErrors';
             const successWithErrorsMessage = `Some (${failedRequests.length} of ${results.length}) Slack webhook requests failed. Status codes: ${codes}.`;
             stateDetails.push(successWithErrorsMessage);
-            if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-                this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                    result: state,
-                    destination: 'slack',
-                });
-            }
-
             this.logger.warn(successWithErrorsMessage);
+        }
+
+        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
+            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+                result: state,
+                destination: 'slack',
+            });
         }
 
         this.registerEvent({

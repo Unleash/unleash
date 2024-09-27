@@ -107,14 +107,14 @@ export default class TeamsAddon extends Addon {
             state = 'failed';
             const failedMessage = `Teams webhook request failed with status code: ${res.status}.`;
             stateDetails.push(failedMessage);
-            if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-                this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                    result: state,
-                    destination: 'teams',
-                });
-            }
-
             this.logger.warn(failedMessage);
+        }
+
+        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
+            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+                result: state,
+                destination: 'teams',
+            });
         }
 
         this.registerEvent({

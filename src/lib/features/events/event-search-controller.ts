@@ -63,7 +63,7 @@ export default class EventSearchController extends Controller {
                     tags: ['Events'],
                     summary: 'Search for events',
                     description:
-                        'Allows searching for events matching the search criteria in the request body. This operation is deprecated. You should perform a GET request to the same endpoint with your query encoded as query parameters instead.',
+                        'Allows searching for events that match the query parameter criteria.',
                     parameters: [...eventSearchQueryParameters],
                     responses: {
                         200: createResponseSchema('eventSearchResponseSchema'),

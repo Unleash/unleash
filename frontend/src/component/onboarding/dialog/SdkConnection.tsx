@@ -19,7 +19,7 @@ export const SdkConnection = ({
 }: ISdkConnectionProps) => {
     return (
         <Suspense fallback={<Loader />}>
-            {feature ? (
+            {!feature ? (
                 <TestSdkConnection
                     sdk={sdk}
                     apiKey={apiKey}

@@ -25,3 +25,18 @@ while (true) {
     Thread.sleep(1000);
 }
 ```
+
+---
+```java
+UnleashConfig config = UnleashConfig.builder()
+    .appName("unleash-onboarding-java")
+    .instanceId("unleash-onboarding-instance")
+    .unleashAPI("<YOUR_API_URL>")
+    .apiKey(System.getenv("UNLEASH_API_KEY"))
+    .build();
+```
+
+---
+- [SDK repository with documentation](https://github.com/Unleash/unleash-client-java)
+- [Java SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Java)
+- [How to Implement Feature Flags in Java](https://docs.getunleash.io/feature-flag-tutorials/java)

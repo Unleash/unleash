@@ -112,6 +112,11 @@ module.exports = {
                                     label: 'Gradual Rollout',
                                     id: 'feature-flag-tutorials/use-cases/gradual-rollout',
                                 },
+                                {
+                                    type: 'doc',
+                                    label: 'Feature flags for AI',
+                                    id: 'feature-flag-tutorials/use-cases/ai',
+                                },
                             ],
                         },
                         {

@@ -112,6 +112,11 @@ module.exports = {
                                     label: 'Gradual Rollout',
                                     id: 'feature-flag-tutorials/use-cases/gradual-rollout',
                                 },
+                                {
+                                    type: 'doc',
+                                    label: 'A/B Testing',
+                                    id: 'feature-flag-tutorials/use-cases/a-b-testing',
+                                },
                             ],
                         },
                         {

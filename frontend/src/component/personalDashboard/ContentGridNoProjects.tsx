@@ -1,7 +1,6 @@
 import { Grid, Typography, styled } from '@mui/material';
-import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
+import { OwnerAvatarGroup } from 'component/common/OwnerAvatarGroup/OwnerAvatarGroup';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { ProjectSchemaOwners } from 'openapi';
 import { Link } from 'react-router-dom';
 
@@ -42,29 +41,8 @@ const ActionBox = styled('div')(({ theme }) => ({
     flexDirection: 'column',
 }));
 
-const mapOwners =
-    (unleashUrl?: string) => (owner: ProjectSchemaOwners[number]) => {
-        if (owner.ownerType === 'user') {
-            return {
-                name: owner.name,
-                imageUrl: owner.imageUrl || undefined,
-                email: owner.email || undefined,
-            };
-        }
-        if (owner.ownerType === 'group') {
-            return {
-                name: owner.name,
-            };
-        }
-        return {
-            name: 'System',
-            imageUrl: `${unleashUrl}/logo-unleash.png`,
-        };
-    };
-
 export const ContentGridNoProjects = () => {
     const { projects } = useProjects();
-    const { uiConfig } = useUiConfig();
 
     const owners = projects.reduce(
         (acc, project) => {
@@ -76,10 +54,6 @@ export const ContentGridNoProjects = () => {
             return acc;
         },
         {} as Record<string, ProjectSchemaOwners[number]>,
-    );
-
-    const mappedOwners = Object.values(owners).map(
-        mapOwners(uiConfig.unleashUrl),
     );
 
     return (
@@ -131,7 +105,10 @@ export const ContentGridNoProjects = () => {
                     </TitleContainer>
                     <div>
                         <p>Project owners in Unleash:</p>
-                        <AvatarGroup users={mappedOwners} avatarLimit={9} />
+                        <OwnerAvatarGroup
+                            users={Object.values(owners)}
+                            avatarLimit={9}
+                        />
                     </div>
                 </ActionBox>
             </SpacedGridItem>

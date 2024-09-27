@@ -1,7 +1,6 @@
 import { styled } from '@mui/material';
-import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
 import { Badge } from 'component/common/Badge/Badge';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { OwnerAvatarGroup } from 'component/common/OwnerAvatarGroup/OwnerAvatarGroup';
 import type { ProjectSchemaOwners } from 'openapi';
 
 type Props = {
@@ -22,29 +21,7 @@ const InfoSection = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const mapOwners =
-    (unleashUrl?: string) => (owner: ProjectSchemaOwners[number]) => {
-        if (owner.ownerType === 'user') {
-            return {
-                name: owner.name,
-                imageUrl: owner.imageUrl || undefined,
-                email: owner.email || undefined,
-            };
-        }
-        if (owner.ownerType === 'group') {
-            return {
-                name: owner.name,
-            };
-        }
-        return {
-            name: 'System',
-            imageUrl: `${unleashUrl}/logo-unleash.png`,
-        };
-    };
-
 export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
-    const { uiConfig } = useUiConfig();
-    const mappedOwners = owners.map(mapOwners(uiConfig.unleashUrl));
     return (
         <Wrapper>
             <InfoSection>
@@ -57,7 +34,7 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
             </InfoSection>
             <InfoSection>
                 <span>Project owner{owners.length > 1 ? 's' : ''}</span>
-                <AvatarGroup users={mappedOwners} avatarLimit={3} />
+                <OwnerAvatarGroup users={owners} avatarLimit={3} />
             </InfoSection>
         </Wrapper>
     );

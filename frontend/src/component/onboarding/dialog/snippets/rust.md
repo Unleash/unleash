@@ -7,7 +7,7 @@ cargo add serde tokio --features full
 cargo add serde anyhow cfg cfg-if enum-map@~2.0.0 surf
 ```
 
-2\. Initialize Unleash
+2\. Run Unleash
 ```rust
 use enum_map::Enum;
 use serde::{Deserialize, Serialize};
@@ -50,3 +50,22 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     Ok(())
 }
 ```
+---
+```rust
+let api_token = env::var("UNLEASH_API_TOKEN").expect("UNLEASH_API_TOKEN environment variable not set");
+
+let client: Client<Flags, reqwest::Client> = ClientBuilder::default()
+    .interval(5000) // Polling & metrics interval - default 15000 (ms)
+    .into_client(
+        "<YOUR_API_URL>",
+        "unleash-onboarding-rust",
+        "unleash-onboarding-instance",
+        Some(api_token.to_owned()),
+    )?;
+client.register().await?;
+```
+
+---
+- [SDK repository with documentation](https://github.com/Unleash/unleash-client-rust)
+- [Rust example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Rust)
+- [How to Implement Feature Flags in Rust](https://docs.getunleash.io/feature-flag-tutorials/rust)

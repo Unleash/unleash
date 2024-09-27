@@ -430,7 +430,9 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <ConditionallyRender
-                condition={setupCompletedState === 'show-setup'}
+                condition={
+                    setupCompletedState === 'show-setup' && !isOnboarding
+                }
                 show={
                     <ProjectOnboarded
                         projectId={projectId}

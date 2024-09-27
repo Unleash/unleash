@@ -3,7 +3,7 @@
 go get github.com/Unleash/unleash-client-go/v3
 ```
 
-2\. Initialize Unleash
+2\. Run Unleash
 ```go
 import (
     "github.com/Unleash/unleash-client-go/v3"
@@ -20,10 +20,7 @@ func init() {
         unleash.WithMetricsInterval(5*time.Second),
     )
 }
-```
 
-3\. Check feature flag status
-```go
 func main() {
     for {
         unleash.IsEnabled("<YOUR_FLAG>")
@@ -31,3 +28,27 @@ func main() {
     }
 }
 ```
+
+---
+```go
+import (
+    "github.com/Unleash/unleash-client-go/v3"
+    "net/http"
+    "time"
+)
+
+func init() {
+    unleash.Initialize(
+        unleash.WithListener(&unleash.DebugListener{}),
+        unleash.WithAppName("unleash-onboarding-golang"),
+        unleash.WithUrl("<YOUR_API_URL>"),
+        unleash.WithCustomHeaders(http.Header{
+            "Authorization": {os.Getenv("UNLEASH_API_KEY")},
+        })
+    )
+}
+```
+
+---
+- [SDK repository with documentation](https://github.com/Unleash/unleash-client-go)
+- [Go SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Go)

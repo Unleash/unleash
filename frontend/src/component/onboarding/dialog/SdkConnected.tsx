@@ -19,7 +19,6 @@ const SpacedContainer = styled('div')(({ theme }) => ({
 interface ISdkConnectedProps {
     sdk: Sdk;
 }
-
 export const SdkConnected: FC<ISdkConnectedProps> = ({ sdk }) => {
     const { uiConfig } = useUiConfig();
 
@@ -42,30 +41,31 @@ export const SdkConnected: FC<ISdkConnectedProps> = ({ sdk }) => {
                 <Stepper active={2} steps={3} />
                 <Badge color='secondary'>3/3 - Test connection</Badge>
             </StepperBox>
-            <Box sx={{ mt: 2 }}>
-                <SectionHeader>Production settings</SectionHeader>
-                <Typography variant='body2'>
-                    In order to validate the connection, we changed some
-                    settings that you might want to revert. We recommend the
-                    following default settings.
-                </Typography>
-                <Markdown components={{ code: CodeRenderer }}>
-                    {productionSnippet}
-                </Markdown>
-            </Box>
-            <Box>
-                <SectionHeader>Additional resources</SectionHeader>
-                <Typography variant='body2'>
-                    Now that we’ve validated the connection, you might want to
-                    look into more advanced use cases and examples:
-                </Typography>
-                <Markdown components={{ code: CodeRenderer }}>
-                    {otherResourcesSnippet}
-                </Markdown>
-            </Box>
+            {productionSnippet?.trim() ? (
+                <Box sx={{ mt: 2 }}>
+                    <SectionHeader>Production settings</SectionHeader>
+                    <Typography variant='body2'>
+                        In order to validate the connection, we changed some
+                        settings that you might want to revert. We recommend the
+                        following default settings.
+                    </Typography>
+                    <Markdown components={{ code: CodeRenderer }}>
+                        {productionSnippet}
+                    </Markdown>
+                </Box>
+            ) : null}
+            {otherResourcesSnippet?.trim() ? (
+                <Box>
+                    <SectionHeader>Additional resources</SectionHeader>
+                    <Typography variant='body2'>
+                        Now that we’ve validated the connection, you might want
+                        to look into more advanced use cases and examples:
+                    </Typography>
+                    <Markdown components={{ code: CodeRenderer }}>
+                        {otherResourcesSnippet}
+                    </Markdown>
+                </Box>
+            ) : null}
         </SpacedContainer>
     );
 };
-
-// Use a default export for lazy-loading
-export default SdkConnected;

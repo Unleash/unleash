@@ -10,8 +10,10 @@ import Controller from '../../routes/controller';
 import type { Response } from 'express';
 import type { IAuthRequest } from '../../routes/unleash-types';
 import type { PersonalDashboardService } from './personal-dashboard-service';
-
-const PATH = '';
+import {
+    personalDashboardProjectDetailsSchema,
+    type PersonalDashboardProjectDetailsSchema,
+} from '../../openapi/spec/personal-dashboard-project-details-schema';
 
 export default class PersonalDashboardController extends Controller {
     private openApiService: OpenApiService;
@@ -34,7 +36,7 @@ export default class PersonalDashboardController extends Controller {
 
         this.route({
             method: 'get',
-            path: PATH,
+            path: '',
             handler: this.getPersonalDashboard,
             permission: NONE,
             middleware: [
@@ -46,6 +48,28 @@ export default class PersonalDashboardController extends Controller {
                     operationId: 'getPersonalDashboard',
                     responses: {
                         200: createResponseSchema('personalDashboardSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
+            path: '/:projectId',
+            handler: this.getPersonalDashboardProjectDetails,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Unstable'],
+                    summary: 'Get personal project details',
+                    description:
+                        'Return personal dashboard project events, owners, user roles and onboarding status',
+                    operationId: 'getPersonalDashboardProjectDetails',
+                    responses: {
+                        200: createResponseSchema(
+                            'personalDashboardProjectDetailsSchema',
+                        ),
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
@@ -70,6 +94,29 @@ export default class PersonalDashboardController extends Controller {
             res,
             personalDashboardSchema.$id,
             { projects, flags, projectOwners },
+        );
+    }
+
+    async getPersonalDashboardProjectDetails(
+        req: IAuthRequest<{ projectId: string }>,
+        res: Response<PersonalDashboardProjectDetailsSchema>,
+    ): Promise<void> {
+        const user = req.user;
+
+        const projectDetails =
+            await this.personalDashboardService.getPersonalProjectDetails(
+                req.params.projectId,
+            );
+
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            personalDashboardProjectDetailsSchema.$id,
+            {
+                ...projectDetails,
+                owners: [{ ownerType: 'user', name: 'placeholder' }],
+                roles: [{ name: 'placeholder', id: 0, type: 'project' }],
+            },
         );
     }
 }

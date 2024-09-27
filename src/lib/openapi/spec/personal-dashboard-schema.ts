@@ -1,5 +1,4 @@
 import type { FromSchema } from 'json-schema-to-ts';
-import { projectSchema } from './project-schema';
 
 export const personalDashboardSchema = {
     $id: '#/components/schemas/personalDashboardSchema',
@@ -75,42 +74,6 @@ export const personalDashboardSchema = {
                         type: 'number',
                         example: 10,
                         description: 'The number of features this project has',
-                    },
-                    owners: projectSchema.properties.owners,
-                    roles: {
-                        type: 'array',
-                        description:
-                            'The list of roles that the user has in this project.',
-                        minItems: 1,
-                        items: {
-                            type: 'object',
-                            description: 'An Unleash role.',
-                            additionalProperties: false,
-                            required: ['name', 'id', 'type'],
-                            properties: {
-                                name: {
-                                    type: 'string',
-                                    example: 'Owner',
-                                    description: 'The name of the role',
-                                },
-                                id: {
-                                    type: 'integer',
-                                    example: 4,
-                                    description: 'The id of the role',
-                                },
-                                type: {
-                                    type: 'string',
-                                    enum: [
-                                        'custom',
-                                        'project',
-                                        'root',
-                                        'custom-root',
-                                    ],
-                                    example: 'project',
-                                    description: 'The type of the role',
-                                },
-                            },
-                        },
                     },
                 },
             },

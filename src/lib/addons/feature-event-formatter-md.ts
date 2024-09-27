@@ -7,7 +7,7 @@ import {
 } from '../types';
 import { EVENT_MAP } from './feature-event-formatter-md-events';
 
-interface IFormattedEventData {
+export interface IFormattedEventData {
     label: string;
     text: string;
     url?: string;

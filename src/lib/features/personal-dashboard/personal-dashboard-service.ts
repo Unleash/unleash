@@ -9,6 +9,12 @@ import type {
 } from './personal-dashboard-read-model-type';
 import type { IProjectReadModel } from '../project/project-read-model-type';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+import type { IEventStore } from '../../types';
+import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
+
+type PersonalProjectDetails = {
+    latestEvents: { summary: string; createdBy: string }[];
+};
 
 export class PersonalDashboardService {
     private personalDashboardReadModel: IPersonalDashboardReadModel;
@@ -19,15 +25,23 @@ export class PersonalDashboardService {
 
     private privateProjectChecker: IPrivateProjectChecker;
 
+    private eventStore: IEventStore;
+
+    private featureEventFormatter: FeatureEventFormatter;
+
     constructor(
         personalDashboardReadModel: IPersonalDashboardReadModel,
         projectOwnersReadModel: IProjectOwnersReadModel,
         projectReadModel: IProjectReadModel,
+        eventStore: IEventStore,
+        featureEventFormatter: FeatureEventFormatter,
         privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectOwnersReadModel = projectOwnersReadModel;
         this.projectReadModel = projectReadModel;
+        this.eventStore = eventStore;
+        this.featureEventFormatter = featureEventFormatter;
         this.privateProjectChecker = privateProjectChecker;
     }
 
@@ -42,6 +56,7 @@ export class PersonalDashboardService {
 
         const projects = await this.projectReadModel.getProjectsForAdminUi({
             ids: userProjectIds,
+            archived: false,
         });
 
         const normalizedProjects = projects.map((project) => ({
@@ -65,5 +80,21 @@ export class PersonalDashboardService {
                 : new Set(accessibleProjects.projects);
 
         return this.projectOwnersReadModel.getAllUserProjectOwners(filter);
+    }
+
+    async getPersonalProjectDetails(
+        projectId: string,
+    ): Promise<PersonalProjectDetails> {
+        const recentEvents = await this.eventStore.searchEvents(
+            { project: projectId, limit: 4, offset: 0 },
+            [],
+        );
+
+        const formattedEvents = recentEvents.map((event) => ({
+            summary: this.featureEventFormatter.format(event).text,
+            createdBy: event.createdBy,
+        }));
+
+        return { latestEvents: formattedEvents };
     }
 }

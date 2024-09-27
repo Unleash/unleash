@@ -3,8 +3,6 @@ title: "11 Principles for building and scaling feature flag systems"
 toc_max_heading_level: 2
 ---
 
-# Best practices for building and scaling feature flags
-
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
 Feature flags, sometimes called feature toggles or feature switches, are a powerful software development technique that allows engineering teams to decouple the release of new functionality from software deployments. 

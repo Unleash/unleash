@@ -210,10 +210,6 @@ test('should return personal dashboard project details', async () => {
                     '**new_user@test.com** created **[log_feature_a]',
                 ),
             },
-            {
-                createdBy: 'unleash_system_user',
-                summary: '**unleash_system_user** created user ****',
-            },
         ],
     });
 });

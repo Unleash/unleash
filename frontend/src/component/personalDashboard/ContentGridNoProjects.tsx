@@ -1,5 +1,5 @@
 import { Grid, Typography, styled } from '@mui/material';
-import { OwnerAvatarGroup } from 'component/common/OwnerAvatarGroup/OwnerAvatarGroup';
+import { AvatarGroupFromOwners } from 'component/common/AvatarGroupFromOwners/AvatarGroupFromOwners';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import type { ProjectSchemaOwners } from 'openapi';
 import { Link } from 'react-router-dom';
@@ -105,7 +105,7 @@ export const ContentGridNoProjects = () => {
                     </TitleContainer>
                     <div>
                         <p>Project owners in Unleash:</p>
-                        <OwnerAvatarGroup
+                        <AvatarGroupFromOwners
                             users={Object.values(owners)}
                             avatarLimit={9}
                         />

@@ -3,7 +3,7 @@ import { styled } from '@mui/material';
 import type { ProjectSchema, ProjectSchemaOwners } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { AvatarComponent } from 'component/common/AvatarGroup/AvatarGroup';
-import { OwnerAvatarGroup } from 'component/common/OwnerAvatarGroup/OwnerAvatarGroup';
+import { AvatarGroupFromOwners } from 'component/common/AvatarGroupFromOwners/AvatarGroupFromOwners';
 
 export interface IProjectOwnersProps {
     owners?: ProjectSchema['owners'];
@@ -69,7 +69,7 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
     return (
         <StyledWrapper data-testid='test'>
             <StyledContainer data-loading>
-                <OwnerAvatarGroup
+                <AvatarGroupFromOwners
                     users={owners}
                     avatarLimit={6}
                     AvatarComponent={StyledAvatarComponent}

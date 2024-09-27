@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
-import { OwnerAvatarGroup } from 'component/common/OwnerAvatarGroup/OwnerAvatarGroup';
+import { AvatarGroupFromOwners } from 'component/common/AvatarGroupFromOwners/AvatarGroupFromOwners';
 import type { ProjectSchemaOwners } from 'openapi';
 
 type Props = {
@@ -34,7 +34,7 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
             </InfoSection>
             <InfoSection>
                 <span>Project owner{owners.length > 1 ? 's' : ''}</span>
-                <OwnerAvatarGroup users={owners} avatarLimit={3} />
+                <AvatarGroupFromOwners users={owners} avatarLimit={3} />
             </InfoSection>
         </Wrapper>
     );

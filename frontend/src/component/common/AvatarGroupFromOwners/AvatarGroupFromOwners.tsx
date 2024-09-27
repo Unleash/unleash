@@ -9,7 +9,7 @@ type Props = {
     AvatarComponent?: typeof UserAvatar;
     className?: string;
 };
-export const OwnerAvatarGroup: React.FC<Props> = ({ users, ...props }) => {
+export const AvatarGroupFromOwners: React.FC<Props> = ({ users, ...props }) => {
     const { uiConfig } = useUiConfig();
 
     const mapOwners = (owner: ProjectSchemaOwners[number]) => {

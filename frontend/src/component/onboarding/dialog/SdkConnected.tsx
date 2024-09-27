@@ -20,18 +20,20 @@ interface ISdkConnectedProps {
     sdk: Sdk;
 }
 export const SdkConnected: FC<ISdkConnectedProps> = ({ sdk }) => {
-    console.log({ sdk });
     const { uiConfig } = useUiConfig();
+
     const clientApiUrl = `${uiConfig.unleashUrl}/api/`;
     const frontendApiUrl = `${uiConfig.unleashUrl}/api/frontend/`;
     const apiUrl = sdk.type === 'client' ? clientApiUrl : frontendApiUrl;
+
     const snippet = (codeRenderSnippets[sdk.name] || '').replaceAll(
         '<YOUR_API_URL>',
         apiUrl,
     );
+
     const [_connectSnippet, productionSnippet, otherResourcesSnippet] =
         snippet.split('---\n');
-    console.log({ _connectSnippet, productionSnippet, otherResourcesSnippet });
+
     return (
         <SpacedContainer>
             <Typography variant='h2'>Connect an SDK to Unleash</Typography>

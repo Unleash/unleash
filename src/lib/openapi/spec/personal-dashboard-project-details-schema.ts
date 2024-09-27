@@ -6,7 +6,7 @@ export const personalDashboardProjectDetailsSchema = {
     type: 'object',
     description: 'Project details in personal dashboard',
     additionalProperties: false,
-    required: ['owners', 'roles'],
+    required: ['owners', 'roles', 'latestEvents'],
     properties: {
         latestEvents: {
             type: 'array',

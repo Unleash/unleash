@@ -153,6 +153,8 @@ import { ProjectOwnersReadModel } from '../features/project/project-owners-read-
 import { FakeProjectOwnersReadModel } from '../features/project/fake-project-owners-read-model';
 import { FakeProjectReadModel } from '../features/project/fake-project-read-model';
 import { ProjectReadModel } from '../features/project/project-read-model';
+import { PrivateProjectChecker } from '../features/private-project/privateProjectChecker';
+import { FakePrivateProjectChecker } from '../features/private-project/fakePrivateProjectChecker';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -418,6 +420,9 @@ export const createServices = (
         db
             ? new ProjectReadModel(db, config.eventBus, config.flagResolver)
             : new FakeProjectReadModel(),
+        db
+            ? new PrivateProjectChecker(stores, config)
+            : new FakePrivateProjectChecker(),
     );
 
     return {

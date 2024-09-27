@@ -104,7 +104,7 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
         return groupsDict;
     }
 
-    async getAllProjectOwners(): Promise<ProjectOwnersDictionary> {
+    async getProjectOwnersDictionary(): Promise<ProjectOwnersDictionary> {
         const ownerRole = await this.db(T.ROLES)
             .where({ name: RoleName.OWNER })
             .first();
@@ -127,10 +127,27 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
         return dict;
     }
 
+    async getAllUserProjectOwners(): Promise<UserProjectOwner[]> {
+        const allOwners = await this.getProjectOwnersDictionary();
+
+        const owners = Object.values(allOwners)
+            .flat()
+            .reduce(
+                (acc, owner) => {
+                    if (owner.ownerType === 'user') {
+                        acc[owner.email || owner.name] = owner;
+                    }
+                    return acc;
+                },
+                {} as Record<string, UserProjectOwner>,
+            );
+        return Object.values(owners);
+    }
+
     async addOwners<T extends { id: string }>(
         projects: T[],
     ): Promise<WithProjectOwners<T>> {
-        const owners = await this.getAllProjectOwners();
+        const owners = await this.getProjectOwnersDictionary();
 
         return ProjectOwnersReadModel.addOwnerData(projects, owners);
     }

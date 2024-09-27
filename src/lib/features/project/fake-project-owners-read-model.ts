@@ -12,4 +12,8 @@ export class FakeProjectOwnersReadModel implements IProjectOwnersReadModel {
             owners: [{ ownerType: 'system' }],
         }));
     }
+
+    async getAllProjectOwners(): Promise<UserProjectOwner[]> {
+        return [];
+    }
 }

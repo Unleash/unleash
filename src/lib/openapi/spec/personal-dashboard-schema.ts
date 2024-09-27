@@ -8,6 +8,35 @@ export const personalDashboardSchema = {
     additionalProperties: false,
     required: ['projects', 'flags'],
     properties: {
+        projectOwners: {
+            type: 'array',
+            description:
+                'Users with the project owner role in Unleash. The list will not include owners of private projects that the user is not a member of, unless the owner is also an owner of a project that the is visible to the user. This property will only be present if the `projects` list is empty.',
+            items: {
+                type: 'object',
+                required: ['ownerType', 'name'],
+                properties: {
+                    ownerType: {
+                        type: 'string',
+                        enum: ['user'],
+                    },
+                    name: {
+                        type: 'string',
+                        example: 'User Name',
+                    },
+                    imageUrl: {
+                        type: 'string',
+                        nullable: true,
+                        example: 'https://example.com/image.jpg',
+                    },
+                    email: {
+                        type: 'string',
+                        nullable: true,
+                        example: 'user@example.com',
+                    },
+                },
+            },
+        },
         projects: {
             type: 'array',
             items: {

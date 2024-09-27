@@ -5,6 +5,12 @@ import type {
     PersonalProject,
 } from './personal-dashboard-read-model-type';
 import type { IProjectReadModel } from '../project/project-read-model-type';
+import type { IEventStore } from '../../types';
+import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
+
+type PersonalProjectDetails = {
+    latestEvents: { summary: string; createdBy: string }[];
+};
 
 export class PersonalDashboardService {
     private personalDashboardReadModel: IPersonalDashboardReadModel;
@@ -13,14 +19,22 @@ export class PersonalDashboardService {
 
     private projectReadModel: IProjectReadModel;
 
+    private eventStore: IEventStore;
+
+    private featureEventFormatter: FeatureEventFormatter;
+
     constructor(
         personalDashboardReadModel: IPersonalDashboardReadModel,
         projectOwnersReadModel: IProjectOwnersReadModel,
         projectReadModel: IProjectReadModel,
+        eventStore: IEventStore,
+        featureEventFormatter: FeatureEventFormatter,
     ) {
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectOwnersReadModel = projectOwnersReadModel;
         this.projectReadModel = projectReadModel;
+        this.eventStore = eventStore;
+        this.featureEventFormatter = featureEventFormatter;
     }
 
     getPersonalFeatures(userId: number): Promise<PersonalFeature[]> {
@@ -45,5 +59,21 @@ export class PersonalDashboardService {
         }));
 
         return normalizedProjects;
+    }
+
+    async getPersonalProjectDetails(
+        projectId: string,
+    ): Promise<PersonalProjectDetails> {
+        const recentEvents = await this.eventStore.searchEvents(
+            { project: projectId, limit: 4, offset: 0 },
+            [],
+        );
+
+        const formattedEvents = recentEvents.map((event) => ({
+            summary: this.featureEventFormatter.format(event).text,
+            createdBy: event.createdBy,
+        }));
+
+        return { latestEvents: formattedEvents };
     }
 }

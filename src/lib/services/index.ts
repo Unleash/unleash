@@ -408,7 +408,7 @@ export const createServices = (
 
     const personalDashboardService = db
         ? createPersonalDashboardService(db, config)
-        : createFakePersonalDashboardService();
+        : createFakePersonalDashboardService(config);
 
     return {
         accessService,

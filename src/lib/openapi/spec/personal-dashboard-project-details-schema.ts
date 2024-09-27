@@ -8,6 +8,29 @@ export const personalDashboardProjectDetailsSchema = {
     additionalProperties: false,
     required: ['owners', 'roles'],
     properties: {
+        latestEvents: {
+            type: 'array',
+            description: 'The latest events for the project.',
+            items: {
+                type: 'object',
+                description: 'An event summary',
+                additionalProperties: false,
+                required: ['summary', 'createdBy'],
+                properties: {
+                    summary: {
+                        type: 'string',
+                        nullable: true,
+                        description:
+                            '**[Experimental]** A markdown-formatted summary of the event.',
+                    },
+                    createdBy: {
+                        type: 'string',
+                        description: 'Which user created this event',
+                        example: 'johndoe',
+                    },
+                },
+            },
+        },
         owners: projectSchema.properties.owners,
         roles: {
             type: 'array',

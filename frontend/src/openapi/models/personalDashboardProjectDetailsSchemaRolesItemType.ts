@@ -7,11 +7,11 @@
 /**
  * The type of the role
  */
-export type PersonalDashboardSchemaProjectsItemRolesItemType =
-    (typeof PersonalDashboardSchemaProjectsItemRolesItemType)[keyof typeof PersonalDashboardSchemaProjectsItemRolesItemType];
+export type PersonalDashboardProjectDetailsSchemaRolesItemType =
+    (typeof PersonalDashboardProjectDetailsSchemaRolesItemType)[keyof typeof PersonalDashboardProjectDetailsSchemaRolesItemType];
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
-export const PersonalDashboardSchemaProjectsItemRolesItemType = {
+export const PersonalDashboardProjectDetailsSchemaRolesItemType = {
     custom: 'custom',
     project: 'project',
     root: 'root',

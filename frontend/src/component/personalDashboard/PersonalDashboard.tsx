@@ -29,6 +29,8 @@ import type {
 import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
 import { ContentGridNoProjects } from './ContentGridNoProjects';
+import { LatestProjectEvents } from './LatestProjectEvents';
+import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
 
 const ScreenExplanation = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
@@ -122,11 +124,11 @@ const SpacedGridItem = styled(Grid)(({ theme }) => ({
 }));
 
 const useProjects = (projects: PersonalDashboardSchemaProjectsItem[]) => {
-    const [activeProject, setActiveProject] = useState(projects[0]?.name);
+    const [activeProject, setActiveProject] = useState(projects[0]?.id);
 
     useEffect(() => {
         if (!activeProject && projects.length > 0) {
-            setActiveProject(projects[0].name);
+            setActiveProject(projects[0].id);
         }
     }, [JSON.stringify(projects)]);
 
@@ -185,14 +187,13 @@ export const PersonalDashboard = () => {
         personalDashboard?.projects || [],
     );
 
+    // TODO: since we use this one only for the onboarding status, we can add th eonboarding status to the personal dashboard project details API
     const { project: activeProjectOverview, loading } =
         useProjectOverview(activeProject);
+    const { personalDashboardProjectDetails, loading: loadingDetails } =
+        usePersonalDashboardProjectDetails(activeProject);
 
-    const onboardingCompleted = Boolean(
-        !loading &&
-            activeProject &&
-            activeProjectOverview?.onboardingStatus.status === 'onboarded',
-    );
+    const stage = activeProjectOverview?.onboardingStatus.status ?? 'loading';
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'seen' | 'not_seen'
@@ -250,10 +251,10 @@ export const PersonalDashboard = () => {
                                         <ListItemButton
                                             sx={projectStyle}
                                             selected={
-                                                project.name === activeProject
+                                                project.id === activeProject
                                             }
                                             onClick={() =>
-                                                setActiveProject(project.name)
+                                                setActiveProject(project.id)
                                             }
                                         >
                                             <ProjectBox>
@@ -272,7 +273,7 @@ export const PersonalDashboard = () => {
                                                     />
                                                 </IconButton>
                                             </ProjectBox>
-                                            {project.name === activeProject ? (
+                                            {project.id === activeProject ? (
                                                 <ActiveProjectDetails
                                                     project={project}
                                                 />
@@ -284,14 +285,23 @@ export const PersonalDashboard = () => {
                         </List>
                     </SpacedGridItem>
                     <SpacedGridItem item lg={4} md={1}>
-                        {onboardingCompleted ? (
+                        {stage === 'onboarded' ? (
                             <ProjectSetupComplete project={activeProject} />
                         ) : activeProject ? (
                             <CreateFlag project={activeProject} />
                         ) : null}
                     </SpacedGridItem>
                     <SpacedGridItem item lg={4} md={1}>
-                        {activeProject ? (
+                        {stage === 'onboarded' &&
+                        personalDashboardProjectDetails ? (
+                            <LatestProjectEvents
+                                latestEvents={
+                                    personalDashboardProjectDetails.latestEvents
+                                }
+                            />
+                        ) : null}
+                        {stage === 'onboarding-started' ||
+                        stage === 'first-flag-created' ? (
                             <ConnectSDK project={activeProject} />
                         ) : null}
                     </SpacedGridItem>

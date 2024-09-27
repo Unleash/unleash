@@ -48,6 +48,7 @@ export class PersonalDashboardService {
 
         const projects = await this.projectReadModel.getProjectsForAdminUi({
             ids: userProjectIds,
+            archived: false,
         });
 
         const normalizedProjects = projects.map((project) => ({

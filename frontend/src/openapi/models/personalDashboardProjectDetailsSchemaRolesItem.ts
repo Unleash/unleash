@@ -3,16 +3,16 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PersonalDashboardSchemaProjectsItemRolesItemType } from './personalDashboardSchemaProjectsItemRolesItemType';
+import type { PersonalDashboardProjectDetailsSchemaRolesItemType } from './personalDashboardProjectDetailsSchemaRolesItemType';
 
 /**
  * An Unleash role.
  */
-export type PersonalDashboardSchemaProjectsItemRolesItem = {
+export type PersonalDashboardProjectDetailsSchemaRolesItem = {
     /** The id of the role */
     id: number;
     /** The name of the role */
     name: string;
     /** The type of the role */
-    type: PersonalDashboardSchemaProjectsItemRolesItemType;
+    type: PersonalDashboardProjectDetailsSchemaRolesItemType;
 };

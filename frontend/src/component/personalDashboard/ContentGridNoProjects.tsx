@@ -3,6 +3,7 @@ import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { ProjectSchemaOwners } from 'openapi';
+import { Link } from 'react-router-dom';
 
 const ContentGrid = styled(Grid)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -95,10 +96,20 @@ export const ContentGridNoProjects = () => {
                 <Typography>Potential next steps</Typography>
             </SpacedGridItem>
             <SpacedGridItem item lg={4} md={1}>
-                <Typography>
-                    You have not created any projects yet. Once you do, they
-                    will show up here.
-                </Typography>
+                <ActionBox>
+                    <Typography>
+                        You don't currently have access to any projects in the
+                        system.
+                    </Typography>
+                    <Typography>
+                        To get started, you can{' '}
+                        <Link to='/projects?create=true'>
+                            create your own project
+                        </Link>
+                        . Alternatively, you can review the available projects
+                        in the system and ask the owner for access.
+                    </Typography>
+                </ActionBox>
             </SpacedGridItem>
             <SpacedGridItem item lg={4} md={1}>
                 <ActionBox>

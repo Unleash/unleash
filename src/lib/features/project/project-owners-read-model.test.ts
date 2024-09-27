@@ -413,4 +413,44 @@ describe('integration tests', () => {
             },
         ]);
     });
+
+    test('only returns projects listed in the projects input if provided', async () => {
+        const createProject = async () => {
+            const id = randomId();
+            return db.stores.projectStore.create({
+                id,
+                name: id,
+            });
+        };
+
+        const projectA = await createProject();
+        const projectB = await createProject();
+
+        await db.stores.accessStore.addUserToRole(
+            owner.id,
+            ownerRoleId,
+            projectA.id,
+        );
+
+        await db.stores.accessStore.addUserToRole(
+            owner2.id,
+            ownerRoleId,
+            projectB.id,
+        );
+
+        const noOwners = await readModel.getAllUserProjectOwners(new Set());
+        expect(noOwners).toMatchObject([]);
+
+        const onlyProjectA = await readModel.getAllUserProjectOwners(
+            new Set([projectA.id]),
+        );
+        expect(onlyProjectA).toMatchObject([
+            {
+                name: owner.name,
+                ownerType: 'user',
+                email: owner.email,
+                imageUrl: 'https://image-url-1',
+            },
+        ]);
+    });
 });

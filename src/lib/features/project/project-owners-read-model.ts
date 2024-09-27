@@ -127,21 +127,27 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
         return dict;
     }
 
-    async getAllUserProjectOwners(): Promise<UserProjectOwner[]> {
+    async getAllUserProjectOwners(
+        projects?: Set<string>,
+    ): Promise<UserProjectOwner[]> {
         const allOwners = await this.getProjectOwnersDictionary();
 
-        const owners = Object.values(allOwners)
-            .flat()
-            .reduce(
-                (acc, owner) => {
-                    if (owner.ownerType === 'user') {
-                        acc[owner.email || owner.name] = owner;
-                    }
-                    return acc;
-                },
-                {} as Record<string, UserProjectOwner>,
-            );
-        return Object.values(owners);
+        const owners = projects
+            ? Object.entries(allOwners)
+                  .filter(([projectId]) => projects.has(projectId))
+                  .map(([_, owners]) => owners)
+            : Object.values(allOwners);
+
+        const ownersDict = owners.flat().reduce(
+            (acc, owner) => {
+                if (owner.ownerType === 'user') {
+                    acc[owner.email || owner.name] = owner;
+                }
+                return acc;
+            },
+            {} as Record<string, UserProjectOwner>,
+        );
+        return Object.values(ownersDict);
     }
 
     async addOwners<T extends { id: string }>(

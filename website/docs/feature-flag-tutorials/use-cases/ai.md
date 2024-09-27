@@ -110,7 +110,7 @@ To implement this, we'll need to:
 2. Replace our static `variants` selection with feature flag calls.
 3. Use the feature flag in our code to determine which AI model and settings to use for each request.
 
-## 2. Install a local feature flag provider
+### Install a local feature flag provider
 
 In this section, we’ll install Unleash, run the instance locally, log in, and create a feature flag. If you prefer, you can use other tools instead of Unleash, but you’ll need to update the code accordingly. The basic steps will probably be the same.
 
@@ -135,7 +135,7 @@ Click the ‘New feature flag’ button to create a new feature flag.
 
 <!-- ![Create a new feature flag](./new-ff.png) -->
 
-### Adding AI feature flags
+## Querying AI feature flags
 
 Now let's go back to the code and grab our AI config from the feature flag that we just created.
 

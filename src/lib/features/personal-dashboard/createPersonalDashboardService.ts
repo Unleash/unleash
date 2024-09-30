@@ -1,5 +1,5 @@
 import type { Db } from '../../db/db';
-import type { IUnleashConfig } from '../../types';
+import type { IUnleashConfig, IUnleashStores } from '../../types';
 import { PersonalDashboardService } from './personal-dashboard-service';
 import { PersonalDashboardReadModel } from './personal-dashboard-read-model';
 import { FakePersonalDashboardReadModel } from './fake-personal-dashboard-read-model';
@@ -10,10 +10,13 @@ import { FakeProjectReadModel } from '../project/fake-project-read-model';
 import EventStore from '../../db/event-store';
 import { FeatureEventFormatterMd } from '../../addons/feature-event-formatter-md';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
+import { FakePrivateProjectChecker } from '../private-project/fakePrivateProjectChecker';
+import { PrivateProjectChecker } from '../private-project/privateProjectChecker';
 
 export const createPersonalDashboardService = (
     db: Db,
     config: IUnleashConfig,
+    stores: IUnleashStores,
 ) => {
     return new PersonalDashboardService(
         new PersonalDashboardReadModel(db),
@@ -24,6 +27,7 @@ export const createPersonalDashboardService = (
             unleashUrl: config.server.unleashUrl,
             formatStyle: 'markdown',
         }),
+        new PrivateProjectChecker(stores, config),
     );
 };
 
@@ -37,5 +41,6 @@ export const createFakePersonalDashboardService = (config: IUnleashConfig) => {
             unleashUrl: config.server.unleashUrl,
             formatStyle: 'markdown',
         }),
+        new FakePrivateProjectChecker(),
     );
 };

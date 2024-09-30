@@ -407,7 +407,7 @@ export const createServices = (
     onboardingService.listen();
 
     const personalDashboardService = db
-        ? createPersonalDashboardService(db, config)
+        ? createPersonalDashboardService(db, config, stores)
         : createFakePersonalDashboardService(config);
 
     return {

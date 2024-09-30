@@ -1,10 +1,14 @@
-import type { IProjectOwnersReadModel } from '../project/project-owners-read-model.type';
+import type {
+    IProjectOwnersReadModel,
+    UserProjectOwner,
+} from '../project/project-owners-read-model.type';
 import type {
     IPersonalDashboardReadModel,
     PersonalFeature,
     PersonalProject,
 } from './personal-dashboard-read-model-type';
 import type { IProjectReadModel } from '../project/project-read-model-type';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type { IEventStore } from '../../types';
 import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
 
@@ -19,6 +23,8 @@ export class PersonalDashboardService {
 
     private projectReadModel: IProjectReadModel;
 
+    private privateProjectChecker: IPrivateProjectChecker;
+
     private eventStore: IEventStore;
 
     private featureEventFormatter: FeatureEventFormatter;
@@ -29,12 +35,14 @@ export class PersonalDashboardService {
         projectReadModel: IProjectReadModel,
         eventStore: IEventStore,
         featureEventFormatter: FeatureEventFormatter,
+        privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectOwnersReadModel = projectOwnersReadModel;
         this.projectReadModel = projectReadModel;
         this.eventStore = eventStore;
         this.featureEventFormatter = featureEventFormatter;
+        this.privateProjectChecker = privateProjectChecker;
     }
 
     getPersonalFeatures(userId: number): Promise<PersonalFeature[]> {
@@ -60,6 +68,18 @@ export class PersonalDashboardService {
         }));
 
         return normalizedProjects;
+    }
+
+    async getProjectOwners(userId: number): Promise<UserProjectOwner[]> {
+        const accessibleProjects =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+
+        const filter =
+            accessibleProjects.mode === 'all'
+                ? undefined
+                : new Set(accessibleProjects.projects);
+
+        return this.projectOwnersReadModel.getAllUserProjectOwners(filter);
     }
 
     async getPersonalProjectDetails(

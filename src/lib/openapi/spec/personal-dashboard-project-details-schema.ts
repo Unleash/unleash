@@ -17,7 +17,7 @@ export const personalDashboardProjectDetailsSchema = {
                 type: 'object',
                 description: 'An event summary',
                 additionalProperties: false,
-                required: ['summary', 'createdBy'],
+                required: ['summary', 'createdBy', 'createdByImageUrl', 'id'],
                 properties: {
                     id: {
                         type: 'integer',

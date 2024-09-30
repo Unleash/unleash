@@ -108,6 +108,17 @@ export interface AccessWithRoles {
 
 const isProjectPermission = (permission) => PROJECT_ADMIN.includes(permission);
 
+export const cleanPermissionEnvironment = (
+    permissions: PermissionRef[] | undefined,
+) => {
+    return permissions?.map((permission) => {
+        if (permission.environment === '') {
+            return { ...permission, environment: null };
+        }
+        return permission;
+    });
+};
+
 export class AccessService {
     private store: IAccessStore;
 
@@ -721,7 +732,7 @@ export class AccessService {
             roleType,
         };
 
-        const rolePermissions = role.permissions;
+        const rolePermissions = cleanPermissionEnvironment(role.permissions);
         const newRole = await this.roleStore.create(baseRole);
         if (rolePermissions) {
             if (roleType === CUSTOM_ROOT_ROLE_TYPE) {
@@ -770,7 +781,7 @@ export class AccessService {
             description: role.description,
             roleType,
         };
-        const rolePermissions = role.permissions;
+        const rolePermissions = cleanPermissionEnvironment(role.permissions);
         const updatedRole = await this.roleStore.update(baseRole);
         const existingPermissions = await this.store.getPermissionsForRole(
             role.id,

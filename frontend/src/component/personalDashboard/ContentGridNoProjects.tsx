@@ -103,7 +103,7 @@ export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
                         </p>
                         <AdminList>
                             {admins.map((admin) => (
-                                <AdminListItem>
+                                <AdminListItem key={admin.name}>
                                     <UserAvatar
                                         sx={{
                                             margin: 0,

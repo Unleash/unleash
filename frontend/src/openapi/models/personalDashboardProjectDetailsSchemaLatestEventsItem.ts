@@ -15,4 +15,6 @@ export type PersonalDashboardProjectDetailsSchemaLatestEventsItem = {
      * @nullable
      */
     summary: string | null;
+    id: number;
+    createdByImageUrl: string;
 };

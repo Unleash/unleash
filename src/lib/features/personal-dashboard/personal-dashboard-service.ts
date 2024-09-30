@@ -9,7 +9,7 @@ import type {
 } from './personal-dashboard-read-model-type';
 import type { IProjectReadModel } from '../project/project-read-model-type';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type { IEventStore } from '../../types';
+import type { IAccountStore, IEventStore, MinimalUser } from '../../types';
 import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
 import { generateImageUrl } from '../../util';
 
@@ -35,6 +35,8 @@ export class PersonalDashboardService {
 
     private featureEventFormatter: FeatureEventFormatter;
 
+    private accountStore: IAccountStore;
+
     constructor(
         personalDashboardReadModel: IPersonalDashboardReadModel,
         projectOwnersReadModel: IProjectOwnersReadModel,
@@ -42,6 +44,7 @@ export class PersonalDashboardService {
         eventStore: IEventStore,
         featureEventFormatter: FeatureEventFormatter,
         privateProjectChecker: IPrivateProjectChecker,
+        accountStore: IAccountStore,
     ) {
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectOwnersReadModel = projectOwnersReadModel;
@@ -49,6 +52,7 @@ export class PersonalDashboardService {
         this.eventStore = eventStore;
         this.featureEventFormatter = featureEventFormatter;
         this.privateProjectChecker = privateProjectChecker;
+        this.accountStore = accountStore;
     }
 
     getPersonalFeatures(userId: number): Promise<PersonalFeature[]> {
@@ -104,5 +108,9 @@ export class PersonalDashboardService {
         }));
 
         return { latestEvents: formattedEvents };
+    }
+
+    async getAdmins(): Promise<MinimalUser[]> {
+        return this.accountStore.getAdmins();
     }
 }

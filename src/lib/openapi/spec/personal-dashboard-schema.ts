@@ -7,6 +7,41 @@ export const personalDashboardSchema = {
     additionalProperties: false,
     required: ['projects', 'flags'],
     properties: {
+        admins: {
+            type: 'array',
+            description: 'Users with the admin role in Unleash.',
+            items: {
+                type: 'object',
+                required: ['id'],
+                properties: {
+                    id: {
+                        type: 'integer',
+                        description: 'The user ID.',
+                        example: 1,
+                    },
+                    name: {
+                        type: 'string',
+                        description: "The user's name.",
+                        example: 'Ash Ketchum',
+                    },
+                    username: {
+                        type: 'string',
+                        description: "The user's username.",
+                        example: 'pokémaster13',
+                    },
+                    imageUrl: {
+                        type: 'string',
+                        nullable: true,
+                        example: 'https://example.com/peek-at-you.jpg',
+                    },
+                    email: {
+                        type: 'string',
+                        nullable: true,
+                        example: 'user@example.com',
+                    },
+                },
+            },
+        },
         projectOwners: {
             type: 'array',
             description:
@@ -18,19 +53,25 @@ export const personalDashboardSchema = {
                     ownerType: {
                         type: 'string',
                         enum: ['user'],
+                        description:
+                            'The type of the owner; will always be `user`.',
                     },
                     name: {
                         type: 'string',
                         example: 'User Name',
+                        description:
+                            "The name displayed for the user. Can be the user's name, username, or email, depending on what they have provided.",
                     },
                     imageUrl: {
                         type: 'string',
                         nullable: true,
+                        description: "The URL of the user's profile image.",
                         example: 'https://example.com/image.jpg',
                     },
                     email: {
                         type: 'string',
                         nullable: true,
+                        description: "The user's email address.",
                         example: 'user@example.com',
                     },
                 },

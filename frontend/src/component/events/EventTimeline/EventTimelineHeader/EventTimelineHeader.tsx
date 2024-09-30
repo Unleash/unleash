@@ -12,9 +12,9 @@ const StyledCol = styled('div')(({ theme }) => ({
 }));
 
 const StyledFilter = styled(TextField)(({ theme }) => ({
-    color: theme.palette.text.secondary,
     '& > div': {
         background: 'transparent',
+        color: theme.palette.text.secondary,
         '& > .MuiSelect-select': {
             padding: theme.spacing(0.5, 4, 0.5, 1),
             background: 'transparent',

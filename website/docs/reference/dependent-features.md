@@ -24,13 +24,17 @@ A feature flag can have only one parent dependency but multiple child flags can 
 In order for the child feature to be evaluated, the corresponding parent value criteria must be satisfied.
 
 Parent value criteria can be set to one of the 3 options:
-* parent feature must be **enabled**. 
-* parent feature must be **disabled**. This is useful when your parent is a [kill-switch](./feature-toggle-types.md#feature-toggle-types) with the inverted enabled/disabled logic.
-* parent feature must be **enabled with variants**. This is useful when your parent is part of A/B testing, and you need [variant dependencies](#variant-dependencies).
+- Parent feature must be **enabled**. 
+- Parent feature must be **disabled**. This is useful when your parent is a [kill-switch](./feature-toggle-types.md#feature-toggle-types) with the inverted enabled/disabled logic.
+- Parent feature must be **enabled with variants**. This is useful when your parent is part of A/B testing, and you need [variant dependencies](#variant-dependencies).
 
 #### Variant dependencies
 
+:::note Availability
+
 **Plan**: [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.12+`
+
+:::
 
 For the variant dependencies, if the parent feature variant is evaluated to the expected value, the dependency is satisfied. You can specify variant values from all [strategy variants](./strategy-variants.md) and all [feature environment variants](./feature-toggle-variants.md). The parent dependency variant is compared to the actual value that the parent dependency is evaluated to in a given environment.
 

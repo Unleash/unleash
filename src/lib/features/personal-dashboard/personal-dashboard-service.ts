@@ -13,7 +13,7 @@ import type {
     IAccountStore,
     IEventStore,
     IOnboardingReadModel,
-    MinimaUilUser,
+    MinimalUiUser,
 } from '../../types';
 import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
 import { generateImageUrl } from '../../util';

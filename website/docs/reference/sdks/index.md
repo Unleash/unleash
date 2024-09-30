@@ -4,7 +4,7 @@ title: SDK overview
 
 import VideoContent from '@site/src/components/VideoContent.jsx'
 
-In order to connect your application to Unleash you will need a client SDK (software developer kit) for your programming language and an [API token](../how-to/how-to-create-api-tokens). The SDK will handle connecting to the Unleash server instance and retrieving feature flags based on your configuration. All versions of Unleash (OSS, Pro, and Enterprise) use the same client SDKs.
+To connect your application to Unleash you need a client SDK (software development kit) for your programming language and an [API token](../how-to/how-to-create-api-tokens). The SDK handles connecting to the Unleash server instance and retrieving feature flags based on your configuration. All versions of Unleash (OSS, Pro, and Enterprise) use the same client SDKs.
 
 Unleash provides official client SDKs for a number of programming languages. Additionally, our community has developed and contributed SDKs for other languages. So if you can't find your favorite language in the list of official SDKs, check out the [list of clients written by our fantastic community](#community-sdks).
 
@@ -32,7 +32,7 @@ Client-side SDKs can connect to [Unleash Edge](/reference/unleash-edge) or to th
 -   [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
 -   [Flutter Proxy SDK](/docs/generated/sdks/client-side/flutter.md)
 -   [iOS Proxy SDK](/docs/generated/sdks/client-side/ios-proxy.md)
--   [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
+-   [JavaScript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
 -   [Next.js](/docs/generated/sdks/client-side/next-js.md)
 -   [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
 -   [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
@@ -166,7 +166,7 @@ By default, all SDKs reach out to the Unleash Server at startup to fetch their f
 Bootstrapping is also supported by the following front-end client SDKs:
 
 -   [Android SDK](/docs/generated/sdks/client-side/android-proxy.md)
--   [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
+-   [JavaScript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
 -   [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
 -   [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
 -   [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)

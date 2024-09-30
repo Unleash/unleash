@@ -10,11 +10,16 @@
 export type PersonalDashboardProjectDetailsSchemaLatestEventsItem = {
     /** Which user created this event */
     createdBy: string;
+    /** URL used for the user profile image of the event author */
+    createdByImageUrl?: string;
+    /**
+     * The ID of the event.
+     * @minimum 1
+     */
+    id?: number;
     /**
      * **[Experimental]** A markdown-formatted summary of the event.
      * @nullable
      */
     summary: string | null;
-    id: number;
-    createdByImageUrl: string;
 };

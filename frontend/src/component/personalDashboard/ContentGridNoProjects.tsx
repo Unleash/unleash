@@ -1,7 +1,8 @@
 import { Grid, Typography, styled } from '@mui/material';
 import { AvatarGroupFromOwners } from 'component/common/AvatarGroupFromOwners/AvatarGroupFromOwners';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import type { ProjectSchemaOwners } from 'openapi';
+import type { PersonalDashboardSchemaAdminsItem } from 'openapi/models/personalDashboardSchemaAdminsItem';
+import type { PersonalDashboardSchemaProjectOwnersItem } from 'openapi/models/personalDashboardSchemaProjectOwnersItem';
 import { Link } from 'react-router-dom';
 
 const ContentGrid = styled(Grid)(({ theme }) => ({
@@ -61,8 +62,8 @@ const AdminListItem = styled('li')(({ theme }) => ({
 }));
 
 type Props = {
-    owners: ProjectSchemaOwners;
-    admins: { name: string; imageUrl?: string }[];
+    owners: PersonalDashboardSchemaProjectOwnersItem[];
+    admins: PersonalDashboardSchemaAdminsItem[];
 };
 
 export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
@@ -102,17 +103,23 @@ export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
                             {admins.length > 1 ? 's are' : ' is'}:
                         </p>
                         <AdminList>
-                            {admins.map((admin) => (
-                                <AdminListItem key={admin.name}>
-                                    <UserAvatar
-                                        sx={{
-                                            margin: 0,
-                                        }}
-                                        user={admin}
-                                    />
-                                    <Typography>{admin.name}</Typography>
-                                </AdminListItem>
-                            ))}
+                            {admins.map((admin) => {
+                                return (
+                                    <AdminListItem key={admin.id}>
+                                        <UserAvatar
+                                            sx={{
+                                                margin: 0,
+                                            }}
+                                            user={admin}
+                                        />
+                                        <Typography>
+                                            {admin.name ||
+                                                admin.username ||
+                                                admin.email}
+                                        </Typography>
+                                    </AdminListItem>
+                                );
+                            })}
                         </AdminList>
                     </BoxMainContent>
                 </GridContent>

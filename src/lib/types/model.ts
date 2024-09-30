@@ -419,7 +419,7 @@ export interface IPermission {
     name: string;
     displayName: string;
     type: string;
-    environment?: string;
+    environment?: string | null;
 }
 
 export interface IEnvironmentPermission {

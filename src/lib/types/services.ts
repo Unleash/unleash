@@ -59,6 +59,7 @@ import type { OnboardingService } from '../features/onboarding/onboarding-servic
 import type { PersonalDashboardService } from '../features/personal-dashboard/personal-dashboard-service';
 
 export interface IUnleashServices {
+    transactionalAccessService: WithTransactional<AccessService>;
     accessService: AccessService;
     accountService: AccountService;
     addonService: AddonService;

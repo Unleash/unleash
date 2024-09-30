@@ -18,19 +18,25 @@ export const personalDashboardSchema = {
                     ownerType: {
                         type: 'string',
                         enum: ['user'],
+                        description:
+                            'The type of the owner; will always be `user`.',
                     },
                     name: {
                         type: 'string',
                         example: 'User Name',
+                        description:
+                            "The name displayed for the user. Can be the user's name, username, or email, depending on what they have provided.",
                     },
                     imageUrl: {
                         type: 'string',
                         nullable: true,
+                        description: "The URL of the user's profile image.",
                         example: 'https://example.com/image.jpg',
                     },
                     email: {
                         type: 'string',
                         nullable: true,
+                        description: "The user's email address.",
                         example: 'user@example.com',
                     },
                 },

@@ -1,13 +1,15 @@
 import type { FromSchema } from 'json-schema-to-ts';
 import { projectSchema } from './project-schema';
+import { projectOverviewSchema } from './project-overview-schema';
 
 export const personalDashboardProjectDetailsSchema = {
     $id: '#/components/schemas/personalDashboardProjectDetailsSchema',
     type: 'object',
     description: 'Project details in personal dashboard',
     additionalProperties: false,
-    required: ['owners', 'roles', 'latestEvents'],
+    required: ['owners', 'roles', 'latestEvents', 'onboardingStatus'],
     properties: {
+        onboardingStatus: projectOverviewSchema.properties.onboardingStatus,
         latestEvents: {
             type: 'array',
             description: 'The latest events for the project.',

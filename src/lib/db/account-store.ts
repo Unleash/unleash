@@ -201,12 +201,13 @@ export class AccountStore implements IAccountStore {
 
     async getAdmins(): Promise<MinimalUser[]> {
         const rowToAdminUser = (row) => {
+            const user = rowToUser(row);
             return {
-                id: row.id,
-                name: emptify(row.name),
-                username: emptify(row.username),
-                email: emptify(row.email),
-                imageUrl: emptify(row.image_url),
+                id: user.id,
+                name: user.name,
+                username: user.username,
+                email: user.email,
+                imageUrl: user.imageUrl,
             };
         };
 

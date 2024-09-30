@@ -52,18 +52,15 @@ export type IFlagKey =
     | 'manyStrategiesPagination'
     | 'enableLegacyVariants'
     | 'navigationSidebar'
-    | 'anonymizeProjectOwners'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
     | 'originMiddleware'
-    | 'newEventSearch'
-    | 'archiveProjects'
-    | 'projectListImprovements'
-    | 'useProjectReadModel'
     | 'addonUsageMetrics'
     | 'onboardingMetrics'
     | 'onboardingUI'
-    | 'projectRoleAssignment';
+    | 'projectRoleAssignment'
+    | 'eventTimeline'
+    | 'personalDashboardUI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -264,10 +261,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
         true,
     ),
-    anonymizeProjectOwners: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ANONYMIZE_PROJECT_OWNERS,
-        false,
-    ),
     extendedMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_METRICS,
         false,
@@ -278,22 +271,6 @@ const flags: IFlags = {
     ),
     originMiddleware: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ORIGIN_MIDDLEWARE,
-        false,
-    ),
-    newEventSearch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_EVENT_SEARCH,
-        false,
-    ),
-    archiveProjects: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_PROJECTS,
-        false,
-    ),
-    projectListImprovements: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_LIST_IMPROVEMENTS,
-        false,
-    ),
-    useProjectReadModel: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_USE_PROJECT_READ_MODEL,
         false,
     ),
     addonUsageMetrics: parseEnvVarBoolean(
@@ -310,6 +287,14 @@ const flags: IFlags = {
     ),
     projectRoleAssignment: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_ROLE_ASSIGNMENT,
+        false,
+    ),
+    eventTimeline: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EVENT_TIMELINE,
+        false,
+    ),
+    personalDashboardUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PERSONAL_DASHBOARD_UI,
         false,
     ),
 };

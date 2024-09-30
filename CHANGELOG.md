@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.3] - 2024-09-18
+
+### Bug Fixes
+
+- Express upgrade to 4.21 ([#8168](https://github.com/Unleash/unleash/issues/8168))
+
+- Cherry pick security fixes ([#8175](https://github.com/Unleash/unleash/issues/8175))
+
+
 ## [6.2.1] - 2024-09-11
 
 ### Bug Fixes

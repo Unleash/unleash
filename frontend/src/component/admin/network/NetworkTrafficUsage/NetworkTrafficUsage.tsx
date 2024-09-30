@@ -17,8 +17,6 @@ import {
     Title,
     Tooltip,
     Legend,
-    type Chart,
-    type Tick,
 } from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
@@ -32,42 +30,13 @@ import {
     type ChartDatasetType,
     useTrafficDataEstimation,
 } from 'hooks/useTrafficData';
+import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
+import { formatTickValue } from 'component/common/Chart/formatTickValue';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
     gap: theme.spacing(5),
 }));
-
-const customHighlightPlugin = {
-    id: 'customLine',
-    beforeDraw: (chart: Chart) => {
-        const width = 46;
-        if (chart.tooltip?.opacity && chart.tooltip.x) {
-            const x = chart.tooltip.caretX;
-            const yAxis = chart.scales.y;
-            const ctx = chart.ctx;
-            ctx.save();
-            const gradient = ctx.createLinearGradient(
-                x,
-                yAxis.top,
-                x,
-                yAxis.bottom + 34,
-            );
-            gradient.addColorStop(0, 'rgba(129, 122, 254, 0)');
-            gradient.addColorStop(1, 'rgba(129, 122, 254, 0.12)');
-            ctx.fillStyle = gradient;
-            ctx.roundRect(
-                x - width / 2,
-                yAxis.top,
-                width,
-                yAxis.bottom - yAxis.top + 34,
-                5,
-            );
-            ctx.fill();
-            ctx.restore();
-        }
-    },
-};
 
 const createBarChartOptions = (
     theme: Theme,
@@ -150,20 +119,7 @@ const createBarChartOptions = (
             ticks: {
                 color: theme.palette.text.secondary,
                 maxTicksLimit: 5,
-                callback: (
-                    tickValue: string | number,
-                    index: number,
-                    ticks: Tick[],
-                ) => {
-                    if (typeof tickValue === 'string') {
-                        return tickValue;
-                    }
-                    const value = Number.parseInt(tickValue.toString());
-                    if (value > 999999) {
-                        return `${value / 1000000}M`;
-                    }
-                    return value > 999 ? `${value / 1000}k` : value;
-                },
+                callback: formatTickValue,
             },
             grid: {
                 drawBorder: false,
@@ -336,7 +292,7 @@ export const NetworkTrafficUsage: VFC = () => {
                         <Grid item xs={12} md={2}>
                             <Bar
                                 data={data}
-                                plugins={[customHighlightPlugin]}
+                                plugins={[customHighlightPlugin()]}
                                 options={options}
                                 aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API'
                             />

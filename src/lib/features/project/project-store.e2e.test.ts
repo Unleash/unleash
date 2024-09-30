@@ -12,7 +12,7 @@ let environmentStore: IEnvironmentStore;
 
 beforeAll(async () => {
     db = await dbInit('project_store_serial', getLogger, {
-        experimental: { flags: { archiveProjects: true } },
+        experimental: { flags: {} },
     });
     stores = db.stores;
     projectStore = stores.projectStore;

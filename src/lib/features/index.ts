@@ -11,3 +11,4 @@ export * from './events/createEventsService';
 export * from './instance-stats/createInstanceStatsService';
 export * from './feature-lifecycle/createFeatureLifecycle';
 export * from './playground/createPlaygroundService';
+export * from './personal-dashboard/createPersonalDashboardService';

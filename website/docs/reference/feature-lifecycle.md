@@ -4,7 +4,7 @@ title: Feature Lifecycle
 
 :::note Availability
 
-**Version**: `5.12+` in BETA
+**Version**: `6.2+`
 
 :::
 

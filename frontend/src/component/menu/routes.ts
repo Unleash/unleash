@@ -47,6 +47,7 @@ import { FeedbackList } from '../feedbackNew/FeedbackList';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
 import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject';
+import { PersonalDashboard } from '../personalDashboard/PersonalDashboard';
 
 export const routes: IRoute[] = [
     // Splash
@@ -57,6 +58,14 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: {},
         isStandalone: true,
+    },
+    // Personal Dashboard
+    {
+        path: '/personal',
+        title: 'Personal Dashboard',
+        component: PersonalDashboard,
+        type: 'protected',
+        menu: { mobile: true },
     },
 
     // Project

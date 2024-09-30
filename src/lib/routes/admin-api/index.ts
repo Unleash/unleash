@@ -35,6 +35,7 @@ import { SegmentsController } from '../../features/segment/segment-controller';
 import { InactiveUsersController } from '../../users/inactive/inactive-users-controller';
 import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller';
 import { SearchApi } from './search';
+import PersonalDashboardController from '../../features/personal-dashboard/personal-dashboard-controller';
 
 export class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -119,6 +120,10 @@ export class AdminApi extends Controller {
         this.app.use(
             '/projects',
             new ProjectController(config, services, db).router,
+        );
+        this.app.use(
+            '/personal-dashboard',
+            new PersonalDashboardController(config, services).router,
         );
         this.app.use(
             '/environments',

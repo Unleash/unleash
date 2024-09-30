@@ -1,10 +1,7 @@
 ---
-title: "Feature flags: Best practices for building and scaling"
-description: "Discover 11 essential principles for building robust, large-scale feature flag systems."
+title: "11 Principles for building and scaling feature flag systems"
 toc_max_heading_level: 2
 ---
-
-# Best practices for building and scaling feature flags
 
 import Figure from '@site/src/components/Figure/Figure.tsx'
 

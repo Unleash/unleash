@@ -198,6 +198,9 @@ export const PersonalDashboard = () => {
             'onboarding-started' ||
         personalDashboardProjectDetails?.onboardingStatus.status ===
             'first-flag-created';
+    const onboarded =
+        personalDashboardProjectDetails?.onboardingStatus.status ===
+        'onboarded';
 
     return (
         <div>
@@ -206,8 +209,7 @@ export const PersonalDashboard = () => {
             </Typography>
             <ScreenExplanation>
                 <p>
-                    {personalDashboardProjectDetails?.onboardingStatus
-                        .status === 'onboarded'
+                    {onboarded
                         ? 'We have gathered projects and flags you have favorited or owned'
                         : null}
                     {setupIncomplete

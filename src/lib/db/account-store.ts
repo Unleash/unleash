@@ -217,6 +217,7 @@ export class AccountStore implements IAccountStore {
                 '=',
                 this.db.raw('(SELECT id FROM roles WHERE name = ?)', ['Admin']),
             )
+            .andWhereNot('users.is_service')
             .select(
                 'users.id',
                 'users.name',

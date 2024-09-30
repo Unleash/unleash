@@ -14,6 +14,8 @@ import { FakePrivateProjectChecker } from '../private-project/fakePrivateProject
 import { PrivateProjectChecker } from '../private-project/privateProjectChecker';
 import { AccountStore } from '../../db/account-store';
 import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
+import { OnboardingReadModel } from '../onboarding/onboarding-read-model';
+import { FakeOnboardingReadModel } from '../onboarding/fake-onboarding-read-model';
 
 export const createPersonalDashboardService = (
     db: Db,
@@ -24,6 +26,7 @@ export const createPersonalDashboardService = (
         new PersonalDashboardReadModel(db),
         new ProjectOwnersReadModel(db),
         new ProjectReadModel(db, config.eventBus, config.flagResolver),
+        new OnboardingReadModel(db),
         new EventStore(db, config.getLogger),
         new FeatureEventFormatterMd({
             unleashUrl: config.server.unleashUrl,
@@ -39,6 +42,7 @@ export const createFakePersonalDashboardService = (config: IUnleashConfig) => {
         new FakePersonalDashboardReadModel(),
         new FakeProjectOwnersReadModel(),
         new FakeProjectReadModel(),
+        new FakeOnboardingReadModel(),
         new FakeEventStore(),
         new FeatureEventFormatterMd({
             unleashUrl: config.server.unleashUrl,

@@ -18,7 +18,6 @@ import { Badge } from '../common/Badge/Badge';
 import { ConnectSDK, CreateFlag } from './ConnectSDK';
 import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectSetupComplete } from './ProjectSetupComplete';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
@@ -182,13 +181,11 @@ export const PersonalDashboard = () => {
         personalDashboard?.projects || [],
     );
 
-    // TODO: since we use this one only for the onboarding status, we can add th eonboarding status to the personal dashboard project details API
-    const { project: activeProjectOverview, loading } =
-        useProjectOverview(activeProject);
     const { personalDashboardProjectDetails, loading: loadingDetails } =
         usePersonalDashboardProjectDetails(activeProject);
 
-    const stage = activeProjectOverview?.onboardingStatus.status ?? 'loading';
+    const stage =
+        personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'open' | 'closed'

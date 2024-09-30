@@ -1,4 +1,4 @@
-import { Button, styled } from '@mui/material';
+import { Button, styled, Typography } from '@mui/material';
 import type { FC } from 'react';
 
 const TitleContainer = styled('div')(({ theme }) => ({
@@ -20,6 +20,22 @@ const NeutralCircleContainer = styled('span')(({ theme }) => ({
     borderRadius: '50%',
 }));
 
+const MainCircleContainer = styled(NeutralCircleContainer)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.background.paper,
+}));
+
+const SuccessContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+
+    fontSize: theme.spacing(1.75),
+    fontWeight: 'bold',
+    backgroundColor: theme.palette.success.light,
+    borderRadius: theme.shape.borderRadiusLarge,
+    padding: theme.spacing(2, 2, 2, 2),
+}));
+
 const ActionBox = styled('div')(({ theme }) => ({
     flexBasis: '50%',
     padding: theme.spacing(4, 2),
@@ -39,6 +55,30 @@ export const CreateFlag: FC<{ project: string }> = ({ project }) => {
                 <p>The project currently holds no feature toggles.</p>
                 <p>Create a feature flag to get started.</p>
             </div>
+            <div>
+                <Button href={`projects/${project}`} variant='contained'>
+                    Go to project
+                </Button>
+            </div>
+        </ActionBox>
+    );
+};
+
+export const ExistingFlag: FC<{ project: string }> = ({ project }) => {
+    return (
+        <ActionBox>
+            <TitleContainer>
+                <MainCircleContainer>✓</MainCircleContainer>
+                Create a feature flag
+            </TitleContainer>
+            <SuccessContainer>
+                <Typography fontWeight='bold' variant='body2'>
+                    You have created your first flag
+                </Typography>
+                <Typography variant='body2'>
+                    Go to project to customize the flag further
+                </Typography>
+            </SuccessContainer>
             <div>
                 <Button href={`projects/${project}`} variant='contained'>
                     Go to project

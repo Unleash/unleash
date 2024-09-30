@@ -193,6 +193,15 @@ export const PersonalDashboard = () => {
 
     const noProjects = projects.length === 0;
 
+    const setupIncomplete =
+        personalDashboardProjectDetails?.onboardingStatus.status ===
+            'onboarding-started' ||
+        personalDashboardProjectDetails?.onboardingStatus.status ===
+            'first-flag-created';
+    const onboarded =
+        personalDashboardProjectDetails?.onboardingStatus.status ===
+        'onboarded';
+
     return (
         <div>
             <Typography component='h2' variant='h2'>
@@ -200,16 +209,22 @@ export const PersonalDashboard = () => {
             </Typography>
             <ScreenExplanation>
                 <p>
-                    Here are some tasks we think would be useful in order to get
-                    the most out of Unleash
+                    {onboarded
+                        ? 'We have gathered projects and flags you have favorited or owned'
+                        : null}
+                    {setupIncomplete
+                        ? 'Here are some tasks we think would be useful in order to get the most out of Unleash'
+                        : null}
                 </p>
-                <IconButton
-                    size={'small'}
-                    title='Key concepts'
-                    onClick={() => setWelcomeDialog('open')}
-                >
-                    <HelpOutline />
-                </IconButton>
+                {setupIncomplete ? (
+                    <IconButton
+                        size={'small'}
+                        title='Key concepts'
+                        onClick={() => setWelcomeDialog('open')}
+                    >
+                        <HelpOutline />
+                    </IconButton>
+                ) : null}
             </ScreenExplanation>
 
             {noProjects && personalDashboard ? (
@@ -228,7 +243,9 @@ export const PersonalDashboard = () => {
                         md={1}
                         sx={{ display: 'flex', justifyContent: 'flex-end' }}
                     >
-                        <Badge color='warning'>Setup incomplete</Badge>
+                        {setupIncomplete ? (
+                            <Badge color='warning'>Setup incomplete</Badge>
+                        ) : null}
                     </SpacedGridItem>
                     <SpacedGridItem item lg={4} md={1}>
                         <List
@@ -294,8 +311,7 @@ export const PersonalDashboard = () => {
                                 }
                             />
                         ) : null}
-                        {stage === 'onboarding-started' ||
-                        stage === 'first-flag-created' ? (
+                        {setupIncomplete ? (
                             <ConnectSDK project={activeProject} />
                         ) : null}
                     </SpacedGridItem>

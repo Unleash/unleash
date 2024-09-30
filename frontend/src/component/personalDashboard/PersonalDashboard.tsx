@@ -204,7 +204,7 @@ export const PersonalDashboard = () => {
             <ScreenExplanation>
                 <p>
                     Here are some tasks we think would be useful in order to get
-                    the most of Unleash
+                    the most out of Unleash
                 </p>
                 <IconButton
                     size={'small'}

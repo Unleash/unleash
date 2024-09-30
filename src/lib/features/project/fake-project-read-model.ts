@@ -17,4 +17,7 @@ export class FakeProjectReadModel implements IProjectReadModel {
     getProjectsByUser(): Promise<string[]> {
         return Promise.resolve([]);
     }
+    getProjectsFavoritedByUser(): Promise<string[]> {
+        return Promise.resolve([]);
+    }
 }

@@ -3,7 +3,7 @@ title: The Anatomy of Unleash
 ---
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
-This guide's purpose is to give you a conceptual overview of how Unleash works. It covers the various components that exist within an Unleash system and how they interact with each other and with external applications. The diagrams are intended to help you understand the fundamental building blocks, such as [projects](../reference/projects.md), [environments](../reference/environments.md), [variants](../reference/feature-toggle-variants.md) and, of course, [feature flags](../reference/feature-toggles.mdx).
+This guide's purpose is to give you a conceptual overview of how Unleash works. It covers the various components that exist within an Unleash system and how they interact with each other and with external applications. The diagrams help you understand the fundamental building blocks, such as [projects](../reference/projects.md), [environments](../reference/environments.md), [variants](../reference/feature-toggle-variants.md) and of course, [feature flags](../reference/feature-toggles.mdx).
 
 The end of this guide presents a [short use case, explaining how you might configure Unleash](#use-case) to start working with feature flags.
 
@@ -18,7 +18,7 @@ Some things in Unleash are configured and defined on the root level. These optio
 - [Strategy types](../reference/activation-strategies.md) (including [custom activation strategy types](../reference/custom-activation-strategies.md))
 - [Tag types](../reference/tags.md)
 - [Unleash context](../reference/unleash-context.md) fields (including [custom context fields](../reference/unleash-context.md#custom-context-fields))
-- Users, [user groups](../reference/rbac.md#user-groups) and [roles](../reference/rbac.md)
+- Users, [user groups](../reference/rbac.md#user-groups), and [roles](../reference/rbac.md)
 
 
 ## Projects
@@ -33,7 +33,7 @@ Pro and Enterprise customers can create, rename, and delete projects as they wis
 
 ## Environments and project environments
 
-<Figure img="/img/anatomy-of-unleash-customer-tiers.png" caption="Feature flags can be activated or deactivated independently in different environments. For instance, a feature flag can be active in the development environment, and deactivated in the production environment. Even if their configuration is otherwise identical, deactivated feature flags will never be considered enabled."/>
+<Figure img="/img/anatomy-of-unleash-customer-tiers.png" caption="Feature flags can be activated or deactivated independently in different environments. For instance, a feature flag can be active in the development environment and deactivated in the production environment. Even if their configuration is otherwise identical, deactivated feature flags will never be considered enabled."/>
 
 [**Environments**](../reference/environments.md) in Unleash let you change how a feature flag works in your application’s different environments. For instance, while you are developing a feature, it’s likely that you’ll want it to be available in your development environment, but not in your production environment: environments let you do that. You might also want to enable a feature for only some users in your development environment, but no users in your production environment: environments let you do that.
 
@@ -70,11 +70,11 @@ When creating a feature flag, you must assign a unique (across your Unleash inst
 
 When you check a [feature flag](../reference/feature-toggles.mdx) in an application, the following decides the result:
 1. Is the flag active in the current environment? If not, it will be disabled.
-2. If the flag **is** active in the current environment, the flag’s strategies decide the result. As long as **at least one** of a flag’s strategies resolve to true for the current context (user or application), then the flag will be considered enabled. In other words, if you have a hundred strategies and ninety-nine of them resolve to false, but one of them resolves to true, then the flag is enabled.
+2. If the flag **is** active in the current environment, the flag’s strategies decide the result. As long as **at least one** of a flag’s strategies resolves to true for the current context (user or application), then the flag will be considered enabled. In other words, if you have a hundred strategies and ninety-nine of them resolve to false, but one of them resolves to true, then the flag is enabled.
 
-Activation strategies tie feature flags and [environments](../reference/environments.md) together. When you assign an activation strategy to a feature flag, you do so in one environment at a time. You can assign the same strategy to the same flag in different environments, but they will be different instances of the same strategy, and do not stay in sync. Unleash also lets you copy strategies from one environment to another.
+Activation strategies tie feature flags and [environments](../reference/environments.md) together. When you assign an activation strategy to a feature flag, you do so in one environment at a time. You can assign the same strategy to the same flag in different environments, but they will be different instances of the same strategy and do not stay in sync. Unleash also lets you copy strategies from one environment to another.
 
-Unleash comes with a number of strategies built in (refer the [activation strategies documentation](../reference/activation-strategies.md) for more information on those). You can also create your own [custom activation strategies](../reference/custom-activation-strategies.md) if you need them. All strategies can be further augmented by [**strategy constraints**](../reference/strategy-constraints.md).
+Unleash comes with a number of [strategies built-in](../reference/activation-strategies.md). You can also create your own [custom activation strategies](../reference/custom-activation-strategies.md). All strategies can be further augmented by [**strategy constraints**](../reference/strategy-constraints.md).
 
 
 <Figure img="/img/anatomy-of-unleash-environments-strategies.png" caption="Feature flags exist across environments and can have different activation strategies in each environment."/>
@@ -93,7 +93,7 @@ An activation strategy can have as many constraints as you want. When an activat
 
 :::tip Strategies and constraints
 
-Feature flag strategies are **permissive**: As long as **one** strategy resolves to true, the feature is considered enabled. On the other hand, constrains are **restrictive**: for a given strategy, **all** constraints must be met for it to resolve to true.
+Feature flag strategies are **permissive**: As long as **one** strategy resolves to true, the feature is considered enabled. On the other hand, constraints are **restrictive**: for a given strategy, **all** constraints must be met for it to resolve to true.
 
 We can exemplify this difference with the logical operators AND and OR:
 - For a feature flag, if Strategy1 OR Strategy2 OR .. OR StrategyN is true, **then the feature is enabled**.
@@ -140,7 +140,7 @@ Prior to 4.21, variants were independent of [environments](../reference/environm
 
 <Figure img="/img/anatomy-of-unleash-variants.png" caption="Before Unleash 4.21, feature flag variants were the same for all environments."/>
 
-As of version 4.21, a feature can have different variants in different environments. For instance, a development environment might have no variants, while a production environment has 2 variants. Payloads, weightings and anything else can also differ between environments.
+As of version 4.21, a feature can have different variants in different environments. For instance, a development environment might have no variants, while a production environment has 2 variants. Payloads, weightings, and anything else can also differ between environments.
 
 <Figure img="/img/anatomy-of-unleash-variants-environment.png" caption="From Unleash 4.21 on, a feature flag can have different variants in each environment."/>
 
@@ -171,7 +171,7 @@ In pseudocode (loosely based on the [Node.js SDK](/docs/generated/sdks/server-si
 if (unleash.isEnabled(“new-color-scheme”)) {
   // load stylesheet with new color scheme
 } else {
-  // load stylesheet with old color scheme
+  // load stylesheet with the old color scheme
 }
 ```
 
@@ -180,7 +180,7 @@ And with that, the new color scheme is now live in your development environment.
 
 ### Rolling out the feature to users
 
-When you’re happy with the new color scheme, you decide to start rolling it out to users. But you want it to go out to only a small number of users at first, so that you can get some feedback while rolling out.
+When you’re happy with the new color scheme, you decide to start rolling it out to users. But you want it to go out to only a small number of users at first so that you can get some feedback while rolling out.
 
 You decide to add a _gradual rollout_ strategy to the new-color-scheme feature in the production environment. Because you want to start small, you set the rollout percentage to 5%.
 

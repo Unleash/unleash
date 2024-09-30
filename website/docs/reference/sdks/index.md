@@ -6,7 +6,7 @@ import VideoContent from '@site/src/components/VideoContent.jsx'
 
 In order to connect your application to Unleash you will need a client SDK (software developer kit) for your programming language and an [API token](../how-to/how-to-create-api-tokens). The SDK will handle connecting to the Unleash server instance and retrieving feature flags based on your configuration. All versions of Unleash (OSS, Pro, and Enterprise) use the same client SDKs.
 
-Unleash provides official client SDKs for a number of programming language. Additionally, our community have developed and contributed SDKs for other languages. So if you can't find your favorite language in the list of official SDKs, check out the [list of clients written by our fantastic community](#community-sdks).
+Unleash provides official client SDKs for a number of programming languages. Additionally, our community has developed and contributed SDKs for other languages. So if you can't find your favorite language in the list of official SDKs, check out the [list of clients written by our fantastic community](#community-sdks).
 
 ## Official SDKs
 
@@ -33,6 +33,7 @@ Client-side SDKs can connect to [Unleash Edge](/reference/unleash-edge) or to th
 -   [Flutter Proxy SDK](/docs/generated/sdks/client-side/flutter.md)
 -   [iOS Proxy SDK](/docs/generated/sdks/client-side/ios-proxy.md)
 -   [Javascript SDK](/docs/generated/sdks/client-side/javascript-browser.md)
+-   [Next.js](/docs/generated/sdks/client-side/next-js.md)
 -   [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
 -   [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
 -   [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)
@@ -83,7 +84,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Basic support | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | <span id="strategy-constraints">**Category: [Strategy constraints](../strategy-constraints.md)**</span> |  |  |  |  |  |  |  |  |
 | Basic support (`IN`, `NOT_IN` operators) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
-| <span id="strategy-constraints-advanced-support">Advanced support (Semver, date, numeric and extended string operators)</span> (introduced in) | ✅ (5.1) | ✅ (3.12) | ✅ (3.3) | ✅ (5.1) | ✅ (4.2) | ✅ (2.1) | ✅ (1.3.1) | ⭕ |
+| <span id="strategy-constraints-advanced-support">Advanced support (Semver, date, numeric, and extended string operators)</span> (introduced in) | ✅ (5.1) | ✅ (3.12) | ✅ (3.3) | ✅ (5.1) | ✅ (4.2) | ✅ (2.1) | ✅ (1.3.1) | ⭕ |
 | **Category: [Unleash Context](../reference/unleash-context)** |  |  |  |  |  |  |  |  |
 | Static fields (`environment`, `appName`) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Defined fields | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -99,7 +100,7 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | [Custom stickiness](../stickiness.md#custom-stickiness-beta) | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 | [Strategy Variants](./strategy-variants)| ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 | **Category: Local backup** |  |  |  |  |  |  |  |  |
-| File based backup | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
+| File-based backup | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 | **Category: Usage metrics** |  |  |  |  |  |  |  |  |
 | Can disable metrics | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
 | Client registration | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
@@ -134,7 +135,7 @@ Here's some of the fantastic work our community has done to make Unleash work in
 
 ### Implement your own SDK {#implement-your-own-sdk}
 
-If you can't find an SDK that fits your need, you can also develop your own SDK. To make implementation easier, check out these resources:
+If you can't find an SDK that fits your requirements, you can also develop your own SDK. To make implementation easier, check out these resources:
 
 -   [Unleash Client Specifications](https://github.com/Unleash/client-specification) - Used by all official SDKs to make sure they behave correctly across different language implementations. This lets us verify that a gradual rollout to 10% of the users would affect the same users regardless of which SDK you're using.
 -   [Client SDK overview](../client-specification) - A brief, overall guide of the _Unleash Architecture_ and important aspects of the SDK role in it all.
@@ -143,7 +144,7 @@ If you can't find an SDK that fits your need, you can also develop your own SDK.
 
 The following section details the behavior of frontend / client-side SDKs when initializing and fetching flags with respect to network connectivity.
 
-When the SDK is initialized in the application, an in memory repository is setup and synchronized against the frontend API using the configured token and context. Note that the frontend API is hosted by either the Unleash Proxy/Edge or the upstream Unleash instance directly.
+When the SDK is initialized in the application, an in-memory repository is set up and synchronized against the frontend API using the configured token and context. Note that the frontend API is hosted by either the Unleash Proxy/Edge or the upstream Unleash instance directly.
 
 1. All feature flag evaluation is performed by the Proxy/Edge or Unleash instance. A payload of all enabled flags and their variants (if applicable) is returned as a single request. Disabled flags are not included.
 

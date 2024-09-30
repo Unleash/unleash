@@ -33,7 +33,7 @@ export interface IUser {
     scimId?: string;
 }
 
-export type MinimalUser = Pick<
+export type MinimalUiUser = Pick<
     IUser,
     'id' | 'name' | 'username' | 'email' | 'imageUrl'
 >;

@@ -9,7 +9,7 @@ import type {
 } from './personal-dashboard-read-model-type';
 import type { IProjectReadModel } from '../project/project-read-model-type';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type { IAccountStore, IEventStore, MinimalUser } from '../../types';
+import type { IAccountStore, IEventStore, MinimalUiUser } from '../../types';
 import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
 import { generateImageUrl } from '../../util';
 
@@ -110,7 +110,7 @@ export class PersonalDashboardService {
         return { latestEvents: formattedEvents };
     }
 
-    async getAdmins(): Promise<MinimalUser[]> {
+    async getAdmins(): Promise<MinimalUiUser[]> {
         return this.accountStore.getAdmins();
     }
 }

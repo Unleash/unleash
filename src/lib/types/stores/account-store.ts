@@ -1,4 +1,4 @@
-import type { IUser, MinimalUser } from '../user';
+import type { IUser, MinimalUiUser } from '../user';
 import type { Store } from './store';
 
 export interface IUserLookup {
@@ -22,5 +22,5 @@ export interface IAccountStore extends Store<IUser, number> {
     getAccountByPersonalAccessToken(secret: string): Promise<IUser>;
     markSeenAt(secrets: string[]): Promise<void>;
     getAdminCount(): Promise<IAdminCount>;
-    getAdmins(): Promise<MinimalUser[]>;
+    getAdmins(): Promise<MinimalUiUser[]>;
 }

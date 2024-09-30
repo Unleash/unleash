@@ -76,7 +76,7 @@ export const ExistingFlag: FC<{ project: string }> = ({ project }) => {
                     You have created your first flag
                 </Typography>
                 <Typography variant='body2'>
-                    Go to project to customize the flag further
+                    Go to the project to customize the flag further.
                 </Typography>
             </SuccessContainer>
             <div>

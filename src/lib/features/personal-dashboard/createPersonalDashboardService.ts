@@ -1,5 +1,5 @@
 import type { Db } from '../../db/db';
-import type { IUnleashConfig } from '../../types';
+import type { IUnleashConfig, IUnleashStores } from '../../types';
 import { PersonalDashboardService } from './personal-dashboard-service';
 import { PersonalDashboardReadModel } from './personal-dashboard-read-model';
 import { FakePersonalDashboardReadModel } from './fake-personal-dashboard-read-model';
@@ -16,6 +16,7 @@ import { PrivateProjectChecker } from '../private-project/privateProjectChecker'
 export const createPersonalDashboardService = (
     db: Db,
     config: IUnleashConfig,
+    stores: IUnleashStores,
 ) => {
     return new PersonalDashboardService(
         new PersonalDashboardReadModel(db),

@@ -4,7 +4,7 @@ import User from '../types/user';
 import NotFoundError from '../error/notfound-error';
 import type { IUserLookup } from '../types/stores/user-store';
 import type { IAdminCount } from '../types/stores/account-store';
-import type { IAccountStore, MinimalUiUser } from '../types';
+import type { IAccountStore, MinimalUser } from '../types';
 import type { Db } from './db';
 
 const TABLE = 'users';
@@ -199,7 +199,7 @@ export class AccountStore implements IAccountStore {
         };
     }
 
-    async getAdmins(): Promise<MinimalUiUser[]> {
+    async getAdmins(): Promise<MinimalUser[]> {
         const rowToAdminUser = (row) => {
             const user = rowToUser(row);
             return {

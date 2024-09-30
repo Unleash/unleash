@@ -13,7 +13,7 @@ import type {
     IAccountStore,
     IEventStore,
     IOnboardingReadModel,
-    MinimalUiUser,
+    MinimalUser,
 } from '../../types';
 import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
 import { generateImageUrl } from '../../util';
@@ -126,7 +126,7 @@ export class PersonalDashboardService {
         return { latestEvents: formattedEvents, onboardingStatus };
     }
 
-    async getAdmins(): Promise<MinimalUiUser[]> {
+    async getAdmins(): Promise<MinimalUser[]> {
         return this.accountStore.getAdmins();
     }
 }

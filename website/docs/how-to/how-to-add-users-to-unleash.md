@@ -4,7 +4,7 @@ title: How to add new users to your Unleash instance
 
 :::note Availability
 
-**Version**: `4+`
+**Version**: `4.0+`
 
 :::
     

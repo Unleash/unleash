@@ -8,7 +8,7 @@ You can usually find availability information in the feature's documentation pag
 
 :::note Availability
 
-**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.21+`
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.5+`
 
 :::
 

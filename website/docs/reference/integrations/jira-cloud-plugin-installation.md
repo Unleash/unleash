@@ -5,7 +5,7 @@ import Figure from '@site/src/components/Figure/Figure.tsx'
 
 :::note Availability
 
-**Version**: `4+`
+**Version**: `4.0+`
 
 :::
 

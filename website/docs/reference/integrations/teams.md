@@ -5,7 +5,7 @@ title: Microsoft Teams
 
 :::note Availability
 
-**Version**: `4+`
+**Version**: `4.0+`
 
 :::
 

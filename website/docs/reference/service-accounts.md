@@ -4,7 +4,7 @@ title: Service Accounts
 
 :::note Availability
 
-**Version**: `4.21+`
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.21+`
 
 :::
 

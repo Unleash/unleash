@@ -5,7 +5,7 @@ title: Role-based Access control
 
 :::note Availability
 
-**Version**: `4+`
+**Version**: `4.0+`
 
 :::
 
@@ -230,7 +230,7 @@ A user group consists of the following:
 - a **description** (optional)
 - a **list of users** (required)
 - a list of SSO groups to sync from (optional)
-- a root role associated with the group (optional) (Available in Unleash 5.1)
+- a root role associated with the group (optional; available in v5.1+)
 
 Groups do nothing on their own. They must either be given a root role directly or a role on a project to assign
 permissions.

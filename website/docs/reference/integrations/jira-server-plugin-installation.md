@@ -10,7 +10,7 @@ The Jira Server plugin is **deprecated**, please use the [Unleash Jira Cloud plu
 
 :::note Availability
 
-**Version**: `4+`
+**Version**: `4.0+`
 
 :::
 

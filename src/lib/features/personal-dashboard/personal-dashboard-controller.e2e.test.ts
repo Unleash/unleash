@@ -250,8 +250,6 @@ test('should return Unleash admins', async () => {
 
     const { body } = await app.request.get(`/api/admin/personal-dashboard`);
 
-    const admins = body.admins;
-    admins.sort((a, b) => a.id - b.id);
     expect(body.admins).toMatchObject([
         {
             id: admin.id,

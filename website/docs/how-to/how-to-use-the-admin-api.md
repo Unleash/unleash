@@ -2,7 +2,7 @@
 title: How to use the Admin API
 ---
 
-You can integrate with Unleash directly using the Admin API. This guide explains the steps required to getting access to and using the Admin API.
+This guide explains the steps required to getting access to and using the Admin API.
 
 ## Step 1: Create API token {#step-1-create-api-token}
 

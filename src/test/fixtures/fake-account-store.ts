@@ -15,7 +15,6 @@ export class FakeAccountStore implements IAccountStore {
         this.idSeq = 1;
         this.data = [];
     }
-
     async hasAccount({
         id,
         username,
@@ -97,5 +96,9 @@ export class FakeAccountStore implements IAccountStore {
 
     async getAdminCount(): Promise<IAdminCount> {
         throw new Error('Not implemented');
+    }
+
+    async getAdmins(): Promise<IUser[]> {
+        return [];
     }
 }

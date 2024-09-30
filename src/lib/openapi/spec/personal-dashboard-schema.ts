@@ -7,6 +7,41 @@ export const personalDashboardSchema = {
     additionalProperties: false,
     required: ['projects', 'flags'],
     properties: {
+        admins: {
+            type: 'array',
+            description: 'Users with the admin role in Unleash.',
+            items: {
+                type: 'object',
+                required: ['id'],
+                properties: {
+                    id: {
+                        type: 'integer',
+                        description: 'The user ID.',
+                        example: 1,
+                    },
+                    name: {
+                        type: 'string',
+                        description: "The user's name.",
+                        example: 'Ash Ketchum',
+                    },
+                    username: {
+                        type: 'string',
+                        description: "The user's username.",
+                        example: 'pokémaster13',
+                    },
+                    imageUrl: {
+                        type: 'string',
+                        nullable: true,
+                        example: 'https://example.com/peek-at-you.jpg',
+                    },
+                    email: {
+                        type: 'string',
+                        nullable: true,
+                        example: 'user@example.com',
+                    },
+                },
+            },
+        },
         projectOwners: {
             type: 'array',
             description:

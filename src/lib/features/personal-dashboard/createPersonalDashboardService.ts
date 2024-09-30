@@ -12,6 +12,8 @@ import { FeatureEventFormatterMd } from '../../addons/feature-event-formatter-md
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import { FakePrivateProjectChecker } from '../private-project/fakePrivateProjectChecker';
 import { PrivateProjectChecker } from '../private-project/privateProjectChecker';
+import { AccountStore } from '../../db/account-store';
+import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
 
 export const createPersonalDashboardService = (
     db: Db,
@@ -28,6 +30,7 @@ export const createPersonalDashboardService = (
             formatStyle: 'markdown',
         }),
         new PrivateProjectChecker(stores, config),
+        new AccountStore(db, config.getLogger),
     );
 };
 
@@ -42,5 +45,6 @@ export const createFakePersonalDashboardService = (config: IUnleashConfig) => {
             formatStyle: 'markdown',
         }),
         new FakePrivateProjectChecker(),
+        new FakeAccountStore(),
     );
 };

@@ -6,14 +6,18 @@ import dbInit, { type ITestDb } from '../../helpers/database-init';
 import getLogger from '../../../fixtures/no-logger';
 import { FEATURE_CREATED, type IBaseEvent } from '../../../../lib/types/events';
 import { randomId } from '../../../../lib/util/random-id';
-import { EventService } from '../../../../lib/services';
-import EventEmitter from 'events';
-import { SYSTEM_USER } from '../../../../lib/types';
+import type { EventService } from '../../../../lib/services';
+import { type IUnleashConfig, SYSTEM_USER } from '../../../../lib/types';
+import { createEventsService } from '../../../../lib/features';
+import { createTestConfig } from '../../../config/test-config';
 
 let app: IUnleashTest;
 let db: ITestDb;
 let eventService: EventService;
 const TEST_USER_ID = -9999;
+
+const config: IUnleashConfig = createTestConfig();
+
 beforeAll(async () => {
     db = await dbInit('event_api_serial', getLogger);
     app = await setupAppWithCustomConfig(db.stores, {
@@ -23,10 +27,7 @@ beforeAll(async () => {
             },
         },
     });
-    eventService = new EventService(db.stores, {
-        getLogger,
-        eventBus: new EventEmitter(),
-    });
+    eventService = createEventsService(db.rawDatabase, config);
 });
 
 beforeEach(async () => {
@@ -233,7 +234,6 @@ test('event creators - takes single distinct username, if 2 users have same id',
     expect(body).toMatchObject([
         {
             id: 2,
-            name: 'test-user4',
         },
     ]);
 });

@@ -8,18 +8,21 @@ export interface IPartialUiConfig {
     versionInfo?: IVersionInfo;
 }
 
-export const formatCurrentVersion = (uiConfig: IPartialUiConfig): string => {
+export const formatCurrentVersion = (
+    uiConfig: IPartialUiConfig,
+): { name: string; version: string; buildNumber?: string } => {
     const current = uiConfig.versionInfo?.current;
-
-    if (current?.enterprise) {
-        return `${uiConfig.name} ${current.enterprise}`;
-    }
-
-    if (current?.oss) {
-        return `${uiConfig.name} ${current.oss}`;
-    }
-
-    return `${uiConfig.name} ${uiConfig.version}`;
+    const [version, buildNumber] = (
+        current?.enterprise ||
+        current?.oss ||
+        uiConfig.version ||
+        ''
+    ).split('+');
+    return {
+        name: uiConfig.name,
+        version,
+        buildNumber,
+    };
 };
 
 export const formatUpdateNotification = (

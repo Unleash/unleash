@@ -145,9 +145,7 @@ const uiConfig = () => {
         versionInfo: {
             current: { oss: 'version', enterprise: 'version' },
         },
-        flags: {
-            changeRequestPlayground: true,
-        },
+        flags: {},
     });
 };
 

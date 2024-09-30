@@ -7,7 +7,7 @@ Before you begin:
 - Have you read the [code of conduct](CODE_OF_CONDUCT.md)?
 - Check out the [existing issues](https://github.com/unleash/Unleash/issues)
 - Browse the [developer-guide](./website/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
-- You need 
+- You need
   - Node 20
   - corepack enabled `corepack enable`
 
@@ -36,7 +36,7 @@ Follow the steps in [the "how to run the project" section](#how-to-run-the-proje
 
 ### Make your update:
 
-Make your changes to the file(s) you'd like to update. You'll need **Node.js v18** and PostgreSQL 14 to run Unleash locally. [See more details](https://github.com/Unleash/unleash/tree/master/website/docs/contributing/developer-guide.md)
+Make your changes to the files you'd like to update. You'll need **Node.js v18.0+** and PostgreSQL v13.0+ to run Unleash locally. [See more details](https://github.com/Unleash/unleash/tree/master/website/docs/contributing/developer-guide.md)
 
 ### Open a pull request
 
@@ -159,7 +159,7 @@ To run the e2e tests, you'll need a running Postgres instance that you can conne
 docker run --name unleash-postgres -p 5432:5432 -e POSTGRES_USER=unleash_user -e POSTGRES_PASSWORD=password -e POSTGRES_DB=unleash_test -d postgres:15
 ```
 
-Unleash will attempt to connect using the connection string in `src/test/e2e/helpers/database-config.ts` or the environment variable `TEST_DATABASE_URL`. 
+Unleash will attempt to connect using the connection string in `src/test/e2e/helpers/database-config.ts` or the environment variable `TEST_DATABASE_URL`.
 
 ## Nice to know
 

@@ -4,6 +4,7 @@ import noLogger from '../../test/fixtures/no-logger';
 import SlackAddon from './slack';
 import type { IAddonConfig, IFlagResolver } from '../types';
 import type { IntegrationEventsService } from '../services';
+import type EventEmitter from 'events';
 
 beforeEach(() => {
     nock.disableNetConnect();
@@ -16,6 +17,7 @@ const ARGS: IAddonConfig = {
     unleashUrl: url,
     integrationEventsService: {} as IntegrationEventsService,
     flagResolver: {} as IFlagResolver,
+    eventBus: {} as EventEmitter,
 };
 
 test('Does not retry if request succeeds', async () => {

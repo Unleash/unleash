@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StyledFileDropZone } from './StyledFileDropZone';
-import { PulsingAvatar } from '../PulsingAvatar';
+import { PulsingAvatar } from 'component/common/PulsingAvatar/PulsingAvatar';
 import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import { ImportExplanation } from './ImportExplanation';
 import { type FC, type ReactNode, useState } from 'react';

@@ -66,16 +66,18 @@ export type CustomAuthHandler = (
     services?: IUnleashServices,
 ) => void;
 
+export type UsernameAdminUser = {
+    username: string;
+    password: string;
+};
+
 export interface IAuthOption {
     demoAllowAdminLogin?: boolean;
     enableApiToken: boolean;
     type: IAuthType;
     customAuthHandler?: CustomAuthHandler;
     createAdminUser?: boolean;
-    initialAdminUser?: {
-        username: string;
-        password: string;
-    };
+    initialAdminUser?: UsernameAdminUser;
     initApiTokens: ILegacyApiTokenCreate[];
 }
 
@@ -142,7 +144,17 @@ export interface IUnleashOptions {
     dailyMetricsStorageDays?: number;
     rateLimiting?: Partial<IRateLimiting>;
     resourceLimits?: Partial<
-        Pick<ResourceLimitsSchema, 'constraintValues' | 'featureFlags'>
+        Pick<
+            ResourceLimitsSchema,
+            | 'apiTokens'
+            | 'constraintValues'
+            | 'constraints'
+            | 'environments'
+            | 'featureEnvironmentStrategies'
+            | 'featureFlags'
+            | 'projects'
+            | 'segments'
+        >
     >;
 }
 

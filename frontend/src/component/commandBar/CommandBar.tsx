@@ -201,7 +201,7 @@ export const CommandBar = () => {
             searchInputRef.current?.blur();
         }
     });
-    const placeholder = `Command bar (${hotkey})`;
+    const placeholder = `Command menu (${hotkey})`;
 
     const findCommandBarLinksAndSelectedIndex = () => {
         const allCommandBarLinks =

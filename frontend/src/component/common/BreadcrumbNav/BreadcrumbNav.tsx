@@ -32,7 +32,7 @@ const BreadcrumbNav = () => {
     const { isAdmin } = useContext(AccessContext);
     const location = useLocation();
 
-    const paths = location.pathname
+    let paths = location.pathname
         .split('/')
         .filter((item) => item)
         .filter(
@@ -46,8 +46,6 @@ const BreadcrumbNav = () => {
                 item !== 'copy' &&
                 item !== 'features' &&
                 item !== 'features2' &&
-                // TODO: this can be removed after new create flag flow goes live
-                item !== 'create-toggle' &&
                 item !== 'settings' &&
                 item !== 'profile' &&
                 item !== 'insights',
@@ -55,7 +53,13 @@ const BreadcrumbNav = () => {
         .map(decodeURI);
 
     if (location.pathname === '/insights') {
+        // Because of sticky header in Insights
         return null;
+    }
+
+    if (paths.length === 1 && paths[0] === 'projects-archive') {
+        // It's not possible to use `projects/archive`, because it's :projectId path
+        paths = ['projects', 'archive'];
     }
 
     return (

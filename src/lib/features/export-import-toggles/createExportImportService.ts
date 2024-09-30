@@ -12,7 +12,6 @@ import ContextFieldStore from '../../db/context-field-store';
 import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
 import {
     ContextService,
-    EventService,
     FeatureTagService,
     StrategyService,
     TagTypeService,
@@ -32,7 +31,6 @@ import FakeTagTypeStore from '../tag-type/fake-tag-type-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 import FakeContextFieldStore from '../../../test/fixtures/fake-context-field-store';
-import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
@@ -48,7 +46,10 @@ import {
     createDependentFeaturesService,
     createFakeDependentFeaturesService,
 } from '../dependent-features/createDependentFeaturesService';
-import { createEventsService } from '../events/createEventsService';
+import {
+    createEventsService,
+    createFakeEventsService,
+} from '../events/createEventsService';
 import { SegmentReadModel } from '../segment/segment-read-model';
 import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
 
@@ -64,20 +65,13 @@ export const createFakeExportImportTogglesService = (
     const featureTagStore = new FakeFeatureTagStore();
     const strategyStore = new FakeStrategiesStore();
     const contextFieldStore = new FakeContextFieldStore();
-    const eventStore = new FakeEventStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
     const { accessService } = createFakeAccessService(config);
     const { featureToggleService } = createFakeFeatureToggleService(config);
     const privateProjectChecker = createFakePrivateProjectChecker();
 
-    const eventService = new EventService(
-        {
-            eventStore,
-            featureTagStore,
-        },
-        config,
-    );
+    const eventService = createFakeEventsService(config);
 
     const featureTagService = new FeatureTagService(
         {

@@ -26,7 +26,7 @@ const CappedText = styled(Typography)({
     whiteSpace: 'nowrap',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    maxWidth: '160px',
+    width: '100%',
 });
 
 const StyledListItemIcon = styled(ListItemIcon)(({ theme }) => ({

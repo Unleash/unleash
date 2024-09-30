@@ -23,13 +23,22 @@ import {
 } from '../../lib/types';
 import BadDataError from '../../lib/error/bad-data-error';
 import { createFakeEventsService } from '../../lib/features/events/createEventsService';
+import { createFakeAccessReadModel } from '../features/access/createAccessReadModel';
 
 function getSetup() {
     const config = createTestConfig({
         getLogger,
     });
 
-    return createFakeAccessService(config);
+    const { accessService, eventStore, accessStore } =
+        createFakeAccessService(config);
+
+    return {
+        accessService,
+        eventStore,
+        accessStore,
+        accessReadModel: createFakeAccessReadModel(accessStore),
+    };
 }
 
 test('should fail when name exists', async () => {
@@ -83,6 +92,33 @@ test('should accept empty permissions', async () => {
     };
     expect(await accessService.validateRole(withEmptyPermissions)).toEqual({
         name: 'name of the role',
+        description: 'description',
+        permissions: [],
+    });
+});
+
+test('should not accept empty names', async () => {
+    const { accessService } = getSetup();
+    const withWhitespaceName: IRoleValidation = {
+        name: '    ',
+        description: 'description',
+        permissions: [],
+    };
+
+    await expect(
+        accessService.validateRole(withWhitespaceName),
+    ).rejects.toThrow('"name" is not allowed to be empty');
+});
+
+test('should trim leading and trailing whitespace from names', async () => {
+    const { accessService } = getSetup();
+    const withUntrimmedName: IRoleValidation = {
+        name: '   untrimmed ',
+        description: 'description',
+        permissions: [],
+    };
+    expect(await accessService.validateRole(withUntrimmedName)).toEqual({
+        name: 'untrimmed',
         description: 'description',
         permissions: [],
     });
@@ -287,28 +323,28 @@ describe('addAccessToProject', () => {
 });
 
 test('should return true if user has admin role', async () => {
-    const { accessService, accessStore } = getSetup();
+    const { accessReadModel, accessStore } = getSetup();
 
     const userId = 1;
     accessStore.getRolesForUserId = jest
         .fn()
         .mockResolvedValue([{ id: 1, name: 'ADMIN', type: 'custom' }]);
 
-    const result = await accessService.isRootAdmin(userId);
+    const result = await accessReadModel.isRootAdmin(userId);
 
     expect(result).toBe(true);
     expect(accessStore.getRolesForUserId).toHaveBeenCalledWith(userId);
 });
 
 test('should return false if user does not have admin role', async () => {
-    const { accessService, accessStore } = getSetup();
+    const { accessReadModel, accessStore } = getSetup();
 
     const userId = 2;
     accessStore.getRolesForUserId = jest
         .fn()
         .mockResolvedValue([{ id: 2, name: 'user', type: 'custom' }]);
 
-    const result = await accessService.isRootAdmin(userId);
+    const result = await accessReadModel.isRootAdmin(userId);
 
     expect(result).toBe(false);
     expect(accessStore.getRolesForUserId).toHaveBeenCalledWith(userId);

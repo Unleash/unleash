@@ -63,6 +63,7 @@ export class FeatureLifecycleStore implements IFeatureLifecycleStore {
                     stage: stage.stage,
                     status: stage.status,
                     status_value: stage.statusValue,
+                    created_at: new Date(),
                 })),
             )
             .returning('*')

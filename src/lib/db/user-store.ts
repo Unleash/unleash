@@ -11,6 +11,7 @@ import type {
     IUserUpdateFields,
 } from '../types/stores/user-store';
 import type { Db } from './db';
+import type { IFlagResolver } from '../types';
 
 const TABLE = 'users';
 const PASSWORD_HASH_TABLE = 'used_passwords';
@@ -25,8 +26,6 @@ const USER_COLUMNS_PUBLIC = [
     'is_service',
     'scim_id',
 ];
-
-const USED_PASSWORDS = ['user_id', 'password_hash', 'used_at'];
 
 const USER_COLUMNS = [...USER_COLUMNS_PUBLIC, 'login_attempts', 'created_at'];
 
@@ -69,9 +68,12 @@ class UserStore implements IUserStore {
 
     private logger: Logger;
 
-    constructor(db: Db, getLogger: LogProvider) {
+    private flagResolver: IFlagResolver;
+
+    constructor(db: Db, getLogger: LogProvider, flagResolver: IFlagResolver) {
         this.db = db;
         this.logger = getLogger('user-store.ts');
+        this.flagResolver = flagResolver;
     }
 
     async getPasswordsPreviouslyUsed(userId: number): Promise<string[]> {
@@ -107,7 +109,7 @@ class UserStore implements IUserStore {
 
     async insert(user: ICreateUser): Promise<User> {
         const rows = await this.db(TABLE)
-            .insert(mapUserToColumns(user))
+            .insert({ ...mapUserToColumns(user), created_at: new Date() })
             .returning(USER_COLUMNS);
         return rowToUser(rows[0]);
     }
@@ -229,11 +231,36 @@ class UserStore implements IUserStore {
         return this.buildSelectUser(user).increment('login_attempts', 1);
     }
 
-    async successfullyLogin(user: User): Promise<void> {
-        return this.buildSelectUser(user).update({
+    async successfullyLogin(user: User): Promise<number> {
+        const currentDate = new Date();
+        const updateQuery = this.buildSelectUser(user).update({
             login_attempts: 0,
-            seen_at: new Date(),
+            seen_at: currentDate,
         });
+
+        let firstLoginOrder = 0;
+
+        if (this.flagResolver.isEnabled('onboardingMetrics')) {
+            const existingUser =
+                await this.buildSelectUser(user).first('first_seen_at');
+
+            if (!existingUser.first_seen_at) {
+                const countEarlierUsers = await this.db(TABLE)
+                    .whereNotNull('first_seen_at')
+                    .andWhere('first_seen_at', '<', currentDate)
+                    .count('*')
+                    .then((res) => Number(res[0].count));
+
+                firstLoginOrder = countEarlierUsers;
+
+                await updateQuery.update({
+                    first_seen_at: currentDate,
+                });
+            }
+        }
+
+        await updateQuery;
+        return firstLoginOrder;
     }
 
     async deleteAll(): Promise<void> {
@@ -270,6 +297,16 @@ class UserStore implements IUserStore {
     async get(id: number): Promise<User> {
         const row = await this.activeUsers().where({ id }).first();
         return rowToUser(row);
+    }
+
+    async getFirstUserDate(): Promise<Date | null> {
+        const firstInstanceUser = await this.db('users')
+            .select('created_at')
+            .where('is_system', '=', false)
+            .orderBy('created_at', 'asc')
+            .first();
+
+        return firstInstanceUser ? firstInstanceUser.created_at : null;
     }
 }
 

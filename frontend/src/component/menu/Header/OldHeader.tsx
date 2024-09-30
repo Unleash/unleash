@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -36,7 +36,7 @@ import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { Badge } from '../../common/Badge/Badge';
+import TimelineIcon from '@mui/icons-material/Timeline';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -117,23 +117,6 @@ const styledIconProps = (theme: Theme) => ({
 
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
 
-const StyledText = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
-
-const StyledLinkWithBetaBadge = ({
-    title,
-    to,
-}: { title: string; to: string }) => (
-    <StyledLink to={to} sx={{ margin: 0 }}>
-        <StyledText>
-            <span>{title}</span> <Badge color='success'>Beta</Badge>
-        </StyledText>
-    </StyledLink>
-);
-
 const StyledIconButton = styled(IconButton)<{
     component?: 'a' | 'button';
     href?: string;
@@ -148,7 +131,12 @@ const StyledIconButton = styled(IconButton)<{
     },
 }));
 
-const OldHeader: VFC = () => {
+interface IOldHeaderProps {
+    showTimeline: boolean;
+    setShowTimeline: (show: boolean) => void;
+}
+
+const OldHeader = ({ showTimeline, setShowTimeline }: IOldHeaderProps) => {
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
     const adminId = useId();
@@ -164,7 +152,7 @@ const OldHeader: VFC = () => {
     const onAdminClose = () => setAdminRef(null);
     const onConfigureClose = () => setConfigRef(null);
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
-    const killInsightsDashboard = useUiFlag('killInsightsUI');
+    const eventTimeline = useUiFlag('eventTimeline') && !isOss();
 
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
@@ -242,7 +230,7 @@ const OldHeader: VFC = () => {
                         <StyledLink to={'/search'}>Search</StyledLink>
                         <StyledLink to='/playground'>Playground</StyledLink>
                         <ConditionallyRender
-                            condition={!killInsightsDashboard && !isOss()}
+                            condition={!isOss()}
                             show={
                                 <StyledLink to='/insights'>Insights</StyledLink>
                             }
@@ -264,6 +252,28 @@ const OldHeader: VFC = () => {
                         />
                     </StyledLinks>
                     <StyledUserContainer>
+                        <ConditionallyRender
+                            condition={eventTimeline}
+                            show={
+                                <Tooltip
+                                    title={
+                                        showTimeline
+                                            ? 'Hide timeline'
+                                            : 'Show timeline'
+                                    }
+                                    arrow
+                                >
+                                    <StyledIconButton
+                                        onClick={() =>
+                                            setShowTimeline(!showTimeline)
+                                        }
+                                        size='large'
+                                    >
+                                        <TimelineIcon />
+                                    </StyledIconButton>
+                                </Tooltip>
+                            }
+                        />
                         <InviteLinkButton />
                         <Tooltip
                             title={

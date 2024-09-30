@@ -1,12 +1,10 @@
-import { styled } from '@mui/material';
+import { Link, styled } from '@mui/material';
 import { DELETE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { useActions } from 'hooks/api/getters/useActions/useActions';
+import { Link as RouterLink } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ArchiveProjectDialogue } from '../../ArchiveProject/ArchiveProjectDialogue';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -32,55 +30,34 @@ export const ArchiveProject = ({
     projectId,
     featureCount,
 }: IDeleteProjectProps) => {
-    const { isEnterprise } = useUiConfig();
-    const automatedActionsEnabled = useUiFlag('automatedActions');
-    const archiveProjectsEnabled = useUiFlag('archiveProjects');
-    const { actions } = useActions(projectId);
     const [showArchiveDialog, setShowArchiveDialog] = useState(false);
-    const actionsCount = actions.filter(({ enabled }) => enabled).length;
     const navigate = useNavigate();
+    const disabled = featureCount > 0;
+
     return (
         <StyledContainer>
             <p>
-                Before you can archive a project, you must first archive all the
-                feature flags associated with it
-                {isEnterprise() && automatedActionsEnabled
-                    ? ' and disable all actions that are in it'
-                    : ''}
-                .
+                Before you can archive a project, you must first archive all of
+                the feature flags associated with it.
             </p>
             <ConditionallyRender
                 condition={featureCount > 0}
                 show={
                     <p>
                         Currently there {featureCount <= 1 ? 'is' : 'are'}{' '}
-                        <strong>
-                            {featureCount} active feature{' '}
-                            {featureCount === 1 ? 'flag' : 'flags'}.
-                        </strong>
-                    </p>
-                }
-            />
-            <ConditionallyRender
-                condition={
-                    isEnterprise() &&
-                    automatedActionsEnabled &&
-                    actionsCount > 0
-                }
-                show={
-                    <p>
-                        Currently there {actionsCount <= 1 ? 'is' : 'are'}{' '}
-                        <strong>
-                            {actionsCount} enabled{' '}
-                            {actionsCount === 1 ? 'action' : 'actions'}.
-                        </strong>
+                        <Link component={RouterLink} to='../..'>
+                            <strong>
+                                {featureCount} active feature{' '}
+                                {featureCount === 1 ? 'flag' : 'flags'}.
+                            </strong>
+                        </Link>
                     </p>
                 }
             />
             <StyledButtonContainer>
                 <PermissionButton
                     permission={DELETE_PROJECT}
-                    disabled={featureCount > 0}
+                    disabled={disabled}
                     projectId={projectId}
                     onClick={() => {
                         setShowArchiveDialog(true);

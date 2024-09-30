@@ -436,28 +436,20 @@ export default class ClientApplicationsStore
     }
 
     private remapUsageRow = (input) => {
-        if (this.flagResolver.isEnabled('parseProjectFromSession')) {
-            if (!input.projects || input.projects.length === 0) {
-                return [
-                    {
-                        app_name: input.appName,
-                        project: '*',
-                        environment: input.environment || '*',
-                    },
-                ];
-            } else {
-                return input.projects.map((project) => ({
+        if (!input.projects || input.projects.length === 0) {
+            return [
+                {
                     app_name: input.appName,
-                    project: project,
+                    project: '*',
                     environment: input.environment || '*',
-                }));
-            }
+                },
+            ];
         } else {
-            return {
+            return input.projects.map((project) => ({
                 app_name: input.appName,
-                project: input.project || '*',
+                project: project,
                 environment: input.environment || '*',
-            };
+            }));
         }
     };
 }

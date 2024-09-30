@@ -16,6 +16,7 @@ import { isDefined } from '../../util';
 const T = {
     segments: 'segments',
     featureStrategies: 'feature_strategies',
+    features: 'features',
     featureStrategySegment: 'feature_strategy_segment',
 };
 
@@ -123,17 +124,15 @@ export default class SegmentStore implements ISegmentStore {
 
     private async getAllWithoutChangeRequestUsageData(): Promise<ISegment[]> {
         const rows: ISegmentRow[] = await this.db
-            .select(
-                this.prefixColumns(),
-                'used_in_projects',
-                'used_in_features',
-            )
-            .countDistinct(
-                `${T.featureStrategies}.project_name AS used_in_projects`,
-            )
-            .countDistinct(
-                `${T.featureStrategies}.feature_name AS used_in_features`,
-            )
+            .select([
+                ...this.prefixColumns(),
+                this.db.raw(
+                    `count(distinct case when ${T.features}.archived_at is null then ${T.featureStrategies}.project_name end) as used_in_projects`,
+                ),
+                this.db.raw(
+                    `count(distinct case when ${T.features}.archived_at is null then ${T.featureStrategies}.feature_name end) as used_in_features`,
+                ),
+            ])
             .from(T.segments)
             .leftJoin(
                 T.featureStrategySegment,
@@ -144,6 +143,11 @@ export default class SegmentStore implements ISegmentStore {
                 T.featureStrategies,
                 `${T.featureStrategies}.id`,
                 `${T.featureStrategySegment}.feature_strategy_id`,
+            )
+            .leftJoin(
+                T.features,
+                `${T.featureStrategies}.feature_name`,
+                `${T.features}.name`,
             )
             .groupBy(this.prefixColumns())
             .orderBy('name', 'asc');
@@ -183,7 +187,13 @@ export default class SegmentStore implements ISegmentStore {
                 T.featureStrategies,
                 `${T.featureStrategies}.id`,
                 `${T.featureStrategySegment}.feature_strategy_id`,
-            );
+            )
+            .leftJoin(
+                T.features,
+                `${T.featureStrategies}.feature_name`,
+                `${T.features}.name`,
+            )
+            .where(`${T.features}.archived_at`, null);
 
         this.mergeCurrentUsageWithCombinedData(
             combinedUsageData,

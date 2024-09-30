@@ -21,7 +21,7 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { ArchivedFeatureActionCell } from 'component/archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell';
 import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
 import theme from 'themes/theme';
-import type { FeatureSchema } from 'openapi';
+import type { ArchivedFeatureSchema } from 'openapi';
 import { useSearch } from 'hooks/useSearch';
 import { FeatureArchivedCell } from './FeatureArchivedCell/FeatureArchivedCell';
 import { useSearchParams } from 'react-router-dom';
@@ -36,7 +36,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ArchivedFeatureReviveConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm';
 
 export interface IFeaturesArchiveTableProps {
-    archivedFeatures: FeatureSchema[];
+    archivedFeatures: ArchivedFeatureSchema[];
     title: string;
     refetch: () => void;
     loading: boolean;

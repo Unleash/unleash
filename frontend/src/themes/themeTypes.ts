@@ -35,6 +35,7 @@ declare module '@mui/material/styles' {
             primaryHeader: string;
             separator: string;
             accordionFooter: string;
+            reverseFooter: string;
         };
     }
 

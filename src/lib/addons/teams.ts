@@ -1,13 +1,18 @@
 import Addon from './addon';
 
 import teamsDefinition from './teams-definition';
-import { type IAddonConfig, serializeDates } from '../types';
+import {
+    type IAddonConfig,
+    type IFlagResolver,
+    serializeDates,
+} from '../types';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface ITeamsParameters {
     url: string;
@@ -16,9 +21,14 @@ interface ITeamsParameters {
 export default class TeamsAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
+    flagResolver: IFlagResolver;
+
     constructor(args: IAddonConfig) {
         super(teamsDefinition, args);
-        this.msgFormatter = new FeatureEventFormatterMd(args.unleashUrl);
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: args.unleashUrl,
+        });
+        this.flagResolver = args.flagResolver;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -98,6 +108,13 @@ export default class TeamsAddon extends Addon {
             const failedMessage = `Teams webhook request failed with status code: ${res.status}.`;
             stateDetails.push(failedMessage);
             this.logger.warn(failedMessage);
+        }
+
+        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
+            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+                result: state,
+                destination: 'teams',
+            });
         }
 
         this.registerEvent({

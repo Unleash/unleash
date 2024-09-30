@@ -55,6 +55,7 @@ export const Error: VFC<IErrorProps> = ({ error }) => {
                     <ConditionallyRender
                         condition={showZendeskButton}
                         show={<ZendeskButton />}
+                        elseShow={undefined}
                     />
                 }
             >

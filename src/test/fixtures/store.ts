@@ -51,6 +51,9 @@ import { FakeFeatureStrategiesReadModel } from '../../lib/features/feature-toggl
 import { FakeFeatureLifecycleReadModel } from '../../lib/features/feature-lifecycle/fake-feature-lifecycle-read-model';
 import { FakeLargestResourcesReadModel } from '../../lib/features/metrics/sizes/fake-largest-resources-read-model';
 import { FakeFeatureCollaboratorsReadModel } from '../../lib/features/feature-toggle/fake-feature-collaborators-read-model';
+import { createFakeProjectReadModel } from '../../lib/features/project/createProjectReadModel';
+import { FakeOnboardingStore } from '../../lib/features/onboarding/fake-onboarding-store';
+import { createFakeOnboardingReadModel } from '../../lib/features/onboarding/createOnboardingReadModel';
 
 const db = {
     select: () => ({
@@ -108,9 +111,12 @@ const createStores: () => IUnleashStores = () => {
         featureLifecycleStore: new FakeFeatureLifecycleStore(),
         featureStrategiesReadModel: new FakeFeatureStrategiesReadModel(),
         featureLifecycleReadModel: new FakeFeatureLifecycleReadModel(),
+        onboardingReadModel: createFakeOnboardingReadModel(),
         largestResourcesReadModel: new FakeLargestResourcesReadModel(),
         integrationEventsStore: {} as IntegrationEventsStore,
         featureCollaboratorsReadModel: new FakeFeatureCollaboratorsReadModel(),
+        projectReadModel: createFakeProjectReadModel(),
+        onboardingStore: new FakeOnboardingStore(),
     };
 };
 

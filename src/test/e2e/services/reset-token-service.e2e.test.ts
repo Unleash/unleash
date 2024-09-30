@@ -12,8 +12,8 @@ import type { IUser, IUserWithRootRole } from '../../../lib/types/user';
 import SettingService from '../../../lib/services/setting-service';
 import FakeSettingStore from '../../fixtures/fake-setting-store';
 import { GroupService } from '../../../lib/services/group-service';
-import { EventService } from '../../../lib/services';
 import { type IUnleashStores, TEST_AUDIT_USER } from '../../../lib/types';
+import { createEventsService } from '../../../lib/features';
 
 const config: IUnleashConfig = createTestConfig();
 
@@ -29,7 +29,7 @@ let sessionService: SessionService;
 beforeAll(async () => {
     db = await dbInit('reset_token_service_serial', getLogger);
     stores = db.stores;
-    const eventService = new EventService(stores, config);
+    const eventService = createEventsService(db.rawDatabase, config);
     const groupService = new GroupService(stores, config, eventService);
     accessService = new AccessService(
         stores,

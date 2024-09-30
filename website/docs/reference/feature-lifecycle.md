@@ -4,7 +4,7 @@ title: Feature Lifecycle
 
 :::info Availability
 
-Feature lifecycle is currently in beta
+Feature lifecycle was introduced in **Unleash 6.2**
 
 :::
 

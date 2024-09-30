@@ -11,7 +11,7 @@ import type {
     NotificationsSchemaItemNotificationType,
 } from 'openapi';
 import { ReactComponent as ChangesAppliedIcon } from 'assets/icons/merge.svg';
-import TimeAgo from 'react-timeago';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import ToggleOffOutlined from '@mui/icons-material/ToggleOffOutlined';
 import { flexRow } from 'themes/themeStyles';
 
@@ -157,10 +157,7 @@ export const Notification = ({
                     </StyledUserContainer>
 
                     <StyledTimeAgoTypography>
-                        <TimeAgo
-                            date={new Date(notification.createdAt)}
-                            minPeriod={60}
-                        />
+                        <TimeAgo date={notification.createdAt} />
                     </StyledTimeAgoTypography>
                 </StyledSecondaryInfoBox>
             </StyledNotificationMessageBox>

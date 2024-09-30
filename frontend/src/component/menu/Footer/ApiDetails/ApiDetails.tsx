@@ -13,18 +13,15 @@ interface IApiDetailsProps {
 
 export const ApiDetails = (props: IApiDetailsProps): ReactElement => {
     const instanceId = props.uiConfig.versionInfo?.instanceId;
-    const currentVersion = formatCurrentVersion(props.uiConfig);
+    const { name, version, buildNumber } = formatCurrentVersion(props.uiConfig);
     const environment = props.uiConfig.environment;
     const updateNotification = formatUpdateNotification(props.uiConfig);
 
+    const buildInfo = buildNumber ? <small>({buildNumber})</small> : '';
     return (
         <section title='API details'>
             <FooterTitle>
-                {currentVersion}{' '}
-                <ConditionallyRender
-                    condition={Boolean(environment)}
-                    show={<small>({environment})</small>}
-                />
+                {name} {environment ? environment : ''} {version} {buildInfo}
             </FooterTitle>
             <ConditionallyRender
                 condition={Boolean(updateNotification)}

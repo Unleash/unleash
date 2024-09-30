@@ -3,12 +3,10 @@ import type {
     IProject,
     IProjectApplications,
     IProjectStore,
-    IProjectWithCount,
 } from '../../lib/types';
 import NotFoundError from '../../lib/error/notfound-error';
 import type {
     IEnvironmentProjectLink,
-    IProjectMembersCount,
     ProjectModeCount,
 } from '../../lib/features/project/project-store';
 import type { CreateFeatureStrategySchema } from '../../lib/openapi';
@@ -46,21 +44,6 @@ export default class FakeProjectStore implements IProjectStore {
         const environments = this.projectEnvironment.get(id) || new Set();
         environments.add(environment);
         this.projectEnvironment.set(id, environments);
-    }
-
-    async getProjectsWithCounts(): Promise<IProjectWithCount[]> {
-        return this.projects
-            .filter((project) => project.archivedAt !== null)
-            .map((project) => {
-                return {
-                    ...project,
-                    memberCount: 0,
-                    featureCount: 0,
-                    staleFeatureCount: 0,
-                    potentiallyStaleFeatureCount: 0,
-                    avgTimeToProduction: 0,
-                };
-            });
     }
 
     private createInternal(project: IProjectInsert): IProject {
@@ -105,7 +88,8 @@ export default class FakeProjectStore implements IProjectStore {
     destroy(): void {}
 
     async count(): Promise<number> {
-        return this.projects.length;
+        return this.projects.filter((project) => project.archivedAt === null)
+            .length;
     }
 
     async get(key: string): Promise<IProject> {
@@ -117,7 +101,7 @@ export default class FakeProjectStore implements IProjectStore {
     }
 
     async getAll(): Promise<IProject[]> {
-        return this.projects;
+        return this.projects.filter((project) => project.archivedAt === null);
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -157,15 +141,6 @@ export default class FakeProjectStore implements IProjectStore {
         this.projects.find(
             (project) => project.id === healthUpdate.id,
         )!.health = healthUpdate.health;
-    }
-
-    getMembersCount(): Promise<IProjectMembersCount[]> {
-        throw new Error('Method not implemented.');
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getProjectsByUser(userId: number): Promise<string[]> {
-        return Promise.resolve([]);
     }
 
     addEnvironmentToProjects(
@@ -231,6 +206,12 @@ export default class FakeProjectStore implements IProjectStore {
             project.id === id
                 ? { ...project, archivedAt: new Date() }
                 : project,
+        );
+    }
+
+    async revive(id: string): Promise<void> {
+        this.projects = this.projects.map((project) =>
+            project.id === id ? { ...project, archivedAt: null } : project,
         );
     }
 }

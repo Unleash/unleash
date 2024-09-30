@@ -18,7 +18,7 @@ const FLAG_NAME = 'crarm-test-flag';
 let readModel: IChangeRequestSegmentUsageReadModel;
 
 beforeAll(async () => {
-    db = await dbInit('change_request_access_read_model_serial', getLogger);
+    db = await dbInit('change_request_segment_usage_read_model', getLogger);
 
     user = await db.stores.userStore.insert({
         username: 'cr-creator',

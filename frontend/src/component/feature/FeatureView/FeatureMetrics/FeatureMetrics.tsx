@@ -40,21 +40,19 @@ export const FeatureMetrics = () => {
         featureId,
         query.hoursBack || FEATURE_METRIC_HOURS_BACK_DEFAULT,
     );
-    const defaultApplication = Array.from(applications)[0];
+
+    const allApplications = Array.from(applications);
+    const defaultApplication = allApplications[0];
 
     const { environment: selectedEnvironment, hoursBack } = query;
     const selectedApplications = query.applications.filter(
         (item) => item !== null,
     ) as string[];
     useEffect(() => {
-        if (
-            query.applications &&
-            query.applications.length === 0 &&
-            defaultApplication
-        ) {
-            setQuery({ applications: [defaultApplication] });
+        if (query.applications && query.applications.length === 0) {
+            setQuery({ applications: allApplications });
         }
-    }, [JSON.stringify(Array.from(applications))]);
+    }, [JSON.stringify(allApplications)]);
 
     const allSelected = [...applications].every((element) =>
         selectedApplications.includes(element),
@@ -100,7 +98,7 @@ export const FeatureMetrics = () => {
     return (
         <PageContent>
             <Grid container component='header' spacing={2}>
-                <Grid item xs={12} md={5}>
+                <Grid item xs={12} md={4}>
                     <ConditionallyRender
                         condition={environments.size > 0}
                         show={
@@ -115,7 +113,7 @@ export const FeatureMetrics = () => {
                         }
                     />
                 </Grid>
-                <Grid item xs={12} md={5}>
+                <Grid item xs={12} md={6}>
                     <ConditionallyRender
                         condition={applications.size > 0}
                         show={

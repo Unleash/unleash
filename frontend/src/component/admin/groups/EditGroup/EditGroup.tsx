@@ -149,6 +149,7 @@ export const EditGroup = ({
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
                 mode={EDIT}
+                isScimGroup={isScimGroup}
             >
                 <Tooltip title={isScimGroup ? scimGroupTooltip : ''} arrow>
                     <div>
@@ -156,7 +157,7 @@ export const EditGroup = ({
                             type='submit'
                             variant='contained'
                             color='primary'
-                            disabled={isScimGroup || !isValid}
+                            disabled={!isValid}
                             data-testid={UG_SAVE_BTN_ID}
                         >
                             Save

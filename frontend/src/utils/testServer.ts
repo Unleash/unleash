@@ -4,7 +4,13 @@ import { http, HttpResponse } from 'msw';
 export const testServerSetup = (): SetupServer => {
     const server = setupServer();
 
-    beforeAll(() => server.listen());
+    beforeAll(() =>
+        server.listen({
+            onUnhandledRequest() {
+                return HttpResponse.error();
+            },
+        }),
+    );
     afterAll(() => server.close());
     afterEach(() => server.resetHandlers());
 

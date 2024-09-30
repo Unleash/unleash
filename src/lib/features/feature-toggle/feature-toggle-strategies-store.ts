@@ -855,6 +855,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             constraints: r.constraints || [],
             variants: r.strategy_variants || [],
             parameters: r.parameters,
+            segments: [],
             sortOrder: r.sort_order,
             id: r.strategy_id,
             title: r.strategy_title || '',

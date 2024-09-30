@@ -1,8 +1,5 @@
 import { useMemo } from 'react';
-import type {
-    InstanceInsightsSchemaProjectFlagTrendsItem,
-    InstanceInsightsSchemaUsers,
-} from 'openapi';
+import type { InstanceInsightsSchemaProjectFlagTrendsItem } from 'openapi';
 
 const validTimeToProduction = (
     item: InstanceInsightsSchemaProjectFlagTrendsItem,
@@ -14,7 +11,6 @@ const validTimeToProduction = (
 // NOTE: should we move project filtering to the backend?
 export const useFilteredFlagsSummary = (
     filteredProjectFlagTrends: InstanceInsightsSchemaProjectFlagTrendsItem[],
-    users: InstanceInsightsSchemaUsers,
 ) =>
     useMemo(() => {
         const lastWeekId = filteredProjectFlagTrends.reduce((prev, current) => {
@@ -69,14 +65,8 @@ export const useFilteredFlagsSummary = (
             ? undefined
             : medianTimeToProductionCalculation;
 
-        const flagsPerUserCalculation = sum.total / users.total;
-        const flagsPerUser = Number.isNaN(flagsPerUserCalculation)
-            ? 'N/A'
-            : flagsPerUserCalculation.toFixed(2);
-
         return {
             ...sum,
-            flagsPerUser,
             averageUsers,
             averageHealth: sum.total
                 ? ((sum.active / (sum.total || 1)) * 100).toFixed(0)

@@ -60,17 +60,10 @@ describe('feature', () => {
         cy.addFlexibleRolloutStrategyToFeature_UI({
             featureToggleName,
             project: projectName,
-        }).then(() => {
-            cy.updateFlexibleRolloutStrategy_UI(
-                featureToggleName,
-                projectName,
-            ).then(() =>
-                cy.deleteFeatureStrategy_UI(
-                    featureToggleName,
-                    false,
-                    projectName,
-                ),
-            );
         });
+
+        cy.updateFlexibleRolloutStrategy_UI(featureToggleName, projectName);
+
+        cy.deleteFeatureStrategy_UI(featureToggleName, false, projectName);
     });
 });

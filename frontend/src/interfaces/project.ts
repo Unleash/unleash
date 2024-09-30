@@ -1,20 +1,7 @@
-import type { ProjectSchema, ProjectStatsSchema } from 'openapi';
+import type { ProjectOverviewSchema, ProjectStatsSchema } from 'openapi';
 import type { IFeatureFlagListItem } from './featureToggle';
 import type { ProjectEnvironmentType } from 'component/project/Project/ProjectFeatureToggles/hooks/useEnvironmentsRef';
 import type { ProjectMode } from 'component/project/Project/hooks/useProjectEnterpriseSettingsForm';
-
-export interface IProjectCard {
-    name: string;
-    id: string;
-    createdAt: string;
-    health: number;
-    description: string;
-    featureCount: number;
-    mode: string;
-    memberCount?: number;
-    favorite?: boolean;
-    owners?: ProjectSchema['owners'];
-}
 
 export type FeatureNamingType = {
     pattern: string;
@@ -59,6 +46,8 @@ export interface IProjectOverview {
     defaultStickiness: string;
     featureLimit?: number;
     featureNaming?: FeatureNamingType;
+    archivedAt?: Date;
+    onboardingStatus: ProjectOverviewSchema['onboardingStatus'];
 }
 
 export interface IProjectHealthReport extends IProject {

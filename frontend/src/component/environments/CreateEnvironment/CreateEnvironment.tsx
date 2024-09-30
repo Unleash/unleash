@@ -2,27 +2,20 @@ import { useNavigate } from 'react-router-dom';
 import useEnvironmentForm from '../hooks/useEnvironmentForm';
 import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { Alert } from '@mui/material';
-import { Button } from '@mui/material';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { PageContent } from 'component/common/PageContent/PageContent';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { Limit } from 'component/common/Limit/Limit';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const CreateEnvironment = () => {
     const { setToastApiError, setToastData } = useToast();
     const { uiConfig } = useUiConfig();
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
     const environmentLimit = uiConfig.resourceLimits.environments;
     const navigate = useNavigate();
     const { environments } = useEnvironments();
@@ -73,13 +66,10 @@ const CreateEnvironment = () => {
     };
 
     return (
-        <ConditionallyRender
-            condition={resourceLimitsEnabled || canCreateMoreEnvs}
-            show={
-                <FormTemplate
-                    loading={loading}
-                    title='Create environment'
-                    description='Environments allow you to manage your
+        <FormTemplate
+            loading={loading}
+            title='Create environment'
+            description='Environments allow you to manage your
                             product lifecycle from local development
                             through production. Your projects and
                             feature flags are accessible in all your
@@ -89,66 +79,36 @@ const CreateEnvironment = () => {
                             development or test environment without
                             enabling the feature flag in the
                             production environment.'
-                    documentationLink='https://docs.getunleash.io/reference/environments'
-                    documentationLinkLabel='Environments documentation'
-                    formatApiCode={formatApiCode}
-                >
-                    <EnvironmentForm
-                        errors={errors}
-                        handleSubmit={handleSubmit}
-                        handleCancel={handleCancel}
-                        validateEnvironmentName={validateEnvironmentName}
-                        name={name}
-                        type={type}
-                        setName={setName}
-                        setType={setType}
-                        mode='Create'
-                        clearErrors={clearErrors}
-                        Limit={
-                            <ConditionallyRender
-                                condition={resourceLimitsEnabled}
-                                show={
-                                    <Limit
-                                        name='environments'
-                                        limit={environmentLimit}
-                                        currentValue={environments.length}
-                                    />
-                                }
-                            />
-                        }
-                    >
-                        <CreateButton
-                            name='environment'
-                            permission={ADMIN}
-                            disabled={!canCreateMoreEnvs}
-                        />
-                    </EnvironmentForm>
-                </FormTemplate>
-            }
-            elseShow={
-                <>
-                    <PageContent
-                        header={<PageHeader title='Create environment' />}
-                    >
-                        <Alert severity='error'>
-                            <p>
-                                Currently Unleash does not support more than{' '}
-                                {environmentLimit} environments. If you need
-                                more please reach out.
-                            </p>
-                        </Alert>
-                        <br />
-                        <Button
-                            onClick={handleCancel}
-                            variant='contained'
-                            color='primary'
-                        >
-                            Go back
-                        </Button>
-                    </PageContent>
-                </>
-            }
-        />
+            documentationLink='https://docs.getunleash.io/reference/environments'
+            documentationLinkLabel='Environments documentation'
+            formatApiCode={formatApiCode}
+        >
+            <EnvironmentForm
+                errors={errors}
+                handleSubmit={handleSubmit}
+                handleCancel={handleCancel}
+                validateEnvironmentName={validateEnvironmentName}
+                name={name}
+                type={type}
+                setName={setName}
+                setType={setType}
+                mode='Create'
+                clearErrors={clearErrors}
+                Limit={
+                    <Limit
+                        name='environments'
+                        limit={environmentLimit}
+                        currentValue={environments.length}
+                    />
+                }
+            >
+                <CreateButton
+                    name='environment'
+                    permission={ADMIN}
+                    disabled={!canCreateMoreEnvs}
+                />
+            </EnvironmentForm>
+        </FormTemplate>
     );
 };
 

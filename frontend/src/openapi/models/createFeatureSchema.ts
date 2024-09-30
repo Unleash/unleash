@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { TagSchema } from './tagSchema';
+import type { CreateFeatureSchemaType } from './createFeatureSchemaType';
 
 /**
  * Data used to create a new feature flag.
@@ -21,5 +22,5 @@ export interface CreateFeatureSchema {
     /** Tags to add to the feature. */
     tags?: TagSchema[];
     /** The feature flag's [type](https://docs.getunleash.io/reference/feature-toggle-types). One of experiment, kill-switch, release, operational, or permission */
-    type?: string;
+    type?: CreateFeatureSchemaType;
 }

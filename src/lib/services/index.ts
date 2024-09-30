@@ -64,7 +64,9 @@ import {
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import {
     createEnvironmentService,
+    createEventsService,
     createFakeEnvironmentService,
+    createFakeEventsService,
     createFakeProjectService,
     createFeatureLifecycleService,
     createFeatureToggleService,
@@ -114,8 +116,6 @@ import {
     createInstanceStatsService,
 } from '../features/instance-stats/createInstanceStatsService';
 import { InactiveUsersService } from '../users/inactive/inactive-users-service';
-import { SegmentReadModel } from '../features/segment/segment-read-model';
-import { FakeSegmentReadModel } from '../features/segment/fake-segment-read-model';
 import {
     createFakeFrontendApiService,
     createFrontendApiService,
@@ -141,13 +141,29 @@ import {
     createFakePlaygroundService,
     createPlaygroundService,
 } from '../features/playground/createPlaygroundService';
+import {
+    createFakeOnboardingService,
+    createOnboardingService,
+} from '../features/onboarding/createOnboardingService';
+import { OnboardingService } from '../features/onboarding/onboarding-service';
+import { PersonalDashboardService } from '../features/personal-dashboard/personal-dashboard-service';
+import {
+    createFakePersonalDashboardService,
+    createPersonalDashboardService,
+} from '../features/personal-dashboard/createPersonalDashboardService';
 
 export const createServices = (
     stores: IUnleashStores,
     config: IUnleashConfig,
     db?: Db,
 ): IUnleashServices => {
-    const eventService = new EventService(stores, config);
+    const privateProjectChecker = db
+        ? createPrivateProjectChecker(db, config)
+        : createFakePrivateProjectChecker();
+
+    const eventService = db
+        ? createEventsService(db, config)
+        : createFakeEventsService(config, stores);
     const groupService = new GroupService(stores, config, eventService);
     const accessService = new AccessService(
         stores,
@@ -166,18 +182,12 @@ export const createServices = (
         config,
         lastSeenService,
     );
-    const privateProjectChecker = db
-        ? createPrivateProjectChecker(db, config)
-        : createFakePrivateProjectChecker();
     const dependentFeaturesReadModel = db
         ? new DependentFeaturesReadModel(db)
         : new FakeDependentFeaturesReadModel();
     const featureLifecycleReadModel = db
         ? new FeatureLifecycleReadModel(db, config.flagResolver)
         : new FakeFeatureLifecycleReadModel();
-    const segmentReadModel = db
-        ? new SegmentReadModel(db)
-        : new FakeSegmentReadModel();
 
     const contextService = new ContextService(
         stores,
@@ -391,6 +401,15 @@ export const createServices = (
     const featureLifecycleService = transactionalFeatureLifecycleService;
     featureLifecycleService.listen();
 
+    const onboardingService = db
+        ? createOnboardingService(config)(db)
+        : createFakeOnboardingService(config).onboardingService;
+    onboardingService.listen();
+
+    const personalDashboardService = db
+        ? createPersonalDashboardService(db, config, stores)
+        : createFakePersonalDashboardService(config);
+
     return {
         accessService,
         accountService,
@@ -453,6 +472,8 @@ export const createServices = (
         featureLifecycleService,
         transactionalFeatureLifecycleService,
         integrationEventsService,
+        onboardingService,
+        personalDashboardService,
     };
 };
 
@@ -502,4 +523,6 @@ export {
     JobService,
     FeatureLifecycleService,
     IntegrationEventsService,
+    OnboardingService,
+    PersonalDashboardService,
 };

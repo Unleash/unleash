@@ -5,6 +5,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 interface IArchivedFeatureReviveConfirmProps {
     revivedFeatures: string[];
@@ -27,6 +28,7 @@ export const ArchivedFeatureReviveConfirm = ({
 }: IArchivedFeatureReviveConfirmProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { reviveFeatures } = useProjectApi();
+    const { project, loading } = useProjectOverview(projectId);
 
     const onReviveFeatureToggle = async () => {
         try {
@@ -67,11 +69,23 @@ export const ArchivedFeatureReviveConfirm = ({
             secondaryButtonText='Cancel'
             onClick={onReviveFeatureToggle}
             onClose={clearModal}
+            disabledPrimaryButton={loading || Boolean(project.archivedAt)}
         >
-            <Alert severity='info'>
-                Revived feature flags will be automatically disabled in all
-                environments
-            </Alert>
+            <ConditionallyRender
+                condition={Boolean(project.archivedAt)}
+                show={
+                    <Alert severity='warning'>
+                        Cannot revive feature flag in archived project (Project
+                        ID: {projectId})
+                    </Alert>
+                }
+                elseShow={
+                    <Alert severity='info'>
+                        Revived feature flags will be automatically disabled in
+                        all environments
+                    </Alert>
+                }
+            />
 
             <ConditionallyRender
                 condition={revivedFeatures.length > 1}

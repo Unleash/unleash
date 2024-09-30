@@ -16,6 +16,17 @@
   ],
   "redirects": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.featureflagbook.com"
+        }
+      ],
+      "destination": "https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices",
+      "permanent": false
+    },
+    {
       "source": "/unleash-client-python(/?)/:path",
       "destination": "https://gh.getunleash.io/unleash-client-python/:path",
       "permanent": true

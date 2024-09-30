@@ -22,7 +22,10 @@ exports[`should render DrawerMenu 1`] = `
           <h2
             className="css-gtu1fw"
           >
-            Unleash 5.x
+            Unleash
+             
+             
+            5.x
              
           </h2>
           <br />
@@ -566,7 +569,10 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
           <h2
             className="css-gtu1fw"
           >
-            Unleash 5.x
+            Unleash
+             
+             
+            5.x
              
           </h2>
           <br />

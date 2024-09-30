@@ -1,8 +1,5 @@
 import type { Db } from '../../db/db';
 import type { IUnleashConfig } from '../../types';
-import { EventService } from '../../services';
-import FakeEventStore from '../../../test/fixtures/fake-event-store';
-import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 import EnvironmentService from './environment-service';
 import EnvironmentStore from './environment-store';
 import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
@@ -12,7 +9,10 @@ import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-env
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
 import FakeEnvironmentStore from './fake-environment-store';
-import { createEventsService } from '../events/createEventsService';
+import {
+    createEventsService,
+    createFakeEventsService,
+} from '../events/createEventsService';
 
 export const createEnvironmentService =
     (config: IUnleashConfig) =>
@@ -52,19 +52,11 @@ export const createEnvironmentService =
 export const createFakeEnvironmentService = (
     config: IUnleashConfig,
 ): EnvironmentService => {
-    const eventStore = new FakeEventStore();
-    const featureTagStore = new FakeFeatureTagStore();
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
     const projectStore = new FakeProjectStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const environmentStore = new FakeEnvironmentStore();
-    const eventService = new EventService(
-        {
-            eventStore,
-            featureTagStore,
-        },
-        config,
-    );
+    const eventService = createFakeEventsService(config);
 
     return new EnvironmentService(
         {

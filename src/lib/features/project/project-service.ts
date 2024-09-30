@@ -32,7 +32,6 @@ import {
     type IProjectRoleUsage,
     type IProjectStore,
     type IProjectUpdate,
-    type IProjectWithCount,
     type IUnleashConfig,
     type IUnleashStores,
     MOVE_FEATURE_TOGGLE,
@@ -47,12 +46,15 @@ import {
     ProjectGroupAddedEvent,
     ProjectGroupRemovedEvent,
     ProjectGroupUpdateRoleEvent,
+    ProjectRevivedEvent,
     ProjectUpdatedEvent,
     ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
     ProjectUserUpdateRoleEvent,
     RoleName,
     SYSTEM_USER_ID,
+    type IProjectReadModel,
+    type IOnboardingReadModel,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -81,11 +83,14 @@ import type {
     IProjectApplicationsSearchParams,
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
+    IProjectsQuery,
 } from './project-store-type';
 import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/api-token-service';
+import type { ProjectForUi } from './project-read-model-type';
+import { canGrantProjectRole } from './can-grant-project-role';
 
 type Days = number;
 type Count = number;
@@ -160,6 +165,10 @@ export default class ProjectService {
 
     private eventBus: EventEmitter;
 
+    private projectReadModel: IProjectReadModel;
+
+    private onboardingReadModel: IOnboardingReadModel;
+
     constructor(
         {
             projectStore,
@@ -171,6 +180,8 @@ export default class ProjectService {
             featureEnvironmentStore,
             accountStore,
             projectStatsStore,
+            projectReadModel,
+            onboardingReadModel,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -182,6 +193,8 @@ export default class ProjectService {
             | 'featureEnvironmentStore'
             | 'accountStore'
             | 'projectStatsStore'
+            | 'projectReadModel'
+            | 'onboardingReadModel'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -213,13 +226,15 @@ export default class ProjectService {
         this.isEnterprise = config.isEnterprise;
         this.resourceLimits = config.resourceLimits;
         this.eventBus = config.eventBus;
+        this.projectReadModel = projectReadModel;
+        this.onboardingReadModel = onboardingReadModel;
     }
 
     async getProjects(
-        query?: IProjectQuery,
+        query?: IProjectQuery & IProjectsQuery,
         userId?: number,
-    ): Promise<IProjectWithCount[]> {
-        const projects = await this.projectStore.getProjectsWithCounts(
+    ): Promise<ProjectForUi[]> {
+        const projects = await this.projectReadModel.getProjectsForAdminUi(
             query,
             userId,
         );
@@ -242,15 +257,9 @@ export default class ProjectService {
     }
 
     async addOwnersToProjects(
-        projects: IProjectWithCount[],
-    ): Promise<IProjectWithCount[]> {
-        const anonymizeProjectOwners = this.flagResolver.isEnabled(
-            'anonymizeProjectOwners',
-        );
-        return this.projectOwnersReadModel.addOwners(
-            projects,
-            anonymizeProjectOwners,
-        );
+        projects: ProjectForUi[],
+    ): Promise<ProjectForUi[]> {
+        return this.projectOwnersReadModel.addOwners(projects);
     }
 
     async getProject(id: string): Promise<IProject> {
@@ -317,8 +326,6 @@ export default class ProjectService {
     }
 
     async validateProjectLimit() {
-        if (!this.flagResolver.isEnabled('resourceLimits')) return;
-
         const limit = Math.max(this.resourceLimits.projects, 1);
         const projectCount = await this.projectStore.count();
 
@@ -486,6 +493,16 @@ export default class ProjectService {
         await this.projectStore.addEnvironmentToProject(project, environment);
     }
 
+    private async validateActiveProject(projectId: string) {
+        const hasActiveProject =
+            await this.projectStore.hasActiveProject(projectId);
+        if (!hasActiveProject) {
+            throw new NotFoundError(
+                `Active project with id ${projectId} does not exist`,
+            );
+        }
+    }
+
     async changeProject(
         newProjectId: string,
         featureName: string,
@@ -498,11 +515,8 @@ export default class ProjectService {
         if (feature.project !== currentProjectId) {
             throw new PermissionError(MOVE_FEATURE_TOGGLE);
         }
-        const project = await this.getProject(newProjectId);
 
-        if (!project) {
-            throw new NotFoundError(`Project ${newProjectId} not found`);
-        }
+        await this.validateActiveProject(newProjectId);
 
         const authorized = await this.accessService.hasPermission(
             user,
@@ -610,6 +624,19 @@ export default class ProjectService {
 
         await this.eventService.storeEvent(
             new ProjectArchivedEvent({
+                project: id,
+                auditUser,
+            }),
+        );
+    }
+
+    async reviveProject(id: string, auditUser: IAuditUser): Promise<void> {
+        await this.validateProjectLimit();
+
+        await this.projectStore.revive(id);
+
+        await this.eventService.storeEvent(
+            new ProjectRevivedEvent({
                 project: id,
                 auditUser,
             }),
@@ -906,15 +933,38 @@ export default class ProjectService {
             userAddingAccess.id,
             projectId,
         );
+
         if (
             this.isAdmin(userAddingAccess.id, userRoles) ||
             this.isProjectOwner(userRoles, projectId)
         ) {
             return true;
         }
-        return rolesBeingAdded.every((roleId) =>
-            userRoles.some((userRole) => userRole.id === roleId),
-        );
+
+        // Users may have access to multiple projects, so we need to filter out the permissions based on this project.
+        // Since the project roles are just collections of permissions that are not tied to a project in the database
+        // not filtering here might lead to false positives as they may have the permission in another project.
+        if (this.flagResolver.isEnabled('projectRoleAssignment')) {
+            const filteredUserPermissions = userPermissions.filter(
+                (permission) => permission.project === projectId,
+            );
+
+            const rolesToBeAssignedData = await Promise.all(
+                rolesBeingAdded.map((role) => this.accessService.getRole(role)),
+            );
+            const rolesToBeAssignedPermissions = rolesToBeAssignedData.flatMap(
+                (role) => role.permissions,
+            );
+
+            return canGrantProjectRole(
+                filteredUserPermissions,
+                rolesToBeAssignedPermissions,
+            );
+        } else {
+            return rolesBeingAdded.every((roleId) =>
+                userRoles.some((userRole) => userRole.id === roleId),
+            );
+        }
     }
 
     async addAccess(
@@ -1289,7 +1339,7 @@ export default class ProjectService {
     }
 
     async getProjectsByUser(userId: number): Promise<string[]> {
-        return this.projectStore.getProjectsByUser(userId);
+        return this.projectReadModel.getProjectsByUser(userId);
     }
 
     async getProjectRoleUsage(roleId: number): Promise<IProjectRoleUsage[]> {
@@ -1463,6 +1513,7 @@ export default class ProjectService {
             members,
             favorite,
             projectStats,
+            onboardingStatus,
         ] = await Promise.all([
             this.projectStore.get(projectId),
             this.projectStore.getEnvironmentsForProject(projectId),
@@ -1479,6 +1530,7 @@ export default class ProjectService {
                   })
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
+            this.onboardingReadModel.getOnboardingStatusForProject(projectId),
         ]);
 
         return {
@@ -1492,7 +1544,9 @@ export default class ProjectService {
             health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,
+            archivedAt: project.archivedAt,
             createdAt: project.createdAt,
+            onboardingStatus,
             environments,
             featureTypeCounts,
             members,

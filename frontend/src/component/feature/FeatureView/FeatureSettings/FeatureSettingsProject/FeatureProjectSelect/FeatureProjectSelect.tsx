@@ -1,5 +1,5 @@
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import type { IProjectCard } from 'interfaces/project';
+import type { ProjectSchema } from 'openapi';
 import GeneralSelect, {
     type ISelectOption,
     type IGeneralSelectProps,
@@ -25,11 +25,11 @@ const FeatureProjectSelect = ({
         return null;
     }
 
-    const formatOption = (project: IProjectCard) => {
+    const formatOption = (project: ProjectSchema) => {
         return {
             key: project.id,
             label: project.name,
-            title: project.description,
+            title: project.description || '',
             sx: {
                 whiteSpace: 'pre-line',
             },

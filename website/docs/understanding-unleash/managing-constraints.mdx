@@ -36,7 +36,7 @@ The first thing to think about would be whether you can group these special case
 
 Further, if you have a lot of special cases and require complex constraint logic to model it correctly, this probably reflects some logic that is specific to your domain. It's also likely that this same logic is used elsewhere in your system external to Unleash. Modeling this logic in multiple places can quickly lead to breakage, and we recommend having a single source of truth for cases like this.
 
-Say, for instance, that you have a VIP program where only your top 100 customers get access, and you want to use Unleash to manage access to these exclusive features. In that case, you probably have that list of 100 customers stored outside of Unleash (and if you don't, you definitely **should**: Unleash is **not** a data store). To solve this without using a constraint with 100 customer IDs, you could add a `cusomerType` field to the Unleash context, and only expose the features to users whose `customerType` is `VIP`.
+Say, for instance that you have a VIP program where only your top 100 customers get access, and you want to use Unleash to manage access to these exclusive features. In that case, you probably have that list of 100 customers stored outside of Unleash (and if you don't, you definitely **should**: Unleash is **not** a data store). To solve this without using a constraint with 100 customer IDs, you could add a `customerType` field to the Unleash context, and only expose the features to users whose `customerType` is `VIP`.
 
 ## The external storage trick
 
@@ -48,7 +48,7 @@ But what if it's more ephemeral or what if it's not available together with the 
 
 An option is to set up an external data store that handles this information specifically. As an example, consider a [Redis](http://redis.com/) instance that has a list of VIP customers. You could have an application connect to it and receive the latest state of VIP customers whenever you check a feature with Unleash. For an example of this, check out the [Unleash and Redis](https://github.com/sighphyre/UnleashAndRedis) example.
 
-## Why doesn't Unleash support complex constraint setups out the box?
+## Why doesn't Unleash support complex constraint setups out of the box?
 
 The Unleash SDKs are designed to be fast and unobtrusive. This means that resolving a large set of constraints at runtime results in one of two problems: either the SDK needs to resolve very large amounts of data, which can put pressure on your network or it needs to make a potentially slow network call to resolve the segment. Both of these are undesirable for the health of your application.
 

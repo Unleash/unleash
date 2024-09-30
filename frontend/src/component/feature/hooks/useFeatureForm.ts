@@ -4,13 +4,14 @@ import useQueryParams from 'hooks/useQueryParams';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { ITag } from 'interfaces/tags';
+import type { CreateFeatureSchema, CreateFeatureSchemaType } from 'openapi';
 
 const useFeatureForm = (
-    initialName = '',
-    initialType = 'release',
-    initialProject = 'default',
-    initialDescription = '',
-    initialImpressionData = false,
+    initialName: string = '',
+    initialType: CreateFeatureSchemaType = 'release',
+    initialProject: string = 'default',
+    initialDescription: string = '',
+    initialImpressionData: boolean = false,
 ) => {
     const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
@@ -49,7 +50,7 @@ const useFeatureForm = (
         setImpressionData(initialImpressionData);
     }, [initialImpressionData]);
 
-    const getTogglePayload = () => {
+    const getTogglePayload = (): CreateFeatureSchema => {
         const tagsPayload = tags.size > 0 ? { tags: Array.from(tags) } : {};
         return {
             type,

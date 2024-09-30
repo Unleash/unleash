@@ -17,7 +17,7 @@ services and overloaded stores - responsible for writing data, reading complex U
 
 To address these challenges categorize your problem as one of 3 models:
 
-[3 types of models](/img/write-model-vs-read-models.png)
+![3 types of models](/img/write-model-vs-read-models.png)
 
 We have 3 types of models serving 3 different purposes:
 * I need to take action that modifies a state of the system (Write Model) 

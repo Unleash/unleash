@@ -6,12 +6,10 @@ import type { AccountService } from '../../services/account-service';
 import type { AccessService } from '../../services/access-service';
 import type { Logger } from '../../logger';
 import type { IUnleashConfig, IUnleashServices, RoleName } from '../../types';
-import type { EmailService } from '../../services/email-service';
 import type ResetTokenService from '../../services/reset-token-service';
 import type { IAuthRequest } from '../unleash-types';
 import type SettingService from '../../services/setting-service';
-import type { IUser, SimpleAuthSettings } from '../../server-impl';
-import { simpleAuthSettingsKey } from '../../types/settings/simple-auth-settings';
+import type { IUser } from '../../server-impl';
 import { anonymise } from '../../util/anonymise';
 import type { OpenApiService } from '../../services/openapi-service';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
@@ -70,8 +68,6 @@ export default class UserAdminController extends Controller {
 
     private readonly logger: Logger;
 
-    private emailService: EmailService;
-
     private resetTokenService: ResetTokenService;
 
     private settingService: SettingService;
@@ -79,8 +75,6 @@ export default class UserAdminController extends Controller {
     private openApiService: OpenApiService;
 
     private groupService: GroupService;
-
-    readonly unleashUrl: string;
 
     readonly isEnterprise: boolean;
 
@@ -90,7 +84,6 @@ export default class UserAdminController extends Controller {
             userService,
             accountService,
             accessService,
-            emailService,
             resetTokenService,
             settingService,
             openApiService,
@@ -111,13 +104,11 @@ export default class UserAdminController extends Controller {
         this.userService = userService;
         this.accountService = accountService;
         this.accessService = accessService;
-        this.emailService = emailService;
         this.resetTokenService = resetTokenService;
         this.settingService = settingService;
         this.openApiService = openApiService;
         this.groupService = groupService;
         this.logger = config.getLogger('routes/user-controller.ts');
-        this.unleashUrl = config.server.unleashUrl;
         this.flagResolver = config.flagResolver;
         this.isEnterprise = config.isEnterprise;
 
@@ -372,6 +363,15 @@ export default class UserAdminController extends Controller {
                     description:
                         'Only the explicitly specified fields get updated.',
                     requestBody: createRequestSchema('updateUserSchema'),
+                    parameters: [
+                        {
+                            name: 'id',
+                            in: 'path',
+                            schema: {
+                                type: 'integer',
+                            },
+                        },
+                    ],
                     responses: {
                         200: createResponseSchema('createUserResponseSchema'),
                         ...getStandardResponses(400, 401, 403, 404),
@@ -525,7 +525,6 @@ export default class UserAdminController extends Controller {
     ): Promise<void> {
         const { username, email, name, rootRole, sendEmail, password } =
             req.body;
-        const { user } = req;
         const normalizedRootRole = Number.isInteger(Number(rootRole))
             ? Number(rootRole)
             : (rootRole as RoleName);
@@ -541,49 +540,19 @@ export default class UserAdminController extends Controller {
             req.audit,
         );
 
-        const passwordAuthSettings =
-            await this.settingService.get<SimpleAuthSettings>(
-                simpleAuthSettingsKey,
-            );
+        const inviteLink = await this.userService.newUserInviteLink(
+            createdUser,
+            req.audit,
+        );
 
-        let inviteLink: string;
-        if (!passwordAuthSettings?.disabled) {
-            const inviteUrl = await this.resetTokenService.createNewUserUrl(
-                createdUser.id,
-                user.email,
-            );
-            inviteLink = inviteUrl.toString();
-        }
-
-        let emailSent = false;
-        const emailConfigured = this.emailService.configured();
-        const reallySendEmail =
-            emailConfigured && (sendEmail !== undefined ? sendEmail : true);
-
-        if (reallySendEmail) {
-            try {
-                await this.emailService.sendGettingStartedMail(
-                    createdUser.name,
-                    createdUser.email,
-                    this.unleashUrl,
-                    inviteLink,
-                );
-                emailSent = true;
-            } catch (e) {
-                this.logger.warn(
-                    'email was configured, but sending failed due to: ',
-                    e,
-                );
-            }
-        } else {
-            this.logger.warn(
-                'email was not sent to the user because email configuration is lacking',
-            );
-        }
+        // send email defaults to true
+        const emailSent = (sendEmail !== undefined ? sendEmail : true)
+            ? await this.userService.sendWelcomeEmail(createdUser, inviteLink)
+            : false;
 
         const responseData: CreateUserResponseSchema = {
             ...serializeDates(createdUser),
-            inviteLink: inviteLink || this.unleashUrl,
+            inviteLink,
             emailSent,
             rootRole: normalizedRootRole,
         };

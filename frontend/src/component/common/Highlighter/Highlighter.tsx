@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import { safeRegExp } from '@server/util/escape-regex';
 import { styled } from '@mui/material';
 
@@ -14,7 +14,7 @@ export const StyledSpan = styled('span')(({ theme }) => ({
     },
 }));
 
-export const Highlighter: VFC<IHighlighterProps> = ({
+export const Highlighter: FC<IHighlighterProps> = ({
     search,
     children,
     caseSensitive,

@@ -4,12 +4,16 @@ import type { IRole } from './stores/access-store';
 import type { IUser } from './user';
 import type { ALL_OPERATORS } from '../util';
 import type { IProjectStats } from '../features/project/project-service';
-import type { CreateFeatureStrategySchema } from '../openapi';
+import type {
+    CreateFeatureStrategySchema,
+    ProjectOverviewSchema,
+} from '../openapi';
 import type { ProjectEnvironment } from '../features/project/project-store-type';
 import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-search-environment-schema';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
 import type { IFlagResolver } from './experimental';
 import type { Collaborator } from '../features/feature-toggle/types/feature-collaborators-read-model-type';
+import type { EventEmitter } from 'events';
 
 export type Operator = (typeof ALL_OPERATORS)[number];
 
@@ -305,12 +309,14 @@ export interface IProjectOverview {
     health: number;
     favorite?: boolean;
     updatedAt?: Date;
+    archivedAt?: Date;
     createdAt: Date | undefined;
     stats?: IProjectStats;
     mode: ProjectMode;
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
     defaultStickiness: string;
+    onboardingStatus: ProjectOverviewSchema['onboardingStatus'];
 }
 
 export interface IProjectHealthReport extends IProjectHealth {
@@ -383,6 +389,7 @@ export interface IAddonConfig {
     unleashUrl: string;
     integrationEventsService: IntegrationEventsService;
     flagResolver: IFlagResolver;
+    eventBus: EventEmitter;
 }
 
 export interface IUserWithRole {
@@ -525,6 +532,7 @@ export interface IProject {
     health?: number;
     createdAt?: Date;
     updatedAt?: Date;
+    archivedAt?: Date;
     changeRequestsEnabled?: boolean;
     mode: ProjectMode;
     defaultStickiness: string;
@@ -564,15 +572,6 @@ export interface IProjectUpdate {
  */
 export interface ICustomRole extends IRole {
     description: string;
-}
-
-export interface IProjectWithCount extends IProject {
-    featureCount: number;
-    staleFeatureCount: number;
-    potentiallyStaleFeatureCount: number;
-    memberCount: number;
-    favorite?: boolean;
-    avgTimeToProduction: number;
 }
 
 export interface IClientSegment {

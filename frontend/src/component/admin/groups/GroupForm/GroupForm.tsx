@@ -81,6 +81,7 @@ interface IGroupForm {
     mappingsSSO: string[];
     users: IGroupUser[];
     rootRole: number | null;
+    isScimGroup: boolean;
     setName: (name: string) => void;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
     setMappingsSSO: React.Dispatch<React.SetStateAction<string[]>>;
@@ -99,6 +100,7 @@ export const GroupForm: FC<IGroupForm> = ({
     mappingsSSO,
     users,
     rootRole,
+    isScimGroup,
     setName,
     setDescription,
     setMappingsSSO,
@@ -138,6 +140,7 @@ export const GroupForm: FC<IGroupForm> = ({
                     onChange={(e) => setName(e.target.value)}
                     data-testid={UG_NAME_ID}
                     required
+                    disabled={isScimGroup}
                 />
                 <StyledInputDescription>
                     How would you describe your group?
@@ -152,7 +155,7 @@ export const GroupForm: FC<IGroupForm> = ({
                     data-testid={UG_DESC_ID}
                 />
                 <ConditionallyRender
-                    condition={isGroupSyncingEnabled}
+                    condition={isGroupSyncingEnabled && !isScimGroup}
                     show={
                         <>
                             <StyledInputDescription>

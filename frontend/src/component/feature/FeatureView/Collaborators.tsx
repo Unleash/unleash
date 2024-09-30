@@ -1,13 +1,19 @@
 import { styled } from '@mui/material';
-import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import {
+    AvatarComponent,
+    AvatarGroup,
+} from 'component/common/AvatarGroup/AvatarGroup';
 import type { Collaborator } from 'interfaces/featureToggle';
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 
-const StyledAvatar = styled(UserAvatar)(({ theme }) => ({
+const StyledAvatarComponent = styled(AvatarComponent)(({ theme }) => ({
     width: theme.spacing(3),
     height: theme.spacing(3),
+}));
+
+const StyledAvatar = styled(StyledAvatarComponent)(() => ({
+    marginLeft: 0,
 }));
 
 const SectionContainer = styled('div')(({ theme }) => ({
@@ -50,7 +56,7 @@ const CollaboratorList: FC<{ collaborators: Collaborator[] }> = ({
             <StyledAvatarGroup
                 users={collaborators}
                 avatarLimit={6}
-                AvatarComponent={StyledAvatar}
+                AvatarComponent={StyledAvatarComponent}
             />
         </SectionContainer>
     );

@@ -10,8 +10,10 @@ const FRONTEND_API_REPOSITORY_CREATED = 'frontend_api_repository_created';
 const PROXY_REPOSITORY_CREATED = 'proxy_repository_created';
 const PROXY_FEATURES_FOR_TOKEN_TIME = 'proxy_features_for_token_time';
 const STAGE_ENTERED = 'stage-entered' as const;
+const USER_LOGIN = 'user-login' as const;
 const EXCEEDS_LIMIT = 'exceeds-limit' as const;
 const REQUEST_ORIGIN = 'request_origin' as const;
+const ADDON_EVENTS_HANDLED = 'addon-event-handled' as const;
 
 type MetricEvent =
     | typeof REQUEST_TIME
@@ -24,12 +26,14 @@ type MetricEvent =
     | typeof PROXY_REPOSITORY_CREATED
     | typeof PROXY_FEATURES_FOR_TOKEN_TIME
     | typeof STAGE_ENTERED
+    | typeof USER_LOGIN
     | typeof EXCEEDS_LIMIT
     | typeof REQUEST_ORIGIN;
 
 type RequestOriginEventPayload = {
     type: 'UI' | 'API';
     method: Request['method'];
+    source?: string;
 };
 
 type MetricEventPayloads = {
@@ -68,8 +72,10 @@ export {
     PROXY_REPOSITORY_CREATED,
     PROXY_FEATURES_FOR_TOKEN_TIME,
     STAGE_ENTERED,
+    USER_LOGIN,
     EXCEEDS_LIMIT,
     REQUEST_ORIGIN,
+    ADDON_EVENTS_HANDLED,
     type MetricEvent,
     type MetricEventPayload,
     emitMetricEvent,

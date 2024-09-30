@@ -34,7 +34,6 @@ export type IFlagKey =
     | 'edgeBulkMetrics'
     | 'extendedUsageMetrics'
     | 'adminTokenKillSwitch'
-    | 'killInsightsUI'
     | 'feedbackComments'
     | 'showInactiveUsers'
     | 'killScheduledChangeRequestCache'
@@ -43,31 +42,25 @@ export type IFlagKey =
     | 'estimateTrafficDataCost'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
-    | 'checkEdgeValidTokensFromCache'
     | 'userAccessUIEnabled'
     | 'disableUpdateMaxRevisionId'
     | 'disablePublishUnannouncedEvents'
     | 'outdatedSdksBanner'
     | 'responseTimeMetricsFix'
-    | 'displayEdgeBanner'
     | 'disableShowContextFieldSelectionValues'
     | 'projectOverviewRefactorFeedback'
-    | 'parseProjectFromSession'
     | 'manyStrategiesPagination'
     | 'enableLegacyVariants'
     | 'navigationSidebar'
-    | 'commandBarUI'
-    | 'anonymizeProjectOwners'
-    | 'resourceLimits'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
-    | 'insightsV2'
-    | 'integrationEvents'
-    | 'improveCreateFlagFlow'
     | 'originMiddleware'
-    | 'newEventSearch'
-    | 'changeRequestPlayground'
-    | 'archiveProjects';
+    | 'addonUsageMetrics'
+    | 'onboardingMetrics'
+    | 'onboardingUI'
+    | 'projectRoleAssignment'
+    | 'eventTimeline'
+    | 'personalDashboardUI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -186,10 +179,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
         false,
     ),
-    killInsightsUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_KILL_INSIGHTS_UI,
-        false,
-    ),
     outdatedSdksBanner: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_OUTDATED_SDKS_BANNER,
         false,
@@ -247,10 +236,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_QUERY_MISSING_TOKENS,
         false,
     ),
-    displayEdgeBanner: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DISPLAY_EDGE_BANNER,
-        false,
-    ),
     responseTimeMetricsFix: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RESPONSE_TIME_METRICS_FIX,
         false,
@@ -262,10 +247,6 @@ const flags: IFlags = {
     ),
     projectOverviewRefactorFeedback: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR_FEEDBACK,
-        false,
-    ),
-    parseProjectFromSession: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PARSE_PROJECT_FROM_SESSION,
         false,
     ),
     manyStrategiesPagination: parseEnvVarBoolean(
@@ -280,18 +261,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
         true,
     ),
-    commandBarUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_COMMAND_BAR_UI,
-        false,
-    ),
-    anonymizeProjectOwners: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ANONYMIZE_PROJECT_OWNERS,
-        false,
-    ),
-    resourceLimits: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_RESOURCE_LIMITS,
-        false,
-    ),
     extendedMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_METRICS,
         false,
@@ -300,32 +269,32 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
         false,
     ),
-    insightsV2: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INSIGHTS_V2,
-        false,
-    ),
-    integrationEvents: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_INTEGRATION_EVENTS,
-        false,
-    ),
-    improveCreateFlagFlow: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_IMPROVE_CREATE_FLAG_FLOW,
-        false,
-    ),
     originMiddleware: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ORIGIN_MIDDLEWARE,
         false,
     ),
-    newEventSearch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_EVENT_SEARCH,
+    addonUsageMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ADDON_USAGE_METRICS,
         false,
     ),
-    changeRequestPlayground: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_CHANGE_REQUEST_PLAYGROUND,
+    onboardingMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_METRICS,
         false,
     ),
-    archiveProjects: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ARCHIVE_PROJECTS,
+    onboardingUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_UI,
+        false,
+    ),
+    projectRoleAssignment: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PROJECT_ROLE_ASSIGNMENT,
+        false,
+    ),
+    eventTimeline: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_EVENT_TIMELINE,
+        false,
+    ),
+    personalDashboardUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PERSONAL_DASHBOARD_UI,
         false,
     ),
 };

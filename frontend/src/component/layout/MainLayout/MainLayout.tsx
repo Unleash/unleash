@@ -17,6 +17,8 @@ import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useEventTimeline } from 'component/events/EventTimeline/useEventTimeline';
+import { MainLayoutEventTimeline } from './MainLayoutEventTimeline';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -61,11 +63,13 @@ const OldMainLayoutContent = styled(Grid)(({ theme }) => ({
 
 const NewMainLayoutContent = styled(Grid)(({ theme }) => ({
     minWidth: 0, // this is a fix for overflowing flex
-    width: '100%',
     maxWidth: '1512px',
     margin: '0 auto',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
+    [theme.breakpoints.up(1856)]: {
+        width: '100%',
+    },
     [theme.breakpoints.down(1856)]: {
         marginLeft: theme.spacing(7),
         marginRight: theme.spacing(7),
@@ -108,11 +112,14 @@ const MainLayoutContentContainer = styled('div')(({ theme }) => ({
 
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
-        const { uiConfig } = useUiConfig();
+        const { uiConfig, isOss } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
+        const eventTimeline = useUiFlag('eventTimeline') && !isOss();
+        const { open: showTimeline, setOpen: setShowTimeline } =
+            useEventTimeline();
 
         const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
         const StyledMainLayoutContent = sidebarNavigationEnabled
@@ -126,8 +133,18 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                 <SkipNavLink />
                 <ConditionallyRender
                     condition={sidebarNavigationEnabled}
-                    show={<Header />}
-                    elseShow={<OldHeader />}
+                    show={
+                        <Header
+                            showTimeline={showTimeline}
+                            setShowTimeline={setShowTimeline}
+                        />
+                    }
+                    elseShow={
+                        <OldHeader
+                            showTimeline={showTimeline}
+                            setShowTimeline={setShowTimeline}
+                        />
+                    }
                 />
 
                 <SkipNavTarget />
@@ -154,18 +171,26 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 show={<NavigationSidebar />}
                             />
 
-                            <StyledMainLayoutContent
-                                item
-                                xs={12}
-                                sm={12}
-                                my={2}
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    flexGrow: 1,
+                                    minWidth: 0,
+                                }}
                             >
-                                <MainLayoutContentContainer ref={ref}>
-                                    <BreadcrumbNav />
-                                    <Proclamation toast={uiConfig.toast} />
-                                    {children}
-                                </MainLayoutContentContainer>
-                            </StyledMainLayoutContent>
+                                <MainLayoutEventTimeline
+                                    open={eventTimeline && showTimeline}
+                                />
+
+                                <StyledMainLayoutContent>
+                                    <MainLayoutContentContainer ref={ref}>
+                                        <BreadcrumbNav />
+                                        <Proclamation toast={uiConfig.toast} />
+                                        {children}
+                                    </MainLayoutContentContainer>
+                                </StyledMainLayoutContent>
+                            </Box>
                         </Box>
 
                         <ThemeMode

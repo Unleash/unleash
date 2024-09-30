@@ -94,9 +94,7 @@ unleash.start(unleashOptions);
           and [notifications](../../reference/notifications.md).
     - `customAuthHandler`: function `(app: any, config: IUnleashConfig): void` — custom express middleware handling
       authentication. Used when type is set to `custom`. Can not be set via environment variables.
-    - `initialAdminUser`: `{ username: string, password: string} | null` — whether to create an admin user with default
-      password - Defaults to using `admin` and `unleash4all` as the username and password. Can not be overridden by
-      setting the `UNLEASH_DEFAULT_ADMIN_USERNAME` and `UNLEASH_DEFAULT_ADMIN_PASSWORD` environment variables.
+    - `initialAdminUser`: `{ username: string, password: string} | undefined` — The initial admin username and password - Defaults to `admin` and `unleash4all`, respectively. Can be set using the `UNLEASH_DEFAULT_ADMIN_USERNAME` and `UNLEASH_DEFAULT_ADMIN_PASSWORD` environment variables.
     - `initApiTokens` / `INIT_ADMIN_API_TOKENS`, `INIT_CLIENT_API_TOKENS`,
           and `INIT_FRONTEND_API_TOKENS`: `ApiTokens[]` — Array of API tokens to create on startup. The tokens will only
           be created if the database doesn't already contain any API tokens. Example:

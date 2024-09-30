@@ -1,5 +1,5 @@
-import type { VFC } from 'react';
-import TimeAgo from 'react-timeago';
+import type { FC } from 'react';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { Tooltip, Typography, useTheme } from '@mui/material';
 import { formatDateYMD } from 'utils/formatDate';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
@@ -9,7 +9,7 @@ interface IFeatureArchivedCellProps {
     value?: string | Date | null;
 }
 
-export const FeatureArchivedCell: VFC<IFeatureArchivedCellProps> = ({
+export const FeatureArchivedCell: FC<IFeatureArchivedCellProps> = ({
     value: archivedAt,
 }) => {
     const { locationSettings } = useLocationSettings();
@@ -37,11 +37,7 @@ export const FeatureArchivedCell: VFC<IFeatureArchivedCellProps> = ({
                 arrow
             >
                 <Typography noWrap variant='body2' data-loading>
-                    <TimeAgo
-                        date={new Date(archivedAt)}
-                        title=''
-                        live={false}
-                    />
+                    <TimeAgo date={new Date(archivedAt)} refresh={false} />
                 </Typography>
             </Tooltip>
         </TextCell>

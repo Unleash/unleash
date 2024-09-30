@@ -2,12 +2,14 @@ import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useState, useEffect } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 
-import type { IProjectCard } from 'interfaces/project';
 import handleErrorResponses from '../httpErrorResponseHandler';
+import type { GetProjectsParams, ProjectsSchema } from 'openapi';
 
-const useProjects = (options: SWRConfiguration = {}) => {
+const useProjects = (options: SWRConfiguration & GetProjectsParams = {}) => {
+    const KEY = `api/admin/projects${options.archived ? '?archived=true' : ''}`;
+
     const fetcher = () => {
-        const path = formatApiPath(`api/admin/projects`);
+        const path = formatApiPath(KEY);
         return fetch(path, {
             method: 'GET',
         })
@@ -15,9 +17,7 @@ const useProjects = (options: SWRConfiguration = {}) => {
             .then((res) => res.json());
     };
 
-    const KEY = `api/admin/projects`;
-
-    const { data, error } = useSWR<{ projects: IProjectCard[] }>(
+    const { data, error } = useSWR<{ projects: ProjectsSchema['projects'] }>(
         KEY,
         fetcher,
         options,

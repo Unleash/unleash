@@ -65,13 +65,13 @@ export const createFeature_UI = (
 
     cy.wait(300);
 
-    cy.get("[data-testid='CF_NAME_ID'] input").type(name, uiOpts);
-    cy.get("[data-testid='CF_DESC_ID'] textarea")
+    cy.get("[data-testid='FORM_NAME_INPUT'] input").type(name, uiOpts);
+    cy.get("[data-testid='FORM_DESCRIPTION_INPUT'] textarea")
         .first()
         .type('hello-world', uiOpts);
     if (!shouldWait)
-        return cy.get("[data-testid='CF_CREATE_BTN_ID']").click(uiOpts);
-    else cy.get("[data-testid='CF_CREATE_BTN_ID']").click(uiOpts);
+        return cy.get("[data-testid='FORM_CREATE_BUTTON']").click(uiOpts);
+    else cy.get("[data-testid='FORM_CREATE_BUTTON']").click(uiOpts);
     return cy.wait('@createFeature');
 };
 

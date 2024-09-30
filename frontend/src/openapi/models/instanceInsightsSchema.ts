@@ -4,11 +4,9 @@
  * See `gen:api` script in package.json
  */
 import type { InstanceInsightsSchemaEnvironmentTypeTrendsItem } from './instanceInsightsSchemaEnvironmentTypeTrendsItem';
-import type { InstanceInsightsSchemaFlags } from './instanceInsightsSchemaFlags';
 import type { InstanceInsightsSchemaFlagTrendsItem } from './instanceInsightsSchemaFlagTrendsItem';
 import type { InstanceInsightsSchemaMetricsSummaryTrendsItem } from './instanceInsightsSchemaMetricsSummaryTrendsItem';
 import type { InstanceInsightsSchemaProjectFlagTrendsItem } from './instanceInsightsSchemaProjectFlagTrendsItem';
-import type { InstanceInsightsSchemaUsers } from './instanceInsightsSchemaUsers';
 import type { InstanceInsightsSchemaUserTrendsItem } from './instanceInsightsSchemaUserTrendsItem';
 
 /**
@@ -17,16 +15,12 @@ import type { InstanceInsightsSchemaUserTrendsItem } from './instanceInsightsSch
 export interface InstanceInsightsSchema {
     /** How updates per environment type changed over time */
     environmentTypeTrends: InstanceInsightsSchemaEnvironmentTypeTrendsItem[];
-    /** High level flag count statistics */
-    flags: InstanceInsightsSchemaFlags;
     /** How number of flags changed over time */
     flagTrends: InstanceInsightsSchemaFlagTrendsItem[];
     /** How metrics data per project changed over time */
     metricsSummaryTrends: InstanceInsightsSchemaMetricsSummaryTrendsItem[];
     /** How number of flags per project changed over time */
     projectFlagTrends: InstanceInsightsSchemaProjectFlagTrendsItem[];
-    /** High level user count statistics */
-    users: InstanceInsightsSchemaUsers;
     /** How number of users changed over time */
     userTrends: InstanceInsightsSchemaUserTrendsItem[];
 }

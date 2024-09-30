@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from 'express';
 import type { IUnleashConfig } from '../types';
 import { REQUEST_ORIGIN, emitMetricEvent } from '../metric-events';
+import {
+    determineIntegrationSource,
+    getFilteredOrigin,
+} from './integration-headers';
 
 export const originMiddleware = ({
     getLogger,
@@ -23,13 +27,19 @@ export const originMiddleware = ({
                 method: req.method,
             });
         } else {
+            const userAgent = req.headers['user-agent'];
+            const uaLabel = userAgent
+                ? determineIntegrationSource(userAgent)
+                : 'Other';
             logger.info('API request', {
                 method: req.method,
                 userAgent: req.headers['user-agent'],
+                origin: getFilteredOrigin(req),
             });
             emitMetricEvent(eventBus, REQUEST_ORIGIN, {
                 type: 'API',
                 method: req.method,
+                source: uaLabel,
             });
         }
 

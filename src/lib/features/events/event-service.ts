@@ -14,6 +14,9 @@ import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { parseSearchOperatorValue } from '../feature-search/search-utils';
 import { endOfDay, formatISO } from 'date-fns';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+import type { ProjectAccess } from '../private-project/privateProjectStore';
+import type { IAccessReadModel } from '../access/access-read-model-type';
 
 export default class EventService {
     private logger: Logger;
@@ -21,6 +24,10 @@ export default class EventService {
     private eventStore: IEventStore;
 
     private featureTagStore: IFeatureTagStore;
+
+    private accessReadModel: IAccessReadModel;
+
+    private privateProjectChecker: IPrivateProjectChecker;
 
     private eventBus: EventEmitter;
 
@@ -30,11 +37,15 @@ export default class EventService {
             featureTagStore,
         }: Pick<IUnleashStores, 'eventStore' | 'featureTagStore'>,
         { getLogger, eventBus }: Pick<IUnleashConfig, 'getLogger' | 'eventBus'>,
+        privateProjectChecker: IPrivateProjectChecker,
+        accessReadModel: IAccessReadModel,
     ) {
         this.logger = getLogger('services/event-service.ts');
         this.eventStore = eventStore;
+        this.privateProjectChecker = privateProjectChecker;
         this.featureTagStore = featureTagStore;
         this.eventBus = eventBus;
+        this.accessReadModel = accessReadModel;
     }
 
     async getEvents(): Promise<IEventList> {
@@ -58,8 +69,22 @@ export default class EventService {
         };
     }
 
-    async searchEvents(search: IEventSearchParams): Promise<IEventList> {
+    async searchEvents(
+        search: IEventSearchParams,
+        userId: number,
+    ): Promise<IEventList> {
+        const projectAccess =
+            await this.privateProjectChecker.getUserAccessibleProjects(userId);
+
+        search.project = filterAccessibleProjects(
+            search.project,
+            projectAccess,
+        );
+
         const queryParams = this.convertToDbParams(search);
+        const projectFilter = await this.getProjectFilterForNonAdmins(userId);
+        queryParams.push(...projectFilter);
+
         const totalEvents = await this.eventStore.searchEventsCount(
             {
                 limit: search.limit,
@@ -177,7 +202,7 @@ export default class EventService {
 
         if (params.createdBy) {
             const parsed = parseSearchOperatorValue(
-                'created_by',
+                'created_by_user_id',
                 params.createdBy,
             );
             if (parsed) queryParams.push(parsed);
@@ -204,4 +229,44 @@ export default class EventService {
     async getEventCreators() {
         return this.eventStore.getEventCreators();
     }
+
+    async getProjectFilterForNonAdmins(userId: number): Promise<IQueryParam[]> {
+        const isRootAdmin = await this.accessReadModel.isRootAdmin(userId);
+        if (!isRootAdmin) {
+            return [{ field: 'project', operator: 'IS_NOT', values: [null] }];
+        }
+        return [];
+    }
 }
+
+export const filterAccessibleProjects = (
+    projectParam: string | undefined,
+    projectAccess: ProjectAccess,
+): string | undefined => {
+    if (projectAccess.mode !== 'all') {
+        const allowedProjects = projectAccess.projects;
+
+        if (!projectParam) {
+            return `IS_ANY_OF:${allowedProjects.join(',')}`;
+        } else {
+            const searchProjectList = projectParam.split(',');
+            const filteredProjects = searchProjectList
+                .filter((proj) =>
+                    allowedProjects.includes(
+                        proj.replace(/^(IS|IS_ANY_OF):/, ''),
+                    ),
+                )
+                .join(',');
+
+            if (!filteredProjects) {
+                throw new Error(
+                    'No accessible projects in the search parameters',
+                );
+            }
+
+            return filteredProjects;
+        }
+    }
+
+    return projectParam;
+};

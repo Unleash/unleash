@@ -6,7 +6,7 @@ export const getCreateTogglePath = (
     projectId: string,
     query?: Record<string, string>,
 ) => {
-    const path = `/projects/${projectId}/create-toggle`;
+    const path = `/projects/${projectId}?create=true`;
 
     let queryString: string | undefined;
     if (query) {
@@ -16,12 +16,8 @@ export const getCreateTogglePath = (
     }
 
     if (queryString) {
-        return `${path}?${queryString}`;
+        return `${path}&${queryString}`;
     }
 
     return path;
-};
-
-export const getProjectEditPath = (projectId: string) => {
-    return `/projects/${projectId}/settings`;
 };

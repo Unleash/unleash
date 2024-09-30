@@ -70,15 +70,17 @@ const StyledBadgeIcon = styled('span')<
             : theme.palette[color].main,
 }));
 
-const BadgeIcon = (color: Color, icon: ReactElement) => (
+const BadgeIcon = (color: Color, icon?: ReactElement) => (
     <StyledBadgeIcon color={color}>
         <ConditionallyRender
             condition={Boolean(icon?.props.sx)}
             show={icon}
-            elseShow={() =>
-                cloneElement(icon!, {
-                    sx: { fontSize: '16px' },
-                })
+            elseShow={
+                icon
+                    ? cloneElement(icon, {
+                          sx: { fontSize: '16px' },
+                      })
+                    : null
             }
         />
     </StyledBadgeIcon>
@@ -110,7 +112,7 @@ export const Badge: FC<IBadgeProps> = forwardRef(
         >
             <ConditionallyRender
                 condition={Boolean(icon) && !iconRight}
-                show={BadgeIcon(color, icon!)}
+                show={BadgeIcon(color, icon)}
             />
             <ConditionallyRender
                 condition={
@@ -122,7 +124,7 @@ export const Badge: FC<IBadgeProps> = forwardRef(
             />
             <ConditionallyRender
                 condition={Boolean(icon) && Boolean(iconRight)}
-                show={BadgeIcon(color, icon!)}
+                show={BadgeIcon(color, icon)}
             />
         </StyledBadge>
     ),

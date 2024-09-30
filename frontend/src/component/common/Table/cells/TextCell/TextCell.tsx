@@ -24,6 +24,11 @@ const StyledWrapper = styled(Box, {
     },
 }));
 
+const StyledSpan = styled('span')(() => ({
+    display: 'inline-block',
+    maxWidth: '100%',
+}));
+
 export const TextCell: FC<ITextCellProps> = ({
     value,
     children,
@@ -32,8 +37,8 @@ export const TextCell: FC<ITextCellProps> = ({
     'data-testid': testid,
 }) => (
     <StyledWrapper lineClamp={lineClamp} sx={sx}>
-        <span data-loading='true' data-testid={testid}>
+        <StyledSpan data-loading='true' data-testid={testid}>
             {children ?? value}
-        </span>
+        </StyledSpan>
     </StyledWrapper>
 );

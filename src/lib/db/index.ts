@@ -51,6 +51,9 @@ import { FeatureLifecycleReadModel } from '../features/feature-lifecycle/feature
 import { LargestResourcesReadModel } from '../features/metrics/sizes/largest-resources-read-model';
 import { IntegrationEventsStore } from '../features/integration-events/integration-events-store';
 import { FeatureCollaboratorsReadModel } from '../features/feature-toggle/feature-collaborators-read-model';
+import { createProjectReadModel } from '../features/project/createProjectReadModel';
+import { OnboardingStore } from '../features/onboarding/onboarding-store';
+import { createOnboardingReadModel } from '../features/onboarding/createOnboardingReadModel';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -87,7 +90,7 @@ export const createStores = (
             config.flagResolver,
         ),
         settingStore: new SettingStore(db, getLogger),
-        userStore: new UserStore(db, getLogger),
+        userStore: new UserStore(db, getLogger, config.flagResolver),
         accountStore: new AccountStore(db, getLogger),
         projectStore: new ProjectStore(
             db,
@@ -170,6 +173,8 @@ export const createStores = (
         projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(db),
         featureLifecycleStore: new FeatureLifecycleStore(db),
         featureStrategiesReadModel: new FeatureStrategiesReadModel(db),
+        onboardingReadModel: createOnboardingReadModel(db),
+        onboardingStore: new OnboardingStore(db),
         featureLifecycleReadModel: new FeatureLifecycleReadModel(
             db,
             config.flagResolver,
@@ -177,6 +182,11 @@ export const createStores = (
         largestResourcesReadModel: new LargestResourcesReadModel(db),
         integrationEventsStore: new IntegrationEventsStore(db, { eventBus }),
         featureCollaboratorsReadModel: new FeatureCollaboratorsReadModel(db),
+        projectReadModel: createProjectReadModel(
+            db,
+            eventBus,
+            config.flagResolver,
+        ),
     };
 };
 

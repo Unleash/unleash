@@ -5,6 +5,7 @@ import type {
     IClientInstanceStore,
     IClientMetricsStoreV2,
     IEventStore,
+    IFeatureStrategiesReadModel,
     IUnleashStores,
 } from '../../types/stores';
 import type { IContextFieldStore } from '../../types/stores/context-field-store';
@@ -61,6 +62,9 @@ export interface InstanceStats {
         enabledCount: number;
         variantCount: number;
     };
+    maxEnvironmentStrategies: number;
+    maxConstraints: number;
+    maxConstraintValues: number;
 }
 
 export type InstanceStatsSigned = Omit<InstanceStats, 'projects'> & {
@@ -109,6 +113,8 @@ export class InstanceStatsService {
 
     private getProductionChanges: GetProductionChanges;
 
+    private featureStrategiesReadModel: IFeatureStrategiesReadModel;
+
     constructor(
         {
             featureToggleStore,
@@ -125,6 +131,7 @@ export class InstanceStatsService {
             eventStore,
             apiTokenStore,
             clientMetricsStoreV2,
+            featureStrategiesReadModel,
         }: Pick<
             IUnleashStores,
             | 'featureToggleStore'
@@ -141,6 +148,7 @@ export class InstanceStatsService {
             | 'eventStore'
             | 'apiTokenStore'
             | 'clientMetricsStoreV2'
+            | 'featureStrategiesReadModel'
         >,
         {
             getLogger,
@@ -169,6 +177,7 @@ export class InstanceStatsService {
         this.apiTokenStore = apiTokenStore;
         this.clientMetricsStore = clientMetricsStoreV2;
         this.flagResolver = flagResolver;
+        this.featureStrategiesReadModel = featureStrategiesReadModel;
     }
 
     async refreshAppCountSnapshot(): Promise<
@@ -250,6 +259,9 @@ export class InstanceStatsService {
             featureImports,
             productionChanges,
             previousDayMetricsBucketsCount,
+            maxEnvironmentStrategies,
+            maxConstraintValues,
+            maxConstraints,
         ] = await Promise.all([
             this.getToggleCount(),
             this.getArchivedToggleCount(),
@@ -277,6 +289,9 @@ export class InstanceStatsService {
             }),
             this.getProductionChanges(),
             this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets(),
+            this.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
+            this.featureStrategiesReadModel.getMaxConstraintValues(),
+            this.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
         ]);
 
         return {
@@ -309,6 +324,9 @@ export class InstanceStatsService {
             featureImports,
             productionChanges,
             previousDayMetricsBucketsCount,
+            maxEnvironmentStrategies: maxEnvironmentStrategies?.count ?? 0,
+            maxConstraintValues: maxConstraintValues?.count ?? 0,
+            maxConstraints: maxConstraints?.count ?? 0,
         };
     }
 

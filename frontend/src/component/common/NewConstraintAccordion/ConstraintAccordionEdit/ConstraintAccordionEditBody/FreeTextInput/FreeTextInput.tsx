@@ -6,9 +6,7 @@ import type React from 'react';
 import { useState } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import { parseParameterStrings } from 'utils/parseParameter';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Limit } from 'component/common/Limit/Limit';
 
 interface IFreeTextInputProps {
@@ -72,7 +70,6 @@ export const FreeTextInput = ({
 }: IFreeTextInputProps) => {
     const [inputValues, setInputValues] = useState('');
     const { classes: styles } = useStyles();
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
     const { uiConfig, loading } = useUiConfig();
     const constraintValuesLimit = uiConfig.resourceLimits.constraintValues;
 
@@ -88,9 +85,7 @@ export const FreeTextInput = ({
             ...values,
             ...parseParameterStrings(inputValues),
         ]);
-        const limitReached = Boolean(
-            resourceLimitsEnabled && newValues.length > constraintValuesLimit,
-        );
+        const limitReached = Boolean(newValues.length > constraintValuesLimit);
 
         if (limitReached) {
             setError(
@@ -148,16 +143,11 @@ export const FreeTextInput = ({
                 />
             </div>
             <LimitContainer>
-                <ConditionallyRender
-                    condition={resourceLimitsEnabled}
-                    show={
-                        <Limit
-                            name='single constraint values'
-                            shortName='values'
-                            currentValue={values.length}
-                            limit={constraintValuesLimit}
-                        />
-                    }
+                <Limit
+                    name='single constraint values'
+                    shortName='values'
+                    currentValue={values.length}
+                    limit={constraintValuesLimit}
                 />
             </LimitContainer>
         </>

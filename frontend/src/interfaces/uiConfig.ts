@@ -72,9 +72,7 @@ export type UiFlags = {
     featureSearchFeedback?: Variant;
     enableLicense?: boolean;
     adminTokenKillSwitch?: boolean;
-    killInsightsUI?: boolean;
     feedbackComments?: Variant;
-    displayUpgradeEdgeBanner?: boolean;
     showInactiveUsers?: boolean;
     featureSearchFeedbackPosting?: boolean;
     userAccessUIEnabled?: boolean;
@@ -84,19 +82,13 @@ export type UiFlags = {
     disableShowContextFieldSelectionValues?: boolean;
     projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
-    scimApi?: boolean;
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
     navigationSidebar?: boolean;
-    commandBarUI?: boolean;
     flagCreator?: boolean;
-    resourceLimits?: boolean;
-    insightsV2?: boolean;
-    integrationEvents?: boolean;
-    improveCreateFlagFlow?: boolean;
-    newEventSearch?: boolean;
-    changeRequestPlayground?: boolean;
-    archiveProjects?: boolean;
+    onboardingUI?: boolean;
+    eventTimeline?: boolean;
+    personalDashboardUI?: boolean;
 };
 
 export interface IVersionInfo {

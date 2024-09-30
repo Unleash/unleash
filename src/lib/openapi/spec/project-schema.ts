@@ -19,6 +19,7 @@ export const projectSchema = {
             description: 'The name of this project',
         },
         description: {
+            deprecated: true,
             type: 'string',
             nullable: true,
             example: 'DX squad feature release',
@@ -36,11 +37,13 @@ export const projectSchema = {
             description: 'The number of features this project has',
         },
         staleFeatureCount: {
+            deprecated: true,
             type: 'number',
             example: 10,
             description: 'The number of stale features this project has',
         },
         potentiallyStaleFeatureCount: {
+            deprecated: true,
             type: 'number',
             example: 10,
             description:
@@ -58,10 +61,25 @@ export const projectSchema = {
             format: 'date-time',
         },
         updatedAt: {
+            deprecated: true,
             type: 'string',
             format: 'date-time',
             nullable: true,
             description: 'When this project was last updated.',
+            example: '2023-07-28T12:12:28Z',
+        },
+        lastUpdatedAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            description: 'When this project was last updated.',
+            example: '2023-07-28T12:12:28Z',
+        },
+        archivedAt: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            description: 'When this project was archived.',
             example: '2023-07-28T12:12:28Z',
         },
         favorite: {
@@ -78,16 +96,26 @@ export const projectSchema = {
                 "The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not.",
         },
         defaultStickiness: {
+            deprecated: true,
             type: 'string',
             example: 'userId',
             description:
                 'A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy',
         },
         avgTimeToProduction: {
+            deprecated: true,
             type: 'number',
             example: 10,
             description:
                 'The average time from when a feature was created to when it was enabled in the "production" environment during the current window',
+        },
+        lastReportedFlagUsage: {
+            type: 'string',
+            format: 'date-time',
+            nullable: true,
+            description:
+                'Across all flags in your project this is the last time usage metrics where reported from connected applications.',
+            example: '2023-07-28T12:12:28Z',
         },
         owners: {
             description:

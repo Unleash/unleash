@@ -3,10 +3,10 @@ import CheckIcon from '@mui/icons-material/Check';
 import { Link as RouterLink } from 'react-router-dom';
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import ReactTimeAgo from 'react-timeago';
 import type { IProjectHealthReport } from 'interfaces/project';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
+import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 
 const StyledBoxActive = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -80,29 +80,6 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
               ? 'warning.main'
               : 'success.main';
 
-    const renderActiveToggles = () => (
-        <StyledBoxActive>
-            <CheckIcon />
-            <span>{healthReport.activeCount} active flags</span>
-        </StyledBoxActive>
-    );
-
-    const renderStaleToggles = () => (
-        <StyledBoxStale>
-            <ReportProblemOutlinedIcon />
-            <span>{healthReport.staleCount} stale flags</span>
-        </StyledBoxStale>
-    );
-
-    const renderPotentiallyStaleToggles = () => (
-        <StyledBoxStale>
-            <ReportProblemOutlinedIcon />
-            <span>
-                {healthReport.potentiallyStaleCount} potentially stale flags
-            </span>
-        </StyledBoxStale>
-    );
-
     const StalenessInfoIcon = () => (
         <HtmlTooltip
             title={
@@ -142,9 +119,9 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                             </StyledHealthRating>
                             <StyledLastUpdated>
                                 Last updated:{' '}
-                                <ReactTimeAgo
+                                <TimeAgo
                                     date={healthReport.updatedAt}
-                                    live={false}
+                                    refresh={false}
                                 />
                             </StyledLastUpdated>
                         </>
@@ -157,7 +134,14 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                     <li>
                         <ConditionallyRender
                             condition={Boolean(healthReport.activeCount)}
-                            show={renderActiveToggles}
+                            show={
+                                <StyledBoxActive>
+                                    <CheckIcon />
+                                    <span>
+                                        {healthReport.activeCount} active flags
+                                    </span>
+                                </StyledBoxActive>
+                            }
                         />
                     </li>
                     <ConditionallyRender
@@ -172,7 +156,14 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                     <li>
                         <ConditionallyRender
                             condition={Boolean(healthReport.staleCount)}
-                            show={renderStaleToggles}
+                            show={
+                                <StyledBoxStale>
+                                    <ReportProblemOutlinedIcon />
+                                    <span>
+                                        {healthReport.staleCount} stale flags
+                                    </span>
+                                </StyledBoxStale>
+                            }
                         />
                     </li>
                 </StyledList>
@@ -190,7 +181,15 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                             condition={Boolean(
                                 healthReport.potentiallyStaleCount,
                             )}
-                            show={renderPotentiallyStaleToggles}
+                            show={
+                                <StyledBoxStale>
+                                    <ReportProblemOutlinedIcon />
+                                    <span>
+                                        {healthReport.potentiallyStaleCount}{' '}
+                                        potentially stale flags
+                                    </span>
+                                </StyledBoxStale>
+                            }
                         />
                     </li>
                 </StyledList>

@@ -1,4 +1,3 @@
-import { Knex } from 'knex';
 import type { Logger, LogProvider } from '../../logger';
 
 import NotFoundError from '../../error/notfound-error';
@@ -9,7 +8,6 @@ import type {
     IProjectApplication,
     IProjectApplications,
     IProjectUpdate,
-    IProjectWithCount,
     ProjectMode,
 } from '../../types';
 import type {
@@ -27,7 +25,6 @@ import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
 import type EventEmitter from 'events';
 import type { Db } from '../../db/db';
-import Raw = Knex.Raw;
 import type { CreateFeatureStrategySchema } from '../../openapi';
 import { applySearchFilters } from '../feature-search/search-utils';
 
@@ -117,122 +114,25 @@ class ProjectStore implements IProjectStore {
         return present;
     }
 
-    async getProjectsWithCounts(
-        query?: IProjectQuery,
-        userId?: number,
-    ): Promise<IProjectWithCount[]> {
-        const projectTimer = this.timer('getProjectsWithCount');
-        let projects = this.db(TABLE)
-            .leftJoin('features', 'features.project', 'projects.id')
-            .leftJoin(
-                'project_settings',
-                'project_settings.project',
-                'projects.id',
-            )
-            .leftJoin('project_stats', 'project_stats.project', 'projects.id')
-            .orderBy('projects.name', 'asc');
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            projects = projects.where('projects.archived_at', null);
-        }
-
-        if (query) {
-            projects = projects.where(query);
-        }
-
-        let selectColumns = [
-            this.db.raw(
-                'projects.id, projects.name, projects.description, projects.health, projects.updated_at, projects.created_at, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null and features.stale IS TRUE) AS stale_feature_count, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count',
-            ),
-            'project_settings.default_stickiness',
-            'project_settings.project_mode',
-            'project_stats.avg_time_to_prod_current_window',
-        ] as (string | Raw<any>)[];
-
-        let groupByColumns = [
-            'projects.id',
-            'project_settings.default_stickiness',
-            'project_settings.project_mode',
-            'project_stats.avg_time_to_prod_current_window',
-        ];
-
-        if (userId) {
-            projects = projects.leftJoin(`favorite_projects`, function () {
-                this.on('favorite_projects.project', 'projects.id').andOnVal(
-                    'favorite_projects.user_id',
-                    '=',
-                    userId,
-                );
-            });
-            selectColumns = [
-                ...selectColumns,
-                this.db.raw(
-                    'favorite_projects.project is not null as favorite',
-                ),
-            ];
-            groupByColumns = [...groupByColumns, 'favorite_projects.project'];
-        }
-
-        const projectAndFeatureCount = await projects
-            .select(selectColumns)
-            .groupBy(groupByColumns);
-
-        const projectsWithFeatureCount = projectAndFeatureCount.map(
-            this.mapProjectWithCountRow,
-        );
-        projectTimer();
-        const memberTimer = this.timer('getMemberCount');
-
-        const memberCount = await this.getMembersCount();
-        memberTimer();
-        const memberMap = new Map<string, number>(
-            memberCount.map((c) => [c.project, Number(c.count)]),
-        );
-
-        return projectsWithFeatureCount.map((projectWithCount) => {
-            return {
-                ...projectWithCount,
-                memberCount: memberMap.get(projectWithCount.id) || 0,
-            };
-        });
-    }
-
-    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    mapProjectWithCountRow(row): IProjectWithCount {
-        return {
-            name: row.name,
-            id: row.id,
-            description: row.description,
-            health: row.health,
-            favorite: row.favorite,
-            featureCount: Number(row.number_of_features) || 0,
-            staleFeatureCount: Number(row.stale_feature_count) || 0,
-            potentiallyStaleFeatureCount:
-                Number(row.potentially_stale_feature_count) || 0,
-            memberCount: Number(row.number_of_users) || 0,
-            updatedAt: row.updated_at,
-            createdAt: row.created_at,
-            mode: row.project_mode || 'open',
-            defaultStickiness: row.default_stickiness || 'default',
-            avgTimeToProduction: row.avg_time_to_prod_current_window || 0,
-        };
-    }
-
     async getAll(query: IProjectQuery = {}): Promise<IProject[]> {
-        const rows = await this.db
+        let projects = this.db
             .select(COLUMNS)
             .from(TABLE)
             .where(query)
             .orderBy('name', 'asc');
 
+        projects = projects.where(`${TABLE}.archived_at`, null);
+
+        const rows = await projects;
+
         return rows.map(this.mapRow);
     }
 
     async get(id: string): Promise<IProject> {
+        const extraColumns: string[] = ['archived_at'];
+
         return this.db
-            .first([...COLUMNS, ...SETTINGS_COLUMNS])
+            .first([...COLUMNS, ...SETTINGS_COLUMNS, ...extraColumns])
             .from(TABLE)
             .leftJoin(
                 SETTINGS_TABLE,
@@ -281,7 +181,7 @@ class ProjectStore implements IProjectStore {
         project: IProjectInsert & IProjectSettings,
     ): Promise<IProject> {
         const row = await this.db(TABLE)
-            .insert(this.fieldToRow(project))
+            .insert({ ...this.fieldToRow(project), created_at: new Date() })
             .returning('*');
         const settingsRow = await this.db(SETTINGS_TABLE)
             .insert({
@@ -413,6 +313,10 @@ class ProjectStore implements IProjectStore {
         await this.db(TABLE).where({ id }).update({ archived_at: now });
     }
 
+    async revive(id: string): Promise<void> {
+        await this.db(TABLE).where({ id }).update({ archived_at: null });
+    }
+
     async getProjectLinksForEnvironments(
         environments: string[],
     ): Promise<IEnvironmentProjectLink[]> {
@@ -486,55 +390,6 @@ class ProjectStore implements IProjectStore {
         return rows.map(this.mapProjectEnvironmentRow);
     }
 
-    async getMembersCount(): Promise<IProjectMembersCount[]> {
-        const members = await this.db
-            .select('project')
-            .from((db) => {
-                db.select('user_id', 'project')
-                    .from('role_user')
-                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                    .where((builder) => builder.whereNot('type', 'root'))
-                    .union((queryBuilder) => {
-                        queryBuilder
-                            .select('user_id', 'project')
-                            .from('group_role')
-                            .leftJoin(
-                                'group_user',
-                                'group_user.group_id',
-                                'group_role.group_id',
-                            );
-                    })
-                    .as('query');
-            })
-            .groupBy('project')
-            .count('user_id');
-        return members;
-    }
-
-    async getProjectsByUser(userId: number): Promise<string[]> {
-        const projects = await this.db
-            .from((db) => {
-                db.select('project')
-                    .from('role_user')
-                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
-                    .where('user_id', userId)
-                    .union((queryBuilder) => {
-                        queryBuilder
-                            .select('project')
-                            .from('group_role')
-                            .leftJoin(
-                                'group_user',
-                                'group_user.group_id',
-                                'group_role.group_id',
-                            )
-                            .where('user_id', userId);
-                    })
-                    .as('query');
-            })
-            .pluck('project');
-        return projects;
-    }
-
     async getMembersCountByProject(projectId: string): Promise<number> {
         const members = await this.db
             .from((db) => {
@@ -601,8 +456,7 @@ class ProjectStore implements IProjectStore {
     async getApplicationsByProject(
         params: IProjectApplicationsSearchParams,
     ): Promise<IProjectApplications> {
-        const { project, limit, sortOrder, sortBy, searchParams, offset } =
-            params;
+        const { project, limit, sortOrder, searchParams, offset } = params;
         const validatedSortOrder =
             sortOrder === 'asc' || sortOrder === 'desc' ? sortOrder : 'asc';
         const query = this.db
@@ -706,14 +560,15 @@ class ProjectStore implements IProjectStore {
     }
 
     async count(): Promise<number> {
-        return this.db
-            .from(TABLE)
-            .count('*')
-            .then((res) => Number(res[0].count));
+        let count = this.db.from(TABLE).count('*');
+
+        count = count.where(`${TABLE}.archived_at`, null);
+
+        return count.then((res) => Number(res[0].count));
     }
 
     async getProjectModeCounts(): Promise<ProjectModeCount[]> {
-        const result: ProjectModeCount[] = await this.db
+        let query = this.db
             .select(
                 this.db.raw(
                     `COALESCE(${SETTINGS_TABLE}.project_mode, 'open') as mode`,
@@ -729,11 +584,16 @@ class ProjectStore implements IProjectStore {
             .groupBy(
                 this.db.raw(`COALESCE(${SETTINGS_TABLE}.project_mode, 'open')`),
             );
+
+        query = query.where(`${TABLE}.archived_at`, null);
+
+        const result: ProjectModeCount[] = await query;
+
         return result.map(this.mapProjectModeCount);
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    mapProjectModeCount(row): ProjectModeCount {
+    private mapProjectModeCount(row): ProjectModeCount {
         return {
             mode: row.mode,
             count: Number(row.count),
@@ -741,7 +601,7 @@ class ProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    mapLinkRow(row): IEnvironmentProjectLink {
+    private mapLinkRow(row): IEnvironmentProjectLink {
         return {
             environmentName: row.environment_name,
             projectId: row.project_id,
@@ -749,7 +609,7 @@ class ProjectStore implements IProjectStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-    mapRow(row): IProject {
+    private mapRow(row): IProject {
         if (!row) {
             throw new NotFoundError('No project found');
         }
@@ -761,6 +621,7 @@ class ProjectStore implements IProjectStore {
             createdAt: row.created_at,
             health: row.health ?? 100,
             updatedAt: row.updated_at || new Date(),
+            ...(row.archived_at ? { archivedAt: row.archived_at } : {}),
             mode: row.project_mode || 'open',
             defaultStickiness: row.default_stickiness || 'default',
             featureLimit: row.feature_limit,
@@ -772,7 +633,7 @@ class ProjectStore implements IProjectStore {
         };
     }
 
-    mapProjectEnvironmentRow(row: {
+    private mapProjectEnvironmentRow(row: {
         environment_name: string;
         default_strategy: CreateFeatureStrategySchema;
     }): ProjectEnvironment {
@@ -785,7 +646,7 @@ class ProjectStore implements IProjectStore {
         };
     }
 
-    getAggregatedApplicationsData(rows): IProjectApplication[] {
+    private getAggregatedApplicationsData(rows): IProjectApplication[] {
         const entriesMap = new Map<string, IProjectApplication>();
 
         rows.forEach((row) => {

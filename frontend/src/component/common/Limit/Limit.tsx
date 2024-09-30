@@ -89,8 +89,8 @@ export const Limit: FC<{
         <>
             If you need more than <strong>{limit}</strong> {shortName ?? name},
             please reach out to us at{' '}
-            <a href='mailto:cs@getunleash.io?subject=Increase limit'>
-                cs@getunleash.io
+            <a href='mailto:customersuccess@getunleash.io?subject=Increase limit'>
+                customersuccess@getunleash.io
             </a>
         </>
     );

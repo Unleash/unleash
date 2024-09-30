@@ -12,7 +12,6 @@ import {
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, styled } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -21,7 +20,6 @@ import useFeatureForm from 'component/feature/hooks/useFeatureForm';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import FlagIcon from '@mui/icons-material/Flag';
 import ImpressionDataIcon from '@mui/icons-material/AltRoute';
-import { useFlagLimits } from 'component/feature/CreateFeature/CreateFeature';
 import { useGlobalFeatureSearch } from 'component/feature/FeatureToggleList/useGlobalFeatureSearch';
 import useProjectOverview, {
     featuresCount,
@@ -37,10 +35,13 @@ import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/MultiSelectConfigButton';
 import type { ITag } from 'interfaces/tags';
 import { ToggleConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/ToggleConfigButton';
+import { useFlagLimits } from './useFlagLimits';
 
 interface ICreateFeatureDialogProps {
     open: boolean;
     onClose: () => void;
+    skipNavigationOnComplete?: boolean;
+    onSuccess?: () => void;
 }
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -79,17 +80,28 @@ const configButtonData = {
 export const CreateFeatureDialog = ({
     open,
     onClose,
+    onSuccess,
+    skipNavigationOnComplete,
 }: ICreateFeatureDialogProps) => {
     if (open) {
         // wrap the inner component so that we only fetch data etc
         // when the dialog is actually open.
-        return <CreateFeatureDialogContent open={open} onClose={onClose} />;
+        return (
+            <CreateFeatureDialogContent
+                open={open}
+                onClose={onClose}
+                skipNavigationOnComplete={skipNavigationOnComplete}
+                onSuccess={onSuccess}
+            />
+        );
     }
 };
 
 const CreateFeatureDialogContent = ({
     open,
     onClose,
+    skipNavigationOnComplete,
+    onSuccess,
 }: ICreateFeatureDialogProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { setShowFeedback } = useContext(UIContext);
@@ -154,13 +166,17 @@ const CreateFeatureDialogContent = ({
             const payload = getTogglePayload();
             try {
                 await createFeatureToggle(project, payload);
-                navigate(`/projects/${project}/features/${name}`);
+                if (!skipNavigationOnComplete) {
+                    navigate(`/projects/${project}/features/${name}`);
+                }
                 setToastData({
                     title: 'Flag created successfully',
                     text: 'Now you can start using your flag.',
                     confetti: true,
                     type: 'success',
                 });
+                onClose();
+                onSuccess?.();
                 setShowFeedback(true);
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
@@ -173,8 +189,6 @@ const CreateFeatureDialogContent = ({
 
     const { project: projectInfo } = useProjectOverview(project);
     const { tags: allTags } = useAllTags();
-
-    const resourceLimitsEnabled = useUiFlag('resourceLimits');
 
     const { globalFlagLimitReached, projectFlagLimitReached, limitMessage } =
         useFlagLimits({
@@ -227,20 +241,16 @@ const CreateFeatureDialogContent = ({
                         tooltipProps: { title: limitMessage, arrow: true },
                     }}
                     description={description}
+                    namingPattern={projectInfo.featureNaming}
                     errors={errors}
                     handleSubmit={handleSubmit}
                     Icon={<FlagIcon />}
                     validateName={validateToggleName}
                     Limit={
-                        <ConditionallyRender
-                            condition={resourceLimitsEnabled}
-                            show={
-                                <Limit
-                                    name='feature flags'
-                                    limit={uiConfig.resourceLimits.featureFlags}
-                                    currentValue={totalFlags ?? 0}
-                                />
-                            }
+                        <Limit
+                            name='feature flags'
+                            limit={uiConfig.resourceLimits.featureFlags}
+                            currentValue={totalFlags ?? 0}
                         />
                     }
                     name={name}

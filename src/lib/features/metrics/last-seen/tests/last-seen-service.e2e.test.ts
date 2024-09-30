@@ -133,3 +133,34 @@ test('should clean unknown feature flag environments from last seen store', asyn
 
     expect(stored.rows.length).toBe(2);
 });
+
+test('should not fail with feature names longer than 255 chars', async () => {
+    const { lastSeenService } = app.services;
+
+    const longFeatureNames = [
+        { name: 'a'.repeat(254), environment: 'default' },
+        { name: 'b'.repeat(255), environment: 'default' },
+        { name: 'c'.repeat(256), environment: 'default' }, // this one should be filtered out
+    ];
+
+    const inserts = [...longFeatureNames].map((feature) => {
+        return {
+            featureName: feature.name,
+            environment: feature.environment,
+            yes: 1,
+            no: 0,
+            appName: 'test',
+            timestamp: new Date(),
+        };
+    });
+
+    lastSeenService.updateLastSeen(inserts);
+    await lastSeenService.store();
+
+    // We have no method to get these from the last seen service or any other service or store
+    const stored = await db.rawDatabase.raw(
+        'SELECT * FROM last_seen_at_metrics;',
+    );
+
+    expect(stored.rows.length).toBe(2);
+});

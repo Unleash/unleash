@@ -31,7 +31,6 @@ function initClientMetrics(flagEnabled = true) {
     const lastSeenService = new LastSeenService(
         {
             lastSeenStore: stores.lastSeenStore,
-            featureToggleStore: stores.featureToggleStore,
         },
         config,
     );

@@ -1,6 +1,5 @@
 import type {
     IEnvironmentProjectLink,
-    IProjectMembersCount,
     ProjectModeCount,
 } from './project-store';
 import type {
@@ -8,7 +7,6 @@ import type {
     IFeatureNaming,
     IProject,
     IProjectApplications,
-    IProjectWithCount,
     ProjectMode,
 } from '../../types/model';
 import type { Store } from '../../types/stores/store';
@@ -47,6 +45,11 @@ export interface IProjectHealthUpdate {
 
 export interface IProjectQuery {
     id?: string;
+    archived?: boolean;
+}
+
+export interface IProjectsQuery {
+    ids?: string[];
 }
 
 export type ProjectEnvironment = {
@@ -97,15 +100,6 @@ export interface IProjectStore extends Store<IProject, string> {
         date: string,
     ): Promise<number>;
 
-    getProjectsByUser(userId: number): Promise<string[]>;
-
-    getMembersCount(): Promise<IProjectMembersCount[]>;
-
-    getProjectsWithCounts(
-        query?: IProjectQuery,
-        userId?: number,
-    ): Promise<IProjectWithCount[]>;
-
     count(): Promise<number>;
 
     getAll(query?: IProjectQuery): Promise<IProject[]>;
@@ -138,4 +132,5 @@ export interface IProjectStore extends Store<IProject, string> {
     ): Promise<IProjectApplications>;
 
     archive(projectId: string): Promise<void>;
+    revive(projectId: string): Promise<void>;
 }

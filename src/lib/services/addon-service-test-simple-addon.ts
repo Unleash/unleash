@@ -15,6 +15,7 @@ const ARGS: IAddonConfig = {
     unleashUrl: 'http://some-url.com',
     integrationEventsService: {} as IntegrationEventsService,
     flagResolver: {} as IFlagResolver,
+    eventBus: {} as any,
 };
 
 const definition: IAddonDefinition = {

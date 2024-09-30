@@ -3,23 +3,24 @@ import getLogger from '../../../test/fixtures/no-logger';
 import { type IUser, RoleName, type IGroup } from '../../types';
 import { randomId } from '../../util';
 import { ProjectOwnersReadModel } from './project-owners-read-model';
+import type { ProjectForUi } from './project-read-model-type';
 
 jest.mock('../../util', () => ({
     ...jest.requireActual('../../util'),
     generateImageUrl: jest.fn((input) => `https://${input.image_url}`),
 }));
 
-const mockProjectWithCounts = (name: string) => ({
+const mockProjectData = (name: string): ProjectForUi => ({
     name,
     id: name,
-    description: '',
     featureCount: 0,
     memberCount: 0,
     mode: 'open' as const,
-    defaultStickiness: 'default' as const,
-    staleFeatureCount: 0,
-    potentiallyStaleFeatureCount: 0,
-    avgTimeToProduction: 0,
+    health: 100,
+    createdAt: new Date(),
+    favorite: false,
+    lastReportedFlagUsage: null,
+    lastUpdatedAt: null,
 });
 
 describe('unit tests', () => {
@@ -134,7 +135,7 @@ afterEach(async () => {
 
 describe('integration tests', () => {
     test('returns an empty object if there are no projects', async () => {
-        const owners = await readModel.getAllProjectOwners();
+        const owners = await readModel.getProjectOwnersDictionary();
 
         expect(owners).toStrictEqual({});
     });
@@ -149,7 +150,7 @@ describe('integration tests', () => {
             projectId,
         );
 
-        const owners = await readModel.getAllProjectOwners();
+        const owners = await readModel.getProjectOwnersDictionary();
         expect(owners).toMatchObject({
             [projectId]: expect.arrayContaining([
                 expect.objectContaining({ name: 'Owner Name' }),
@@ -167,7 +168,7 @@ describe('integration tests', () => {
             projectId,
         );
 
-        const owners = await readModel.getAllProjectOwners();
+        const owners = await readModel.getProjectOwnersDictionary();
 
         expect(owners).toMatchObject({
             [projectId]: [
@@ -200,7 +201,7 @@ describe('integration tests', () => {
             projectId,
         );
 
-        const owners = await readModel.getAllProjectOwners();
+        const owners = await readModel.getProjectOwnersDictionary();
 
         expect(owners).toMatchObject({
             [projectId]: [{ name: 'Owner Name' }],
@@ -218,7 +219,7 @@ describe('integration tests', () => {
             projectId,
         );
 
-        const owners = await readModel.getAllProjectOwners();
+        const owners = await readModel.getProjectOwnersDictionary();
 
         expect(owners).toMatchObject({
             [projectId]: [
@@ -247,7 +248,7 @@ describe('integration tests', () => {
             projectId,
         );
 
-        const owners = await readModel.getAllProjectOwners();
+        const owners = await readModel.getProjectOwnersDictionary();
 
         expect(owners).toMatchObject({
             [projectId]: [
@@ -298,7 +299,7 @@ describe('integration tests', () => {
             projectId,
         );
 
-        const owners = await readModel.getAllProjectOwners();
+        const owners = await readModel.getProjectOwnersDictionary();
 
         expect(owners).toMatchObject({
             [projectId]: [
@@ -351,8 +352,8 @@ describe('integration tests', () => {
         );
 
         const projectsWithOwners = await readModel.addOwners([
-            mockProjectWithCounts(projectIdA),
-            mockProjectWithCounts(projectIdB),
+            mockProjectData(projectIdA),
+            mockProjectData(projectIdB),
         ]);
 
         expect(projectsWithOwners).toMatchObject([
@@ -361,24 +362,95 @@ describe('integration tests', () => {
         ]);
     });
 
-    test('anonymizes emails when asked to', async () => {
-        const projectId = randomId();
-        await db.stores.projectStore.create({ id: projectId, name: projectId });
+    test('filters out system and group owners when getting all user project owners', async () => {
+        const createProject = async () => {
+            const id = randomId();
+            return db.stores.projectStore.create({
+                id,
+                name: id,
+            });
+        };
+
+        const projectA = await createProject();
+        const projectB = await createProject();
+        const projectC = await createProject();
+        await createProject(); // <- no owner
 
         await db.stores.accessStore.addUserToRole(
             owner.id,
             ownerRoleId,
-            projectId,
+            projectA.id,
         );
 
-        const owners = await readModel.getAllProjectOwners(true);
-        expect(owners).toMatchObject({
-            [projectId]: [
-                {
-                    name: 'Owner Name',
-                    email: expect.stringMatching(/@unleash.run$/),
-                },
-            ],
-        });
+        await db.stores.accessStore.addUserToRole(
+            owner2.id,
+            ownerRoleId,
+            projectB.id,
+        );
+
+        await db.stores.accessStore.addGroupToRole(
+            group.id,
+            ownerRoleId,
+            '',
+            projectC.id,
+        );
+
+        const userOwners = await readModel.getAllUserProjectOwners();
+        userOwners.sort((a, b) => a.name.localeCompare(b.name));
+
+        expect(userOwners).toMatchObject([
+            {
+                name: owner.name,
+                ownerType: 'user',
+                email: owner.email,
+                imageUrl: 'https://image-url-1',
+            },
+            {
+                name: owner2.name,
+                ownerType: 'user',
+                email: owner2.email,
+                imageUrl: 'https://image-url-3',
+            },
+        ]);
+    });
+
+    test('only returns projects listed in the projects input if provided', async () => {
+        const createProject = async () => {
+            const id = randomId();
+            return db.stores.projectStore.create({
+                id,
+                name: id,
+            });
+        };
+
+        const projectA = await createProject();
+        const projectB = await createProject();
+
+        await db.stores.accessStore.addUserToRole(
+            owner.id,
+            ownerRoleId,
+            projectA.id,
+        );
+
+        await db.stores.accessStore.addUserToRole(
+            owner2.id,
+            ownerRoleId,
+            projectB.id,
+        );
+
+        const noOwners = await readModel.getAllUserProjectOwners(new Set());
+        expect(noOwners).toMatchObject([]);
+
+        const onlyProjectA = await readModel.getAllUserProjectOwners(
+            new Set([projectA.id]),
+        );
+        expect(onlyProjectA).toMatchObject([
+            {
+                name: owner.name,
+                ownerType: 'user',
+                email: owner.email,
+                imageUrl: 'https://image-url-1',
+            },
+        ]);
     });
 });

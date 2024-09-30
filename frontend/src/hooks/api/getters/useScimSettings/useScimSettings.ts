@@ -3,28 +3,24 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const ENDPOINT = 'api/admin/scim-settings';
 
 export type ScimSettings = {
     enabled: boolean;
     hasToken: boolean;
-    assumeControlOfExisting: boolean;
 };
 
 const DEFAULT_DATA: ScimSettings = {
     enabled: false,
     hasToken: false,
-    assumeControlOfExisting: false,
 };
 
 export const useScimSettings = () => {
     const { isEnterprise } = useUiConfig();
-    const scimEnabled = useUiFlag('scimApi');
 
     const { data, error, mutate } = useConditionalSWR<ScimSettings>(
-        isEnterprise() && scimEnabled,
+        isEnterprise(),
         DEFAULT_DATA,
         formatApiPath(ENDPOINT),
         fetcher,

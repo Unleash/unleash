@@ -7,6 +7,7 @@ import WebhookAddon from './webhook';
 import noLogger from '../../test/fixtures/no-logger';
 import {
     type IAddonConfig,
+    type IFlagKey,
     type IFlagResolver,
     serializeDates,
     SYSTEM_USER_ID,
@@ -21,7 +22,8 @@ const ARGS: IAddonConfig = {
     getLogger: noLogger,
     unleashUrl: 'http://some-url.com',
     integrationEventsService: {} as IntegrationEventsService,
-    flagResolver: {} as IFlagResolver,
+    flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
+    eventBus: {} as any,
 };
 
 jest.mock(

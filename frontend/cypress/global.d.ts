@@ -55,7 +55,7 @@ declare namespace Cypress {
         // STRATEGY
         addUserIdStrategyToFeature_UI(
             featureName: string,
-            projectName?: string,
+            projectName: string,
         ): Chainable;
         addFlexibleRolloutStrategyToFeature_UI(
             options: AddFlexibleRolloutStrategyOptions,
@@ -93,5 +93,14 @@ declare namespace Cypress {
             environment: IEnvironment,
             options?: Partial<Cypress.RequestOptions>,
         ): Chainable;
+        visit(
+            options: Partial<Cypress.VisitOptions & PopulatePreloadsOptions> & {
+                url: string;
+            },
+        ): Cypress.Chainable<Cypress.AUTWindow>;
+        visit(
+            url: string,
+            options?: Partial<Cypress.VisitOptions & PopulatePreloadsOptions>,
+        ): Cypress.Chainable<Cypress.AUTWindow>;
     }
 }

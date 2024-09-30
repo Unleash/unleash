@@ -20,8 +20,8 @@ import { RoleName } from '../../../../lib/types/model';
 import SettingService from '../../../../lib/services/setting-service';
 import FakeSettingStore from '../../../fixtures/fake-setting-store';
 import { GroupService } from '../../../../lib/services/group-service';
-import { EventService } from '../../../../lib/services';
 import { type IUnleashStores, TEST_AUDIT_USER } from '../../../../lib/types';
+import { createEventsService } from '../../../../lib/features';
 
 let app: IUnleashTest;
 let stores: IUnleashStores;
@@ -54,7 +54,7 @@ beforeAll(async () => {
     db = await dbInit('reset_password_api_serial', getLogger);
     stores = db.stores;
     app = await setupApp(stores);
-    const eventService = new EventService(stores, config);
+    const eventService = createEventsService(db.rawDatabase, config);
     const groupService = new GroupService(stores, config, eventService);
     accessService = new AccessService(
         stores,

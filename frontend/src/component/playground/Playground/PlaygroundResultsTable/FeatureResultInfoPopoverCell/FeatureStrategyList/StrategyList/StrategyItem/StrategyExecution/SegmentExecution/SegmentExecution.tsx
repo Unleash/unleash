@@ -54,6 +54,7 @@ export const SegmentExecution: VFC<ISegmentExecutionProps> = ({
                                         </span>
                                     </SegmentResultTextWrapper>
                                 }
+                                elseShow={undefined}
                             />
                         }
                         isExpanded

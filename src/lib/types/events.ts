@@ -8,9 +8,9 @@ import type {
 } from './model';
 import type { IApiToken } from './models/api-token';
 import type { IAuditUser, IUserWithRootRole } from './user';
-import type { FeatureLifecycleCompletedSchema } from '../openapi';
 import type { ITagType } from '../features/tag-type/tag-type-store-type';
 import type { IFeatureAndTag } from './stores/feature-tag-store';
+import type { FeatureLifecycleCompletedSchema } from '../openapi';
 
 export const APPLICATION_CREATED = 'application-created' as const;
 
@@ -82,6 +82,7 @@ export const PROJECT_CREATED = 'project-created' as const;
 export const PROJECT_UPDATED = 'project-updated' as const;
 export const PROJECT_DELETED = 'project-deleted' as const;
 export const PROJECT_ARCHIVED = 'project-archived' as const;
+export const PROJECT_REVIVED = 'project-revived' as const;
 export const PROJECT_IMPORT = 'project-import' as const;
 export const PROJECT_USER_ADDED = 'project-user-added' as const;
 export const PROJECT_USER_REMOVED = 'project-user-removed' as const;
@@ -251,6 +252,7 @@ export const IEventTypes = [
     PROJECT_UPDATED,
     PROJECT_DELETED,
     PROJECT_ARCHIVED,
+    PROJECT_REVIVED,
     PROJECT_IMPORT,
     PROJECT_USER_ADDED,
     PROJECT_USER_REMOVED,
@@ -352,7 +354,7 @@ export const IEventTypes = [
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
-// this rerpresents the write model for events
+// this represents the write model for events
 export interface IBaseEvent {
     type: IEventType;
     createdBy: string;
@@ -370,6 +372,11 @@ export interface IBaseEvent {
 export interface IEvent extends Omit<IBaseEvent, 'ip'> {
     id: number;
     createdAt: Date;
+}
+
+export interface IEnrichedEvent extends IEvent {
+    label: string;
+    summary: string;
 }
 
 export interface IEventList {
@@ -576,7 +583,7 @@ export class ProjectDeletedEvent extends BaseEvent {
         project: string;
         auditUser: IAuditUser;
     }) {
-        super(PROJECT_ARCHIVED, eventData.auditUser);
+        super(PROJECT_DELETED, eventData.auditUser);
         this.project = eventData.project;
     }
 }
@@ -589,6 +596,18 @@ export class ProjectArchivedEvent extends BaseEvent {
         auditUser: IAuditUser;
     }) {
         super(PROJECT_ARCHIVED, eventData.auditUser);
+        this.project = eventData.project;
+    }
+}
+
+export class ProjectRevivedEvent extends BaseEvent {
+    readonly project: string;
+
+    constructor(eventData: {
+        project: string;
+        auditUser: IAuditUser;
+    }) {
+        super(PROJECT_REVIVED, eventData.auditUser);
         this.project = eventData.project;
     }
 }
@@ -735,13 +754,13 @@ export class FeatureTagImport extends BaseEvent {
 
 export class FeatureCompletedEvent extends BaseEvent {
     readonly featureName: string;
-    readonly data: FeatureLifecycleCompletedSchema;
+    readonly data: FeatureLifecycleCompletedSchema & { kept: boolean };
     readonly project: string;
 
     constructor(p: {
         project: string;
         featureName: string;
-        data: FeatureLifecycleCompletedSchema;
+        data: FeatureLifecycleCompletedSchema & { kept: boolean };
         auditUser: IAuditUser;
     }) {
         super(FEATURE_COMPLETED, p.auditUser);
@@ -1916,12 +1935,12 @@ export class AddonConfigDeletedEvent extends BaseEvent {
 }
 
 export class SegmentCreatedEvent extends BaseEvent {
-    readonly project: string;
+    readonly project: string | undefined;
     readonly data: any;
 
     constructor(eventData: {
         auditUser: IAuditUser;
-        project: string;
+        project: string | undefined;
         data: any;
     }) {
         super(SEGMENT_CREATED, eventData.auditUser);

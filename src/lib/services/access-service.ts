@@ -41,13 +41,11 @@ import BadDataError from '../error/bad-data-error';
 import type { IGroup } from '../types/group';
 import type { GroupService } from './group-service';
 import {
-    ADMIN_TOKEN_USER,
     type IUnleashConfig,
     type IUserAccessOverview,
     RoleCreatedEvent,
     RoleDeletedEvent,
     RoleUpdatedEvent,
-    SYSTEM_USER_ID,
 } from '../types';
 import type EventService from '../features/events/event-service';
 
@@ -888,15 +886,5 @@ export class AccessService {
 
     async getUserAccessOverview(): Promise<IUserAccessOverview[]> {
         return this.store.getUserAccessOverview();
-    }
-
-    async isRootAdmin(userId: number): Promise<boolean> {
-        if (userId === SYSTEM_USER_ID || userId === ADMIN_TOKEN_USER.id) {
-            return true;
-        }
-        const roles = await this.store.getRolesForUserId(userId);
-        return roles.some(
-            (role) => role.name.toLowerCase() === ADMIN.toLowerCase(),
-        );
     }
 }

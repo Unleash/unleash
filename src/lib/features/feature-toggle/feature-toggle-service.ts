@@ -378,8 +378,6 @@ class FeatureToggleService {
         environment: string;
         featureName: string;
     }) {
-        if (!this.flagResolver.isEnabled('resourceLimits')) return;
-
         const limit = this.resourceLimits.featureEnvironmentStrategies;
         const existingCount = (
             await this.featureStrategiesStore.getStrategiesForFeatureEnv(
@@ -400,8 +398,6 @@ class FeatureToggleService {
         updated: IConstraint[];
         existing: IConstraint[];
     }) {
-        if (!this.flagResolver.isEnabled('resourceLimits')) return;
-
         const {
             constraints: constraintsLimit,
             constraintValues: constraintValuesLimit,
@@ -1223,15 +1219,23 @@ class FeatureToggleService {
     }
 
     private async validateFeatureFlagLimit() {
-        if (this.flagResolver.isEnabled('resourceLimits')) {
-            const currentFlagCount = await this.featureToggleStore.count();
-            const limit = this.resourceLimits.featureFlags;
-            if (currentFlagCount >= limit) {
-                throwExceedsLimitError(this.eventBus, {
-                    resource: 'feature flag',
-                    limit,
-                });
-            }
+        const currentFlagCount = await this.featureToggleStore.count();
+        const limit = this.resourceLimits.featureFlags;
+        if (currentFlagCount >= limit) {
+            throwExceedsLimitError(this.eventBus, {
+                resource: 'feature flag',
+                limit,
+            });
+        }
+    }
+
+    private async validateActiveProject(projectId: string) {
+        const hasActiveProject =
+            await this.projectStore.hasActiveProject(projectId);
+        if (!hasActiveProject) {
+            throw new NotFoundError(
+                `Active project with id ${projectId} does not exist`,
+            );
         }
     }
 
@@ -1247,12 +1251,8 @@ class FeatureToggleService {
         await this.validateName(value.name);
         await this.validateFeatureFlagNameAgainstPattern(value.name, projectId);
 
-        let projectExists: boolean;
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            projectExists = await this.projectStore.hasActiveProject(projectId);
-        } else {
-            projectExists = await this.projectStore.hasProject(projectId);
-        }
+        const projectExists =
+            await this.projectStore.hasActiveProject(projectId);
 
         if (await this.projectStore.isFeatureLimitReached(projectId)) {
             throw new InvalidOperationError(
@@ -1884,7 +1884,7 @@ class FeatureToggleService {
                     strategies.map((strategy) =>
                         this.updateStrategy(
                             strategy.id,
-                            { disabled: false },
+                            { ...strategy, disabled: false },
                             {
                                 environment,
                                 projectId: project,
@@ -2058,6 +2058,7 @@ class FeatureToggleService {
         projectId: string,
         auditUser: IAuditUser,
     ): Promise<void> {
+        await this.validateActiveProject(projectId);
         await this.validateFeaturesContext(featureNames, projectId);
 
         const features =
@@ -2091,6 +2092,11 @@ class FeatureToggleService {
         featureName: string,
         auditUser: IAuditUser,
     ): Promise<void> {
+        const feature = await this.featureToggleStore.get(featureName);
+        if (!feature) {
+            throw new NotFoundError(`Feature ${featureName} does not exist`);
+        }
+        await this.validateActiveProject(feature.project);
         const toggle = await this.featureToggleStore.revive(featureName);
         await this.featureToggleStore.disableAllEnvironmentsForFeatures([
             featureName,

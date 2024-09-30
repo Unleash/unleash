@@ -29,6 +29,7 @@ const theme = {
         primaryHeader: '0px 8px 24px rgba(97, 91, 194, 0.2)',
         separator: '0px 2px 4px rgba(32, 32, 33, 0.12)', // Notifications header
         accordionFooter: 'inset 0px 2px 4px rgba(32, 32, 33, 0.05)',
+        reverseFooter: 'inset 0px -2px 4px rgba(32, 32, 33, 0.05)',
     },
     typography: {
         fontFamily: 'Sen, Roboto, sans-serif',

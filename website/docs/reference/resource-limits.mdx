@@ -3,8 +3,8 @@ title: Resource Limits
 ---
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
-:::info Availability
-Resource limits are currently in beta for hosted customers.
+:::note Availability
+**Version**: `6.2+`
 :::
 
 <Figure caption="When you're close to reaching the limit for a resource, you'll see a warning in the Unleash UI. The warning will tell you what the limit is, how close you are to reaching it, and how you can increase the limit." img="/img/project-limit-warning.png" />
@@ -37,6 +37,15 @@ Existing hosted customers who are already above the limits will have their limit
 :::
 
 With a few exceptions, all the limits can be overridden through the use of their respective environment variables. However, while it is possible to override these limits, we advise against it in most cases. If you feel that you're unable to do what you need to do because of the limits, we'd love to hear from you.
+
+The following resources have a lower limit of 1:
+- feature flags
+- strategies
+- constraint values
+- projects
+- environments
+
+If you try to set their limits lower than that, Unleash will automatically adjust them to 1.
 
 If you operate a self-hosted Unleash instance, you can adjust the limit yourself. For hosted users of Unleash, you'll need to reach out and talk to your Unleash contact.
 

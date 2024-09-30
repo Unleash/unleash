@@ -13,7 +13,11 @@ import {
 import Addon from './addon';
 
 import slackAppDefinition from './slack-app-definition';
-import { type IAddonConfig, serializeDates } from '../types';
+import {
+    type IAddonConfig,
+    type IFlagResolver,
+    serializeDates,
+} from '../types';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
@@ -21,6 +25,7 @@ import {
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface ISlackAppAddonParameters {
     accessToken: string;
@@ -30,16 +35,19 @@ interface ISlackAppAddonParameters {
 export default class SlackAppAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
+    flagResolver: IFlagResolver;
+
     private accessToken?: string;
 
     private slackClient?: WebClient;
 
     constructor(args: IAddonConfig) {
         super(slackAppDefinition, args);
-        this.msgFormatter = new FeatureEventFormatterMd(
-            args.unleashUrl,
-            LinkStyle.SLACK,
-        );
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: args.unleashUrl,
+            linkStyle: LinkStyle.SLACK,
+        });
+        this.flagResolver = args.flagResolver;
     }
 
     async handleEvent(
@@ -96,8 +104,11 @@ export default class SlackAppAddon extends Addon {
                 this.accessToken = accessToken;
             }
 
-            const { text, url } = this.msgFormatter.format(event);
-            message = text;
+            const { text: formattedMessage, url } =
+                this.msgFormatter.format(event);
+            const maxLength = 3000;
+            const text = formattedMessage.substring(0, maxLength);
+            message = `${formattedMessage}${text.length < formattedMessage.length ? ` (trimmed to ${maxLength} characters)` : ''}`;
 
             const blocks: (Block | KnownBlock)[] = [
                 {
@@ -171,6 +182,13 @@ export default class SlackAppAddon extends Addon {
             stateDetails.push(errorMessage);
             this.logger.warn(errorMessage, error);
         } finally {
+            if (this.flagResolver.isEnabled('addonUsageMetrics')) {
+                this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+                    result: state,
+                    destination: 'slack-app',
+                });
+            }
+
             this.registerEvent({
                 integrationId,
                 state,

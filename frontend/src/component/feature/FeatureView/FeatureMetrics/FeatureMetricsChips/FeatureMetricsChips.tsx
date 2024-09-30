@@ -64,6 +64,15 @@ export const FeatureMetricsChips = ({
         <div>
             <StyledTitle>{title}</StyledTitle>
             <StyledList>
+                {toggleValues && values.size > 1 && (
+                    <Button
+                        size={'small'}
+                        onClick={toggleValues}
+                        aria-pressed={allSelected}
+                    >
+                        {allSelected ? 'Unselect' : 'Select all'}
+                    </Button>
+                )}
                 {sortedValues.map((val) => (
                     <StyledItem key={val}>
                         <Chip
@@ -74,16 +83,6 @@ export const FeatureMetricsChips = ({
                         />
                     </StyledItem>
                 ))}
-
-                {toggleValues && values.size > 1 && (
-                    <Button
-                        size={'small'}
-                        onClick={toggleValues}
-                        aria-pressed={allSelected}
-                    >
-                        {allSelected ? 'Unselect' : 'Select all'}
-                    </Button>
-                )}
             </StyledList>
         </div>
     );

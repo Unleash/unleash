@@ -1,4 +1,3 @@
-import type React from 'react';
 import {
     FormControl,
     InputLabel,
@@ -22,12 +21,13 @@ export interface ISelectOption {
     sx?: SxProps<Theme>;
 }
 
-export interface IGeneralSelectProps extends Omit<SelectProps, 'onChange'> {
+export interface IGeneralSelectProps<T extends string = string>
+    extends Omit<SelectProps, 'onChange'> {
     name?: string;
-    value?: string;
+    value?: T;
     label?: string;
     options: ISelectOption[];
-    onChange: (key: string) => void;
+    onChange: (key: T) => void;
     disabled?: boolean;
     fullWidth?: boolean;
     classes?: any;
@@ -39,9 +39,9 @@ const StyledFormControl = styled(FormControl)({
     maxWidth: '100%',
 });
 
-const GeneralSelect: React.FC<IGeneralSelectProps> = ({
+function GeneralSelect<T extends string = string>({
     name,
-    value = '',
+    value,
     label = '',
     options,
     onChange,
@@ -52,10 +52,10 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
     fullWidth,
     visuallyHideLabel,
     ...rest
-}) => {
+}: IGeneralSelectProps<T>) {
     const onSelectChange = (event: SelectChangeEvent) => {
         event.preventDefault();
-        onChange(String(event.target.value));
+        onChange(String(event.target.value) as T);
     };
 
     return (
@@ -78,7 +78,7 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
                 className={className}
                 label={visuallyHideLabel ? '' : label}
                 id={id}
-                value={value}
+                value={value ?? ''}
                 MenuProps={{
                     sx: {
                         '.MuiPopover-paper.MuiMenu-paper': {
@@ -104,6 +104,6 @@ const GeneralSelect: React.FC<IGeneralSelectProps> = ({
             </Select>
         </StyledFormControl>
     );
-};
+}
 
 export default GeneralSelect;

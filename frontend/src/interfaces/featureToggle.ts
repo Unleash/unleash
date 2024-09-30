@@ -1,3 +1,4 @@
+import type { CreateFeatureSchemaType } from 'openapi';
 import type { IFeatureStrategy } from './strategy';
 import type { ITag } from './tags';
 
@@ -60,10 +61,9 @@ export interface IFeatureToggle {
     description?: string;
     environments: IFeatureEnvironment[];
     name: string;
-
     favorite: boolean;
     project: string;
-    type: string;
+    type: CreateFeatureSchemaType;
     variants: IFeatureVariant[];
     impressionData: boolean;
     strategies?: IFeatureStrategy[];

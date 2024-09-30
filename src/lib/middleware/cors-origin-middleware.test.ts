@@ -4,14 +4,11 @@ import { createTestConfig } from '../../test/config/test-config';
 import FakeEventStore from '../../test/fixtures/fake-event-store';
 import { randomId } from '../util/random-id';
 import FakeProjectStore from '../../test/fixtures/fake-project-store';
-import {
-    EventService,
-    FrontendApiService,
-    SettingService,
-} from '../../lib/services';
+import { FrontendApiService, SettingService } from '../../lib/services';
 import { type ISettingStore, TEST_AUDIT_USER } from '../../lib/types';
 import { frontendSettingsKey } from '../../lib/types/settings/frontend-settings';
 import FakeFeatureTagStore from '../../test/fixtures/fake-feature-tag-store';
+import { createFakeEventsService } from '../features';
 
 const TEST_USER_ID = -9999;
 const createSettingService = (
@@ -26,7 +23,7 @@ const createSettingService = (
         projectStore: new FakeProjectStore(),
     };
 
-    const eventService = new EventService(stores, config);
+    const eventService = createFakeEventsService(config);
 
     const services = {
         settingService: new SettingService(stores, config, eventService),

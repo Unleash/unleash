@@ -13,16 +13,6 @@ const ShowHideRow = styled(Box, {
     alignItems: 'center',
     padding: theme.spacing(0, 1, 0, mode === 'mini' ? 1.5 : 2),
     cursor: 'pointer',
-    position: 'sticky',
-    bottom: theme.spacing(2),
-    width: '100%',
-}));
-
-// This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.
-const ShowHideContainer = styled(Box)(({ theme }) => ({
-    flexGrow: 1,
-    display: 'flex',
-    alignItems: 'end',
 }));
 
 export const ShowHide: FC<{ mode: NavigationMode; onChange: () => void }> = ({
@@ -30,32 +20,30 @@ export const ShowHide: FC<{ mode: NavigationMode; onChange: () => void }> = ({
     onChange,
 }) => {
     return (
-        <ShowHideContainer>
-            <ShowHideRow onClick={onChange} mode={mode}>
-                {mode === 'full' && (
-                    <Box
-                        sx={(theme) => ({
-                            color: theme.palette.neutral.main,
-                            fontSize: 'small',
-                        })}
-                    >
-                        Hide (⌘ + B)
-                    </Box>
+        <ShowHideRow onClick={onChange} mode={mode}>
+            {mode === 'full' && (
+                <Box
+                    sx={(theme) => ({
+                        color: theme.palette.neutral.main,
+                        fontSize: 'small',
+                    })}
+                >
+                    Hide (⌘ + B)
+                </Box>
+            )}
+            <IconButton>
+                {mode === 'full' ? (
+                    <HideIcon color='primary' />
+                ) : (
+                    <Tooltip title='Expand (⌘ + B)' placement='right'>
+                        <ExpandIcon
+                            data-testid='expand-navigation'
+                            color='primary'
+                        />
+                    </Tooltip>
                 )}
-                <IconButton>
-                    {mode === 'full' ? (
-                        <HideIcon color='primary' />
-                    ) : (
-                        <Tooltip title='Expand (⌘ + B)' placement='right'>
-                            <ExpandIcon
-                                data-testid='expand-navigation'
-                                color='primary'
-                            />
-                        </Tooltip>
-                    )}
-                </IconButton>
-            </ShowHideRow>
-        </ShowHideContainer>
+            </IconButton>
+        </ShowHideRow>
     );
 };
 

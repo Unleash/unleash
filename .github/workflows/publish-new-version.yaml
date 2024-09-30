@@ -18,8 +18,8 @@ on:
         required: true
         type: boolean
         default: true
-      update-version-function:
-        description: Should we update the version function to use this version?
+      is-latest-version:
+        description: Is this the latest version? If latest we'll update the version function, docker and npm latest
         required: true
         type: boolean
         default: true
@@ -116,7 +116,7 @@ jobs:
           cache: 'yarn'
       - name: upgrade package version
         run: |
-          jq --arg version "${{ github.event.inputs.version }}+main" '.version=$version' package.json > package.json.tmp
+          jq --arg version "${{ github.event.inputs.version }}" '.version=$version' package.json > package.json.tmp
           mv package.json.tmp package.json
       - name: checkout changelog from ${{ github.ref_name }}
         run: git checkout origin/${{ github.ref_name }} -- CHANGELOG.md
@@ -129,7 +129,7 @@ jobs:
       - name: push changes
         run: |
           git add package.json CHANGELOG.md
-          git commit -m "chore: bump version to ${{ github.event.inputs.version }}+main"
+          git commit -m "chore: bump version to ${{ github.event.inputs.version }}"
           git push origin main
 
   publish-docker:
@@ -138,6 +138,7 @@ jobs:
     secrets: inherit
     with:
       version: ${{ github.event.inputs.version }}
+      is-latest-version: ${{ github.event.inputs.is-latest-version == 'true' }}
 
   publish-npm:
     needs: build
@@ -154,7 +155,7 @@ jobs:
 
   update-version-checker:
     needs: publish-docker
-    if: ${{ github.event.inputs.update-version-function == 'true' }}
+    if: ${{ github.event.inputs.is-latest-version == 'true' }}
     uses: ./.github/workflows/update_version_for_version_checker.yml
     secrets: inherit
     with:

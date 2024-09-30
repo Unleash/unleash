@@ -2,20 +2,16 @@ import useSWR, { mutate, type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import type { InstanceInsightsSchema } from 'openapi';
-
-interface IUseInsightsDataOutput {
-    insights: InstanceInsightsSchema;
-    refetchInsights: () => void;
-    loading: boolean;
-    error?: Error;
-}
+import type {
+    InstanceInsightsSchema,
+    GetInstanceInsightsParams,
+} from 'openapi';
 
 export const useInsights = (
-    from = '',
-    to = '',
+    from: GetInstanceInsightsParams['from'] = '',
+    to: GetInstanceInsightsParams['to'] = '',
     options?: SWRConfiguration,
-): IUseInsightsDataOutput => {
+) => {
     const path = formatApiPath(`api/admin/insights?from=${from}&to=${to}`);
 
     const { data, error } = useSWR<InstanceInsightsSchema>(
@@ -29,15 +25,15 @@ export const useInsights = (
     }, [path]);
 
     return {
-        insights: data || {
-            users: { total: 0, inactive: 0, active: 0 },
-            flags: { total: 0 },
-            userTrends: [],
-            flagTrends: [],
-            projectFlagTrends: [],
-            metricsSummaryTrends: [],
-            environmentTypeTrends: [],
-        },
+        insights:
+            data ||
+            ({
+                userTrends: [],
+                flagTrends: [],
+                projectFlagTrends: [],
+                metricsSummaryTrends: [],
+                environmentTypeTrends: [],
+            } as InstanceInsightsSchema),
         refetchInsights,
         loading: !error && !data,
         error,

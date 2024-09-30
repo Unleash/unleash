@@ -8,7 +8,7 @@ import { ActionsContainer } from '../ActionsContainer';
 import Check from '@mui/icons-material/Check';
 import ErrorIcon from '@mui/icons-material/Error';
 import Pending from '@mui/icons-material/Pending';
-import { PulsingAvatar } from '../PulsingAvatar';
+import { PulsingAvatar } from 'component/common/PulsingAvatar/PulsingAvatar';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Box } from '@mui/system';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';

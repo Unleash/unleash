@@ -23,9 +23,13 @@ import {
     PermissionError,
 } from '../../../error';
 import type { ISegmentService } from '../../segment/segment-service-interface';
-import { createFeatureToggleService, createSegmentService } from '../..';
+import {
+    createEventsService,
+    createFeatureToggleService,
+    createSegmentService,
+} from '../..';
 import { insertLastSeenAt } from '../../../../test/e2e/helpers/test-helper';
-import { EventService } from '../../../services';
+import type { EventService } from '../../../services';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -34,7 +38,6 @@ let segmentService: ISegmentService;
 let eventService: EventService;
 let environmentService: EnvironmentService;
 let unleashConfig: IUnleashConfig;
-const TEST_USER_ID = -9999;
 const mockConstraints = (): IConstraint[] => {
     return Array.from({ length: 5 }).map(() => ({
         values: ['x', 'y', 'z'],
@@ -47,7 +50,7 @@ const irrelevantDate = new Date();
 
 beforeAll(async () => {
     const config = createTestConfig({
-        experimental: { flags: { archiveProjects: true } },
+        experimental: { flags: {} },
     });
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
@@ -60,7 +63,7 @@ beforeAll(async () => {
 
     service = createFeatureToggleService(db.rawDatabase, config);
 
-    eventService = new EventService(stores, config);
+    eventService = createEventsService(db.rawDatabase, config);
 });
 
 afterAll(async () => {
@@ -73,7 +76,6 @@ beforeEach(async () => {
 });
 test('Should create feature flag strategy configuration', async () => {
     const projectId = 'default';
-    const username = 'feature-flag';
     const config: Omit<FeatureStrategySchema, 'id'> = {
         name: 'default',
         constraints: [],
@@ -100,7 +102,6 @@ test('Should create feature flag strategy configuration', async () => {
 
 test('Should be able to update existing strategy configuration', async () => {
     const projectId = 'default';
-    const username = 'existing-strategy';
     const featureName = 'update-existing-strategy';
     const config: Omit<FeatureStrategySchema, 'id'> = {
         name: 'default',
@@ -135,8 +136,6 @@ test('Should be able to update existing strategy configuration', async () => {
 test('Should be able to get strategy by id', async () => {
     const featureName = 'get-strategy-by-id';
     const projectId = 'default';
-
-    const userName = 'strategy';
     const config: Omit<FeatureStrategySchema, 'id'> = {
         name: 'default',
         constraints: [],
@@ -164,8 +163,6 @@ test('Should be able to get strategy by id', async () => {
 test('should ignore name in the body when updating feature flag', async () => {
     const featureName = 'body-name-update';
     const projectId = 'default';
-
-    const userName = 'strategy';
     const secondFeatureName = 'body-name-update2';
 
     await service.createFeatureToggle(
@@ -208,8 +205,6 @@ test('should ignore name in the body when updating feature flag', async () => {
 
 test('should not get empty rows as features', async () => {
     const projectId = 'default';
-
-    const userName = 'strategy';
 
     await service.createFeatureToggle(
         projectId,
@@ -501,7 +496,6 @@ test('If change requests are enabled, cannot change variants without going via C
 });
 
 test('If CRs are protected for any environment in the project stops bulk update of variants', async () => {
-    const user = { email: 'test@example.com', username: 'test-user' } as User;
     const project = await stores.projectStore.create({
         id: 'crOnVariantsProject',
         name: 'crOnVariantsProject',
@@ -595,7 +589,6 @@ test('getPlaygroundFeatures should return ids and titles (if they exist) on clie
     const projectId = 'default';
 
     const title = 'custom strategy title';
-    const userName = 'strategy';
     const config: Omit<FeatureStrategySchema, 'id'> = {
         name: 'default',
         constraints: [],
@@ -772,4 +765,88 @@ test('Should not allow to add flags to archived projects', async () => {
             `Active project with id archivedProject does not exist`,
         ),
     );
+});
+
+test('Should not allow to revive flags to archived projects', async () => {
+    const project = await stores.projectStore.create({
+        id: 'archivedProjectWithFlag',
+        name: 'archivedProjectWithFlag',
+    });
+    const flag = await service.createFeatureToggle(
+        project.id,
+        {
+            name: 'archiveFlag',
+        },
+        TEST_AUDIT_USER,
+    );
+
+    await service.archiveToggle(
+        flag.name,
+        { email: 'test@example.com' } as User,
+        TEST_AUDIT_USER,
+    );
+    await stores.projectStore.archive(project.id);
+
+    await expect(
+        service.reviveFeature(flag.name, TEST_AUDIT_USER),
+    ).rejects.toEqual(
+        new NotFoundError(
+            `Active project with id archivedProjectWithFlag does not exist`,
+        ),
+    );
+
+    await expect(
+        service.reviveFeatures([flag.name], project.id, TEST_AUDIT_USER),
+    ).rejects.toEqual(
+        new NotFoundError(
+            `Active project with id archivedProjectWithFlag does not exist`,
+        ),
+    );
+});
+
+test('Should enable disabled strategies on feature environment enabled', async () => {
+    const flagName = 'enableThisFlag';
+    const project = 'default';
+    const environment = 'default';
+    await service.createFeatureToggle(
+        project,
+        {
+            name: flagName,
+        },
+        TEST_AUDIT_USER,
+    );
+    const config: Omit<FeatureStrategySchema, 'id'> = {
+        name: 'default',
+        constraints: [
+            { contextName: 'userId', operator: 'IN', values: ['1', '1'] },
+        ],
+        parameters: { param: 'a' },
+        variants: [
+            {
+                name: 'a',
+                weight: 100,
+                weightType: 'variable',
+                stickiness: 'random',
+            },
+        ],
+        disabled: true,
+    };
+    const createdConfig = await service.createStrategy(
+        config,
+        { projectId: project, featureName: flagName, environment },
+        TEST_AUDIT_USER,
+    );
+
+    await service.updateEnabled(
+        project,
+        flagName,
+        environment,
+        true,
+        TEST_AUDIT_USER,
+        { email: 'test@example.com' } as User,
+        true,
+    );
+
+    const strategy = await service.getStrategy(createdConfig.id);
+    expect(strategy).toMatchObject({ ...config, disabled: false });
 });

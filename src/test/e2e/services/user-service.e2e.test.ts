@@ -15,7 +15,7 @@ import { addDays, minutesToMilliseconds } from 'date-fns';
 import { GroupService } from '../../../lib/services/group-service';
 import { BadDataError } from '../../../lib/error';
 import PasswordMismatch from '../../../lib/error/password-mismatch';
-import { EventService } from '../../../lib/services';
+import type { EventService } from '../../../lib/services';
 import {
     CREATE_ADDON,
     type IUnleashStores,
@@ -28,6 +28,9 @@ import {
 } from '../../../lib/types';
 import { CUSTOM_ROOT_ROLE_TYPE } from '../../../lib/util';
 import { PasswordPreviouslyUsedError } from '../../../lib/error/password-previously-used';
+import { createEventsService } from '../../../lib/features';
+import type EventEmitter from 'events';
+import { USER_LOGIN } from '../../../lib/metric-events';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -40,12 +43,14 @@ let sessionService: SessionService;
 let settingService: SettingService;
 let eventService: EventService;
 let accessService: AccessService;
+let eventBus: EventEmitter;
 
 beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
     const config = createTestConfig();
-    eventService = new EventService(stores, config);
+    eventBus = config.eventBus;
+    eventService = createEventsService(db.rawDatabase, config);
     const groupService = new GroupService(stores, config, eventService);
     accessService = new AccessService(
         stores,
@@ -97,10 +102,6 @@ afterEach(async () => {
 test('should create initial admin user', async () => {
     await userService.initAdminUser({
         createAdminUser: true,
-        initialAdminUser: {
-            username: 'admin',
-            password: 'unleash4all',
-        },
     });
     await expect(async () =>
         userService.loginUser('admin', 'wrong-password'),
@@ -121,10 +122,6 @@ test('should not init default user if we already have users', async () => {
     );
     await userService.initAdminUser({
         createAdminUser: true,
-        initialAdminUser: {
-            username: 'admin',
-            password: 'unleash4all',
-        },
     });
     const users = await userService.getAll();
     expect(users).toHaveLength(1);
@@ -145,6 +142,10 @@ test('should not be allowed to create existing user', async () => {
 });
 
 test('should create user with password', async () => {
+    const recordedEvents: Array<{ loginOrder: number }> = [];
+    eventBus.on(USER_LOGIN, (data) => {
+        recordedEvents.push(data);
+    });
     await userService.createUser(
         {
             username: 'test',
@@ -158,6 +159,7 @@ test('should create user with password', async () => {
         'A very strange P4ssw0rd_',
     );
     expect(user.username).toBe('test');
+    expect(recordedEvents).toEqual([{ loginOrder: 0 }]);
 });
 
 test('should create user with rootRole in audit-log', async () => {
@@ -384,6 +386,10 @@ test('updating a user without an email should not strip the email', async () => 
 });
 
 test('should login and create user via SSO', async () => {
+    const recordedEvents: Array<{ loginOrder: number }> = [];
+    eventBus.on(USER_LOGIN, (data) => {
+        recordedEvents.push(data);
+    });
     const email = 'some@test.com';
     const user = await userService.loginUserSSO({
         email,
@@ -397,6 +403,7 @@ test('should login and create user via SSO', async () => {
     expect(user.name).toBe('some');
     expect(userWithRole.name).toBe('some');
     expect(userWithRole.rootRole).toBe(viewerRole.id);
+    expect(recordedEvents).toEqual([{ loginOrder: 0 }]);
 });
 
 test('should throw if rootRole is wrong via SSO', async () => {

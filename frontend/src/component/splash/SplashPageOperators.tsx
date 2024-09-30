@@ -1,7 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, IconButton, styled } from '@mui/material';
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
-import { OperatorUpgradeAlert } from 'component/common/OperatorUpgradeAlert/OperatorUpgradeAlert';
 
 const StyledContainer = styled('section')(({ theme }) => ({
     backgroundColor: theme.palette.primary.light,
@@ -164,7 +163,6 @@ export const SplashPageOperators = () => {
                     </p>
                 </StyledFooter>
             </StyledContent>
-            <OperatorUpgradeAlert />
         </StyledContainer>
     );
 };

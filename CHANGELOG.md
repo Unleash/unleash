@@ -2,6 +2,533 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.2.3] - 2024-09-18
+
+### Bug Fixes
+
+- Express upgrade to 4.21 ([#8168](https://github.com/Unleash/unleash/issues/8168))
+
+- Cherry pick security fixes ([#8175](https://github.com/Unleash/unleash/issues/8175))
+
+
+## [6.2.1] - 2024-09-11
+
+### Bug Fixes
+
+- Invert logic ([#8135](https://github.com/Unleash/unleash/issues/8135)) ([#8136](https://github.com/Unleash/unleash/issues/8136))
+
+
+## [6.2.0] - 2024-09-05
+
+### ADR
+
+- Use of conditionals in JSX (`</ConditionallyRender>`) ([#8025](https://github.com/Unleash/unleash/issues/8025))
+
+
+### Bug Fixes
+
+- Missing space in delete project message ([#7771](https://github.com/Unleash/unleash/issues/7771))
+
+- Update dependency ajv to v8.17.1 ([#7786](https://github.com/Unleash/unleash/issues/7786))
+
+- Don't delete projects screen from history ([#7787](https://github.com/Unleash/unleash/issues/7787))
+
+- Select an item only from the filtered list of options ([#7789](https://github.com/Unleash/unleash/issues/7789))
+
+- Allow for empty groupId in form ([#7798](https://github.com/Unleash/unleash/issues/7798))
+
+- Show environments page as enterprise feature ([#7796](https://github.com/Unleash/unleash/issues/7796))
+
+- Playground env column spacing made bigger ([#7806](https://github.com/Unleash/unleash/issues/7806))
+
+- Don't show link stubs in slack notifications ([#7810](https://github.com/Unleash/unleash/issues/7810))
+
+- Update avatar usage in change requests ([#7818](https://github.com/Unleash/unleash/issues/7818))
+
+- Event creators, distinct on two users with same id ([#7824](https://github.com/Unleash/unleash/issues/7824))
+
+- After encryption some emails end up being too long ([#7828](https://github.com/Unleash/unleash/issues/7828))
+
+- Don't always fetch all flags on project flag screen ([#7834](https://github.com/Unleash/unleash/issues/7834))
+
+- Display feature naming patterns in dialog ([#7837](https://github.com/Unleash/unleash/issues/7837))
+
+- Search events by user ID, not by user name ([#7846](https://github.com/Unleash/unleash/issues/7846))
+
+- Remove flag from UI ([#7857](https://github.com/Unleash/unleash/issues/7857))
+
+- Remove another scimApi flag ([#7858](https://github.com/Unleash/unleash/issues/7858))
+
+- Make archivedAt nullable ([#7872](https://github.com/Unleash/unleash/issues/7872))
+
+- Messed up on merge-conflicts ([#7873](https://github.com/Unleash/unleash/issues/7873))
+
+- Change request enabled check should ignore disabled envs ([#7869](https://github.com/Unleash/unleash/issues/7869))
+
+- Add collaborators to ignored props for feature diff notif ([#7877](https://github.com/Unleash/unleash/issues/7877))
+
+- Cap number of collaborators displayed ([#7879](https://github.com/Unleash/unleash/issues/7879))
+
+- Always provide empty segments list in feature env strategies ([#7880](https://github.com/Unleash/unleash/issues/7880))
+
+- Display 3 types of models image ([#7885](https://github.com/Unleash/unleash/issues/7885))
+
+- Exclude archived features in segments count ([#7886](https://github.com/Unleash/unleash/issues/7886))
+
+- Exclude archived features in segments count ([#7897](https://github.com/Unleash/unleash/issues/7897))
+
+- Projects archive search ([#7898](https://github.com/Unleash/unleash/issues/7898))
+
+- Orphaned token label only for items without projects ([#7901](https://github.com/Unleash/unleash/issues/7901))
+
+- Avoid awkward overlaps of group cards with lots of members, long project names, and small cards ([#7915](https://github.com/Unleash/unleash/issues/7915))
+
+- Last seen metrics exceeding table limits ([#7923](https://github.com/Unleash/unleash/issues/7923))
+
+- Don't count flags multiple times (bonus: don't count non-project events) ([#7931](https://github.com/Unleash/unleash/issues/7931))
+
+- Delete project action ([#7934](https://github.com/Unleash/unleash/issues/7934))
+
+- Update the customer success email for limits ([#7933](https://github.com/Unleash/unleash/issues/7933))
+
+- React-timeago issue ([#7936](https://github.com/Unleash/unleash/issues/7936))
+
+- Only show addon delete button when editing addons ([#7930](https://github.com/Unleash/unleash/issues/7930))
+
+- Misc fixes for project archive ([#7948](https://github.com/Unleash/unleash/issues/7948))
+
+- Project owner name overflow ([#7949](https://github.com/Unleash/unleash/issues/7949))
+
+- Enable disabled strategies keeps settings ([#7950](https://github.com/Unleash/unleash/issues/7950))
+
+- Fix events with no-project projects ([#7951](https://github.com/Unleash/unleash/issues/7951))
+
+- Fixing flaky test, because order for distinct may be random ([#7954](https://github.com/Unleash/unleash/issues/7954))
+
+- Serialize API token data correctly in instance stats ([#7953](https://github.com/Unleash/unleash/issues/7953))
+
+- When backporting we don't want to push latest docker tag ([#7961](https://github.com/Unleash/unleash/issues/7961))
+
+- When running on main we need to use latest=auto ([#7969](https://github.com/Unleash/unleash/issues/7969))
+
+- Normalize casing for API token types before insert  ([#7972](https://github.com/Unleash/unleash/issues/7972))
+
+- Split features schema into archived and project features ([#7973](https://github.com/Unleash/unleash/issues/7973))
+
+- Add migration to normalize api token types ([#7974](https://github.com/Unleash/unleash/issues/7974))
+
+- Project last seen at metrics ([#7988](https://github.com/Unleash/unleash/issues/7988))
+
+- Copy strategy should always add a new strategy ([#7994](https://github.com/Unleash/unleash/issues/7994))
+
+- Support search for tags that has colon inside ([#7998](https://github.com/Unleash/unleash/issues/7998))
+
+- Change .inc calls to .increment ([#8000](https://github.com/Unleash/unleash/issues/8000))
+
+- Project badge alignment ([#8019](https://github.com/Unleash/unleash/issues/8019))
+
+- Boolean logic for feature last seen toolbar ([#8016](https://github.com/Unleash/unleash/issues/8016))
+
+- Project archive card ([#8024](https://github.com/Unleash/unleash/issues/8024))
+
+- Prevent config resolver snapshot test ([#8041](https://github.com/Unleash/unleash/issues/8041))
+
+- Force languages in cypress browser for tests ([#8049](https://github.com/Unleash/unleash/issues/8049))
+
+- Onboarding events corner cases ([#8057](https://github.com/Unleash/unleash/issues/8057))
+
+- Reduce integration events requests ([#8055](https://github.com/Unleash/unleash/issues/8055))
+
+- Deps revert for chartjs plugin ([#8060](https://github.com/Unleash/unleash/issues/8060))
+
+- Editor can add dependencies in default project ([#8077](https://github.com/Unleash/unleash/issues/8077))
+
+- Add request body schema in update segment endpoint ([#8085](https://github.com/Unleash/unleash/issues/8085))
+
+- Use the correct env vars for initial admin account ([#8095](https://github.com/Unleash/unleash/issues/8095))
+
+- Align short owner username on project card ([#8093](https://github.com/Unleash/unleash/issues/8093))
+
+
+### Documentation
+
+- Change request preview playground ([#7738](https://github.com/Unleash/unleash/issues/7738))
+
+- Update projects docs ([#7941](https://github.com/Unleash/unleash/issues/7941))
+
+- Mention what the minimum values are if you override the limits ([#7971](https://github.com/Unleash/unleash/issues/7971))
+
+- Redirect featureflagbook.com to best practices guide ([#8026](https://github.com/Unleash/unleash/issues/8026))
+
+- Remove mention of admin name and email env vars ([#8096](https://github.com/Unleash/unleash/issues/8096))
+
+
+### Feat
+
+- Projects OpenAPI update ([#8036](https://github.com/Unleash/unleash/issues/8036))
+
+
+### Features
+
+- Front end filter state management for event search ([#7776](https://github.com/Unleash/unleash/issues/7776))
+
+- Make `to` date inclusive ([#7775](https://github.com/Unleash/unleash/issues/7775))
+
+- Archived at column in projects ([#7782](https://github.com/Unleash/unleash/issues/7782))
+
+- Wait for postgres to boot before running tests ([#7790](https://github.com/Unleash/unleash/issues/7790))
+
+- Archive project service ([#7794](https://github.com/Unleash/unleash/issues/7794))
+
+- Add paging to event log ([#7793](https://github.com/Unleash/unleash/issues/7793))
+
+- Transactional project service support ([#7799](https://github.com/Unleash/unleash/issues/7799))
+
+- Archive project form ([#7797](https://github.com/Unleash/unleash/issues/7797))
+
+- Filter out archived projects from the main project list ([#7803](https://github.com/Unleash/unleash/issues/7803))
+
+- Prevent adding flags to archived project ([#7811](https://github.com/Unleash/unleash/issues/7811))
+
+- Event creators ([#7809](https://github.com/Unleash/unleash/issues/7809))
+
+- Add collaborators to feature schema ([#7821](https://github.com/Unleash/unleash/issues/7821))
+
+- Add index on events created at ([#7836](https://github.com/Unleash/unleash/issues/7836))
+
+- Events table type column index ([#7838](https://github.com/Unleash/unleash/issues/7838))
+
+- Prevent revive flag/flags in archived project ([#7826](https://github.com/Unleash/unleash/issues/7826))
+
+- Prevent move feature to archived project ([#7839](https://github.com/Unleash/unleash/issues/7839))
+
+- Export events as json ([#7841](https://github.com/Unleash/unleash/issues/7841))
+
+- Exclude archived projects from insights and project stats ([#7843](https://github.com/Unleash/unleash/issues/7843))
+
+- Revive project ([#7847](https://github.com/Unleash/unleash/issues/7847))
+
+- Add event creators data to filter ([#7822](https://github.com/Unleash/unleash/issues/7822))
+
+- Update feature completed payload to have boolean instead of string ([#7855](https://github.com/Unleash/unleash/issues/7855))
+
+- Exporting events as csv ([#7860](https://github.com/Unleash/unleash/issues/7860))
+
+- Query archived projects ([#7862](https://github.com/Unleash/unleash/issues/7862))
+
+- Plausible for events export ([#7868](https://github.com/Unleash/unleash/issues/7868))
+
+- Archived projects query improved ([#7866](https://github.com/Unleash/unleash/issues/7866))
+
+- Allow editing root role/description on SCIM group ([#7874](https://github.com/Unleash/unleash/issues/7874))
+
+- Start using event service composition root ([#7871](https://github.com/Unleash/unleash/issues/7871))
+
+- Dialogs for project revive and delete ([#7863](https://github.com/Unleash/unleash/issues/7863))
+
+- Support private projects for event search ([#7884](https://github.com/Unleash/unleash/issues/7884))
+
+- Resolve useragent source and add as source label to metrics ([#7883](https://github.com/Unleash/unleash/issues/7883))
+
+- Return archived at in project overview ([#7888](https://github.com/Unleash/unleash/issues/7888))
+
+- Show project archived message ([#7899](https://github.com/Unleash/unleash/issues/7899))
+
+- Static link to archived flags in archived project ([#7913](https://github.com/Unleash/unleash/issues/7913))
+
+- Feature flags for metrics and service name logging ([#7916](https://github.com/Unleash/unleash/issues/7916))
+
+- Adjust archived card styling ([#7917](https://github.com/Unleash/unleash/issues/7917))
+
+- Metrics for outgoing integrations ([#7921](https://github.com/Unleash/unleash/issues/7921))
+
+- Project actions count metric ([#7929](https://github.com/Unleash/unleash/issues/7929))
+
+- Prevent revive feature to archived project ([#7939](https://github.com/Unleash/unleash/issues/7939))
+
+- Filter projectless events for normal users ([#7914](https://github.com/Unleash/unleash/issues/7914))
+
+- Log domain every time a webhook is invoked ([#7962](https://github.com/Unleash/unleash/issues/7962))
+
+- Command menu docs ([#7963](https://github.com/Unleash/unleash/issues/7963))
+
+- Add remaining resource usage to instance stats ([#7958](https://github.com/Unleash/unleash/issues/7958))
+
+- Introduce new icons for import/export ([#7970](https://github.com/Unleash/unleash/issues/7970))
+
+- Make hide nav info always visible ([#7981](https://github.com/Unleash/unleash/issues/7981))
+
+- Align insights charts ([#7984](https://github.com/Unleash/unleash/issues/7984))
+
+- New in unleash tooltip ([#7991](https://github.com/Unleash/unleash/issues/7991))
+
+- Signals preview img ([#7993](https://github.com/Unleash/unleash/issues/7993))
+
+- New in unleash summary text ([#7996](https://github.com/Unleash/unleash/issues/7996))
+
+- Fixed full mode navbar width ([#7999](https://github.com/Unleash/unleash/issues/7999))
+
+- Fixed full mode navbar width ([#8001](https://github.com/Unleash/unleash/issues/8001))
+
+- Add database url to environment variable ([#7792](https://github.com/Unleash/unleash/issues/7792))
+
+- Start tracking user first login migration ([#8006](https://github.com/Unleash/unleash/issues/8006))
+
+- New project card ([#7992](https://github.com/Unleash/unleash/issues/7992))
+
+- Start populating user first seen column ([#8010](https://github.com/Unleash/unleash/issues/8010))
+
+- Start collecting prometheus metrics for onboarding events ([#8012](https://github.com/Unleash/unleash/issues/8012))
+
+- Projects onboarding metrics ([#8014](https://github.com/Unleash/unleash/issues/8014))
+
+- Projects list sorting ([#8011](https://github.com/Unleash/unleash/issues/8011))
+
+- Collect onboarding events in separate table ([#8020](https://github.com/Unleash/unleash/issues/8020))
+
+- User loging event emitting with login order ([#8021](https://github.com/Unleash/unleash/issues/8021))
+
+- Display the build number as extra data ([#8022](https://github.com/Unleash/unleash/issues/8022))
+
+- Onboarding store ([#8027](https://github.com/Unleash/unleash/issues/8027))
+
+- Onboarding table to prometheus ([#8034](https://github.com/Unleash/unleash/issues/8034))
+
+- Onboarding service composition root ([#8035](https://github.com/Unleash/unleash/issues/8035))
+
+- Welcome to your project component ([#8039](https://github.com/Unleash/unleash/issues/8039))
+
+- Update Orval config ([#8038](https://github.com/Unleash/unleash/issues/8038))
+
+- Connect sdk step 1 ([#8042](https://github.com/Unleash/unleash/issues/8042))
+
+- Onboarding connect api token generation ([#8054](https://github.com/Unleash/unleash/issues/8054))
+
+- Start returning onboarding status with project overview ([#8058](https://github.com/Unleash/unleash/issues/8058))
+
+- Ignore onboarding events for existing customers ([#8064](https://github.com/Unleash/unleash/issues/8064))
+
+- Select sdk onboarding pt 1 ([#8065](https://github.com/Unleash/unleash/issues/8065))
+
+- Can select client and frontend sdk ([#8066](https://github.com/Unleash/unleash/issues/8066))
+
+- Connect sdk icons ([#8075](https://github.com/Unleash/unleash/issues/8075))
+
+- Welcome to project onboarding status rendering ([#8076](https://github.com/Unleash/unleash/issues/8076))
+
+- Connect welcome to sdk dialog ([#8078](https://github.com/Unleash/unleash/issues/8078))
+
+- Connect sdk concepts ([#8079](https://github.com/Unleash/unleash/issues/8079))
+
+- Navigate between all stages ([#8080](https://github.com/Unleash/unleash/issues/8080))
+
+- Sdk snippets in test connection phase ([#8082](https://github.com/Unleash/unleash/issues/8082))
+
+- Copy to clipboard sdk snippet ([#8083](https://github.com/Unleash/unleash/issues/8083))
+
+- Add sdk example box ([#8092](https://github.com/Unleash/unleash/issues/8092))
+
+
+### Fix
+
+- Time to production ([#7835](https://github.com/Unleash/unleash/issues/7835))
+
+
+### Miscellaneous Tasks
+
+- Archive projects flag ([#7772](https://github.com/Unleash/unleash/issues/7772))
+
+- Remove scim api flag ([#7780](https://github.com/Unleash/unleash/issues/7780))
+
+- Bump version to 6.1.0+main
+
+- Bump version to 6.1.2+main
+
+- Align with 6.1 ([#7804](https://github.com/Unleash/unleash/issues/7804))
+
+- Remove docker build & push on PRs ([#7805](https://github.com/Unleash/unleash/issues/7805))
+
+- Remove flagCreator flag ([#7807](https://github.com/Unleash/unleash/issues/7807))
+
+- Remove featureLifecycle and featureLifecycleMetrics flags ([#7808](https://github.com/Unleash/unleash/issues/7808))
+
+- Fixed typo ([#7774](https://github.com/Unleash/unleash/issues/7774))
+
+- [Gitar] Cleaning up stale flag: featureCollaborators with value true ([#7820](https://github.com/Unleash/unleash/issues/7820))
+
+- Generate orval for event creators ([#7823](https://github.com/Unleash/unleash/issues/7823))
+
+- Bump version to 6.1.3+main
+
+- Bump version to 6.1.4+main
+
+- Bump version to 6.1.5+main
+
+- Create skeleton loading for new event screen ([#7861](https://github.com/Unleash/unleash/issues/7861))
+
+- Begin front end cleanup ([#7865](https://github.com/Unleash/unleash/issues/7865))
+
+- Initial admin email ([#7795](https://github.com/Unleash/unleash/issues/7795))
+
+- Bump version to 6.1.8+main
+
+- Code cleanup: event log filters ([#7870](https://github.com/Unleash/unleash/issues/7870))
+
+- Bump version to 6.1.9+main
+
+- Update openapi ([#7881](https://github.com/Unleash/unleash/issues/7881))
+
+- Extract project read model  ([#7887](https://github.com/Unleash/unleash/issues/7887))
+
+- Add flags `projectListImprovements` and `useProjectReadModel` ([#7905](https://github.com/Unleash/unleash/issues/7905))
+
+- Bump version to 6.1.10+main
+
+- Minor cleanup in new project read model ([#7911](https://github.com/Unleash/unleash/issues/7911))
+
+- Impl empty results for fake project read model ([#7912](https://github.com/Unleash/unleash/issues/7912))
+
+- Change integration events api tag to addons ([#7932](https://github.com/Unleash/unleash/issues/7932))
+
+- Allow you to use the options object to override *all* the new resource limits ([#7938](https://github.com/Unleash/unleash/issues/7938))
+
+- Type our path parameters when they are numbers ([#4471](https://github.com/Unleash/unleash/issues/4471))
+
+- Bump version to 6.1.11+main
+
+- Remove create feature component ([#7959](https://github.com/Unleash/unleash/issues/7959))
+
+- Bump version to 6.1.12+main
+
+- Remove unused feature flag for webhooks name logging ([#7968](https://github.com/Unleash/unleash/issues/7968))
+
+- Move flags widget 2 widgets down ([#7977](https://github.com/Unleash/unleash/issues/7977))
+
+- Strip +main from package version ([#8017](https://github.com/Unleash/unleash/issues/8017))
+
+- Upgraded yarn to 4.4.1 ([#8033](https://github.com/Unleash/unleash/issues/8033))
+
+- Remove upgrade edge banner. ([#8032](https://github.com/Unleash/unleash/issues/8032))
+
+- Reorganize product data in footer ([#8030](https://github.com/Unleash/unleash/issues/8030))
+
+- Update Frontend schema ([#8037](https://github.com/Unleash/unleash/issues/8037))
+
+- Bump frontend yarn version to 4.4.1 ([#8052](https://github.com/Unleash/unleash/issues/8052))
+
+- Remove operator upgrade alert ([#8053](https://github.com/Unleash/unleash/issues/8053))
+
+- Clear onboarding events ([#8062](https://github.com/Unleash/unleash/issues/8062))
+
+
+### Refactor
+
+- Rename createdAtFrom/To to from/to ([#7773](https://github.com/Unleash/unleash/issues/7773))
+
+- Split EventLog into separate components and hook up new Event search ([#7777](https://github.com/Unleash/unleash/issues/7777))
+
+- Project archive card ([#7859](https://github.com/Unleash/unleash/issues/7859))
+
+- Switch `projectStore.getProjects` with `projectReadModel.getProjectsForAdminUi` in project service ([#7904](https://github.com/Unleash/unleash/issues/7904))
+
+- Remove `react-timeago` ([#7943](https://github.com/Unleash/unleash/issues/7943))
+
+- Prepare project card iteration ([#7990](https://github.com/Unleash/unleash/issues/7990))
+
+- Make avatar group more customizable ([#7989](https://github.com/Unleash/unleash/issues/7989))
+
+- Ts checking conditionallyrender props ([#7840](https://github.com/Unleash/unleash/issues/7840))
+
+- Replace IProjectCard with openapi type ([#8043](https://github.com/Unleash/unleash/issues/8043))
+
+- Extract generate api key stage into component ([#8061](https://github.com/Unleash/unleash/issues/8061))
+
+
+## [6.1.11] - 2024-08-21
+
+### Bug Fixes
+
+- Enable disabled strategies keeps settings ([#7952](https://github.com/Unleash/unleash/issues/7952))
+
+
+## [6.1.10] - 2024-08-16
+
+### Bug Fixes
+
+- Orphaned token label patch ([#7903](https://github.com/Unleash/unleash/issues/7903))
+
+
+## [6.1.9] - 2024-08-14
+
+### Bug Fixes
+
+- Add collaborators to ignored props for feature diff notif ([#7877](https://github.com/Unleash/unleash/issues/7877))
+
+
+### Features
+
+- Allow editing root role/description on SCIM group ([#7874](https://github.com/Unleash/unleash/issues/7874))
+
+
+## [6.1.8] - 2024-08-14
+
+### Bug Fixes
+
+- Change request enabled check should ignore disabled envs ([#7869](https://github.com/Unleash/unleash/issues/7869)) ([#7876](https://github.com/Unleash/unleash/issues/7876))
+
+
+## [6.1.7] - 2024-08-14
+
+### Bug Fixes
+
+- Messed up on merge-conflicts
+
+
+## [6.1.6] - 2024-08-14
+
+### Features
+
+- Update feature completed payload to have boolean instead of string ([#7855](https://github.com/Unleash/unleash/issues/7855))
+
+
+### Miscellaneous Tasks
+
+- Split send welcome email ([#7795](https://github.com/Unleash/unleash/issues/7795)) ([#7867](https://github.com/Unleash/unleash/issues/7867))
+
+
+## [6.1.5] - 2024-08-13
+
+### Bug Fixes
+
+- SCIM UI flag removal ([#7856](https://github.com/Unleash/unleash/issues/7856))
+
+
+## [6.1.4] - 2024-08-13
+
+### Bug Fixes
+
+- Don't show link stubs in slack notifications ([#7810](https://github.com/Unleash/unleash/issues/7810)) ([#7850](https://github.com/Unleash/unleash/issues/7850))
+
+
+### Fix
+
+- Time to production ([#7835](https://github.com/Unleash/unleash/issues/7835)) ([#7848](https://github.com/Unleash/unleash/issues/7848))
+
+
+### Miscellaneous Tasks
+
+- Cherry-pick SCIM flag removal ([#7851](https://github.com/Unleash/unleash/issues/7851))
+
+
+## [6.1.3] - 2024-08-13
+
+### Bug Fixes
+
+- Don't always fetch all flags on project flag screen ([#7834](https://github.com/Unleash/unleash/issues/7834))
+
+- Display feature naming patterns in dialog ([#7837](https://github.com/Unleash/unleash/issues/7837))
+
+
 ## [6.1.2] - 2024-08-08
 
 ### Bug Fixes

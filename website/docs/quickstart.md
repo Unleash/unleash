@@ -89,7 +89,7 @@ unleash.on("synchronized", () => {
 
 For testing purposes, we have set up a demo instance that you can use to test out different use cases before setting up your own instance. You can find the demo instance here: https://app.unleash-hosted.com/demo/
 
-NOTE: This is a demo instance set up with the Enterprise version. [More information on our different versions](https://www.getunleash.io/pricing).
+NOTE: This is a demo instance set up with the Pro version. [More information on our different versions](https://www.getunleash.io/pricing).
 
 If you don't have your own Unleash instance set up, you can use the Unleash demo instance. In that case, the details are:
 

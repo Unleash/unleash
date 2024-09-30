@@ -106,6 +106,7 @@ export const CreateGroup = () => {
                 handleSubmit={handleSubmit}
                 handleCancel={handleCancel}
                 mode={CREATE}
+                isScimGroup={false}
             >
                 <Button
                     type='submit'

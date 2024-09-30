@@ -1,4 +1,5 @@
-import { Box, IconButton, Tooltip } from '@mui/material';
+import type { FC } from 'react';
+import { Box, IconButton, styled, Tooltip } from '@mui/material';
 import CopyIcon from '@mui/icons-material/FileCopy';
 import useToast from 'hooks/useToast';
 
@@ -8,15 +9,43 @@ interface ILinkFieldProps {
     successTitle?: string;
     errorTitle?: string;
     onCopy?: () => void;
+    isExpired?: boolean;
 }
 
-export const LinkField = ({
+const StyledBox = styled(Box)<{ isExpired?: boolean; small?: boolean }>(
+    ({ theme, small, isExpired }) => ({
+        backgroundColor: theme.palette.background.elevation2,
+        padding: theme.spacing(4),
+        borderRadius: `${theme.shape.borderRadius}px`,
+        marginTop: theme.spacing(2),
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        wordBreak: 'break-all',
+        ...(small
+            ? {
+                  marginTop: 0,
+                  padding: theme.spacing(0.5, 0.5, 0.5, 1.5),
+                  fontSize: theme.typography.body2.fontSize,
+              }
+            : {}),
+        ...(isExpired
+            ? {
+                  textDecoration: 'line-through',
+                  color: theme.palette.text.disabled,
+              }
+            : {}),
+    }),
+);
+
+export const LinkField: FC<ILinkFieldProps> = ({
     inviteLink,
     small,
     successTitle = 'Successfully copied invite link.',
     errorTitle = 'Could not copy invite link.',
     onCopy,
-}: ILinkFieldProps) => {
+    isExpired,
+}) => {
     const { setToastData } = useToast();
 
     const setError = () =>
@@ -45,38 +74,18 @@ export const LinkField = ({
     };
 
     return (
-        <Box
-            sx={{
-                backgroundColor: (theme) => theme.palette.background.elevation2,
-                py: 4,
-                px: 4,
-                borderRadius: (theme) => `${theme.shape.borderRadius}px`,
-                mt: 2,
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                wordBreak: 'break-all',
-                ...(small
-                    ? {
-                          my: 0,
-                          py: 0.5,
-                          pl: 1.5,
-                          pr: 0.5,
-                          fontSize: (theme) => theme.typography.body2.fontSize,
-                      }
-                    : {}),
-            }}
-        >
+        <StyledBox small={small} isExpired={isExpired}>
             {inviteLink}
-            <Tooltip title='Copy link' arrow>
+            <Tooltip title={isExpired ? '' : 'Copy link'} arrow>
                 <IconButton
                     onClick={handleCopy}
                     size={small ? 'small' : 'large'}
                     sx={small ? { ml: 0.5 } : {}}
+                    disabled={isExpired}
                 >
                     <CopyIcon sx={{ fontSize: small ? 20 : undefined }} />
                 </IconButton>
             </Tooltip>
-        </Box>
+        </StyledBox>
     );
 };

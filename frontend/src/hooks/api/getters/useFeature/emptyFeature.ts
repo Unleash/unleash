@@ -3,7 +3,7 @@ import type { IFeatureToggle } from 'interfaces/featureToggle';
 export const emptyFeature: IFeatureToggle = {
     environments: [],
     name: '',
-    type: '',
+    type: 'release',
     stale: false,
     archived: false,
     createdAt: '',

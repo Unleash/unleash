@@ -7,12 +7,18 @@ import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
 import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
 import type { FeatureTypeCountSchema } from './featureTypeCountSchema';
 import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode';
+import type { ProjectOverviewSchemaOnboardingStatus } from './projectOverviewSchemaOnboardingStatus';
 import type { ProjectStatsSchema } from './projectStatsSchema';
 
 /**
  * A high-level overview of a project. It contains information such as project statistics, the name of the project, what members and what features it contains, etc.
  */
 export interface ProjectOverviewSchema {
+    /**
+     * When the project was archived.
+     * @nullable
+     */
+    archivedAt?: string | null;
     /**
      * When the project was created.
      * @nullable
@@ -45,6 +51,8 @@ export interface ProjectOverviewSchema {
     mode?: ProjectOverviewSchemaMode;
     /** The name of this project */
     name: string;
+    /** The current onboarding status of the project. */
+    onboardingStatus: ProjectOverviewSchemaOnboardingStatus;
     /** Project statistics */
     stats?: ProjectStatsSchema;
     /**

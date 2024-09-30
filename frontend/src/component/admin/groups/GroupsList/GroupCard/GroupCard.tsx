@@ -41,8 +41,10 @@ const StyledTitleRow = styled(StyledRow)(() => ({
     alignItems: 'flex-start',
 }));
 
-const StyledBottomRow = styled(StyledRow)(() => ({
+const StyledBottomRow = styled(StyledRow)(({ theme }) => ({
     marginTop: 'auto',
+    alignItems: 'flex-end',
+    gap: theme.spacing(1),
 }));
 
 const StyledHeaderTitle = styled('h2')(({ theme }) => ({
@@ -84,6 +86,10 @@ const InfoBadgeDescription = styled('span')(({ theme }) => ({
     gap: theme.spacing(1),
     fontSize: theme.fontSizes.smallBody,
 }));
+
+const ProjectNameBadge = styled(Badge)({
+    wordBreak: 'break-word',
+});
 
 interface IGroupCardProps {
     group: IGroup;
@@ -150,7 +156,7 @@ export const GroupCard = ({
                                         placement='bottom-end'
                                         describeChild
                                     >
-                                        <Badge
+                                        <ProjectNameBadge
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 navigate(
@@ -161,20 +167,22 @@ export const GroupCard = ({
                                             icon={<TopicOutlinedIcon />}
                                         >
                                             {project}
-                                        </Badge>
+                                        </ProjectNameBadge>
                                     </Tooltip>
                                 ))}
                                 elseShow={
-                                    <Tooltip
-                                        title='This group is not used in any project'
-                                        arrow
-                                        describeChild
-                                    >
-                                        <ConditionallyRender
-                                            condition={!group.rootRole}
-                                            show={<Badge>Not used</Badge>}
-                                        />
-                                    </Tooltip>
+                                    <ConditionallyRender
+                                        condition={!group.rootRole}
+                                        show={
+                                            <Tooltip
+                                                title='This group is not used in any project'
+                                                arrow
+                                                describeChild
+                                            >
+                                                <Badge>Not used</Badge>
+                                            </Tooltip>
+                                        }
+                                    />
                                 }
                             />
                         </ProjectBadgeContainer>

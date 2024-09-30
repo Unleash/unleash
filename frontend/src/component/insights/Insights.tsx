@@ -1,17 +1,11 @@
 import { useState, type FC } from 'react';
-import { Box, styled } from '@mui/material';
-import { ArrayParam, withDefault } from 'use-query-params';
+import { styled } from '@mui/material';
 import { usePersistentTableState } from 'hooks/usePersistentTableState';
-import {
-    allOption,
-    ProjectSelect,
-} from 'component/common/ProjectSelect/ProjectSelect';
+import { allOption } from 'component/common/ProjectSelect/ProjectSelect';
 import { useInsights } from 'hooks/api/getters/useInsights/useInsights';
 import { InsightsHeader } from './components/InsightsHeader/InsightsHeader';
 import { useInsightsData } from './hooks/useInsightsData';
-import { type IChartsProps, InsightsCharts } from './InsightsCharts';
-import { LegacyInsightsCharts } from './LegacyInsightsCharts';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { InsightsCharts } from './InsightsCharts';
 import { Sticky } from 'component/common/Sticky/Sticky';
 import { InsightsFilters } from './InsightsFilters';
 import { FilterItemParam } from '../../utils/serializeQueryParams';
@@ -29,87 +23,11 @@ const StickyContainer = styled(Sticky)(({ theme }) => ({
     transition: 'padding 0.3s ease',
 }));
 
-/**
- * @deprecated remove with insightsV2 flag
- */
-const StickyWrapper = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'scrolled',
-})<{ scrolled?: boolean }>(({ theme, scrolled }) => ({
-    position: 'sticky',
-    top: 0,
-    zIndex: theme.zIndex.sticky,
-    padding: scrolled ? theme.spacing(2, 0) : theme.spacing(2, 0, 2),
-    background: theme.palette.background.application,
-    transition: 'padding 0.3s ease',
-}));
-
-const StyledProjectSelect = styled(ProjectSelect)(({ theme }) => ({
-    flex: 1,
-    width: '300px',
-    [theme.breakpoints.down('sm')]: {
-        width: '100%',
-    },
-}));
-
-/**
- * @deprecated remove with insightsV2 flag
- */
-const LegacyInsights: FC = () => {
-    const [scrolled, setScrolled] = useState(false);
-    const { insights, loading, error } = useInsights();
-    const stateConfig = {
-        projects: withDefault(ArrayParam, [allOption.id]),
-    };
-    const [state, setState] = usePersistentTableState('insights', stateConfig);
-    const setProjects = (projects: string[]) => {
-        setState({ projects });
-    };
-    const projects = state.projects
-        ? (state.projects.filter(Boolean) as string[])
-        : [];
-
-    const insightsData = useInsightsData(insights, projects);
-
-    const handleScroll = () => {
-        if (!scrolled && window.scrollY > 0) {
-            setScrolled(true);
-        } else if (scrolled && window.scrollY === 0) {
-            setScrolled(false);
-        }
-    };
-
-    if (typeof window !== 'undefined') {
-        window.addEventListener('scroll', handleScroll);
-    }
-
-    return (
-        <StyledWrapper>
-            <StickyWrapper>
-                <InsightsHeader
-                    actions={
-                        <StyledProjectSelect
-                            selectedProjects={projects}
-                            onChange={setProjects}
-                            dataTestId={'DASHBOARD_PROJECT_SELECT'}
-                            limitTags={1}
-                        />
-                    }
-                />
-            </StickyWrapper>
-            <LegacyInsightsCharts
-                loading={loading}
-                projects={projects}
-                {...insightsData}
-            />
-        </StyledWrapper>
-    );
-};
-
 interface InsightsProps {
-    ChartComponent?: FC<IChartsProps>;
+    withCharts?: boolean;
 }
 
-export const NewInsights: FC<InsightsProps> = ({ ChartComponent }) => {
+export const Insights: FC<InsightsProps> = ({ withCharts = true }) => {
     const [scrolled, setScrolled] = useState(false);
 
     const stateConfig = {
@@ -118,7 +36,7 @@ export const NewInsights: FC<InsightsProps> = ({ ChartComponent }) => {
         to: FilterItemParam,
     };
     const [state, setState] = usePersistentTableState('insights', stateConfig);
-    const { insights, loading, error } = useInsights(
+    const { insights, loading } = useInsights(
         state.from?.values[0],
         state.to?.values[0],
     );
@@ -148,8 +66,8 @@ export const NewInsights: FC<InsightsProps> = ({ ChartComponent }) => {
                     }
                 />
             </StickyContainer>
-            {ChartComponent && (
-                <ChartComponent
+            {withCharts && (
+                <InsightsCharts
                     loading={loading}
                     projects={projects}
                     {...insightsData}
@@ -157,13 +75,4 @@ export const NewInsights: FC<InsightsProps> = ({ ChartComponent }) => {
             )}
         </StyledWrapper>
     );
-};
-
-export const Insights: FC = () => {
-    const isInsightsV2Enabled = useUiFlag('insightsV2');
-
-    if (isInsightsV2Enabled)
-        return <NewInsights ChartComponent={InsightsCharts} />;
-
-    return <LegacyInsights />;
 };

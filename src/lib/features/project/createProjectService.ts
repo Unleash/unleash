@@ -6,7 +6,6 @@ import EnvironmentStore from '../project-environments/environment-store';
 import {
     type AccessService,
     ApiTokenService,
-    EventService,
     FavoritesService,
     GroupService,
     ProjectService,
@@ -39,13 +38,24 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
-import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 import { ProjectOwnersReadModel } from './project-owners-read-model';
 import { FakeProjectOwnersReadModel } from './fake-project-owners-read-model';
 import { FakeProjectFlagCreatorsReadModel } from './fake-project-flag-creators-read-model';
 import { ProjectFlagCreatorsReadModel } from './project-flag-creators-read-model';
 import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store';
 import { ApiTokenStore } from '../../db/api-token-store';
+import {
+    createEventsService,
+    createFakeEventsService,
+} from '../events/createEventsService';
+import {
+    createFakeProjectReadModel,
+    createProjectReadModel,
+} from './createProjectReadModel';
+import {
+    createFakeOnboardingReadModel,
+    createOnboardingReadModel,
+} from '../onboarding/createOnboardingReadModel';
 
 export const createProjectService = (
     db: Db,
@@ -88,13 +98,7 @@ export const createProjectService = (
         eventBus,
         getLogger,
     );
-    const eventService = new EventService(
-        {
-            eventStore,
-            featureTagStore: new FakeFeatureTagStore(),
-        },
-        config,
-    );
+    const eventService = createEventsService(db, config);
     const favoriteService = new FavoritesService(
         {
             favoriteFeaturesStore,
@@ -124,6 +128,14 @@ export const createProjectService = (
         eventService,
     );
 
+    const projectReadModel = createProjectReadModel(
+        db,
+        eventBus,
+        config.flagResolver,
+    );
+
+    const onboardingReadModel = createOnboardingReadModel(db);
+
     return new ProjectService(
         {
             projectStore,
@@ -135,6 +147,8 @@ export const createProjectService = (
             projectStatsStore,
             projectOwnersReadModel,
             projectFlagCreatorsReadModel,
+            projectReadModel,
+            onboardingReadModel,
         },
         config,
         accessService,
@@ -166,13 +180,8 @@ export const createFakeProjectService = (
     const favoriteFeaturesStore = new FakeFavoriteFeaturesStore();
     const favoriteProjectsStore = new FakeFavoriteProjectsStore();
     const apiTokenStore = new FakeApiTokenStore();
-    const eventService = new EventService(
-        {
-            eventStore,
-            featureTagStore: new FakeFeatureTagStore(),
-        },
-        config,
-    );
+    const privateProjectChecker = createFakePrivateProjectChecker();
+    const eventService = createFakeEventsService(config);
     const favoriteService = new FavoritesService(
         {
             favoriteFeaturesStore,
@@ -187,13 +196,15 @@ export const createFakeProjectService = (
         eventService,
     );
 
-    const privateProjectChecker = createFakePrivateProjectChecker();
-
     const apiTokenService = new ApiTokenService(
         { apiTokenStore, environmentStore },
         config,
         eventService,
     );
+
+    const projectReadModel = createFakeProjectReadModel();
+
+    const onboardingReadModel = createFakeOnboardingReadModel();
 
     return new ProjectService(
         {
@@ -206,6 +217,8 @@ export const createFakeProjectService = (
             featureEnvironmentStore,
             accountStore,
             projectStatsStore,
+            projectReadModel,
+            onboardingReadModel,
         },
         config,
         accessService,

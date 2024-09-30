@@ -44,7 +44,7 @@ export class OpenApiService {
 
     useDocs(app: Express): void {
         app.use(this.api);
-        app.use(this.docsPath(), this.api.swaggerui);
+        app.use(this.docsPath(), this.api.swaggerui());
     }
 
     docsPath(): string {

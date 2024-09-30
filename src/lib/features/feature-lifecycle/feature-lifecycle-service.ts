@@ -186,7 +186,7 @@ export class FeatureLifecycleService {
             new FeatureCompletedEvent({
                 project: projectId,
                 featureName: feature,
-                data: status,
+                data: { ...status, kept: status.status === 'kept' },
                 auditUser,
             }),
         );

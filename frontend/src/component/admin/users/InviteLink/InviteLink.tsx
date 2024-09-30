@@ -1,4 +1,4 @@
-import { type FormEventHandler, useState, type VFC } from 'react';
+import { type FormEventHandler, useState, type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSWRConfig } from 'swr';
 import { Box, Button, Typography } from '@mui/material';
@@ -19,7 +19,7 @@ import { LinkField } from '../LinkField/LinkField';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
-type ICreateInviteLinkProps = {};
+type IInviteLinkProps = {};
 
 const expiryOptions = [
     {
@@ -56,7 +56,7 @@ const useFormatApiCode = (isUpdating: boolean, expiry: string) => {
     )}'`;
 };
 
-export const InviteLink: VFC<ICreateInviteLinkProps> = () => {
+export const InviteLink: FC<IInviteLinkProps> = () => {
     const navigate = useNavigate();
     const { data, loading } = useInviteTokens();
     const [inviteLink, setInviteLink] = useState('');

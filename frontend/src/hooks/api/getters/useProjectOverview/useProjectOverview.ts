@@ -24,6 +24,9 @@ const fallbackProject: IProjectOverview = {
         projectActivityPastWindow: 0,
         projectMembersAddedCurrentWindow: 0,
     },
+    onboardingStatus: {
+        status: 'onboarded',
+    },
 };
 
 const useProjectOverview = (id: string, options: SWRConfiguration = {}) => {

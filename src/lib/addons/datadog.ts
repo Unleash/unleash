@@ -2,14 +2,18 @@ import Addon from './addon';
 
 import definition from './datadog-definition';
 import Mustache from 'mustache';
-import { type IAddonConfig, serializeDates } from '../types';
+import {
+    type IAddonConfig,
+    type IFlagResolver,
+    serializeDates,
+} from '../types';
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
-    LinkStyle,
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface IDatadogParameters {
     url: string;
@@ -29,12 +33,14 @@ interface DDRequestBody {
 export default class DatadogAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
+    flagResolver: IFlagResolver;
+
     constructor(config: IAddonConfig) {
         super(definition, config);
-        this.msgFormatter = new FeatureEventFormatterMd(
-            config.unleashUrl,
-            LinkStyle.MD,
-        );
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: config.unleashUrl,
+        });
+        this.flagResolver = config.flagResolver;
     }
 
     async handleEvent(
@@ -108,6 +114,13 @@ export default class DatadogAddon extends Addon {
             const failedMessage = `Datadog Events API request failed with status code: ${res.status}.`;
             stateDetails.push(failedMessage);
             this.logger.warn(failedMessage);
+        }
+
+        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
+            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+                result: state,
+                destination: 'datadog',
+            });
         }
 
         this.registerEvent({

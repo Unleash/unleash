@@ -15,7 +15,11 @@ afterAll(async () => {
 test('creates new feature flag with createdBy', async () => {
     expect.assertions(1);
 
-    const { request, destroy } = await setupAppWithAuth(db.stores);
+    const { request, destroy } = await setupAppWithAuth(
+        db.stores,
+        {},
+        db.rawDatabase,
+    );
 
     // Login
     await request.post('/auth/demo/login').send({

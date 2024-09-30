@@ -25,11 +25,13 @@ const StyledButtonContainer = styled('div')(({ theme }) => ({
 
 interface IDeleteProjectProps {
     projectId: string;
+    projectName?: string;
     featureCount: number;
 }
 
 export const DeleteProject = ({
     projectId,
+    projectName,
     featureCount,
 }: IDeleteProjectProps) => {
     const { isEnterprise } = useUiConfig();
@@ -106,7 +108,8 @@ export const DeleteProject = ({
                 </PermissionButton>
             </StyledButtonContainer>
             <DeleteProjectDialogue
-                project={projectId}
+                projectId={projectId}
+                projectName={projectName}
                 open={showDelDialog}
                 onClose={() => {
                     setShowDelDialog(false);

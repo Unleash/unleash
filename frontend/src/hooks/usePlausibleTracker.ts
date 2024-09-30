@@ -65,7 +65,8 @@ export type CustomEvents =
     | 'command-bar'
     | 'new-in-unleash-click'
     | 'new-in-unleash-dismiss'
-    | 'search-opened';
+    | 'search-opened'
+    | 'events-exported';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

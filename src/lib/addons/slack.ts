@@ -1,7 +1,11 @@
 import Addon from './addon';
 
 import slackDefinition from './slack-definition';
-import { type IAddonConfig, serializeDates } from '../types';
+import {
+    type IAddonConfig,
+    type IFlagResolver,
+    serializeDates,
+} from '../types';
 
 import {
     type FeatureEventFormatter,
@@ -10,6 +14,7 @@ import {
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
+import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface ISlackAddonParameters {
     url: string;
@@ -21,12 +26,15 @@ interface ISlackAddonParameters {
 export default class SlackAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
+    flagResolver: IFlagResolver;
+
     constructor(args: IAddonConfig) {
         super(slackDefinition, args);
-        this.msgFormatter = new FeatureEventFormatterMd(
-            args.unleashUrl,
-            LinkStyle.SLACK,
-        );
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: args.unleashUrl,
+            linkStyle: LinkStyle.SLACK,
+        });
+        this.flagResolver = args.flagResolver;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -65,8 +73,10 @@ export default class SlackAddon extends Addon {
             }
         }
 
-        const { text, url: featureLink } = this.msgFormatter.format(event);
-
+        const { text: formattedMessage, url: featureLink } =
+            this.msgFormatter.format(event);
+        const maxLength = 3000;
+        const text = formattedMessage.substring(0, maxLength);
         const requests = slackChannels.map((channel) => {
             const body = {
                 username,
@@ -124,6 +134,13 @@ export default class SlackAddon extends Addon {
             this.logger.warn(successWithErrorsMessage);
         }
 
+        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
+            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+                result: state,
+                destination: 'slack',
+            });
+        }
+
         this.registerEvent({
             integrationId,
             state,
@@ -133,7 +150,7 @@ export default class SlackAddon extends Addon {
                 url,
                 channels: slackChannels,
                 username,
-                message: text,
+                message: `${formattedMessage}${text.length < formattedMessage.length ? ` (trimmed to ${maxLength} characters)` : ''}`,
             },
         });
     }

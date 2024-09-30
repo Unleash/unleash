@@ -4,19 +4,16 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import EventCard from 'component/events/EventCard/EventCard';
 import { useEventSettings } from 'hooks/useEventSettings';
-import { useState, useEffect } from 'react';
 import { Search } from 'component/common/Search/Search';
 import theme from 'themes/theme';
-import { useLegacyEventSearch } from 'hooks/api/getters/useEventSearch/useLegacyEventSearch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useOnVisible } from 'hooks/useOnVisible';
 import { styled } from '@mui/system';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { EventLogFilters } from './EventLogFilters';
-import type { EventSchema } from 'openapi';
 import { useEventLogSearch } from './useEventLogSearch';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
+import { EventActions } from './EventActions';
+import useLoading from 'hooks/useLoading';
 
 interface IEventLogProps {
     title: string;
@@ -36,14 +33,24 @@ const StyledFilters = styled(EventLogFilters)({
     padding: 0,
 });
 
-const EventResultWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(2, 4, 4, 4),
+const EventResultWrapper = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'withFilters',
+})<{ withFilters: boolean }>(({ theme, withFilters }) => ({
+    padding: theme.spacing(withFilters ? 2 : 4, 4, 4, 4),
     display: 'flex',
     flexFlow: 'column',
-    gap: theme.spacing(1),
+    gap: theme.spacing(2),
 }));
 
-const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
+const Placeholder = styled('li')({
+    height: '246px',
+    borderRadius: theme.shape.borderRadiusLarge,
+    '&[data-loading-events=true]': { zIndex: '1' }, // .skeleton has z-index: 9990
+});
+
+export const EventLog = ({ title, project, feature }: IEventLogProps) => {
+    const { isEnterprise } = useUiConfig();
+    const showFilters = isEnterprise();
     const {
         events,
         total,
@@ -59,6 +66,7 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
               ? { type: 'flag', flagName: feature }
               : { type: 'global' },
     );
+    const ref = useLoading(loading, '[data-loading-events=true]');
 
     const setSearchValue = (query = '') => {
         setTableState({ query });
@@ -93,7 +101,16 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
 
     const resultComponent = () => {
         if (loading) {
-            return <p>Loading...</p>;
+            return (
+                <StyledEventsList>
+                    {Array.from({ length: pagination.pageSize }).map((_, i) => (
+                        <Placeholder
+                            data-loading-events='true'
+                            key={`event-skeleton-${i}`}
+                        />
+                    ))}
+                </StyledEventsList>
+            );
         } else if (events.length === 0) {
             return <p>No events found.</p>;
         } else {
@@ -103,8 +120,8 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
                         <ConditionallyRender
                             key={entry.id}
                             condition={eventSettings.showData}
-                            show={() => <EventJson entry={entry} />}
-                            elseShow={() => <EventCard entry={entry} />}
+                            show={<EventJson entry={entry} />}
+                            elseShow={<EventCard entry={entry} />}
                         />
                     ))}
                 </StyledEventsList>
@@ -113,132 +130,57 @@ const NewEventLog = ({ title, project, feature }: IEventLogProps) => {
     };
 
     return (
-        <PageContent
-            bodyClass={'no-padding'}
-            header={
-                <PageHeader
-                    title={`${title} (${total})`}
-                    actions={
-                        <>
-                            {showDataSwitch}
-                            {!isSmallScreen && searchInputField}
-                        </>
-                    }
-                >
-                    {isSmallScreen && searchInputField}
-                </PageHeader>
-            }
-        >
-            <EventResultWrapper>
-                <StyledFilters
-                    logType={project ? 'project' : feature ? 'flag' : 'global'}
-                    state={filterState}
-                    onChange={setTableState}
-                />
-                {resultComponent()}
-            </EventResultWrapper>
-            <ConditionallyRender
-                condition={total > 25}
-                show={
-                    <StickyPaginationBar
-                        totalItems={total}
-                        pageSize={pagination.pageSize}
-                        pageIndex={pagination.currentPage}
-                        fetchPrevPage={pagination.prevPage}
-                        fetchNextPage={pagination.nextPage}
-                        setPageLimit={pagination.setPageLimit}
-                    />
+        <>
+            <PageContent
+                bodyClass={'no-padding'}
+                header={
+                    <PageHeader
+                        title={`${title} (${total})`}
+                        actions={
+                            <>
+                                {showDataSwitch}
+                                <EventActions events={events} />
+                                {!isSmallScreen && searchInputField}
+                            </>
+                        }
+                    >
+                        {isSmallScreen && searchInputField}
+                    </PageHeader>
                 }
-            />
-        </PageContent>
-    );
-};
-
-export const LegacyEventLog = ({ title, project, feature }: IEventLogProps) => {
-    const [query, setQuery] = useState('');
-    const { events, totalEvents, fetchNextPage } = useLegacyEventSearch(
-        project,
-        feature,
-        query,
-    );
-    const fetchNextPageRef = useOnVisible<HTMLDivElement>(fetchNextPage);
-    const { eventSettings, setEventSettings } = useEventSettings();
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-
-    // Cache the previous search results so that we can show those while
-    // fetching new results for a new search query in the background.
-    const [cache, setCache] = useState<EventSchema[]>();
-    useEffect(() => events && setCache(events), [events]);
-
-    const onShowData = () => {
-        setEventSettings((prev) => ({ showData: !prev.showData }));
-    };
-
-    const searchInputField = <Search onChange={setQuery} debounceTime={500} />;
-
-    const showDataSwitch = (
-        <FormControlLabel
-            label='Full events'
-            control={
-                <Switch
-                    checked={eventSettings.showData}
-                    onChange={onShowData}
-                    color='primary'
-                />
-            }
-        />
-    );
-
-    const count = events?.length || 0;
-    const totalCount = totalEvents || 0;
-    const countText = `${count} of ${totalCount}`;
-
-    return (
-        <PageContent
-            header={
-                <PageHeader
-                    title={`${title} (${countText})`}
-                    actions={
-                        <>
-                            {showDataSwitch}
-                            {!isSmallScreen && searchInputField}
-                        </>
-                    }
-                >
-                    {isSmallScreen && searchInputField}
-                </PageHeader>
-            }
-        >
-            <ConditionallyRender
-                condition={Boolean(cache && cache.length === 0)}
-                show={<p>No events found.</p>}
-            />
-            <ConditionallyRender
-                condition={Boolean(cache && cache.length > 0)}
-                show={
-                    <StyledEventsList>
-                        {cache?.map((entry) => (
-                            <ConditionallyRender
-                                key={entry.id}
-                                condition={eventSettings.showData}
-                                show={() => <EventJson entry={entry} />}
-                                elseShow={() => <EventCard entry={entry} />}
+            >
+                <EventResultWrapper ref={ref} withFilters={showFilters}>
+                    <ConditionallyRender
+                        condition={showFilters}
+                        show={
+                            <StyledFilters
+                                logType={
+                                    project
+                                        ? 'project'
+                                        : feature
+                                          ? 'flag'
+                                          : 'global'
+                                }
+                                state={filterState}
+                                onChange={setTableState}
                             />
-                        ))}
-                    </StyledEventsList>
-                }
-            />
-            <div ref={fetchNextPageRef} />
-        </PageContent>
+                        }
+                    />
+                    {resultComponent()}
+                </EventResultWrapper>
+                <ConditionallyRender
+                    condition={total > 25}
+                    show={
+                        <StickyPaginationBar
+                            totalItems={total}
+                            pageSize={pagination.pageSize}
+                            pageIndex={pagination.currentPage}
+                            fetchPrevPage={pagination.prevPage}
+                            fetchNextPage={pagination.nextPage}
+                            setPageLimit={pagination.setPageLimit}
+                        />
+                    }
+                />
+            </PageContent>
+        </>
     );
-};
-
-export const EventLog = (props: IEventLogProps) => {
-    const { isEnterprise } = useUiConfig();
-    const showFilters = useUiFlag('newEventSearch') && isEnterprise();
-    if (showFilters) {
-        return <NewEventLog {...props} />;
-    } else {
-        return <LegacyEventLog {...props} />;
-    }
 };

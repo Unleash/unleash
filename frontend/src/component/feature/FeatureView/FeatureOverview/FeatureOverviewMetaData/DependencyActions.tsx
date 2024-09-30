@@ -1,6 +1,5 @@
 import type React from 'react';
 import { type FC, useState } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     IconButton,
     ListItemIcon,
@@ -71,47 +70,33 @@ export const DependencyActions: FC<{
                 disableScrollLock={true}
             >
                 <MenuList aria-labelledby={id}>
-                    <ConditionallyRender
-                        condition={true}
-                        show={
-                            <MenuItem
-                                onClick={() => {
-                                    onEdit();
-                                    closeActions();
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <Edit />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    <Typography variant='body2'>
-                                        Edit
-                                    </Typography>
-                                </ListItemText>
-                            </MenuItem>
-                        }
-                    />
+                    <MenuItem
+                        onClick={() => {
+                            onEdit();
+                            closeActions();
+                        }}
+                    >
+                        <ListItemIcon>
+                            <Edit />
+                        </ListItemIcon>
+                        <ListItemText>
+                            <Typography variant='body2'>Edit</Typography>
+                        </ListItemText>
+                    </MenuItem>
 
-                    <ConditionallyRender
-                        condition={true}
-                        show={
-                            <MenuItem
-                                onClick={() => {
-                                    onDelete();
-                                    closeActions();
-                                }}
-                            >
-                                <ListItemIcon>
-                                    <Delete />
-                                </ListItemIcon>
-                                <ListItemText>
-                                    <Typography variant='body2'>
-                                        Delete
-                                    </Typography>
-                                </ListItemText>
-                            </MenuItem>
-                        }
-                    />
+                    <MenuItem
+                        onClick={() => {
+                            onDelete();
+                            closeActions();
+                        }}
+                    >
+                        <ListItemIcon>
+                            <Delete />
+                        </ListItemIcon>
+                        <ListItemText>
+                            <Typography variant='body2'>Delete</Typography>
+                        </ListItemText>
+                    </MenuItem>
                 </MenuList>
             </StyledPopover>
         </Box>

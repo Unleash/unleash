@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ReactComponent as ImportSvg } from 'assets/icons/import.svg';
 import {
     StyledDiv,
     StyledFavoriteIconButton,
@@ -14,7 +15,6 @@ import {
     StyledTopRow,
 } from './Project.styles';
 import { Box, Paper, Tabs, Typography, styled } from '@mui/material';
-import FileUpload from '@mui/icons-material/FileUpload';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
 import { useEffect, useState } from 'react';
@@ -43,6 +43,7 @@ import { ChangeRequestPlausibleProvider } from 'component/changeRequest/ChangeRe
 import { ProjectApplications } from '../ProjectApplications/ProjectApplications';
 import { ProjectInsights } from './ProjectInsights/ProjectInsights';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { ProjectArchived } from './ArchiveProject/ProjectArchived';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -100,7 +101,7 @@ export const Project = () => {
             name: 'health',
         },
         {
-            title: 'Archive',
+            title: 'Archived flags',
             path: `${basePath}/archive`,
             name: 'archive',
         },
@@ -189,6 +190,10 @@ export const Project = () => {
         </Box>
     );
 
+    if (project.archivedAt) {
+        return <ProjectArchived name={project.name} />;
+    }
+
     return (
         <div ref={ref}>
             <StyledHeader>
@@ -223,7 +228,7 @@ export const Project = () => {
                                         data-testid={IMPORT_BUTTON}
                                         data-loading-project
                                     >
-                                        <FileUpload />
+                                        <ImportSvg />
                                     </PermissionIconButton>
                                 }
                             />
@@ -278,7 +283,7 @@ export const Project = () => {
                 </StyledTabContainer>
             </StyledHeader>
             <DeleteProjectDialogue
-                project={projectId}
+                projectId={projectId}
                 open={showDelDialog}
                 onClose={() => {
                     setShowDelDialog(false);

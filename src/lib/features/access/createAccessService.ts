@@ -4,16 +4,18 @@ import { AccountStore } from '../../db/account-store';
 import RoleStore from '../../db/role-store';
 import EnvironmentStore from '../project-environments/environment-store';
 import { AccessStore } from '../../db/access-store';
-import { AccessService, EventService, GroupService } from '../../services';
+import { AccessService, GroupService } from '../../services';
 import FakeGroupStore from '../../../test/fixtures/fake-group-store';
 import FakeEventStore from '../../../test/fixtures/fake-event-store';
 import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store';
 import FakeAccessStore from '../../../test/fixtures/fake-access-store';
-import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
 import type { IAccessStore, IEventStore, IRoleStore } from '../../types';
-import { createEventsService } from '../events/createEventsService';
+import {
+    createEventsService,
+    createFakeEventsService,
+} from '../events/createEventsService';
 
 export const createAccessService = (
     db: Db,
@@ -31,7 +33,6 @@ export const createAccessService = (
         { getLogger },
         eventService,
     );
-
     return new AccessService(
         { accessStore, accountStore, roleStore, environmentStore },
         { getLogger },
@@ -48,18 +49,14 @@ export const createFakeAccessService = (
     accessStore: IAccessStore;
     roleStore: IRoleStore;
 } => {
-    const { getLogger, flagResolver } = config;
+    const { getLogger } = config;
     const eventStore = new FakeEventStore();
     const groupStore = new FakeGroupStore();
     const accountStore = new FakeAccountStore();
     const roleStore = new FakeRoleStore();
     const environmentStore = new FakeEnvironmentStore();
     const accessStore = new FakeAccessStore(roleStore);
-    const featureTagStore = new FakeFeatureTagStore();
-    const eventService = new EventService(
-        { eventStore, featureTagStore },
-        config,
-    );
+    const eventService = createFakeEventsService(config, { eventStore });
     const groupService = new GroupService(
         { groupStore, accountStore },
         { getLogger },

@@ -11,12 +11,23 @@ interface IApiTokenIconProps {
     secret?: string;
 }
 
-export const ApiTokenIcon: FC<IApiTokenIconProps> = ({ secret }) => {
+export const isOrphanedToken = ({
+    secret,
+    project,
+    projects,
+}: IApiTokenIconProps): boolean => {
     const tokenFormat = secret?.includes(':') ? 'v2' : 'v1'; // see https://docs.getunleash.io/reference/api-tokens-and-client-keys#format
-    const isWildcardToken = secret?.startsWith('*:');
-    const isOrphanedToken = tokenFormat === 'v2' && !isWildcardToken;
+    const isWildcardSecret = secret?.startsWith('*:');
+    const hasProjects =
+        (projects && projects?.length > 1) ||
+        (projects?.length === 1 && projects[0] !== '*') ||
+        (project && project !== '*');
 
-    if (isOrphanedToken) {
+    return tokenFormat === 'v2' && !isWildcardSecret && !hasProjects;
+};
+
+export const ApiTokenIcon: FC<IApiTokenIconProps> = ({ ...props }) => {
+    if (isOrphanedToken(props)) {
         return (
             <IconCell
                 icon={

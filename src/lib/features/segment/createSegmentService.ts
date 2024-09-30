@@ -1,6 +1,5 @@
 import type { Db, IUnleashConfig } from '../../server-impl';
-import { EventService, SegmentService } from '../../services';
-import FakeEventStore from '../../../test/fixtures/fake-event-store';
+import { SegmentService } from '../../services';
 import type { ISegmentService } from './segment-service-interface';
 import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
 import SegmentStore from './segment-store';
@@ -18,8 +17,10 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../private-project/createPrivateProjectChecker';
-import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
-import { createEventsService } from '../events/createEventsService';
+import {
+    createEventsService,
+    createFakeEventsService,
+} from '../events/createEventsService';
 
 export const createSegmentService = (
     db: Db,
@@ -63,7 +64,6 @@ export const createSegmentService = (
 export const createFakeSegmentService = (
     config: IUnleashConfig,
 ): ISegmentService => {
-    const eventStore = new FakeEventStore();
     const segmentStore = new FakeSegmentStore();
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const changeRequestAccessReadModel = createFakeChangeRequestAccessService();
@@ -72,13 +72,7 @@ export const createFakeSegmentService = (
 
     const privateProjectChecker = createFakePrivateProjectChecker();
 
-    const eventService = new EventService(
-        {
-            eventStore,
-            featureTagStore: new FakeFeatureTagStore(),
-        },
-        config,
-    );
+    const eventService = createFakeEventsService(config);
 
     return new SegmentService(
         { segmentStore, featureStrategiesStore },

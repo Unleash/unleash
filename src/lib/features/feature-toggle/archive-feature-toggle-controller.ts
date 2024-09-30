@@ -9,10 +9,6 @@ import {
 import { DELETE_FEATURE, NONE, UPDATE_FEATURE } from '../../types/permissions';
 import type FeatureToggleService from './feature-toggle-service';
 import type { IAuthRequest } from '../../routes/unleash-types';
-import {
-    featuresSchema,
-    type FeaturesSchema,
-} from '../../openapi/spec/features-schema';
 import { serializeDates } from '../../types/serialize-dates';
 import type { OpenApiService } from '../../services/openapi-service';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
@@ -24,6 +20,10 @@ import type {
     TransactionCreator,
     UnleashTransaction,
 } from '../../db/transaction';
+import {
+    archivedFeaturesSchema,
+    type ArchivedFeaturesSchema,
+} from '../../openapi';
 
 export default class ArchiveController extends Controller {
     private featureService: FeatureToggleService;
@@ -67,7 +67,7 @@ export default class ArchiveController extends Controller {
                         'Retrieve a list of all [archived feature flags](https://docs.getunleash.io/reference/archived-toggles).',
                     operationId: 'getArchivedFeatures',
                     responses: {
-                        200: createResponseSchema('featuresSchema'),
+                        200: createResponseSchema('archivedFeaturesSchema'),
                         ...getStandardResponses(401, 403),
                     },
 
@@ -89,7 +89,7 @@ export default class ArchiveController extends Controller {
                     description:
                         'Retrieves a list of archived features that belong to the provided project.',
                     responses: {
-                        200: createResponseSchema('featuresSchema'),
+                        200: createResponseSchema('archivedFeaturesSchema'),
                         ...getStandardResponses(401, 403),
                     },
 
@@ -143,7 +143,7 @@ export default class ArchiveController extends Controller {
 
     async getArchivedFeatures(
         req: IAuthRequest,
-        res: Response<FeaturesSchema>,
+        res: Response<ArchivedFeaturesSchema>,
     ): Promise<void> {
         const { user } = req;
         const features = await this.featureService.getAllArchivedFeatures(
@@ -153,14 +153,14 @@ export default class ArchiveController extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            featuresSchema.$id,
+            archivedFeaturesSchema.$id,
             { version: 2, features: serializeDates(features) },
         );
     }
 
     async getArchivedFeaturesByProjectId(
         req: Request<{ projectId: string }, any, any, any>,
-        res: Response<FeaturesSchema>,
+        res: Response<ArchivedFeaturesSchema>,
     ): Promise<void> {
         const { projectId } = req.params;
         const features =
@@ -171,7 +171,7 @@ export default class ArchiveController extends Controller {
         this.openApiService.respondWithValidation(
             200,
             res,
-            featuresSchema.$id,
+            archivedFeaturesSchema.$id,
             { version: 2, features: serializeDates(features) },
         );
     }

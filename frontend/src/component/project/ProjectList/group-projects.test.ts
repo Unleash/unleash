@@ -1,10 +1,10 @@
-import type { IProjectCard } from 'interfaces/project';
+import type { ProjectSchema } from 'openapi';
 import { groupProjects } from './group-projects';
 
 test('should check that the project is a user project OR that it is a favorite', () => {
     const myProjectIds = new Set(['my1', 'my2', 'my3']);
 
-    const projects: IProjectCard[] = [
+    const projects: ProjectSchema[] = [
         { id: 'my1', favorite: true },
         { id: 'my2', favorite: false },
         { id: 'my3' },

@@ -64,7 +64,11 @@ export default class AddonService {
             getLogger,
             server,
             flagResolver,
-        }: Pick<IUnleashConfig, 'getLogger' | 'server' | 'flagResolver'>,
+            eventBus,
+        }: Pick<
+            IUnleashConfig,
+            'getLogger' | 'server' | 'flagResolver' | 'eventBus'
+        >,
         tagTypeService: TagTypeService,
         eventService: EventService,
         integrationEventsService,
@@ -83,6 +87,7 @@ export default class AddonService {
                 unleashUrl: server.unleashUrl,
                 integrationEventsService,
                 flagResolver,
+                eventBus,
             });
         this.sensitiveParams = this.loadSensitiveParams(this.addonProviders);
         if (addonStore) {

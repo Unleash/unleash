@@ -48,7 +48,6 @@ export default class LastSeenStore implements ILastSeenStore {
     async setLastSeen(data: LastSeenInput[]): Promise<void> {
         try {
             const inserts = prepareLastSeenInput(data);
-
             const batchSize = 500;
 
             for (let i = 0; i < inserts.length; i += batchSize) {

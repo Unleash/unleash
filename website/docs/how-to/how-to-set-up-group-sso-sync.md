@@ -2,9 +2,9 @@
 title: How to Set Up User Group SSO Syncing
 ---
 
-:::info availability
+:::note Availability
 
-User group syncing was released in Unleash 4.18 and is available for enterprise customers.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: 4.18+
 
 :::
 

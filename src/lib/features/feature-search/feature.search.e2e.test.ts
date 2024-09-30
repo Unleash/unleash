@@ -359,6 +359,20 @@ test('should filter features by tag', async () => {
     await filterFeaturesByTag('EXCLUDE_ALL:simple,simple:jest', 400);
 });
 
+test('should filter features by tag that has colon inside', async () => {
+    await app.createFeature('my_feature_a');
+    await app.addTag('my_feature_a', {
+        type: 'simple',
+        value: 'my_tag:colon',
+    });
+
+    const { body } = await filterFeaturesByTag('INCLUDE:simple:my_tag:colon');
+
+    expect(body).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+});
+
 test('should filter features by environment status', async () => {
     await app.createFeature('my_feature_a');
     await app.createFeature('my_feature_b');

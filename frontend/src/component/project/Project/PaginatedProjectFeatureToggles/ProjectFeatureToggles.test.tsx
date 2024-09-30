@@ -28,6 +28,7 @@ const setupApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             flagCreator: true,
+            onboardingUI: true,
         },
     });
     testServerRoute(server, '/api/admin/tags', {
@@ -161,4 +162,50 @@ test.skip('filters by flag author', async () => {
     fireEvent.click(authorA);
 
     expect(window.location.href).toContain('createdBy=IS%3A1');
+});
+
+test('Project is onboarded', async () => {
+    const projectId = 'default';
+    setupApi();
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        onboardingStatus: {
+            status: 'onboarded',
+        },
+    });
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={<ProjectFeatureToggles environments={[]} />}
+            />
+        </Routes>,
+        {
+            route: `/projects/${projectId}`,
+        },
+    );
+    expect(
+        screen.queryByText('Welcome to your project'),
+    ).not.toBeInTheDocument();
+});
+
+test('Project is not onboarded', async () => {
+    const projectId = 'default';
+    setupApi();
+    testServerRoute(server, '/api/admin/projects/default/overview', {
+        onboardingStatus: {
+            status: 'onboarding-started',
+        },
+    });
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={<ProjectFeatureToggles environments={[]} />}
+            />
+        </Routes>,
+        {
+            route: `/projects/${projectId}`,
+        },
+    );
+    await screen.findByText('Welcome to your project');
 });

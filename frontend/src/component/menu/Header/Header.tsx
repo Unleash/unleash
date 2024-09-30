@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -33,6 +33,7 @@ import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
+import TimelineIcon from '@mui/icons-material/Timeline';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -80,26 +81,7 @@ const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
 
 const StyledCelebatoryLogo = styled(CelebatoryUnleashLogo)({ width: '150px' });
 
-const StyledLinks = styled('div')(({ theme }) => ({
-    display: 'flex',
-    justifyContent: 'center',
-    marginLeft: theme.spacing(3),
-    '& a': {
-        textDecoration: 'none',
-        color: 'inherit',
-        marginRight: theme.spacing(3),
-        display: 'flex',
-        alignItems: 'center',
-    },
-}));
-
 const StyledLink = styled(Link)(({ theme }) => focusable(theme));
-
-const StyledText = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-}));
 
 const StyledIconButton = styled(IconButton)<{
     component?: 'a' | 'button';
@@ -115,17 +97,22 @@ const StyledIconButton = styled(IconButton)<{
     },
 }));
 
-const Header: VFC = () => {
+interface IHeaderProps {
+    showTimeline: boolean;
+    setShowTimeline: (show: boolean) => void;
+}
+
+const Header = ({ showTimeline, setShowTimeline }: IHeaderProps) => {
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
 
     const disableNotifications = useUiFlag('disableNotifications');
-    const commandBarUI = useUiFlag('commandBarUI');
     const { uiConfig, isOss } = useUiConfig();
     const smallScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
+    const eventTimeline = useUiFlag('eventTimeline') && !isOss();
 
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
@@ -199,7 +186,29 @@ const Header: VFC = () => {
 
                 <StyledNav>
                     <StyledUserContainer>
-                        {commandBarUI && <CommandBar />}
+                        <CommandBar />
+                        <ConditionallyRender
+                            condition={eventTimeline}
+                            show={
+                                <Tooltip
+                                    title={
+                                        showTimeline
+                                            ? 'Hide timeline'
+                                            : 'Show timeline'
+                                    }
+                                    arrow
+                                >
+                                    <StyledIconButton
+                                        onClick={() =>
+                                            setShowTimeline(!showTimeline)
+                                        }
+                                        size='large'
+                                    >
+                                        <TimelineIcon />
+                                    </StyledIconButton>
+                                </Tooltip>
+                            }
+                        />
                         <InviteLinkButton />
                         <Tooltip
                             title={

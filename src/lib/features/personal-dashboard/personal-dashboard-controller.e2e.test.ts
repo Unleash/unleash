@@ -249,7 +249,16 @@ test('should return Unleash admins', async () => {
     const admins = body.admins;
     admins.sort((a, b) => a.id - b.id);
     expect(body.admins).toMatchObject([
-        { id: admin.id, username: admin.username },
-        { id: admin2.id, name: admin2.name, username: admin2.username },
+        {
+            id: admin.id,
+            username: admin.username,
+            imageUrl: expect.stringMatching(/^https:\/\/gravatar.com/),
+        },
+        {
+            id: admin2.id,
+            name: admin2.name,
+            username: admin2.username,
+            imageUrl: expect.stringMatching(/^https:\/\/gravatar.com/),
+        },
     ]);
 });

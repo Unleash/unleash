@@ -1,9 +1,13 @@
-import useSWR, { type SWRConfiguration } from 'swr';
-import { useCallback } from 'react';
+import type { SWRConfiguration } from 'swr';
+import { useCallback, useContext } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useClearSWRCache } from 'hooks/useClearSWRCache';
 import type { ISignalQuerySignal } from 'interfaces/signal';
+import useUiConfig from '../useUiConfig/useUiConfig';
+import { useUiFlag } from 'hooks/useUiFlag';
+import AccessContext from 'contexts/AccessContext';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
 type SignalQueryParams = {
     from?: string;
@@ -53,15 +57,22 @@ const createSignalQuery = () => {
         options: SWRConfiguration = {},
         cachePrefix: string = '',
     ): UseSignalsOutput => {
+        const { isAdmin } = useContext(AccessContext);
+        const { isEnterprise } = useUiConfig();
+        const signalsEnabled = useUiFlag('signals');
+
         const { KEY, fetcher } = getSignalQueryFetcher(params);
         const swrKey = `${cachePrefix}${KEY}`;
         useClearSWRCache(swrKey, PATH, SWR_CACHE_SIZE);
 
-        const { data, error, mutate, isLoading } = useSWR<SignalQueryResponse>(
-            swrKey,
-            fetcher,
-            options,
-        );
+        const { data, error, mutate, isLoading } =
+            useConditionalSWR<SignalQueryResponse>(
+                isEnterprise() && isAdmin && signalsEnabled,
+                fallbackData,
+                swrKey,
+                fetcher,
+                options,
+            );
 
         const refetch = useCallback(() => {
             mutate();

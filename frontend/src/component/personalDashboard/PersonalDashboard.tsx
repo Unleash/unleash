@@ -15,7 +15,7 @@ import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import React, { type FC, useEffect, useState } from 'react';
 import LinkIcon from '@mui/icons-material/Link';
 import { Badge } from '../common/Badge/Badge';
-import { ConnectSDK, CreateFlag } from './ConnectSDK';
+import { ConnectSDK, CreateFlag, ExistingFlag } from './ConnectSDK';
 import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { ProjectSetupComplete } from './ProjectSetupComplete';
@@ -298,8 +298,12 @@ export const PersonalDashboard = () => {
                     <SpacedGridItem item lg={4} md={1}>
                         {stage === 'onboarded' ? (
                             <ProjectSetupComplete project={activeProject} />
-                        ) : activeProject ? (
+                        ) : null}
+                        {stage === 'onboarding-started' ? (
                             <CreateFlag project={activeProject} />
+                        ) : null}
+                        {stage === 'first-flag-created' ? (
+                            <ExistingFlag project={activeProject} />
                         ) : null}
                     </SpacedGridItem>
                     <SpacedGridItem item lg={4} md={1}>

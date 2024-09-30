@@ -212,23 +212,10 @@ export const PersonalDashboard = () => {
                 </IconButton>
             </ScreenExplanation>
 
-            {noProjects ? (
+            {noProjects && personalDashboard ? (
                 <ContentGridNoProjects
-                    owners={
-                        // use payload.projectOwners
-                        [{ ownerType: 'system' }]
-                    }
-                    admins={
-                        // use payload.admins
-                        [
-                            { name: 'admin' },
-                            {
-                                name: 'Christopher Tompkins',
-                                imageUrl:
-                                    'https://avatars.githubusercontent.com/u/1010371?v=4',
-                            },
-                        ]
-                    }
+                    owners={personalDashboard.projectOwners}
+                    admins={personalDashboard.admins}
                 />
             ) : (
                 <ContentGrid container columns={{ lg: 12, md: 1 }}>

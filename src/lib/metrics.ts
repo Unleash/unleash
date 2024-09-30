@@ -102,7 +102,13 @@ export default class MetricsMonitor {
         const featureFlagUpdateTotal = createCounter({
             name: 'feature_toggle_update_total',
             help: 'Number of times a toggle has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature flag is created.',
-            labelNames: ['toggle', 'project', 'environment', 'environmentType'],
+            labelNames: [
+                'toggle',
+                'project',
+                'environment',
+                'environmentType',
+                'action',
+            ],
         });
         const featureFlagUsageTotal = createCounter({
             name: 'feature_toggle_usage_total',
@@ -782,6 +788,7 @@ export default class MetricsMonitor {
                 project,
                 environment: 'n/a',
                 environmentType: 'n/a',
+                action: 'created',
             });
         });
         eventStore.on(FEATURE_VARIANTS_UPDATED, ({ featureName, project }) => {
@@ -790,6 +797,7 @@ export default class MetricsMonitor {
                 project,
                 environment: 'n/a',
                 environmentType: 'n/a',
+                action: 'updated',
             });
         });
         eventStore.on(FEATURE_METADATA_UPDATED, ({ featureName, project }) => {
@@ -798,6 +806,7 @@ export default class MetricsMonitor {
                 project,
                 environment: 'n/a',
                 environmentType: 'n/a',
+                action: 'updated',
             });
         });
         eventStore.on(FEATURE_UPDATED, ({ featureName, project }) => {
@@ -806,6 +815,7 @@ export default class MetricsMonitor {
                 project,
                 environment: 'default',
                 environmentType: 'production',
+                action: 'updated',
             });
         });
         eventStore.on(
@@ -820,6 +830,7 @@ export default class MetricsMonitor {
                     project,
                     environment,
                     environmentType,
+                    action: 'updated',
                 });
             },
         );
@@ -835,6 +846,7 @@ export default class MetricsMonitor {
                     project,
                     environment,
                     environmentType,
+                    action: 'updated',
                 });
             },
         );
@@ -850,6 +862,7 @@ export default class MetricsMonitor {
                     project,
                     environment,
                     environmentType,
+                    action: 'updated',
                 });
             },
         );
@@ -865,6 +878,7 @@ export default class MetricsMonitor {
                     project,
                     environment,
                     environmentType,
+                    action: 'updated',
                 });
             },
         );
@@ -880,6 +894,7 @@ export default class MetricsMonitor {
                     project,
                     environment,
                     environmentType,
+                    action: 'updated',
                 });
             },
         );
@@ -889,6 +904,7 @@ export default class MetricsMonitor {
                 project,
                 environment: 'n/a',
                 environmentType: 'n/a',
+                action: 'archived',
             });
         });
         eventStore.on(FEATURE_REVIVED, ({ featureName, project }) => {
@@ -897,6 +913,7 @@ export default class MetricsMonitor {
                 project,
                 environment: 'n/a',
                 environmentType: 'n/a',
+                action: 'revived',
             });
         });
         eventStore.on(PROJECT_CREATED, () => {

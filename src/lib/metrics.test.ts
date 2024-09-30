@@ -141,7 +141,7 @@ test('should collect metrics for updated toggles', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="default",environmentType="production"\} 1/,
+        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="default",environmentType="production",action="updated"\} 1/,
     );
 });
 
@@ -166,7 +166,7 @@ test('should set environmentType when toggle is flipped', async () => {
     const metrics = await prometheusRegister.metrics();
 
     expect(metrics).toMatch(
-        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="testEnvironment",environmentType="testType"\} 1/,
+        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="testEnvironment",environmentType="testType",action="updated"\} 1/,
     );
 });
 

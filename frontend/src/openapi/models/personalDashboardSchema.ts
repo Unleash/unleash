@@ -13,11 +13,11 @@ import type { PersonalDashboardSchemaProjectsItem } from './personalDashboardSch
  */
 export interface PersonalDashboardSchema {
     /** Users with the admin role in Unleash. */
-    admins?: PersonalDashboardSchemaAdminsItem[];
+    admins: PersonalDashboardSchemaAdminsItem[];
     /** A list of flags a user created or favorited */
     flags: PersonalDashboardSchemaFlagsItem[];
     /** Users with the project owner role in Unleash. Only contains owners of projects that are visible to the user. */
-    projectOwners?: PersonalDashboardSchemaProjectOwnersItem[];
+    projectOwners: PersonalDashboardSchemaProjectOwnersItem[];
     /** A list of projects that a user participates in with any role e.g. member or owner or any custom role */
     projects: PersonalDashboardSchemaProjectsItem[];
 }

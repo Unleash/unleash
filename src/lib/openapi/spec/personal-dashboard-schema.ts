@@ -5,7 +5,7 @@ export const personalDashboardSchema = {
     type: 'object',
     description: 'Project and flags relevant to the user',
     additionalProperties: false,
-    required: ['projects', 'flags'],
+    required: ['projects', 'flags', 'admins', 'projectOwners'],
     properties: {
         admins: {
             type: 'array',
@@ -31,12 +31,10 @@ export const personalDashboardSchema = {
                     },
                     imageUrl: {
                         type: 'string',
-                        nullable: true,
                         example: 'https://example.com/peek-at-you.jpg',
                     },
                     email: {
                         type: 'string',
-                        nullable: true,
                         example: 'user@example.com',
                     },
                 },

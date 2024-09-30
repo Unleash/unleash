@@ -6,7 +6,7 @@ import { EventTimelineEventGroup } from './EventTimelineEventGroup/EventTimeline
 import { EventTimelineHeader } from './EventTimelineHeader/EventTimelineHeader';
 import { useEventTimeline } from './useEventTimeline';
 import { useMemo } from 'react';
-import { useSignalQuery } from 'hooks/api/getters/useSignals/useSignals';
+import { useSignalQuery } from 'hooks/api/getters/useSignalQuery/useSignalQuery';
 import type { ISignalQuerySignal } from 'interfaces/signal';
 import type { IEnvironment } from 'interfaces/environments';
 

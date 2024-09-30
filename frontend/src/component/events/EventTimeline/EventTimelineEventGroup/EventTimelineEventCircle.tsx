@@ -1,4 +1,3 @@
-import type { EventSchemaType } from 'openapi';
 import ToggleOnIcon from '@mui/icons-material/ToggleOn';
 import ToggleOffIcon from '@mui/icons-material/ToggleOff';
 import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
@@ -6,12 +5,13 @@ import ExtensionOutlinedIcon from '@mui/icons-material/ExtensionOutlined';
 import SegmentsIcon from '@mui/icons-material/DonutLargeOutlined';
 import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import { styled } from '@mui/material';
-import type { TimelineEventGroup } from '../EventTimeline';
+import type { TimelineEventGroup, TimelineEventType } from '../EventTimeline';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import type { HTMLAttributes } from 'react';
+import SensorsIcon from '@mui/icons-material/Sensors';
 
 type DefaultEventVariant = 'secondary';
-type CustomEventVariant = 'success' | 'neutral';
+type CustomEventVariant = 'success' | 'neutral' | 'warning';
 type EventVariant = DefaultEventVariant | CustomEventVariant;
 
 const StyledEventCircle = styled('div', {
@@ -36,7 +36,10 @@ const StyledEventCircle = styled('div', {
     },
 }));
 
-const getEventIcon = (type: EventSchemaType) => {
+const getEventIcon = (type: TimelineEventType) => {
+    if (type === 'signal') {
+        return <SensorsIcon />;
+    }
     if (type === 'feature-environment-enabled') {
         return <ToggleOnIcon />;
     }
@@ -57,8 +60,9 @@ const getEventIcon = (type: EventSchemaType) => {
 };
 
 const customEventVariants: Partial<
-    Record<EventSchemaType, CustomEventVariant>
+    Record<TimelineEventType, CustomEventVariant>
 > = {
+    signal: 'warning',
     'feature-environment-enabled': 'success',
     'feature-environment-disabled': 'neutral',
     'feature-archived': 'neutral',

@@ -191,6 +191,10 @@ test('should return personal dashboard project details', async () => {
     expect(body).toMatchObject({
         owners: [{}],
         roles: [{}],
+        onboardingStatus: {
+            status: 'first-flag-created',
+            feature: 'log_feature_a',
+        },
         latestEvents: [
             {
                 createdBy: 'new_user@test.com',

@@ -6,6 +6,7 @@
 import type { PersonalDashboardProjectDetailsSchemaLatestEventsItem } from './personalDashboardProjectDetailsSchemaLatestEventsItem';
 import type { PersonalDashboardProjectDetailsSchemaOwners } from './personalDashboardProjectDetailsSchemaOwners';
 import type { PersonalDashboardProjectDetailsSchemaRolesItem } from './personalDashboardProjectDetailsSchemaRolesItem';
+import type { ProjectOverviewSchemaOnboardingStatus } from './projectOverviewSchemaOnboardingStatus';
 
 /**
  * Project details in personal dashboard
@@ -20,4 +21,5 @@ export interface PersonalDashboardProjectDetailsSchema {
      * @minItems 1
      */
     roles: PersonalDashboardProjectDetailsSchemaRolesItem[];
+    onboardingStatus: ProjectOverviewSchemaOnboardingStatus;
 }

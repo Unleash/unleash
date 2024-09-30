@@ -1,13 +1,15 @@
 import type { FromSchema } from 'json-schema-to-ts';
 import { projectSchema } from './project-schema';
+import { projectOverviewSchema } from './project-overview-schema';
 
 export const personalDashboardProjectDetailsSchema = {
     $id: '#/components/schemas/personalDashboardProjectDetailsSchema',
     type: 'object',
     description: 'Project details in personal dashboard',
     additionalProperties: false,
-    required: ['owners', 'roles', 'latestEvents'],
+    required: ['owners', 'roles', 'latestEvents', 'onboardingStatus'],
     properties: {
+        onboardingStatus: projectOverviewSchema.properties.onboardingStatus,
         latestEvents: {
             type: 'array',
             description: 'The latest events for the project.',
@@ -17,6 +19,11 @@ export const personalDashboardProjectDetailsSchema = {
                 additionalProperties: false,
                 required: ['summary', 'createdBy'],
                 properties: {
+                    id: {
+                        type: 'integer',
+                        minimum: 1,
+                        description: 'The ID of the event.',
+                    },
                     summary: {
                         type: 'string',
                         nullable: true,
@@ -27,6 +34,11 @@ export const personalDashboardProjectDetailsSchema = {
                         type: 'string',
                         description: 'Which user created this event',
                         example: 'johndoe',
+                    },
+                    createdByImageUrl: {
+                        type: 'string',
+                        description: `URL used for the user profile image of the event author`,
+                        example: 'https://example.com/242x200.png',
                     },
                 },
             },

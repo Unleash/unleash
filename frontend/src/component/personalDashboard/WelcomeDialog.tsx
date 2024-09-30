@@ -60,50 +60,47 @@ export const WelcomeDialog: FC<IWelcomeDialogProps> = ({ open, onClose }) => {
                     />
                 </WelcomeLine>
                 <Box>
-                    Here are the concepts you{' '}
+                    Here are the{' '}
                     <Typography
                         component='span'
                         color='primary'
                         fontWeight='bold'
                     >
-                        must understand
+                        key concepts
                     </Typography>{' '}
-                    in order to work effectively with Unleash
+                    you'll need when working with Unleash
                 </Box>
                 <StyledImg src={formatAssetPath(onboardingConcepts)} />
                 <ScreenReaderOnly>
                     <h2>Environments</h2>
                     <p>
-                        Unleash comes with two global environments. Once you
-                        create a feature flag it will exist in all environments,
-                        but it will hold different configuration per
-                        environment.
+                        Environments represent different stages in your
+                        development lifecycle. The default environments are
+                        development and production.
                     </p>
                     <h2>Projects</h2>
                     <p>
-                        Feature flags live in projects. When SDKs connect to
-                        Unleash they use an environment /project combination in
-                        order to retrieve the correct configuration. You can
-                        also use projects to control access level for feature
-                        flags.
+                        Projects help you organize feature flags and define
+                        access for users and applications. SDKs use a
+                        combination of environment and project to retrieve
+                        feature flag configurations.
                     </p>
                     <h2>Feature flags</h2>
                     <p>
-                        Flags live in projects and across all configured
-                        environments. Each flag will have separate configuration
-                        in each environment enabled for the project that they
-                        live in.
+                        Feature flags exist within a project and have distinct
+                        configurations for each of the project's active
+                        environments.
                     </p>
                     <h2>Activation strategy</h2>
                     <p>
-                        Activation strategies are rulesets that decide whether
-                        or not a feature flag should be enabled in a specific
-                        environment. You can configure as many rulesets as you
-                        want per environment.
+                        Activation strategies are rulesets that determine if a
+                        feature flag is enabled in a specific environment. You
+                        can configure multiple activation strategies per
+                        environment.
                     </p>
                 </ScreenReaderOnly>
                 <Button variant='contained' onClick={onClose}>
-                    Got it, let's get started
+                    Got it, let's get started!
                 </Button>
             </ContentWrapper>
         </StyledDialog>

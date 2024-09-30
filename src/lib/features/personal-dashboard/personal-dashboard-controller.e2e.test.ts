@@ -81,6 +81,13 @@ const createProject = async (name: string, user: IUser) => {
     return project;
 };
 
+const favoriteProject = async (projectName = 'default') => {
+    await app.request
+        .post(`/api/admin/projects/${projectName}/favorites`)
+        .set('Content-Type', 'application/json')
+        .expect(200);
+};
+
 test('should return personal dashboard with membered projects', async () => {
     const { body: user1 } = await loginUser('user1@test.com');
     const projectA = await createProject('Project A', user1);
@@ -118,6 +125,36 @@ test('should return personal dashboard with membered projects', async () => {
             {
                 name: projectC.name,
                 id: projectC.id,
+                health: 100,
+                memberCount: 1,
+                featureCount: 0,
+            },
+        ],
+    });
+});
+
+test('should return personal dashboard with user favorited projects', async () => {
+    const { body: user1 } = await loginUser('user1@test.com');
+    const projectA = await createProject('Project A', user1);
+
+    await loginUser('user2@test.com');
+    await favoriteProject(projectA.id);
+
+    const { body } = await app.request.get(`/api/admin/personal-dashboard`);
+
+    expect(body).toMatchObject({
+        projects: [
+            {
+                name: 'Default',
+                id: 'default',
+                health: 100,
+                memberCount: 0,
+                featureCount: 0,
+            },
+            {
+                name: projectA.name,
+                id: projectA.id,
+                health: 100,
                 memberCount: 1,
                 featureCount: 0,
             },

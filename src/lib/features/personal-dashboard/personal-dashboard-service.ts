@@ -71,12 +71,13 @@ export class PersonalDashboardService {
     }
 
     async getPersonalProjects(userId: number): Promise<PersonalProject[]> {
-        // TODO: add favorite projects in addition to membership projects
-        const userProjectIds =
-            await this.projectReadModel.getProjectsByUser(userId);
+        const [userProjectIds, userFavoritedProjectIds] = await Promise.all([
+            this.projectReadModel.getProjectsByUser(userId),
+            this.projectReadModel.getProjectsFavoritedByUser(userId),
+        ]);
 
         const projects = await this.projectReadModel.getProjectsForAdminUi({
-            ids: userProjectIds,
+            ids: [...new Set([...userProjectIds, ...userFavoritedProjectIds])],
             archived: false,
         });
 

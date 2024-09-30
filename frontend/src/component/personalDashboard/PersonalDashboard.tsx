@@ -31,17 +31,12 @@ import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
 import { ContentGridNoProjects } from './ContentGridNoProjects';
 import { LatestProjectEvents } from './LatestProjectEvents';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
+import HelpOutline from '@mui/icons-material/HelpOutline';
 
-const ScreenExplanation = styled(Typography)(({ theme }) => ({
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(8),
-    maxWidth: theme.spacing(45),
-}));
-
-const StyledHeaderTitle = styled(Typography)(({ theme }) => ({
-    fontSize: theme.typography.h2.fontSize,
-    fontWeight: 'normal',
-    marginBottom: theme.spacing(2),
+const ScreenExplanation = styled('div')(({ theme }) => ({
+    marginBottom: theme.spacing(4),
+    display: 'flex',
+    alignItems: 'center',
 }));
 
 const ContentGrid = styled(Grid)(({ theme }) => ({
@@ -196,8 +191,8 @@ export const PersonalDashboard = () => {
     const stage = activeProjectOverview?.onboardingStatus.status ?? 'loading';
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
-        'seen' | 'not_seen'
-    >('welcome-dialog:v1', 'not_seen');
+        'open' | 'closed'
+    >('welcome-dialog:v1', 'open');
 
     const noProjects = projects.length === 0;
 
@@ -207,10 +202,19 @@ export const PersonalDashboard = () => {
                 Welcome {name}
             </Typography>
             <ScreenExplanation>
-                Here are some tasks we think would be useful in order to get the
-                most of Unleash
+                <p>
+                    Here are some tasks we think would be useful in order to get
+                    the most of Unleash
+                </p>
+                <IconButton
+                    size={'small'}
+                    title='Key concepts'
+                    onClick={() => setWelcomeDialog('open')}
+                >
+                    <HelpOutline />
+                </IconButton>
             </ScreenExplanation>
-            <StyledHeaderTitle>Your resources</StyledHeaderTitle>
+
             {noProjects ? (
                 <ContentGridNoProjects
                     owners={[{ ownerType: 'system' }]}
@@ -366,8 +370,8 @@ export const PersonalDashboard = () => {
                 </SpacedGridItem>
             </ContentGrid>
             <WelcomeDialog
-                open={welcomeDialog !== 'seen'}
-                onClose={() => setWelcomeDialog('seen')}
+                open={welcomeDialog === 'open'}
+                onClose={() => setWelcomeDialog('closed')}
             />
         </div>
     );

@@ -227,17 +227,10 @@ export const PersonalDashboard = () => {
                 ) : null}
             </ScreenExplanation>
 
-            {noProjects ? (
+            {noProjects && personalDashboard ? (
                 <ContentGridNoProjects
-                    owners={[{ ownerType: 'system' }]}
-                    admins={[
-                        { name: 'admin' },
-                        {
-                            name: 'Christopher Tompkins',
-                            imageUrl:
-                                'https://avatars.githubusercontent.com/u/1010371?v=4',
-                        },
-                    ]}
+                    owners={personalDashboard.projectOwners}
+                    admins={personalDashboard.admins}
                 />
             ) : (
                 <ContentGrid container columns={{ lg: 12, md: 1 }}>

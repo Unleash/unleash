@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import { Markdown } from 'component/common/Markdown/Markdown';
+import type { HtmlHTMLAttributes } from 'react';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import {
     formatDateHMS,
@@ -56,6 +57,10 @@ const StyledEventTimelineEventCircle = styled(EventTimelineEventCircle)(
     }),
 );
 
+const BoldToNormal = (props: HtmlHTMLAttributes<HTMLElement>) => {
+    return <span>{props.children}</span>;
+};
+
 interface IEventTimelineEventTooltipProps {
     group: TimelineEventGroup;
 }
@@ -107,7 +112,9 @@ export const EventTimelineEventTooltip = ({
                                 locationSettings?.locale,
                             )}
                         </StyledDate>
-                        <Markdown>{event.summary}</Markdown>
+                        <Markdown components={{ strong: BoldToNormal }}>
+                            {event.summary}
+                        </Markdown>
                     </div>
                 </StyledTooltipItem>
             ))}

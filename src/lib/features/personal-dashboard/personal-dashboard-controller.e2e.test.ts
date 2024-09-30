@@ -213,3 +213,43 @@ test('should return personal dashboard project details', async () => {
         ],
     });
 });
+
+test('should return Unleash admins', async () => {
+    await loginUser('new_user@test.com');
+    const adminRoleId = 1;
+    const userService = app.services.userService;
+
+    const admin = await userService.createUser({
+        username: 'admin',
+        rootRole: adminRoleId,
+    });
+    const admin2 = await userService.createUser({
+        username: 'John',
+        name: 'John Admin',
+        rootRole: adminRoleId,
+    });
+
+    // service account that shouldn't be listed in the output. Service
+    // accounts are enterprise functionality, so there's no service to
+    // call here
+    const [{ id: serviceAdminId }] = await db
+        .rawDatabase('users')
+        .insert({
+            username: 'service_admin',
+            is_service: true,
+        })
+        .returning('*');
+    await app.services.accessService.setUserRootRole(
+        serviceAdminId,
+        adminRoleId,
+    );
+
+    const { body } = await app.request.get(`/api/admin/personal-dashboard`);
+
+    const admins = body.admins;
+    admins.sort((a, b) => a.id - b.id);
+    expect(body.admins).toMatchObject([
+        { id: admin.id, username: admin.username },
+        { id: admin2.id, name: admin2.name, username: admin2.username },
+    ]);
+});

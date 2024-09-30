@@ -9,9 +9,15 @@ import type {
 } from './personal-dashboard-read-model-type';
 import type { IProjectReadModel } from '../project/project-read-model-type';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
-import type { IAccountStore, IEventStore, MinimalUser } from '../../types';
+import type {
+    IAccountStore,
+    IEventStore,
+    IOnboardingReadModel,
+    MinimalUser,
+} from '../../types';
 import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
 import { generateImageUrl } from '../../util';
+import type { OnboardingStatus } from '../onboarding/onboarding-read-model-type';
 
 type PersonalProjectDetails = {
     latestEvents: {
@@ -20,6 +26,7 @@ type PersonalProjectDetails = {
         id: number;
         createdByImageUrl: string;
     }[];
+    onboardingStatus: OnboardingStatus;
 };
 
 export class PersonalDashboardService {
@@ -37,10 +44,13 @@ export class PersonalDashboardService {
 
     private accountStore: IAccountStore;
 
+    private onboardingReadModel: IOnboardingReadModel;
+
     constructor(
         personalDashboardReadModel: IPersonalDashboardReadModel,
         projectOwnersReadModel: IProjectOwnersReadModel,
         projectReadModel: IProjectReadModel,
+        onboardingReadModel: IOnboardingReadModel,
         eventStore: IEventStore,
         featureEventFormatter: FeatureEventFormatter,
         privateProjectChecker: IPrivateProjectChecker,
@@ -49,6 +59,7 @@ export class PersonalDashboardService {
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectOwnersReadModel = projectOwnersReadModel;
         this.projectReadModel = projectReadModel;
+        this.onboardingReadModel = onboardingReadModel;
         this.eventStore = eventStore;
         this.featureEventFormatter = featureEventFormatter;
         this.privateProjectChecker = privateProjectChecker;
@@ -100,6 +111,11 @@ export class PersonalDashboardService {
             [{ field: 'project', operator: 'IS', values: [projectId] }],
         );
 
+        const onboardingStatus =
+            await this.onboardingReadModel.getOnboardingStatusForProject(
+                projectId,
+            );
+
         const formattedEvents = recentEvents.map((event) => ({
             summary: this.featureEventFormatter.format(event).text,
             createdBy: event.createdBy,
@@ -107,7 +123,7 @@ export class PersonalDashboardService {
             createdByImageUrl: generateImageUrl({ email: event.createdBy }),
         }));
 
-        return { latestEvents: formattedEvents };
+        return { latestEvents: formattedEvents, onboardingStatus };
     }
 
     async getAdmins(): Promise<MinimalUser[]> {

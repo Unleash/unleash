@@ -17,6 +17,11 @@ export const personalDashboardProjectDetailsSchema = {
                 additionalProperties: false,
                 required: ['summary', 'createdBy'],
                 properties: {
+                    id: {
+                        type: 'integer',
+                        minimum: 1,
+                        description: 'The ID of the event.',
+                    },
                     summary: {
                         type: 'string',
                         nullable: true,
@@ -27,6 +32,11 @@ export const personalDashboardProjectDetailsSchema = {
                         type: 'string',
                         description: 'Which user created this event',
                         example: 'johndoe',
+                    },
+                    createdByImageUrl: {
+                        type: 'string',
+                        description: `URL used for the user profile image of the event author`,
+                        example: 'https://example.com/242x200.png',
                     },
                 },
             },

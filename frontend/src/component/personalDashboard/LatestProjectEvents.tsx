@@ -1,22 +1,41 @@
 import type { FC } from 'react';
-import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
 import { Markdown } from '../common/Markdown/Markdown';
+import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
+import { UserAvatar } from '../common/UserAvatar/UserAvatar';
+import { styled } from '@mui/material';
+
+const Events = styled('ul')(({ theme }) => ({
+    padding: 0,
+    alignItems: 'flex-start',
+}));
+
+const Event = styled('li')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+    listStyleType: 'none',
+    padding: 0,
+    marginBottom: theme.spacing(4),
+}));
 
 export const LatestProjectEvents: FC<{
     latestEvents: PersonalDashboardProjectDetailsSchema['latestEvents'];
 }> = ({ latestEvents }) => {
     return (
-        <ul>
+        <Events>
             {latestEvents.map((event) => {
                 return (
-                    <li key={event.summary}>
+                    <Event key={event.id}>
+                        <UserAvatar
+                            src={event.createdByImageUrl}
+                            sx={{ mt: 1 }}
+                        />
                         <Markdown>
                             {event.summary ||
                                 'No preview available for this event'}
                         </Markdown>
-                    </li>
+                    </Event>
                 );
             })}
-        </ul>
+        </Events>
     );
 };

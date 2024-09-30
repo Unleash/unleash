@@ -7,9 +7,15 @@ import type {
 import type { IProjectReadModel } from '../project/project-read-model-type';
 import type { IEventStore } from '../../types';
 import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
+import { generateImageUrl } from '../../util';
 
 type PersonalProjectDetails = {
-    latestEvents: { summary: string; createdBy: string }[];
+    latestEvents: {
+        summary: string;
+        createdBy: string;
+        id: number;
+        createdByImageUrl: string;
+    }[];
 };
 
 export class PersonalDashboardService {
@@ -73,6 +79,8 @@ export class PersonalDashboardService {
         const formattedEvents = recentEvents.map((event) => ({
             summary: this.featureEventFormatter.format(event).text,
             createdBy: event.createdBy,
+            id: event.id,
+            createdByImageUrl: generateImageUrl({ email: event.createdBy }),
         }));
 
         return { latestEvents: formattedEvents };

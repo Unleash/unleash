@@ -7,10 +7,10 @@ import {
 } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import type { IEnvironment } from 'interfaces/environments';
 import { useEffect, useMemo } from 'react';
-import { type TimeSpanOption, timeSpanOptions } from '../useEventTimeline';
+import { timeSpanOptions } from '../EventTimelineProvider';
 import CloseIcon from '@mui/icons-material/Close';
+import { useEventTimelineContext } from '../EventTimelineContext';
 
 const StyledCol = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -36,21 +36,13 @@ const StyledTimelineEventsCount = styled('span')(({ theme }) => ({
 
 interface IEventTimelineHeaderProps {
     totalEvents: number;
-    timeSpan: TimeSpanOption;
-    setTimeSpan: (timeSpan: TimeSpanOption) => void;
-    environment: IEnvironment | undefined;
-    setEnvironment: (environment: IEnvironment) => void;
-    setOpen: (open: boolean) => void;
 }
 
 export const EventTimelineHeader = ({
     totalEvents,
-    timeSpan,
-    setTimeSpan,
-    environment,
-    setEnvironment,
-    setOpen,
 }: IEventTimelineHeaderProps) => {
+    const { timeSpan, environment, setOpen, setTimeSpan, setEnvironment } =
+        useEventTimelineContext();
     const { environments } = useEnvironments();
 
     const activeEnvironments = useMemo(

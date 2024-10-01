@@ -1,12 +1,32 @@
+import type { ReactNode } from 'react';
+import { EventTimelineContext } from './EventTimelineContext';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import type { IEnvironment } from 'interfaces/environments';
 
-export type TimeSpanOption = {
+type TimeSpanOption = {
     key: string;
     label: string;
     value: Duration;
     markers: string[];
 };
+
+type EventTimelineState = {
+    open: boolean;
+    timeSpan: TimeSpanOption;
+    environment?: IEnvironment;
+    signalsAlertSeen?: boolean;
+};
+
+type EventTimelineStateSetters = {
+    setOpen: (open: boolean) => void;
+    setTimeSpan: (timeSpan: TimeSpanOption) => void;
+    setEnvironment: (environment: IEnvironment) => void;
+    setSignalsAlertSeen: (seen: boolean) => void;
+};
+
+export interface IEventTimelineContext
+    extends EventTimelineState,
+        EventTimelineStateSetters {}
 
 export const timeSpanOptions: TimeSpanOption[] = [
     {
@@ -57,18 +77,18 @@ export const timeSpanOptions: TimeSpanOption[] = [
     },
 ];
 
-type EventTimelineState = {
-    open: boolean;
-    timeSpan: TimeSpanOption;
-    environment?: IEnvironment;
-};
-
 const defaultState: EventTimelineState = {
     open: false,
     timeSpan: timeSpanOptions[0],
 };
 
-export const useEventTimeline = () => {
+interface IEventTimelineProviderProps {
+    children: ReactNode;
+}
+
+export const EventTimelineProvider = ({
+    children,
+}: IEventTimelineProviderProps) => {
     const [state, setState] = useLocalStorageState<EventTimelineState>(
         'event-timeline:v1',
         defaultState,
@@ -81,12 +101,20 @@ export const useEventTimeline = () => {
         setState((prevState) => ({ ...prevState, [key]: value }));
     };
 
-    return {
+    const contextValue: IEventTimelineContext = {
         ...state,
         setOpen: (open: boolean) => setField('open', open),
         setTimeSpan: (timeSpan: TimeSpanOption) =>
             setField('timeSpan', timeSpan),
         setEnvironment: (environment: IEnvironment) =>
             setField('environment', environment),
+        setSignalsAlertSeen: (seen: boolean) =>
+            setField('signalsAlertSeen', seen),
     };
+
+    return (
+        <EventTimelineContext.Provider value={contextValue}>
+            {children}
+        </EventTimelineContext.Provider>
+    );
 };

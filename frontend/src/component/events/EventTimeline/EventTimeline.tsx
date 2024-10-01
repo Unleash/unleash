@@ -4,11 +4,11 @@ import { startOfDay, sub } from 'date-fns';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import { EventTimelineEventGroup } from './EventTimelineEventGroup/EventTimelineEventGroup';
 import { EventTimelineHeader } from './EventTimelineHeader/EventTimelineHeader';
-import type { TimeSpanOption } from './useEventTimeline';
 import { useMemo } from 'react';
 import { useSignalQuery } from 'hooks/api/getters/useSignalQuery/useSignalQuery';
 import type { ISignalQuerySignal } from 'interfaces/signal';
 import type { IEnvironment } from 'interfaces/environments';
+import { useEventTimelineContext } from './EventTimelineContext';
 
 export type TimelineEventType = 'signal' | EventSchemaType;
 
@@ -157,21 +157,8 @@ const getTimelineEvent = (
     }
 };
 
-interface IEventTimelineProps {
-    timeSpan: TimeSpanOption;
-    environment: IEnvironment | undefined;
-    setTimeSpan: (timeSpan: TimeSpanOption) => void;
-    setEnvironment: (environment: IEnvironment) => void;
-    setOpen: (open: boolean) => void;
-}
-
-export const EventTimeline = ({
-    timeSpan,
-    environment,
-    setTimeSpan,
-    setEnvironment,
-    setOpen,
-}: IEventTimelineProps) => {
+export const EventTimeline = () => {
+    const { timeSpan, environment } = useEventTimelineContext();
     const endDate = new Date();
     const startDate = sub(endDate, timeSpan.value);
     const endTime = endDate.getTime();
@@ -246,14 +233,7 @@ export const EventTimeline = ({
     return (
         <>
             <StyledRow>
-                <EventTimelineHeader
-                    totalEvents={events.length}
-                    timeSpan={timeSpan}
-                    setTimeSpan={setTimeSpan}
-                    environment={environment}
-                    setEnvironment={setEnvironment}
-                    setOpen={setOpen}
-                />
+                <EventTimelineHeader totalEvents={events.length} />
             </StyledRow>
             <StyledTimelineBody>
                 <StyledTimelineContainer>

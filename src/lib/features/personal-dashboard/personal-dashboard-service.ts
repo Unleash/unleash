@@ -10,6 +10,7 @@ import type {
 import type { IProjectReadModel } from '../project/project-read-model-type';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type {
+    IAccessStore,
     IAccountStore,
     IEventStore,
     IOnboardingReadModel,
@@ -36,6 +37,8 @@ export class PersonalDashboardService {
 
     private onboardingReadModel: IOnboardingReadModel;
 
+    private accessStore: IAccessStore;
+
     constructor(
         personalDashboardReadModel: IPersonalDashboardReadModel,
         projectOwnersReadModel: IProjectOwnersReadModel,
@@ -45,6 +48,7 @@ export class PersonalDashboardService {
         featureEventFormatter: FeatureEventFormatter,
         privateProjectChecker: IPrivateProjectChecker,
         accountStore: IAccountStore,
+        accessStore: IAccessStore,
     ) {
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectOwnersReadModel = projectOwnersReadModel;
@@ -54,6 +58,7 @@ export class PersonalDashboardService {
         this.featureEventFormatter = featureEventFormatter;
         this.privateProjectChecker = privateProjectChecker;
         this.accountStore = accountStore;
+        this.accessStore = accessStore;
     }
 
     getPersonalFeatures(userId: number): Promise<PersonalFeature[]> {
@@ -95,6 +100,7 @@ export class PersonalDashboardService {
     }
 
     async getPersonalProjectDetails(
+        userId: number,
         projectId: string,
     ): Promise<PersonalDashboardProjectDetailsSchema> {
         const recentEvents = await this.eventStore.searchEvents(
@@ -117,11 +123,26 @@ export class PersonalDashboardService {
         const owners =
             await this.projectOwnersReadModel.getProjectOwners(projectId);
 
+        const allRoles = await this.accessStore.getAllProjectRolesForUser(
+            userId,
+            projectId,
+        );
+
+        const projectRoles = allRoles
+            .filter((role) => ['project', 'custom'].includes(role.type))
+            .map((role) => ({
+                id: role.id,
+                name: role.name,
+                type: role.type as PersonalDashboardProjectDetailsSchema['roles'][number]['type'],
+            }));
+
+        console.log('project roles', projectRoles);
+
         return {
             latestEvents: formattedEvents,
             onboardingStatus,
             owners,
-            roles: [],
+            roles: projectRoles,
         };
     }
 

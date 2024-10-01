@@ -159,9 +159,10 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
     }
 
     async getUserProjectOwners(projectId: string): Promise<UserProjectOwner[]> {
-        const allOwners = await this.getProjectOwnersDictionary();
-        return (allOwners[projectId] ?? []).filter(
-            (owner) => owner.ownerType === 'user',
-        ) as UserProjectOwner[];
+        const ownerRole = await this.db(T.ROLES)
+            .where({ name: RoleName.OWNER })
+            .first();
+        const usersDict = await this.getAllProjectUsersByRole(ownerRole.id);
+        return usersDict[projectId] ?? [];
     }
 }

@@ -215,14 +215,15 @@ test('should return projects where users are part of a group', async () => {
 });
 
 test('should return personal dashboard project details', async () => {
-    await loginUser('new_user@test.com');
+    const { body: user } = await loginUser('new_user@test.com');
 
-    await app.createFeature('log_feature_a');
-    await app.createFeature('log_feature_b');
-    await app.createFeature('log_feature_c');
+    const project = await createProject(`x${randomId()}`, user);
+    await app.createFeature('log_feature_a', project.id);
+    await app.createFeature('log_feature_b', project.id);
+    await app.createFeature('log_feature_c', project.id);
 
     const { body } = await app.request.get(
-        `/api/admin/personal-dashboard/default`,
+        `/api/admin/personal-dashboard/${project.id}`,
     );
 
     expect(body).toMatchObject({
@@ -249,6 +250,12 @@ test('should return personal dashboard project details', async () => {
                 createdBy: 'new_user@test.com',
                 summary: expect.stringContaining(
                     '**new_user@test.com** created **[log_feature_a]',
+                ),
+            },
+            {
+                createdBy: 'audit user',
+                summary: expect.stringContaining(
+                    `**audit user** created project **[${project.id}]`,
                 ),
             },
         ],

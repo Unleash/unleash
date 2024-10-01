@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import Loader from './common/Loader/Loader';
-import { getSessionStorageItem, setSessionStorageItem } from '../utils/storage';
+import { getSessionStorageItem, setSessionStorageItem } from 'utils/storage';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 export const InitialRedirect = () => {

@@ -36,7 +36,7 @@ import { Notifications } from 'component/common/Notifications/Notifications';
 import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
-import TimelineIcon from '@mui/icons-material/Timeline';
+import LinearScaleIcon from '@mui/icons-material/LinearScale';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -269,7 +269,7 @@ const OldHeader = ({ showTimeline, setShowTimeline }: IOldHeaderProps) => {
                                         }
                                         size='large'
                                     >
-                                        <TimelineIcon />
+                                        <LinearScaleIcon />
                                     </StyledIconButton>
                                 </Tooltip>
                             }

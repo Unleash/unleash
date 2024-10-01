@@ -33,7 +33,7 @@ import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
-import TimelineIcon from '@mui/icons-material/Timeline';
+import LinearScaleIcon from '@mui/icons-material/LinearScale';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -204,7 +204,7 @@ const Header = ({ showTimeline, setShowTimeline }: IHeaderProps) => {
                                         }
                                         size='large'
                                     >
-                                        <TimelineIcon />
+                                        <LinearScaleIcon />
                                     </StyledIconButton>
                                 </Tooltip>
                             }

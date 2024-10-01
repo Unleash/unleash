@@ -47,7 +47,11 @@ const getEventIcon = (type: TimelineEventType) => {
         return <ToggleOffIcon />;
     }
     if (type.startsWith('strategy-') || type.startsWith('feature-strategy-')) {
-        return <ExtensionOutlinedIcon />;
+        return (
+            <ExtensionOutlinedIcon
+                sx={{ marginTop: '-2px', marginRight: '-2px' }}
+            />
+        );
     }
     if (type.startsWith('feature-')) {
         return <FlagOutlinedIcon />;

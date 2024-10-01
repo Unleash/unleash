@@ -115,7 +115,7 @@ export class PersonalDashboardService {
         }));
 
         const owners =
-            await this.projectOwnersReadModel.getUserProjectOwners(projectId);
+            await this.projectOwnersReadModel.getProjectOwners(projectId);
 
         return {
             latestEvents: formattedEvents,

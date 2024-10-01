@@ -4,6 +4,7 @@ import { generateImageUrl } from '../../util';
 import type {
     GroupProjectOwner,
     IProjectOwnersReadModel,
+    ProjectOwners,
     ProjectOwnersDictionary,
     UserProjectOwner,
     WithProjectOwners,
@@ -158,11 +159,8 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
         return ProjectOwnersReadModel.addOwnerData(projects, owners);
     }
 
-    async getUserProjectOwners(projectId: string): Promise<UserProjectOwner[]> {
-        const ownerRole = await this.db(T.ROLES)
-            .where({ name: RoleName.OWNER })
-            .first();
-        const usersDict = await this.getAllProjectUsersByRole(ownerRole.id);
-        return usersDict[projectId] ?? [];
+    async getProjectOwners(projectId: string): Promise<ProjectOwners> {
+        const owners = await this.getProjectOwnersDictionary();
+        return owners[projectId] ?? [];
     }
 }

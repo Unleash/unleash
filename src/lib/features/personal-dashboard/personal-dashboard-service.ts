@@ -136,8 +136,6 @@ export class PersonalDashboardService {
                 type: role.type as PersonalDashboardProjectDetailsSchema['roles'][number]['type'],
             }));
 
-        console.log('project roles', projectRoles);
-
         return {
             latestEvents: formattedEvents,
             onboardingStatus,

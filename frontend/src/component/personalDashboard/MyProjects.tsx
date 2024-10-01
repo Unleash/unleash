@@ -71,10 +71,11 @@ export const MyProjects: FC<{
     setActiveProject,
     activeProject,
 }) => {
-    const stage =
+    const activeProjectStage =
         personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
     const setupIncomplete =
-        stage === 'onboarding-started' || stage === 'first-flag-created';
+        activeProjectStage === 'onboarding-started' ||
+        activeProjectStage === 'first-flag-created';
 
     return (
         <ContentGrid container columns={{ lg: 12, md: 1 }}>
@@ -136,25 +137,27 @@ export const MyProjects: FC<{
                 </List>
             </SpacedGridItem>
             <SpacedGridItem item lg={4} md={1}>
-                {stage === 'onboarded' ? (
+                {activeProjectStage === 'onboarded' ? (
                     <ProjectSetupComplete project={activeProject} />
                 ) : null}
-                {stage === 'onboarding-started' || stage === 'loading' ? (
+                {activeProjectStage === 'onboarding-started' ||
+                activeProjectStage === 'loading' ? (
                     <CreateFlag project={activeProject} />
                 ) : null}
-                {stage === 'first-flag-created' ? (
+                {activeProjectStage === 'first-flag-created' ? (
                     <ExistingFlag project={activeProject} />
                 ) : null}
             </SpacedGridItem>
             <SpacedGridItem item lg={4} md={1}>
-                {stage === 'onboarded' && personalDashboardProjectDetails ? (
+                {activeProjectStage === 'onboarded' &&
+                personalDashboardProjectDetails ? (
                     <LatestProjectEvents
                         latestEvents={
                             personalDashboardProjectDetails.latestEvents
                         }
                     />
                 ) : null}
-                {setupIncomplete || stage === 'loading' ? (
+                {setupIncomplete || activeProjectStage === 'loading' ? (
                     <ConnectSDK project={activeProject} />
                 ) : null}
             </SpacedGridItem>

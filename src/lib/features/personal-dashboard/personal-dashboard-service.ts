@@ -17,18 +17,7 @@ import type {
 } from '../../types';
 import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
 import { generateImageUrl } from '../../util';
-import type { OnboardingStatus } from '../onboarding/onboarding-read-model-type';
 import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
-
-type PersonalProjectDetails = {
-    latestEvents: {
-        summary: string;
-        createdBy: string;
-        id: number;
-        createdByImageUrl: string;
-    }[];
-    onboardingStatus: OnboardingStatus;
-};
 
 export class PersonalDashboardService {
     private personalDashboardReadModel: IPersonalDashboardReadModel;

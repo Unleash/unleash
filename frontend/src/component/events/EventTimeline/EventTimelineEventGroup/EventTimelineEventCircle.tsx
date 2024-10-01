@@ -83,7 +83,7 @@ export const EventTimelineEventCircle = ({
 }: IEventTimelineEventCircleProps) => {
     if (
         group.length === 1 ||
-        group.every((event) => event.type === group[0].type)
+        !group.some(({ type }) => type !== group[0].type)
     ) {
         const event = group[0];
 

@@ -4,8 +4,10 @@ import useProjects from '../hooks/api/getters/useProjects/useProjects';
 import { useLastViewedProject } from '../hooks/useLastViewedProject';
 import Loader from './common/Loader/Loader';
 import { getSessionStorageItem, setSessionStorageItem } from '../utils/storage';
+import { useUiFlag } from '../hooks/useUiFlag';
 
 export const InitialRedirect = () => {
+    const personalDashboardUiEnabled = useUiFlag('personalDashboardUI');
     const { lastViewed } = useLastViewedProject();
     const { projects, loading } = useProjects();
     const navigate = useNavigate();
@@ -15,6 +17,10 @@ export const InitialRedirect = () => {
     const getRedirect = useCallback(() => {
         if (projects && lastViewed) {
             return `/projects/${lastViewed}`;
+        }
+
+        if (personalDashboardUiEnabled) {
+            return '/personal';
         }
 
         if (projects && !lastViewed && projects.length === 1) {

@@ -18,19 +18,19 @@ const StyledEvent = styled('div', {
 
 interface IEventTimelineEventProps {
     group: TimelineEventGroup;
-    startDate: Date;
-    endDate: Date;
+    startTime: number;
+    endTime: number;
 }
 
 export const EventTimelineEventGroup = ({
     group,
-    startDate,
-    endDate,
+    startTime,
+    endTime,
 }: IEventTimelineEventProps) => {
-    const timelineDuration = endDate.getTime() - startDate.getTime();
-    const eventTime = new Date(group[0].createdAt).getTime();
+    const timelineDuration = endTime - startTime;
+    const eventTime = group[0].timestamp;
 
-    const position = `${((eventTime - startDate.getTime()) / timelineDuration) * 100}%`;
+    const position = `${((eventTime - startTime) / timelineDuration) * 100}%`;
 
     return (
         <StyledEvent position={position}>

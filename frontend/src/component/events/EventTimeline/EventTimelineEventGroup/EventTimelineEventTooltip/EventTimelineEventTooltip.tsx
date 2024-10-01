@@ -68,7 +68,7 @@ export const EventTimelineEventTooltip = ({
     if (group.length === 1) {
         const event = group[0];
         const eventDateTime = formatDateYMDHMS(
-            event.createdAt,
+            event.timestamp,
             locationSettings?.locale,
         );
 
@@ -85,7 +85,7 @@ export const EventTimelineEventTooltip = ({
 
     const firstEvent = group[0];
     const eventDate = formatDateYMD(
-        firstEvent.createdAt,
+        firstEvent.timestamp,
         locationSettings?.locale,
     );
 
@@ -103,7 +103,7 @@ export const EventTimelineEventTooltip = ({
                     <div>
                         <StyledDate>
                             {formatDateHMS(
-                                event.createdAt,
+                                event.timestamp,
                                 locationSettings?.locale,
                             )}
                         </StyledDate>

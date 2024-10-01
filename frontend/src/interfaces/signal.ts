@@ -31,3 +31,8 @@ export interface ISignalEndpointSignal
     extends Omit<ISignal, 'createdBySourceTokenId'> {
     tokenName: string;
 }
+
+export interface ISignalQuerySignal extends ISignalEndpointSignal {
+    sourceName?: string;
+    sourceDescription?: string;
+}

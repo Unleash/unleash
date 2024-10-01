@@ -1,9 +1,16 @@
-import { MenuItem, styled, TextField } from '@mui/material';
+import {
+    IconButton,
+    MenuItem,
+    styled,
+    TextField,
+    Tooltip,
+} from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import type { IEnvironment } from 'interfaces/environments';
 import { useEffect, useMemo } from 'react';
 import { type TimeSpanOption, timeSpanOptions } from '../useEventTimeline';
+import CloseIcon from '@mui/icons-material/Close';
 
 const StyledCol = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -33,6 +40,7 @@ interface IEventTimelineHeaderProps {
     setTimeSpan: (timeSpan: TimeSpanOption) => void;
     environment: IEnvironment | undefined;
     setEnvironment: (environment: IEnvironment) => void;
+    setOpen: (open: boolean) => void;
 }
 
 export const EventTimelineHeader = ({
@@ -41,6 +49,7 @@ export const EventTimelineHeader = ({
     setTimeSpan,
     environment,
     setEnvironment,
+    setOpen,
 }: IEventTimelineHeaderProps) => {
     const { environments } = useEnvironments();
 
@@ -110,6 +119,15 @@ export const EventTimelineHeader = ({
                         </StyledFilter>
                     )}
                 />
+                <Tooltip title='Hide timeline' arrow>
+                    <IconButton
+                        aria-label='close'
+                        size='small'
+                        onClick={() => setOpen(false)}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </Tooltip>
             </StyledCol>
         </>
     );

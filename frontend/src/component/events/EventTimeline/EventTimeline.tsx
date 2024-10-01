@@ -4,7 +4,7 @@ import { startOfDay, sub } from 'date-fns';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import { EventTimelineEventGroup } from './EventTimelineEventGroup/EventTimelineEventGroup';
 import { EventTimelineHeader } from './EventTimelineHeader/EventTimelineHeader';
-import { useEventTimeline } from './useEventTimeline';
+import type { TimeSpanOption } from './useEventTimeline';
 import { useMemo } from 'react';
 import { useSignalQuery } from 'hooks/api/getters/useSignalQuery/useSignalQuery';
 import type { ISignalQuerySignal } from 'interfaces/signal';
@@ -29,6 +29,12 @@ const StyledRow = styled('div')({
     flexDirection: 'row',
     justifyContent: 'space-between',
 });
+
+const StyledTimelineBody = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    padding: theme.spacing(1, 0),
+}));
 
 const StyledTimelineContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -151,10 +157,21 @@ const getTimelineEvent = (
     }
 };
 
-export const EventTimeline = () => {
-    const { timeSpan, environment, setTimeSpan, setEnvironment } =
-        useEventTimeline();
+interface IEventTimelineProps {
+    timeSpan: TimeSpanOption;
+    environment: IEnvironment | undefined;
+    setTimeSpan: (timeSpan: TimeSpanOption) => void;
+    setEnvironment: (environment: IEnvironment) => void;
+    setOpen: (open: boolean) => void;
+}
 
+export const EventTimeline = ({
+    timeSpan,
+    environment,
+    setTimeSpan,
+    setEnvironment,
+    setOpen,
+}: IEventTimelineProps) => {
     const endDate = new Date();
     const startDate = sub(endDate, timeSpan.value);
     const endTime = endDate.getTime();
@@ -235,31 +252,34 @@ export const EventTimeline = () => {
                     setTimeSpan={setTimeSpan}
                     environment={environment}
                     setEnvironment={setEnvironment}
+                    setOpen={setOpen}
                 />
             </StyledRow>
-            <StyledTimelineContainer>
-                <StyledTimeline />
-                <StyledStart />
-                {groups.map((group) => (
-                    <EventTimelineEventGroup
-                        key={group[0].id}
-                        group={group}
-                        startTime={startTime}
-                        endTime={endTime}
-                    />
-                ))}
-                <StyledEnd />
-            </StyledTimelineContainer>
-            <StyledRow>
-                <StyledMarkerLabel>{timeSpan.markers[0]}</StyledMarkerLabel>
-                {timeSpan.markers.slice(1).map((marker) => (
-                    <StyledMiddleMarkerContainer key={marker}>
-                        <StyledMiddleMarker />
-                        <StyledMarkerLabel>{marker}</StyledMarkerLabel>
-                    </StyledMiddleMarkerContainer>
-                ))}
-                <StyledMarkerLabel>now</StyledMarkerLabel>
-            </StyledRow>
+            <StyledTimelineBody>
+                <StyledTimelineContainer>
+                    <StyledTimeline />
+                    <StyledStart />
+                    {groups.map((group) => (
+                        <EventTimelineEventGroup
+                            key={group[0].id}
+                            group={group}
+                            startTime={startTime}
+                            endTime={endTime}
+                        />
+                    ))}
+                    <StyledEnd />
+                </StyledTimelineContainer>
+                <StyledRow>
+                    <StyledMarkerLabel>{timeSpan.markers[0]}</StyledMarkerLabel>
+                    {timeSpan.markers.slice(1).map((marker) => (
+                        <StyledMiddleMarkerContainer key={marker}>
+                            <StyledMiddleMarker />
+                            <StyledMarkerLabel>{marker}</StyledMarkerLabel>
+                        </StyledMiddleMarkerContainer>
+                    ))}
+                    <StyledMarkerLabel>now</StyledMarkerLabel>
+                </StyledRow>
+            </StyledTimelineBody>
         </>
     );
 };

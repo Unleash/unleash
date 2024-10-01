@@ -118,8 +118,14 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
             projectId || '',
         );
         const eventTimeline = useUiFlag('eventTimeline') && !isOss();
-        const { open: showTimeline, setOpen: setShowTimeline } =
-            useEventTimeline();
+        const {
+            open: showTimeline,
+            timeSpan,
+            environment,
+            setOpen: setShowTimeline,
+            setTimeSpan,
+            setEnvironment,
+        } = useEventTimeline();
 
         const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
         const StyledMainLayoutContent = sidebarNavigationEnabled
@@ -181,6 +187,11 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             >
                                 <MainLayoutEventTimeline
                                     open={eventTimeline && showTimeline}
+                                    setOpen={setShowTimeline}
+                                    timeSpan={timeSpan}
+                                    setTimeSpan={setTimeSpan}
+                                    environment={environment}
+                                    setEnvironment={setEnvironment}
                                 />
 
                                 <StyledMainLayoutContent>

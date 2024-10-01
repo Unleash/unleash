@@ -131,7 +131,6 @@ export class PersonalDashboardService {
                         },
                     ])
                     .then(formatEvents),
-
                 this.onboardingReadModel.getOnboardingStatusForProject(
                     projectId,
                 ),

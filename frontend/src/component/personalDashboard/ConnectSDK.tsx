@@ -46,7 +46,7 @@ const ActionBox = styled('div')(({ theme }) => ({
 
 export const CreateFlag: FC<{ project: string }> = ({ project }) => {
     return (
-        <ActionBox>
+        <ActionBox data-loading>
             <TitleContainer>
                 <NeutralCircleContainer>1</NeutralCircleContainer>
                 Create a feature flag
@@ -90,7 +90,7 @@ export const ExistingFlag: FC<{ project: string }> = ({ project }) => {
 
 export const ConnectSDK: FC<{ project: string }> = ({ project }) => {
     return (
-        <ActionBox>
+        <ActionBox data-loading>
             {' '}
             <TitleContainer>
                 <NeutralCircleContainer>2</NeutralCircleContainer>

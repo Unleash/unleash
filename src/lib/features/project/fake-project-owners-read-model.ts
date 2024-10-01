@@ -19,7 +19,7 @@ export class FakeProjectOwnersReadModel implements IProjectOwnersReadModel {
         return [];
     }
 
-    async getUserProjectOwners(projectId: string): Promise<ProjectOwners> {
+    async getProjectOwners(): Promise<ProjectOwners> {
         return [];
     }
 }

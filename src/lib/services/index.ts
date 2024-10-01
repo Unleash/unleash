@@ -63,8 +63,10 @@ import {
 } from '../features/change-request-segment-usage-service/createChangeRequestSegmentUsageReadModel';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import {
+    createAccessService,
     createEnvironmentService,
     createEventsService,
+    createFakeAccessService,
     createFakeEnvironmentService,
     createFakeEventsService,
     createFakeProjectService,
@@ -165,6 +167,11 @@ export const createServices = (
         ? createEventsService(db, config)
         : createFakeEventsService(config, stores);
     const groupService = new GroupService(stores, config, eventService);
+
+    const transactionalAccessService = db
+        ? withTransactional((db) => createAccessService(db, config), db)
+        : withFakeTransactional(createFakeAccessService(config).accessService);
+
     const accessService = new AccessService(
         stores,
         config,
@@ -411,6 +418,7 @@ export const createServices = (
         : createFakePersonalDashboardService(config);
 
     return {
+        transactionalAccessService,
         accessService,
         accountService,
         addonService,

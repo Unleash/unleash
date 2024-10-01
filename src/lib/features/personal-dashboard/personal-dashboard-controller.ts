@@ -106,6 +106,7 @@ export default class PersonalDashboardController extends Controller {
 
         const projectDetails =
             await this.personalDashboardService.getPersonalProjectDetails(
+                user.id,
                 req.params.projectId,
             );
 
@@ -115,8 +116,6 @@ export default class PersonalDashboardController extends Controller {
             personalDashboardProjectDetailsSchema.$id,
             {
                 ...projectDetails,
-                owners: [{ ownerType: 'user', name: 'placeholder' }],
-                roles: [{ name: 'placeholder', id: 0, type: 'project' }],
             },
         );
     }

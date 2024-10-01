@@ -1,5 +1,6 @@
 import type {
     IProjectOwnersReadModel,
+    ProjectOwners,
     UserProjectOwner,
     WithProjectOwners,
 } from './project-owners-read-model.type';
@@ -15,6 +16,10 @@ export class FakeProjectOwnersReadModel implements IProjectOwnersReadModel {
     }
 
     async getAllUserProjectOwners(): Promise<UserProjectOwner[]> {
+        return [];
+    }
+
+    async getProjectOwners(): Promise<ProjectOwners> {
         return [];
     }
 }

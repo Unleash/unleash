@@ -163,10 +163,12 @@ export const MyProjects: FC<{
             </SpacedGridItem>
             <SpacedGridItem item lg={4} md={1} />
             <SpacedGridItem item lg={8} md={1}>
-                {activeProject ? (
+                {personalDashboardProjectDetails ? (
                     <RoleAndOwnerInfo
-                        roles={['owner', 'custom']}
-                        owners={[{ ownerType: 'system' }]}
+                        roles={personalDashboardProjectDetails.roles.map(
+                            (role) => role.name,
+                        )}
+                        owners={personalDashboardProjectDetails.owners}
                     />
                 ) : null}
             </SpacedGridItem>

@@ -28,7 +28,7 @@ export const InitialRedirect = () => {
         }
 
         return '/projects';
-    }, [lastViewed, projects]);
+    }, [lastViewed, projects, personalDashboardUiEnabled]);
 
     const redirect = () => {
         navigate(sessionRedirect ?? getRedirect(), { replace: true });

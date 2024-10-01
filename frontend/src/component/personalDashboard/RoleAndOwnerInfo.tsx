@@ -25,12 +25,18 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
     return (
         <Wrapper>
             <InfoSection>
-                <span>Your roles in this project:</span>
-                {roles.map((role) => (
-                    <Badge key={role} color='secondary'>
-                        {role}
-                    </Badge>
-                ))}
+                {roles.length > 0 ? (
+                    <>
+                        <span>Your roles in this project:</span>
+                        {roles.map((role) => (
+                            <Badge key={role} color='secondary'>
+                                {role}
+                            </Badge>
+                        ))}
+                    </>
+                ) : (
+                    <span>You have no project roles in this project.</span>
+                )}
             </InfoSection>
             <InfoSection>
                 <span>Project owner{owners.length > 1 ? 's' : ''}</span>

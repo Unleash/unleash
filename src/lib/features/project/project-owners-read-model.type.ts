@@ -30,6 +30,8 @@ export interface IProjectOwnersReadModel {
         projects: T[],
     ): Promise<WithProjectOwners<T>>;
 
+    getUserProjectOwners(projectId: string): Promise<UserProjectOwner[]>;
+
     getAllUserProjectOwners(
         projects?: Set<string>,
     ): Promise<UserProjectOwner[]>;

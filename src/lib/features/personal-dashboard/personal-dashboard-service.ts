@@ -18,6 +18,7 @@ import type {
 import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
 import { generateImageUrl } from '../../util';
 import type { OnboardingStatus } from '../onboarding/onboarding-read-model-type';
+import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
 
 type PersonalProjectDetails = {
     latestEvents: {
@@ -106,7 +107,7 @@ export class PersonalDashboardService {
 
     async getPersonalProjectDetails(
         projectId: string,
-    ): Promise<PersonalProjectDetails> {
+    ): Promise<PersonalDashboardProjectDetailsSchema> {
         const recentEvents = await this.eventStore.searchEvents(
             { limit: 4, offset: 0 },
             [{ field: 'project', operator: 'IS', values: [projectId] }],
@@ -124,7 +125,16 @@ export class PersonalDashboardService {
             createdByImageUrl: generateImageUrl({ email: event.createdBy }),
         }));
 
-        return { latestEvents: formattedEvents, onboardingStatus };
+        const owners =
+            await this.projectOwnersReadModel.getUserProjectOwners(projectId);
+        // const roles = ..
+
+        return {
+            latestEvents: formattedEvents,
+            onboardingStatus,
+            owners,
+            roles: [],
+        };
     }
 
     async getAdmins(): Promise<MinimalUser[]> {

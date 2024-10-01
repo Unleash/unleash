@@ -49,7 +49,7 @@ const getEventIcon = (type: TimelineEventType) => {
     if (type.startsWith('strategy-') || type.startsWith('feature-strategy-')) {
         return (
             <ExtensionOutlinedIcon
-                sx={{ marginTop: '-1px', marginRight: '-1px' }}
+                sx={{ marginTop: '-2px', marginRight: '-2px' }}
             />
         );
     }

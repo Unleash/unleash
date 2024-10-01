@@ -4,7 +4,7 @@ title: How to Setup Okta Provisioning
 
 :::note Availability
 
-**Plan**: [Enterprise](https://www.getunleash.io/pricing)
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.1+`
 
 :::
 

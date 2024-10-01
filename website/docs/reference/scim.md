@@ -5,7 +5,7 @@ title: Provisioning
 
 :::note Availability
 
-**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.1+` in BETA
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.1+`
 
 :::
 

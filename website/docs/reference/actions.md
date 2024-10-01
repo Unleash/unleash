@@ -5,7 +5,7 @@ title: Actions
 :::note Availability
 
 
-**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.11+`
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.11+` in BETA
 
 :::
 

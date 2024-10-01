@@ -127,7 +127,6 @@ export class PersonalDashboardService {
 
         const owners =
             await this.projectOwnersReadModel.getUserProjectOwners(projectId);
-        // const roles = ..
 
         return {
             latestEvents: formattedEvents,

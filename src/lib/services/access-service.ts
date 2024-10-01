@@ -752,7 +752,7 @@ export class AccessService {
         const addedPermissions = await this.store.getPermissionsForRole(
             newRole.id,
         );
-        this.eventService.storeEvent(
+        await this.eventService.storeEvent(
             new RoleCreatedEvent({
                 data: {
                     ...newRole,
@@ -803,7 +803,7 @@ export class AccessService {
         const updatedPermissions = await this.store.getPermissionsForRole(
             role.id,
         );
-        this.eventService.storeEvent(
+        await this.eventService.storeEvent(
             new RoleUpdatedEvent({
                 data: {
                     ...updatedRole,
@@ -846,7 +846,7 @@ export class AccessService {
         const existingRole = await this.roleStore.get(id);
         const existingPermissions = await this.store.getPermissionsForRole(id);
         await this.roleStore.delete(id);
-        this.eventService.storeEvent(
+        await this.eventService.storeEvent(
             new RoleDeletedEvent({
                 preData: {
                     ...existingRole,

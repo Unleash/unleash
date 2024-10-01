@@ -20,39 +20,37 @@ const StyledLink = styled(Link)({
 
 const repositoryUrl =
     'https://github.com/Unleash/unleash-sdk-examples/tree/main';
-const exampleDirectories: Record<SdkName, string> = {
-    Android: 'Android',
-    '.NET': 'Csharp',
-    Flutter: 'Flutter',
-    Go: 'Go',
-    Java: 'Java',
-    JavaScript: 'JavaScript',
-    'Node.js': 'NodeJS',
-    PHP: 'PHP',
-    Python: 'Python',
-    React: 'React',
-    Ruby: 'Ruby',
-    Rust: 'Rust',
-    Svelte: 'Svelte',
-    Swift: 'Swift',
-    Vue: 'Vue',
-};
+
+type exampleDirectories =
+    | 'Android'
+    | '.NET'
+    | 'Flutter'
+    | 'Go'
+    | 'Java'
+    | 'JavaScript'
+    | 'Node.js'
+    | 'PHP'
+    | 'Python'
+    | 'React'
+    | 'Ruby'
+    | 'Rust'
+    | 'Svelte'
+    | 'Swift'
+    | 'Vue';
 
 export const SdkExample = () => {
     const sdkOptions = allSdks.map((sdk) => ({
         key: sdk.name,
         label: sdk.name,
     }));
-
-    const [selectedSdk, setSelectedSdk] = useLocalStorageState<SdkName>(
-        'onboarding-sdk-example',
-        sdkOptions[0].key,
-    );
-
+    const [selectedSdk, setSelectedSdk] =
+        useLocalStorageState<exampleDirectories>(
+            'onboarding-sdk-example',
+            sdkOptions[0].key,
+        );
     const onChange = (event: SelectChangeEvent) => {
         setSelectedSdk(event.target.value as SdkName);
     };
-    const selectedExample = exampleDirectories[selectedSdk];
 
     return (
         <>
@@ -70,10 +68,7 @@ export const SdkExample = () => {
                     width: '60%',
                 }}
             />
-            <StyledLink
-                to={`${repositoryUrl}/${selectedExample}`}
-                target='_blank'
-            >
+            <StyledLink to={`${repositoryUrl}/${selectedSdk}`} target='_blank'>
                 Go to example
             </StyledLink>
         </>

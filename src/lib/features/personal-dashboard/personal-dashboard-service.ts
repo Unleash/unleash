@@ -103,44 +103,49 @@ export class PersonalDashboardService {
         userId: number,
         projectId: string,
     ): Promise<PersonalDashboardProjectDetailsSchema> {
-        const recentEvents = await this.eventStore.searchEvents(
-            { limit: 4, offset: 0 },
-            [{ field: 'project', operator: 'IS', values: [projectId] }],
-        );
-
-        const onboardingStatus =
-            await this.onboardingReadModel.getOnboardingStatusForProject(
-                projectId,
-            );
-
-        const formattedEvents = recentEvents.map((event) => ({
-            summary: this.featureEventFormatter.format(event).text,
-            createdBy: event.createdBy,
-            id: event.id,
-            createdByImageUrl: generateImageUrl({ email: event.createdBy }),
-        }));
-
-        const owners =
-            await this.projectOwnersReadModel.getProjectOwners(projectId);
-
-        const allRoles = await this.accessStore.getAllProjectRolesForUser(
-            userId,
-            projectId,
-        );
-
-        const projectRoles = allRoles
-            .filter((role) => ['project', 'custom'].includes(role.type))
-            .map((role) => ({
-                id: role.id,
-                name: role.name,
-                type: role.type as PersonalDashboardProjectDetailsSchema['roles'][number]['type'],
+        const formatEvents = (recentEvents) =>
+            recentEvents.map((event) => ({
+                summary: this.featureEventFormatter.format(event).text,
+                createdBy: event.createdBy,
+                id: event.id,
+                createdByImageUrl: generateImageUrl({ email: event.createdBy }),
             }));
 
+        const filterRoles = (allRoles) =>
+            allRoles
+                .filter((role) => ['project', 'custom'].includes(role.type))
+                .map((role) => ({
+                    id: role.id,
+                    name: role.name,
+                    type: role.type as PersonalDashboardProjectDetailsSchema['roles'][number]['type'],
+                }));
+
+        const [latestEvents, onboardingStatus, owners, roles] =
+            await Promise.all([
+                this.eventStore
+                    .searchEvents({ limit: 4, offset: 0 }, [
+                        {
+                            field: 'project',
+                            operator: 'IS',
+                            values: [projectId],
+                        },
+                    ])
+                    .then(formatEvents),
+
+                this.onboardingReadModel.getOnboardingStatusForProject(
+                    projectId,
+                ),
+                this.projectOwnersReadModel.getProjectOwners(projectId),
+                this.accessStore
+                    .getAllProjectRolesForUser(userId, projectId)
+                    .then(filterRoles),
+            ]);
+
         return {
-            latestEvents: formattedEvents,
+            latestEvents,
             onboardingStatus,
             owners,
-            roles: projectRoles,
+            roles,
         };
     }
 

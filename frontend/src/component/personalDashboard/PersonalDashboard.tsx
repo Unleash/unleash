@@ -31,6 +31,7 @@ import { ContentGridNoProjects } from './ContentGridNoProjects';
 import { LatestProjectEvents } from './LatestProjectEvents';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
 import HelpOutline from '@mui/icons-material/HelpOutline';
+import useLoading from '../../hooks/useLoading';
 
 const ScreenExplanation = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -166,8 +167,11 @@ export const PersonalDashboard = () => {
 
     const name = user?.name;
 
-    const { personalDashboard, refetch: refetchDashboard } =
-        usePersonalDashboard();
+    const {
+        personalDashboard,
+        refetch: refetchDashboard,
+        loading: personalDashboardLoading,
+    } = usePersonalDashboard();
     const [activeFlag, setActiveFlag] = useState<
         PersonalDashboardSchema['flags'][0] | null
     >(null);
@@ -202,29 +206,33 @@ export const PersonalDashboard = () => {
         personalDashboardProjectDetails?.onboardingStatus.status ===
         'onboarded';
 
+    const projectStageRef = useLoading(stage === 'loading');
+
     return (
-        <div>
+        <div ref={projectStageRef}>
             <Typography component='h2' variant='h2'>
                 Welcome {name}
             </Typography>
             <ScreenExplanation>
-                <p>
+                <p data-loading>
                     {onboarded
                         ? 'We have gathered projects and flags you have favorited or owned'
                         : null}
                     {setupIncomplete
                         ? 'Here are some tasks we think would be useful in order to get the most out of Unleash'
                         : null}
+                    {stage === 'loading'
+                        ? 'We have gathered projects and flags you have favorited or owned'
+                        : null}
                 </p>
-                {setupIncomplete ? (
-                    <IconButton
-                        size={'small'}
-                        title='Key concepts'
-                        onClick={() => setWelcomeDialog('open')}
-                    >
-                        <HelpOutline />
-                    </IconButton>
-                ) : null}
+                <IconButton
+                    data-loading
+                    size={'small'}
+                    title='Key concepts'
+                    onClick={() => setWelcomeDialog('open')}
+                >
+                    <HelpOutline />
+                </IconButton>
             </ScreenExplanation>
 
             {noProjects && personalDashboard ? (
@@ -299,7 +307,8 @@ export const PersonalDashboard = () => {
                         {stage === 'onboarded' ? (
                             <ProjectSetupComplete project={activeProject} />
                         ) : null}
-                        {stage === 'onboarding-started' ? (
+                        {stage === 'onboarding-started' ||
+                        stage === 'loading' ? (
                             <CreateFlag project={activeProject} />
                         ) : null}
                         {stage === 'first-flag-created' ? (
@@ -315,7 +324,7 @@ export const PersonalDashboard = () => {
                                 }
                             />
                         ) : null}
-                        {setupIncomplete ? (
+                        {setupIncomplete || stage === 'loading' ? (
                             <ConnectSDK project={activeProject} />
                         ) : null}
                     </SpacedGridItem>

@@ -23,7 +23,6 @@ import {
     createPlaceholderBarChartOptions,
 } from './createChartOptions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { customHighlightPlugin } from '../common/Chart/customHighlightPlugin';
 
 const defaultYes = [
     45_000_000, 28_000_000, 28_000_000, 25_000_000, 50_000_000, 27_000_000,
@@ -67,7 +66,7 @@ export const PlaceholderFlagMetricsChart = () => {
 
     return (
         <>
-            <Typography sx={{ mb: 4 }}>Feature flag metrics</Typography>
+            <Typography sx={{ mb: 4 }}>No feature flag metrics data</Typography>
             <Bar
                 data={placeholderData}
                 options={options}
@@ -173,6 +172,8 @@ export const FlagMetricsChart: FC<{
 
     const { data, options } = useFlagMetrics(flag.name, environment, hoursBack);
 
+    const noData = data.datasets[0].data.length === 0;
+
     return (
         <>
             <MetricsSelectors>
@@ -190,12 +191,15 @@ export const FlagMetricsChart: FC<{
                 />
             </MetricsSelectors>
 
-            <Bar
-                data={data}
-                plugins={[customHighlightPlugin(30, 0)]}
-                options={options}
-                aria-label='A bar chart with a single feature flag exposure metrics'
-            />
+            {noData ? (
+                <PlaceholderFlagMetricsChart />
+            ) : (
+                <Bar
+                    data={data}
+                    options={options}
+                    aria-label='A bar chart with a single feature flag exposure metrics'
+                />
+            )}
         </>
     );
 };

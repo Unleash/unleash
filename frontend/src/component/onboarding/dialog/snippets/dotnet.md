@@ -18,10 +18,10 @@ public class Program
         {
             AppName = "unleash-onboarding-dotnet",
             UnleashApi = new Uri("<YOUR_API_URL>"),
-            SendMetricsInterval = TimeSpan.FromSeconds(1),
+            SendMetricsInterval = TimeSpan.FromSeconds(5),
             CustomHttpHeaders = new Dictionary<string, string>()
             {
-                {"Authorization",Environment.GetEnvironmentVariable("<YOUR_API_TOKEN>")}
+                {"Authorization","<YOUR_API_TOKEN>"}
             }
         };
 
@@ -42,7 +42,6 @@ var settings = new UnleashSettings()
 {
     AppName = "unleash-onboarding-dotnet",
     UnleashApi = new Uri("<YOUR_API_URL>"),
-    SendMetricsInterval = TimeSpan.FromSeconds(1),
     CustomHttpHeaders = new Dictionary<string, string>()
     {
         {"Authorization",Environment.GetEnvironmentVariable("UNLEASH_API_KEY")}

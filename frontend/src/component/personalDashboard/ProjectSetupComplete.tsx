@@ -72,6 +72,10 @@ const ProjectHealthMessage: FC<{
     project: string;
 }> = ({ trend, insights, project }) => {
     const { avgHealthCurrentWindow, avgHealthPastWindow } = insights;
+    const improveMessage =
+        'Remember to archive your stale feature flags to keep the project health growing.';
+    const keepDoingMessage =
+        'This indicates that you are doing a good job of arching your feature flags.';
 
     if (trend === 'improved') {
         return (
@@ -79,8 +83,7 @@ const ProjectHealthMessage: FC<{
                 On average, your project health went up from{' '}
                 <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
                 <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
-                during the last 4 weeks. This indicates that you are archiving
-                your stale flags.
+                during the last 4 weeks. <br /> {keepDoingMessage}
             </Typography>
         );
     }
@@ -91,8 +94,7 @@ const ProjectHealthMessage: FC<{
                 On average, your project health went down from{' '}
                 <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
                 <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
-                during the last 4 weeks. Remember to archive your stale feature
-                flags to keep the project health growing.
+                during the last 4 weeks. <br /> {improveMessage}
             </Typography>
         );
     }
@@ -103,6 +105,9 @@ const ProjectHealthMessage: FC<{
                 On average, your project health has remained at{' '}
                 <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
                 during the last 4 weeks.
+                {avgHealthCurrentWindow >= 70
+                    ? keepDoingMessage
+                    : improveMessage}
             </Typography>
         );
     }

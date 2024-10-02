@@ -11,6 +11,7 @@ import { useEffect, useMemo } from 'react';
 import { timeSpanOptions } from '../EventTimelineProvider';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEventTimelineContext } from '../EventTimelineContext';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledCol = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -49,6 +50,7 @@ export const EventTimelineHeader = ({
         () => environments.filter(({ enabled }) => enabled),
         [environments],
     );
+    const { trackEvent } = usePlausibleTracker();
 
     useEffect(() => {
         if (activeEnvironments.length > 0 && !environment) {
@@ -115,7 +117,14 @@ export const EventTimelineHeader = ({
                     <IconButton
                         aria-label='close'
                         size='small'
-                        onClick={() => setOpen(false)}
+                        onClick={() => {
+                            trackEvent('timeline-usage', {
+                                props: {
+                                    eventType: 'timeline closed',
+                                },
+                            });
+                            setOpen(false);
+                        }}
                     >
                         <CloseIcon />
                     </IconButton>

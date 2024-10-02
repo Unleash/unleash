@@ -40,11 +40,13 @@ const TitleBox = styled('div')(({ theme }) => ({
 const Actions = styled('div')(({ theme }) => ({
     display: 'flex',
     flexGrow: 1,
-    gap: theme.spacing(7),
-    padding: theme.spacing(3, 5),
+    padding: theme.spacing(0, 1),
+    // gap: theme.spacing(7),
+    // padding: theme.spacing(3, 5),
     [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
-        gap: theme.spacing(7),
+        padding: theme.spacing(0),
+        // gap: theme.spacing(7),
     },
 }));
 
@@ -53,6 +55,15 @@ const ActionBox = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(3),
     flexDirection: 'column',
+    borderRight: `1px solid ${theme.palette.divider}`,
+    padding: theme.spacing(4),
+    [theme.breakpoints.down('md')]: {
+        borderRight: 0,
+        borderBottom: `1px solid ${theme.palette.divider}`,
+    },
+    '&:last-child': {
+        borderWidth: 0,
+    },
 }));
 
 const TitleContainer = styled('div')(({ theme }) => ({

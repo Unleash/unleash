@@ -152,7 +152,7 @@ export const MyProjects: FC<{
                     <ExistingFlag project={activeProject} />
                 ) : null}
             </SpacedGridItem>
-            <SpacedGridItem item lg={4} md={1}>
+            <SpacedGridItem item lg={4} md={1} sx={{ pr: 4 }}>
                 {activeProjectStage === 'onboarded' &&
                 personalDashboardProjectDetails ? (
                     <LatestProjectEvents

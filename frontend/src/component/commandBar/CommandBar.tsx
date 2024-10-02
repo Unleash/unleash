@@ -21,7 +21,10 @@ import { CommandPageSuggestions } from './CommandPageSuggestions';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { CommandSearchFeatures } from './CommandSearchFeatures';
+import {
+    type CommandQueryCounter,
+    CommandSearchFeatures,
+} from './CommandSearchFeatures';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { CommandQuickSuggestions } from './CommandQuickSuggestions';
 import { CommandSearchPages } from './CommandSearchPages';
@@ -105,7 +108,8 @@ export const CommandBar = () => {
     const [searchedPages, setSearchedPages] = useState<
         CommandResultGroupItem[]
     >([]);
-    const [searchedFlagCount, setSearchedFlagCount] = useState(0);
+    const [searchedFlagCount, setSearchedFlagCount] =
+        useState<CommandQueryCounter>({ query: '', count: 0 });
     const [hasNoResults, setHasNoResults] = useState(false);
     const [value, setValue] = useState<string>('');
     const { routes } = useRoutes();
@@ -155,7 +159,8 @@ export const CommandBar = () => {
             query.length !== 0 &&
             mappedProjects.length === 0 &&
             mappedPages.length === 0 &&
-            searchedFlagCount === 0;
+            searchedFlagCount.count === 0 &&
+            searchedFlagCount.query === query;
         if (noResultsFound) {
             trackEvent('command-bar', {
                 props: {
@@ -169,7 +174,7 @@ export const CommandBar = () => {
 
     useEffect(() => {
         debouncedSetSearchState(value);
-    }, [searchedFlagCount]);
+    }, [JSON.stringify(searchedFlagCount)]);
 
     const onSearchChange = (value: string) => {
         debouncedSetSearchState(value);

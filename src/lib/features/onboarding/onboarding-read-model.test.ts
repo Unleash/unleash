@@ -16,7 +16,7 @@ let lastSeenStore: ILastSeenStore;
 
 beforeAll(async () => {
     db = await dbInit('onboarding_read_model', getLogger, {
-        experimental: { flags: { onboardingMetrics: true } },
+        experimental: { flags: {} },
     });
     onboardingReadModel = db.stores.onboardingReadModel;
     onBoardingStore = db.stores.onboardingStore;

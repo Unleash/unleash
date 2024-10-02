@@ -421,12 +421,8 @@ export default class MetricsMonitor {
                         1,
                     ),
                     stores.apiTokenStore.countDeprecatedTokens(),
-                    flagResolver.isEnabled('onboardingMetrics')
-                        ? stores.onboardingReadModel.getInstanceOnboardingMetrics()
-                        : Promise.resolve({}),
-                    flagResolver.isEnabled('onboardingMetrics')
-                        ? stores.onboardingReadModel.getProjectsOnboardingMetrics()
-                        : Promise.resolve([]),
+                    stores.onboardingReadModel.getInstanceOnboardingMetrics(),
+                    stores.onboardingReadModel.getProjectsOnboardingMetrics(),
                 ]);
 
                 featureFlagsTotal.reset();

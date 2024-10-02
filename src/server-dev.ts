@@ -52,7 +52,6 @@ process.nextTick(async () => {
                         extendedMetrics: true,
                         originMiddleware: true,
                         addonUsageMetrics: true,
-                        onboardingMetrics: true,
                         onboardingUI: true,
                         personalDashboardUI: true,
                     },

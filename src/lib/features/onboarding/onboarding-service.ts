@@ -56,8 +56,6 @@ export class OnboardingService {
 
     listen() {
         this.eventBus.on(USER_LOGIN, async (event: { loginOrder: number }) => {
-            if (!this.flagResolver.isEnabled('onboardingMetrics')) return;
-
             if (event.loginOrder === 0) {
                 await this.insert({ type: 'first-user-login' });
             }
@@ -68,8 +66,6 @@ export class OnboardingService {
             }
         });
         this.eventBus.on(STAGE_ENTERED, async (stage: NewStage) => {
-            if (!this.flagResolver.isEnabled('onboardingMetrics')) return;
-
             if (stage.stage === 'initial') {
                 await this.insert({
                     type: 'flag-created',

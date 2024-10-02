@@ -6,9 +6,14 @@ import { useFeatureSearch } from 'hooks/api/getters/useFeatureSearch/useFeatureS
 import { useEffect } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
+export type CommandQueryCounter = {
+    query: string;
+    count: number;
+};
+
 interface ICommandBar {
     searchString: string;
-    setSearchedFlagCount: (count: number) => void;
+    setSearchedFlagCount: (count: CommandQueryCounter) => void;
     onClick: () => void;
     setSearchLoading: (loading: boolean) => void;
 }
@@ -36,8 +41,8 @@ export const CommandSearchFeatures = ({
     }));
 
     useEffect(() => {
-        setSearchedFlagCount(flags.length);
-    }, [JSON.stringify(flags)]);
+        setSearchedFlagCount({ count: flags.length, query: searchString });
+    }, [loading]);
 
     useEffect(() => {
         setSearchLoading(loading);

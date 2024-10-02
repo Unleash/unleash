@@ -39,9 +39,7 @@ Environments exist on a global level, so they are available to all projects with
 
 ## How to start using environments
 
-If you are on v4.2, you need to have the environment feature enabled (if you are using Unleash Hosted, please reach out on [contact@getunleash.io](mailto:contact@getunleash.io) if you want to start using environments. If you are on v4.3 or later, environments are already enabled for you.
-
-Note that in order to enable an environment for a feature flag, you must first add activation strategies for that environment. You cannot enable an environment without activation strategies.
+To enable an environment for a feature flag, you must first add activation strategies for that environment. You cannot enable an environment without activation strategies.
 
 ### Step 1: Enable new environments for your Project
 

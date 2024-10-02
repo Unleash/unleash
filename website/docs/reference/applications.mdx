@@ -4,17 +4,17 @@ title: Applications
 
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
-An **application** is any service that sends requests to the [Unleash Client API](/reference/api/unleash/client), the [Unleash Frontend API](front-end-api.md), the Unleash Admin API, or any other API that Unleash exposes. This includes [Unleash SDKs](./sdks/index.md), [Unleash Edge](/docs/generated/unleash-edge.md), the [Unleash proxy](/docs/generated/unleash-proxy.md), and even the Admin UI.
-
-In the Admin UI, you can access Applications in **Configure > Applications**.
-
-## Application overview
-
 :::note Availability
 
 **Version**: `5.11+`
 
 :::
+
+An **application** is any service that sends requests to the [Unleash Client API](/reference/api/unleash/client), the [Unleash Frontend API](front-end-api.md), the Unleash Admin API, or any other API that Unleash exposes. This includes [Unleash SDKs](./sdks/index.md), [Unleash Edge](/docs/generated/unleash-edge.md), the [Unleash proxy](/docs/generated/unleash-proxy.md), and even the Admin UI.
+
+In the Admin UI, you can access Applications in **Configure > Applications**.
+
+## Application overview
 
 The application overview displays a list of projects that the application is accessing (accessing those projects' flags) and highlights any potential issues detected in your applications.
 
@@ -31,23 +31,11 @@ The application is also illustrated as a diagram, showing the application node, 
 
 ## Connected instances
 
-:::note Availability
-
-**Version**: `5.11+`
-
-:::
-
 Connected instances display a list of instances that the application has in a selected environment. It shows the instance name, SDK version, last seen, and the IP address from which the instance connected.
 
 <Figure caption="Connected instances currently show that in the development environment, there is one connected instance that was last seen 19 hours ago." img="/img/application-connected-instances.png"/>
 
 ## Project applications
-
-:::note Availability
-
-**Version**: `5.11+`
-
-:::
 
 In the project view, there is a tab named "Applications." In this view, it is possible to see all the applications that are consuming the project's features. The applications are displayed in a list, showing the application name, environments the application is consuming in the current project, instances, and SDKs.
 

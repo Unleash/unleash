@@ -1,4 +1,10 @@
-import { type SelectChangeEvent, styled, Typography } from '@mui/material';
+import {
+    Box,
+    Button,
+    type SelectChangeEvent,
+    styled,
+    Typography,
+} from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import Select from 'component/common/select';
@@ -13,10 +19,16 @@ const TitleContainer = styled('div')(({ theme }) => ({
     fontWeight: 'bold',
 }));
 
-const StyledLink = styled(Link)({
+const StyledButton = styled(Button<typeof Link>)({
     fontWeight: 'bold',
     textDecoration: 'none',
 });
+
+const SelectWithButton = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+}));
 
 const repositoryUrl =
     'https://github.com/Unleash/unleash-sdk-examples/tree/main';
@@ -56,21 +68,31 @@ export const SdkExample = () => {
         <>
             <TitleContainer>View SDK Example</TitleContainer>
             <Typography>
-                Choose your preferred SDK to view an example
+                Choose your preferred SDK to view an example.
             </Typography>
-            <Select
-                id='sdk-select'
-                name='sdk'
-                options={sdkOptions}
-                value={selectedSdk}
-                onChange={onChange}
-                style={{
-                    width: '60%',
-                }}
-            />
-            <StyledLink to={`${repositoryUrl}/${selectedSdk}`} target='_blank'>
-                Go to example
-            </StyledLink>
+            <SelectWithButton>
+                <Select
+                    id='sdk-select'
+                    name='sdk'
+                    options={sdkOptions}
+                    value={selectedSdk}
+                    onChange={onChange}
+                    style={{
+                        width: '60%',
+                    }}
+                />
+                <Box>
+                    <StyledButton
+                        to={`${repositoryUrl}/${selectedSdk}`}
+                        target='_blank'
+                        component={Link}
+                        variant='text'
+                        color='primary'
+                    >
+                        Go to example
+                    </StyledButton>
+                </Box>
+            </SelectWithButton>
         </>
     );
 };

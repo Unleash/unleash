@@ -31,7 +31,7 @@ const Container = styled('div')(({ theme }) => ({
 }));
 
 const TitleBox = styled('div')(({ theme }) => ({
-    padding: theme.spacing(2, 7, 2, 7),
+    padding: theme.spacing(2, 2.5, 2, 5),
     borderBottom: '1px solid',
     borderColor: theme.palette.divider,
     minHeight: '80px',
@@ -40,11 +40,16 @@ const TitleBox = styled('div')(({ theme }) => ({
 const Actions = styled('div')(({ theme }) => ({
     display: 'flex',
     flexGrow: 1,
+    gap: theme.spacing(7),
+    padding: theme.spacing(3, 5),
+    [theme.breakpoints.down('md')]: {
+        flexDirection: 'column',
+        gap: theme.spacing(7),
+    },
 }));
 
 const ActionBox = styled('div')(({ theme }) => ({
     flexBasis: '50%',
-    padding: theme.spacing(3, 2, 6, 8),
     display: 'flex',
     gap: theme.spacing(3),
     flexDirection: 'column',
@@ -114,7 +119,7 @@ export const ProjectOnboarding = ({
     };
 
     return (
-        <Container>
+        <Container data-testid='container'>
             <TitleBox>
                 <TitleRow>
                     <Typography fontWeight='bold'>

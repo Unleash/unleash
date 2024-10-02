@@ -137,8 +137,12 @@ export const MyProjects: FC<{
                 </List>
             </SpacedGridItem>
             <SpacedGridItem item lg={4} md={1}>
-                {activeProjectStage === 'onboarded' ? (
-                    <ProjectSetupComplete project={activeProject} />
+                {activeProjectStage === 'onboarded' &&
+                personalDashboardProjectDetails ? (
+                    <ProjectSetupComplete
+                        project={activeProject}
+                        insights={personalDashboardProjectDetails.insights}
+                    />
                 ) : null}
                 {activeProjectStage === 'onboarding-started' ||
                 activeProjectStage === 'loading' ? (

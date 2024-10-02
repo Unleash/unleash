@@ -3,6 +3,7 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { PersonalDashboardProjectDetailsSchemaInsights } from './personalDashboardProjectDetailsSchemaInsights';
 import type { PersonalDashboardProjectDetailsSchemaLatestEventsItem } from './personalDashboardProjectDetailsSchemaLatestEventsItem';
 import type { PersonalDashboardProjectDetailsSchemaOnboardingStatus } from './personalDashboardProjectDetailsSchemaOnboardingStatus';
 import type { PersonalDashboardProjectDetailsSchemaOwners } from './personalDashboardProjectDetailsSchemaOwners';
@@ -12,6 +13,8 @@ import type { PersonalDashboardProjectDetailsSchemaRolesItem } from './personalD
  * Project details in personal dashboard
  */
 export interface PersonalDashboardProjectDetailsSchema {
+    /** Insights for the project */
+    insights: PersonalDashboardProjectDetailsSchemaInsights;
     /** The latest events for the project. */
     latestEvents: PersonalDashboardProjectDetailsSchemaLatestEventsItem[];
     /** The current onboarding status of the project. */

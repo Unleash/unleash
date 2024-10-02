@@ -14,14 +14,14 @@ type EventTimelineState = {
     open: boolean;
     timeSpan: TimeSpanOption;
     environment?: IEnvironment;
-    signalsAlertSeen?: boolean;
+    signalsSuggestionSeen?: boolean;
 };
 
 type EventTimelineStateSetters = {
     setOpen: (open: boolean) => void;
     setTimeSpan: (timeSpan: TimeSpanOption) => void;
     setEnvironment: (environment: IEnvironment) => void;
-    setSignalsAlertSeen: (seen: boolean) => void;
+    setSignalsSuggestionSeen: (seen: boolean) => void;
 };
 
 export interface IEventTimelineContext
@@ -108,8 +108,8 @@ export const EventTimelineProvider = ({
             setField('timeSpan', timeSpan),
         setEnvironment: (environment: IEnvironment) =>
             setField('environment', environment),
-        setSignalsAlertSeen: (seen: boolean) =>
-            setField('signalsAlertSeen', seen),
+        setSignalsSuggestionSeen: (seen: boolean) =>
+            setField('signalsSuggestionSeen', seen),
     };
 
     return (

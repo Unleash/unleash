@@ -188,7 +188,6 @@ const CreateFlag = ({ projectId, refetchFeatures }: ICreateFlagProps) => {
                 text='Create flag'
                 skipNavigationOnComplete={true}
                 onSuccess={() => {
-                    console.log('refetching features');
                     refetch();
                     refetchFeatures();
                 }}

@@ -1,23 +1,14 @@
-import { styled } from '@mui/material';
 import GeneralSelect, {
     type IGeneralSelectProps,
 } from 'component/common/GeneralSelect/GeneralSelect';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { type ReactNode, useEffect } from 'react';
+import { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-
-const StyledTitle = styled('h2')(({ theme }) => ({
-    margin: 0,
-    marginBottom: theme.spacing(1),
-    fontSize: theme.fontSizes.smallBody,
-    fontWeight: theme.fontWeight.thin,
-    color: theme.palette.text.secondary,
-}));
 
 interface IFeatureMetricsHoursProps {
     hoursBack: number;
     setHoursBack: (value: number) => void;
-    label?: ReactNode;
+    label?: string;
 }
 
 export const FEATURE_METRIC_HOURS_BACK_DEFAULT = 48;
@@ -25,7 +16,7 @@ export const FEATURE_METRIC_HOURS_BACK_DEFAULT = 48;
 export const FeatureMetricsHours = ({
     hoursBack,
     setHoursBack,
-    label = <StyledTitle>Period</StyledTitle>,
+    label = 'Period',
 }: IFeatureMetricsHoursProps) => {
     const { trackEvent } = usePlausibleTracker();
 
@@ -57,9 +48,9 @@ export const FeatureMetricsHours = ({
 
     return (
         <div>
-            {label}
             <GeneralSelect
                 name='feature-metrics-period'
+                label={label}
                 id='feature-metrics-period'
                 options={options}
                 value={String(normalizedHoursBack)}

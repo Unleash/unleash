@@ -65,6 +65,49 @@ const determineProjectHealthTrend = (
 
     return 'consistent';
 };
+
+const ProjectHealthMessage: FC<{
+    trend: HeathTrend;
+    insights: PersonalDashboardProjectDetailsSchemaInsights;
+    project: string;
+}> = ({ trend, insights, project }) => {
+    const { avgHealthCurrentWindow, avgHealthPastWindow } = insights;
+
+    if (trend === 'improved') {
+        return (
+            <Typography>
+                On average, your project health went up from{' '}
+                <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
+                <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
+                during the last 4 weeks.
+            </Typography>
+        );
+    }
+
+    if (trend === 'declined') {
+        return (
+            <Typography>
+                On average, your project health went down from{' '}
+                <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
+                <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
+                during the last 4 weeks.
+            </Typography>
+        );
+    }
+
+    if (trend === 'consistent') {
+        return (
+            <Typography>
+                On average, your project health has remained at{' '}
+                <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
+                during the last 4 weeks.
+            </Typography>
+        );
+    }
+
+    return <ConnectedSdkProject project={project} />;
+};
+
 export const ProjectSetupComplete: FC<{
     project: string;
     insights: PersonalDashboardProjectDetailsSchemaInsights;
@@ -78,49 +121,17 @@ export const ProjectSetupComplete: FC<{
                 <h3>Project Insight</h3>
             </TitleContainer>
 
-            {projectHealthTrend === 'unknown' ? (
-                <ConnectedSdkProject project={project} />
-            ) : null}
-            {projectHealthTrend === 'improved' ? (
-                <Typography>
-                    On average, your project health went up from{' '}
-                    <PercentageScore>
-                        {insights.avgHealthPastWindow}%
-                    </PercentageScore>{' '}
-                    to{' '}
-                    <PercentageScore>
-                        {insights.avgHealthCurrentWindow}%
-                    </PercentageScore>{' '}
-                    during the last 4 weeks.
-                </Typography>
-            ) : null}
-            {projectHealthTrend === 'declined' ? (
-                <Typography>
-                    On average, your project health went down from{' '}
-                    <PercentageScore>
-                        {insights.avgHealthPastWindow}%
-                    </PercentageScore>{' '}
-                    to{' '}
-                    <PercentageScore>
-                        {insights.avgHealthCurrentWindow}%
-                    </PercentageScore>{' '}
-                    during the last 4 weeks.
-                </Typography>
-            ) : null}
-            {projectHealthTrend === 'consistent' ? (
-                <Typography>
-                    On average, your project health has remained at{' '}
-                    <PercentageScore>
-                        {insights.avgHealthCurrentWindow}%
-                    </PercentageScore>{' '}
-                    during the last 4 weeks.
-                </Typography>
-            ) : null}
-            {projectHealthTrend !== 'unknown' ? (
+            <ProjectHealthMessage
+                trend={projectHealthTrend}
+                insights={insights}
+                project={project}
+            />
+
+            {projectHealthTrend !== 'unknown' && (
                 <Link to={`/projects/${project}/insights`}>
                     View more insights
                 </Link>
-            ) : null}
+            )}
         </ActionBox>
     );
 };

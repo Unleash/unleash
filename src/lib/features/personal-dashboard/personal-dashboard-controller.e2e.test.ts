@@ -215,9 +215,20 @@ test('should return projects where users are part of a group', async () => {
 });
 
 test('should return personal dashboard project details', async () => {
-    const { body: user } = await loginUser('new_user@test.com');
+    const { body: user1 } = await loginUser('new_user@test.com');
 
-    const project = await createProject(`x${randomId()}`, user);
+    const project = await createProject(`x${randomId()}`, user1);
+    const { body: user2 } = await loginUser('user2@test.com');
+    await app.services.projectService.addAccess(
+        project.id,
+        [4], // owner role
+        [],
+        [user2.id],
+        user1,
+    );
+
+    await loginUser(user1.email);
+
     await app.createFeature('log_feature_a', project.id);
     await app.createFeature('log_feature_b', project.id);
     await app.createFeature('log_feature_c', project.id);
@@ -227,12 +238,30 @@ test('should return personal dashboard project details', async () => {
     );
 
     expect(body).toMatchObject({
+        owners: [
+            {
+                email: user1.email,
+                name: user1.email,
+                ownerType: 'user',
+            },
+            {
+                email: user2.email,
+                name: user2.email,
+                ownerType: 'user',
+            },
+        ],
+        roles: [
+            {
+                id: 4,
+                name: 'Owner',
+                type: 'project',
+            },
+        ],
         insights: {
             avgHealthCurrentWindow: null,
             avgHealthPastWindow: null,
         },
-        owners: [{}],
-        roles: [{}],
+
         onboardingStatus: {
             status: 'first-flag-created',
             feature: 'log_feature_a',
@@ -257,9 +286,9 @@ test('should return personal dashboard project details', async () => {
                 ),
             },
             {
-                createdBy: 'audit user',
+                createdBy: 'unknown',
                 summary: expect.stringContaining(
-                    `**audit user** created project **[${project.id}]`,
+                    'triggered **project-access-added**',
                 ),
             },
         ],

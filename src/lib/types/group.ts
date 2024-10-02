@@ -36,7 +36,6 @@ export interface IGroupModel extends IGroup {
 
 export interface ICreateGroupModel extends Omit<IGroup, 'id'> {
     users?: ICreateGroupUserModel[];
-    projects?: string[];
 }
 
 export interface IGroupProject {

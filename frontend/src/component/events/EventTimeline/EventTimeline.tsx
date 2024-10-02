@@ -33,7 +33,7 @@ const StyledRow = styled('div')({
 const StyledTimelineBody = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    padding: theme.spacing(1, 0),
+    padding: theme.spacing(1.5, 0),
 }));
 
 const StyledTimelineContainer = styled('div')(({ theme }) => ({

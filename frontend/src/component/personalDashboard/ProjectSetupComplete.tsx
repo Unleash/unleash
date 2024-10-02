@@ -104,7 +104,7 @@ const ProjectHealthMessage: FC<{
             <Typography>
                 On average, your project health has remained at{' '}
                 <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
-                during the last 4 weeks.
+                during the last 4 weeks. <br />
                 {avgHealthCurrentWindow && avgHealthCurrentWindow >= 70
                     ? keepDoingMessage
                     : improveMessage}

@@ -35,6 +35,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
 import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import { useEventTimelineContext } from 'component/events/EventTimeline/EventTimelineContext';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -111,6 +112,7 @@ const Header = () => {
     const eventTimeline = useUiFlag('eventTimeline') && !isOss();
     const { open: showTimeline, setOpen: setShowTimeline } =
         useEventTimelineContext();
+    const { trackEvent } = usePlausibleTracker();
 
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
@@ -197,9 +199,17 @@ const Header = () => {
                                     arrow
                                 >
                                     <StyledIconButton
-                                        onClick={() =>
-                                            setShowTimeline(!showTimeline)
-                                        }
+                                        onClick={() => {
+                                            trackEvent('timeline-usage', {
+                                                props: {
+                                                    eventType: showTimeline
+                                                        ? 'timeline closed'
+                                                        : 'timeline opened',
+                                                },
+                                            });
+
+                                            setShowTimeline(!showTimeline);
+                                        }}
                                         size='large'
                                     >
                                         <LinearScaleIcon />

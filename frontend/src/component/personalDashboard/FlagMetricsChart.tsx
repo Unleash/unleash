@@ -144,6 +144,7 @@ const EnvironmentSelect: FC<{
     return (
         <GeneralSelect
             name='feature-environments'
+            label='Environment'
             id='feature-environments'
             options={activeEnvironments.map((env) => ({
                 key: env.name,
@@ -187,7 +188,6 @@ export const FlagMetricsChart: FC<{
                 <FeatureMetricsHours
                     hoursBack={hoursBack}
                     setHoursBack={setHoursBack}
-                    label={null}
                 />
             </MetricsSelectors>
 

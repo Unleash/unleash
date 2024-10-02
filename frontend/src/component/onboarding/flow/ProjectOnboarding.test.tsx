@@ -22,6 +22,7 @@ test('Project can start onboarding', async () => {
                         projectId={projectId}
                         setConnectSdkOpen={() => {}}
                         setOnboardingFlow={() => {}}
+                        refetchFeatures={() => {}}
                     />
                 }
             />
@@ -50,6 +51,7 @@ test('Project can connect SDK', async () => {
                         projectId={projectId}
                         setConnectSdkOpen={() => {}}
                         setOnboardingFlow={() => {}}
+                        refetchFeatures={() => {}}
                     />
                 }
             />

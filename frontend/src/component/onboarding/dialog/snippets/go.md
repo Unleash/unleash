@@ -1,12 +1,14 @@
 1\. Install the SDK
 ```sh
-go get github.com/Unleash/unleash-client-go/v3
+go get github.com/Unleash/unleash-client-go/v4
 ```
 
 2\. Run Unleash
 ```go
+package main
+
 import (
-    "github.com/Unleash/unleash-client-go/v3"
+    "github.com/Unleash/unleash-client-go/v4"
     "net/http"
     "time"
 )
@@ -31,12 +33,6 @@ func main() {
 
 ---
 ```go
-import (
-    "github.com/Unleash/unleash-client-go/v3"
-    "net/http"
-    "time"
-)
-
 func init() {
     unleash.Initialize(
         unleash.WithListener(&unleash.DebugListener{}),

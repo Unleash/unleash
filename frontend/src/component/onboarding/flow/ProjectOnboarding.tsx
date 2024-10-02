@@ -119,7 +119,7 @@ export const ProjectOnboarding = ({
     };
 
     return (
-        <Container data-testid='container'>
+        <Container>
             <TitleBox>
                 <TitleRow>
                     <Typography fontWeight='bold'>

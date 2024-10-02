@@ -12,6 +12,7 @@ import type { IPrivateProjectChecker } from '../private-project/privateProjectCh
 import type {
     IAccessStore,
     IAccountStore,
+    IEvent,
     IEventStore,
     IOnboardingReadModel,
     MinimalUser,
@@ -19,6 +20,7 @@ import type {
 import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
 import { generateImageUrl } from '../../util';
 import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
+import type { IRoleWithProject } from '../../types/stores/access-store';
 
 export class PersonalDashboardService {
     private personalDashboardReadModel: IPersonalDashboardReadModel;
@@ -103,7 +105,7 @@ export class PersonalDashboardService {
         userId: number,
         projectId: string,
     ): Promise<PersonalDashboardProjectDetailsSchema> {
-        const formatEvents = (recentEvents) =>
+        const formatEvents = (recentEvents: IEvent[]) =>
             recentEvents.map((event) => ({
                 summary: this.featureEventFormatter.format(event).text,
                 createdBy: event.createdBy,
@@ -111,7 +113,7 @@ export class PersonalDashboardService {
                 createdByImageUrl: generateImageUrl({ email: event.createdBy }),
             }));
 
-        const filterRoles = (allRoles) =>
+        const filterRoles = (allRoles: IRoleWithProject[]) =>
             allRoles
                 .filter((role) => ['project', 'custom'].includes(role.type))
                 .map((role) => ({

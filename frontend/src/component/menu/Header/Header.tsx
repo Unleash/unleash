@@ -202,8 +202,8 @@ const Header = () => {
                                         onClick={() => {
                                             trackEvent(
                                                 showTimeline
-                                                    ? 'event-timeline-dismiss'
-                                                    : 'event-timeline-click',
+                                                    ? 'event-timeline-close'
+                                                    : 'event-timeline-open',
                                             );
                                             setShowTimeline(!showTimeline);
                                         }}

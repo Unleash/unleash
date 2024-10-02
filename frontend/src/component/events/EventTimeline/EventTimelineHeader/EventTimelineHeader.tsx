@@ -118,11 +118,7 @@ export const EventTimelineHeader = ({
                         aria-label='close'
                         size='small'
                         onClick={() => {
-                            trackEvent('timeline-usage', {
-                                props: {
-                                    eventType: 'timeline closed',
-                                },
-                            });
+                            trackEvent('event-timeline-dismiss');
                             setOpen(false);
                         }}
                     >

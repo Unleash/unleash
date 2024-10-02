@@ -200,14 +200,11 @@ const Header = () => {
                                 >
                                     <StyledIconButton
                                         onClick={() => {
-                                            trackEvent('timeline-usage', {
-                                                props: {
-                                                    eventType: showTimeline
-                                                        ? 'timeline closed'
-                                                        : 'timeline opened',
-                                                },
-                                            });
-
+                                            trackEvent(
+                                                showTimeline
+                                                    ? 'event-timeline-dismiss'
+                                                    : 'event-timeline-click',
+                                            );
                                             setShowTimeline(!showTimeline);
                                         }}
                                         size='large'

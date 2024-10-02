@@ -132,8 +132,17 @@ export class FeatureLifecycleService {
     }
 
     private recordStagesEntered(newlyEnteredStages: NewStage[]) {
+        if (this.flagResolver.isEnabled('trackLifecycleMetrics')) {
+            this.logger.info(
+                'recordStagesEntered parameter',
+                newlyEnteredStages,
+            );
+        }
         newlyEnteredStages.forEach(({ stage, feature }) => {
             this.eventBus.emit(STAGE_ENTERED, { stage, feature });
+            if (this.flagResolver.isEnabled('trackLifecycleMetrics')) {
+                this.logger.info('STAGE_ENTERED emitted', { stage, feature });
+            }
         });
     }
 

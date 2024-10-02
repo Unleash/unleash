@@ -12,7 +12,6 @@ const ContentGrid2 = styled('article')(({ theme }) => {
         overflow: 'hidden',
         border: `0.5px solid ${theme.palette.divider}`,
         gap: `2px`,
-
         display: 'grid',
 
         '&>*': {

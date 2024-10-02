@@ -136,11 +136,39 @@ export class PersonalDashboardService {
                 type: role.type as PersonalDashboardProjectDetailsSchema['roles'][number]['type'],
             }));
 
+        const healthScores =
+            await this.personalDashboardReadModel.getLatestHealthScores(
+                projectId,
+                8,
+            );
+        let avgHealthCurrentWindow: number | null = null;
+        let avgHealthPastWindow: number | null = null;
+
+        if (healthScores.length >= 4) {
+            avgHealthCurrentWindow = Math.round(
+                healthScores
+                    .slice(0, 4)
+                    .reduce((acc, score) => acc + score, 0) / 4,
+            );
+        }
+
+        if (healthScores.length >= 8) {
+            avgHealthPastWindow = Math.round(
+                healthScores
+                    .slice(4, 8)
+                    .reduce((acc, score) => acc + score, 0) / 4,
+            );
+        }
+
         return {
             latestEvents: formattedEvents,
             onboardingStatus,
             owners,
             roles: projectRoles,
+            insights: {
+                avgHealthCurrentWindow,
+                avgHealthPastWindow,
+            },
         };
     }
 

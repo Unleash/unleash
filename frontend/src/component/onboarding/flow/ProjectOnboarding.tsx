@@ -14,10 +14,12 @@ interface IProjectOnboardingProps {
     projectId: string;
     setConnectSdkOpen: (open: boolean) => void;
     setOnboardingFlow: (status: 'visible' | 'closed') => void;
+    refetchFeatures: () => void;
 }
 
 interface ICreateFlagProps {
     projectId: string;
+    refetchFeatures: () => void;
 }
 
 const Container = styled('div')(({ theme }) => ({
@@ -101,6 +103,7 @@ export const ProjectOnboarding = ({
     projectId,
     setConnectSdkOpen,
     setOnboardingFlow,
+    refetchFeatures,
 }: IProjectOnboardingProps) => {
     const { project } = useProjectOverview(projectId);
     const isFirstFlagCreated =
@@ -133,7 +136,10 @@ export const ProjectOnboarding = ({
                     'first-flag-created' ? (
                         <ExistingFlag />
                     ) : (
-                        <CreateFlag projectId={projectId} />
+                        <CreateFlag
+                            projectId={projectId}
+                            refetchFeatures={refetchFeatures}
+                        />
                     )}
                 </ActionBox>
                 <ActionBox>
@@ -166,7 +172,7 @@ export const ProjectOnboarding = ({
     );
 };
 
-const CreateFlag = ({ projectId }: ICreateFlagProps) => {
+const CreateFlag = ({ projectId, refetchFeatures }: ICreateFlagProps) => {
     const { refetch } = useProjectOverview(projectId);
     return (
         <>
@@ -181,7 +187,10 @@ const CreateFlag = ({ projectId }: ICreateFlagProps) => {
             <FlagCreationButton
                 text='Create flag'
                 skipNavigationOnComplete={true}
-                onSuccess={refetch}
+                onSuccess={() => {
+                    refetch();
+                    refetchFeatures();
+                }}
             />
         </>
     );

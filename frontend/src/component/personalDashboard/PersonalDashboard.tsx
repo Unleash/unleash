@@ -1,7 +1,5 @@
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import {
-    Box,
-    Grid,
     IconButton,
     Link,
     List,
@@ -10,15 +8,10 @@ import {
     styled,
     Typography,
 } from '@mui/material';
-import type { Theme } from '@mui/material/styles/createTheme';
-import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import React, { type FC, useEffect, useState } from 'react';
 import LinkIcon from '@mui/icons-material/Link';
-import { Badge } from '../common/Badge/Badge';
-import { ConnectSDK, CreateFlag, ExistingFlag } from './ConnectSDK';
 import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
-import { ProjectSetupComplete } from './ProjectSetupComplete';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import type {
@@ -26,42 +19,23 @@ import type {
     PersonalDashboardSchemaProjectsItem,
 } from '../../openapi';
 import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
-import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
-import { ContentGridNoProjects } from './ContentGridNoProjects';
-import { LatestProjectEvents } from './LatestProjectEvents';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import useLoading from '../../hooks/useLoading';
+import { MyProjects } from './MyProjects';
+import {
+    ContentGrid,
+    ListItemBox,
+    listItemStyle,
+    SpacedGridItem,
+} from './Grid';
+import { ContentGridNoProjects } from './ContentGridNoProjects';
 
 const ScreenExplanation = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(4),
     display: 'flex',
     alignItems: 'center',
 }));
-
-const ContentGrid = styled(Grid)(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-}));
-
-const ProjectBox = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(2),
-    alignItems: 'center',
-    width: '100%',
-}));
-
-const projectStyle = (theme: Theme) => ({
-    borderRadius: theme.spacing(0.5),
-    borderLeft: `${theme.spacing(0.5)} solid transparent`,
-    '&.Mui-selected': {
-        borderLeft: `${theme.spacing(0.5)} solid ${theme.palette.primary.main}`,
-    },
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    gap: theme.spacing(1),
-});
 
 export const StyledCardTitle = styled('div')<{ lines?: number }>(
     ({ theme, lines = 2 }) => ({
@@ -80,56 +54,6 @@ export const StyledCardTitle = styled('div')<{ lines?: number }>(
     }),
 );
 
-const ActiveProjectDetails: FC<{
-    project: PersonalDashboardSchemaProjectsItem;
-}> = ({ project }) => {
-    return (
-        <Box sx={{ display: 'flex', gap: 2 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='subtitle2' color='primary'>
-                    {project.featureCount}
-                </Typography>
-                <Typography variant='caption' color='text.secondary'>
-                    flags
-                </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='subtitle2' color='primary'>
-                    {project.memberCount}
-                </Typography>
-                <Typography variant='caption' color='text.secondary'>
-                    members
-                </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='subtitle2' color='primary'>
-                    {project.health}%
-                </Typography>
-                <Typography variant='caption' color='text.secondary'>
-                    health
-                </Typography>
-            </Box>
-        </Box>
-    );
-};
-
-const SpacedGridItem = styled(Grid)(({ theme }) => ({
-    padding: theme.spacing(4),
-    border: `0.5px solid ${theme.palette.divider}`,
-}));
-
-const useProjects = (projects: PersonalDashboardSchemaProjectsItem[]) => {
-    const [activeProject, setActiveProject] = useState(projects[0]?.id);
-
-    useEffect(() => {
-        if (!activeProject && projects.length > 0) {
-            setActiveProject(projects[0].id);
-        }
-    }, [JSON.stringify(projects)]);
-
-    return { projects, activeProject, setActiveProject };
-};
-
 const FlagListItem: FC<{
     flag: { name: string; project: string; type: string };
     selected: boolean;
@@ -139,11 +63,11 @@ const FlagListItem: FC<{
     return (
         <ListItem key={flag.name} disablePadding={true} sx={{ mb: 1 }}>
             <ListItemButton
-                sx={projectStyle}
+                sx={listItemStyle}
                 selected={selected}
                 onClick={onClick}
             >
-                <ProjectBox>
+                <ListItemBox>
                     <IconComponent color='primary' />
                     <StyledCardTitle>{flag.name}</StyledCardTitle>
                     <IconButton
@@ -156,10 +80,22 @@ const FlagListItem: FC<{
                             titleAccess={`projects/${flag.project}/features/${flag.name}`}
                         />
                     </IconButton>
-                </ProjectBox>
+                </ListItemBox>
             </ListItemButton>
         </ListItem>
     );
+};
+
+const useActiveProject = (projects: PersonalDashboardSchemaProjectsItem[]) => {
+    const [activeProject, setActiveProject] = useState(projects[0]?.id);
+
+    useEffect(() => {
+        if (!activeProject && projects.length > 0) {
+            setActiveProject(projects[0].id);
+        }
+    }, [JSON.stringify(projects)]);
+
+    return [activeProject, setActiveProject] as const;
 };
 
 export const PersonalDashboard = () => {
@@ -181,32 +117,25 @@ export const PersonalDashboard = () => {
         }
     }, [JSON.stringify(personalDashboard?.flags)]);
 
-    const { projects, activeProject, setActiveProject } = useProjects(
-        personalDashboard?.projects || [],
-    );
-
-    const { personalDashboardProjectDetails, loading: loadingDetails } =
-        usePersonalDashboardProjectDetails(activeProject);
-
-    const stage =
-        personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
-
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'open' | 'closed'
     >('welcome-dialog:v1', 'open');
 
+    const projects = personalDashboard?.projects || [];
+    const [activeProject, setActiveProject] = useActiveProject(projects);
+
+    const { personalDashboardProjectDetails, loading: loadingDetails } =
+        usePersonalDashboardProjectDetails(activeProject);
+
+    const activeProjectStage =
+        personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
+    const setupIncomplete =
+        activeProjectStage === 'onboarding-started' ||
+        activeProjectStage === 'first-flag-created';
+
     const noProjects = projects.length === 0;
 
-    const setupIncomplete =
-        personalDashboardProjectDetails?.onboardingStatus.status ===
-            'onboarding-started' ||
-        personalDashboardProjectDetails?.onboardingStatus.status ===
-            'first-flag-created';
-    const onboarded =
-        personalDashboardProjectDetails?.onboardingStatus.status ===
-        'onboarded';
-
-    const projectStageRef = useLoading(stage === 'loading');
+    const projectStageRef = useLoading(activeProjectStage === 'loading');
 
     return (
         <div ref={projectStageRef}>
@@ -215,13 +144,13 @@ export const PersonalDashboard = () => {
             </Typography>
             <ScreenExplanation>
                 <p data-loading>
-                    {onboarded
+                    {activeProjectStage === 'onboarded'
                         ? 'We have gathered projects and flags you have favorited or owned'
                         : null}
                     {setupIncomplete
                         ? 'Here are some tasks we think would be useful in order to get the most out of Unleash'
                         : null}
-                    {stage === 'loading'
+                    {activeProjectStage === 'loading'
                         ? 'We have gathered projects and flags you have favorited or owned'
                         : null}
                 </p>
@@ -241,104 +170,16 @@ export const PersonalDashboard = () => {
                     admins={personalDashboard.admins}
                 />
             ) : (
-                <ContentGrid container columns={{ lg: 12, md: 1 }}>
-                    <SpacedGridItem item lg={4} md={1}>
-                        <Typography variant='h3'>My projects</Typography>
-                    </SpacedGridItem>
-                    <SpacedGridItem
-                        item
-                        lg={8}
-                        md={1}
-                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
-                    >
-                        {setupIncomplete ? (
-                            <Badge color='warning'>Setup incomplete</Badge>
-                        ) : null}
-                    </SpacedGridItem>
-                    <SpacedGridItem item lg={4} md={1}>
-                        <List
-                            disablePadding={true}
-                            sx={{ maxHeight: '400px', overflow: 'auto' }}
-                        >
-                            {projects.map((project) => {
-                                return (
-                                    <ListItem
-                                        key={project.id}
-                                        disablePadding={true}
-                                        sx={{ mb: 1 }}
-                                    >
-                                        <ListItemButton
-                                            sx={projectStyle}
-                                            selected={
-                                                project.id === activeProject
-                                            }
-                                            onClick={() =>
-                                                setActiveProject(project.id)
-                                            }
-                                        >
-                                            <ProjectBox>
-                                                <ProjectIcon color='primary' />
-                                                <StyledCardTitle>
-                                                    {project.name}
-                                                </StyledCardTitle>
-                                                <IconButton
-                                                    component={Link}
-                                                    href={`projects/${project.id}`}
-                                                    size='small'
-                                                    sx={{ ml: 'auto' }}
-                                                >
-                                                    <LinkIcon
-                                                        titleAccess={`projects/${project.id}`}
-                                                    />
-                                                </IconButton>
-                                            </ProjectBox>
-                                            {project.id === activeProject ? (
-                                                <ActiveProjectDetails
-                                                    project={project}
-                                                />
-                                            ) : null}
-                                        </ListItemButton>
-                                    </ListItem>
-                                );
-                            })}
-                        </List>
-                    </SpacedGridItem>
-                    <SpacedGridItem item lg={4} md={1}>
-                        {stage === 'onboarded' ? (
-                            <ProjectSetupComplete project={activeProject} />
-                        ) : null}
-                        {stage === 'onboarding-started' ||
-                        stage === 'loading' ? (
-                            <CreateFlag project={activeProject} />
-                        ) : null}
-                        {stage === 'first-flag-created' ? (
-                            <ExistingFlag project={activeProject} />
-                        ) : null}
-                    </SpacedGridItem>
-                    <SpacedGridItem item lg={4} md={1}>
-                        {stage === 'onboarded' &&
-                        personalDashboardProjectDetails ? (
-                            <LatestProjectEvents
-                                latestEvents={
-                                    personalDashboardProjectDetails.latestEvents
-                                }
-                            />
-                        ) : null}
-                        {setupIncomplete || stage === 'loading' ? (
-                            <ConnectSDK project={activeProject} />
-                        ) : null}
-                    </SpacedGridItem>
-                    <SpacedGridItem item lg={4} md={1} />
-                    <SpacedGridItem item lg={8} md={1}>
-                        {activeProject ? (
-                            <RoleAndOwnerInfo
-                                roles={['owner', 'custom']}
-                                owners={[{ ownerType: 'system' }]}
-                            />
-                        ) : null}
-                    </SpacedGridItem>
-                </ContentGrid>
+                <MyProjects
+                    projects={projects}
+                    activeProject={activeProject}
+                    setActiveProject={setActiveProject}
+                    personalDashboardProjectDetails={
+                        personalDashboardProjectDetails
+                    }
+                />
             )}
+
             <ContentGrid container columns={{ lg: 12, md: 1 }} sx={{ mt: 2 }}>
                 <SpacedGridItem item lg={4} md={1}>
                     <Typography variant='h3'>My feature flags</Typography>

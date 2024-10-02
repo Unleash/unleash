@@ -19,6 +19,19 @@ export class PersonalDashboardReadModel implements IPersonalDashboardReadModel {
         this.db = db;
     }
 
+    async getLatestHealthScores(
+        project: string,
+        count: number,
+    ): Promise<number[]> {
+        const results = await this.db<{ health: number }>('flag_trends')
+            .select('health')
+            .orderBy('created_at', 'desc')
+            .where('project', project)
+            .limit(count);
+
+        return results.map((row) => Number(row.health));
+    }
+
     async getPersonalProjects(userId: number): Promise<BasePersonalProject[]> {
         const result = await this.db<{
             name: string;

@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import { Markdown } from 'component/common/Markdown/Markdown';
+import type { HTMLAttributes } from 'react';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import {
     formatDateHMS,
@@ -35,26 +36,34 @@ const StyledDate = styled('div')(({ theme }) => ({
     whiteSpace: 'nowrap',
 }));
 
+const StyledTooltipItemList = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
+
 const StyledTooltipItem = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
-    marginBottom: theme.spacing(1),
 }));
 
 const StyledEventTimelineEventCircle = styled(EventTimelineEventCircle)(
     ({ theme }) => ({
-        marginTop: theme.spacing(0.5),
+        marginTop: theme.spacing(0.125),
         height: theme.spacing(2.5),
         width: theme.spacing(2.5),
         transition: 'none',
         '& > svg': {
-            height: theme.spacing(2),
+            height: theme.spacing(1.75),
         },
         '&:hover': {
             transform: 'none',
         },
     }),
 );
+
+const BoldToNormal = ({ children }: HTMLAttributes<HTMLElement>) => children;
 
 interface IEventTimelineEventTooltipProps {
     group: TimelineEventGroup;
@@ -78,7 +87,9 @@ export const EventTimelineEventTooltip = ({
                     <StyledTooltipTitle>{event.label}</StyledTooltipTitle>
                     <StyledDateTime>{eventDateTime}</StyledDateTime>
                 </StyledTooltipHeader>
-                <Markdown>{event.summary}</Markdown>
+                <Markdown components={{ strong: BoldToNormal }}>
+                    {event.summary}
+                </Markdown>
             </>
         );
     }
@@ -97,20 +108,24 @@ export const EventTimelineEventTooltip = ({
                 </StyledTooltipTitle>
                 <StyledDate>{eventDate}</StyledDate>
             </StyledTooltipHeader>
-            {group.map((event) => (
-                <StyledTooltipItem key={event.id}>
-                    <StyledEventTimelineEventCircle group={[event]} />
-                    <div>
-                        <StyledDate>
-                            {formatDateHMS(
-                                event.timestamp,
-                                locationSettings?.locale,
-                            )}
-                        </StyledDate>
-                        <Markdown>{event.summary}</Markdown>
-                    </div>
-                </StyledTooltipItem>
-            ))}
+            <StyledTooltipItemList>
+                {group.map((event) => (
+                    <StyledTooltipItem key={event.id}>
+                        <StyledEventTimelineEventCircle group={[event]} />
+                        <div>
+                            <StyledDate>
+                                {formatDateHMS(
+                                    event.timestamp,
+                                    locationSettings?.locale,
+                                )}
+                            </StyledDate>
+                            <Markdown components={{ strong: BoldToNormal }}>
+                                {event.summary}
+                            </Markdown>
+                        </div>
+                    </StyledTooltipItem>
+                ))}
+            </StyledTooltipItemList>
         </>
     );
 };

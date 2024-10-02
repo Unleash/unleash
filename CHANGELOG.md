@@ -2,6 +2,308 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.3.0] - 2024-10-01
+
+### Bug Fixes
+
+- Update dependency @slack/web-api to v6.12.1 ([#8103](https://github.com/Unleash/unleash/issues/8103))
+
+- Also display strategy variant information on default strategies ([#8115](https://github.com/Unleash/unleash/issues/8115))
+
+- Give project_default_strategy_write the ability to update the default strategy ([#8112](https://github.com/Unleash/unleash/issues/8112))
+
+- Allow you to see default strategies if you have write access ([#8113](https://github.com/Unleash/unleash/issues/8113))
+
+- Allow you to save default strategies with the right permissions ([#8114](https://github.com/Unleash/unleash/issues/8114))
+
+- User projects should exclude archived ones ([#8118](https://github.com/Unleash/unleash/issues/8118))
+
+- Update dependency express-rate-limit to v7.4.0 ([#8127](https://github.com/Unleash/unleash/issues/8127))
+
+- Update dependency unleash-client to v5.6.1 ([#8129](https://github.com/Unleash/unleash/issues/8129))
+
+- Update dependency git-url-parse to v14.1.0 ([#8128](https://github.com/Unleash/unleash/issues/8128))
+
+- Invert logic ([#8135](https://github.com/Unleash/unleash/issues/8135))
+
+- Update dependency express to v4.20.0 [security] ([#8138](https://github.com/Unleash/unleash/issues/8138))
+
+- Docker warnings ([#8148](https://github.com/Unleash/unleash/issues/8148))
+
+- Express upgrade to 4.21 ([#8169](https://github.com/Unleash/unleash/issues/8169))
+
+- Upgrade openapi to drop dompurify and fix path-to-regexp ([#8170](https://github.com/Unleash/unleash/issues/8170))
+
+- Connect sdk description bg color ([#8171](https://github.com/Unleash/unleash/issues/8171))
+
+- Archive project curl ([#8181](https://github.com/Unleash/unleash/issues/8181))
+
+- Update playground SDK to increase the possible random numbers used for stickiness id ([#8182](https://github.com/Unleash/unleash/issues/8182))
+
+- Typo and improved example in latest ADR ([#8063](https://github.com/Unleash/unleash/issues/8063))
+
+- Now onboarding will show up in correct times ([#8214](https://github.com/Unleash/unleash/issues/8214))
+
+- Onboarding img asset path ([#8213](https://github.com/Unleash/unleash/issues/8213))
+
+- Update dependency nodemailer to v6.9.15 ([#8224](https://github.com/Unleash/unleash/issues/8224))
+
+- Trim messages longer than 3000 chars ([#8219](https://github.com/Unleash/unleash/issues/8219))
+
+- SDK snippets import ([#8235](https://github.com/Unleash/unleash/issues/8235))
+
+- Adjust welcome dialog size ([#8244](https://github.com/Unleash/unleash/issues/8244))
+
+- Layout content width on large screens ([#8267](https://github.com/Unleash/unleash/issues/8267))
+
+- Trim role names before validation ([#8277](https://github.com/Unleash/unleash/issues/8277))
+
+- Trim name and description before validation ([#8275](https://github.com/Unleash/unleash/issues/8275))
+
+- Now only one onboarding screen will be shown at time ([#8290](https://github.com/Unleash/unleash/issues/8290))
+
+- Event timeline should unmount when hidden and be closed by default ([#8294](https://github.com/Unleash/unleash/issues/8294))
+
+- Some integrations only counted errors not all results ([#8295](https://github.com/Unleash/unleash/issues/8295))
+
+- Extend feature_toggle_update counter with details about action ([#8202](https://github.com/Unleash/unleash/issues/8202))
+
+- Handle empty strings on permissions gracefully in access service ([#8306](https://github.com/Unleash/unleash/issues/8306))
+
+- Add missing awaits on events ([#8320](https://github.com/Unleash/unleash/issues/8320))
+
+
+### Documentation
+
+- Add in gradual rollout use case doc ([#8172](https://github.com/Unleash/unleash/issues/8172))
+
+- Remove extra diagram ([#8203](https://github.com/Unleash/unleash/issues/8203))
+
+- Demo is pro ([#8270](https://github.com/Unleash/unleash/issues/8270))
+
+- Recommend PG v13 or later ([#8276](https://github.com/Unleash/unleash/issues/8276))
+
+- Feature lifecycle availability ([#8288](https://github.com/Unleash/unleash/issues/8288))
+
+- A/B Testing Use Case Tutorial ([#8257](https://github.com/Unleash/unleash/issues/8257))
+
+
+### Features
+
+- Check flag status snippet ([#8097](https://github.com/Unleash/unleash/issues/8097))
+
+- Change sdk action ([#8098](https://github.com/Unleash/unleash/issues/8098))
+
+- Connection status bubble ([#8099](https://github.com/Unleash/unleash/issues/8099))
+
+- Onboarding stepper ([#8100](https://github.com/Unleash/unleash/issues/8100))
+
+- Onboarding step badges ([#8102](https://github.com/Unleash/unleash/issues/8102))
+
+- New onboarding welcome screen logic ([#8110](https://github.com/Unleash/unleash/issues/8110))
+
+- Make node example more consistent ([#8111](https://github.com/Unleash/unleash/issues/8111))
+
+- Explain complete feature name ([#8120](https://github.com/Unleash/unleash/issues/8120))
+
+- Swift and flutter sdk snippets ([#8149](https://github.com/Unleash/unleash/issues/8149))
+
+- Personal dashboard route ([#8173](https://github.com/Unleash/unleash/issues/8173))
+
+- My projects ui stub ([#8185](https://github.com/Unleash/unleash/issues/8185))
+
+- Personal dashboard project selection ([#8188](https://github.com/Unleash/unleash/issues/8188))
+
+- Personal dashboard connect sdk ([#8190](https://github.com/Unleash/unleash/issues/8190))
+
+- Placeholder flag metrics chart ([#8197](https://github.com/Unleash/unleash/issues/8197))
+
+- Onboarding flow will not break ([#8198](https://github.com/Unleash/unleash/issues/8198))
+
+- Welcome dialog with unleash concepts ([#8199](https://github.com/Unleash/unleash/issues/8199))
+
+- Onboarding can be now closed ([#8215](https://github.com/Unleash/unleash/issues/8215))
+
+- Personal dashboard api ([#8218](https://github.com/Unleash/unleash/issues/8218))
+
+- Personal flags UI component ([#8221](https://github.com/Unleash/unleash/issues/8221))
+
+- Complete java example ([#8227](https://github.com/Unleash/unleash/issues/8227))
+
+- Only show sdk button to specific roles ([#8231](https://github.com/Unleash/unleash/issues/8231))
+
+- Sdk snippets in files ([#8233](https://github.com/Unleash/unleash/issues/8233))
+
+- Personal flag metrics display ([#8232](https://github.com/Unleash/unleash/issues/8232))
+
+- Add your projects (with roles) to personal dashboard api ([#8236](https://github.com/Unleash/unleash/issues/8236))
+
+- Highlighting flags chart ([#8237](https://github.com/Unleash/unleash/issues/8237))
+
+- Add group project roles to project roles ([#8245](https://github.com/Unleash/unleash/issues/8245))
+
+- Flag exposure in personal dashboard ([#8247](https://github.com/Unleash/unleash/issues/8247))
+
+- Rust SDK snippet ([#8239](https://github.com/Unleash/unleash/issues/8239))
+
+- Add project owners to personal dashboard project payload ([#8248](https://github.com/Unleash/unleash/issues/8248))
+
+- Nodejs snippet for production ([#8256](https://github.com/Unleash/unleash/issues/8256))
+
+- Display new completed dialog ([#8255](https://github.com/Unleash/unleash/issues/8255))
+
+- Sdk connected using production snippet ([#8266](https://github.com/Unleash/unleash/issues/8266))
+
+- Get projects by ids ([#8269](https://github.com/Unleash/unleash/issues/8269))
+
+- Show user's roles and project owners ([#8253](https://github.com/Unleash/unleash/issues/8253))
+
+- Project details for personal dashboard ([#8274](https://github.com/Unleash/unleash/issues/8274))
+
+- Vue and Svelte snippets ([#8250](https://github.com/Unleash/unleash/issues/8250))
+
+- Read projects from personal dashboard API ([#8279](https://github.com/Unleash/unleash/issues/8279))
+
+- After onboarding show success box with resources ([#8278](https://github.com/Unleash/unleash/issues/8278))
+
+- Personal dashboard project details API stub ([#8282](https://github.com/Unleash/unleash/issues/8282))
+
+- Now code examples are joined into one ([#8284](https://github.com/Unleash/unleash/issues/8284))
+
+- Create page for when you have no projects ([#8285](https://github.com/Unleash/unleash/issues/8285))
+
+- Add production snippets and resources ([#8286](https://github.com/Unleash/unleash/issues/8286))
+
+- Return latest project events ([#8287](https://github.com/Unleash/unleash/issues/8287))
+
+- Android snippet ([#8281](https://github.com/Unleash/unleash/issues/8281))
+
+- Display basic list of project events ([#8291](https://github.com/Unleash/unleash/issues/8291))
+
+- Adjust search query for personal project ([#8296](https://github.com/Unleash/unleash/issues/8296))
+
+- Add project owners to personal dashboard ([#8293](https://github.com/Unleash/unleash/issues/8293))
+
+- Last project events ui polishing ([#8298](https://github.com/Unleash/unleash/issues/8298))
+
+- Add Unleash admins to API payload ([#8299](https://github.com/Unleash/unleash/issues/8299))
+
+- Open unleash concepts ([#8301](https://github.com/Unleash/unleash/issues/8301))
+
+- Add onboarding status to personal dashboard api ([#8302](https://github.com/Unleash/unleash/issues/8302))
+
+- Use onboarding status to conditionally show badge and message ([#8304](https://github.com/Unleash/unleash/issues/8304))
+
+- Hook up admin / owner data to UI ([#8300](https://github.com/Unleash/unleash/issues/8300))
+
+- Personal dashboard flag created ([#8305](https://github.com/Unleash/unleash/issues/8305))
+
+- Include favorite projects in personal dashboard ([#8309](https://github.com/Unleash/unleash/issues/8309))
+
+- Skeleton loaders for personal dashboard ([#8313](https://github.com/Unleash/unleash/issues/8313))
+
+- Return project owners ([#8312](https://github.com/Unleash/unleash/issues/8312))
+
+- Return project roles ([#8314](https://github.com/Unleash/unleash/issues/8314))
+
+- Add transactional support for access service ([#8311](https://github.com/Unleash/unleash/issues/8311))
+
+- Add links to examples ([#8308](https://github.com/Unleash/unleash/issues/8308))
+
+- Redirect to personal dashboard when no last project ([#8318](https://github.com/Unleash/unleash/issues/8318))
+
+- .NET snippet ([#8307](https://github.com/Unleash/unleash/issues/8307))
+
+
+### Miscellaneous Tasks
+
+- Bump version to 6.2.0
+
+- Remove unused SCIM setting - assumeControlOfExisting ([#8101](https://github.com/Unleash/unleash/issues/8101))
+
+- Adjust language names ([#8117](https://github.com/Unleash/unleash/issues/8117))
+
+- Add logging to new code path ([#8133](https://github.com/Unleash/unleash/issues/8133))
+
+- Add stringified logs ([#8134](https://github.com/Unleash/unleash/issues/8134))
+
+- Bump version to 6.2.1
+
+- Bump version to 6.2.2
+
+- Update go sdk examples ([#8145](https://github.com/Unleash/unleash/issues/8145))
+
+- PHP SDK example fix ([#8146](https://github.com/Unleash/unleash/issues/8146))
+
+- Remove debug logs ([#8147](https://github.com/Unleash/unleash/issues/8147))
+
+- Upgrade unleash-client and mime libraries ([#8158](https://github.com/Unleash/unleash/issues/8158))
+
+- Add eventTimeline feature flag ([#8159](https://github.com/Unleash/unleash/issues/8159))
+
+- Update docker yarnlock ([#8174](https://github.com/Unleash/unleash/issues/8174))
+
+- Bump version to 6.2.3
+
+- Make count column bigint. ([#8183](https://github.com/Unleash/unleash/issues/8183))
+
+- Event timeline ([#8176](https://github.com/Unleash/unleash/issues/8176))
+
+- Finalize python sdk example ([#8186](https://github.com/Unleash/unleash/issues/8186))
+
+- Enables github docker cache ([#8187](https://github.com/Unleash/unleash/issues/8187))
+
+- Update project onboarding UI text ([#8189](https://github.com/Unleash/unleash/issues/8189))
+
+- Orval gen ([#8220](https://github.com/Unleash/unleash/issues/8220))
+
+- Event timeline tooltips ([#8205](https://github.com/Unleash/unleash/issues/8205))
+
+- Full js sdk example ([#8229](https://github.com/Unleash/unleash/issues/8229))
+
+- Feature event formatter md format style ([#8222](https://github.com/Unleash/unleash/issues/8222))
+
+- Send full message without trimming to the addon event ([#8230](https://github.com/Unleash/unleash/issues/8230))
+
+- Event timeline header placement ([#8234](https://github.com/Unleash/unleash/issues/8234))
+
+- Event timeline persistent state ([#8240](https://github.com/Unleash/unleash/issues/8240))
+
+- Update orval for personal dashboards ([#8268](https://github.com/Unleash/unleash/issues/8268))
+
+- Remove manual anonymization of outgoing project owners ([#8252](https://github.com/Unleash/unleash/issues/8252))
+
+- Move onboarding flow and dialog under same location ([#8272](https://github.com/Unleash/unleash/issues/8272))
+
+- Implement event grouping in the event timeline ([#8254](https://github.com/Unleash/unleash/issues/8254))
+
+- Fix search events endpoint description ([#8289](https://github.com/Unleash/unleash/issues/8289))
+
+- Event timeline signals ([#8310](https://github.com/Unleash/unleash/issues/8310))
+
+
+### Refactor
+
+- Move getProjectsByUser to read model ([#8262](https://github.com/Unleash/unleash/issues/8262))
+
+- Composition root for personal dashboard service ([#8280](https://github.com/Unleash/unleash/issues/8280))
+
+- Extract my projects component ([#8317](https://github.com/Unleash/unleash/issues/8317))
+
+
+### Testing
+
+- Onboarding test with existing key ([#8116](https://github.com/Unleash/unleash/issues/8116))
+
+- Improve onboarding test ([#8121](https://github.com/Unleash/unleash/issues/8121))
+
+- Reduce noise from test warnings ([#8251](https://github.com/Unleash/unleash/issues/8251))
+
+- Skip vercel toolbar in e2e tests ([#8273](https://github.com/Unleash/unleash/issues/8273))
+
+- Test the dashboard admins property ([#8303](https://github.com/Unleash/unleash/issues/8303))
+
+
 ## [6.2.3] - 2024-09-18
 
 ### Bug Fixes

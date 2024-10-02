@@ -8,7 +8,7 @@ Before Unleash 4.16, strategy constraints were only available to Unleash Pro and
 
 :::
 
-This guide shows you how to add [strategy constraints](../reference/strategy-constraints.md) to your feature flags via the admin UI. For information on how to interact with strategy constraints from an [Unleash client SDK](../reference/sdks/index.md), visit the specific SDKs documentation or see [the relevant section in the strategy constraints documentation](../reference/strategy-constraints.md#sdks 'strategy constraints documentation, section on interacting with constraints from client SDKs').
+This guide shows you how to add [strategy constraints](../reference/strategy-constraints.md) to your feature flags using the Admin UI. For information on how to interact with strategy constraints from an [Unleash client SDK](../reference/sdks/index.md), visit the specific SDK's documentation or see [the relevant section in the strategy constraints documentation](../reference/strategy-constraints.md#sdks 'strategy constraints documentation, section on interacting with constraints from client SDKs').
 
 ## Prerequisites
 

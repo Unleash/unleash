@@ -12,6 +12,7 @@ import { timeSpanOptions } from '../EventTimelineProvider';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEventTimelineContext } from '../EventTimelineContext';
 import { EventTimelineHeaderTip } from './EventTimelineHeaderTip';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const StyledCol = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -32,6 +33,8 @@ const StyledFilter = styled(TextField)(({ theme }) => ({
 }));
 
 const StyledTimelineEventsCount = styled('span')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
     marginTop: theme.spacing(0.25),
 }));
 
@@ -66,6 +69,7 @@ export const EventTimelineHeader = ({
                 <StyledTimelineEventsCount>
                     {totalEvents} event
                     {totalEvents === 1 ? '' : 's'}
+                    <HelpIcon tooltip='These are key events per environment across all your projects. For more details, visit the event log.' />
                 </StyledTimelineEventsCount>
                 <StyledFilter
                     select

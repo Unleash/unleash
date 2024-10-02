@@ -12,6 +12,7 @@ import type { IPrivateProjectChecker } from '../private-project/privateProjectCh
 import type {
     IAccessStore,
     IAccountStore,
+    IEvent,
     IEventStore,
     IOnboardingReadModel,
     MinimalUser,
@@ -19,6 +20,7 @@ import type {
 import type { FeatureEventFormatter } from '../../addons/feature-event-formatter-md';
 import { generateImageUrl } from '../../util';
 import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
+import type { IRoleWithProject } from '../../types/stores/access-store';
 
 export class PersonalDashboardService {
     private personalDashboardReadModel: IPersonalDashboardReadModel;
@@ -103,44 +105,47 @@ export class PersonalDashboardService {
         userId: number,
         projectId: string,
     ): Promise<PersonalDashboardProjectDetailsSchema> {
-        const recentEvents = await this.eventStore.searchEvents(
-            { limit: 4, offset: 0 },
-            [{ field: 'project', operator: 'IS', values: [projectId] }],
-        );
-
-        const onboardingStatus =
-            await this.onboardingReadModel.getOnboardingStatusForProject(
-                projectId,
-            );
-
-        const formattedEvents = recentEvents.map((event) => ({
-            summary: this.featureEventFormatter.format(event).text,
-            createdBy: event.createdBy,
-            id: event.id,
-            createdByImageUrl: generateImageUrl({ email: event.createdBy }),
-        }));
-
-        const owners =
-            await this.projectOwnersReadModel.getProjectOwners(projectId);
-
-        const allRoles = await this.accessStore.getAllProjectRolesForUser(
-            userId,
-            projectId,
-        );
-
-        const projectRoles = allRoles
-            .filter((role) => ['project', 'custom'].includes(role.type))
-            .map((role) => ({
-                id: role.id,
-                name: role.name,
-                type: role.type as PersonalDashboardProjectDetailsSchema['roles'][number]['type'],
+        const formatEvents = (recentEvents: IEvent[]) =>
+            recentEvents.map((event) => ({
+                summary: this.featureEventFormatter.format(event).text,
+                createdBy: event.createdBy,
+                id: event.id,
+                createdByImageUrl: generateImageUrl({ email: event.createdBy }),
             }));
 
-        const healthScores =
-            await this.personalDashboardReadModel.getLatestHealthScores(
-                projectId,
-                8,
-            );
+        const filterRoles = (allRoles: IRoleWithProject[]) =>
+            allRoles
+                .filter((role) => ['project', 'custom'].includes(role.type))
+                .map((role) => ({
+                    id: role.id,
+                    name: role.name,
+                    type: role.type as PersonalDashboardProjectDetailsSchema['roles'][number]['type'],
+                }));
+
+        const [latestEvents, onboardingStatus, owners, roles, healthScores] =
+            await Promise.all([
+                this.eventStore
+                    .searchEvents({ limit: 4, offset: 0 }, [
+                        {
+                            field: 'project',
+                            operator: 'IS',
+                            values: [projectId],
+                        },
+                    ])
+                    .then(formatEvents),
+                this.onboardingReadModel.getOnboardingStatusForProject(
+                    projectId,
+                ),
+                this.projectOwnersReadModel.getProjectOwners(projectId),
+                this.accessStore
+                    .getAllProjectRolesForUser(userId, projectId)
+                    .then(filterRoles),
+                this.personalDashboardReadModel.getLatestHealthScores(
+                    projectId,
+                    8,
+                ),
+            ]);
+
         let avgHealthCurrentWindow: number | null = null;
         let avgHealthPastWindow: number | null = null;
 
@@ -161,10 +166,10 @@ export class PersonalDashboardService {
         }
 
         return {
-            latestEvents: formattedEvents,
+            latestEvents,
             onboardingStatus,
             owners,
-            roles: projectRoles,
+            roles,
             insights: {
                 avgHealthCurrentWindow,
                 avgHealthPastWindow,

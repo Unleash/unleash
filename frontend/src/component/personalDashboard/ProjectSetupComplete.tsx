@@ -48,27 +48,23 @@ type HeathTrend = 'consistent' | 'improved' | 'declined' | 'unknown';
 
 const determineProjectHealthTrend = (
     insights: PersonalDashboardProjectDetailsSchemaInsights,
-) => {
-    let trend: HeathTrend = 'unknown';
-    if (
-        insights.avgHealthCurrentWindow !== null &&
-        insights.avgHealthPastWindow !== null
-    ) {
-        if (insights.avgHealthCurrentWindow > insights.avgHealthPastWindow) {
-            trend = 'improved';
-        } else if (
-            insights.avgHealthCurrentWindow < insights.avgHealthPastWindow
-        ) {
-            trend = 'declined';
-        } else if (
-            insights.avgHealthPastWindow === insights.avgHealthCurrentWindow
-        ) {
-            trend = 'consistent';
-        }
-    }
-    return trend;
-};
+): HeathTrend => {
+    const { avgHealthCurrentWindow, avgHealthPastWindow } = insights;
 
+    if (avgHealthCurrentWindow === null || avgHealthPastWindow === null) {
+        return 'unknown';
+    }
+
+    if (avgHealthCurrentWindow > avgHealthPastWindow) {
+        return 'improved';
+    }
+
+    if (avgHealthCurrentWindow < avgHealthPastWindow) {
+        return 'declined';
+    }
+
+    return 'consistent';
+};
 export const ProjectSetupComplete: FC<{
     project: string;
     insights: PersonalDashboardProjectDetailsSchemaInsights;

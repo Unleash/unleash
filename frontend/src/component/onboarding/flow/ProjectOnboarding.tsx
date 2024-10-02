@@ -41,12 +41,9 @@ const Actions = styled('div')(({ theme }) => ({
     display: 'flex',
     flexGrow: 1,
     padding: theme.spacing(0, 1),
-    // gap: theme.spacing(7),
-    // padding: theme.spacing(3, 5),
     [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
         padding: theme.spacing(0),
-        // gap: theme.spacing(7),
     },
 }));
 

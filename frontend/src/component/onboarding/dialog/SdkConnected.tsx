@@ -45,9 +45,10 @@ export const SdkConnected: FC<ISdkConnectedProps> = ({ sdk }) => {
                 <Box sx={{ mt: 2 }}>
                     <SectionHeader>Production settings</SectionHeader>
                     <Typography variant='body2'>
-                        In order to validate the connection, we changed some
-                        settings that you might want to revert. We recommend the
-                        following default settings.
+                        You have successfully connected your SDK. In the
+                        previous code example, the settings were optimized for
+                        development. We recommend the following setup for
+                        production.
                     </Typography>
                     <Markdown components={{ code: CodeRenderer }}>
                         {productionSnippet}

@@ -122,7 +122,7 @@ export class PersonalDashboardService {
                     type: role.type as PersonalDashboardProjectDetailsSchema['roles'][number]['type'],
                 }));
 
-        const [latestEvents, onboardingStatus, owners, roles] =
+        const [latestEvents, onboardingStatus, owners, roles, healthScores] =
             await Promise.all([
                 this.eventStore
                     .searchEvents({ limit: 4, offset: 0 }, [
@@ -140,13 +140,40 @@ export class PersonalDashboardService {
                 this.accessStore
                     .getAllProjectRolesForUser(userId, projectId)
                     .then(filterRoles),
+                this.personalDashboardReadModel.getLatestHealthScores(
+                    projectId,
+                    8,
+                ),
             ]);
+
+        let avgHealthCurrentWindow: number | null = null;
+        let avgHealthPastWindow: number | null = null;
+
+        if (healthScores.length >= 4) {
+            avgHealthCurrentWindow = Math.round(
+                healthScores
+                    .slice(0, 4)
+                    .reduce((acc, score) => acc + score, 0) / 4,
+            );
+        }
+
+        if (healthScores.length >= 8) {
+            avgHealthPastWindow = Math.round(
+                healthScores
+                    .slice(4, 8)
+                    .reduce((acc, score) => acc + score, 0) / 4,
+            );
+        }
 
         return {
             latestEvents,
             onboardingStatus,
             owners,
             roles,
+            insights: {
+                avgHealthCurrentWindow,
+                avgHealthPastWindow,
+            },
         };
     }
 

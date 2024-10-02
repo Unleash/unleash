@@ -36,7 +36,7 @@ export const EventTimelineEventGroup = ({
         <StyledEvent position={position}>
             <HtmlTooltip
                 title={<EventTimelineEventTooltip group={group} />}
-                maxWidth={320}
+                maxWidth={350}
                 arrow
             >
                 <Badge

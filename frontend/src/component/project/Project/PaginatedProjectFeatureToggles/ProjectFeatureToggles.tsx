@@ -426,6 +426,7 @@ export const ProjectFeatureToggles = ({
                         projectId={projectId}
                         setConnectSdkOpen={setConnectSdkOpen}
                         setOnboardingFlow={setOnboardingFlow}
+                        refetchFeatures={refetch}
                     />
                 }
             />

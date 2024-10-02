@@ -1,9 +1,10 @@
 import { IconButton, styled, Tooltip, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import Check from '@mui/icons-material/Check';
-import People from '@mui/icons-material/People';
-import MenuBook from '@mui/icons-material/MenuBook';
 import { Link } from 'react-router-dom';
+import ExtensionOutlined from '@mui/icons-material/ExtensionOutlined';
+import MenuBookOutlined from '@mui/icons-material/MenuBookOutlined';
+import PeopleOutlined from '@mui/icons-material/PeopleOutlined';
 
 interface IProjectOnboardedProps {
     projectId: string;
@@ -66,11 +67,15 @@ const StyledCheck = styled(Check)(({ theme }) => ({
     height: '28px',
 }));
 
-const ColoredPeople = styled(People)(({ theme }) => ({
+const ColoredExtension = styled(ExtensionOutlined)(({ theme }) => ({
     color: theme.palette.primary.main,
 }));
 
-const ColoredMenuBook = styled(MenuBook)(({ theme }) => ({
+const ColoredPeople = styled(PeopleOutlined)(({ theme }) => ({
+    color: theme.palette.primary.main,
+}));
+
+const ColoredMenuBook = styled(MenuBookOutlined)(({ theme }) => ({
     color: theme.palette.primary.main,
 }));
 
@@ -96,6 +101,7 @@ export const ProjectOnboarded = ({
             <Actions>
                 <ActionBox>
                     <TitleContainer>
+                        <ColoredExtension />
                         Expose your feature flag to users
                     </TitleContainer>
                     <Typography>

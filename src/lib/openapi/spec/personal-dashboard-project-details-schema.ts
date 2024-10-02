@@ -7,8 +7,36 @@ export const personalDashboardProjectDetailsSchema = {
     type: 'object',
     description: 'Project details in personal dashboard',
     additionalProperties: false,
-    required: ['owners', 'roles', 'latestEvents', 'onboardingStatus'],
+    required: [
+        'owners',
+        'roles',
+        'latestEvents',
+        'onboardingStatus',
+        'insights',
+    ],
     properties: {
+        insights: {
+            type: 'object',
+            description: 'Insights for the project',
+            additionalProperties: false,
+            required: ['avgHealthCurrentWindow', 'avgHealthPastWindow'],
+            properties: {
+                avgHealthCurrentWindow: {
+                    type: 'number',
+                    description:
+                        'The average health score in the current window of the last 4 weeks',
+                    example: 80,
+                    nullable: true,
+                },
+                avgHealthPastWindow: {
+                    type: 'number',
+                    description:
+                        'The average health score in the previous 4 weeks before the current window',
+                    example: 70,
+                    nullable: true,
+                },
+            },
+        },
         onboardingStatus: projectOverviewSchema.properties.onboardingStatus,
         latestEvents: {
             type: 'array',

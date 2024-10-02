@@ -8,6 +8,13 @@ import type {
 export class FakePersonalDashboardReadModel
     implements IPersonalDashboardReadModel
 {
+    async getLatestHealthScores(
+        project: string,
+        count: number,
+    ): Promise<number[]> {
+        return [];
+    }
+
     async getPersonalFeatures(userId: number): Promise<PersonalFeature[]> {
         return [];
     }

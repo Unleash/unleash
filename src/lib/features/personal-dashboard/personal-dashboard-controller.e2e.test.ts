@@ -227,6 +227,10 @@ test('should return personal dashboard project details', async () => {
     );
 
     expect(body).toMatchObject({
+        insights: {
+            avgHealthCurrentWindow: null,
+            avgHealthPastWindow: null,
+        },
         owners: [{}],
         roles: [{}],
         onboardingStatus: {
@@ -259,6 +263,41 @@ test('should return personal dashboard project details', async () => {
                 ),
             },
         ],
+    });
+
+    const insertHealthScore = (id: string, health: number) => {
+        const irrelevantFlagTrendDetails = {
+            total_flags: 10,
+            stale_flags: 10,
+            potentially_stale_flags: 10,
+        };
+        return db.rawDatabase('flag_trends').insert({
+            ...irrelevantFlagTrendDetails,
+            id,
+            project: project.id,
+            health,
+        });
+    };
+
+    await insertHealthScore('2024-01', 80);
+    await insertHealthScore('2024-02', 80);
+    await insertHealthScore('2024-03', 80);
+    await insertHealthScore('2024-04', 81);
+
+    await insertHealthScore('2024-05', 90);
+    await insertHealthScore('2024-06', 91);
+    await insertHealthScore('2024-07', 91);
+    await insertHealthScore('2024-08', 91);
+
+    const { body: bodyWithHealthScores } = await app.request.get(
+        `/api/admin/personal-dashboard/${project.id}`,
+    );
+
+    expect(bodyWithHealthScores).toMatchObject({
+        insights: {
+            avgHealthPastWindow: 80,
+            avgHealthCurrentWindow: 91,
+        },
     });
 });
 

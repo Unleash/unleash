@@ -41,7 +41,7 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
         let is_enabled = client.is_enabled(Flags::TestFlag, None, true);
         println!("\nIs flag enabled: {}\n", is_enabled);
 
-        sleep(Duration::from_millis(1000)).await;
+        sleep(Duration::from_millis(5000)).await;
 
         client.stop_poll().await;
         Ok::<(), Box<dyn Error + Send + Sync>>(())

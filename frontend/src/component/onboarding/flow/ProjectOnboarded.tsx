@@ -132,7 +132,7 @@ export const ProjectOnboarded = ({
                 <ActionBox>
                     <TitleContainer>
                         <ColoredMenuBook />
-                        Learn about unleash
+                        Learn about Unleash
                     </TitleContainer>
                     <Typography>
                         Take a deep dive through our documentation,{' '}

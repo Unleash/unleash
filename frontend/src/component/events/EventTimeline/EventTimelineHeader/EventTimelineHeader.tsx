@@ -12,6 +12,7 @@ import { timeSpanOptions } from '../EventTimelineProvider';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEventTimelineContext } from '../EventTimelineContext';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { EventTimelineHeaderTip } from './EventTimelineHeaderTip';
 
 const StyledCol = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -88,6 +89,7 @@ export const EventTimelineHeader = ({
                     ))}
                 </StyledFilter>
             </StyledCol>
+            <EventTimelineHeaderTip />
             <StyledCol>
                 <ConditionallyRender
                     condition={Boolean(environment)}

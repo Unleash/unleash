@@ -453,6 +453,9 @@ export default class MetricsMonitor {
                 eventBus.on(
                     events.STAGE_ENTERED,
                     (entered: { stage: string; feature: string }) => {
+                        if (flagResolver.isEnabled('trackLifecycleMetrics')) {
+                            logger.info('STAGE_ENTERED listened', entered);
+                        }
                         featureLifecycleStageEnteredCounter.increment({
                             stage: entered.stage,
                         });

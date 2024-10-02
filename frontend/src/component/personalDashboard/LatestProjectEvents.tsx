@@ -10,10 +10,11 @@ const Events = styled('ul')(({ theme }) => ({
 }));
 
 const Event = styled('li')(({ theme }) => ({
-    display: 'flex',
-    gap: theme.spacing(2),
     listStyleType: 'none',
-    padding: 0,
+    padding: theme.spacing(0),
+    display: 'inline-flex',
+    gap: theme.spacing(2),
+    alignItems: 'center',
     marginBottom: theme.spacing(4),
 }));
 

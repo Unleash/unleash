@@ -8,10 +8,10 @@ import { useEffect, useState } from 'react';
 
 const StyledEventTimelineSlider = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
-    height: '105px',
+    height: '120px',
     overflow: 'hidden',
     boxShadow: theme.boxShadows.popup,
-    borderLeft: `1px solid ${theme.palette.divider}`,
+    borderLeft: `1px solid ${theme.palette.background.application}`,
 }));
 
 const StyledEventTimelineWrapper = styled(Box)(({ theme }) => ({
@@ -36,7 +36,7 @@ export const MainLayoutEventTimeline = () => {
                 transition: isInitialLoad
                     ? 'none'
                     : 'max-height 0.3s ease-in-out',
-                maxHeight: open ? '105px' : '0',
+                maxHeight: open ? '120px' : '0',
             }}
         >
             <StyledEventTimelineWrapper>

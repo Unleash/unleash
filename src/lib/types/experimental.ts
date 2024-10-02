@@ -31,7 +31,6 @@ export type IFlagKey =
     | 'celebrateUnleash'
     | 'featureSearchFeedback'
     | 'featureSearchFeedbackPosting'
-    | 'edgeBulkMetrics'
     | 'extendedUsageMetrics'
     | 'adminTokenKillSwitch'
     | 'feedbackComments'
@@ -60,7 +59,8 @@ export type IFlagKey =
     | 'onboardingUI'
     | 'projectRoleAssignment'
     | 'eventTimeline'
-    | 'personalDashboardUI';
+    | 'personalDashboardUI'
+    | 'trackLifecycleMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -165,10 +165,6 @@ const flags: IFlags = {
     ),
     encryptEmails: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ENCRYPT_EMAILS,
-        false,
-    ),
-    edgeBulkMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EDGE_BULK_METRICS,
         false,
     ),
     extendedUsageMetrics: parseEnvVarBoolean(
@@ -295,6 +291,10 @@ const flags: IFlags = {
     ),
     personalDashboardUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PERSONAL_DASHBOARD_UI,
+        false,
+    ),
+    trackLifecycleMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_TRACK_LIFECYCLE_METRICS,
         false,
     ),
 };

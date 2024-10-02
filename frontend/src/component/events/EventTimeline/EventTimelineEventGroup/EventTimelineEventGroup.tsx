@@ -28,11 +28,11 @@ export const EventTimelineEventGroup = ({
     startTime,
     endTime,
 }: IEventTimelineEventProps) => {
+    const { trackEvent } = usePlausibleTracker();
     const timelineDuration = endTime - startTime;
     const eventTime = group[0].timestamp;
 
     const position = `${((eventTime - startTime) / timelineDuration) * 100}%`;
-    const { trackEvent } = usePlausibleTracker();
     const trackHover = () => {
         trackEvent('event-timeline-event-hover');
     };

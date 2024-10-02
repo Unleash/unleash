@@ -2,6 +2,7 @@ import { styled, Typography } from '@mui/material';
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
+import type { PersonalDashboardProjectDetailsSchemaInsights } from '../../openapi';
 
 const TitleContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -18,18 +19,17 @@ const ActionBox = styled('article')(({ theme }) => ({
     flexDirection: 'column',
 }));
 
-export const ProjectSetupComplete: FC<{ project: string }> = ({ project }) => {
+const PercentageScore = styled('span')(({ theme }) => ({
+    color: theme.palette.primary.main,
+}));
+
+const ConnectedSdkProject: FC<{ project: string }> = ({ project }) => {
     return (
-        <ActionBox>
-            <TitleContainer>
-                <Lightbulb color='primary' />
-                <h3>Project Insight</h3>
-            </TitleContainer>
+        <>
             <Typography>
                 This project already has connected SDKs and existing feature
                 flags.
             </Typography>
-
             <Typography>
                 <Link to={`/projects/${project}?create=true`}>
                     Create a new feature flag
@@ -40,6 +40,91 @@ export const ProjectSetupComplete: FC<{ project: string }> = ({ project }) => {
                 </Link>{' '}
                 to work with existing flags
             </Typography>
+        </>
+    );
+};
+
+type HeathTrend = 'consistent' | 'improved' | 'declined' | 'unknown';
+
+const determineProjectHealthTrend = (
+    insights: PersonalDashboardProjectDetailsSchemaInsights,
+) => {
+    let trend: HeathTrend = 'unknown';
+    if (
+        insights.avgHealthCurrentWindow !== null &&
+        insights.avgHealthPastWindow !== null
+    ) {
+        if (insights.avgHealthCurrentWindow > insights.avgHealthPastWindow) {
+            trend = 'improved';
+        } else if (
+            insights.avgHealthCurrentWindow < insights.avgHealthPastWindow
+        ) {
+            trend = 'declined';
+        } else if (
+            insights.avgHealthPastWindow === insights.avgHealthCurrentWindow
+        ) {
+            trend = 'consistent';
+        }
+    }
+    return trend;
+};
+
+export const ProjectSetupComplete: FC<{
+    project: string;
+    insights: PersonalDashboardProjectDetailsSchemaInsights;
+}> = ({ project, insights }) => {
+    const projectHealthTrend = determineProjectHealthTrend(insights);
+
+    return (
+        <ActionBox>
+            <TitleContainer>
+                <Lightbulb color='primary' />
+                <h3>Project Insight</h3>
+            </TitleContainer>
+
+            {projectHealthTrend === 'unknown' ? (
+                <ConnectedSdkProject project={project} />
+            ) : null}
+            {projectHealthTrend === 'improved' ? (
+                <Typography>
+                    On average, your project health went up from{' '}
+                    <PercentageScore>
+                        {insights.avgHealthPastWindow}%
+                    </PercentageScore>{' '}
+                    to{' '}
+                    <PercentageScore>
+                        {insights.avgHealthCurrentWindow}%
+                    </PercentageScore>{' '}
+                    during the last 4 weeks.
+                </Typography>
+            ) : null}
+            {projectHealthTrend === 'declined' ? (
+                <Typography>
+                    On average, your project health went down from{' '}
+                    <PercentageScore>
+                        {insights.avgHealthPastWindow}%
+                    </PercentageScore>{' '}
+                    to{' '}
+                    <PercentageScore>
+                        {insights.avgHealthCurrentWindow}%
+                    </PercentageScore>{' '}
+                    during the last 4 weeks.
+                </Typography>
+            ) : null}
+            {projectHealthTrend === 'consistent' ? (
+                <Typography>
+                    On average, your project health has remained at{' '}
+                    <PercentageScore>
+                        {insights.avgHealthCurrentWindow}%
+                    </PercentageScore>{' '}
+                    during the last 4 weeks.
+                </Typography>
+            ) : null}
+            {projectHealthTrend !== 'unknown' ? (
+                <Link to={`/projects/${project}/insights`}>
+                    View more insights
+                </Link>
+            ) : null}
         </ActionBox>
     );
 };

@@ -79,7 +79,8 @@ const ProjectHealthMessage: FC<{
                 On average, your project health went up from{' '}
                 <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
                 <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
-                during the last 4 weeks.
+                during the last 4 weeks. This indicates that you are archiving
+                your stale flags.
             </Typography>
         );
     }
@@ -90,7 +91,8 @@ const ProjectHealthMessage: FC<{
                 On average, your project health went down from{' '}
                 <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
                 <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
-                during the last 4 weeks.
+                during the last 4 weeks. Remember to archive your stale feature
+                flags to keep the project health growing.
             </Typography>
         );
     }

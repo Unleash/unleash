@@ -11,7 +11,7 @@ const unleash = new UnleashClient({
     url: '<YOUR_API_URL>',
     clientKey: '<YOUR_API_TOKEN>',
     appName: 'unleash-onboarding-javascript',
-    refreshInterval: 5000,
+    refreshInterval: 1000,
 });
 
 unleash.start();

@@ -16,7 +16,7 @@ $unleash = UnleashBuilder::create()
     ->withAppUrl('<YOUR_API_URL>')
     ->withHeader('Authorization', '<YOUR_API_TOKEN>')
     ->withInstanceId('unleash-onboarding-instance')
-    ->withMetricsInterval(5000)
+    ->withMetricsInterval(1000)
     ->build();
 
 while (true) {

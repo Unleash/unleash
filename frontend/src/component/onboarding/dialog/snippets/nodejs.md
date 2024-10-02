@@ -11,7 +11,7 @@ const unleash = initialize({
   url: '<YOUR_API_URL>',
   appName: 'unleash-onboarding-node',
   customHeaders: { Authorization: '<YOUR_API_TOKEN>' },
-  metricsInterval: 5000,
+  metricsInterval: 1000,
 });
 
 setInterval(() => {

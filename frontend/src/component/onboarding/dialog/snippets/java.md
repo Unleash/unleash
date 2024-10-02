@@ -14,7 +14,7 @@ UnleashConfig config = UnleashConfig.builder()
     .instanceId("unleash-onboarding-instance")
     .unleashAPI("<YOUR_API_URL>")
     .apiKey("<YOUR_API_TOKEN>")
-    .sendMetricsInterval(5)
+    .sendMetricsInterval(1)
     .build();
 
 Unleash unleash = new DefaultUnleash(config);

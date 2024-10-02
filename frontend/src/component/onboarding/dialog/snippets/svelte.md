@@ -12,7 +12,7 @@ npm install @unleash/proxy-client-svelte
         url: '<YOUR_API_URL>',
         clientKey: '<YOUR_API_TOKEN>',
         appName: 'unleash-onboarding-svelte',
-        metricsInterval: 5,
+        metricsInterval: 1,
 	};
 </script>
 

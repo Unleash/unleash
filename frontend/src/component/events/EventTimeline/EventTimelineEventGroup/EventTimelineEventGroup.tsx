@@ -38,7 +38,7 @@ export const EventTimelineEventGroup = ({
     };
 
     return (
-        <StyledEvent position={position} onMouseOver={trackHover}>
+        <StyledEvent position={position} onMouseEnter={trackHover}>
             <HtmlTooltip
                 title={<EventTimelineEventTooltip group={group} />}
                 maxWidth={350}

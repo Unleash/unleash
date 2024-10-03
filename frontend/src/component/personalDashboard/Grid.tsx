@@ -1,11 +1,11 @@
-import { Box, Grid, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import type { Theme } from '@mui/material/styles/createTheme';
 
 export const ContentGridContainer = styled('div')({
     containerType: 'inline-size',
 });
 
-const ContentGrid2 = styled('article')(({ theme }) => {
+const ContentGrid = styled('article')(({ theme }) => {
     return {
         backgroundColor: theme.palette.divider,
         borderRadius: `${theme.shape.borderRadiusLarge}px`,
@@ -21,8 +21,23 @@ const ContentGrid2 = styled('article')(({ theme }) => {
     };
 });
 
-export const ProjectGrid = styled(ContentGrid2)(({ theme }) => ({
-    '@container (min-width: 1000px)': {
+const onWideContainer =
+    (css: object) =>
+    ({ theme }: { theme: Theme }) => {
+        const containerBreakpoint = '1000px';
+        const screenBreakpoint = theme.breakpoints.up('lg');
+
+        return {
+            [`@container (min-width: ${containerBreakpoint})`]: css,
+
+            '@supports not (container-type: inline-size)': {
+                [screenBreakpoint]: css,
+            },
+        };
+    };
+
+export const ProjectGrid = styled(ContentGrid)(
+    onWideContainer({
         gridTemplateColumns: '1fr 1fr 1fr',
         display: 'grid',
         gridTemplateAreas: `
@@ -30,47 +45,36 @@ export const ProjectGrid = styled(ContentGrid2)(({ theme }) => ({
                 "projects box1 box2"
                 ". owners owners"
             `,
-    },
+    }),
+);
 
-    '@supports not (container-type: inline-size)': {
-        [theme.breakpoints.up('lg')]: {
-            gridTemplateColumns: '1fr 1fr 1fr',
-            display: 'grid',
-            gridTemplateAreas: `
-                "title onboarding onboarding"
-                "projects box1 box2"
-                ". owners owners"
+export const FlagGrid = styled(ContentGrid)(
+    onWideContainer({
+        gridTemplateColumns: '1fr 1fr 1fr',
+        display: 'grid',
+        gridTemplateAreas: `
+                "title lifecycle lifecycle"
+                "flags chart chart"
             `,
-        },
-    },
-}));
+    }),
+);
 
-export const SpacedGridItem2 = styled('div')(({ theme }) => ({
+export const SpacedGridItem = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'gridArea',
+})<{ gridArea: string }>(({ theme, gridArea }) => ({
     padding: theme.spacing(4),
+    gridArea,
 }));
 
-export const EmptyGridItem = styled('div')(({ theme }) => ({
+export const EmptyGridItem = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'gridArea',
+})<{ gridArea?: string }>(({ theme, gridArea }) => ({
     display: 'none',
+    gridArea,
 
-    '@container (min-width: 1000px)': {
+    ...onWideContainer({
         display: 'block',
-    },
-
-    '@supports not (container-type: inline-size)': {
-        [theme.breakpoints.up('lg')]: {
-            display: 'block',
-        },
-    },
-}));
-
-export const ContentGrid = styled(Grid)(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-}));
-
-export const SpacedGridItem = styled(Grid)(({ theme }) => ({
-    padding: theme.spacing(4),
-    border: `0.5px solid ${theme.palette.divider}`,
+    })({ theme }),
 }));
 
 export const ListItemBox = styled(Box)(({ theme }) => ({

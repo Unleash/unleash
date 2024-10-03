@@ -24,7 +24,8 @@ import HelpOutline from '@mui/icons-material/HelpOutline';
 import useLoading from '../../hooks/useLoading';
 import { MyProjects } from './MyProjects';
 import {
-    ContentGrid,
+    ContentGridContainer,
+    FlagGrid,
     ListItemBox,
     listItemStyle,
     SpacedGridItem,
@@ -180,55 +181,58 @@ export const PersonalDashboard = () => {
                 />
             )}
 
-            <ContentGrid container columns={{ lg: 12, md: 1 }} sx={{ mt: 2 }}>
-                <SpacedGridItem item lg={4} md={1}>
-                    <Typography variant='h3'>My feature flags</Typography>
-                </SpacedGridItem>
-                <SpacedGridItem
-                    item
-                    lg={8}
-                    md={1}
-                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
-                >
-                    {activeFlag ? (
-                        <FlagExposure
-                            project={activeFlag.project}
-                            flagName={activeFlag.name}
-                            onArchive={refetchDashboard}
-                        />
-                    ) : null}
-                </SpacedGridItem>
-                <SpacedGridItem item lg={4} md={1}>
-                    {personalDashboard && personalDashboard.flags.length > 0 ? (
-                        <List
-                            disablePadding={true}
-                            sx={{ maxHeight: '400px', overflow: 'auto' }}
-                        >
-                            {personalDashboard.flags.map((flag) => (
-                                <FlagListItem
-                                    key={flag.name}
-                                    flag={flag}
-                                    selected={flag.name === activeFlag?.name}
-                                    onClick={() => setActiveFlag(flag)}
-                                />
-                            ))}
-                        </List>
-                    ) : (
-                        <Typography>
-                            You have not created or favorited any feature flags.
-                            Once you do, they will show up here.
-                        </Typography>
-                    )}
-                </SpacedGridItem>
+            <ContentGridContainer>
+                <FlagGrid sx={{ mt: 2 }}>
+                    <SpacedGridItem gridArea='title'>
+                        <Typography variant='h3'>My feature flags</Typography>
+                    </SpacedGridItem>
+                    <SpacedGridItem
+                        gridArea='lifecycle'
+                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                    >
+                        {activeFlag ? (
+                            <FlagExposure
+                                project={activeFlag.project}
+                                flagName={activeFlag.name}
+                                onArchive={refetchDashboard}
+                            />
+                        ) : null}
+                    </SpacedGridItem>
+                    <SpacedGridItem gridArea='flags'>
+                        {personalDashboard &&
+                        personalDashboard.flags.length > 0 ? (
+                            <List
+                                disablePadding={true}
+                                sx={{ maxHeight: '400px', overflow: 'auto' }}
+                            >
+                                {personalDashboard.flags.map((flag) => (
+                                    <FlagListItem
+                                        key={flag.name}
+                                        flag={flag}
+                                        selected={
+                                            flag.name === activeFlag?.name
+                                        }
+                                        onClick={() => setActiveFlag(flag)}
+                                    />
+                                ))}
+                            </List>
+                        ) : (
+                            <Typography>
+                                You have not created or favorited any feature
+                                flags. Once you do, they will show up here.
+                            </Typography>
+                        )}
+                    </SpacedGridItem>
 
-                <SpacedGridItem item lg={8} md={1}>
-                    {activeFlag ? (
-                        <FlagMetricsChart flag={activeFlag} />
-                    ) : (
-                        <PlaceholderFlagMetricsChart />
-                    )}
-                </SpacedGridItem>
-            </ContentGrid>
+                    <SpacedGridItem gridArea='chart'>
+                        {activeFlag ? (
+                            <FlagMetricsChart flag={activeFlag} />
+                        ) : (
+                            <PlaceholderFlagMetricsChart />
+                        )}
+                    </SpacedGridItem>
+                </FlagGrid>
+            </ContentGridContainer>
             <WelcomeDialog
                 open={welcomeDialog === 'open'}
                 onClose={() => setWelcomeDialog('closed')}

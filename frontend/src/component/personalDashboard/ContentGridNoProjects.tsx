@@ -1,18 +1,18 @@
-import { Grid, Typography, styled } from '@mui/material';
+import { Typography, styled } from '@mui/material';
 import { AvatarGroupFromOwners } from 'component/common/AvatarGroupFromOwners/AvatarGroupFromOwners';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import type { PersonalDashboardSchemaAdminsItem } from 'openapi/models/personalDashboardSchemaAdminsItem';
 import type { PersonalDashboardSchemaProjectOwnersItem } from 'openapi/models/personalDashboardSchemaProjectOwnersItem';
 import { Link } from 'react-router-dom';
+import {
+    ContentGridContainer,
+    EmptyGridItem,
+    ProjectGrid,
+    SpacedGridItem,
+} from './Grid';
 
-const ContentGrid = styled(Grid)(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-}));
-
-const SpacedGridItem = styled(Grid)(({ theme }) => ({
+const PaddedEmptyGridItem = styled(EmptyGridItem)(({ theme }) => ({
     padding: theme.spacing(4),
-    border: `0.5px solid ${theme.palette.divider}`,
 }));
 
 const TitleContainer = styled('div')(({ theme }) => ({
@@ -68,96 +68,99 @@ type Props = {
 
 export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
     return (
-        <ContentGrid container columns={{ lg: 12, md: 1 }}>
-            <SpacedGridItem item lg={4} md={1}>
-                <Typography variant='h3'>My projects</Typography>
-            </SpacedGridItem>
-            <SpacedGridItem item lg={8} md={1}>
-                <Typography>Potential next steps</Typography>
-            </SpacedGridItem>
-            <SpacedGridItem item lg={4} md={1}>
-                <GridContent>
-                    <Typography>
-                        You don't currently have access to any projects in the
-                        system.
-                    </Typography>
-                    <Typography>
-                        To get started, you can{' '}
-                        <Link to='/projects?create=true'>
-                            create your own project
-                        </Link>
-                        . Alternatively, you can review the available projects
-                        in the system and ask the owner for access.
-                    </Typography>
-                </GridContent>
-            </SpacedGridItem>
-            <SpacedGridItem item lg={4} md={1}>
-                <GridContent>
-                    <TitleContainer>
-                        <NeutralCircleContainer>1</NeutralCircleContainer>
-                        Contact Unleash admin
-                    </TitleContainer>
-                    <BoxMainContent>
-                        {admins.length ? (
-                            <>
+        <ContentGridContainer>
+            <ProjectGrid>
+                <SpacedGridItem gridArea='title'>
+                    <Typography variant='h3'>My projects</Typography>
+                </SpacedGridItem>
+                <SpacedGridItem gridArea='onboarding'>
+                    <Typography>Potential next steps</Typography>
+                </SpacedGridItem>
+                <SpacedGridItem gridArea='projects'>
+                    <GridContent>
+                        <Typography>
+                            You don't currently have access to any projects in
+                            the system.
+                        </Typography>
+                        <Typography>
+                            To get started, you can{' '}
+                            <Link to='/projects?create=true'>
+                                create your own project
+                            </Link>
+                            . Alternatively, you can review the available
+                            projects in the system and ask the owner for access.
+                        </Typography>
+                    </GridContent>
+                </SpacedGridItem>
+                <SpacedGridItem gridArea='box1'>
+                    <GridContent>
+                        <TitleContainer>
+                            <NeutralCircleContainer>1</NeutralCircleContainer>
+                            Contact Unleash admin
+                        </TitleContainer>
+                        <BoxMainContent>
+                            {admins.length ? (
+                                <>
+                                    <p>
+                                        Your Unleash administrator
+                                        {admins.length > 1 ? 's are' : ' is'}:
+                                    </p>
+                                    <AdminList>
+                                        {admins.map((admin) => {
+                                            return (
+                                                <AdminListItem key={admin.id}>
+                                                    <UserAvatar
+                                                        sx={{
+                                                            margin: 0,
+                                                        }}
+                                                        user={admin}
+                                                    />
+                                                    <Typography>
+                                                        {admin.name ||
+                                                            admin.username ||
+                                                            admin.email}
+                                                    </Typography>
+                                                </AdminListItem>
+                                            );
+                                        })}
+                                    </AdminList>
+                                </>
+                            ) : (
                                 <p>
-                                    Your Unleash administrator
-                                    {admins.length > 1 ? 's are' : ' is'}:
+                                    You have no Unleash administrators to
+                                    contact.
                                 </p>
-                                <AdminList>
-                                    {admins.map((admin) => {
-                                        return (
-                                            <AdminListItem key={admin.id}>
-                                                <UserAvatar
-                                                    sx={{
-                                                        margin: 0,
-                                                    }}
-                                                    user={admin}
-                                                />
-                                                <Typography>
-                                                    {admin.name ||
-                                                        admin.username ||
-                                                        admin.email}
-                                                </Typography>
-                                            </AdminListItem>
-                                        );
-                                    })}
-                                </AdminList>
-                            </>
-                        ) : (
-                            <p>
-                                You have no Unleash administrators to contact.
-                            </p>
-                        )}
-                    </BoxMainContent>
-                </GridContent>
-            </SpacedGridItem>
-            <SpacedGridItem item lg={4} md={1}>
-                <GridContent>
-                    <TitleContainer>
-                        <NeutralCircleContainer>2</NeutralCircleContainer>
-                        Ask a project owner to add you to their project
-                    </TitleContainer>
-                    <BoxMainContent>
-                        {owners.length ? (
-                            <>
-                                <p>Project owners in Unleash:</p>
-                                <AvatarGroupFromOwners
-                                    users={owners}
-                                    avatarLimit={9}
-                                />
-                            </>
-                        ) : (
-                            <p>
-                                There are no project owners in Unleash to ask
-                                for access.
-                            </p>
-                        )}
-                    </BoxMainContent>
-                </GridContent>
-            </SpacedGridItem>
-            <SpacedGridItem item lg={4} md={1} />
-            <SpacedGridItem item lg={8} md={1} />
-        </ContentGrid>
+                            )}
+                        </BoxMainContent>
+                    </GridContent>
+                </SpacedGridItem>
+                <SpacedGridItem gridArea='box2'>
+                    <GridContent>
+                        <TitleContainer>
+                            <NeutralCircleContainer>2</NeutralCircleContainer>
+                            Ask a project owner to add you to their project
+                        </TitleContainer>
+                        <BoxMainContent>
+                            {owners.length ? (
+                                <>
+                                    <p>Project owners in Unleash:</p>
+                                    <AvatarGroupFromOwners
+                                        users={owners}
+                                        avatarLimit={9}
+                                    />
+                                </>
+                            ) : (
+                                <p>
+                                    There are no project owners in Unleash to
+                                    ask for access.
+                                </p>
+                            )}
+                        </BoxMainContent>
+                    </GridContent>
+                </SpacedGridItem>
+                <EmptyGridItem />
+                <PaddedEmptyGridItem gridArea='owners' />
+            </ProjectGrid>
+        </ContentGridContainer>
     );
 };

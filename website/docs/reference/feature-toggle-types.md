@@ -2,7 +2,12 @@
 title: Feature Flag Types
 ---
 
-> This feature was introduced in _Unleash v3.5.0_.
+:::note Availability
+
+**Version**: `3.5+`
+
+:::
+
 
 You can use feature flags to support different use cases, each with their own specific needs. Heavily inspired by [Pete Hodgson's article on feature flags](https://martinfowler.com/articles/feature-toggles.html), Unleash introduced the concept of feature flag types in version `3.5.0`.
 

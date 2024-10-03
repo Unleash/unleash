@@ -3,6 +3,8 @@ import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import type { PersonalDashboardProjectDetailsSchemaInsights } from '../../openapi';
+import { ProjectHealthChart } from 'component/project/Project/ProjectInsights/ProjectHealth/ProjectHealthChart';
+import { FlagCounts } from '../project/Project/ProjectInsights/ProjectHealth/FlagCounts';
 
 const TitleContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -12,8 +14,16 @@ const TitleContainer = styled('div')(({ theme }) => ({
     justifyContent: 'center',
 }));
 
+const Health = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing(3),
+}));
+
 const ActionBox = styled('article')(({ theme }) => ({
-    padding: theme.spacing(4, 2),
+    padding: theme.spacing(0, 2),
     display: 'flex',
     gap: theme.spacing(3),
     flexDirection: 'column',
@@ -127,6 +137,22 @@ export const ProjectSetupComplete: FC<{
                 <Lightbulb color='primary' />
                 <h3>Project Insight</h3>
             </TitleContainer>
+
+            <Health>
+                <ProjectHealthChart
+                    health={insights.health}
+                    active={insights.activeFlags}
+                    potentiallyStale={insights.potentiallyStaleFlags}
+                    stale={insights.staleFlags}
+                />
+                <FlagCounts
+                    projectId={project}
+                    activeCount={insights.activeFlags}
+                    potentiallyStaleCount={insights.potentiallyStaleFlags}
+                    staleCount={insights.staleFlags}
+                    hideLinks={true}
+                />
+            </Health>
 
             <ProjectHealthMessage
                 trend={projectHealthTrend}

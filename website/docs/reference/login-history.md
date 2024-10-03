@@ -2,9 +2,9 @@
 title: Login History
 ---
 
-:::info Availability
+:::note Availability
 
-Login history is an enterprise feature available from Unleash 4.22 onwards.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.22+`
 
 :::
 

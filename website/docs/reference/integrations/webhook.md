@@ -3,7 +3,12 @@ id: webhook
 title: Webhook
 ---
 
-> This feature was introduced in _Unleash v3.11.0_.
+:::note Availability
+
+**Version**: `3.11+`
+
+:::
+
 
 The Webhook Integration introduces a generic way to post messages from Unleash to third party services. Unleash allows you to define a webhook which listens for changes in Unleash and posts them to third party services.
 
@@ -16,7 +21,6 @@ The webhook will perform a single retry if the HTTP POST call fails (either a 50
 You can choose to trigger updates for the following events (we might add more event types in the future):
 
 - feature-created
-- feature-updated (*)
 - feature-metadata-updated
 - feature-project-change
 - feature-archived
@@ -46,8 +50,7 @@ You can choose to trigger updates for the following events (we might add more ev
 - change-request-scheduled-application-failure
 - change-request-schedule-suspended
 - feature-potentially-stale-on
-
-> *) Deprecated, and will not be used after transition to environments in Unleash v4.3
+- feature-updated (deprecated in v4.3)
 
 #### Parameters {#parameters}
 

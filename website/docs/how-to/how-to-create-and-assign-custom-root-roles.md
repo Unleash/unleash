@@ -2,9 +2,9 @@
 title: How to create and assign custom root roles
 ---
 
-:::info availability
+:::note Availability
 
-Custom root roles were introduced in **Unleash 5.4** and are only available in Unleash Enterprise.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.4+`
 
 :::
 

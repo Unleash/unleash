@@ -4,10 +4,9 @@ title: Change Requests
 
 import VideoContent from '@site/src/components/VideoContent.jsx';
 
-:::info Availability
+:::note Availability
 
-The change requests feature is an enterprise-only feature that was introduced in **Unleash 4.19.0**.
-The change requests for segments was introduced in **Unleash 5.4.0**.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.19+`
 
 :::
 
@@ -67,9 +66,9 @@ From here, if you have the correct permissions, you can approve and schedule or 
 
 ### Scheduled changes
 
-:::info Availability
+:::note Availability
 
-Change request scheduling was released in Unleash 5.10.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.10+`
 
 :::
 
@@ -143,6 +142,12 @@ In the UI non-admin users with **skip change requests** permission and explicit 
 Admin users will always see the change request UI so that they can test the change request flow. Admin users can however self-approve and self-apply their own changes.
 
 ## Change Request for segments
+
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.4+`
+
+:::
 
 Changes to project [segments](segments.mdx) (as opposed to global segments) also go through the change request process. This is to prevent a backdoor in the change request process.
 

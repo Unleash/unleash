@@ -2,10 +2,9 @@
 title: 'How to set up Keycloak and Unleash to sync user groups'
 ---
 
-
 :::note Availability
 
-**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: 4.18+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.18+`
 
 :::
 

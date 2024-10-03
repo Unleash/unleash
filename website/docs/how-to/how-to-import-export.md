@@ -3,9 +3,9 @@ title: '[Deprecated] Import & Export'
 ---
 import ApiRequest from '@site/src/components/ApiRequest'
 
-:::info Availability
+:::note Availability
 
-The import and export API first appeared in Unleash 3.3.0.
+**Version**: `3.3+`
 
 :::
 

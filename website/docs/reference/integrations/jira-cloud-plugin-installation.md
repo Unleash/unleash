@@ -3,6 +3,12 @@ title: Jira Cloud Integration - Installation
 ---
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
+:::note Availability
+
+**Version**: `4.0+`
+
+:::
+
 ## Prerequisites
 
 ### Jira Cloud
@@ -11,9 +17,6 @@ import Figure from '@site/src/components/Figure/Figure.tsx'
 
 For Jira Data Center, check out the [Jira Server plugin](jira-server-plugin-installation.md)
 
-### Unleash
-
-- Unleash v4 or higher
 
 ## Required access levels
 

@@ -4,9 +4,10 @@ title: Strategy Variants
 
 import VideoContent from '@site/src/components/VideoContent.jsx'
 
-:::info Availability
+:::note Availability
 
-**Strategy variants** were first introduced in Unleash 5.4.
+**Version**: `5.4+`
+
 :::
 
 

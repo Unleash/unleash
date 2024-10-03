@@ -36,6 +36,11 @@ const setupLongRunningProject = () => {
         insights: {
             avgHealthCurrentWindow: 80,
             avgHealthPastWindow: 70,
+            totalFlags: 39,
+            potentiallyStaleFlags: 14,
+            staleFlags: 13,
+            activeFlags: 12,
+            health: 81,
         },
         latestEvents: [{ summary: 'someone created a flag', id: 0 }],
         roles: [{ name: 'Member' }],
@@ -135,7 +140,10 @@ test('Render personal dashboard for a long running project', async () => {
     await screen.findByText('70%'); // avg health past window
     await screen.findByText('someone created a flag');
     await screen.findByText('Member');
-
+    await screen.findByText('81%'); // current health score
+    await screen.findByText('12 feature flags'); // active flags
+    await screen.findByText('13 feature flags'); // stale flags
+    await screen.findByText('14 feature flags'); // potentially stale flags
     await screen.findByText('myFlag');
     await screen.findByText('No feature flag metrics data');
     await screen.findByText('production');

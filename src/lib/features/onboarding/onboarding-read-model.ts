@@ -86,7 +86,6 @@ export class OnboardingReadModel implements IOnboardingReadModel {
         const feature = await this.db('features')
             .select('name')
             .where('project', projectId)
-            .where('archived_at', null)
             .first();
 
         if (!feature) {

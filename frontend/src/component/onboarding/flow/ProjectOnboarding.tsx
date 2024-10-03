@@ -218,10 +218,10 @@ const ExistingFlag = () => {
             </TitleContainer>
             <SuccessContainer>
                 <Typography fontWeight='bold' variant='body2'>
-                    Congratulations! You have created your first flag
+                    Congratulations, your first flag is ready!
                 </Typography>
                 <Typography variant='body2'>
-                    Click into the flag below to customize the flag further
+                    You can open it to customize further.
                 </Typography>
             </SuccessContainer>
         </ExistingFlagContainer>

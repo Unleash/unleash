@@ -27,6 +27,7 @@ import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton';
 import { StyledDefinitionList } from './CreateProjectDialog.styles';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import { useUiFlag } from '../../../../../hooks/useUiFlag';
 
 interface ICreateProjectDialogProps {
     open: boolean;
@@ -118,6 +119,7 @@ export const CreateProjectDialog = ({
     const { setToastData, setToastApiError } = useToast();
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
+    const onboardingUIEnabled = useUiFlag('onboardingUI');
     const {
         projectName,
         projectDesc,
@@ -190,9 +192,11 @@ export const CreateProjectDialog = ({
                 trackEvent('project-mode', {
                     props: { mode: projectMode, action: 'added' },
                 });
-                trackEvent('onboarding', {
-                    props: { eventType: 'onboarding-started' },
-                });
+                if (onboardingUIEnabled) {
+                    trackEvent('onboarding', {
+                        props: { eventType: 'onboarding-started' },
+                    });
+                }
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }

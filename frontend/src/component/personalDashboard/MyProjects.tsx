@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { Badge } from '../common/Badge/Badge';
 import { ProjectIcon } from '../common/ProjectIcon/ProjectIcon';
-import LinkIcon from '@mui/icons-material/Link';
+import LinkIcon from '@mui/icons-material/ArrowForward';
 import { ProjectSetupComplete } from './ProjectSetupComplete';
 import { ConnectSDK, CreateFlag, ExistingFlag } from './ConnectSDK';
 import { LatestProjectEvents } from './LatestProjectEvents';
@@ -26,6 +26,7 @@ import {
     ListItemBox,
     listItemStyle,
     ProjectGrid,
+    GridItem,
     SpacedGridItem,
 } from './Grid';
 
@@ -82,10 +83,10 @@ export const MyProjects: FC<{
     return (
         <ContentGridContainer>
             <ProjectGrid>
-                <SpacedGridItem gridArea='title'>
+                <GridItem gridArea='title'>
                     <Typography variant='h3'>My projects</Typography>
-                </SpacedGridItem>
-                <SpacedGridItem
+                </GridItem>
+                <GridItem
                     gridArea='onboarding'
                     sx={{
                         display: 'flex',
@@ -95,7 +96,7 @@ export const MyProjects: FC<{
                     {setupIncomplete ? (
                         <Badge color='warning'>Setup incomplete</Badge>
                     ) : null}
-                </SpacedGridItem>
+                </GridItem>
                 <SpacedGridItem gridArea='projects'>
                     <List
                         disablePadding={true}
@@ -172,7 +173,7 @@ export const MyProjects: FC<{
                     ) : null}
                 </SpacedGridItem>
                 <EmptyGridItem />
-                <SpacedGridItem gridArea='owners'>
+                <GridItem gridArea='owners'>
                     {personalDashboardProjectDetails ? (
                         <RoleAndOwnerInfo
                             roles={personalDashboardProjectDetails.roles.map(
@@ -181,7 +182,7 @@ export const MyProjects: FC<{
                             owners={personalDashboardProjectDetails.owners}
                         />
                     ) : null}
-                </SpacedGridItem>
+                </GridItem>
             </ProjectGrid>
         </ContentGridContainer>
     );

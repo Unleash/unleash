@@ -9,7 +9,7 @@ import {
     Typography,
 } from '@mui/material';
 import React, { type FC, useEffect, useState } from 'react';
-import LinkIcon from '@mui/icons-material/Link';
+import LinkIcon from '@mui/icons-material/ArrowForward';
 import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
@@ -28,6 +28,7 @@ import {
     FlagGrid,
     ListItemBox,
     listItemStyle,
+    GridItem,
     SpacedGridItem,
 } from './Grid';
 import { ContentGridNoProjects } from './ContentGridNoProjects';
@@ -183,10 +184,13 @@ export const PersonalDashboard = () => {
 
             <ContentGridContainer>
                 <FlagGrid sx={{ mt: 2 }}>
-                    <SpacedGridItem gridArea='title'>
+                    <GridItem
+                        gridArea='title'
+                        sx={{ display: 'flex', alignItems: 'center' }}
+                    >
                         <Typography variant='h3'>My feature flags</Typography>
-                    </SpacedGridItem>
-                    <SpacedGridItem
+                    </GridItem>
+                    <GridItem
                         gridArea='lifecycle'
                         sx={{ display: 'flex', justifyContent: 'flex-end' }}
                     >
@@ -197,7 +201,7 @@ export const PersonalDashboard = () => {
                                 onArchive={refetchDashboard}
                             />
                         ) : null}
-                    </SpacedGridItem>
+                    </GridItem>
                     <SpacedGridItem gridArea='flags'>
                         {personalDashboard &&
                         personalDashboard.flags.length > 0 ? (

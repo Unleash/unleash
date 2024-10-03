@@ -5,7 +5,7 @@ export const ContentGridContainer = styled('div')({
     containerType: 'inline-size',
 });
 
-const ContentGrid2 = styled('article')(({ theme }) => {
+const ContentGrid = styled('article')(({ theme }) => {
     return {
         backgroundColor: theme.palette.divider,
         borderRadius: `${theme.shape.borderRadiusLarge}px`,
@@ -21,21 +21,23 @@ const ContentGrid2 = styled('article')(({ theme }) => {
     };
 });
 
-const withContainerQueryFallback = (css: object) => (theme: Theme) => {
-    const containerBreakpoint = '1000px';
-    const screenBreakpoint = theme.breakpoints.up('lg');
+const onWideContainer =
+    (css: object) =>
+    ({ theme }: { theme: Theme }) => {
+        const containerBreakpoint = '1000px';
+        const screenBreakpoint = theme.breakpoints.up('lg');
 
-    return {
-        [`@container (min-width: ${containerBreakpoint})`]: css,
+        return {
+            [`@container (min-width: ${containerBreakpoint})`]: css,
 
-        '@supports not (container-type: inline-size)': {
-            [screenBreakpoint]: css,
-        },
+            '@supports not (container-type: inline-size)': {
+                [screenBreakpoint]: css,
+            },
+        };
     };
-};
 
-export const ProjectGrid = styled(ContentGrid2)(({ theme }) =>
-    withContainerQueryFallback({
+export const ProjectGrid = styled(ContentGrid)(
+    onWideContainer({
         gridTemplateColumns: '1fr 1fr 1fr',
         display: 'grid',
         gridTemplateAreas: `
@@ -43,18 +45,18 @@ export const ProjectGrid = styled(ContentGrid2)(({ theme }) =>
                 "projects box1 box2"
                 ". owners owners"
             `,
-    })(theme),
+    }),
 );
 
-export const FlagGrid = styled(ContentGrid2)(({ theme }) =>
-    withContainerQueryFallback({
+export const FlagGrid = styled(ContentGrid)(
+    onWideContainer({
         gridTemplateColumns: '1fr 1fr 1fr',
         display: 'grid',
         gridTemplateAreas: `
                 "title lifecycle lifecycle"
                 "flags chart chart"
             `,
-    })(theme),
+    }),
 );
 
 export const SpacedGridItem = styled('div', {
@@ -70,9 +72,9 @@ export const EmptyGridItem = styled('div', {
     display: 'none',
     gridArea,
 
-    ...withContainerQueryFallback({
+    ...onWideContainer({
         display: 'block',
-    })(theme),
+    })({ theme }),
 }));
 
 export const ListItemBox = styled(Box)(({ theme }) => ({

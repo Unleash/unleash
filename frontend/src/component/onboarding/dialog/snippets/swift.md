@@ -11,8 +11,8 @@ import UnleashProxyClientSwift
 
 var unleash = UnleashProxyClientSwift.UnleashClient(
    unleashUrl: "<YOUR_API_URL>",
-   clientKey: "<YOUR_API_TOKEN>",
-   refreshInterval: 5,
+   clientKey: "<YOUR_API_TOKEN>", // in production use environment variable
+   refreshInterval: 5, // in production remove this or increase to >=5
    appName: "unleash-onboarding-swift",
    context: [:])
 

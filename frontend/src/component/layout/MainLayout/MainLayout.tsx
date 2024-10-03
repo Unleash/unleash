@@ -18,7 +18,6 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { MainLayoutEventTimeline } from './MainLayoutEventTimeline';
-import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -126,7 +125,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
         return (
-            <EventTimelineProvider>
+            <>
                 <SkipNavLink />
                 <ConditionallyRender
                     condition={sidebarNavigationEnabled}
@@ -196,7 +195,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                     </MainLayoutContentWrapper>
                     <Footer />
                 </MainLayoutContainer>
-            </EventTimelineProvider>
+            </>
         );
     },
 );

@@ -21,6 +21,7 @@ import { PlausibleProvider } from 'component/providers/PlausibleProvider/Plausib
 import { Error as LayoutError } from './component/layout/Error/Error';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRecordUiErrorApi';
+import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 
 window.global ||= window;
 
@@ -56,10 +57,12 @@ const ApplicationRoot = () => {
                                         <FeedbackProvider>
                                             <FeedbackCESProvider>
                                                 <StickyProvider>
-                                                    <InstanceStatus>
-                                                        <ScrollTop />
-                                                        <App />
-                                                    </InstanceStatus>
+                                                    <EventTimelineProvider>
+                                                        <InstanceStatus>
+                                                            <ScrollTop />
+                                                            <App />
+                                                        </InstanceStatus>
+                                                    </EventTimelineProvider>
                                                 </StickyProvider>
                                             </FeedbackCESProvider>
                                         </FeedbackProvider>

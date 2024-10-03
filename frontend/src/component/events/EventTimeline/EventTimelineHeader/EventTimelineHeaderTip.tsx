@@ -53,7 +53,11 @@ export const EventTimelineHeaderTip = () => {
                         </>
                     }
                     onClick={() => {
-                        trackEvent('event-timeline-signals-click');
+                        trackEvent('event-timeline', {
+                            props: {
+                                eventType: 'signals clicked',
+                            },
+                        });
                         navigate(signalsLink);
                     }}
                     onDelete={() => setSignalsSuggestionSeen(true)}

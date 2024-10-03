@@ -64,15 +64,9 @@ export const SpacedGridItem2 = styled('div')(({ theme }) => ({
 export const EmptyGridItem = styled('div')(({ theme }) => ({
     display: 'none',
 
-    '@container (min-width: 1000px)': {
+    ...withContainerQueryFallback({
         display: 'block',
-    },
-
-    '@supports not (container-type: inline-size)': {
-        [theme.breakpoints.up('lg')]: {
-            display: 'block',
-        },
-    },
+    })(theme),
 }));
 
 export const ContentGrid = styled(Grid)(({ theme }) => ({

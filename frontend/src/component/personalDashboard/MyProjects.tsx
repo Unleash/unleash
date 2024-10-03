@@ -21,10 +21,12 @@ import type {
     PersonalDashboardSchemaProjectsItem,
 } from '../../openapi';
 import {
-    ContentGrid,
+    ContentGridContainer,
+    EmptyGridItem,
     ListItemBox,
     listItemStyle,
-    SpacedGridItem,
+    ProjectGrid,
+    SpacedGridItem2,
 } from './Grid';
 
 const ActiveProjectDetails: FC<{
@@ -78,104 +80,129 @@ export const MyProjects: FC<{
         activeProjectStage === 'first-flag-created';
 
     return (
-        <ContentGrid container columns={{ lg: 12, md: 1 }}>
-            <SpacedGridItem item lg={4} md={1}>
-                <Typography variant='h3'>My projects</Typography>
-            </SpacedGridItem>
-            <SpacedGridItem
-                item
-                lg={8}
-                md={1}
-                sx={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-                {setupIncomplete ? (
-                    <Badge color='warning'>Setup incomplete</Badge>
-                ) : null}
-            </SpacedGridItem>
-            <SpacedGridItem item lg={4} md={1}>
-                <List
-                    disablePadding={true}
-                    sx={{ maxHeight: '400px', overflow: 'auto' }}
+        <ContentGridContainer>
+            <ProjectGrid>
+                <SpacedGridItem2
+                    sx={{
+                        gridArea: 'title',
+                    }}
                 >
-                    {projects.map((project) => {
-                        return (
-                            <ListItem
-                                key={project.id}
-                                disablePadding={true}
-                                sx={{ mb: 1 }}
-                            >
-                                <ListItemButton
-                                    sx={listItemStyle}
-                                    selected={project.id === activeProject}
-                                    onClick={() => setActiveProject(project.id)}
+                    <Typography variant='h3'>My projects</Typography>
+                </SpacedGridItem2>
+                <SpacedGridItem2
+                    sx={{
+                        gridArea: 'onboarding',
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                    }}
+                >
+                    {setupIncomplete ? (
+                        <Badge color='warning'>Setup incomplete</Badge>
+                    ) : null}
+                </SpacedGridItem2>
+                <SpacedGridItem2
+                    sx={{
+                        gridArea: 'projects',
+                    }}
+                >
+                    <List
+                        disablePadding={true}
+                        sx={{ maxHeight: '400px', overflow: 'auto' }}
+                    >
+                        {projects.map((project) => {
+                            return (
+                                <ListItem
+                                    key={project.id}
+                                    disablePadding={true}
+                                    sx={{ mb: 1 }}
                                 >
-                                    <ListItemBox>
-                                        <ProjectIcon color='primary' />
-                                        <StyledCardTitle>
-                                            {project.name}
-                                        </StyledCardTitle>
-                                        <IconButton
-                                            component={Link}
-                                            href={`projects/${project.id}`}
-                                            size='small'
-                                            sx={{ ml: 'auto' }}
-                                        >
-                                            <LinkIcon
-                                                titleAccess={`projects/${project.id}`}
+                                    <ListItemButton
+                                        sx={listItemStyle}
+                                        selected={project.id === activeProject}
+                                        onClick={() =>
+                                            setActiveProject(project.id)
+                                        }
+                                    >
+                                        <ListItemBox>
+                                            <ProjectIcon color='primary' />
+                                            <StyledCardTitle>
+                                                {project.name}
+                                            </StyledCardTitle>
+                                            <IconButton
+                                                component={Link}
+                                                href={`projects/${project.id}`}
+                                                size='small'
+                                                sx={{ ml: 'auto' }}
+                                            >
+                                                <LinkIcon
+                                                    titleAccess={`projects/${project.id}`}
+                                                />
+                                            </IconButton>
+                                        </ListItemBox>
+                                        {project.id === activeProject ? (
+                                            <ActiveProjectDetails
+                                                project={project}
                                             />
-                                        </IconButton>
-                                    </ListItemBox>
-                                    {project.id === activeProject ? (
-                                        <ActiveProjectDetails
-                                            project={project}
-                                        />
-                                    ) : null}
-                                </ListItemButton>
-                            </ListItem>
-                        );
-                    })}
-                </List>
-            </SpacedGridItem>
-            <SpacedGridItem item lg={4} md={1}>
-                {activeProjectStage === 'onboarded' &&
-                personalDashboardProjectDetails ? (
-                    <ProjectSetupComplete
-                        project={activeProject}
-                        insights={personalDashboardProjectDetails.insights}
-                    />
-                ) : null}
-                {activeProjectStage === 'onboarding-started' ||
-                activeProjectStage === 'loading' ? (
-                    <CreateFlag project={activeProject} />
-                ) : null}
-                {activeProjectStage === 'first-flag-created' ? (
-                    <ExistingFlag project={activeProject} />
-                ) : null}
-            </SpacedGridItem>
-            <SpacedGridItem item lg={4} md={1} sx={{ pr: 4 }}>
-                {activeProjectStage === 'onboarded' &&
-                personalDashboardProjectDetails ? (
-                    <LatestProjectEvents
-                        latestEvents={
-                            personalDashboardProjectDetails.latestEvents
-                        }
-                    />
-                ) : null}
-                {setupIncomplete || activeProjectStage === 'loading' ? (
-                    <ConnectSDK project={activeProject} />
-                ) : null}
-            </SpacedGridItem>
-            <SpacedGridItem item lg={4} md={1} />
-            <SpacedGridItem item lg={8} md={1}>
-                {personalDashboardProjectDetails ? (
-                    <RoleAndOwnerInfo
-                        roles={personalDashboardProjectDetails.roles.map(
-                            (role) => role.name,
-                        )}
-                        owners={personalDashboardProjectDetails.owners}
-                    />
-                ) : null}
-            </SpacedGridItem>
-        </ContentGrid>
+                                        ) : null}
+                                    </ListItemButton>
+                                </ListItem>
+                            );
+                        })}
+                    </List>
+                </SpacedGridItem2>
+                <SpacedGridItem2
+                    sx={{
+                        gridArea: 'box1',
+                    }}
+                >
+                    {activeProjectStage === 'onboarded' &&
+                    personalDashboardProjectDetails ? (
+                        <ProjectSetupComplete
+                            project={activeProject}
+                            insights={personalDashboardProjectDetails.insights}
+                        />
+                    ) : null}
+                    {activeProjectStage === 'onboarding-started' ||
+                    activeProjectStage === 'loading' ? (
+                        <CreateFlag project={activeProject} />
+                    ) : null}
+                    {activeProjectStage === 'first-flag-created' ? (
+                        <ExistingFlag project={activeProject} />
+                    ) : null}
+                </SpacedGridItem2>
+                <SpacedGridItem2
+                    sx={{
+                        gridArea: 'box2',
+                    }}
+                >
+                    {activeProjectStage === 'onboarded' &&
+                    personalDashboardProjectDetails ? (
+                        <LatestProjectEvents
+                            latestEvents={
+                                personalDashboardProjectDetails.latestEvents
+                            }
+                        />
+                    ) : null}
+                    {setupIncomplete || activeProjectStage === 'loading' ? (
+                        <ConnectSDK project={activeProject} />
+                    ) : null}
+                </SpacedGridItem2>
+                <EmptyGridItem />
+                <SpacedGridItem2
+                    sx={{
+                        gridArea: 'owners',
+                    }}
+                >
+                    {personalDashboardProjectDetails ? (
+                        <RoleAndOwnerInfo
+                            roles={personalDashboardProjectDetails.roles.map(
+                                (role) => role.name,
+                            )}
+                            owners={personalDashboardProjectDetails.owners}
+                        />
+                    ) : null}
+                </SpacedGridItem2>
+            </ProjectGrid>
+        </ContentGridContainer>
     );
 };

@@ -67,9 +67,7 @@ export type CustomEvents =
     | 'new-in-unleash-dismiss'
     | 'search-opened'
     | 'events-exported'
-    | 'event-timeline-open'
-    | 'event-timeline-close'
-    | 'event-timeline-event-hover'
+    | 'event-timeline'
     | 'onboarding';
 
 export const usePlausibleTracker = () => {

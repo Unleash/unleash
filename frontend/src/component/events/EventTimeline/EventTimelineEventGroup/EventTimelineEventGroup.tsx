@@ -34,7 +34,11 @@ export const EventTimelineEventGroup = ({
 
     const position = `${((eventTime - startTime) / timelineDuration) * 100}%`;
     const trackHover = () => {
-        trackEvent('event-timeline-event-hover');
+        trackEvent('event-timeline', {
+            props: {
+                eventType: 'event hover',
+            },
+        });
     };
 
     return (

@@ -46,7 +46,7 @@ import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { ProjectOnboarded } from 'component/onboarding/flow/ProjectOnboarded';
-import { usePlausibleTracker } from '../../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];

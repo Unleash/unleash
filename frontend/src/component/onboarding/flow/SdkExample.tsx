@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import Select from 'component/common/select';
 import { allSdks, type SdkName } from '../dialog/sharedTypes';
-import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const TitleContainer = styled('div')(({ theme }) => ({
     display: 'flex',

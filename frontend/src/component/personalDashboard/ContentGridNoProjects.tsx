@@ -8,7 +8,7 @@ import {
     ContentGridContainer,
     EmptyGridItem,
     ProjectGrid,
-    SpacedGridItem,
+    GridItem,
 } from './Grid';
 
 const PaddedEmptyGridItem = styled(EmptyGridItem)(({ theme }) => ({
@@ -70,13 +70,13 @@ export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
     return (
         <ContentGridContainer>
             <ProjectGrid>
-                <SpacedGridItem gridArea='title'>
+                <GridItem gridArea='title'>
                     <Typography variant='h3'>My projects</Typography>
-                </SpacedGridItem>
-                <SpacedGridItem gridArea='onboarding'>
+                </GridItem>
+                <GridItem gridArea='onboarding'>
                     <Typography>Potential next steps</Typography>
-                </SpacedGridItem>
-                <SpacedGridItem gridArea='projects'>
+                </GridItem>
+                <GridItem gridArea='projects'>
                     <GridContent>
                         <Typography>
                             You don't currently have access to any projects in
@@ -91,8 +91,8 @@ export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
                             projects in the system and ask the owner for access.
                         </Typography>
                     </GridContent>
-                </SpacedGridItem>
-                <SpacedGridItem gridArea='box1'>
+                </GridItem>
+                <GridItem gridArea='box1'>
                     <GridContent>
                         <TitleContainer>
                             <NeutralCircleContainer>1</NeutralCircleContainer>
@@ -133,8 +133,8 @@ export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
                             )}
                         </BoxMainContent>
                     </GridContent>
-                </SpacedGridItem>
-                <SpacedGridItem gridArea='box2'>
+                </GridItem>
+                <GridItem gridArea='box2'>
                     <GridContent>
                         <TitleContainer>
                             <NeutralCircleContainer>2</NeutralCircleContainer>
@@ -157,7 +157,7 @@ export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
                             )}
                         </BoxMainContent>
                     </GridContent>
-                </SpacedGridItem>
+                </GridItem>
                 <EmptyGridItem />
                 <PaddedEmptyGridItem gridArea='owners' />
             </ProjectGrid>

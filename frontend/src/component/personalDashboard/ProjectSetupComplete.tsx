@@ -11,7 +11,6 @@ const TitleContainer = styled('div')(({ theme }) => ({
     flexDirection: 'row',
     gap: theme.spacing(2),
     alignItems: 'center',
-    justifyContent: 'center',
 }));
 
 const Health = styled('div')(({ theme }) => ({
@@ -30,7 +29,11 @@ const ActionBox = styled('article')(({ theme }) => ({
 }));
 
 const PercentageScore = styled('span')(({ theme }) => ({
-    color: theme.palette.primary.main,
+    fontWeight: theme.typography.fontWeightBold,
+}));
+
+const ProjectInsight = styled('h3')(({ theme }) => ({
+    margin: 0,
 }));
 
 const ConnectedSdkProject: FC<{ project: string }> = ({ project }) => {
@@ -135,7 +138,7 @@ export const ProjectSetupComplete: FC<{
         <ActionBox>
             <TitleContainer>
                 <Lightbulb color='primary' />
-                <h3>Project Insight</h3>
+                <ProjectInsight>Project Insight</ProjectInsight>
             </TitleContainer>
 
             <Health>

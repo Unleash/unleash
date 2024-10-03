@@ -69,7 +69,8 @@ export type CustomEvents =
     | 'events-exported'
     | 'event-timeline-open'
     | 'event-timeline-close'
-    | 'event-timeline-event-hover';
+    | 'event-timeline-event-hover'
+    | 'onboarding';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import Select from 'component/common/select';
 import { allSdks, type SdkName } from '../dialog/sharedTypes';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const TitleContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -51,6 +52,8 @@ type exampleDirectories =
     | 'Vue';
 
 export const SdkExample = () => {
+    const { trackEvent } = usePlausibleTracker();
+
     const sdkOptions = allSdks.map((sdk) => ({
         key: sdk.name,
         label: sdk.name,
@@ -62,6 +65,15 @@ export const SdkExample = () => {
         );
     const onChange = (event: SelectChangeEvent) => {
         setSelectedSdk(event.target.value as SdkName);
+    };
+
+    const trackClick = () => {
+        trackEvent('onboarding', {
+            props: {
+                eventType: 'sdk-example-opened',
+                sdk: selectedSdk,
+            },
+        });
     };
 
     return (
@@ -88,6 +100,7 @@ export const SdkExample = () => {
                         component={Link}
                         variant='text'
                         color='primary'
+                        onClick={trackClick}
                     >
                         Go to example
                     </StyledButton>

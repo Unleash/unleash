@@ -18,6 +18,7 @@ import { useEffect } from 'react';
 import { SectionHeader, StepperBox } from './SharedComponents';
 import { Stepper } from './Stepper';
 import { Badge } from 'component/common/Badge/Badge';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 const ChooseEnvironment = ({
     environments,
@@ -194,6 +195,7 @@ export const GenerateApiKey = ({
     onEnvSelect,
     onApiKey,
 }: GenerateApiKeyProps) => {
+    const { trackEvent } = usePlausibleTracker();
     const { tokens, refetch: refreshTokens } = useProjectApiTokens(project);
     const { createToken, loading: creatingToken } = useProjectApiTokensApi();
     const currentEnvironmentToken = tokens.find(
@@ -220,9 +222,18 @@ export const GenerateApiKey = ({
                 project,
             );
             refreshTokens();
+            trackGenerate();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
+    };
+
+    const trackGenerate = () => {
+        trackEvent('onboarding', {
+            props: {
+                eventType: 'api-key-generated',
+            },
+        });
     };
 
     return (

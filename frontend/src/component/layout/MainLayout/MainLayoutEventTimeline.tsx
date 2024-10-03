@@ -7,7 +7,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useEffect, useState } from 'react';
 
 const StyledEventTimelineSlider = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'variant',
+    shouldForwardProp: (prop) => prop !== 'highlighted',
 })<{ highlighted?: boolean }>(({ theme, highlighted }) => ({
     backgroundColor: theme.palette.background.paper,
     height: '120px',

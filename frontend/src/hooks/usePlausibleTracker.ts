@@ -66,7 +66,10 @@ export type CustomEvents =
     | 'new-in-unleash-click'
     | 'new-in-unleash-dismiss'
     | 'search-opened'
-    | 'events-exported';
+    | 'events-exported'
+    | 'event-timeline-open'
+    | 'event-timeline-close'
+    | 'event-timeline-event-hover';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

@@ -15,7 +15,7 @@ The key benefits of gradual rollouts are that you can experiment rapidly on a co
 
 ## How to Perform a Gradual Rollout with Unleash
 
-To follow along with this tutorial, you will need an Unleash instance. If you’d prefer to self-host Unleash, read our [Quick Start documentation](/quickstart). Alternatively, if you’d like your project to be hosted by Unleash, go to [www.getunleash.io](https://www.getunleash.io/plans?_gl=1*1ka2wb0*_gcl_au*MTIxNzI5NDM5MC4xNzI3MTk3Njc2*_ga*MTA3MjUwMjc2Ni4xNzI3MTk3Njc0*_ga_492KEZQRT8*MTcyNzQzNDM3Ny41LjEuMTcyNzQzNDM5Ny40MC4wLjA).
+To follow along with this tutorial, you will need an Unleash instance. If you’d prefer to self-host Unleash, read our [Quick Start documentation](/quickstart). Alternatively, if you’d like your project to be hosted by Unleash, go to [getunleash.io](https://www.getunleash.io/pricing).
 
 With Unleash set up, you can use your application to talk to Unleash through one of our SDKs.
 

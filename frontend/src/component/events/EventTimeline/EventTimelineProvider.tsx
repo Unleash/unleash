@@ -21,15 +21,12 @@ type EventTimelineTemporaryState = {
     highlighted: boolean;
 };
 
-type OpenOptions = {
-    highlight?: boolean;
-};
-
 type EventTimelineStateSetters = {
-    setOpen: (open: boolean, options?: OpenOptions) => void;
+    setOpen: (open: boolean) => void;
     setTimeSpan: (timeSpan: TimeSpanOption) => void;
     setEnvironment: (environment: IEnvironment) => void;
     setSignalsSuggestionSeen: (seen: boolean) => void;
+    setHighlighted: (highlighted: boolean) => void;
 };
 
 export interface IEventTimelineContext
@@ -112,27 +109,24 @@ export const EventTimelineProvider = ({
         setState((prevState) => ({ ...prevState, [key]: value }));
     };
 
-    const setOpen = (
-        open: boolean,
-        { highlight = false }: OpenOptions = {},
-    ) => {
-        setField('open', open);
-        setHighlighted(highlight);
-        if (highlight) {
-            setTimeout(() => setHighlighted(false), 2000);
+    const onSetHighlighted = (highlighted: boolean) => {
+        setHighlighted(highlighted);
+        if (highlighted) {
+            setTimeout(() => setHighlighted(false), 3000);
         }
     };
 
     const contextValue: IEventTimelineContext = {
         ...state,
         highlighted,
-        setOpen,
+        setOpen: (open: boolean) => setField('open', open),
         setTimeSpan: (timeSpan: TimeSpanOption) =>
             setField('timeSpan', timeSpan),
         setEnvironment: (environment: IEnvironment) =>
             setField('environment', environment),
         setSignalsSuggestionSeen: (seen: boolean) =>
             setField('signalsSuggestionSeen', seen),
+        setHighlighted: onSetHighlighted,
     };
 
     return (

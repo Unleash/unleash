@@ -107,7 +107,7 @@ export const NewInUnleash = ({
     const signalsEnabled = useUiFlag('signals');
     const eventTimelineEnabled = useUiFlag('eventTimeline');
 
-    const { setOpen: showTimeline } = useEventTimelineContext();
+    const { setHighlighted } = useEventTimelineContext();
 
     const items: NewItem[] = [
         {
@@ -152,7 +152,7 @@ export const NewInUnleash = ({
             icon: <StyledLinearScaleIcon />,
             preview: <EventTimelinePreview />,
             onCheckItOut: () => {
-                showTimeline(true, { highlight: true });
+                setHighlighted(true);
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth',

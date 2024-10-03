@@ -30,7 +30,9 @@ afterAll(async () => {
     }
 });
 
-beforeEach(async () => {});
+beforeEach(async () => {
+    await featureToggleStore.deleteAll();
+});
 
 test('can get instance onboarding durations', async () => {
     const initialResult =
@@ -145,6 +147,29 @@ test('can get project onboarding status', async () => {
             featureName: 'my-flag',
         },
     ]);
+
+    const onboardedResult =
+        await onboardingReadModel.getOnboardingStatusForProject('default');
+
+    expect(onboardedResult).toMatchObject({
+        status: 'onboarded',
+    });
+});
+
+test('archived feature counts as onboarded', async () => {
+    await featureToggleStore.create('default', {
+        name: 'my-flag',
+        createdByUserId: SYSTEM_USER.id,
+    });
+
+    await lastSeenStore.setLastSeen([
+        {
+            environment: 'default',
+            featureName: 'my-flag',
+        },
+    ]);
+
+    await featureToggleStore.archive('my-flag');
 
     const onboardedResult =
         await onboardingReadModel.getOnboardingStatusForProject('default');

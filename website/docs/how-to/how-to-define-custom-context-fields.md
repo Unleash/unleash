@@ -2,10 +2,9 @@
 title: How to define custom context fields
 ---
 
-:::info Availability
+:::note Availability
 
-
-Before Unleash 4.16, custom context fields were only available to Unleash Pro and Enterprise users. From 4.16 onwards, they're **available to everyone**. They were introduced in Unleash 3.2.28.
+**Version**: `4.16+`
 
 :::
 

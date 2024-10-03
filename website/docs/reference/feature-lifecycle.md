@@ -2,9 +2,9 @@
 title: Feature Lifecycle
 ---
 
-:::info Availability
+:::note Availability
 
-Feature lifecycle was introduced in **Unleash 6.2**
+**Version**: `6.2+`
 
 :::
 

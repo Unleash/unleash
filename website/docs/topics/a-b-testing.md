@@ -54,7 +54,12 @@ If you want to run a more advanced experiment, then take a look at using [featur
 
 ### Impression data
 
-[Impression data](../reference/impression-data.md) is an Unleash feature that was released in Unleash 4.7.
+:::note Availability
+
+**Version**: `4.7+`
+
+:::
+
 It allows you to capture events whenever a feature flag is checked in your applications.
 The event contains all the information about the flag and the current context, so you can pass everything onto your third-party analytics provider, such as [Google Analytics](https://analytics.google.com/analytics) or [Posthog](https://posthog.com/).
 This makes Unleash even more useful as an A/B testing tool and makes it much easier to correlate events and variants with feature flags and Unleash context.

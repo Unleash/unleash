@@ -45,7 +45,7 @@ The available project settings depend on a user's [root and project roles](rbac.
 
 :::note Availability
 
-**Plan**: [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing). | **Version**: 6.2 in BETA.
+**Plan**: [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing). | **Version**: `6.3+`
 
 :::
 
@@ -96,7 +96,7 @@ import Figure from '@site/src/components/Figure/Figure.tsx'
 
 :::note Availability
 
-**Version**: 5.2.0+.
+**Version**: `5.2+`.
 
 :::
 

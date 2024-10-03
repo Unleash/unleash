@@ -2,7 +2,11 @@
 title: Single Sign-On
 ---
 
-> The **Single-Sign-On capability** is only available for customers on the Enterprise subscription. Check out the [Unleash plans](https://www.getunleash.io/plans) for details.
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing)
+
+:::
 
 Unleash Enterprise supports SAML 2.0, OpenID Connect and Google Authentication. In addition, Unleash supports username/password authentication out of the box.
 

@@ -64,8 +64,11 @@ export const SpacedGridItem2 = styled('div', {
     gridArea,
 }));
 
-export const EmptyGridItem = styled('div')(({ theme }) => ({
+export const EmptyGridItem = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'gridArea',
+})<{ gridArea?: string }>(({ theme, gridArea }) => ({
     display: 'none',
+    gridArea,
 
     ...withContainerQueryFallback({
         display: 'block',

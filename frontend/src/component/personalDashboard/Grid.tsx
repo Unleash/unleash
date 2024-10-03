@@ -57,8 +57,11 @@ export const FlagGrid = styled(ContentGrid2)(({ theme }) =>
     })(theme),
 );
 
-export const SpacedGridItem2 = styled('div')(({ theme }) => ({
+export const SpacedGridItem2 = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'gridArea',
+})<{ gridArea: string }>(({ theme, gridArea }) => ({
     padding: theme.spacing(4),
+    gridArea,
 }));
 
 export const EmptyGridItem = styled('div')(({ theme }) => ({

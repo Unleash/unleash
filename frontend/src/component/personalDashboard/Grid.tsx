@@ -12,7 +12,8 @@ const ContentGrid2 = styled('article')(({ theme }) => {
         overflow: 'hidden',
         border: `0.5px solid ${theme.palette.divider}`,
         gap: `2px`,
-        display: 'grid',
+        display: 'flex',
+        flexFlow: 'column nowrap',
 
         '&>*': {
             backgroundColor: theme.palette.background.paper,
@@ -21,17 +22,9 @@ const ContentGrid2 = styled('article')(({ theme }) => {
 });
 
 export const ProjectGrid = styled(ContentGrid2)(({ theme }) => ({
-    gridTemplateAreas: `
-            "title"
-            "onboarding"
-            "projects"
-            "box1"
-            "box2"
-            "owners"
-            `,
-
     '@container (min-width: 1000px)': {
         gridTemplateColumns: '1fr 1fr 1fr',
+        display: 'grid',
         gridTemplateAreas: `
                 "title onboarding onboarding"
                 "projects box1 box2"
@@ -42,6 +35,7 @@ export const ProjectGrid = styled(ContentGrid2)(({ theme }) => ({
     '@supports not (container-type: inline-size)': {
         [theme.breakpoints.up('lg')]: {
             gridTemplateColumns: '1fr 1fr 1fr',
+            display: 'grid',
             gridTemplateAreas: `
                 "title onboarding onboarding"
                 "projects box1 box2"

@@ -1,45 +1,94 @@
 ---
-title: Event Types
+title: Events
 ---
 
-Unleash emits a large number of different events (described in more detail in the next sections). The exact fields an event contains varies from event to event, but they all conform to the following TypeScript interface before being transformed to JSON:
+## Overview
 
-```ts
-interface IEvent {
-  id: number;
-  createdAt: Date;
-  type: string;
-  createdBy: string;
-  project?: string;
-  environment?: string;
-  featureName?: string;
-  data?: any;
-  preData?: any;
-  tags?: ITag[];
+Events help you keep track of changes across your Unleash instance. You can explore events in [Event Log](#event-log) or using the global [Event Timeline](#event-timeline).
+
+## Event Log
+
+The Event Log lists all events in your Unleash instance. You can search and filter events by date range, event type, project, feature flag, and user. You can also export events as CSV or JSON files.
+
+To access events in the Admin UI, you need Admin access. To view all events, go to Admin > Event Log. To view events for a specific feature flag, go to the Event Log tab on that feature flag's page.
+
+Each [event type](#event-types) contains different data, but all events follow the same schema:
+
+
+| Field              | Type   | Description                                                       |
+|--------------------|--------|-------------------------------------------------------------------|
+| `id`*              | number | Unique identifier for the event; incremental whole number.        |
+| `type`*            | string | Describes the type of event (e.g., `feature-strategy-update`).    |
+| `createdAt`*       | string | Timestamp when the event was created; ISO 8601 format.            |
+| `createdBy`*       | string | Email of the user who triggered the event.                        |
+| `createdByUserId`* | number | Unique identifier of the user who triggered the event.            |
+| `data`             | object | Details about the event (e.g., feature strategy, API token data). |
+| `preData`          | object | Previous state before the event.                                  |
+| `tags`             | array  | Array of tags associated with the event.                          |
+| `featureName`      | string | Name of the feature flag associated with the event.               |
+| `project`          | string | Name of the project involved in the event.                        |
+| `environment`      | string | Environment related to the event (e.g., `development`).           |
+| `label`            | string | Brief description of the event.                                   |
+| `summary`          | string | Markdown formatted summary of the event.                          |
+
+
+Fields marked with an asterisk (*) are always returned in the event schema. Other fields may be optional or have null values, depending on the event type.
+
+The following is an example event for [feature-strategy-update](#feature-strategy-update):
+
+```json
+{
+{
+  "id": 27332,
+  "type": "feature-created",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
+  "data": {
+    "name": "test-flag",
+    "description": null,
+    "type": "release",
+    "project": "test-project",
+    "stale": false,
+    "createdAt": "2024-10-03T11:09:53.201Z",
+    "lastSeenAt": null,
+    "impressionData": false,
+    "archivedAt": null,
+    "archived": false
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": "test-flag",
+  "project": "test-project",
+  "environment": null,
+  "label": "Flag created",
+  "summary": "**user@getunleash.io** created test-flag in ... "
 }
 ```
 
-The event properties are described in short in the table below. For more info regarding specific event types, refer to the following sections.
+## Event Timeline
 
-| Property | Description |
-| --- | --- |
-| `createdAt` | The time the event happened as a RFC 3339-conformant timestamp. |
-| `data` | Extra associated data related to the event, such as feature flag state, segment configuration, etc., if applicable. |
-| `environment` | The feature flag environment the event relates to, if applicable. |
-| `featureName` | The name of the feature flag the event relates to, if applicable. |
-| `id` | The ID of the event. An increasing natural number. |
-| `preData` | Data relating to the previous state of the event's subject. |
-| `project` | The project the event relates to, if applicable. |
-| `tags` | Any tags related to the event, if applicable. |
-| `type` | The event type, as described in the rest of this section. |
+:::note Availability
 
-## Feature flag events
+**Plan**: [Enterprise](https://www.getunleash.io/plans/enterprise) | **Version**: `6.3+` in BETA
 
-These events pertain to feature flags and their life cycle.
+:::
 
-### `feature-created`
+Event timeline highlights recent events across all your projects in one unified timeline. You can access the event timeline from the top menu in the Admin UI.
 
-This event fires when you create a feature. The `data` property contains the details for the new feature.
+![A gradual rollout form can allow you to customize your flag strategy.](/img/event-timeline.png)
+
+The timeline shows key events and signals for up to 48 hours per environment and is designed to help you get an overview of changes and quickly identify and debug any issues.
+
+## Event types
+
+### Feature flag events
+
+Events related to feature flags and their life cycle.
+
+#### `feature-created`
+
+Generated when you create a feature flag. The `data` property contains the details for the new feature.
 
 ```json title="example event: feature-created"
 {
@@ -66,44 +115,9 @@ This event fires when you create a feature. The `data` property contains the det
 }
 ```
 
-### `feature-updated`
+#### `feature-deleted`
 
-:::caution Deprecation notice
-
-This event type was replaced by more granular event types in Unleash 4.3. From Unleash 4.3 onwards, you'll need to use the events listed later in this section instead.
-
-:::
-
-This event fires when a feature gets updated in some way. The `data` property contains the new state of the flag. This is a legacy event, so it does not populate `preData` property.
-
-```json title="example event: feature-updated"
-{
-  "id": 899,
-  "type": "feature-updated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-05-31T13:32:20.560Z",
-  "data": {
-    "name": "new-feature",
-    "description": "Flag description",
-    "type": "release",
-    "project": "my-project",
-    "stale": false,
-    "variants": [],
-    "createdAt": "2022-05-31T13:32:20.547Z",
-    "lastSeenAt": null,
-    "impressionData": true
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-project",
-  "environment": null
-}
-```
-
-### `feature-deleted`
-
-This event fires when you delete a feature flag. The `preData` property contains the deleted flag data.
+Generated when you delete a feature flag. The `preData` property contains the deleted flag data.
 
 ```json title="example event: feature-deleted"
 {
@@ -130,9 +144,9 @@ This event fires when you delete a feature flag. The `preData` property contains
 }
 ```
 
-### `feature-archived`
+#### `feature-archived`
 
-This event fires when you archive a flag.
+Generated when you archive a feature flag.
 
 ```json title="example event: feature-archived"
 {
@@ -149,9 +163,9 @@ This event fires when you archive a flag.
 }
 ```
 
-### `feature-revived`
+#### `feature-revived`
 
-This event fires when you revive an archived feature flag (when you take a flag out from the archive).
+Generated when you revive an archived feature flag.
 
 ```json title="example-event: feature-revived"
 {
@@ -168,9 +182,9 @@ This event fires when you revive an archived feature flag (when you take a flag 
 }
 ```
 
-### `feature-metadata-updated`
+#### `feature-metadata-updated`
 
-This event fires when a feature's metadata (its description, flag type, or impression data settings) are changed. The `data` property contains the new flag data. The `preData` property contains the flag's previous data.
+Generated when a feature flag's metadata, such as description, flag type, or impression data settings, are changed. The `data` property contains the new flag data. The `preData` property contains the flag's previous data.
 
 The below example changes the flag's type from _release_ to _experiment_.
 
@@ -209,9 +223,9 @@ The below example changes the flag's type from _release_ to _experiment_.
 }
 ```
 
-### `feature-project-change`
+#### `feature-project-change`
 
-This event fires when you move a feature from one project to another. The `data` property contains the names of the old and the new project.
+Generated when you move a feature flag from one project to another. The `data` property contains the names of the old and the new project.
 
 ```json title="example event: feature-project-change"
 {
@@ -231,9 +245,9 @@ This event fires when you move a feature from one project to another. The `data`
 }
 ```
 
-### `feature-import`
+#### `feature-import`
 
-This event fires when you import a feature as part of an import process. The `data` property contains the feature data.
+Generated when you import a feature flag as part of an import process. The `data` property contains the feature data.
 
 ```json title="example event: feature-import"
 {
@@ -260,9 +274,9 @@ This event fires when you import a feature as part of an import process. The `da
 }
 ```
 
-### `feature-tagged`
+#### `feature-tagged`
 
-This event fires when you add a tag to a feature. The `data` property contains the new tag.
+Generated when you add a tag to a feature flag. The `data` property contains the new tag.
 
 ```json title="example event: feature-tagged"
 {
@@ -282,9 +296,9 @@ This event fires when you add a tag to a feature. The `data` property contains t
 }
 ```
 
-### `feature-untagged`
+#### `feature-untagged`
 
-This event fires when you remove a tag from a flag. The `data` property contains the tag that was removed.
+Generated when you remove a tag from a feature flag. The `data` property contains the tag that was removed.
 
 ```json title="example event: feature-untagged"
 {
@@ -304,9 +318,9 @@ This event fires when you remove a tag from a flag. The `data` property contains
 }
 ```
 
-### `feature-tag-import`
+#### `feature-tag-import`
 
-This event fires when you import a tagged feature as part of an import job. The `data` property contains the name of the feature and the tag.
+Generated when you import a tagged feature flag as part of an import job. The `data` property contains the name of the feature and the tag.
 
 ```json title="example event: feature-tag-import"
 {
@@ -329,9 +343,9 @@ This event fires when you import a tagged feature as part of an import job. The 
 }
 ```
 
-### `feature-strategy-add`
+#### `feature-strategy-add`
 
-This event fires when you add a strategy to a feature. The `data` property contains the configuration for the new strategy.
+Generated when you add a strategy to a feature flag. The `data` property contains the configuration for the new strategy.
 
 ```json title="example event: feature-strategy-add"
 {
@@ -357,9 +371,9 @@ This event fires when you add a strategy to a feature. The `data` property conta
 }
 ```
 
-### `feature-strategy-update`
+#### `feature-strategy-update`
 
-This event fires when you update a feature strategy. The `data` property contains the new strategy configuration. The `preData` property contains the previous strategy configuration.
+Generated when you update a feature flag strategy. The `data` property contains the new strategy configuration. The `preData` property contains the previous strategy configuration.
 
 ```json title="example event: feature-strategy-update"
 {
@@ -394,9 +408,9 @@ This event fires when you update a feature strategy. The `data` property contain
 }
 ```
 
-### `feature-strategy-remove`
+#### `feature-strategy-remove`
 
-This event fires when you remove a strategy from a feature. The `preData` contains the configuration of the strategy that was removed.
+Generated when you remove a strategy from a feature flag. The `preData` contains the configuration of the strategy that was removed.
 
 ```json title="example event: feature-strategy-remove"
 {
@@ -418,9 +432,9 @@ This event fires when you remove a strategy from a feature. The `preData` contai
 }
 ```
 
-### `feature-stale-on`
+#### `feature-stale-on`
 
-This event fires when you mark a feature as stale.
+Generated when you mark a feature flag as stale.
 
 ```json title="example event: feature-stale-on"
 {
@@ -430,25 +444,16 @@ This event fires when you mark a feature as stale.
   "createdAt": "2022-06-01T10:10:46.737Z",
   "data": null,
   "preData": null,
-  "tags": [
-    {
-      "value": "tag",
-      "type": "simple"
-    },
-    {
-      "value": "tog",
-      "type": "simple"
-    }
-  ],
+  "tags": [],
   "featureName": "new-feature",
   "project": "my-other-project",
   "environment": null
 }
 ```
 
-### `feature-stale-off`
+#### `feature-stale-off`
 
-This event fires when you mark a stale feature as no longer being stale.
+Generated when you mark a stale feature flag as no longer stale.
 
 ```json title="example event: feature-stale-off"
 {
@@ -458,25 +463,16 @@ This event fires when you mark a stale feature as no longer being stale.
   "createdAt": "2022-06-01T10:10:52.790Z",
   "data": null,
   "preData": null,
-  "tags": [
-    {
-      "value": "tag",
-      "type": "simple"
-    },
-    {
-      "value": "tog",
-      "type": "simple"
-    }
-  ],
+  "tags": [],
   "featureName": "new-feature",
   "project": "my-other-project",
   "environment": null
 }
 ```
 
-### `feature-environment-enabled`
+#### `feature-environment-enabled`
 
-This event fires when you enable an environment for a feature. The `environment` property contains the name of the environment.
+Generated when you enable an environment for a feature flag. The `environment` property contains the name of the environment.
 
 ```json title="example event: feature-environment-enabled"
 {
@@ -502,9 +498,9 @@ This event fires when you enable an environment for a feature. The `environment`
 }
 ```
 
-### `feature-environment-disabled`
+#### `feature-environment-disabled`
 
-This event fires when you disable an environment for a feature. The `environment` property contains the name of the environment.
+Generated when you disable an environment for a feature. The `environment` property contains the name of the environment.
 
 ```json title="example event: feature-environment-disabled"
 {
@@ -530,9 +526,9 @@ This event fires when you disable an environment for a feature. The `environment
 }
 ```
 
-### `drop-features`
+#### `drop-features`
 
-This event fires when you delete existing features as part of an import job. The `data.name` property will always be `"all-features"`.
+Generated when you delete existing features as part of an import job. The `data.name` property will always be `"all-features"`.
 
 ```json title="example event: drop-features"
 {
@@ -551,9 +547,9 @@ This event fires when you delete existing features as part of an import job. The
 }
 ```
 
-### `drop-feature-tags`
+#### `drop-feature-tags`
 
-This event fires when you drop all existing tags as part of a configuration import. The `data.name` property will always be `"all-feature-tags"`.
+Generated when you drop all existing tags as part of a configuration import. The `data.name` property will always be `"all-feature-tags"`.
 
 ```json title="example event: drop-feature-tags"
 {
@@ -572,9 +568,9 @@ This event fires when you drop all existing tags as part of a configuration impo
 }
 ```
 
-### `feature-potentially-stale-on`
+#### `feature-potentially-stale-on`
 
-This event fires when Unleash marks a feature flag as potentially stale. Feature flags are marked as potentially stale when they exceed the expected lifetime of their [feature flag type](/reference/feature-toggle-types.md).
+Generated when Unleash marks a feature flag as potentially stale. Feature flags are marked as potentially stale when they exceed the expected lifetime of their [feature flag type](/reference/feature-toggle-types.md).
 
 ``` json title="Example event when my-feature is marked as potentially stale"
 {
@@ -591,11 +587,47 @@ This event fires when Unleash marks a feature flag as potentially stale. Feature
 }
 ```
 
-## Strategy events
+#### `feature-updated`
 
-### `strategy-created`
+:::caution Deprecation notice
 
-This event fires when you create a strategy. The `data` property contains the strategy configuration.
+This event type was replaced by more granular event types in Unleash 4.3. From Unleash 4.3 onwards, you'll need to use the events listed later in this section instead.
+
+:::
+
+Generated when a feature gets updated in some way. The `data` property contains the new state of the flag. This is a legacy event, so it does not populate `preData` property.
+
+```json title="example event: feature-updated"
+{
+  "id": 899,
+  "type": "feature-updated",
+  "createdBy": "user@company.com",
+  "createdAt": "2022-05-31T13:32:20.560Z",
+  "data": {
+    "name": "new-feature",
+    "description": "Flag description",
+    "type": "release",
+    "project": "my-project",
+    "stale": false,
+    "variants": [],
+    "createdAt": "2022-05-31T13:32:20.547Z",
+    "lastSeenAt": null,
+    "impressionData": true
+  },
+  "preData": null,
+  "tags": [],
+  "featureName": "new-feature",
+  "project": "my-project",
+  "environment": null
+}
+```
+
+
+### Strategy events
+
+#### `strategy-created`
+
+Generated when you create a strategy. The `data` property contains the strategy configuration.
 
 ```json title="example event: strategy-created"
 {
@@ -618,9 +650,9 @@ This event fires when you create a strategy. The `data` property contains the st
 }
 ```
 
-### `strategy-updated`
+#### `strategy-updated`
 
-This event fires when you change a strategy's configuration. The `data` property contains the new strategy configuration.
+Generated when you change a strategy's configuration. The `data` property contains the new strategy configuration.
 
 ```json title="example event: strategy-updated"
 {
@@ -643,9 +675,9 @@ This event fires when you change a strategy's configuration. The `data` property
 }
 ```
 
-### `strategy-deleted`
+#### `strategy-deleted`
 
-This event fires when you delete a strategy. The `data` property contains the name of the deleted strategy.
+Generated when you delete a strategy. The `data` property contains the name of the deleted strategy.
 
 ```json title="example event: strategy-deleted"
 {
@@ -664,9 +696,9 @@ This event fires when you delete a strategy. The `data` property contains the na
 }
 ```
 
-### `strategy-deprecated`
+#### `strategy-deprecated`
 
-This event fires when you deprecate a strategy. The `data` property contains the name of the deprecated strategy.
+Generated when you deprecate a strategy. The `data` property contains the name of the deprecated strategy.
 
 ```json title="example event: strategy-deprecated"
 {
@@ -685,9 +717,9 @@ This event fires when you deprecate a strategy. The `data` property contains the
 }
 ```
 
-### `strategy-reactivated`
+#### `strategy-reactivated`
 
-This event fires when you bring reactivate a deprecated strategy. The `data` property contains the name of the reactivated strategy.
+Generated when you bring reactivate a deprecated strategy. The `data` property contains the name of the reactivated strategy.
 
 ```json title="example event: strategy-reactivated"
 {
@@ -706,9 +738,9 @@ This event fires when you bring reactivate a deprecated strategy. The `data` pro
 }
 ```
 
-### `strategy-import`
+#### `strategy-import`
 
-This event fires when you import a strategy as part of an import job. The `data` property contains the strategy's configuration.
+Generated when you import a strategy as part of an import job. The `data` property contains the strategy's configuration.
 
 ```json title="example event: strategy-import"
 {
@@ -743,9 +775,9 @@ This event fires when you import a strategy as part of an import job. The `data`
 }
 ```
 
-### `drop-strategies`
+#### `drop-strategies`
 
-This event fires when you delete existing strategies as part of an important job. The `data.name` property will always be `"all-strategies"`.
+Generated when you delete existing strategies as part of an important job. The `data.name` property will always be `"all-strategies"`.
 
 ```json title="example event: drop-strategies"
 {
@@ -764,11 +796,11 @@ This event fires when you delete existing strategies as part of an important job
 }
 ```
 
-## Context field events
+### Context field events
 
-### `context-field-created`
+#### `context-field-created`
 
-This event fires when you create a context field. The `data` property contains the context field configuration.
+Generated when you create a context field. The `data` property contains the context field configuration.
 
 ```json title="example event: context-field-created"
 {
@@ -790,9 +822,9 @@ This event fires when you create a context field. The `data` property contains t
 }
 ```
 
-### `context-field-updated`
+#### `context-field-updated`
 
-This event fires when you update a context field. The `data` property contains the new context field configuration.
+Generated when you update a context field. The `data` property contains the new context field configuration.
 
 ```json title="example event: context-field-updated"
 {
@@ -823,9 +855,9 @@ This event fires when you update a context field. The `data` property contains t
 }
 ```
 
-### `context-field-deleted`
+#### `context-field-deleted`
 
-This event fires when you delete a context field. The `data` property contains the name of the deleted context field.
+Generated when you delete a context field. The `data` property contains the name of the deleted context field.
 
 ```json title="example event: context-field-deleted"
 {
@@ -844,11 +876,11 @@ This event fires when you delete a context field. The `data` property contains t
 }
 ```
 
-## Project events
+### Project events
 
-### `project-created`
+#### `project-created`
 
-This event fires when you create a project. The `data` property contains the project configuration.
+Generated when you create a project. The `data` property contains the project configuration.
 
 ```json title="example event: project-created"
 {
@@ -869,9 +901,9 @@ This event fires when you create a project. The `data` property contains the pro
 }
 ```
 
-### `project-updated`
+#### `project-updated`
 
-This event fires when you update a project's configuration. The `data` property contains the new project configuration. The `preData` property contains the previous project configuration.
+Generated when you update a project's configuration. The `data` property contains the new project configuration. The `preData` property contains the previous project configuration.
 
 ```json title="example event: project-updated"
 {
@@ -899,9 +931,9 @@ This event fires when you update a project's configuration. The `data` property 
 }
 ```
 
-### `project-deleted`
+#### `project-deleted`
 
-This event fires when you delete a project. The `project` property contains the name of the deleted project.
+Generated when you delete a project. The `project` property contains the name of the deleted project.
 
 ```json title="example event: project-deleted"
 {
@@ -918,9 +950,9 @@ This event fires when you delete a project. The `project` property contains the 
 }
 ```
 
-### `project-import`
+#### `project-import`
 
-This event fires when you import a project. The `data` property contains the project's configuration details.
+Generated when you import a project. The `data` property contains the project's configuration details.
 
 ```json title="example event: project-import"
 {
@@ -944,9 +976,9 @@ This event fires when you import a project. The `data` property contains the pro
 }
 ```
 
-### `drop-projects`
+#### `drop-projects`
 
-This event fires when you delete existing projects as part of an import job. The `data.name` property will always be `"all-projects"`.
+Generated when you delete existing projects as part of an import job. The `data.name` property will always be `"all-projects"`.
 
 ```json title="example event: drop-projects"
 {
@@ -965,11 +997,11 @@ This event fires when you delete existing projects as part of an import job. The
 }
 ```
 
-## Tag events
+### Tag events
 
-### `tag-created`
+#### `tag-created`
 
-This event fires when you create a new tag. The `data` property contains the tag that was created.
+Generated when you create a new tag. The `data` property contains the tag that was created.
 
 ```json title="example event: tag-created"
 {
@@ -989,9 +1021,9 @@ This event fires when you create a new tag. The `data` property contains the tag
 }
 ```
 
-### `tag-deleted`
+#### `tag-deleted`
 
-This event fires when you delete a tag. The `data` property contains the tag that was deleted.
+Generated when you delete a tag. The `data` property contains the tag that was deleted.
 
 ```json title="example event: tag-deleted"
 {
@@ -1011,9 +1043,9 @@ This event fires when you delete a tag. The `data` property contains the tag tha
 }
 ```
 
-### `tag-import`
+#### `tag-import`
 
-This event fires when you import a tag as part of an import job. The `data` property contains the imported tag.
+Generated when you import a tag as part of an import job. The `data` property contains the imported tag.
 
 ```json title="example event: tag-import"
 {
@@ -1033,9 +1065,9 @@ This event fires when you import a tag as part of an import job. The `data` prop
 }
 ```
 
-### `drop-tags`
+#### `drop-tags`
 
-This event fires when you delete existing tags as part of an import job. The `data.name` property will always be `"all-tags"`.
+Generated when you delete existing tags as part of an import job. The `data.name` property will always be `"all-tags"`.
 
 ```json title="example event: drop-tags"
 {
@@ -1054,11 +1086,11 @@ This event fires when you delete existing tags as part of an import job. The `da
 }
 ```
 
-## Tag type events
+### Tag type events
 
-### `tag-type-created`
+#### `tag-type-created`
 
-This event fires when you create a new tag type. The `data` property contains the tag type configuration.
+Generated when you create a new tag type. The `data` property contains the tag type configuration.
 
 ```json title="example event: tag-type-created"
 {
@@ -1078,9 +1110,9 @@ This event fires when you create a new tag type. The `data` property contains th
 }
 ```
 
-### `tag-type-updated`
+#### `tag-type-updated`
 
-This event fires when you update a tag type. The `data` property contains the new tag type configuration.
+Generated when you update a tag type. The `data` property contains the new tag type configuration.
 
 ```json title="example event: tag-type-updated"
 {
@@ -1100,9 +1132,9 @@ This event fires when you update a tag type. The `data` property contains the ne
 }
 ```
 
-### `tag-type-deleted`
+#### `tag-type-deleted`
 
-This event fires when you delete a tag type. The `data` property contains the name of the deleted tag type.
+Generated when you delete a tag type. The `data` property contains the name of the deleted tag type.
 
 ```json title="example event: tag-type-deleted"
 {
@@ -1121,9 +1153,9 @@ This event fires when you delete a tag type. The `data` property contains the na
 }
 ```
 
-### `tag-type-import`
+#### `tag-type-import`
 
-This event fires when you import a tag type as part of an import job. The `data` property contains the imported tag.
+Generated when you import a tag type as part of an import job. The `data` property contains the imported tag.
 
 ```json title="example event: tag-type-import"
 {
@@ -1144,9 +1176,9 @@ This event fires when you import a tag type as part of an import job. The `data`
 }
 ```
 
-### `drop-tag-types`
+#### `drop-tag-types`
 
-This event fires when you drop all existing tag types as part of a configuration import. The `data.name` property will always be `"all-tag-types"`.
+Generated when you drop all existing tag types as part of a configuration import. The `data.name` property will always be `"all-tag-types"`.
 
 ```json title="example event: drop-tag-types"
 {
@@ -1165,11 +1197,11 @@ This event fires when you drop all existing tag types as part of a configuration
 }
 ```
 
-## Integration events
+### Integration events
 
-### `addon-config-created`
+#### `addon-config-created`
 
-This event fires when you create an integration configuration. The `data` property contains the provider type.
+Generated when you create an integration configuration. The `data` property contains the provider type.
 
 ```json title="example event: addon-config-created"
 {
@@ -1188,9 +1220,9 @@ This event fires when you create an integration configuration. The `data` proper
 }
 ```
 
-### `addon-config-updated`
+#### `addon-config-updated`
 
-This event fires when you update an integration configuration. The `data` property contains the integration's ID and provider type.
+Generated when you update an integration configuration. The `data` property contains the integration's ID and provider type.
 
 ```json title="example event: addon-config-updated"
 {
@@ -1210,9 +1242,9 @@ This event fires when you update an integration configuration. The `data` proper
 }
 ```
 
-### `addon-config-deleted`
+#### `addon-config-deleted`
 
-This event fires when you update an integration configuration. The `data` property contains the integration's ID.
+Generated when you update an integration configuration. The `data` property contains the integration's ID.
 
 ```json title="example event: addon-config-deleted"
 {
@@ -1231,11 +1263,11 @@ This event fires when you update an integration configuration. The `data` proper
 }
 ```
 
-## User events
+### User events
 
-### `user-created`
+#### `user-created`
 
-This event fires when you create a new user. The `data` property contains the user's information.
+Generated when you create a new user. The `data` property contains the user's information.
 
 ```json title="example event: user-created"
 {
@@ -1256,9 +1288,9 @@ This event fires when you create a new user. The `data` property contains the us
 }
 ```
 
-### `user-updated`
+#### `user-updated`
 
-This event fires when you update a user. The `data` property contains the updated user information; the `preData` property contains the previous state of the user's information.
+Generated when you update a user. The `data` property contains the updated user information; the `preData` property contains the previous state of the user's information.
 
 ```json title="example event: user-updated"
 {
@@ -1283,9 +1315,9 @@ This event fires when you update a user. The `data` property contains the update
 }
 ```
 
-### `user-deleted`
+#### `user-deleted`
 
-This event fires when you delete a user. The `preData` property contains the deleted user's information.
+Generated when you delete a user. The `preData` property contains the deleted user's information.
 
 ```json title="example event: user-deleted"
 {
@@ -1306,11 +1338,11 @@ This event fires when you delete a user. The `preData` property contains the del
 }
 ```
 
-## Environment events
+### Environment events
 
-### `environment-import`
+#### `environment-import`
 
-This event fires when you import an environment (custom or otherwise) as part of an import job. The `data` property contains the configuration of the imported environment.
+Generated when you import an environment (custom or otherwise) as part of an import job. The `data` property contains the configuration of the imported environment.
 
 ```json title="example event: environment-import"
 {
@@ -1333,9 +1365,9 @@ This event fires when you import an environment (custom or otherwise) as part of
 }
 ```
 
-### `drop-environments`
+#### `drop-environments`
 
-This event fires when you delete existing environments as part of an import job. The `data.name` property will always be `"all-environments"`.
+Generated when you delete existing environments as part of an import job. The `data.name` property will always be `"all-environments"`.
 
 ```json title="example event: drop-environments"
 {
@@ -1354,11 +1386,11 @@ This event fires when you delete existing environments as part of an import job.
 }
 ```
 
-## Segment events
+### Segment events
 
-### `segment-created`
+#### `segment-created`
 
-This event fires when you create a segment. The `data` property contains the newly created segment.
+Generated when you create a segment. The `data` property contains the newly created segment.
 
 ```json title="example event: segment-created"
 {
@@ -1390,9 +1422,9 @@ This event fires when you create a segment. The `data` property contains the new
 }
 ```
 
-### `segment-updated`
+#### `segment-updated`
 
-This event fires when you update a segment's configuration. The `data` property contains the new segment configuration; the `preData` property contains the previous segment configuration.
+Generated when you update a segment's configuration. The `data` property contains the new segment configuration; the `preData` property contains the previous segment configuration.
 
 ```json title="example event: segment-updated"
 {
@@ -1431,9 +1463,9 @@ This event fires when you update a segment's configuration. The `data` property 
 }
 ```
 
-### `segment-deleted`
+#### `segment-deleted`
 
-This event fires when you delete a segment.
+Generated when you delete a segment.
 
 ```json title="example event: segment-deleted"
 {
@@ -1450,11 +1482,11 @@ This event fires when you delete a segment.
 }
 ```
 
-## Suggest changes events
+### Suggest changes events
 
-### `suggest-change-created`
+#### `suggest-change-created`
 
-This event fires when you create a change-request draft.
+Generated when you create a change-request draft.
 
 ```json title="example event: suggest-change-created"
 {

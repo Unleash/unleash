@@ -10,7 +10,7 @@ In order to access the admin API endpoints you need to identify yourself. Unless
 
 :::
 
-The Events API lets you retrieve [events](/reference/event-types.mdx) from your Unleash instance.
+The Events API lets you retrieve [events](/reference/events.mdx) from your Unleash instance.
 
 ## Event endpoints
 
@@ -131,6 +131,6 @@ The list of events related to the given toggle.
 
 :::note Content moved
 
-This section has been moved to a dedicated [event type reference document](/reference/event-types.mdx).
+This section has been moved to a dedicated [events document](/reference/event.mdx).
 
 :::

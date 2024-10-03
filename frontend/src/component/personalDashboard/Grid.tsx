@@ -48,11 +48,11 @@ export const ProjectGrid = styled(ContentGrid2)(({ theme }) =>
 
 export const FlagGrid = styled(ContentGrid2)(({ theme }) =>
     withContainerQueryFallback({
-        gridTemplateColumns: '1fr 2fr',
+        gridTemplateColumns: '1fr 1fr 1fr',
         display: 'grid',
         gridTemplateAreas: `
-                "title lifecycle"
-                "flags chart"
+                "title lifecycle lifecycle"
+                "flags chart chart"
             `,
     })(theme),
 );

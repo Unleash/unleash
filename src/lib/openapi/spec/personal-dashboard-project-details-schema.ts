@@ -19,7 +19,15 @@ export const personalDashboardProjectDetailsSchema = {
             type: 'object',
             description: 'Insights for the project',
             additionalProperties: false,
-            required: ['avgHealthCurrentWindow', 'avgHealthPastWindow'],
+            required: [
+                'avgHealthCurrentWindow',
+                'avgHealthPastWindow',
+                'totalFlags',
+                'activeFlags',
+                'staleFlags',
+                'potentiallyStaleFlags',
+                'health',
+            ],
             properties: {
                 avgHealthCurrentWindow: {
                     type: 'number',
@@ -34,6 +42,33 @@ export const personalDashboardProjectDetailsSchema = {
                         'The average health score in the previous 4 weeks before the current window',
                     example: 70,
                     nullable: true,
+                },
+                totalFlags: {
+                    type: 'number',
+                    example: 100,
+                    description: 'The current number of all flags',
+                },
+                activeFlags: {
+                    type: 'number',
+                    example: 98,
+                    description: 'The current number of active flags',
+                },
+                staleFlags: {
+                    type: 'number',
+                    example: 0,
+                    description:
+                        'The current number of user marked stale flags',
+                },
+                potentiallyStaleFlags: {
+                    type: 'number',
+                    example: 2,
+                    description:
+                        'The current number of time calculated potentially stale flags',
+                },
+                health: {
+                    type: 'number',
+                    description: 'The current health score of the project',
+                    example: 80,
                 },
             },
         },

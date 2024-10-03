@@ -165,6 +165,16 @@ export class PersonalDashboardService {
             );
         }
 
+        const [projectInsights] =
+            await this.projectReadModel.getProjectsForInsights({
+                id: projectId,
+            });
+        const totalFlags = projectInsights?.featureCount || 0;
+        const potentiallyStaleFlags =
+            projectInsights?.potentiallyStaleFeatureCount || 0;
+        const staleFlags = projectInsights?.staleFeatureCount || 0;
+        const currentHealth = projectInsights?.health || 0;
+
         return {
             latestEvents,
             onboardingStatus,
@@ -173,6 +183,11 @@ export class PersonalDashboardService {
             insights: {
                 avgHealthCurrentWindow,
                 avgHealthPastWindow,
+                totalFlags,
+                potentiallyStaleFlags,
+                staleFlags,
+                activeFlags: totalFlags - staleFlags - potentiallyStaleFlags,
+                health: currentHealth,
             },
         };
     }

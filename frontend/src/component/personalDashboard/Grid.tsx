@@ -11,7 +11,7 @@ const ContentGrid = styled('article')(({ theme }) => {
         borderRadius: `${theme.shape.borderRadiusLarge}px`,
         overflow: 'hidden',
         border: `0.5px solid ${theme.palette.divider}`,
-        gap: `2px`,
+        gap: `1px`,
         display: 'flex',
         flexFlow: 'column nowrap',
 

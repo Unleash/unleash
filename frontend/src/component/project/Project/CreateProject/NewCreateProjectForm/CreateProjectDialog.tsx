@@ -190,6 +190,9 @@ export const CreateProjectDialog = ({
                 trackEvent('project-mode', {
                     props: { mode: projectMode, action: 'added' },
                 });
+                trackEvent('onboarding', {
+                    props: { eventType: 'onboarding-started' },
+                });
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }

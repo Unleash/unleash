@@ -11,6 +11,7 @@ import {
 import { type FC, useEffect } from 'react';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
+import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 
 const server = testServerSetup();
 
@@ -18,8 +19,29 @@ beforeEach(() => {
     window.localStorage.clear();
 });
 
+const TestNavigationSidebar: FC<{
+    project?: string;
+    flags?: LastViewedFlag[];
+}> = ({ project, flags }) => {
+    const { setLastViewed: setProject } = useLastViewedProject();
+    const { setLastViewed: setFlag } = useLastViewedFlags();
+
+    useEffect(() => {
+        setProject(project);
+        flags?.forEach((flag) => {
+            setFlag(flag);
+        });
+    }, []);
+
+    return (
+        <EventTimelineProvider>
+            <NavigationSidebar />
+        </EventTimelineProvider>
+    );
+};
+
 test('switch full mode and mini mode', () => {
-    render(<NavigationSidebar />);
+    render(<TestNavigationSidebar />);
 
     expect(screen.queryByText('Projects')).toBeInTheDocument();
     expect(screen.queryByText('Applications')).toBeInTheDocument();
@@ -42,7 +64,7 @@ test('switch full mode and mini mode', () => {
 });
 
 test('persist navigation mode and expansion selection in storage', async () => {
-    render(<NavigationSidebar />);
+    render(<TestNavigationSidebar />);
     const { value } = createLocalStorage('navigation-mode:v1', {});
     expect(value).toBe('full');
 
@@ -70,7 +92,7 @@ test('persist navigation mode and expansion selection in storage', async () => {
 test('select active item', async () => {
     render(
         <Routes>
-            <Route path={'/search'} element={<NavigationSidebar />} />
+            <Route path={'/search'} element={<TestNavigationSidebar />} />
         </Routes>,
         { route: '/search' },
     );
@@ -80,30 +102,13 @@ test('select active item', async () => {
     expect(links[1]).toHaveClass(classes.selected);
 });
 
-const SetupComponent: FC<{ project: string; flags: LastViewedFlag[] }> = ({
-    project,
-    flags,
-}) => {
-    const { setLastViewed: setProject } = useLastViewedProject();
-    const { setLastViewed: setFlag } = useLastViewedFlags();
-
-    useEffect(() => {
-        setProject(project);
-        flags.forEach((flag) => {
-            setFlag(flag);
-        });
-    }, []);
-
-    return <NavigationSidebar />;
-};
-
 test('print recent projects and flags', async () => {
     testServerRoute(server, `/api/admin/projects/projectA/overview`, {
         name: 'projectNameA',
     });
 
     render(
-        <SetupComponent
+        <TestNavigationSidebar
             project={'projectA'}
             flags={[{ featureId: 'featureA', projectId: 'projectB' }]}
         />,

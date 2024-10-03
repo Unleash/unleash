@@ -19,7 +19,15 @@ export const personalDashboardProjectDetailsSchema = {
             type: 'object',
             description: 'Insights for the project',
             additionalProperties: false,
-            required: ['avgHealthCurrentWindow', 'avgHealthPastWindow'],
+            required: [
+                'avgHealthCurrentWindow',
+                'avgHealthPastWindow',
+                'totalFlags',
+                'activeFlags',
+                'staleFlags',
+                'potentiallyStaleFlags',
+                'health',
+            ],
             properties: {
                 avgHealthCurrentWindow: {
                     type: 'number',
@@ -34,6 +42,34 @@ export const personalDashboardProjectDetailsSchema = {
                         'The average health score in the previous 4 weeks before the current window',
                     example: 70,
                     nullable: true,
+                },
+                totalFlags: {
+                    type: 'number',
+                    example: 100,
+                    description: 'The number of all flags on a particular day',
+                },
+                activeFlags: {
+                    type: 'number',
+                    example: 98,
+                    description:
+                        'The number of active flags on a particular day',
+                },
+                staleFlags: {
+                    type: 'number',
+                    example: 0,
+                    description:
+                        'The number of user marked stale flags on a particular day',
+                },
+                potentiallyStaleFlags: {
+                    type: 'number',
+                    example: 2,
+                    description:
+                        'The number of time calculated potentially stale flags on a particular day',
+                },
+                health: {
+                    type: 'number',
+                    description: 'The current health score of the project',
+                    example: 80,
                 },
             },
         },

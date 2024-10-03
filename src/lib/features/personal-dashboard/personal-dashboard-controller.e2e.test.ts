@@ -326,6 +326,11 @@ test('should return personal dashboard project details', async () => {
         insights: {
             avgHealthPastWindow: 80,
             avgHealthCurrentWindow: 91,
+            totalFlags: 3,
+            potentiallyStaleFlags: 0,
+            staleFlags: 0,
+            activeFlags: 3,
+            health: 100,
         },
     });
 });

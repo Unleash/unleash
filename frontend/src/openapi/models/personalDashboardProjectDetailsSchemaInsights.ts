@@ -18,4 +18,9 @@ export type PersonalDashboardProjectDetailsSchemaInsights = {
      * @nullable
      */
     avgHealthPastWindow: number | null;
+    totalFlags: number;
+    activeFlags: number;
+    staleFlags: number;
+    potentiallyStaleFlags: number;
+    health: number;
 };

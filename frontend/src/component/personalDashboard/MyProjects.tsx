@@ -85,7 +85,13 @@ export const MyProjects: FC<{
                 <SpacedGridItem gridArea='title'>
                     <Typography variant='h3'>My projects</Typography>
                 </SpacedGridItem>
-                <SpacedGridItem gridArea='onboarding'>
+                <SpacedGridItem
+                    gridArea='onboarding'
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'flex-end',
+                    }}
+                >
                     {setupIncomplete ? (
                         <Badge color='warning'>Setup incomplete</Badge>
                     ) : null}

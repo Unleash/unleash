@@ -46,25 +46,24 @@ export const personalDashboardProjectDetailsSchema = {
                 totalFlags: {
                     type: 'number',
                     example: 100,
-                    description: 'The number of all flags on a particular day',
+                    description: 'The current number of all flags',
                 },
                 activeFlags: {
                     type: 'number',
                     example: 98,
-                    description:
-                        'The number of active flags on a particular day',
+                    description: 'The current number of active flags',
                 },
                 staleFlags: {
                     type: 'number',
                     example: 0,
                     description:
-                        'The number of user marked stale flags on a particular day',
+                        'The current number of user marked stale flags',
                 },
                 potentiallyStaleFlags: {
                     type: 'number',
                     example: 2,
                     description:
-                        'The number of time calculated potentially stale flags on a particular day',
+                        'The current number of time calculated potentially stale flags',
                 },
                 health: {
                     type: 'number',

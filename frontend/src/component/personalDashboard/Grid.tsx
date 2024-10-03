@@ -21,8 +21,21 @@ const ContentGrid2 = styled('article')(({ theme }) => {
     };
 });
 
-export const ProjectGrid = styled(ContentGrid2)(({ theme }) => ({
-    '@container (min-width: 1000px)': {
+const withContainerQueryFallback = (css: object) => (theme: Theme) => {
+    const containerBreakpoint = '1000px';
+    const screenBreakpoint = theme.breakpoints.up('lg');
+
+    return {
+        [`@container (min-width: ${containerBreakpoint})`]: css,
+
+        '@supports not (container-type: inline-size)': {
+            [screenBreakpoint]: css,
+        },
+    };
+};
+
+export const ProjectGrid = styled(ContentGrid2)(({ theme }) =>
+    withContainerQueryFallback({
         gridTemplateColumns: '1fr 1fr 1fr',
         display: 'grid',
         gridTemplateAreas: `
@@ -30,20 +43,19 @@ export const ProjectGrid = styled(ContentGrid2)(({ theme }) => ({
                 "projects box1 box2"
                 ". owners owners"
             `,
-    },
+    })(theme),
+);
 
-    '@supports not (container-type: inline-size)': {
-        [theme.breakpoints.up('lg')]: {
-            gridTemplateColumns: '1fr 1fr 1fr',
-            display: 'grid',
-            gridTemplateAreas: `
-                "title onboarding onboarding"
-                "projects box1 box2"
-                ". owners owners"
+export const FlagGrid = styled(ContentGrid2)(({ theme }) =>
+    withContainerQueryFallback({
+        gridTemplateColumns: '1fr 2fr',
+        display: 'grid',
+        gridTemplateAreas: `
+                "title lifecycle"
+                "flags chart"
             `,
-        },
-    },
-}));
+    })(theme),
+);
 
 export const SpacedGridItem2 = styled('div')(({ theme }) => ({
     padding: theme.spacing(4),

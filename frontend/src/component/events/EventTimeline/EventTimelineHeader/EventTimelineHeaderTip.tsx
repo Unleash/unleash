@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import { useEventTimelineContext } from '../EventTimelineContext';
 import { Link, useNavigate } from 'react-router-dom';
 import SensorsIcon from '@mui/icons-material/Sensors';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledTip = styled('div')({
     display: 'flex',
@@ -30,6 +31,7 @@ export const EventTimelineHeaderTip = () => {
     const { isAdmin } = useContext(AccessContext);
     const signalsEnabled = useUiFlag('signals');
     const { signalEndpoints, loading } = useSignalEndpoints();
+    const { trackEvent } = usePlausibleTracker();
 
     if (
         !signalsSuggestionSeen &&
@@ -50,7 +52,10 @@ export const EventTimelineHeaderTip = () => {
                             external sources in real-time within Unleash
                         </>
                     }
-                    onClick={() => navigate(signalsLink)}
+                    onClick={() => {
+                        trackEvent('event-timeline-signals-click');
+                        navigate(signalsLink);
+                    }}
                     onDelete={() => setSignalsSuggestionSeen(true)}
                 />
             </StyledTip>

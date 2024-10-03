@@ -82,7 +82,6 @@ module.exports = {
                             label: 'Migrating from homegrown feature management solutions',
                             id: 'topics/feature-flag-migration/feature-flag-migration-best-practices',
                         },
-                        'topics/a-b-testing',
                     ],
                 },
                 {

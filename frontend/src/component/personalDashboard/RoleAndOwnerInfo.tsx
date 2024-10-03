@@ -19,6 +19,7 @@ const Wrapper = styled('div')(({ theme }) => ({
 const InfoSection = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
+    alignItems: 'center',
 }));
 
 export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {

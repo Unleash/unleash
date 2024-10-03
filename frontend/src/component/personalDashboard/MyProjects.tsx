@@ -26,7 +26,7 @@ import {
     ListItemBox,
     listItemStyle,
     ProjectGrid,
-    SpacedGridItem2,
+    SpacedGridItem,
 } from './Grid';
 
 const ActiveProjectDetails: FC<{
@@ -82,15 +82,15 @@ export const MyProjects: FC<{
     return (
         <ContentGridContainer>
             <ProjectGrid>
-                <SpacedGridItem2 gridArea='title'>
+                <SpacedGridItem gridArea='title'>
                     <Typography variant='h3'>My projects</Typography>
-                </SpacedGridItem2>
-                <SpacedGridItem2 gridArea='onboarding'>
+                </SpacedGridItem>
+                <SpacedGridItem gridArea='onboarding'>
                     {setupIncomplete ? (
                         <Badge color='warning'>Setup incomplete</Badge>
                     ) : null}
-                </SpacedGridItem2>
-                <SpacedGridItem2 gridArea='projects'>
+                </SpacedGridItem>
+                <SpacedGridItem gridArea='projects'>
                     <List
                         disablePadding={true}
                         sx={{ maxHeight: '400px', overflow: 'auto' }}
@@ -135,8 +135,8 @@ export const MyProjects: FC<{
                             );
                         })}
                     </List>
-                </SpacedGridItem2>
-                <SpacedGridItem2 gridArea='box1'>
+                </SpacedGridItem>
+                <SpacedGridItem gridArea='box1'>
                     {activeProjectStage === 'onboarded' &&
                     personalDashboardProjectDetails ? (
                         <ProjectSetupComplete
@@ -151,8 +151,8 @@ export const MyProjects: FC<{
                     {activeProjectStage === 'first-flag-created' ? (
                         <ExistingFlag project={activeProject} />
                     ) : null}
-                </SpacedGridItem2>
-                <SpacedGridItem2 gridArea='box2'>
+                </SpacedGridItem>
+                <SpacedGridItem gridArea='box2'>
                     {activeProjectStage === 'onboarded' &&
                     personalDashboardProjectDetails ? (
                         <LatestProjectEvents
@@ -164,9 +164,9 @@ export const MyProjects: FC<{
                     {setupIncomplete || activeProjectStage === 'loading' ? (
                         <ConnectSDK project={activeProject} />
                     ) : null}
-                </SpacedGridItem2>
+                </SpacedGridItem>
                 <EmptyGridItem />
-                <SpacedGridItem2 gridArea='owners'>
+                <SpacedGridItem gridArea='owners'>
                     {personalDashboardProjectDetails ? (
                         <RoleAndOwnerInfo
                             roles={personalDashboardProjectDetails.roles.map(
@@ -175,7 +175,7 @@ export const MyProjects: FC<{
                             owners={personalDashboardProjectDetails.owners}
                         />
                     ) : null}
-                </SpacedGridItem2>
+                </SpacedGridItem>
             </ProjectGrid>
         </ContentGridContainer>
     );

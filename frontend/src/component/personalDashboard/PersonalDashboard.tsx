@@ -28,7 +28,7 @@ import {
     FlagGrid,
     ListItemBox,
     listItemStyle,
-    SpacedGridItem2,
+    SpacedGridItem,
 } from './Grid';
 import { ContentGridNoProjects } from './ContentGridNoProjects';
 
@@ -183,10 +183,10 @@ export const PersonalDashboard = () => {
 
             <ContentGridContainer>
                 <FlagGrid sx={{ mt: 2 }}>
-                    <SpacedGridItem2 gridArea='title'>
+                    <SpacedGridItem gridArea='title'>
                         <Typography variant='h3'>My feature flags</Typography>
-                    </SpacedGridItem2>
-                    <SpacedGridItem2
+                    </SpacedGridItem>
+                    <SpacedGridItem
                         gridArea='lifecycle'
                         sx={{ display: 'flex', justifyContent: 'flex-end' }}
                     >
@@ -197,8 +197,8 @@ export const PersonalDashboard = () => {
                                 onArchive={refetchDashboard}
                             />
                         ) : null}
-                    </SpacedGridItem2>
-                    <SpacedGridItem2 gridArea='flags'>
+                    </SpacedGridItem>
+                    <SpacedGridItem gridArea='flags'>
                         {personalDashboard &&
                         personalDashboard.flags.length > 0 ? (
                             <List
@@ -222,15 +222,15 @@ export const PersonalDashboard = () => {
                                 flags. Once you do, they will show up here.
                             </Typography>
                         )}
-                    </SpacedGridItem2>
+                    </SpacedGridItem>
 
-                    <SpacedGridItem2 gridArea='chart'>
+                    <SpacedGridItem gridArea='chart'>
                         {activeFlag ? (
                             <FlagMetricsChart flag={activeFlag} />
                         ) : (
                             <PlaceholderFlagMetricsChart />
                         )}
-                    </SpacedGridItem2>
+                    </SpacedGridItem>
                 </FlagGrid>
             </ContentGridContainer>
             <WelcomeDialog

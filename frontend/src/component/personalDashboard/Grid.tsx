@@ -1,4 +1,4 @@
-import { Box, Grid, styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import type { Theme } from '@mui/material/styles/createTheme';
 
 export const ContentGridContainer = styled('div')({
@@ -57,7 +57,7 @@ export const FlagGrid = styled(ContentGrid2)(({ theme }) =>
     })(theme),
 );
 
-export const SpacedGridItem2 = styled('div', {
+export const SpacedGridItem = styled('div', {
     shouldForwardProp: (prop) => prop !== 'gridArea',
 })<{ gridArea: string }>(({ theme, gridArea }) => ({
     padding: theme.spacing(4),
@@ -73,16 +73,6 @@ export const EmptyGridItem = styled('div', {
     ...withContainerQueryFallback({
         display: 'block',
     })(theme),
-}));
-
-export const ContentGrid = styled(Grid)(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-    borderRadius: `${theme.shape.borderRadiusLarge}px`,
-}));
-
-export const SpacedGridItem = styled(Grid)(({ theme }) => ({
-    padding: theme.spacing(4),
-    border: `0.5px solid ${theme.palette.divider}`,
 }));
 
 export const ListItemBox = styled(Box)(({ theme }) => ({

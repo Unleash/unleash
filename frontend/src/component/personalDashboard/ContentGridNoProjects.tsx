@@ -11,6 +11,10 @@ import {
     SpacedGridItem2,
 } from './Grid';
 
+const PaddedEmptyGridItem = styled(EmptyGridItem)(({ theme }) => ({
+    padding: theme.spacing(4),
+}));
+
 const TitleContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
@@ -155,7 +159,7 @@ export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
                     </GridContent>
                 </SpacedGridItem2>
                 <EmptyGridItem />
-                <EmptyGridItem />
+                <PaddedEmptyGridItem gridArea='owners' />
             </ProjectGrid>
         </ContentGridContainer>
     );

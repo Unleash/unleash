@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { EventTimelineContext } from './EventTimelineContext';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import type { IEnvironment } from 'interfaces/environments';
@@ -10,22 +10,31 @@ type TimeSpanOption = {
     markers: string[];
 };
 
-type EventTimelineState = {
+type EventTimelinePersistentState = {
     open: boolean;
     timeSpan: TimeSpanOption;
     environment?: IEnvironment;
     signalsSuggestionSeen?: boolean;
 };
 
+type EventTimelineTemporaryState = {
+    highlighted: boolean;
+};
+
+type OpenOptions = {
+    highlight?: boolean;
+};
+
 type EventTimelineStateSetters = {
-    setOpen: (open: boolean) => void;
+    setOpen: (open: boolean, options?: OpenOptions) => void;
     setTimeSpan: (timeSpan: TimeSpanOption) => void;
     setEnvironment: (environment: IEnvironment) => void;
     setSignalsSuggestionSeen: (seen: boolean) => void;
 };
 
 export interface IEventTimelineContext
-    extends EventTimelineState,
+    extends EventTimelinePersistentState,
+        EventTimelineTemporaryState,
         EventTimelineStateSetters {}
 
 export const timeSpanOptions: TimeSpanOption[] = [
@@ -77,7 +86,7 @@ export const timeSpanOptions: TimeSpanOption[] = [
     },
 ];
 
-const defaultState: EventTimelineState = {
+const defaultState: EventTimelinePersistentState = {
     open: false,
     timeSpan: timeSpanOptions[0],
 };
@@ -89,21 +98,35 @@ interface IEventTimelineProviderProps {
 export const EventTimelineProvider = ({
     children,
 }: IEventTimelineProviderProps) => {
-    const [state, setState] = useLocalStorageState<EventTimelineState>(
-        'event-timeline:v1',
-        defaultState,
-    );
+    const [state, setState] =
+        useLocalStorageState<EventTimelinePersistentState>(
+            'event-timeline:v1',
+            defaultState,
+        );
+    const [highlighted, setHighlighted] = useState(false);
 
-    const setField = <K extends keyof EventTimelineState>(
+    const setField = <K extends keyof EventTimelinePersistentState>(
         key: K,
-        value: EventTimelineState[K],
+        value: EventTimelinePersistentState[K],
     ) => {
         setState((prevState) => ({ ...prevState, [key]: value }));
     };
 
+    const setOpen = (
+        open: boolean,
+        { highlight = false }: OpenOptions = {},
+    ) => {
+        setField('open', open);
+        setHighlighted(highlight);
+        if (highlight) {
+            setTimeout(() => setHighlighted(false), 2000);
+        }
+    };
+
     const contextValue: IEventTimelineContext = {
         ...state,
-        setOpen: (open: boolean) => setField('open', open),
+        highlighted,
+        setOpen,
         setTimeSpan: (timeSpan: TimeSpanOption) =>
             setField('timeSpan', timeSpan),
         setEnvironment: (environment: IEnvironment) =>

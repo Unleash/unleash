@@ -314,7 +314,7 @@ You can view Event logs to monitor the changes to flag strategies and statuses, 
 -   How the gradual rollout strategy was configured
 -   When and how the variants were created and configured
 
-![Event logs in Unleash track every single change made to flags, similar to Git commit history.](./events#event-logs.png)
+![Event logs in Unleash track every single change made to flags, similar to Git commit history.](./event-logs.png)
 
 You can also retrieve event logs by using an API command, like below:
 

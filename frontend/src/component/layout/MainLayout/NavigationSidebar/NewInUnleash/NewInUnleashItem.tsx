@@ -36,7 +36,7 @@ interface INewInUnleashItemProps {
     onDismiss: () => void;
     label: string;
     longDescription: ReactNode;
-    link: string;
+    onCheckItOut: () => void;
     docsLink: string;
     preview?: ReactNode;
     summary: string;
@@ -62,7 +62,7 @@ export const NewInUnleashItem = ({
     onDismiss,
     label,
     longDescription,
-    link,
+    onCheckItOut,
     docsLink,
     preview,
     summary,
@@ -87,7 +87,7 @@ export const NewInUnleashItem = ({
                 onClose={handleTooltipClose}
                 title={label}
                 longDescription={longDescription}
-                link={link}
+                onCheckItOut={onCheckItOut}
                 docsLink={docsLink}
                 preview={preview}
             >

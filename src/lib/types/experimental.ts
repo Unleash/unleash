@@ -60,7 +60,8 @@ export type IFlagKey =
     | 'projectRoleAssignment'
     | 'eventTimeline'
     | 'personalDashboardUI'
-    | 'trackLifecycleMetrics';
+    | 'trackLifecycleMetrics'
+    | 'purchaseAdditionalEnvironments';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -295,6 +296,10 @@ const flags: IFlags = {
     ),
     trackLifecycleMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_TRACK_LIFECYCLE_METRICS,
+        false,
+    ),
+    purchaseAdditionalEnvironments: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PURCHASE_ADDITIONAL_ENVIRONMENTS,
         false,
     ),
 };

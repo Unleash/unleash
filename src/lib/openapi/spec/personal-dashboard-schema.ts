@@ -46,7 +46,7 @@ export const personalDashboardSchema = {
                 'Users with the project owner role in Unleash. Only contains owners of projects that are visible to the user.',
             items: {
                 type: 'object',
-                required: ['ownerType', 'name'],
+                required: ['ownerType', 'name', 'imageUrl'],
                 properties: {
                     ownerType: {
                         type: 'string',

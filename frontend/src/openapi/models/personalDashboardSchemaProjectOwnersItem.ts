@@ -13,9 +13,8 @@ export type PersonalDashboardSchemaProjectOwnersItem = {
     email?: string | null;
     /**
      * The URL of the user's profile image.
-     * @nullable
      */
-    imageUrl?: string | null;
+    imageUrl: string;
     /** The name displayed for the user. Can be the user's name, username, or email, depending on what they have provided. */
     name: string;
     /** The type of the owner; will always be `user`. */

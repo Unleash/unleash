@@ -88,7 +88,7 @@ const ProjectHealthMessage: FC<{
     const improveMessage =
         'Remember to archive your stale feature flags to keep the project health growing.';
     const keepDoingMessage =
-        'This indicates that you are doing a good job of arching your feature flags.';
+        'This indicates that you are doing a good job of archiving your feature flags.';
 
     if (trend === 'improved') {
         return (

@@ -60,7 +60,7 @@ export const FlagGrid = styled(ContentGrid)(
 );
 
 export const GridItem = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'gridArea',
+    shouldForwardProp: (prop) => !['gridArea', 'sx'].includes(prop.toString()),
 })<{ gridArea: string }>(({ theme, gridArea }) => ({
     padding: theme.spacing(2, 4),
     gridArea,

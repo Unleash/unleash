@@ -1,12 +1,11 @@
 import type { SWRConfiguration } from 'swr';
-import { useCallback, useContext } from 'react';
+import { useCallback } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useClearSWRCache } from 'hooks/useClearSWRCache';
 import type { ISignalQuerySignal } from 'interfaces/signal';
 import useUiConfig from '../useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
-import AccessContext from 'contexts/AccessContext';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
 type SignalQueryParams = {
@@ -57,7 +56,6 @@ const createSignalQuery = () => {
         options: SWRConfiguration = {},
         cachePrefix: string = '',
     ): UseSignalsOutput => {
-        const { isAdmin } = useContext(AccessContext);
         const { isEnterprise } = useUiConfig();
         const signalsEnabled = useUiFlag('signals');
 
@@ -67,7 +65,7 @@ const createSignalQuery = () => {
 
         const { data, error, mutate, isLoading } =
             useConditionalSWR<SignalQueryResponse>(
-                isEnterprise() && isAdmin && signalsEnabled,
+                isEnterprise() && signalsEnabled,
                 fallbackData,
                 swrKey,
                 fetcher,

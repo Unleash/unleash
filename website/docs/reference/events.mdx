@@ -45,9 +45,9 @@ See the [feature-created event type](#feature-created) for an example event.
 
 :::
 
-Event timeline highlights recent events across all your projects in one unified timeline. You can access the event timeline from the top menu in the Admin UI.
+Event Timeline highlights recent events across all your projects in one unified timeline. You can access the event timeline from the top menu in the Admin UI.
 
-![A gradual rollout form can allow you to customize your flag strategy.](/img/event-timeline.png)
+![Event timeline in Unleash Admin UI](/img/event-timeline.png)
 
 The timeline shows key events and signals for up to 48 hours per environment and is designed to help you get an overview of changes and quickly identify and debug any issues.
 
@@ -88,6 +88,7 @@ Generated when you create a feature flag. The `data` property contains the detai
   "label": "Flag created",
   "summary": "**user@getunleash.io** created test-flag in ... "
 }
+```
 
 #### `feature-deleted`
 
@@ -154,7 +155,7 @@ Generated when you add a tag to a feature flag. The `data` property contains the
     {
       "type": "simple",
       "value": "tag2"
-    },
+    }
   ],
   "featureName": "test-flag",
   "project": "test-project",
@@ -289,7 +290,7 @@ Generated when Unleash marks a feature flag as potentially stale due to exceedin
 
 :::caution Deprecated functionality
 
-Deprecated in Unleash 4.3. Use more granular the events, such as `feature-strategy-update`, instead.
+Deprecated in Unleash 4.3. Use more granular events, such as `feature-strategy-update`, instead.
 
 :::
 
@@ -572,7 +573,7 @@ Generated when you create a new tag. The `data` property contains the tag that w
 ```json title="example event: tag-created"
 {
   "id": 959,
-  "type": "feature-tagged",
+  "type": "tag-created",
   "createdBy": "user@company.com",
   "createdAt": "2022-06-03T10:13:39.401Z",
   "data": {
@@ -935,7 +936,7 @@ Generated when you import an environment (custom or otherwise) as part of an imp
 
 Generated when you delete existing environments as part of an import job. The `data.name` property will always be `"all-environments"`.
 
-```json title="example event: drop-environments"
+```json
 {
   "id": 21,
   "type": "drop-environments",

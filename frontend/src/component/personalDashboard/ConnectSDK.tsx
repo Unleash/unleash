@@ -52,7 +52,7 @@ export const CreateFlag: FC<{ project: string }> = ({ project }) => {
                 Create a feature flag
             </TitleContainer>
             <div>
-                <p>The project currently holds no feature toggles.</p>
+                <p>The project currently holds no feature flags.</p>
                 <p>Create a feature flag to get started.</p>
             </div>
             <div>
@@ -99,8 +99,8 @@ export const ConnectSDK: FC<{ project: string }> = ({ project }) => {
             <div>
                 <p>Your project is not yet connected to any SDK.</p>
                 <p>
-                    In order to start using your feature flag connect an SDK to
-                    the project.
+                    To start using your feature flag, connect an SDK to the
+                    project.
                 </p>
             </div>
             <div>

@@ -138,7 +138,7 @@ export const personalDashboardProjectDetailsSchema = {
                     },
                     type: {
                         type: 'string',
-                        enum: ['custom', 'project', 'root', 'custom-root'],
+                        enum: ['custom', 'project'],
                         example: 'project',
                         description: 'The type of the role',
                     },

@@ -53,7 +53,7 @@ export const CreateFlag: FC<{ project: string }> = ({ project }) => {
             </TitleContainer>
             <div>
                 <p>The project currently holds no feature flags.</p>
-                <p>Create a feature flag to get started.</p>
+                <p>Create one to get started.</p>
             </div>
             <div>
                 <Button href={`projects/${project}`} variant='contained'>

@@ -82,7 +82,17 @@ export class OnboardingReadModel implements IOnboardingReadModel {
 
     async getOnboardingStatusForProject(
         projectId: string,
-    ): Promise<OnboardingStatus> {
+    ): Promise<OnboardingStatus | null> {
+        const projectExistsResult = await this.db.raw(
+            `SELECT EXISTS(SELECT 1 FROM projects WHERE id = ?) AS projectExists`,
+            [projectId],
+        );
+        const { projectExists } = projectExistsResult.rows[0];
+
+        if (!projectExists) {
+            return null;
+        }
+
         const feature = await this.db('features')
             .select('name')
             .where('project', projectId)

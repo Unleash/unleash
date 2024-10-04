@@ -38,7 +38,6 @@ The following is an example event for [feature-strategy-update](#feature-strateg
 
 ```json
 {
-{
   "id": 27332,
   "type": "feature-created",
   "createdBy": "user@getunleash.io",
@@ -88,140 +87,23 @@ Events related to feature flags and their life cycle.
 
 #### `feature-created`
 
-Generated when you create a feature flag. The `data` property contains the details for the new feature.
-
-```json title="example event: feature-created"
-{
-  "id": 899,
-  "type": "feature-created",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-05-31T13:32:20.560Z",
-  "data": {
-    "name": "new-feature",
-    "description": "Flag description",
-    "type": "release",
-    "project": "my-project",
-    "stale": false,
-    "variants": [],
-    "createdAt": "2022-05-31T13:32:20.547Z",
-    "lastSeenAt": null,
-    "impressionData": true
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-project",
-  "environment": null
-}
-```
+Generated when you create a feature flag. The `data` property contains the details for the new feature flag.
 
 #### `feature-deleted`
 
-Generated when you delete a feature flag. The `preData` property contains the deleted flag data.
-
-```json title="example event: feature-deleted"
-{
-  "id": 903,
-  "type": "feature-deleted",
-  "createdBy": "admin-account",
-  "createdAt": "2022-05-31T14:06:14.574Z",
-  "data": null,
-  "preData": {
-    "name": "new-feature",
-    "type": "experiment",
-    "stale": false,
-    "project": "my-project",
-    "variants": [],
-    "createdAt": "2022-05-31T13:32:20.547Z",
-    "lastSeenAt": null,
-    "description": "Flag description",
-    "impressionData": true
-  },
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-project",
-  "environment": null
-}
-```
+Generated when you delete a feature flag. The `preData` property contains the deleted feature flag data.
 
 #### `feature-archived`
 
-Generated when you archive a feature flag.
-
-```json title="example event: feature-archived"
-{
-  "id": 902,
-  "type": "feature-archived",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-05-31T14:04:38.661Z",
-  "data": null,
-  "preData": null,
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-project",
-  "environment": null
-}
-```
+Generated when you archive a feature flag. `preData` and `data` are null.
 
 #### `feature-revived`
 
-Generated when you revive an archived feature flag.
-
-```json title="example-event: feature-revived"
-{
-  "id": 914,
-  "type": "feature-revived",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-01T09:57:10.719Z",
-  "data": null,
-  "preData": null,
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-other-project",
-  "environment": null
-}
-```
+Generated when you revive an archived feature flag. `preData` and `data` are null.
 
 #### `feature-metadata-updated`
 
 Generated when a feature flag's metadata, such as description, flag type, or impression data settings, are changed. The `data` property contains the new flag data. The `preData` property contains the flag's previous data.
-
-The below example changes the flag's type from _release_ to _experiment_.
-
-```json title="example event: feature-metadata-updated"
-{
-  "id": 901,
-  "type": "feature-metadata-updated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-05-31T13:35:25.244Z",
-  "data": {
-    "name": "new-feature",
-    "description": "Flag description",
-    "type": "experiment",
-    "project": "my-project",
-    "stale": false,
-    "variants": [],
-    "createdAt": "2022-05-31T13:32:20.547Z",
-    "lastSeenAt": null,
-    "impressionData": true
-  },
-  "preData": {
-    "name": "new-feature",
-    "type": "release",
-    "stale": false,
-    "project": "my-project",
-    "variants": [],
-    "createdAt": "2022-05-31T13:32:20.547Z",
-    "lastSeenAt": null,
-    "description": "Flag description",
-    "impressionData": true
-  },
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-project",
-  "environment": null
-}
-```
 
 #### `feature-project-change`
 

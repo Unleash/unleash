@@ -224,7 +224,7 @@ For our Spring Boot app, we can view Event logs to monitor the changes to flag s
 
 ![Event logs in Unleash track every single change made to flags, similar to Git commit history.](/img/spring-boot-events-log.png)
 
-You can also retrieve event log data by using an API command. Read our documentation on [Event logs](/reference/event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
+You can also retrieve event log data by using an API command. Read our documentation on [Event logs](/reference/events#event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
 
 ## Flag Automation & Workflow Integration for Java Apps
 

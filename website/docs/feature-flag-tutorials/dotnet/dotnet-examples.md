@@ -336,7 +336,7 @@ var responseBody = await response.Content.ReadAsStringAsync();
 Console.WriteLine(responseBody);
 ```
 
-Read our documentation on [Event logs](/reference/event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
+Read our documentation on [Event logs](/reference/events#event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
 
 ## Flag Automation and Workflow Integration for .NET Apps
 

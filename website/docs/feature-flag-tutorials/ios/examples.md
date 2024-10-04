@@ -290,7 +290,7 @@ curl -L -X GET '<your-unleash-url>/api/admin/events/:featureName' \
 -H 'Authorization: <API_KEY_VALUE>'
 ```
 
-Read our documentation on [Event logs](/reference/event-log) and [APIs](/reference/api/unleash/events) to learn more.
+Read our documentation on [Event logs](/reference/events#event-log) and [APIs](/reference/api/unleash/events) to learn more.
 
 ## Change Management & Feature Flag Approvals in iOS
 

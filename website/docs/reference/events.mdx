@@ -256,33 +256,9 @@ Generated when you enable an environment for a feature flag. The `environment` p
 
 Generated when you disable an environment for a feature. The `environment` property contains the name of the environment. `preData` and `data` are null.
 
-```json title="example event: feature-environment-disabled"
-{
-  "id": 931,
-  "type": "feature-environment-disabled",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T12:09:04.469Z",
-  "data": null,
-  "preData": null,
-  "tags": [
-    {
-      "value": "tag",
-      "type": "simple"
-    },
-    {
-      "value": "tog",
-      "type": "simple"
-    }
-  ],
-  "featureName": "new-feature",
-  "project": "my-other-project",
-  "environment": "development"
-}
-```
-
 #### `drop-features`
 
-Generated when you delete existing features as part of an import job. The `data.name` property will always be `"all-features"`.
+Generated when you delete existing features as part of an import job. The `data.name` property is `"all-features"`.
 
 ```json title="example event: drop-features"
 {
@@ -303,79 +279,19 @@ Generated when you delete existing features as part of an import job. The `data.
 
 #### `drop-feature-tags`
 
-Generated when you drop all existing tags as part of a configuration import. The `data.name` property will always be `"all-feature-tags"`.
-
-```json title="example event: drop-feature-tags"
-{
-  "id": 36,
-  "type": "drop-feature-tags",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.596Z",
-  "data": {
-    "name": "all-feature-tags"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you drop all existing tags as part of a configuration import. The `data.name` is `"all-feature-tags"`. See [drop-features](#drop-features) for an example.
 
 #### `feature-potentially-stale-on`
 
-Generated when Unleash marks a feature flag as potentially stale. Feature flags are marked as potentially stale when they exceed the expected lifetime of their [feature flag type](/reference/feature-toggle-types.md).
-
-``` json title="Example event when my-feature is marked as potentially stale"
-{
-  "id": 561,
-  "type": "feature-potentially-stale-on",
-  "createdBy": "unleash-system",
-  "createdAt": "2023-07-19T09:12:31.313Z",
-  "data": null,
-  "preData": null,
-  "tags": [],
-  "featureName": "helix",
-  "project": "viridian-forest",
-  "environment": null
-}
-```
+Generated when Unleash marks a feature flag as potentially stale due to exceeding the expected lifetime of its [feature flag type](/reference/feature-toggle-types). `preData` and `data` are null.
 
 #### `feature-updated`
 
-:::caution Deprecation notice
+:::caution Deprecated functionality
 
-This event type was replaced by more granular event types in Unleash 4.3. From Unleash 4.3 onwards, you'll need to use the events listed later in this section instead.
+Deprecated in Unleash 4.3. Use more granular the events, such as `feature-strategy-update`, instead.
 
 :::
-
-Generated when a feature gets updated in some way. The `data` property contains the new state of the flag. This is a legacy event, so it does not populate `preData` property.
-
-```json title="example event: feature-updated"
-{
-  "id": 899,
-  "type": "feature-updated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-05-31T13:32:20.560Z",
-  "data": {
-    "name": "new-feature",
-    "description": "Flag description",
-    "type": "release",
-    "project": "my-project",
-    "stale": false,
-    "variants": [],
-    "createdAt": "2022-05-31T13:32:20.547Z",
-    "lastSeenAt": null,
-    "impressionData": true
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-project",
-  "environment": null
-}
-```
-
 
 ### Strategy events
 
@@ -383,7 +299,7 @@ Generated when a feature gets updated in some way. The `data` property contains 
 
 Generated when you create a strategy. The `data` property contains the strategy configuration.
 
-```json title="example event: strategy-created"
+```json
 {
   "id": 932,
   "type": "strategy-created",
@@ -406,132 +322,28 @@ Generated when you create a strategy. The `data` property contains the strategy 
 
 #### `strategy-updated`
 
-Generated when you change a strategy's configuration. The `data` property contains the new strategy configuration.
-
-```json title="example event: strategy-updated"
-{
-  "id": 933,
-  "type": "strategy-updated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T12:21:23.741Z",
-  "data": {
-    "name": "new-strategy",
-    "description": "this strategy does something else!",
-    "parameters": [],
-    "editable": true,
-    "deprecated": false
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you change a strategy's configuration. The `data` property contains the new strategy configuration. See [startegy-created](#strategy-created) for an example.
 
 #### `strategy-deleted`
 
-Generated when you delete a strategy. The `data` property contains the name of the deleted strategy.
-
-```json title="example event: strategy-deleted"
-{
-  "id": 936,
-  "type": "strategy-deleted",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T12:22:01.302Z",
-  "data": {
-    "name": "new-strategy"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you delete a strategy. The `data` property contains the name of the deleted strategy, `preData` is null.
 
 #### `strategy-deprecated`
 
-Generated when you deprecate a strategy. The `data` property contains the name of the deprecated strategy.
-
-```json title="example event: strategy-deprecated"
-{
-  "id": 934,
-  "type": "strategy-deprecated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T12:21:45.041Z",
-  "data": {
-    "name": "new-strategy"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you deprecate a strategy. The `data` property contains the name of the deprecated strategy, `preData` is null.
 
 #### `strategy-reactivated`
 
-Generated when you bring reactivate a deprecated strategy. The `data` property contains the name of the reactivated strategy.
-
-```json title="example event: strategy-reactivated"
-{
-  "id": 935,
-  "type": "strategy-reactivated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T12:21:49.010Z",
-  "data": {
-    "name": "new-strategy"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you bring reactivate a deprecated strategy. The `data` property contains the name of the reactivated strategy, `preData` is null.
 
 #### `strategy-import`
 
-Generated when you import a strategy as part of an import job. The `data` property contains the strategy's configuration.
+Generated when you import a strategy as part of an import job. The `data` property contains the strategy's configuration, `preData` is null. See [strategy-created](#strategy-created) for an example.
 
-```json title="example event: strategy-import"
-{
-  "id": 29,
-  "type": "strategy-import",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.583Z",
-  "data": {
-    "name": "gradualRolloutSessionId",
-    "description": "Gradually activate feature flag. Stickiness based on session id.",
-    "parameters": [
-      {
-        "name": "percentage",
-        "type": "percentage",
-        "description": "",
-        "required": false
-      },
-      {
-        "name": "groupId",
-        "type": "string",
-        "description": "Used to define a activation groups, which allows you to correlate across feature flags.",
-        "required": true
-      }
-    ],
-    "deprecated": true
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
 
 #### `drop-strategies`
 
-Generated when you delete existing strategies as part of an important job. The `data.name` property will always be `"all-strategies"`.
+Generated when you delete existing strategies as part of an import job. The `data.name` property will is `"all-strategies"`.
 
 ```json title="example event: drop-strategies"
 {

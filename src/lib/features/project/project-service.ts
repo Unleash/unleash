@@ -1546,7 +1546,9 @@ export default class ProjectService {
             updatedAt: project.updatedAt,
             archivedAt: project.archivedAt,
             createdAt: project.createdAt,
-            onboardingStatus,
+            onboardingStatus: onboardingStatus ?? {
+                status: 'onboarding-started',
+            },
             environments,
             featureTypeCounts,
             members,

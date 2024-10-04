@@ -335,6 +335,14 @@ test('should return personal dashboard project details', async () => {
     });
 });
 
+test("should return 404 if the project doesn't exist", async () => {
+    await loginUser('new_user@test.com');
+
+    await app.request
+        .get(`/api/admin/personal-dashboard/${randomId()}`)
+        .expect(404);
+});
+
 test('should return Unleash admins', async () => {
     await loginUser('new_user@test.com');
     const adminRoleId = 1;

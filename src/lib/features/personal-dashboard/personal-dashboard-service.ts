@@ -10,6 +10,7 @@ import type {
 import type { IProjectReadModel } from '../project/project-read-model-type';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type {
+    IProjectStore,
     IAccessStore,
     IAccountStore,
     IEvent,
@@ -21,6 +22,7 @@ import type { FeatureEventFormatter } from '../../addons/feature-event-formatter
 import { generateImageUrl } from '../../util';
 import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
 import type { IRoleWithProject } from '../../types/stores/access-store';
+import { NotFoundError } from '../../error';
 
 export class PersonalDashboardService {
     private personalDashboardReadModel: IPersonalDashboardReadModel;
@@ -41,6 +43,8 @@ export class PersonalDashboardService {
 
     private accessStore: IAccessStore;
 
+    private projectStore: IProjectStore;
+
     constructor(
         personalDashboardReadModel: IPersonalDashboardReadModel,
         projectOwnersReadModel: IProjectOwnersReadModel,
@@ -51,6 +55,7 @@ export class PersonalDashboardService {
         privateProjectChecker: IPrivateProjectChecker,
         accountStore: IAccountStore,
         accessStore: IAccessStore,
+        projectStore: IProjectStore,
     ) {
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectOwnersReadModel = projectOwnersReadModel;
@@ -61,6 +66,7 @@ export class PersonalDashboardService {
         this.privateProjectChecker = privateProjectChecker;
         this.accountStore = accountStore;
         this.accessStore = accessStore;
+        this.projectStore = projectStore;
     }
 
     getPersonalFeatures(userId: number): Promise<PersonalFeature[]> {
@@ -105,6 +111,12 @@ export class PersonalDashboardService {
         userId: number,
         projectId: string,
     ): Promise<PersonalDashboardProjectDetailsSchema> {
+        if (!(await this.projectStore.hasProject(projectId))) {
+            throw new NotFoundError(
+                `No project with id "${projectId}" exists.`,
+            );
+        }
+
         const formatEvents = (recentEvents: IEvent[]) =>
             recentEvents.map((event) => ({
                 summary: this.featureEventFormatter.format(event).text,

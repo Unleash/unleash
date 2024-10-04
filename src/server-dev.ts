@@ -55,6 +55,7 @@ process.nextTick(async () => {
                         onboardingMetrics: true,
                         onboardingUI: true,
                         personalDashboardUI: true,
+                        purchaseAdditionalEnvironments: true,
                     },
                 },
                 authentication: {

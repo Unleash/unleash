@@ -131,6 +131,6 @@ The list of events related to the given toggle.
 
 :::note Content moved
 
-This section has been moved to a dedicated [events document](/reference/event.mdx).
+This section has been moved to a dedicated [events documentation](/reference/events.mdx).
 
 :::

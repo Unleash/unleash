@@ -18,8 +18,6 @@ import { OnboardingReadModel } from '../onboarding/onboarding-read-model';
 import { FakeOnboardingReadModel } from '../onboarding/fake-onboarding-read-model';
 import { AccessStore } from '../../db/access-store';
 import FakeAccessStore from '../../../test/fixtures/fake-access-store';
-import ProjectStore from '../project/project-store';
-import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 
 export const createPersonalDashboardService = (
     db: Db,
@@ -39,12 +37,6 @@ export const createPersonalDashboardService = (
         new PrivateProjectChecker(stores, config),
         new AccountStore(db, config.getLogger),
         new AccessStore(db, config.eventBus, config.getLogger),
-        new ProjectStore(
-            db,
-            config.eventBus,
-            config.getLogger,
-            config.flagResolver,
-        ),
     );
 };
 
@@ -62,6 +54,5 @@ export const createFakePersonalDashboardService = (config: IUnleashConfig) => {
         new FakePrivateProjectChecker(),
         new FakeAccountStore(),
         new FakeAccessStore(),
-        new FakeProjectStore(),
     );
 };

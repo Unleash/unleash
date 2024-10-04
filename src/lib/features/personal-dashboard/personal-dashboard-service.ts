@@ -10,7 +10,6 @@ import type {
 import type { IProjectReadModel } from '../project/project-read-model-type';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type {
-    IProjectStore,
     IAccessStore,
     IAccountStore,
     IEvent,
@@ -43,8 +42,6 @@ export class PersonalDashboardService {
 
     private accessStore: IAccessStore;
 
-    private projectStore: IProjectStore;
-
     constructor(
         personalDashboardReadModel: IPersonalDashboardReadModel,
         projectOwnersReadModel: IProjectOwnersReadModel,
@@ -55,7 +52,6 @@ export class PersonalDashboardService {
         privateProjectChecker: IPrivateProjectChecker,
         accountStore: IAccountStore,
         accessStore: IAccessStore,
-        projectStore: IProjectStore,
     ) {
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectOwnersReadModel = projectOwnersReadModel;
@@ -66,7 +62,6 @@ export class PersonalDashboardService {
         this.privateProjectChecker = privateProjectChecker;
         this.accountStore = accountStore;
         this.accessStore = accessStore;
-        this.projectStore = projectStore;
     }
 
     getPersonalFeatures(userId: number): Promise<PersonalFeature[]> {
@@ -111,7 +106,12 @@ export class PersonalDashboardService {
         userId: number,
         projectId: string,
     ): Promise<PersonalDashboardProjectDetailsSchema> {
-        if (!(await this.projectStore.hasProject(projectId))) {
+        const onboardingStatus =
+            await this.onboardingReadModel.getOnboardingStatusForProject(
+                projectId,
+            );
+
+        if (!onboardingStatus) {
             throw new NotFoundError(
                 `No project with id "${projectId}" exists.`,
             );
@@ -134,29 +134,22 @@ export class PersonalDashboardService {
                     type: role.type as PersonalDashboardProjectDetailsSchema['roles'][number]['type'],
                 }));
 
-        const [latestEvents, onboardingStatus, owners, roles, healthScores] =
-            await Promise.all([
-                this.eventStore
-                    .searchEvents({ limit: 4, offset: 0 }, [
-                        {
-                            field: 'project',
-                            operator: 'IS',
-                            values: [projectId],
-                        },
-                    ])
-                    .then(formatEvents),
-                this.onboardingReadModel.getOnboardingStatusForProject(
-                    projectId,
-                ),
-                this.projectOwnersReadModel.getProjectOwners(projectId),
-                this.accessStore
-                    .getAllProjectRolesForUser(userId, projectId)
-                    .then(filterRoles),
-                this.personalDashboardReadModel.getLatestHealthScores(
-                    projectId,
-                    8,
-                ),
-            ]);
+        const [latestEvents, owners, roles, healthScores] = await Promise.all([
+            this.eventStore
+                .searchEvents({ limit: 4, offset: 0 }, [
+                    {
+                        field: 'project',
+                        operator: 'IS',
+                        values: [projectId],
+                    },
+                ])
+                .then(formatEvents),
+            this.projectOwnersReadModel.getProjectOwners(projectId),
+            this.accessStore
+                .getAllProjectRolesForUser(userId, projectId)
+                .then(filterRoles),
+            this.personalDashboardReadModel.getLatestHealthScores(projectId, 8),
+        ]);
 
         let avgHealthCurrentWindow: number | null = null;
         let avgHealthPastWindow: number | null = null;

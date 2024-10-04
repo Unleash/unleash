@@ -10,9 +10,9 @@ npm install @unleash/proxy-client-vue
 
     const config = {
         url: '<YOUR_API_URL>',
-        clientKey: '<YOUR_API_TOKEN>',
+        clientKey: '<YOUR_API_TOKEN>', // in production use environment variable
         appName: 'unleash-onboarding-vue',
-        metricsInterval: 1,
+        metricsInterval: 1, // in production remove this or increase to >=15
     }
 </script>
 

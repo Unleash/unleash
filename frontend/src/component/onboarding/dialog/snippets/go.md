@@ -18,8 +18,8 @@ func init() {
         unleash.WithListener(&unleash.DebugListener{}),
         unleash.WithAppName("unleash-onboarding-golang"),
         unleash.WithUrl("<YOUR_API_URL>"),
-        unleash.WithCustomHeaders(http.Header{"Authorization": {"<YOUR_API_TOKEN>"}}),
-        unleash.WithMetricsInterval(1*time.Second),
+        unleash.WithCustomHeaders(http.Header{"Authorization": {"<YOUR_API_TOKEN>"}}), // in production use environment variable
+        unleash.WithMetricsInterval(1*time.Second), // in production remove this or increase to >=15s
     )
 }
 

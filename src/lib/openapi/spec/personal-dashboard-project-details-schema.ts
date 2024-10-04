@@ -32,7 +32,7 @@ export const personalDashboardProjectDetailsSchema = {
             properties: {
                 avgHealthCurrentWindow: {
                     type: 'integer',
-                    min: 0,
+                    minimum: 0,
                     description:
                         "The project's average health score over the last 4 weeks",
                     example: 80,
@@ -40,7 +40,7 @@ export const personalDashboardProjectDetailsSchema = {
                 },
                 avgHealthPastWindow: {
                     type: 'integer',
-                    min: 0,
+                    minimum: 0,
                     description:
                         "The project's average health score over the previous 4-week window",
                     example: 70,
@@ -48,34 +48,34 @@ export const personalDashboardProjectDetailsSchema = {
                 },
                 totalFlags: {
                     type: 'integer',
-                    min: 0,
+                    minimum: 0,
                     example: 100,
                     description: 'The current number of non-archived flags',
                 },
                 activeFlags: {
                     type: 'integer',
-                    min: 0,
+                    minimum: 0,
                     example: 98,
                     description:
                         'The number of active flags that are not stale or potentially stale',
                 },
                 staleFlags: {
                     type: 'integer',
-                    min: 0,
+                    minimum: 0,
                     example: 0,
                     description:
                         'The current number of flags that have been manually marked as stale',
                 },
                 potentiallyStaleFlags: {
                     type: 'integer',
-                    min: 0,
+                    minimum: 0,
                     example: 2,
                     description:
                         'The number of potentially stale flags as calculated by Unleash',
                 },
                 health: {
                     type: 'integer',
-                    min: 0,
+                    minimum: 0,
                     description: "The project's current health score",
                     example: 80,
                 },

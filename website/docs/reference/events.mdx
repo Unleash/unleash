@@ -34,7 +34,32 @@ Each [event type](#event-types) contains different data, but all events follow t
 
 Fields marked with an asterisk (*) are always returned in the event schema. Other fields may be optional or have null values, depending on the event type.
 
-The following is an example event for [feature-strategy-update](#feature-strategy-update):
+See the [feature-created event type](#feature-created) for an example event.
+
+
+## Event Timeline
+
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/plans/enterprise) | **Version**: `6.3+` in BETA
+
+:::
+
+Event timeline highlights recent events across all your projects in one unified timeline. You can access the event timeline from the top menu in the Admin UI.
+
+![A gradual rollout form can allow you to customize your flag strategy.](/img/event-timeline.png)
+
+The timeline shows key events and signals for up to 48 hours per environment and is designed to help you get an overview of changes and quickly identify and debug any issues.
+
+## Event types
+
+### Feature flag events
+
+Events related to feature flags and their life cycle.
+
+#### `feature-created`
+
+Generated when you create a feature flag. The `data` property contains the details for the new feature flag.
 
 ```json
 {
@@ -63,31 +88,6 @@ The following is an example event for [feature-strategy-update](#feature-strateg
   "label": "Flag created",
   "summary": "**user@getunleash.io** created test-flag in ... "
 }
-```
-
-## Event Timeline
-
-:::note Availability
-
-**Plan**: [Enterprise](https://www.getunleash.io/plans/enterprise) | **Version**: `6.3+` in BETA
-
-:::
-
-Event timeline highlights recent events across all your projects in one unified timeline. You can access the event timeline from the top menu in the Admin UI.
-
-![A gradual rollout form can allow you to customize your flag strategy.](/img/event-timeline.png)
-
-The timeline shows key events and signals for up to 48 hours per environment and is designed to help you get an overview of changes and quickly identify and debug any issues.
-
-## Event types
-
-### Feature flag events
-
-Events related to feature flags and their life cycle.
-
-#### `feature-created`
-
-Generated when you create a feature flag. The `data` property contains the details for the new feature flag.
 
 #### `feature-deleted`
 
@@ -109,107 +109,76 @@ Generated when a feature flag's metadata, such as description, flag type, or imp
 
 Generated when you move a feature flag from one project to another. The `data` property contains the names of the old and the new project.
 
-```json title="example event: feature-project-change"
+```json
 {
-  "id": 11,
-  "type": "feature-project-change",
-  "createdBy": "admin",
-  "createdAt": "2022-06-03T11:09:41.444Z",
+  "id": 27332,
+  "type": "feature-created",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
-    "newProject": "default",
-    "oldProject": "2"
+    "newProject": "test-project",
+    "oldProject": "old-test-project"
   },
   "preData": null,
   "tags": [],
-  "featureName": "feature",
-  "project": "default",
-  "environment": null
+  "featureName": "test-flag",
+  "project": "test-project",
+  "environment": null,
+  "label": "Flag moved to a new project",
+  "summary": "**user@getunleash.io** moved test-flag from ... "
 }
 ```
 
 #### `feature-import`
 
-Generated when you import a feature flag as part of an import process. The `data` property contains the feature data.
-
-```json title="example event: feature-import"
-{
-  "id": 26,
-  "type": "feature-import",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.570Z",
-  "data": {
-    "name": "feature",
-    "description": "",
-    "type": "release",
-    "project": "default",
-    "stale": false,
-    "variants": [],
-    "impressionData": false,
-    "enabled": false,
-    "archived": false
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you import a feature flag as part of an import process. The `data` property contains the feature flag data. See [feature-created](#feature-created) for an example.
 
 #### `feature-tagged`
 
 Generated when you add a tag to a feature flag. The `data` property contains the new tag.
 
-```json title="example event: feature-tagged"
+```json
 {
-  "id": 897,
+  "id": 27333,
   "type": "feature-tagged",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-05-31T13:06:31.047Z",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
     "type": "simple",
     "value": "tag2"
   },
   "preData": null,
-  "tags": [],
-  "featureName": "example-feature-name",
-  "project": null,
-  "environment": null
+  "tags": [
+    {
+      "type": "simple",
+      "value": "tag2"
+    },
+  ],
+  "featureName": "test-flag",
+  "project": "test-project",
+  "environment": null,
+  "label": "Flag created",
+  "summary": "**user@getunleash.io** tagged test-flag with ... "
 }
 ```
 
 #### `feature-untagged`
 
-Generated when you remove a tag from a feature flag. The `data` property contains the tag that was removed.
-
-```json title="example event: feature-untagged"
-{
-  "id": 893,
-  "type": "feature-untagged",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-05-31T12:58:10.241Z",
-  "data": {
-    "type": "simple",
-    "value": "thisisatag"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": "example-feature-name",
-  "project": null,
-  "environment": null
-}
-```
+Generated when you remove a tag from a feature flag. The `data` property contains the tag that was removed. See [feature-tagged](#feature-tagged) for an example.
 
 #### `feature-tag-import`
 
 Generated when you import a tagged feature flag as part of an import job. The `data` property contains the name of the feature and the tag.
 
-```json title="example event: feature-tag-import"
+```json
 {
-  "id": 43,
+  "id": 27334,
   "type": "feature-tag-import",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.606Z",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
     "featureName": "new-feature",
     "tag": {
@@ -221,7 +190,9 @@ Generated when you import a tagged feature flag as part of an import job. The `d
   "tags": [],
   "featureName": null,
   "project": null,
-  "environment": null
+  "environment": null,
+  "label": null,
+  "summary": null
 }
 ```
 
@@ -231,25 +202,32 @@ Generated when you add a strategy to a feature flag. The `data` property contain
 
 ```json title="example event: feature-strategy-add"
 {
-  "id": 919,
+  "id": 27335,
   "type": "feature-strategy-add",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-01T10:03:08.290Z",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
     "id": "3f4bf713-696c-43a4-8ce7-d6c607108858",
     "name": "flexibleRollout",
-    "constraints": [],
+    "title": null,
+    "disabled": false,
     "parameters": {
       "groupId": "new-feature",
       "rollout": "67",
       "stickiness": "default"
-    }
+    },
+    "variants": [],
+    "sortOrder": 0,
+    "segments": []
   },
   "preData": null,
   "tags": [],
   "featureName": "new-feature",
   "project": "my-other-project",
-  "environment": "default"
+  "environment": "default",
+  "label": "Flag strategy added",
+  "summary": "**user@getunleash.io** added strategy"
 }
 ```
 
@@ -257,132 +235,26 @@ Generated when you add a strategy to a feature flag. The `data` property contain
 
 Generated when you update a feature flag strategy. The `data` property contains the new strategy configuration. The `preData` property contains the previous strategy configuration.
 
-```json title="example event: feature-strategy-update"
-{
-  "id": 920,
-  "type": "feature-strategy-update",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-01T10:03:11.549Z",
-  "data": {
-    "id": "3f4bf713-696c-43a4-8ce7-d6c607108858",
-    "name": "flexibleRollout",
-    "constraints": [],
-    "parameters": {
-      "groupId": "new-feature",
-      "rollout": "32",
-      "stickiness": "default"
-    }
-  },
-  "preData": {
-    "id": "3f4bf713-696c-43a4-8ce7-d6c607108858",
-    "name": "flexibleRollout",
-    "parameters": {
-      "groupId": "new-feature",
-      "rollout": "67",
-      "stickiness": "default"
-    },
-    "constraints": []
-  },
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-other-project",
-  "environment": "default"
-}
-```
-
 #### `feature-strategy-remove`
 
 Generated when you remove a strategy from a feature flag. The `preData` contains the configuration of the strategy that was removed.
 
-```json title="example event: feature-strategy-remove"
-{
-  "id": 918,
-  "type": "feature-strategy-remove",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-01T10:03:00.229Z",
-  "data": null,
-  "preData": {
-    "id": "9591090e-acb0-4088-8958-21faaeb7147d",
-    "name": "default",
-    "parameters": {},
-    "constraints": []
-  },
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-other-project",
-  "environment": "default"
-}
-```
 
 #### `feature-stale-on`
 
-Generated when you mark a feature flag as stale.
-
-```json title="example event: feature-stale-on"
-{
-  "id": 926,
-  "type": "feature-stale-on",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-01T10:10:46.737Z",
-  "data": null,
-  "preData": null,
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-other-project",
-  "environment": null
-}
-```
+Generated when you mark a feature flag as stale. `preData` and `data` are null.
 
 #### `feature-stale-off`
 
-Generated when you mark a stale feature flag as no longer stale.
-
-```json title="example event: feature-stale-off"
-{
-  "id": 928,
-  "type": "feature-stale-off",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-01T10:10:52.790Z",
-  "data": null,
-  "preData": null,
-  "tags": [],
-  "featureName": "new-feature",
-  "project": "my-other-project",
-  "environment": null
-}
-```
+Generated when you mark a stale feature flag as no longer stale. `preData` and `data` are null.
 
 #### `feature-environment-enabled`
 
-Generated when you enable an environment for a feature flag. The `environment` property contains the name of the environment.
-
-```json title="example event: feature-environment-enabled"
-{
-  "id": 930,
-  "type": "feature-environment-enabled",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T12:09:03.045Z",
-  "data": null,
-  "preData": null,
-  "tags": [
-    {
-      "value": "tag",
-      "type": "simple"
-    },
-    {
-      "value": "tog",
-      "type": "simple"
-    }
-  ],
-  "featureName": "new-feature",
-  "project": "my-other-project",
-  "environment": "development"
-}
-```
+Generated when you enable an environment for a feature flag. The `environment` property contains the name of the environment, `preData` and `data` are null.
 
 #### `feature-environment-disabled`
 
-Generated when you disable an environment for a feature. The `environment` property contains the name of the environment.
+Generated when you disable an environment for a feature. The `environment` property contains the name of the environment. `preData` and `data` are null.
 
 ```json title="example event: feature-environment-disabled"
 {

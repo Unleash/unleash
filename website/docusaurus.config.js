@@ -344,11 +344,11 @@ module.exports = {
                     },
                     {
                         from: '/reference/event-log',
-                        to: '/reference/events#event-log',
+                        to: '/reference/events',
                     },
                     {
                         from: '/reference/event-types',
-                        to: '/reference/events#event-types',
+                        to: '/reference/events',
                     },
                     {
                         from: '/advanced/api_access',

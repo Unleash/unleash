@@ -12,7 +12,7 @@ export const personalDashboardSchema = {
             description: 'Users with the admin role in Unleash.',
             items: {
                 type: 'object',
-                required: ['id'],
+                required: ['id', 'imageUrl'],
                 properties: {
                     id: {
                         type: 'integer',

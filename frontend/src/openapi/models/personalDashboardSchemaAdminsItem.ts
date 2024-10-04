@@ -8,7 +8,7 @@ export type PersonalDashboardSchemaAdminsItem = {
     email?: string;
     /** The user ID. */
     id: number;
-    imageUrl?: string;
+    imageUrl: string;
     /** The user's name. */
     name?: string;
     /** The user's username. */

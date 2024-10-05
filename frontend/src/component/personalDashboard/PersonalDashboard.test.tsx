@@ -114,6 +114,40 @@ const setupNewProject = () => {
     });
 };
 
+const setupNoProject = () => {
+    testServerRoute(server, '/api/admin/user', {
+        user: {
+            name: 'Unleash User',
+        },
+    });
+
+    testServerRoute(server, '/api/admin/personal-dashboard', {
+        projects: [],
+        flags: [],
+        roles: [{ name: 'Member' }],
+        projectOwners: [
+            [
+                {
+                    name: 'Some Owner',
+                    ownerType: 'user',
+                    email: 'owner@getunleash.io',
+                    imageUrl:
+                        'https://gravatar.com/avatar/b8e99c1ee6be6823230aacd6f2ca67b67f70863b4439abfcd6ccd434d98e4457?s=42&d=retro&r=g',
+                },
+            ],
+        ],
+        admins: [
+            {
+                id: 0,
+                name: 'Some Admin',
+                email: 'admin@getunleash.io',
+                imageUrl:
+                    'https://gravatar.com/avatar/b8e99c1ee6be6823230aacd6f2ca67b67f70863b4439abfcd6ccd434d98e4457?s=42&d=retro&r=g',
+            },
+        ],
+    });
+};
+
 // @ts-ignore
 HTMLCanvasElement.prototype.getContext = () => {};
 
@@ -169,4 +203,17 @@ test('Render personal dashboard for a new project', async () => {
     );
 
     await screen.findByText('No feature flag metrics data');
+});
+
+test('Render personal dashboard for a user with no projects', async () => {
+    setupNoProject();
+    render(<PersonalDashboard />);
+
+    await screen.findByText('Welcome Unleash User');
+    await screen.findByText(
+        'Here are some tasks we think would be useful in order to get the most out of Unleash',
+    );
+    await screen.findByText('Contact Unleash admin');
+    await screen.findByText('Some Admin');
+    await screen.findByText('Ask a project owner to add you to their project');
 });

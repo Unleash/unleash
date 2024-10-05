@@ -131,6 +131,7 @@ const FeatureOverviewEnvironment = ({
     const featureEnvironment = feature?.environments.find(
         (featureEnvironment) => featureEnvironment.name === env.name,
     );
+    const defaultExpanded = feature?.environments.length === 1;
 
     return (
         <ConditionallyRender
@@ -143,6 +144,7 @@ const FeatureOverviewEnvironment = ({
                         className={`environment-accordion ${
                             env.enabled ? '' : 'accordion-disabled'
                         }`}
+                        defaultExpanded={defaultExpanded}
                     >
                         <StyledAccordionSummary
                             expandIcon={<ExpandMore titleAccess='Toggle' />}

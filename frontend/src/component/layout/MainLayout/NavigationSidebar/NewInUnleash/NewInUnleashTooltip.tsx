@@ -69,7 +69,10 @@ const LongDescription = styled(Box)(({ theme }) => ({
     },
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
+const StyledTitle = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    alignItems: 'center',
     padding: theme.spacing(1, 0, 2, 0),
     lineHeight: 1.5,
 }));
@@ -123,11 +126,13 @@ export const NewInUnleashTooltip: FC<{
                         )}
                     </Header>
                     <Body>
-                        <ConditionallyRender
-                            condition={beta}
-                            show={<Badge color='secondary'>Beta</Badge>}
-                        />
-                        <Title>{title}</Title>
+                        <StyledTitle>
+                            <Typography>{title}</Typography>
+                            <ConditionallyRender
+                                condition={beta}
+                                show={<Badge color='secondary'>Beta</Badge>}
+                            />
+                        </StyledTitle>
                         <LongDescription>{longDescription}</LongDescription>
                         <ReadMore>
                             <StyledLink

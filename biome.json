@@ -94,6 +94,11 @@
       "indentWidth": 4
     }
   },
+  "css": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
   "json": {
     "formatter": {
       "indentWidth": 2

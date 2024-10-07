@@ -38,7 +38,7 @@
     display: none;
 }
 
-.navbar button[class*="toggleButton_"]:hover {
+.navbar button[class*='toggleButton_']:hover {
     background: var(--unleash-navbar-active-background-color);
 }
 
@@ -81,7 +81,7 @@ article video {
     margin-inline: auto;
 }
 
-html[data-theme="light"] {
+html[data-theme='light'] {
     --ifm-color-primary-lightest: #8783d2;
     --ifm-color-primary-lighter: #7b76ce;
     --ifm-color-primary-light: #6f6ac9;
@@ -100,7 +100,7 @@ html[data-theme="light"] {
     --ifm-background-color: #fff;
 }
 
-html[data-theme="dark"] {
+html[data-theme='dark'] {
     --ifm-color-primary-lightest: #d1d1ff;
     --ifm-color-primary-lighter: #c9c9ff;
     --ifm-color-primary-light: #c2c0ff;
@@ -123,8 +123,8 @@ html[data-theme="dark"] {
     --docsearch-primary-color: var(--ifm-color-primary-darkest);
 }
 
-div[class^="announcementBar_"],
-div[class^="announcementBar_"] svg {
+div[class^='announcementBar_'],
+div[class^='announcementBar_'] svg {
     background-color: var(--ifm-color-primary);
     color: var(--ifm-color-primary-contrast-background);
     font-size: larger;
@@ -150,8 +150,8 @@ main img {
 main
     p
     > img:not(
-        [src^="https://img.shields.io/" i],
-        [src*="badge.svg?branch=" i]
+        [src^='https://img.shields.io/' i],
+        [src*='badge.svg?branch=' i]
     ) {
     /* give inline images a border */
     border: var(--ifm-global-border-width) solid var(--unleash-color-gray);
@@ -160,8 +160,8 @@ main
 main
     :is(p, figure)
     > img:not(
-        [src^="https://img.shields.io/" i],
-        [src*="badge.svg?branch=" i]
+        [src^='https://img.shields.io/' i],
+        [src*='badge.svg?branch=' i]
     ) {
     /* round corners to match the rest of the page */
     border-radius: var(--ifm-global-radius);
@@ -178,7 +178,7 @@ main
     margin-block: calc(1.5 * var(--ifm-spacing-vertical));
 }
 
-[class^="docTitle"] {
+[class^='docTitle'] {
     font-size: 2.5rem !important;
 }
 
@@ -198,7 +198,7 @@ main
 li.theme-doc-sidebar-item-category-level-1 > div::before {
     width: 0.3em;
     height: 100%;
-    content: " ";
+    content: ' ';
     background-color: var(--unleash-color-purple);
     border-radius: 2px;
     position: absolute;
@@ -216,7 +216,7 @@ li.theme-doc-sidebar-item-category-level-1 > div::before {
 }
 
 .header-github-link:before {
-    content: "";
+    content: '';
     width: 24px;
     height: 24px;
     display: flex;
@@ -257,22 +257,22 @@ li.theme-doc-sidebar-item-category-level-1 > div::before {
     text-transform: capitalize;
 }
 
-html[data-theme="light"] .unleash-academy-level-badge {
+html[data-theme='light'] .unleash-academy-level-badge {
     border-color: var(--unleash-logo-purple);
     color: var(--unleash-logo-purple);
 }
 
-html[data-theme="dark"] .unleash-academy-level-badge {
+html[data-theme='dark'] .unleash-academy-level-badge {
     border-color: var(--ifm-link-color);
     color: var(--ifm-link-color);
 }
 
 .unleash-academy-level-container.advanced {
-    background-image: url("/img/unleash-academy/advanced-pixels.svg");
+    background-image: url('/img/unleash-academy/advanced-pixels.svg');
 }
 
 .unleash-academy-level-container.beginners {
-    background-image: url("/img/unleash-academy/beginner-pixels.svg");
+    background-image: url('/img/unleash-academy/beginner-pixels.svg');
 }
 
 .unleash-academy-banner {
@@ -289,14 +289,14 @@ html[data-theme="dark"] .unleash-academy-level-badge {
     padding: var(--banner-padding);
     border-radius: var(--ifm-global-radius);
     background-color: #f1f0fc;
-    background-image: url("/img/unleash-academy/banner-bg-pixels.svg");
+    background-image: url('/img/unleash-academy/banner-bg-pixels.svg');
     background-position: top right;
     background-repeat: no-repeat;
     overflow: hidden;
     color: var(--banner-font-color);
 }
 
-html[data-theme="dark"] .course-banner-container {
+html[data-theme='dark'] .course-banner-container {
     background-color: inherit;
     color: inherit;
 }
@@ -317,7 +317,7 @@ html[data-theme="dark"] .course-banner-container {
 .unleash-academy-banner-list > li {
     font-weight: bold;
     list-style-type: none;
-    background-image: url("/img/unleash-academy/bullet-check.svg");
+    background-image: url('/img/unleash-academy/bullet-check.svg');
     background-repeat: no-repeat;
     background-position: left center;
     padding-left: 30px;
@@ -413,7 +413,7 @@ html[data-theme="dark"] .course-banner-container {
 /* Specific styles for the main Unleash academy banner */
 .academy-general-banner-content {
     display: grid;
-    grid-template-areas: "header logo" "bullets bullets" "button button";
+    grid-template-areas: 'header logo' 'bullets bullets' 'button button';
     grid-template-columns: auto var(--unleash-academy-logo-width);
     gap: var(--ifm-spacing-horizontal);
 }
@@ -428,7 +428,7 @@ html[data-theme="dark"] .course-banner-container {
 
 .academy-general-banner .small-logo {
     grid-area: logo;
-    background-image: url("/img/unleash-academy/academy-logo.svg");
+    background-image: url('/img/unleash-academy/academy-logo.svg');
     background-repeat: no-repeat;
     background-position: center;
     width: 100%;
@@ -438,7 +438,7 @@ html[data-theme="dark"] .course-banner-container {
 
 @media (min-width: 711px) and (max-width: 996px), (min-width: 1247px) {
     .academy-general-banner-content {
-        grid-template-areas: "header logo" "bullets logo" "button logo";
+        grid-template-areas: 'header logo' 'bullets logo' 'button logo';
         grid-template-columns: 480px auto;
     }
 
@@ -452,7 +452,7 @@ html[data-theme="dark"] .course-banner-container {
 
     .academy-general-banner .big-logo {
         position: absolute;
-        background-image: url("/img/unleash-academy/academy-logo.svg");
+        background-image: url('/img/unleash-academy/academy-logo.svg');
         bottom: 0;
         right: 40px;
         width: 200px;
@@ -486,12 +486,12 @@ html[data-theme="dark"] .course-banner-container {
     text-transform: capitalize;
 }
 
-html[data-theme="light"] .unleash-academy-level-badge {
+html[data-theme='light'] .unleash-academy-level-badge {
     border-color: var(--unleash-logo-purple);
     color: var(--unleash-logo-purple);
 }
 
-html[data-theme="dark"] .unleash-academy-level-badge {
+html[data-theme='dark'] .unleash-academy-level-badge {
     border-color: var(--ifm-link-color);
     color: var(--ifm-link-color);
 }
@@ -528,42 +528,42 @@ https://github.com/PaloAltoNetworks/docusaurus-openapi-docs/issues/177
 }
 
 .get > .menu__link::before {
-    content: "get";
+    content: 'get';
     background-color: var(--ifm-color-info-contrast-background);
     color: var(--ifm-color-info-contrast-foreground);
     border-color: var(--ifm-color-info-dark);
 }
 
 .post > .menu__link::before {
-    content: "post";
+    content: 'post';
     background-color: var(--ifm-color-success-contrast-background);
     color: var(--ifm-color-success-contrast-foreground);
     border-color: var(--ifm-color-success-dark);
 }
 
 .delete > .menu__link::before {
-    content: "del";
+    content: 'del';
     background-color: var(--ifm-color-danger-contrast-background);
     color: var(--ifm-color-danger-contrast-foreground);
     border-color: var(--ifm-color-danger-dark);
 }
 
 .put > .menu__link::before {
-    content: "put";
+    content: 'put';
     background-color: var(--ifm-color-warning-contrast-background);
     color: var(--ifm-color-warning-contrast-foreground);
     border-color: var(--ifm-color-warning-dark);
 }
 
 .patch > .menu__link::before {
-    content: "patch";
+    content: 'patch';
     background-color: var(--ifm-color-success-contrast-background);
     color: var(--ifm-color-success-contrast-foreground);
     border-color: var(--ifm-color-success-dark);
 }
 
 .head > .menu__link::before {
-    content: "head";
+    content: 'head';
     background-color: var(--ifm-color-secondary-contrast-background);
     color: var(--ifm-color-secondary-contrast-foreground);
     border-color: var(--ifm-color-secondary-dark);

@@ -5129,6 +5129,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ip-address@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "ip-address@npm:10.0.0"
+  checksum: 10c0/de28efeac726bce4a088ad2b31a3eefaf8d0f586ece6808366aef68029c0ad1387c1db98de23ddb1a888caf914de80424c1baf548e580dae65e0a9b24073f542
+  languageName: node
+  linkType: hard
+
 "ip-address@npm:^9.0.5":
   version: 9.0.5
   resolution: "ip-address@npm:9.0.5"
@@ -9461,7 +9468,7 @@ __metadata:
     helmet: "npm:^6.0.0"
     http-errors: "npm:^2.0.0"
     husky: "npm:^9.0.11"
-    ip: "npm:^2.0.1"
+    ip-address: "npm:^10.0.0"
     jest: "npm:29.7.0"
     jest-junit: "npm:^16.0.0"
     joi: "npm:^17.13.3"

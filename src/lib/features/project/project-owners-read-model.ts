@@ -161,6 +161,6 @@ export class ProjectOwnersReadModel implements IProjectOwnersReadModel {
 
     async getProjectOwners(projectId: string): Promise<ProjectOwners> {
         const owners = await this.getProjectOwnersDictionary();
-        return owners[projectId] ?? [];
+        return owners[projectId] ?? [{ ownerType: 'system' }];
     }
 }

@@ -15,7 +15,7 @@ import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import type {
-    PersonalDashboardSchema,
+    PersonalDashboardSchemaFlagsItem,
     PersonalDashboardSchemaProjectsItem,
 } from '../../openapi';
 import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
@@ -100,6 +100,63 @@ const useActiveProject = (projects: PersonalDashboardSchemaProjectsItem[]) => {
     return [activeProject, setActiveProject] as const;
 };
 
+const useDashboardState = (
+    projects: PersonalDashboardSchemaProjectsItem[],
+    flags: PersonalDashboardSchemaFlagsItem[],
+) => {
+    type State = {
+        activeProject: string | undefined;
+        activeFlag: PersonalDashboardSchemaFlagsItem | undefined;
+    };
+
+    const defaultState = {
+        activeProject: undefined,
+        activeFlag: undefined,
+    };
+
+    const [state, setState] = useLocalStorageState<State>(
+        'personal-dashboard:v1',
+        defaultState,
+    );
+
+    useEffect(() => {
+        const setDefaultFlag = !state.activeFlag && flags.length;
+        const setDefaultProject = !state.activeProject && projects.length;
+
+        if (setDefaultFlag || setDefaultProject) {
+            setState({
+                activeFlag: setDefaultFlag ? flags[0] : state.activeFlag,
+                activeProject: setDefaultProject
+                    ? projects[0].id
+                    : state.activeProject,
+            });
+        }
+    });
+
+    const { activeFlag, activeProject } = state;
+
+    const setActiveFlag = (flag: PersonalDashboardSchemaFlagsItem) => {
+        setState({
+            ...state,
+            activeFlag: flag,
+        });
+    };
+
+    const setActiveProject = (projectId: string) => {
+        setState({
+            ...state,
+            activeProject: projectId,
+        });
+    };
+
+    return {
+        activeFlag,
+        setActiveFlag,
+        activeProject,
+        setActiveProject,
+    };
+};
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
 
@@ -110,21 +167,15 @@ export const PersonalDashboard = () => {
         refetch: refetchDashboard,
         loading: personalDashboardLoading,
     } = usePersonalDashboard();
-    const [activeFlag, setActiveFlag] = useState<
-        PersonalDashboardSchema['flags'][0] | null
-    >(null);
-    useEffect(() => {
-        if (personalDashboard?.flags.length) {
-            setActiveFlag(personalDashboard.flags[0]);
-        }
-    }, [JSON.stringify(personalDashboard?.flags)]);
+
+    const projects = personalDashboard?.projects || [];
+
+    const { activeProject, setActiveProject, activeFlag, setActiveFlag } =
+        useDashboardState(projects, personalDashboard?.flags ?? []);
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'open' | 'closed'
     >('welcome-dialog:v1', 'open');
-
-    const projects = personalDashboard?.projects || [];
-    const [activeProject, setActiveProject] = useActiveProject(projects);
 
     const { personalDashboardProjectDetails, loading: loadingDetails } =
         usePersonalDashboardProjectDetails(activeProject);
@@ -174,7 +225,7 @@ export const PersonalDashboard = () => {
             ) : (
                 <MyProjects
                     projects={projects}
-                    activeProject={activeProject}
+                    activeProject={activeProject || ''}
                     setActiveProject={setActiveProject}
                     personalDashboardProjectDetails={
                         personalDashboardProjectDetails

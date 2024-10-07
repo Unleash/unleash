@@ -119,7 +119,7 @@ export const EventTimelineHeader = ({
                         </StyledFilter>
                     )}
                 />
-                <Tooltip title='Hide timeline' arrow>
+                <Tooltip title='Hide event timeline' arrow>
                     <IconButton
                         aria-label='close'
                         size='small'

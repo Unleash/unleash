@@ -8,7 +8,7 @@ import {
     Table,
     TablePlaceholder,
 } from 'component/common/Table';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Alert, styled, TableBody } from '@mui/material';
 import type { MoveListItem } from 'hooks/useDragItem';
@@ -38,6 +38,9 @@ export const EnvironmentTable = () => {
     const { setToastApiError } = useToast();
     const { environments, mutateEnvironments } = useEnvironments();
     const isFeatureEnabled = useUiFlag('EEA');
+    const isPurchaseAdditionalEnvronmentsEnabled = useUiFlag(
+        'purchaseAdditionalEnvironments',
+    );
 
     const moveListItem: MoveListItem = useCallback(
         async (dragIndex: number, dropIndex: number, save = false) => {
@@ -58,6 +61,28 @@ export const EnvironmentTable = () => {
         [changeSortOrder, environments, mutateEnvironments, setToastApiError],
     );
 
+    const columnsWithActions = useMemo(() => {
+        if (isFeatureEnabled) {
+            return [
+                ...COLUMNS,
+                {
+                    Header: 'Actions',
+                    id: 'Actions',
+                    align: 'center',
+                    width: '1%',
+                    Cell: ({
+                        row: { original },
+                    }: { row: { original: IEnvironment } }) => (
+                        <EnvironmentActionCell environment={original} />
+                    ),
+                    disableGlobalFilter: true,
+                },
+            ];
+        }
+
+        return COLUMNS;
+    }, [isFeatureEnabled]);
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -68,7 +93,7 @@ export const EnvironmentTable = () => {
         setGlobalFilter,
     } = useTable(
         {
-            columns: COLUMNS as any,
+            columns: columnsWithActions as any,
             data: environments,
             disableSortBy: true,
         },
@@ -91,7 +116,7 @@ export const EnvironmentTable = () => {
         <PageHeader title={`Environments (${count})`} actions={headerActions} />
     );
 
-    if (!isFeatureEnabled) {
+    if (!isFeatureEnabled && !isPurchaseAdditionalEnvronmentsEnabled) {
         return (
             <PageContent header={header}>
                 <PremiumFeature feature='environments' />
@@ -184,15 +209,5 @@ const COLUMNS = [
         accessor: (row: IEnvironment) =>
             row.apiTokenCount === 1 ? '1 token' : `${row.apiTokenCount} tokens`,
         Cell: TextCell,
-    },
-    {
-        Header: 'Actions',
-        id: 'Actions',
-        align: 'center',
-        width: '1%',
-        Cell: ({ row: { original } }: { row: { original: IEnvironment } }) => (
-            <EnvironmentActionCell environment={original} />
-        ),
-        disableGlobalFilter: true,
     },
 ];

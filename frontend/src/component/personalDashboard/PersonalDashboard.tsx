@@ -173,6 +173,7 @@ export const PersonalDashboard = () => {
                 />
             ) : (
                 <MyProjects
+                    // need to handle 404s here
                     projects={projects}
                     activeProject={activeProject}
                     setActiveProject={setActiveProject}

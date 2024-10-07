@@ -106,13 +106,13 @@ export const NewInUnleashItem = ({
                     {icon}
                     <LabelWithSummary>
                         <StyledItemTitle>
+                            <Typography fontWeight='bold' fontSize='small'>
+                                {label}
+                            </Typography>
                             <ConditionallyRender
                                 condition={beta}
                                 show={<Badge color='secondary'>Beta</Badge>}
                             />
-                            <Typography fontWeight='bold' fontSize='small'>
-                                {label}
-                            </Typography>
                         </StyledItemTitle>
                         <Typography fontSize='small'>{summary}</Typography>
                     </LabelWithSummary>

@@ -308,15 +308,15 @@ This is especially true in very regulated environments like health care, insuran
 
 Unleash provides the data to log any change over time at the flag level and at the project level. Logs are useful for downstream data warehouses or data lakes.
 
-You can view Event logs to monitor the changes to flag strategies and statuses, like:
+You can view Event Log to monitor the changes to flag strategies and statuses, like:
 
 -   When the flag was created
 -   How the gradual rollout strategy was configured
 -   When and how the variants were created and configured
 
-![Event logs in Unleash track every single change made to flags, similar to Git commit history.](./event-logs.png)
+![Event Log in Unleash track every single change made to flags, similar to Git commit history.](./event-logs.png)
 
-You can also retrieve event logs by using an API command, like below:
+You can also retrieve events by using an API command, like below:
 
 ```ruby
 require 'httpx'
@@ -332,7 +332,7 @@ response = HTTPX.get(url, headers: headers)
 puts response.body
 ```
 
-Read our documentation on [Event logs](/reference/events#event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
+Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
 
 ## Flag Automation & Workflow Integration for Ruby Apps
 

@@ -406,7 +406,7 @@ In our React tutorial application, we can view events in [Event Log](/reference/
 -   How the gradual rollout strategy was configured
 -   When and how the variants were created and configured
 
-![Feature flag events. The flag's variant's have been updated.](/img/react-ex-event-log.png)
+![Feature flag events showing that the flag's variants have been updated.](/img/react-ex-event-log.png)
 
 You can also retrieve events by using an API command below:
 

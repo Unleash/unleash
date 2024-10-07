@@ -280,7 +280,7 @@ For our iOS app, we can view events in [Event Log](/reference/events#event-log) 
 -   How the gradual rollout strategy was configured
 -   When and how the variants were created and configured
 
-![Feature flag Event Log. The flag's variant's have been updated.](/img/ios-ex-event-logs.png)
+![Feature flag events showing that the flag's variants have been updated.](/img/ios-ex-event-logs.png)
 
 You can also retrieve events by using an API command below:
 

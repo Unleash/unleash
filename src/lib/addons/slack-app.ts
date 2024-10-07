@@ -182,12 +182,10 @@ export default class SlackAppAddon extends Addon {
             stateDetails.push(errorMessage);
             this.logger.warn(errorMessage, error);
         } finally {
-            if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-                this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                    result: state,
-                    destination: 'slack-app',
-                });
-            }
+            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+                result: state,
+                destination: 'slack-app',
+            });
 
             this.registerEvent({
                 integrationId,

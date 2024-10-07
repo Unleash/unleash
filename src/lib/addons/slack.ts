@@ -134,12 +134,10 @@ export default class SlackAddon extends Addon {
             this.logger.warn(successWithErrorsMessage);
         }
 
-        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                result: state,
-                destination: 'slack',
-            });
-        }
+        this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+            result: state,
+            destination: 'slack',
+        });
 
         this.registerEvent({
             integrationId,

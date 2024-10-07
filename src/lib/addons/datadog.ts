@@ -116,12 +116,10 @@ export default class DatadogAddon extends Addon {
             this.logger.warn(failedMessage);
         }
 
-        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                result: state,
-                destination: 'datadog',
-            });
-        }
+        this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+            result: state,
+            destination: 'datadog',
+        });
 
         this.registerEvent({
             integrationId,

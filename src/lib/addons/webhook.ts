@@ -104,12 +104,10 @@ export default class Webhook extends Addon {
             this.logger.warn(failedMessage);
         }
 
-        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                result: state,
-                destination: 'webhook',
-            });
-        }
+        this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+            result: state,
+            destination: 'webhook',
+        });
 
         const domain = new URL(url).hostname;
         this.logger.info(`Webhook invoked`, {

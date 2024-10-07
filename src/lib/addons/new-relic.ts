@@ -120,12 +120,10 @@ export default class NewRelicAddon extends Addon {
             this.logger.warn(failedMessage);
         }
 
-        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                result: state,
-                destination: 'new-relic',
-            });
-        }
+        this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+            result: state,
+            destination: 'new-relic',
+        });
 
         this.registerEvent({
             integrationId,

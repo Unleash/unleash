@@ -110,12 +110,10 @@ export default class TeamsAddon extends Addon {
             this.logger.warn(failedMessage);
         }
 
-        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                result: state,
-                destination: 'teams',
-            });
-        }
+        this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+            result: state,
+            destination: 'teams',
+        });
 
         this.registerEvent({
             integrationId,

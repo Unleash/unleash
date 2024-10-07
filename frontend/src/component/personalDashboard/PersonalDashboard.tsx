@@ -8,7 +8,7 @@ import {
     styled,
     Typography,
 } from '@mui/material';
-import React, { type FC, useEffect, useState, useRef } from 'react';
+import React, { type FC, useEffect, useRef } from 'react';
 import LinkIcon from '@mui/icons-material/ArrowForward';
 import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
@@ -101,18 +101,6 @@ const FlagListItem: FC<{
             </ListItemButton>
         </ListItem>
     );
-};
-
-const useActiveProject = (projects: PersonalDashboardSchemaProjectsItem[]) => {
-    const [activeProject, setActiveProject] = useState(projects[0]?.id);
-
-    useEffect(() => {
-        if (!activeProject && projects.length > 0) {
-            setActiveProject(projects[0].id);
-        }
-    }, [JSON.stringify(projects)]);
-
-    return [activeProject, setActiveProject] as const;
 };
 
 const useDashboardState = (

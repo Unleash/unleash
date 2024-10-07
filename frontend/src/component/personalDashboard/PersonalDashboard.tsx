@@ -135,8 +135,18 @@ const useDashboardState = (
     );
 
     useEffect(() => {
-        const setDefaultFlag = !state.activeFlag && flags.length;
-        const setDefaultProject = !state.activeProject && projects.length;
+        const setDefaultFlag =
+            (!state.activeFlag && flags.length) ||
+            (state.activeFlag &&
+                flags.length &&
+                !flags.some((flag) => flag.name === state.activeFlag?.name));
+        const setDefaultProject =
+            (!state.activeProject && projects.length) ||
+            (state.activeProject &&
+                projects.length &&
+                !projects.some(
+                    (project) => project.id === state.activeProject,
+                ));
 
         if (setDefaultFlag || setDefaultProject) {
             setState({

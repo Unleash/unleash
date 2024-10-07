@@ -7,7 +7,7 @@ title: Events
 Events help you keep track of changes across your Unleash instance. You can explore events in [Event Log](#event-log) or using the global [Event Timeline](#event-timeline).
 
 The Event Log provides a full list of all events, whereas the Event Timeline offers a highlight of recent key events and [Signals](/reference/signals) from external sources.
-You can use Event Log for auditing purposes, while Event Timeline is particularly helpful for debugging recent changes and their impact on your Unleash instance.
+You can use Event Log for auditing purposes, while Event Timeline is particularly helpful for debugging recent changes and their impact.
 
 ## Event Log
 
@@ -92,7 +92,7 @@ Generated when you create a feature flag. The `data` property contains the detai
   "project": "test-project",
   "environment": null,
   "label": "Flag created",
-  "summary": "**user@getunleash.io** created test-flag in ... "
+  "summary": "**user@getunleash.io** created **test-flag** in ... "
 }
 ```
 
@@ -133,7 +133,7 @@ Generated when you move a feature flag from one project to another. The `data` p
   "project": "test-project",
   "environment": null,
   "label": "Flag moved to a new project",
-  "summary": "**user@getunleash.io** moved test-flag from ... "
+  "summary": "**user@getunleash.io** moved **test-flag** from ... "
 }
 ```
 
@@ -167,7 +167,7 @@ Generated when you add a tag to a feature flag. The `data` property contains the
   "project": "test-project",
   "environment": null,
   "label": "Flag created",
-  "summary": "**user@getunleash.io** tagged test-flag with ... "
+  "summary": "**user@getunleash.io** tagged **test-flag** with ... "
 }
 ```
 
@@ -207,7 +207,7 @@ Generated when you import a tagged feature flag as part of an import job. The `d
 
 Generated when you add a strategy to a feature flag. The `data` property contains the configuration for the new strategy.
 
-```json title="example event: feature-strategy-add"
+```json
 {
   "id": 27335,
   "type": "feature-strategy-add",
@@ -267,12 +267,13 @@ Generated when you disable an environment for a feature. The `environment` prope
 
 Generated when you delete existing features as part of an import job. The `data.name` property is `"all-features"`.
 
-```json title="example event: drop-features"
+```json
 {
-  "id": 25,
+  "id": 27336,
   "type": "drop-features",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.563Z",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
     "name": "all-features"
   },
@@ -308,10 +309,11 @@ Generated when you create a strategy. The `data` property contains the strategy 
 
 ```json
 {
-  "id": 932,
+  "id": 273357,
   "type": "strategy-created",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T12:20:52.111Z",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
     "name": "new-strategy",
     "description": "this strategy does ...",
@@ -323,7 +325,9 @@ Generated when you create a strategy. The `data` property contains the strategy 
   "tags": [],
   "featureName": null,
   "project": null,
-  "environment": null
+  "environment": null,
+  "label": "strategy-created",
+  "summary": "**user@getunleash.io** triggered **strategy-created**"
 }
 ```
 
@@ -347,14 +351,13 @@ Generated when you reactivate a deprecated strategy. The `data` property contain
 
 Generated when you import a strategy as part of an import job. The `data` property contains the strategy's configuration, `preData` is null. See [strategy-created](#strategy-created) for an example.
 
-
 #### `drop-strategies`
 
-Generated when you delete existing strategies as part of an import job. The `data.name` property will is `"all-strategies"`.
+Generated when you delete existing strategies as part of an import job. The `data.name` property is `"all-strategies"`.
 
-```json title="example event: drop-strategies"
+```json
 {
-  "id": 28,
+  "id": 27338,
   "type": "drop-strategies",
   "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.579Z",
@@ -375,12 +378,13 @@ Generated when you delete existing strategies as part of an import job. The `dat
 
 Generated when you create a context field. The `data` property contains the context field configuration.
 
-```json title="example event: context-field-created"
+```json
 {
-  "id": 937,
+  "id": 27339,
   "type": "context-field-created",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T13:17:17.499Z",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
     "name": "new-context-field",
     "description": "this context field is for describing events",
@@ -391,63 +395,19 @@ Generated when you create a context field. The `data` property contains the cont
   "tags": [],
   "featureName": null,
   "project": null,
-  "environment": null
+  "environment": null,
+  "label": "Context field created",
+  "summary": "**user@getunleash.io** created context field **new-context-field**"
 }
 ```
 
 #### `context-field-updated`
 
-Generated when you update a context field. The `data` property contains the new context field configuration.
-
-```json title="example event: context-field-updated"
-{
-  "id": 939,
-  "type": "context-field-updated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T13:19:19.422Z",
-  "data": {
-    "name": "new-context-field",
-    "description": "this context field is for describing events",
-    "legalValues": [
-      {
-        "value": "0fcf7d07-276c-41e1-a207-e62876d9c949",
-        "description": "Red team"
-      },
-      {
-        "value": "176ab647-4d50-41bf-afe0-f8b856d9bbb9",
-        "description": "Blue team"
-      }
-    ],
-    "stickiness": false
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you update a context field. The `data` property contains the new context field configuration. See [context-field-created](#context-field-created) for an example.
 
 #### `context-field-deleted`
 
 Generated when you delete a context field. The `data` property contains the name of the deleted context field.
-
-```json title="example event: context-field-deleted"
-{
-  "id": 940,
-  "type": "context-field-deleted",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T13:20:41.386Z",
-  "data": {
-    "name": "new-context-field"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
 
 ### Project events
 
@@ -455,22 +415,28 @@ Generated when you delete a context field. The `data` property contains the name
 
 Generated when you create a project. The `data` property contains the project configuration.
 
-```json title="example event: project-created"
+```json
 {
-  "id": 905,
+  "id": 27340,
   "type": "project-created",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-05-31T14:16:14.498Z",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
     "id": "my-other-project",
     "name": "my other project",
-    "description": "a project for important work"
+    "description": "a project for important work",
+    "defaultStickiness": "default",
+    "mode": "private",
+    "changeRequestEnvironments": []
   },
   "preData": null,
   "tags": [],
   "featureName": null,
   "project": "my-other-project",
-  "environment": null
+  "environment": null,
+  "label": "Project created",
+  "summary": "**user@getunleash.io** created project **my-other-project** ..."
 }
 ```
 
@@ -478,97 +444,17 @@ Generated when you create a project. The `data` property contains the project co
 
 Generated when you update a project's configuration. The `data` property contains the new project configuration. The `preData` property contains the previous project configuration.
 
-```json title="example event: project-updated"
-{
-  "id": 941,
-  "type": "project-updated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T13:23:55.025Z",
-  "data": {
-    "id": "my-other-project",
-    "name": "my other project",
-    "description": "a project for important work!"
-  },
-  "preData": {
-    "id": "my-other-project",
-    "name": "my other project",
-    "health": 50,
-    "createdAt": "2022-05-31T14:16:14.483Z",
-    "updatedAt": "2022-06-02T12:30:48.095Z",
-    "description": "a project for important work"
-  },
-  "tags": [],
-  "featureName": null,
-  "project": "my-other-project",
-  "environment": null
-}
-```
-
 #### `project-deleted`
 
 Generated when you delete a project. The `project` property contains the name of the deleted project.
 
-```json title="example event: project-deleted"
-{
-  "id": 944,
-  "type": "project-deleted",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T13:25:53.820Z",
-  "data": null,
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": "my-other-project",
-  "environment": null
-}
-```
-
 #### `project-import`
 
-Generated when you import a project. The `data` property contains the project's configuration details.
-
-```json title="example event: project-import"
-{
-  "id": 35,
-  "type": "project-import",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.591Z",
-  "data": {
-    "id": "default",
-    "name": "Default",
-    "description": "Default project",
-    "createdAt": "2022-06-03T09:30:40.587Z",
-    "health": 100,
-    "updatedAt": "2022-06-03T11:30:40.587Z"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you import a project. The `data` property contains the project's configuration details. See [project-created](#project-created) for an example.
 
 #### `drop-projects`
 
-Generated when you delete existing projects as part of an import job. The `data.name` property will always be `"all-projects"`.
-
-```json title="example event: drop-projects"
-{
-  "id": 33,
-  "type": "drop-projects",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.586Z",
-  "data": {
-    "name": "all-projects"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you delete existing projects as part of an import job. The `data.name` property is `"all-projects"`.
 
 ### Tag events
 
@@ -576,78 +462,46 @@ Generated when you delete existing projects as part of an import job. The `data.
 
 Generated when you create a new tag. The `data` property contains the tag that was created.
 
-```json title="example event: tag-created"
+```json
 {
-  "id": 959,
+  "id": 27341,
   "type": "tag-created",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-03T10:13:39.401Z",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
-    "type": "heartag",
-    "value": "tag-value"
+    "type": "6.1.0",
+    "value": "release"
   },
   "preData": null,
   "tags": [],
-  "featureName": "new-feature",
+  "featureName": null,
   "project": null,
-  "environment": null
+  "environment": null,
+  "label": "tag-created",
+  "summary": "**user@getunleash.io** triggered **tag-created**"
 }
 ```
 
 #### `tag-deleted`
 
-Generated when you delete a tag. The `data` property contains the tag that was deleted.
-
-```json title="example event: tag-deleted"
-{
-  "id": 957,
-  "type": "tag-deleted",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-03T10:12:17.310Z",
-  "data": {
-    "type": "heartag",
-    "value": "tag-value"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you delete a tag. The `data` property contains the tag that was deleted. See [tag-created](#tag-created) for an example.
 
 #### `tag-import`
 
-Generated when you import a tag as part of an import job. The `data` property contains the imported tag.
-
-```json title="example event: tag-import"
-{
-  "id": 41,
-  "type": "tag-import",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.603Z",
-  "data": {
-    "type": "simple",
-    "value": "tag1"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you import a tag as part of an import job. The `data` property contains the imported tag.  See [tag-created](#tag-created) for an example.
 
 #### `drop-tags`
 
-Generated when you delete existing tags as part of an import job. The `data.name` property will always be `"all-tags"`.
+Generated when you delete existing tags as part of an import job. The `data.name` property is `"all-tags"`.
 
-```json title="example event: drop-tags"
+```json
 {
-  "id": 37,
+  "id": 27342,
   "type": "drop-tags",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.596Z",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
     "name": "all-tags"
   },
@@ -655,7 +509,9 @@ Generated when you delete existing tags as part of an import job. The `data.name
   "tags": [],
   "featureName": null,
   "project": null,
-  "environment": null
+  "environment": null,
+  "label": "tag-created",
+  "summary": "**user@getunleash.io** triggered **drop-tags**"
 }
 ```
 
@@ -665,12 +521,13 @@ Generated when you delete existing tags as part of an import job. The `data.name
 
 Generated when you create a new tag type. The `data` property contains the tag type configuration.
 
-```json title="example event: tag-type-created"
+```json
 {
-  "id": 945,
+  "id": 27343,
   "type": "tag-type-created",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T13:27:01.235Z",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
     "name": "new-tag-type",
     "description": "event testing"
@@ -679,96 +536,27 @@ Generated when you create a new tag type. The `data` property contains the tag t
   "tags": [],
   "featureName": null,
   "project": null,
-  "environment": null
+  "environment": null,
+  "label": "tag-type-created",
+  "summary": "**user@getunleash.io** triggered **tag-type-created**"
 }
 ```
 
 #### `tag-type-updated`
 
-Generated when you update a tag type. The `data` property contains the new tag type configuration.
-
-```json title="example event: tag-type-updated"
-{
-  "id": 946,
-  "type": "tag-type-updated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T13:27:31.126Z",
-  "data": {
-    "name": "new-tag-type",
-    "description": "This tag is for testing events."
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you update a tag type. The `data` property contains the new tag type configuration. See [tag-type-created](#tag-type-created) for an example.
 
 #### `tag-type-deleted`
 
 Generated when you delete a tag type. The `data` property contains the name of the deleted tag type.
 
-```json title="example event: tag-type-deleted"
-{
-  "id": 947,
-  "type": "tag-type-deleted",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-02T13:27:37.277Z",
-  "data": {
-    "name": "new-tag-type"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
-
 #### `tag-type-import`
 
-Generated when you import a tag type as part of an import job. The `data` property contains the imported tag.
-
-```json title="example event: tag-type-import"
-{
-  "id": 40,
-  "type": "tag-type-import",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.599Z",
-  "data": {
-    "name": "custom-tag-type",
-    "description": "custom tag type",
-    "icon": null
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you import a tag type as part of an import job. The `data` property contains the imported tag. See [tag-type-created](#tag-type-created) for an example.
 
 #### `drop-tag-types`
 
-Generated when you drop all existing tag types as part of a configuration import. The `data.name` property will always be `"all-tag-types"`.
-
-```json title="example event: drop-tag-types"
-{
-  "id": 38,
-  "type": "drop-tag-types",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.596Z",
-  "data": {
-    "name": "all-tag-types"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you drop all existing tag types as part of a configuration import. The `data.name` property is `"all-tag-types"`.
 
 ### Integration events
 
@@ -776,65 +564,46 @@ Generated when you drop all existing tag types as part of a configuration import
 
 Generated when you create an integration configuration. The `data` property contains the provider type.
 
-```json title="example event: addon-config-created"
+```json
 {
-  "id": 960,
+  "id": 27343,
   "type": "addon-config-created",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-03T10:15:45.040Z",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
-    "provider": "webhook"
-  },
+    "id": 14,
+    "provider": "webhook",
+    "enabled": true,
+    "description": "Test Webhooks",
+    "events": [
+      "feature-updated"
+    ],
+    "projects": [
+      "test-project"
+    ],
+    "environments": [
+      "production"
+    ]
+  },  
   "preData": null,
   "tags": [],
   "featureName": null,
   "project": null,
-  "environment": null
+  "environment": null,
+  "label": "Integration configuration created",
+  "summary": "**user@getunleash.io** created a new **webhook** integration configuration"
 }
 ```
 
 #### `addon-config-updated`
 
-Generated when you update an integration configuration. The `data` property contains the integration's ID and provider type.
+Generated when you update an integration configuration. The `data` property contains the `id` and `provider` of the integration.
 
-```json title="example event: addon-config-updated"
-{
-  "id": 961,
-  "type": "addon-config-updated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-03T10:16:11.732Z",
-  "data": {
-    "id": "2",
-    "provider": "webhook"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
 
 #### `addon-config-deleted`
 
-Generated when you update an integration configuration. The `data` property contains the integration's ID.
-
-```json title="example event: addon-config-deleted"
-{
-  "id": 964,
-  "type": "addon-config-deleted",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-03T10:16:59.723Z",
-  "data": {
-    "id": "2"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you update an integration configuration. The `data` property contains the `id` of the integration.
 
 ### User events
 
@@ -842,22 +611,24 @@ Generated when you update an integration configuration. The `data` property cont
 
 Generated when you create a new user. The `data` property contains the user's information.
 
-```json title="example event: user-created"
-{
-  "id": 965,
-  "type": "user-created",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-03T10:23:47.713Z",
+```json
+  "id": 27344,
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
-    "id": 44,
+    "id": 111,
     "name": "New User Name",
-    "email": "newuser@company.com"
+    "email": "newuser@getunleash.io",
+    "rootRole": 2
   },
   "preData": null,
   "tags": [],
   "featureName": null,
   "project": null,
-  "environment": null
+  "environment": null,
+  "label": "User created",
+  "summary": "**user@getunleash.io** created user **New User Name**"
 }
 ```
 
@@ -865,61 +636,20 @@ Generated when you create a new user. The `data` property contains the user's in
 
 Generated when you update a user. The `data` property contains the updated user information; the `preData` property contains the previous state of the user's information.
 
-```json title="example event: user-updated"
-{
-  "id": 967,
-  "type": "user-updated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-03T10:24:26.301Z",
-  "data": {
-    "id": 44,
-    "name": "New User's Name",
-    "email": "newuser@company.com"
-  },
-  "preData": {
-    "id": 44,
-    "name": "New User Name",
-    "email": "newuser@company.com"
-  },
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
 
 #### `user-deleted`
 
 Generated when you delete a user. The `preData` property contains the deleted user's information.
 
-```json title="example event: user-deleted"
-{
-  "id": 968,
-  "type": "user-deleted",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-03T10:24:49.153Z",
-  "data": null,
-  "preData": {
-    "id": 44,
-    "name": "New User's Name",
-    "email": "newuser@company.com"
-  },
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
-
 ### Environment events
 
 #### `environment-import`
 
-Generated when you import an environment (custom or otherwise) as part of an import job. The `data` property contains the configuration of the imported environment.
+Generated when you import an environment as part of an import job. The `data` property contains the configuration of the imported environment.
 
-```json title="example event: environment-import"
+```json
 {
-  "id": 24,
+  "id": 27345,
   "type": "environment-import",
   "createdBy": "import-API-token",
   "createdAt": "2022-06-03T11:30:40.557Z",
@@ -940,24 +670,8 @@ Generated when you import an environment (custom or otherwise) as part of an imp
 
 #### `drop-environments`
 
-Generated when you delete existing environments as part of an import job. The `data.name` property will always be `"all-environments"`.
+Generated when you delete existing environments as part of an import job. The `data.name` property is `"all-environments"`.
 
-```json
-{
-  "id": 21,
-  "type": "drop-environments",
-  "createdBy": "import-API-token",
-  "createdAt": "2022-06-03T11:30:40.549Z",
-  "data": {
-    "name": "all-projects"
-  },
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
 
 ### Segment events
 
@@ -965,16 +679,18 @@ Generated when you delete existing environments as part of an import job. The `d
 
 Generated when you create a segment. The `data` property contains the newly created segment.
 
-```json title="example event: segment-created"
+```json
 {
-  "id": 969,
+  "id": 27346,
   "type": "segment-created",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-03T10:29:43.977Z",
+  "createdBy": "user@getunleash.io",
+  "createdAt": "2024-10-03T11:09:53.225Z",
+  "createdByUserId": 110,
   "data": {
     "id": 5,
     "name": "new segment",
     "description": "this segment is for events",
+    "project": "development",
     "constraints": [
       {
         "values": ["appA", "appB", "appC"],
@@ -984,14 +700,16 @@ Generated when you create a segment. The `data` property contains the newly crea
         "caseInsensitive": false
       }
     ],
-    "createdBy": "user@company.com",
-    "createdAt": "2022-06-03T10:29:43.974Z"
+    "createdBy": "user@getunleash.io",
+    "createdAt": "2024-10-03T11:09:53.225Z"
   },
   "preData": null,
   "tags": [],
   "featureName": null,
-  "project": null,
-  "environment": null
+  "project": "development",
+  "environment": null,
+  "label": "Segment created",
+  "summary": "**user@getunleash.io** created segment **new segment**"
 }
 ```
 
@@ -999,79 +717,7 @@ Generated when you create a segment. The `data` property contains the newly crea
 
 Generated when you update a segment's configuration. The `data` property contains the new segment configuration; the `preData` property contains the previous segment configuration.
 
-```json title="example event: segment-updated"
-{
-  "id": 970,
-  "type": "segment-updated",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-03T10:29:59.892Z",
-  "data": {
-    "id": 5,
-    "name": "new segment",
-    "description": "this segment is for events",
-    "constraints": [],
-    "createdBy": "user@company.com",
-    "createdAt": "2022-06-03T10:29:43.974Z"
-  },
-  "preData": {
-    "id": 5,
-    "name": "new segment",
-    "createdAt": "2022-06-03T10:29:43.974Z",
-    "createdBy": "user@company.com",
-    "constraints": [
-      {
-        "values": ["appA", "appB", "appC"],
-        "inverted": false,
-        "operator": "IN",
-        "contextName": "appName",
-        "caseInsensitive": false
-      }
-    ],
-    "description": "this segment is for events"
-  },
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
 
 #### `segment-deleted`
 
-Generated when you delete a segment.
-
-```json title="example event: segment-deleted"
-{
-  "id": 971,
-  "type": "segment-deleted",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-03T10:30:08.128Z",
-  "data": {},
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
-
-### Suggest changes events
-
-#### `suggest-change-created`
-
-Generated when you create a change-request draft.
-
-```json title="example event: suggest-change-created"
-{
-  "id": 971,
-  "type": "suggest-change-created",
-  "createdBy": "user@company.com",
-  "createdAt": "2022-06-03T10:30:08.128Z",
-  "data": {},
-  "preData": null,
-  "tags": [],
-  "featureName": null,
-  "project": null,
-  "environment": null
-}
-```
+Generated when you delete a segment. `preData` property contains the deleted segment.

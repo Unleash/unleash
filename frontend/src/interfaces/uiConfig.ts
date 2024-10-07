@@ -89,6 +89,7 @@ export type UiFlags = {
     onboardingUI?: boolean;
     eventTimeline?: boolean;
     personalDashboardUI?: boolean;
+    purchaseAdditionalEnvironments?: boolean;
 };
 
 export interface IVersionInfo {

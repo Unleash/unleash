@@ -126,8 +126,11 @@ export const PersonalDashboard = () => {
     const projects = personalDashboard?.projects || [];
     const [activeProject, setActiveProject] = useActiveProject(projects);
 
-    const { personalDashboardProjectDetails, loading: loadingDetails } =
-        usePersonalDashboardProjectDetails(activeProject);
+    const {
+        personalDashboardProjectDetails,
+        loading: loadingDetails,
+        error: detailsError,
+    } = usePersonalDashboardProjectDetails(activeProject);
 
     const activeProjectStage =
         personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
@@ -137,7 +140,9 @@ export const PersonalDashboard = () => {
 
     const noProjects = projects.length === 0;
 
-    const projectStageRef = useLoading(activeProjectStage === 'loading');
+    const projectStageRef = useLoading(
+        !detailsError && activeProjectStage === 'loading',
+    );
 
     return (
         <div>
@@ -173,6 +178,7 @@ export const PersonalDashboard = () => {
                 />
             ) : (
                 <MyProjects
+                    admins={personalDashboard?.admins ?? []}
                     ref={projectStageRef}
                     projects={projects}
                     activeProject={activeProject}

@@ -6,11 +6,14 @@ title: Events
 
 Events help you keep track of changes across your Unleash instance. You can explore events in [Event Log](#event-log) or using the global [Event Timeline](#event-timeline).
 
+The Event Log provides a full list of all events, whereas the Event Timeline offers a highlight of recent key events and [Signals](/reference/signals) from external sources.
+You can use Event Log for auditing purposes, while Event Timeline is particularly helpful for debugging recent changes and their impact on your Unleash instance.
+
 ## Event Log
 
 The Event Log lists all events in your Unleash instance. You can search and filter events by date range, event type, project, feature flag, and user. You can also export events as CSV or JSON files.
 
-To access events in the Admin UI, you need Admin access. To view all events, go to Admin > Event Log. To view events for a specific feature flag, go to the Event Log tab on that feature flag's page.
+To access events in the Admin UI, you need Admin access. To view all events, go to **Admin > Event Log**. To view events for a specific feature flag, go to the Event Log tab on that feature flag's page.
 
 Each [event type](#event-types) contains different data, but all events follow the same schema:
 
@@ -49,7 +52,10 @@ Event Timeline highlights recent events across all your projects in one unified 
 
 ![Event timeline in Unleash Admin UI](/img/event-timeline.png)
 
-The timeline shows key events and signals for up to 48 hours per environment and is designed to help you get an overview of changes and quickly identify and debug any issues.
+The timeline shows key events and signals for up to 48 hours per environment and is designed to help you get an overview of changes and quickly identify and debug any issues. You can switch between different time spans to focus on recent activity.
+Although you can filter events by environment, the timeline also shows environment-agnostic events, such as archiving a feature flag.
+
+You can enable or disable the timeline view at any time based on your preferences. Events that occur close together in time are automatically grouped, but hovering over an event group shows detailed information about the specific events.
 
 ## Event types
 
@@ -323,7 +329,7 @@ Generated when you create a strategy. The `data` property contains the strategy 
 
 #### `strategy-updated`
 
-Generated when you change a strategy's configuration. The `data` property contains the new strategy configuration. See [startegy-created](#strategy-created) for an example.
+Generated when you change a strategy's configuration. The `data` property contains the new strategy configuration. See [strategy-created](#strategy-created) for an example.
 
 #### `strategy-deleted`
 
@@ -335,7 +341,7 @@ Generated when you deprecate a strategy. The `data` property contains the name o
 
 #### `strategy-reactivated`
 
-Generated when you bring reactivate a deprecated strategy. The `data` property contains the name of the reactivated strategy, `preData` is null.
+Generated when you reactivate a deprecated strategy. The `data` property contains the name of the reactivated strategy, `preData` is null.
 
 #### `strategy-import`
 

@@ -119,7 +119,6 @@ export const personalDashboardProjectDetailsSchema = {
         roles: {
             type: 'array',
             description: 'The list of roles that the user has in this project.',
-            minItems: 1,
             items: {
                 type: 'object',
                 description: 'An Unleash role.',

@@ -10,7 +10,7 @@ import {
 } from 'component/common/Table';
 import { useCallback, useMemo } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { Alert, styled, TableBody } from '@mui/material';
+import { Alert, Button, styled, TableBody, Typography } from '@mui/material';
 import type { MoveListItem } from 'hooks/useDragItem';
 import useToast from 'hooks/useToast';
 import useEnvironmentApi, {
@@ -27,6 +27,7 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IEnvironment } from 'interfaces/environments';
 import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
@@ -41,6 +42,7 @@ export const EnvironmentTable = () => {
     const isPurchaseAdditionalEnvronmentsEnabled = useUiFlag(
         'purchaseAdditionalEnvironments',
     );
+    const { isPro } = useUiConfig();
 
     const moveListItem: MoveListItem = useCallback(
         async (dragIndex: number, dropIndex: number, save = false) => {
@@ -126,6 +128,17 @@ export const EnvironmentTable = () => {
 
     return (
         <PageContent header={header}>
+            {isPro() && isPurchaseAdditionalEnvronmentsEnabled ? (
+                <StyledAlert severity='info'>
+                    <Typography>Purchase additional environments</Typography>
+                    <Typography>
+                        With our Pro plan, you now have the flexibility to
+                        expand your workspace by adding up to three additional
+                        environments.
+                    </Typography>
+                    <Button variant='contained'>View pricing</Button>
+                </StyledAlert>
+            ) : null}
             <StyledAlert severity='info'>
                 This is the order of environments that you have today in each
                 feature flag. Rearranging them here will change also the order

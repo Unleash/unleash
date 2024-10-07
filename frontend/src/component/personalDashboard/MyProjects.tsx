@@ -63,6 +63,52 @@ const ActiveProjectDetails: FC<{
     );
 };
 
+const ProjectListItem: FC<{
+    project: PersonalDashboardSchemaProjectsItem;
+    selected: boolean;
+    onClick: () => void;
+}> = ({ project, selected, onClick }) => {
+    const activeProjectRef = useRef<HTMLLIElement>(null);
+
+    useEffect(() => {
+        if (activeProjectRef.current) {
+            activeProjectRef.current.scrollIntoView({
+                block: 'nearest',
+                inline: 'start',
+            });
+        }
+    }, []);
+
+    return (
+        <ListItem
+            key={project.id}
+            disablePadding={true}
+            sx={{ mb: 1 }}
+            ref={selected ? activeProjectRef : null}
+        >
+            <ListItemButton
+                sx={listItemStyle}
+                selected={selected}
+                onClick={onClick}
+            >
+                <ListItemBox>
+                    <ProjectIcon color='primary' />
+                    <StyledCardTitle>{project.name}</StyledCardTitle>
+                    <IconButton
+                        component={Link}
+                        href={`projects/${project.id}`}
+                        size='small'
+                        sx={{ ml: 'auto' }}
+                    >
+                        <LinkIcon titleAccess={`projects/${project.id}`} />
+                    </IconButton>
+                </ListItemBox>
+                {selected ? <ActiveProjectDetails project={project} /> : null}
+            </ListItemButton>
+        </ListItem>
+    );
+};
+
 export const MyProjects: FC<{
     projects: PersonalDashboardSchemaProjectsItem[];
     personalDashboardProjectDetails?: PersonalDashboardProjectDetailsSchema;
@@ -79,17 +125,6 @@ export const MyProjects: FC<{
     const setupIncomplete =
         activeProjectStage === 'onboarding-started' ||
         activeProjectStage === 'first-flag-created';
-
-    const activeItemRef = useRef<HTMLLIElement>(null);
-
-    useEffect(() => {
-        if (activeItemRef.current) {
-            activeItemRef.current.scrollIntoView({
-                block: 'nearest',
-                inline: 'start',
-            });
-        }
-    }, []);
 
     return (
         <ContentGridContainer>
@@ -115,46 +150,11 @@ export const MyProjects: FC<{
                     >
                         {projects.map((project) => {
                             return (
-                                <ListItem
-                                    key={project.id}
-                                    disablePadding={true}
-                                    sx={{ mb: 1 }}
-                                    ref={
-                                        project.id === activeProject
-                                            ? activeItemRef
-                                            : null
-                                    }
-                                >
-                                    <ListItemButton
-                                        sx={listItemStyle}
-                                        selected={project.id === activeProject}
-                                        onClick={() =>
-                                            setActiveProject(project.id)
-                                        }
-                                    >
-                                        <ListItemBox>
-                                            <ProjectIcon color='primary' />
-                                            <StyledCardTitle>
-                                                {project.name}
-                                            </StyledCardTitle>
-                                            <IconButton
-                                                component={Link}
-                                                href={`projects/${project.id}`}
-                                                size='small'
-                                                sx={{ ml: 'auto' }}
-                                            >
-                                                <LinkIcon
-                                                    titleAccess={`projects/${project.id}`}
-                                                />
-                                            </IconButton>
-                                        </ListItemBox>
-                                        {project.id === activeProject ? (
-                                            <ActiveProjectDetails
-                                                project={project}
-                                            />
-                                        ) : null}
-                                    </ListItemButton>
-                                </ListItem>
+                                <ProjectListItem
+                                    project={project}
+                                    selected={project.id === activeProject}
+                                    onClick={() => setActiveProject(project.id)}
+                                />
                             );
                         })}
                     </List>

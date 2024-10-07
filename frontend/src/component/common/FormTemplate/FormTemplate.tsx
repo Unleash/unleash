@@ -26,7 +26,7 @@ import { relative } from 'themes/themeStyles';
 
 interface ICreateProps {
     title?: ReactNode;
-    description: string;
+    description: ReactNode;
     documentationLink?: string;
     documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
@@ -370,7 +370,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
 };
 
 interface IMobileGuidance {
-    description: string;
+    description: ReactNode;
     documentationLink?: string;
     documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
@@ -410,7 +410,7 @@ const MobileGuidance = ({
 };
 
 interface IGuidanceProps {
-    description: string;
+    description: ReactNode;
     documentationIcon?: ReactNode;
     documentationLink?: string;
     documentationLinkLabel?: string;

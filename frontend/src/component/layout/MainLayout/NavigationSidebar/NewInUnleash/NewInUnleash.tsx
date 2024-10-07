@@ -84,6 +84,7 @@ type NewItem = {
     show: boolean;
     longDescription: ReactNode;
     preview?: ReactNode;
+    beta?: boolean;
 };
 
 interface INewInUnleashProps {
@@ -174,6 +175,7 @@ export const NewInUnleash = ({
                     </p>
                 </>
             ),
+            beta: true,
         },
     ];
 
@@ -218,6 +220,7 @@ export const NewInUnleash = ({
                         docsLink,
                         preview,
                         summary,
+                        beta = false,
                     }) => (
                         <NewInUnleashItem
                             key={label}
@@ -243,6 +246,7 @@ export const NewInUnleash = ({
                             longDescription={longDescription}
                             docsLink={docsLink}
                             summary={summary}
+                            beta={beta}
                         />
                     ),
                 )}

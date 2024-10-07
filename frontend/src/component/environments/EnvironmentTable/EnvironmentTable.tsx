@@ -10,7 +10,7 @@ import {
 } from 'component/common/Table';
 import { useCallback, useMemo } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { Alert, Button, styled, TableBody, Typography } from '@mui/material';
+import { Alert, styled, TableBody } from '@mui/material';
 import type { MoveListItem } from 'hooks/useDragItem';
 import useToast from 'hooks/useToast';
 import useEnvironmentApi, {
@@ -29,6 +29,7 @@ import type { IEnvironment } from 'interfaces/environments';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import { PurchasableFeature } from './PurchasableFeature/PurchasableFeature';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -129,15 +130,11 @@ export const EnvironmentTable = () => {
     return (
         <PageContent header={header}>
             {isPro() && isPurchaseAdditionalEnvronmentsEnabled ? (
-                <StyledAlert severity='info'>
-                    <Typography>Purchase additional environments</Typography>
-                    <Typography>
-                        With our Pro plan, you now have the flexibility to
-                        expand your workspace by adding up to three additional
-                        environments.
-                    </Typography>
-                    <Button variant='contained'>View pricing</Button>
-                </StyledAlert>
+                <PurchasableFeature
+                    title='Purchase additional environments'
+                    description='With our Pro plan, you now have the flexibility to expand your workspace by adding up to three additional environments.'
+                    onClick={() => {}}
+                />
             ) : null}
             <StyledAlert severity='info'>
                 This is the order of environments that you have today in each

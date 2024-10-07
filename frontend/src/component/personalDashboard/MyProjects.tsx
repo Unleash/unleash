@@ -14,7 +14,7 @@ import { ProjectSetupComplete } from './ProjectSetupComplete';
 import { ConnectSDK, CreateFlag, ExistingFlag } from './ConnectSDK';
 import { LatestProjectEvents } from './LatestProjectEvents';
 import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
-import type { FC } from 'react';
+import { useEffect, useRef, type FC } from 'react';
 import { StyledCardTitle } from './PersonalDashboard';
 import type {
     PersonalDashboardProjectDetailsSchema,
@@ -80,6 +80,17 @@ export const MyProjects: FC<{
         activeProjectStage === 'onboarding-started' ||
         activeProjectStage === 'first-flag-created';
 
+    const activeItemRef = useRef<HTMLLIElement>(null);
+
+    useEffect(() => {
+        if (activeItemRef.current) {
+            activeItemRef.current.scrollIntoView({
+                block: 'nearest',
+                inline: 'start',
+            });
+        }
+    }, []);
+
     return (
         <ContentGridContainer>
             <ProjectGrid>
@@ -108,6 +119,11 @@ export const MyProjects: FC<{
                                     key={project.id}
                                     disablePadding={true}
                                     sx={{ mb: 1 }}
+                                    ref={
+                                        project.id === activeProject
+                                            ? activeItemRef
+                                            : null
+                                    }
                                 >
                                     <ListItemButton
                                         sx={listItemStyle}

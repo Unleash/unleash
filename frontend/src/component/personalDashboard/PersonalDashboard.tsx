@@ -8,7 +8,7 @@ import {
     styled,
     Typography,
 } from '@mui/material';
-import React, { type FC, useEffect, useState } from 'react';
+import React, { type FC, useEffect, useState, useRef } from 'react';
 import LinkIcon from '@mui/icons-material/ArrowForward';
 import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
@@ -61,9 +61,24 @@ const FlagListItem: FC<{
     selected: boolean;
     onClick: () => void;
 }> = ({ flag, selected, onClick }) => {
+    const activeFlagRef = useRef<HTMLLIElement>(null);
+
+    useEffect(() => {
+        if (activeFlagRef.current) {
+            activeFlagRef.current.scrollIntoView({
+                block: 'nearest',
+                inline: 'start',
+            });
+        }
+    }, []);
     const IconComponent = getFeatureTypeIcons(flag.type);
     return (
-        <ListItem key={flag.name} disablePadding={true} sx={{ mb: 1 }}>
+        <ListItem
+            key={flag.name}
+            disablePadding={true}
+            sx={{ mb: 1 }}
+            ref={selected ? activeFlagRef : null}
+        >
             <ListItemButton
                 sx={listItemStyle}
                 selected={selected}

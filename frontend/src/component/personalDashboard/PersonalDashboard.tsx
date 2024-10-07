@@ -140,7 +140,7 @@ export const PersonalDashboard = () => {
     const projectStageRef = useLoading(activeProjectStage === 'loading');
 
     return (
-        <div ref={projectStageRef}>
+        <div>
             <Typography component='h2' variant='h2'>
                 Welcome {name}
             </Typography>
@@ -173,7 +173,7 @@ export const PersonalDashboard = () => {
                 />
             ) : (
                 <MyProjects
-                    // need to handle 404s here
+                    ref={projectStageRef}
                     projects={projects}
                     activeProject={activeProject}
                     setActiveProject={setActiveProject}

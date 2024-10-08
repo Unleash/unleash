@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { Typography, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import { AvatarGroupFromOwners } from 'component/common/AvatarGroupFromOwners/AvatarGroupFromOwners';
 import type { ProjectSchemaOwners } from 'openapi';
@@ -43,6 +43,10 @@ const RoleBadge = styled(Badge)({
     whitespace: 'nowrap',
 });
 
+const StyledAvatarGroup = styled(AvatarGroupFromOwners)({
+    width: 'max-content',
+});
+
 export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
     const firstRoles = roles.slice(0, 3);
     const extraRoles = roles.slice(3);
@@ -51,7 +55,15 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
             <InfoSection>
                 {roles.length > 0 ? (
                     <>
-                        <span>Your roles in this project:</span>
+                        <Typography
+                            sx={{
+                                whiteSpace: 'nowrap',
+                            }}
+                            variant='body1'
+                            component='h4'
+                        >
+                            Your roles in this project:
+                        </Typography>
                         <Roles>
                             {firstRoles.map((role) => (
                                 <li>
@@ -63,6 +75,7 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
                             {extraRoles.length ? (
                                 <li>
                                     <HtmlTooltip
+                                        arrow
                                         title={
                                             <TooltipRoles>
                                                 {extraRoles.map((role) => (
@@ -91,8 +104,16 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
                 )}
             </InfoSection>
             <InfoSection>
-                <span>Project owner{owners.length > 1 ? 's' : ''}</span>
-                <AvatarGroupFromOwners users={owners} avatarLimit={3} />
+                <Typography
+                    variant='body1'
+                    component='h4'
+                    sx={{
+                        whiteSpace: 'nowrap',
+                    }}
+                >
+                    Project owner{owners.length > 1 ? 's' : ''}
+                </Typography>
+                <StyledAvatarGroup users={owners} avatarLimit={3} />
             </InfoSection>
         </Wrapper>
     );

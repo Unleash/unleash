@@ -1,4 +1,4 @@
-/* eslint-disable no-param-reassign */
+import type EventEmitter from 'events';
 import timer from './timer';
 
 // wrapTimer keeps track of the timing of a async operation and emits
@@ -8,11 +8,14 @@ import timer from './timer';
 // It transparently passes the data to the following .then(<func>)
 //
 // usage: promise.then(wrapTimer(bus, type, { payload: 'ok' }))
-const wrapTimer: (EventEmitter, string, object) => (any) => any = (
-    eventBus,
-    event,
-    args = {},
-) => {
+type TimeMetrics = {
+    [key: string]: string | number;
+};
+const wrapTimer: (
+    eventBus: EventEmitter,
+    type: string,
+    args: TimeMetrics,
+) => (args: any) => any = (eventBus, event, args = {}) => {
     const t = timer.new();
     return (data) => {
         args.time = t();

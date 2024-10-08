@@ -42,7 +42,7 @@ export const EnvironmentTable = () => {
     const { environments, mutateEnvironments } = useEnvironments();
     const [purchaseDialogOpen, setPurchaseDialogOpen] = useState(false);
     const isFeatureEnabled = useUiFlag('EEA');
-    const isPurchaseAdditionalEnvronmentsEnabled = useUiFlag(
+    const isPurchaseAdditionalEnvironmentsEnabled = useUiFlag(
         'purchaseAdditionalEnvironments',
     );
     const { isPro } = useUiConfig();
@@ -121,7 +121,7 @@ export const EnvironmentTable = () => {
         <PageHeader title={`Environments (${count})`} actions={headerActions} />
     );
 
-    if (!isFeatureEnabled && !isPurchaseAdditionalEnvronmentsEnabled) {
+    if (!isFeatureEnabled && !isPurchaseAdditionalEnvironmentsEnabled) {
         return (
             <PageContent header={header}>
                 <PremiumFeature feature='environments' />
@@ -131,7 +131,7 @@ export const EnvironmentTable = () => {
 
     return (
         <PageContent header={header}>
-            {isPro() && isPurchaseAdditionalEnvronmentsEnabled ? (
+            {isPro() && isPurchaseAdditionalEnvironmentsEnabled ? (
                 <>
                     <PurchasableFeature
                         title='Purchase additional environments'

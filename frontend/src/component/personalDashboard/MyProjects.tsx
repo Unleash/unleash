@@ -178,9 +178,7 @@ export const MyProjects = forwardRef<
                                     >
                                         <ListItemButton
                                             sx={listItemStyle}
-                                            selected={
-                                                project.id === activeProject
-                                            }
+                                            selected={project.id === activeProject}
                                             onClick={() =>
                                                 setActiveProject(project.id)
                                             }

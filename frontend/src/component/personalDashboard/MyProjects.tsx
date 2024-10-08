@@ -137,8 +137,6 @@ export const MyProjects = forwardRef<
             activeProjectStage === 'onboarding-started' ||
             activeProjectStage === 'first-flag-created';
 
-        console.log('active project:', activeProject);
-
         const error = personalDashboardProjectDetails === undefined;
 
         const box1Content = () => {

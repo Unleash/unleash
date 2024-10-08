@@ -133,7 +133,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - [Canary releases / gradual rollouts](https://docs.getunleash.io/reference/activation-strategies#gradual-rollout)
 - Targeted releases: release features to specific [users](https://docs.getunleash.io/reference/activation-strategies#userids), [IPs](https://docs.getunleash.io/reference/activation-strategies#ips), or [hostnames](https://docs.getunleash.io/reference/activation-strategies#hostnames)
 - [Kill switches](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types)
-- [A/B testing](https://docs.getunleash.io/topics/a-b-testing)
+- [A/B testing](https://docs.getunleash.io/feature-flag-tutorials/use-cases/a-b-testing)
 - 2 [environments](https://docs.getunleash.io/reference/environments)
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
 - [Dashboard for managing technical debt](https://docs.getunleash.io/reference/technical-debt) and [stale flags](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles)

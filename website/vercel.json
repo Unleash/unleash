@@ -52,6 +52,11 @@
       "permanent": true
     },
     {
+      "source": "/topics/a-b-testing",
+      "destination": "/feature-flag-tutorials/use-cases/a-b-testing",
+      "permanent": true
+    },
+    {
       "source": "/reference/event-types",
       "destination": "/reference/events#event-types",
       "permanent": true

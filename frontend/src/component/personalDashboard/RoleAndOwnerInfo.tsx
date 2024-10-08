@@ -2,6 +2,7 @@ import { styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import { AvatarGroupFromOwners } from 'component/common/AvatarGroupFromOwners/AvatarGroupFromOwners';
 import type { ProjectSchemaOwners } from 'openapi';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 
 type Props = {
     roles: string[];
@@ -22,18 +23,68 @@ const InfoSection = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
+const Roles = styled('ul')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    flexFlow: 'row wrap',
+    listStyle: 'none',
+    padding: 0,
+}));
+
+const TooltipRoles = styled('ul')(({ theme }) => ({
+    gap: theme.spacing(1),
+    flexFlow: 'column',
+    display: 'flex',
+    listStyle: 'none',
+    padding: 0,
+}));
+
+const RoleBadge = styled(Badge)({
+    whitespace: 'nowrap',
+});
+
 export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
+    const firstRoles = roles.slice(0, 3);
+    const extraRoles = roles.slice(3);
     return (
         <Wrapper>
             <InfoSection>
                 {roles.length > 0 ? (
                     <>
                         <span>Your roles in this project:</span>
-                        {roles.map((role) => (
-                            <Badge key={role} color='secondary'>
-                                {role}
-                            </Badge>
-                        ))}
+                        <Roles>
+                            {firstRoles.map((role) => (
+                                <li>
+                                    <RoleBadge key={role} color='secondary'>
+                                        {role}
+                                    </RoleBadge>
+                                </li>
+                            ))}
+                            {extraRoles.length ? (
+                                <li>
+                                    <HtmlTooltip
+                                        title={
+                                            <TooltipRoles>
+                                                {extraRoles.map((role) => (
+                                                    <li>
+                                                        <RoleBadge>
+                                                            {role}
+                                                        </RoleBadge>
+                                                    </li>
+                                                ))}
+                                            </TooltipRoles>
+                                        }
+                                    >
+                                        <RoleBadge
+                                            key={'extra-roles'}
+                                            color='secondary'
+                                        >
+                                            {`+ ${extraRoles.length} more`}
+                                        </RoleBadge>
+                                    </HtmlTooltip>
+                                </li>
+                            ) : null}
+                        </Roles>
                     </>
                 ) : (
                     <span>You have no project roles in this project.</span>

@@ -252,6 +252,18 @@ exports[`returns all baseRoutes 1`] = `
       "advanced": true,
       "mobile": true,
     },
+    "notFlag": "purchaseAdditionalEnvironments",
+    "path": "/environments",
+    "title": "Environments",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "flag": "purchaseAdditionalEnvironments",
+    "menu": {
+      "advanced": true,
+      "mobile": true,
+    },
     "path": "/environments",
     "title": "Environments",
     "type": "protected",

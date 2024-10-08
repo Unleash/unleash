@@ -58,6 +58,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 ```
+ℹ️ **Info:** The Android SDK takes at least 60 seconds to post metrics to Unleash.
 
 ---
 ---

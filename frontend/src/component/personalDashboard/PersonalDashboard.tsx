@@ -1,5 +1,6 @@
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import {
+    Accordion,
     Button,
     IconButton,
     Link,
@@ -106,14 +107,23 @@ const useDashboardState = (
     projects: PersonalDashboardSchemaProjectsItem[],
     flags: PersonalDashboardSchemaFlagsItem[],
 ) => {
+    type SectionState = 'expanded' | 'collapsed';
     type State = {
         activeProject: string | undefined;
         activeFlag: PersonalDashboardSchemaFlagsItem | undefined;
+        sections: {
+            projects: { state: SectionState };
+            flags: { state: SectionState };
+        };
     };
 
-    const defaultState = {
+    const defaultState: State = {
         activeProject: undefined,
         activeFlag: undefined,
+        sections: {
+            projects: { state: 'expanded' as const },
+            flags: { state: 'expanded' as const },
+        },
     };
 
     const [state, setState] = useLocalStorageState<State>(
@@ -135,6 +145,7 @@ const useDashboardState = (
 
         if (setDefaultFlag || setDefaultProject) {
             setState({
+                ...state,
                 activeFlag: setDefaultFlag ? flags[0] : state.activeFlag,
                 activeProject: setDefaultProject
                     ? projects[0].id
@@ -159,11 +170,27 @@ const useDashboardState = (
         });
     };
 
+    const toggleSectionState = (section: keyof State['sections']) => {
+        setState({
+            ...state,
+            sections: {
+                ...state.sections,
+                [section]: {
+                    state:
+                        state.sections[section].state === 'expanded'
+                            ? 'collapsed'
+                            : 'expanded',
+                },
+            },
+        });
+    };
+
     return {
         activeFlag,
         setActiveFlag,
         activeProject,
         setActiveProject,
+        toggleSectionState,
     };
 };
 
@@ -182,6 +209,34 @@ const ViewKeyConceptsButton = styled(Button)(({ theme }) => ({
     margin: 0,
 }));
 
+const SectionAccordion = styled(Accordion)(({ theme }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    backgroundColor: theme.palette.background.elevation1,
+    boxShadow: 'none',
+    margin: 0,
+    '& .expanded': {
+        '&:before': {
+            opacity: '0 !important',
+        },
+    },
+}));
+
+const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+    border: 'none',
+    padding: theme.spacing(0.5, 3),
+    '&:hover .valuesExpandLabel': {
+        textDecoration: 'underline',
+    },
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    borderTop: `1px dashed ${theme.palette.divider}`,
+    display: 'flex',
+    flexDirection: 'column',
+    padding: 0,
+}));
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
 
@@ -195,8 +250,13 @@ export const PersonalDashboard = () => {
 
     const projects = personalDashboard?.projects || [];
 
-    const { activeProject, setActiveProject, activeFlag, setActiveFlag } =
-        useDashboardState(projects, personalDashboard?.flags ?? []);
+    const {
+        activeProject,
+        setActiveProject,
+        activeFlag,
+        setActiveFlag,
+        toggleSectionState,
+    } = useDashboardState(projects, personalDashboard?.flags ?? []);
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'open' | 'closed'
@@ -257,61 +317,80 @@ export const PersonalDashboard = () => {
                 />
             )}
 
-            <ContentGridContainer>
-                <FlagGrid sx={{ mt: 2 }}>
-                    <GridItem
-                        gridArea='title'
-                        sx={{ display: 'flex', alignItems: 'center' }}
-                    >
-                        <Typography variant='h3'>My feature flags</Typography>
-                    </GridItem>
-                    <GridItem
-                        gridArea='lifecycle'
-                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
-                    >
-                        {activeFlag ? (
-                            <FlagExposure
-                                project={activeFlag.project}
-                                flagName={activeFlag.name}
-                                onArchive={refetchDashboard}
-                            />
-                        ) : null}
-                    </GridItem>
-                    <SpacedGridItem gridArea='flags'>
-                        {personalDashboard &&
-                        personalDashboard.flags.length > 0 ? (
-                            <List
-                                disablePadding={true}
-                                sx={{ maxHeight: '400px', overflow: 'auto' }}
+            <SectionAccordion>
+                <StyledAccordionSummary>
+                    <Typography variant='h3'>My feature flags</Typography>
+                </StyledAccordionSummary>
+                <StyledAccordionDetails>
+                    <ContentGridContainer>
+                        <FlagGrid sx={{ mt: 2 }}>
+                            <GridItem
+                                gridArea='title'
+                                sx={{ display: 'flex', alignItems: 'center' }}
                             >
-                                {personalDashboard.flags.map((flag) => (
-                                    <FlagListItem
-                                        key={flag.name}
-                                        flag={flag}
-                                        selected={
-                                            flag.name === activeFlag?.name
-                                        }
-                                        onClick={() => setActiveFlag(flag)}
+                                <Typography variant='h3'>
+                                    My feature flags
+                                </Typography>
+                            </GridItem>
+                            <GridItem
+                                gridArea='lifecycle'
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'flex-end',
+                                }}
+                            >
+                                {activeFlag ? (
+                                    <FlagExposure
+                                        project={activeFlag.project}
+                                        flagName={activeFlag.name}
+                                        onArchive={refetchDashboard}
                                     />
-                                ))}
-                            </List>
-                        ) : (
-                            <Typography>
-                                You have not created or favorited any feature
-                                flags. Once you do, they will show up here.
-                            </Typography>
-                        )}
-                    </SpacedGridItem>
+                                ) : null}
+                            </GridItem>
+                            <SpacedGridItem gridArea='flags'>
+                                {personalDashboard &&
+                                personalDashboard.flags.length > 0 ? (
+                                    <List
+                                        disablePadding={true}
+                                        sx={{
+                                            maxHeight: '400px',
+                                            overflow: 'auto',
+                                        }}
+                                    >
+                                        {personalDashboard.flags.map((flag) => (
+                                            <FlagListItem
+                                                key={flag.name}
+                                                flag={flag}
+                                                selected={
+                                                    flag.name ===
+                                                    activeFlag?.name
+                                                }
+                                                onClick={() =>
+                                                    setActiveFlag(flag)
+                                                }
+                                            />
+                                        ))}
+                                    </List>
+                                ) : (
+                                    <Typography>
+                                        You have not created or favorited any
+                                        feature flags. Once you do, they will
+                                        show up here.
+                                    </Typography>
+                                )}
+                            </SpacedGridItem>
 
-                    <SpacedGridItem gridArea='chart'>
-                        {activeFlag ? (
-                            <FlagMetricsChart flag={activeFlag} />
-                        ) : (
-                            <PlaceholderFlagMetricsChart />
-                        )}
-                    </SpacedGridItem>
-                </FlagGrid>
-            </ContentGridContainer>
+                            <SpacedGridItem gridArea='chart'>
+                                {activeFlag ? (
+                                    <FlagMetricsChart flag={activeFlag} />
+                                ) : (
+                                    <PlaceholderFlagMetricsChart />
+                                )}
+                            </SpacedGridItem>
+                        </FlagGrid>
+                    </ContentGridContainer>
+                </StyledAccordionDetails>
+            </SectionAccordion>
             <WelcomeDialog
                 open={welcomeDialog === 'open'}
                 onClose={() => setWelcomeDialog('closed')}

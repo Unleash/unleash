@@ -101,11 +101,18 @@ export class OnboardingReadModel implements IOnboardingReadModel {
             return { status: 'onboarding-started' };
         }
 
-        const lastSeen = await this.db('last_seen_at_metrics as lsm')
-            .select('lsm.feature_name')
+        const db = this.db;
+        const lastSeen = await db
+            .select(db.raw('1'))
+            .from('last_seen_at_metrics as lsm')
             .innerJoin('features as f', 'f.name', 'lsm.feature_name')
             .innerJoin('projects as p', 'p.id', 'f.project')
             .where('p.id', projectId)
+            .union((qb) => {
+                qb.select(db.raw('1'))
+                    .from('client_applications_usage as cau')
+                    .where('cau.project', projectId);
+            })
             .first();
 
         if (lastSeen) {

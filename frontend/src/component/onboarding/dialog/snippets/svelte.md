@@ -12,7 +12,6 @@ npm install @unleash/proxy-client-svelte
         url: '<YOUR_API_URL>',
         clientKey: '<YOUR_API_TOKEN>', // in production use environment variable
         appName: 'unleash-onboarding-svelte',
-        metricsInterval: 1, // in production remove this or increase to >=15
 	};
 </script>
 

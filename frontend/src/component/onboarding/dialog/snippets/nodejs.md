@@ -13,7 +13,6 @@ const unleash = initialize({
   customHeaders: {
     Authorization: '<YOUR_API_TOKEN>' // in production use environment variable
   },
-  metricsInterval: 1000, // in production remove this or increase to >=15000
 });
 
 setInterval(() => {

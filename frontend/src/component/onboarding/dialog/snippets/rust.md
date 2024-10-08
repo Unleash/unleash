@@ -26,7 +26,6 @@ enum Flags {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let client: Client<Flags, reqwest::Client> = ClientBuilder::default()
-        .interval(1000) // in production remove this or increase to >=15000
         .into_client(
             "<YOUR_API_URL>",
             "unleash-onboarding-rust",
@@ -55,7 +54,6 @@ async fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 let api_token = env::var("UNLEASH_API_TOKEN").expect("UNLEASH_API_TOKEN environment variable not set");
 
 let client: Client<Flags, reqwest::Client> = ClientBuilder::default()
-    .interval(1000) // Polling & metrics interval - default 15000 (ms)
     .into_client(
         "<YOUR_API_URL>",
         "unleash-onboarding-rust",

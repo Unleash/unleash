@@ -189,9 +189,6 @@ export const MyProjects = forwardRef<
         return (
             <ContentGridContainer ref={ref}>
                 <ProjectGrid>
-                    <GridItem gridArea='header'>
-                        <Typography variant='h3'>My projects</Typography>
-                    </GridItem>
                     <SpacedGridItem gridArea='projects'>
                         <List
                             disablePadding={true}

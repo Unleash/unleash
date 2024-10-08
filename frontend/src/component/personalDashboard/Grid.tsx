@@ -10,7 +10,6 @@ const ContentGrid = styled('article')(({ theme }) => {
         backgroundColor: theme.palette.divider,
         borderRadius: `${theme.shape.borderRadiusLarge}px`,
         overflow: 'hidden',
-        border: `0.5px solid ${theme.palette.divider}`,
         gap: `1px`,
         display: 'flex',
         flexFlow: 'column nowrap',
@@ -41,7 +40,6 @@ export const ProjectGrid = styled(ContentGrid)(
         gridTemplateColumns: '1fr 1fr 1fr',
         display: 'grid',
         gridTemplateAreas: `
-                "header header header"
                 "projects box1 box2"
                 ". owners owners"
             `,
@@ -53,7 +51,6 @@ export const FlagGrid = styled(ContentGrid)(
         gridTemplateColumns: '1fr 1fr 1fr',
         display: 'grid',
         gridTemplateAreas: `
-                "title lifecycle lifecycle"
                 "flags chart chart"
             `,
     }),

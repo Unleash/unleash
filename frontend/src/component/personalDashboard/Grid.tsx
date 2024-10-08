@@ -41,7 +41,7 @@ export const ProjectGrid = styled(ContentGrid)(
         gridTemplateColumns: '1fr 1fr 1fr',
         display: 'grid',
         gridTemplateAreas: `
-                "title onboarding onboarding"
+                "header header header"
                 "projects box1 box2"
                 ". owners owners"
             `,

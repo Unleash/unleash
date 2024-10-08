@@ -3,6 +3,8 @@ import { Markdown } from '../common/Markdown/Markdown';
 import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
 import { UserAvatar } from '../common/UserAvatar/UserAvatar';
 import { Typography, styled } from '@mui/material';
+import { formatDateYMDHM } from 'utils/formatDate';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const Events = styled('ul')(({ theme }) => ({
     padding: 0,
@@ -16,6 +18,10 @@ const Event = styled('li')(({ theme }) => ({
     gap: theme.spacing(2),
     alignItems: 'center',
     marginBottom: theme.spacing(4),
+
+    '*': {
+        fontWeight: 'normal',
+    },
 }));
 
 const TitleContainer = styled('div')(({ theme }) => ({
@@ -32,9 +38,16 @@ const ActionBox = styled('article')(({ theme }) => ({
     flexDirection: 'column',
 }));
 
+const Timestamp = styled('time')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.fontSize,
+    marginBottom: theme.spacing(1),
+}));
+
 export const LatestProjectEvents: FC<{
     latestEvents: PersonalDashboardProjectDetailsSchema['latestEvents'];
 }> = ({ latestEvents }) => {
+    const { locationSettings } = useLocationSettings();
     return (
         <ActionBox>
             <TitleContainer>
@@ -55,10 +68,18 @@ export const LatestProjectEvents: FC<{
                                 src={event.createdByImageUrl}
                                 sx={{ mt: 1 }}
                             />
-                            <Markdown>
-                                {event.summary ||
-                                    'No preview available for this event'}
-                            </Markdown>
+                            <div>
+                                <Timestamp dateTime={event.createdAt}>
+                                    {formatDateYMDHM(
+                                        event.createdAt,
+                                        locationSettings.locale,
+                                    )}
+                                </Timestamp>
+                                <Markdown>
+                                    {event.summary ||
+                                        'No preview available for this event'}
+                                </Markdown>
+                            </div>
                         </Event>
                     );
                 })}

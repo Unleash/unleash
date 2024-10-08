@@ -159,7 +159,6 @@ test('Render personal dashboard for a new project', async () => {
 
     await screen.findByText('Welcome Unleash User');
     await screen.findByText('projectName');
-    await screen.findByText('Setup incomplete');
     await screen.findByText('3'); // members
     await screen.findByText('0'); // features
     await screen.findByText('100%'); // health

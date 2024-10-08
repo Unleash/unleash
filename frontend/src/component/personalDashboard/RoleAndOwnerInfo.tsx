@@ -66,8 +66,8 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
                         </Typography>
                         <Roles>
                             {firstRoles.map((role) => (
-                                <li>
-                                    <RoleBadge key={role} color='secondary'>
+                                <li key={role}>
+                                    <RoleBadge color='secondary'>
                                         {role}
                                     </RoleBadge>
                                 </li>
@@ -79,7 +79,7 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
                                         title={
                                             <TooltipRoles>
                                                 {extraRoles.map((role) => (
-                                                    <li>
+                                                    <li key={role}>
                                                         <RoleBadge>
                                                             {role}
                                                         </RoleBadge>

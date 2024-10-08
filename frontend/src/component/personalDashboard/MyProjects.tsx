@@ -7,7 +7,6 @@ import {
     ListItemButton,
     Typography,
 } from '@mui/material';
-import { Badge } from '../common/Badge/Badge';
 import { ProjectIcon } from '../common/ProjectIcon/ProjectIcon';
 import LinkIcon from '@mui/icons-material/ArrowForward';
 import { ProjectSetupComplete } from './ProjectSetupComplete';
@@ -190,22 +189,8 @@ export const MyProjects = forwardRef<
         return (
             <ContentGridContainer ref={ref}>
                 <ProjectGrid>
-                    <GridItem gridArea='title'>
+                    <GridItem gridArea='header'>
                         <Typography variant='h3'>My projects</Typography>
-                    </GridItem>
-                    <GridItem
-                        gridArea='onboarding'
-                        sx={{
-                            display: 'flex',
-                            justifyContent: 'flex-end',
-                        }}
-                    >
-                        {setupIncomplete ? (
-                            <Badge color='warning'>Setup incomplete</Badge>
-                        ) : null}
-                        {error ? (
-                            <Badge color='error'>Setup state unknown</Badge>
-                        ) : null}
                     </GridItem>
                     <SpacedGridItem gridArea='projects'>
                         <List

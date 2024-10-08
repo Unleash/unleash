@@ -267,6 +267,15 @@ export const routes: IRoute[] = [
         component: EnvironmentTable,
         type: 'protected',
         flag: EEA,
+        notFlag: 'purchaseAdditionalEnvironments',
+        menu: { mobile: true, advanced: true },
+    },
+    {
+        path: '/environments',
+        title: 'Environments',
+        component: EnvironmentTable,
+        type: 'protected',
+        flag: 'purchaseAdditionalEnvironments',
         menu: { mobile: true, advanced: true },
     },
     {

@@ -101,13 +101,6 @@ export class OnboardingReadModel implements IOnboardingReadModel {
             return { status: 'onboarding-started' };
         }
 
-        // const lastSeen = await this.db('last_seen_at_metrics as lsm')
-        //     .select('lsm.feature_name')
-        //     .innerJoin('features as f', 'f.name', 'lsm.feature_name')
-        //     .innerJoin('projects as p', 'p.id', 'f.project')
-        //     .where('p.id', projectId)
-        //     .first();
-
         const db = this.db;
         const lastSeen = await db
             .select(db.raw('1'))

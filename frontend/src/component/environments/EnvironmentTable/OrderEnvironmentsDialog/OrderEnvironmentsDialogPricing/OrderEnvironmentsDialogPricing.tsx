@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { Box, Card, CardContent, styled, Typography } from '@mui/material';
+import { Box, Card, styled, Typography } from '@mui/material';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 
 const pricingOptions = [
@@ -12,6 +12,11 @@ const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
+    justifyContent: 'center',
+    height: '100%',
+    [theme.breakpoints.up('lg')]: {
+        marginTop: theme.spacing(7.5),
+    },
 }));
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -19,12 +24,12 @@ const StyledCard = styled(Card)(({ theme }) => ({
     boxShadow: 'none',
 }));
 
-const StyledCardContent = styled(CardContent)(({ theme }) => ({
+const StyledCardContent = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     flexDirection: 'row',
-    // padding: theme.spacing(2),
+    padding: theme.spacing(2),
 }));
 
 export const OrderEnvironmentsDialogPricing: FC = () => (
@@ -43,7 +48,7 @@ export const OrderEnvironmentsDialogPricing: FC = () => (
                                 {option.environments > 1 ? 's' : ''}
                             </Typography>
                         </Box>
-                        <Typography variant='body2' color='textSecondary'>
+                        <Typography variant='body2'>
                             ${option.price} per user per month
                         </Typography>
                     </Box>

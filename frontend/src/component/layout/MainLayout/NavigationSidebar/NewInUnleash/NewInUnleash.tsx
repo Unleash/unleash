@@ -159,7 +159,8 @@ export const NewInUnleash = ({
                     behavior: 'smooth',
                 });
             },
-            docsLink: 'https://docs.getunleash.io/reference/events',
+            docsLink:
+                'https://docs.getunleash.io/reference/events#event-timeline',
             show: !isOss() && eventTimelineEnabled,
             longDescription: (
                 <>

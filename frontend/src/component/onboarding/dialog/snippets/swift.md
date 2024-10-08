@@ -12,7 +12,6 @@ import UnleashProxyClientSwift
 var unleash = UnleashProxyClientSwift.UnleashClient(
    unleashUrl: "<YOUR_API_URL>",
    clientKey: "<YOUR_API_TOKEN>", // in production use environment variable
-   refreshInterval: 5, // in production remove this or increase to >=5
    appName: "unleash-onboarding-swift",
    context: [:])
 
@@ -22,3 +21,4 @@ Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
     print("Is enabled", unleash.isEnabled(name: "<YOUR_FLAG>"))
 }
 ```
+ℹ️ **Info:** The Swift SDK takes at least 60 seconds to post metrics to Unleash.

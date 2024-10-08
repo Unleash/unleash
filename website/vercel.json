@@ -83,7 +83,12 @@
     },
     {
       "source": "/advanced/feature_toggle_types",
-      "destination": "/reference/feature-toggle-types",
+      "destination": "/reference/feature-toggles#feature-flag-types",
+      "permanent": true
+    },
+    {
+      "source": "/reference/feature-toggle-types",
+      "destination": "/reference/feature-toggles#feature-flag-types",
       "permanent": true
     },
     {

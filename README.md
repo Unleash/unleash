@@ -132,7 +132,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - Organise feature flags by [feature flag tags](https://docs.getunleash.io/reference/tags)
 - [Canary releases / gradual rollouts](https://docs.getunleash.io/reference/activation-strategies#gradual-rollout)
 - Targeted releases: release features to specific [users](https://docs.getunleash.io/reference/activation-strategies#userids), [IPs](https://docs.getunleash.io/reference/activation-strategies#ips), or [hostnames](https://docs.getunleash.io/reference/activation-strategies#hostnames)
-- [Kill switches](https://docs.getunleash.io/reference/feature-toggle-types#feature-toggle-types)
+- [Kill switches](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types)
 - [A/B testing](https://docs.getunleash.io/topics/a-b-testing)
 - 2 [environments](https://docs.getunleash.io/reference/environments)
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)

@@ -5,7 +5,7 @@ import VideoContent from '@site/src/components/VideoContent.jsx'
 
 A/B testing is a type of randomized controlled experiment, where you test two different versions of a feature to see which version performs better. If you have more than two versions, it's known as _multivariate testing_. Coupled with analytics, A/B and multivariate testing enables you to better understand your users and how you can serve them better.
 
-To facilitate A/B testing and experimentation, Unleash has a built-in 'experiment' [flag type](../reference/feature-toggle-types.md#feature-toggle-types) and lets you give flags any number of [variants](../reference/feature-toggle-variants.md). To see a concrete example of configuring multivariate testing with unleash, see [our blog post on A/B testing with Unleash and Google Analytics](https://www.getunleash.io/blog/a-b-n-experiments-in-3-simple-steps).
+To facilitate A/B testing and experimentation, Unleash has a built-in 'experiment' [flag type](../reference/feature-toggles.md#feature-flag-types) and lets you give flags any number of [variants](../reference/feature-toggle-variants.md). To see a concrete example of configuring multivariate testing with unleash, see [our blog post on A/B testing with Unleash and Google Analytics](https://www.getunleash.io/blog/a-b-n-experiments-in-3-simple-steps).
 
 In the rest of this document, _A/B testing_ will refer to both strict A/B testing and multivariate testing unless otherwise specified.
 
@@ -46,9 +46,9 @@ Don't do yourself a disservice by chasing one metric above all else. Keep an eye
 
 Feature flags are a great way to run A/B tests and to decouple them from your code, and Unleash ships with features to make it easy to get started with.
 
-Flags can be used for different purposes and we consider experimentation important enough to have given it its own [flag type](../reference/feature-toggle-types.md#feature-toggle-types). Experiment flags have a lifetime expectancy suited to let you run an experiment and gather enough data to know whether it was a success or not.
+Flags can be used for different purposes and we consider experimentation important enough to have given it its own [flag type](../reference/feature-flags#feature-flag-types). Experiment flags have a lifetime expectancy suited to let you run an experiment and gather enough data to know whether it was a success or not.
 
-If you're running a basic A/B test where the control group doesn't see any change, then a basic experiment flag will do the job excellently. With a [gradual rollout](../reference/activation-strategies#gradual-rollout), some appropriate [strategy constraints](../reference/strategy-constraints.md), and an analytics tool of your choosing, you should be all set to start collecting metrics and measuring.
+If you're running a basic A/B test where the control group doesn't see any change, then a basic experiment flag will do the job excellently. With a [gradual rollout](../reference/activation-strategies#gradual-rollout), some appropriate [strategy constraints](../reference/strategy-constraints), and an analytics tool of your choosing, you should be all set to start collecting metrics and measuring.
 
 If you want to run a more advanced experiment, then take a look at using [feature flag variants](../reference/feature-toggle-variants). If you have a control group, and want to test multiple potential improvements, then simply add your desired variants to the flag as discussed in the previous paragraph. If you want to launch a new feature (or a headline) in multiple variations right out the gate, consider using a basic on/off flag with variants and activate it for all your users.
 

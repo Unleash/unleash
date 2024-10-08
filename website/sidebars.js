@@ -328,8 +328,6 @@ module.exports = {
                         'reference/feature-flag-naming-patterns',
                         'reference/feature-lifecycle',
                         'reference/feature-toggles',
-                        'reference/feature-toggle-types',
-                        'reference/feature-toggle-variants',
                         'reference/front-end-api',
                         'reference/impression-data',
                         'reference/insights',

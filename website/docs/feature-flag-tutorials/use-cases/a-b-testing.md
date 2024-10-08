@@ -23,7 +23,7 @@ In the projects view, the Unleash platform shows a list of feature flags that yo
 
 Next, you will create a feature flag on the platform and turn it on for your app.
 
-Flags can be used with different purposes and we consider experimentation important enough to have its own flag type. Experimentation flags have a lifetime expectancy suited to let you run an experiment and gather enough data to know whether it was a success or not. Learn more about [feature flag types](/reference/feature-toggle-types) in our documentation.
+Flags can be used with different purposes and we consider experimentation important enough to have its own flag type. Experimentation flags have a lifetime expectancy suited to let you run an experiment and gather enough data to know whether it was a success or not. Learn more about [feature flag types](/reference/feature-toggles#feature-flag-types) in our documentation.
 
 The feature flag we are creating is considered an ‘Experimentation’ flag type. The project will be ‘Default’ or the named project in which you are working in for the purpose of this tutorial. As the number of feature flags grows, you can organize them in your projects.
 

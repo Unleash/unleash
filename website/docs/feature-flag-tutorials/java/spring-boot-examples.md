@@ -216,15 +216,15 @@ Because a feature flag service controls how an application behaves in production
 
 Unleash provides the data to log any change over time at the flag level and the project level. Logs are useful for downstream data warehouses or data lakes. Tools like Splunk can help you combine logs and run advanced queries against them.
 
-For our Spring Boot app, we can view Event logs to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
+For our Spring Boot app, we can view events in [Event Log](/reference/events#event-log) to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
 
 -   When the flag was created
 -   How the gradual rollout strategy was configured
 -   When and how the variants were created and configured
 
-![Event logs in Unleash track every single change made to flags, similar to Git commit history.](/img/spring-boot-events-log.png)
+![Event Log in Unleash tracks every single change made to flags, similar to Git commit history.](/img/spring-boot-events-log.png)
 
-You can also retrieve event log data by using an API command. Read our documentation on [Event logs](/reference/event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
+You can also retrieve events by using an API command. Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
 
 ## Flag Automation & Workflow Integration for Java Apps
 

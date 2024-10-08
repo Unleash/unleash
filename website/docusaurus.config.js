@@ -336,11 +336,19 @@ module.exports = {
                     },
                     {
                         from: '/advanced/audit_log',
-                        to: '/reference/event-log',
+                        to: '/reference/events',
                     },
                     {
-                        from: '/api/open_api',
-                        to: '/reference/api/unleash',
+                        from: '/advanced/audit_log',
+                        to: '/reference/events',
+                    },
+                    {
+                        from: '/reference/event-log',
+                        to: '/reference/events',
+                    },
+                    {
+                        from: '/reference/event-types',
+                        to: '/reference/events',
                     },
                     {
                         from: '/advanced/api_access',

@@ -164,9 +164,9 @@ Fortunately, this is straightforward in Unleash Enterprise.
 
 Unleash provides the data to log any change that has happened over time, at the flag level from a global level. In conjunction with Unleash, tools like Splunk can help you combine logs and run advanced queries against them. Logs are useful for downstream data warehouses or data lakes.
 
-![The event log for a feature flag. The "Event log" tab is highlighted and the UI shows the most recent changes, including a JSON diff and the change details.](/img/unleash-toggle-history.png)
+![Events for a feature flag. The Event log tab is highlighted and the UI shows the most recent changes, including a JSON diff and the change details.](/img/unleash-toggle-history.png)
 
-Learn more about [event logs](/reference/event-log/) in our documentation.
+Learn more about [Event Log](/reference/events#event-log/) in our documentation.
 
 ### Managing Change Requests
 

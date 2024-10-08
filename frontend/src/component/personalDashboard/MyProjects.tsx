@@ -14,10 +14,11 @@ import { ProjectSetupComplete } from './ProjectSetupComplete';
 import { ConnectSDK, CreateFlag, ExistingFlag } from './ConnectSDK';
 import { LatestProjectEvents } from './LatestProjectEvents';
 import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
-import { useEffect, useRef, type FC } from 'react';
+import { forwardRef, useEffect, useRef, type FC } from 'react';
 import { StyledCardTitle } from './PersonalDashboard';
 import type {
     PersonalDashboardProjectDetailsSchema,
+    PersonalDashboardSchemaAdminsItem,
     PersonalDashboardSchemaProjectsItem,
 } from '../../openapi';
 import {
@@ -29,6 +30,7 @@ import {
     GridItem,
     SpacedGridItem,
 } from './Grid';
+import { ContactAdmins, DataError } from './ProjectDetailsError';
 
 const ActiveProjectDetails: FC<{
     project: PersonalDashboardSchemaProjectsItem;
@@ -108,98 +110,141 @@ const ProjectListItem: FC<{
     );
 };
 
-export const MyProjects: FC<{
-    projects: PersonalDashboardSchemaProjectsItem[];
-    personalDashboardProjectDetails?: PersonalDashboardProjectDetailsSchema;
-    activeProject: string;
-    setActiveProject: (project: string) => void;
-}> = ({
-    projects,
-    personalDashboardProjectDetails,
-    setActiveProject,
-    activeProject,
-}) => {
-    const activeProjectStage =
-        personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
-    const setupIncomplete =
-        activeProjectStage === 'onboarding-started' ||
-        activeProjectStage === 'first-flag-created';
+export const MyProjects = forwardRef<
+    HTMLDivElement,
+    {
+        projects: PersonalDashboardSchemaProjectsItem[];
+        personalDashboardProjectDetails?: PersonalDashboardProjectDetailsSchema;
+        activeProject: string;
+        setActiveProject: (project: string) => void;
+        admins: PersonalDashboardSchemaAdminsItem[];
+    }
+>(
+    (
+        {
+            projects,
+            personalDashboardProjectDetails,
+            setActiveProject,
+            activeProject,
+            admins,
+        },
+        ref,
+    ) => {
+        const activeProjectStage =
+            personalDashboardProjectDetails?.onboardingStatus.status ??
+            'loading';
+        const setupIncomplete =
+            activeProjectStage === 'onboarding-started' ||
+            activeProjectStage === 'first-flag-created';
 
-    return (
-        <ContentGridContainer>
-            <ProjectGrid>
-                <GridItem gridArea='title'>
-                    <Typography variant='h3'>My projects</Typography>
-                </GridItem>
-                <GridItem
-                    gridArea='onboarding'
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                    }}
-                >
-                    {setupIncomplete ? (
-                        <Badge color='warning'>Setup incomplete</Badge>
-                    ) : null}
-                </GridItem>
-                <SpacedGridItem gridArea='projects'>
-                    <List
-                        disablePadding={true}
-                        sx={{ maxHeight: '400px', overflow: 'auto' }}
+        const error = personalDashboardProjectDetails === undefined;
+
+        const box1Content = () => {
+            if (error) {
+                return <DataError project={activeProject} />;
+            }
+
+            if (
+                activeProjectStage === 'onboarded' &&
+                personalDashboardProjectDetails
+            ) {
+                return (
+                    <ProjectSetupComplete
+                        project={activeProject}
+                        insights={personalDashboardProjectDetails.insights}
+                    />
+                );
+            } else if (
+                activeProjectStage === 'onboarding-started' ||
+                activeProjectStage === 'loading'
+            ) {
+                return <CreateFlag project={activeProject} />;
+            } else if (activeProjectStage === 'first-flag-created') {
+                return <ExistingFlag project={activeProject} />;
+            }
+        };
+
+        const box2Content = () => {
+            if (error) {
+                return <ContactAdmins admins={admins} />;
+            }
+
+            if (
+                activeProjectStage === 'onboarded' &&
+                personalDashboardProjectDetails
+            ) {
+                return (
+                    <LatestProjectEvents
+                        latestEvents={
+                            personalDashboardProjectDetails.latestEvents
+                        }
+                    />
+                );
+            }
+
+            if (setupIncomplete || activeProjectStage === 'loading') {
+                return <ConnectSDK project={activeProject} />;
+            }
+        };
+
+        return (
+            <ContentGridContainer ref={ref}>
+                <ProjectGrid>
+                    <GridItem gridArea='title'>
+                        <Typography variant='h3'>My projects</Typography>
+                    </GridItem>
+                    <GridItem
+                        gridArea='onboarding'
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'flex-end',
+                        }}
                     >
-                        {projects.map((project) => {
-                            return (
+                        {setupIncomplete ? (
+                            <Badge color='warning'>Setup incomplete</Badge>
+                        ) : null}
+                        {error ? (
+                            <Badge color='error'>Setup state unknown</Badge>
+                        ) : null}
+                    </GridItem>
+                    <SpacedGridItem gridArea='projects'>
+                        <List
+                            disablePadding={true}
+                            sx={{ maxHeight: '400px', overflow: 'auto' }}
+                        >
+                            {projects.map((project) => (
                                 <ProjectListItem
                                     key={project.id}
                                     project={project}
                                     selected={project.id === activeProject}
                                     onClick={() => setActiveProject(project.id)}
                                 />
-                            );
-                        })}
-                    </List>
-                </SpacedGridItem>
-                <SpacedGridItem gridArea='box1'>
-                    {activeProjectStage === 'onboarded' &&
-                    personalDashboardProjectDetails ? (
-                        <ProjectSetupComplete
-                            project={activeProject}
-                            insights={personalDashboardProjectDetails.insights}
-                        />
-                    ) : null}
-                    {activeProjectStage === 'onboarding-started' ||
-                    activeProjectStage === 'loading' ? (
-                        <CreateFlag project={activeProject} />
-                    ) : null}
-                    {activeProjectStage === 'first-flag-created' ? (
-                        <ExistingFlag project={activeProject} />
-                    ) : null}
-                </SpacedGridItem>
-                <SpacedGridItem gridArea='box2'>
-                    {activeProjectStage === 'onboarded' &&
-                    personalDashboardProjectDetails ? (
-                        <LatestProjectEvents
-                            latestEvents={
-                                personalDashboardProjectDetails.latestEvents
+                            ))}
+                        </List>
+                    </SpacedGridItem>
+                    <SpacedGridItem gridArea='box1'>
+                        {box1Content()}
+                    </SpacedGridItem>
+                    <SpacedGridItem gridArea='box2'>
+                        {box2Content()}
+                    </SpacedGridItem>
+                    <EmptyGridItem />
+                    <GridItem gridArea='owners'>
+                        <RoleAndOwnerInfo
+                            roles={
+                                personalDashboardProjectDetails?.roles.map(
+                                    (role) => role.name,
+                                ) ?? []
+                            }
+                            owners={
+                                personalDashboardProjectDetails?.owners ?? [
+                                    { ownerType: 'user', name: '?' },
+                                ]
                             }
                         />
-                    ) : null}
-                    {setupIncomplete || activeProjectStage === 'loading' ? (
-                        <ConnectSDK project={activeProject} />
-                    ) : null}
-                </SpacedGridItem>
-                <EmptyGridItem />
-                <GridItem gridArea='owners'>
-                    {personalDashboardProjectDetails ? (
-                        <RoleAndOwnerInfo
-                            roles={personalDashboardProjectDetails.roles.map(
-                                (role) => role.name,
-                            )}
-                            owners={personalDashboardProjectDetails.owners}
-                        />
-                    ) : null}
-                </GridItem>
-            </ProjectGrid>
-        </ContentGridContainer>
-    );
-};
+                    </GridItem>
+                </ProjectGrid>
+            </ContentGridContainer>
+        );
+    },
+);

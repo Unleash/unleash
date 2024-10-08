@@ -55,7 +55,6 @@ export const StyledCardTitle = styled('div')<{ lines?: number }>(
         wordBreak: 'break-word',
     }),
 );
-
 const FlagListItem: FC<{
     flag: { name: string; project: string; type: string };
     selected: boolean;
@@ -167,7 +166,6 @@ const useDashboardState = (
         setActiveProject,
     };
 };
-
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
 
@@ -188,8 +186,11 @@ export const PersonalDashboard = () => {
         'open' | 'closed'
     >('welcome-dialog:v1', 'open');
 
-    const { personalDashboardProjectDetails, loading: loadingDetails } =
-        usePersonalDashboardProjectDetails(activeProject);
+    const {
+        personalDashboardProjectDetails,
+        loading: loadingDetails,
+        error: detailsError,
+    } = usePersonalDashboardProjectDetails(activeProject);
 
     const activeProjectStage =
         personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
@@ -199,10 +200,12 @@ export const PersonalDashboard = () => {
 
     const noProjects = projects.length === 0;
 
-    const projectStageRef = useLoading(activeProjectStage === 'loading');
+    const projectStageRef = useLoading(
+        !detailsError && activeProjectStage === 'loading',
+    );
 
     return (
-        <div ref={projectStageRef}>
+        <div>
             <Typography component='h2' variant='h2'>
                 Welcome {name}
             </Typography>
@@ -235,6 +238,8 @@ export const PersonalDashboard = () => {
                 />
             ) : (
                 <MyProjects
+                    admins={personalDashboard?.admins ?? []}
+                    ref={projectStageRef}
                     projects={projects}
                     activeProject={activeProject || ''}
                     setActiveProject={setActiveProject}

@@ -11,7 +11,7 @@ export interface IPersonalDashboardProjectDetailsOutput {
 }
 
 export const usePersonalDashboardProjectDetails = (
-    project: string,
+    project?: string,
 ): IPersonalDashboardProjectDetailsOutput => {
     const { data, error, mutate } = useConditionalSWR(
         Boolean(project),

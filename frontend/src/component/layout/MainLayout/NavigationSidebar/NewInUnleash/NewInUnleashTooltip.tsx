@@ -12,6 +12,8 @@ import {
 import type { Link as RouterLink } from 'react-router-dom';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoWithWhiteText.svg';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Badge } from 'component/common/Badge/Badge';
 
 const Header = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.primary.light,
@@ -67,7 +69,10 @@ const LongDescription = styled(Box)(({ theme }) => ({
     },
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
+const StyledTitle = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    alignItems: 'center',
     padding: theme.spacing(1, 0, 2, 0),
     lineHeight: 1.5,
 }));
@@ -85,6 +90,7 @@ export const NewInUnleashTooltip: FC<{
     open: boolean;
     preview?: ReactNode;
     onClose: () => void;
+    beta: boolean;
 }> = ({
     children,
     title,
@@ -94,6 +100,7 @@ export const NewInUnleashTooltip: FC<{
     preview,
     open,
     onClose,
+    beta,
 }) => (
     <HtmlTooltip
         disableFocusListener
@@ -119,7 +126,13 @@ export const NewInUnleashTooltip: FC<{
                         )}
                     </Header>
                     <Body>
-                        <Title>{title}</Title>
+                        <StyledTitle>
+                            <Typography>{title}</Typography>
+                            <ConditionallyRender
+                                condition={beta}
+                                show={<Badge color='secondary'>Beta</Badge>}
+                            />
+                        </StyledTitle>
                         <LongDescription>{longDescription}</LongDescription>
                         <ReadMore>
                             <StyledLink

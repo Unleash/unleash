@@ -389,3 +389,17 @@ test('should return Unleash admins', async () => {
         },
     ]);
 });
+
+test('should return System owner for default project if nothing else is set', async () => {
+    await loginUser('new_user@test.com');
+
+    const { body } = await app.request.get(
+        `/api/admin/personal-dashboard/default`,
+    );
+
+    expect(body.owners).toMatchObject([
+        {
+            ownerType: 'system',
+        },
+    ]);
+});

@@ -117,6 +117,9 @@ const setupNewProject = () => {
 // @ts-ignore
 HTMLCanvasElement.prototype.getContext = () => {};
 
+//scrollIntoView is not implemented in jsdom
+HTMLElement.prototype.scrollIntoView = () => {};
+
 test('Render personal dashboard for a long running project', async () => {
     setupLongRunningProject();
     render(<PersonalDashboard />);
@@ -136,7 +139,7 @@ test('Render personal dashboard for a long running project', async () => {
     await screen.findByText(
         'We have gathered projects and flags you have favorited or owned',
     );
-    await screen.findByText('Project Insight');
+    await screen.findByText('Project health');
     await screen.findByText('70%'); // avg health past window
     await screen.findByText('someone created a flag');
     await screen.findByText('Member');

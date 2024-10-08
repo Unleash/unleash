@@ -138,7 +138,7 @@ export const ProjectSetupComplete: FC<{
         <ActionBox>
             <TitleContainer>
                 <Lightbulb color='primary' />
-                <ProjectInsight>Project Insight</ProjectInsight>
+                <ProjectInsight>Project health</ProjectInsight>
             </TitleContainer>
 
             <Health>

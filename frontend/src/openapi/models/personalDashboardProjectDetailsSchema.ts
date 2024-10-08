@@ -23,7 +23,6 @@ export interface PersonalDashboardProjectDetailsSchema {
     owners: PersonalDashboardProjectDetailsSchemaOwners;
     /**
      * The list of roles that the user has in this project.
-     * @minItems 1
      */
     roles: PersonalDashboardProjectDetailsSchemaRolesItem[];
 }

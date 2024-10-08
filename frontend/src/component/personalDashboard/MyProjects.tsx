@@ -14,7 +14,7 @@ import { ProjectSetupComplete } from './ProjectSetupComplete';
 import { ConnectSDK, CreateFlag, ExistingFlag } from './ConnectSDK';
 import { LatestProjectEvents } from './LatestProjectEvents';
 import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
-import { forwardRef, type FC } from 'react';
+import { forwardRef, useEffect, useRef, type FC } from 'react';
 import { StyledCardTitle } from './PersonalDashboard';
 import type {
     PersonalDashboardProjectDetailsSchema,
@@ -62,6 +62,51 @@ const ActiveProjectDetails: FC<{
                 </Typography>
             </Box>
         </Box>
+    );
+};
+
+const ProjectListItem: FC<{
+    project: PersonalDashboardSchemaProjectsItem;
+    selected: boolean;
+    onClick: () => void;
+}> = ({ project, selected, onClick }) => {
+    const activeProjectRef = useRef<HTMLLIElement>(null);
+
+    useEffect(() => {
+        if (activeProjectRef.current) {
+            activeProjectRef.current.scrollIntoView({
+                block: 'nearest',
+                inline: 'start',
+            });
+        }
+    }, []);
+
+    return (
+        <ListItem
+            disablePadding={true}
+            sx={{ mb: 1 }}
+            ref={selected ? activeProjectRef : null}
+        >
+            <ListItemButton
+                sx={listItemStyle}
+                selected={selected}
+                onClick={onClick}
+            >
+                <ListItemBox>
+                    <ProjectIcon color='primary' />
+                    <StyledCardTitle>{project.name}</StyledCardTitle>
+                    <IconButton
+                        component={Link}
+                        href={`projects/${project.id}`}
+                        size='small'
+                        sx={{ ml: 'auto' }}
+                    >
+                        <LinkIcon titleAccess={`projects/${project.id}`} />
+                    </IconButton>
+                </ListItemBox>
+                {selected ? <ActiveProjectDetails project={project} /> : null}
+            </ListItemButton>
+        </ListItem>
     );
 };
 
@@ -169,45 +214,14 @@ export const MyProjects = forwardRef<
                             disablePadding={true}
                             sx={{ maxHeight: '400px', overflow: 'auto' }}
                         >
-                            {projects.map((project) => {
-                                return (
-                                    <ListItem
-                                        key={project.id}
-                                        disablePadding={true}
-                                        sx={{ mb: 1 }}
-                                    >
-                                        <ListItemButton
-                                            sx={listItemStyle}
-                                            selected={project.id === activeProject}
-                                            onClick={() =>
-                                                setActiveProject(project.id)
-                                            }
-                                        >
-                                            <ListItemBox>
-                                                <ProjectIcon color='primary' />
-                                                <StyledCardTitle>
-                                                    {project.name}
-                                                </StyledCardTitle>
-                                                <IconButton
-                                                    component={Link}
-                                                    href={`projects/${project.id}`}
-                                                    size='small'
-                                                    sx={{ ml: 'auto' }}
-                                                >
-                                                    <LinkIcon
-                                                        titleAccess={`projects/${project.id}`}
-                                                    />
-                                                </IconButton>
-                                            </ListItemBox>
-                                            {project.id === activeProject ? (
-                                                <ActiveProjectDetails
-                                                    project={project}
-                                                />
-                                            ) : null}
-                                        </ListItemButton>
-                                    </ListItem>
-                                );
-                            })}
+                            {projects.map((project) => (
+                                <ProjectListItem
+                                    key={project.id}
+                                    project={project}
+                                    selected={project.id === activeProject}
+                                    onClick={() => setActiveProject(project.id)}
+                                />
+                            ))}
                         </List>
                     </SpacedGridItem>
                     <SpacedGridItem gridArea='box1'>

@@ -44,7 +44,10 @@ export const HeaderEventTimelineButton = () => {
     if (!eventTimeline) return null;
 
     return (
-        <Tooltip title={showTimeline ? 'Hide timeline' : 'Show timeline'} arrow>
+        <Tooltip
+            title={showTimeline ? 'Hide event timeline' : 'Show event timeline'}
+            arrow
+        >
             <StyledHeaderEventTimelineButton
                 highlighted={highlighted}
                 onClick={() => {

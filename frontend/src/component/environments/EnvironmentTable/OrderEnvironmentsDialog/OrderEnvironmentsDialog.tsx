@@ -1,18 +1,21 @@
-import type { FC } from 'react';
-import { Box, Button, Dialog, styled, Typography } from '@mui/material';
+import { useState, type FC } from 'react';
+import {
+    Box,
+    Button,
+    Checkbox,
+    Dialog,
+    styled,
+    Typography,
+} from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { OrderEnvironmentsDialogPricing } from './OrderEnvironmentsDialogPricing/OrderEnvironmentsDialogPricing';
-import GeneralSelect, {
-    type ISelectOption,
-} from 'component/common/GeneralSelect/GeneralSelect';
+import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
 
 type OrderEnvironmentsDialogProps = {
     open: boolean;
     onClose: () => void;
 };
-
-const PRICE = '10';
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
     maxWidth: '940px',
@@ -39,6 +42,10 @@ const StyledFooter = styled(Typography)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
+    margin: theme.spacing(1, 0),
+}));
+
 const StyledFields = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -46,21 +53,51 @@ const StyledFields = styled(Box)(({ theme }) => ({
     paddingTop: theme.spacing(3),
 }));
 
+const StyledEnvironmentNameInputs = styled('fieldset')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    border: 'none',
+    padding: 0,
+    margin: 0,
+    gap: theme.spacing(1.5),
+}));
+
+const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
+    marginBottom: theme.spacing(0.4),
+}));
+
+const PRICE = 10;
+const options = [1, 2, 3];
+
 export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
     open,
     onClose,
 }) => {
-    const options: ISelectOption[] = [{ key: '1', label: '1 environment' }];
+    const [selectedOption, setSelectedOption] = useState(options[0]);
+    const [costCheckboxChecked, setCostCheckboxChecked] = useState(false);
+    const [environmentNames, setEnvironmentNames] = useState<string[]>([]);
 
     return (
         <StyledDialog open={open} title=''>
             <FormTemplate
                 compact
-                description={<OrderEnvironmentsDialogPricing />}
+                description={
+                    <OrderEnvironmentsDialogPricing
+                        pricingOptions={options.map((option) => ({
+                            environments: option,
+                            price: option * PRICE,
+                        }))}
+                    />
+                }
                 footer={
                     <StyledFooter>
                         <Button onClick={onClose}>Cancel</Button>
-                        <Button variant='contained'>Order</Button>
+                        <Button
+                            variant='contained'
+                            disabled={!costCheckboxChecked}
+                        >
+                            Order
+                        </Button>
                     </StyledFooter>
                 }
             >
@@ -76,25 +113,54 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                 </Typography>
                 <StyledFields>
                     <Box>
-                        <Typography>Select number of environments</Typography>
-                        <GeneralSelect
-                            value={options[0].key}
-                            options={options}
-                            onChange={() => {}}
-                        />
-                    </Box>
-                    <Box>
                         <Typography>
-                            What would you like the environment(s) to be named?
+                            Select the number of additional environments
                         </Typography>
-                        <Input
-                            label='Environment 1 name'
-                            value=''
-                            onChange={() => {}}
+                        <StyledGeneralSelect
+                            value={`${selectedOption}`}
+                            options={options.map((option) => ({
+                                key: `${option}`,
+                                label: `${option} environment${option > 1 ? 's' : ''}`,
+                            }))}
+                            onChange={(option) => {
+                                const value = Number.parseInt(option, 10);
+                                setSelectedOption(value);
+                                setEnvironmentNames((names) =>
+                                    names.slice(0, value),
+                                );
+                            }}
                         />
                     </Box>
-                    <Box>
+                    <StyledEnvironmentNameInputs>
                         <Typography>
+                            How would you like the environment
+                            {selectedOption > 1 ? 's' : ''} to be named?
+                        </Typography>
+                        {[...Array(selectedOption)].map((_, i) => (
+                            <Input
+                                key={i}
+                                label={`Environment ${i + 1} name`}
+                                value={environmentNames[i]}
+                                onChange={(event) => {
+                                    setEnvironmentNames((names) => {
+                                        const newValues = [...names];
+                                        newValues[i] = event.target.value;
+                                        return newValues;
+                                    });
+                                }}
+                            />
+                        ))}
+                    </StyledEnvironmentNameInputs>
+                    <Box>
+                        <StyledCheckbox
+                            edge='start'
+                            id='costsCheckbox'
+                            checked={costCheckboxChecked}
+                            onChange={() =>
+                                setCostCheckboxChecked((state) => !state)
+                            }
+                        />
+                        <Typography component='label' htmlFor='costsCheckbox'>
                             I understand adding environments leads to extra
                             costs
                         </Typography>

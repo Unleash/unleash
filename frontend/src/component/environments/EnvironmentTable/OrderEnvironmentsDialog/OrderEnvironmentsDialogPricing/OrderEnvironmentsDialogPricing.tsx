@@ -2,11 +2,9 @@ import type { FC } from 'react';
 import { Box, Card, styled, Typography } from '@mui/material';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 
-const pricingOptions = [
-    { environments: 1, price: 10 },
-    { environments: 2, price: 20 },
-    { environments: 3, price: 30 },
-];
+type OrderEnvironmentsDialogPricingProps = {
+    pricingOptions: Array<{ environments: number; price: number }>;
+};
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -32,7 +30,9 @@ const StyledCardContent = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
 }));
 
-export const OrderEnvironmentsDialogPricing: FC = () => (
+export const OrderEnvironmentsDialogPricing: FC<
+    OrderEnvironmentsDialogPricingProps
+> = ({ pricingOptions }) => (
     <StyledContainer>
         <Typography variant='h3' component='div' color='white' gutterBottom>
             Pricing

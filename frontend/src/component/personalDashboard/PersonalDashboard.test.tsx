@@ -117,6 +117,9 @@ const setupNewProject = () => {
 // @ts-ignore
 HTMLCanvasElement.prototype.getContext = () => {};
 
+//scrollIntoView is not implemented in jsdom
+HTMLElement.prototype.scrollIntoView = () => {};
+
 test('Render personal dashboard for a long running project', async () => {
     setupLongRunningProject();
     render(<PersonalDashboard />);

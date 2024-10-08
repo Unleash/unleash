@@ -81,7 +81,6 @@ const ProjectListItem: FC<{
 
     return (
         <ListItem
-            key={project.id}
             disablePadding={true}
             sx={{ mb: 1 }}
             ref={selected ? activeProjectRef : null}
@@ -151,6 +150,7 @@ export const MyProjects: FC<{
                         {projects.map((project) => {
                             return (
                                 <ProjectListItem
+                                    key={project.id}
                                     project={project}
                                     selected={project.id === activeProject}
                                     onClick={() => setActiveProject(project.id)}

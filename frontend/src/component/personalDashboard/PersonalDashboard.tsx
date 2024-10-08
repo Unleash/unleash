@@ -1,5 +1,6 @@
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import {
+    Button,
     IconButton,
     Link,
     List,
@@ -20,7 +21,6 @@ import type {
 } from '../../openapi';
 import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
-import HelpOutline from '@mui/icons-material/HelpOutline';
 import useLoading from '../../hooks/useLoading';
 import { MyProjects } from './MyProjects';
 import {
@@ -166,6 +166,22 @@ const useDashboardState = (
         setActiveProject,
     };
 };
+
+const WelcomeSection = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: theme.spacing(1),
+    flexFlow: 'row wrap',
+    alignItems: 'baseline',
+    marginBottom: theme.spacing(2),
+}));
+
+const ViewKeyConceptsButton = styled(Button)(({ theme }) => ({
+    fontWeight: 'normal',
+    padding: 0,
+    margin: 0,
+}));
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
 
@@ -206,30 +222,22 @@ export const PersonalDashboard = () => {
 
     return (
         <div>
-            <Typography component='h2' variant='h2'>
-                Welcome {name}
-            </Typography>
-            <ScreenExplanation>
-                <p data-loading>
-                    {activeProjectStage === 'onboarded'
-                        ? 'We have gathered projects and flags you have favorited or owned'
-                        : null}
-                    {setupIncomplete
-                        ? 'Here are some tasks we think would be useful in order to get the most out of Unleash'
-                        : null}
-                    {activeProjectStage === 'loading'
-                        ? 'We have gathered projects and flags you have favorited or owned'
-                        : null}
-                </p>
-                <IconButton
-                    data-loading
+            <WelcomeSection>
+                <Typography component='h2' variant='h2'>
+                    Welcome {name}
+                </Typography>
+
+                <ViewKeyConceptsButton
+                    sx={{
+                        fontWeight: 'normal',
+                    }}
                     size={'small'}
-                    title='Key concepts'
+                    variant='text'
                     onClick={() => setWelcomeDialog('open')}
                 >
-                    <HelpOutline />
-                </IconButton>
-            </ScreenExplanation>
+                    View key concepts
+                </ViewKeyConceptsButton>
+            </WelcomeSection>
 
             {noProjects && personalDashboard ? (
                 <ContentGridNoProjects

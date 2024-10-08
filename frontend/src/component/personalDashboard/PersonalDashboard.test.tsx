@@ -136,9 +136,6 @@ test('Render personal dashboard for a long running project', async () => {
     await screen.findByText('100'); // features
     await screen.findByText('80%'); // health
 
-    await screen.findByText(
-        'We have gathered projects and flags you have favorited or owned',
-    );
     await screen.findByText('Project health');
     await screen.findByText('70%'); // avg health past window
     await screen.findByText('someone created a flag');

@@ -4,7 +4,7 @@ import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesLi
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { IntegrationList } from 'component/integrations/IntegrationList/IntegrationList';
 import Login from 'component/user/Login/Login';
-import { EEA, P } from 'component/common/flags';
+import { P } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -266,17 +266,8 @@ export const routes: IRoute[] = [
         title: 'Environments',
         component: EnvironmentTable,
         type: 'protected',
-        flag: EEA,
-        notFlag: 'purchaseAdditionalEnvironments',
         menu: { mobile: true, advanced: true },
-    },
-    {
-        path: '/environments',
-        title: 'Environments',
-        component: EnvironmentTable,
-        type: 'protected',
-        flag: 'purchaseAdditionalEnvironments',
-        menu: { mobile: true, advanced: true },
+        enterprise: true,
     },
     {
         path: '/feedback',

@@ -355,7 +355,7 @@ For our Python app, we can view events in [Event Log](/reference/events#event-lo
 
 ![Event Log in Unleash tracks every single change made to flags, similar to Git commit history.](/img/python-ex-logs.png)
 
-You can also retrieve event by using an API command below:
+You can also retrieve events by using the API command below:
 
 ```py
 import requests

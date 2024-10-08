@@ -378,7 +378,7 @@ You can view events in [Event Log](/reference/events#event-log) to monitor the c
 -   How the gradual rollout strategy was configured
 -   When and how the variants were created and configured
 
-![Event Log in Unleash track every single change made to flags, similar to Git commit history.](../ruby/event-logs.png)
+![Event Log in Unleash tracks every single change made to flags, similar to Git commit history.](../ruby/event-logs.png)
 
 You can also retrieve events by using an API command, like below:
 

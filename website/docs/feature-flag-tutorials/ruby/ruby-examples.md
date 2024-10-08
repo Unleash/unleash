@@ -308,13 +308,13 @@ This is especially true in very regulated environments like health care, insuran
 
 Unleash provides the data to log any change over time at the flag level and at the project level. Logs are useful for downstream data warehouses or data lakes.
 
-You can view Event Log to monitor the changes to flag strategies and statuses, like:
+You can view [Event Log](/reference/events#event-log) to monitor the changes to flag strategies and statuses, like:
 
 -   When the flag was created
 -   How the gradual rollout strategy was configured
 -   When and how the variants were created and configured
 
-![Event Log in Unleash track every single change made to flags, similar to Git commit history.](./event-logs.png)
+![Event Log in Unleash tracks every single change made to flags, similar to Git commit history.](./event-logs.png)
 
 You can also retrieve events by using an API command, like below:
 

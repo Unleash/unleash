@@ -282,7 +282,7 @@ For our iOS app, we can view events in [Event Log](/reference/events#event-log) 
 
 ![Feature flag events showing that the flag's variants have been updated.](/img/ios-ex-event-logs.png)
 
-You can also retrieve events by using an API command below:
+You can also retrieve events by using the API command below:
 
 ```
 curl -L -X GET '<your-unleash-url>/api/admin/events/:featureName' \

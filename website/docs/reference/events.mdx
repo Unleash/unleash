@@ -13,7 +13,7 @@ You can use Event Log for auditing purposes, while Event Timeline is particularl
 
 The Event Log lists all events in your Unleash instance. You can search and filter events by date range, event type, project, feature flag, and user. You can also export events as CSV or JSON files.
 
-To access events in the Admin UI, you need Admin access. To view all events, go to **Admin > Event Log**. To view events for a specific feature flag, go to the Event Log tab on that feature flag's page.
+To access events in the Admin UI, you need Admin access. To view all events, go to **Admin > Event log**. To view events for a specific feature flag, go to the **Event log** tab on that feature flag's page.
 
 Each [event type](#event-types) contains different data, but all events follow the same schema:
 
@@ -24,7 +24,7 @@ Each [event type](#event-types) contains different data, but all events follow t
 | `type`*            | string | Describes the type of event (e.g., `feature-strategy-update`).    |
 | `createdAt`*       | string | Timestamp when the event was created; ISO 8601 format.            |
 | `createdBy`*       | string | Email of the user who triggered the event.                        |
-| `createdByUserId`* | number | Unique identifier of the user who triggered the event.            |
+| `createdByUserId` | number | Unique identifier of the user who triggered the event.            |
 | `data`             | object | Details about the event (e.g., feature strategy, API token data). |
 | `preData`          | object | Previous state before the event.                                  |
 | `tags`             | array  | Array of tags associated with the event.                          |
@@ -48,7 +48,7 @@ See the [feature-created event type](#feature-created) for an example event.
 
 :::
 
-Event Timeline highlights recent events across all your projects in one unified timeline. You can access the event timeline from the top menu in the Admin UI.
+Event Timeline highlights recent events across all your projects in one unified timeline. You can access the timeline from the top menu in the Admin UI.
 
 ![Event timeline in Unleash Admin UI](/img/event-timeline.png)
 
@@ -119,7 +119,7 @@ Generated when you move a feature flag from one project to another. The `data` p
 ```json
 {
   "id": 27332,
-  "type": "feature-created",
+  "type": "feature-project-change",
   "createdBy": "user@getunleash.io",
   "createdAt": "2024-10-03T11:09:53.225Z",
   "createdByUserId": 110,
@@ -603,7 +603,7 @@ Generated when you update an integration configuration. The `data` property cont
 
 #### `addon-config-deleted`
 
-Generated when you update an integration configuration. The `data` property contains the `id` of the integration.
+Generated when you delete an integration configuration. The `data` property contains the `id` of the integration.
 
 ### User events
 
@@ -612,7 +612,9 @@ Generated when you update an integration configuration. The `data` property cont
 Generated when you create a new user. The `data` property contains the user's information.
 
 ```json
+{
   "id": 27344,
+  "type": "user-created",
   "createdBy": "user@getunleash.io",
   "createdAt": "2024-10-03T11:09:53.225Z",
   "createdByUserId": 110,

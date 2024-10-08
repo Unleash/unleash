@@ -15,6 +15,7 @@ import Input from 'component/common/Input/Input';
 type OrderEnvironmentsDialogProps = {
     open: boolean;
     onClose: () => void;
+    onSubmit: (environments: string[]) => void;
 };
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -32,11 +33,11 @@ const StyledDialog = styled(Dialog)(({ theme }) => ({
     },
 }));
 
-const StyledTitle = styled(Typography)(({ theme }) => ({
+const StyledTitle = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(3),
 }));
 
-const StyledFooter = styled(Typography)(({ theme }) => ({
+const StyledFooter = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     gap: theme.spacing(2),
@@ -67,13 +68,14 @@ const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
 }));
 
 const PRICE = 10;
-const options = [1, 2, 3];
+const OPTIONS = [1, 2, 3];
 
 export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
     open,
     onClose,
+    onSubmit,
 }) => {
-    const [selectedOption, setSelectedOption] = useState(options[0]);
+    const [selectedOption, setSelectedOption] = useState(OPTIONS[0]);
     const [costCheckboxChecked, setCostCheckboxChecked] = useState(false);
     const [environmentNames, setEnvironmentNames] = useState<string[]>([]);
 
@@ -83,7 +85,7 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                 compact
                 description={
                     <OrderEnvironmentsDialogPricing
-                        pricingOptions={options.map((option) => ({
+                        pricingOptions={OPTIONS.map((option) => ({
                             environments: option,
                             price: option * PRICE,
                         }))}
@@ -95,6 +97,7 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                         <Button
                             variant='contained'
                             disabled={!costCheckboxChecked}
+                            onClick={() => onSubmit(environmentNames)}
                         >
                             Order
                         </Button>
@@ -102,7 +105,7 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                 }
             >
                 <StyledTitle>
-                    <Typography variant='h3'>
+                    <Typography variant='h3' component='div'>
                         Order additional environments
                     </Typography>
                 </StyledTitle>
@@ -113,12 +116,16 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                 </Typography>
                 <StyledFields>
                     <Box>
-                        <Typography>
+                        <Typography
+                            component='label'
+                            htmlFor='numberOfEnvironments'
+                        >
                             Select the number of additional environments
                         </Typography>
                         <StyledGeneralSelect
+                            id='numberOfEnvironments'
                             value={`${selectedOption}`}
-                            options={options.map((option) => ({
+                            options={OPTIONS.map((option) => ({
                                 key: `${option}`,
                                 label: `${option} environment${option > 1 ? 's' : ''}`,
                             }))}

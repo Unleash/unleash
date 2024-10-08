@@ -141,6 +141,7 @@ export const EnvironmentTable = () => {
                     <OrderEnvironmentsDialog
                         open={purchaseDialogOpen}
                         onClose={() => setPurchaseDialogOpen(false)}
+                        onSubmit={() => {}} // TODO: API call
                     />
                 </>
             ) : null}

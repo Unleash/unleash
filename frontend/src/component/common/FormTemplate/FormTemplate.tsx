@@ -210,7 +210,7 @@ const StyledDescriptionCard = styled('article')(({ theme }) => ({
     marginBlockEnd: theme.spacing(3),
 }));
 
-const StyledDescription = styled('p')(({ theme }) => ({
+const StyledDescription = styled('div')(() => ({
     width: '100%',
 }));
 

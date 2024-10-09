@@ -21,7 +21,7 @@ const unleashTeam = new Map([
     ['thomasheartman', 'developer, Unleash'],
     ['Tymek', 'developer, Unleash'],
     ['sebastian-bury', 'implementation architect, Unleash'],
-    ['melindafekete', 'documentation lead, Unleash']
+    ['melindafekete', 'documentation lead, Unleash'],
 ]);
 
 const GitHubContributors = ({ owner, repo, filePath }) => {

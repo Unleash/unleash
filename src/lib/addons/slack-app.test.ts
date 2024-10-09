@@ -30,7 +30,9 @@ const ARGS: IAddonConfig = {
     unleashUrl: 'http://some-url.com',
     integrationEventsService: {} as IntegrationEventsService,
     flagResolver: { isEnabled: (expName: IFlagKey) => false } as IFlagResolver,
-    eventBus: {} as any,
+    eventBus: {
+        emit: jest.fn(),
+    } as any,
 };
 
 let postMessage = jest.fn().mockImplementation((options) => {

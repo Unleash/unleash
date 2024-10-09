@@ -328,7 +328,9 @@ export const PersonalDashboard = () => {
                     id='projects-panel-header'
                     aria-controls='projects-panel-content'
                 >
-                    <Typography variant='h3'>My projects</Typography>
+                    <Typography variant='body1' component='h3'>
+                        My projects
+                    </Typography>
                 </StyledAccordionSummary>
                 <StyledAccordionDetails>
                     {noProjects && personalDashboard ? (
@@ -362,7 +364,9 @@ export const PersonalDashboard = () => {
                     id='flags-panel-header'
                     aria-controls='flags-panel-content'
                 >
-                    <Typography variant='h3'>My feature flags</Typography>
+                    <Typography variant='body1' component='h3'>
+                        My feature flags
+                    </Typography>
                 </StyledAccordionSummary>
                 <StyledAccordionDetails>
                     <ContentGridContainer>

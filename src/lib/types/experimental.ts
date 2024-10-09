@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'eventTimeline'
     | 'personalDashboardUI'
     | 'trackLifecycleMetrics'
-    | 'purchaseAdditionalEnvironments';
+    | 'purchaseAdditionalEnvironments'
+    | 'unleashAI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -300,6 +301,10 @@ const flags: IFlags = {
     ),
     purchaseAdditionalEnvironments: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PURCHASE_ADDITIONAL_ENVIRONMENTS,
+        false,
+    ),
+    unleashAI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_UNLEASH_AI,
         false,
     ),
 };

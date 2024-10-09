@@ -90,6 +90,7 @@ export type UiFlags = {
     eventTimeline?: boolean;
     personalDashboardUI?: boolean;
     purchaseAdditionalEnvironments?: boolean;
+    unleashAI?: boolean;
 };
 
 export interface IVersionInfo {

@@ -35,12 +35,6 @@ import {
 import { ContentGridNoProjects } from './ContentGridNoProjects';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
-const ScreenExplanation = styled('div')(({ theme }) => ({
-    marginBottom: theme.spacing(4),
-    display: 'flex',
-    alignItems: 'center',
-}));
-
 export const StyledCardTitle = styled('div')<{ lines?: number }>(
     ({ theme, lines = 2 }) => ({
         fontWeight: theme.typography.fontWeightRegular,
@@ -203,11 +197,11 @@ const WelcomeSection = styled('div')(({ theme }) => ({
     alignItems: 'baseline',
 }));
 
-const ViewKeyConceptsButton = styled(Button)(({ theme }) => ({
+const ViewKeyConceptsButton = styled(Button)({
     fontWeight: 'normal',
     padding: 0,
     margin: 0,
-}));
+});
 
 const SectionAccordion = styled(Accordion)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
@@ -243,9 +237,9 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     },
 }));
 
-const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+const StyledAccordionDetails = styled(AccordionDetails)({
     padding: 0,
-}));
+});
 
 const MainContent = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -258,11 +252,7 @@ export const PersonalDashboard = () => {
 
     const name = user?.name;
 
-    const {
-        personalDashboard,
-        refetch: refetchDashboard,
-        loading: personalDashboardLoading,
-    } = usePersonalDashboard();
+    const { personalDashboard } = usePersonalDashboard();
 
     const projects = personalDashboard?.projects || [];
 
@@ -279,17 +269,11 @@ export const PersonalDashboard = () => {
         'open' | 'closed'
     >('welcome-dialog:v1', 'open');
 
-    const {
-        personalDashboardProjectDetails,
-        loading: loadingDetails,
-        error: detailsError,
-    } = usePersonalDashboardProjectDetails(activeProject);
+    const { personalDashboardProjectDetails, error: detailsError } =
+        usePersonalDashboardProjectDetails(activeProject);
 
     const activeProjectStage =
         personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
-    const setupIncomplete =
-        activeProjectStage === 'onboarding-started' ||
-        activeProjectStage === 'first-flag-created';
 
     const noProjects = projects.length === 0;
 

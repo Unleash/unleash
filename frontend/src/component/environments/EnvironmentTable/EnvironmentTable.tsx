@@ -134,7 +134,7 @@ export const EnvironmentTable = () => {
             {isPro() && isPurchaseAdditionalEnvironmentsEnabled ? (
                 <>
                     <PurchasableFeature
-                        title='Purchase additional environments'
+                        title='Order additional environments'
                         description='With our Pro plan, you now have the flexibility to expand your workspace by adding up to three additional environments.'
                         onClick={() => setPurchaseDialogOpen(true)}
                     />

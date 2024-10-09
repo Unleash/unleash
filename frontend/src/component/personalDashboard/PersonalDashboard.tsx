@@ -144,15 +144,14 @@ const useDashboardState = (
                     (project) => project.id === state.activeProject,
                 ));
 
-        if (setDefaultFlag || setDefaultProject) {
-            setState({
-                ...state,
-                activeFlag: setDefaultFlag ? flags[0] : state.activeFlag,
-                activeProject: setDefaultProject
-                    ? projects[0].id
-                    : state.activeProject,
-            });
-        }
+        setState({
+            ...defaultState,
+            ...state,
+            activeFlag: setDefaultFlag ? flags[0] : state.activeFlag,
+            activeProject: setDefaultProject
+                ? projects[0].id
+                : state.activeProject,
+        });
     });
 
     const { activeFlag, activeProject } = state;
@@ -216,6 +215,12 @@ const SectionAccordion = styled(Accordion)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     backgroundColor: theme.palette.background.paper,
     boxShadow: 'none',
+
+    '& .expanded': {
+        '&:before': {
+            opacity: '0 !important',
+        },
+    },
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -225,10 +230,10 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     '&>*': {
         margin: '0 !important',
     },
+    borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    borderTop: `1px solid ${theme.palette.divider}`,
     padding: 0,
 }));
 
@@ -296,13 +301,16 @@ export const PersonalDashboard = () => {
             </WelcomeSection>
 
             <SectionAccordion
-                expanded={sectionState.projects.state === 'expanded'}
+                disableGutters
+                expanded={!(sectionState?.projects.state === 'collapsed')}
                 onChange={() => toggleSectionState('projects')}
             >
                 <StyledAccordionSummary
                     expandIcon={
                         <ExpandMore titleAccess='Toggle projects section' />
                     }
+                    id='projects-panel-header'
+                    aria-controls='projects-panel-content'
                 >
                     <Typography variant='h3'>My projects</Typography>
                 </StyledAccordionSummary>
@@ -328,13 +336,15 @@ export const PersonalDashboard = () => {
             </SectionAccordion>
 
             <SectionAccordion
-                expanded={sectionState.flags.state === 'expanded'}
-                onChange={() => toggleSectionState('projects')}
+                expanded={!(sectionState?.flags.state === 'collapsed')}
+                onChange={() => toggleSectionState('flags')}
             >
                 <StyledAccordionSummary
                     expandIcon={
                         <ExpandMore titleAccess='Toggle flags section' />
                     }
+                    id='flags-panel-header'
+                    aria-controls='flags-panel-content'
                 >
                     <Typography variant='h3'>My feature flags</Typography>
                 </StyledAccordionSummary>

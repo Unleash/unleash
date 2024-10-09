@@ -201,7 +201,6 @@ const WelcomeSection = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     flexFlow: 'row wrap',
     alignItems: 'baseline',
-    marginBottom: theme.spacing(2),
 }));
 
 const ViewKeyConceptsButton = styled(Button)(({ theme }) => ({
@@ -239,6 +238,7 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 
 const MainContent = styled('div')(({ theme }) => ({
     display: 'flex',
+    flexDirection: 'column',
     gap: theme.spacing(2),
 }));
 

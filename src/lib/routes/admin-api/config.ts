@@ -152,6 +152,7 @@ class ConfigController extends Controller {
             disablePasswordAuth,
             maintenanceMode,
             feedbackUriPath: this.config.feedbackUriPath,
+            unleashAIAvailable: this.config.openAIAPIKey !== undefined,
         };
 
         this.openApiService.respondWithValidation(

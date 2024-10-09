@@ -367,7 +367,7 @@ module.exports = {
                     },
                     {
                         from: '/advanced/feature_toggle_types',
-                        to: '/reference/feature_toggles',
+                        to: '/reference/feature-toggles',
                     },
                     {
                         from: [

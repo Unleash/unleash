@@ -48,7 +48,7 @@ While variants are most often used for A/B testing and the like, you can also us
 :::
 
 
-You can use feature flags to support different use cases, each with their own specific needs. Heavily inspired by [Pete Hodgson's article on feature flags](https://martinfowler.com/articles/feature-toggles.html), Unleash introduced the concept of feature flag types in version `3.5.0`.
+You can use feature flags to support different use cases, each with their own specific needs.
 
 A feature flag's type affects only two things:
 1. It gives the flag an appropriate icon
@@ -64,7 +64,7 @@ A flag's type also helps Unleash understand the [flag's expected lifetime](#expe
 
 Here's the list of the feature flag types that Unleash supports together with their intended use case and expected lifetime:
 
-| Feature flag type | Used to ...                                                                                                                                                       | Expected lifetime |
+| Feature flag type | Used to                                                                                                                                                       | Expected lifetime |
 |---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
 | Release             | Enable trunk-based development for teams practicing Continuous Delivery.                                                                                          | 40 days           |
 | Experiment          | Perform multivariate or A/B testing.                                                                                                                              | 40 days           |

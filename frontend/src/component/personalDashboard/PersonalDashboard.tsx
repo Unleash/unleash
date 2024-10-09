@@ -98,6 +98,7 @@ const FlagListItem: FC<{
     );
 };
 
+// todo: move into own file
 const useDashboardState = (
     projects: PersonalDashboardSchemaProjectsItem[],
     flags: PersonalDashboardSchemaFlagsItem[],
@@ -125,15 +126,14 @@ const useDashboardState = (
         setState({ ...defaultState, ...state, ...newState });
 
     useEffect(() => {
+        const updates: Partial<State> = {};
         const setDefaultFlag =
             flags.length &&
             (!state.activeFlag ||
                 !flags.some((flag) => flag.name === state.activeFlag?.name));
 
         if (setDefaultFlag) {
-            updateState({
-                activeFlag: flags[0],
-            });
+            updates.activeFlag = flags[0];
         }
 
         const setDefaultProject =
@@ -144,9 +144,11 @@ const useDashboardState = (
                 ));
 
         if (setDefaultProject) {
-            updateState({
-                activeProject: projects[0].id,
-            });
+            updates.activeProject = projects[0].id;
+        }
+
+        if (Object.keys(updates).length) {
+            updateState(updates);
         }
     }, [
         JSON.stringify(projects, null, 2),

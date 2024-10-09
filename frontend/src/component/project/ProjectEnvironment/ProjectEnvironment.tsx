@@ -230,10 +230,14 @@ const ProjectEnvironmentList = () => {
                         initialValue={globalFilter}
                         onChange={setGlobalFilter}
                     />
-                    <PageHeader.Divider />
-                    <Link component={RouterLink} to='/environments'>
-                        Configure environments
-                    </Link>
+                    {!isOss() ? (
+                        <>
+                            <PageHeader.Divider />
+                            <Link component={RouterLink} to='/environments'>
+                                Configure environments
+                            </Link>
+                        </>
+                    ) : null}
                 </>
             }
         />

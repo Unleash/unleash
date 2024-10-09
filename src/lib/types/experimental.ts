@@ -60,7 +60,8 @@ export type IFlagKey =
     | 'eventTimeline'
     | 'personalDashboardUI'
     | 'trackLifecycleMetrics'
-    | 'purchaseAdditionalEnvironments';
+    | 'purchaseAdditionalEnvironments'
+    | 'originMiddlewareRequestLogging';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -295,6 +296,10 @@ const flags: IFlags = {
     ),
     purchaseAdditionalEnvironments: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PURCHASE_ADDITIONAL_ENVIRONMENTS,
+        false,
+    ),
+    originMiddlewareRequestLogging: parseEnvVarBoolean(
+        process.env.UNLEASH_ORIGIN_MIDDLEWARE_REQUEST_LOGGING,
         false,
     ),
 };

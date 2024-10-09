@@ -13,7 +13,6 @@ export const originMiddleware = ({
 }: Pick<IUnleashConfig, 'getLogger' | 'eventBus' | 'flagResolver'>) => {
     const logger = getLogger('/middleware/origin-middleware.ts');
     logger.debug('Enabling origin middleware');
-
     return (req: Request, _: Response, next: NextFunction) => {
         const isUI = !req.headers.authorization;
 
@@ -27,11 +26,15 @@ export const originMiddleware = ({
             const uaLabel = userAgent
                 ? determineIntegrationSource(userAgent)
                 : 'Other';
-            logger.info('API request', {
-                method: req.method,
-                userAgent: req.headers['user-agent'],
-                origin: getFilteredOrigin(req),
-            });
+
+            if (!flagResolver.isEnabled('originMiddlewareRequestLogging')) {
+                logger.info('API request', {
+                    method: req.method,
+                    userAgent: req.headers['user-agent'],
+                    origin: getFilteredOrigin(req),
+                });
+            }
+
             emitMetricEvent(eventBus, REQUEST_ORIGIN, {
                 type: 'API',
                 method: req.method,

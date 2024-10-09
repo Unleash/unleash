@@ -55,6 +55,7 @@ process.nextTick(async () => {
                         onboardingUI: true,
                         personalDashboardUI: true,
                         purchaseAdditionalEnvironments: true,
+                        originMiddlewareRequestLogging: true,
                     },
                 },
                 authentication: {

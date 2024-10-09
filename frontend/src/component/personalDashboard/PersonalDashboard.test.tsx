@@ -114,7 +114,9 @@ const setupNewProject = () => {
     });
 };
 
-// @ts-ignore
+// @ts-expect-error The return type here isn't correct, but it's not
+// an issue for the tests. We just need to override it because it's
+// not implemented in jsdom.
 HTMLCanvasElement.prototype.getContext = () => {};
 
 //scrollIntoView is not implemented in jsdom

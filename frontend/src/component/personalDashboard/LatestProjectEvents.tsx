@@ -2,7 +2,9 @@ import type { FC } from 'react';
 import { Markdown } from '../common/Markdown/Markdown';
 import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
 import { UserAvatar } from '../common/UserAvatar/UserAvatar';
-import { styled } from '@mui/material';
+import { Typography, styled } from '@mui/material';
+import { formatDateYMDHM } from 'utils/formatDate';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const Events = styled('ul')(({ theme }) => ({
     padding: 0,
@@ -16,27 +18,72 @@ const Event = styled('li')(({ theme }) => ({
     gap: theme.spacing(2),
     alignItems: 'center',
     marginBottom: theme.spacing(4),
+
+    '*': {
+        fontWeight: 'normal',
+    },
+}));
+
+const TitleContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'row',
+    gap: theme.spacing(2),
+    alignItems: 'center',
+}));
+
+const ActionBox = styled('article')(({ theme }) => ({
+    padding: theme.spacing(0, 2),
+    display: 'flex',
+    gap: theme.spacing(3),
+    flexDirection: 'column',
+}));
+
+const Timestamp = styled('time')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.fontSize,
+    marginBottom: theme.spacing(1),
 }));
 
 export const LatestProjectEvents: FC<{
     latestEvents: PersonalDashboardProjectDetailsSchema['latestEvents'];
 }> = ({ latestEvents }) => {
+    const { locationSettings } = useLocationSettings();
     return (
-        <Events>
-            {latestEvents.map((event) => {
-                return (
-                    <Event key={event.id}>
-                        <UserAvatar
-                            src={event.createdByImageUrl}
-                            sx={{ mt: 1 }}
-                        />
-                        <Markdown>
-                            {event.summary ||
-                                'No preview available for this event'}
-                        </Markdown>
-                    </Event>
-                );
-            })}
-        </Events>
+        <ActionBox>
+            <TitleContainer>
+                <Typography
+                    sx={{
+                        fontWeight: 'bold',
+                    }}
+                    component='h4'
+                >
+                    Latest Events
+                </Typography>
+            </TitleContainer>
+            <Events>
+                {latestEvents.map((event) => {
+                    return (
+                        <Event key={event.id}>
+                            <UserAvatar
+                                src={event.createdByImageUrl}
+                                sx={{ mt: 1 }}
+                            />
+                            <div>
+                                <Timestamp dateTime={event.createdAt}>
+                                    {formatDateYMDHM(
+                                        event.createdAt,
+                                        locationSettings.locale,
+                                    )}
+                                </Timestamp>
+                                <Markdown>
+                                    {event.summary ||
+                                        'No preview available for this event'}
+                                </Markdown>
+                            </div>
+                        </Event>
+                    );
+                })}
+            </Events>
+        </ActionBox>
     );
 };

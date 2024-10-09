@@ -356,31 +356,6 @@ export const PersonalDashboard = () => {
                 <StyledAccordionDetails>
                     <ContentGridContainer>
                         <FlagGrid>
-                            {
-                                // <GridItem
-                                //     gridArea='title'
-                                //     sx={{ display: 'flex', alignItems: 'center' }}
-                                // >
-                                //     <Typography variant='h3'>
-                                //         My feature flags
-                                //     </Typography>
-                                // </GridItem>
-                                //     <GridItem
-                                //                                 gridArea='lifecycle'
-                                //                                 sx={{
-                                //                                     display: 'flex',
-                                //                                     justifyContent: 'flex-end',
-                                //                                 }}
-                                // >
-                                //                                 {activeFlag ? (
-                                //                                     <FlagExposure
-                                //                                         project={activeFlag.project}
-                                //                                         flagName={activeFlag.name}
-                                //                                         onArchive={refetchDashboard}
-                                //                                     />
-                                //                                 ) : null}
-                                //                             </GridItem>
-                            }
                             <SpacedGridItem gridArea='flags'>
                                 {personalDashboard &&
                                 personalDashboard.flags.length > 0 ? (

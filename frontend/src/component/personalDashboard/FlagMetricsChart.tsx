@@ -66,7 +66,10 @@ export const PlaceholderFlagMetricsChart = () => {
 
     return (
         <>
-            <Typography sx={{ mb: 4 }}>No feature flag metrics data</Typography>
+            <Typography sx={{ mb: 4 }}>
+                No metrics for this feature flag in the selected environment and
+                time period
+            </Typography>
             <Bar
                 data={placeholderData}
                 options={options}

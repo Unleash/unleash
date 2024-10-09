@@ -12,7 +12,8 @@ export const FlagExposure: FC<{
     project: string;
     flagName: string;
     onArchive: () => void;
-}> = ({ project, flagName, onArchive }) => {
+    className?: string;
+}> = ({ project, flagName, onArchive, className }) => {
     const { feature, refetchFeature } = useFeature(project, flagName);
     const lastSeenEnvironments: ILastSeenEnvironments[] =
         feature.environments?.map((env) => ({
@@ -27,7 +28,7 @@ export const FlagExposure: FC<{
         useState(false);
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex' }} className={className}>
             <FeatureEnvironmentSeen
                 sx={{ pt: 0, pb: 0 }}
                 featureLastSeen={feature.lastSeenAt}

@@ -37,6 +37,10 @@ const placeholderData = {
     ],
 };
 
+const ChartWrapper = styled('div')({
+    width: '90%',
+});
+
 export const PlaceholderFlagMetricsChart = () => {
     const theme = useTheme();
 
@@ -46,15 +50,17 @@ export const PlaceholderFlagMetricsChart = () => {
 
     return (
         <>
-            <Typography sx={{ mb: 4 }}>
+            <Typography>
                 No metrics for this feature flag in the selected environment and
                 time period
             </Typography>
-            <Bar
-                data={placeholderData}
-                options={options}
-                aria-label='A placeholder bar chart with a single feature flag exposure metrics'
-            />
+            <ChartWrapper>
+                <Bar
+                    data={placeholderData}
+                    options={options}
+                    aria-label='A placeholder bar chart with a single feature flag exposure metrics'
+                />
+            </ChartWrapper>
         </>
     );
 };
@@ -143,7 +149,14 @@ const MetricsSelectors = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     gap: theme.spacing(2),
-    mb: theme.spacing(6),
+    width: '100%',
+}));
+
+const ChartContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+    alignItems: 'center',
 }));
 
 export const FlagMetricsChart: FC<{
@@ -159,7 +172,7 @@ export const FlagMetricsChart: FC<{
     const noData = data.datasets[0].data.length === 0;
 
     return (
-        <>
+        <ChartContainer>
             <MetricsSelectors>
                 {environment ? (
                     <EnvironmentSelect
@@ -177,13 +190,15 @@ export const FlagMetricsChart: FC<{
             {noData ? (
                 <PlaceholderFlagMetricsChart />
             ) : (
-                <Bar
-                    data={data}
-                    options={options}
-                    aria-label='A bar chart with a single feature flag exposure metrics'
-                />
+                <ChartWrapper>
+                    <Bar
+                        data={data}
+                        options={options}
+                        aria-label='A bar chart with a single feature flag exposure metrics'
+                    />
+                </ChartWrapper>
             )}
-        </>
+        </ChartContainer>
     );
 };
 

@@ -24,35 +24,15 @@ import {
 } from './createChartOptions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
-const defaultYes = [
-    45_000_000, 28_000_000, 28_000_000, 25_000_000, 50_000_000, 27_000_000,
-    26_000_000, 50_000_000, 32_000_000, 12_000_000, 13_000_000, 31_000_000,
-    12_000_000, 47_000_000, 29_000_000, 46_000_000, 45_000_000, 28_000_000,
-    28_000_000, 25_000_000, 50_000_000, 27_000_000, 26_000_000, 50_000_000,
-    32_000_000, 12_000_000, 13_000_000, 31_000_000, 12_000_000, 47_000_000,
-];
-const defaultNo = [
-    5_000_000, 8_000_000, 3_000_000, 2_000_000, 2_000_000, 5_000_000, 9_000_000,
-    3_000_000, 7_000_000, 2_000_000, 5_000_000, 8_000_000, 3_000_000, 2_000_000,
-    2_000_000, 5_000_000, 1_000_000, 3_000_000, 12_000_000, 2_000_000,
-    1_000_000, 1_000_000, 3_000_000, 2_000_000, 2_000_000, 5_000_000, 1_000_000,
-    3_000_000, 8_000_000, 2_000_000,
-];
+const defaultYes = [0, 14, 28, 21, 33, 31, 31, 22, 26, 37, 31, 14, 21, 14, 0];
 
 const placeholderData = {
-    labels: Array.from({ length: 30 }, (_, i) => i + 1),
+    labels: Array.from({ length: 15 }, (_, i) => i + 1),
     datasets: [
         {
             data: defaultYes,
-            label: 'yes',
-            backgroundColor: '#BEBEBE',
-            hoverBackgroundColor: '#BEBEBE',
-        },
-        {
-            data: defaultNo,
-            label: 'no',
-            backgroundColor: '#9A9A9A',
-            hoverBackgroundColor: '#9A9A9A',
+            backgroundColor: '#EAEAED',
+            hoverBackgroundColor: '#EAEAED',
         },
     ],
 };

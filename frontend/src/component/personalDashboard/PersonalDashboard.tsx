@@ -217,8 +217,9 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     border: 'none',
     padding: theme.spacing(2, 4),
     margin: 0,
-    '&>*': {
-        margin: '0 !important',
+    // increase specificity to override the default margin
+    '&>.MuiAccordionSummary-content.MuiAccordionSummary-content': {
+        margin: '0',
     },
     "&[aria-expanded='true']": {
         // only add the border when it's open

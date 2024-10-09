@@ -237,6 +237,11 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: 0,
 }));
 
+const MainContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+}));
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
 
@@ -282,7 +287,7 @@ export const PersonalDashboard = () => {
     );
 
     return (
-        <div>
+        <MainContent>
             <WelcomeSection>
                 <Typography component='h2' variant='h2'>
                     Welcome {name}
@@ -424,7 +429,7 @@ export const PersonalDashboard = () => {
                 open={welcomeDialog === 'open'}
                 onClose={() => setWelcomeDialog('closed')}
             />
-        </div>
+        </MainContent>
     );
 };
 

@@ -1,6 +1,5 @@
 import type { Theme } from '@mui/material/styles/createTheme';
 import type { ChartOptions } from 'chart.js';
-import { formatTickValue } from '../common/Chart/formatTickValue';
 import type { ILocationSettings } from '../../hooks/useLocationSettings';
 import type { IPoint } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsChart/createChartData';
 import {
@@ -24,15 +23,7 @@ export const createPlaceholderBarChartOptions = (
 ): ChartOptions<'bar'> => ({
     plugins: {
         legend: {
-            position: 'bottom',
-            labels: {
-                color: theme.palette.text.primary,
-                pointStyle: 'circle',
-                usePointStyle: true,
-                boxHeight: 6,
-                padding: 15,
-                boxPadding: 5,
-            },
+            display: false,
         },
         tooltip: {
             enabled: false,
@@ -43,7 +34,7 @@ export const createPlaceholderBarChartOptions = (
         x: {
             stacked: true,
             ticks: {
-                color: theme.palette.text.secondary,
+                display: false,
             },
             grid: {
                 display: false,
@@ -52,9 +43,8 @@ export const createPlaceholderBarChartOptions = (
         y: {
             stacked: true,
             ticks: {
-                color: theme.palette.text.secondary,
                 maxTicksLimit: 5,
-                callback: formatTickValue,
+                display: false,
             },
             grid: {
                 drawBorder: false,

@@ -252,7 +252,8 @@ export const PersonalDashboard = () => {
 
     const name = user?.name;
 
-    const { personalDashboard } = usePersonalDashboard();
+    const { personalDashboard, refetch: refetchDashboard } =
+        usePersonalDashboard();
 
     const projects = personalDashboard?.projects || [];
 
@@ -390,7 +391,10 @@ export const PersonalDashboard = () => {
 
                             <SpacedGridItem gridArea='chart'>
                                 {activeFlag ? (
-                                    <FlagMetricsChart flag={activeFlag} />
+                                    <FlagMetricsChart
+                                        flag={activeFlag}
+                                        onArchive={refetchDashboard}
+                                    />
                                 ) : (
                                     <PlaceholderFlagMetricsChart />
                                 )}

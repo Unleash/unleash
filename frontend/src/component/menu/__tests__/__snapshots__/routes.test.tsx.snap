@@ -247,7 +247,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "EEA",
+    "enterprise": true,
     "menu": {
       "advanced": true,
       "mobile": true,

@@ -856,6 +856,10 @@ module.exports = {
                         ],
                         to: '/topics/feature-flag-migration/feature-flag-migration-best-practices',
                     },
+                    {
+                        from: '/topics/a-b-testing',
+                        to: '/feature-flag-tutorials/use-cases/a-b-testing',
+                    },
                 ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: (toPath) => {
                     if (

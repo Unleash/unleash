@@ -11,7 +11,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { Bar } from 'react-chartjs-2';
 import useTheme from '@mui/material/styles/useTheme';
 import { type FC, useEffect, useMemo, useState } from 'react';
-import { Box, styled, Typography } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { FeatureMetricsHours } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsHours/FeatureMetricsHours';
 import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
 import { useFeatureMetricsRaw } from 'hooks/api/getters/useFeatureMetricsRaw/useFeatureMetricsRaw';
@@ -25,38 +25,23 @@ import {
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 
-const defaultYes = [
-    45_000_000, 28_000_000, 28_000_000, 25_000_000, 50_000_000, 27_000_000,
-    26_000_000, 50_000_000, 32_000_000, 12_000_000, 13_000_000, 31_000_000,
-    12_000_000, 47_000_000, 29_000_000, 46_000_000, 45_000_000, 28_000_000,
-    28_000_000, 25_000_000, 50_000_000, 27_000_000, 26_000_000, 50_000_000,
-    32_000_000, 12_000_000, 13_000_000, 31_000_000, 12_000_000, 47_000_000,
-];
-const defaultNo = [
-    5_000_000, 8_000_000, 3_000_000, 2_000_000, 2_000_000, 5_000_000, 9_000_000,
-    3_000_000, 7_000_000, 2_000_000, 5_000_000, 8_000_000, 3_000_000, 2_000_000,
-    2_000_000, 5_000_000, 1_000_000, 3_000_000, 12_000_000, 2_000_000,
-    1_000_000, 1_000_000, 3_000_000, 2_000_000, 2_000_000, 5_000_000, 1_000_000,
-    3_000_000, 8_000_000, 2_000_000,
-];
+const defaultYes = [0, 14, 28, 21, 33, 31, 31, 22, 26, 37, 31, 14, 21, 14, 0];
 
 const placeholderData = {
-    labels: Array.from({ length: 30 }, (_, i) => i + 1),
+    labels: Array.from({ length: 15 }, (_, i) => i + 1),
     datasets: [
         {
             data: defaultYes,
-            label: 'yes',
-            backgroundColor: '#BEBEBE',
-            hoverBackgroundColor: '#BEBEBE',
-        },
-        {
-            data: defaultNo,
-            label: 'no',
-            backgroundColor: '#9A9A9A',
-            hoverBackgroundColor: '#9A9A9A',
+            backgroundColor: '#EAEAED',
+            hoverBackgroundColor: '#EAEAED',
+            label: 'No metrics for this feature flag in the selected environment and time period',
         },
     ],
 };
+
+const ChartWrapper = styled('div')({
+    width: '90%',
+});
 
 export const PlaceholderFlagMetricsChart = () => {
     const theme = useTheme();
@@ -66,14 +51,13 @@ export const PlaceholderFlagMetricsChart = () => {
     }, [theme]);
 
     return (
-        <>
-            <Typography sx={{ mb: 4 }}>No feature flag metrics data</Typography>
+        <ChartWrapper>
             <Bar
                 data={placeholderData}
                 options={options}
                 aria-label='A placeholder bar chart with a single feature flag exposure metrics'
             />
-        </>
+        </ChartWrapper>
     );
 };
 
@@ -161,7 +145,14 @@ const ExposureAndSelectors = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     gap: theme.spacing(2),
-    mb: theme.spacing(6),
+    width: '100%',
+}));
+
+const ChartContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+    alignItems: 'center',
 }));
 
 const StyledExposure = styled(FlagExposure)({
@@ -182,7 +173,7 @@ export const FlagMetricsChart: FC<{
     const noData = data.datasets[0].data.length === 0;
 
     return (
-        <>
+        <ChartContainer>
             <ExposureAndSelectors>
                 <StyledExposure
                     project={flag.project}
@@ -205,13 +196,15 @@ export const FlagMetricsChart: FC<{
             {noData ? (
                 <PlaceholderFlagMetricsChart />
             ) : (
-                <Bar
-                    data={data}
-                    options={options}
-                    aria-label='A bar chart with a single feature flag exposure metrics'
-                />
+                <ChartWrapper>
+                    <Bar
+                        data={data}
+                        options={options}
+                        aria-label='A bar chart with a single feature flag exposure metrics'
+                    />
+                </ChartWrapper>
             )}
-        </>
+        </ChartContainer>
     );
 };
 

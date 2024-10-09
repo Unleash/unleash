@@ -105,6 +105,16 @@ export class ApiTokenStore implements IApiTokenStore {
         this.flagResolver = flagResolver;
     }
 
+    // helper function that we can move to utils
+    async withTimer<T>(timerName: string, fn: () => Promise<T>): Promise<T> {
+        const stopTimer = this.timer(timerName);
+        try {
+            return await fn();
+        } finally {
+            stopTimer();
+        }
+    }
+
     async count(): Promise<number> {
         return this.db(TABLE)
             .count('*')
@@ -248,18 +258,22 @@ export class ApiTokenStore implements IApiTokenStore {
         legacyTokens: number;
         activeLegacyTokens: number;
     }> {
-        const allLegacyCount = this.db<ITokenRow>(`${TABLE} as tokens`)
-            .where('tokens.secret', 'NOT LIKE', '%:%')
-            .count()
-            .first()
-            .then((res) => Number(res?.count) || 0);
+        const allLegacyCount = this.withTimer('allLegacyCount', () =>
+            this.db<ITokenRow>(`${TABLE} as tokens`)
+                .where('tokens.secret', 'NOT LIKE', '%:%')
+                .count()
+                .first()
+                .then((res) => Number(res?.count) || 0),
+        );
 
-        const activeLegacyCount = this.db<ITokenRow>(`${TABLE} as tokens`)
-            .where('tokens.secret', 'NOT LIKE', '%:%')
-            .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'")
-            .count()
-            .first()
-            .then((res) => Number(res?.count) || 0);
+        const activeLegacyCount = this.withTimer('activeLegacyCount', () =>
+            this.db<ITokenRow>(`${TABLE} as tokens`)
+                .where('tokens.secret', 'NOT LIKE', '%:%')
+                .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'")
+                .count()
+                .first()
+                .then((res) => Number(res?.count) || 0),
+        );
 
         const orphanedTokensQuery = this.db<ITokenRow>(`${TABLE} as tokens`)
             .leftJoin(
@@ -276,18 +290,22 @@ export class ApiTokenStore implements IApiTokenStore {
                     .orWhere('tokens.type', ApiTokenType.FRONTEND);
             });
 
-        const allOrphanedCount = orphanedTokensQuery
-            .clone()
-            .count()
-            .first()
-            .then((res) => Number(res?.count) || 0);
+        const allOrphanedCount = this.withTimer('allOrphanedCount', () =>
+            orphanedTokensQuery
+                .clone()
+                .count()
+                .first()
+                .then((res) => Number(res?.count) || 0),
+        );
 
-        const activeOrphanedCount = orphanedTokensQuery
-            .clone()
-            .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'")
-            .count()
-            .first()
-            .then((res) => Number(res?.count) || 0);
+        const activeOrphanedCount = this.withTimer('activeOrphanedCount', () =>
+            orphanedTokensQuery
+                .clone()
+                .andWhereRaw("tokens.seen_at > NOW() - INTERVAL '3 MONTH'")
+                .count()
+                .first()
+                .then((res) => Number(res?.count) || 0),
+        );
 
         const [
             orphanedTokens,

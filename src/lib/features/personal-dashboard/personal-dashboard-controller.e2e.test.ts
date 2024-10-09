@@ -237,6 +237,8 @@ test('should return personal dashboard project details', async () => {
         `/api/admin/personal-dashboard/${project.id}`,
     );
 
+    const timestampPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/;
+
     expect(body).toMatchObject({
         owners: [
             {
@@ -268,24 +270,28 @@ test('should return personal dashboard project details', async () => {
         },
         latestEvents: [
             {
+                createdAt: expect.stringMatching(timestampPattern),
                 createdBy: 'new_user@test.com',
                 summary: expect.stringContaining(
                     '**new_user@test.com** created **[log_feature_c]',
                 ),
             },
             {
+                createdAt: expect.stringMatching(timestampPattern),
                 createdBy: 'new_user@test.com',
                 summary: expect.stringContaining(
                     '**new_user@test.com** created **[log_feature_b]',
                 ),
             },
             {
+                createdAt: expect.stringMatching(timestampPattern),
                 createdBy: 'new_user@test.com',
                 summary: expect.stringContaining(
                     '**new_user@test.com** created **[log_feature_a]',
                 ),
             },
             {
+                createdAt: expect.stringMatching(timestampPattern),
                 createdBy: 'unknown',
                 summary: expect.stringContaining(
                     'triggered **project-access-added**',

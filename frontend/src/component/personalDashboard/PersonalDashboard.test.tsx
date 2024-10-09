@@ -147,7 +147,6 @@ test('Render personal dashboard for a long running project', async () => {
     await screen.findByText('13 feature flags'); // stale flags
     await screen.findByText('14 feature flags'); // potentially stale flags
     await screen.findByText('myFlag');
-    await screen.findByText('No feature flag metrics data');
     await screen.findByText('production');
     await screen.findByText('Last 48 hours');
 });
@@ -168,6 +167,4 @@ test('Render personal dashboard for a new project', async () => {
     await screen.findByText(
         'You have not created or favorited any feature flags. Once you do, they will show up here.',
     );
-
-    await screen.findByText('No feature flag metrics data');
 });

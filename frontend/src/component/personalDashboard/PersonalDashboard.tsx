@@ -148,7 +148,11 @@ const useDashboardState = (
                 activeProject: projects[0].id,
             });
         }
-    });
+    }, [
+        JSON.stringify(projects, null, 2),
+        JSON.stringify(flags, null, 2),
+        JSON.stringify(state, null, 2),
+    ]);
 
     const { activeFlag, activeProject } = state;
 

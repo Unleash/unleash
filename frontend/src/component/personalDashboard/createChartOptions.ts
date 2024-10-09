@@ -23,7 +23,15 @@ export const createPlaceholderBarChartOptions = (
 ): ChartOptions<'bar'> => ({
     plugins: {
         legend: {
-            display: false,
+            position: 'top',
+            labels: {
+                color: theme.palette.text.primary,
+                usePointStyle: true,
+                pointStyle: 'none',
+                boxHeight: 0,
+                padding: 15,
+                boxPadding: 5,
+            },
         },
 
         tooltip: {

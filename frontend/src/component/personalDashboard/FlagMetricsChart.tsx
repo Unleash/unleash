@@ -11,7 +11,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { Bar } from 'react-chartjs-2';
 import useTheme from '@mui/material/styles/useTheme';
 import { type FC, useEffect, useMemo, useState } from 'react';
-import { Box, styled, Typography } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { FeatureMetricsHours } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsHours/FeatureMetricsHours';
 import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
 import { useFeatureMetricsRaw } from 'hooks/api/getters/useFeatureMetricsRaw/useFeatureMetricsRaw';
@@ -33,6 +33,7 @@ const placeholderData = {
             data: defaultYes,
             backgroundColor: '#EAEAED',
             hoverBackgroundColor: '#EAEAED',
+            label: 'No metrics for this feature flag in the selected environment and time period',
         },
     ],
 };
@@ -49,19 +50,13 @@ export const PlaceholderFlagMetricsChart = () => {
     }, [theme]);
 
     return (
-        <>
-            <Typography>
-                No metrics for this feature flag in the selected environment and
-                time period
-            </Typography>
-            <ChartWrapper>
-                <Bar
-                    data={placeholderData}
-                    options={options}
-                    aria-label='A placeholder bar chart with a single feature flag exposure metrics'
-                />
-            </ChartWrapper>
-        </>
+        <ChartWrapper>
+            <Bar
+                data={placeholderData}
+                options={options}
+                aria-label='A placeholder bar chart with a single feature flag exposure metrics'
+            />
+        </ChartWrapper>
     );
 };
 

@@ -136,7 +136,7 @@ test('Render personal dashboard for a long running project', async () => {
     await screen.findByText('projectName');
     await screen.findByText('10'); // members
     await screen.findByText('100'); // features
-    await screen.findByText('80%'); // health
+    await screen.findAllByText('80%'); // health
 
     await screen.findByText('Project health');
     await screen.findByText('70%'); // avg health past window

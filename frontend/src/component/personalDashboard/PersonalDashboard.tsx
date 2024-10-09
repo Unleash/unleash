@@ -121,11 +121,21 @@ const useDashboardState = (
         defaultState,
     );
 
+    const setPartialState = (newState: Partial<State>) =>
+        setState({ ...defaultState, ...state, ...newState });
+
     useEffect(() => {
         const setDefaultFlag =
             flags.length &&
             (!state.activeFlag ||
                 !flags.some((flag) => flag.name === state.activeFlag?.name));
+
+        if (setDefaultFlag) {
+            setPartialState({
+                activeFlag: flags[0],
+            });
+        }
+
         const setDefaultProject =
             projects.length &&
             (!state.activeProject ||
@@ -133,36 +143,30 @@ const useDashboardState = (
                     (project) => project.id === state.activeProject,
                 ));
 
-        setState({
-            ...defaultState,
-            ...state,
-            activeFlag: setDefaultFlag ? flags[0] : state.activeFlag,
-            activeProject: setDefaultProject
-                ? projects[0].id
-                : state.activeProject,
-        });
+        if (setDefaultProject) {
+            setPartialState({
+                activeProject: projects[0].id,
+            });
+        }
     });
 
     const { activeFlag, activeProject } = state;
 
     const setActiveFlag = (flag: PersonalDashboardSchemaFlagsItem) => {
-        setState({
-            ...state,
+        setPartialState({
             activeFlag: flag,
         });
     };
 
     const setActiveProject = (projectId: string) => {
-        setState({
-            ...state,
+        setPartialState({
             activeProject: projectId,
         });
     };
 
     const toggleSectionState = (section: 'flags' | 'projects') => {
         const property = section === 'flags' ? 'expandFlags' : 'expandProjects';
-        setState({
-            ...state,
+        setPartialState({
             [property]: !(state[property] ?? true),
         });
     };
@@ -172,8 +176,8 @@ const useDashboardState = (
         setActiveFlag,
         activeProject,
         setActiveProject,
-        expandFlags: state.expandFlags,
-        expandProjects: state.expandProjects,
+        expandFlags: state.expandFlags ?? true,
+        expandProjects: state.expandProjects ?? true,
         toggleSectionState,
     };
 };

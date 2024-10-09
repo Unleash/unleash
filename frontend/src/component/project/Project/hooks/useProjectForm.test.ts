@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import useProjectForm from './useProjectForm';
-import { act } from 'react-test-renderer';
 import { test } from 'vitest';
+import { act } from 'react';
 
 describe('configuring change requests', () => {
     test('setting project environments removes any change request envs that are not in the new project env list', () => {

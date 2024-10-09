@@ -2446,7 +2446,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/dom@npm:8.20.1, @testing-library/dom@npm:^8.5.0":
+"@testing-library/dom@npm:8.20.1":
   version: 8.20.1
   resolution: "@testing-library/dom@npm:8.20.1"
   dependencies:
@@ -2477,17 +2477,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/react@npm:13.4.0":
-  version: 13.4.0
-  resolution: "@testing-library/react@npm:13.4.0"
+"@testing-library/react@npm:16.0.1":
+  version: 16.0.1
+  resolution: "@testing-library/react@npm:16.0.1"
   dependencies:
     "@babel/runtime": "npm:^7.12.5"
-    "@testing-library/dom": "npm:^8.5.0"
-    "@types/react-dom": "npm:^18.0.0"
   peerDependencies:
+    "@testing-library/dom": ^10.0.0
+    "@types/react": ^18.0.0
+    "@types/react-dom": ^18.0.0
     react: ^18.0.0
     react-dom: ^18.0.0
-  checksum: 10c0/371bf982dd0deb27da004f368b06904353eac0f23f9c08ff0f24443c3f51a6d647009e366034417565d2484c40f1c7eff74413738abf4ec55209da9bd3253b0e
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+    "@types/react-dom":
+      optional: true
+  checksum: 10c0/67d05dec5ad5a2e6f92b6a3234af785435c7bb62bdbf12f3bfc89c9bca0c871a189e88c4ba023ed4cea504704c87c6ac7e86e24a3962df6c521ae89b62f48ff7
   languageName: node
   linkType: hard
 
@@ -2768,7 +2774,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:18.3.0, @types/react-dom@npm:^18.0.0":
+"@types/react-dom@npm:18.3.0":
   version: 18.3.0
   resolution: "@types/react-dom@npm:18.3.0"
   dependencies:
@@ -9780,7 +9786,7 @@ __metadata:
     "@tanstack/react-table": "npm:^8.10.7"
     "@testing-library/dom": "npm:8.20.1"
     "@testing-library/jest-dom": "npm:6.5.0"
-    "@testing-library/react": "npm:13.4.0"
+    "@testing-library/react": "npm:16.0.1"
     "@testing-library/user-event": "npm:14.5.2"
     "@types/css-mediaquery": "npm:^0.1.4"
     "@types/debounce": "npm:1.2.4"

@@ -121,7 +121,7 @@ const useDashboardState = (
         defaultState,
     );
 
-    const setPartialState = (newState: Partial<State>) =>
+    const updateState = (newState: Partial<State>) =>
         setState({ ...defaultState, ...state, ...newState });
 
     useEffect(() => {
@@ -131,7 +131,7 @@ const useDashboardState = (
                 !flags.some((flag) => flag.name === state.activeFlag?.name));
 
         if (setDefaultFlag) {
-            setPartialState({
+            updateState({
                 activeFlag: flags[0],
             });
         }
@@ -144,7 +144,7 @@ const useDashboardState = (
                 ));
 
         if (setDefaultProject) {
-            setPartialState({
+            updateState({
                 activeProject: projects[0].id,
             });
         }
@@ -157,20 +157,20 @@ const useDashboardState = (
     const { activeFlag, activeProject } = state;
 
     const setActiveFlag = (flag: PersonalDashboardSchemaFlagsItem) => {
-        setPartialState({
+        updateState({
             activeFlag: flag,
         });
     };
 
     const setActiveProject = (projectId: string) => {
-        setPartialState({
+        updateState({
             activeProject: projectId,
         });
     };
 
     const toggleSectionState = (section: 'flags' | 'projects') => {
         const property = section === 'flags' ? 'expandFlags' : 'expandProjects';
-        setPartialState({
+        updateState({
             [property]: !(state[property] ?? true),
         });
     };

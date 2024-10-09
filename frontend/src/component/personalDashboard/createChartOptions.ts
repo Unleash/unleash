@@ -25,6 +25,7 @@ export const createPlaceholderBarChartOptions = (
         legend: {
             display: false,
         },
+
         tooltip: {
             enabled: false,
         },
@@ -67,11 +68,22 @@ export const createBarChartOptions = (
     hoursBack: number,
     locationSettings: ILocationSettings,
 ): ChartOptions<'bar'> => {
-    const { plugins, responsive, elements, interaction, scales } =
+    const { responsive, elements, interaction, scales } =
         createPlaceholderBarChartOptions(theme);
     return {
         plugins: {
-            legend: plugins?.legend,
+            legend: {
+                position: 'bottom',
+                labels: {
+                    color: theme.palette.text.primary,
+                    pointStyle: 'circle',
+                    usePointStyle: true,
+                    boxHeight: 6,
+                    padding: 15,
+                    boxPadding: 5,
+                },
+            },
+
             // required to avoid the highlight plugin highlighting empty annotation
             annotation: {
                 clip: false,

@@ -15,10 +15,6 @@ export const originMiddleware = ({
     logger.debug('Enabling origin middleware');
 
     return (req: Request, _: Response, next: NextFunction) => {
-        if (!flagResolver.isEnabled('originMiddleware')) {
-            return next();
-        }
-
         const isUI = !req.headers.authorization;
 
         if (isUI) {

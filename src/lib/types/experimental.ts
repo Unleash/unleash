@@ -53,7 +53,6 @@ export type IFlagKey =
     | 'navigationSidebar'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
-    | 'originMiddleware'
     | 'addonUsageMetrics'
     | 'onboardingMetrics'
     | 'onboardingUI'
@@ -264,10 +263,6 @@ const flags: IFlags = {
     ),
     removeUnsafeInlineStyleSrc: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
-        false,
-    ),
-    originMiddleware: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ORIGIN_MIDDLEWARE,
         false,
     ),
     addonUsageMetrics: parseEnvVarBoolean(

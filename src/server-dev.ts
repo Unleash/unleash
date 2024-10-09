@@ -50,7 +50,6 @@ process.nextTick(async () => {
                         manyStrategiesPagination: true,
                         enableLegacyVariants: false,
                         extendedMetrics: true,
-                        originMiddleware: true,
                         addonUsageMetrics: true,
                         onboardingMetrics: true,
                         onboardingUI: true,

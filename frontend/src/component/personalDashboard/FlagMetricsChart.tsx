@@ -23,6 +23,7 @@ import {
     createPlaceholderBarChartOptions,
 } from './createChartOptions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 
 const defaultYes = [0, 14, 28, 21, 33, 31, 31, 22, 26, 37, 31, 14, 21, 14, 0];
 
@@ -140,7 +141,7 @@ const EnvironmentSelect: FC<{
     );
 };
 
-const MetricsSelectors = styled(Box)(({ theme }) => ({
+const ExposureAndSelectors = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     gap: theme.spacing(2),
@@ -154,9 +155,14 @@ const ChartContainer = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
+const StyledExposure = styled(FlagExposure)({
+    alignItems: 'center',
+});
+
 export const FlagMetricsChart: FC<{
     flag: { name: string; project: string };
-}> = ({ flag }) => {
+    onArchive: () => void;
+}> = ({ flag, onArchive }) => {
     const [hoursBack, setHoursBack] = useState(48);
 
     const { environment, setEnvironment, activeEnvironments } =
@@ -168,7 +174,12 @@ export const FlagMetricsChart: FC<{
 
     return (
         <ChartContainer>
-            <MetricsSelectors>
+            <ExposureAndSelectors>
+                <StyledExposure
+                    project={flag.project}
+                    flagName={flag.name}
+                    onArchive={onArchive}
+                />
                 {environment ? (
                     <EnvironmentSelect
                         environment={environment}
@@ -180,7 +191,7 @@ export const FlagMetricsChart: FC<{
                     hoursBack={hoursBack}
                     setHoursBack={setHoursBack}
                 />
-            </MetricsSelectors>
+            </ExposureAndSelectors>
 
             {noData ? (
                 <PlaceholderFlagMetricsChart />

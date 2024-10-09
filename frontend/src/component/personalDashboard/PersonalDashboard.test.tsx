@@ -114,7 +114,9 @@ const setupNewProject = () => {
     });
 };
 
-// @ts-ignore
+// @ts-expect-error The return type here isn't correct, but it's not
+// an issue for the tests. We just need to override it because it's
+// not implemented in jsdom.
 HTMLCanvasElement.prototype.getContext = () => {};
 
 //scrollIntoView is not implemented in jsdom
@@ -134,7 +136,7 @@ test('Render personal dashboard for a long running project', async () => {
     await screen.findByText('projectName');
     await screen.findByText('10'); // members
     await screen.findByText('100'); // features
-    await screen.findByText('80%'); // health
+    await screen.findAllByText('80%'); // health
 
     await screen.findByText('Project health');
     await screen.findByText('70%'); // avg health past window

@@ -1,5 +1,8 @@
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
     Button,
     IconButton,
     Link,
@@ -19,7 +22,6 @@ import type {
     PersonalDashboardSchemaFlagsItem,
     PersonalDashboardSchemaProjectsItem,
 } from '../../openapi';
-import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
 import useLoading from '../../hooks/useLoading';
 import { MyProjects } from './MyProjects';
@@ -28,16 +30,10 @@ import {
     FlagGrid,
     ListItemBox,
     listItemStyle,
-    GridItem,
     SpacedGridItem,
 } from './Grid';
 import { ContentGridNoProjects } from './ContentGridNoProjects';
-
-const ScreenExplanation = styled('div')(({ theme }) => ({
-    marginBottom: theme.spacing(4),
-    display: 'flex',
-    alignItems: 'center',
-}));
+import ExpandMore from '@mui/icons-material/ExpandMore';
 
 export const StyledCardTitle = styled('div')<{ lines?: number }>(
     ({ theme, lines = 2 }) => ({
@@ -102,6 +98,7 @@ const FlagListItem: FC<{
     );
 };
 
+// todo: move into own file
 const useDashboardState = (
     projects: PersonalDashboardSchemaProjectsItem[],
     flags: PersonalDashboardSchemaFlagsItem[],
@@ -109,11 +106,15 @@ const useDashboardState = (
     type State = {
         activeProject: string | undefined;
         activeFlag: PersonalDashboardSchemaFlagsItem | undefined;
+        expandProjects: boolean;
+        expandFlags: boolean;
     };
 
-    const defaultState = {
+    const defaultState: State = {
         activeProject: undefined,
         activeFlag: undefined,
+        expandProjects: true,
+        expandFlags: true,
     };
 
     const [state, setState] = useLocalStorageState<State>(
@@ -121,11 +122,20 @@ const useDashboardState = (
         defaultState,
     );
 
+    const updateState = (newState: Partial<State>) =>
+        setState({ ...defaultState, ...state, ...newState });
+
     useEffect(() => {
+        const updates: Partial<State> = {};
         const setDefaultFlag =
             flags.length &&
             (!state.activeFlag ||
                 !flags.some((flag) => flag.name === state.activeFlag?.name));
+
+        if (setDefaultFlag) {
+            updates.activeFlag = flags[0];
+        }
+
         const setDefaultProject =
             projects.length &&
             (!state.activeProject ||
@@ -133,29 +143,37 @@ const useDashboardState = (
                     (project) => project.id === state.activeProject,
                 ));
 
-        if (setDefaultFlag || setDefaultProject) {
-            setState({
-                activeFlag: setDefaultFlag ? flags[0] : state.activeFlag,
-                activeProject: setDefaultProject
-                    ? projects[0].id
-                    : state.activeProject,
-            });
+        if (setDefaultProject) {
+            updates.activeProject = projects[0].id;
         }
-    });
+
+        if (Object.keys(updates).length) {
+            updateState(updates);
+        }
+    }, [
+        JSON.stringify(projects, null, 2),
+        JSON.stringify(flags, null, 2),
+        JSON.stringify(state, null, 2),
+    ]);
 
     const { activeFlag, activeProject } = state;
 
     const setActiveFlag = (flag: PersonalDashboardSchemaFlagsItem) => {
-        setState({
-            ...state,
+        updateState({
             activeFlag: flag,
         });
     };
 
     const setActiveProject = (projectId: string) => {
-        setState({
-            ...state,
+        updateState({
             activeProject: projectId,
+        });
+    };
+
+    const toggleSectionState = (section: 'flags' | 'projects') => {
+        const property = section === 'flags' ? 'expandFlags' : 'expandProjects';
+        updateState({
+            [property]: !(state[property] ?? true),
         });
     };
 
@@ -164,6 +182,9 @@ const useDashboardState = (
         setActiveFlag,
         activeProject,
         setActiveProject,
+        expandFlags: state.expandFlags ?? true,
+        expandProjects: state.expandProjects ?? true,
+        toggleSectionState,
     };
 };
 
@@ -173,13 +194,57 @@ const WelcomeSection = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     flexFlow: 'row wrap',
     alignItems: 'baseline',
-    marginBottom: theme.spacing(2),
 }));
 
-const ViewKeyConceptsButton = styled(Button)(({ theme }) => ({
+const ViewKeyConceptsButton = styled(Button)({
     fontWeight: 'normal',
     padding: 0,
     margin: 0,
+});
+
+const SectionAccordion = styled(Accordion)(({ theme }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: 'none',
+    '& .expanded': {
+        '&:before': {
+            opacity: '0 !important',
+        },
+    },
+
+    // add a top border to the region when the accordion is collapsed.
+    // This retains the border between the summary and the region
+    // during the collapsing animation
+    "[aria-expanded='false']+.MuiCollapse-root .MuiAccordion-region": {
+        borderTop: `1px solid ${theme.palette.divider}`,
+    },
+
+    overflow: 'hidden',
+}));
+
+const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+    border: 'none',
+    padding: theme.spacing(2, 4),
+    margin: 0,
+    // increase specificity to override the default margin
+    '&>.MuiAccordionSummary-content.MuiAccordionSummary-content': {
+        margin: '0',
+    },
+    "&[aria-expanded='true']": {
+        // only add the border when it's open
+        borderBottom: `1px solid ${theme.palette.divider}`,
+    },
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails)({
+    padding: 0,
+});
+
+const MainContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
 }));
 
 export const PersonalDashboard = () => {
@@ -187,32 +252,30 @@ export const PersonalDashboard = () => {
 
     const name = user?.name;
 
-    const {
-        personalDashboard,
-        refetch: refetchDashboard,
-        loading: personalDashboardLoading,
-    } = usePersonalDashboard();
+    const { personalDashboard, refetch: refetchDashboard } =
+        usePersonalDashboard();
 
     const projects = personalDashboard?.projects || [];
 
-    const { activeProject, setActiveProject, activeFlag, setActiveFlag } =
-        useDashboardState(projects, personalDashboard?.flags ?? []);
+    const {
+        activeProject,
+        setActiveProject,
+        activeFlag,
+        setActiveFlag,
+        toggleSectionState,
+        expandFlags,
+        expandProjects,
+    } = useDashboardState(projects, personalDashboard?.flags ?? []);
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'open' | 'closed'
     >('welcome-dialog:v1', 'open');
 
-    const {
-        personalDashboardProjectDetails,
-        loading: loadingDetails,
-        error: detailsError,
-    } = usePersonalDashboardProjectDetails(activeProject);
+    const { personalDashboardProjectDetails, error: detailsError } =
+        usePersonalDashboardProjectDetails(activeProject);
 
     const activeProjectStage =
         personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
-    const setupIncomplete =
-        activeProjectStage === 'onboarding-started' ||
-        activeProjectStage === 'first-flag-created';
 
     const noProjects = projects.length === 0;
 
@@ -221,7 +284,7 @@ export const PersonalDashboard = () => {
     );
 
     return (
-        <div>
+        <MainContent>
             <WelcomeSection>
                 <Typography component='h2' variant='h2'>
                     Welcome {name}
@@ -239,84 +302,113 @@ export const PersonalDashboard = () => {
                 </ViewKeyConceptsButton>
             </WelcomeSection>
 
-            {noProjects && personalDashboard ? (
-                <ContentGridNoProjects
-                    owners={personalDashboard.projectOwners}
-                    admins={personalDashboard.admins}
-                />
-            ) : (
-                <MyProjects
-                    admins={personalDashboard?.admins ?? []}
-                    ref={projectStageRef}
-                    projects={projects}
-                    activeProject={activeProject || ''}
-                    setActiveProject={setActiveProject}
-                    personalDashboardProjectDetails={
-                        personalDashboardProjectDetails
+            <SectionAccordion
+                disableGutters
+                expanded={expandProjects ?? true}
+                onChange={() => toggleSectionState('projects')}
+            >
+                <StyledAccordionSummary
+                    expandIcon={
+                        <ExpandMore titleAccess='Toggle projects section' />
                     }
-                />
-            )}
+                    id='projects-panel-header'
+                    aria-controls='projects-panel-content'
+                >
+                    <Typography variant='body1' component='h3'>
+                        My projects
+                    </Typography>
+                </StyledAccordionSummary>
+                <StyledAccordionDetails>
+                    {noProjects && personalDashboard ? (
+                        <ContentGridNoProjects
+                            owners={personalDashboard.projectOwners}
+                            admins={personalDashboard.admins}
+                        />
+                    ) : (
+                        <MyProjects
+                            admins={personalDashboard?.admins ?? []}
+                            ref={projectStageRef}
+                            projects={projects}
+                            activeProject={activeProject || ''}
+                            setActiveProject={setActiveProject}
+                            personalDashboardProjectDetails={
+                                personalDashboardProjectDetails
+                            }
+                        />
+                    )}
+                </StyledAccordionDetails>
+            </SectionAccordion>
 
-            <ContentGridContainer>
-                <FlagGrid sx={{ mt: 2 }}>
-                    <GridItem
-                        gridArea='title'
-                        sx={{ display: 'flex', alignItems: 'center' }}
-                    >
-                        <Typography variant='h3'>My feature flags</Typography>
-                    </GridItem>
-                    <GridItem
-                        gridArea='lifecycle'
-                        sx={{ display: 'flex', justifyContent: 'flex-end' }}
-                    >
-                        {activeFlag ? (
-                            <FlagExposure
-                                project={activeFlag.project}
-                                flagName={activeFlag.name}
-                                onArchive={refetchDashboard}
-                            />
-                        ) : null}
-                    </GridItem>
-                    <SpacedGridItem gridArea='flags'>
-                        {personalDashboard &&
-                        personalDashboard.flags.length > 0 ? (
-                            <List
-                                disablePadding={true}
-                                sx={{ maxHeight: '400px', overflow: 'auto' }}
-                            >
-                                {personalDashboard.flags.map((flag) => (
-                                    <FlagListItem
-                                        key={flag.name}
-                                        flag={flag}
-                                        selected={
-                                            flag.name === activeFlag?.name
-                                        }
-                                        onClick={() => setActiveFlag(flag)}
+            <SectionAccordion
+                expanded={expandFlags ?? true}
+                onChange={() => toggleSectionState('flags')}
+            >
+                <StyledAccordionSummary
+                    expandIcon={
+                        <ExpandMore titleAccess='Toggle flags section' />
+                    }
+                    id='flags-panel-header'
+                    aria-controls='flags-panel-content'
+                >
+                    <Typography variant='body1' component='h3'>
+                        My feature flags
+                    </Typography>
+                </StyledAccordionSummary>
+                <StyledAccordionDetails>
+                    <ContentGridContainer>
+                        <FlagGrid>
+                            <SpacedGridItem gridArea='flags'>
+                                {personalDashboard &&
+                                personalDashboard.flags.length > 0 ? (
+                                    <List
+                                        disablePadding={true}
+                                        sx={{
+                                            maxHeight: '400px',
+                                            overflow: 'auto',
+                                        }}
+                                    >
+                                        {personalDashboard.flags.map((flag) => (
+                                            <FlagListItem
+                                                key={flag.name}
+                                                flag={flag}
+                                                selected={
+                                                    flag.name ===
+                                                    activeFlag?.name
+                                                }
+                                                onClick={() =>
+                                                    setActiveFlag(flag)
+                                                }
+                                            />
+                                        ))}
+                                    </List>
+                                ) : (
+                                    <Typography>
+                                        You have not created or favorited any
+                                        feature flags. Once you do, they will
+                                        show up here.
+                                    </Typography>
+                                )}
+                            </SpacedGridItem>
+
+                            <SpacedGridItem gridArea='chart'>
+                                {activeFlag ? (
+                                    <FlagMetricsChart
+                                        flag={activeFlag}
+                                        onArchive={refetchDashboard}
                                     />
-                                ))}
-                            </List>
-                        ) : (
-                            <Typography>
-                                You have not created or favorited any feature
-                                flags. Once you do, they will show up here.
-                            </Typography>
-                        )}
-                    </SpacedGridItem>
-
-                    <SpacedGridItem gridArea='chart'>
-                        {activeFlag ? (
-                            <FlagMetricsChart flag={activeFlag} />
-                        ) : (
-                            <PlaceholderFlagMetricsChart />
-                        )}
-                    </SpacedGridItem>
-                </FlagGrid>
-            </ContentGridContainer>
+                                ) : (
+                                    <PlaceholderFlagMetricsChart />
+                                )}
+                            </SpacedGridItem>
+                        </FlagGrid>
+                    </ContentGridContainer>
+                </StyledAccordionDetails>
+            </SectionAccordion>
             <WelcomeDialog
                 open={welcomeDialog === 'open'}
                 onClose={() => setWelcomeDialog('closed')}
             />
-        </div>
+        </MainContent>
     );
 };
 

@@ -11,7 +11,6 @@ const unleash = new UnleashClient({
     url: '<YOUR_API_URL>',
     clientKey: '<YOUR_API_TOKEN>', // in production use environment variable
     appName: 'unleash-onboarding-javascript',
-    metricsInterval: 1000, // in production remove this or increase to >=15000
 });
 
 unleash.start();

@@ -336,11 +336,19 @@ module.exports = {
                     },
                     {
                         from: '/advanced/audit_log',
-                        to: '/reference/event-log',
+                        to: '/reference/events',
                     },
                     {
-                        from: '/api/open_api',
-                        to: '/reference/api/unleash',
+                        from: '/advanced/audit_log',
+                        to: '/reference/events',
+                    },
+                    {
+                        from: '/reference/event-log',
+                        to: '/reference/events',
+                    },
+                    {
+                        from: '/reference/event-types',
+                        to: '/reference/events',
                     },
                     {
                         from: '/advanced/api_access',
@@ -847,6 +855,10 @@ module.exports = {
                             '/topics/feature-flag-migration/onbording-users-to-feature-flag-service',
                         ],
                         to: '/topics/feature-flag-migration/feature-flag-migration-best-practices',
+                    },
+                    {
+                        from: '/topics/a-b-testing',
+                        to: '/feature-flag-tutorials/use-cases/a-b-testing',
                     },
                 ].map(addDocsRoutePrefix), // add /docs prefixes
                 createRedirects: (toPath) => {

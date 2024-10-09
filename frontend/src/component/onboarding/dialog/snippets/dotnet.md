@@ -18,7 +18,6 @@ public class Program
         {
             AppName = "unleash-onboarding-dotnet",
             UnleashApi = new Uri("<YOUR_API_URL>"),
-            SendMetricsInterval = TimeSpan.FromSeconds(1), // in production remove this or increase to >=15s
             CustomHttpHeaders = new Dictionary<string, string>()
             {
                 {"Authorization","<YOUR_API_TOKEN>"} // in production use environment variable

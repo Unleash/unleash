@@ -14,7 +14,6 @@ UnleashConfig config = UnleashConfig.builder()
     .instanceId("unleash-onboarding-instance")
     .unleashAPI("<YOUR_API_URL>")
     .apiKey("<YOUR_API_TOKEN>") // in production use environment variable
-    .sendMetricsInterval(1) // in production remove this or increase to >=15
     .build();
 
 Unleash unleash = new DefaultUnleash(config);

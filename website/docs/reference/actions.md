@@ -46,7 +46,7 @@ Filters are completely optional, so if you don't configure any filter your actio
 
 ### Actions
 
-When these actions are triggered, they will execute under the identity of a [service account](./service-accounts.md). This means that when you later check the [event log](./event-log) you will see this service account as the actor for those events. In order to execute the configured actions successfully, this service account needs to have the necessary permissions. This service account doesn't need an API token, so when creating it you can skip the token generation step and simply make sure it has the necessary permissions.
+When these actions are triggered, they execute using the identity of a [service account](./service-accounts.md). As a result, when you later view events in [Event Log](./events#event-log), you’ll see this service account listed as the actor for those events. In order to execute the configured actions successfully, this service account needs to have the necessary permissions. This service account doesn't need an API token, so when creating it you can skip the token generation step and simply make sure it has the necessary permissions.
 
 The actions are executed in the same order that they are defined. If a previous action fails, the following actions will not be started. You can add multiple actions to an action set and you can add multiple action sets to a project. Depending on the action you want to execute you will have to provide different parameters.
 

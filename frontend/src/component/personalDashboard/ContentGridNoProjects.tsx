@@ -66,11 +66,49 @@ type Props = {
     admins: PersonalDashboardSchemaAdminsItem[];
 };
 
+export const AdminListRendered: React.FC<Pick<Props, 'admins'>> = ({
+    admins,
+}) => {
+    return (
+        <BoxMainContent>
+            {admins.length ? (
+                <>
+                    <p>
+                        Your Unleash administrator
+                        {admins.length > 1 ? 's are' : ' is'}:
+                    </p>
+                    <AdminList>
+                        {admins.map((admin) => {
+                            return (
+                                <AdminListItem key={admin.id}>
+                                    <UserAvatar
+                                        sx={{
+                                            margin: 0,
+                                        }}
+                                        user={admin}
+                                    />
+                                    <Typography>
+                                        {admin.name ||
+                                            admin.username ||
+                                            admin.email}
+                                    </Typography>
+                                </AdminListItem>
+                            );
+                        })}
+                    </AdminList>
+                </>
+            ) : (
+                <p>You have no Unleash administrators to contact.</p>
+            )}
+        </BoxMainContent>
+    );
+};
+
 export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
     return (
         <ContentGridContainer>
             <ProjectGrid>
-                <GridItem gridArea='title'>
+                <GridItem gridArea='header'>
                     <Typography variant='h3'>My projects</Typography>
                 </GridItem>
                 <GridItem gridArea='onboarding'>
@@ -98,40 +136,7 @@ export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
                             <NeutralCircleContainer>1</NeutralCircleContainer>
                             Contact Unleash admin
                         </TitleContainer>
-                        <BoxMainContent>
-                            {admins.length ? (
-                                <>
-                                    <p>
-                                        Your Unleash administrator
-                                        {admins.length > 1 ? 's are' : ' is'}:
-                                    </p>
-                                    <AdminList>
-                                        {admins.map((admin) => {
-                                            return (
-                                                <AdminListItem key={admin.id}>
-                                                    <UserAvatar
-                                                        sx={{
-                                                            margin: 0,
-                                                        }}
-                                                        user={admin}
-                                                    />
-                                                    <Typography>
-                                                        {admin.name ||
-                                                            admin.username ||
-                                                            admin.email}
-                                                    </Typography>
-                                                </AdminListItem>
-                                            );
-                                        })}
-                                    </AdminList>
-                                </>
-                            ) : (
-                                <p>
-                                    You have no Unleash administrators to
-                                    contact.
-                                </p>
-                            )}
-                        </BoxMainContent>
+                        <AdminListRendered admins={admins} />
                     </GridContent>
                 </GridItem>
                 <GridItem gridArea='box2'>

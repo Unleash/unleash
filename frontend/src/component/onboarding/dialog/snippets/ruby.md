@@ -12,7 +12,6 @@ require 'unleash'
   custom_http_headers: { 'Authorization': "<YOUR_API_TOKEN>" },  # in production use environment variable
   app_name: 'unleash-onboarding-ruby',
   instance_id: 'unleash-onboarding-ruby',
-  metrics_interval: 3, # In production use interval of >15s
 )
 
 while true

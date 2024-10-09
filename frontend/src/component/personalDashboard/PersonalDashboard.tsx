@@ -1,5 +1,6 @@
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import {
+    Button,
     IconButton,
     Link,
     List,
@@ -8,19 +9,18 @@ import {
     styled,
     Typography,
 } from '@mui/material';
-import React, { type FC, useEffect, useState } from 'react';
+import React, { type FC, useEffect, useRef } from 'react';
 import LinkIcon from '@mui/icons-material/ArrowForward';
 import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import type {
-    PersonalDashboardSchema,
+    PersonalDashboardSchemaFlagsItem,
     PersonalDashboardSchemaProjectsItem,
 } from '../../openapi';
 import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
-import HelpOutline from '@mui/icons-material/HelpOutline';
 import useLoading from '../../hooks/useLoading';
 import { MyProjects } from './MyProjects';
 import {
@@ -55,15 +55,29 @@ export const StyledCardTitle = styled('div')<{ lines?: number }>(
         wordBreak: 'break-word',
     }),
 );
-
 const FlagListItem: FC<{
     flag: { name: string; project: string; type: string };
     selected: boolean;
     onClick: () => void;
 }> = ({ flag, selected, onClick }) => {
+    const activeFlagRef = useRef<HTMLLIElement>(null);
+
+    useEffect(() => {
+        if (activeFlagRef.current) {
+            activeFlagRef.current.scrollIntoView({
+                block: 'nearest',
+                inline: 'start',
+            });
+        }
+    }, []);
     const IconComponent = getFeatureTypeIcons(flag.type);
     return (
-        <ListItem key={flag.name} disablePadding={true} sx={{ mb: 1 }}>
+        <ListItem
+            key={flag.name}
+            disablePadding={true}
+            sx={{ mb: 1 }}
+            ref={selected ? activeFlagRef : null}
+        >
             <ListItemButton
                 sx={listItemStyle}
                 selected={selected}
@@ -88,17 +102,85 @@ const FlagListItem: FC<{
     );
 };
 
-const useActiveProject = (projects: PersonalDashboardSchemaProjectsItem[]) => {
-    const [activeProject, setActiveProject] = useState(projects[0]?.id);
+const useDashboardState = (
+    projects: PersonalDashboardSchemaProjectsItem[],
+    flags: PersonalDashboardSchemaFlagsItem[],
+) => {
+    type State = {
+        activeProject: string | undefined;
+        activeFlag: PersonalDashboardSchemaFlagsItem | undefined;
+    };
+
+    const defaultState = {
+        activeProject: undefined,
+        activeFlag: undefined,
+    };
+
+    const [state, setState] = useLocalStorageState<State>(
+        'personal-dashboard:v1',
+        defaultState,
+    );
 
     useEffect(() => {
-        if (!activeProject && projects.length > 0) {
-            setActiveProject(projects[0].id);
-        }
-    }, [JSON.stringify(projects)]);
+        const setDefaultFlag =
+            flags.length &&
+            (!state.activeFlag ||
+                !flags.some((flag) => flag.name === state.activeFlag?.name));
+        const setDefaultProject =
+            projects.length &&
+            (!state.activeProject ||
+                !projects.some(
+                    (project) => project.id === state.activeProject,
+                ));
 
-    return [activeProject, setActiveProject] as const;
+        if (setDefaultFlag || setDefaultProject) {
+            setState({
+                activeFlag: setDefaultFlag ? flags[0] : state.activeFlag,
+                activeProject: setDefaultProject
+                    ? projects[0].id
+                    : state.activeProject,
+            });
+        }
+    });
+
+    const { activeFlag, activeProject } = state;
+
+    const setActiveFlag = (flag: PersonalDashboardSchemaFlagsItem) => {
+        setState({
+            ...state,
+            activeFlag: flag,
+        });
+    };
+
+    const setActiveProject = (projectId: string) => {
+        setState({
+            ...state,
+            activeProject: projectId,
+        });
+    };
+
+    return {
+        activeFlag,
+        setActiveFlag,
+        activeProject,
+        setActiveProject,
+    };
 };
+
+const WelcomeSection = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    gap: theme.spacing(1),
+    flexFlow: 'row wrap',
+    alignItems: 'baseline',
+    marginBottom: theme.spacing(2),
+}));
+
+const ViewKeyConceptsButton = styled(Button)(({ theme }) => ({
+    fontWeight: 'normal',
+    padding: 0,
+    margin: 0,
+}));
 
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
@@ -110,24 +192,21 @@ export const PersonalDashboard = () => {
         refetch: refetchDashboard,
         loading: personalDashboardLoading,
     } = usePersonalDashboard();
-    const [activeFlag, setActiveFlag] = useState<
-        PersonalDashboardSchema['flags'][0] | null
-    >(null);
-    useEffect(() => {
-        if (personalDashboard?.flags.length) {
-            setActiveFlag(personalDashboard.flags[0]);
-        }
-    }, [JSON.stringify(personalDashboard?.flags)]);
+
+    const projects = personalDashboard?.projects || [];
+
+    const { activeProject, setActiveProject, activeFlag, setActiveFlag } =
+        useDashboardState(projects, personalDashboard?.flags ?? []);
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'open' | 'closed'
     >('welcome-dialog:v1', 'open');
 
-    const projects = personalDashboard?.projects || [];
-    const [activeProject, setActiveProject] = useActiveProject(projects);
-
-    const { personalDashboardProjectDetails, loading: loadingDetails } =
-        usePersonalDashboardProjectDetails(activeProject);
+    const {
+        personalDashboardProjectDetails,
+        loading: loadingDetails,
+        error: detailsError,
+    } = usePersonalDashboardProjectDetails(activeProject);
 
     const activeProjectStage =
         personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
@@ -137,34 +216,28 @@ export const PersonalDashboard = () => {
 
     const noProjects = projects.length === 0;
 
-    const projectStageRef = useLoading(activeProjectStage === 'loading');
+    const projectStageRef = useLoading(
+        !detailsError && activeProjectStage === 'loading',
+    );
 
     return (
-        <div ref={projectStageRef}>
-            <Typography component='h2' variant='h2'>
-                Welcome {name}
-            </Typography>
-            <ScreenExplanation>
-                <p data-loading>
-                    {activeProjectStage === 'onboarded'
-                        ? 'We have gathered projects and flags you have favorited or owned'
-                        : null}
-                    {setupIncomplete
-                        ? 'Here are some tasks we think would be useful in order to get the most out of Unleash'
-                        : null}
-                    {activeProjectStage === 'loading'
-                        ? 'We have gathered projects and flags you have favorited or owned'
-                        : null}
-                </p>
-                <IconButton
-                    data-loading
+        <div>
+            <WelcomeSection>
+                <Typography component='h2' variant='h2'>
+                    Welcome {name}
+                </Typography>
+
+                <ViewKeyConceptsButton
+                    sx={{
+                        fontWeight: 'normal',
+                    }}
                     size={'small'}
-                    title='Key concepts'
+                    variant='text'
                     onClick={() => setWelcomeDialog('open')}
                 >
-                    <HelpOutline />
-                </IconButton>
-            </ScreenExplanation>
+                    View key concepts
+                </ViewKeyConceptsButton>
+            </WelcomeSection>
 
             {noProjects && personalDashboard ? (
                 <ContentGridNoProjects
@@ -173,8 +246,10 @@ export const PersonalDashboard = () => {
                 />
             ) : (
                 <MyProjects
+                    admins={personalDashboard?.admins ?? []}
+                    ref={projectStageRef}
                     projects={projects}
-                    activeProject={activeProject}
+                    activeProject={activeProject || ''}
                     setActiveProject={setActiveProject}
                     personalDashboardProjectDetails={
                         personalDashboardProjectDetails

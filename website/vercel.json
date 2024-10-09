@@ -43,7 +43,22 @@
     },
     {
       "source": "/advanced/audit_log",
-      "destination": "/reference/event-log",
+      "destination": "/reference/events",
+      "permanent": true
+    },
+    {
+      "source": "/reference/event-log",
+      "destination": "/reference/events#event-log",
+      "permanent": true
+    },
+    {
+      "source": "/topics/a-b-testing",
+      "destination": "/feature-flag-tutorials/use-cases/a-b-testing",
+      "permanent": true
+    },
+    {
+      "source": "/reference/event-types",
+      "destination": "/reference/events#event-types",
       "permanent": true
     },
     {

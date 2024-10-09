@@ -1,4 +1,9 @@
-import { type IUnleashConfig, type IUnleashServices, NONE } from '../../types';
+import {
+    type IUnleashConfig,
+    type IUnleashServices,
+    NONE,
+    serializeDates,
+} from '../../types';
 import type { OpenApiService } from '../../services';
 import {
     createResponseSchema,
@@ -114,9 +119,9 @@ export default class PersonalDashboardController extends Controller {
             200,
             res,
             personalDashboardProjectDetailsSchema.$id,
-            {
+            serializeDates({
                 ...projectDetails,
-            },
+            }),
         );
     }
 }

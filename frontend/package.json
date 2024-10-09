@@ -87,7 +87,7 @@
     "fast-json-patch": "3.1.1",
     "http-proxy-middleware": "2.0.6",
     "immer": "9.0.21",
-    "jsdom": "23.2.0",
+    "jsdom": "25.0.1",
     "lodash.clonedeep": "4.5.0",
     "lodash.isequal": "^4.5.0",
     "lodash.mapvalues": "^4.6.0",

@@ -57,11 +57,11 @@ const ConnectedSdkProject: FC<{ project: string }> = ({ project }) => {
     );
 };
 
-type HeathTrend = 'consistent' | 'improved' | 'declined' | 'unknown';
+type HealthTrend = 'consistent' | 'improved' | 'declined' | 'unknown';
 
 const determineProjectHealthTrend = (
     insights: PersonalDashboardProjectDetailsSchemaInsights,
-): HeathTrend => {
+): HealthTrend => {
     const { avgHealthCurrentWindow, avgHealthPastWindow } = insights;
 
     if (avgHealthCurrentWindow === null || avgHealthPastWindow === null) {
@@ -80,7 +80,7 @@ const determineProjectHealthTrend = (
 };
 
 const ProjectHealthMessage: FC<{
-    trend: HeathTrend;
+    trend: HealthTrend;
     insights: PersonalDashboardProjectDetailsSchemaInsights;
     project: string;
 }> = ({ trend, insights, project }) => {

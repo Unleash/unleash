@@ -2,7 +2,7 @@ import { render, cleanup } from '@testing-library/react';
 import { StickyProvider } from './StickyProvider';
 import { type IStickyContext, StickyContext } from './StickyContext';
 import { expect } from 'vitest';
-import { act } from 'react-test-renderer';
+import { act } from 'react';
 
 const defaultGetBoundingClientRect = {
     width: 0,

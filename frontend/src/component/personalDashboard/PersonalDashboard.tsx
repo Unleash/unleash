@@ -214,12 +214,20 @@ const SectionAccordion = styled(Accordion)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     backgroundColor: theme.palette.background.paper,
     boxShadow: 'none',
-
     '& .expanded': {
         '&:before': {
             opacity: '0 !important',
         },
     },
+
+    // add a top border to the region when the accordion is collapsed.
+    // This retains the border between the summary and the region
+    // during the collapsing animation
+    "[aria-expanded='false']+.MuiCollapse-root .MuiAccordion-region": {
+        borderTop: `1px solid ${theme.palette.divider}`,
+    },
+
+    overflow: 'hidden',
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -229,7 +237,10 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     '&>*': {
         margin: '0 !important',
     },
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    "&[aria-expanded='true']": {
+        // only add the border when it's open
+        borderBottom: `1px solid ${theme.palette.divider}`,
+    },
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({

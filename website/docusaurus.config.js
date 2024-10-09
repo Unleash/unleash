@@ -339,10 +339,6 @@ module.exports = {
                         to: '/reference/events',
                     },
                     {
-                        from: '/advanced/audit_log',
-                        to: '/reference/events',
-                    },
-                    {
                         from: '/reference/event-log',
                         to: '/reference/events',
                     },

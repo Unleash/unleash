@@ -102,23 +102,18 @@ const useDashboardState = (
     projects: PersonalDashboardSchemaProjectsItem[],
     flags: PersonalDashboardSchemaFlagsItem[],
 ) => {
-    type SectionState = 'expanded' | 'collapsed';
     type State = {
         activeProject: string | undefined;
         activeFlag: PersonalDashboardSchemaFlagsItem | undefined;
-        sections: {
-            projects: { state: SectionState };
-            flags: { state: SectionState };
-        };
+        expandProjects: boolean;
+        expandFlags: boolean;
     };
 
     const defaultState: State = {
         activeProject: undefined,
         activeFlag: undefined,
-        sections: {
-            projects: { state: 'expanded' as const },
-            flags: { state: 'expanded' as const },
-        },
+        expandProjects: true,
+        expandFlags: true,
     };
 
     const [state, setState] = useLocalStorageState<State>(
@@ -164,18 +159,11 @@ const useDashboardState = (
         });
     };
 
-    const toggleSectionState = (section: keyof State['sections']) => {
+    const toggleSectionState = (section: 'flags' | 'projects') => {
+        const property = section === 'flags' ? 'expandFlags' : 'expandProjects';
         setState({
             ...state,
-            sections: {
-                ...state.sections,
-                [section]: {
-                    state:
-                        state.sections[section].state === 'expanded'
-                            ? 'collapsed'
-                            : 'expanded',
-                },
-            },
+            [property]: !(state[property] ?? true),
         });
     };
 
@@ -184,7 +172,8 @@ const useDashboardState = (
         setActiveFlag,
         activeProject,
         setActiveProject,
-        sectionState: state.sections,
+        expandFlags: state.expandFlags,
+        expandProjects: state.expandProjects,
         toggleSectionState,
     };
 };
@@ -263,7 +252,8 @@ export const PersonalDashboard = () => {
         activeFlag,
         setActiveFlag,
         toggleSectionState,
-        sectionState,
+        expandFlags,
+        expandProjects,
     } = useDashboardState(projects, personalDashboard?.flags ?? []);
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
@@ -303,7 +293,7 @@ export const PersonalDashboard = () => {
 
             <SectionAccordion
                 disableGutters
-                expanded={!(sectionState?.projects.state === 'collapsed')}
+                expanded={expandProjects ?? true}
                 onChange={() => toggleSectionState('projects')}
             >
                 <StyledAccordionSummary
@@ -339,7 +329,7 @@ export const PersonalDashboard = () => {
             </SectionAccordion>
 
             <SectionAccordion
-                expanded={!(sectionState?.flags.state === 'collapsed')}
+                expanded={expandFlags ?? true}
                 onChange={() => toggleSectionState('flags')}
             >
                 <StyledAccordionSummary

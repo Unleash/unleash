@@ -3,8 +3,6 @@ import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import type { PersonalDashboardProjectDetailsSchemaInsights } from '../../openapi';
-import { ProjectHealthChart } from 'component/project/Project/ProjectInsights/ProjectHealth/ProjectHealthChart';
-import { FlagCounts } from '../project/Project/ProjectInsights/ProjectHealth/FlagCounts';
 
 const TitleContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -140,22 +138,6 @@ export const ProjectSetupComplete: FC<{
                 <Lightbulb color='primary' />
                 <ProjectInsight>Project health</ProjectInsight>
             </TitleContainer>
-
-            <Health>
-                <ProjectHealthChart
-                    health={insights.health}
-                    active={insights.activeFlags}
-                    potentiallyStale={insights.potentiallyStaleFlags}
-                    stale={insights.staleFlags}
-                />
-                <FlagCounts
-                    projectId={project}
-                    activeCount={insights.activeFlags}
-                    potentiallyStaleCount={insights.potentiallyStaleFlags}
-                    staleCount={insights.staleFlags}
-                    hideLinks={true}
-                />
-            </Health>
 
             <ProjectHealthMessage
                 trend={projectHealthTrend}

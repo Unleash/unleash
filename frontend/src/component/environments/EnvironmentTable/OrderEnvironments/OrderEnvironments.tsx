@@ -6,6 +6,8 @@ import { OrderEnvironmentsDialog } from './OrderEnvironmentsDialog/OrderEnvironm
 import { OrderEnvironmentsConfirmation } from './OrderEnvironmentsConfirmation/OrderEnvironmentsConfirmation';
 import { useFormErrors } from 'hooks/useFormErrors';
 import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { useOrderEnvironmentApi } from 'hooks/api/actions/useOrderEnvironmentsApi/useOrderEnvironmentsApi';
 
 type OrderEnvironmentsProps = {};
 
@@ -20,13 +22,14 @@ export const OrderEnvironments: FC<OrderEnvironmentsProps> = () => {
         'purchaseAdditionalEnvironments',
     );
     const errors = useFormErrors();
+    const { orderEnvironments } = useOrderEnvironmentApi();
     const { setToastData, setToastApiError } = useToast();
 
     if (!isPro() || !isPurchaseAdditionalEnvironmentsEnabled) {
         return null;
     }
 
-    const onSubmit = (environments: string[]) => {
+    const onSubmit = async (environments: string[]) => {
         let hasErrors = false;
         environments.forEach((environment, index) => {
             const field = `environment-${index}`;
@@ -41,13 +44,16 @@ export const OrderEnvironments: FC<OrderEnvironmentsProps> = () => {
         if (hasErrors) {
             return;
         } else {
-            // TODO: API call
-
-            setPurchaseDialogOpen(false);
-            setConfirmationState({
-                isOpen: true,
-                environmentsCount: environments.length,
-            });
+            try {
+                await orderEnvironments({ environments });
+                setPurchaseDialogOpen(false);
+                setConfirmationState({
+                    isOpen: true,
+                    environmentsCount: environments.length,
+                });
+            } catch (error) {
+                setToastApiError(formatUnknownError(error));
+            }
         }
     };
 

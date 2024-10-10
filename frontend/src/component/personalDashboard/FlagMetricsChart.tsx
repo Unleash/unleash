@@ -24,6 +24,7 @@ import {
 } from './createChartOptions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
+import useLoading from 'hooks/useLoading';
 
 const defaultYes = [0, 14, 28, 21, 33, 31, 31, 22, 26, 37, 31, 14, 21, 14, 0];
 
@@ -69,6 +70,31 @@ export const PlaceholderFlagMetricsChart: React.FC<{ label?: string }> = ({
     );
 };
 
+export const EmptyFlagMetricsChart = () => {
+    const theme = useTheme();
+
+    const options = useMemo(() => {
+        return createPlaceholderBarChartOptions(theme);
+    }, [theme]);
+
+    const data = useMemo(() => {
+        return {
+            labels: [],
+            datasets: [],
+        };
+    }, [theme]);
+
+    return (
+        <ChartWrapper>
+            <Bar
+                data={data}
+                options={options}
+                aria-label='A placeholder bar chart with a single feature flag exposure metrics'
+            />
+        </ChartWrapper>
+    );
+};
+
 const useMetricsEnvironments = (project: string, flagName: string) => {
     const [environment, setEnvironment] = useState<string | null>(null);
     const { feature } = useFeature(project, flagName);
@@ -96,7 +122,7 @@ const useFlagMetrics = (
     environment: string | null,
     hoursBack: number,
 ) => {
-    const { featureMetrics: metrics = [] } = useFeatureMetricsRaw(
+    const { featureMetrics: metrics = [], loading } = useFeatureMetricsRaw(
         flagName,
         hoursBack,
     );
@@ -126,7 +152,7 @@ const useFlagMetrics = (
         return createBarChartOptions(theme, hoursBack, locationSettings);
     }, [theme, hoursBack, locationSettings]);
 
-    return { data, options };
+    return { data, options, loading };
 };
 
 const EnvironmentSelect: FC<{
@@ -183,9 +209,16 @@ export const FlagMetricsChart: FC<{
     const { environment, setEnvironment, activeEnvironments } =
         useMetricsEnvironments(flag.project, flag.name);
 
-    const { data, options } = useFlagMetrics(flag.name, environment, hoursBack);
+    const { data, options, loading } = useFlagMetrics(
+        flag.name,
+        environment,
+        hoursBack,
+    );
 
     const noData = data.datasets[0].data.length === 0;
+
+    console.log('loading', loading);
+    const ref = useLoading(loading);
 
     return (
         <ChartContainer>
@@ -210,7 +243,9 @@ export const FlagMetricsChart: FC<{
                 </MetricsSelectors>
             </ExposureAndMetricsRow>
 
-            {noData ? (
+            {loading ? (
+                <EmptyFlagMetricsChart />
+            ) : noData ? (
                 <PlaceholderFlagMetricsChart />
             ) : (
                 <ChartWrapper>

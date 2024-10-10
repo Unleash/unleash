@@ -128,17 +128,17 @@ const getTimelineEvent = (
             sourceDescription,
             tokenName,
             payload: {
-                unleash_title,
-                unleash_description,
-                unleash_icon,
-                unleash_variant,
+                experimental_unleash_title,
+                experimental_unleash_description,
+                experimental_unleash_icon,
+                experimental_unleash_variant,
             },
         } = event;
 
-        const title = unleash_title || sourceName;
+        const title = experimental_unleash_title || sourceName;
         const label = `Signal: ${title}`;
-        const summary = unleash_description
-            ? `Signal: **[${title}](/integrations/signals)** ${unleash_description}`
+        const summary = experimental_unleash_description
+            ? `Signal: **[${title}](/integrations/signals)** ${experimental_unleash_description}`
             : `Signal originated from **[${sourceName} (${tokenName})](/integrations/signals)** endpoint${sourceDescription ? `: ${sourceDescription}` : ''}`;
 
         return {
@@ -147,9 +147,11 @@ const getTimelineEvent = (
             type: 'signal',
             label,
             summary,
-            ...(isValidString(unleash_icon) ? { icon: unleash_icon } : {}),
-            ...(isValidString(unleash_variant)
-                ? { variant: unleash_variant }
+            ...(isValidString(experimental_unleash_icon)
+                ? { icon: experimental_unleash_icon }
+                : {}),
+            ...(isValidString(experimental_unleash_variant)
+                ? { variant: experimental_unleash_variant }
                 : {}),
         };
     }

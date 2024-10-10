@@ -24,7 +24,6 @@ import {
 } from './createChartOptions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
-import useLoading from 'hooks/useLoading';
 
 const defaultYes = [0, 14, 28, 21, 33, 31, 31, 22, 26, 37, 31, 14, 21, 14, 0];
 
@@ -216,9 +215,6 @@ export const FlagMetricsChart: FC<{
     );
 
     const noData = data.datasets[0].data.length === 0;
-
-    console.log('loading', loading);
-    const ref = useLoading(loading);
 
     return (
         <ChartContainer>

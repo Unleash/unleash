@@ -27,7 +27,7 @@ export const originMiddleware = ({
                 ? determineIntegrationSource(userAgent)
                 : 'Other';
 
-            if (!flagResolver.isEnabled('originMiddlewareRequestLogging')) {
+            if (flagResolver.isEnabled('originMiddlewareRequestLogging')) {
                 logger.info('API request', {
                     method: req.method,
                     userAgent: req.headers['user-agent'],

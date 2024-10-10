@@ -4,6 +4,8 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { PurchasableFeature } from './PurchasableFeature/PurchasableFeature';
 import { OrderEnvironmentsDialog } from './OrderEnvironmentsDialog/OrderEnvironmentsDialog';
 import { OrderEnvironmentsConfirmation } from './OrderEnvironmentsConfirmation/OrderEnvironmentsConfirmation';
+import { useFormErrors } from 'hooks/useFormErrors';
+import useToast from 'hooks/useToast';
 
 type OrderEnvironmentsProps = {};
 
@@ -17,18 +19,36 @@ export const OrderEnvironments: FC<OrderEnvironmentsProps> = () => {
     const isPurchaseAdditionalEnvironmentsEnabled = useUiFlag(
         'purchaseAdditionalEnvironments',
     );
+    const errors = useFormErrors();
+    const { setToastData, setToastApiError } = useToast();
 
     if (!isPro() || !isPurchaseAdditionalEnvironmentsEnabled) {
         return null;
     }
 
     const onSubmit = (environments: string[]) => {
-        setPurchaseDialogOpen(false);
-        // TODO: API call
-        setConfirmationState({
-            isOpen: true,
-            environmentsCount: environments.length,
+        let hasErrors = false;
+        environments.forEach((environment, index) => {
+            const field = `environment-${index}`;
+            if (environment.trim() === '') {
+                errors.setFormError(field, 'Environment name is required');
+                hasErrors = true;
+            } else {
+                errors.removeFormError(field);
+            }
         });
+
+        if (hasErrors) {
+            return;
+        } else {
+            // TODO: API call
+
+            setPurchaseDialogOpen(false);
+            setConfirmationState({
+                isOpen: true,
+                environmentsCount: environments.length,
+            });
+        }
     };
 
     return (
@@ -42,6 +62,7 @@ export const OrderEnvironments: FC<OrderEnvironmentsProps> = () => {
                 open={purchaseDialogOpen}
                 onClose={() => setPurchaseDialogOpen(false)}
                 onSubmit={onSubmit}
+                errors={errors}
             />
             <OrderEnvironmentsConfirmation
                 open={confirmationState.isOpen}

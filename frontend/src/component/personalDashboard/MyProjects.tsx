@@ -30,6 +30,7 @@ import {
     SpacedGridItem,
 } from './Grid';
 import { ContactAdmins, DataError } from './ProjectDetailsError';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const ActiveProjectDetails: FC<{
     project: PersonalDashboardSchemaProjectsItem;
@@ -70,6 +71,7 @@ const ProjectListItem: FC<{
     onClick: () => void;
 }> = ({ project, selected, onClick }) => {
     const activeProjectRef = useRef<HTMLLIElement>(null);
+    const { trackEvent } = usePlausibleTracker();
 
     useEffect(() => {
         if (activeProjectRef.current) {
@@ -99,6 +101,13 @@ const ProjectListItem: FC<{
                         href={`projects/${project.id}`}
                         size='small'
                         sx={{ ml: 'auto' }}
+                        onClick={() => {
+                            trackEvent('personal-dashboard', {
+                                props: {
+                                    eventType: `Go to project from list`,
+                                },
+                            });
+                        }}
                     >
                         <LinkIcon titleAccess={`projects/${project.id}`} />
                     </IconButton>

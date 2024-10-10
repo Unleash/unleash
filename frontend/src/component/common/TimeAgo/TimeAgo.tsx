@@ -1,13 +1,11 @@
 import { useEffect, useState, type FC } from 'react';
 import { formatDistanceToNow, secondsToMilliseconds } from 'date-fns';
-import { styled } from '@mui/material';
 
 type TimeAgoProps = {
     date: Date | number | string | null | undefined;
     fallback?: string;
     refresh?: boolean;
     timeElement?: boolean;
-    className?: string;
 };
 
 const formatTimeAgo = (date: string | number | Date) =>
@@ -17,19 +15,13 @@ const formatTimeAgo = (date: string | number | Date) =>
         .replace('about ', '')
         .replace('less than a minute ago', '< 1 minute ago');
 
-const StyledTime = styled('time')({});
-
 export const TimeAgo: FC<TimeAgoProps> = ({
     date,
     fallback = '',
     refresh = true,
     timeElement = true,
-    className,
 }) => {
-    const getValue = (): {
-        description: string;
-        dateTime?: Date;
-    } => {
+    const getValue = (): { description: string; dateTime?: Date } => {
         try {
             if (!date) return { description: fallback };
             return {
@@ -61,11 +53,6 @@ export const TimeAgo: FC<TimeAgoProps> = ({
     }
 
     return (
-        <StyledTime
-            className={className}
-            dateTime={state.dateTime.toISOString()}
-        >
-            {state.description}
-        </StyledTime>
+        <time dateTime={state.dateTime.toISOString()}>{state.description}</time>
     );
 };

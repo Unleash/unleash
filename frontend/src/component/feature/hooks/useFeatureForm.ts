@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useQueryParams from 'hooks/useQueryParams';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { ITag } from 'interfaces/tags';
 import type { CreateFeatureSchema, CreateFeatureSchemaType } from 'openapi';
+import { useOptionalPathParamWithFallback } from 'hooks/useOptionalPathParamWithFallback';
 
 const useFeatureForm = (
     initialName: string = '',
@@ -12,8 +12,13 @@ const useFeatureForm = (
     initialProject: string = 'default',
     initialDescription: string = '',
     initialImpressionData: boolean = false,
+    fallbackProjectId?: string,
 ) => {
-    const projectId = useRequiredPathParam('projectId');
+    console.log('fallbackProjectId', fallbackProjectId);
+    const projectId = useOptionalPathParamWithFallback(
+        'projectId',
+        fallbackProjectId,
+    );
     const params = useQueryParams();
     const { validateFeatureToggleName } = useFeatureApi();
     const toggleQueryName = params.get('name');

@@ -14,7 +14,6 @@ import {
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
-import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface ISlackAddonParameters {
     url: string;
@@ -133,11 +132,6 @@ export default class SlackAddon extends Addon {
             stateDetails.push(successWithErrorsMessage);
             this.logger.warn(successWithErrorsMessage);
         }
-
-        this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-            result: state,
-            destination: 'slack',
-        });
 
         this.registerEvent({
             integrationId,

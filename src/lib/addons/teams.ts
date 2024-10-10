@@ -12,7 +12,6 @@ import {
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
-import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface ITeamsParameters {
     url: string;
@@ -109,11 +108,6 @@ export default class TeamsAddon extends Addon {
             stateDetails.push(failedMessage);
             this.logger.warn(failedMessage);
         }
-
-        this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-            result: state,
-            destination: 'teams',
-        });
 
         this.registerEvent({
             integrationId,

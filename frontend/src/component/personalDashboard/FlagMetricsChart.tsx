@@ -141,11 +141,10 @@ const EnvironmentSelect: FC<{
     );
 };
 
-const ExposureAndSelectors = styled(Box)(({ theme }) => ({
+const MetricsSelectors = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     gap: theme.spacing(2),
-    width: '100%',
 }));
 
 const ChartContainer = styled('div')(({ theme }) => ({
@@ -157,6 +156,14 @@ const ChartContainer = styled('div')(({ theme }) => ({
 
 const StyledExposure = styled(FlagExposure)({
     alignItems: 'center',
+    justifySelf: 'start',
+});
+
+const ExposureAndMetricsRow = styled('div')({
+    display: 'flex',
+    flexFlow: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
 });
 
 export const FlagMetricsChart: FC<{
@@ -174,24 +181,26 @@ export const FlagMetricsChart: FC<{
 
     return (
         <ChartContainer>
-            <ExposureAndSelectors>
+            <ExposureAndMetricsRow>
                 <StyledExposure
                     project={flag.project}
                     flagName={flag.name}
                     onArchive={onArchive}
                 />
-                {environment ? (
-                    <EnvironmentSelect
-                        environment={environment}
-                        setEnvironment={setEnvironment}
-                        activeEnvironments={activeEnvironments}
+                <MetricsSelectors>
+                    {environment ? (
+                        <EnvironmentSelect
+                            environment={environment}
+                            setEnvironment={setEnvironment}
+                            activeEnvironments={activeEnvironments}
+                        />
+                    ) : null}
+                    <FeatureMetricsHours
+                        hoursBack={hoursBack}
+                        setHoursBack={setHoursBack}
                     />
-                ) : null}
-                <FeatureMetricsHours
-                    hoursBack={hoursBack}
-                    setHoursBack={setHoursBack}
-                />
-            </ExposureAndSelectors>
+                </MetricsSelectors>
+            </ExposureAndMetricsRow>
 
             {noData ? (
                 <PlaceholderFlagMetricsChart />

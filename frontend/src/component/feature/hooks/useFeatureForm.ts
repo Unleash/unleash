@@ -6,15 +6,24 @@ import type { ITag } from 'interfaces/tags';
 import type { CreateFeatureSchema, CreateFeatureSchemaType } from 'openapi';
 import { useOptionalPathParamWithFallback } from 'hooks/useOptionalPathParamWithFallback';
 
-const useFeatureForm = (
-    initialName: string = '',
-    initialType: CreateFeatureSchemaType = 'release',
-    initialProject: string = 'default',
-    initialDescription: string = '',
-    initialImpressionData: boolean = false,
-    fallbackProjectId?: string,
-) => {
-    console.log('fallbackProjectId', fallbackProjectId);
+type UseFeatureFormProps = {
+    initialName?: string;
+    initialType?: CreateFeatureSchemaType;
+    initialProject?: string;
+    initialDescription?: string;
+    initialImpressionData?: boolean;
+    fallbackProjectId?: string;
+};
+
+const useFeatureForm = (props: UseFeatureFormProps | undefined) => {
+    const {
+        initialName = '',
+        initialType = 'release',
+        initialProject = 'default',
+        initialDescription = '',
+        initialImpressionData = false,
+        fallbackProjectId,
+    } = props ?? {};
     const projectId = useOptionalPathParamWithFallback(
         'projectId',
         fallbackProjectId,

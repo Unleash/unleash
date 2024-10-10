@@ -58,7 +58,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Feature Types',
         description:
-            'Manage [feature flag types](https://docs.getunleash.io/reference/feature-toggle-types).',
+            'Manage [feature flag types](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types).',
     },
     {
         name: 'Features',

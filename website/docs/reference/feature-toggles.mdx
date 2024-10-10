@@ -2,38 +2,79 @@
 title: Feature Flags
 ---
 
-Feature flags are the central concept that we built Unleash around. In Unleash, feature flags are organized within [projects](../reference/projects.md). Feature flags can have different [activation strategies](../reference/activation-strategies.md) for each of their project's [environments](../reference/environments.md), and can also be given [variants](../reference/feature-toggle-variants.md) to facilitate A/B testing.
+# Overview
 
-## Configuration options
+Feature flags are a core concept of Unleash. Feature flags allow you to release, test, and manage features and functionality across your application without changing the source code.
 
-Each feature flag has the following configuration options
+Feature flags exist within a [project](./projects) and have distinct configurations and [activation strategies](./activation-strategies) for each of the project's active [environments](./environments). Activation strategies determine if a feature flag is enabled in a specififc environment.
 
-| Option | Required? | Default value | Description |
-| --- | --- | --- | --- |
-| name | Yes | N/A | The feature flag's name. Must be URL-friendly according to [section 2.3 of RFC 3986](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) and must be unique within your Unleash instance. Must be between 1 and 100 characters long, inclusive. |
-| feature flag type | Yes | Release | The [feature flag's type](../reference/feature-toggle-types.md). |
-| project | Yes | The [default project](../reference/projects.md). When created from a project page in the admin UI, that project will be the default value instead. | The [project](../reference/projects.md) that should contain the feature flag. |
-| description | No | N/A | A description of the feature flag's purpose. |
-| enable impression data | Yes | No | Whether to enable [impression data](../reference/impression-data.md) for this flag or not. |
+Feature flags have the following properties:
 
-## Environments
+- **Name**: [URL-friendly](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) string between 1 and 100 characters; must be unique per instance.
+- **Type**: The [feature flag's type](#feature-flag-types); `Release` by default.
+- **Project**: The [project](./projects) that contains the feature flag.
+- **Description**: A description of the feature flag's purpose; optional.
+- **Impression data**: Whether impression data is enabled for the flag; disabled by feault.
 
-You probably won't want to use the same configuration to enable a flag in development as you do in production. That's why feature flags have different activation strategy configurations for each environment.
+## Environments and activation strategies
 
-You can enable and disable a flag independently in each of the [project's environments](../reference/projects.md). When you disable a flag in an environment, it will always evaluate to false in that environment. When you enable a flag in an environment, the flag will evaluate to true or false depending on its activation strategies.
+Feature flags have different [activation strategies](./activation-strategies) for each environment to allow you manage feature rollouts per environment.
 
-Refer to the [documentation on environments](../reference/environments.md) for more details on how environments work.
+To activate a feature within an environment, assign it at least one activation strategy. If you don't specify a strategy, the deafault of gradual rollout to 100% is used.
 
-## Activation strategies
+Activation strategies determine if a feature flag activates for a specific [Unleash context](./unleash-context), such as a particular user or segment. When multiple strategies are in place, the flag will activate if any one of them evaluates to true.
 
-To enable a feature in an environment, you must assign it at least one activation strategy. A feature flag's activation strategies determine whether the flag gets enabled for a particular [Unleash context](../reference/unleash-context.md) (typically a user). When using multiple strategies in a single environment, only a single strategy needs to evaluate to true for the flag to get enabled for a user. Whenever Unleash evaluates a flag, it will evaluate strategies in the current environment until one of them resolves to true. If no strategies resolve to true, then the flag's value is false.
+### Stategy variants
 
-Refer to the [activation strategies documentation](../reference/activation-strategies.md) for a detailed description of all the built-in strategies.
+You can enhance your feature flags with [strategy variants](./strategy-variants.md). Feature flags let you define who gets access to a feature. With variants, you can also determine which version of the feature they see.
+For example, you might use variants to run an A/B testing experiment.
 
-## Variants
+Variants are defined by a name, weight, which determines the likelihood of each variant being shown. [Stickiness](./stickiness) ensures that users consisteny see the same variant based on predefined parameters.
+Variants also support payloads like JSON, CSV, or strings to provide additional context to users.
 
-[Variants](../reference/feature-toggle-variants.md) adds another dimension of flexibility to feature flags. Each feature flag can be assigned any number of variants which will then get distributed amongst your users based on your choice of [context field](../reference/unleash-context.md#structure). You can find out more about variants in the [variants docs](../reference/feature-toggle-variants.md).
 
-### Creating flags with payloads
+# Feature flag types
 
-While variants are most often used for A/B testing and the like, you can also use variants to assign a constant payload to a flag. If you give a flag only a single variant and that variant has a payload, then all users variants will receive that payload.
+:::note Availability
+
+**Version**: `3.5+`
+
+:::
+
+
+Feature flags have a type to indicate their use case and help you manage and sort your flags. A feature flag's type determines its expected lifetime, and it's visual apprearance in the Admin UI.
+
+
+The following are the list of feature flag types:
+
+| Feature flag type | Used to                                                                                                                                                       | Expected lifetime |
+|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
+| Release             | Manage the deployment of new or incomplete features.                                                                                          | 40 days           |
+| Experiment          | Perform multivariate or A/B testing.                                                                                                                              | 40 days           |
+| Operational         | Transition between technical implementations with minimal risk.                                                                                                            | 7 days            |
+| Kill switch         | Gracefully degrade system functionality. | Permanent         |
+| Permission          | CControl feature access based on user roles or entitlements.                                                                                             | Permanent         |
+
+To learn more, visit [Types of feature flags](../what-is-a-feature-flag#types-of-feature-flags).
+
+### Expected lifetimes
+
+
+A feature flag's expected lifetime is an indicator of how long Unleash expects flags of that type to be around. Some feature flags are meant to live for a few weeks as you work on new functionality, while others stick around for much longer. As a part of good code hygiene, you should clean up your feature flags when they have served their purpose. This is further explored in the document on [technical debt](./technical-debt).
+
+Each feature flag type in Unleash has an assigned expected lifetime, after which the system will consider this feature _potentially stale_. The reasoning behind each type's expected lifetime is detailed in this [blog post on best practices for feature flag lifetimes](https://www.getunleash.io/blog/feature-toggle-life-time-best-practices).
+
+With Admin access, you can configure the lifetime of a feature flag type. In the Admin UI, go to **Configure > Feature flag** types and edit the flag type you'd like to change.
+
+
+## Deprecating feature flags
+
+You can mark feature flags as `stale`. This is a way to deprecate a feature flag without removing the active configuration for connected applications. Use this to signal that you should stop using the feature in your applications. Stale flags will show as stale in the ["technical debt dashboard"](./technical-debt).
+
+When you mark a flag as stale, Unleash will emit an event. You can use [an integration](/integrations/integrations) to integrate this with your systems, for instance to post a message in a Slack channel.
+
+Additionally, with some extra work, you can also use the `stale` property to:
+
+- Inform developers that a flag is stale _while_ they're developing.
+- Break a project build if the code contains stale feature flags.
+- Send automatic PRs to remove usage of flags that have served their purpose.

@@ -339,10 +339,6 @@ module.exports = {
                         to: '/reference/events',
                     },
                     {
-                        from: '/advanced/audit_log',
-                        to: '/reference/events',
-                    },
-                    {
                         from: '/reference/event-log',
                         to: '/reference/events',
                     },
@@ -367,7 +363,7 @@ module.exports = {
                     },
                     {
                         from: '/advanced/feature_toggle_types',
-                        to: '/reference/feature-toggle-types',
+                        to: '/reference/feature-toggles',
                     },
                     {
                         from: [

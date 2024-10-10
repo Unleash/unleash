@@ -25,7 +25,7 @@ In order for the child feature to be evaluated, the corresponding parent value c
 
 Parent value criteria can be set to one of the 3 options:
 - Parent feature must be **enabled**. 
-- Parent feature must be **disabled**. This is useful when your parent is a [kill-switch](./feature-toggle-types.md#feature-toggle-types) with the inverted enabled/disabled logic.
+- Parent feature must be **disabled**. This is useful when your parent is a [kill-switch](./feature-toggles#feature-flag-types) with the inverted enabled/disabled logic.
 - Parent feature must be **enabled with variants**. This is useful when your parent is part of A/B testing, and you need [variant dependencies](#variant-dependencies).
 
 #### Variant dependencies

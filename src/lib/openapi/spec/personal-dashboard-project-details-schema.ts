@@ -89,7 +89,13 @@ export const personalDashboardProjectDetailsSchema = {
                 type: 'object',
                 description: 'An event summary',
                 additionalProperties: false,
-                required: ['summary', 'createdBy', 'createdByImageUrl', 'id'],
+                required: [
+                    'summary',
+                    'createdBy',
+                    'createdByImageUrl',
+                    'id',
+                    'createdAt',
+                ],
                 properties: {
                     id: {
                         type: 'integer',
@@ -111,6 +117,12 @@ export const personalDashboardProjectDetailsSchema = {
                         type: 'string',
                         description: `URL used for the user profile image of the event author`,
                         example: 'https://example.com/242x200.png',
+                    },
+                    createdAt: {
+                        type: 'string',
+                        format: 'date-time',
+                        description: 'When the event was recorded',
+                        example: '2021-09-01T12:00:00Z',
                     },
                 },
             },

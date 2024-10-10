@@ -1,0 +1,379 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>*|MC:SUBJECT|*</title>
+    <style type="text/css">
+        /* /\/\/\/\/\/\/\/\/ CLIENT-SPECIFIC STYLES /\/\/\/\/\/\/\/\/ */
+        #outlook a{padding:0;} /* Force Outlook to provide a "view in browser" message */
+        .ReadMsgBody{width:100%;} .ExternalClass{width:100%;} /* Force Hotmail to display emails at full width */
+        .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {line-height: 100%;} /* Force Hotmail to display normal line spacing */
+        body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:100%; -ms-text-size-adjust:100%;} /* Prevent WebKit and Windows mobile changing default text sizes */
+        table, td{mso-table-lspace:0pt; mso-table-rspace:0pt;} /* Remove spacing between tables in Outlook 2007 and up */
+        img{-ms-interpolation-mode:bicubic;} /* Allow smoother rendering of resized image in Internet Explorer */
+
+        /* /\/\/\/\/\/\/\/\/ RESET STYLES /\/\/\/\/\/\/\/\/ */
+        body{margin:0; padding:0;}
+        img{border:0; height:auto; line-height:100%; outline:none; text-decoration:none;}
+        body, #bodyTable, #bodyCell{height:100% !important; margin:0; padding:0; width:100% !important;}
+
+        /* /\/\/\/\/\/\/\/\/ TEMPLATE STYLES /\/\/\/\/\/\/\/\/ */
+
+        /* ========== Page Styles ========== */
+
+        #bodyCell{padding:20px;}
+        #templateContainer{width:600px;}
+
+        /**
+        * @tab Page
+        * @section background style
+        * @tip Set the background color and top border for your email. You may want to choose colors that match your company's branding.
+        * @theme page
+        */
+        body, #bodyTable{
+            background-color:#F7F7FA;
+        }
+
+
+        /**
+        * @tab Page
+        * @section email border
+        * @tip Set the border for your email.
+        */
+        #templateContainer{
+            border:2px solid #817AFE;
+            border-radius: 12px;
+            overflow: hidden;
+            padding: 48px;
+        }
+
+        /**
+        * @tab Page
+        * @section heading 1
+        * @tip Set the styling for all first-level headings in your emails. These should be the largest of your headings.
+        * @style heading 1
+        */
+        h1{
+            color:#202021 !important;
+            display:block;
+            font-family:Helvetica;
+            font-size:24px;
+            font-style:normal;
+            font-weight:bold;
+            line-height:1.4;
+            letter-spacing:normal;
+            margin-top:0;
+            margin-right:0;
+            margin-bottom:32px;
+            margin-left:0;
+        }
+
+        /**
+        * @tab Page
+        * @section heading 2
+        * @tip Set the styling for all second-level headings in your emails.
+        * @style heading 2
+        */
+        h2{
+            color:#202021 !important;
+            display:block;
+            font-family:Helvetica;
+            font-size:20px;
+            font-style:normal;
+            font-weight:bold;
+            line-height:1.4;
+            letter-spacing:normal;
+            margin-top:0;
+            margin-right:0;
+            margin-bottom:24px;
+            margin-left:0;
+            text-align:left;
+        }
+
+        /**
+        * @tab Page
+        * @section heading 3
+        * @tip Set the styling for all third-level headings in your emails.
+        * @style heading 3
+        */
+        h3{
+            color:#202021 !important;
+            display:block;
+            font-family:Helvetica;
+            font-size:16px;
+            font-style:normal;
+            font-weight:bold;
+            line-height:1.4;
+            letter-spacing:normal;
+            margin-top:0;
+            margin-right:0;
+            margin-bottom:16px;
+            margin-left:0;
+            text-align:left;
+        }
+
+        /**
+        * @tab Page
+        * @section heading 4
+        * @tip Set the styling for all fourth-level headings in your emails. These should be the smallest of your headings.
+        * @style heading 4
+        */
+        h4{
+            color:#202021 !important;
+            display:block;
+            font-family:Helvetica;
+            font-size:14px;
+            font-style:normal;
+            font-weight:normal;
+            line-height:1.4;
+            letter-spacing:normal;
+            margin-top:0;
+            margin-right:0;
+            margin-bottom:16px;
+            margin-left:0;
+            text-align:left;
+        }
+
+        /* ========== Header Styles ========== */
+
+        /**
+        * @tab Header
+        * @section header style
+        * @tip Set the background color and borders for your email's header area.
+        * @theme header
+        */
+        #templateHeader{
+            color:#6E6E70;
+        }
+
+        /**
+        * @tab Header
+        * @section header text
+        * @tip Set the styling for your email's header text. Choose a size and color that is easy to read.
+        */
+        .headerContent{
+            color:#6E6E70;
+            font-family:Helvetica;
+            font-size:20px;
+            font-weight:bold;
+            line-height:1.4;
+            padding-top:0;
+            padding-right:0;
+            padding-bottom:0;
+            padding-left:0;
+            text-align:left;
+            vertical-align:middle;
+        }
+
+        /**
+        * @tab Header
+        * @section header link
+        * @tip Set the styling for your email's header links. Choose a color that helps them stand out from your text.
+        */
+        .headerContent a:link, .headerContent a:visited, /* Yahoo! Mail Override */ .headerContent a .yshortcuts /* Yahoo! Mail Override */{
+            color:#fff;
+            font-weight:normal;
+            text-decoration:underline;
+        }
+
+
+        /* ========== Body Styles ========== */
+
+        /**
+        * @tab Body
+        * @section body style
+        * @tip Set the background color and borders for your email's body area.
+        */
+        #templateBody{
+            margin: 48px 0;
+            padding: 48px 0;
+            border-top: 1px solid #E1E1E3;
+            border-bottom: 1px solid #E1E1E3;
+        }
+
+        /**
+        * @tab Body
+        * @section body text
+        * @tip Set the styling for your email's main content text. Choose a size and color that is easy to read.
+        * @theme main
+        */
+        .bodyContent{
+            color:#202021;
+            font-family:Helvetica;
+            font-size:16px;
+            line-height:1.4;
+            text-align:left;
+        }
+
+        .bodyContent img{
+            display:inline;
+            height:auto;
+            max-width:560px;
+        }
+
+        .bodyContent a {
+            color: #615BC2;
+            text-decoration: none;
+        }
+
+        .bodyContent a:hover {
+            text-decoration: underline;
+        }
+
+        .bodyContent .buttonStyle {
+            margin-top: 32px;
+            display: inline-block;
+            padding: 13px 20px;
+            color: #fff;
+            background: #6C65E5;
+            border-radius: 4px;
+            font-size: 16px;
+            line-height: 1;
+            text-decoration: none !important;
+        }
+
+        /* ========== Footer Styles ========== */
+
+        /**
+        * @tab Footer
+        * @section footer text
+        * @tip Set the styling for your email's footer text. Choose a size and color that is easy to read.
+        * @theme footer
+        */
+        .footerContent{
+            color:#6E6E70;
+            font-family:Helvetica;
+            font-size:14px;
+            line-height:1.4;
+            text-align:left;
+        }
+
+        .footerContent a {
+            padding-right: 12px;
+            margin-right: 12px;
+            border-right: 1px solid #E1E1E3;
+            color:#615BC2;
+        }
+
+        .footerContent em {
+            display: block;
+            margin-top: 24px;
+        }
+
+        /**
+        * @tab Footer
+        * @section footer link
+        * @tip Set the styling for your email's footer links. Choose a color that helps them stand out from your text.
+        */
+        .footerContent a:link, .footerContent a:visited, /* Yahoo! Mail Override */ .footerContent a .yshortcuts, .footerContent a span /* Yahoo! Mail Override */{
+            color:#615BC2;
+            font-weight:normal;
+            text-decoration:underline;
+        }
+
+        /* /\/\/\/\/\/\/\/\/ MOBILE STYLES /\/\/\/\/\/\/\/\/ */
+
+        @media only screen and (max-width: 480px){
+            /* /\/\/\/\/\/\/ CLIENT-SPECIFIC MOBILE STYLES /\/\/\/\/\/\/ */
+            body, table, td, p, a, li, blockquote{-webkit-text-size-adjust:none !important;} /* Prevent Webkit platforms from changing default text sizes */
+            body{width:100% !important; min-width:100% !important;} /* Prevent iOS Mail from adding padding to the body */
+
+            /* /\/\/\/\/\/\/ MOBILE RESET STYLES /\/\/\/\/\/\/ */
+            #bodyCell{padding:10px !important;}
+
+            /* /\/\/\/\/\/\/ MOBILE TEMPLATE STYLES /\/\/\/\/\/\/ */
+
+            /* ======== Page Styles ======== */
+
+            /**
+            * @tab Mobile Styles
+            * @section template width
+            * @tip Make the template fluid for portrait or landscape view adaptability. If a fluid layout doesn't work for you, set the width to 300px instead.
+            */
+            #templateContainer{
+                max-width:600px !important;
+                width:100% !important;
+                padding: 32px;
+            }
+
+
+            /* ======== Body Styles ======== */
+
+            #templateBody{
+                margin: 32px 0;
+                padding: 32px 0;
+            }
+
+            /* ======== Footer Styles ======== */
+
+            .footerContent a {
+                display:block !important;
+                border-right: 0;
+                padding: 6px 0;
+            } /* Place footer social and utility links on their own lines, for easier access */
+        }
+    </style>
+</head>
+<body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0">
+<center>
+    <table align="center" border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable" style="background:#F7F7FA;">
+        <tr>
+            <td align="center" valign="top" id="bodyCell">
+                <!-- BEGIN TEMPLATE // -->
+                <table border="0" cellpadding="0" cellspacing="0" id="templateContainer" style="background:#FFFFFF;">
+                    <tr>
+                        <td align="center" valign="top">
+                            <!-- BEGIN HEADER // -->
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
+                                <tr>
+                                    <td valign="top" class="headerContent">
+                                        <img src="https://cdn.getunleash.io/unleash_logo_600.png" style="width:140px;" id="headerImage" mc:label="header_image" mc:edit="header_image" mc:allowdesigner mc:allowtext />
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- // END HEADER -->
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" class="bodyContent" mc:edit="body_content">
+                            <h1>Order for additional environments submitted</h1>
+                            <p>Hello,</p>
+                            <p>An order for additional environments has been successfully submitted by <strong>{{{ userEmail }}}</strong> for customer ID <strong>{{{ customerId }}}</strong>. Below are the details of the environments requested:</p>
+                            <ul>
+                                {{#environments}}
+                                    <li>{{.}}</li>
+                                {{/environments}}
+                            </ul>
+                            <p>Please note that it may take up to 24 hours for these changes to come into effect.</p>
+                            <p>Thank you for your attention.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center" valign="top">
+                            <!-- BEGIN FOOTER // -->
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateFooter">
+                                <tr>
+                                    <td valign="top" class="footerContent" mc:edit="footer_content00">
+                                        <a href="https://www.getunleash.io/blog">Unleash blog</a>
+                                        <a href="https://github.com/Unleash/unleash">Github</a>
+                                        <a href="https://slack.unleash.run">Slack community</a>
+                                        <a href="https://www.getunleash.io/support" style="border-right:0;">Help center</a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" class="footerContent" mc:edit="footer_content01">
+                                        <em>Copyright &copy; {{ year }} | Bricks Software | All rights reserved.</em>
+                                    </td>
+                                </tr>
+                            </table>
+                            <!-- // END FOOTER -->
+                        </td>
+                    </tr>
+                </table>
+                <!-- // END TEMPLATE -->
+            </td>
+        </tr>
+    </table>
+</center>
+</body>
+</html>

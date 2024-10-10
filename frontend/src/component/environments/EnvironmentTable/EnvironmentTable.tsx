@@ -8,7 +8,7 @@ import {
     Table,
     TablePlaceholder,
 } from 'component/common/Table';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Alert, styled, TableBody } from '@mui/material';
 import type { MoveListItem } from 'hooks/useDragItem';
@@ -27,11 +27,8 @@ import { HighlightCell } from 'component/common/Table/cells/HighlightCell/Highli
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IEnvironment } from 'interfaces/environments';
 import { useUiFlag } from 'hooks/useUiFlag';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
-import { PurchasableFeature } from './PurchasableFeature/PurchasableFeature';
-import { OrderEnvironmentsDialog } from './OrderEnvironmentsDialog/OrderEnvironmentsDialog';
-
+import { OrderEnvironments } from './OrderEnvironments/OrderEnvironments';
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
@@ -40,12 +37,10 @@ export const EnvironmentTable = () => {
     const { changeSortOrder } = useEnvironmentApi();
     const { setToastApiError } = useToast();
     const { environments, mutateEnvironments } = useEnvironments();
-    const [purchaseDialogOpen, setPurchaseDialogOpen] = useState(false);
     const isFeatureEnabled = useUiFlag('EEA');
     const isPurchaseAdditionalEnvironmentsEnabled = useUiFlag(
         'purchaseAdditionalEnvironments',
     );
-    const { isPro } = useUiConfig();
 
     const moveListItem: MoveListItem = useCallback(
         async (dragIndex: number, dropIndex: number, save = false) => {
@@ -131,20 +126,7 @@ export const EnvironmentTable = () => {
 
     return (
         <PageContent header={header}>
-            {isPro() && isPurchaseAdditionalEnvironmentsEnabled ? (
-                <>
-                    <PurchasableFeature
-                        title='Purchase additional environments'
-                        description='With our Pro plan, you now have the flexibility to expand your workspace by adding up to three additional environments.'
-                        onClick={() => setPurchaseDialogOpen(true)}
-                    />
-                    <OrderEnvironmentsDialog
-                        open={purchaseDialogOpen}
-                        onClose={() => setPurchaseDialogOpen(false)}
-                        onSubmit={() => {}} // TODO: API call
-                    />
-                </>
-            ) : null}
+            <OrderEnvironments />
             <StyledAlert severity='info'>
                 This is the order of environments that you have today in each
                 feature flag. Rearranging them here will change also the order

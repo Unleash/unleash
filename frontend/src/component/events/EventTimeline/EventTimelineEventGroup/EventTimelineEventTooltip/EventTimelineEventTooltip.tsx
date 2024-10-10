@@ -50,6 +50,7 @@ const StyledTooltipItem = styled('div')(({ theme }) => ({
 
 const StyledEventTimelineEventCircle = styled(EventTimelineEventCircle)(
     ({ theme }) => ({
+        flexShrink: 0,
         marginTop: theme.spacing(0.125),
         height: theme.spacing(2.5),
         width: theme.spacing(2.5),

@@ -338,10 +338,10 @@
                         <td valign="top" class="bodyContent" mc:edit="body_content">
                             <h1>Order for additional environments submitted</h1>
                             <p>Hello,</p>
-                            <p>An order for additional environments has been successfully submitted by <strong>{{{ userEmail }}}</strong> for customer ID <strong>{{{ instanceId }}}</strong>. Below are the details of the environments requested:</p>
+                            <p>An order for additional environments has been successfully submitted by <strong>{{{ userEmail }}}</strong> for customer ID <strong>{{{ customerId }}}</strong>. Below are the details of the environments requested:</p>
                             <ul>
                                 {{#environments}}
-                                    <li>{{{ name }}}</li>
+                                    <li>{{.}}</li>
                                 {{/environments}}
                             </ul>
                             <p>Please note that it may take up to 24 hours for these changes to come into effect.</p>

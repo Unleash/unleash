@@ -56,6 +56,8 @@ process.nextTick(async () => {
                         personalDashboardUI: true,
                         purchaseAdditionalEnvironments: true,
                         originMiddlewareRequestLogging: true,
+                        unleashAI: true,
+                        webhookDomainLogging: true,
                     },
                 },
                 authentication: {

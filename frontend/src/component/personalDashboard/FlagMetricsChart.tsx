@@ -11,7 +11,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { Bar } from 'react-chartjs-2';
 import useTheme from '@mui/material/styles/useTheme';
 import { type FC, useEffect, useMemo, useState } from 'react';
-import { Box, styled } from '@mui/material';
+import { Box, type Theme, styled } from '@mui/material';
 import { FeatureMetricsHours } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsHours/FeatureMetricsHours';
 import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
 import { useFeatureMetricsRaw } from 'hooks/api/getters/useFeatureMetricsRaw/useFeatureMetricsRaw';
@@ -23,36 +23,45 @@ import {
     createPlaceholderBarChartOptions,
 } from './createChartOptions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 
 const defaultYes = [0, 14, 28, 21, 33, 31, 31, 22, 26, 37, 31, 14, 21, 14, 0];
 
-const placeholderData = {
+const placeholderData = (theme: Theme, label?: string) => ({
     labels: Array.from({ length: 15 }, (_, i) => i + 1),
     datasets: [
         {
             data: defaultYes,
-            backgroundColor: '#EAEAED',
-            hoverBackgroundColor: '#EAEAED',
-            label: 'No metrics for this feature flag in the selected environment and time period',
+            backgroundColor: theme.palette.divider,
+            hoverBackgroundColor: theme.palette.divider,
+            label:
+                label ||
+                'No metrics for this feature flag in the selected environment and time period',
         },
     ],
-};
+});
 
 const ChartWrapper = styled('div')({
     width: '90%',
 });
 
-export const PlaceholderFlagMetricsChart = () => {
+export const PlaceholderFlagMetricsChart: React.FC<{ label?: string }> = ({
+    label,
+}) => {
     const theme = useTheme();
 
     const options = useMemo(() => {
         return createPlaceholderBarChartOptions(theme);
     }, [theme]);
 
+    const data = useMemo(() => {
+        return placeholderData(theme, label);
+    }, [theme]);
+
     return (
         <ChartWrapper>
             <Bar
-                data={placeholderData}
+                data={data}
                 options={options}
                 aria-label='A placeholder bar chart with a single feature flag exposure metrics'
             />
@@ -144,7 +153,6 @@ const MetricsSelectors = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     gap: theme.spacing(2),
-    width: '100%',
 }));
 
 const ChartContainer = styled('div')(({ theme }) => ({
@@ -154,9 +162,22 @@ const ChartContainer = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
+const StyledExposure = styled(FlagExposure)({
+    alignItems: 'center',
+    justifySelf: 'start',
+});
+
+const ExposureAndMetricsRow = styled('div')({
+    display: 'flex',
+    flexFlow: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+});
+
 export const FlagMetricsChart: FC<{
     flag: { name: string; project: string };
-}> = ({ flag }) => {
+    onArchive: () => void;
+}> = ({ flag, onArchive }) => {
     const [hoursBack, setHoursBack] = useState(48);
 
     const { environment, setEnvironment, activeEnvironments } =
@@ -168,19 +189,26 @@ export const FlagMetricsChart: FC<{
 
     return (
         <ChartContainer>
-            <MetricsSelectors>
-                {environment ? (
-                    <EnvironmentSelect
-                        environment={environment}
-                        setEnvironment={setEnvironment}
-                        activeEnvironments={activeEnvironments}
-                    />
-                ) : null}
-                <FeatureMetricsHours
-                    hoursBack={hoursBack}
-                    setHoursBack={setHoursBack}
+            <ExposureAndMetricsRow>
+                <StyledExposure
+                    project={flag.project}
+                    flagName={flag.name}
+                    onArchive={onArchive}
                 />
-            </MetricsSelectors>
+                <MetricsSelectors>
+                    {environment ? (
+                        <EnvironmentSelect
+                            environment={environment}
+                            setEnvironment={setEnvironment}
+                            activeEnvironments={activeEnvironments}
+                        />
+                    ) : null}
+                    <FeatureMetricsHours
+                        hoursBack={hoursBack}
+                        setHoursBack={setHoursBack}
+                    />
+                </MetricsSelectors>
+            </ExposureAndMetricsRow>
 
             {noData ? (
                 <PlaceholderFlagMetricsChart />

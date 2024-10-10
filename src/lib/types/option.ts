@@ -273,4 +273,5 @@ export interface IUnleashConfig {
     isEnterprise: boolean;
     rateLimiting: IRateLimiting;
     feedbackUriPath?: string;
+    openAIAPIKey?: string;
 }

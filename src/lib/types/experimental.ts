@@ -61,7 +61,9 @@ export type IFlagKey =
     | 'personalDashboardUI'
     | 'trackLifecycleMetrics'
     | 'purchaseAdditionalEnvironments'
-    | 'originMiddlewareRequestLogging';
+    | 'originMiddlewareRequestLogging'
+    | 'unleashAI'
+    | 'webhookDomainLogging';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -300,6 +302,14 @@ const flags: IFlags = {
     ),
     originMiddlewareRequestLogging: parseEnvVarBoolean(
         process.env.UNLEASH_ORIGIN_MIDDLEWARE_REQUEST_LOGGING,
+        false,
+    ),
+    unleashAI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_UNLEASH_AI,
+        false,
+    ),
+    webhookDomainLogging: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENT_WEBHOOK_DOMAIN_LOGGING,
         false,
     ),
 };

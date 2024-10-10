@@ -511,6 +511,7 @@ export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
             menu: route.menu,
             configFlag: route.configFlag,
             notFlag: route.notFlag,
+            enterprise: route.enterprise,
         };
     });
 };

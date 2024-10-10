@@ -3,6 +3,7 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    Alert,
     Button,
     IconButton,
     Link,
@@ -247,6 +248,12 @@ const MainContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const NoActiveFlagsInfo = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(2),
+}));
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
 
@@ -282,6 +289,9 @@ export const PersonalDashboard = () => {
     const projectStageRef = useLoading(
         !detailsError && activeProjectStage === 'loading',
     );
+
+    const [createFlagDialogOpen, setCreateFlagDialogOpen] =
+        React.useState(false);
 
     return (
         <MainContent>
@@ -381,12 +391,25 @@ export const PersonalDashboard = () => {
                                             />
                                         ))}
                                     </List>
+                                ) : activeProject ? (
+                                    <NoActiveFlagsInfo>
+                                        <Typography>
+                                            You have not created or favorited
+                                            any feature flags. Once you do, they
+                                            will show up here.
+                                        </Typography>
+                                        <Typography>
+                                            To create a new flag, go to one of
+                                            your projects.
+                                        </Typography>
+                                    </NoActiveFlagsInfo>
                                 ) : (
-                                    <Typography>
-                                        You have not created or favorited any
-                                        feature flags. Once you do, they will
-                                        show up here.
-                                    </Typography>
+                                    <Alert severity='info'>
+                                        You need to create or join a project to
+                                        be able to add a flag, or you must be
+                                        given the rights by your admin to add
+                                        feature flags.
+                                    </Alert>
                                 )}
                             </SpacedGridItem>
 
@@ -397,7 +420,11 @@ export const PersonalDashboard = () => {
                                         onArchive={refetchDashboard}
                                     />
                                 ) : (
-                                    <PlaceholderFlagMetricsChart />
+                                    <PlaceholderFlagMetricsChart
+                                        label={
+                                            'Metrics for your feature flags will be shown here'
+                                        }
+                                    />
                                 )}
                             </SpacedGridItem>
                         </FlagGrid>

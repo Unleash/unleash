@@ -27,14 +27,16 @@ import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/Feat
 
 const defaultYes = [0, 14, 28, 21, 33, 31, 31, 22, 26, 37, 31, 14, 21, 14, 0];
 
-const placeholderData = (theme: Theme) => ({
+const placeholderData = (theme: Theme, label?: string) => ({
     labels: Array.from({ length: 15 }, (_, i) => i + 1),
     datasets: [
         {
             data: defaultYes,
             backgroundColor: theme.palette.divider,
             hoverBackgroundColor: theme.palette.divider,
-            label: 'No metrics for this feature flag in the selected environment and time period',
+            label:
+                label ||
+                'No metrics for this feature flag in the selected environment and time period',
         },
     ],
 });
@@ -43,7 +45,9 @@ const ChartWrapper = styled('div')({
     width: '90%',
 });
 
-export const PlaceholderFlagMetricsChart = () => {
+export const PlaceholderFlagMetricsChart: React.FC<{ label?: string }> = ({
+    label,
+}) => {
     const theme = useTheme();
 
     const options = useMemo(() => {
@@ -51,7 +55,7 @@ export const PlaceholderFlagMetricsChart = () => {
     }, [theme]);
 
     const data = useMemo(() => {
-        return placeholderData(theme);
+        return placeholderData(theme, label);
     }, [theme]);
 
     return (

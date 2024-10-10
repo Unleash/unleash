@@ -19,7 +19,6 @@ const Event = styled('li')(({ theme }) => ({
     padding: theme.spacing(0),
     display: 'inline-flex',
     gap: theme.spacing(2),
-    alignItems: 'center',
     fontSize: theme.typography.body2.fontSize,
 
     '*': {
@@ -47,6 +46,10 @@ const Timestamp = styled('time')(({ theme }) => ({
     marginBottom: theme.spacing(1),
 }));
 
+const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
+    marginTop: theme.spacing(0.5),
+}));
+
 export const LatestProjectEvents: FC<{
     latestEvents: PersonalDashboardProjectDetailsSchema['latestEvents'];
 }> = ({ latestEvents }) => {
@@ -67,10 +70,7 @@ export const LatestProjectEvents: FC<{
                 {latestEvents.map((event) => {
                     return (
                         <Event key={event.id}>
-                            <UserAvatar
-                                src={event.createdByImageUrl}
-                                sx={{ mt: 1 }}
-                            />
+                            <StyledUserAvatar src={event.createdByImageUrl} />
                             <div>
                                 <Timestamp dateTime={event.createdAt}>
                                     {formatDateYMDHM(

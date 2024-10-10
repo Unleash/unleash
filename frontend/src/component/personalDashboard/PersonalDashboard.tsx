@@ -91,7 +91,7 @@ const FlagListItem: FC<{
                         onClick={() => {
                             trackEvent('personal-dashboard', {
                                 props: {
-                                    eventType: `Go to flag`,
+                                    eventType: `Go to flag from list`,
                                 },
                             });
                         }}

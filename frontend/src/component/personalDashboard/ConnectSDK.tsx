@@ -45,6 +45,7 @@ const ActionBox = styled('div')(({ theme }) => ({
 }));
 
 export const CreateFlag: FC<{ project: string }> = ({ project }) => {
+    const { trackEvent } = usePlausibleTracker();
     return (
         <ActionBox data-loading>
             <TitleContainer>
@@ -56,7 +57,17 @@ export const CreateFlag: FC<{ project: string }> = ({ project }) => {
                 <p>Create one to get started.</p>
             </div>
             <div>
-                <Button href={`projects/${project}`} variant='contained'>
+                <Button
+                    href={`/projects/${project}`}
+                    onClick={() => {
+                        trackEvent('personal-dashboard', {
+                            props: {
+                                eventType: `Go to project from onboarding`,
+                            },
+                        });
+                    }}
+                    variant='contained'
+                >
                     Go to project
                 </Button>
             </div>

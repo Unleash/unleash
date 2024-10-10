@@ -14,12 +14,14 @@ export type TimelineEventType = 'signal' | EventSchemaType;
 
 type RawTimelineEvent = EventSchema | ISignalQuerySignal;
 
-type TimelineEvent = {
+export type TimelineEvent = {
     id: number;
     timestamp: number;
     type: TimelineEventType;
     label: string;
     summary: string;
+    icon?: string;
+    variant?: string;
 };
 
 export type TimelineEventGroup = TimelineEvent[];
@@ -111,6 +113,9 @@ const getTimestamp = (event: RawTimelineEvent) => {
 const isInRange = (timestamp: number, startTime: number, endTime: number) =>
     timestamp >= startTime && timestamp <= endTime;
 
+const isValidString = (str: unknown): str is string =>
+    typeof str === 'string' && str.trim().length > 0;
+
 const getTimelineEvent = (
     event: RawTimelineEvent,
     timestamp: number,
@@ -122,10 +127,19 @@ const getTimelineEvent = (
             sourceName = 'unknown source',
             sourceDescription,
             tokenName,
+            payload: {
+                unleash_title,
+                unleash_description,
+                unleash_icon,
+                unleash_variant,
+            },
         } = event;
 
-        const label = `Signal: ${sourceName}`;
-        const summary = `Signal originated from **[${sourceName} (${tokenName})](/integrations/signals)** endpoint${sourceDescription ? `: ${sourceDescription}` : ''}`;
+        const title = unleash_title || sourceName;
+        const label = `Signal: ${title}`;
+        const summary = unleash_description
+            ? `Signal: **[${title}](/integrations/signals)** ${unleash_description}`
+            : `Signal originated from **[${sourceName} (${tokenName})](/integrations/signals)** endpoint${sourceDescription ? `: ${sourceDescription}` : ''}`;
 
         return {
             id,
@@ -133,6 +147,10 @@ const getTimelineEvent = (
             type: 'signal',
             label,
             summary,
+            ...(isValidString(unleash_icon) ? { icon: unleash_icon } : {}),
+            ...(isValidString(unleash_variant)
+                ? { variant: unleash_variant }
+                : {}),
         };
     }
 

@@ -13,7 +13,6 @@ import {
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
-import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface IDatadogParameters {
     url: string;
@@ -47,7 +46,7 @@ export default class DatadogAddon extends Addon {
         event: IEvent,
         parameters: IDatadogParameters,
         integrationId: number,
-    ): Promise<void> {
+    ): Promise<string> {
         let state: IntegrationEventState = 'success';
         const stateDetails: string[] = [];
 
@@ -116,13 +115,6 @@ export default class DatadogAddon extends Addon {
             this.logger.warn(failedMessage);
         }
 
-        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                result: state,
-                destination: 'datadog',
-            });
-        }
-
         this.registerEvent({
             integrationId,
             state,
@@ -133,5 +125,7 @@ export default class DatadogAddon extends Addon {
                 body,
             },
         });
+
+        return state;
     }
 }

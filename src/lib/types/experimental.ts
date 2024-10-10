@@ -54,7 +54,6 @@ export type IFlagKey =
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
     | 'originMiddleware'
-    | 'addonUsageMetrics'
     | 'onboardingMetrics'
     | 'onboardingUI'
     | 'projectRoleAssignment'
@@ -269,10 +268,6 @@ const flags: IFlags = {
     ),
     originMiddleware: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ORIGIN_MIDDLEWARE,
-        false,
-    ),
-    addonUsageMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADDON_USAGE_METRICS,
         false,
     ),
     onboardingMetrics: parseEnvVarBoolean(

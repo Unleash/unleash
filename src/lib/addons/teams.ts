@@ -12,7 +12,6 @@ import {
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
-import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface ITeamsParameters {
     url: string;
@@ -36,7 +35,7 @@ export default class TeamsAddon extends Addon {
         event: IEvent,
         parameters: ITeamsParameters,
         integrationId: number,
-    ): Promise<void> {
+    ): Promise<string> {
         let state: IntegrationEventState = 'success';
         const stateDetails: string[] = [];
 
@@ -110,13 +109,6 @@ export default class TeamsAddon extends Addon {
             this.logger.warn(failedMessage);
         }
 
-        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                result: state,
-                destination: 'teams',
-            });
-        }
-
         this.registerEvent({
             integrationId,
             state,
@@ -127,5 +119,7 @@ export default class TeamsAddon extends Addon {
                 body,
             },
         });
+
+        return state;
     }
 }

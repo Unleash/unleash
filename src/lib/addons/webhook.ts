@@ -12,7 +12,6 @@ import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
 } from './feature-event-formatter-md';
-import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface IParameters {
     url: string;
@@ -40,7 +39,7 @@ export default class Webhook extends Addon {
         event: IEvent,
         parameters: IParameters,
         integrationId: number,
-    ): Promise<void> {
+    ): Promise<string> {
         let state: IntegrationEventState = 'success';
         const stateDetails: string[] = [];
 
@@ -104,13 +103,6 @@ export default class Webhook extends Addon {
             this.logger.warn(failedMessage);
         }
 
-        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                result: state,
-                destination: 'webhook',
-            });
-        }
-
         const domain = new URL(url).hostname;
         this.logger.info(`Webhook invoked`, {
             domain,
@@ -127,5 +119,7 @@ export default class Webhook extends Addon {
                 body: sendingEvent ? event : body,
             },
         });
+
+        return state;
     }
 }

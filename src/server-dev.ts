@@ -51,7 +51,6 @@ process.nextTick(async () => {
                         enableLegacyVariants: false,
                         extendedMetrics: true,
                         originMiddleware: true,
-                        addonUsageMetrics: true,
                         onboardingMetrics: true,
                         onboardingUI: true,
                         personalDashboardUI: true,

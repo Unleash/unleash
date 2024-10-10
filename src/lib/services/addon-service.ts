@@ -27,6 +27,8 @@ import type { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
 import type EventService from '../features/events/event-service';
 import { omitKeys } from '../util';
+import { ADDON_EVENTS_HANDLED } from '../metric-events';
+import type EventEmitter from 'events';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
 
@@ -51,6 +53,8 @@ export default class AddonService {
     addonProviders: IAddonProviders;
 
     sensitiveParams: ISensitiveParams;
+
+    eventBus: EventEmitter;
 
     fetchAddonConfigs: (() => Promise<IAddon[]>) &
         memoizee.Memoized<() => Promise<IAddon[]>>;
@@ -79,6 +83,7 @@ export default class AddonService {
         this.logger = getLogger('services/addon-service.js');
         this.tagTypeService = tagTypeService;
         this.eventService = eventService;
+        this.eventBus = eventBus;
 
         this.addonProviders =
             addons ||
@@ -148,13 +153,16 @@ export default class AddonService {
                             addon.environments.includes(event.environment),
                     )
                     .filter((addon) => addonProviders[addon.provider])
-                    .forEach((addon) =>
-                        addonProviders[addon.provider].handleEvent(
-                            event,
-                            addon.parameters,
-                            addon.id,
-                        ),
-                    );
+                    .forEach((addon) => {
+                        const result = addonProviders[
+                            addon.provider
+                        ].handleEvent(event, addon.parameters, addon.id);
+
+                        this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+                            result: result,
+                            destination: addon.provider,
+                        });
+                    });
             });
         };
     }

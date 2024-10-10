@@ -55,6 +55,7 @@ function getSetup() {
                 getLogger,
                 // @ts-ignore
                 server: { unleashUrl: 'http://test' },
+                eventBus: { emit: jest.fn() } as any,
             },
             tagTypeService,
             eventService,

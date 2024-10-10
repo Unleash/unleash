@@ -30,7 +30,9 @@ describe('originMiddleware', () => {
             ...createTestConfig({
                 getLogger,
                 experimental: {
-                    flags: {},
+                    flags: {
+                        originMiddlewareRequestLogging: true,
+                    },
                 },
             }),
             eventBus,

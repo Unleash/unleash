@@ -9,6 +9,9 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 const Events = styled('ul')(({ theme }) => ({
     padding: 0,
     alignItems: 'flex-start',
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    gap: theme.spacing(2),
 }));
 
 const Event = styled('li')(({ theme }) => ({
@@ -17,7 +20,7 @@ const Event = styled('li')(({ theme }) => ({
     display: 'inline-flex',
     gap: theme.spacing(2),
     alignItems: 'center',
-    marginBottom: theme.spacing(4),
+    fontSize: theme.typography.body2.fontSize,
 
     '*': {
         fontWeight: 'normal',

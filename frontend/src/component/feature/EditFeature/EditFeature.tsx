@@ -32,13 +32,13 @@ const EditFeature = () => {
         impressionData,
         setImpressionData,
         clearErrors,
-    } = useFeatureForm({
-        initialName: feature?.name,
-        initialType: feature?.type,
-        initialProject: feature?.project,
-        initialDescription: feature?.description,
-        initialImpressionData: feature?.impressionData,
-    });
+    } = useFeatureForm(
+        feature?.name,
+        feature?.type,
+        feature?.project,
+        feature?.description,
+        feature?.impressionData,
+    );
 
     const createPatch = () => {
         const comparison = { ...feature, type, description, impressionData };

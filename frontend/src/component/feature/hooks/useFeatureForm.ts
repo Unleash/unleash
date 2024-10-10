@@ -1,33 +1,19 @@
 import { useEffect, useState } from 'react';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useQueryParams from 'hooks/useQueryParams';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import type { ITag } from 'interfaces/tags';
 import type { CreateFeatureSchema, CreateFeatureSchemaType } from 'openapi';
-import { useOptionalPathParamWithFallback } from 'hooks/useOptionalPathParamWithFallback';
 
-type UseFeatureFormProps = {
-    initialName?: string;
-    initialType?: CreateFeatureSchemaType;
-    initialProject?: string;
-    initialDescription?: string;
-    initialImpressionData?: boolean;
-    fallbackProjectId?: string;
-};
-
-const useFeatureForm = (props: UseFeatureFormProps | undefined) => {
-    const {
-        initialName = '',
-        initialType = 'release',
-        initialProject = 'default',
-        initialDescription = '',
-        initialImpressionData = false,
-        fallbackProjectId,
-    } = props ?? {};
-    const projectId = useOptionalPathParamWithFallback(
-        'projectId',
-        fallbackProjectId,
-    );
+const useFeatureForm = (
+    initialName: string = '',
+    initialType: CreateFeatureSchemaType = 'release',
+    initialProject: string = 'default',
+    initialDescription: string = '',
+    initialImpressionData: boolean = false,
+) => {
+    const projectId = useRequiredPathParam('projectId');
     const params = useQueryParams();
     const { validateFeatureToggleName } = useFeatureApi();
     const toggleQueryName = params.get('name');

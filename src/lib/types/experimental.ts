@@ -53,7 +53,6 @@ export type IFlagKey =
     | 'navigationSidebar'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
-    | 'originMiddleware'
     | 'addonUsageMetrics'
     | 'onboardingMetrics'
     | 'onboardingUI'
@@ -62,6 +61,7 @@ export type IFlagKey =
     | 'personalDashboardUI'
     | 'trackLifecycleMetrics'
     | 'purchaseAdditionalEnvironments'
+    | 'originMiddlewareRequestLogging'
     | 'unleashAI'
     | 'webhookDomainLogging';
 
@@ -268,10 +268,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
         false,
     ),
-    originMiddleware: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ORIGIN_MIDDLEWARE,
-        false,
-    ),
     addonUsageMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADDON_USAGE_METRICS,
         false,
@@ -302,6 +298,10 @@ const flags: IFlags = {
     ),
     purchaseAdditionalEnvironments: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PURCHASE_ADDITIONAL_ENVIRONMENTS,
+        false,
+    ),
+    originMiddlewareRequestLogging: parseEnvVarBoolean(
+        process.env.UNLEASH_ORIGIN_MIDDLEWARE_REQUEST_LOGGING,
         false,
     ),
     unleashAI: parseEnvVarBoolean(

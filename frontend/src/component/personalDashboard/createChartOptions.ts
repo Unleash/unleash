@@ -7,6 +7,7 @@ import {
     formatDateYMD,
     formatDateYMDHM,
 } from '../../utils/formatDate';
+import { formatTickValue } from 'component/common/Chart/formatTickValue';
 
 const formatVariantEntry = (
     variant: [string, number],
@@ -168,7 +169,15 @@ export const createBarChartOptions = (
                     },
                 },
             },
-            y: scales ? scales.y : {},
+            y: {
+                ...(scales?.y ?? {}),
+                ticks: {
+                    ...(scales?.y?.ticks ?? {}),
+                    color: theme.palette.text.secondary,
+                    callback: formatTickValue,
+                    display: true,
+                },
+            },
         },
         elements,
         interaction,

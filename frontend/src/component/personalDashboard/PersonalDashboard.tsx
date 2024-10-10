@@ -249,9 +249,9 @@ const MainContent = styled('div')(({ theme }) => ({
 }));
 
 const NoActiveFlagsInfo = styled('div')(({ theme }) => ({
-    '&>*+*': {
-        marginTop: theme.spacing(2),
-    },
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(2),
 }));
 
 export const PersonalDashboard = () => {

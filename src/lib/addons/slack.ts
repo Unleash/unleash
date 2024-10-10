@@ -41,7 +41,7 @@ export default class SlackAddon extends Addon {
         event: IEvent,
         parameters: ISlackAddonParameters,
         integrationId: number,
-    ): Promise<void> {
+    ): Promise<string> {
         let state: IntegrationEventState = 'success';
         const stateDetails: string[] = [];
 
@@ -145,6 +145,8 @@ export default class SlackAddon extends Addon {
                 message: `${formattedMessage}${text.length < formattedMessage.length ? ` (trimmed to ${maxLength} characters)` : ''}`,
             },
         });
+
+        return state;
     }
 
     getUniqueArray<T>(arr: T[]): T[] {

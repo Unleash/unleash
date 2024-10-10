@@ -87,7 +87,7 @@ export default abstract class Addon {
         event: IEvent,
         parameters: any,
         integrationId: number,
-    ): Promise<void>;
+    ): Promise<string>;
 
     async registerEvent(
         integrationEvent: IntegrationEventWriteModel,

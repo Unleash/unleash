@@ -53,7 +53,7 @@ export default class SlackAppAddon extends Addon {
         event: IEvent,
         parameters: ISlackAppAddonParameters,
         integrationId: number,
-    ): Promise<void> {
+    ): Promise<string> {
         let state: IntegrationEventState = 'success';
         const stateDetails: string[] = [];
         let channels: string[] = [];
@@ -69,7 +69,7 @@ export default class SlackAppAddon extends Addon {
                     event,
                     noAccessTokenMessage,
                 );
-                return;
+                return noAccessTokenMessage;
             }
 
             const taggedChannels = this.findTaggedChannels(event);
@@ -85,7 +85,7 @@ export default class SlackAppAddon extends Addon {
                     event,
                     noSlackChannelsMessage,
                 );
-                return;
+                return noSlackChannelsMessage;
             }
 
             this.logger.debug(
@@ -192,6 +192,8 @@ export default class SlackAppAddon extends Addon {
                 },
             });
         }
+
+        return state;
     }
 
     getUniqueArray<T>(arr: T[]): T[] {

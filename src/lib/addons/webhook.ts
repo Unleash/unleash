@@ -39,7 +39,7 @@ export default class Webhook extends Addon {
         event: IEvent,
         parameters: IParameters,
         integrationId: number,
-    ): Promise<void> {
+    ): Promise<string> {
         let state: IntegrationEventState = 'success';
         const stateDetails: string[] = [];
 
@@ -119,5 +119,7 @@ export default class Webhook extends Addon {
                 body: sendingEvent ? event : body,
             },
         });
+
+        return state;
     }
 }

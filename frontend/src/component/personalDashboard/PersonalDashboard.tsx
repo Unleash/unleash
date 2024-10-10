@@ -451,7 +451,7 @@ export const PersonalDashboard = () => {
             <WelcomeDialog
                 open={welcomeDialog === 'open'}
                 onClose={() => {
-                    setSplashSeen('personalDashboard');
+                    setSplashSeen('personalDashboardKeyConcepts');
                     setWelcomeDialog('closed');
                 }}
             />

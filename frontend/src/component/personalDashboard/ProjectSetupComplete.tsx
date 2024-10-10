@@ -82,7 +82,7 @@ const ProjectHealthMessage: FC<{
     insights: PersonalDashboardProjectDetailsSchemaInsights;
     project: string;
 }> = ({ trend, insights, project }) => {
-    const { avgHealthCurrentWindow, avgHealthPastWindow } = insights;
+    const { avgHealthCurrentWindow, avgHealthPastWindow, health } = insights;
     const improveMessage =
         'Remember to archive your stale feature flags to keep the project health growing.';
     const keepDoingMessage =
@@ -90,36 +90,60 @@ const ProjectHealthMessage: FC<{
 
     if (trend === 'improved') {
         return (
-            <Typography>
-                On average, your project health went up from{' '}
-                <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
-                <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
-                during the last 4 weeks. <br /> {keepDoingMessage}
-            </Typography>
+            <>
+                <Typography>
+                    On average, your project health went up from{' '}
+                    <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
+                    <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
+                    during the last 4 weeks.
+                </Typography>
+                <Typography>{keepDoingMessage}</Typography>
+            </>
         );
     }
 
     if (trend === 'declined') {
         return (
-            <Typography>
-                On average, your project health went down from{' '}
-                <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
-                <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
-                during the last 4 weeks. <br /> {improveMessage}
-            </Typography>
+            <>
+                <Typography>
+                    On average, your project health went down from{' '}
+                    <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
+                    <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
+                    during the last 4 weeks.
+                </Typography>
+                <Typography>{improveMessage}</Typography>
+            </>
         );
     }
 
     if (trend === 'consistent') {
         return (
-            <Typography>
-                On average, your project health has remained at{' '}
-                <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
-                during the last 4 weeks. <br />
-                {avgHealthCurrentWindow && avgHealthCurrentWindow >= 70
-                    ? keepDoingMessage
-                    : improveMessage}
-            </Typography>
+            <>
+                <Typography>
+                    On average, your project health has remained at{' '}
+                    <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
+                    during the last 4 weeks.
+                </Typography>
+                <Typography>
+                    {avgHealthCurrentWindow && avgHealthCurrentWindow >= 70
+                        ? keepDoingMessage
+                        : improveMessage}
+                </Typography>
+            </>
+        );
+    }
+
+    if (trend === 'unknown') {
+        return (
+            <>
+                <Typography>
+                    Your current health score is{' '}
+                    <PercentageScore>{health}%</PercentageScore>.
+                </Typography>
+                <Typography>
+                    {health >= 70 ? keepDoingMessage : improveMessage}
+                </Typography>
+            </>
         );
     }
 

@@ -42,6 +42,7 @@ interface ICreateFeatureDialogProps {
     onClose: () => void;
     skipNavigationOnComplete?: boolean;
     onSuccess?: () => void;
+    projectId?: string;
 }
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -79,21 +80,12 @@ const configButtonData = {
 
 export const CreateFeatureDialog = ({
     open,
-    onClose,
-    onSuccess,
-    skipNavigationOnComplete,
+    ...props
 }: ICreateFeatureDialogProps) => {
     if (open) {
         // wrap the inner component so that we only fetch data etc
         // when the dialog is actually open.
-        return (
-            <CreateFeatureDialogContent
-                open={open}
-                onClose={onClose}
-                skipNavigationOnComplete={skipNavigationOnComplete}
-                onSuccess={onSuccess}
-            />
-        );
+        return <CreateFeatureDialogContent open={open} {...props} />;
     }
 };
 
@@ -102,6 +94,7 @@ const CreateFeatureDialogContent = ({
     onClose,
     skipNavigationOnComplete,
     onSuccess,
+    projectId,
 }: ICreateFeatureDialogProps) => {
     const { setToastData, setToastApiError } = useToast();
     const { setShowFeedback } = useContext(UIContext);
@@ -125,7 +118,7 @@ const CreateFeatureDialogContent = ({
         getTogglePayload,
         clearErrors,
         errors,
-    } = useFeatureForm();
+    } = useFeatureForm({ fallbackProjectId: projectId });
     const { createFeatureToggle, loading } = useFeatureApi();
 
     const generalDocumentation: {

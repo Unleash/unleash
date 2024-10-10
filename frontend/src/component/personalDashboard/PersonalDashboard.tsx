@@ -3,6 +3,7 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    Alert,
     Button,
     IconButton,
     Link,
@@ -34,6 +35,7 @@ import {
 } from './Grid';
 import { ContentGridNoProjects } from './ContentGridNoProjects';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog';
 
 export const StyledCardTitle = styled('div')<{ lines?: number }>(
     ({ theme, lines = 2 }) => ({
@@ -247,6 +249,12 @@ const MainContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const NoActiveFlagsInfo = styled('div')(({ theme }) => ({
+    '&>*+*': {
+        marginTop: theme.spacing(2),
+    },
+}));
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
 
@@ -282,6 +290,9 @@ export const PersonalDashboard = () => {
     const projectStageRef = useLoading(
         !detailsError && activeProjectStage === 'loading',
     );
+
+    const [createFlagDialogOpen, setCreateFlagDialogOpen] =
+        React.useState(false);
 
     return (
         <MainContent>
@@ -381,12 +392,37 @@ export const PersonalDashboard = () => {
                                             />
                                         ))}
                                     </List>
+                                ) : activeProject ? (
+                                    <NoActiveFlagsInfo>
+                                        <Typography>
+                                            You have not created or favorited
+                                            any feature flags. Once you do, they
+                                            will show up here.
+                                        </Typography>
+                                        <Button
+                                            onClick={() =>
+                                                setCreateFlagDialogOpen(true)
+                                            }
+                                            variant='outlined'
+                                            color='primary'
+                                        >
+                                            Create new flag
+                                        </Button>
+                                        <CreateFeatureDialog
+                                            open={createFlagDialogOpen}
+                                            onClose={() =>
+                                                setCreateFlagDialogOpen(false)
+                                            }
+                                            projectId={activeProject}
+                                        />
+                                    </NoActiveFlagsInfo>
                                 ) : (
-                                    <Typography>
-                                        You have not created or favorited any
-                                        feature flags. Once you do, they will
-                                        show up here.
-                                    </Typography>
+                                    <Alert severity='info'>
+                                        You need to create a project to be able
+                                        to add a flag, or you must be given the
+                                        rights by your admin to add feature
+                                        flags.
+                                    </Alert>
                                 )}
                             </SpacedGridItem>
 

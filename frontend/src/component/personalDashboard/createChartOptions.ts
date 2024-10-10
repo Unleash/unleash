@@ -58,6 +58,7 @@ export const createPlaceholderBarChartOptions = (
             },
             grid: {
                 drawBorder: false,
+                color: theme.palette.divider,
             },
         },
     },

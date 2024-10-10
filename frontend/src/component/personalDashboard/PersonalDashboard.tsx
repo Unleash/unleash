@@ -257,6 +257,7 @@ const MainContent = styled('div')(({ theme }) => ({
 
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
+    const { trackEvent } = usePlausibleTracker();
 
     const name = user?.name;
 
@@ -304,7 +305,14 @@ export const PersonalDashboard = () => {
                     }}
                     size={'small'}
                     variant='text'
-                    onClick={() => setWelcomeDialog('open')}
+                    onClick={() => {
+                        trackEvent('personal-dashboard', {
+                            props: {
+                                eventType: 'open key concepts',
+                            },
+                        });
+                        setWelcomeDialog('open');
+                    }}
                 >
                     View key concepts
                 </ViewKeyConceptsButton>

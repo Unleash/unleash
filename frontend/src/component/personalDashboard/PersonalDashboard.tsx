@@ -433,7 +433,11 @@ export const PersonalDashboard = () => {
                                         onArchive={refetchDashboard}
                                     />
                                 ) : (
-                                    <PlaceholderFlagMetricsChart />
+                                    <PlaceholderFlagMetricsChart
+                                        label={
+                                            'Metrics for your feature flags will be shown here'
+                                        }
+                                    />
                                 )}
                             </SpacedGridItem>
                         </FlagGrid>

@@ -91,7 +91,6 @@ export const ExistingFlag: FC<{ project: string }> = ({ project }) => {
 export const ConnectSDK: FC<{ project: string }> = ({ project }) => {
     return (
         <ActionBox data-loading>
-            {' '}
             <TitleContainer>
                 <NeutralCircleContainer>2</NeutralCircleContainer>
                 Connect an SDK
@@ -104,7 +103,7 @@ export const ConnectSDK: FC<{ project: string }> = ({ project }) => {
                 </p>
             </div>
             <div>
-                <Button href={`projects/${project}`} variant='contained'>
+                <Button href={`/projects/${project}`} variant='contained'>
                     Go to project
                 </Button>
             </div>

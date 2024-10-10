@@ -1,4 +1,5 @@
 import { Button, styled, Typography } from '@mui/material';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { FC } from 'react';
 
 const TitleContainer = styled('div')(({ theme }) => ({

@@ -57,7 +57,7 @@ export const LatestProjectEvents: FC<{
                     }}
                     component='h4'
                 >
-                    Latest Events
+                    Latest events
                 </Typography>
             </TitleContainer>
             <Events>

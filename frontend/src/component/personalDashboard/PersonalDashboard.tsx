@@ -251,7 +251,7 @@ const MainContent = styled('div')(({ theme }) => ({
 
 const NoActiveFlagsInfo = styled('div')(({ theme }) => ({
     '&>*+*': {
-        marginTop: theme.spacing(2),
+        marginTop: theme.spacing(4),
     },
 }));
 

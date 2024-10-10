@@ -130,5 +130,4 @@ test('Can send order environments email', async () => {
     expect(content.html.includes(`<li>${environments[1]}</li>`)).toBe(true);
     expect(content.html.includes(customerId)).toBe(true);
     expect(content.bcc).toBe('bcc@bcc.com');
-    // expect(content.text.includes(resetLinkUrl)).toBe(true);
 });

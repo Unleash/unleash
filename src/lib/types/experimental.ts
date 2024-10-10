@@ -62,7 +62,8 @@ export type IFlagKey =
     | 'personalDashboardUI'
     | 'trackLifecycleMetrics'
     | 'purchaseAdditionalEnvironments'
-    | 'unleashAI';
+    | 'unleashAI'
+    | 'webhookDomainLogging';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -305,6 +306,10 @@ const flags: IFlags = {
     ),
     unleashAI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_UNLEASH_AI,
+        false,
+    ),
+    webhookDomainLogging: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENT_WEBHOOK_DOMAIN_LOGGING,
         false,
     ),
 };

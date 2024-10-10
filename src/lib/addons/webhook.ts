@@ -111,10 +111,12 @@ export default class Webhook extends Addon {
             });
         }
 
-        const domain = new URL(url).hostname;
-        this.logger.info(`Webhook invoked`, {
-            domain,
-        });
+        if (this.flagResolver.isEnabled('webhookDomainLogging')) {
+            const domain = new URL(url).hostname;
+            this.logger.info(`Webhook invoked`, {
+                domain,
+            });
+        }
 
         this.registerEvent({
             integrationId,

@@ -50,10 +50,14 @@ export const PlaceholderFlagMetricsChart = () => {
         return createPlaceholderBarChartOptions(theme);
     }, [theme]);
 
+    const data = useMemo(() => {
+        return placeholderData(theme);
+    }, [theme]);
+
     return (
         <ChartWrapper>
             <Bar
-                data={placeholderData(theme)}
+                data={data}
                 options={options}
                 aria-label='A placeholder bar chart with a single feature flag exposure metrics'
             />

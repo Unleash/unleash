@@ -418,10 +418,10 @@ export const PersonalDashboard = () => {
                                     </NoActiveFlagsInfo>
                                 ) : (
                                     <Alert severity='info'>
-                                        You need to create a project to be able
-                                        to add a flag, or you must be given the
-                                        rights by your admin to add feature
-                                        flags.
+                                        You need to create or join a project to
+                                        be able to add a flag, or you must be
+                                        given the rights by your admin to add
+                                        feature flags.
                                     </Alert>
                                 )}
                             </SpacedGridItem>

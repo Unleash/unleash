@@ -173,7 +173,7 @@
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
     "@babel/core": "7.25.2",
-    "@biomejs/biome": "^1.8.3",
+    "@biomejs/biome": "^1.9.3",
     "@cyclonedx/yarn-plugin-cyclonedx": "^1.0.0-rc.7",
     "@swc/core": "1.7.26",
     "@swc/jest": "0.2.36",
@@ -249,5 +249,5 @@
       "yarn biome format --write --no-errors-on-unmatched"
     ]
   },
-  "packageManager": "yarn@4.4.1"
+  "packageManager": "yarn@4.5.0"
 }

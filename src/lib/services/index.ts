@@ -153,6 +153,7 @@ import {
     createFakePersonalDashboardService,
     createPersonalDashboardService,
 } from '../features/personal-dashboard/createPersonalDashboardService';
+import { AIService } from '../features/ai/ai-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -417,6 +418,11 @@ export const createServices = (
         ? createPersonalDashboardService(db, config, stores)
         : createFakePersonalDashboardService(config);
 
+    const aiService = new AIService(config, {
+        featureToggleService: featureToggleServiceV2,
+        featureSearchService: featureSearchService,
+    });
+
     return {
         transactionalAccessService,
         accessService,
@@ -482,6 +488,7 @@ export const createServices = (
         integrationEventsService,
         onboardingService,
         personalDashboardService,
+        aiService,
     };
 };
 
@@ -533,4 +540,5 @@ export {
     IntegrationEventsService,
     OnboardingService,
     PersonalDashboardService,
+    AIService,
 };

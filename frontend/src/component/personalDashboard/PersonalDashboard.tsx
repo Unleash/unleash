@@ -34,6 +34,7 @@ import {
 } from './Grid';
 import { ContentGridNoProjects } from './ContentGridNoProjects';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 export const StyledCardTitle = styled('div')<{ lines?: number }>(
     ({ theme, lines = 2 }) => ({
@@ -57,6 +58,7 @@ const FlagListItem: FC<{
     onClick: () => void;
 }> = ({ flag, selected, onClick }) => {
     const activeFlagRef = useRef<HTMLLIElement>(null);
+    const { trackEvent } = usePlausibleTracker();
 
     useEffect(() => {
         if (activeFlagRef.current) {
@@ -67,6 +69,7 @@ const FlagListItem: FC<{
         }
     }, []);
     const IconComponent = getFeatureTypeIcons(flag.type);
+    const flagLink = `/projects/${flag.project}/features/${flag.name}`;
     return (
         <ListItem
             key={flag.name}
@@ -84,13 +87,18 @@ const FlagListItem: FC<{
                     <StyledCardTitle>{flag.name}</StyledCardTitle>
                     <IconButton
                         component={Link}
-                        href={`projects/${flag.project}/features/${flag.name}`}
+                        href={flagLink}
+                        onClick={() => {
+                            trackEvent('personal-dashboard', {
+                                props: {
+                                    eventType: `Go to flag`,
+                                },
+                            });
+                        }}
                         size='small'
                         sx={{ ml: 'auto' }}
                     >
-                        <LinkIcon
-                            titleAccess={`projects/${flag.project}/features/${flag.name}`}
-                        />
+                        <LinkIcon titleAccess={flagLink} />
                     </IconButton>
                 </ListItemBox>
             </ListItemButton>

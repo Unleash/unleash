@@ -32,6 +32,7 @@ export interface IUiConfig {
     resourceLimits: ResourceLimitsSchema;
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
+    unleashAIAvailable?: boolean;
 }
 
 export interface IProclamationToast {

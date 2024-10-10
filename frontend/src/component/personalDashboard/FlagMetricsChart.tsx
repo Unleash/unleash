@@ -176,6 +176,7 @@ export const FlagMetricsChart: FC<{
         <ChartContainer>
             <ExposureAndSelectors>
                 <StyledExposure
+                    showTimeAgo
                     project={flag.project}
                     flagName={flag.name}
                     onArchive={onArchive}

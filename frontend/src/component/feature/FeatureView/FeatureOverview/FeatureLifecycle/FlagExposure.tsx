@@ -12,8 +12,9 @@ export const FlagExposure: FC<{
     project: string;
     flagName: string;
     onArchive: () => void;
+    showTimeAgo?: boolean;
     className?: string;
-}> = ({ project, flagName, onArchive, className }) => {
+}> = ({ project, flagName, onArchive, className, showTimeAgo }) => {
     const { feature, refetchFeature } = useFeature(project, flagName);
     const lastSeenEnvironments: ILastSeenEnvironments[] =
         feature.environments?.map((env) => ({
@@ -33,6 +34,7 @@ export const FlagExposure: FC<{
                 sx={{ pt: 0, pb: 0 }}
                 featureLastSeen={feature.lastSeenAt}
                 environments={lastSeenEnvironments}
+                showTimeAgo={showTimeAgo}
             />
             <FeatureLifecycle
                 feature={feature}

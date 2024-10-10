@@ -35,7 +35,6 @@ import {
 } from './Grid';
 import { ContentGridNoProjects } from './ContentGridNoProjects';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { CreateFeatureDialog } from 'component/project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/CreateFeatureDialog';
 
 export const StyledCardTitle = styled('div')<{ lines?: number }>(
     ({ theme, lines = 2 }) => ({
@@ -399,22 +398,10 @@ export const PersonalDashboard = () => {
                                             any feature flags. Once you do, they
                                             will show up here.
                                         </Typography>
-                                        <Button
-                                            onClick={() =>
-                                                setCreateFlagDialogOpen(true)
-                                            }
-                                            variant='outlined'
-                                            color='primary'
-                                        >
-                                            Create new flag
-                                        </Button>
-                                        <CreateFeatureDialog
-                                            open={createFlagDialogOpen}
-                                            onClose={() =>
-                                                setCreateFlagDialogOpen(false)
-                                            }
-                                            projectId={activeProject}
-                                        />
+                                        <Typography>
+                                            To create a new flag, go to one of
+                                            your projects.
+                                        </Typography>
                                     </NoActiveFlagsInfo>
                                 ) : (
                                     <Alert severity='info'>

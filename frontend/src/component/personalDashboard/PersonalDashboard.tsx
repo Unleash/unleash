@@ -70,7 +70,7 @@ const FlagListItem: FC<{
         }
     }, []);
     const IconComponent = getFeatureTypeIcons(flag.type);
-    const flagLink = `/projects/${flag.project}/features/${flag.name}`;
+    const flagLink = `projects/${flag.project}/features/${flag.name}`;
     return (
         <ListItem
             key={flag.name}

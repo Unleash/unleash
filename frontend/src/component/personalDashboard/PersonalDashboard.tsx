@@ -171,6 +171,28 @@ const NoActiveFlagsInfo = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+type DashboardState =
+    | {
+          state: 'flags and projects';
+          // regular state; show everything
+          activeFlag: any;
+          activeProject: any;
+      }
+    | {
+          state: 'projects, no flags';
+          // show projects as normal, tell the user to create a flag
+          activeProject: any;
+      }
+    | {
+          state: 'no projects, no flags';
+          // no projects and no flags; show information about admins, project owners, and tell the user to join a project to create a flags
+      }
+    | {
+          state: 'flags, no projects';
+          // show info about admins + project owners, regular flags
+          activeFlag: any;
+      };
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
     const { trackEvent } = usePlausibleTracker();

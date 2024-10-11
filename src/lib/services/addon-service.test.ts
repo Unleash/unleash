@@ -55,7 +55,6 @@ function getSetup() {
                 getLogger,
                 // @ts-ignore
                 server: { unleashUrl: 'http://test' },
-                eventBus: {} as any,
             },
             tagTypeService,
             eventService,

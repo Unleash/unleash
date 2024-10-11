@@ -62,7 +62,8 @@ export type IFlagKey =
     | 'purchaseAdditionalEnvironments'
     | 'originMiddlewareRequestLogging'
     | 'unleashAI'
-    | 'webhookDomainLogging';
+    | 'webhookDomainLogging'
+    | 'addonUsageMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -305,6 +306,10 @@ const flags: IFlags = {
     ),
     webhookDomainLogging: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENT_WEBHOOK_DOMAIN_LOGGING,
+        false,
+    ),
+    addonUsageMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ADDON_USAGE_METRICS,
         false,
     ),
 };

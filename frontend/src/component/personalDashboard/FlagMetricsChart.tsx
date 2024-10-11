@@ -61,8 +61,7 @@ const PlaceholderFlagMetricsChart: React.FC<{ label: string }> = ({
 
     return (
         <>
-            {label ? <Typography id={labelId}>{label}</Typography> : null}
-
+            <Typography id={labelId}>{label}</Typography>
             <ChartWrapper>
                 <Bar data={data} options={options} aria-describedby={labelId} />
             </ChartWrapper>

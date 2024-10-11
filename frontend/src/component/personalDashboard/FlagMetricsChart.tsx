@@ -11,7 +11,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { Bar } from 'react-chartjs-2';
 import useTheme from '@mui/material/styles/useTheme';
 import { type FC, useEffect, useMemo, useState } from 'react';
-import { Box, type Theme, styled } from '@mui/material';
+import { Box, type Theme, styled, Typography } from '@mui/material';
 import { FeatureMetricsHours } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsHours/FeatureMetricsHours';
 import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
 import { useFeatureMetricsRaw } from 'hooks/api/getters/useFeatureMetricsRaw/useFeatureMetricsRaw';
@@ -27,16 +27,14 @@ import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/Feat
 
 const defaultYes = [0, 14, 28, 21, 33, 31, 31, 22, 26, 37, 31, 14, 21, 14, 0];
 
-const placeholderData = (theme: Theme, label?: string) => ({
+const placeholderData = (theme: Theme) => ({
     labels: Array.from({ length: 15 }, (_, i) => i + 1),
     datasets: [
         {
             data: defaultYes,
             backgroundColor: theme.palette.divider,
             hoverBackgroundColor: theme.palette.divider,
-            label:
-                label ||
-                'No metrics for this feature flag in the selected environment and time period',
+            label: '',
         },
     ],
 });
@@ -46,7 +44,7 @@ const ChartWrapper = styled('div')({
     flexGrow: 1,
 });
 
-export const PlaceholderFlagMetricsChart: React.FC<{ label?: string }> = ({
+const PlaceholderFlagMetricsChart: React.FC<{ label?: string }> = ({
     label,
 }) => {
     const theme = useTheme();
@@ -56,21 +54,21 @@ export const PlaceholderFlagMetricsChart: React.FC<{ label?: string }> = ({
     }, [theme]);
 
     const data = useMemo(() => {
-        return placeholderData(theme, label);
+        return placeholderData(theme);
     }, [theme]);
 
     return (
-        <ChartWrapper>
-            <Bar
-                data={data}
-                options={options}
-                aria-label='A placeholder bar chart with a single feature flag exposure metrics'
-            />
-        </ChartWrapper>
+        <>
+            {label ? <Typography>{label}</Typography> : null}
+
+            <ChartWrapper>
+                <Bar data={data} options={options} aria-label={label} />
+            </ChartWrapper>
+        </>
     );
 };
 
-export const EmptyFlagMetricsChart = () => {
+const EmptyFlagMetricsChart = () => {
     const theme = useTheme();
 
     const options = useMemo(() => {
@@ -201,6 +199,15 @@ const ExposureAndMetricsRow = styled('div')({
     justifyContent: 'space-between',
     width: '100%',
 });
+export const PlaceholderFlagMetricsChartWithWrapper: React.FC<{
+    label?: string;
+}> = (props) => {
+    return (
+        <ChartContainer>
+            <PlaceholderFlagMetricsChart {...props} />
+        </ChartContainer>
+    );
+};
 
 export const FlagMetricsChart: FC<{
     flag: { name: string; project: string };
@@ -245,7 +252,7 @@ export const FlagMetricsChart: FC<{
             {loading ? (
                 <EmptyFlagMetricsChart />
             ) : noData ? (
-                <PlaceholderFlagMetricsChart />
+                <PlaceholderFlagMetricsChart label='No metrics for this feature flag in the selected environment and time period' />
             ) : (
                 <ChartWrapper>
                     <Bar

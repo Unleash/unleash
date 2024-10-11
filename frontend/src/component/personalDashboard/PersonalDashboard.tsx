@@ -469,6 +469,6 @@ const FlagMetricsChart = React.lazy(() =>
 );
 const PlaceholderFlagMetricsChart = React.lazy(() =>
     import('./FlagMetricsChart').then((module) => ({
-        default: module.PlaceholderFlagMetricsChart,
+        default: module.PlaceholderFlagMetricsChartWithWrapper,
     })),
 );

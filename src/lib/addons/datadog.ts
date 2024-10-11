@@ -46,7 +46,7 @@ export default class DatadogAddon extends Addon {
         event: IEvent,
         parameters: IDatadogParameters,
         integrationId: number,
-    ): Promise<string> {
+    ): Promise<void> {
         let state: IntegrationEventState = 'success';
         const stateDetails: string[] = [];
 
@@ -125,7 +125,5 @@ export default class DatadogAddon extends Addon {
                 body,
             },
         });
-
-        return state;
     }
 }

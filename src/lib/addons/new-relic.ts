@@ -53,7 +53,7 @@ export default class NewRelicAddon extends Addon {
         event: IEvent,
         parameters: INewRelicParameters,
         integrationId: number,
-    ): Promise<string> {
+    ): Promise<void> {
         let state: IntegrationEventState = 'success';
         const stateDetails: string[] = [];
 
@@ -129,7 +129,5 @@ export default class NewRelicAddon extends Addon {
                 body,
             },
         });
-
-        return state;
     }
 }

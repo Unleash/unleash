@@ -35,7 +35,7 @@ export default class TeamsAddon extends Addon {
         event: IEvent,
         parameters: ITeamsParameters,
         integrationId: number,
-    ): Promise<string> {
+    ): Promise<void> {
         let state: IntegrationEventState = 'success';
         const stateDetails: string[] = [];
 
@@ -119,7 +119,5 @@ export default class TeamsAddon extends Addon {
                 body,
             },
         });
-
-        return state;
     }
 }

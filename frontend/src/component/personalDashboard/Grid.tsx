@@ -49,7 +49,7 @@ export const ProjectGrid = styled(ContentGrid)(
 export const FlagGrid = styled(ContentGrid)(
     onWideContainer({
         gridTemplateColumns: '1fr 1fr 1fr',
-        gridTemplateRows: '480px',
+        gridTemplateRows: '410px',
         display: 'grid',
         gridTemplateAreas: `
                 "flags chart chart"

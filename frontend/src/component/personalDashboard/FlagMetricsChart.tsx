@@ -43,6 +43,7 @@ const placeholderData = (theme: Theme, label?: string) => ({
 
 const ChartWrapper = styled('div')({
     width: '80%',
+    flexGrow: 1,
 });
 
 export const PlaceholderFlagMetricsChart: React.FC<{ label?: string }> = ({
@@ -185,6 +186,8 @@ const ChartContainer = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(3),
     alignItems: 'center',
+    height: '100%',
+    justifyContent: 'space-between',
 }));
 
 const StyledExposure = styled(FlagExposure)({

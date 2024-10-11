@@ -23,7 +23,7 @@ export const OrderEnvironments: FC<OrderEnvironmentsProps> = () => {
     );
     const errors = useFormErrors();
     const { orderEnvironments } = useOrderEnvironmentApi();
-    const { setToastData, setToastApiError } = useToast();
+    const { setToastApiError } = useToast();
 
     if (!isPro() || !isPurchaseAdditionalEnvironmentsEnabled) {
         return null;

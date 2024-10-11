@@ -84,8 +84,6 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
     const [costCheckboxChecked, setCostCheckboxChecked] = useState(false);
     const [environmentNames, setEnvironmentNames] = useState<string[]>(['']);
 
-    console.log({ environmentNames });
-
     const trackEnvironmentSelect = () => {
         trackEvent('order-environments', {
             props: {

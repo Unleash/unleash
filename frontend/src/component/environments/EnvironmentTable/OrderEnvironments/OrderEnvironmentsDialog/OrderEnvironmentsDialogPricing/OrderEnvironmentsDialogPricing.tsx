@@ -30,6 +30,10 @@ const StyledCardContent = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
 }));
 
+const StyledExtraText = styled('div')(({ theme }) => ({
+    paddingTop: theme.spacing(2),
+}));
+
 export const OrderEnvironmentsDialogPricing: FC<
     OrderEnvironmentsDialogPricingProps
 > = ({ pricingOptions }) => (
@@ -55,5 +59,11 @@ export const OrderEnvironmentsDialogPricing: FC<
                 </StyledCardContent>
             </StyledCard>
         ))}
+        <StyledExtraText>
+            <Typography variant='body2' color='white'>
+                With Pro it is minimum of 5 users, that means an additional
+                environment would be minimum $50 per month.
+            </Typography>
+        </StyledExtraText>
     </StyledContainer>
 );

@@ -18,9 +18,9 @@ export const OrderEnvironments: FC<OrderEnvironmentsProps> = () => {
         'purchaseAdditionalEnvironments',
     );
 
-    if (!isPro() || !isPurchaseAdditionalEnvironmentsEnabled) {
-        return null;
-    }
+    // if (!isPro() || !isPurchaseAdditionalEnvironmentsEnabled) {
+    //     return null;
+    // }
 
     const onSubmit = (environments: string[]) => {
         setPurchaseDialogOpen(false);

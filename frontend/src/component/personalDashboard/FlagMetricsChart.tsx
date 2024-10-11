@@ -42,7 +42,7 @@ const placeholderData = (theme: Theme, label?: string) => ({
 });
 
 const ChartWrapper = styled('div')({
-    width: '80%',
+    width: '100%',
     flexGrow: 1,
 });
 

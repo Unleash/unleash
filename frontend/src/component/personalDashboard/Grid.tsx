@@ -9,7 +9,6 @@ const ContentGrid = styled('article')(({ theme }) => {
     return {
         backgroundColor: theme.palette.divider,
         borderRadius: `${theme.shape.borderRadiusLarge}px`,
-        overflow: 'hidden',
         gap: `1px`,
         display: 'flex',
         flexFlow: 'column nowrap',
@@ -38,6 +37,7 @@ const onWideContainer =
 export const ProjectGrid = styled(ContentGrid)(
     onWideContainer({
         gridTemplateColumns: '1fr 1fr 1fr',
+        gridTemplateRows: '450px auto',
         display: 'grid',
         gridTemplateAreas: `
                 "projects box1 box2"
@@ -49,6 +49,7 @@ export const ProjectGrid = styled(ContentGrid)(
 export const FlagGrid = styled(ContentGrid)(
     onWideContainer({
         gridTemplateColumns: '1fr 1fr 1fr',
+        gridTemplateRows: '450px',
         display: 'grid',
         gridTemplateAreas: `
                 "flags chart chart"
@@ -60,6 +61,8 @@ export const GridItem = styled('div', {
     shouldForwardProp: (prop) => !['gridArea', 'sx'].includes(prop.toString()),
 })<{ gridArea: string }>(({ theme, gridArea }) => ({
     padding: theme.spacing(2, 4),
+    maxHeight: '100%',
+    overflowY: 'auto',
     gridArea,
 }));
 
@@ -67,6 +70,8 @@ export const SpacedGridItem = styled('div', {
     shouldForwardProp: (prop) => prop !== 'gridArea',
 })<{ gridArea: string }>(({ theme, gridArea }) => ({
     padding: theme.spacing(3, 4),
+    maxHeight: '100%',
+    overflowY: 'auto',
     gridArea,
 }));
 

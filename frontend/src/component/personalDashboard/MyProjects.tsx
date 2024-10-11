@@ -2,7 +2,6 @@ import {
     Box,
     IconButton,
     Link,
-    List,
     ListItem,
     ListItemButton,
     Typography,
@@ -28,6 +27,7 @@ import {
     ProjectGrid,
     GridItem,
     SpacedGridItem,
+    StyledList,
 } from './Grid';
 import { ContactAdmins, DataError } from './ProjectDetailsError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -199,10 +199,7 @@ export const MyProjects = forwardRef<
             <ContentGridContainer ref={ref}>
                 <ProjectGrid>
                     <SpacedGridItem gridArea='projects'>
-                        <List
-                            disablePadding={true}
-                            sx={{ maxHeight: '400px', overflow: 'auto' }}
-                        >
+                        <StyledList>
                             {projects.map((project) => (
                                 <ProjectListItem
                                     key={project.id}
@@ -211,7 +208,7 @@ export const MyProjects = forwardRef<
                                     onClick={() => setActiveProject(project.id)}
                                 />
                             ))}
-                        </List>
+                        </StyledList>
                     </SpacedGridItem>
                     <SpacedGridItem gridArea='box1'>
                         {box1Content()}

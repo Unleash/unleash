@@ -59,7 +59,7 @@ export const CreateFlag: FC<{ project: string }> = ({ project }) => {
             </div>
             <div>
                 <Button
-                    href={`/projects/${project}`}
+                    href={`projects/${project}`}
                     onClick={() => {
                         trackEvent('personal-dashboard', {
                             props: {
@@ -115,7 +115,7 @@ export const ConnectSDK: FC<{ project: string }> = ({ project }) => {
                 </p>
             </div>
             <div>
-                <Button href={`/projects/${project}`} variant='contained'>
+                <Button href={`projects/${project}`} variant='contained'>
                     Go to project
                 </Button>
             </div>

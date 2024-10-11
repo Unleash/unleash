@@ -476,7 +476,9 @@ export class EmailService {
             const email = {
                 from: this.sender,
                 to: userEmail,
-                bcc: process.env.ORDER_ENVIRONMENTS_BCC || 'ivar@getunleash.io',
+                bcc:
+                    process.env.ORDER_ENVIRONMENTS_BCC ||
+                    'pro-sales@getunleash.io',
                 subject: ORDER_ENVIRONMENTS_SUBJECT,
                 html: bodyHtml,
                 text: bodyText,

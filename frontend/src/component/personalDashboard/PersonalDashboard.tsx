@@ -7,7 +7,6 @@ import {
     Button,
     IconButton,
     Link,
-    List,
     ListItem,
     ListItemButton,
     styled,
@@ -32,6 +31,7 @@ import {
     ListItemBox,
     listItemStyle,
     SpacedGridItem,
+    StyledList,
 } from './Grid';
 import { ContentGridNoProjects } from './ContentGridNoProjects';
 import ExpandMore from '@mui/icons-material/ExpandMore';
@@ -299,9 +299,6 @@ export const PersonalDashboard = () => {
         !detailsError && activeProjectStage === 'loading',
     );
 
-    const [createFlagDialogOpen, setCreateFlagDialogOpen] =
-        React.useState(false);
-
     return (
         <MainContent>
             <WelcomeSection>
@@ -386,7 +383,7 @@ export const PersonalDashboard = () => {
                             <SpacedGridItem gridArea='flags'>
                                 {personalDashboard &&
                                 personalDashboard.flags.length > 0 ? (
-                                    <List
+                                    <StyledList
                                         disablePadding={true}
                                         sx={{
                                             height: '100%',
@@ -406,7 +403,7 @@ export const PersonalDashboard = () => {
                                                 }
                                             />
                                         ))}
-                                    </List>
+                                    </StyledList>
                                 ) : activeProject ? (
                                     <NoActiveFlagsInfo>
                                         <Typography>

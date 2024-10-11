@@ -200,7 +200,7 @@ const ExposureAndMetricsRow = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
     flexFlow: 'row wrap',
     width: '100%',
-    gap: theme.spacing(1),
+    gap: theme.spacing(4),
 }));
 
 export const PlaceholderFlagMetricsChartWithWrapper: React.FC<{

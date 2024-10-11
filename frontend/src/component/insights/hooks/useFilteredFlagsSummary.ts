@@ -70,7 +70,7 @@ export const useFilteredFlagsSummary = (
             averageUsers,
             averageHealth: sum.total
                 ? ((sum.active / (sum.total || 1)) * 100).toFixed(0)
-                : 100,
+                : '100',
             medianTimeToProduction,
         };
     }, [filteredProjectFlagTrends]);

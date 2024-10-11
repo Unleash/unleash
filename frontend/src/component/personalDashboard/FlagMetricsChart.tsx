@@ -176,7 +176,8 @@ const EnvironmentSelect: FC<{
 
 const MetricsSelectors = styled(Box)(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
+    flexFlow: 'row wrap',
     gap: theme.spacing(2),
 }));
 
@@ -194,14 +195,16 @@ const StyledExposure = styled(FlagExposure)({
     justifySelf: 'start',
 });
 
-const ExposureAndMetricsRow = styled('div')({
+const ExposureAndMetricsRow = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexFlow: 'row',
     justifyContent: 'space-between',
+    flexFlow: 'row wrap',
     width: '100%',
-});
+    gap: theme.spacing(1),
+}));
+
 export const PlaceholderFlagMetricsChartWithWrapper: React.FC<{
-    label?: string;
+    label: string;
 }> = (props) => {
     return (
         <ChartContainer>

@@ -12,8 +12,7 @@ export const useOrderEnvironmentApi = () => {
             body: JSON.stringify(payload),
         });
 
-        const res = await makeRequest(req.caller, req.id);
-        return res.json();
+        await makeRequest(req.caller, req.id);
     };
 
     return {

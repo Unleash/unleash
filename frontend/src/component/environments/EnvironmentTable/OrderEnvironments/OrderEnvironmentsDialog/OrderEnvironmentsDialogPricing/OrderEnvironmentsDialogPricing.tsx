@@ -61,8 +61,8 @@ export const OrderEnvironmentsDialogPricing: FC<
         ))}
         <StyledExtraText>
             <Typography variant='body2' color='white'>
-                With Pro, there is a minimum of 5 users, meaning
-                an additional environment will cost at least $50 per month.
+                With Pro, there is a minimum of 5 users, meaning an additional
+                environment will cost at least $50 per month.
             </Typography>
         </StyledExtraText>
     </StyledContainer>

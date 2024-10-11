@@ -145,8 +145,6 @@ export default class SlackAddon extends Addon {
                 message: `${formattedMessage}${text.length < formattedMessage.length ? ` (trimmed to ${maxLength} characters)` : ''}`,
             },
         });
-
-        return state;
     }
 
     getUniqueArray<T>(arr: T[]): T[] {

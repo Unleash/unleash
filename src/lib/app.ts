@@ -31,6 +31,7 @@ import NotFoundError from './error/notfound-error';
 import { bearerTokenMiddleware } from './middleware/bearer-token-middleware';
 import { auditAccessMiddleware } from './middleware';
 import { originMiddleware } from './middleware/origin-middleware';
+import { unlessHasHeader } from './middleware/unless-has-header-middleware';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -90,7 +91,7 @@ export default async function getApp(
         ),
     );
     if (unleashSession) {
-        app.use(unleashSession);
+        app.use(unlessHasHeader('authorization', unleashSession));
     }
     app.use(secureHeaders(config));
     app.use(express.urlencoded({ extended: true }));

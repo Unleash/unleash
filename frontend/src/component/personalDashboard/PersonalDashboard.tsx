@@ -36,6 +36,8 @@ import {
 import { ContentGridNoProjects } from './ContentGridNoProjects';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
+import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 
 export const StyledCardTitle = styled('div')<{ lines?: number }>(
     ({ theme, lines = 2 }) => ({
@@ -265,6 +267,8 @@ const NoActiveFlagsInfo = styled('div')(({ theme }) => ({
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
     const { trackEvent } = usePlausibleTracker();
+    const { setSplashSeen } = useSplashApi();
+    const { splash } = useAuthSplash();
 
     const name = user?.name;
 
@@ -285,7 +289,10 @@ export const PersonalDashboard = () => {
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'open' | 'closed'
-    >('welcome-dialog:v1', 'open');
+    >(
+        'welcome-dialog:v1',
+        splash?.personalDashboardKeyConcepts ? 'closed' : 'open',
+    );
 
     const { personalDashboardProjectDetails, error: detailsError } =
         usePersonalDashboardProjectDetails(activeProject);
@@ -298,9 +305,6 @@ export const PersonalDashboard = () => {
     const projectStageRef = useLoading(
         !detailsError && activeProjectStage === 'loading',
     );
-
-    const [createFlagDialogOpen, setCreateFlagDialogOpen] =
-        React.useState(false);
 
     return (
         <MainContent>
@@ -449,7 +453,10 @@ export const PersonalDashboard = () => {
             </SectionAccordion>
             <WelcomeDialog
                 open={welcomeDialog === 'open'}
-                onClose={() => setWelcomeDialog('closed')}
+                onClose={() => {
+                    setSplashSeen('personalDashboardKeyConcepts');
+                    setWelcomeDialog('closed');
+                }}
             />
         </MainContent>
     );

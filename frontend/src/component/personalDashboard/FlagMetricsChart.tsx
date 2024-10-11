@@ -42,7 +42,7 @@ const placeholderData = (theme: Theme, label?: string) => ({
 });
 
 const ChartWrapper = styled('div')({
-    width: '90%',
+    width: '80%',
 });
 
 export const PlaceholderFlagMetricsChart: React.FC<{ label?: string }> = ({

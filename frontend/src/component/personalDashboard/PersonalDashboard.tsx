@@ -289,7 +289,10 @@ export const PersonalDashboard = () => {
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'open' | 'closed'
-    >('welcome-dialog:v1', splash?.personalDashboardKeyConcepts ? 'closed' : 'open');
+    >(
+        'welcome-dialog:v1',
+        splash?.personalDashboardKeyConcepts ? 'closed' : 'open'
+    );
 
     const { personalDashboardProjectDetails, error: detailsError } =
         usePersonalDashboardProjectDetails(activeProject);

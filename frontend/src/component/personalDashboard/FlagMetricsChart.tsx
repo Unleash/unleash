@@ -44,7 +44,7 @@ const ChartWrapper = styled('div')({
     flexGrow: 1,
 });
 
-const PlaceholderFlagMetricsChart: React.FC<{ label?: string }> = ({
+const PlaceholderFlagMetricsChart: React.FC<{ label: string }> = ({
     label,
 }) => {
     const theme = useTheme();
@@ -57,12 +57,14 @@ const PlaceholderFlagMetricsChart: React.FC<{ label?: string }> = ({
         return placeholderData(theme);
     }, [theme]);
 
+    const labelId = 'placeholder-chart-label';
+
     return (
         <>
-            {label ? <Typography>{label}</Typography> : null}
+            {label ? <Typography id={labelId}>{label}</Typography> : null}
 
             <ChartWrapper>
-                <Bar data={data} options={options} aria-label={label} />
+                <Bar data={data} options={options} aria-describedby={labelId} />
             </ChartWrapper>
         </>
     );

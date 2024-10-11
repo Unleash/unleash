@@ -161,7 +161,7 @@ describe('useFilteredFlagTrends', () => {
             stale: 0,
             potentiallyStale: 0,
             averageUsers: 0,
-            averageHealth: undefined,
+            averageHealth: 100,
             medianTimeToProduction: undefined,
         });
     });
@@ -214,7 +214,7 @@ describe('useFilteredFlagTrends', () => {
             stale: 0,
             potentiallyStale: 0,
             averageUsers: 0,
-            averageHealth: undefined,
+            averageHealth: 100,
             medianTimeToProduction: 5,
         });
     });

@@ -389,7 +389,7 @@ export const PersonalDashboard = () => {
                                     <List
                                         disablePadding={true}
                                         sx={{
-                                            maxHeight: '400px',
+                                            height: '100%',
                                             overflow: 'auto',
                                         }}
                                     >

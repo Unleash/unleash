@@ -201,7 +201,7 @@ export const MyProjects = forwardRef<
                     <SpacedGridItem gridArea='projects'>
                         <List
                             disablePadding={true}
-                            sx={{ maxHeight: '400px', overflow: 'auto' }}
+                            sx={{ height: '100%', overflow: 'auto' }}
                         >
                             {projects.map((project) => (
                                 <ProjectListItem

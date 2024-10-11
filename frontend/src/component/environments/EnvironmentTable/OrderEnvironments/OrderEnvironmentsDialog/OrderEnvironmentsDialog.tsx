@@ -11,12 +11,14 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { OrderEnvironmentsDialogPricing } from './OrderEnvironmentsDialogPricing/OrderEnvironmentsDialogPricing';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
+import type { IFormErrors } from 'hooks/useFormErrors';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 type OrderEnvironmentsDialogProps = {
     open: boolean;
     onClose: () => void;
     onSubmit: (environments: string[]) => void;
+    errors?: IFormErrors;
 };
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -75,11 +77,14 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
     open,
     onClose,
     onSubmit,
+    errors,
 }) => {
     const { trackEvent } = usePlausibleTracker();
     const [selectedOption, setSelectedOption] = useState(OPTIONS[0]);
     const [costCheckboxChecked, setCostCheckboxChecked] = useState(false);
-    const [environmentNames, setEnvironmentNames] = useState<string[]>([]);
+    const [environmentNames, setEnvironmentNames] = useState<string[]>(['']);
+
+    console.log({ environmentNames });
 
     const trackEnvironmentSelect = () => {
         trackEvent('order-environments', {
@@ -143,7 +148,10 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                                 const value = Number.parseInt(option, 10);
                                 setSelectedOption(value);
                                 setEnvironmentNames((names) =>
-                                    names.slice(0, value),
+                                    [...names, ...Array(value).fill('')].slice(
+                                        0,
+                                        value,
+                                    ),
                                 );
                                 trackEnvironmentSelect();
                             }}
@@ -154,20 +162,28 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                             How would you like the environment
                             {selectedOption > 1 ? 's' : ''} to be named?
                         </Typography>
-                        {[...Array(selectedOption)].map((_, i) => (
-                            <Input
-                                key={i}
-                                label={`Environment ${i + 1} name`}
-                                value={environmentNames[i]}
-                                onChange={(event) => {
-                                    setEnvironmentNames((names) => {
-                                        const newValues = [...names];
-                                        newValues[i] = event.target.value;
-                                        return newValues;
-                                    });
-                                }}
-                            />
-                        ))}
+                        {[...Array(selectedOption)].map((_, i) => {
+                            const error = errors?.getFormError(
+                                `environment-${i}`,
+                            );
+
+                            return (
+                                <Input
+                                    key={i}
+                                    label={`Environment ${i + 1} name`}
+                                    value={environmentNames[i]}
+                                    onChange={(event) => {
+                                        setEnvironmentNames((names) => {
+                                            const newValues = [...names];
+                                            newValues[i] = event.target.value;
+                                            return newValues;
+                                        });
+                                    }}
+                                    error={Boolean(error)}
+                                    errorText={error}
+                                />
+                            );
+                        })}
                     </StyledEnvironmentNameInputs>
                     <Box>
                         <StyledCheckbox

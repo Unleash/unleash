@@ -291,7 +291,7 @@ export const PersonalDashboard = () => {
         'open' | 'closed'
     >(
         'welcome-dialog:v1',
-        splash?.personalDashboardKeyConcepts ? 'closed' : 'open'
+        splash?.personalDashboardKeyConcepts ? 'closed' : 'open',
     );
 
     const { personalDashboardProjectDetails, error: detailsError } =

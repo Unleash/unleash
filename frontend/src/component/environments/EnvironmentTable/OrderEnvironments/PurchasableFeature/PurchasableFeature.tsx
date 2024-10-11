@@ -3,7 +3,7 @@ import { Box, Button, styled, Typography } from '@mui/material';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
-import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 type PurchasableFeatureProps = {
     title: ReactNode;

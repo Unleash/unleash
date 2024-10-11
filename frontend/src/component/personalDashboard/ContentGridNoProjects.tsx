@@ -108,12 +108,6 @@ export const ContentGridNoProjects: React.FC<Props> = ({ owners, admins }) => {
     return (
         <ContentGridContainer>
             <ProjectGrid>
-                <GridItem gridArea='header'>
-                    <Typography variant='h3'>My projects</Typography>
-                </GridItem>
-                <GridItem gridArea='onboarding'>
-                    <Typography>Potential next steps</Typography>
-                </GridItem>
                 <GridItem gridArea='projects'>
                     <GridContent>
                         <Typography>

@@ -711,6 +711,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ),
     };
 
+    const openAIAPIKey = process.env.OPENAI_API_KEY;
+
     return {
         db,
         session,
@@ -749,6 +751,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         rateLimiting,
         feedbackUriPath,
         dailyMetricsStorageDays,
+        openAIAPIKey,
     };
 }
 

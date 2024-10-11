@@ -94,6 +94,7 @@ exports[`should create default config 1`] = `
     "frontendMetricsMaxPerMinute": 6000,
     "frontendRegisterMaxPerMinute": 6000,
   },
+  "openAIAPIKey": undefined,
   "preHook": undefined,
   "preRouterHook": undefined,
   "prometheusApi": undefined,

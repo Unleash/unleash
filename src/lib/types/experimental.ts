@@ -53,14 +53,16 @@ export type IFlagKey =
     | 'navigationSidebar'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
-    | 'originMiddleware'
     | 'onboardingMetrics'
     | 'onboardingUI'
     | 'projectRoleAssignment'
     | 'eventTimeline'
     | 'personalDashboardUI'
     | 'trackLifecycleMetrics'
-    | 'purchaseAdditionalEnvironments';
+    | 'purchaseAdditionalEnvironments'
+    | 'originMiddlewareRequestLogging'
+    | 'unleashAI'
+    | 'webhookDomainLogging';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -265,10 +267,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
         false,
     ),
-    originMiddleware: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ORIGIN_MIDDLEWARE,
-        false,
-    ),
     onboardingMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_METRICS,
         false,
@@ -295,6 +293,18 @@ const flags: IFlags = {
     ),
     purchaseAdditionalEnvironments: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PURCHASE_ADDITIONAL_ENVIRONMENTS,
+        false,
+    ),
+    originMiddlewareRequestLogging: parseEnvVarBoolean(
+        process.env.UNLEASH_ORIGIN_MIDDLEWARE_REQUEST_LOGGING,
+        false,
+    ),
+    unleashAI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_UNLEASH_AI,
+        false,
+    ),
+    webhookDomainLogging: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENT_WEBHOOK_DOMAIN_LOGGING,
         false,
     ),
 };

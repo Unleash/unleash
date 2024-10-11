@@ -1,4 +1,4 @@
-import { Box, styled } from '@mui/material';
+import { Box, List, styled } from '@mui/material';
 import type { Theme } from '@mui/material/styles/createTheme';
 
 export const ContentGridContainer = styled('div')({
@@ -49,7 +49,7 @@ export const ProjectGrid = styled(ContentGrid)(
 export const FlagGrid = styled(ContentGrid)(
     onWideContainer({
         gridTemplateColumns: '1fr 1fr 1fr',
-        gridTemplateRows: '450px',
+        gridTemplateRows: '410px',
         display: 'grid',
         gridTemplateAreas: `
                 "flags chart chart"
@@ -104,3 +104,12 @@ export const listItemStyle = (theme: Theme) => ({
     alignItems: 'flex-start',
     gap: theme.spacing(1),
 });
+
+export const StyledList = styled(List)(({ theme }) => ({
+    overflowY: 'auto',
+    maxHeight: '400px',
+
+    ...onWideContainer({
+        maxHeight: '100%',
+    })({ theme }),
+}));

@@ -40,6 +40,7 @@ export const createPlaceholderBarChartOptions = (
         },
     },
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
         x: {
             stacked: true,
@@ -78,7 +79,7 @@ export const createBarChartOptions = (
     hoursBack: number,
     locationSettings: ILocationSettings,
 ): ChartOptions<'bar'> => {
-    const { responsive, elements, interaction, scales } =
+    const { responsive, elements, interaction, scales, maintainAspectRatio } =
         createPlaceholderBarChartOptions(theme);
     return {
         plugins: {
@@ -153,6 +154,7 @@ export const createBarChartOptions = (
             },
         },
         responsive,
+        maintainAspectRatio,
         scales: {
             x: {
                 ...(scales ? scales.x : {}),

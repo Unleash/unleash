@@ -41,7 +41,7 @@ export default class SlackAddon extends Addon {
         event: IEvent,
         parameters: ISlackAddonParameters,
         integrationId: number,
-    ): Promise<string> {
+    ): Promise<void> {
         let state: IntegrationEventState = 'success';
         const stateDetails: string[] = [];
 

@@ -37,7 +37,7 @@ const onWideContainer =
 export const ProjectGrid = styled(ContentGrid)(
     onWideContainer({
         gridTemplateColumns: '1fr 1fr 1fr',
-        gridTemplateRows: '450px auto',
+        gridTemplateRows: '410px auto',
         display: 'grid',
         gridTemplateAreas: `
                 "projects box1 box2"

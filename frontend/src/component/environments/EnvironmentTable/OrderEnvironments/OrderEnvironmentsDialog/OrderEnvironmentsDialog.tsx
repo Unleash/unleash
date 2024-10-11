@@ -11,6 +11,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { OrderEnvironmentsDialogPricing } from './OrderEnvironmentsDialogPricing/OrderEnvironmentsDialogPricing';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import Input from 'component/common/Input/Input';
+import { usePlausibleTracker } from '../../../../../hooks/usePlausibleTracker';
 
 type OrderEnvironmentsDialogProps = {
     open: boolean;
@@ -75,9 +76,18 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
     onClose,
     onSubmit,
 }) => {
+    const { trackEvent } = usePlausibleTracker();
     const [selectedOption, setSelectedOption] = useState(OPTIONS[0]);
     const [costCheckboxChecked, setCostCheckboxChecked] = useState(false);
     const [environmentNames, setEnvironmentNames] = useState<string[]>([]);
+
+    const trackEnvironmentSelect = () => {
+        trackEvent('order-environments', {
+            props: {
+                eventType: 'selected environment count',
+            },
+        });
+    };
 
     return (
         <StyledDialog open={open} title=''>
@@ -135,6 +145,7 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                                 setEnvironmentNames((names) =>
                                     names.slice(0, value),
                                 );
+                                trackEnvironmentSelect();
                             }}
                         />
                     </Box>

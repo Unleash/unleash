@@ -69,6 +69,7 @@ export default class SlackAppAddon extends Addon {
                     event,
                     noAccessTokenMessage,
                 );
+                return;
             }
 
             const taggedChannels = this.findTaggedChannels(event);
@@ -84,6 +85,7 @@ export default class SlackAppAddon extends Addon {
                     event,
                     noSlackChannelsMessage,
                 );
+                return;
             }
 
             this.logger.debug(

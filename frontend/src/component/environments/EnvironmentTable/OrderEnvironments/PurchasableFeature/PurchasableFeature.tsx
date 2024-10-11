@@ -3,6 +3,7 @@ import { Box, Button, styled, Typography } from '@mui/material';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 type PurchasableFeatureProps = {
     title: ReactNode;
@@ -50,6 +51,17 @@ export const PurchasableFeature: FC<PurchasableFeatureProps> = ({
     description,
     onClick,
 }) => {
+    const { trackEvent } = usePlausibleTracker();
+
+    const onViewPricingClick = () => {
+        onClick();
+        trackEvent('order-environments', {
+            props: {
+                eventType: 'view pricing clicked',
+            },
+        });
+    };
+
     return (
         <StyledContainer>
             <StyledMessage>
@@ -62,7 +74,7 @@ export const PurchasableFeature: FC<PurchasableFeatureProps> = ({
                 </Box>
             </StyledMessage>
             <StyledButtonContainer>
-                <Button variant='contained' onClick={onClick}>
+                <Button variant='contained' onClick={onViewPricingClick}>
                     View pricing
                 </Button>
             </StyledButtonContainer>

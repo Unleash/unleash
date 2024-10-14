@@ -35,7 +35,11 @@ describe('OrderEnvironmentsDialog Component', () => {
             screen.getAllByLabelText(/environment \d+ name/i);
         expect(environmentInputs).toHaveLength(1);
 
-        const selectButton = screen.getByRole('combobox');
+        const selectButton = screen.getByLabelText(/select number of/i);
+        // const selectButton = screen.getByRole('combobox', {
+
+        //     name: /select number of/i,
+        // });
         fireEvent.mouseDown(selectButton);
 
         const option2 = screen.getByRole('option', { name: '2 environments' });

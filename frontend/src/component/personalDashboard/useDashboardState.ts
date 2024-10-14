@@ -57,9 +57,9 @@ export const useDashboardState = (
             updateState(updates);
         }
     }, [
-        JSON.stringify(projects, null, 2),
-        JSON.stringify(flags, null, 2),
-        JSON.stringify(state, null, 2),
+        JSON.stringify(projects),
+        JSON.stringify(flags),
+        JSON.stringify(state),
     ]);
 
     const { activeFlag, activeProject } = state;

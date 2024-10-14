@@ -235,7 +235,7 @@ export const FlagMetricsChart: FC<{
         return (
             <ChartContainer>
                 <PlaceholderFlagMetricsChart
-                    label={`Couldn't fetch metrics for the current flag. This may be a transient error or there may be something with your flag name ("${flag.name}") that's causing issues.`}
+                    label={`Couldn't fetch metrics for the current flag. This may be a transient error, or your flag name ("${flag.name}") may be causing issues.`}
                 />
             </ChartContainer>
         );

@@ -50,7 +50,6 @@ process.nextTick(async () => {
                         manyStrategiesPagination: true,
                         enableLegacyVariants: false,
                         extendedMetrics: true,
-                        addonUsageMetrics: true,
                         onboardingMetrics: true,
                         onboardingUI: true,
                         personalDashboardUI: true,
@@ -58,6 +57,7 @@ process.nextTick(async () => {
                         originMiddlewareRequestLogging: true,
                         unleashAI: true,
                         webhookDomainLogging: true,
+                        addonUsageMetrics: true,
                     },
                 },
                 authentication: {

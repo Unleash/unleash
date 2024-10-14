@@ -28,7 +28,7 @@ import {
     SpacedGridItem,
     StyledList,
     StyledCardTitle,
-} from './Grid';
+} from './SharedComponents';
 import { ContactAdmins, DataError } from './ProjectDetailsError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 

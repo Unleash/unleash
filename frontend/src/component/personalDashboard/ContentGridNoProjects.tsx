@@ -9,7 +9,7 @@ import {
     EmptyGridItem,
     ProjectGrid,
     GridItem,
-} from './Grid';
+} from './SharedComponents';
 
 const PaddedEmptyGridItem = styled(EmptyGridItem)(({ theme }) => ({
     padding: theme.spacing(4),

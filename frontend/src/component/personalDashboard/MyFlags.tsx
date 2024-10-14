@@ -7,7 +7,7 @@ import {
     StyledCardTitle,
     StyledList,
     listItemStyle,
-} from './Grid';
+} from './SharedComponents';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import {

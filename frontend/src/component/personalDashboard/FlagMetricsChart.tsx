@@ -241,7 +241,7 @@ export const FlagMetricsChart: FC<{
         );
     }
 
-    const noData = data?.datasets[0].data.length === 0;
+    const noData = data.datasets[0].data.length === 0;
 
     return (
         <ChartContainer>

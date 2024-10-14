@@ -5,6 +5,7 @@ import { UserAvatar } from '../common/UserAvatar/UserAvatar';
 import { Typography, styled } from '@mui/material';
 import { formatDateYMDHM } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
+import { ActionBox } from './ActionBox';
 
 const Events = styled('ul')(({ theme }) => ({
     padding: 0,
@@ -33,13 +34,6 @@ const TitleContainer = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
-const ActionBox = styled('article')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    display: 'flex',
-    gap: theme.spacing(3),
-    flexDirection: 'column',
-}));
-
 const Timestamp = styled('time')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.typography.fontSize,
@@ -55,8 +49,8 @@ export const LatestProjectEvents: FC<{
 }> = ({ latestEvents }) => {
     const { locationSettings } = useLocationSettings();
     return (
-        <ActionBox>
-            <TitleContainer>
+        <ActionBox
+            title={
                 <Typography
                     sx={{
                         fontWeight: 'bold',
@@ -65,7 +59,8 @@ export const LatestProjectEvents: FC<{
                 >
                     Latest events
                 </Typography>
-            </TitleContainer>
+            }
+        >
             <Events>
                 {latestEvents.map((event) => {
                     return (

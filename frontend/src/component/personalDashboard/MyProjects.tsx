@@ -1,7 +1,6 @@
 import {
     Box,
     IconButton,
-    Link,
     ListItem,
     ListItemButton,
     Typography,
@@ -16,6 +15,7 @@ import { forwardRef, useEffect, useRef, type FC } from 'react';
 import type {
     PersonalDashboardProjectDetailsSchema,
     PersonalDashboardSchemaAdminsItem,
+    PersonalDashboardSchemaProjectOwnersItem,
     PersonalDashboardSchemaProjectsItem,
 } from '../../openapi';
 import {
@@ -31,6 +31,8 @@ import {
 } from './SharedComponents';
 import { ContactAdmins, DataError } from './ProjectDetailsError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { Link } from 'react-router-dom';
+import { ActionBox } from './ActionBox';
 
 const ActiveProjectDetails: FC<{
     project: PersonalDashboardSchemaProjectsItem;
@@ -98,7 +100,7 @@ const ProjectListItem: FC<{
                     <StyledCardTitle>{project.name}</StyledCardTitle>
                     <IconButton
                         component={Link}
-                        href={`projects/${project.id}`}
+                        to={`/projects/${project.id}`}
                         size='small'
                         sx={{ ml: 'auto' }}
                         onClick={() => {
@@ -118,6 +120,8 @@ const ProjectListItem: FC<{
     );
 };
 
+type MyProjectsState = 'no projects' | 'projects' | 'projects with error';
+
 export const MyProjects = forwardRef<
     HTMLDivElement,
     {
@@ -126,6 +130,7 @@ export const MyProjects = forwardRef<
         activeProject: string;
         setActiveProject: (project: string) => void;
         admins: PersonalDashboardSchemaAdminsItem[];
+        owners: PersonalDashboardSchemaProjectOwnersItem[];
     }
 >(
     (
@@ -138,6 +143,12 @@ export const MyProjects = forwardRef<
         },
         ref,
     ) => {
+        const state: MyProjectsState = projects.length
+            ? personalDashboardProjectDetails
+                ? 'projects'
+                : 'projects with error'
+            : 'no projects';
+
         const activeProjectStage =
             personalDashboardProjectDetails?.onboardingStatus.status ??
             'loading';
@@ -145,10 +156,11 @@ export const MyProjects = forwardRef<
             activeProjectStage === 'onboarding-started' ||
             activeProjectStage === 'first-flag-created';
 
-        const error = personalDashboardProjectDetails === undefined;
-
         const box1Content = () => {
-            if (error) {
+            if (state === 'no projects') {
+            }
+
+            if (state === 'projects with error') {
                 return <DataError project={activeProject} />;
             }
 
@@ -173,7 +185,7 @@ export const MyProjects = forwardRef<
         };
 
         const box2Content = () => {
-            if (error) {
+            if (state === 'projects with error') {
                 return <ContactAdmins admins={admins} />;
             }
 
@@ -195,20 +207,45 @@ export const MyProjects = forwardRef<
             }
         };
 
+        const projectListContent = () => {
+            if (state === 'no projects') {
+                return (
+                    <ActionBox>
+                        <Typography>
+                            You don't currently have access to any projects in
+                            the system.
+                        </Typography>
+                        <Typography>
+                            To get started, you can{' '}
+                            <Link to='/projects?create=true'>
+                                create your own project
+                            </Link>
+                            . Alternatively, you can review the available
+                            projects in the system and ask the owner for access.
+                        </Typography>
+                    </ActionBox>
+                );
+            }
+
+            return (
+                <StyledList>
+                    {projects.map((project) => (
+                        <ProjectListItem
+                            key={project.id}
+                            project={project}
+                            selected={project.id === activeProject}
+                            onClick={() => setActiveProject(project.id)}
+                        />
+                    ))}
+                </StyledList>
+            );
+        };
+
         return (
             <ContentGridContainer ref={ref}>
                 <ProjectGrid>
                     <SpacedGridItem gridArea='projects'>
-                        <StyledList>
-                            {projects.map((project) => (
-                                <ProjectListItem
-                                    key={project.id}
-                                    project={project}
-                                    selected={project.id === activeProject}
-                                    onClick={() => setActiveProject(project.id)}
-                                />
-                            ))}
-                        </StyledList>
+                        {projectListContent()}
                     </SpacedGridItem>
                     <SpacedGridItem gridArea='box1'>
                         {box1Content()}

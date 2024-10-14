@@ -53,7 +53,6 @@ export type IFlagKey =
     | 'navigationSidebar'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
-    | 'addonUsageMetrics'
     | 'onboardingMetrics'
     | 'onboardingUI'
     | 'projectRoleAssignment'
@@ -63,7 +62,8 @@ export type IFlagKey =
     | 'purchaseAdditionalEnvironments'
     | 'originMiddlewareRequestLogging'
     | 'unleashAI'
-    | 'webhookDomainLogging';
+    | 'webhookDomainLogging'
+    | 'addonUsageMetrics';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -268,10 +268,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
         false,
     ),
-    addonUsageMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADDON_USAGE_METRICS,
-        false,
-    ),
     onboardingMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_METRICS,
         false,
@@ -310,6 +306,10 @@ const flags: IFlags = {
     ),
     webhookDomainLogging: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENT_WEBHOOK_DOMAIN_LOGGING,
+        false,
+    ),
+    addonUsageMetrics: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ADDON_USAGE_METRICS,
         false,
     ),
 };

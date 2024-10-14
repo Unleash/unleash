@@ -5,7 +5,7 @@ Hello,
 An order for additional environments has been successfully submitted by {{ userEmail }} for customer ID {{ customerId }}. Below are the details of the environments requested:
 
 {{#environments}}
-    - {{.}}
+    - Name: {{name}}, Type: {{type}}
 {{/environments}}
 
 Please note that it may take up to 24 hours for these changes to come into effect.

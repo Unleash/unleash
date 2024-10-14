@@ -13,10 +13,12 @@ const StyledAIChatInputContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(1),
+    paddingTop: 0,
 }));
 
 const StyledAIChatInput = styled(TextField)(({ theme }) => ({
-    margin: theme.spacing(0.5),
+    margin: theme.spacing(1),
+    marginTop: 0,
 }));
 
 const StyledInputAdornment = styled(InputAdornment)({

@@ -57,6 +57,7 @@ const StyledChatContent = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     padding: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
     width: '30vw',
     height: '50vh',
     overflow: 'auto',

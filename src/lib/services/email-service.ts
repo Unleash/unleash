@@ -63,6 +63,11 @@ export type ChangeRequestScheduleConflictData =
           environment: string;
       };
 
+export type OrderEnvironmentData = {
+    name: string;
+    type: string;
+};
+
 export class EmailService {
     private logger: Logger;
     private config: IUnleashConfig;
@@ -453,16 +458,18 @@ export class EmailService {
     async sendOrderEnvironmentEmail(
         userEmail: string,
         customerId: string,
-        environmentNames: string[],
+        environments: OrderEnvironmentData[],
     ): Promise<IEmailEnvelope> {
         if (this.configured()) {
             const context = {
                 userEmail,
                 customerId,
-                environments: environmentNames.map((name) =>
-                    this.stripSpecialCharacters(name),
-                ),
+                environments: environments.map((data) => ({
+                    name: this.stripSpecialCharacters(data.name),
+                    type: this.stripSpecialCharacters(data.type),
+                })),
             };
+
             const bodyHtml = await this.compileTemplate(
                 'order-environments',
                 TemplateFormat.HTML,

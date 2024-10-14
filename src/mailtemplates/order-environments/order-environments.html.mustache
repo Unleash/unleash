@@ -341,7 +341,7 @@
                             <p>An order for additional environments has been successfully submitted by <strong>{{{ userEmail }}}</strong> for customer ID <strong>{{{ customerId }}}</strong>. Below are the details of the environments requested:</p>
                             <ul>
                                 {{#environments}}
-                                    <li>{{.}}</li>
+                                    <li>Name: {{name}}, Type: {{type}}</li>
                                 {{/environments}}
                             </ul>
                             <p>Please note that it may take up to 24 hours for these changes to come into effect.</p>

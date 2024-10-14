@@ -3,108 +3,23 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Alert,
     Button,
-    IconButton,
-    Link,
-    ListItem,
-    ListItemButton,
     styled,
     Typography,
 } from '@mui/material';
-import React, { type FC, useEffect, useRef } from 'react';
-import LinkIcon from '@mui/icons-material/ArrowForward';
 import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
-import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
 import useLoading from '../../hooks/useLoading';
 import { MyProjects } from './MyProjects';
-import {
-    ContentGridContainer,
-    FlagGrid,
-    ListItemBox,
-    listItemStyle,
-    SpacedGridItem,
-    StyledList,
-} from './Grid';
 import { ContentGridNoProjects } from './ContentGridNoProjects';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { useDashboardState } from './useDashboardState';
-
-export const StyledCardTitle = styled('div')<{ lines?: number }>(
-    ({ theme, lines = 2 }) => ({
-        fontWeight: theme.typography.fontWeightRegular,
-        fontSize: theme.typography.body1.fontSize,
-        lineClamp: `${lines}`,
-        WebkitLineClamp: lines,
-        lineHeight: '1.2',
-        display: '-webkit-box',
-        boxOrient: 'vertical',
-        textOverflow: 'ellipsis',
-        overflow: 'hidden',
-        alignItems: 'flex-start',
-        WebkitBoxOrient: 'vertical',
-        wordBreak: 'break-word',
-    }),
-);
-const FlagListItem: FC<{
-    flag: { name: string; project: string; type: string };
-    selected: boolean;
-    onClick: () => void;
-}> = ({ flag, selected, onClick }) => {
-    const activeFlagRef = useRef<HTMLLIElement>(null);
-    const { trackEvent } = usePlausibleTracker();
-
-    useEffect(() => {
-        if (activeFlagRef.current) {
-            activeFlagRef.current.scrollIntoView({
-                block: 'nearest',
-                inline: 'start',
-            });
-        }
-    }, []);
-    const IconComponent = getFeatureTypeIcons(flag.type);
-    const flagLink = `projects/${flag.project}/features/${flag.name}`;
-    return (
-        <ListItem
-            key={flag.name}
-            disablePadding={true}
-            sx={{ mb: 1 }}
-            ref={selected ? activeFlagRef : null}
-        >
-            <ListItemButton
-                sx={listItemStyle}
-                selected={selected}
-                onClick={onClick}
-            >
-                <ListItemBox>
-                    <IconComponent color='primary' />
-                    <StyledCardTitle>{flag.name}</StyledCardTitle>
-                    <IconButton
-                        component={Link}
-                        href={flagLink}
-                        onClick={() => {
-                            trackEvent('personal-dashboard', {
-                                props: {
-                                    eventType: `Go to flag from list`,
-                                },
-                            });
-                        }}
-                        size='small'
-                        sx={{ ml: 'auto' }}
-                    >
-                        <LinkIcon titleAccess={flagLink} />
-                    </IconButton>
-                </ListItemBox>
-            </ListItemButton>
-        </ListItem>
-    );
-};
+import { MyFlags } from './MyFlags';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -201,8 +116,11 @@ export const PersonalDashboard = () => {
 
     const name = user?.name;
 
-    const { personalDashboard, refetch: refetchDashboard } =
-        usePersonalDashboard();
+    const {
+        personalDashboard,
+        refetch: refetchDashboard,
+        loading: personalDashboardLoading,
+    } = usePersonalDashboard();
 
     const projects = personalDashboard?.projects || [];
 
@@ -314,70 +232,22 @@ export const PersonalDashboard = () => {
                     </Typography>
                 </StyledAccordionSummary>
                 <StyledAccordionDetails>
-                    <ContentGridContainer>
-                        <FlagGrid>
-                            <SpacedGridItem gridArea='flags'>
-                                {personalDashboard &&
-                                personalDashboard.flags.length > 0 ? (
-                                    <StyledList
-                                        disablePadding={true}
-                                        sx={{
-                                            height: '100%',
-                                            overflow: 'auto',
-                                        }}
-                                    >
-                                        {personalDashboard.flags.map((flag) => (
-                                            <FlagListItem
-                                                key={flag.name}
-                                                flag={flag}
-                                                selected={
-                                                    flag.name ===
-                                                    activeFlag?.name
-                                                }
-                                                onClick={() =>
-                                                    setActiveFlag(flag)
-                                                }
-                                            />
-                                        ))}
-                                    </StyledList>
-                                ) : activeProject ? (
-                                    <NoActiveFlagsInfo>
-                                        <Typography>
-                                            You have not created or favorited
-                                            any feature flags. Once you do, they
-                                            will show up here.
-                                        </Typography>
-                                        <Typography>
-                                            To create a new flag, go to one of
-                                            your projects.
-                                        </Typography>
-                                    </NoActiveFlagsInfo>
-                                ) : (
-                                    <Alert severity='info'>
-                                        You need to create or join a project to
-                                        be able to add a flag, or you must be
-                                        given the rights by your admin to add
-                                        feature flags.
-                                    </Alert>
-                                )}
-                            </SpacedGridItem>
-
-                            <SpacedGridItem gridArea='chart'>
-                                {activeFlag ? (
-                                    <FlagMetricsChart
-                                        flag={activeFlag}
-                                        onArchive={refetchDashboard}
-                                    />
-                                ) : (
-                                    <PlaceholderFlagMetricsChart
-                                        label={
-                                            'Metrics for your feature flags will be shown here'
-                                        }
-                                    />
-                                )}
-                            </SpacedGridItem>
-                        </FlagGrid>
-                    </ContentGridContainer>
+                    <MyFlags
+                        hasProjects={projects?.length > 0}
+                        flagData={
+                            personalDashboard &&
+                            personalDashboard.flags.length &&
+                            activeFlag
+                                ? {
+                                      state: 'flags' as const,
+                                      activeFlag,
+                                      flags: personalDashboard.flags,
+                                  }
+                                : { state: 'no flags' as const }
+                        }
+                        setActiveFlag={setActiveFlag}
+                        refetchDashboard={refetchDashboard}
+                    />
                 </StyledAccordionDetails>
             </SectionAccordion>
             <WelcomeDialog
@@ -390,14 +260,3 @@ export const PersonalDashboard = () => {
         </MainContent>
     );
 };
-
-const FlagMetricsChart = React.lazy(() =>
-    import('./FlagMetricsChart').then((module) => ({
-        default: module.FlagMetricsChart,
-    })),
-);
-const PlaceholderFlagMetricsChart = React.lazy(() =>
-    import('./FlagMetricsChart').then((module) => ({
-        default: module.PlaceholderFlagMetricsChartWithWrapper,
-    })),
-);

@@ -62,7 +62,7 @@ export const routes: IRoute[] = [
     // Personal Dashboard
     {
         path: '/personal',
-        title: 'Personal Dashboard',
+        title: 'Dashboard',
         component: PersonalDashboard,
         type: 'protected',
         menu: { mobile: true },

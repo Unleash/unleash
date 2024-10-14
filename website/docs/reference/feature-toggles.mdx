@@ -2,11 +2,11 @@
 title: Feature Flags
 ---
 
-# Overview
+## Overview
 
 Feature flags are a core concept of Unleash. Feature flags allow you to release, test, and manage features and functionality across your application without changing the source code.
 
-Feature flags exist within a [project](./projects) and have distinct configurations and [activation strategies](./activation-strategies) for each of the project's active [environments](./environments). Activation strategies determine if a feature flag is enabled in a specififc environment.
+Feature flags exist within a [project](./projects) and have distinct configurations and [activation strategies](./activation-strategies) for each of the project's active [environments](./environments). Activation strategies determine if a feature flag is enabled in a specific environment.
 
 Feature flags have the following properties:
 
@@ -14,26 +14,26 @@ Feature flags have the following properties:
 - **Type**: The [feature flag's type](#feature-flag-types); `Release` by default.
 - **Project**: The [project](./projects) that contains the feature flag.
 - **Description**: A description of the feature flag's purpose; optional.
-- **Impression data**: Whether impression data is enabled for the flag; disabled by feault.
+- **Impression data**: Whether impression data is enabled for the flag; disabled by default.
 
 ## Environments and activation strategies
 
-Feature flags have different [activation strategies](./activation-strategies) for each environment to allow you manage feature rollouts per environment.
+Feature flags have different [activation strategies](./activation-strategies) for each environment to allow you to manage feature rollouts per environment.
 
-To activate a feature within an environment, assign it at least one activation strategy. If you don't specify a strategy, the deafault of gradual rollout to 100% is used.
+To activate a feature within an environment, assign at least one activation strategy to it. If you don't specify a strategy, the default of gradual rollout to 100% is used.
 
 Activation strategies determine if a feature flag activates for a specific [Unleash context](./unleash-context), such as a particular user or segment. When multiple strategies are in place, the flag will activate if any one of them evaluates to true.
 
-### Stategy variants
+### Strategy variants
 
 You can enhance your feature flags with [strategy variants](./strategy-variants.md). Feature flags let you define who gets access to a feature. With variants, you can also determine which version of the feature they see.
 For example, you might use variants to run an A/B testing experiment.
 
-Variants are defined by a name, weight, which determines the likelihood of each variant being shown. [Stickiness](./stickiness) ensures that users consisteny see the same variant based on predefined parameters.
-Variants also support payloads like JSON, CSV, or strings to provide additional context to users.
+Variants are defined by a name and weight, which determines the likelihood of each variant being shown. [Stickiness](./stickiness) ensures that users consistently see the same variant based on predefined parameters.
+Variants can also include payloads such as JSON, CSV, or strings to provide users with additional context.
 
 
-# Feature flag types
+## Feature flag types
 
 :::note Availability
 
@@ -42,39 +42,47 @@ Variants also support payloads like JSON, CSV, or strings to provide additional 
 :::
 
 
-Feature flags have a type to indicate their use case and help you manage and sort your flags. A feature flag's type determines its expected lifetime, and it's visual apprearance in the Admin UI.
+Feature flags have a type to indicate their use case and help you manage and sort your flags. A feature flag's type determines its [expected lifetime](#feature-flag-lifetime), and its visual appearance in the Admin UI.
 
 
-The following are the list of feature flag types:
+The following is a list of feature flag types:
 
 | Feature flag type | Used to                                                                                                                                                       | Expected lifetime |
 |---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
-| Release             | Manage the deployment of new or incomplete features.                                                                                          | 40 days           |
+| Release             | Manage the deployment of new or incomplete features.                                                                                          | 360 days           |
 | Experiment          | Perform multivariate or A/B testing.                                                                                                                              | 40 days           |
 | Operational         | Transition between technical implementations with minimal risk.                                                                                                            | 7 days            |
 | Kill switch         | Gracefully degrade system functionality. | Permanent         |
-| Permission          | CControl feature access based on user roles or entitlements.                                                                                             | Permanent         |
+| Permission          | Control feature access based on user roles or entitlements.                                                                                             | Permanent         |
 
 To learn more, visit [Types of feature flags](../what-is-a-feature-flag#types-of-feature-flags).
 
-### Expected lifetimes
+## Feature flag state
 
+A feature flag can have one of the following states: _active_, _potentially stale_, and _stale_. Unleash marks all flags as _potentially stale_ automatically once it passes its [expected lifetime](#feature-flag-lifetime).
 
-A feature flag's expected lifetime is an indicator of how long Unleash expects flags of that type to be around. Some feature flags are meant to live for a few weeks as you work on new functionality, while others stick around for much longer. As a part of good code hygiene, you should clean up your feature flags when they have served their purpose. This is further explored in the document on [technical debt](./technical-debt).
+State, together with expected lifetime, gives you an indication of when to [clean up a feature flag in code](./technical-debt.md).
 
-Each feature flag type in Unleash has an assigned expected lifetime, after which the system will consider this feature _potentially stale_. The reasoning behind each type's expected lifetime is detailed in this [blog post on best practices for feature flag lifetimes](https://www.getunleash.io/blog/feature-toggle-life-time-best-practices).
+You can also manually change the state on a feature flag's page by going to **Overview** and clicking **Toggle stale state**.
+
+![Marking a feature flag as stale](/img/mark-flag-stale.png)
+
+Marking a flag as stale helps you deprecate a feature flag without removing the active configuration for connected applications.
+
+You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [technical debt dashboard](./technical-debt).
+
+Marking a flag as stale generates the `feature-stale-on` [event](./reference/events#feature-stale-on). You can use [an integration](/integrations/integrations) to trigger automated workflows, for instance, post notifications in a Slack channel, break project builds if the code contains stale flags, or open PRs automatically to remove stale flags from the code.
+
+## Feature flag lifetime
+
+Each feature flag type has an expected lifetime, which gives you an indication of when a feature flag might be stale. While some feature flag types are permanent, most flags are short-lived.
+
+The lifetime and state indicators help you make decisions about what flags need to be [cleaned up](./technical-debt.md) in your codebase. See [11 Principles for building and scaling feature flags](../topics/feature-flags/feature-flag-best-practices) to learn more.
+
+Once a feature flag exists for longer than its expected lifetime, Unleash changes its state to _potentially stale_.
 
 With Admin access, you can configure the lifetime of a feature flag type. In the Admin UI, go to **Configure > Feature flag** types and edit the flag type you'd like to change.
 
+## Feature flag lifecycle
 
-## Deprecating feature flags
-
-You can mark feature flags as `stale`. This is a way to deprecate a feature flag without removing the active configuration for connected applications. Use this to signal that you should stop using the feature in your applications. Stale flags will show as stale in the ["technical debt dashboard"](./technical-debt).
-
-When you mark a flag as stale, Unleash will emit an event. You can use [an integration](/integrations/integrations) to integrate this with your systems, for instance to post a message in a Slack channel.
-
-Additionally, with some extra work, you can also use the `stale` property to:
-
-- Inform developers that a flag is stale _while_ they're developing.
-- Break a project build if the code contains stale feature flags.
-- Send automatic PRs to remove usage of flags that have served their purpose.
+## Naming patterns

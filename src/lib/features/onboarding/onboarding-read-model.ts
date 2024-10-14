@@ -92,15 +92,6 @@ export class OnboardingReadModel implements IOnboardingReadModel {
             return null;
         }
 
-        const feature = await this.db('features')
-            .select('name')
-            .where('project', projectId)
-            .first();
-
-        if (!feature) {
-            return { status: 'onboarding-started' };
-        }
-
         const db = this.db;
         const lastSeen = await db
             .select(db.raw('1'))
@@ -117,8 +108,17 @@ export class OnboardingReadModel implements IOnboardingReadModel {
 
         if (lastSeen) {
             return { status: 'onboarded' };
-        } else {
-            return { status: 'first-flag-created', feature: feature.name };
         }
+
+        const feature = await this.db('features')
+            .select('name')
+            .where('project', projectId)
+            .where('archived_at', null)
+            .first();
+
+        if (!feature) {
+            return { status: 'onboarding-started' };
+        }
+        return { status: 'first-flag-created', feature: feature.name };
     }
 }

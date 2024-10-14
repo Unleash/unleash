@@ -326,7 +326,6 @@ module.exports = {
                         'reference/environments',
                         'reference/events',
                         'reference/feature-flag-naming-patterns',
-                        'reference/feature-lifecycle',
                         'reference/feature-toggles',
                         'reference/front-end-api',
                         'reference/impression-data',

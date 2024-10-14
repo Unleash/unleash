@@ -13,6 +13,7 @@ import { ConnectSDK, CreateFlag, ExistingFlag } from './ConnectSDK';
 import { LatestProjectEvents } from './LatestProjectEvents';
 import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
 import { forwardRef, useEffect, useRef, type FC } from 'react';
+import { StyledCardTitle } from './PersonalDashboard';
 import type {
     PersonalDashboardProjectDetailsSchema,
     PersonalDashboardSchemaAdminsItem,
@@ -27,7 +28,6 @@ import {
     GridItem,
     SpacedGridItem,
     StyledList,
-    StyledCardTitle,
 } from './Grid';
 import { ContactAdmins, DataError } from './ProjectDetailsError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

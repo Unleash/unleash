@@ -121,12 +121,10 @@ const useFlagMetrics = (
     environment: string | null,
     hoursBack: number,
 ) => {
-    const {
-        featureMetrics: metrics = [],
-        loading,
-        error,
-    } = useFeatureMetricsRaw(flagName, hoursBack);
-
+    const { featureMetrics: metrics = [], loading } = useFeatureMetricsRaw(
+        flagName,
+        hoursBack,
+    );
     const sortedMetrics = useMemo(() => {
         return [...metrics].sort((metricA, metricB) => {
             return metricA.timestamp.localeCompare(metricB.timestamp);
@@ -153,7 +151,7 @@ const useFlagMetrics = (
         return createBarChartOptions(theme, hoursBack, locationSettings);
     }, [theme, hoursBack, locationSettings]);
 
-    return { data, options, loading, error };
+    return { data, options, loading };
 };
 
 const EnvironmentSelect: FC<{
@@ -224,22 +222,11 @@ export const FlagMetricsChart: FC<{
     const { environment, setEnvironment, activeEnvironments } =
         useMetricsEnvironments(flag.project, flag.name);
 
-    const {
-        data,
-        options,
-        loading,
-        error: metricsError,
-    } = useFlagMetrics(flag.name, environment, hoursBack);
-
-    if (metricsError) {
-        return (
-            <ChartContainer>
-                <PlaceholderFlagMetricsChart
-                    label={`Couldn't fetch metrics for the current flag. This may be a transient error, or your flag name ("${flag.name}") may be causing issues.`}
-                />
-            </ChartContainer>
-        );
-    }
+    const { data, options, loading } = useFlagMetrics(
+        flag.name,
+        environment,
+        hoursBack,
+    );
 
     const noData = data.datasets[0].data.length === 0;
 

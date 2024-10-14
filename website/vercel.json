@@ -97,6 +97,11 @@
       "permanent": true
     },
     {
+      "source": "/reference/feature-lifecycle",
+      "destination": "/reference/feature-toggles#feature-flag-lifecycle",
+      "permanent": true
+    },
+    {
       "source": "/toggle_variants",
       "destination": "/reference/feature-toggle-variants",
       "permanent": true

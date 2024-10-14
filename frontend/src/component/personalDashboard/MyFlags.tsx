@@ -87,7 +87,7 @@ type FlagData =
     | {
           state: 'flags';
           flags: PersonalDashboardSchemaFlagsItem[];
-          activeFlag: PersonalDashboardSchemaFlagsItem;
+          activeFlag?: PersonalDashboardSchemaFlagsItem;
       }
     | {
           state: 'no flags';
@@ -123,7 +123,7 @@ export const MyFlags: FC<Props> = ({
                                     key={flag.name}
                                     flag={flag}
                                     selected={
-                                        flag.name === flagData.activeFlag.name
+                                        flag.name === flagData.activeFlag?.name
                                     }
                                     onClick={() => setActiveFlag(flag)}
                                 />
@@ -150,7 +150,7 @@ export const MyFlags: FC<Props> = ({
                 </SpacedGridItem>
 
                 <SpacedGridItem gridArea='chart'>
-                    {flagData.state === 'flags' ? (
+                    {flagData.state === 'flags' && flagData.activeFlag ? (
                         <FlagMetricsChart
                             flag={flagData.activeFlag}
                             onArchive={refetchDashboard}

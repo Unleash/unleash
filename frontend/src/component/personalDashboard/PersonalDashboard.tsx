@@ -204,9 +204,7 @@ export const PersonalDashboard = () => {
                     <MyFlags
                         hasProjects={projects?.length > 0}
                         flagData={
-                            personalDashboard &&
-                            personalDashboard.flags.length &&
-                            activeFlag
+                            personalDashboard && personalDashboard.flags.length
                                 ? {
                                       state: 'flags' as const,
                                       activeFlag,

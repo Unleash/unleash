@@ -80,34 +80,6 @@ const MainContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const NoActiveFlagsInfo = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexFlow: 'column',
-    gap: theme.spacing(2),
-}));
-
-type DashboardState =
-    | {
-          state: 'flags and projects';
-          // regular state; show everything
-          activeFlag: any;
-          activeProject: any;
-      }
-    | {
-          state: 'projects, no flags';
-          // show projects as normal, tell the user to create a flag
-          activeProject: any;
-      }
-    | {
-          state: 'no projects, no flags';
-          // no projects and no flags; show information about admins, project owners, and tell the user to join a project to create a flags
-      }
-    | {
-          state: 'flags, no projects';
-          // show info about admins + project owners, regular flags
-          activeFlag: any;
-      };
-
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
     const { trackEvent } = usePlausibleTracker();
@@ -116,11 +88,8 @@ export const PersonalDashboard = () => {
 
     const name = user?.name;
 
-    const {
-        personalDashboard,
-        refetch: refetchDashboard,
-        loading: personalDashboardLoading,
-    } = usePersonalDashboard();
+    const { personalDashboard, refetch: refetchDashboard } =
+        usePersonalDashboard();
 
     const projects = personalDashboard?.projects || [];
 

@@ -58,7 +58,7 @@ export const FlagGrid = styled(ContentGrid)(
 );
 
 export const GridItem = styled('div', {
-    shouldForwardProp: (prop) => !['gridArea', 'sx'].includes(prop.toString()),
+    shouldForwardProp: (prop) => !['gridArea'].includes(prop.toString()),
 })<{ gridArea: string }>(({ theme, gridArea }) => ({
     padding: theme.spacing(2, 4),
     maxHeight: '100%',
@@ -113,3 +113,20 @@ export const StyledList = styled(List)(({ theme }) => ({
         maxHeight: '100%',
     })({ theme }),
 }));
+
+export const StyledCardTitle = styled('div')<{ lines?: number }>(
+    ({ theme, lines = 2 }) => ({
+        fontWeight: theme.typography.fontWeightRegular,
+        fontSize: theme.typography.body1.fontSize,
+        lineClamp: `${lines}`,
+        WebkitLineClamp: lines,
+        lineHeight: '1.2',
+        display: '-webkit-box',
+        boxOrient: 'vertical',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        alignItems: 'flex-start',
+        WebkitBoxOrient: 'vertical',
+        wordBreak: 'break-word',
+    }),
+);

@@ -91,7 +91,7 @@ With Admin access, you can configure the lifetime of a feature flag type. In the
 
 :::
 
-Based on usage metrics and interactions with the Unleash, feature flags can go through five distinct lifecycle stages: initial, pre-live, live, completed, and archived. These stages mirror the typical software development process and allow you to identify bottlenecks at any stage of the lifecycle. 
+Based on usage metrics and interactions with Unleash, feature flags can go through five distinct lifecycle stages: initial, pre-live, live, completed, and archived. These stages mirror the typical software development process and allow you to identify bottlenecks at any stage of the lifecycle. 
 These insights can help you improve the efficiency of your software development process.
 
 
@@ -101,7 +101,7 @@ These insights can help you improve the efficiency of your software development 
 
 #### Initial
 
-The feature flag is created, but Unleash hasn't detected any metrics in any environments. Once Unleash received metrics from a non-production environment, the flag moves to the [pre-live](#pre-live) stage.
+The feature flag is created, but Unleash hasn't detected any metrics in any environments. Once Unleash receives metrics from a non-production environment, the flag moves to the [pre-live](#pre-live) stage.
 
 A feature stuck in an initial stage can indicate integration issues in pre-production setups. 
 
@@ -121,7 +121,7 @@ This stage serves as a reminder to start cleaning up the feature toggle and remo
 
 #### Completed
 
-The feature has been completed but Unleash still received usage metrics in production. This is an indication that you should clean up the feature flag from your code before archiving it.
+The feature has been completed but Unleash still receives usage metrics in production. This is an indication that you should clean up the feature flag from your code before archiving it.
 If you've accidentally marked the feature as completed, you can revert it to the [live](#live) stage.
 
 Too much time in the completed stage can indicate delays in decommissioning the feature and cleaning up resources.
@@ -148,3 +148,23 @@ Optionally, you can provide an example and a description to guide users when cre
 Once saved, all future feature flag names in the project, including those created via the API, must follow the defined pattern. Note that the full feature flag name must match the pattern; a part of the name matching is not sufficient.
 
 For example, you could set a pattern like `^(red|blue|green)\.[a-z-]+\.[0-9]+$`. You could then provide an example of a valid feature flag name, such as "blue.fast-checkout.64" and a description like: "`<team>.<feature>.<ticket>`" to clarify the structure.
+
+## Archive a feature flag
+
+You can archive a feature flag once you no longer need it. To do so, go to the feature flag's page and click **Archive feature flag**.
+
+Once archived, the flag is no longer available to Client SDKs.
+
+![Feature lifecycle example](/img/archive-feature-flag.png)
+
+### View archived flags
+
+To view an archived feature flag, open the project that contains the flag and select the **Archived flags** tab.
+
+### Revive a feature flag
+
+You can revive archived flags by navigating to the [feature flag archive](#view-archived-flags) and clicking **Revive feature flag**. Revived flags are in an inactive state by default.
+
+### Delete a feature flag
+
+You can delete archived flags by navigating to the [feature flag archive](#view-archived-flags) and clicking **Delete feature flag**. Don't delete any feature flags unless you are certain that it is no longer in use, and its name can be safely reused.

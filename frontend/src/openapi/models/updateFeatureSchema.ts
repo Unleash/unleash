@@ -9,7 +9,7 @@ import type { UpdateFeatureSchemaType } from './updateFeatureSchemaType';
  * Data used for updating a feature flag
  */
 export interface UpdateFeatureSchema {
-    /** If `true` the feature flag will be moved to the [archive](https://docs.getunleash.io/reference/archived-toggles) with a property `archivedAt` set to current time */
+    /** If `true` the feature flag will be moved to the [archive](https://docs.getunleash.io/reference/feature-toggles) with a property `archivedAt` set to current time */
     archived?: boolean;
     /** Detailed description of the feature */
     description?: string;

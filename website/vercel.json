@@ -73,7 +73,7 @@
     },
     {
       "source": "/advanced/archived_toggles",
-      "destination": "/reference/archived-toggles",
+      "destination": "/reference/feature-toggles#archive-a-feature-toggle",
       "permanent": true
     },
     {
@@ -144,6 +144,11 @@
     {
       "source": "/advanced/sso-google",
       "destination": "/how-to/how-to-add-sso-google",
+      "permanent": true
+    },
+    {
+      "source": "/reference/archived-toggles",
+      "destination": "/reference/feature-toggles#archive-a-feature-flag",
       "permanent": true
     },
     {

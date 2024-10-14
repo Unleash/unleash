@@ -317,7 +317,6 @@ module.exports = {
                         'reference/activation-strategies',
                         'reference/api-tokens-and-client-keys',
                         'reference/applications',
-                        'reference/archived-toggles',
                         'reference/banners',
                         'reference/change-requests',
                         'reference/command-menu',

@@ -352,7 +352,7 @@ module.exports = {
                     },
                     {
                         from: '/advanced/archived_toggles',
-                        to: '/reference/archived-toggles',
+                        to: '/reference/feature-toggles',
                     },
                     {
                         from: [

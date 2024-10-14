@@ -118,7 +118,11 @@ test('Can send order environments email', async () => {
     } as unknown as IUnleashConfig);
 
     const customerId = 'customer133';
-    const environments = ['development', 'production'];
+    const environments = [
+        { name: 'test', type: 'development' },
+        { name: 'live', type: 'production' },
+    ];
+
     const content = await emailService.sendOrderEnvironmentEmail(
         'user@user.com',
         customerId,
@@ -126,8 +130,16 @@ test('Can send order environments email', async () => {
     );
     expect(content.from).toBe('noreply@getunleash.ai');
     expect(content.subject).toBe('Unleash - ordered environments successfully');
-    expect(content.html.includes(`<li>${environments[0]}</li>`)).toBe(true);
-    expect(content.html.includes(`<li>${environments[1]}</li>`)).toBe(true);
+    expect(
+        content.html.includes(
+            `<li>Name: ${environments[0].name}, Type: ${environments[0].type}</li>`,
+        ),
+    ).toBe(true);
+    expect(
+        content.html.includes(
+            `<li>Name: ${environments[1].name}, Type: ${environments[1].type}</li>`,
+        ),
+    ).toBe(true);
     expect(content.html.includes(customerId)).toBe(true);
     expect(content.bcc).toBe('bcc@bcc.com');
 });

@@ -19,13 +19,13 @@ import timer from './timer';
 // // perform operation and then stop timer
 // stopTimer();
 
-const wrapTimer: (
+const wrapTimer = (
     eventBus: EventEmitter,
-    type: string,
-    args: Record<string, unknown>,
-) => (args: any) => any = (eventBus, event, args = {}) => {
+    event: string,
+    args: Record<string, unknown> = {},
+) => {
     const t = timer.new();
-    return (data) => {
+    return (data: unknown) => {
         args.time = t();
         eventBus.emit(event, args);
         return data;

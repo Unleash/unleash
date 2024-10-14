@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
 import type { PersonalDashboardSchemaAdminsItem } from 'openapi';
 import type { FC } from 'react';
-import { AdminListRendered } from './ContentGridNoProjects';
+import { YourAdmins } from './YourAdmins';
 
 const TitleContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -48,7 +48,7 @@ export const ContactAdmins: FC<{
             <TitleContainer>
                 Consider contacting one of your Unleash admins for help.
             </TitleContainer>
-            <AdminListRendered admins={admins} />
+            <YourAdmins admins={admins} />
         </ActionBox>
     );
 };

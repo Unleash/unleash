@@ -291,7 +291,7 @@ A good rule of thumb is that if the data is static (you don’t expect it to cha
 
 Feature flag names need to be globally unique. [We wrote about this before](https://docs.getunleash.io/topics/feature-flags/unique-names), but it is such an important point that it bears repeating. Every feature flag within the same Feature Flag Control service must have a unique name across the cluster to prevent inconsistencies and errors.
 
-In a perfect world, all references to feature flags in code would be cleaned up as soon as the feature flag is archived. But we don’t live in a perfect world. You will save yourself many hours of frustration and potential downtime if you use unique names to protect new features from being accidentally linked to outdated flags, which could inadvertently expose old features. [Unique names should ideally be enforced during flag creation](https://docs.getunleash.io/reference/feature-flag-naming-patterns).
+In a perfect world, all references to feature flags in code would be cleaned up as soon as the feature flag is archived. But we don’t live in a perfect world. You will save yourself many hours of frustration and potential downtime if you use unique names to protect new features from being accidentally linked to outdated flags, which could inadvertently expose old features. [Unique names should ideally be enforced during flag creation](https://docs.getunleash.io/reference/feature-toggles#naming-patterns).
 
 ### 14. Avoid giant feature flag targeting lists.
 

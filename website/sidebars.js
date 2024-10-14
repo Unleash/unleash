@@ -325,7 +325,6 @@ module.exports = {
                         'reference/dependent-features',
                         'reference/environments',
                         'reference/events',
-                        'reference/feature-flag-naming-patterns',
                         'reference/feature-toggles',
                         'reference/front-end-api',
                         'reference/impression-data',
@@ -518,7 +517,6 @@ module.exports = {
                             },
                             items: [
                                 'how-to/how-to-add-strategy-constraints',
-                                'how-to/how-to-add-feature-flag-naming-patterns',
                                 'how-to/how-to-capture-impression-data',
                                 'how-to/how-to-create-feature-toggles',
                                 'how-to/how-to-create-and-display-banners',

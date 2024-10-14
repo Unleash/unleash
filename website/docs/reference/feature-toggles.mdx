@@ -131,5 +131,20 @@ Too much time in the completed stage can indicate delays in decommissioning the 
 Unleash hasn't detected any production usage metrics for at least two days. It's likely that it is safe to archive this flag.
 If an archived feature is revived, it starts a new lifecycle with a new initial stage. 
 
-
 ## Naming patterns
+
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.7+`
+
+:::
+
+A consistent and unique feature flag naming pattern reduces risks and simplifies flag management by preventing the reuse of old names, which could accidentally re-enable outdated features.
+Unique names also make it easier to track and search for flags across codebases, ensuring clarity on what each flag controls and its purpose.
+
+To define a new naming convention for a project, go to **Project settings > Enterprise settings**. For **Naming Pattern**, define a valid [JavaScript regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp).
+Optionally, you can provide an example and a description to guide users when creating new flags.
+
+Once saved, all future feature flag names in the project, including those created via the API, must follow the defined pattern. Note that the full feature flag name must match the pattern; a part of the name matching is not sufficient.
+
+For example, you could set a pattern like `^(red|blue|green)\.[a-z-]+\.[0-9]+$`. You could then provide an example of a valid feature flag name, such as "blue.fast-checkout.64" and a description like: "`<team>.<feature>.<ticket>`" to clarify the structure.

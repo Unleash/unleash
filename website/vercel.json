@@ -102,6 +102,16 @@
       "permanent": true
     },
     {
+      "source": "/reference/feature-flag-naming-patterns",
+      "destination": "/reference/feature-toggles#naming-patterns",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-feature-flag-naming-patterns",
+      "destination": "/reference/feature-toggles#naming-patterns",
+      "permanent": true
+    },
+    {
       "source": "/toggle_variants",
       "destination": "/reference/feature-toggle-variants",
       "permanent": true

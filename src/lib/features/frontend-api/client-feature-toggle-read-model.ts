@@ -22,7 +22,7 @@ export default class ClientFeatureToggleReadModel
 
     constructor(db: Db, eventBus: EventEmitter) {
         this.db = db;
-        this.timer = (action) =>
+        this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'client-feature-toggle-read-model',
                 action,

@@ -117,10 +117,12 @@ export default class MetricsMonitor {
             help: 'Number of times a feature flag has been used',
             labelNames: ['toggle', 'active', 'appName'],
         });
-        const featureFlagsTotal = createGauge({
+        dbMetrics.registerGaugeDbMetric({
             name: 'feature_toggles_total',
             help: 'Number of feature flags',
             labelNames: ['version'],
+            query: () => instanceStatsService.getToggleCount(),
+            map: (count) => ({ count, labels: { version } }),
         });
         dbMetrics.registerGaugeDbMetric({
             name: 'max_feature_environment_strategies',
@@ -445,9 +447,6 @@ export default class MetricsMonitor {
                         ? stores.onboardingReadModel.getProjectsOnboardingMetrics()
                         : Promise.resolve([]),
                 ]);
-
-                featureFlagsTotal.reset();
-                featureFlagsTotal.labels({ version }).set(stats.featureToggles);
 
                 featureTogglesArchivedTotal.reset();
                 featureTogglesArchivedTotal.set(stats.archivedFeatureToggles);

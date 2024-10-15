@@ -122,10 +122,19 @@ export default class MetricsMonitor {
             help: 'Number of feature flags',
             labelNames: ['version'],
         });
-        const maxFeatureEnvironmentStrategies = createGauge({
+        dbMetrics.registerGaugeDbMetric({
             name: 'max_feature_environment_strategies',
             help: 'Maximum number of environment strategies in one feature',
             labelNames: ['feature', 'environment'],
+            query: () =>
+                stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
+            map: (result) => ({
+                count: result.count,
+                labels: {
+                    environment: result.environment,
+                    feature: result.feature,
+                },
+            }),
         });
 
         dbMetrics.registerGaugeDbMetric({
@@ -408,7 +417,6 @@ export default class MetricsMonitor {
 
                 const stats = await instanceStatsService.getStats();
                 const [
-                    maxEnvironmentStrategies,
                     maxConstraintValuesResult,
                     maxConstraintsPerStrategyResult,
                     stageCountByProjectResult,
@@ -419,7 +427,6 @@ export default class MetricsMonitor {
                     instanceOnboardingMetrics,
                     projectsOnboardingMetrics,
                 ] = await Promise.all([
-                    stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
                     stores.featureStrategiesReadModel.getMaxConstraintValues(),
                     stores.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
                     stores.featureLifecycleReadModel.getStageCountByProject(),
@@ -487,16 +494,6 @@ export default class MetricsMonitor {
 
                 legacyTokensActive.reset();
                 legacyTokensActive.set(deprecatedTokens.activeLegacyTokens);
-
-                if (maxEnvironmentStrategies) {
-                    maxFeatureEnvironmentStrategies.reset();
-                    maxFeatureEnvironmentStrategies
-                        .labels({
-                            environment: maxEnvironmentStrategies.environment,
-                            feature: maxEnvironmentStrategies.feature,
-                        })
-                        .set(maxEnvironmentStrategies.count);
-                }
 
                 if (maxConstraintValuesResult) {
                     maxConstraintValues.reset();

@@ -115,8 +115,6 @@ export const PersonalDashboard = () => {
     const activeProjectStage =
         personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
 
-    const noProjects = projects.length === 0;
-
     const projectStageRef = useLoading(
         !detailsError && activeProjectStage === 'loading',
     );

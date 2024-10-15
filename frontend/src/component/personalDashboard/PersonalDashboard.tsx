@@ -13,7 +13,6 @@ import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/use
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
 import useLoading from '../../hooks/useLoading';
 import { MyProjects } from './MyProjects';
-import { ContentGridNoProjects } from './ContentGridNoProjects';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';

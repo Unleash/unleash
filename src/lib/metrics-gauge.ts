@@ -15,16 +15,17 @@ type GaugeDefinition<T> = {
     map: MapResult<T>;
 };
 
+type Task = () => Promise<void>;
 export class DbMetricsMonitor {
-    private tasks: (() => Promise<void>)[] = [];
-    private gauges: Record<string, Gauge<string>> = {};
+    private tasks: Set<Task> = new Set();
+    private gauges: Map<string, Gauge<string>> = new Map();
 
     constructor() {}
 
     registerGaugeDbMetric<T>(definition: GaugeDefinition<T>) {
         const gauge = createGauge(definition);
-        this.gauges[definition.name] = gauge;
-        this.tasks.push(async () => {
+        this.gauges.set(definition.name, gauge);
+        this.tasks.add(async () => {
             const result = await definition.query();
             if (result) {
                 const { count, labels } = definition.map(result);

@@ -79,6 +79,25 @@ const MainContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const AccordionSummaryText = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.5),
+}));
+
+const AccordionSummaryHeader = styled('h3')(({ theme }) => ({
+    color: theme.palette.text.primary,
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: theme.typography.body2.fontWeight,
+    margin: 0,
+}));
+
+const AccordionSummarySubtitle = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+    fontWeight: theme.typography.body2.fontWeight,
+}));
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
     const { trackEvent } = usePlausibleTracker();
@@ -157,9 +176,15 @@ export const PersonalDashboard = () => {
                     id='projects-panel-header'
                     aria-controls='projects-panel-content'
                 >
-                    <Typography variant='body1' component='h3'>
-                        My projects
-                    </Typography>
+                    <AccordionSummaryText>
+                        <AccordionSummaryHeader>
+                            My projects
+                        </AccordionSummaryHeader>
+                        <AccordionSummarySubtitle>
+                            Favorite projects, projects you own, and projects
+                            you are a member of
+                        </AccordionSummarySubtitle>
+                    </AccordionSummaryText>
                 </StyledAccordionSummary>
                 <StyledAccordionDetails>
                     <MyProjects
@@ -187,9 +212,14 @@ export const PersonalDashboard = () => {
                     id='flags-panel-header'
                     aria-controls='flags-panel-content'
                 >
-                    <Typography variant='body1' component='h3'>
-                        My feature flags
-                    </Typography>
+                    <AccordionSummaryText>
+                        <AccordionSummaryHeader>
+                            My feature flags
+                        </AccordionSummaryHeader>
+                        <AccordionSummarySubtitle>
+                            Feature flags you have created or favorited
+                        </AccordionSummarySubtitle>
+                    </AccordionSummaryText>
                 </StyledAccordionSummary>
                 <StyledAccordionDetails>
                     <MyFlags

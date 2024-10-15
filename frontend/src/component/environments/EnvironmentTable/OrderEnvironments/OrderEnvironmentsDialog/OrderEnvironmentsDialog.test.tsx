@@ -35,7 +35,9 @@ describe('OrderEnvironmentsDialog Component', () => {
             screen.getAllByLabelText(/environment \d+ name/i);
         expect(environmentInputs).toHaveLength(1);
 
-        const selectButton = screen.getByRole('combobox');
+        const selectButton = screen.getByRole('combobox', {
+            name: /select the number of additional environments/i,
+        });
         fireEvent.mouseDown(selectButton);
 
         const option2 = screen.getByRole('option', { name: '2 environments' });
@@ -75,7 +77,9 @@ describe('OrderEnvironmentsDialog Component', () => {
         const onSubmitMock = vi.fn();
         renderComponent({ onSubmit: onSubmitMock });
 
-        const selectButton = screen.getByRole('combobox');
+        const selectButton = screen.getByRole('combobox', {
+            name: /select the number of additional environments/i,
+        });
         fireEvent.mouseDown(selectButton);
 
         const option2 = screen.getByRole('option', { name: '2 environments' });
@@ -97,7 +101,10 @@ describe('OrderEnvironmentsDialog Component', () => {
         fireEvent.click(submitButton);
 
         expect(onSubmitMock).toHaveBeenCalledTimes(1);
-        expect(onSubmitMock).toHaveBeenCalledWith(['Dev', 'Staging']);
+        expect(onSubmitMock).toHaveBeenCalledWith([
+            { name: 'Dev', type: 'development' },
+            { name: 'Staging', type: 'development' },
+        ]);
     });
 
     test('should call onClose when "Cancel" button is clicked', () => {
@@ -114,7 +121,9 @@ describe('OrderEnvironmentsDialog Component', () => {
         const onSubmitMock = vi.fn();
         renderComponent({ onSubmit: onSubmitMock });
 
-        const selectButton = screen.getByRole('combobox');
+        const selectButton = screen.getByRole('combobox', {
+            name: /select the number of additional environments/i,
+        });
         fireEvent.mouseDown(selectButton);
 
         const option3 = screen.getByRole('option', { name: '3 environments' });
@@ -146,6 +155,58 @@ describe('OrderEnvironmentsDialog Component', () => {
         fireEvent.click(submitButton);
 
         expect(onSubmitMock).toHaveBeenCalledTimes(1);
-        expect(onSubmitMock).toHaveBeenCalledWith(['Dev', 'Staging']);
+        expect(onSubmitMock).toHaveBeenCalledWith([
+            { name: 'Dev', type: 'development' },
+            { name: 'Prod', type: 'development' },
+        ]);
+    });
+
+    test('should allow for changing environment types', () => {
+        const onSubmitMock = vi.fn();
+        renderComponent({ onSubmit: onSubmitMock });
+
+        const selectButton = screen.getByRole('combobox', {
+            name: /select the number of additional environments/i,
+        });
+        fireEvent.mouseDown(selectButton);
+        const option3 = screen.getByRole('option', { name: '2 environments' });
+        fireEvent.click(option3);
+
+        const checkbox = screen.getByRole('checkbox', {
+            name: /i understand adding environments leads to extra costs/i,
+        });
+        fireEvent.click(checkbox);
+
+        const environmentInputs =
+            screen.getAllByLabelText(/environment \d+ name/i);
+        fireEvent.change(environmentInputs[0], { target: { value: 'Test' } });
+        fireEvent.change(environmentInputs[1], {
+            target: { value: 'Staging' },
+        });
+
+        const typeSelects = screen.getAllByRole('combobox', {
+            name: /type of environment/i,
+        });
+
+        fireEvent.mouseDown(typeSelects[0]);
+        const optionTesting = screen.getByRole('option', {
+            name: /testing/i,
+        });
+        fireEvent.click(optionTesting);
+
+        fireEvent.mouseDown(typeSelects[1]);
+        const optionProduction = screen.getByRole('option', {
+            name: /pre\-production/i,
+        });
+        fireEvent.click(optionProduction);
+
+        const submitButton = screen.getByRole('button', { name: /order/i });
+        fireEvent.click(submitButton);
+
+        expect(onSubmitMock).toHaveBeenCalledTimes(1);
+        expect(onSubmitMock).toHaveBeenCalledWith([
+            { name: 'Test', type: 'testing' },
+            { name: 'Staging', type: 'pre-production' },
+        ]);
     });
 });

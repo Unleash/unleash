@@ -6,18 +6,19 @@ import {
     Dialog,
     styled,
     Typography,
+    TextField,
 } from '@mui/material';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { OrderEnvironmentsDialogPricing } from './OrderEnvironmentsDialogPricing/OrderEnvironmentsDialogPricing';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
-import Input from 'component/common/Input/Input';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import type { OrderEnvironmentsSchemaEnvironmentsItem } from 'openapi';
 
 type OrderEnvironmentsDialogProps = {
     open: boolean;
     onClose: () => void;
-    onSubmit: (environments: string[]) => void;
+    onSubmit: (environments: OrderEnvironmentsSchemaEnvironmentsItem[]) => void;
     errors?: IFormErrors;
 };
 
@@ -50,6 +51,16 @@ const StyledGeneralSelect = styled(GeneralSelect)(({ theme }) => ({
     margin: theme.spacing(1, 0),
 }));
 
+const StyledTypeSelect = styled(GeneralSelect)(({ theme }) => ({
+    minWidth: '166px',
+}));
+
+const StyledEnvironmentInputs = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+}));
+
 const StyledFields = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -72,6 +83,12 @@ const StyledCheckbox = styled(Checkbox)(({ theme }) => ({
 
 const PRICE = 10;
 const OPTIONS = [1, 2, 3];
+const ENVIRONMENT_TYPES = [
+    'development',
+    'testing',
+    'pre-production',
+    'production',
+];
 
 export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
     open,
@@ -82,7 +99,9 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
     const { trackEvent } = usePlausibleTracker();
     const [selectedOption, setSelectedOption] = useState(OPTIONS[0]);
     const [costCheckboxChecked, setCostCheckboxChecked] = useState(false);
-    const [environmentNames, setEnvironmentNames] = useState<string[]>(['']);
+    const [environments, setEnvironments] = useState<
+        { name: string; type: string }[]
+    >([{ name: '', type: ENVIRONMENT_TYPES[0] }]);
 
     const trackEnvironmentSelect = () => {
         trackEvent('order-environments', {
@@ -110,7 +129,7 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                         <Button
                             variant='contained'
                             disabled={!costCheckboxChecked}
-                            onClick={() => onSubmit(environmentNames)}
+                            onClick={() => onSubmit(environments)}
                         >
                             Order
                         </Button>
@@ -129,14 +148,11 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                 </Typography>
                 <StyledFields>
                     <Box>
-                        <Typography
-                            component='label'
-                            htmlFor='numberOfEnvironments'
-                        >
+                        <Typography component='label' id='numberOfEnvironments'>
                             Select the number of additional environments
                         </Typography>
                         <StyledGeneralSelect
-                            id='numberOfEnvironments'
+                            labelId='numberOfEnvironments'
                             value={`${selectedOption}`}
                             options={OPTIONS.map((option) => ({
                                 key: `${option}`,
@@ -145,11 +161,14 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                             onChange={(option) => {
                                 const value = Number.parseInt(option, 10);
                                 setSelectedOption(value);
-                                setEnvironmentNames((names) =>
-                                    [...names, ...Array(value).fill('')].slice(
-                                        0,
-                                        value,
-                                    ),
+                                setEnvironments((envs) =>
+                                    [
+                                        ...envs,
+                                        ...Array(value).fill({
+                                            name: '',
+                                            type: ENVIRONMENT_TYPES[0],
+                                        }),
+                                    ].slice(0, value),
                                 );
                                 trackEnvironmentSelect();
                             }}
@@ -164,22 +183,45 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                             const error = errors?.getFormError(
                                 `environment-${i}`,
                             );
-
                             return (
-                                <Input
-                                    key={i}
-                                    label={`Environment ${i + 1} name`}
-                                    value={environmentNames[i]}
-                                    onChange={(event) => {
-                                        setEnvironmentNames((names) => {
-                                            const newValues = [...names];
-                                            newValues[i] = event.target.value;
-                                            return newValues;
-                                        });
-                                    }}
-                                    error={Boolean(error)}
-                                    errorText={error}
-                                />
+                                <StyledEnvironmentInputs key={i}>
+                                    <StyledTypeSelect
+                                        label='Type of environment'
+                                        labelId={`environmentType${i}`}
+                                        value={
+                                            environments[i]?.type ||
+                                            ENVIRONMENT_TYPES[0]
+                                        }
+                                        options={ENVIRONMENT_TYPES.map(
+                                            (type) => ({
+                                                key: type,
+                                                label: type,
+                                            }),
+                                        )}
+                                        onChange={(type) => {
+                                            const newEnvironments = [
+                                                ...environments,
+                                            ];
+                                            newEnvironments[i].type = type;
+                                            setEnvironments(newEnvironments);
+                                        }}
+                                    />
+                                    <TextField
+                                        size='small'
+                                        label={`Environment ${i + 1} Name`}
+                                        value={environments[i]?.name || ''}
+                                        onChange={(e) => {
+                                            const newEnvironments = [
+                                                ...environments,
+                                            ];
+                                            newEnvironments[i].name =
+                                                e.target.value;
+                                            setEnvironments(newEnvironments);
+                                        }}
+                                        error={!!error}
+                                        helperText={error}
+                                    />
+                                </StyledEnvironmentInputs>
                             );
                         })}
                     </StyledEnvironmentNameInputs>

@@ -22,17 +22,19 @@ export class DbMetricsMonitor {
 
     constructor() {}
 
-    registerGaugeDbMetric<T>(definition: GaugeDefinition<T>) {
+    registerGaugeDbMetric<T>(definition: GaugeDefinition<T>): Task {
         const gauge = createGauge(definition);
         this.gauges.set(definition.name, gauge);
-        this.tasks.add(async () => {
+        const task = async () => {
             const result = await definition.query();
-            if (result) {
+            if (result !== null && result !== undefined) {
                 const { count, labels } = definition.map(result);
                 gauge.reset();
                 gauge.labels(labels).set(count);
             }
-        });
+        };
+        this.tasks.add(task);
+        return task;
     }
 
     refreshDbMetrics = async () => {

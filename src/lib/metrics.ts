@@ -117,13 +117,16 @@ export default class MetricsMonitor {
             help: 'Number of times a feature flag has been used',
             labelNames: ['toggle', 'active', 'appName'],
         });
-        dbMetrics.registerGaugeDbMetric({
+
+        // schedule and execute immediately
+        await dbMetrics.registerGaugeDbMetric({
             name: 'feature_toggles_total',
             help: 'Number of feature flags',
             labelNames: ['version'],
             query: () => instanceStatsService.getToggleCount(),
             map: (count) => ({ count, labels: { version } }),
-        });
+        })();
+
         dbMetrics.registerGaugeDbMetric({
             name: 'max_feature_environment_strategies',
             help: 'Maximum number of environment strategies in one feature',

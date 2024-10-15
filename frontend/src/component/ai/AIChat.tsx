@@ -13,6 +13,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { AIChatInput } from './AIChatInput';
 import { AIChatMessage } from './AIChatMessage';
 import { AIChatHeader } from './AIChatHeader';
+import { Resizable } from 'component/common/Resizable/Resizable';
 
 const StyledAIIconContainer = styled('div')(({ theme }) => ({
     position: 'fixed',
@@ -37,6 +38,11 @@ const StyledAIChatContainer = styled(StyledAIIconContainer)({
     right: 10,
 });
 
+const StyledResizable = styled(Resizable)(({ theme }) => ({
+    boxShadow: theme.boxShadows.popup,
+    borderRadius: theme.shape.borderRadiusLarge,
+}));
+
 const StyledAIIconButton = styled(IconButton)(({ theme }) => ({
     background: theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
@@ -47,9 +53,10 @@ const StyledAIIconButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const StyledChat = styled('div')(({ theme }) => ({
-    borderRadius: theme.shape.borderRadiusLarge,
+    display: 'flex',
+    flex: 1,
+    flexDirection: 'column',
     overflow: 'hidden',
-    boxShadow: theme.boxShadows.popup,
     background: theme.palette.background.paper,
 }));
 
@@ -58,9 +65,9 @@ const StyledChatContent = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     padding: theme.spacing(2),
     paddingBottom: theme.spacing(1),
-    width: '30vw',
-    height: '50vh',
-    overflow: 'auto',
+    flex: 1,
+    overflowY: 'auto',
+    overflowX: 'hidden',
 }));
 
 const initialMessages: ChatMessage[] = [
@@ -134,24 +141,32 @@ export const AIChat = () => {
 
     return (
         <StyledAIChatContainer>
-            <StyledChat>
-                <AIChatHeader
-                    onNew={() => setMessages(initialMessages)}
-                    onClose={() => setOpen(false)}
-                />
-                <StyledChatContent>
-                    <AIChatMessage from='assistant'>
-                        Hello, how can I assist you?
-                    </AIChatMessage>
-                    {messages.map(({ role, content }, index) => (
-                        <AIChatMessage key={index} from={role}>
-                            {content}
+            <StyledResizable
+                handlers={['top-left', 'top', 'left']}
+                minSize={{ width: '270px', height: '200px' }}
+                maxSize={{ width: '90vw', height: '90vh' }}
+                defaultSize={{ width: '25vw', height: '60vh' }}
+                onResize={scrollToEnd}
+            >
+                <StyledChat>
+                    <AIChatHeader
+                        onNew={() => setMessages(initialMessages)}
+                        onClose={() => setOpen(false)}
+                    />
+                    <StyledChatContent>
+                        <AIChatMessage from='assistant'>
+                            Hello, how can I assist you?
                         </AIChatMessage>
-                    ))}
-                    <div ref={chatEndRef} />
-                </StyledChatContent>
-                <AIChatInput onSend={onSend} loading={loading} />
-            </StyledChat>
+                        {messages.map(({ role, content }, index) => (
+                            <AIChatMessage key={index} from={role}>
+                                {content}
+                            </AIChatMessage>
+                        ))}
+                        <div ref={chatEndRef} />
+                    </StyledChatContent>
+                    <AIChatInput onSend={onSend} loading={loading} />
+                </StyledChat>
+            </StyledResizable>
         </StyledAIChatContainer>
     );
 };

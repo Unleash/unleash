@@ -165,7 +165,7 @@ export const PersonalDashboard = () => {
                 </StyledAccordionSummary>
                 <StyledAccordionDetails>
                     <MyProjects
-                        owners={personalDashboard.projectOwners}
+                        owners={personalDashboard?.projectOwners ?? []}
                         admins={personalDashboard?.admins ?? []}
                         ref={projectStageRef}
                         projects={projects}

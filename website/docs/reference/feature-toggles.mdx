@@ -4,25 +4,25 @@ title: Feature Flags
 
 ## Overview
 
-Feature flags are a core concept of Unleash. Feature flags allow you to release, test, and manage features and functionality across your application without changing the source code.
+Feature flags are a core concept of Unleash. They allow you to release, test, and manage features and functionality across your application without changing the source code.
 
-Feature flags exist within a [project](./projects) and have distinct configurations and [activation strategies](./activation-strategies) for each of the project's active [environments](./environments). Activation strategies determine if a feature flag is enabled in a specific environment.
+Feature flags exist within a [project](./projects) and have distinct configurations and [activation strategies](./activation-strategies) for each of the project's active [environments](./environments). Activation strategies determine whether a feature flag is enabled in a specific environment.
 
 Feature flags have the following properties:
 
-- **Name**: [URL-friendly](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) string between 1 and 100 characters; must be unique per instance.
-- **Type**: The [feature flag's type](#feature-flag-types); `Release` by default.
+- **Name**: A [URL-friendly](https://www.rfc-editor.org/rfc/rfc3986#section-2.3) string between 1 and 100 characters; must be unique per instance.
+- **Type**: The [feature flag's type](#feature-flag-types); defaults to `Release`.
 - **Project**: The [project](./projects) that contains the feature flag.
-- **Description**: A description of the feature flag's purpose; optional.
-- **Impression data**: Whether impression data is enabled for the flag; disabled by default.
+- **Description**: An optional description of the feature flag's purpose.
+- **Impression data**: Indicates whether impression data is enabled for the flag; disabled by default.
 
 ## Environments and activation strategies
 
-Feature flags have different [activation strategies](./activation-strategies) for each environment to allow you to manage feature rollouts per environment.
+Feature flags have different [activation strategies](./activation-strategies) for each environment, allowing you to manage feature rollouts per environment.
 
-To activate a feature within an environment, assign at least one activation strategy to it. If you don't specify a strategy, the default of gradual rollout to 100% is used.
+To activate a feature within an environment, assign at least one activation strategy to it. If you don't specify a strategy, the default is a gradual rollout to 100%.
 
-Activation strategies determine if a feature flag activates for a specific [Unleash context](./unleash-context), such as a particular user or segment. When multiple strategies are in place, the flag will activate if any one of them evaluates to true.
+Activation strategies determine whether a feature flag activates for a specific [Unleash context](./unleash-context), such as a particular user or segment. When multiple strategies are in place, the flag activates if any one of the strategies evaluates to true.
 
 ### Strategy variants
 
@@ -59,7 +59,7 @@ To learn more, visit [Types of feature flags](../what-is-a-feature-flag#types-of
 
 ## Feature flag state
 
-A feature flag can have one of the following states: _active_, _potentially stale_, and _stale_. Unleash marks all flags as _potentially stale_ automatically once it passes its [expected lifetime](#feature-flag-lifetime).
+A feature flag can have one of the following states: _active_, _potentially stale_, or _stale_. Unleash marks all flags as _potentially stale_ automatically once they pass their [expected lifetime](#feature-flag-lifetime).
 
 State, together with expected lifetime, gives you an indication of when to [clean up a feature flag in code](./technical-debt.md).
 
@@ -71,17 +71,17 @@ Marking a flag as stale helps you deprecate a feature flag without removing the 
 
 You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [technical debt dashboard](./technical-debt).
 
-Marking a flag as stale generates the `feature-stale-on` [event](./reference/events#feature-stale-on). You can use [an integration](/integrations/integrations) to trigger automated workflows, for instance, post notifications in a Slack channel, break project builds if the code contains stale flags, or open PRs automatically to remove stale flags from the code.
+Marking a flag as stale generates the `feature-stale-on` [event](./reference/events#feature-stale-on). You can use [an integration](/integrations/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
 
 ## Feature flag lifetime
 
-Each feature flag type has an expected lifetime, which gives you an indication of when a feature flag might be stale. While some feature flag types are permanent, most flags are short-lived.
+Each feature flag type has an expected lifetime, which gives you an indication of when a feature flag might become stale. While some feature flag types are permanent, most flags are short-lived.
 
 The lifetime and state indicators help you make decisions about what flags need to be [cleaned up](./technical-debt.md) in your codebase. See [11 Principles for building and scaling feature flags](../topics/feature-flags/feature-flag-best-practices) to learn more.
 
 Once a feature flag exists for longer than its expected lifetime, Unleash changes its state to _potentially stale_.
 
-With Admin access, you can configure the lifetime of a feature flag type. In the Admin UI, go to **Configure > Feature flag** types and edit the flag type you'd like to change.
+With Admin access, you can configure the lifetime of a feature flag type. In the Admin UI, go to **Configure > Feature flag types** and edit the flag type you'd like to change.
 
 ## Feature flag lifecycle
 
@@ -95,7 +95,7 @@ Based on usage metrics and interactions with Unleash, feature flags can go throu
 These insights can help you improve the efficiency of your software development process.
 
 
-![Feature lifecycle example](/img/feature-lifecycle.png)
+![Feature lifecycle](/img/feature-lifecycle.png)
 
 ### Lifecycle stages
 
@@ -129,7 +129,7 @@ Too much time in the completed stage can indicate delays in decommissioning the 
 #### Archived
 
 Unleash hasn't detected any production usage metrics for at least two days. It's likely that it is safe to archive this flag.
-If an archived feature is revived, it starts a new lifecycle with a new initial stage. 
+If an archived feature is revived, it starts a new lifecycle with a new [initial](#initial) stage. 
 
 ## Naming patterns
 
@@ -145,7 +145,7 @@ Unique names also make it easier to track and search for flags across codebases,
 To define a new naming convention for a project, go to **Project settings > Enterprise settings**. For **Naming Pattern**, define a valid [JavaScript regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp).
 Optionally, you can provide an example and a description to guide users when creating new flags.
 
-Once saved, all future feature flag names in the project, including those created via the API, must follow the defined pattern. Note that the full feature flag name must match the pattern; a part of the name matching is not sufficient.
+Once saved, all future feature flag names in the project, including those created via the API, must follow the defined pattern. Note that the full feature flag name must match the pattern; partial matches are not sufficient.
 
 For example, you could set a pattern like `^(red|blue|green)\.[a-z-]+\.[0-9]+$`. You could then provide an example of a valid feature flag name, such as "blue.fast-checkout.64" and a description like: "`<team>.<feature>.<ticket>`" to clarify the structure.
 
@@ -153,9 +153,9 @@ For example, you could set a pattern like `^(red|blue|green)\.[a-z-]+\.[0-9]+$`.
 
 You can archive a feature flag once you no longer need it. To do so, go to the feature flag's page and click **Archive feature flag**.
 
-Once archived, the flag is no longer available to Client SDKs.
+Once archived, the flag is no longer available to client SDKs.
 
-![Feature lifecycle example](/img/archive-feature-flag.png)
+![Archive a feature flag](/img/archive-feature-flag.png)
 
 ### View archived flags
 
@@ -167,4 +167,7 @@ You can revive archived flags by navigating to the [feature flag archive](#view-
 
 ### Delete a feature flag
 
-You can delete archived flags by navigating to the [feature flag archive](#view-archived-flags) and clicking **Delete feature flag**. Don't delete any feature flags unless you are certain that it is no longer in use, and its name can be safely reused.
+You can delete archived flags by navigating to the [feature flag archive](#view-archived-flags) and clicking **Delete feature flag**. 
+
+However, we recommend not deleting feature flags unless they are completely removed from your codebase. If you delete a flag and later create a new one with the same name, it might unintentionally reactivate old code that still references the original flag.
+

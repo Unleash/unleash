@@ -4,15 +4,11 @@ import { createGauge, type Gauge } from './util/metrics';
 
 type RestrictedRecord<T extends readonly string[]> = Record<T[number], string>;
 type Query<R> = () => Promise<R | undefined | null>;
-type MapResult<R> = (result: R) =>
-    | {
-          count: number;
-          labels: RestrictedRecord<GaugeDefinition<R>['labelNames']>;
-      }
-    | {
-          count: number;
-          labels: RestrictedRecord<GaugeDefinition<R>['labelNames']>;
-      }[];
+type MetricValue<R> = {
+    count: number;
+    labels: RestrictedRecord<GaugeDefinition<R>['labelNames']>;
+};
+type MapResult<R> = (result: R) => MetricValue<R> | MetricValue<R>[];
 
 type GaugeDefinition<T> = {
     name: string;

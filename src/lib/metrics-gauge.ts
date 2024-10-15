@@ -1,6 +1,6 @@
 import { createGauge, type Gauge } from './util/metrics';
 
-type RestrictedRecord<T extends string[]> = Record<T[number], string>;
+type RestrictedRecord<T extends readonly string[]> = Record<T[number], string>;
 type Query<R> = () => Promise<R | undefined | null>;
 type MapResult<R> = (result: R) => {
     count: number;

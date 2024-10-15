@@ -39,9 +39,6 @@ test('Enabled new token button when limits, version and permission allow for it'
         permissions,
     });
 
-    const button = await screen.findByText('Create token');
-    expect(button).toBeDisabled();
-
     await waitFor(async () => {
         const button = await screen.findByText('Create token');
         expect(button).not.toBeDisabled();

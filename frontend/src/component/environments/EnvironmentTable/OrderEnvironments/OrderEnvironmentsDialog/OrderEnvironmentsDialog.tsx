@@ -147,14 +147,11 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                 </Typography>
                 <StyledFields>
                     <Box>
-                        <Typography
-                            component='label'
-                            htmlFor='numberOfEnvironments'
-                        >
+                        <Typography component='label' id='numberOfEnvironments'>
                             Select the number of additional environments
                         </Typography>
                         <StyledGeneralSelect
-                            id='numberOfEnvironments'
+                            labelId='numberOfEnvironments'
                             value={`${selectedOption}`}
                             options={OPTIONS.map((option) => ({
                                 key: `${option}`,
@@ -189,6 +186,7 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                                 <StyledEnvironmentInputs key={i}>
                                     <StyledTypeSelect
                                         label='Type of environment'
+                                        labelId={`environmentType${i}`}
                                         value={
                                             environments[i]?.type ||
                                             ENVIRONMENT_TYPES[0]

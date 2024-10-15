@@ -42,10 +42,10 @@ export class DbMetricsMonitor {
     };
 
     async getLastValue(name: string): Promise<number | undefined> {
-        try {
-            return (await this.gauges[name].gauge.get()).values[0].value;
-        } catch (e) {
-            return undefined;
+        const gauge = await this.gauges.get(name)?.gauge?.get();
+        if (gauge && gauge.values.length > 0) {
+            return gauge.values[0].value;
         }
+        return undefined;
     }
 }

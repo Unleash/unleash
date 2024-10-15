@@ -108,7 +108,7 @@ export const ConnectSDK: FC<{ project: string }> = ({ project }) => {
             <div>
                 <Button
                     component={Link}
-                    to={`projects/${project}`}
+                    to={`/projects/${project}`}
                     variant='contained'
                 >
                     Go to project

@@ -8,6 +8,7 @@ import { useFormErrors } from 'hooks/useFormErrors';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useOrderEnvironmentApi } from 'hooks/api/actions/useOrderEnvironmentsApi/useOrderEnvironmentsApi';
+import type { OrderEnvironmentsSchema } from 'openapi';
 
 type OrderEnvironmentsProps = {};
 
@@ -29,11 +30,14 @@ export const OrderEnvironments: FC<OrderEnvironmentsProps> = () => {
         return null;
     }
 
-    const onSubmit = async (environments: string[]) => {
+    const onSubmit = async (
+        environments: OrderEnvironmentsSchema['environments'],
+    ) => {
         let hasErrors = false;
         environments.forEach((environment, index) => {
             const field = `environment-${index}`;
-            if (environment.trim() === '') {
+            const environmentName = environment.name.trim();
+            if (environmentName === '') {
                 errors.setFormError(field, 'Environment name is required');
                 hasErrors = true;
             } else {

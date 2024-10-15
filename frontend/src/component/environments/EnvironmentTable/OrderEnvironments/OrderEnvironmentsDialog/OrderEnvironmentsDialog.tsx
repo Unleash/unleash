@@ -13,11 +13,12 @@ import { OrderEnvironmentsDialogPricing } from './OrderEnvironmentsDialogPricing
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';
 import type { IFormErrors } from 'hooks/useFormErrors';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import type { OrderEnvironmentsSchemaEnvironmentsItem } from 'openapi';
 
 type OrderEnvironmentsDialogProps = {
     open: boolean;
     onClose: () => void;
-    onSubmit: (environments: { name: string; type: string }[]) => void;
+    onSubmit: (environments: OrderEnvironmentsSchemaEnvironmentsItem[]) => void;
     errors?: IFormErrors;
 };
 
@@ -180,7 +181,7 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                         </Typography>
                         {[...Array(selectedOption)].map((_, i) => {
                             const error = errors?.getFormError(
-                                `environmentNames[${i}]`,
+                                `environment-${i}`,
                             );
                             return (
                                 <StyledEnvironmentInputs key={i}>

@@ -152,6 +152,11 @@
       "permanent": true
     },
     {
+      "source": "/reference/dependent-features",
+      "destination": "/reference/feature-toggles#feature-flag-dependencies",
+      "permanent": true
+    },
+    {
       "source": "/advanced/sso-open-id-connect",
       "destination": "/how-to/how-to-add-sso-open-id-connect",
       "permanent": true

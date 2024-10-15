@@ -2,7 +2,6 @@ import type {
     ICreateGroupModel,
     IGroup,
     IGroupModel,
-    IGroupModelWithProjectRole,
     IGroupProject,
     IGroupRole,
     IGroupUser,
@@ -29,6 +28,7 @@ import type { IAccountStore } from '../types/stores/account-store';
 import type { IUser } from '../types/user';
 import type EventService from '../features/events/event-service';
 import { SSO_SYNC_USER } from '../db/group-store';
+import type { IGroupWithProjectRoles } from '../types/stores/access-store';
 
 const setsAreEqual = (firstSet, secondSet) =>
     firstSet.size === secondSet.size &&
@@ -179,7 +179,7 @@ export class GroupService {
 
     async getProjectGroups(
         projectId: string,
-    ): Promise<IGroupModelWithProjectRole[]> {
+    ): Promise<IGroupWithProjectRoles[]> {
         const projectGroups = await this.groupStore.getProjectGroups(projectId);
 
         if (projectGroups.length > 0) {

@@ -156,6 +156,7 @@ export interface IUnleashOptions {
             | 'segments'
         >
     >;
+    userInactivityThresholdInDays?: number;
 }
 
 export interface IEmailOption {
@@ -274,4 +275,5 @@ export interface IUnleashConfig {
     rateLimiting: IRateLimiting;
     feedbackUriPath?: string;
     openAIAPIKey?: string;
+    userInactivityThresholdInDays: number;
 }

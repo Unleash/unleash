@@ -5,7 +5,6 @@ import { InactiveUsersStore } from './inactive-users-store';
 import { FakeInactiveUsersStore } from './fakes/fake-inactive-users-store';
 import type { UserService } from '../../services';
 
-export const DAYS_TO_BE_COUNTED_AS_INACTIVE = 180;
 export const createInactiveUsersService = (
     db: Db,
     config: IUnleashConfig,

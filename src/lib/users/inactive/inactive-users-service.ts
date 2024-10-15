@@ -8,15 +8,18 @@ import type { IInactiveUsersStore } from './types/inactive-users-store-type';
 import type { Logger } from '../../logger';
 import type { InactiveUserSchema } from '../../openapi';
 import type { UserService } from '../../services';
-import { DAYS_TO_BE_COUNTED_AS_INACTIVE } from './createInactiveUsersService';
 
 export class InactiveUsersService {
     private inactiveUsersStore: IInactiveUsersStore;
     private readonly logger: Logger;
     private userService: UserService;
+    private readonly userInactivityThresholdInDays: number;
     constructor(
         { inactiveUsersStore }: Pick<IUnleashStores, 'inactiveUsersStore'>,
-        { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
+        {
+            getLogger,
+            userInactivityThresholdInDays,
+        }: Pick<IUnleashConfig, 'getLogger' | 'userInactivityThresholdInDays'>,
         services: {
             userService: UserService;
         },
@@ -24,11 +27,12 @@ export class InactiveUsersService {
         this.logger = getLogger('services/client-feature-toggle-service.ts');
         this.inactiveUsersStore = inactiveUsersStore;
         this.userService = services.userService;
+        this.userInactivityThresholdInDays = userInactivityThresholdInDays;
     }
 
     async getInactiveUsers(): Promise<InactiveUserSchema[]> {
         const users = await this.inactiveUsersStore.getInactiveUsers(
-            DAYS_TO_BE_COUNTED_AS_INACTIVE,
+            this.userInactivityThresholdInDays,
         );
         if (users.length > 0) {
             return users.map((user) => {

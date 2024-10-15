@@ -57,7 +57,7 @@ export default class MetricsMonitor {
 
         const { eventStore, environmentStore } = stores;
         const { flagResolver } = config;
-        const dbMetrics = new DbMetricsMonitor();
+        const dbMetrics = new DbMetricsMonitor(config);
 
         const cachedEnvironments: () => Promise<IEnvironment[]> = memoizee(
             async () => environmentStore.getAll(),
@@ -260,11 +260,18 @@ export default class MetricsMonitor {
             help: 'Number of strategies',
         });
 
-        const clientAppsTotal = createGauge({
+        // execute immediately to get initial values
+        await dbMetrics.registerGaugeDbMetric({
             name: 'client_apps_total',
             help: 'Number of registered client apps aggregated by range by last seen',
             labelNames: ['range'],
-        });
+            query: () => instanceStatsService.getLabeledAppCounts(),
+            map: (result) =>
+                Object.entries(result).map(([range, count]) => ({
+                    count,
+                    labels: { range },
+                })),
+        })();
 
         const samlEnabled = createGauge({
             name: 'saml_enabled',
@@ -628,11 +635,6 @@ export default class MetricsMonitor {
                 oidcEnabled.reset();
                 oidcEnabled.set(stats.OIDCenabled ? 1 : 0);
 
-                clientAppsTotal.reset();
-                stats.clientApps.forEach(({ range, count }) =>
-                    clientAppsTotal.labels({ range }).set(count),
-                );
-
                 rateLimits.reset();
                 rateLimits
                     .labels({
@@ -695,7 +697,6 @@ export default class MetricsMonitor {
             collectStaticCounters.bind(this),
             hoursToMilliseconds(2),
             'collectStaticCounters',
-            0, // no jitter
         );
 
         eventBus.on(

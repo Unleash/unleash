@@ -157,7 +157,7 @@ describe('OrderEnvironmentsDialog Component', () => {
         expect(onSubmitMock).toHaveBeenCalledTimes(1);
         expect(onSubmitMock).toHaveBeenCalledWith([
             { name: 'Dev', type: 'development' },
-            { name: 'Prod', type: 'development' },
+            { name: 'Staging', type: 'development' },
         ]);
     });
 

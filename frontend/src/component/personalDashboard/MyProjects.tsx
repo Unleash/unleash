@@ -33,6 +33,8 @@ import { ContactAdmins, DataError } from './ProjectDetailsError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Link } from 'react-router-dom';
 import { ActionBox } from './ActionBox';
+import { NoProjectsContactAdmin } from './NoProjectsContactAdmin';
+import { AskOwnerToAddYouToTheirProject } from './AskOwnerToAddYouToTheirProject';
 
 const ActiveProjectDetails: FC<{
     project: PersonalDashboardSchemaProjectsItem;
@@ -140,6 +142,7 @@ export const MyProjects = forwardRef<
             setActiveProject,
             activeProject,
             admins,
+            owners,
         },
         ref,
     ) => {
@@ -158,6 +161,7 @@ export const MyProjects = forwardRef<
 
         const box1Content = () => {
             if (state === 'no projects') {
+                return <NoProjectsContactAdmin admins={admins} />;
             }
 
             if (state === 'projects with error') {
@@ -185,6 +189,10 @@ export const MyProjects = forwardRef<
         };
 
         const box2Content = () => {
+            if (state === 'no projects') {
+                return <AskOwnerToAddYouToTheirProject owners={owners} />;
+            }
+
             if (state === 'projects with error') {
                 return <ContactAdmins admins={admins} />;
             }

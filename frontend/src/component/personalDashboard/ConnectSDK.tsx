@@ -3,16 +3,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { FC } from 'react';
 import { ActionBox } from './ActionBox';
 import { Link } from 'react-router-dom';
-
-const NeutralCircleContainer = styled('span')(({ theme }) => ({
-    width: '28px',
-    height: '28px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.palette.neutral.border,
-    borderRadius: '50%',
-}));
+import { NeutralCircleContainer } from './SharedComponents';
 
 const MainCircleContainer = styled(NeutralCircleContainer)(({ theme }) => ({
     backgroundColor: theme.palette.primary.main,

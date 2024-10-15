@@ -130,3 +130,13 @@ export const StyledCardTitle = styled('div')<{ lines?: number }>(
         wordBreak: 'break-word',
     }),
 );
+
+export const NeutralCircleContainer = styled('span')(({ theme }) => ({
+    width: '28px',
+    height: '28px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: theme.palette.neutral.border,
+    borderRadius: '50%',
+}));

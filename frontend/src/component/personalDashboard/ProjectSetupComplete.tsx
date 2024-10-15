@@ -3,20 +3,7 @@ import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import type { PersonalDashboardProjectDetailsSchemaInsights } from '../../openapi';
-
-const TitleContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    gap: theme.spacing(2),
-    alignItems: 'center',
-}));
-
-const ActionBox = styled('article')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    display: 'flex',
-    gap: theme.spacing(3),
-    flexDirection: 'column',
-}));
+import { ActionBox } from './ActionBox';
 
 const PercentageScore = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
@@ -145,14 +132,16 @@ export const ProjectSetupComplete: FC<{
     const projectHealthTrend = determineProjectHealthTrend(insights);
 
     return (
-        <ActionBox>
-            <TitleContainer>
-                <Lightbulb color='primary' />
-                <Typography sx={{ fontWeight: 'bold' }} component='h4'>
-                    Project health
-                </Typography>
-            </TitleContainer>
-
+        <ActionBox
+            title={
+                <>
+                    <Lightbulb color='primary' />
+                    <Typography sx={{ fontWeight: 'bold' }} component='h4'>
+                        Project health
+                    </Typography>
+                </>
+            }
+        >
             <ProjectHealthMessage
                 trend={projectHealthTrend}
                 insights={insights}

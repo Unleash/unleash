@@ -10,24 +10,27 @@ export const createInactiveUsersService = (
     config: IUnleashConfig,
     userService: UserService,
 ): InactiveUsersService => {
-    const { eventBus, getLogger } = config;
+    const { eventBus, getLogger, userInactivityThresholdInDays } = config;
     const inactiveUsersStore = new InactiveUsersStore(db, eventBus, getLogger);
 
     return new InactiveUsersService(
         { inactiveUsersStore },
-        { getLogger },
+        { getLogger, userInactivityThresholdInDays },
         { userService },
     );
 };
 
 export const createFakeInactiveUsersService = (
-    { getLogger, eventBus }: Pick<IUnleashConfig, 'getLogger' | 'eventBus'>,
+    {
+        getLogger,
+        userInactivityThresholdInDays,
+    }: Pick<IUnleashConfig, 'getLogger' | 'userInactivityThresholdInDays'>,
     userService: UserService,
 ): InactiveUsersService => {
     const fakeStore = new FakeInactiveUsersStore();
     return new InactiveUsersService(
         { inactiveUsersStore: fakeStore },
-        { getLogger },
+        { getLogger, userInactivityThresholdInDays },
         { userService },
     );
 };

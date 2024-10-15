@@ -713,6 +713,14 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
     const openAIAPIKey = process.env.OPENAI_API_KEY;
 
+    const defaultDaysToBeConsideredInactive = 180;
+    const userInactivityThresholdInDays =
+        options.userInactivityThresholdInDays ??
+        parseEnvVarNumber(
+            process.env.USER_INACTIVITY_THRESHOLD_IN_DAYS,
+            defaultDaysToBeConsideredInactive,
+        );
+
     return {
         db,
         session,
@@ -752,6 +760,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         feedbackUriPath,
         dailyMetricsStorageDays,
         openAIAPIKey,
+        userInactivityThresholdInDays,
     };
 }
 

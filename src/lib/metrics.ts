@@ -460,30 +460,6 @@ export default class MetricsMonitor {
                         .set(stage.duration);
                 });
 
-                eventBus.on(
-                    events.STAGE_ENTERED,
-                    (entered: { stage: string; feature: string }) => {
-                        if (flagResolver.isEnabled('trackLifecycleMetrics')) {
-                            logger.info(
-                                `STAGE_ENTERED listened ${JSON.stringify(entered)}`,
-                            );
-                        }
-                        featureLifecycleStageEnteredCounter.increment({
-                            stage: entered.stage,
-                        });
-                    },
-                );
-
-                eventBus.on(
-                    events.EXCEEDS_LIMIT,
-                    ({
-                        resource,
-                        limit,
-                    }: { resource: string; limit: number }) => {
-                        exceedsLimitErrorCounter.increment({ resource, limit });
-                    },
-                );
-
                 featureLifecycleStageCountByProject.reset();
                 stageCountByProjectResult.forEach((stageResult) =>
                     featureLifecycleStageCountByProject
@@ -721,6 +697,27 @@ export default class MetricsMonitor {
             hoursToMilliseconds(2),
             'collectStaticCounters',
             0, // no jitter
+        );
+
+        eventBus.on(
+            events.EXCEEDS_LIMIT,
+            ({ resource, limit }: { resource: string; limit: number }) => {
+                exceedsLimitErrorCounter.increment({ resource, limit });
+            },
+        );
+
+        eventBus.on(
+            events.STAGE_ENTERED,
+            (entered: { stage: string; feature: string }) => {
+                if (flagResolver.isEnabled('trackLifecycleMetrics')) {
+                    logger.info(
+                        `STAGE_ENTERED listened ${JSON.stringify(entered)}`,
+                    );
+                }
+                featureLifecycleStageEnteredCounter.increment({
+                    stage: entered.stage,
+                });
+            },
         );
 
         eventBus.on(

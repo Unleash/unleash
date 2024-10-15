@@ -94,7 +94,6 @@ With Admin access, you can configure the lifetime of a feature flag type. In the
 Based on usage metrics and interactions with Unleash, feature flags can go through five distinct lifecycle stages: initial, pre-live, live, completed, and archived. These stages mirror the typical software development process and allow you to identify bottlenecks at any stage of the lifecycle. 
 These insights can help you improve the efficiency of your software development process.
 
-
 ![Feature lifecycle](/img/feature-lifecycle.png)
 
 ### Lifecycle stages
@@ -148,6 +147,43 @@ Optionally, you can provide an example and a description to guide users when cre
 Once saved, all future feature flag names in the project, including those created via the API, must follow the defined pattern. Note that the full feature flag name must match the pattern; partial matches are not sufficient.
 
 For example, you could set a pattern like `^(red|blue|green)\.[a-z-]+\.[0-9]+$`. You could then provide an example of a valid feature flag name, such as "blue.fast-checkout.64" and a description like: "`<team>.<feature>.<ticket>`" to clarify the structure.
+
+## Feature flag dependencies
+
+:::note Availability
+
+**Plan**: [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing)
+
+**Unleash version**: `5.7+` | **Unleash Edge version**: `13.1+` | **Unleash Proxy version**: `0.18+`. Requires [SDK compatibility](../reference/sdks/index.md#server-side-sdk-compatibility-table) for variants.
+:::
+
+Feature flag dependencies define a relationship between feature flags. Each feature flag can have one parent, but multiple child flags can share the same parent.
+The hierarchy is limited to a single level, meaning a parent flag cannot have its own parent. Additionally, both parent and child flags must belong to the same project.
+
+A child feature flag is evaluated only when both the child and its parent feature are enabled in the same environment and the parent dependency value is met. You can set the parent dependency value to one of the following:
+
+- Parent feature is enabled.
+- Parent feature is disabled: Useful when the parent acts as a kill switch with inverted enabled/disabled logic.
+- Parent feature is enabled with variants: Useful for A/B testing scenarios where you need specific variant dependencies.
+
+To add a dependency, you need the `update-feature-dependency` project permission. In the Admin UI, go to the feature flag you want to add a parent to and select **Add parent feature**.
+
+![Feature lifecycle](/img/add-parent-flag.png)
+
+Archiving a child feature flag also removes its dependencies on parent feature flags. A parent feature cannot be archived if it has any child dependencies; in such cases, remove the dependencies, or archive both parent and child together.
+
+Note that metrics are affected only by child feature flag evaluations.
+
+### Variant dependencies
+
+:::note Availability
+
+**Plan**: [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.12+`
+
+:::
+
+Variant dependencies are satisfied if the parent feature variant is evaluated to the expected value.
+The parent dependency variant is compared to the actual value of the parent in a given environment.
 
 ## Archive a feature flag
 

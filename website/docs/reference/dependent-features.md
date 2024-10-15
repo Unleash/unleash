@@ -76,8 +76,6 @@ To make use of dependent feature, you need to use a compatible client. Client SD
 - [unleash-client-php](https://github.com/Unleash/unleash-client-php) (from v2.2.0)
 - Client SDKs talking to [unleash-proxy](https://github.com/Unleash/unleash-proxy) (from v0.18.0)
 - Client SDKs talking to [unleash-edge](https://github.com/Unleash/unleash-edge) (from v13.1.0)
-- Client SDKs talking to Frontend API in [unleash-server](https://github.com/Unleash/unleash) (from v5.7.0)
-- Unleash Playground in [unleash-server](https://github.com/Unleash/unleash) (from v5.7.0)
 
 
 If you would like to give feedback on this feature, experience issues or have questions, please feel free to open an issue on [GitHub](https://github.com/Unleash/unleash/).

@@ -20,7 +20,7 @@ For instance: When using the [gradual rollout activation strategy](../reference/
 
 :::note Availability
 
-**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.0+` and [SDK compatibility](../reference/sdks/index.md#server-side-sdk-compatibility-table) .
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.0+` and [SDK compatibility](../reference/sdks/index.md#server-side-sdk-compatibility-table).
 
 :::
 

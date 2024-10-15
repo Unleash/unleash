@@ -42,7 +42,7 @@ Variants can also include payloads such as JSON, CSV, or strings to provide user
 :::
 
 
-Feature flags have a type to indicate their use case and help you manage and sort your flags. A feature flag's type determines its [expected lifetime](#feature-flag-lifetime), and its visual appearance in the Admin UI.
+Feature flags have a type to indicate their use case and help you manage and sort your flags. A feature flag's type determines its [expected lifetime](#expected-lifetime) and its visual appearance in the Admin UI.
 
 
 The following is a list of feature flag types:
@@ -59,9 +59,9 @@ To learn more, visit [Types of feature flags](../what-is-a-feature-flag#types-of
 
 ## Feature flag state
 
-A feature flag can have one of the following states: _active_, _potentially stale_, or _stale_. Unleash marks all flags as _potentially stale_ automatically once they pass their [expected lifetime](#feature-flag-lifetime).
+A feature flag can have one of the following states: _active_, _potentially stale_, or _stale_. Unleash marks all flags as _potentially stale_ automatically once they pass their [expected lifetime](#expected-lifetime).
 
-State, together with expected lifetime, gives you an indication of when to [clean up a feature flag in code](./technical-debt.md).
+State gives you an indication of when to [clean up a feature flag in code](./technical-debt.md).
 
 You can also manually change the state on a feature flag's page by going to **Overview** and clicking **Toggle stale state**.
 
@@ -73,15 +73,10 @@ You can use this to signal to your team to stop using the feature in your applic
 
 Marking a flag as stale generates the `feature-stale-on` [event](./reference/events#feature-stale-on). You can use [an integration](/integrations/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
 
-## Feature flag lifetime
+### Configure expected lifetime
 
-Each feature flag type has an expected lifetime, which gives you an indication of when a feature flag might become stale. While some feature flag types are permanent, most flags are short-lived.
-
-The lifetime and state indicators help you make decisions about what flags need to be [cleaned up](./technical-debt.md) in your codebase. See [11 Principles for building and scaling feature flags](../topics/feature-flags/feature-flag-best-practices) to learn more.
-
-Once a feature flag exists for longer than its expected lifetime, Unleash changes its state to _potentially stale_.
-
-With Admin access, you can configure the lifetime of a feature flag type. In the Admin UI, go to **Configure > Feature flag types** and edit the flag type you'd like to change.
+Each [feature flag type](#feature-flag-type) has a default expected lifetime.
+With Admin access, you can configure these values. In the Admin UI, go to **Configure > Feature flag types** and edit the flag type you'd like to change.
 
 ## Feature flag lifecycle
 
@@ -106,15 +101,11 @@ A feature stuck in an initial stage can indicate integration issues in pre-produ
 
 #### Pre-live
 
-The feature flag has received metrics in a non-production environment or a production environment that is disabled.
-
-Too much time in the pre-live stage can suggest challenges in achieving production readiness. 
+The feature flag has received metrics in a non-production environment or a production environment that is disabled. Too much time in the pre-live stage can suggest challenges in achieving production readiness. 
 
 #### Live
 
-The first users have been exposed to the feature in a production environment.
-
-Once you have enough production usage data, you can mark the feature as completed. Marking the feature flag as complete does not affect any configuration; you decide whether to keep the feature, keep just one variant of it, or archive it entirely.
+The first users have been exposed to the feature in a production environment. Once you have enough production usage data, you can mark the feature as completed. Marking the feature flag as complete does not affect any configuration; you decide whether to keep the feature, keep just one variant of it, or archive it entirely.
 
 This stage serves as a reminder to start cleaning up the feature toggle and removing it from the code. A feature flag stuck in the live stage can indicate difficulties in data gathering or decision-making.
 
@@ -130,24 +121,6 @@ Too much time in the completed stage can indicate delays in decommissioning the 
 Unleash hasn't detected any production usage metrics for at least two days. It's likely that it is safe to archive this flag.
 If an archived feature is revived, it starts a new lifecycle with a new [initial](#initial) stage. 
 
-## Naming patterns
-
-:::note Availability
-
-**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.7+`
-
-:::
-
-A consistent and unique feature flag naming pattern reduces risks and simplifies flag management by preventing the reuse of old names, which could accidentally re-enable outdated features.
-Unique names also make it easier to track and search for flags across codebases, ensuring clarity on what each flag controls and its purpose.
-
-To define a new naming convention for a project, go to **Project settings > Enterprise settings**. For **Naming Pattern**, define a valid [JavaScript regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp).
-Optionally, you can provide an example and a description to guide users when creating new flags.
-
-Once saved, all future feature flag names in the project, including those created via the API, must follow the defined pattern. Note that the full feature flag name must match the pattern; partial matches are not sufficient.
-
-For example, you could set a pattern like `^(red|blue|green)\.[a-z-]+\.[0-9]+$`. You could then provide an example of a valid feature flag name, such as "blue.fast-checkout.64" and a description like: "`<team>.<feature>.<ticket>`" to clarify the structure.
-
 ## Feature flag dependencies
 
 :::note Availability
@@ -160,7 +133,7 @@ For example, you could set a pattern like `^(red|blue|green)\.[a-z-]+\.[0-9]+$`.
 Feature flag dependencies define a relationship between feature flags. Each feature flag can have one parent, but multiple child flags can share the same parent.
 The hierarchy is limited to a single level, meaning a parent flag cannot have its own parent. Additionally, both parent and child flags must belong to the same project.
 
-A child feature flag is evaluated only when both the child and its parent feature are enabled in the same environment and the parent dependency value is met. You can set the parent dependency value to one of the following:
+A child feature flag is evaluated only when both the child and its parent feature are **enabled in the same environment** and the parent dependency value is met. You can set the parent dependency value to one of the following:
 
 - Parent feature is enabled.
 - Parent feature is disabled: Useful when the parent acts as a kill switch with inverted enabled/disabled logic.
@@ -184,6 +157,24 @@ Note that metrics are affected only by child feature flag evaluations.
 
 Variant dependencies are satisfied if the parent feature variant is evaluated to the expected value.
 The parent dependency variant is compared to the actual value of the parent in a given environment.
+
+## Set a naming pattern
+
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.7+`
+
+:::
+
+A consistent and unique feature flag naming pattern reduces risks and simplifies flag management by preventing the reuse of old names, which could accidentally re-enable outdated features.
+Unique names also make it easier to track and search for flags across codebases, ensuring clarity on what each flag controls and its purpose.
+
+To define a new naming convention for a project, go to **Project settings > Enterprise settings**. For **Naming Pattern**, define a valid [JavaScript regular expression](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp).
+Optionally, you can provide an example and a description to guide users when creating new flags.
+
+Once saved, all future feature flag names in the project, including those created via the API, must follow the defined pattern. Note that the full feature flag name must match the pattern; partial matches are not sufficient.
+
+For example, you could set a pattern like `^(red|blue|green)\.[a-z-]+\.[0-9]+$`. You could then provide an example of a valid feature flag name, such as "blue.fast-checkout.64" and a description like: "`<team>.<feature>.<ticket>`" to clarify the structure.
 
 ## Archive a feature flag
 

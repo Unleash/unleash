@@ -321,7 +321,6 @@ module.exports = {
                         'reference/change-requests',
                         'reference/command-menu',
                         'reference/custom-activation-strategies',
-                        'reference/dependent-features',
                         'reference/environments',
                         'reference/events',
                         'reference/feature-toggles',

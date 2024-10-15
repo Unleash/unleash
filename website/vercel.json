@@ -103,12 +103,12 @@
     },
     {
       "source": "/reference/feature-flag-naming-patterns",
-      "destination": "/reference/feature-toggles#naming-patterns",
+      "destination": "/reference/feature-toggles#set-a-naming-pattern",
       "permanent": true
     },
     {
       "source": "/how-to/how-to-add-feature-flag-naming-patterns",
-      "destination": "/reference/feature-toggles#naming-patterns",
+      "destination": "/reference/feature-toggles#set-a-naming-pattern",
       "permanent": true
     },
     {

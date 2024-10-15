@@ -11,7 +11,7 @@ import { ProjectSetupComplete } from './ProjectSetupComplete';
 import { ConnectSDK, CreateFlag, ExistingFlag } from './ConnectSDK';
 import { LatestProjectEvents } from './LatestProjectEvents';
 import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
-import { forwardRef, useEffect, useRef, type FC } from 'react';
+import { type ReactNode, forwardRef, useEffect, useRef, type FC } from 'react';
 import type {
     PersonalDashboardProjectDetailsSchema,
     PersonalDashboardSchemaAdminsItem,
@@ -159,108 +159,132 @@ export const MyProjects = forwardRef<
             activeProjectStage === 'onboarding-started' ||
             activeProjectStage === 'first-flag-created';
 
-        const box1Content = () => {
-            if (state === 'no projects') {
-                return <NoProjectsContactAdmin admins={admins} />;
-            }
+        const getGridContents = (): {
+            list: ReactNode;
+            box1: ReactNode;
+            box2: ReactNode;
+        } => {
+            switch (state) {
+                case 'no projects':
+                    return {
+                        list: (
+                            <ActionBox>
+                                <Typography>
+                                    You don't currently have access to any
+                                    projects in the system.
+                                </Typography>
+                                <Typography>
+                                    To get started, you can{' '}
+                                    <Link to='/projects?create=true'>
+                                        create your own project
+                                    </Link>
+                                    . Alternatively, you can review the
+                                    available projects in the system and ask the
+                                    owner for access.
+                                </Typography>
+                            </ActionBox>
+                        ),
+                        box1: <NoProjectsContactAdmin admins={admins} />,
+                        box2: (
+                            <AskOwnerToAddYouToTheirProject owners={owners} />
+                        ),
+                    };
 
-            if (state === 'projects with error') {
-                return <DataError project={activeProject} />;
-            }
+                case 'projects with error':
+                    return {
+                        list: (
+                            <StyledList>
+                                {projects.map((project) => (
+                                    <ProjectListItem
+                                        key={project.id}
+                                        project={project}
+                                        selected={project.id === activeProject}
+                                        onClick={() =>
+                                            setActiveProject(project.id)
+                                        }
+                                    />
+                                ))}
+                            </StyledList>
+                        ),
+                        box1: <DataError project={activeProject} />,
+                        box2: <ContactAdmins admins={admins} />,
+                    };
 
-            if (
-                activeProjectStage === 'onboarded' &&
-                personalDashboardProjectDetails
-            ) {
-                return (
-                    <ProjectSetupComplete
-                        project={activeProject}
-                        insights={personalDashboardProjectDetails.insights}
-                    />
-                );
-            } else if (
-                activeProjectStage === 'onboarding-started' ||
-                activeProjectStage === 'loading'
-            ) {
-                return <CreateFlag project={activeProject} />;
-            } else if (activeProjectStage === 'first-flag-created') {
-                return <ExistingFlag project={activeProject} />;
-            }
-        };
-
-        const box2Content = () => {
-            if (state === 'no projects') {
-                return <AskOwnerToAddYouToTheirProject owners={owners} />;
-            }
-
-            if (state === 'projects with error') {
-                return <ContactAdmins admins={admins} />;
-            }
-
-            if (
-                activeProjectStage === 'onboarded' &&
-                personalDashboardProjectDetails
-            ) {
-                return (
-                    <LatestProjectEvents
-                        latestEvents={
-                            personalDashboardProjectDetails.latestEvents
+                case 'projects': {
+                    const box1 = (() => {
+                        if (
+                            activeProjectStage === 'onboarded' &&
+                            personalDashboardProjectDetails
+                        ) {
+                            return (
+                                <ProjectSetupComplete
+                                    project={activeProject}
+                                    insights={
+                                        personalDashboardProjectDetails.insights
+                                    }
+                                />
+                            );
+                        } else if (
+                            activeProjectStage === 'onboarding-started' ||
+                            activeProjectStage === 'loading'
+                        ) {
+                            return <CreateFlag project={activeProject} />;
+                        } else if (
+                            activeProjectStage === 'first-flag-created'
+                        ) {
+                            return <ExistingFlag project={activeProject} />;
                         }
-                    />
-                );
-            }
+                    })();
 
-            if (setupIncomplete || activeProjectStage === 'loading') {
-                return <ConnectSDK project={activeProject} />;
+                    const box2 = (() => {
+                        if (
+                            activeProjectStage === 'onboarded' &&
+                            personalDashboardProjectDetails
+                        ) {
+                            return (
+                                <LatestProjectEvents
+                                    latestEvents={
+                                        personalDashboardProjectDetails.latestEvents
+                                    }
+                                />
+                            );
+                        } else if (
+                            setupIncomplete ||
+                            activeProjectStage === 'loading'
+                        ) {
+                            return <ConnectSDK project={activeProject} />;
+                        }
+                    })();
+
+                    return {
+                        list: (
+                            <StyledList>
+                                {projects.map((project) => (
+                                    <ProjectListItem
+                                        key={project.id}
+                                        project={project}
+                                        selected={project.id === activeProject}
+                                        onClick={() =>
+                                            setActiveProject(project.id)
+                                        }
+                                    />
+                                ))}
+                            </StyledList>
+                        ),
+                        box1,
+                        box2,
+                    };
+                }
             }
         };
 
-        const projectListContent = () => {
-            if (state === 'no projects') {
-                return (
-                    <ActionBox>
-                        <Typography>
-                            You don't currently have access to any projects in
-                            the system.
-                        </Typography>
-                        <Typography>
-                            To get started, you can{' '}
-                            <Link to='/projects?create=true'>
-                                create your own project
-                            </Link>
-                            . Alternatively, you can review the available
-                            projects in the system and ask the owner for access.
-                        </Typography>
-                    </ActionBox>
-                );
-            }
-
-            return (
-                <StyledList>
-                    {projects.map((project) => (
-                        <ProjectListItem
-                            key={project.id}
-                            project={project}
-                            selected={project.id === activeProject}
-                            onClick={() => setActiveProject(project.id)}
-                        />
-                    ))}
-                </StyledList>
-            );
-        };
-
+        const { list, box1, box2 } = getGridContents();
         return (
             <ContentGridContainer ref={ref}>
                 <ProjectGrid>
-                    <SpacedGridItem gridArea='projects'>
-                        {projectListContent()}
-                    </SpacedGridItem>
-                    <SpacedGridItem gridArea='box1'>
-                        {box1Content()}
-                    </SpacedGridItem>
-                    <SpacedGridItem gridArea='box2'>
-                        {box2Content()}
-                    </SpacedGridItem>
+                    <SpacedGridItem gridArea='projects'>{list}</SpacedGridItem>
+                    <SpacedGridItem gridArea='box1'>{box1}</SpacedGridItem>
+                    <SpacedGridItem gridArea='box2'>{box2}</SpacedGridItem>
                     <EmptyGridItem />
                     <GridItem gridArea='owners'>
                         <RoleAndOwnerInfo

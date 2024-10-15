@@ -47,6 +47,7 @@ const StyledAIIconButton = styled(IconButton)(({ theme }) => ({
     background: theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
     boxShadow: theme.boxShadows.popup,
+    transition: 'background 0.3s',
     '&:hover': {
         background: theme.palette.primary.dark,
     },
@@ -145,7 +146,7 @@ export const AIChat = () => {
                 handlers={['top-left', 'top', 'left']}
                 minSize={{ width: '270px', height: '200px' }}
                 maxSize={{ width: '90vw', height: '90vh' }}
-                defaultSize={{ width: '25vw', height: '60vh' }}
+                defaultSize={{ width: '320px', height: '450px' }}
                 onResize={scrollToEnd}
             >
                 <StyledChat>

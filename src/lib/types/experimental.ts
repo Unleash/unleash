@@ -25,7 +25,6 @@ export type IFlagKey =
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
     | 'disableMetrics'
-    | 'stripHeadersOnAPI'
     | 'signals'
     | 'automatedActions'
     | 'celebrateUnleash'

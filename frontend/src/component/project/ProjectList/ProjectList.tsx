@@ -112,7 +112,7 @@ export const ProjectList = () => {
                 <SearchHighlightProvider value={state.query || ''}>
                     <ProjectGroup
                         sectionTitle='My projects'
-                        sectionSubtitle='Favorite projects, projects you own or projects you are a member of.'
+                        sectionSubtitle='Favorite projects, projects you own, and projects you are a member of'
                         HeaderActions={
                             <ProjectsListSort
                                 sortBy={state.sortBy}

@@ -194,8 +194,8 @@ const CreateFlag = ({ projectId, refetchFeatures }: ICreateFlagProps) => {
                 Create a feature flag
             </TitleContainer>
             <Typography>
-                <div>The project currently holds no feature flags.</div>
-                <div>Create one to get started.</div>
+                The project currently holds no feature flags. Create one to get
+                started.
             </Typography>
             <FlagCreationButton
                 text='Create flag'

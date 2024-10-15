@@ -56,6 +56,12 @@ const setupLongRunningProject = () => {
         ],
     });
 
+    testServerRoute(
+        server,
+        '/api/admin/client-metrics/features/myFlag/raw',
+        [],
+    );
+
     testServerRoute(server, '/api/admin/projects/projectId/features/myFlag', {
         environments: [
             { name: 'development', type: 'development' },

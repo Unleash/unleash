@@ -1,5 +1,6 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { useOptimisticUpdate } from './useOptimisticUpdate';
+import { act } from 'react';
 
 describe('useOptimisticUpdate', () => {
     it('should return state, setter, and rollback function', () => {

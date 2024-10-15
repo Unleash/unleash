@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { useRoleForm } from './useRoleForm';
-import { act } from 'react-test-renderer';
 import { test } from 'vitest';
+import { act } from 'react';
 
 describe('trim names and description', () => {
     test('name is trimmed before being set', () => {

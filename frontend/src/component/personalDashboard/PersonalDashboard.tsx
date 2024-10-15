@@ -115,8 +115,6 @@ export const PersonalDashboard = () => {
     const activeProjectStage =
         personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
 
-    const noProjects = projects.length === 0;
-
     const projectStageRef = useLoading(
         !detailsError && activeProjectStage === 'loading',
     );
@@ -197,7 +195,7 @@ export const PersonalDashboard = () => {
                     <MyFlags
                         hasProjects={projects?.length > 0}
                         flagData={
-                            personalDashboard && personalDashboard.flags.length
+                            personalDashboard?.flags.length
                                 ? {
                                       state: 'flags' as const,
                                       activeFlag,

@@ -43,6 +43,9 @@ const StyledAIMessage = styled('div')(({ theme }) => ({
         borderWidth: '5px',
         borderColor: `transparent ${theme.palette.secondary.border} transparent transparent`,
     },
+    pre: {
+        whiteSpace: 'pre-wrap',
+    },
 }));
 
 const StyledUserMessage = styled(StyledAIMessage)(({ theme }) => ({

@@ -111,6 +111,22 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
         });
     };
 
+    const onTypeChange = (index: number, type: string) => {
+        setEnvironments(
+            environments.map((env, i) =>
+                i === index ? { ...env, type } : { ...env },
+            ),
+        );
+    };
+
+    const onNameChange = (index: number, name: string) => {
+        setEnvironments(
+            environments.map((env, i) =>
+                i === index ? { ...env, name } : { ...env },
+            ),
+        );
+    };
+
     return (
         <StyledDialog open={open} title=''>
             <FormTemplate
@@ -199,11 +215,7 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                                             }),
                                         )}
                                         onChange={(type) => {
-                                            const newEnvironments = [
-                                                ...environments,
-                                            ];
-                                            newEnvironments[i].type = type;
-                                            setEnvironments(newEnvironments);
+                                            onTypeChange(i, type);
                                         }}
                                     />
                                     <TextField
@@ -211,12 +223,7 @@ export const OrderEnvironmentsDialog: FC<OrderEnvironmentsDialogProps> = ({
                                         label={`Environment ${i + 1} Name`}
                                         value={environments[i]?.name || ''}
                                         onChange={(e) => {
-                                            const newEnvironments = [
-                                                ...environments,
-                                            ];
-                                            newEnvironments[i].name =
-                                                e.target.value;
-                                            setEnvironments(newEnvironments);
+                                            onNameChange(i, e.target.value);
                                         }}
                                         error={!!error}
                                         helperText={error}

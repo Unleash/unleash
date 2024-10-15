@@ -164,23 +164,17 @@ export const PersonalDashboard = () => {
                     </Typography>
                 </StyledAccordionSummary>
                 <StyledAccordionDetails>
-                    {noProjects && personalDashboard ? (
-                        <ContentGridNoProjects
-                            owners={personalDashboard.projectOwners}
-                            admins={personalDashboard.admins}
-                        />
-                    ) : (
-                        <MyProjects
-                            admins={personalDashboard?.admins ?? []}
-                            ref={projectStageRef}
-                            projects={projects}
-                            activeProject={activeProject || ''}
-                            setActiveProject={setActiveProject}
-                            personalDashboardProjectDetails={
-                                personalDashboardProjectDetails
-                            }
-                        />
-                    )}
+                    <MyProjects
+                        owners={personalDashboard.projectOwners}
+                        admins={personalDashboard?.admins ?? []}
+                        ref={projectStageRef}
+                        projects={projects}
+                        activeProject={activeProject || ''}
+                        setActiveProject={setActiveProject}
+                        personalDashboardProjectDetails={
+                            personalDashboardProjectDetails
+                        }
+                    />
                 </StyledAccordionDetails>
             </SectionAccordion>
 

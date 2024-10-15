@@ -16,7 +16,7 @@ exports[`returns all baseRoutes 1`] = `
       "mobile": true,
     },
     "path": "/personal",
-    "title": "Personal Dashboard",
+    "title": "Dashboard",
     "type": "protected",
   },
   {

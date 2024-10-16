@@ -15,9 +15,9 @@ import { AIChatMessage } from './AIChatMessage';
 import { AIChatHeader } from './AIChatHeader';
 import { Resizable } from 'component/common/Resizable/Resizable';
 
-const AI_LOADING_MESSAGE = {
+const AI_ERROR_MESSAGE = {
     role: 'assistant',
-    content: '_Unleash AI is typing..._',
+    content: `I'm sorry, I'm having trouble understanding you right now. I've reported the issue to the team. Please try again later.`,
 } as const;
 
 const StyledAIIconContainer = styled('div')(({ theme }) => ({
@@ -109,18 +109,21 @@ export const AIChat = () => {
 
         try {
             setLoading(true);
-            const tempMessages: ChatMessage[] = [
-                ...messages,
+            setMessages((currentMessages) => [
+                ...currentMessages,
                 { role: 'user', content },
-                AI_LOADING_MESSAGE,
-            ];
-            setMessages(tempMessages);
+            ]);
             const { messages: newMessages } = await chat(content);
             mutate(() => true);
             setMessages(newMessages);
-            setLoading(false);
         } catch (error: unknown) {
+            setMessages((currentMessages) => [
+                ...currentMessages,
+                AI_ERROR_MESSAGE,
+            ]);
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -166,6 +169,11 @@ export const AIChat = () => {
                                 {content}
                             </AIChatMessage>
                         ))}
+                        {loading && (
+                            <AIChatMessage from='assistant'>
+                                _Unleash AI is typing..._
+                            </AIChatMessage>
+                        )}
                         <div ref={chatEndRef} />
                     </StyledChatContent>
                     <AIChatInput onSend={onSend} loading={loading} />

@@ -2,37 +2,40 @@ import type { Logger } from './logger';
 import type { IUnleashConfig } from './types';
 import { createGauge, type Gauge } from './util/metrics';
 
-type RestrictedRecord<T extends readonly string[]> = Record<T[number], string>;
 type Query<R> = () => Promise<R | undefined | null>;
-type MetricValue<R> = {
-    count: number;
-    labels: RestrictedRecord<GaugeDefinition<R>['labelNames']>;
+type MetricValue<L extends string> = {
+    value: number;
+    labels?: Record<L, string | number>;
 };
-type MapResult<R> = (result: R) => MetricValue<R> | MetricValue<R>[];
+type MapResult<R, L extends string> = (
+    result: R,
+) => MetricValue<L> | MetricValue<L>[];
 
-type GaugeDefinition<T> = {
+type GaugeDefinition<T, L extends string> = {
     name: string;
     help: string;
-    labelNames: string[];
+    labelNames: L[];
     query: Query<T>;
-    map: MapResult<T>;
+    map: MapResult<T, L>;
 };
 
 type Task = () => Promise<void>;
 export class DbMetricsMonitor {
     private tasks: Set<Task> = new Set();
     private gauges: Map<string, Gauge<string>> = new Map();
-    private logger: Logger;
+    private log: Logger;
 
-    constructor(config: IUnleashConfig) {
-        this.logger = config.getLogger('gauge-metrics');
+    constructor({ getLogger }: Pick<IUnleashConfig, 'getLogger'>) {
+        this.log = getLogger('gauge-metrics');
     }
 
     private asArray<T>(value: T | T[]): T[] {
         return Array.isArray(value) ? value : [value];
     }
 
-    registerGaugeDbMetric<T>(definition: GaugeDefinition<T>): Task {
+    registerGaugeDbMetric<T, L extends string>(
+        definition: GaugeDefinition<T, L>,
+    ): Task {
         const gauge = createGauge(definition);
         this.gauges.set(definition.name, gauge);
         const task = async () => {
@@ -42,11 +45,15 @@ export class DbMetricsMonitor {
                     const results = this.asArray(definition.map(result));
                     gauge.reset();
                     for (const r of results) {
-                        gauge.labels(r.labels).set(r.count);
+                        if (r.labels) {
+                            gauge.labels(r.labels).set(r.value);
+                        } else {
+                            gauge.set(r.value);
+                        }
                     }
                 }
             } catch (e) {
-                this.logger.warn(`Failed to refresh ${definition.name}`, e);
+                this.log.warn(`Failed to refresh ${definition.name}`, e);
             }
         };
         this.tasks.add(task);
@@ -59,10 +66,21 @@ export class DbMetricsMonitor {
         }
     };
 
-    async getLastValue(name: string): Promise<number | undefined> {
+    async findValue(
+        name: string,
+        labels?: Record<string, string | number>,
+    ): Promise<number | undefined> {
         const gauge = await this.gauges.get(name)?.gauge?.get();
         if (gauge && gauge.values.length > 0) {
-            return gauge.values[0].value;
+            const values = labels
+                ? gauge.values.filter(({ labels: l }) => {
+                      return Object.entries(labels).every(
+                          ([key, value]) => l[key] === value,
+                      );
+                  })
+                : gauge.values;
+            // return first value
+            return values.map(({ value }) => value).shift();
         }
         return undefined;
     }

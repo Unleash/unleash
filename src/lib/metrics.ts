@@ -124,7 +124,7 @@ export default class MetricsMonitor {
             help: 'Number of feature flags',
             labelNames: ['version'],
             query: () => instanceStatsService.getToggleCount(),
-            map: (count) => ({ count, labels: { version } }),
+            map: (value) => ({ value, labels: { version } }),
         })();
 
         dbMetrics.registerGaugeDbMetric({
@@ -134,7 +134,7 @@ export default class MetricsMonitor {
             query: () =>
                 stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
             map: (result) => ({
-                count: result.count,
+                value: result.count,
                 labels: {
                     environment: result.environment,
                     feature: result.feature,
@@ -149,7 +149,7 @@ export default class MetricsMonitor {
             query: () =>
                 stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
             map: (result) => ({
-                count: result.count,
+                value: result.count,
                 labels: { feature: result.feature },
             }),
         });
@@ -268,7 +268,7 @@ export default class MetricsMonitor {
             query: () => instanceStatsService.getLabeledAppCounts(),
             map: (result) =>
                 Object.entries(result).map(([range, count]) => ({
-                    count,
+                    value: count,
                     labels: { range },
                 })),
         })();

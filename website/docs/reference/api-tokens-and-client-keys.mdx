@@ -200,13 +200,13 @@ Some example client tokens are:
 
 ## Proxy client keys {#proxy-client-keys}
 
-Use proxy client keys to connect [Proxy client SDKs (front-end SDKs)](../reference/sdks#front-end-sdks) to the [Unleash Proxy](../reference/unleash-proxy). As opposed to the [API tokens](#api-tokens), Proxy client keys are _not_ considered secret and are safe to use on any clients (refer to the [the proxy documentation for more about privacy](../generated/unleash-proxy#we-care-about-privacy)). They do _not_ let you connect to the Unleash server API.
+Use proxy client keys to connect [Proxy client SDKs (front-end SDKs)](../reference/sdks#front-end-sdks) to the [Unleash Proxy](../reference/unleash-proxy). As opposed to the [API tokens](#api-tokens), Proxy client keys are _not_ considered secret and are safe to use on any clients (refer to the [the proxy documentation for more about privacy](../reference/unleash-proxy#we-care-about-privacy)). They do _not_ let you connect to the Unleash server API.
 
 Proxy client keys are arbitrary strings that you _must_ provide the Unleash proxy with on startup. They can be whatever you want and you **create them yourself**.
 
 :::info Creating proxy client keys
 
-To designate a string as a proxy client key, add it to the `clientKeys` list when starting the proxy, as mentioned in the [_configuration_ section of the Unleash proxy documentation](../generated/unleash-proxy#configuration). Connecting clients should then specify the same string as their client key.
+To designate a string as a proxy client key, add it to the `clientKeys` list when starting the proxy, as mentioned in the [_configuration_ section of the Unleash proxy documentation](../reference/unleash-proxy#configuration). Connecting clients should then specify the same string as their client key.
 
 :::
 

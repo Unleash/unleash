@@ -35,11 +35,11 @@ In this example we want to define an activation strategy offers a scheduled rele
 The steps to implement a custom strategy for your client depend on the kind of client SDK you're using:
 
 - if you're using a server-side client SDK, follow the steps in [option A](#step-3-a 'Step 3 option A: implement the strategy for a server-side client SDK').
-- if you're using a front-end client SDK ([Android](../reference/sdks/client-side/android-proxy), [JavaScript](../reference/sdks/javascript-browser)), [React](../reference/sdks/client-side/react), [iOS](../reference/sdks/client-side/ios-proxy)), follow the steps in [option B](#step-3-b 'Step 3 option B: implementing the strategy for a front-end client SDK')
+- if you're using a front-end client SDK ([Android](../reference/sdks/android-proxy), [JavaScript](../reference/sdks/javascript-browser)), [React](../reference/sdks/react), [iOS](../reference/sdksios-proxy)), follow the steps in [option B](#step-3-b 'Step 3 option B: implementing the strategy for a front-end client SDK')
 
 ### Option A: Implement the strategy for a server-side client SDK {#step-3-a}
 
-1. **Implement the custom strategy** in your [client SDK](../reference/sdks). The exact way to do this will vary depending on the specific SDK you're using, so refer to the SDK's documentation. The example below shows an example of how you'd implement a custom strategy called "TimeStamp" for the [Node.js client SDK](../reference/sdks/server-side/node).
+1. **Implement the custom strategy** in your [client SDK](../reference/sdks). The exact way to do this will vary depending on the specific SDK you're using, so refer to the SDK's documentation. The example below shows an example of how you'd implement a custom strategy called "TimeStamp" for the [Node.js client SDK](../reference/sdks/node).
 
    ```js
    const { Strategy } = require('unleash-client');

@@ -37,7 +37,7 @@ To try Unleash with a client-side technology, create a [front-end token](/refere
 
 Now you can open your application code and connect through one of the [client-side SDKs](/reference/sdks#client-side-sdks).
 
-The following example shows you how you could use the [JavaScript SDK](/generated/sdks/client-side/javascript-browser) to connect to the Unleash demo frontend API:
+The following example shows you how you could use the [JavaScript SDK](/reference/sdks/javascript-browser) to connect to the Unleash demo frontend API:
 
 ```javascript
 import { UnleashClient } from "unleash-proxy-client";

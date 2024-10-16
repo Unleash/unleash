@@ -81,19 +81,22 @@ export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
     };
 
     const renderOption = (
-        props: object,
+        props: object & { key?: string },
         option: IAutocompleteBoxOption,
         { selected }: AutocompleteRenderOptionState,
-    ) => (
-        <li {...props}>
-            <SelectOptionCheckbox
-                icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
-                checkedIcon={<CheckBoxIcon fontSize='small' />}
-                checked={selected}
-            />
-            {option.label}
-        </li>
-    );
+    ) => {
+        const { key, ...rest } = props;
+        return (
+            <li key={key} {...rest}>
+                <SelectOptionCheckbox
+                    icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
+                    checkedIcon={<CheckBoxIcon fontSize='small' />}
+                    checked={selected}
+                />
+                {option.label}
+            </li>
+        );
+    };
 
     const renderGroup = ({ key, children }: AutocompleteRenderGroupParams) => (
         <Fragment key={key}>

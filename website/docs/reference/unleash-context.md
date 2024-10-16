@@ -2,7 +2,7 @@
 title: Unleash Context
 ---
 
-The **Unleash Context** contains information relating to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies) and [strategy constraints](../reference/strategy-constraints) and to calculate [flag stickiness](../reference/stickiness). The Unleash Context is an important feature of all the [Unleash client SDKs](../reference/sdks/index).
+The **Unleash Context** contains information relating to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies) and [strategy constraints](../reference/strategy-constraints) and to calculate [flag stickiness](../reference/stickiness). The Unleash Context is an important feature of all the [Unleash client SDKs](../reference/sdks).
 
 ## Structure
 
@@ -71,7 +71,7 @@ Using a custom context field called _region_ as an example: if you define the fi
 
 :::note SDK compatibility
 
-Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks/index#server-side-sdk-compatibility-table) for the full overview.
+Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks#server-side-sdk-compatibility-table) for the full overview.
 
 :::
 
@@ -81,4 +81,4 @@ Any context field _can_ be used to [calculate custom stickiness](../reference/st
 
 [^1]: If you're on Unleash 4.3 or higher, you'll probably want to use [the environments feature](../reference/environments) instead of relying on the `environment` context field when working with environments.
 
-[^2]: Check the [*strategy constraints: advanced support* row of the compatibility table](../reference/sdks/index#strategy-constraints-advanced-support) for an overview of which SDKs provide the `currentTime` property.
+[^2]: Check the [*strategy constraints: advanced support* row of the compatibility table](../reference/sdks#strategy-constraints-advanced-support) for an overview of which SDKs provide the `currentTime` property.

@@ -75,7 +75,7 @@ To clarify, here's a few example strategy constraints and what they do:
 In this section, `<context-field>` is used as a placeholder for an arbitrary context field. With the exception of the `currentTime` field, you can use any context field in its place.
 :::
 
-Unleash supports a wide range of constraint operators. `IN` and `NOT_IN` are basic operators that are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](../reference/sdks/index#strategy-constraints).
+Unleash supports a wide range of constraint operators. `IN` and `NOT_IN` are basic operators that are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](../reference/sdks#strategy-constraints).
 
 ### Constraint negation / inversion {#constraint-negation}
 
@@ -174,7 +174,7 @@ Additionally, you can use negation to get _less than or equal to_ and _greater t
 This section gives a brief overview over to use the client SDKs to interact with strategy constraints. The exact steps will vary depending on which client you are using, so make sure to consult the documentation for your specific client SDK.
 :::
 
-Strategy constraints require [the Unleash Context](../reference/unleash-context) to work. All official [Unleash client SDKs](../reference/sdks/index) support the option to pass [dynamic context values](../reference/unleash-context#structure "Unleash Context, section: structure") to the `isEnabled` function (or the SDK's equivalent).
+Strategy constraints require [the Unleash Context](../reference/unleash-context) to work. All official [Unleash client SDKs](../reference/sdks) support the option to pass [dynamic context values](../reference/unleash-context#structure "Unleash Context, section: structure") to the `isEnabled` function (or the SDK's equivalent).
 
 If the strategy constraint uses a [**standard Unleash Context field**](../reference/unleash-context#structure), set the context field to the value you wish to give it.
 
@@ -188,7 +188,7 @@ This value can still be negated as explained in [the section on negating values]
 
 :::tip
 
-Explore the content in this subsection in more depth in [the topic guide on using Unleash with large constraints](/understanding-unleash/managing-constraintsx).
+Explore the content in this subsection in more depth in [the topic guide on using Unleash with large constraints](/understanding-unleash/managing-constraints).
 
 :::
 
@@ -209,7 +209,7 @@ If you use the new constraints with old SDKs, here's how it'll affect _some_ of 
 - The Python client SDK will evaluate the flag to false, as it cannot evaluate the constraint successfully.
 - The .NET, Ruby, and PHP SDKs raise exceptions if the provided operator is not `IN` or `NOT_IN`.
 
-Please inspect the [SDK compatibility table to see which version of your preferred SDK introduced support for this feature](../reference/sdks/index#strategy-constraints).
+Please inspect the [SDK compatibility table to see which version of your preferred SDK introduced support for this feature](../reference/sdks#strategy-constraints).
 
 After Unleash 4.9, we updated the [Unleash client specification](https://github.com/Unleash/client-specification). Going forward, any constraint that a client does not recognize, **must be evaluated as `false`**
 

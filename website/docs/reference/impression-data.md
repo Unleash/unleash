@@ -4,7 +4,7 @@ title: Impression Data
 
 :::note Availability
 
-**Version**: `4.7+`. Requires [SDK compatibility](../reference/sdks/index#server-side-sdk-compatibility-table).
+**Version**: `4.7+`. Requires [SDK compatibility](../reference/sdks#server-side-sdk-compatibility-table).
 
 :::
 
@@ -12,7 +12,7 @@ Unleash can provide you with **impression data** about the flags in your applica
 
 :::caution Front-end SDKs and disabled flags
 
-Older versions of the front-end SDKs and other SDKs that connect the [Unleash proxy](../generated/unleash-proxy) or the [Unleash front-end API](../reference/front-end-api) would **not** emit impression events when a flag is disabled.
+Older versions of the front-end SDKs and other SDKs that connect the [Unleash proxy](./unleash-proxy) or the [Unleash front-end API](./front-end-api) would **not** emit impression events when a flag is disabled.
 
 This is because impression data is a **per-flag** setting and the Proxy and front-end API only transmit information about flags that are enabled. As such, the SDK will never know that it should emit an impression event if a flag is disabled.
 
@@ -20,7 +20,7 @@ Some of the front-end SDKs now include a include a configuration property that l
 
 :::
 
-Impression data was designed to make it easier for you to **collect analytics data**, **perform A/B tests**, and **enrich experiments** in your applications. It contains information about the feature flag and the related [Unleash Context](../reference/unleash-context).
+Impression data was designed to make it easier for you to **collect analytics data**, **perform A/B tests**, and **enrich experiments** in your applications. It contains information about the feature flag and the related [Unleash Context](./unleash-context).
 
 Impression data is **opt-in on a per-flag basis**. Unleash will not emit impression events for flags not marked as such. Once you've turned impression data on for a flag, you can start listening for impression events in your client SDK.
 
@@ -39,7 +39,7 @@ This table describes all the properties on the impression events:
 | --- | --- | --- |
 | `eventType` | The type of the event: `isEnabled` or `getVariant` | All |
 | `eventId` | A globally unique id (GUID) assigned to this event. | All |
-| `context` | A representation of the current [Unleash Context](../reference/unleash-context). | All |
+| `context` | A representation of the current [Unleash Context](./unleash-context). | All |
 | `enabled` | Whether the flag was enabled or not at when the client made the request. | All |
 | `featureName` | The name of the feature flag. | All |
 | `variant` | The name of the active variant | `getVariant` events only |
@@ -87,7 +87,7 @@ You can enable impression data via the impression data flag in the admin UI's fl
 
 ## Example setup
 
-The exact setup will vary depending on your [client SDK](../reference/sdks/index). The below example configures the [Unleash Proxy client../reference/sdks/javascript-browser) to listen for impression events and log them to the console. If "my-feature-flag" is configured to emit impression data, then it will trigger an impression event as soon as Unleash is ready.
+The exact setup will vary depending on your [client SDK](./sdks). The below example configures the [Unleash Proxy client../reference/sdks/javascript-browser) to listen for impression events and log them to the console. If "my-feature-flag" is configured to emit impression data, then it will trigger an impression event as soon as Unleash is ready.
 
 ```js
 const unleash = new UnleashClient({

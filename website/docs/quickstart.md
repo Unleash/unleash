@@ -62,7 +62,7 @@ unleash.on("synchronized", () => {
 
 To try Unleash with a server-side technology, create a [client token](/reference/api-tokens-and-client-keys#client-tokens) and use `<your-unleash-instance>/api` as the API URL.
 
-Now you can open up your application code and create a connection to Unleash using one of our [SDKs](/reference/sdks/index). Here's an example using the [NodeJS SDK](/reference/sdks/node) to connect to the Unleash demo instance:
+Now you can open up your application code and create a connection to Unleash using one of our [SDKs](/reference/sdks). Here's an example using the [NodeJS SDK](/reference/sdks/node) to connect to the Unleash demo instance:
 
 ```javascript
 const { initialize } = require("unleash-client");

@@ -8,7 +8,7 @@ title: How to add strategy constraints
 
 :::
 
-This guide shows you how to add [strategy constraints](../reference/strategy-constraints) to your feature flags using the Admin UI. For information on how to interact with strategy constraints from an [Unleash client SDK](../reference/sdks/index), visit the specific SDK's documentation or see [the relevant section in the strategy constraints documentation](../reference/strategy-constraints#sdks 'strategy constraints documentation, section on interacting with constraints from client SDKs').
+This guide shows you how to add [strategy constraints](../reference/strategy-constraints) to your feature flags using the Admin UI. For information on how to interact with strategy constraints from an [Unleash client SDK](../reference/sdks), visit the specific SDK's documentation or see [the relevant section in the strategy constraints documentation](../reference/strategy-constraints#sdks).
 
 ## Prerequisites
 

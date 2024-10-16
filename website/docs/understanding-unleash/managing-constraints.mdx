@@ -8,7 +8,7 @@ In this explanatory guide, we will discuss how best to deal with large and compl
 
 :::
 
-Unleash offers several ways to limit feature exposure to a specified audience, such as the [User IDs strategy](../reference/activation-strategies#userids), [strategy constraints](../reference/strategy-constraints), and [segments](../reference/segmentsx). Each of these options makes it easy to add some sort of user identifier to the list of users who should get access to a feature.
+Unleash offers several ways to limit feature exposure to a specified audience, such as the [User IDs strategy](../reference/activation-strategies#userids), [strategy constraints](../reference/strategy-constraints), and [segments](../reference/segments). Each of these options makes it easy to add some sort of user identifier to the list of users who should get access to a feature.
 
 Because of their availability and ease of use with smaller lists, it can be tempting to just keep adding identifiers to those lists. However, once you start approaching a hundred elements, we recommend that you find another way to manage these IDs. In fact, it's probably better to stop well before you get that far.
 
@@ -18,7 +18,7 @@ How large is too large? How complex is too complex? It depends. However, smaller
 
 ## The cost of data
 
-First, let's talk a bit about Unleash's architecture: **Your Unleash instance** is where you define all your features, their strategies, and constraints (and a lot more). However, the Unleash instance itself does not do any of the feature evaluation[^1]. That responsibility is delegated to the Unleash SDKs (or [Edge](/generated/unleash-edge) / the [Unleash proxy](/generated/unleash-proxy)).
+First, let's talk a bit about Unleash's architecture: **Your Unleash instance** is where you define all your features, their strategies, and constraints (and a lot more). However, the Unleash instance itself does not do any of the feature evaluation[^1]. That responsibility is delegated to the Unleash SDKs (or [Edge](../reference/unleash-edge) / the [Unleash proxy](../reference/unleash-proxy)).
 
 For the SDKs (Edge/proxy included) to evaluate a feature, it needs to know everything about that feature in a specific environment. This includes all strategies and their constraints. This means that the Unleash instance must transmit all information about this feature (and all other features) as a response to an API call.
 

@@ -6,7 +6,7 @@ It is powerful to be able to turn a feature on and off instantaneously, without 
 
 Unleash comes with a number of built-in strategies (described below) that can be enhanced with [constraints](https://docs.getunleash.io/reference/strategy-constraints) for fine-grained control. For more advanced use cases, where constraints do not fulfill your needs, you can add your own [custom activation strategies](../reference/custom-activation-strategies). However, while activation strategies are _defined_ on the server, the server does not _implement_ the strategies. Instead, activation strategy implementation is done client-side. This means that it is _the client_ that decides whether a feature should be enabled or not.
 
-All [server-side client SDKs](../reference/sdks/index#server-side-sdks) and the [Unleash Proxy](../generated/unleash-proxy) implement the default strategies (and allow you to add your own [custom strategy implementations](../reference/custom-activation-strategies#implementation)). The [front-end client SDKs](../reference/sdks/index#front-end-sdks) do not do the evaluation themselves, instead relying on the [Unleash Proxy](../generated/unleash-proxy) to take care of the implementation and evaluation.
+All [server-side client SDKs](../reference/sdks#server-side-sdks) and the [Unleash Proxy](../reference/unleash-proxy) implement the default strategies (and allow you to add your own [custom strategy implementations](../reference/custom-activation-strategies#implementation)). The [front-end client SDKs](../reference/sdks#front-end-sdks) do not do the evaluation themselves, instead relying on the [Unleash Proxy](../reference/unleash-proxy) to take care of the implementation and evaluation.
 
 Some activation strategies require the client to provide the current [Unleash context](unleash-context) to the flag evaluation function for the evaluation to be done correctly.
 
@@ -60,7 +60,7 @@ This strategy has the following modelling name in the code:
 
 :::note SDK compatibility
 
-Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks/index#server-side-sdk-compatibility-table) for the full overview.
+Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks#server-side-sdk-compatibility-table) for the full overview.
 
 :::
 

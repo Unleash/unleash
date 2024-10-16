@@ -1,5 +1,5 @@
 import type { ComponentProps, Dispatch, FC, SetStateAction } from 'react';
-import { Autocomplete, TextField } from '@mui/material';
+import { Autocomplete, Chip, TextField } from '@mui/material';
 import { renderOption } from '../../renderOption';
 
 interface IEnvironmentsFieldProps {
@@ -59,6 +59,19 @@ export const EnvironmentsField: FC<IEnvironmentsFieldProps> = ({
                 <TextField {...params} label='Environments' />
             )}
             renderOption={renderOption}
+            renderTags={(value, getTagProps) => {
+                return value.map((option, index) => {
+                    const { key, ...props } = getTagProps({ index });
+                    return (
+                        <Chip
+                            size='small'
+                            key={key}
+                            {...props}
+                            label={option.label}
+                        />
+                    );
+                });
+            }}
             getOptionLabel={({ label }) => label}
             disableCloseOnSelect={false}
             size='small'

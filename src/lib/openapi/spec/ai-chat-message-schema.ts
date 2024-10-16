@@ -4,6 +4,7 @@ export const aiChatMessageSchema = {
     $id: '#/components/schemas/aiChatMessageSchema',
     type: 'object',
     description: 'Describes an Unleash AI chat message.',
+    additionalProperties: false,
     required: ['role', 'content'],
     properties: {
         role: {

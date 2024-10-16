@@ -2,7 +2,10 @@ import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IGroupUser } from 'interfaces/group';
 import { useMemo } from 'react';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar'; // usage
+import {
+    type IUserAvatarProps,
+    UserAvatar,
+} from 'component/common/UserAvatar/UserAvatar';
 import { objectId } from 'utils/objectId';
 import millify from 'millify';
 
@@ -14,6 +17,8 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     justifyContent: 'start',
 }));
 
+type AvatarComponentType = React.ComponentType<IUserAvatarProps>;
+
 export const AvatarComponent = styled(UserAvatar)(({ theme }) => ({
     outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
     margin: 0,
@@ -21,7 +26,7 @@ export const AvatarComponent = styled(UserAvatar)(({ theme }) => ({
     '&:hover': {
         outlineColor: theme.palette.primary.main,
     },
-}));
+})) as AvatarComponentType;
 
 type User = {
     name: string;
@@ -32,7 +37,7 @@ type User = {
 type AvatarGroupProps = {
     users: User[];
     avatarLimit?: number;
-    AvatarComponent?: typeof UserAvatar;
+    AvatarComponent?: AvatarComponentType;
     className?: string;
 };
 
@@ -44,7 +49,7 @@ export const AvatarGroup = ({ ...props }: AvatarGroupProps) => (
 );
 
 type AvatarGroupInnerProps = Omit<AvatarGroupProps, 'AvatarComponent'> & {
-    AvatarComponent: typeof UserAvatar;
+    AvatarComponent: AvatarComponentType;
 };
 
 const MAX_OVERFLOW_DISPLAY_NUMBER = 99;

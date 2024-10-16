@@ -20,9 +20,13 @@ type GaugeDefinition<T, L extends string> = {
 };
 
 type Task = () => Promise<void>;
+
+interface GaugeUpdater {
+    target: Gauge<string>;
+    task: Task;
+}
 export class DbMetricsMonitor {
-    private tasks: Set<Task> = new Set();
-    private gauges: Map<string, Gauge<string>> = new Map();
+    private updaters: Map<string, GaugeUpdater> = new Map();
     private log: Logger;
 
     constructor({ getLogger }: Pick<IUnleashConfig, 'getLogger'>) {
@@ -37,7 +41,6 @@ export class DbMetricsMonitor {
         definition: GaugeDefinition<T, L>,
     ): Task {
         const gauge = createGauge(definition);
-        this.gauges.set(definition.name, gauge);
         const task = async () => {
             try {
                 const result = await definition.query();
@@ -56,12 +59,15 @@ export class DbMetricsMonitor {
                 this.log.warn(`Failed to refresh ${definition.name}`, e);
             }
         };
-        this.tasks.add(task);
+        this.updaters.set(definition.name, { target: gauge, task });
         return task;
     }
 
     refreshDbMetrics = async () => {
-        for (const task of this.tasks) {
+        const tasks = Array.from(this.updaters.values()).map(
+            (updater) => updater.task,
+        );
+        for (const task of tasks) {
             await task();
         }
     };
@@ -70,7 +76,7 @@ export class DbMetricsMonitor {
         name: string,
         labels?: Record<string, string | number>,
     ): Promise<number | undefined> {
-        const gauge = await this.gauges.get(name)?.gauge?.get();
+        const gauge = await this.updaters.get(name)?.target.gauge?.get();
         if (gauge && gauge.values.length > 0) {
             const values = labels
                 ? gauge.values.filter(({ labels: l }) => {

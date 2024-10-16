@@ -90,7 +90,7 @@ export const PersonalDashboard = () => {
     const { personalDashboard, refetch: refetchDashboard } =
         usePersonalDashboard();
 
-    const projects = personalDashboard?.projects || []; // test comment <| remove later
+    const projects = personalDashboard?.projects || [];
 
     const {
         activeProject,

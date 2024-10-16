@@ -35,7 +35,7 @@ The other environment types do not currently have any functionality associated w
 
 ## Global and project-level environments
 
-Environments exist on a global level, so they are available to all projects within Unleash. However, every [project](./projects.md) might not need to use every environment. That's why you can also choose which of the global environments should be available within a project.
+Environments exist on a global level, so they are available to all projects within Unleash. However, every [project](./projects) might not need to use every environment. That's why you can also choose which of the global environments should be available within a project.
 
 ## How to start using environments
 

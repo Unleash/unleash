@@ -5,7 +5,7 @@ title: Slack (deprecated)
 
 :::caution Deprecation notice
 
-This Slack integration is deprecated and will be removed in a future release. We recommend using the new [Slack App](./slack-app.md) integration instead.
+This Slack integration is deprecated and will be removed in a future release. We recommend using the new [Slack App](./slack-app) integration instead.
 
 :::
 

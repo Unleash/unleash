@@ -17,7 +17,7 @@ _(We recommend changing the password of the default user from the admin section.
 
 ### Role-Based Access Control {#role-based-access-control}
 
-With Role-Based Access Control you can now assign groups to users in order to control access. You can control access to root resources in addition to controlling access to [projects](projects.md). _Please be aware that all existing users will become "Owner" of all existing projects as part of the migration from v3 to v4._
+With Role-Based Access Control you can now assign groups to users in order to control access. You can control access to root resources in addition to controlling access to [projects](./projects). _Please be aware that all existing users will become "Owner" of all existing projects as part of the migration from v3 to v4._
 
 [Read more](rbac.md)
 

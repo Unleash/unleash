@@ -1,7 +1,12 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IGroupUser } from 'interfaces/group';
-import { useMemo } from 'react';
+import {
+    type ForwardRefExoticComponent,
+    type FunctionComponent,
+    type RefAttributes,
+    useMemo,
+} from 'react';
 import {
     type IUserAvatarProps,
     UserAvatar,
@@ -17,7 +22,11 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     justifyContent: 'start',
 }));
 
-type AvatarComponentType = React.ComponentType<IUserAvatarProps>;
+export type AvatarComponentType =
+    | FunctionComponent<IUserAvatarProps>
+    | ForwardRefExoticComponent<
+          IUserAvatarProps & RefAttributes<HTMLDivElement>
+      >;
 
 export const AvatarComponent = styled(UserAvatar)(({ theme }) => ({
     outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,

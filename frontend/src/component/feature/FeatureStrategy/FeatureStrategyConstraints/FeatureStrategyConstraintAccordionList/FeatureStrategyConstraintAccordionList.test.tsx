@@ -3,6 +3,7 @@ import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList';
 import type { IConstraint } from 'interfaces/strategy';
+import { constraintId } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 
 const server = testServerSetup();
 
@@ -18,7 +19,11 @@ const setupApi = () => {
 };
 
 const constraints = (limit: number): IConstraint[] =>
-    Array.from(Array(limit).keys()).map(() => ({
+    // @ts-expect-error: we access the id field using `Symbol(id)`,
+    // so just calling the property `id` doesn't work. Instead, we
+    // need to use the `constraintId` symbol.
+    Array.from(Array(limit).keys()).map((_, index) => ({
+        [constraintId]: index,
         contextName: 'test',
         operator: 'IN',
     }));

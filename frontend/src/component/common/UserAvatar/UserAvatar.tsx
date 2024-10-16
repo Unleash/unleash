@@ -66,8 +66,9 @@ export const UserAvatar = forwardRef<HTMLDivElement, IUserAvatarProps>(
         if (!children && user) {
             fallback = user?.name || user?.email || user?.username;
             if (fallback?.includes(' ')) {
-                fallback =
-                    `${fallback.split(' ')[0][0]}${fallback.split(' ')[1][0]}`.toUpperCase();
+                fallback = `${fallback.split(' ')[0][0]}${
+                    fallback.split(' ')[1][0]
+                }`.toUpperCase();
             } else if (fallback) {
                 fallback = fallback[0].toUpperCase();
             }

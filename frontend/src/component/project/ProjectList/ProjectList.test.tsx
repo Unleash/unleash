@@ -15,7 +15,7 @@ const setupApi = () => {
     });
 
     testServerRoute(server, '/api/admin/projects', {
-        projects: [{ name: 'existing' }],
+        projects: [{ name: 'existing', id: '1' }],
     });
 };
 

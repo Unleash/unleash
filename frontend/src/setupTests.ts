@@ -15,8 +15,11 @@ if (!window.ResizeObserver) {
 
 process.env.TZ = 'UTC';
 
-const messagesToIgnore = [
+const errorsToIgnore = [
     'Warning: An update to %s inside a test was not wrapped in act',
+];
+
+const warningsToIgnore = [
     '[MSW] Found a redundant usage of query parameters in the request handler URL for',
     'An exception was caught and handled.',
     'MUI: You have provided an out-of-range value',
@@ -25,15 +28,26 @@ const messagesToIgnore = [
 
 // ignore known React warnings
 const consoleError = console.error;
+const consoleWarn = console.warn;
 beforeAll(() => {
     vi.spyOn(console, 'error').mockImplementation((...args) => {
         if (
             !(
                 typeof args[0] === 'string' &&
-                messagesToIgnore.some((message) => args[0].includes(message))
+                errorsToIgnore.some((message) => args[0].includes(message))
             )
         ) {
             consoleError(...args);
+        }
+    });
+    vi.spyOn(console, 'warn').mockImplementation((...args) => {
+        if (
+            !(
+                typeof args[0] === 'string' &&
+                warningsToIgnore.some((message) => args[0].includes(message))
+            )
+        ) {
+            consoleWarn(...args);
         }
     });
 });

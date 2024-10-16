@@ -102,7 +102,7 @@ The `streamText` function part of some utilities provided by Vercel's AI SDK, wh
 
 ## Creating a feature flag with AI variants
 
-Instead of hardcoding `variant1`, we want to use feature flags to dynamically choose which AI model to use. This will let us easily switch between models, test different configurations, or even do some A/B testing.
+Instead of hardcoding `variant1`, we want to use feature flags to dynamically choose which AI model to use. This will let us easily switch between models, test different configurations, or even do some A/B testing to see which model performs better for which task.
 
 To implement this, we'll need to:
 
@@ -133,7 +133,39 @@ Password: unleash4all
 
 Click the ‘New feature flag’ button to create a new feature flag.
 
-<!-- ![Create a new feature flag](./new-ff.png) -->
+![Create a new feature flag](../ruby/new-ff.png)
+
+Create a new feature flag called `gpt-version`.
+
+After that, and this the most important part, we need to add a variant to our feature flag.
+
+What we'll do is hold all the model configurations in the feature flag variants.
+
+So, we can take these model configurations:
+
+```javascript
+const variants = {
+    variant1: {
+        model: "gpt-3.5-turbo",
+        max_tokens: 4096,
+        temperature: 1,
+    },
+    variant2: {
+        model: "gpt-4-turbo",
+        max_tokens: 4096,
+        temperature: 1,
+    },
+    variant3: {
+        model: "gpt-4-vision-preview",
+        max_tokens: 4096,
+        temperature: 1,
+    },
+};
+```
+
+And add them into Unleash.
+
+![a variant with parameters for an OpenAI model](./model-variant.png)
 
 ## Querying AI feature flags
 
@@ -185,3 +217,7 @@ This setup uses the Unleash client to fetch the value of a feature flag called `
 Now, instead of hardcoding 'variant1', we're dynamically choosing the AI model based on the feature flag variant.
 
 This setup gives us a ton of flexibility. Want to roll out GPT-4 to 10% of your users? Easy. Need to quickly switch everyone back to GPT-3.5 because of a bug? No problem. You can do all of this from your Unleash dashboard without touching your code.
+
+## Conclusion
+
+Thanks for following along! You've learned one way to use feature flags to interact with AI models.

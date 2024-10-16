@@ -11,7 +11,7 @@ If you want more details you can read about [our unique architecture](https://ww
 Before you can connect your application to Unleash you need a Unleash server. You have a few options available:
 
 1. **Unleash Open-Source**
-   - [Docker](../using-unleash/deploy/getting-started.md)
+   - [Docker](../using-unleash/deploy/getting-started)
    - [Helm Chart](https://github.com/unleash/helm-charts/)
    - [GitLab](https://docs.gitlab.com/ee/operations/feature_flags.html#choose-a-client-library)
 2. **Unleash Enterprise**
@@ -23,8 +23,8 @@ Before you can connect your application to Unleash you need a Unleash server. Yo
 ![A visual overview of an Unleash system as described in the following paragraph.](/img/unleash-architecture-edge.png 'System Overview')
 
 - [**Unleash API**](/reference/api/unleash) - The Unleash instance. This is where you create feature flags, configure activation strategies, and parameters, etc. The service that contains all feature flags and their configurations. Configurations declare which activation strategies to use and which parameters they should get.
-- **Unleash Admin UI** - The bundled web interface for interacting with the Unleash instance. Manage flags, define strategies, look at metrics, and much more. Use the UI to [create feature flags](how-to/how-to-create-feature-toggles.md), [manage project access roles](../how-to/how-to-create-and-assign-custom-project-roles.md), [create API tokens](how-to/how-to-create-api-tokens.mdx), and more.
-- [**Unleash SDKs**](../reference/sdks/index.md) - Unleash SDKs integrate into your applications and get feature configurations from the Unleash API. Use them to check whether features are enabled or disabled and to send metrics to the Unleash API. [See all our SDKs](../reference/sdks/index.md)
-- [**Unleash Edge**](../generated/unleash-edge.md) - The Unleash Edge sits between front-end and native applications on one side and the Unleash API on the other. It can also sit between server-side SDKs and the Unleash API as well. You can scale it independently of the Unleash API to handle large request rates without causing issues for the Unleash API. Edge has all endpoints for the client API, frontend API, and proxy API. 
+- **Unleash Admin UI** - The bundled web interface for interacting with the Unleash instance. Manage flags, define strategies, look at metrics, and much more. Use the UI to [create feature flags](how-to/how-to-create-feature-toggles), [manage project access roles](../how-to/how-to-create-and-assign-custom-project-roles), [create API tokens](how-to/how-to-create-api-tokensx), and more.
+- [**Unleash SDKs**](../reference/sdks/index) - Unleash SDKs integrate into your applications and get feature configurations from the Unleash API. Use them to check whether features are enabled or disabled and to send metrics to the Unleash API. [See all our SDKs](../reference/sdks/index)
+- [**Unleash Edge**](../generated/unleash-edge) - The Unleash Edge sits between front-end and native applications on one side and the Unleash API on the other. It can also sit between server-side SDKs and the Unleash API as well. You can scale it independently of the Unleash API to handle large request rates without causing issues for the Unleash API. Edge has all endpoints for the client API, frontend API, and proxy API. 
 
-To be super fast (_we're talking nano-seconds_), the [client SDK](../reference/sdks/index.md) caches all feature flags and their current configuration in memory. The activation strategies are also implemented in the SDK. This makes it really fast to check if a flag is on or off because it is just a simple function operating on local state, without the need to poll data from the database.
+To be super fast (_we're talking nano-seconds_), the [client SDK](../reference/sdks/index) caches all feature flags and their current configuration in memory. The activation strategies are also implemented in the SDK. This makes it really fast to check if a flag is on or off because it is just a simple function operating on local state, without the need to poll data from the database.

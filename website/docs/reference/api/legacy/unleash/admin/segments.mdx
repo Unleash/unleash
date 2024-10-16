@@ -12,11 +12,11 @@ import ApiRequest from '@site/src/components/ApiRequest'; export const basePath 
 
 :::note
 
-To use the admin API, you'll need to [create and use an admin API token](/how-to/how-to-create-api-tokens.mdx).
+To use the admin API, you'll need to [create and use an admin API token](/how-to/how-to-create-api-tokensx).
 
 :::
 
-The segments API lets you create, read, update, and delete [segments](/reference/segments.mdx).
+The segments API lets you create, read, update, and delete [segments](/reference/segmentsx).
 
 ## Get all segments
 
@@ -330,18 +330,18 @@ This section describes the data objects returned by the endpoints in the segment
 
 :::note `values` and `value`
 
-Some constraint operators only support single values. If a constraint uses one of these operators, the payload will contain a `value` property with the correct value. However, for backwards compatibility reasons, the payload will *also* contain a `values` property. If the operator accepts multiple values, the `value` property will not be present. Visit the [strategy constraints documentation](/reference/strategy-constraints.md) for more information on what operators support what number of values.
+Some constraint operators only support single values. If a constraint uses one of these operators, the payload will contain a `value` property with the correct value. However, for backwards compatibility reasons, the payload will *also* contain a `values` property. If the operator accepts multiple values, the `value` property will not be present. Visit the [strategy constraints documentation](/reference/strategy-constraints) for more information on what operators support what number of values.
 
 :::
 
 | Property          | Type                                                                                          | Required | Description                                                                                                                                                       | Example value            |
 |-------------------|-----------------------------------------------------------------------------------------------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------|
 | `contextName`     | string                                                                                        | Yes      | The name of the context field targeted by the constraint.                                                                                                         | `"myContextField"`       |
-| `operator`        | string, the name of one of the [constraint operators](/reference/strategy-constraints.md) | Yes      | The operator to apply to the context field.                                                                                                                       | `"DATE_BEFORE"`          |
+| `operator`        | string, the name of one of the [constraint operators](/reference/strategy-constraints) | Yes      | The operator to apply to the context field.                                                                                                                       | `"DATE_BEFORE"`          |
 | `values`          | a list of strings                                                                             | Yes      | The list of values to apply the constraint operator to.                                                                                                           | `["value a", "value b"]` |
 | `value`           | string                                                                                        | No       | The value to apply the constraint operator to.                                                                                                                    | `"15"`                   |
-| `inverted`        | boolean                                                                                       | No       | Whether the result of [the constraint will be negated or not](/reference/strategy-constraints.md#constraint-negation).                                        | `false`                  |
-| `caseInsensitive` | boolean string                                                                                | No       | Whether the constraint operator is case sensitive or not. Only [applies to some string-based operators](/reference/strategy-constraints.md#string-operators). | `false`                  |
+| `inverted`        | boolean                                                                                       | No       | Whether the result of [the constraint will be negated or not](/reference/strategy-constraints#constraint-negation).                                        | `false`                  |
+| `caseInsensitive` | boolean string                                                                                | No       | Whether the constraint operator is case sensitive or not. Only [applies to some string-based operators](/reference/strategy-constraints#string-operators). | `false`                  |
 
 
 ### Activation strategy {#activation-strategy-type-description}

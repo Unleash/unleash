@@ -9,9 +9,9 @@ Projects help you organize feature flags within Unleash. For example, you can us
 
 Each instance requires at least one project. New instances get a default project that all members can access. You cannot delete this project, but you can [rename](#update-a-project) or [archive it](#archive-a-project).
 
-You can configure which [environments](environments.md) are available within a project. By default, all global environments are available. You can only enable and disable feature flags for the environments you've configured for the project.
+You can configure which [environments](./environments) are available within a project. By default, all global environments are available. You can only enable and disable feature flags for the environments you've configured for the project.
 
-By default, projects have an open [collaboration mode](project-collaboration-mode.md), which means all members of your instance can access the project and submit change requests. To learn more, visit [Project Collaboration Mode](project-collaboration-mode.md).
+By default, projects have an open [collaboration mode](./project-collaboration-mode), which means all members of your instance can access the project and submit change requests. To learn more, visit [Project Collaboration Mode](./project-collaboration-mode).
 
 ## Create a project
 
@@ -23,7 +23,7 @@ By default, projects have an open [collaboration mode](project-collaboration-mod
 
 To create a new project:
 1. Go to **Projects** > **New project** and enter a project name.
-2. Optionally configure settings such as [environments](environments.md), [stickiness](stickiness.md), [collaboration mode](project-collaboration-mode.md), and [change requests](change-requests.md).
+2. Optionally configure settings such as [environments](./environments), [stickiness](./stickiness), [collaboration mode](./project-collaboration-mode), and [change requests](./change-requests).
 3. Click **Create project**.
 
 
@@ -37,9 +37,9 @@ To create a new project:
 
 You can update all aspects of a project except its ID.
 
-To update a project, go to **Projects** and select the project you'd like to edit. In the **Project settings** tab, you can update general settings such as project name, description, [stickiness](stickiness.md), [collaboration mode](project-collaboration-mode.md), and more. You can also configure user and API access, [change requests](change-requests.md), and [actions](actions.md), add [segments](segments.mdx) and [environments](environments.md), and update the [default strategy](#project-default-strategy).
+To update a project, go to **Projects** and select the project you'd like to edit. In the **Project settings** tab, you can update general settings such as project name, description, [stickiness](./stickiness), [collaboration mode](./project-collaboration-mode), and more. You can also configure user and API access, [change requests](./hange-requests), and [actions](./actions), add [segments](./segments) and [environments](./environments), and update the [default strategy](#project-default-strategy).
 
-The available project settings depend on a user's [root and project roles](rbac.md).
+The available project settings depend on a user's [root and project roles](./rbac).
 
 ## Archive a project
 
@@ -51,7 +51,7 @@ The available project settings depend on a user's [root and project roles](rbac.
 
 The archive projects functionality allows you to hide a project while maintaining historical project data. Archiving lets you manage short-lived projects, for example, to represent specific initiatives in your organization.
 
-Before archiving a project, you must archive all feature flags within it. Archiving automatically disables all project [actions](actions.md). Once you archive a project, you cannot add or move feature flags to it.
+Before archiving a project, you must archive all feature flags within it. Archiving automatically disables all project [actions](./actions). Once you archive a project, you cannot add or move feature flags to it.
 
 To archive a project:
 
@@ -100,9 +100,9 @@ import Figure from '@site/src/components/Figure/Figure.tsx'
 
 :::
 
-Each project has a default strategy of [gradual rollout](activation-strategies.md#gradual-rollout) to 100% of the user base. The default strategy only applies when **no active strategies** are defined for a flag in a specific environment.
+Each project has a default strategy of [gradual rollout](./activation-strategies#gradual-rollout) to 100% of the user base. The default strategy only applies when **no active strategies** are defined for a flag in a specific environment.
 
-You can change the default strategies of a project per environment. You can customize the default strategies by changing the rollout percentage and [stickiness](stickiness.md) and adding [segments](segments.mdx), [constraints](strategy-constraints.md), and [variants](strategy-variants.md).
+You can change the default strategies of a project per environment. You can customize the default strategies by changing the rollout percentage and [stickiness](./stickiness) and adding [segments](./segments), [constraints](./strategy-constraints), and [variants](./strategy-variants).
 
 To change the default strategy for an environment in a project:
 

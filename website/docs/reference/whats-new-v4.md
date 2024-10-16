@@ -6,7 +6,7 @@ Version 4 of Unleash brings a lot of improvements to Unleash. In this document w
 
 ### Upgrade with ease {#upgrade-with-ease}
 
-Unleash can either be hosted by us or self-hosted. If you have a managed Unleash Enterprise instance you are automatically upgraded to version 4. If you manage Unleash yourself (either Open-Source or Enterprise Self-hosted) we recommend reading the [migration guide](../using-unleash/deploy/upgrading-unleash.md).
+Unleash can either be hosted by us or self-hosted. If you have a managed Unleash Enterprise instance you are automatically upgraded to version 4. If you manage Unleash yourself (either Open-Source or Enterprise Self-hosted) we recommend reading the [migration guide](../using-unleash/deploy/upgrading-unleash).
 
 **PS! The first time you access Unleash v4 from a self-hosted instance you will need to login with the default admin user:**
 
@@ -19,14 +19,14 @@ _(We recommend changing the password of the default user from the admin section.
 
 With Role-Based Access Control you can now assign groups to users in order to control access. You can control access to root resources in addition to controlling access to [projects](./projects). _Please be aware that all existing users will become "Owner" of all existing projects as part of the migration from v3 to v4._
 
-[Read more](rbac.md)
+[Read more](./rbac)
 
 ### New Integrations {#new-integrations}
 
 Integrations make it easy to integrate Unleash with other systems. In version 4 we bring two new integrations to Unleash:
 
-- [Microsoft Teams](../reference/integrations/teams.md)
-- [Datadog](../reference/integrations/datadog.md)
+- [Microsoft Teams](../reference/integrations/teams)
+- [Datadog](../reference/integrations/datadog)
 
 ### Improved UX {#improved-ux}
 
@@ -40,15 +40,15 @@ In version 4 we added support for [OpenID Connect](https://openid.net/connect/) 
 
 In version 4 we improved the User Management and made it available for Unleash Open-Source and Unleash Enterprise. Starting in v4 all users accessing Unleash needs to exist in Unleash in order to gain access (because they need to have the proper permission from RBAC.)
 
-[Read more](../how-to/how-to-add-users-to-unleash.md)
+[Read more](../how-to/how-to-add-users-to-unleash)
 
 ### API access {#api-access}
 
 In version 4 we improved the API Access and made it available for Unleash Open-Source and Unleash Enterprise. Starting from Unleash v4 we require all SDKs to use an access token in order to connect to Unleash.
 
-[Read more](../how-to/how-to-use-the-admin-api.md)
+[Read more](../how-to/how-to-use-the-admin-api)
 
 ### Custom stickiness {#custom-stickiness}
 
 In Unleash Enterprise v4 you can configure stickiness when you are
-doing a gradual rollout with the "gradual rollout" strategy (previously known as "flexible rollout") or together with feature flag variants. This means that you can now have consistent behavior based on any field available on the [Unleash context](unleash-context.md).
+doing a gradual rollout with the "gradual rollout" strategy (previously known as "flexible rollout") or together with feature flag variants. This means that you can now have consistent behavior based on any field available on the [Unleash context](./unleash-context).

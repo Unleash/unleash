@@ -75,7 +75,7 @@ export const EnvironmentsField: FC<IEnvironmentsFieldProps> = ({
             getOptionLabel={({ label }) => label}
             disableCloseOnSelect={false}
             size='small'
-            value={envValue} // this appears to trigger a Warning: A props object containing a "key" prop is being spread into JSX:
+            value={envValue}
             onChange={onEnvironmentsChange}
             disabled={disabled}
             data-testid={'PLAYGROUND_ENVIRONMENT_SELECT'}

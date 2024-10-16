@@ -131,3 +131,8 @@ To make use of strategy variants, you need to use a compatible client. Client SD
 
 
 If you would like to give feedback on this feature, experience issues or have questions, please feel free to open an issue on [GitHub](https://github.com/Unleash/unleash/).
+
+
+## Environment level variants
+
+[Environment level variants](./feature-toggle-variants) are deprecated. Use strategy variants instead.

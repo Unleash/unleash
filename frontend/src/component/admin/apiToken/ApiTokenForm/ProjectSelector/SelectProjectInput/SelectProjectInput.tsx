@@ -1,4 +1,4 @@
-import { Fragment, useState, type ChangeEvent, type VFC } from 'react';
+import { type FC, Fragment, useState, type ChangeEvent } from 'react';
 import {
     Checkbox,
     FormControlLabel,
@@ -6,6 +6,7 @@ import {
     Box,
     Paper,
     styled,
+    Chip,
 } from '@mui/material';
 import { Autocomplete } from '@mui/material';
 
@@ -39,7 +40,7 @@ export interface ISelectProjectInputProps {
     error?: string;
 }
 
-export const SelectProjectInput: VFC<ISelectProjectInputProps> = ({
+export const SelectProjectInput: FC<ISelectProjectInputProps> = ({
     options,
     defaultValue = [ALL_PROJECTS],
     onChange,
@@ -149,6 +150,19 @@ export const SelectProjectInput: VFC<ISelectProjectInputProps> = ({
                 fullWidth
                 PaperComponent={CustomPaper}
                 renderOption={renderOption}
+                renderTags={(value, getTagProps) => {
+                    return value.map((option, index) => {
+                        const { key, ...props } = getTagProps({ index });
+                        return (
+                            <Chip
+                                size='small'
+                                key={key}
+                                {...props}
+                                label={option.label}
+                            />
+                        );
+                    });
+                }}
                 renderInput={renderInput}
                 value={
                     isWildcardSelected || disabled

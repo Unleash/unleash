@@ -53,14 +53,16 @@ export const ArchiveButton: VFC<IArchiveButtonProps> = ({
         <>
             <PermissionHOC projectId={projectId} permission={DELETE_FEATURE}>
                 {({ hasAccess }) => (
-                    <Button
-                        disabled={!hasAccess || isDialogOpen}
-                        variant='outlined'
-                        size='small'
-                        onClick={() => setIsDialogOpen(true)}
-                    >
-                        Archive
-                    </Button>
+                    <span>
+                        <Button
+                            disabled={!hasAccess || isDialogOpen}
+                            variant='outlined'
+                            size='small'
+                            onClick={() => setIsDialogOpen(true)}
+                        >
+                            Archive
+                        </Button>
+                    </span>
                 )}
             </PermissionHOC>
             <FeatureArchiveDialog

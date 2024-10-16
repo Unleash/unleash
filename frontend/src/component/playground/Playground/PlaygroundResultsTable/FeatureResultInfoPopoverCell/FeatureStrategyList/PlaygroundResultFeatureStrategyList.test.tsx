@@ -12,6 +12,8 @@ const testCases = [
                 result: true,
                 data: [
                     {
+                        id: 'f17532c8-4b36-4406-a23f-3db75e0adc82',
+
                         name: 'default',
                         parameters: {},
                         result: { enabled: true, evaluationStatus: 'complete' },
@@ -31,6 +33,7 @@ const testCases = [
                 result: true,
                 data: [
                     {
+                        id: 'f17532c8-4b36-4406-a23f-3db75e0adc83',
                         name: 'default',
                         parameters: {},
                         result: { enabled: true, evaluationStatus: 'complete' },
@@ -50,6 +53,7 @@ const testCases = [
                 result: true,
                 data: [
                     {
+                        id: 'f17532c8-4b36-4406-a23f-3db75e0adc77',
                         name: 'default',
                         parameters: {},
                         result: { enabled: true, evaluationStatus: 'complete' },
@@ -69,11 +73,13 @@ const testCases = [
                 result: true,
                 data: [
                     {
+                        id: 'f17532c8-4b36-4406-a23f-3db75e0adc78',
                         name: 'default',
                         parameters: {},
                         result: { enabled: true, evaluationStatus: 'complete' },
                     },
                     {
+                        id: 'f17532c8-4b36-4406-a23f-3db75e0adc79',
                         name: 'default',
                         parameters: {},
                         disabled: true,
@@ -97,11 +103,13 @@ const testCases = [
                 result: true,
                 data: [
                     {
+                        id: 'f17532c8-4b36-4406-a23f-3db75e0adc80',
                         name: 'default',
                         parameters: {},
                         result: { enabled: true, evaluationStatus: 'complete' },
                     },
                     {
+                        id: 'f17532c8-4b36-4406-a23f-3db75e0adc81',
                         name: 'default',
                         parameters: {},
                         disabled: true,

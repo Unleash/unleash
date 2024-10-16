@@ -19,7 +19,7 @@ was not sent to the user because email configuration is lacking
 
 ## Configuring {#configuring}
 
-Depending on your deploy case there are different ways of configuring this service. Full documentation of all configuration possibilities is available [here](./configuring-unleash.md)
+Depending on your deploy case there are different ways of configuring this service. Full documentation of all configuration possibilities is available [here](./configuring-unleash).
 
 ### Docker {#docker}
 

@@ -33,7 +33,7 @@ import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
-import TimelineIcon from '@mui/icons-material/Timeline';
+import { HeaderEventTimelineButton } from './HeaderEventTimelineButton';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -97,12 +97,7 @@ const StyledIconButton = styled(IconButton)<{
     },
 }));
 
-interface IHeaderProps {
-    showTimeline: boolean;
-    setShowTimeline: (show: boolean) => void;
-}
-
-const Header = ({ showTimeline, setShowTimeline }: IHeaderProps) => {
+const Header = () => {
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
 
@@ -112,7 +107,6 @@ const Header = ({ showTimeline, setShowTimeline }: IHeaderProps) => {
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
-    const eventTimeline = useUiFlag('eventTimeline') && !isOss();
 
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
@@ -187,28 +181,7 @@ const Header = ({ showTimeline, setShowTimeline }: IHeaderProps) => {
                 <StyledNav>
                     <StyledUserContainer>
                         <CommandBar />
-                        <ConditionallyRender
-                            condition={eventTimeline}
-                            show={
-                                <Tooltip
-                                    title={
-                                        showTimeline
-                                            ? 'Hide timeline'
-                                            : 'Show timeline'
-                                    }
-                                    arrow
-                                >
-                                    <StyledIconButton
-                                        onClick={() =>
-                                            setShowTimeline(!showTimeline)
-                                        }
-                                        size='large'
-                                    >
-                                        <TimelineIcon />
-                                    </StyledIconButton>
-                                </Tooltip>
-                            }
-                        />
+                        <HeaderEventTimelineButton />
                         <InviteLinkButton />
                         <Tooltip
                             title={

@@ -43,11 +43,12 @@ Personal access tokens follow their own special format, and only contain an opti
 
 ### API token visibility
 
-:::info project-level visibility
+:::note Availability
 
-Project-level visibility and access to API tokens was introduced in Unleash 4.22.
+**Version**: `4.22+`
 
 :::
+
 
 By default, only admin users can create API tokens, and only admins can see their values.
 
@@ -81,7 +82,7 @@ We do not recommend using admin tokens anymore, they are not connected to any us
 
 **Personal access tokens** are a special form of admin tokens and grant access to the same resources that the user that created them has access to. These permissions are dynamic, so if a user's permissions change through addition of a custom role, the token will likewise have altered permissions.
 
-When using a personal access token to modify resources, the event log will list the token creator's name for that operation.
+When you use a personal access token to modify resources, the events record the token creator's name for that operation.
 
 Personal access tokens with a lifetime **will stop working after the expiration date**.
 
@@ -128,7 +129,7 @@ Do **not** use client tokens in:
 
 **Front-end tokens** are used with [front-end SDKs](../reference/sdks/index.md#front-end-sdks) when used with the [Unleash front-end API](./front-end-api.md). They grant the user permission to:
 
--   Read the enabled flagd for a given context
+-   Read the enabled flags for a given context
 -   Register applications with the Unleash server
 -   Send usage metrics
 

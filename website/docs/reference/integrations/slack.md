@@ -9,7 +9,12 @@ This Slack integration is deprecated and will be removed in a future release. We
 
 :::
 
-> This feature was introduced in _Unleash v3.11.0_.
+:::note Availability
+
+**Version**: `3.11+`
+
+:::
+
 
 The Slack integration allows Unleash to post Updates when a feature flag is updated. To set up Slack, you need to configure an incoming Slack webhook URL. You can follow [Sending messages using Incoming Webhooks](https://api.slack.com/incoming-webhooks) on how to do that. You can also choose to [create a slack app for Unleash](https://api.slack.com/apps), which will provide you with additional functionality to control how Unleash communicates messages on your Slack workspace.
 
@@ -22,7 +27,6 @@ The Slack integration will perform a single retry if the HTTP POST against the S
 You can choose to trigger updates for the following events:
 
 - feature-created
-- feature-updated (*)
 - feature-metadata-updated
 - feature-project-change
 - feature-archived
@@ -34,8 +38,7 @@ You can choose to trigger updates for the following events:
 - feature-stale-off
 - feature-environment-enabled
 - feature-environment-disabled
-
-> *) Deprecated, and will not be used after transition to environments in Unleash v4.3
+- feature-updated (deprecated in v4.3)
 
 #### Parameters {#parameters}
 

@@ -1,46 +1,85 @@
-import { Button, styled } from '@mui/material';
+import { Button, styled, Typography } from '@mui/material';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { FC } from 'react';
+import { ActionBox } from './ActionBox';
+import { Link } from 'react-router-dom';
+import { NeutralCircleContainer } from './SharedComponents';
 
-const TitleContainer = styled('div')(({ theme }) => ({
+const MainCircleContainer = styled(NeutralCircleContainer)(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.background.paper,
+}));
+
+const SuccessContainer = styled('div')(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'row',
-    gap: theme.spacing(2),
-    alignItems: 'center',
+    flexDirection: 'column',
+
     fontSize: theme.spacing(1.75),
     fontWeight: 'bold',
-}));
-
-const NeutralCircleContainer = styled('span')(({ theme }) => ({
-    width: '28px',
-    height: '28px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: theme.palette.neutral.border,
-    borderRadius: '50%',
-}));
-
-const ActionBox = styled('div')(({ theme }) => ({
-    flexBasis: '50%',
-    padding: theme.spacing(4, 2),
-    display: 'flex',
-    gap: theme.spacing(3),
-    flexDirection: 'column',
+    backgroundColor: theme.palette.success.light,
+    borderRadius: theme.shape.borderRadiusLarge,
+    padding: theme.spacing(2, 2, 2, 2),
 }));
 
 export const CreateFlag: FC<{ project: string }> = ({ project }) => {
+    const { trackEvent } = usePlausibleTracker();
     return (
-        <ActionBox>
-            <TitleContainer>
-                <NeutralCircleContainer>1</NeutralCircleContainer>
-                Create a feature flag
-            </TitleContainer>
+        <ActionBox
+            data-loading
+            title={
+                <>
+                    <NeutralCircleContainer>1</NeutralCircleContainer>
+                    Create a feature flag
+                </>
+            }
+        >
             <div>
-                <p>The project currently holds no feature toggles.</p>
-                <p>Create a feature flag to get started.</p>
+                <p>The project currently holds no feature flags.</p>
+                <p>Create one to get started.</p>
             </div>
             <div>
-                <Button href={`projects/${project}`} variant='contained'>
+                <Button
+                    href={`projects/${project}`}
+                    onClick={() => {
+                        trackEvent('personal-dashboard', {
+                            props: {
+                                eventType: `Go to project from onboarding`,
+                            },
+                        });
+                    }}
+                    variant='contained'
+                >
+                    Go to project
+                </Button>
+            </div>
+        </ActionBox>
+    );
+};
+
+export const ExistingFlag: FC<{ project: string }> = ({ project }) => {
+    return (
+        <ActionBox
+            title={
+                <>
+                    <MainCircleContainer>1</MainCircleContainer>
+                    Create a feature flag
+                </>
+            }
+        >
+            <SuccessContainer>
+                <Typography fontWeight='bold' variant='body2'>
+                    You have created your first flag
+                </Typography>
+                <Typography variant='body2'>
+                    Go to the project to customize the flag further.
+                </Typography>
+            </SuccessContainer>
+            <div>
+                <Button
+                    component={Link}
+                    to={`/projects/${project}`}
+                    variant='contained'
+                >
                     Go to project
                 </Button>
             </div>
@@ -50,21 +89,28 @@ export const CreateFlag: FC<{ project: string }> = ({ project }) => {
 
 export const ConnectSDK: FC<{ project: string }> = ({ project }) => {
     return (
-        <ActionBox>
-            {' '}
-            <TitleContainer>
-                <NeutralCircleContainer>2</NeutralCircleContainer>
-                Connect an SDK
-            </TitleContainer>
+        <ActionBox
+            data-loading
+            title={
+                <>
+                    <NeutralCircleContainer>2</NeutralCircleContainer>
+                    Connect an SDK
+                </>
+            }
+        >
             <div>
                 <p>Your project is not yet connected to any SDK.</p>
                 <p>
-                    In order to start using your feature flag connect an SDK to
-                    the project.
+                    To start using your feature flag, connect an SDK to the
+                    project.
                 </p>
             </div>
             <div>
-                <Button href={`projects/${project}`} variant='contained'>
+                <Button
+                    component={Link}
+                    to={`/projects/${project}`}
+                    variant='contained'
+                >
                     Go to project
                 </Button>
             </div>

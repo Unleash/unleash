@@ -9,9 +9,8 @@ const { UnleashClient } = require('unleash-proxy-client');
 
 const unleash = new UnleashClient({
     url: '<YOUR_API_URL>',
-    clientKey: '<YOUR_API_TOKEN>',
+    clientKey: '<YOUR_API_TOKEN>', // in production use environment variable
     appName: 'unleash-onboarding-javascript',
-    refreshInterval: 5000,
 });
 
 unleash.start();

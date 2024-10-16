@@ -1,9 +1,19 @@
-import { MenuItem, styled, TextField } from '@mui/material';
+import {
+    IconButton,
+    MenuItem,
+    styled,
+    TextField,
+    Tooltip,
+} from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
-import type { IEnvironment } from 'interfaces/environments';
 import { useEffect, useMemo } from 'react';
-import { type TimeSpanOption, timeSpanOptions } from '../useEventTimeline';
+import { timeSpanOptions } from '../EventTimelineProvider';
+import CloseIcon from '@mui/icons-material/Close';
+import { useEventTimelineContext } from '../EventTimelineContext';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { EventTimelineHeaderTip } from './EventTimelineHeaderTip';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const StyledCol = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -12,9 +22,9 @@ const StyledCol = styled('div')(({ theme }) => ({
 }));
 
 const StyledFilter = styled(TextField)(({ theme }) => ({
-    color: theme.palette.text.secondary,
     '& > div': {
         background: 'transparent',
+        color: theme.palette.text.secondary,
         '& > .MuiSelect-select': {
             padding: theme.spacing(0.5, 4, 0.5, 1),
             background: 'transparent',
@@ -23,27 +33,28 @@ const StyledFilter = styled(TextField)(({ theme }) => ({
     },
 }));
 
+const StyledTimelineEventsCount = styled('span')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    marginTop: theme.spacing(0.25),
+}));
+
 interface IEventTimelineHeaderProps {
     totalEvents: number;
-    timeSpan: TimeSpanOption;
-    setTimeSpan: (timeSpan: TimeSpanOption) => void;
-    environment: IEnvironment | undefined;
-    setEnvironment: (environment: IEnvironment) => void;
 }
 
 export const EventTimelineHeader = ({
     totalEvents,
-    timeSpan,
-    setTimeSpan,
-    environment,
-    setEnvironment,
 }: IEventTimelineHeaderProps) => {
+    const { timeSpan, environment, setOpen, setTimeSpan, setEnvironment } =
+        useEventTimelineContext();
     const { environments } = useEnvironments();
 
     const activeEnvironments = useMemo(
         () => environments.filter(({ enabled }) => enabled),
         [environments],
     );
+    const { trackEvent } = usePlausibleTracker();
 
     useEffect(() => {
         if (activeEnvironments.length > 0 && !environment) {
@@ -57,10 +68,11 @@ export const EventTimelineHeader = ({
     return (
         <>
             <StyledCol>
-                <span>
+                <StyledTimelineEventsCount>
                     {totalEvents} event
                     {totalEvents === 1 ? '' : 's'}
-                </span>
+                    <HelpIcon tooltip='These are key events per environment across all your projects. For more details, visit the event log.' />
+                </StyledTimelineEventsCount>
                 <StyledFilter
                     select
                     size='small'
@@ -81,6 +93,7 @@ export const EventTimelineHeader = ({
                     ))}
                 </StyledFilter>
             </StyledCol>
+            <EventTimelineHeaderTip />
             <StyledCol>
                 <ConditionallyRender
                     condition={Boolean(environment)}
@@ -106,6 +119,22 @@ export const EventTimelineHeader = ({
                         </StyledFilter>
                     )}
                 />
+                <Tooltip title='Hide event timeline' arrow>
+                    <IconButton
+                        aria-label='close'
+                        size='small'
+                        onClick={() => {
+                            trackEvent('event-timeline', {
+                                props: {
+                                    eventType: 'close',
+                                },
+                            });
+                            setOpen(false);
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </Tooltip>
             </StyledCol>
         </>
     );

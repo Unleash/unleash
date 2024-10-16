@@ -2,7 +2,7 @@
 title: How to use the Admin API
 ---
 
-It is possible to integrate directly with the Admin API. In this guide we will explain all the steps to set it up.
+This guide explains the steps required to getting access to and using the Admin API.
 
 ## Step 1: Create API token {#step-1-create-api-token}
 
@@ -28,9 +28,9 @@ curl -X POST -H "Content-Type: application/json" \
      https://app.unleash-hosted.com/demo/api/admin/features/Demo/toggle/on
 ```
 
-**Great success!** We have now enabled the feature flag. We can also verify that it was actually changed by the API user by navigating to the Event log (history) for this feature flag.
+**Great success!** We have now enabled the feature flag. We can also verify that it was actually changed by the API user by navigating to [Event Log](/reference/events#event-log) and filtering events for this feature flag.
 
-![A feature flag's event log showing that it was last updated by "admin-api".](/img/api_access_history.png)
+![Feature flag events showing that it was last updated by "admin-api".](/img/api_access_history.png)
 
 ## API overview {#api-overview}
 

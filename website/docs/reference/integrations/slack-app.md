@@ -4,9 +4,9 @@ title: Slack App
 
 import Figure from '@site/src/components/Figure/Figure.tsx'
 
-:::info Availability
+:::note Availability
 
-The Slack App integration was introduced in **Unleash 5.5**.
+**Version**: `5.5+`
 
 :::
 

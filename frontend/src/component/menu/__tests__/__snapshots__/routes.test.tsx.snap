@@ -16,7 +16,7 @@ exports[`returns all baseRoutes 1`] = `
       "mobile": true,
     },
     "path": "/personal",
-    "title": "Personal Dashboard",
+    "title": "Dashboard",
     "type": "protected",
   },
   {
@@ -247,7 +247,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "EEA",
+    "enterprise": true,
     "menu": {
       "advanced": true,
       "mobile": true,

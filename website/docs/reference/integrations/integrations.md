@@ -4,15 +4,13 @@ title: Integrations
 ---
 import DocCardList from '@theme/DocCardList';
 
-:::info Availability
+:::note Availability
 
-Unleash integrations were introduced in _Unleash v3.11.0_.
-
-Integrations were previously known as _addons_.
+**Version**: `3.11+`
 
 :::
 
-Unleash integrations allows you to extend Unleash with new functionality and to connect to external applications.
+Unleash integrations (previously known as addons) allows you to extend Unleash with new functionality and to connect to external applications.
 
 Unleash has two types of integrations: Integrations that allow you to listen to changes in Unleash and trigger updates in other systems (for instance via webhooks or direct integrations) and integrations that communicate with Unleash (such as the Jira integrations).
 
@@ -49,9 +47,9 @@ Our wonderful community has also created the following integrations:
 
 ## Integration events
 
-:::info Availability
+:::note Availability
 
-Integration events were introduced as a beta feature in **Unleash 6.1**.
+**Version**: `6.1+`
 
 :::
 

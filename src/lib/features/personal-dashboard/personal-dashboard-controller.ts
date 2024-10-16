@@ -1,4 +1,9 @@
-import { type IUnleashConfig, type IUnleashServices, NONE } from '../../types';
+import {
+    type IUnleashConfig,
+    type IUnleashServices,
+    NONE,
+    serializeDates,
+} from '../../types';
 import type { OpenApiService } from '../../services';
 import {
     createResponseSchema,
@@ -83,18 +88,18 @@ export default class PersonalDashboardController extends Controller {
     ): Promise<void> {
         const user = req.user;
 
-        const flags = await this.personalDashboardService.getPersonalFeatures(
-            user.id,
-        );
-
-        const projects =
-            await this.personalDashboardService.getPersonalProjects(user.id);
+        const [flags, projects, projectOwners, admins] = await Promise.all([
+            this.personalDashboardService.getPersonalFeatures(user.id),
+            this.personalDashboardService.getPersonalProjects(user.id),
+            this.personalDashboardService.getProjectOwners(user.id),
+            this.personalDashboardService.getAdmins(),
+        ]);
 
         this.openApiService.respondWithValidation(
             200,
             res,
             personalDashboardSchema.$id,
-            { projects, flags },
+            { projects, flags, projectOwners, admins },
         );
     }
 
@@ -106,6 +111,7 @@ export default class PersonalDashboardController extends Controller {
 
         const projectDetails =
             await this.personalDashboardService.getPersonalProjectDetails(
+                user.id,
                 req.params.projectId,
             );
 
@@ -113,11 +119,9 @@ export default class PersonalDashboardController extends Controller {
             200,
             res,
             personalDashboardProjectDetailsSchema.$id,
-            {
+            serializeDates({
                 ...projectDetails,
-                owners: [{ ownerType: 'user', name: 'placeholder' }],
-                roles: [{ name: 'placeholder', id: 0, type: 'project' }],
-            },
+            }),
         );
     }
 }

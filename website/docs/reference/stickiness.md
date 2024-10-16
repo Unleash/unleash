@@ -18,17 +18,14 @@ For instance: When using the [gradual rollout activation strategy](../reference/
 
 ## Custom stickiness {#custom-stickiness}
 
-:::info
-Custom stickiness is available starting from Unleash Enterprise v4.
+:::note Availability
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.0+` and [SDK compatibility](../reference/sdks/index.md#server-side-sdk-compatibility-table).
+
 :::
 
 When using [the gradual rollout strategy](../reference/activation-strategies.md#gradual-rollout) or [feature flag variants](./feature-toggle-variants.md), you can use parameters other than the user id to calculate stickiness. More specifically, you can use any field, custom or otherwise, of the [Unleash Context](../reference/unleash-context.md) as long as you have enabled custom stickiness for these fields.
 
-:::note SDK compatibility
-
-Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) for the full overview.
-
-:::
 
 ### Enabling custom stickiness
 
@@ -38,9 +35,9 @@ To enable custom stickiness on a field, navigate to the Create Context screen in
 
 ## Project default stickiness
 
-:::info Availability
+:::note Availability
 
-Project default stickiness was introduced in **Unleash v5**.
+**Version**: `5.0+`
 
 :::
 

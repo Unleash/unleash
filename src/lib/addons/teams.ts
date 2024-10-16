@@ -12,7 +12,6 @@ import {
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
-import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface ITeamsParameters {
     url: string;
@@ -108,13 +107,6 @@ export default class TeamsAddon extends Addon {
             const failedMessage = `Teams webhook request failed with status code: ${res.status}.`;
             stateDetails.push(failedMessage);
             this.logger.warn(failedMessage);
-        }
-
-        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                result: state,
-                destination: 'teams',
-            });
         }
 
         this.registerEvent({

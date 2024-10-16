@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "6.2.3",
+  "version": "6.3.0",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -41,6 +41,7 @@
     "build": "yarn run clean && concurrently \"yarn:copy-templates\" \"yarn:build:frontend\" \"yarn:build:backend\"",
     "dev:backend": "TZ=UTC NODE_ENV=development tsc-watch --strictNullChecks false --onSuccess \"node dist/server-dev.js\"",
     "dev:frontend": "wait-on tcp:4242 && yarn --cwd ./frontend run dev",
+    "dev:frontend:cloud": "UNLEASH_BASE_PATH=/demo/ yarn run dev:frontend",
     "dev": "concurrently \"yarn:dev:backend\" \"yarn:dev:frontend\"",
     "prepare:backend": "concurrently \"yarn:copy-templates\" \"yarn:build:backend\"",
     "start:dev": "yarn run clean && TZ=UTC NODE_ENV=development tsc-watch --strictNullChecks false --onSuccess \"node dist/server-dev.js\"",
@@ -134,7 +135,7 @@
     "hash-sum": "^2.0.0",
     "helmet": "^6.0.0",
     "http-errors": "^2.0.0",
-    "ip": "^2.0.1",
+    "ip-address": "^10.0.0",
     "joi": "^17.13.3",
     "js-sha256": "^0.11.0",
     "js-yaml": "^4.1.0",

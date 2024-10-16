@@ -33,6 +33,11 @@ export interface IUser {
     scimId?: string;
 }
 
+export type MinimalUser = Pick<
+    IUser,
+    'id' | 'name' | 'username' | 'email' | 'imageUrl'
+>;
+
 export interface IProjectUser extends IUser {
     addedAt: Date;
 }

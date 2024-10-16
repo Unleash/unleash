@@ -43,7 +43,22 @@
     },
     {
       "source": "/advanced/audit_log",
-      "destination": "/reference/event-log",
+      "destination": "/reference/events",
+      "permanent": true
+    },
+    {
+      "source": "/reference/event-log",
+      "destination": "/reference/events#event-log",
+      "permanent": true
+    },
+    {
+      "source": "/topics/a-b-testing",
+      "destination": "/feature-flag-tutorials/use-cases/a-b-testing",
+      "permanent": true
+    },
+    {
+      "source": "/reference/event-types",
+      "destination": "/reference/events#event-types",
       "permanent": true
     },
     {
@@ -58,7 +73,7 @@
     },
     {
       "source": "/advanced/archived_toggles",
-      "destination": "/reference/archived-toggles",
+      "destination": "/reference/feature-toggles#archive-a-feature-toggle",
       "permanent": true
     },
     {
@@ -73,7 +88,27 @@
     },
     {
       "source": "/advanced/feature_toggle_types",
-      "destination": "/reference/feature-toggle-types",
+      "destination": "/reference/feature-toggles#feature-flag-types",
+      "permanent": true
+    },
+    {
+      "source": "/reference/feature-toggle-types",
+      "destination": "/reference/feature-toggles#feature-flag-types",
+      "permanent": true
+    },
+    {
+      "source": "/reference/feature-lifecycle",
+      "destination": "/reference/feature-toggles#feature-flag-lifecycle",
+      "permanent": true
+    },
+    {
+      "source": "/reference/feature-flag-naming-patterns",
+      "destination": "/reference/feature-toggles#set-a-naming-pattern",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-feature-flag-naming-patterns",
+      "destination": "/reference/feature-toggles#set-a-naming-pattern",
       "permanent": true
     },
     {
@@ -109,6 +144,16 @@
     {
       "source": "/advanced/sso-google",
       "destination": "/how-to/how-to-add-sso-google",
+      "permanent": true
+    },
+    {
+      "source": "/reference/archived-toggles",
+      "destination": "/reference/feature-toggles#archive-a-feature-flag",
+      "permanent": true
+    },
+    {
+      "source": "/reference/dependent-features",
+      "destination": "/reference/feature-toggles#feature-flag-dependencies",
       "permanent": true
     },
     {

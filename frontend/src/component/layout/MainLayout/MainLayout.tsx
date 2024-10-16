@@ -17,8 +17,9 @@ import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useEventTimeline } from 'component/events/EventTimeline/useEventTimeline';
 import { MainLayoutEventTimeline } from './MainLayoutEventTimeline';
+import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
+import { AIChat } from 'component/ai/AIChat';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -112,14 +113,11 @@ const MainLayoutContentContainer = styled('div')(({ theme }) => ({
 
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
-        const { uiConfig, isOss } = useUiConfig();
+        const { uiConfig } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
-        const eventTimeline = useUiFlag('eventTimeline') && !isOss();
-        const { open: showTimeline, setOpen: setShowTimeline } =
-            useEventTimeline();
 
         const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
         const StyledMainLayoutContent = sidebarNavigationEnabled
@@ -129,22 +127,12 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
 
         return (
-            <>
+            <EventTimelineProvider>
                 <SkipNavLink />
                 <ConditionallyRender
                     condition={sidebarNavigationEnabled}
-                    show={
-                        <Header
-                            showTimeline={showTimeline}
-                            setShowTimeline={setShowTimeline}
-                        />
-                    }
-                    elseShow={
-                        <OldHeader
-                            showTimeline={showTimeline}
-                            setShowTimeline={setShowTimeline}
-                        />
-                    }
+                    show={<Header />}
+                    elseShow={<OldHeader />}
                 />
 
                 <SkipNavTarget />
@@ -179,9 +167,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     minWidth: 0,
                                 }}
                             >
-                                <MainLayoutEventTimeline
-                                    open={eventTimeline && showTimeline}
-                                />
+                                <MainLayoutEventTimeline />
 
                                 <StyledMainLayoutContent>
                                     <MainLayoutContentContainer ref={ref}>
@@ -209,9 +195,10 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             }
                         />
                     </MainLayoutContentWrapper>
+                    <AIChat />
                     <Footer />
                 </MainLayoutContainer>
-            </>
+            </EventTimelineProvider>
         );
     },
 );

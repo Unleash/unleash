@@ -96,14 +96,16 @@ export const ManageTags: VFC<IManageTagsProps> = ({
         <>
             <PermissionHOC projectId={projectId} permission={UPDATE_FEATURE}>
                 {({ hasAccess }) => (
-                    <Button
-                        disabled={!hasAccess || isOpen}
-                        variant='outlined'
-                        size='small'
-                        onClick={() => setIsOpen(true)}
-                    >
-                        Tags
-                    </Button>
+                    <span>
+                        <Button
+                            disabled={!hasAccess || isOpen}
+                            variant='outlined'
+                            size='small'
+                            onClick={() => setIsOpen(true)}
+                        >
+                            Tags
+                        </Button>
+                    </span>
                 )}
             </PermissionHOC>
             <ManageBulkTagsDialog

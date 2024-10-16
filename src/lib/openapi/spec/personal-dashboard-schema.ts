@@ -5,8 +5,76 @@ export const personalDashboardSchema = {
     type: 'object',
     description: 'Project and flags relevant to the user',
     additionalProperties: false,
-    required: ['projects', 'flags'],
+    required: ['projects', 'flags', 'admins', 'projectOwners'],
     properties: {
+        admins: {
+            type: 'array',
+            description: 'Users with the admin role in Unleash.',
+            items: {
+                type: 'object',
+                required: ['id'],
+                properties: {
+                    id: {
+                        type: 'integer',
+                        description: 'The user ID.',
+                        example: 1,
+                    },
+                    name: {
+                        type: 'string',
+                        description: "The user's name.",
+                        example: 'Ash Ketchum',
+                    },
+                    username: {
+                        type: 'string',
+                        description: "The user's username.",
+                        example: 'pokémaster13',
+                    },
+                    imageUrl: {
+                        type: 'string',
+                        example: 'https://example.com/peek-at-you.jpg',
+                    },
+                    email: {
+                        type: 'string',
+                        example: 'user@example.com',
+                    },
+                },
+            },
+        },
+        projectOwners: {
+            type: 'array',
+            description:
+                'Users with the project owner role in Unleash. Only contains owners of projects that are visible to the user.',
+            items: {
+                type: 'object',
+                required: ['ownerType', 'name'],
+                properties: {
+                    ownerType: {
+                        type: 'string',
+                        enum: ['user'],
+                        description:
+                            'The type of the owner; will always be `user`.',
+                    },
+                    name: {
+                        type: 'string',
+                        example: 'User Name',
+                        description:
+                            "The name displayed for the user. Can be the user's name, username, or email, depending on what they have provided.",
+                    },
+                    imageUrl: {
+                        type: 'string',
+                        nullable: true,
+                        description: "The URL of the user's profile image.",
+                        example: 'https://example.com/image.jpg',
+                    },
+                    email: {
+                        type: 'string',
+                        nullable: true,
+                        description: "The user's email address.",
+                        example: 'user@example.com',
+                    },
+                },
+            },
+        },
         projects: {
             type: 'array',
             items: {
@@ -31,19 +99,22 @@ export const personalDashboardSchema = {
                         description: 'The name of the project',
                     },
                     health: {
-                        type: 'number',
+                        type: 'integer',
                         example: 50,
+                        minimum: 0,
                         description:
                             "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100",
                     },
                     memberCount: {
-                        type: 'number',
+                        type: 'integer',
                         example: 4,
+                        minimum: 0,
                         description: 'The number of members this project has',
                     },
                     featureCount: {
-                        type: 'number',
+                        type: 'integer',
                         example: 10,
+                        minimum: 0,
                         description: 'The number of features this project has',
                     },
                 },

@@ -2,9 +2,9 @@
 title: Banners
 ---
 
-:::info Availability
+:::note Availability
 
-Banners were introduced in **Unleash 5.7** and are only available in Unleash Enterprise.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.7+`
 
 :::
 

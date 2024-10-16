@@ -4,22 +4,39 @@ import { startOfDay, sub } from 'date-fns';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import { EventTimelineEventGroup } from './EventTimelineEventGroup/EventTimelineEventGroup';
 import { EventTimelineHeader } from './EventTimelineHeader/EventTimelineHeader';
-import { useEventTimeline } from './useEventTimeline';
 import { useMemo } from 'react';
+import { useSignalQuery } from 'hooks/api/getters/useSignalQuery/useSignalQuery';
+import type { ISignalQuerySignal } from 'interfaces/signal';
+import type { IEnvironment } from 'interfaces/environments';
+import { useEventTimelineContext } from './EventTimelineContext';
 
-export type EnrichedEvent = EventSchema & {
+export type TimelineEventType = 'signal' | EventSchemaType;
+
+type RawTimelineEvent = EventSchema | ISignalQuerySignal;
+
+export type TimelineEvent = {
+    id: number;
+    timestamp: number;
+    type: TimelineEventType;
     label: string;
     summary: string;
-    timestamp: number;
+    icon?: string;
+    variant?: string;
 };
 
-export type TimelineEventGroup = EnrichedEvent[];
+export type TimelineEventGroup = TimelineEvent[];
 
 const StyledRow = styled('div')({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
 });
+
+const StyledTimelineBody = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    padding: theme.spacing(1.5, 0),
+}));
 
 const StyledTimelineContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -86,10 +103,82 @@ const RELEVANT_EVENT_TYPES: EventSchemaType[] = [
 
 const toISODateString = (date: Date) => date.toISOString().split('T')[0];
 
-export const EventTimeline = () => {
-    const { timeSpan, environment, setTimeSpan, setEnvironment } =
-        useEventTimeline();
+const isSignal = (event: RawTimelineEvent): event is ISignalQuerySignal =>
+    'sourceId' in event;
 
+const getTimestamp = (event: RawTimelineEvent) => {
+    return new Date(event.createdAt).getTime();
+};
+
+const isInRange = (timestamp: number, startTime: number, endTime: number) =>
+    timestamp >= startTime && timestamp <= endTime;
+
+const isValidString = (str: unknown): str is string =>
+    typeof str === 'string' && str.trim().length > 0;
+
+const getTimelineEvent = (
+    event: RawTimelineEvent,
+    timestamp: number,
+    environment?: IEnvironment,
+): TimelineEvent | undefined => {
+    if (isSignal(event)) {
+        const {
+            id,
+            sourceName = 'unknown source',
+            sourceDescription,
+            tokenName,
+            payload: {
+                experimental_unleash_title,
+                experimental_unleash_description,
+                experimental_unleash_icon,
+                experimental_unleash_variant,
+            },
+        } = event;
+
+        const title = experimental_unleash_title || sourceName;
+        const label = `Signal: ${title}`;
+        const summary = experimental_unleash_description
+            ? `Signal: **[${title}](/integrations/signals)** ${experimental_unleash_description}`
+            : `Signal originated from **[${sourceName} (${tokenName})](/integrations/signals)** endpoint${sourceDescription ? `: ${sourceDescription}` : ''}`;
+
+        return {
+            id,
+            timestamp,
+            type: 'signal',
+            label,
+            summary,
+            ...(isValidString(experimental_unleash_icon)
+                ? { icon: experimental_unleash_icon }
+                : {}),
+            ...(isValidString(experimental_unleash_variant)
+                ? { variant: experimental_unleash_variant }
+                : {}),
+        };
+    }
+
+    if (
+        !event.environment ||
+        !environment ||
+        event.environment === environment.name
+    ) {
+        const {
+            id,
+            type,
+            label: eventLabel,
+            summary: eventSummary,
+            createdBy,
+        } = event;
+
+        const label = eventLabel || type;
+        const summary =
+            eventSummary || `**${createdBy}** triggered **${type}**`;
+
+        return { id, timestamp, type, label, summary };
+    }
+};
+
+export const EventTimeline = () => {
+    const { timeSpan, environment } = useEventTimelineContext();
     const endDate = new Date();
     const startDate = sub(endDate, timeSpan.value);
     const endTime = endDate.getTime();
@@ -103,24 +192,34 @@ export const EventTimeline = () => {
         },
         { refreshInterval: 10 * 1000 },
     );
-
-    const events = useMemo(() => {
-        return baseEvents.map((event) => ({
-            ...event,
-            timestamp: new Date(event.createdAt).getTime(),
-        }));
-    }, [baseEvents]) as EnrichedEvent[];
-
-    const filteredEvents = events.filter(
-        (event) =>
-            event.timestamp >= startTime &&
-            event.timestamp <= endTime &&
-            (!event.environment ||
-                !environment ||
-                event.environment === environment.name),
+    const { signals: baseSignals } = useSignalQuery(
+        {
+            from: `IS:${toISODateString(startOfDay(startDate))}`,
+            to: `IS:${toISODateString(endDate)}`,
+        },
+        { refreshInterval: 10 * 1000 },
     );
 
-    const sortedEvents = filteredEvents.reverse();
+    const events = useMemo(
+        () =>
+            [...baseEvents, ...baseSignals]
+                .reduce<TimelineEvent[]>((acc, event) => {
+                    const timestamp = getTimestamp(event);
+                    if (isInRange(timestamp, startTime, endTime)) {
+                        const timelineEvent = getTimelineEvent(
+                            event,
+                            timestamp,
+                            environment,
+                        );
+                        if (timelineEvent) {
+                            acc.push(timelineEvent);
+                        }
+                    }
+                    return acc;
+                }, [])
+                .sort((a, b) => a.timestamp - b.timestamp),
+        [baseEvents, baseSignals, startTime, endTime, environment],
+    );
 
     const timespanInMs = endTime - startTime;
     const groupingThresholdInMs = useMemo(
@@ -130,7 +229,7 @@ export const EventTimeline = () => {
 
     const groups = useMemo(
         () =>
-            sortedEvents.reduce((groups: TimelineEventGroup[], event) => {
+            events.reduce((groups: TimelineEventGroup[], event) => {
                 if (groups.length === 0) {
                     groups.push([event]);
                 } else {
@@ -148,43 +247,39 @@ export const EventTimeline = () => {
                 }
                 return groups;
             }, []),
-        [sortedEvents, groupingThresholdInMs],
+        [events, groupingThresholdInMs],
     );
 
     return (
         <>
             <StyledRow>
-                <EventTimelineHeader
-                    totalEvents={sortedEvents.length}
-                    timeSpan={timeSpan}
-                    setTimeSpan={setTimeSpan}
-                    environment={environment}
-                    setEnvironment={setEnvironment}
-                />
+                <EventTimelineHeader totalEvents={events.length} />
             </StyledRow>
-            <StyledTimelineContainer>
-                <StyledTimeline />
-                <StyledStart />
-                {groups.map((group) => (
-                    <EventTimelineEventGroup
-                        key={group[0].id}
-                        group={group}
-                        startDate={startDate}
-                        endDate={endDate}
-                    />
-                ))}
-                <StyledEnd />
-            </StyledTimelineContainer>
-            <StyledRow>
-                <StyledMarkerLabel>{timeSpan.markers[0]}</StyledMarkerLabel>
-                {timeSpan.markers.slice(1).map((marker) => (
-                    <StyledMiddleMarkerContainer key={marker}>
-                        <StyledMiddleMarker />
-                        <StyledMarkerLabel>{marker}</StyledMarkerLabel>
-                    </StyledMiddleMarkerContainer>
-                ))}
-                <StyledMarkerLabel>now</StyledMarkerLabel>
-            </StyledRow>
+            <StyledTimelineBody>
+                <StyledTimelineContainer>
+                    <StyledTimeline />
+                    <StyledStart />
+                    {groups.map((group) => (
+                        <EventTimelineEventGroup
+                            key={group[0].id}
+                            group={group}
+                            startTime={startTime}
+                            endTime={endTime}
+                        />
+                    ))}
+                    <StyledEnd />
+                </StyledTimelineContainer>
+                <StyledRow>
+                    <StyledMarkerLabel>{timeSpan.markers[0]}</StyledMarkerLabel>
+                    {timeSpan.markers.slice(1).map((marker) => (
+                        <StyledMiddleMarkerContainer key={marker}>
+                            <StyledMiddleMarker />
+                            <StyledMarkerLabel>{marker}</StyledMarkerLabel>
+                        </StyledMiddleMarkerContainer>
+                    ))}
+                    <StyledMarkerLabel>now</StyledMarkerLabel>
+                </StyledRow>
+            </StyledTimelineBody>
         </>
     );
 };

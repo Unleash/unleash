@@ -10,8 +10,7 @@ import { FlagProvider } from '@unleash/proxy-client-react';
 
 const config = {
   url: '<YOUR_API_URL>',
-  clientKey: '<YOUR_API_TOKEN>',
-  refreshInterval: 5, // In production use interval of >15s
+  clientKey: '<YOUR_API_TOKEN>', // in production use environment variable
   appName: 'unleash-onboarding-react',
 };
 

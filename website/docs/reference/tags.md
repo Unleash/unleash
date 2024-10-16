@@ -3,7 +3,12 @@ id: tags
 title: Tags
 ---
 
-> This feature was introduced in Unleash 3.11.0
+:::note Availability
+
+**Version**: `3.11+`
+
+:::
+
 
 Do you want to filter your features to avoid having to see all features belonging to other teams than your own? Do you want to write a plugin that only gets notified about changes to features that your plugin knows how to handle?
 

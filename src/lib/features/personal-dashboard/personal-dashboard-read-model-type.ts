@@ -21,4 +21,5 @@ export type PersonalProject = BasePersonalProject & {
 export interface IPersonalDashboardReadModel {
     getPersonalFeatures(userId: number): Promise<PersonalFeature[]>;
     getPersonalProjects(userId: number): Promise<BasePersonalProject[]>;
+    getLatestHealthScores(project: string, count: number): Promise<number[]>;
 }

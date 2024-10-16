@@ -4,7 +4,7 @@ import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesLi
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { IntegrationList } from 'component/integrations/IntegrationList/IntegrationList';
 import Login from 'component/user/Login/Login';
-import { EEA, P } from 'component/common/flags';
+import { P } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -62,7 +62,7 @@ export const routes: IRoute[] = [
     // Personal Dashboard
     {
         path: '/personal',
-        title: 'Personal Dashboard',
+        title: 'Dashboard',
         component: PersonalDashboard,
         type: 'protected',
         menu: { mobile: true },
@@ -266,8 +266,8 @@ export const routes: IRoute[] = [
         title: 'Environments',
         component: EnvironmentTable,
         type: 'protected',
-        flag: EEA,
         menu: { mobile: true, advanced: true },
+        enterprise: true,
     },
     {
         path: '/feedback',
@@ -511,6 +511,7 @@ export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
             menu: route.menu,
             configFlag: route.configFlag,
             notFlag: route.notFlag,
+            enterprise: route.enterprise,
         };
     });
 };

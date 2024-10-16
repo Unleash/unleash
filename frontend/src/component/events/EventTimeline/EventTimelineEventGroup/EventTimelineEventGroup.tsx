@@ -3,6 +3,7 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { EventTimelineEventTooltip } from './EventTimelineEventTooltip/EventTimelineEventTooltip';
 import type { TimelineEventGroup } from '../EventTimeline';
 import { EventTimelineEventCircle } from './EventTimelineEventCircle';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledEvent = styled('div', {
     shouldForwardProp: (prop) => prop !== 'position',
@@ -18,25 +19,33 @@ const StyledEvent = styled('div', {
 
 interface IEventTimelineEventProps {
     group: TimelineEventGroup;
-    startDate: Date;
-    endDate: Date;
+    startTime: number;
+    endTime: number;
 }
 
 export const EventTimelineEventGroup = ({
     group,
-    startDate,
-    endDate,
+    startTime,
+    endTime,
 }: IEventTimelineEventProps) => {
-    const timelineDuration = endDate.getTime() - startDate.getTime();
-    const eventTime = new Date(group[0].createdAt).getTime();
+    const { trackEvent } = usePlausibleTracker();
+    const timelineDuration = endTime - startTime;
+    const eventTime = group[0].timestamp;
 
-    const position = `${((eventTime - startDate.getTime()) / timelineDuration) * 100}%`;
+    const position = `${((eventTime - startTime) / timelineDuration) * 100}%`;
+    const trackHover = () => {
+        trackEvent('event-timeline', {
+            props: {
+                eventType: 'event hover',
+            },
+        });
+    };
 
     return (
-        <StyledEvent position={position}>
+        <StyledEvent position={position} onMouseEnter={trackHover}>
             <HtmlTooltip
                 title={<EventTimelineEventTooltip group={group} />}
-                maxWidth={320}
+                maxWidth={350}
                 arrow
             >
                 <Badge

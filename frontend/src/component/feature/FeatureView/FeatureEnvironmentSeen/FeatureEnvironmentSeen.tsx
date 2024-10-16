@@ -74,6 +74,11 @@ const TooltipContainer: FC<{
     );
 };
 
+const LineBox = styled(Box)({
+    display: 'grid',
+    placeItems: 'center',
+});
+
 export const FeatureEnvironmentSeen = ({
     featureLastSeen,
     environments,
@@ -91,9 +96,9 @@ export const FeatureEnvironmentSeen = ({
                 tooltip='No usage reported from connected applications'
             >
                 <Box data-loading>
-                    <Box>
+                    <LineBox>
                         <UsageLine />
-                    </Box>
+                    </LineBox>
                 </Box>
             </TooltipContainer>
         );

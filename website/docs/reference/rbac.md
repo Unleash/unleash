@@ -3,9 +3,11 @@ id: rbac
 title: Role-based Access control
 ---
 
-This document forms the specifications
-for [Role-Based Access Control](https://en.wikipedia.org/wiki/Role-based_access_control) (RBAC) which was introduced as part of
-the **Unleash v4 release**.
+:::note Availability
+
+**Version**: `4.0+`
+
+:::
 
 ## Core principles {#core-principles}
 
@@ -23,8 +25,6 @@ Unleash has two levels in its hierarchy of resources:
    supports multiple projects.
 
 ![RBAC overview](/img/rbac.png)
-
-Unleash v4 allows you control access to both root resources and individual project resources.
 
 ## Predefined roles
 
@@ -45,9 +45,9 @@ When you add a new user, you can assign them one of the root roles listed below.
 
 ## Custom Root Roles
 
-:::info availability
+:::note Availability
 
-Custom root roles were introduced in **Unleash 5.4** and are only available in Unleash Enterprise.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.4+`
 
 :::
 
@@ -138,9 +138,9 @@ You can assign the following root permissions:
 
 ## Custom Project Roles
 
-:::info availability
+:::note Availability
 
-Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.6+`
 
 :::
 
@@ -196,9 +196,9 @@ You can assign the following permissions on a per-environment level within the p
 
 ## Multiple Project Roles
 
-:::info availability
+:::note Availability
 
-Multiple project roles is an enterprise feature available from **Unleash 5.6** onwards.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.6+`
 
 :::
 
@@ -214,10 +214,9 @@ role that encapsulates the needed permissions.
 
 ## User Groups
 
-:::info availability
+:::note Availability
 
-User groups are available to Unleash Enterprise users since **Unleash 4.14**. Root role groups are planned to be
-released in **Unleash 5.1**.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.14+`
 
 :::
 
@@ -231,7 +230,7 @@ A user group consists of the following:
 - a **description** (optional)
 - a **list of users** (required)
 - a list of SSO groups to sync from (optional)
-- a root role associated with the group (optional) (only available in **Unleash 5.1** and later)
+- a root role associated with the group (optional; available in v5.1+)
 
 Groups do nothing on their own. They must either be given a root role directly or a role on a project to assign
 permissions.
@@ -247,9 +246,9 @@ user will inherit most permissive permissions of all their groups in that projec
 
 ## User Group SSO Integration
 
-:::info availability
+:::note Availability
 
-User group syncing is planned to be released in Unleash 4.18 and will be available for Enterprise customers.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.18+`
 
 :::
 

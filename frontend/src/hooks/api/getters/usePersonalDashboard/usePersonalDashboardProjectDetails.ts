@@ -1,7 +1,7 @@
-import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import type { PersonalDashboardProjectDetailsSchema } from 'openapi';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
 export interface IPersonalDashboardProjectDetailsOutput {
     personalDashboardProjectDetails?: PersonalDashboardProjectDetailsSchema;
@@ -11,9 +11,18 @@ export interface IPersonalDashboardProjectDetailsOutput {
 }
 
 export const usePersonalDashboardProjectDetails = (
-    project: string,
+    project?: string,
 ): IPersonalDashboardProjectDetailsOutput => {
-    const { data, error, mutate } = useSWR(
+    const { data, error, mutate } = useConditionalSWR(
+        Boolean(project),
+        {
+            latestEvents: [],
+            onboardingStatus: {
+                status: 'onboarding-started',
+            },
+            owners: [],
+            roles: [],
+        },
         formatApiPath(`api/admin/personal-dashboard/${project}`),
         fetcher,
     );

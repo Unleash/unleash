@@ -20,7 +20,6 @@ import {
 import type { IAuthRequest } from '../../routes/unleash-types';
 import type { Response } from 'express';
 import type { OpenApiService } from '../../services';
-import { DAYS_TO_BE_COUNTED_AS_INACTIVE } from './createInactiveUsersService';
 import { anonymise } from '../../util';
 export class InactiveUsersController extends Controller {
     private readonly logger: Logger;
@@ -30,6 +29,8 @@ export class InactiveUsersController extends Controller {
     private openApiService: OpenApiService;
 
     private flagResolver: IFlagResolver;
+
+    private readonly userInactivityThresholdInDays: number;
     constructor(
         config: IUnleashConfig,
         {
@@ -44,6 +45,8 @@ export class InactiveUsersController extends Controller {
         this.inactiveUsersService = inactiveUsersService;
         this.openApiService = openApiService;
         this.flagResolver = config.flagResolver;
+        this.userInactivityThresholdInDays =
+            config.userInactivityThresholdInDays;
 
         this.route({
             method: 'get',
@@ -54,7 +57,7 @@ export class InactiveUsersController extends Controller {
                 openApiService.validPath({
                     operationId: 'getInactiveUsers',
                     summary: 'Gets inactive users',
-                    description: `Gets all inactive users. An inactive user is a user that has not logged in in the last ${DAYS_TO_BE_COUNTED_AS_INACTIVE} days`,
+                    description: `Gets all inactive users. An inactive user is a user that has not logged in in the last ${this.userInactivityThresholdInDays} days`,
                     tags: ['Users'],
                     responses: {
                         200: createResponseSchema('inactiveUsersSchema'),
@@ -71,7 +74,7 @@ export class InactiveUsersController extends Controller {
                 openApiService.validPath({
                     operationId: 'deleteInactiveUsers',
                     summary: 'Deletes inactive users',
-                    description: `Deletes all inactive users. An inactive user is a user that has not logged in in the last ${DAYS_TO_BE_COUNTED_AS_INACTIVE} days`,
+                    description: `Deletes all inactive users. An inactive user is a user that has not logged in in the last ${this.userInactivityThresholdInDays} days`,
                     tags: ['Users'],
                     requestBody: createRequestSchema('idsSchema'),
                     responses: {

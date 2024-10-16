@@ -2,9 +2,9 @@
 title: Front-end API access
 ---
 
-:::info Availability
+:::note Availability
 
-The Unleash front-end API was released in Unleash 4.18. You can read more in the [Unleash 4.18 release blog post](https://www.getunleash.io/blog/new-features-direct-client-side-front-end-api-access-sync-user-groups-and-clone-environments).
+**Version**: `4.18+`
 
 :::
 

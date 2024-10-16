@@ -180,6 +180,11 @@ export const uiConfigSchema = {
                 'Whether the SAML configuration is set through environment variables or not.',
             example: false,
         },
+        unleashAIAvailable: {
+            type: 'boolean',
+            description: 'Whether Unleash AI is available.',
+            example: false,
+        },
     },
     components: {
         schemas: {

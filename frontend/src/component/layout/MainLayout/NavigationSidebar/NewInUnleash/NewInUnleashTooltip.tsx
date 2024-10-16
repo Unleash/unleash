@@ -9,9 +9,11 @@ import {
     Typography,
     ClickAwayListener,
 } from '@mui/material';
-import { type Link as RouterLink, useNavigate } from 'react-router-dom';
+import type { Link as RouterLink } from 'react-router-dom';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoWithWhiteText.svg';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Badge } from 'component/common/Badge/Badge';
 
 const Header = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.primary.light,
@@ -22,6 +24,7 @@ const Header = styled(Box)(({ theme }) => ({
 
 const Body = styled(Box)(({ theme }) => ({
     padding: theme.spacing(2),
+    lineHeight: 1.5,
 }));
 
 const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
@@ -57,17 +60,25 @@ const CenteredPreview = styled(Box)(({ theme }) => ({
 }));
 
 const LongDescription = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1.5),
     ul: {
+        margin: 0,
         paddingLeft: theme.spacing(2),
     },
 }));
 
-const Title = styled(Typography)(({ theme }) => ({
+const StyledTitle = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    alignItems: 'center',
     padding: theme.spacing(1, 0, 2, 0),
+    lineHeight: 1.5,
 }));
 
 const ReadMore = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(2, 0, 4, 0),
+    padding: theme.spacing(3, 0),
 }));
 
 export const NewInUnleashTooltip: FC<{
@@ -75,80 +86,84 @@ export const NewInUnleashTooltip: FC<{
     title: string;
     longDescription: ReactNode;
     docsLink: string;
-    link: string;
+    onCheckItOut: () => void;
     open: boolean;
     preview?: ReactNode;
     onClose: () => void;
+    beta: boolean;
 }> = ({
     children,
     title,
     longDescription,
-    link,
+    onCheckItOut,
     docsLink,
     preview,
     open,
     onClose,
-}) => {
-    const navigate = useNavigate();
-
-    return (
-        <HtmlTooltip
-            disableFocusListener
-            disableHoverListener
-            disableTouchListener
-            onClose={onClose}
-            open={open}
-            maxHeight={800}
-            maxWidth={350}
-            arrow
-            tabIndex={0}
-            placement='right-end'
-            title={
-                <ClickAwayListener onClickAway={onClose}>
-                    <Box>
-                        <Header>
-                            {preview ? (
-                                <BottomPreview>{preview}</BottomPreview>
-                            ) : (
-                                <CenteredPreview>
-                                    <UnleashLogo />
-                                </CenteredPreview>
-                            )}
-                        </Header>
-                        <Body>
-                            <Title>{title}</Title>
-                            <LongDescription>{longDescription}</LongDescription>
-                            <ReadMore>
-                                <StyledLink
-                                    component='a'
-                                    href={docsLink}
-                                    underline='hover'
-                                    rel='noopener noreferrer'
-                                    target='_blank'
-                                >
-                                    <StyledOpenInNew /> Read more in our
-                                    documentation
-                                </StyledLink>
-                            </ReadMore>
-                            <Button
-                                variant='contained'
-                                color='primary'
-                                type='submit'
-                                size='small'
-                                onClick={(event) => {
-                                    event.stopPropagation();
-                                    onClose();
-                                    navigate(link);
-                                }}
+    beta,
+}) => (
+    <HtmlTooltip
+        disableFocusListener
+        disableHoverListener
+        disableTouchListener
+        onClose={onClose}
+        open={open}
+        maxHeight={800}
+        maxWidth={350}
+        arrow
+        tabIndex={0}
+        placement='right-end'
+        title={
+            <ClickAwayListener onClickAway={onClose}>
+                <Box>
+                    <Header>
+                        {preview ? (
+                            <BottomPreview>{preview}</BottomPreview>
+                        ) : (
+                            <CenteredPreview>
+                                <UnleashLogo />
+                            </CenteredPreview>
+                        )}
+                    </Header>
+                    <Body>
+                        <StyledTitle>
+                            <Typography>{title}</Typography>
+                            <ConditionallyRender
+                                condition={beta}
+                                show={<Badge color='secondary'>Beta</Badge>}
+                            />
+                        </StyledTitle>
+                        <LongDescription>{longDescription}</LongDescription>
+                        <ReadMore>
+                            <StyledLink
+                                component='a'
+                                href={docsLink}
+                                underline='hover'
+                                rel='noopener noreferrer'
+                                target='_blank'
                             >
-                                Check it out
-                            </Button>
-                        </Body>
-                    </Box>
-                </ClickAwayListener>
-            }
-        >
-            {children}
-        </HtmlTooltip>
-    );
-};
+                                <StyledOpenInNew /> Read more in our
+                                documentation
+                            </StyledLink>
+                        </ReadMore>
+                        <Button
+                            variant='contained'
+                            color='primary'
+                            type='submit'
+                            size='small'
+                            onClick={(event) => {
+                                event.stopPropagation();
+                                onClose();
+                                onCheckItOut();
+                            }}
+                        >
+                            Check it out
+                        </Button>
+                    </Body>
+                </Box>
+            </ClickAwayListener>
+        }
+    >
+        {children}
+    </HtmlTooltip>
+);

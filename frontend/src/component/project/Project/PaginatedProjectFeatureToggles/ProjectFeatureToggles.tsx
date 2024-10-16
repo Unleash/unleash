@@ -46,6 +46,7 @@ import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { ProjectOnboarded } from 'component/onboarding/flow/ProjectOnboarded';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -66,6 +67,7 @@ const Container = styled('div')(({ theme }) => ({
 export const ProjectFeatureToggles = ({
     environments,
 }: IPaginatedProjectFeatureTogglesProps) => {
+    const { trackEvent } = usePlausibleTracker();
     const onboardingUIEnabled = useUiFlag('onboardingUI');
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
@@ -134,6 +136,17 @@ export const ProjectFeatureToggles = ({
         onboardingFlow === 'visible';
     const showFeaturesTable =
         (total !== undefined && total > 0) || notOnboarding;
+
+    const trackOnboardingFinish = (sdkName: string) => {
+        if (!isOnboarding) {
+            trackEvent('onboarding', {
+                props: {
+                    eventType: 'onboarding-finished',
+                    onboardedSdk: sdkName,
+                },
+            });
+        }
+    };
 
     const columns = useMemo(
         () => [
@@ -426,6 +439,7 @@ export const ProjectFeatureToggles = ({
                         projectId={projectId}
                         setConnectSdkOpen={setConnectSdkOpen}
                         setOnboardingFlow={setOnboardingFlow}
+                        refetchFeatures={refetch}
                     />
                 }
             />
@@ -556,9 +570,10 @@ export const ProjectFeatureToggles = ({
                 onClose={() => {
                     setConnectSdkOpen(false);
                 }}
-                onFinish={() => {
+                onFinish={(sdkName: string) => {
                     setConnectSdkOpen(false);
                     setSetupCompletedState('show-setup');
+                    trackOnboardingFinish(sdkName);
                 }}
                 project={projectId}
                 environments={environments}

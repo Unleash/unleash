@@ -284,4 +284,16 @@ export class ProjectReadModel implements IProjectReadModel {
             .pluck('project');
         return projects;
     }
+
+    async getProjectsFavoritedByUser(userId: number): Promise<string[]> {
+        const favoritedProjects = await this.db
+            .select('favorite_projects.project')
+            .from('favorite_projects')
+            .leftJoin('projects', 'favorite_projects.project', 'projects.id')
+            .where('favorite_projects.user_id', userId)
+            .andWhere('projects.archived_at', null)
+            .pluck('project');
+
+        return favoritedProjects;
+    }
 }

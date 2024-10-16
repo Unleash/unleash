@@ -82,7 +82,34 @@ export class OnboardingReadModel implements IOnboardingReadModel {
 
     async getOnboardingStatusForProject(
         projectId: string,
-    ): Promise<OnboardingStatus> {
+    ): Promise<OnboardingStatus | null> {
+        const projectExists = await this.db('projects')
+            .select(1)
+            .where('id', projectId)
+            .first();
+
+        if (!projectExists) {
+            return null;
+        }
+
+        const db = this.db;
+        const lastSeen = await db
+            .select(db.raw('1'))
+            .from('last_seen_at_metrics as lsm')
+            .innerJoin('features as f', 'f.name', 'lsm.feature_name')
+            .innerJoin('projects as p', 'p.id', 'f.project')
+            .where('p.id', projectId)
+            .union((qb) => {
+                qb.select(db.raw('1'))
+                    .from('client_applications_usage as cau')
+                    .where('cau.project', projectId);
+            })
+            .first();
+
+        if (lastSeen) {
+            return { status: 'onboarded' };
+        }
+
         const feature = await this.db('features')
             .select('name')
             .where('project', projectId)
@@ -92,18 +119,6 @@ export class OnboardingReadModel implements IOnboardingReadModel {
         if (!feature) {
             return { status: 'onboarding-started' };
         }
-
-        const lastSeen = await this.db('last_seen_at_metrics as lsm')
-            .select('lsm.feature_name')
-            .innerJoin('features as f', 'f.name', 'lsm.feature_name')
-            .innerJoin('projects as p', 'p.id', 'f.project')
-            .where('p.id', projectId)
-            .first();
-
-        if (lastSeen) {
-            return { status: 'onboarded' };
-        } else {
-            return { status: 'first-flag-created', feature: feature.name };
-        }
+        return { status: 'first-flag-created', feature: feature.name };
     }
 }

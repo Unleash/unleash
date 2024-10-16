@@ -1,12 +1,14 @@
 1\. Install the SDK
 ```sh
-go get github.com/Unleash/unleash-client-go/v3
+go get github.com/Unleash/unleash-client-go/v4
 ```
 
 2\. Run Unleash
 ```go
+package main
+
 import (
-    "github.com/Unleash/unleash-client-go/v3"
+    "github.com/Unleash/unleash-client-go/v4"
     "net/http"
     "time"
 )
@@ -16,8 +18,7 @@ func init() {
         unleash.WithListener(&unleash.DebugListener{}),
         unleash.WithAppName("unleash-onboarding-golang"),
         unleash.WithUrl("<YOUR_API_URL>"),
-        unleash.WithCustomHeaders(http.Header{"Authorization": {"<YOUR_API_TOKEN>"}}),
-        unleash.WithMetricsInterval(5*time.Second),
+        unleash.WithCustomHeaders(http.Header{"Authorization": {"<YOUR_API_TOKEN>"}}), // in production use environment variable
     )
 }
 
@@ -31,12 +32,6 @@ func main() {
 
 ---
 ```go
-import (
-    "github.com/Unleash/unleash-client-go/v3"
-    "net/http"
-    "time"
-)
-
 func init() {
     unleash.Initialize(
         unleash.WithListener(&unleash.DebugListener{}),

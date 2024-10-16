@@ -6,7 +6,7 @@ import {
     type Theme,
 } from '@mui/material';
 import type { IUser } from 'interfaces/user';
-import type { FC } from 'react';
+import { forwardRef } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip';
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
@@ -60,63 +60,59 @@ const TooltipMainContent = styled('div')(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
 }));
 
-export const UserAvatar: FC<IUserAvatarProps> = ({
-    user,
-    src,
-    className,
-    sx,
-    children,
-    disableTooltip,
-    ...props
-}) => {
-    let fallback: string | undefined;
-    if (!children && user) {
-        fallback = user?.name || user?.email || user?.username;
-        if (fallback?.includes(' ')) {
-            fallback = `${fallback.split(' ')[0][0]}${
-                fallback.split(' ')[1][0]
-            }`.toUpperCase();
-        } else if (fallback) {
-            fallback = fallback[0].toUpperCase();
+export const UserAvatar = forwardRef<HTMLDivElement, IUserAvatarProps>(
+    ({ user, src, className, sx, children, disableTooltip, ...props }, ref) => {
+        let fallback: string | undefined;
+        if (!children && user) {
+            fallback = user?.name || user?.email || user?.username;
+            if (fallback?.includes(' ')) {
+                fallback =
+                    `${fallback.split(' ')[0][0]}${fallback.split(' ')[1][0]}`.toUpperCase();
+            } else if (fallback) {
+                fallback = fallback[0].toUpperCase();
+            }
         }
-    }
 
-    const Avatar = (
-        <StyledAvatar
-            className={className}
-            sx={sx}
-            {...props}
-            data-loading
-            alt={user?.name || user?.email || user?.username || 'Gravatar'}
-            src={src || user?.imageUrl}
-        >
-            <ConditionallyRender
-                condition={Boolean(fallback)}
-                show={fallback}
-                elseShow={children}
-            />
-        </StyledAvatar>
-    );
-
-    const tooltip = disableTooltip ? undefined : tooltipContent(user);
-    if (tooltip) {
-        return (
-            <HtmlTooltip
-                arrow
-                describeChild
-                title={
-                    <>
-                        <TooltipSecondaryContent>
-                            {tooltip.secondary}
-                        </TooltipSecondaryContent>
-                        <TooltipMainContent>{tooltip.main}</TooltipMainContent>
-                    </>
-                }
+        const Avatar = (
+            <StyledAvatar
+                ref={ref}
+                className={className}
+                sx={sx}
+                {...props}
+                data-loading
+                alt={user?.name || user?.email || user?.username || 'Gravatar'}
+                src={src || user?.imageUrl}
             >
-                {Avatar}
-            </HtmlTooltip>
+                <ConditionallyRender
+                    condition={Boolean(fallback)}
+                    show={fallback}
+                    elseShow={children}
+                />
+            </StyledAvatar>
         );
-    }
 
-    return Avatar;
-};
+        const tooltip = disableTooltip ? undefined : tooltipContent(user);
+        if (tooltip) {
+            return (
+                <HtmlTooltip
+                    arrow
+                    describeChild
+                    title={
+                        <>
+                            <TooltipSecondaryContent>
+                                {tooltip.secondary}
+                            </TooltipSecondaryContent>
+                            <TooltipMainContent>
+                                {tooltip.main}
+                            </TooltipMainContent>
+                        </>
+                    }
+                >
+                    {Avatar}
+                </HtmlTooltip>
+            );
+        }
+
+        return Avatar;
+    },
+);

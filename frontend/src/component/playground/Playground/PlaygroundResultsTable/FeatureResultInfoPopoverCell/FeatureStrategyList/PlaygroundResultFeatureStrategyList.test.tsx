@@ -13,7 +13,6 @@ const testCases = [
                 data: [
                     {
                         id: 'f17532c8-4b36-4406-a23f-3db75e0adc82',
-
                         name: 'default',
                         parameters: {},
                         result: { enabled: true, evaluationStatus: 'complete' },

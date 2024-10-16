@@ -15,6 +15,11 @@ import { AIChatMessage } from './AIChatMessage';
 import { AIChatHeader } from './AIChatHeader';
 import { Resizable } from 'component/common/Resizable/Resizable';
 
+const AI_LOADING_MESSAGE = {
+    role: 'assistant',
+    content: '_Unleash AI is typing..._',
+} as const;
+
 const StyledAIIconContainer = styled('div')(({ theme }) => ({
     position: 'fixed',
     bottom: 20,
@@ -71,13 +76,6 @@ const StyledChatContent = styled('div')(({ theme }) => ({
     overflowX: 'hidden',
 }));
 
-const initialMessages: ChatMessage[] = [
-    {
-        role: 'system',
-        content: `You are an assistant that helps users interact with Unleash. You should ask the user in case you're missing any required information.`,
-    },
-];
-
 export const AIChat = () => {
     const unleashAIEnabled = useUiFlag('unleashAI');
     const {
@@ -86,9 +84,9 @@ export const AIChat = () => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const { setToastApiError } = useToast();
-    const { chat } = useAIApi();
+    const { chat, newChat } = useAIApi();
 
-    const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+    const [messages, setMessages] = useState<ChatMessage[]>([]);
 
     const chatEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -106,24 +104,29 @@ export const AIChat = () => {
         scrollToEnd();
     }, [open]);
 
-    const onSend = async (message: string) => {
-        if (!message.trim() || loading) return;
+    const onSend = async (content: string) => {
+        if (!content.trim() || loading) return;
 
         try {
             setLoading(true);
             const tempMessages: ChatMessage[] = [
                 ...messages,
-                { role: 'user', content: message },
-                { role: 'assistant', content: '_Unleash AI is typing..._' },
+                { role: 'user', content },
+                AI_LOADING_MESSAGE,
             ];
             setMessages(tempMessages);
-            const newMessages = await chat(tempMessages.slice(0, -1));
+            const { messages: newMessages } = await chat(content);
             mutate(() => true);
             setMessages(newMessages);
             setLoading(false);
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
+    };
+
+    const onNewChat = () => {
+        setMessages([]);
+        newChat();
     };
 
     if (!unleashAIEnabled || !unleashAIAvailable) {
@@ -151,7 +154,7 @@ export const AIChat = () => {
             >
                 <StyledChat>
                     <AIChatHeader
-                        onNew={() => setMessages(initialMessages)}
+                        onNew={onNewChat}
                         onClose={() => setOpen(false)}
                     />
                     <StyledChatContent>

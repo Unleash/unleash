@@ -3,7 +3,7 @@ title: How to use feature flags with AI
 slug: /feature-flag-tutorials/use-cases/ai
 ---
 
-Many tech companies today are implementing some form of generative AI with LLMs into their products. This is usually a chatbot or a content generator.
+Many tech companies today are integrating generative AI with large language models (LLMs) into their products, often in the form of chatbots or content generators.
 
 The main way to interact with LLMs today is via a set of APIs, usually either OpenAI, Anthropic or aggregators like Groq. All the APIs usually have similar parameters, like:
 
@@ -12,9 +12,9 @@ The main way to interact with LLMs today is via a set of APIs, usually either Op
 
 Because all these models vary a lot in their capabilities, chances are you'll be testing multiple models, and multiple versions of the same model, and multiple prompts.
 
-This is where feature flags are super useful. And this is what we'll be doing in this tutorial.
+This is where feature flags are super useful. They allow you to easily switch between different configurations. In this tutorial, we’ll explore how to use feature flags with AI models.
 
-We'll be starting with a basic chatbot. I know building a chatbot is a total cliché at this point, but it's a small, self-contained example that everyone knows how to interact with. You can take this example and apply it to any other use case where you need to interact with an LLM via an API.
+We'll start with a basic chatbot. I know building a chatbot is a total cliché at this point, but it's a small, self-contained example that everyone knows how to interact with. You can take this example and apply it to any other use case where you need to interact with an LLM via an API.
 
 First, clone the repo:
 
@@ -23,27 +23,27 @@ git clone https://github.com/alvinometric/feature-flags-ai
 cd feature-flags-ai
 ```
 
-Install the dependencies
+Install the dependencies:
 
 ```sh
 npm install
 ```
 
-Run the app
+Run the app:
 
 ```sh
 npm run dev
 ```
 
-And you should see something like this:
+You should now see a chatbot UI, like this:
 
 ![chatbot UI](./sveltekit-chatbot.png)
 
-This is a simple Sveltekit app with a chatbot UI. It doesn't really matter if you've never used Sveltekit before. It's similar to Next.js or Nuxt or SolidStart, where your file structure defines your routes.
+This is a simple Sveltekit app with a chatbot interface. If you’re not familiar with SvelteKit, it works similarly to frameworks like Next.js, Nuxt, or SolidStart, where your file structure defines the routing.
 
 The most important file for this tutorial is the `src/routes/api/chat/+server.js` file.
 
-It creates an API endpoint at `/api/chat`. When your frontend sends a POST request to `/api/chat`, this is the code that handles it.
+It creates an API endpoint at `/api/chat`. When your frontend sends a POST request to `/api/chat`, this is the code that handles the request.
 
 ```javascript
 import { createOpenAI } from "@ai-sdk/openai";
@@ -87,16 +87,16 @@ export const POST = async ({ request }) => {
 
 This file is doing a few key things:
 
-1. It sets up our OpenAI client with an API key.
-2. It defines different AI model configurations in the `variants` object.
-3. The `POST` function handles incoming chat requests.
+1. Sets up our OpenAI client with an API key.
+2. Defines different AI model configurations in the `variants` object.
+3. Handles incoming chat requests with the `POST` function.
 
 When a request comes in, it:
 
--   Extracts the messages from the request body
--   Selects a variant (currently hardcoded to 'variant1')
--   Uses the OpenAI API to generate a response
--   Streams the response back to the client
+-   Extracts the messages from the request body.
+-   Selects a variant (currently hardcoded to 'variant1').
+-   Uses the OpenAI API to generate a response.
+-   Streams the response back to the client.
 
 The `streamText` function part of some utilities provided by Vercel's AI SDK, which helps deal with real-time streaming of the AI's responses and other AI-related tasks.
 
@@ -107,12 +107,12 @@ Instead of hardcoding `variant1`, we want to use feature flags to dynamically ch
 To implement this, we'll need to:
 
 1. Set up a feature flag provider (we'll use Unleash).
-2. Replace our static `variants` selection with feature flag calls.
+2. Replace our static variant selection with feature flag calls.
 3. Use the feature flag in our code to determine which AI model and settings to use for each request.
 
 ### Install a local feature flag provider
 
-In this section, we’ll install Unleash, run the instance locally, log in, and create a feature flag. If you prefer, you can use other tools instead of Unleash, but you’ll need to update the code accordingly. The basic steps will probably be the same.
+In this section, we’ll install Unleash, run the instance locally, log in, and create a feature flag. If you prefer, you can use other tools instead of Unleash, but you’ll need to update the code accordingly.
 
 Use Git to clone the Unleash repository and Docker to build and run it. Open a terminal window and run the following commands:
 
@@ -122,7 +122,7 @@ cd unleash
 docker compose up -d
 ```
 
-You will now have Unleash installed onto your machine and running in the background. You can access this instance in your web browser at [http://localhost:4242](http://localhost:4242).
+You now have Unleash installed on your machine and running in the background. You can access this instance in your web browser at [http://localhost:4242](http://localhost:4242).
 
 Log in to the platform using these credentials:
 
@@ -131,7 +131,7 @@ Username: admin
 Password: unleash4all
 ```
 
-Click the ‘New feature flag’ button to create a new feature flag.
+Click **New feature flag** to create a new feature flag.
 
 ![Create a new feature flag](../ruby/new-ff.png)
 

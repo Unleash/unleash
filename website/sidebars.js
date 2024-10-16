@@ -114,7 +114,7 @@ module.exports = {
                                 },
                                 {
                                     type: 'doc',
-                                    label: 'Feature flags for AI',
+                                    label: 'Feature Flags for AI',
                                     id: 'feature-flag-tutorials/use-cases/ai',
                                 },
                             ],

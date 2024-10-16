@@ -1,5 +1,5 @@
 import type React from 'react';
-import { Fragment, useState } from 'react';
+import { useState } from 'react';
 import type { ISegment } from 'interfaces/segment';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategySegmentChip } from 'component/feature/FeatureStrategy/FeatureStrategySegment/FeatureStrategySegmentChip';
@@ -57,8 +57,9 @@ export const FeatureStrategySegmentList = ({
             />
             <StyledList>
                 {segments.map((segment, i) => (
-                    <Fragment key={segment.id}>
+                    <>
                         <FeatureStrategySegmentChip
+                            key={segment.id}
                             segment={segment}
                             setSegments={setSegments}
                             preview={preview}
@@ -68,7 +69,7 @@ export const FeatureStrategySegmentList = ({
                             condition={i < lastSegmentIndex}
                             show={<StyledAnd>AND</StyledAnd>}
                         />
-                    </Fragment>
+                    </>
                 ))}
             </StyledList>
             <ConditionallyRender

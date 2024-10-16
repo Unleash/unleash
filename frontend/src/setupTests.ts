@@ -17,9 +17,9 @@ process.env.TZ = 'UTC';
 
 const messagesToIgnore = [
     'Warning: An update to %s inside a test was not wrapped in act',
-    '[MSW] Found a redundant usage of query parameters in the request handler URL for %s',
+    '[MSW] Found a redundant usage of query parameters in the request handler URL for',
     'An exception was caught and handled.',
-    'MUI: You have provided an out-of-range value %s',
+    'MUI: You have provided an out-of-range value',
     "Failed to create chart: can't acquire context from the given item",
 ];
 

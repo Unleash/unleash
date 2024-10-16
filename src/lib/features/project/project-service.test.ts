@@ -2,6 +2,7 @@ import { createTestConfig } from '../../../test/config/test-config';
 import { BadDataError } from '../../error';
 import { type IBaseEvent, RoleName, TEST_AUDIT_USER } from '../../types';
 import { createFakeProjectService } from './createProjectService';
+import ProjectService from './project-service';
 
 describe('enterprise extension: enable change requests', () => {
     const createService = () => {
@@ -299,5 +300,45 @@ describe('enterprise extension: enable change requests', () => {
                 TEST_AUDIT_USER,
             ),
         ).resolves.toBeTruthy();
+    });
+
+    test('has at least one owner after deletion when group has the role and a project user for role exists', async () => {
+        const config = createTestConfig();
+        const projectId = 'fake-project-id';
+        const service = new ProjectService(
+            {
+                projectStore: {} as any,
+                projectOwnersReadModel: {} as any,
+                projectFlagCreatorsReadModel: {} as any,
+                eventStore: {} as any,
+                featureToggleStore: {} as any,
+                environmentStore: {} as any,
+                featureEnvironmentStore: {} as any,
+                accountStore: {} as any,
+                projectStatsStore: {} as any,
+                projectReadModel: {} as any,
+                onboardingReadModel: {} as any,
+            },
+            config,
+            {
+                getProjectUsersForRole: async () =>
+                    Promise.resolve([{ id: 1 } as any]),
+            } as any,
+            {} as any,
+            {
+                getProjectGroups: async () =>
+                    Promise.resolve([{ roles: [2, 5] } as any]),
+            } as any,
+            {} as any,
+            {} as any,
+            {} as any,
+            {} as any,
+        );
+
+        await service.validateAtLeastOneOwner(projectId, {
+            id: 5,
+            name: 'Owner',
+            type: 'Owner',
+        });
     });
 });

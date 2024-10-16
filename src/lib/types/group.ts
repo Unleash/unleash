@@ -53,8 +53,7 @@ export interface ICreateGroupUserModel {
     user: Pick<IUser, 'id'>;
 }
 
-export interface IGroupModelWithProjectRole extends IGroupModel {
-    roleId: number;
+export interface IGroupModelWithAddedAt extends IGroupModel {
     addedAt: Date;
 }
 

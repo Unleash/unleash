@@ -151,8 +151,9 @@ export const EnvironmentVariantsTable = ({
                     <TableBody {...getTableBodyProps()}>
                         {rows.map((row) => {
                             prepareRow(row);
+                            const { key, ...rowProps } = row.getRowProps();
                             return (
-                                <TableRow hover {...row.getRowProps()}>
+                                <TableRow hover {...rowProps} key={key}>
                                     {row.cells.map((cell) => (
                                         <TableCell {...cell.getCellProps()}>
                                             {cell.render('Cell')}

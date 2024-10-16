@@ -5,12 +5,12 @@ slug: /feature-flag-tutorials/use-cases/ai
 
 Many tech companies today are integrating generative AI with large language models (LLMs) into their products, often in the form of chatbots or content generators.
 
-The main way to interact with LLMs today is via a set of APIs, usually either OpenAI, Anthropic or aggregators like Groq. All the APIs usually have similar parameters, like:
+The main way to interact with LLMs today is via a set of APIs, usually either OpenAI, Anthropic or aggregators like Groq. Most of these APIs have similar parameters, like:
 
 -   `model`: The model and the specific version of the model to use.
 -   `prompt`: The prompt to give to the LLM.
 
-Because all these models vary a lot in their capabilities, chances are you'll be testing multiple models, and multiple versions of the same model, and multiple prompts.
+Given how much these models vary in their capabilities, chances are you'll be testing multiple models, multiple versions of the same model, and multiple prompts.
 
 This is where feature flags are super useful. They allow you to easily switch between different configurations. In this tutorial, we’ll explore how to use feature flags with AI models.
 
@@ -98,7 +98,7 @@ When a request comes in, it:
 -   Uses the OpenAI API to generate a response.
 -   Streams the response back to the client.
 
-The `streamText` function part of some utilities provided by Vercel's AI SDK, which helps deal with real-time streaming of the AI's responses and other AI-related tasks.
+The `streamText` function is one of the utilities provided by Vercel's AI SDK. It helps deal with the real-time streaming of the AI's responses.
 
 ## Creating a feature flag with AI variants
 

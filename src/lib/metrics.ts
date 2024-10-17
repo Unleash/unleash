@@ -367,6 +367,55 @@ export function registerPrometheusMetrics(
         help: 'Rate limits (per minute) for METHOD/ENDPOINT pairs',
         labelNames: ['endpoint', 'method'],
     });
+    rateLimits
+        .labels({
+            endpoint: '/api/client/metrics',
+            method: 'POST',
+        })
+        .set(config.metricsRateLimiting.clientMetricsMaxPerMinute);
+    rateLimits
+        .labels({
+            endpoint: '/api/client/register',
+            method: 'POST',
+        })
+        .set(config.metricsRateLimiting.clientRegisterMaxPerMinute);
+    rateLimits
+        .labels({
+            endpoint: '/api/frontend/metrics',
+            method: 'POST',
+        })
+        .set(config.metricsRateLimiting.frontendMetricsMaxPerMinute);
+    rateLimits
+        .labels({
+            endpoint: '/api/frontend/register',
+            method: 'POST',
+        })
+        .set(config.metricsRateLimiting.frontendRegisterMaxPerMinute);
+    rateLimits
+        .labels({
+            endpoint: '/api/admin/user-admin',
+            method: 'POST',
+        })
+        .set(config.rateLimiting.createUserMaxPerMinute);
+    rateLimits
+        .labels({
+            endpoint: '/auth/simple',
+            method: 'POST',
+        })
+        .set(config.rateLimiting.simpleLoginMaxPerMinute);
+    rateLimits
+        .labels({
+            endpoint: '/auth/reset/password-email',
+            method: 'POST',
+        })
+        .set(config.rateLimiting.passwordResetMaxPerMinute);
+    rateLimits
+        .labels({
+            endpoint: '/api/signal-endpoint/:name',
+            method: 'POST',
+        })
+        .set(config.rateLimiting.callSignalEndpointMaxPerSecond * 60);
+
     const featureCreatedByMigration = createCounter({
         name: 'feature_created_by_migration_count',
         help: 'Feature createdBy migration count',
@@ -1005,62 +1054,6 @@ export function registerPrometheusMetrics(
 
                 oidcEnabled.reset();
                 oidcEnabled.set((await instanceStatsService.hasOIDC()) ? 1 : 0);
-
-                rateLimits.reset();
-                rateLimits
-                    .labels({
-                        endpoint: '/api/client/metrics',
-                        method: 'POST',
-                    })
-                    .set(config.metricsRateLimiting.clientMetricsMaxPerMinute);
-                rateLimits
-                    .labels({
-                        endpoint: '/api/client/register',
-                        method: 'POST',
-                    })
-                    .set(config.metricsRateLimiting.clientRegisterMaxPerMinute);
-                rateLimits
-                    .labels({
-                        endpoint: '/api/frontend/metrics',
-                        method: 'POST',
-                    })
-                    .set(
-                        config.metricsRateLimiting.frontendMetricsMaxPerMinute,
-                    );
-                rateLimits
-                    .labels({
-                        endpoint: '/api/frontend/register',
-                        method: 'POST',
-                    })
-                    .set(
-                        config.metricsRateLimiting.frontendRegisterMaxPerMinute,
-                    );
-                rateLimits
-                    .labels({
-                        endpoint: '/api/admin/user-admin',
-                        method: 'POST',
-                    })
-                    .set(config.rateLimiting.createUserMaxPerMinute);
-                rateLimits
-                    .labels({
-                        endpoint: '/auth/simple',
-                        method: 'POST',
-                    })
-                    .set(config.rateLimiting.simpleLoginMaxPerMinute);
-                rateLimits
-                    .labels({
-                        endpoint: '/auth/reset/password-email',
-                        method: 'POST',
-                    })
-                    .set(config.rateLimiting.passwordResetMaxPerMinute);
-                rateLimits
-                    .labels({
-                        endpoint: '/api/signal-endpoint/:name',
-                        method: 'POST',
-                    })
-                    .set(
-                        config.rateLimiting.callSignalEndpointMaxPerSecond * 60,
-                    );
             } catch (e) {}
         },
     };

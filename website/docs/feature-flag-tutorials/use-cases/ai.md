@@ -39,7 +39,7 @@ You should now see a chatbot UI, like this:
 
 ![chatbot UI](./sveltekit-chatbot.png)
 
-This is a simple Sveltekit app with a chatbot interface. If you’re not familiar with SvelteKit, it works similarly to frameworks like Next.js, Nuxt, or SolidStart, where your file structure defines the routing.
+This is a simple SvelteKit app with a chatbot interface. If you’re not familiar with SvelteKit, it works similarly to frameworks like Next.js, Nuxt, or SolidStart, where your file structure defines the routing.
 
 The most important file for this tutorial is the `src/routes/api/chat/+server.js` file.
 
@@ -131,13 +131,11 @@ Username: admin
 Password: unleash4all
 ```
 
-Click **New feature flag** to create a new feature flag.
+Click **New feature flag** to create a new feature flag, called `gpt-version`.
 
-![Create a new feature flag](../ruby/new-ff.png)
 
-Create a new feature flag called `gpt-version`.
 
-After that, and this the most important part, we need to add a variant to our feature flag.
+After that, and this is the most important part, we need to add a variant to our feature flag.
 
 What we'll do is hold all the model configurations in the feature flag variants.
 

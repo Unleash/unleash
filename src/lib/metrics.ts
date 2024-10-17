@@ -25,7 +25,7 @@ import {
     PROJECT_DELETED,
 } from './types/events';
 import type { IUnleashConfig } from './types/option';
-import type { ISettingStore, IUnleashStores } from './types/stores';
+import type { IUnleashStores } from './types/stores';
 import { hoursToMilliseconds, minutesToMilliseconds } from 'date-fns';
 import type { InstanceStatsService } from './features/instance-stats/instance-stats-service';
 import type { IEnvironment, ISdkHeartbeat } from './types';
@@ -37,6 +37,56 @@ import {
 } from './util/metrics';
 import type { SchedulerService } from './services';
 import type { IClientMetricsEnv } from './features/metrics/client-metrics/client-metrics-store-v2-type';
+import { DbMetricsMonitor } from './metrics-gauge';
+
+export function registerPrometheusPostgresMetrics(
+    db: Knex,
+    eventBus: EventEmitter,
+    postgresVersion: string,
+) {
+    if (db?.client) {
+        const dbPoolMin = createGauge({
+            name: 'db_pool_min',
+            help: 'Minimum DB pool size',
+        });
+        dbPoolMin.set(db.client.pool.min);
+        const dbPoolMax = createGauge({
+            name: 'db_pool_max',
+            help: 'Maximum DB pool size',
+        });
+        dbPoolMax.set(db.client.pool.max);
+        const dbPoolFree = createGauge({
+            name: 'db_pool_free',
+            help: 'Current free connections in DB pool',
+        });
+        const dbPoolUsed = createGauge({
+            name: 'db_pool_used',
+            help: 'Current connections in use in DB pool',
+        });
+        const dbPoolPendingCreates = createGauge({
+            name: 'db_pool_pending_creates',
+            help: 'how many asynchronous create calls are running in DB pool',
+        });
+        const dbPoolPendingAcquires = createGauge({
+            name: 'db_pool_pending_acquires',
+            help: 'how many acquires are waiting for a resource to be released in DB pool',
+        });
+
+        eventBus.on(DB_POOL_UPDATE, (data) => {
+            dbPoolFree.set(data.free);
+            dbPoolUsed.set(data.used);
+            dbPoolPendingCreates.set(data.pendingCreates);
+            dbPoolPendingAcquires.set(data.pendingAcquires);
+        });
+
+        const database_version = createGauge({
+            name: 'postgres_version',
+            help: 'Which version of postgres is running (SHOW server_version)',
+            labelNames: ['version'],
+        });
+        database_version.labels({ version: postgresVersion }).set(1);
+    }
+}
 
 export function registerPrometheusMetrics(
     config: IUnleashConfig,
@@ -60,8 +110,8 @@ export function registerPrometheusMetrics(
     };
 
     const { eventStore, environmentStore } = stores;
-    const { flagResolver } = config;
-    const dbMetrics = instanceStatsService.dbMetrics;
+    const { flagResolver, db } = config;
+    const dbMetrics = new DbMetricsMonitor(config);
 
     const cachedEnvironments: () => Promise<IEnvironment[]> = memoizee(
         async () => environmentStore.getAll(),
@@ -124,10 +174,7 @@ export function registerPrometheusMetrics(
         name: 'feature_toggles_total',
         help: 'Number of feature flags',
         labelNames: ['version'],
-        query: () =>
-            stores.featureToggleStore.count({
-                archived: false,
-            }),
+        query: () => instanceStatsService.getToggleCount(),
         map: (value) => ({ value, labels: { version } }),
     });
 
@@ -268,18 +315,7 @@ export function registerPrometheusMetrics(
         name: 'client_apps_total',
         help: 'Number of registered client apps aggregated by range by last seen',
         labelNames: ['range'],
-        query: async () => {
-            const [t7d, t30d, allTime] = await Promise.all([
-                stores.clientInstanceStore.getDistinctApplicationsCount(7),
-                stores.clientInstanceStore.getDistinctApplicationsCount(30),
-                stores.clientInstanceStore.getDistinctApplicationsCount(),
-            ]);
-            return {
-                '7d': t7d,
-                '30d': t30d,
-                allTime,
-            };
-        },
+        query: () => instanceStatsService.getLabeledAppCounts(),
         map: (result) =>
             Object.entries(result).map(([range, count]) => ({
                 value: count,
@@ -735,13 +771,10 @@ export function registerPrometheusMetrics(
         addonEventsHandledCounter.increment({ result, destination });
     });
 
-    // return an update function (temporarily) to allow for manual refresh
     return {
+        collectDbMetrics: dbMetrics.refreshDbMetrics,
         collectStaticCounters: async () => {
             try {
-                dbMetrics.refreshDbMetrics();
-
-                const stats = await instanceStatsService.getStats();
                 const [
                     maxConstraintValuesResult,
                     maxConstraintsPerStrategyResult,
@@ -773,13 +806,17 @@ export function registerPrometheusMetrics(
                 ]);
 
                 featureTogglesArchivedTotal.reset();
-                featureTogglesArchivedTotal.set(stats.archivedFeatureToggles);
+                featureTogglesArchivedTotal.set(
+                    await instanceStatsService.getArchivedToggleCount(),
+                );
 
                 usersTotal.reset();
-                usersTotal.set(stats.users);
+                usersTotal.set(await instanceStatsService.getRegisteredUsers());
 
                 serviceAccounts.reset();
-                serviceAccounts.set(stats.serviceAccounts);
+                serviceAccounts.set(
+                    await instanceStatsService.countServiceAccounts(),
+                );
 
                 stageDurationByProject.forEach((stage) => {
                     featureLifecycleStageDuration
@@ -802,7 +839,10 @@ export function registerPrometheusMetrics(
 
                 apiTokens.reset();
 
-                for (const [type, value] of stats.apiTokens) {
+                for (const [
+                    type,
+                    value,
+                ] of await instanceStatsService.countApiTokensByType()) {
                     apiTokens.labels({ type }).set(value);
                 }
 
@@ -887,67 +927,84 @@ export function registerPrometheusMetrics(
                     resourceLimit.labels({ resource }).set(limit);
                 }
 
+                const previousDayMetricsBucketsCount =
+                    await instanceStatsService.countPreviousDayHourlyMetricsBuckets();
                 enabledMetricsBucketsPreviousDay.reset();
                 enabledMetricsBucketsPreviousDay.set(
-                    stats.previousDayMetricsBucketsCount.enabledCount,
+                    previousDayMetricsBucketsCount.enabledCount,
                 );
                 variantMetricsBucketsPreviousDay.reset();
                 variantMetricsBucketsPreviousDay.set(
-                    stats.previousDayMetricsBucketsCount.variantCount,
+                    previousDayMetricsBucketsCount.variantCount,
                 );
 
+                const activeUsers = await instanceStatsService.getActiveUsers();
                 usersActive7days.reset();
-                usersActive7days.set(stats.activeUsers.last7);
+                usersActive7days.set(activeUsers.last7);
                 usersActive30days.reset();
-                usersActive30days.set(stats.activeUsers.last30);
+                usersActive30days.set(activeUsers.last30);
                 usersActive60days.reset();
-                usersActive60days.set(stats.activeUsers.last60);
+                usersActive60days.set(activeUsers.last60);
                 usersActive90days.reset();
-                usersActive90days.set(stats.activeUsers.last90);
+                usersActive90days.set(activeUsers.last90);
 
+                const productionChanges =
+                    await instanceStatsService.getProductionChanges();
                 productionChanges30.reset();
-                productionChanges30.set(stats.productionChanges.last30);
+                productionChanges30.set(productionChanges.last30);
                 productionChanges60.reset();
-                productionChanges60.set(stats.productionChanges.last60);
+                productionChanges60.set(productionChanges.last60);
                 productionChanges90.reset();
-                productionChanges90.set(stats.productionChanges.last90);
+                productionChanges90.set(productionChanges.last90);
 
+                const projects =
+                    await instanceStatsService.getProjectModeCount();
                 projectsTotal.reset();
-                stats.projects.forEach((projectStat) => {
+                projects.forEach((projectStat) => {
                     projectsTotal
                         .labels({ mode: projectStat.mode })
                         .set(projectStat.count);
                 });
 
                 environmentsTotal.reset();
-                environmentsTotal.set(stats.environments);
+                environmentsTotal.set(
+                    await instanceStatsService.environmentCount(),
+                );
 
                 groupsTotal.reset();
-                groupsTotal.set(stats.groups);
+                groupsTotal.set(await instanceStatsService.groupCount());
 
                 rolesTotal.reset();
-                rolesTotal.set(stats.roles);
+                rolesTotal.set(await instanceStatsService.roleCount());
 
                 customRootRolesTotal.reset();
-                customRootRolesTotal.set(stats.customRootRoles);
+                customRootRolesTotal.set(
+                    await instanceStatsService.customRolesCount(),
+                );
 
                 customRootRolesInUseTotal.reset();
-                customRootRolesInUseTotal.set(stats.customRootRolesInUse);
+                customRootRolesInUseTotal.set(
+                    await instanceStatsService.customRolesCountInUse(),
+                );
 
                 segmentsTotal.reset();
-                segmentsTotal.set(stats.segments);
+                segmentsTotal.set(await instanceStatsService.segmentCount());
 
                 contextTotal.reset();
-                contextTotal.set(stats.contextFields);
+                contextTotal.set(
+                    await instanceStatsService.contextFieldCount(),
+                );
 
                 strategiesTotal.reset();
-                strategiesTotal.set(stats.strategies);
+                strategiesTotal.set(
+                    await instanceStatsService.strategiesCount(),
+                );
 
                 samlEnabled.reset();
-                samlEnabled.set(stats.SAMLenabled ? 1 : 0);
+                samlEnabled.set((await instanceStatsService.hasSAML()) ? 1 : 0);
 
                 oidcEnabled.reset();
-                oidcEnabled.set(stats.OIDCenabled ? 1 : 0);
+                oidcEnabled.set((await instanceStatsService.hasOIDC()) ? 1 : 0);
 
                 rateLimits.reset();
                 rateLimits
@@ -1026,22 +1083,21 @@ export default class MetricsMonitor {
 
         collectDefaultMetrics();
 
-        const { collectStaticCounters } = registerPrometheusMetrics(
-            config,
-            stores,
-            version,
-            eventBus,
-            instanceStatsService,
-        );
+        const { collectStaticCounters, collectDbMetrics } =
+            registerPrometheusMetrics(
+                config,
+                stores,
+                version,
+                eventBus,
+                instanceStatsService,
+            );
 
-        await this.registerPrometheusDbMetrics(
-            db,
-            eventBus,
-            stores.settingStore,
-        );
+        const postgresVersion = await stores.settingStore.postgresVersion();
+        registerPrometheusPostgresMetrics(db, eventBus, postgresVersion);
 
         await schedulerService.schedule(
-            collectStaticCounters.bind(this),
+            async () =>
+                Promise.all([collectStaticCounters(), collectDbMetrics()]),
             hoursToMilliseconds(2),
             'collectStaticCounters',
         );
@@ -1054,56 +1110,6 @@ export default class MetricsMonitor {
         );
 
         return Promise.resolve();
-    }
-
-    async registerPrometheusDbMetrics(
-        db: Knex,
-        eventBus: EventEmitter,
-        settingStore: ISettingStore,
-    ): Promise<void> {
-        if (db?.client) {
-            const dbPoolMin = createGauge({
-                name: 'db_pool_min',
-                help: 'Minimum DB pool size',
-            });
-            dbPoolMin.set(db.client.pool.min);
-            const dbPoolMax = createGauge({
-                name: 'db_pool_max',
-                help: 'Maximum DB pool size',
-            });
-            dbPoolMax.set(db.client.pool.max);
-            const dbPoolFree = createGauge({
-                name: 'db_pool_free',
-                help: 'Current free connections in DB pool',
-            });
-            const dbPoolUsed = createGauge({
-                name: 'db_pool_used',
-                help: 'Current connections in use in DB pool',
-            });
-            const dbPoolPendingCreates = createGauge({
-                name: 'db_pool_pending_creates',
-                help: 'how many asynchronous create calls are running in DB pool',
-            });
-            const dbPoolPendingAcquires = createGauge({
-                name: 'db_pool_pending_acquires',
-                help: 'how many acquires are waiting for a resource to be released in DB pool',
-            });
-
-            eventBus.on(DB_POOL_UPDATE, (data) => {
-                dbPoolFree.set(data.free);
-                dbPoolUsed.set(data.used);
-                dbPoolPendingCreates.set(data.pendingCreates);
-                dbPoolPendingAcquires.set(data.pendingAcquires);
-            });
-
-            const postgresVersion = await settingStore.postgresVersion();
-            const database_version = createGauge({
-                name: 'postgres_version',
-                help: 'Which version of postgres is running (SHOW server_version)',
-                labelNames: ['version'],
-            });
-            database_version.labels({ version: postgresVersion }).set(1);
-        }
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

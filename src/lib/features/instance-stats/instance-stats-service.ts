@@ -29,7 +29,6 @@ import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import type { GetActiveUsers } from './getActiveUsers';
 import type { ProjectModeCount } from '../project/project-store';
 import type { GetProductionChanges } from './getProductionChanges';
-import { DbMetricsMonitor } from '../../metrics-gauge';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -110,13 +109,11 @@ export class InstanceStatsService {
 
     private appCount?: Partial<{ [key in TimeRange]: number }>;
 
-    private getActiveUsers: GetActiveUsers;
+    getActiveUsers: GetActiveUsers;
 
-    private getProductionChanges: GetProductionChanges;
+    getProductionChanges: GetProductionChanges;
 
     private featureStrategiesReadModel: IFeatureStrategiesReadModel;
-
-    dbMetrics: DbMetricsMonitor;
 
     constructor(
         {
@@ -181,18 +178,16 @@ export class InstanceStatsService {
         this.clientMetricsStore = clientMetricsStoreV2;
         this.flagResolver = flagResolver;
         this.featureStrategiesReadModel = featureStrategiesReadModel;
-        this.dbMetrics = new DbMetricsMonitor({ getLogger });
-    }
-
-    async fromPrometheus(
-        name: string,
-        labels?: Record<string, string | number>,
-    ): Promise<number> {
-        return (await this.dbMetrics.findValue(name, labels)) ?? 0;
     }
 
     getProjectModeCount(): Promise<ProjectModeCount[]> {
         return this.projectStore.getProjectModeCounts();
+    }
+
+    getToggleCount(): Promise<number> {
+        return this.featureToggleStore.count({
+            archived: false,
+        });
     }
 
     getArchivedToggleCount(): Promise<number> {
@@ -217,9 +212,6 @@ export class InstanceStatsService {
         return settings?.enabled || false;
     }
 
-    /**
-     * use getStatsSnapshot for low latency, sacrificing data-freshness
-     */
     async getStats(): Promise<InstanceStats> {
         const versionInfo = await this.versionService.getVersionInfo();
         const [
@@ -249,24 +241,24 @@ export class InstanceStatsService {
             maxConstraintValues,
             maxConstraints,
         ] = await Promise.all([
-            this.fromPrometheus('feature_toggles_total'),
+            this.getToggleCount(),
             this.getArchivedToggleCount(),
-            this.userStore.count(),
-            this.userStore.countServiceAccounts(),
-            this.apiTokenStore.countByType(),
+            this.getRegisteredUsers(),
+            this.countServiceAccounts(),
+            this.countApiTokensByType(),
             this.getActiveUsers(),
             this.getProjectModeCount(),
-            this.contextFieldStore.count(),
-            this.groupStore.count(),
-            this.roleStore.count(),
-            this.roleStore.filteredCount({ type: CUSTOM_ROOT_ROLE_TYPE }),
-            this.roleStore.filteredCountInUse({ type: CUSTOM_ROOT_ROLE_TYPE }),
-            this.environmentStore.count(),
-            this.segmentStore.count(),
-            this.strategyStore.count(),
+            this.contextFieldCount(),
+            this.groupCount(),
+            this.roleCount(),
+            this.customRolesCount(),
+            this.customRolesCountInUse(),
+            this.environmentCount(),
+            this.segmentCount(),
+            this.strategiesCount(),
             this.hasSAML(),
             this.hasOIDC(),
-            this.clientAppCounts(),
+            this.appCount ? this.appCount : this.getLabeledAppCounts(),
             this.eventStore.deprecatedFilteredCount({
                 type: FEATURES_EXPORTED,
             }),
@@ -274,7 +266,7 @@ export class InstanceStatsService {
                 type: FEATURES_IMPORTED,
             }),
             this.getProductionChanges(),
-            this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets(),
+            this.countPreviousDayHourlyMetricsBuckets(),
             this.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
             this.featureStrategiesReadModel.getMaxConstraintValues(),
             this.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
@@ -315,17 +307,72 @@ export class InstanceStatsService {
             maxConstraints: maxConstraints?.count ?? 0,
         };
     }
-    async clientAppCounts(): Promise<Partial<{ [key in TimeRange]: number }>> {
+
+    groupCount(): Promise<number> {
+        return this.groupStore.count();
+    }
+
+    roleCount(): Promise<number> {
+        return this.roleStore.count();
+    }
+
+    customRolesCount(): Promise<number> {
+        return this.roleStore.filteredCount({ type: CUSTOM_ROOT_ROLE_TYPE });
+    }
+
+    customRolesCountInUse(): Promise<number> {
+        return this.roleStore.filteredCountInUse({
+            type: CUSTOM_ROOT_ROLE_TYPE,
+        });
+    }
+
+    segmentCount(): Promise<number> {
+        return this.segmentStore.count();
+    }
+
+    contextFieldCount(): Promise<number> {
+        return this.contextFieldStore.count();
+    }
+
+    strategiesCount(): Promise<number> {
+        return this.strategyStore.count();
+    }
+
+    environmentCount(): Promise<number> {
+        return this.environmentStore.count();
+    }
+
+    countPreviousDayHourlyMetricsBuckets(): Promise<{
+        enabledCount: number;
+        variantCount: number;
+    }> {
+        return this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets();
+    }
+
+    countApiTokensByType(): Promise<Map<string, number>> {
+        return this.apiTokenStore.countByType();
+    }
+
+    getRegisteredUsers(): Promise<number> {
+        return this.userStore.count();
+    }
+
+    countServiceAccounts(): Promise<number> {
+        return this.userStore.countServiceAccounts();
+    }
+
+    async getLabeledAppCounts(): Promise<
+        Partial<{ [key in TimeRange]: number }>
+    > {
+        const [t7d, t30d, allTime] = await Promise.all([
+            this.clientInstanceStore.getDistinctApplicationsCount(7),
+            this.clientInstanceStore.getDistinctApplicationsCount(30),
+            this.clientInstanceStore.getDistinctApplicationsCount(),
+        ]);
         this.appCount = {
-            '7d': await this.fromPrometheus('client_apps_total', {
-                range: '7d',
-            }),
-            '30d': await this.fromPrometheus('client_apps_total', {
-                range: '30d',
-            }),
-            allTime: await this.fromPrometheus('client_apps_total', {
-                range: 'allTime',
-            }),
+            '7d': t7d,
+            '30d': t30d,
+            allTime,
         };
         return this.appCount;
     }

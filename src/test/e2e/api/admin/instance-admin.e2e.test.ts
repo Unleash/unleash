@@ -11,6 +11,7 @@ import { registerPrometheusMetrics } from '../../../../lib/metrics';
 let app: IUnleashTest;
 let db: ITestDb;
 let stores: IUnleashStores;
+let refreshDbMetrics: () => Promise<void>;
 
 beforeAll(async () => {
     db = await dbInit('instance_admin_api_serial', getLogger);
@@ -28,13 +29,14 @@ beforeAll(async () => {
         db.rawDatabase,
     );
 
-    registerPrometheusMetrics(
+    const { collectDbMetrics } = registerPrometheusMetrics(
         app.config,
         stores,
         undefined as unknown as string,
         app.config.eventBus,
         app.services.instanceStatsService,
     );
+    refreshDbMetrics = collectDbMetrics;
 });
 
 afterAll(async () => {
@@ -48,7 +50,7 @@ test('should return instance statistics', async () => {
         createdByUserId: 9999,
     });
 
-    await app.services.instanceStatsService.dbMetrics.refreshDbMetrics();
+    await refreshDbMetrics();
 
     return app.request
         .get('/api/admin/instance-admin/statistics')

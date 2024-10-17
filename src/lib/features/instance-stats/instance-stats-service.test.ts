@@ -10,8 +10,10 @@ import type { IClientInstanceStore } from '../../types';
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;
 let clientInstanceStore: IClientInstanceStore;
-
+let updateMetrics: () => Promise<void>;
 beforeEach(() => {
+    jest.clearAllMocks();
+
     register.clear();
 
     const config = createTestConfig();
@@ -31,13 +33,14 @@ beforeEach(() => {
         createFakeGetProductionChanges(),
     );
 
-    registerPrometheusMetrics(
+    const { collectDbMetrics } = registerPrometheusMetrics(
         config,
         stores,
         undefined as unknown as string,
         config.eventBus,
         instanceStatsService,
     );
+    updateMetrics = collectDbMetrics;
 
     jest.spyOn(clientInstanceStore, 'getDistinctApplicationsCount');
     jest.spyOn(instanceStatsService, 'getStats');
@@ -46,13 +49,12 @@ beforeEach(() => {
 });
 
 test('get snapshot should not call getStats', async () => {
-    await instanceStatsService.dbMetrics.refreshDbMetrics();
+    await updateMetrics();
     expect(
         clientInstanceStore.getDistinctApplicationsCount,
     ).toHaveBeenCalledTimes(3);
     expect(instanceStatsService.getStats).toHaveBeenCalledTimes(0);
 
-    // subsequent calls to getStatsSnapshot don't call getStats
     for (let i = 0; i < 3; i++) {
         const { clientApps } = await instanceStatsService.getStats();
         expect(clientApps).toStrictEqual([

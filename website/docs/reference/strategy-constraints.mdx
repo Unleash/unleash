@@ -30,7 +30,7 @@ You can constrain both on [standard context fields](../reference/unleash-context
 Unleash SDKs expect all context values to be strings. If you use an operator that acts on non-string values, such as [numeric operators](#numeric-operators) or [date and time operators](#date-and-time-operators), the SDK will attempt to convert the string into the expected type. If the conversion fails, the constraint will evaluate to `false`.
 :::
 
-This page explains what strategy constraints are in Unleash and how they work. If you want to know *how you add* strategy constraints to an activation strategy, see [the corresponding how-to guide](../how-to/how-to-add-strategy-constraints.md "how to add strategy constraints").
+This page explains what strategy constraints are in Unleash and how they work. If you want to know *how you add* strategy constraints to an activation strategy, see [the corresponding how-to guide](../how-to/how-to-add-strategy-constraints).
 
 <VideoContent videoUrls={["https://www.youtube.com/embed/kqtqMFhLRBE"]}/>
 
@@ -38,7 +38,7 @@ This page explains what strategy constraints are in Unleash and how they work. I
 ## Constraining on custom context fields
 
 :::info Making custom context fields available
-To be able to constrain on a field, it must be listed under the Context Field menu. If a field isn't listed, you can add it yourself. See [the how-to guide for creating your own custom fields](../how-to/how-to-define-custom-context-fields.md) for more info.
+To be able to constrain on a field, it must be listed under the Context Field menu. If a field isn't listed, you can add it yourself. See [the how-to guide for creating your own custom fields](../how-to/how-to-define-custom-context-fields) for more info.
 :::
 
 Unleash only provides a limited set of context fields by default, and they may not fulfill all your needs.
@@ -75,7 +75,7 @@ To clarify, here's a few example strategy constraints and what they do:
 In this section, `<context-field>` is used as a placeholder for an arbitrary context field. With the exception of the `currentTime` field, you can use any context field in its place.
 :::
 
-Unleash supports a wide range of constraint operators. `IN` and `NOT_IN` are basic operators that are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](../reference/sdks/index.md#strategy-constraints).
+Unleash supports a wide range of constraint operators. `IN` and `NOT_IN` are basic operators that are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](../reference/sdks#strategy-constraints).
 
 ### Constraint negation / inversion {#constraint-negation}
 
@@ -174,7 +174,7 @@ Additionally, you can use negation to get _less than or equal to_ and _greater t
 This section gives a brief overview over to use the client SDKs to interact with strategy constraints. The exact steps will vary depending on which client you are using, so make sure to consult the documentation for your specific client SDK.
 :::
 
-Strategy constraints require [the Unleash Context](../reference/unleash-context) to work. All official [Unleash client SDKs](../reference/sdks/index.md) support the option to pass [dynamic context values](../reference/unleash-context#structure "Unleash Context, section: structure") to the `isEnabled` function (or the SDK's equivalent).
+Strategy constraints require [the Unleash Context](../reference/unleash-context) to work. All official [Unleash client SDKs](../reference/sdks) support the option to pass [dynamic context values](../reference/unleash-context#structure) to the `isEnabled` function (or the SDK's equivalent).
 
 If the strategy constraint uses a [**standard Unleash Context field**](../reference/unleash-context#structure), set the context field to the value you wish to give it.
 
@@ -188,7 +188,7 @@ This value can still be negated as explained in [the section on negating values]
 
 :::tip
 
-Explore the content in this subsection in more depth in [the topic guide on using Unleash with large constraints](/understanding-unleash/managing-constraints.mdx).
+Explore the content in this subsection in more depth in [the topic guide on using Unleash with large constraints](/understanding-unleash/managing-constraints).
 
 :::
 
@@ -209,12 +209,12 @@ If you use the new constraints with old SDKs, here's how it'll affect _some_ of 
 - The Python client SDK will evaluate the flag to false, as it cannot evaluate the constraint successfully.
 - The .NET, Ruby, and PHP SDKs raise exceptions if the provided operator is not `IN` or `NOT_IN`.
 
-Please inspect the [SDK compatibility table to see which version of your preferred SDK introduced support for this feature](../reference/sdks/index.md#strategy-constraints).
+Please inspect the [SDK compatibility table to see which version of your preferred SDK introduced support for this feature](../reference/sdks#strategy-constraints).
 
 After Unleash 4.9, we updated the [Unleash client specification](https://github.com/Unleash/client-specification). Going forward, any constraint that a client does not recognize, **must be evaluated as `false`**
 
 ## [Deprecated]: Constrain on a specific environment {#constrain-on-a-specific-environment}
 
-Before Unleash 4.3, using strategy constraints was the recommended way to have different flag configurations per environment. Now that Unleash has environment support built in, we no longer recommend you use strategy constraints for this. Instead, see the [environments documentation](../reference/environments.md).
+Before Unleash 4.3, using strategy constraints was the recommended way to have different flag configurations per environment. Now that Unleash has environment support built in, we no longer recommend you use strategy constraints for this. Instead, see the [environments documentation](../reference/environments).
 
 [^1]: `userScore` is not a default Unleash field, but can be added as a [custom context field](../reference/unleash-context#custom-context-fields).

@@ -148,7 +148,7 @@ Custom project roles let you define your own project roles with a specific set o
 environment level. The roles can then be assigned to users in specific projects. All users have viewer access to all
 projects and resources, but must be assigned a project role to be allowed to edit a project's resources. For a
 step-by-step walkthrough of how to create and assign custom project roles, see [_how to create and assign custom project
-roles_](../how-to/how-to-create-and-assign-custom-project-roles.md).
+roles_](../how-to/how-to-create-and-assign-custom-project-roles).
 
 Each custom project role consists of:
 
@@ -190,9 +190,9 @@ You can assign the following permissions on a per-environment level within the p
 | **delete activation strategies** | Lets the user delete feature flag activation strategies within the environment.                                                                                                                                                                                                                                                                       |
 | **enable/disable flags**         | Lets the user enable and disable flags within the environment.                                                                                                                                                                                                                                                                                        |
 | **update variants**              | Lets the user create, edit and remove variants within the environment.                                                                                                                                                                                                                                                                                |
-| **approve a change request**     | Lets the user approve [change requests](change-requests.md) in the environment.                                                                                                                                                                                                                                                                       |
+| **approve a change request**     | Lets the user approve [change requests](./change-requests) in the environment.                                                                                                                                                                                                                                                                       |
 | **apply a change request**       | Lets the user apply change requests in the environment.                                                                                                                                                                                                                                                                                               |
-| **skip change requests**         | Lets the user ignore change request requirements. This applies **only when using the API** directly; when using the admin UI, users with this permission will still need to go through the normal change request flow. You can find more details in the section on [circumventing change requests](change-requests.md#circumventing-change-requests). |
+| **skip change requests**         | Lets the user ignore change request requirements. This applies **only when using the API** directly; when using the admin UI, users with this permission will still need to go through the normal change request flow. You can find more details in the section on [circumventing change requests](./change-requests#circumventing-change-requests). |
 
 ## Multiple Project Roles
 

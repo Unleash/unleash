@@ -15,22 +15,22 @@ To ensure that Unleash operates smoothly, it includes resource limits for some o
 
 The resources and their respective limits and environment variables are:
 
-| Resource                                                        | OSS limit | Pro limit | Enterprise limit | Environment variable                           |
-|-----------------------------------------------------------------|----------:|----------:|-----------------:|------------------------------------------------|
-| [Feature flags](feature-toggles.mdx)[^1]                        |     5,000 |     5,000 |           50,000 | `UNLEASH_FEATURE_FLAGS_LIMIT`                  |
-| [Strategies](activation-strategies.md) per flag per environment |        30 |        30 |               30 | `UNLEASH_FEATURE_ENVIRONMENT_STRATEGIES_LIMIT` |
-| [Constraints](strategy-constraints.md) per strategy             |        30 |        30 |               30 | `UNLEASH_CONSTRAINTS_LIMIT`                    |
-| Values per [constraint](strategy-constraints.md)                |       250 |       250 |            1,000 | `UNLEASH_CONSTRAINT_VALUES_LIMIT`              |
-| [Segments](segments.mdx)                                        |       300 |       300 |              300 | `UNLEASH_SEGMENTS_LIMIT`                       |
-| [API tokens](api-tokens-and-client-keys.mdx)                    |     2,000 |     2,000 |            2,000 | `UNLEASH_API_TOKENS_LIMIT`                     |
-| [Projects](projects.md)                                         |         1 |         3 |              500 | `UNLEASH_PROJECTS_LIMIT`                       |
-| [Environments](environments.md)                                 |         2 |         2 |               50 | `UNLEASH_ENVIRONMENTS_LIMIT`                   |
-| [Signal](signals.md) endpoints                                  |       N/A |       N/A |                5 | `UNLEASH_SIGNAL_ENDPOINTS_LIMIT`               |
-| [Signal](signals.md) tokens per endpoint                        |       N/A |       N/A |                5 | `UNLEASH_SIGNAL_TOKENS_PER_ENDPOINT_LIMIT`     |
-| [Action](actions.md) set actions                                |       N/A |       N/A |               10 | `UNLEASH_ACTION_SET_ACTIONS_LIMIT`             |
-| [Action](actions.md) sets per project                           |       N/A |       N/A |                5 | `UNLEASH_ACTION_SETS_PER_PROJECT_LIMIT`        |
-| [Action](actions.md) set filters                                |       N/A |       N/A |                5 | `UNLEASH_ACTION_SET_FILTERS_LIMIT`             |
-| [Action](actions.md) set filter values                          |       N/A |       N/A |               25 | `UNLEASH_ACTION_SET_FILTER_VALUES_LIMIT`       |
+| Resource                                                       | OSS limit | Pro limit | Enterprise limit | Environment variable                           |
+|----------------------------------------------------------------|----------:|----------:|-----------------:|------------------------------------------------|
+| [Feature flags](./feature-toggles)[^1]                         |     5,000 |     5,000 |           50,000 | `UNLEASH_FEATURE_FLAGS_LIMIT`                  |
+| [Strategies](./activation-strategies) per flag per environment |        30 |        30 |               30 | `UNLEASH_FEATURE_ENVIRONMENT_STRATEGIES_LIMIT` |
+| [Constraints](./strategy-constraints) per strategy             |        30 |        30 |               30 | `UNLEASH_CONSTRAINTS_LIMIT`                    |
+| Values per [constraint](./strategy-constraints)                |       250 |       250 |            1,000 | `UNLEASH_CONSTRAINT_VALUES_LIMIT`              |
+| [Segments](./segments)                                         |       300 |       300 |              300 | `UNLEASH_SEGMENTS_LIMIT`                       |
+| [API tokens](./api-tokens-and-client-keys)                     |     2,000 |     2,000 |            2,000 | `UNLEASH_API_TOKENS_LIMIT`                     |
+| [Projects](./projects)                                         |         1 |         3 |              500 | `UNLEASH_PROJECTS_LIMIT`                       |
+| [Environments](./environments)                                 |         2 |         2 |               50 | `UNLEASH_ENVIRONMENTS_LIMIT`                   |
+| [Signal](./signals) endpoints                                  |       N/A |       N/A |                5 | `UNLEASH_SIGNAL_ENDPOINTS_LIMIT`               |
+| [Signal](./signals) tokens per endpoint                        |       N/A |       N/A |                5 | `UNLEASH_SIGNAL_TOKENS_PER_ENDPOINT_LIMIT`     |
+| [Action](./actions) set actions                                |       N/A |       N/A |               10 | `UNLEASH_ACTION_SET_ACTIONS_LIMIT`             |
+| [Action](./actions) sets per project                           |       N/A |       N/A |                5 | `UNLEASH_ACTION_SETS_PER_PROJECT_LIMIT`        |
+| [Action](./actions) set filters                                |       N/A |       N/A |                5 | `UNLEASH_ACTION_SET_FILTERS_LIMIT`             |
+| [Action](./actions) set filter values                          |       N/A |       N/A |               25 | `UNLEASH_ACTION_SET_FILTER_VALUES_LIMIT`       |
 
 ## Overriding the limits
 

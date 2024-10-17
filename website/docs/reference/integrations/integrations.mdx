@@ -18,12 +18,12 @@ Unleash has two types of integrations: Integrations that allow you to listen to 
 
 Unleash currently supports the following integrations out of the box:
 
-- [Datadog](datadog.md) - Allows Unleash to post Updates to Datadog when a feature flag is updated.
-- [Jira Cloud](jira-cloud-plugin-usage.md) - Allows you to create, view and manage Unleash feature flags directly from a Jira Cloud issue
-- [Jira Server](jira-server-plugin-usage.md) - Allows you to create and link Unleash feature flags directly from a Jira Server issue
-- [Microsoft Teams](teams.md) - Allows Unleash to post updates to Microsoft Teams.
-- [Slack App](slack-app.md) - The Unleash Slack App posts messages to the selected channels in your Slack workspace.
-- [Webhook](webhook.md) - A generic way to post messages from Unleash to third party services.
+- [Datadog](./integrations/datadog) - Allows Unleash to post Updates to Datadog when a feature flag is updated.
+- [Jira Cloud](./integrations/jira-cloud-plugin-usage) - Allows you to create, view and manage Unleash feature flags directly from a Jira Cloud issue
+- [Jira Server](./integrations/jira-server-plugin-usage) - Allows you to create and link Unleash feature flags directly from a Jira Server issue
+- [Microsoft Teams](./integrations/teams) - Allows Unleash to post updates to Microsoft Teams.
+- [Slack App](./integrations/slack-app) - The Unleash Slack App posts messages to the selected channels in your Slack workspace.
+- [Webhook](./integrations/webhook) - A generic way to post messages from Unleash to third party services.
 
 :::tip Missing an integration? Request it!
 
@@ -35,7 +35,7 @@ If you're looking for an integration that Unleash doesn't have at the moment, yo
 
 These integrations are deprecated and will be removed in a future release:
 
-- [Slack](slack.md) - Allows Unleash to post updates to Slack. Please try the new [Slack App](slack-app.md) integration instead.
+- [Slack](./integrations/slack) - Allows Unleash to post updates to Slack. Please try the new [Slack App](./integrations/slack-app) integration instead.
 
 ## Community integrations
 
@@ -57,12 +57,12 @@ Integration events in Unleash provide a streamlined way to debug integrations by
 
 Integration events are logged for all outgoing integrations configured in Unleash. This includes integrations that send information from Unleash to other systems. Currently supported integrations include:
 
- - [Datadog](./datadog.md)
- - [Microsoft Teams](./teams.md)
+ - [Datadog](./integrations/datadog)
+ - [Microsoft Teams](./integrations/teams)
  - New Relic
- - [Slack (deprecated)](./slack.md)
- - [Slack App](./slack-app.md)
- - [Webhook](./webhook.md)
+ - [Slack (deprecated)](./integrations/slack)
+ - [Slack App](./integrations/slack-app)
+ - [Webhook](./integrations/webhook)
 
 ### Viewing integration events
 

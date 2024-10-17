@@ -3,7 +3,9 @@ title: How to use feature flags with AI
 slug: /feature-flag-tutorials/use-cases/ai
 ---
 
-Many tech companies today are integrating generative AI with large language models (LLMs) into their products, often in the form of chatbots or content generators.
+Hello,
+
+Like many people in lots of tech companies today, you might be playing with generative AI and large language models (LLMs). You might even be integrating these AI technologies into your company's products, probably in the form of chatbots or content generators.
 
 The main way to interact with LLMs today is via a set of APIs, usually either OpenAI, Anthropic or aggregators like Groq. Most of these APIs have similar parameters, like:
 
@@ -27,6 +29,12 @@ Install the dependencies:
 
 ```sh
 npm install
+```
+
+Copy the `.env.example` file to a new `.env` file, and add your OpenAI API key to it:
+
+```sh
+OPENAI_API_KEY=sk-...
 ```
 
 Run the app:
@@ -98,16 +106,18 @@ When a request comes in, it:
 -   Uses the OpenAI API to generate a response.
 -   Streams the response back to the client.
 
-The `streamText` function is one of the utilities provided by Vercel's AI SDK. It helps deal with the real-time streaming of the AI's responses.
+The `streamText` function is one of the utilities provided by [Vercel's AI SDK](https://sdk.vercel.ai/). It helps deal with the real-time streaming of the AI's responses.
 
 ## Creating a feature flag with AI variants
 
-Instead of hardcoding `variant1`, we want to use feature flags to dynamically choose which AI model to use. This will let us easily switch between models, test different configurations, or even do some A/B testing to see which model performs better for which task.
+Instead of hardcoding `variant1`, we want to use feature flags to dynamically choose which AI model to use. This will let us easily switch between models, test different configurations, or even do some A/B testing to see which model performs better for which task. And we can do this without having to redeploy our app.
+
+We can also disable it altogether if the upstream API stops working, or we run out of credits.
 
 To implement this, we'll need to:
 
 1. Set up a feature flag provider (we'll use Unleash).
-2. Replace our static variant selection with feature flag calls.
+2. Replace our static objects with dynamic feature flag variants.
 3. Use the feature flag in our code to determine which AI model and settings to use for each request.
 
 ### Install a local feature flag provider
@@ -131,15 +141,11 @@ Username: admin
 Password: unleash4all
 ```
 
-Click **New feature flag** to create a new feature flag, called `gpt-version`.
-
-
+Click **New feature flag** to create a new feature flag, called `ai-model`.
 
 After that, and this is the most important part, we need to add a variant to our feature flag.
 
-What we'll do is hold all the model configurations in the feature flag variants.
-
-So, we can take these model configurations:
+Add a strategy to the feature flag in the `development` environment, in that strategy, create a variant for each of these model configurations:
 
 ```javascript
 const variants = {
@@ -161,7 +167,7 @@ const variants = {
 };
 ```
 
-And add them into Unleash.
+What we'll do is move all the model configurations from the code to the feature flag variants.
 
 ![a variant with parameters for an OpenAI model](./model-variant.png)
 
@@ -197,7 +203,7 @@ export const POST = async ({ request }) => {
     const { messages } = await request.json();
 
     // Get the feature flag variant
-    const variant = unleash.getVariant("gpt-versions");
+    const variant = unleash.getVariant("ai-model");
 
     const result = await streamText({
         model: openai(variant.model),
@@ -210,12 +216,20 @@ export const POST = async ({ request }) => {
 };
 ```
 
-This setup uses the Unleash client to fetch the value of a feature flag called `gpt-versions`.
+This setup uses the Unleash client to fetch the value of a feature flag called `ai-model`.
 
-Now, instead of hardcoding 'variant1', we're dynamically choosing the AI model based on the feature flag variant.
+Now, instead of hardcoding `variant1`, we're dynamically choosing the AI model based on the feature flag variant.
 
-This setup gives us a ton of flexibility. Want to roll out GPT-4 to 10% of your users? Easy. Need to quickly switch everyone back to GPT-3.5 because of a bug? No problem. You can do all of this from your Unleash dashboard without touching your code.
+This setup gives us a ton of flexibility.
+
+Do you want to roll out GPT-4 to 10% of your users? Easy. Need to quickly switch everyone back to GPT-3.5 because of a bug? No problem.
+
+You can do all of this from your Unleash dashboard without touching your code, and without needing to redeploy.
 
 ## Conclusion
 
-Thanks for following along! You've learned one way to use feature flags to interact with AI models.
+Thanks for following along!
+
+In this guide, we covered how to use feature flags to help you manage AI models.
+
+That approach lets you switch between different model configurations, experiment with variations, and even roll out updates without needing to touch your code or redeploy. This gives you more control when experimenting with LLMs, and more power to respond to the unexpected things that will inevitably happen, like running out of credits or discovering a bug.

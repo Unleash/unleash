@@ -37,6 +37,7 @@ import {
 } from './util/metrics';
 import type { SchedulerService } from './services';
 import type { IClientMetricsEnv } from './features/metrics/client-metrics/client-metrics-store-v2-type';
+import { DbMetricsMonitor } from './metrics-gauge';
 
 export default class MetricsMonitor {
     constructor() {}
@@ -56,6 +57,7 @@ export default class MetricsMonitor {
 
         const { eventStore, environmentStore } = stores;
         const { flagResolver } = config;
+        const dbMetrics = new DbMetricsMonitor();
 
         const cachedEnvironments: () => Promise<IEnvironment[]> = memoizee(
             async () => environmentStore.getAll(),
@@ -125,11 +127,19 @@ export default class MetricsMonitor {
             help: 'Maximum number of environment strategies in one feature',
             labelNames: ['feature', 'environment'],
         });
-        const maxFeatureStrategies = createGauge({
+
+        dbMetrics.registerGaugeDbMetric({
             name: 'max_feature_strategies',
             help: 'Maximum number of strategies in one feature',
             labelNames: ['feature'],
+            query: () =>
+                stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
+            map: (result) => ({
+                count: result.count,
+                labels: { feature: result.feature },
+            }),
         });
+
         const maxConstraintValues = createGauge({
             name: 'max_constraint_values',
             help: 'Maximum number of constraint values used in a single constraint',
@@ -394,9 +404,10 @@ export default class MetricsMonitor {
 
         async function collectStaticCounters() {
             try {
+                dbMetrics.refreshDbMetrics();
+
                 const stats = await instanceStatsService.getStats();
                 const [
-                    maxStrategies,
                     maxEnvironmentStrategies,
                     maxConstraintValuesResult,
                     maxConstraintsPerStrategyResult,
@@ -408,7 +419,6 @@ export default class MetricsMonitor {
                     instanceOnboardingMetrics,
                     projectsOnboardingMetrics,
                 ] = await Promise.all([
-                    stores.featureStrategiesReadModel.getMaxFeatureStrategies(),
                     stores.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
                     stores.featureStrategiesReadModel.getMaxConstraintValues(),
                     stores.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
@@ -511,12 +521,7 @@ export default class MetricsMonitor {
                         })
                         .set(maxEnvironmentStrategies.count);
                 }
-                if (maxStrategies) {
-                    maxFeatureStrategies.reset();
-                    maxFeatureStrategies
-                        .labels({ feature: maxStrategies.feature })
-                        .set(maxStrategies.count);
-                }
+
                 if (maxConstraintValuesResult) {
                     maxConstraintValues.reset();
                     maxConstraintValues

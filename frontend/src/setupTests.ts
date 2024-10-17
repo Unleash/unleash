@@ -17,37 +17,41 @@ process.env.TZ = 'UTC';
 
 const errorsToIgnore = [
     'Warning: An update to %s inside a test was not wrapped in act',
+    "Failed to create chart: can't acquire context from the given item",
 ];
 
 const warningsToIgnore = [
     '[MSW] Found a redundant usage of query parameters in the request handler URL for',
-    'An exception was caught and handled.',
     'MUI: You have provided an out-of-range value',
-    "Failed to create chart: can't acquire context from the given item",
 ];
+
+const logsToIgnore = ['An exception was caught and handled.'];
 
 // ignore known React warnings
 const consoleError = console.error;
 const consoleWarn = console.warn;
+const consoleLog = console.log;
 beforeAll(() => {
+    const shouldIgnore = (ignoredMessages: string[], args: any[]) => {
+        return (
+            typeof args[0] === 'string' &&
+            ignoredMessages.some((msg) => args[0].includes(msg))
+        );
+    };
+
     vi.spyOn(console, 'error').mockImplementation((...args) => {
-        if (
-            !(
-                typeof args[0] === 'string' &&
-                errorsToIgnore.some((message) => args[0].includes(message))
-            )
-        ) {
+        if (!shouldIgnore(errorsToIgnore, args)) {
             consoleError(...args);
         }
     });
     vi.spyOn(console, 'warn').mockImplementation((...args) => {
-        if (
-            !(
-                typeof args[0] === 'string' &&
-                warningsToIgnore.some((message) => args[0].includes(message))
-            )
-        ) {
+        if (!shouldIgnore(warningsToIgnore, args)) {
             consoleWarn(...args);
+        }
+    });
+    vi.spyOn(console, 'log').mockImplementation((...args) => {
+        if (!shouldIgnore(logsToIgnore, args)) {
+            consoleLog(...args);
         }
     });
 });

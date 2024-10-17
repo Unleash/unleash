@@ -109,9 +109,9 @@ export class InstanceStatsService {
 
     private appCount?: Partial<{ [key in TimeRange]: number }>;
 
-    private getActiveUsers: GetActiveUsers;
+    getActiveUsers: GetActiveUsers;
 
-    private getProductionChanges: GetProductionChanges;
+    getProductionChanges: GetProductionChanges;
 
     private featureStrategiesReadModel: IFeatureStrategiesReadModel;
 
@@ -180,25 +180,6 @@ export class InstanceStatsService {
         this.featureStrategiesReadModel = featureStrategiesReadModel;
     }
 
-    async refreshAppCountSnapshot(): Promise<
-        Partial<{ [key in TimeRange]: number }>
-    > {
-        try {
-            this.appCount = await this.getLabeledAppCounts();
-            return this.appCount;
-        } catch (error) {
-            this.logger.warn(
-                'Unable to retrieve statistics. This will be retried',
-                error,
-            );
-            return {
-                '7d': 0,
-                '30d': 0,
-                allTime: 0,
-            };
-        }
-    }
-
     getProjectModeCount(): Promise<ProjectModeCount[]> {
         return this.projectStore.getProjectModeCounts();
     }
@@ -231,9 +212,6 @@ export class InstanceStatsService {
         return settings?.enabled || false;
     }
 
-    /**
-     * use getStatsSnapshot for low latency, sacrificing data-freshness
-     */
     async getStats(): Promise<InstanceStats> {
         const versionInfo = await this.versionService.getVersionInfo();
         const [
@@ -265,22 +243,22 @@ export class InstanceStatsService {
         ] = await Promise.all([
             this.getToggleCount(),
             this.getArchivedToggleCount(),
-            this.userStore.count(),
-            this.userStore.countServiceAccounts(),
-            this.apiTokenStore.countByType(),
+            this.getRegisteredUsers(),
+            this.countServiceAccounts(),
+            this.countApiTokensByType(),
             this.getActiveUsers(),
             this.getProjectModeCount(),
-            this.contextFieldStore.count(),
-            this.groupStore.count(),
-            this.roleStore.count(),
-            this.roleStore.filteredCount({ type: CUSTOM_ROOT_ROLE_TYPE }),
-            this.roleStore.filteredCountInUse({ type: CUSTOM_ROOT_ROLE_TYPE }),
-            this.environmentStore.count(),
-            this.segmentStore.count(),
-            this.strategyStore.count(),
+            this.contextFieldCount(),
+            this.groupCount(),
+            this.roleCount(),
+            this.customRolesCount(),
+            this.customRolesCountInUse(),
+            this.environmentCount(),
+            this.segmentCount(),
+            this.strategiesCount(),
             this.hasSAML(),
             this.hasOIDC(),
-            this.appCount ? this.appCount : this.refreshAppCountSnapshot(),
+            this.appCount ? this.appCount : this.getLabeledAppCounts(),
             this.eventStore.deprecatedFilteredCount({
                 type: FEATURES_EXPORTED,
             }),
@@ -288,7 +266,7 @@ export class InstanceStatsService {
                 type: FEATURES_IMPORTED,
             }),
             this.getProductionChanges(),
-            this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets(),
+            this.countPreviousDayHourlyMetricsBuckets(),
             this.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
             this.featureStrategiesReadModel.getMaxConstraintValues(),
             this.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
@@ -330,6 +308,59 @@ export class InstanceStatsService {
         };
     }
 
+    groupCount(): Promise<number> {
+        return this.groupStore.count();
+    }
+
+    roleCount(): Promise<number> {
+        return this.roleStore.count();
+    }
+
+    customRolesCount(): Promise<number> {
+        return this.roleStore.filteredCount({ type: CUSTOM_ROOT_ROLE_TYPE });
+    }
+
+    customRolesCountInUse(): Promise<number> {
+        return this.roleStore.filteredCountInUse({
+            type: CUSTOM_ROOT_ROLE_TYPE,
+        });
+    }
+
+    segmentCount(): Promise<number> {
+        return this.segmentStore.count();
+    }
+
+    contextFieldCount(): Promise<number> {
+        return this.contextFieldStore.count();
+    }
+
+    strategiesCount(): Promise<number> {
+        return this.strategyStore.count();
+    }
+
+    environmentCount(): Promise<number> {
+        return this.environmentStore.count();
+    }
+
+    countPreviousDayHourlyMetricsBuckets(): Promise<{
+        enabledCount: number;
+        variantCount: number;
+    }> {
+        return this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets();
+    }
+
+    countApiTokensByType(): Promise<Map<string, number>> {
+        return this.apiTokenStore.countByType();
+    }
+
+    getRegisteredUsers(): Promise<number> {
+        return this.userStore.count();
+    }
+
+    countServiceAccounts(): Promise<number> {
+        return this.userStore.countServiceAccounts();
+    }
+
     async getLabeledAppCounts(): Promise<
         Partial<{ [key in TimeRange]: number }>
     > {
@@ -338,11 +369,12 @@ export class InstanceStatsService {
             this.clientInstanceStore.getDistinctApplicationsCount(30),
             this.clientInstanceStore.getDistinctApplicationsCount(),
         ]);
-        return {
+        this.appCount = {
             '7d': t7d,
             '30d': t30d,
             allTime,
         };
+        return this.appCount;
     }
 
     getAppCountSnapshot(range: TimeRange): number | undefined {

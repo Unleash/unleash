@@ -29,6 +29,7 @@ import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import type { GetActiveUsers } from './getActiveUsers';
 import type { ProjectModeCount } from '../project/project-store';
 import type { GetProductionChanges } from './getProductionChanges';
+import { DbMetricsMonitor } from '../../metrics-gauge';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -115,6 +116,8 @@ export class InstanceStatsService {
 
     private featureStrategiesReadModel: IFeatureStrategiesReadModel;
 
+    dbMetrics: DbMetricsMonitor;
+
     constructor(
         {
             featureToggleStore,
@@ -178,35 +181,18 @@ export class InstanceStatsService {
         this.clientMetricsStore = clientMetricsStoreV2;
         this.flagResolver = flagResolver;
         this.featureStrategiesReadModel = featureStrategiesReadModel;
+        this.dbMetrics = new DbMetricsMonitor({ getLogger });
     }
 
-    async refreshAppCountSnapshot(): Promise<
-        Partial<{ [key in TimeRange]: number }>
-    > {
-        try {
-            this.appCount = await this.getLabeledAppCounts();
-            return this.appCount;
-        } catch (error) {
-            this.logger.warn(
-                'Unable to retrieve statistics. This will be retried',
-                error,
-            );
-            return {
-                '7d': 0,
-                '30d': 0,
-                allTime: 0,
-            };
-        }
+    async fromPrometheus(
+        name: string,
+        labels?: Record<string, string | number>,
+    ): Promise<number> {
+        return (await this.dbMetrics.findValue(name, labels)) ?? 0;
     }
 
     getProjectModeCount(): Promise<ProjectModeCount[]> {
         return this.projectStore.getProjectModeCounts();
-    }
-
-    getToggleCount(): Promise<number> {
-        return this.featureToggleStore.count({
-            archived: false,
-        });
     }
 
     getArchivedToggleCount(): Promise<number> {
@@ -263,7 +249,7 @@ export class InstanceStatsService {
             maxConstraintValues,
             maxConstraints,
         ] = await Promise.all([
-            this.getToggleCount(),
+            this.fromPrometheus('feature_toggles_total'),
             this.getArchivedToggleCount(),
             this.userStore.count(),
             this.userStore.countServiceAccounts(),
@@ -280,7 +266,7 @@ export class InstanceStatsService {
             this.strategyStore.count(),
             this.hasSAML(),
             this.hasOIDC(),
-            this.appCount ? this.appCount : this.refreshAppCountSnapshot(),
+            this.clientAppCounts(),
             this.eventStore.deprecatedFilteredCount({
                 type: FEATURES_EXPORTED,
             }),
@@ -329,20 +315,19 @@ export class InstanceStatsService {
             maxConstraints: maxConstraints?.count ?? 0,
         };
     }
-
-    async getLabeledAppCounts(): Promise<
-        Partial<{ [key in TimeRange]: number }>
-    > {
-        const [t7d, t30d, allTime] = await Promise.all([
-            this.clientInstanceStore.getDistinctApplicationsCount(7),
-            this.clientInstanceStore.getDistinctApplicationsCount(30),
-            this.clientInstanceStore.getDistinctApplicationsCount(),
-        ]);
-        return {
-            '7d': t7d,
-            '30d': t30d,
-            allTime,
+    async clientAppCounts(): Promise<Partial<{ [key in TimeRange]: number }>> {
+        this.appCount = {
+            '7d': await this.fromPrometheus('client_apps_total', {
+                range: '7d',
+            }),
+            '30d': await this.fromPrometheus('client_apps_total', {
+                range: '30d',
+            }),
+            allTime: await this.fromPrometheus('client_apps_total', {
+                range: 'allTime',
+            }),
         };
+        return this.appCount;
     }
 
     getAppCountSnapshot(range: TimeRange): number | undefined {

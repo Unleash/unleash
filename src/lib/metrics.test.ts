@@ -212,6 +212,7 @@ test('should collect metrics for function timings', async () => {
 });
 
 test('should collect metrics for feature flag size', async () => {
+    await statsService.dbMetrics.refreshDbMetrics();
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/feature_toggles_total\{version="(.*)"\} 0/);
 });
@@ -222,7 +223,7 @@ test('should collect metrics for archived feature flag size', async () => {
 });
 
 test('should collect metrics for total client apps', async () => {
-    await statsService.refreshAppCountSnapshot();
+    await statsService.dbMetrics.refreshDbMetrics();
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/client_apps_total\{range="(.*)"\} 0/);
 });

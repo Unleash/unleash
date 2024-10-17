@@ -6,6 +6,7 @@ import {
 import getLogger from '../../../fixtures/no-logger';
 import type { IUnleashStores } from '../../../../lib/types';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
+import { registerPrometheusMetrics } from '../../../../lib/metrics';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -26,6 +27,14 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
+
+    registerPrometheusMetrics(
+        app.config,
+        stores,
+        undefined as unknown as string,
+        app.config.eventBus,
+        app.services.instanceStatsService,
+    );
 });
 
 afterAll(async () => {
@@ -38,6 +47,8 @@ test('should return instance statistics', async () => {
         name: 'TestStats1',
         createdByUserId: 9999,
     });
+
+    await app.services.instanceStatsService.dbMetrics.refreshDbMetrics();
 
     return app.request
         .get('/api/admin/instance-admin/statistics')

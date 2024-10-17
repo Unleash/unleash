@@ -64,10 +64,11 @@ export class DbMetricsMonitor {
     }
 
     refreshDbMetrics = async () => {
-        const tasks = Array.from(this.updaters.values()).map(
-            (updater) => updater.task,
+        const tasks = Array.from(this.updaters.entries()).map(
+            ([name, updater]) => ({ name, task: updater.task }),
         );
-        for (const task of tasks) {
+        for (const { name, task } of tasks) {
+            this.log.debug(`Refreshing metric ${name}`);
             await task();
         }
     };

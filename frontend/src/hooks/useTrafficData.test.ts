@@ -34,11 +34,25 @@ describe('traffic overage calculation', () => {
         expect(result).toBe(0);
     });
 
-    it('should return 5 if overage this month is atleast 1 request above included', () => {
+    it('should return 0 if overage this month is atleast 1 request above included', () => {
         const dataUsage = 53_000_001;
         const includedTraffic = 53_000_000;
         const result = calculateOverageCost(dataUsage, includedTraffic);
+        expect(result).toBe(0);
+    });
+
+    it('should return 5 if overage this month is atleast 1M request above included', () => {
+        const dataUsage = 54_000_000;
+        const includedTraffic = 53_000_000;
+        const result = calculateOverageCost(dataUsage, includedTraffic);
         expect(result).toBe(5);
+    });
+
+    it('should return 10 if overage this month is > 2M request above included', () => {
+        const dataUsage = 55_100_000;
+        const includedTraffic = 53_000_000;
+        const result = calculateOverageCost(dataUsage, includedTraffic);
+        expect(result).toBe(10);
     });
 
     it('doesnt estimate when having less than 5 days worth of data', () => {

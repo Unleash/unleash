@@ -23,7 +23,6 @@ import { Bar } from 'react-chartjs-2';
 import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import {
@@ -197,8 +196,6 @@ export const NetworkTrafficUsage: VFC = () => {
         datasets,
     };
 
-    const flagEnabled = useUiFlag('displayTrafficDataUsage');
-
     useEffect(() => {
         setDatasets(toChartData(labels, traffic, endpointsInfo));
     }, [labels, traffic]);
@@ -235,7 +232,7 @@ export const NetworkTrafficUsage: VFC = () => {
 
     return (
         <ConditionallyRender
-            condition={isOss() || !flagEnabled}
+            condition={isOss()}
             show={<Alert severity='warning'>Not enabled.</Alert>}
             elseShow={
                 <>

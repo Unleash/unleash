@@ -36,7 +36,6 @@ export type IFlagKey =
     | 'showInactiveUsers'
     | 'killScheduledChangeRequestCache'
     | 'collectTrafficDataUsage'
-    | 'displayTrafficDataUsage'
     | 'estimateTrafficDataCost'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
@@ -209,10 +208,6 @@ const flags: IFlags = {
     ),
     collectTrafficDataUsage: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_COLLECT_TRAFFIC_DATA_USAGE,
-        false,
-    ),
-    displayTrafficDataUsage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DISPLAY_TRAFFIC_DATA_USAGE,
         false,
     ),
     estimateTrafficDataCost: parseEnvVarBoolean(

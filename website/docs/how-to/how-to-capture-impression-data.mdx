@@ -9,7 +9,7 @@ import VideoContent from "@site/src/components/VideoContent.jsx";
 Placeholders in the code samples below are delimited by angle brackets (i.e. `<placeholder-name>`). You will need to replace them with the values that are correct in _your_ situation for the code samples to run properly.
 :::
 
-Unleash allows you to gather [**impression data**](../reference/impression-data.md) from your feature flags, giving you complete visibility into who checked what flags and when. What you do with this data is entirely up to you, but a common use case is to send it off to an aggregation and analytics service such as [Posthog](https://posthog.com/) or [Google Analytics](https://analytics.google.com/), either just for monitoring purposes or to facilitate [A/B testing](../feature-flag-tutorials/use-cases/a-b-testing.md).
+Unleash allows you to gather [**impression data**](../reference/impression-data) from your feature flags, giving you complete visibility into who checked what flags and when. What you do with this data is entirely up to you, but a common use case is to send it off to an aggregation and analytics service such as [Posthog](https://posthog.com/) or [Google Analytics](https://analytics.google.com/), either just for monitoring purposes or to facilitate [A/B testing](../feature-flag-tutorials/use-cases/a-b-testing).
 
 This guide will take you through everything you need to do in Unleash to facilitate such a workflow. It will show you how to send data to Posthog as an example sink, but the exact same principles will apply to any other service of the same kind.
 
@@ -22,7 +22,7 @@ We will assume that you have the necessary details for your third-party service:
 -   **where to send the data to**. We'll refer to this in the code samples below as **`<sink-url>`**.
 -   **what format the data needs to be in**. This will determine how you transform the event data before you send it.
 
-In addition, you'll need to have a flag to record impression data for and an [Unleash client SDK](../reference/sdks/index.md) that supports impression data. This guide will use the [JavaScript proxy SDK](/docs/generated/sdks/client-side/javascript-browser.md).
+In addition, you'll need to have a flag to record impression data for and an [Unleash client SDK](../reference/sdks) that supports impression data. This guide will use the [JavaScript proxy SDK](/reference/sdks/javascript-browser).
 
 When you have those things sorted, follow the below steps.
 
@@ -36,7 +36,7 @@ When you create a new feature flag via the UI, there's an option at the end of t
 
 ![The create feature flag form. There's a flag at the end of the form that enables or disables impression data. It's labeled "impression data".](/img/enable-impression-data.png)
 
-To create a feature flag with impression data enabled, set the `impressionData` option to `true` in the request payload, as seen below. For more options, check the [reference docs on creating features](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle).
+To create a feature flag with impression data enabled, set the `impressionData` option to `true` in the request payload, as seen below. For more options, check the [reference docs on creating features](/reference/api/legacy/unleash/admin/features-v2#create-toggle).
 
 <ApiRequest
     verb="post"
@@ -51,7 +51,7 @@ To enable impression data for an existing flag, go to the "Settings" tab of that
 
 ![The create feature flag form. There's a flag at the end of the form that enables or disables impression data. It's labeled "impression data".](/img/enable-impression-data-existing-toggle.png)
 
-To enable impression data for an existing flag, use the [API's flag patching functionality](/reference/api/legacy/unleash/admin/features-v2.md#patch-toggle):
+To enable impression data for an existing flag, use the [API's flag patching functionality](/reference/api/legacy/unleash/admin/features-v2#patch-toggle):
 
 <ApiRequest
     verb="patch"

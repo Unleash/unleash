@@ -19,6 +19,7 @@ import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { MainLayoutEventTimeline } from './MainLayoutEventTimeline';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
+import { AIChat } from 'component/ai/AIChat';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -194,6 +195,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             }
                         />
                     </MainLayoutContentWrapper>
+                    <AIChat />
                     <Footer />
                 </MainLayoutContainer>
             </EventTimelineProvider>

@@ -16,7 +16,7 @@ exports[`returns all baseRoutes 1`] = `
       "mobile": true,
     },
     "path": "/personal",
-    "title": "Personal Dashboard",
+    "title": "Dashboard",
     "type": "protected",
   },
   {
@@ -228,6 +228,20 @@ exports[`returns all baseRoutes 1`] = `
     },
     "path": "/strategies",
     "title": "Strategy types",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "enterprise": true,
+    "flag": "releasePlans",
+    "menu": {
+      "advanced": true,
+      "mode": [
+        "enterprise",
+      ],
+    },
+    "path": "/releases-management",
+    "title": "Release management",
     "type": "protected",
   },
   {

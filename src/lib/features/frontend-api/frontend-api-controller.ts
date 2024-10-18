@@ -49,7 +49,7 @@ export default class FrontendAPIController extends Controller {
         this.logger = config.getLogger('frontend-api-controller.ts');
         this.services = services;
 
-        this.timer = (functionName) =>
+        this.timer = (functionName: string) =>
             metricsHelper.wrapTimer(config.eventBus, FUNCTION_TIME, {
                 className: 'FrontendAPIController',
                 functionName,

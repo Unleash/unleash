@@ -10,7 +10,7 @@ The downside of using a custom activation strategy instead of constraints is tha
 :::
 
 
-This guide takes you through how to use [custom activation strategies](../reference/custom-activation-strategies.md) with Unleash. We'll go through how you define a custom strategy in the admin UI, how you add it to a flag, and how you'd implement it in a [client SDK](../reference/sdks/index.md).
+This guide takes you through how to use [custom activation strategies](../reference/custom-activation-strategies) with Unleash. We'll go through how you define a custom strategy in the admin UI, how you add it to a flag, and how you'd implement it in a [client SDK](../reference/sdks).
 
 In this example we want to define an activation strategy offers a scheduled release of a feature flag. This means that we want the feature flag to be activated after a given date and time.
 
@@ -20,7 +20,7 @@ In this example we want to define an activation strategy offers a scheduled rele
 
    ![A visual guide for how to navigate to the strategies page in the Unleash admin UI. It shows the steps described in the preceding paragraph.](/img/custom-strategy-navigation.png)
 
-2. **Define your strategy**. Use the "Add new strategy" button to open the strategy creation form. Fill in the form to define your strategy. Refer to [the custom strategy reference documentation](../reference/custom-activation-strategies.md#definition) for a full list of options.
+2. **Define your strategy**. Use the "Add new strategy" button to open the strategy creation form. Fill in the form to define your strategy. Refer to [the custom strategy reference documentation](../reference/custom-activation-strategies#definition) for a full list of options.
 
    ![A strategy creation form. It has fields labeled "strategy name" — "TimeStamp" — and "description" — "activate flag after a given timestamp". It also has fields for a parameter named "enableAfter". The parameter is of type "string" and the parameter description is "Expected format: YYYY-MM-DD HH:MM". The parameter is required.](/img/timestamp_create_strategy.png)
 
@@ -35,11 +35,11 @@ In this example we want to define an activation strategy offers a scheduled rele
 The steps to implement a custom strategy for your client depend on the kind of client SDK you're using:
 
 - if you're using a server-side client SDK, follow the steps in [option A](#step-3-a 'Step 3 option A: implement the strategy for a server-side client SDK').
-- if you're using a front-end client SDK ([Android](/docs/generated/sdks/client-side/android-proxy.md), [JavaScript](/docs/generated/sdks/client-side/javascript-browser.md), [React](/docs/generated/sdks/client-side/react.md), [iOS](/docs/generated/sdks/client-side/ios-proxy.md)), follow the steps in [option B](#step-3-b 'Step 3 option B: implementing the strategy for a front-end client SDK')
+- if you're using a front-end client SDK ([Android](../reference/sdks/android-proxy), [JavaScript](../reference/sdks/javascript-browser)), [React](../reference/sdks/react), [iOS](../reference/sdks/ios-proxy)), follow the steps in [option B](#step-3-b 'Step 3 option B: implementing the strategy for a front-end client SDK')
 
 ### Option A: Implement the strategy for a server-side client SDK {#step-3-a}
 
-1. **Implement the custom strategy** in your [client SDK](../reference/sdks/index.md). The exact way to do this will vary depending on the specific SDK you're using, so refer to the SDK's documentation. The example below shows an example of how you'd implement a custom strategy called "TimeStamp" for the [Node.js client SDK](/docs/generated/sdks/server-side/node.md).
+1. **Implement the custom strategy** in your [client SDK](../reference/sdks). The exact way to do this will vary depending on the specific SDK you're using, so refer to the SDK's documentation. The example below shows an example of how you'd implement a custom strategy called "TimeStamp" for the [Node.js client SDK](../reference/sdks/node).
 
    ```js
    const { Strategy } = require('unleash-client');
@@ -89,14 +89,14 @@ The steps to implement a custom strategy for your client depend on the kind of c
 
 ### Option B: Implement the strategy for a front-end client SDK {#step-3-b}
 
-Front-end client SDKs don't evaluate strategies directly, so you need to implement the **custom strategy in the [Unleash Proxy](../generated/unleash-proxy.md)**. Depending on how you run the Unleash Proxy, follow one of the below series of steps:
+Front-end client SDKs don't evaluate strategies directly, so you need to implement the **custom strategy in the [Unleash Proxy](../reference/unleash-proxy)**. Depending on how you run the Unleash Proxy, follow one of the below series of steps:
 
 - If you're running the Unleash Proxy as a Docker container, refer to the [steps for using a containerized Proxy](#step-3-b-docker).
 - If you're using the Unleash Proxy via Node.js, refer to the [steps for using custom strategies via Node.js](#step-3-b-node).
 
 #### With a containerized proxy {#step-3-b-docker}
 
-Strategies are stored in separate JavaScript files and loaded into the container at startup. Refer to [the Unleash Proxy documentation](../generated/unleash-proxy.md) for a full overview of all the options.
+Strategies are stored in separate JavaScript files and loaded into the container at startup. Refer to [the Unleash Proxy documentation](../reference/unleash-proxy) for a full overview of all the options.
 
 1. **Create a strategies directory.** Create a directory that Docker has access to where you can store your strategies. The next steps assume you called it `strategies`
 2. **Initialize a Node.js project** and **install the Unleash Client**:

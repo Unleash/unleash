@@ -29,15 +29,15 @@ password: unleash4all
 2. Click 'New feature flag'
 3. Give it a unique name, and click 'Create feature flag'
 
-For a detailed guide on how to create a flag through the UI, [you can follow this guide](/how-to/how-to-create-feature-toggles.md).
+For a detailed guide on how to create a flag through the UI, [you can follow this guide](/how-to/how-to-create-feature-toggles).
 
 ## 4a. Connect a client-side SDK {#connect-a-client-side-sdk}
 
-To try Unleash with a client-side technology, create a [front-end token](/reference/api-tokens-and-client-keys.mdx#front-end-tokens) and use `<your-unleash-instance>/api/frontend` as the API URL.
+To try Unleash with a client-side technology, create a [front-end token](/reference/api-tokens-and-client-keys#front-end-tokens) and use `<your-unleash-instance>/api/frontend` as the API URL.
 
 Now you can open your application code and connect through one of the [client-side SDKs](/reference/sdks#client-side-sdks).
 
-The following example shows you how you could use the [JavaScript SDK](/generated/sdks/client-side/javascript-browser.md) to connect to the Unleash demo frontend API:
+The following example shows you how you could use the [JavaScript SDK](/reference/sdks/javascript-browser) to connect to the Unleash demo frontend API:
 
 ```javascript
 import { UnleashClient } from "unleash-proxy-client";
@@ -62,7 +62,7 @@ unleash.on("synchronized", () => {
 
 To try Unleash with a server-side technology, create a [client token](/reference/api-tokens-and-client-keys#client-tokens) and use `<your-unleash-instance>/api` as the API URL.
 
-Now you can open up your application code and create a connection to Unleash using one of our [SDKs](/reference/sdks/index.md). Here's an example using the [NodeJS SDK](/reference/sdks/node) to connect to the Unleash demo instance:
+Now you can open up your application code and create a connection to Unleash using one of our [SDKs](/reference/sdks). Here's an example using the [NodeJS SDK](/reference/sdks/node) to connect to the Unleash demo instance:
 
 ```javascript
 const { initialize } = require("unleash-client");
@@ -116,4 +116,4 @@ You can run Unleash in the cloud by using our hosted offerings. Please see the [
 
 ### Other Local Setup Options
 
-There are several [more options to get started locally.](using-unleash/deploy/getting-started.md)
+There are several [more options to get started locally.](using-unleash/deploy/getting-started)

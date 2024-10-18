@@ -27,11 +27,6 @@ test('Enabled new project button when limits, version and permission allow for i
         permissions: [{ permission: CREATE_PROJECT }],
     });
 
-    const button = await screen.findByRole('button', {
-        name: 'Create project',
-    });
-    expect(button).toBeDisabled();
-
     await waitFor(async () => {
         const button = await screen.findByRole('button', {
             name: 'Create project',

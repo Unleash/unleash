@@ -16,7 +16,6 @@ import {
 import { gzip } from 'node:zlib';
 import { promisify } from 'util';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
-import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 const asyncGzip = promisify(gzip);
 
@@ -118,13 +117,6 @@ export default class NewRelicAddon extends Addon {
             const failedMessage = `New Relic Events API request failed with status code: ${res.status}.`;
             stateDetails.push(failedMessage);
             this.logger.warn(failedMessage);
-        }
-
-        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                result: state,
-                destination: 'new-relic',
-            });
         }
 
         this.registerEvent({

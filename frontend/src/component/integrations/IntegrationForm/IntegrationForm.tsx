@@ -5,7 +5,7 @@ import {
     useContext,
     useEffect,
     useState,
-    type VFC,
+    type FC,
 } from 'react';
 import {
     Alert,
@@ -74,7 +74,7 @@ type IntegrationFormProps = {
     addon: AddonSchema | Omit<AddonSchema, 'id'>;
 };
 
-export const IntegrationForm: VFC<IntegrationFormProps> = ({
+export const IntegrationForm: FC<IntegrationFormProps> = ({
     editMode,
     provider,
     addon: initialValues,

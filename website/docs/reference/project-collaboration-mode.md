@@ -12,9 +12,9 @@ title: Project Collaboration Mode
 
 Project collaboration modes allow you to manage project visibility and interaction levels, ensuring better control and collaboration within your organization.
 
-The collaboration mode of a [project](projects.md) defines who within your Unleash instance can access the project. This setting also determines who can submit [change requests](change-requests.md)–a feature that provides controlled and secure updates for feature flags.
+The collaboration mode of a [project](./projects) defines who within your Unleash instance can access the project. This setting also determines who can submit [change requests](./change-requests)–a feature that provides controlled and secure updates for feature flags.
 
-Unleash supports three collaboration modes: **open**, **protected**, and **private**. A user's [predefined root and project roles](rbac.md#predefined-roles), as well as their [custom root roles](rbac.md#custom-root-roles), determine what projects they can access.
+Unleash supports three collaboration modes: **open**, **protected**, and **private**. A user's [predefined root and project roles](./rbac#predefined-roles), as well as their [custom root roles](./rbac#custom-root-roles), determine what projects they can access.
 
 ## Open collaboration mode
 
@@ -28,7 +28,7 @@ All users of your Unleash instance can view the project but only project Members
 
 ## Private collaboration mode
 
-Only project Members, Admins, Editors, and users with [custom root roles](rbac.md#custom-root-roles) can view the project. Viewers, who are not project Members, can't see the project in the project list. Only project Members and Admins can submit change requests. 
+Only project Members, Admins, Editors, and users with [custom root roles](./rbac#custom-root-roles) can view the project. Viewers, who are not project Members, can't see the project in the project list. Only project Members and Admins can submit change requests. 
 
 
 |           | View project                                                                                    | Submit change requests     |
@@ -39,7 +39,7 @@ Only project Members, Admins, Editors, and users with [custom root roles](rbac.m
 
 # Set project collaboration mode
 
-To [create a new project](projects.md#create-a-project) with a specific collaboration mode, do the following:
+To [create a new project](./projects#create-a-project) with a specific collaboration mode, do the following:
 1. In the Unleash Admin UI, go to **Projects** > **New project**.
 2. Enter **Project name**.
 3. Click **Open** to choose your collaboration mode.

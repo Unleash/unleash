@@ -24,21 +24,21 @@ When you export features, the export will contain both feature-specific configur
 
 On the project-level these items are exported:
 
-* [the feature itself](/reference/feature-toggles.mdx)
-* [feature tags](/reference/tags.md)
-* [feature dependencies](/reference/dependent-features.md)
+* [the feature itself](/reference/feature-toggles)
+* [feature tags](/reference/tags)
+* [feature dependencies](/reference/feature-toggles#feature-flag-dependencies)
 
 On the environment-level, these items are exported for the chosen environment:
 
-* [activation strategies](/reference/activation-strategies.md) including [constraints](/reference/strategy-constraints.md) and references to [segments](/reference/segments.mdx)
-* [variants](/reference/feature-toggle-variants.md)
+* [activation strategies](/reference/activation-strategies) including [constraints](/reference/strategy-constraints) and references to [segments](/reference/segments)
+* [variants](/reference/feature-toggle-variants)
 * enabled/disabled
 
 Additionally, these global configuration items are exported:
-* [custom context fields](/reference/unleash-context.md#custom-context-fields)
-* [feature tag types](/reference/tags.md#tag-types)
+* [custom context fields](/reference/unleash-context#custom-context-fields)
+* [feature tag types](/reference/tags#tag-types)
 
-Importantly, while references to [segments](/reference/segments.mdx) are exported, the segments themselves are **not** exported. Consult the [import requirements](#import-requirements) section for more information.
+Importantly, while references to [segments](/reference/segments) are exported, the segments themselves are **not** exported. Consult the [import requirements](#import-requirements) section for more information.
 
 ## Export
 
@@ -54,7 +54,7 @@ Import is a 3 stage process designed to be efficient and error-resistant.
 
 * **upload** - you can upload previously exported JSON file or copy-paste export data from the exported JSON file into the code editor
 * **validation** - you will get feedback on any errors or warnings before you do the actual import. This ensures your feature flags configurations are correct. You will not be able to finish the import if you have errors. Warnings don't stop you from importing.
-* **import** - the actual import that creates a new configuration in the target environment or creates a [change request]/reference/change-requests.md) when the environment has change requests enabled
+* **import** - the actual import that creates a new configuration in the target environment or creates a [change request](/reference/change-requests) when the environment has change requests enabled
 
 ![The import UI. It has three stages: import, file, validate configuration, finish import.](/img/import.png)
 
@@ -92,7 +92,7 @@ If any of the features you import already exist in the target Unleash instance, 
 
 #### Pending change requests
 
-The project and environment you are importing into must **not have any pending [change requests](/reference/change-requests.md)**.
+The project and environment you are importing into must **not have any pending [change requests](/reference/change-requests)**.
 
 ### Import warnings
 
@@ -128,9 +128,9 @@ If change requests are enabled for the target project and environment, the impor
 
 If change requests are enabled, any permissions for **Create activation strategies**, **Delete activation strategies** and **Update variants** are not required.
 
-## Environment import/export vs the [instance import/export API](how-to-import-export.md)
+## Environment import/export vs the instance import/export API
 
-Environment import/export has some similarities to the [instance import/export API](how-to-import-export.md), but they serve different purposes.
+Environment import/export has some similarities to the [instance import/export API](./how-to-import-export), but they serve different purposes.
 
 The instance import/export API was designed to export all feature flags (optionally with strategies and projects) from one Unleash instance to another. When it was developed, Unleash had much fewer features than it does now. As such, the API lacks support for some of the more recent features in Unleash.
 

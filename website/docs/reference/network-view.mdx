@@ -20,7 +20,7 @@ The network view is intended to provide a simple and Unleash-centric overview th
 
 ## Applications
 
-Both the network overview and the network traffic diagrams show you **applications** that have made requests to the Unleash instance. An **application** is defined as anything that sends requests to the [Unleash client API](/reference/api/unleash/client), the [Unleash front-end API](front-end-api.md),  the Unleash admin API, or any other API that Unleash exposes. This includes [Unleash SDKs](./sdks/index.md), [Unleash Edge](/docs/generated/unleash-edge.md), the [Unleash proxy](/docs/generated/unleash-proxy.md), and even the admin UI.
+Both the network overview and the network traffic diagrams show you **applications** that have made requests to the Unleash instance. An **application** is defined as anything that sends requests to the [Unleash client API](./api/unleash/client), the [Unleash front-end API](front-end-api),  the Unleash admin API, or any other API that Unleash exposes. This includes [Unleash SDKs](./sdks), [Unleash Edge](./unleash-edge), the [Unleash proxy](./unleash-proxy), and even the admin UI.
 
 ### "unknown" applications
 
@@ -66,7 +66,7 @@ This section will refer to the external source as Prometheus for simplicity.
 
 The network view uses an external Prometheus-like API to create diagrams. Because of this, Unleash will not enable the network view feature unless you set the `PROMETHEUS_API` environment variable.
 
-The `PROMETHEUS_API` environment variable should point to the base path of the Prometheus installation, and Prometheus should be configured to get its data from Unleash's [internal backstage API](api/legacy/unleash/internal/prometheus.md). This can for example be done via a scraping job[^2]:
+The `PROMETHEUS_API` environment variable should point to the base path of the Prometheus installation, and Prometheus should be configured to get its data from Unleash's [internal backstage API](api/legacy/unleash/internal/prometheus). This can for example be done via a scraping job[^2]:
 
 ```yaml title="Scraping job for Unleash metrics"
   - job_name: unleash_internal_metrics

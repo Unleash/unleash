@@ -24,6 +24,7 @@ export enum TransporterType {
 export interface IEmailEnvelope {
     from: string;
     to: string;
+    bcc?: string;
     subject: string;
     html: string;
     text: string;
@@ -31,6 +32,8 @@ export interface IEmailEnvelope {
 
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
 const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
+const ORDER_ENVIRONMENTS_SUBJECT =
+    'Unleash - ordered environments successfully';
 const SCHEDULED_CHANGE_CONFLICT_SUBJECT =
     'Unleash - Scheduled changes can no longer be applied';
 const SCHEDULED_EXECUTION_FAILED_SUBJECT =
@@ -59,6 +62,11 @@ export type ChangeRequestScheduleConflictData =
           flagName: string;
           environment: string;
       };
+
+export type OrderEnvironmentData = {
+    name: string;
+    type: string;
+};
 
 export class EmailService {
     private logger: Logger;
@@ -441,6 +449,71 @@ export class EmailService {
                 from: this.sender,
                 to: recipient,
                 subject: GETTING_STARTED_SUBJECT,
+                html: '',
+                text: '',
+            });
+        });
+    }
+
+    async sendOrderEnvironmentEmail(
+        userEmail: string,
+        customerId: string,
+        environments: OrderEnvironmentData[],
+    ): Promise<IEmailEnvelope> {
+        if (this.configured()) {
+            const context = {
+                userEmail,
+                customerId,
+                environments: environments.map((data) => ({
+                    name: this.stripSpecialCharacters(data.name),
+                    type: this.stripSpecialCharacters(data.type),
+                })),
+            };
+
+            const bodyHtml = await this.compileTemplate(
+                'order-environments',
+                TemplateFormat.HTML,
+                context,
+            );
+            const bodyText = await this.compileTemplate(
+                'order-environments',
+                TemplateFormat.PLAIN,
+                context,
+            );
+            const email = {
+                from: this.sender,
+                to: userEmail,
+                bcc:
+                    process.env.ORDER_ENVIRONMENTS_BCC ||
+                    'pro-sales@getunleash.io',
+                subject: ORDER_ENVIRONMENTS_SUBJECT,
+                html: bodyHtml,
+                text: bodyText,
+            };
+            process.nextTick(() => {
+                this.mailer!.sendMail(email).then(
+                    () =>
+                        this.logger.info(
+                            'Successfully sent order environments email',
+                        ),
+                    (e) =>
+                        this.logger.warn(
+                            'Failed to send order environments email',
+                            e,
+                        ),
+                );
+            });
+            return Promise.resolve(email);
+        }
+        return new Promise((res) => {
+            this.logger.warn(
+                'No mailer is configured. Please read the docs on how to configure an email service',
+            );
+            res({
+                from: this.sender,
+                to: userEmail,
+                bcc: '',
+                subject: ORDER_ENVIRONMENTS_SUBJECT,
                 html: '',
                 text: '',
             });

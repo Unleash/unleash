@@ -120,7 +120,7 @@ export const ProjectOnboarding = ({
 }: IProjectOnboardingProps) => {
     const { project } = useProjectOverview(projectId);
     const isFirstFlagCreated =
-        project.onboardingStatus.status === 'first-flag-created';
+        project.onboardingStatus?.status === 'first-flag-created';
 
     const closeOnboardingFlow = () => {
         setOnboardingFlow('closed');
@@ -145,7 +145,7 @@ export const ProjectOnboarding = ({
             </TitleBox>
             <Actions>
                 <ActionBox>
-                    {project.onboardingStatus.status ===
+                    {project.onboardingStatus?.status ===
                     'first-flag-created' ? (
                         <ExistingFlag />
                     ) : (
@@ -194,8 +194,8 @@ const CreateFlag = ({ projectId, refetchFeatures }: ICreateFlagProps) => {
                 Create a feature flag
             </TitleContainer>
             <Typography>
-                <div>The project currently holds no feature flags.</div>
-                <div>Create one to get started.</div>
+                The project currently holds no feature flags. Create one to get
+                started.
             </Typography>
             <FlagCreationButton
                 text='Create flag'

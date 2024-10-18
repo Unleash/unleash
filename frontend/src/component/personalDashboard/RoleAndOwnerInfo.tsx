@@ -12,7 +12,7 @@ type Props = {
 const Wrapper = styled('div')(({ theme }) => ({
     width: '100%',
     display: 'flex',
-    flexDirection: 'row',
+    flexFlow: 'row wrap',
     gap: theme.spacing(1),
     justifyContent: 'space-between',
 }));

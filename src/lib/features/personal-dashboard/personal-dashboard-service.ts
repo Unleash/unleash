@@ -23,6 +23,19 @@ import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
 import type { IRoleWithProject } from '../../types/stores/access-store';
 import { NotFoundError } from '../../error';
 
+type PersonalDashboardProjectDetailsUnserialized = Omit<
+    PersonalDashboardProjectDetailsSchema,
+    'latestEvents'
+> & {
+    latestEvents: {
+        createdBy: string;
+        summary: string;
+        createdByImageUrl: string;
+        id: number;
+        createdAt: Date;
+    }[];
+};
+
 export class PersonalDashboardService {
     private personalDashboardReadModel: IPersonalDashboardReadModel;
 
@@ -105,7 +118,7 @@ export class PersonalDashboardService {
     async getPersonalProjectDetails(
         userId: number,
         projectId: string,
-    ): Promise<PersonalDashboardProjectDetailsSchema> {
+    ): Promise<PersonalDashboardProjectDetailsUnserialized> {
         const onboardingStatus =
             await this.onboardingReadModel.getOnboardingStatusForProject(
                 projectId,
@@ -119,6 +132,7 @@ export class PersonalDashboardService {
 
         const formatEvents = (recentEvents: IEvent[]) =>
             recentEvents.map((event) => ({
+                createdAt: event.createdAt,
                 summary: this.featureEventFormatter.format(event).text,
                 createdBy: event.createdBy,
                 id: event.id,

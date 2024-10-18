@@ -48,6 +48,7 @@ import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
 import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject';
 import { PersonalDashboard } from '../personalDashboard/PersonalDashboard';
+import { ReleaseManagement } from 'component/releases/ReleaseManagement';
 
 export const routes: IRoute[] = [
     // Splash
@@ -62,7 +63,7 @@ export const routes: IRoute[] = [
     // Personal Dashboard
     {
         path: '/personal',
-        title: 'Personal Dashboard',
+        title: 'Dashboard',
         component: PersonalDashboard,
         type: 'protected',
         menu: { mobile: true },
@@ -245,6 +246,15 @@ export const routes: IRoute[] = [
         component: StrategiesList,
         type: 'protected',
         menu: { mobile: true, advanced: true },
+    },
+    {
+        path: '/releases-management',
+        title: 'Release management',
+        component: ReleaseManagement,
+        type: 'protected',
+        menu: { advanced: true, mode: ['enterprise'] },
+        flag: 'releasePlans',
+        enterprise: true,
     },
     {
         path: '/environments/create',
@@ -511,6 +521,7 @@ export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
             menu: route.menu,
             configFlag: route.configFlag,
             notFlag: route.notFlag,
+            enterprise: route.enterprise,
         };
     });
 };

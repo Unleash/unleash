@@ -1,4 +1,4 @@
-import type { VFC } from 'react';
+import type { FC } from 'react';
 import type { IAutocompleteBoxOption } from '../../../common/AutocompleteBox/AutocompleteBox';
 import type {
     AutocompleteRenderInputParams,
@@ -35,7 +35,7 @@ const StyledCheckbox = styled(Checkbox)(() => ({
 
 const CustomPaper = ({ ...props }) => <Paper elevation={8} {...props} />;
 
-export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
+export const IntegrationMultiSelector: FC<IIntegrationMultiSelectorProps> = ({
     options,
     selectedItems,
     onChange,
@@ -67,12 +67,13 @@ export const IntegrationMultiSelector: VFC<IIntegrationMultiSelectorProps> = ({
     );
 
     const renderOption = (
-        props: object,
+        props: object & { key?: string },
         option: IAutocompleteBoxOption,
         { selected }: AutocompleteRenderOptionState,
     ) => {
+        const { key, ...rest } = props;
         return (
-            <li {...props}>
+            <li key={key} {...rest}>
                 <StyledCheckbox
                     icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
                     checkedIcon={<CheckBoxIcon fontSize='small' />}

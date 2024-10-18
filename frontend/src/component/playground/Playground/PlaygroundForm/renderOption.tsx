@@ -7,16 +7,19 @@ const SelectOptionCheckbox = styled(Checkbox)(({ theme }) => ({
 }));
 
 export const renderOption = (
-    props: object,
+    props: object & { key?: string },
     option: { label: string },
     { selected }: { selected: boolean },
-) => (
-    <li {...props}>
-        <SelectOptionCheckbox
-            icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
-            checkedIcon={<CheckBoxIcon fontSize='small' />}
-            checked={selected}
-        />
-        {option.label}
-    </li>
-);
+) => {
+    const { key, ...rest } = props;
+    return (
+        <li key={key} {...rest}>
+            <SelectOptionCheckbox
+                icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
+                checkedIcon={<CheckBoxIcon fontSize='small' />}
+                checked={selected}
+            />
+            {option.label}
+        </li>
+    );
+};

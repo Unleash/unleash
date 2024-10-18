@@ -64,7 +64,7 @@ export default class ArchiveController extends Controller {
                     tags: ['Archive'],
                     summary: 'Get archived features',
                     description:
-                        'Retrieve a list of all [archived feature flags](https://docs.getunleash.io/reference/archived-toggles).',
+                        'Retrieve a list of all [archived feature flags](https://docs.getunleash.io/reference/feature-toggles#archive-a-feature-flag).',
                     operationId: 'getArchivedFeatures',
                     responses: {
                         200: createResponseSchema('archivedFeaturesSchema'),

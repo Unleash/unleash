@@ -22,4 +22,5 @@ export type PersonalDashboardProjectDetailsSchemaLatestEventsItem = {
      * @nullable
      */
     summary: string | null;
+    createdAt: string;
 };

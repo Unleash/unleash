@@ -120,7 +120,7 @@ export const Badge: FC<IBadgeProps> = forwardRef(
                     children !== undefined &&
                     children !== ''
                 }
-                show={<div>{children}</div>}
+                show={<span>{children}</span>}
             />
             <ConditionallyRender
                 condition={Boolean(icon) && Boolean(iconRight)}

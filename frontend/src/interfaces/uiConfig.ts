@@ -32,6 +32,7 @@ export interface IUiConfig {
     resourceLimits: ResourceLimitsSchema;
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
+    unleashAIAvailable?: boolean;
 }
 
 export interface IProclamationToast {
@@ -90,6 +91,8 @@ export type UiFlags = {
     eventTimeline?: boolean;
     personalDashboardUI?: boolean;
     purchaseAdditionalEnvironments?: boolean;
+    unleashAI?: boolean;
+    releasePlans?: boolean;
 };
 
 export interface IVersionInfo {

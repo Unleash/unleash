@@ -132,7 +132,10 @@ export class FeatureLifecycleService {
     }
 
     private recordStagesEntered(newlyEnteredStages: NewStage[]) {
-        if (this.flagResolver.isEnabled('trackLifecycleMetrics')) {
+        if (
+            this.flagResolver.isEnabled('trackLifecycleMetrics') &&
+            newlyEnteredStages.length > 0
+        ) {
             this.logger.info(
                 `recordStagesEntered parameter ${JSON.stringify(newlyEnteredStages)}`,
             );

@@ -107,7 +107,9 @@ export const AIChat = () => {
     };
 
     useEffect(() => {
-        scrollToEnd();
+        requestAnimationFrame(() => {
+            scrollToEnd();
+        });
 
         const intersectionObserver = new IntersectionObserver(
             ([entry]) => {

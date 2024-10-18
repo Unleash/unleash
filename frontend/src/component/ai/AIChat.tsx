@@ -20,6 +20,10 @@ const AI_ERROR_MESSAGE = {
     content: `I'm sorry, I'm having trouble understanding you right now. I've reported the issue to the team. Please try again later.`,
 } as const;
 
+type ScrollOptions = ScrollIntoViewOptions & {
+    onlyIfAtEnd?: boolean;
+};
+
 const StyledAIIconContainer = styled('div')(({ theme }) => ({
     position: 'fixed',
     bottom: 20,
@@ -88,21 +92,44 @@ export const AIChat = () => {
 
     const [messages, setMessages] = useState<ChatMessage[]>([]);
 
+    const isAtEndRef = useRef(true);
     const chatEndRef = useRef<HTMLDivElement | null>(null);
 
-    const scrollToEnd = (options?: ScrollIntoViewOptions) => {
+    const scrollToEnd = (options?: ScrollOptions) => {
         if (chatEndRef.current) {
-            chatEndRef.current.scrollIntoView(options);
+            const shouldScroll = !options?.onlyIfAtEnd || isAtEndRef.current;
+
+            if (shouldScroll) {
+                chatEndRef.current.scrollIntoView(options);
+            }
         }
     };
 
     useEffect(() => {
-        scrollToEnd({ behavior: 'smooth' });
-    }, [messages]);
+        scrollToEnd();
+
+        const intersectionObserver = new IntersectionObserver(
+            ([entry]) => {
+                isAtEndRef.current = entry.isIntersecting;
+            },
+            { threshold: 1.0 },
+        );
+
+        const target = chatEndRef.current;
+        if (target) {
+            intersectionObserver.observe(target);
+        }
+
+        return () => {
+            if (target) {
+                intersectionObserver.unobserve(target);
+            }
+        };
+    }, [open]);
 
     useEffect(() => {
-        scrollToEnd();
-    }, [open]);
+        scrollToEnd({ behavior: 'smooth', onlyIfAtEnd: true });
+    }, [messages]);
 
     const onSend = async (content: string) => {
         if (!content.trim() || loading) return;
@@ -153,7 +180,7 @@ export const AIChat = () => {
                 minSize={{ width: '270px', height: '200px' }}
                 maxSize={{ width: '90vw', height: '90vh' }}
                 defaultSize={{ width: '320px', height: '450px' }}
-                onResize={scrollToEnd}
+                onResize={() => scrollToEnd({ onlyIfAtEnd: true })}
             >
                 <StyledChat>
                     <AIChatHeader
@@ -176,7 +203,13 @@ export const AIChat = () => {
                         )}
                         <div ref={chatEndRef} />
                     </StyledChatContent>
-                    <AIChatInput onSend={onSend} loading={loading} />
+                    <AIChatInput
+                        onSend={onSend}
+                        loading={loading}
+                        onHeightChange={() =>
+                            scrollToEnd({ onlyIfAtEnd: true })
+                        }
+                    />
                 </StyledChat>
             </StyledResizable>
         </StyledAIChatContainer>

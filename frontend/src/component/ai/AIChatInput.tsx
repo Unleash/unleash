@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     IconButton,
     InputAdornment,
@@ -32,10 +32,40 @@ const StyledIconButton = styled(IconButton)({
 export interface IAIChatInputProps {
     onSend: (message: string) => void;
     loading: boolean;
+    onHeightChange?: () => void;
 }
 
-export const AIChatInput = ({ onSend, loading }: IAIChatInputProps) => {
+export const AIChatInput = ({
+    onSend,
+    loading,
+    onHeightChange,
+}: IAIChatInputProps) => {
     const [message, setMessage] = useState('');
+
+    const inputContainerRef = useRef<HTMLDivElement | null>(null);
+    const previousHeightRef = useRef<number>(0);
+
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver(([entry]) => {
+            const newHeight = entry.contentRect.height;
+
+            if (newHeight !== previousHeightRef.current) {
+                previousHeightRef.current = newHeight;
+                onHeightChange?.();
+            }
+        });
+
+        const target = inputContainerRef.current;
+        if (target) {
+            resizeObserver.observe(target);
+        }
+
+        return () => {
+            if (target) {
+                resizeObserver.unobserve(target);
+            }
+        };
+    }, [onHeightChange]);
 
     const send = () => {
         if (!message.trim() || loading) return;
@@ -44,7 +74,7 @@ export const AIChatInput = ({ onSend, loading }: IAIChatInputProps) => {
     };
 
     return (
-        <StyledAIChatInputContainer>
+        <StyledAIChatInputContainer ref={inputContainerRef}>
             <StyledAIChatInput
                 autoFocus
                 size='small'

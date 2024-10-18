@@ -69,6 +69,7 @@ export const InsightsHeader: VFC<DashboardHeaderProps> = ({ actions }) => {
     return (
         <>
             <PageHeader
+                title='Insights'
                 titleElement={
                     <Typography
                         variant='h1'

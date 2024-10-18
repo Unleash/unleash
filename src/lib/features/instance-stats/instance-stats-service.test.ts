@@ -4,11 +4,18 @@ import createStores from '../../../test/fixtures/store';
 import VersionService from '../../services/version-service';
 import { createFakeGetActiveUsers } from './getActiveUsers';
 import { createFakeGetProductionChanges } from './getProductionChanges';
-
+import { registerPrometheusMetrics } from '../../metrics';
+import { register } from 'prom-client';
+import type { IClientInstanceStore } from '../../types';
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;
-
+let clientInstanceStore: IClientInstanceStore;
+let updateMetrics: () => Promise<void>;
 beforeEach(() => {
+    jest.clearAllMocks();
+
+    register.clear();
+
     const config = createTestConfig();
     const stores = createStores();
     versionService = new VersionService(
@@ -17,6 +24,7 @@ beforeEach(() => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
     );
+    clientInstanceStore = stores.clientInstanceStore;
     instanceStatsService = new InstanceStatsService(
         stores,
         config,
@@ -25,23 +33,28 @@ beforeEach(() => {
         createFakeGetProductionChanges(),
     );
 
-    jest.spyOn(instanceStatsService, 'refreshAppCountSnapshot');
-    jest.spyOn(instanceStatsService, 'getLabeledAppCounts');
+    const { collectDbMetrics } = registerPrometheusMetrics(
+        config,
+        stores,
+        undefined as unknown as string,
+        config.eventBus,
+        instanceStatsService,
+    );
+    updateMetrics = collectDbMetrics;
+
+    jest.spyOn(clientInstanceStore, 'getDistinctApplicationsCount');
     jest.spyOn(instanceStatsService, 'getStats');
 
-    // validate initial state without calls to these methods
-    expect(instanceStatsService.refreshAppCountSnapshot).toHaveBeenCalledTimes(
-        0,
-    );
     expect(instanceStatsService.getStats).toHaveBeenCalledTimes(0);
 });
 
 test('get snapshot should not call getStats', async () => {
-    await instanceStatsService.refreshAppCountSnapshot();
-    expect(instanceStatsService.getLabeledAppCounts).toHaveBeenCalledTimes(1);
+    await updateMetrics();
+    expect(
+        clientInstanceStore.getDistinctApplicationsCount,
+    ).toHaveBeenCalledTimes(3);
     expect(instanceStatsService.getStats).toHaveBeenCalledTimes(0);
 
-    // subsequent calls to getStatsSnapshot don't call getStats
     for (let i = 0; i < 3; i++) {
         const { clientApps } = await instanceStatsService.getStats();
         expect(clientApps).toStrictEqual([
@@ -51,12 +64,11 @@ test('get snapshot should not call getStats', async () => {
         ]);
     }
     // after querying the stats snapshot no call to getStats should be issued
-    expect(instanceStatsService.getLabeledAppCounts).toHaveBeenCalledTimes(1);
+    expect(
+        clientInstanceStore.getDistinctApplicationsCount,
+    ).toHaveBeenCalledTimes(3);
 });
 
 test('before the snapshot is refreshed we can still get the appCount', async () => {
-    expect(instanceStatsService.refreshAppCountSnapshot).toHaveBeenCalledTimes(
-        0,
-    );
     expect(instanceStatsService.getAppCountSnapshot('7d')).toBeUndefined();
 });

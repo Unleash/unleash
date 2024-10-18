@@ -116,6 +116,11 @@ module.exports = {
                                     label: 'A/B Testing',
                                     id: 'feature-flag-tutorials/use-cases/a-b-testing',
                                 },
+                                {
+                                    type: 'doc',
+                                    label: 'Feature Flags for AI',
+                                    id: 'feature-flag-tutorials/use-cases/ai',
+                                },
                             ],
                         },
                         {

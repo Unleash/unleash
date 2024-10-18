@@ -19,6 +19,7 @@ import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { useDashboardState } from './useDashboardState';
 import { MyFlags } from './MyFlags';
+import { usePageTitle } from '../../hooks/usePageTitle';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -103,8 +104,9 @@ export const PersonalDashboard = () => {
     const { trackEvent } = usePlausibleTracker();
     const { setSplashSeen } = useSplashApi();
     const { splash } = useAuthSplash();
-
     const name = user?.name;
+
+    usePageTitle(`Dashboard: ${name}`);
 
     const { personalDashboard, refetch: refetchDashboard } =
         usePersonalDashboard();

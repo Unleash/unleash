@@ -31,6 +31,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { CustomStrategyInfo } from '../CustomStrategyInfo/CustomStrategyInfo';
 import { AddStrategyButton } from './AddStrategyButton/AddStrategyButton';
+import { usePageTitle } from 'hooks/usePageTitle';
 
 interface IDialogueMetaData {
     show: boolean;
@@ -100,15 +101,19 @@ const CustomStrategyTitle: FC = () => (
     </Box>
 );
 
-const PredefinedStrategyTitle = () => (
-    <Box>
-        <Subtitle
-            title='Predefined strategies'
-            description='Activation strategies let you enable a feature only for a specified audience. Different strategies use different parameters. Predefined strategies are bundled with Unleash.'
-            link='https://docs.getunleash.io/reference/activation-strategies'
-        />
-    </Box>
-);
+const PredefinedStrategyTitle = () => {
+    usePageTitle('Strategy types');
+
+    return (
+        <Box>
+            <Subtitle
+                title='Predefined strategies'
+                description='Activation strategies let you enable a feature only for a specified audience. Different strategies use different parameters. Predefined strategies are bundled with Unleash.'
+                link='https://docs.getunleash.io/reference/activation-strategies'
+            />
+        </Box>
+    );
+};
 
 const StrategyDeprecationWarning = () => (
     <Alert severity='warning' sx={{ mb: 2 }}>

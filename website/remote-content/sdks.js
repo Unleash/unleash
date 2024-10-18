@@ -44,9 +44,9 @@ const serverSideSdks = {
     'unleash-client-ruby': {
         sidebarName: 'Ruby',
     },
-    // 'unleash-client-rust': {
-    //     sidebarName: 'Rust',
-    // },
+    'unleash-client-rust': {
+        sidebarName: 'Rust',
+    },
     'unleash-client-dotnet': {
         sidebarName: '.NET',
         slugName: 'dotnet',

@@ -57,7 +57,7 @@ process.nextTick(async () => {
                         unleashAI: true,
                         webhookDomainLogging: true,
                         addonUsageMetrics: true,
-                        releasePlans: true,
+                        releasePlans: false,
                     },
                 },
                 authentication: {

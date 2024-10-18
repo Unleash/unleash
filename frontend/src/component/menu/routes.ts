@@ -48,6 +48,7 @@ import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
 import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject';
 import { PersonalDashboard } from '../personalDashboard/PersonalDashboard';
+import { ReleaseManagement } from 'component/releases/ReleaseManagement';
 
 export const routes: IRoute[] = [
     // Splash
@@ -245,6 +246,15 @@ export const routes: IRoute[] = [
         component: StrategiesList,
         type: 'protected',
         menu: { mobile: true, advanced: true },
+    },
+    {
+        path: '/releases-management',
+        title: 'Release management',
+        component: ReleaseManagement,
+        type: 'protected',
+        menu: { advanced: true, mode: ['enterprise'] },
+        flag: 'releasePlans',
+        enterprise: true,
     },
     {
         path: '/environments/create',

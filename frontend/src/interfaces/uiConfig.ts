@@ -92,6 +92,7 @@ export type UiFlags = {
     personalDashboardUI?: boolean;
     purchaseAdditionalEnvironments?: boolean;
     unleashAI?: boolean;
+    releasePlans?: boolean;
 };
 
 export interface IVersionInfo {

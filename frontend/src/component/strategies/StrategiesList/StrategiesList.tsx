@@ -31,7 +31,6 @@ import { Badge } from 'component/common/Badge/Badge';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { CustomStrategyInfo } from '../CustomStrategyInfo/CustomStrategyInfo';
 import { AddStrategyButton } from './AddStrategyButton/AddStrategyButton';
-import { usePageTitle } from 'hooks/usePageTitle';
 
 interface IDialogueMetaData {
     show: boolean;
@@ -102,8 +101,6 @@ const CustomStrategyTitle: FC = () => (
 );
 
 const PredefinedStrategyTitle = () => {
-    usePageTitle('Strategy types');
-
     return (
         <Box>
             <Subtitle
@@ -402,9 +399,10 @@ export const StrategiesList = () => {
             <PageContent
                 isLoading={loading}
                 header={
-                    <PageHeader>
-                        <PredefinedStrategyTitle />
-                    </PageHeader>
+                    <PageHeader
+                        titleElement={<PredefinedStrategyTitle />}
+                        title='Strategy types'
+                    ></PageHeader>
                 }
             >
                 <Box>

@@ -13,7 +13,11 @@ export const customJoi = joi.extend((j) => ({
     },
     validate(value, helpers) {
         // Base validation regardless of the rules applied
-        if (encodeURIComponent(value) !== value) {
+        if (
+            encodeURIComponent(value) !== value ||
+            value === '..' ||
+            value === '.'
+        ) {
             // Generate an error, state and options need to be passed
             return { value, errors: helpers.error('isUrlFriendly.base') };
         }

@@ -100,17 +100,15 @@ const CustomStrategyTitle: FC = () => (
     </Box>
 );
 
-const PredefinedStrategyTitle = () => {
-    return (
-        <Box>
-            <Subtitle
-                title='Predefined strategies'
-                description='Activation strategies let you enable a feature only for a specified audience. Different strategies use different parameters. Predefined strategies are bundled with Unleash.'
-                link='https://docs.getunleash.io/reference/activation-strategies'
-            />
-        </Box>
-    );
-};
+const PredefinedStrategyTitle = () => (
+    <Box>
+        <Subtitle
+            title='Predefined strategies'
+            description='Activation strategies let you enable a feature only for a specified audience. Different strategies use different parameters. Predefined strategies are bundled with Unleash.'
+            link='https://docs.getunleash.io/reference/activation-strategies'
+        />
+    </Box>
+);
 
 const StrategyDeprecationWarning = () => (
     <Alert severity='warning' sx={{ mb: 2 }}>
@@ -402,7 +400,7 @@ export const StrategiesList = () => {
                     <PageHeader
                         titleElement={<PredefinedStrategyTitle />}
                         title='Strategy types'
-                    ></PageHeader>
+                    />
                 }
             >
                 <Box>

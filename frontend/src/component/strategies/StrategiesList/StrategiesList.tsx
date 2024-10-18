@@ -397,9 +397,10 @@ export const StrategiesList = () => {
             <PageContent
                 isLoading={loading}
                 header={
-                    <PageHeader>
-                        <PredefinedStrategyTitle />
-                    </PageHeader>
+                    <PageHeader
+                        titleElement={<PredefinedStrategyTitle />}
+                        title='Strategy types'
+                    />
                 }
             >
                 <Box>

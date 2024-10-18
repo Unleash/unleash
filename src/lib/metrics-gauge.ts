@@ -14,7 +14,7 @@ type MapResult<R, L extends string> = (
 type GaugeDefinition<T, L extends string> = {
     name: string;
     help: string;
-    labelNames: L[];
+    labelNames?: L[];
     query: Query<T>;
     map: MapResult<T, L>;
 };

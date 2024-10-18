@@ -205,11 +205,20 @@ export function registerPrometheusMetrics(
         }),
     });
 
-    const maxConstraintValues = createGauge({
+    dbMetrics.registerGaugeDbMetric({
         name: 'max_constraint_values',
         help: 'Maximum number of constraint values used in a single constraint',
         labelNames: ['feature', 'environment'],
+        query: () => stores.featureStrategiesReadModel.getMaxConstraintValues(),
+        map: (result) => ({
+            value: result.count,
+            labels: {
+                environment: result.environment,
+                feature: result.feature,
+            },
+        }),
     });
+
     const maxConstraintsPerStrategy = createGauge({
         name: 'max_strategy_constraints',
         help: 'Maximum number of constraints used on a single strategy',
@@ -267,48 +276,71 @@ export function registerPrometheusMetrics(
         name: 'users_active_90',
         help: 'Number of users active in the last 90 days',
     });
-    const projectsTotal = createGauge({
+    dbMetrics.registerGaugeDbMetric({
         name: 'projects_total',
         help: 'Number of projects',
         labelNames: ['mode'],
+        query: () => instanceStatsService.getProjectModeCount(),
+        map: (projects) =>
+            projects.map((projectStat) => ({
+                value: projectStat.count,
+                labels: { mode: projectStat.mode },
+            })),
     });
-    const environmentsTotal = createGauge({
+
+    dbMetrics.registerGaugeDbMetric({
         name: 'environments_total',
         help: 'Number of environments',
+        query: () => instanceStatsService.environmentCount(),
+        map: (result) => ({ value: result }),
     });
-    const groupsTotal = createGauge({
+    dbMetrics.registerGaugeDbMetric({
         name: 'groups_total',
         help: 'Number of groups',
+        query: () => instanceStatsService.groupCount(),
+        map: (result) => ({ value: result }),
     });
 
-    const rolesTotal = createGauge({
+    dbMetrics.registerGaugeDbMetric({
         name: 'roles_total',
         help: 'Number of roles',
+        query: () => instanceStatsService.roleCount(),
+        map: (result) => ({ value: result }),
     });
 
-    const customRootRolesTotal = createGauge({
+    dbMetrics.registerGaugeDbMetric({
         name: 'custom_root_roles_total',
         help: 'Number of custom root roles',
+        query: () => instanceStatsService.customRolesCount(),
+        map: (result) => ({ value: result }),
     });
 
-    const customRootRolesInUseTotal = createGauge({
+    dbMetrics.registerGaugeDbMetric({
         name: 'custom_root_roles_in_use_total',
         help: 'Number of custom root roles in use',
+        query: () => instanceStatsService.customRolesCountInUse(),
+        map: (result) => ({ value: result }),
     });
 
-    const segmentsTotal = createGauge({
+    dbMetrics.registerGaugeDbMetric({
         name: 'segments_total',
         help: 'Number of segments',
+        query: () => instanceStatsService.segmentCount(),
+        map: (result) => ({ value: result }),
     });
 
-    const contextTotal = createGauge({
+    dbMetrics.registerGaugeDbMetric({
         name: 'context_total',
         help: 'Number of context',
+        query: () => instanceStatsService.contextFieldCount(),
+        map: (result) => ({ value: result }),
     });
 
-    const strategiesTotal = createGauge({
+    dbMetrics.registerGaugeDbMetric({
         name: 'strategies_total',
         help: 'Number of strategies',
+        query: () => instanceStatsService.strategiesCount(),
+        map: (result) => ({ value: result }),
     });
 
     dbMetrics.registerGaugeDbMetric({
@@ -323,14 +355,18 @@ export function registerPrometheusMetrics(
             })),
     });
 
-    const samlEnabled = createGauge({
+    dbMetrics.registerGaugeDbMetric({
         name: 'saml_enabled',
         help: 'Whether SAML is enabled',
+        query: () => instanceStatsService.hasSAML(),
+        map: (result) => ({ value: result ? 1 : 0 }),
     });
 
-    const oidcEnabled = createGauge({
+    dbMetrics.registerGaugeDbMetric({
         name: 'oidc_enabled',
         help: 'Whether OIDC is enabled',
+        query: () => instanceStatsService.hasOIDC(),
+        map: (result) => ({ value: result ? 1 : 0 }),
     });
 
     const clientSdkVersionUsage = createCounter({
@@ -823,7 +859,6 @@ export function registerPrometheusMetrics(
         collectStaticCounters: async () => {
             try {
                 const [
-                    maxConstraintValuesResult,
                     maxConstraintsPerStrategyResult,
                     stageCountByProjectResult,
                     stageDurationByProject,
@@ -833,7 +868,6 @@ export function registerPrometheusMetrics(
                     instanceOnboardingMetrics,
                     projectsOnboardingMetrics,
                 ] = await Promise.all([
-                    stores.featureStrategiesReadModel.getMaxConstraintValues(),
                     stores.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
                     stores.featureLifecycleReadModel.getStageCountByProject(),
                     stores.featureLifecycleReadModel.getAllWithStageDuration(),
@@ -905,15 +939,6 @@ export function registerPrometheusMetrics(
                 legacyTokensActive.reset();
                 legacyTokensActive.set(deprecatedTokens.activeLegacyTokens);
 
-                if (maxConstraintValuesResult) {
-                    maxConstraintValues.reset();
-                    maxConstraintValues
-                        .labels({
-                            environment: maxConstraintValuesResult.environment,
-                            feature: maxConstraintValuesResult.feature,
-                        })
-                        .set(maxConstraintValuesResult.count);
-                }
                 if (maxConstraintsPerStrategyResult) {
                     maxConstraintsPerStrategy.reset();
                     maxConstraintsPerStrategy
@@ -1003,55 +1028,6 @@ export function registerPrometheusMetrics(
                 productionChanges60.set(productionChanges.last60);
                 productionChanges90.reset();
                 productionChanges90.set(productionChanges.last90);
-
-                const projects =
-                    await instanceStatsService.getProjectModeCount();
-                projectsTotal.reset();
-                projects.forEach((projectStat) => {
-                    projectsTotal
-                        .labels({ mode: projectStat.mode })
-                        .set(projectStat.count);
-                });
-
-                environmentsTotal.reset();
-                environmentsTotal.set(
-                    await instanceStatsService.environmentCount(),
-                );
-
-                groupsTotal.reset();
-                groupsTotal.set(await instanceStatsService.groupCount());
-
-                rolesTotal.reset();
-                rolesTotal.set(await instanceStatsService.roleCount());
-
-                customRootRolesTotal.reset();
-                customRootRolesTotal.set(
-                    await instanceStatsService.customRolesCount(),
-                );
-
-                customRootRolesInUseTotal.reset();
-                customRootRolesInUseTotal.set(
-                    await instanceStatsService.customRolesCountInUse(),
-                );
-
-                segmentsTotal.reset();
-                segmentsTotal.set(await instanceStatsService.segmentCount());
-
-                contextTotal.reset();
-                contextTotal.set(
-                    await instanceStatsService.contextFieldCount(),
-                );
-
-                strategiesTotal.reset();
-                strategiesTotal.set(
-                    await instanceStatsService.strategiesCount(),
-                );
-
-                samlEnabled.reset();
-                samlEnabled.set((await instanceStatsService.hasSAML()) ? 1 : 0);
-
-                oidcEnabled.reset();
-                oidcEnabled.set((await instanceStatsService.hasOIDC()) ? 1 : 0);
             } catch (e) {}
         },
     };

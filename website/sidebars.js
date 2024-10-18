@@ -377,7 +377,7 @@ module.exports = {
                         slug: '/reference/api/unleash',
                     },
                     items: [
-                        require('./docs/reference/api/unleash/sidebar.js'),
+                        require('./docs/reference/api/unleash/sidebar.ts'),
                         {
                             'System API': [
                                 'reference/api/legacy/unleash/internal/prometheus',

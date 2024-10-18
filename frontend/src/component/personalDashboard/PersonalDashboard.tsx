@@ -19,7 +19,7 @@ import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { useDashboardState } from './useDashboardState';
 import { MyFlags } from './MyFlags';
-import { usePageTitle } from '../../hooks/usePageTitle';
+import { usePageTitle } from 'hooks/usePageTitle';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',

@@ -39,7 +39,7 @@ export class DbMetricsMonitor {
 
     private async fetch<T, L extends string>(
         definition: GaugeDefinition<T, L>,
-    ) {
+    ): Promise<MetricValue<L>[]> {
         const result = await definition.query();
         if (
             result !== undefined &&

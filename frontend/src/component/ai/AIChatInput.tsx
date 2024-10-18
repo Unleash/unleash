@@ -81,10 +81,11 @@ export const AIChatInput = ({
                 placeholder='Type your message here'
                 fullWidth
                 multiline
-                maxRows={20}
+                maxRows={5}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={(e) => {
+                    e.stopPropagation();
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         send();

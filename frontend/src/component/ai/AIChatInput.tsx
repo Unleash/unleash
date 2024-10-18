@@ -55,14 +55,13 @@ export const AIChatInput = ({
             }
         });
 
-        const target = inputContainerRef.current;
-        if (target) {
-            resizeObserver.observe(target);
+        if (inputContainerRef.current) {
+            resizeObserver.observe(inputContainerRef.current);
         }
 
         return () => {
-            if (target) {
-                resizeObserver.unobserve(target);
+            if (inputContainerRef.current) {
+                resizeObserver.unobserve(inputContainerRef.current);
             }
         };
     }, [onHeightChange]);

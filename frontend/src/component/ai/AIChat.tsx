@@ -115,14 +115,13 @@ export const AIChat = () => {
             { threshold: 1.0 },
         );
 
-        const target = chatEndRef.current;
-        if (target) {
-            intersectionObserver.observe(target);
+        if (chatEndRef.current) {
+            intersectionObserver.observe(chatEndRef.current);
         }
 
         return () => {
-            if (target) {
-                intersectionObserver.unobserve(target);
+            if (chatEndRef.current) {
+                intersectionObserver.unobserve(chatEndRef.current);
             }
         };
     }, [open]);

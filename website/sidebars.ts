@@ -9,10 +9,11 @@
  Create as many sidebars as you want.
  */
 
-// TODO: Add warning to legacy API docs - but generated items
-// TODO: Continue to clean URLs & redirects - but wait for SEO results first
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
-module.exports = {
+import docsSidebar from './docs/reference/api/unleash/sidebar.ts';
+
+const sidebars: SidebarsConfig = {
     academy: [
         {
             label: 'Unleash Academy',
@@ -382,7 +383,7 @@ module.exports = {
                         slug: '/reference/api/unleash',
                     },
                     items: [
-                        require('./docs/reference/api/unleash/sidebar.ts'),
+                        docsSidebar,
                         {
                             'System API': [
                                 'reference/api/legacy/unleash/internal/prometheus',
@@ -688,3 +689,5 @@ module.exports = {
         },
     ],
 };
+
+export default sidebars;

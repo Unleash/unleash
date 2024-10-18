@@ -1,9 +1,9 @@
-const {
+import {
     enrichAdditional,
     modifyContent,
     getRepoData,
     getUrls,
-} = require('./shared');
+} from './shared';
 
 // Type definitions
 //
@@ -44,9 +44,9 @@ const serverSideSdks = {
     'unleash-client-ruby': {
         sidebarName: 'Ruby',
     },
-    'unleash-client-rust': {
-        sidebarName: 'Rust',
-    },
+    // 'unleash-client-rust': {
+    //     sidebarName: 'Rust',
+    // },
     'unleash-client-dotnet': {
         sidebarName: '.NET',
         slugName: 'dotnet',
@@ -117,7 +117,7 @@ const modifyContent2 = modifyContent({
     getAdditionalAdmonitions: getAdmonitions,
 });
 
-module.exports.sdks = {
+export const sdks = {
     urls: getUrls(SDKS),
     modifyContent: modifyContent2,
 };

@@ -48,13 +48,13 @@ export class DbMetricsMonitor {
         ) {
             const resultArray = this.asArray(definition.map(result));
             resultArray
-                .filter((r) => !Number.isInteger(r.value))
+                .filter((r) => typeof r.value !== 'number')
                 .forEach((r) => {
-                    this.log.warn(
-                        `Invalid value for ${definition.name}: ${r.value}. Value must be an integer.`,
+                    this.log.debug(
+                        `Invalid value for ${definition.name}: ${r.value}. Value must be an number.`,
                     );
                 });
-            return resultArray.filter((r) => Number.isInteger(r.value));
+            return resultArray.filter((r) => typeof r.value === 'number');
         }
         return [];
     }

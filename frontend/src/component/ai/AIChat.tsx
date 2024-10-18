@@ -14,6 +14,7 @@ import { AIChatInput } from './AIChatInput';
 import { AIChatMessage } from './AIChatMessage';
 import { AIChatHeader } from './AIChatHeader';
 import { Resizable } from 'component/common/Resizable/Resizable';
+import { AIChatDisclaimer } from './AIChatDisclaimer';
 
 const AI_ERROR_MESSAGE = {
     role: 'assistant',
@@ -176,9 +177,9 @@ export const AIChat = () => {
         <StyledAIChatContainer>
             <StyledResizable
                 handlers={['top-left', 'top', 'left']}
-                minSize={{ width: '270px', height: '200px' }}
+                minSize={{ width: '270px', height: '250px' }}
                 maxSize={{ width: '90vw', height: '90vh' }}
-                defaultSize={{ width: '320px', height: '450px' }}
+                defaultSize={{ width: '320px', height: '500px' }}
                 onResize={() => scrollToEnd({ onlyIfAtEnd: true })}
             >
                 <StyledChat>
@@ -187,6 +188,7 @@ export const AIChat = () => {
                         onClose={() => setOpen(false)}
                     />
                     <StyledChatContent>
+                        <AIChatDisclaimer />
                         <AIChatMessage from='assistant'>
                             Hello, how can I assist you?
                         </AIChatMessage>

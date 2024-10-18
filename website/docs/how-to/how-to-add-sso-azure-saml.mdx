@@ -34,8 +34,8 @@ To create a new enterprise application in Microsoft Entra, do the following:
 To configure SSO for the new application, do the following:
 1. In the overview page of the application, go to **Manage > Single sign-on** and click **SAML**.
 2. In the **Basic SAML Configuration** section, click **Edit**.
-3. Click **Add identifier** and enter the Unleash identifier. For hosted instances, that is `https://<region>.app.unleash-hosted.com/<your_unleash_instance_name>`.
-4. Click **Add reply URL** and enter the URL shown in the Unleash Admin UI at **Admin > Single sign-on > SAML 2.0**. For example, `<your_unleash_url>/auth/saml/callback`.
+3. Click **Add identifier** and enter the Unleash identifier. For hosted instances, that is ``https://<region>.app.unleash-hosted.com/<your_unleash_instance_name>``.
+4. Click **Add reply URL** and enter the URL shown in the Unleash Admin UI at **Admin > Single sign-on > SAML 2.0**. For example, ``<your_unleash_url>/auth/saml/callback``.
 5. Click **Save**.
 
 ### Manage attributes and claims
@@ -65,11 +65,11 @@ To save the SAML certificate, go to the single sign-on settings of your applicat
 <Figure caption="Save the X509 Certificate from the SAML certificate XML file. The example has been redacted." img="/img/x509cert.png" />
 
 #### Login URL
-To find your login URL, go to the single sign-on settings of your application. In the **Set up {your-application-name}** section, copy and save **Login URL**. For example: `https://login.microsoftonline.com/<your_identifier>/saml2`.
+To find your login URL, go to the single sign-on settings of your application. In the **Set up ``<your-application-name>`` section, copy and save **Login URL**. For example: ``https://login.microsoftonline.com/<your_identifier>/saml2``.
 
 #### Microsoft Entra identifier
 
-To find your Microsoft Entra identifier, go to the single sign-on settings of your application. In the **Set up {your-application-name}** section, copy and save **Microsoft Entra Identifier**. For example: `https://sts.windows.net/<your_identifier>/`
+To find your Microsoft Entra identifier, go to the single sign-on settings of your application. In the **Set up ``<your-application-name>`` section, copy and save **Microsoft Entra Identifier**. For example: ``https://sts.windows.net/<your_identifier>``
 
 
 ## Configure the SAML 2.0 provider in Unleash

@@ -60,7 +60,7 @@ Save the following information from the single sign-on settings of your applicat
 - [Microsoft Entra Identifier](#microsoft-entra-identifier)
 
 #### SAML certificate
-To save the SAML certificate, go to the single sign-on settings of your application. In **SAML Certificates > Federation Metadata XML**, click **Download**. Open the file and copy the contents between the `X509Certificate` tag. 
+To save the SAML certificate, go to the single sign-on settings of your application. In **SAML Certificates → Federation Metadata XML**, click **Download**. Open the file and copy the contents between the `X509Certificate` tag. 
 
 <Figure caption="Save the X509 Certificate from the SAML certificate XML file. The example has been redacted." img="/img/x509cert.png" />
 
@@ -76,7 +76,7 @@ To find your Microsoft Entra identifier, go to the single sign-on settings of yo
 
 To finalize the configuration, do the following:
 
-1. In the Unleash Admin UI, go to **Admin > Single sign-on> SAML 2.0**.
+1. In the Unleash Admin UI, go to **Admin → Single sign-on → SAML 2.0**.
 2. In **Entity ID**, enter your [Microsoft Entra identifier](#microsoft-entra-identifier).
 3. In **Single sign-on URL**, enter your [Login URL](#login-url).
 4. In **X.509 Certificate**, [enter your SAML certificate](#saml-certificate).
@@ -104,6 +104,6 @@ Microsoft Entra limits the number of groups emitted in a SAML response to 150, i
 :::
 
 To enable group syncing in Unleash, do the following:
-1. In the Unleash Admin UI, go to **Admin > Single sign-on > SAML 2.0**.
+1. In the Unleash Admin UI, go to **Admin → Single sign-on → SAML 2.0**.
 2. Select **Enable Group Syncing** and add the name in your group in Group Field JSON Path.
 3. Click **Save**.

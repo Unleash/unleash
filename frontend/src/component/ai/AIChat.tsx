@@ -14,11 +14,17 @@ import { AIChatInput } from './AIChatInput';
 import { AIChatMessage } from './AIChatMessage';
 import { AIChatHeader } from './AIChatHeader';
 import { Resizable } from 'component/common/Resizable/Resizable';
+import { AIChatDisclaimer } from './AIChatDisclaimer';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const AI_ERROR_MESSAGE = {
     role: 'assistant',
     content: `I'm sorry, I'm having trouble understanding you right now. I've reported the issue to the team. Please try again later.`,
 } as const;
+
+type ScrollOptions = ScrollIntoViewOptions & {
+    onlyIfAtEnd?: boolean;
+};
 
 const StyledAIIconContainer = styled('div')(({ theme }) => ({
     position: 'fixed',
@@ -85,27 +91,58 @@ export const AIChat = () => {
     const [loading, setLoading] = useState(false);
     const { setToastApiError } = useToast();
     const { chat, newChat } = useAIApi();
+    const { trackEvent } = usePlausibleTracker();
 
     const [messages, setMessages] = useState<ChatMessage[]>([]);
 
+    const isAtEndRef = useRef(true);
     const chatEndRef = useRef<HTMLDivElement | null>(null);
 
-    const scrollToEnd = (options?: ScrollIntoViewOptions) => {
+    const scrollToEnd = (options?: ScrollOptions) => {
         if (chatEndRef.current) {
-            chatEndRef.current.scrollIntoView(options);
+            const shouldScroll = !options?.onlyIfAtEnd || isAtEndRef.current;
+
+            if (shouldScroll) {
+                chatEndRef.current.scrollIntoView(options);
+            }
         }
     };
 
     useEffect(() => {
-        scrollToEnd({ behavior: 'smooth' });
-    }, [messages]);
+        requestAnimationFrame(() => {
+            scrollToEnd();
+        });
+
+        const intersectionObserver = new IntersectionObserver(
+            ([entry]) => {
+                isAtEndRef.current = entry.isIntersecting;
+            },
+            { threshold: 1.0 },
+        );
+
+        if (chatEndRef.current) {
+            intersectionObserver.observe(chatEndRef.current);
+        }
+
+        return () => {
+            if (chatEndRef.current) {
+                intersectionObserver.unobserve(chatEndRef.current);
+            }
+        };
+    }, [open]);
 
     useEffect(() => {
-        scrollToEnd();
-    }, [open]);
+        scrollToEnd({ behavior: 'smooth', onlyIfAtEnd: true });
+    }, [messages]);
 
     const onSend = async (content: string) => {
         if (!content.trim() || loading) return;
+
+        trackEvent('unleash-ai-chat', {
+            props: {
+                eventType: 'send',
+            },
+        });
 
         try {
             setLoading(true);
@@ -139,7 +176,17 @@ export const AIChat = () => {
     if (!open) {
         return (
             <StyledAIIconContainer>
-                <StyledAIIconButton size='large' onClick={() => setOpen(true)}>
+                <StyledAIIconButton
+                    size='large'
+                    onClick={() => {
+                        trackEvent('unleash-ai-chat', {
+                            props: {
+                                eventType: 'open',
+                            },
+                        });
+                        setOpen(true);
+                    }}
+                >
                     <SmartToyIcon />
                 </StyledAIIconButton>
             </StyledAIIconContainer>
@@ -150,17 +197,25 @@ export const AIChat = () => {
         <StyledAIChatContainer>
             <StyledResizable
                 handlers={['top-left', 'top', 'left']}
-                minSize={{ width: '270px', height: '200px' }}
+                minSize={{ width: '270px', height: '250px' }}
                 maxSize={{ width: '90vw', height: '90vh' }}
-                defaultSize={{ width: '320px', height: '450px' }}
-                onResize={scrollToEnd}
+                defaultSize={{ width: '320px', height: '500px' }}
+                onResize={() => scrollToEnd({ onlyIfAtEnd: true })}
             >
                 <StyledChat>
                     <AIChatHeader
                         onNew={onNewChat}
-                        onClose={() => setOpen(false)}
+                        onClose={() => {
+                            trackEvent('unleash-ai-chat', {
+                                props: {
+                                    eventType: 'close',
+                                },
+                            });
+                            setOpen(false);
+                        }}
                     />
                     <StyledChatContent>
+                        <AIChatDisclaimer />
                         <AIChatMessage from='assistant'>
                             Hello, how can I assist you?
                         </AIChatMessage>
@@ -176,7 +231,13 @@ export const AIChat = () => {
                         )}
                         <div ref={chatEndRef} />
                     </StyledChatContent>
-                    <AIChatInput onSend={onSend} loading={loading} />
+                    <AIChatInput
+                        onSend={onSend}
+                        loading={loading}
+                        onHeightChange={() =>
+                            scrollToEnd({ onlyIfAtEnd: true })
+                        }
+                    />
                 </StyledChat>
             </StyledResizable>
         </StyledAIChatContainer>

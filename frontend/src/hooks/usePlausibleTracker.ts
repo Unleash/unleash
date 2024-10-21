@@ -70,7 +70,8 @@ export type CustomEvents =
     | 'event-timeline'
     | 'onboarding'
     | 'personal-dashboard'
-    | 'order-environments';
+    | 'order-environments'
+    | 'unleash-ai-chat';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

@@ -297,6 +297,13 @@ test('should return personal dashboard project details', async () => {
                     'triggered **project-access-added**',
                 ),
             },
+            {
+                createdAt: expect.stringMatching(timestampPattern),
+                createdBy: 'audit user',
+                summary: expect.stringContaining(
+                    '**audit user** created project',
+                ),
+            },
         ],
     });
 

@@ -5,10 +5,7 @@ import { ActionBox } from './ActionBox';
 
 export const DataError: FC<{ project: string }> = ({ project }) => {
     return (
-        <ActionBox
-            data-loading
-            title={`Couldn't fetch data for project "${project}".`}
-        >
+        <ActionBox title={`Couldn't fetch data for project "${project}".`}>
             <p>
                 The API request to get data for this project returned with an
                 error.

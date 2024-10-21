@@ -11,7 +11,6 @@ import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
-import useLoading from '../../hooks/useLoading';
 import { MyProjects } from './MyProjects';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -136,10 +135,6 @@ export const PersonalDashboard = () => {
             usePersonalDashboardProjectDetails(activeProject),
         );
 
-    const loadingProjectDetailsRef = useLoading(
-        personalDashboardProjectDetails.state === 'loading',
-    );
-
     return (
         <MainContent>
             <WelcomeSection>
@@ -192,7 +187,6 @@ export const PersonalDashboard = () => {
                     <MyProjects
                         owners={personalDashboard?.projectOwners ?? []}
                         admins={personalDashboard?.admins ?? []}
-                        ref={loadingProjectDetailsRef}
                         projects={projects}
                         activeProject={activeProject || ''}
                         setActiveProject={setActiveProject}

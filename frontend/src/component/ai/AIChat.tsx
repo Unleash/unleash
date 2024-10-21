@@ -15,6 +15,7 @@ import { AIChatMessage } from './AIChatMessage';
 import { AIChatHeader } from './AIChatHeader';
 import { Resizable } from 'component/common/Resizable/Resizable';
 import { AIChatDisclaimer } from './AIChatDisclaimer';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const AI_ERROR_MESSAGE = {
     role: 'assistant',
@@ -90,6 +91,7 @@ export const AIChat = () => {
     const [loading, setLoading] = useState(false);
     const { setToastApiError } = useToast();
     const { chat, newChat } = useAIApi();
+    const { trackEvent } = usePlausibleTracker();
 
     const [messages, setMessages] = useState<ChatMessage[]>([]);
 
@@ -136,6 +138,12 @@ export const AIChat = () => {
     const onSend = async (content: string) => {
         if (!content.trim() || loading) return;
 
+        trackEvent('unleash-ai-chat', {
+            props: {
+                eventType: 'send',
+            },
+        });
+
         try {
             setLoading(true);
             setMessages((currentMessages) => [
@@ -168,7 +176,17 @@ export const AIChat = () => {
     if (!open) {
         return (
             <StyledAIIconContainer>
-                <StyledAIIconButton size='large' onClick={() => setOpen(true)}>
+                <StyledAIIconButton
+                    size='large'
+                    onClick={() => {
+                        trackEvent('unleash-ai-chat', {
+                            props: {
+                                eventType: 'open',
+                            },
+                        });
+                        setOpen(true);
+                    }}
+                >
                     <SmartToyIcon />
                 </StyledAIIconButton>
             </StyledAIIconContainer>
@@ -187,7 +205,14 @@ export const AIChat = () => {
                 <StyledChat>
                     <AIChatHeader
                         onNew={onNewChat}
-                        onClose={() => setOpen(false)}
+                        onClose={() => {
+                            trackEvent('unleash-ai-chat', {
+                                props: {
+                                    eventType: 'close',
+                                },
+                            });
+                            setOpen(false);
+                        }}
                     />
                     <StyledChatContent>
                         <AIChatDisclaimer />

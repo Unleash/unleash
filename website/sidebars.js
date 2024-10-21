@@ -539,7 +539,6 @@ module.exports = {
                                 slug: '/how-to/env',
                             },
                             items: [
-                                'how-to/how-to-clone-environments',
                                 'how-to/how-to-import-export',
                                 'how-to/how-to-environment-import-export',
                             ],

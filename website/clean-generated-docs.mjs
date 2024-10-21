@@ -17,7 +17,6 @@
 // save us loooots of questions.
 import { replaceInFileSync } from 'replace-in-file';
 
-
 const options = {
     files: 'docs/reference/api/**/*.api.mdx',
     from: [

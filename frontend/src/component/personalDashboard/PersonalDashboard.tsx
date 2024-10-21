@@ -20,6 +20,7 @@ import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { useDashboardState } from './useDashboardState';
 import { MyFlags } from './MyFlags';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -130,10 +131,14 @@ export const PersonalDashboard = () => {
         splash?.personalDashboardKeyConcepts ? 'closed' : 'open',
     );
 
-    const { personalDashboardProjectDetails, loading: detailsLoading } =
-        usePersonalDashboardProjectDetails(activeProject);
+    const personalDashboardProjectDetails =
+        fromPersonalDashboardProjectDetailsOutput(
+            usePersonalDashboardProjectDetails(activeProject),
+        );
 
-    const loadingProjectDetailsRef = useLoading(detailsLoading);
+    const loadingProjectDetailsRef = useLoading(
+        personalDashboardProjectDetails.state === 'loading',
+    );
 
     return (
         <MainContent>

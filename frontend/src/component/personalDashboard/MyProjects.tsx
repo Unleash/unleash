@@ -1,9 +1,11 @@
+import type { RemoteData } from './RemoteData';
 import {
     Box,
     IconButton,
     ListItem,
     ListItemButton,
     Typography,
+    styled,
 } from '@mui/material';
 import { ProjectIcon } from '../common/ProjectIcon/ProjectIcon';
 import LinkIcon from '@mui/icons-material/ArrowForward';
@@ -33,8 +35,7 @@ import { ContactAdmins, DataError } from './ProjectDetailsError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Link } from 'react-router-dom';
 import { ActionBox } from './ActionBox';
-import { NoProjectsContactAdmin } from './NoProjectsContactAdmin';
-import { AskOwnerToAddYouToTheirProject } from './AskOwnerToAddYouToTheirProject';
+import useLoading from 'hooks/useLoading';
 
 const ActiveProjectDetails: FC<{
     project: PersonalDashboardSchemaProjectsItem;
@@ -68,6 +69,10 @@ const ActiveProjectDetails: FC<{
         </Box>
     );
 };
+
+const SkeletonDiv = styled('div')({
+    height: '80%',
+});
 
 const ProjectListItem: FC<{
     project: PersonalDashboardSchemaProjectsItem;
@@ -122,16 +127,11 @@ const ProjectListItem: FC<{
     );
 };
 
-type MyProjectsState =
-    | 'no projects'
-    | 'projects'
-    | 'projects with error or loading';
-
 export const MyProjects = forwardRef<
     HTMLDivElement,
     {
         projects: PersonalDashboardSchemaProjectsItem[];
-        personalDashboardProjectDetails?: PersonalDashboardProjectDetailsSchema;
+        personalDashboardProjectDetails: RemoteData<PersonalDashboardProjectDetailsSchema>;
         activeProject: string;
         setActiveProject: (project: string) => void;
         admins: PersonalDashboardSchemaAdminsItem[];
@@ -147,149 +147,103 @@ export const MyProjects = forwardRef<
             admins,
             owners,
         },
-        ref,
+        // ref,
     ) => {
-        const state: MyProjectsState = projects.length
-            ? personalDashboardProjectDetails
-                ? 'projects'
-                : 'projects with error or loading'
-            : 'no projects';
+        const ref = useLoading(
+            personalDashboardProjectDetails.state === 'loading',
+        );
 
-        const activeProjectStage =
-            personalDashboardProjectDetails?.onboardingStatus.status ??
-            'loading';
-        const setupIncomplete =
-            activeProjectStage === 'onboarding-started' ||
-            activeProjectStage === 'first-flag-created';
+        // const state: MyProjectsState = projects.length
+        //     ? personalDashboardProjectDetails
+        //         ? 'projects'
+        //         : 'projects with error or loading'
+        //     : 'no projects';
 
         const getGridContents = (): {
             list: ReactNode;
             box1: ReactNode;
             box2: ReactNode;
         } => {
-            switch (state) {
-                case 'no projects':
-                    return {
-                        list: (
-                            <ActionBox>
-                                <Typography>
-                                    You don't currently have access to any
-                                    projects in the system.
-                                </Typography>
-                                <Typography>
-                                    To get started, you can{' '}
-                                    <Link to='/projects?create=true'>
-                                        create your own project
-                                    </Link>
-                                    . Alternatively, you can review the
-                                    available projects in the system and ask the
-                                    owner for access.
-                                </Typography>
-                            </ActionBox>
-                        ),
-                        box1: <NoProjectsContactAdmin admins={admins} />,
-                        box2: (
-                            <AskOwnerToAddYouToTheirProject owners={owners} />
-                        ),
-                    };
+            const list = projects.length ? (
+                <StyledList>
+                    {projects.map((project) => (
+                        <ProjectListItem
+                            key={project.id}
+                            project={project}
+                            selected={project.id === activeProject}
+                            onClick={() => setActiveProject(project.id)}
+                        />
+                    ))}
+                </StyledList>
+            ) : (
+                <ActionBox>
+                    <Typography>
+                        You don't currently have access to any projects in the
+                        system.
+                    </Typography>
+                    <Typography>
+                        To get started, you can{' '}
+                        <Link to='/projects?create=true'>
+                            create your own project
+                        </Link>
+                        . Alternatively, you can review the available projects
+                        in the system and ask the owner for access.
+                    </Typography>
+                </ActionBox>
+            );
 
-                case 'projects with error or loading':
-                    return {
-                        list: (
-                            <StyledList>
-                                {projects.map((project) => (
-                                    <ProjectListItem
-                                        key={project.id}
-                                        project={project}
-                                        selected={project.id === activeProject}
-                                        onClick={() =>
-                                            setActiveProject(project.id)
-                                        }
-                                    />
-                                ))}
-                            </StyledList>
-                        ),
-                        box1: (
-                            <div data-loading>
-                                <DataError
-                                    data-loading
-                                    project={activeProject}
-                                />
-                            </div>
-                        ),
-                        box2: (
-                            <div data-loading>
-                                <ContactAdmins admins={admins} />
-                            </div>
-                        ),
-                    };
+            const [box1, box2] = (() => {
+                switch (personalDashboardProjectDetails.state) {
+                    case 'success': {
+                        const activeProjectStage =
+                            personalDashboardProjectDetails.data
+                                .onboardingStatus.status ?? 'loading';
+                        const setupIncomplete =
+                            activeProjectStage === 'onboarding-started' ||
+                            activeProjectStage === 'first-flag-created';
 
-                case 'projects': {
-                    const box1 = (() => {
-                        if (
-                            activeProjectStage === 'onboarded' &&
-                            personalDashboardProjectDetails
-                        ) {
-                            return (
+                        if (activeProjectStage === 'onboarded') {
+                            return [
                                 <ProjectSetupComplete
                                     project={activeProject}
                                     insights={
-                                        personalDashboardProjectDetails.insights
+                                        personalDashboardProjectDetails.data
+                                            .insights
                                     }
-                                />
-                            );
-                        } else if (
-                            activeProjectStage === 'onboarding-started' ||
-                            activeProjectStage === 'loading'
-                        ) {
-                            return <CreateFlag project={activeProject} />;
-                        } else if (
-                            activeProjectStage === 'first-flag-created'
-                        ) {
-                            return <ExistingFlag project={activeProject} />;
-                        }
-                    })();
-
-                    const box2 = (() => {
-                        if (
-                            activeProjectStage === 'onboarded' &&
-                            personalDashboardProjectDetails
-                        ) {
-                            return (
+                                />,
                                 <LatestProjectEvents
                                     latestEvents={
-                                        personalDashboardProjectDetails.latestEvents
+                                        personalDashboardProjectDetails.data
+                                            .latestEvents
                                     }
-                                />
-                            );
-                        } else if (
-                            setupIncomplete ||
-                            activeProjectStage === 'loading'
-                        ) {
-                            return <ConnectSDK project={activeProject} />;
+                                />,
+                            ];
+                        } else if (setupIncomplete) {
+                            return [
+                                <CreateFlag project={activeProject} />,
+                                <ConnectSDK project={activeProject} />,
+                            ];
+                        } else {
+                            return [
+                                <ExistingFlag project={activeProject} />,
+                                <ConnectSDK project={activeProject} />,
+                            ];
                         }
-                    })();
-
-                    return {
-                        list: (
-                            <StyledList>
-                                {projects.map((project) => (
-                                    <ProjectListItem
-                                        key={project.id}
-                                        project={project}
-                                        selected={project.id === activeProject}
-                                        onClick={() =>
-                                            setActiveProject(project.id)
-                                        }
-                                    />
-                                ))}
-                            </StyledList>
-                        ),
-                        box1,
-                        box2,
-                    };
+                    }
+                    case 'error':
+                        return [
+                            <DataError project={activeProject} />,
+                            <ContactAdmins admins={admins} />,
+                        ];
+                    default: // loading
+                        return [
+                            <SkeletonDiv data-loading />,
+                            <SkeletonDiv data-loading />,
+                        ];
                 }
-            }
+            })();
+
+            return { list, box1, box2 };
         };
 
         const { list, box1, box2 } = getGridContents();
@@ -303,14 +257,19 @@ export const MyProjects = forwardRef<
                     <GridItem gridArea='owners'>
                         <RoleAndOwnerInfo
                             roles={
-                                personalDashboardProjectDetails?.roles.map(
-                                    (role) => role.name,
-                                ) ?? []
+                                personalDashboardProjectDetails.state ===
+                                'success'
+                                    ? personalDashboardProjectDetails.data.roles.map(
+                                          (role) => role.name,
+                                      )
+                                    : []
                             }
                             owners={
-                                personalDashboardProjectDetails?.owners ?? [
-                                    { ownerType: 'user', name: '?' },
-                                ]
+                                personalDashboardProjectDetails.state ===
+                                'success'
+                                    ? personalDashboardProjectDetails.data
+                                          .owners
+                                    : [{ ownerType: 'user', name: '?' }]
                             }
                         />
                     </GridItem>

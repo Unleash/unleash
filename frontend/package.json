@@ -102,7 +102,7 @@
     "react-chartjs-2": "4.3.1",
     "react-confetti": "^6.1.0",
     "react-dom": "18.3.1",
-    "react-dropzone": "14.2.3",
+    "react-dropzone": "14.2.9",
     "react-error-boundary": "3.1.4",
     "react-hooks-global-state": "2.1.0",
     "react-joyride": "^2.5.3",

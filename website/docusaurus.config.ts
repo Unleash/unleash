@@ -172,20 +172,9 @@ const config: Config = {
                 },
             ],
         },
-        // prism: {
-        //     theme: require("prism-react-renderer/themes/oceanicNext"),
-        //     additionalLanguages: [
-        //         "csharp",
-        //         "dart",
-        //         "http",
-        //         "java",
-        //         "kotlin",
-        //         "php",
-        //         "ruby",
-        //         "rust",
-        //         "swift",
-        //     ],
-        // },
+        prism: {
+            additionalLanguages: ['csharp', 'dart', 'java', 'php', 'ruby'],
+        },
         languageTabs: [
             {
                 highlight: 'bash',

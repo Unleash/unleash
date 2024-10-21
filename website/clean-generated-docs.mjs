@@ -15,9 +15,8 @@
 // the bits that are specific to the generation source we use, and make the docs
 // easier to use. In particular, removing the leading `/ushosted` is likely to
 // save us loooots of questions.
-const replaceInFileSync = require('replace-in-file');
+import { replaceInFileSync } from 'replace-in-file';
 
-console.log(replaceInFileSync);
 
 const options = {
     files: 'docs/reference/api/**/*.api.mdx',

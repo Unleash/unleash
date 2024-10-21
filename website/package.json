@@ -11,7 +11,7 @@
     "build": "yarn generate && yarn fetch-remote-content && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "fetch-remote-content": "docusaurus download-remote-content-external && docusaurus download-remote-content-sdks",
-    "generate": "docusaurus gen-api-docs all && node clean-generated-docs.js",
+    "generate": "docusaurus gen-api-docs all && node clean-generated-docs.mjs",
     "deploy": "yarn generate && yarn fetch-remote-content && docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",

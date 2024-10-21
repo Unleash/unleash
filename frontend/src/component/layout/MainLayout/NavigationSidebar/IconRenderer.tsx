@@ -57,7 +57,7 @@ const icons: Record<string, typeof SvgIcon> = {
     '/admin/cors': CorsIcon,
     '/admin/billing': BillingIcon,
     '/history': EventLogIcon,
-    '/releases-management': LaunchIcon,
+    '/release-management': LaunchIcon,
     GitHub: GitHubIcon,
     Documentation: LibraryBooksIcon,
 };

@@ -248,7 +248,7 @@ export const routes: IRoute[] = [
         menu: { mobile: true, advanced: true },
     },
     {
-        path: '/releases-management',
+        path: '/release-management',
         title: 'Release management',
         component: ReleaseManagement,
         type: 'protected',

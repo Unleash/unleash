@@ -122,7 +122,10 @@ const ProjectListItem: FC<{
     );
 };
 
-type MyProjectsState = 'no projects' | 'projects' | 'projects with error';
+type MyProjectsState =
+    | 'no projects'
+    | 'projects'
+    | 'projects with error or loading';
 
 export const MyProjects = forwardRef<
     HTMLDivElement,
@@ -149,7 +152,7 @@ export const MyProjects = forwardRef<
         const state: MyProjectsState = projects.length
             ? personalDashboardProjectDetails
                 ? 'projects'
-                : 'projects with error'
+                : 'projects with error or loading'
             : 'no projects';
 
         const activeProjectStage =
@@ -190,7 +193,7 @@ export const MyProjects = forwardRef<
                         ),
                     };
 
-                case 'projects with error':
+                case 'projects with error or loading':
                     return {
                         list: (
                             <StyledList>
@@ -206,8 +209,19 @@ export const MyProjects = forwardRef<
                                 ))}
                             </StyledList>
                         ),
-                        box1: <DataError project={activeProject} />,
-                        box2: <ContactAdmins admins={admins} />,
+                        box1: (
+                            <div data-loading>
+                                <DataError
+                                    data-loading
+                                    project={activeProject}
+                                />
+                            </div>
+                        ),
+                        box2: (
+                            <div data-loading>
+                                <ContactAdmins admins={admins} />
+                            </div>
+                        ),
                     };
 
                 case 'projects': {

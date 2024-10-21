@@ -130,15 +130,10 @@ export const PersonalDashboard = () => {
         splash?.personalDashboardKeyConcepts ? 'closed' : 'open',
     );
 
-    const { personalDashboardProjectDetails, error: detailsError } =
+    const { personalDashboardProjectDetails, loading: detailsLoading } =
         usePersonalDashboardProjectDetails(activeProject);
 
-    const activeProjectStage =
-        personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
-
-    const projectStageRef = useLoading(
-        !detailsError && activeProjectStage === 'loading',
-    );
+    const loadingProjectDetailsRef = useLoading(detailsLoading);
 
     return (
         <MainContent>
@@ -192,7 +187,7 @@ export const PersonalDashboard = () => {
                     <MyProjects
                         owners={personalDashboard?.projectOwners ?? []}
                         admins={personalDashboard?.admins ?? []}
-                        ref={projectStageRef}
+                        ref={loadingProjectDetailsRef}
                         projects={projects}
                         activeProject={activeProject || ''}
                         setActiveProject={setActiveProject}

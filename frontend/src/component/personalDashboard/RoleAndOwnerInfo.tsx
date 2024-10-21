@@ -51,7 +51,7 @@ export const RoleAndOwnerInfo = ({ roles, owners }: Props) => {
     const firstRoles = roles.slice(0, 3);
     const extraRoles = roles.slice(3);
     return (
-        <Wrapper>
+        <Wrapper data-loading>
             <InfoSection>
                 {roles.length > 0 ? (
                     <>

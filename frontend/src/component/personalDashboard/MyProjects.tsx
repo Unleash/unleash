@@ -16,6 +16,7 @@ import { RoleAndOwnerInfo } from './RoleAndOwnerInfo';
 import { type ReactNode, useEffect, useRef, type FC } from 'react';
 import type {
     PersonalDashboardProjectDetailsSchema,
+    PersonalDashboardProjectDetailsSchemaRolesItem,
     PersonalDashboardSchemaAdminsItem,
     PersonalDashboardSchemaProjectOwnersItem,
     PersonalDashboardSchemaProjectsItem,
@@ -36,6 +37,8 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Link } from 'react-router-dom';
 import { ActionBox } from './ActionBox';
 import useLoading from 'hooks/useLoading';
+import { NoProjectsContactAdmin } from './NoProjectsContactAdmin';
+import { AskOwnerToAddYouToTheirProject } from './AskOwnerToAddYouToTheirProject';
 
 const ActiveProjectDetails: FC<{
     project: PersonalDashboardSchemaProjectsItem;
@@ -149,7 +152,30 @@ export const MyProjects: React.FC<{
         box1: ReactNode;
         box2: ReactNode;
     } => {
-        const list = projects.length ? (
+        if (projects.length === 0) {
+            return {
+                list: (
+                    <ActionBox>
+                        <Typography>
+                            You don't currently have access to any projects in
+                            the system.
+                        </Typography>
+                        <Typography>
+                            To get started, you can{' '}
+                            <Link to='/projects?create=true'>
+                                create your own project
+                            </Link>
+                            . Alternatively, you can review the available
+                            projects in the system and ask the owner for access.
+                        </Typography>
+                    </ActionBox>
+                ),
+                box1: <NoProjectsContactAdmin admins={admins} />,
+                box2: <AskOwnerToAddYouToTheirProject owners={owners} />,
+            };
+        }
+
+        const list = (
             <StyledList>
                 {projects.map((project) => (
                     <ProjectListItem
@@ -160,21 +186,6 @@ export const MyProjects: React.FC<{
                     />
                 ))}
             </StyledList>
-        ) : (
-            <ActionBox>
-                <Typography>
-                    You don't currently have access to any projects in the
-                    system.
-                </Typography>
-                <Typography>
-                    To get started, you can{' '}
-                    <Link to='/projects?create=true'>
-                        create your own project
-                    </Link>
-                    . Alternatively, you can review the available projects in
-                    the system and ask the owner for access.
-                </Typography>
-            </ActionBox>
         );
 
         const [box1, box2] = (() => {
@@ -244,7 +255,9 @@ export const MyProjects: React.FC<{
                         roles={
                             personalDashboardProjectDetails.state === 'success'
                                 ? personalDashboardProjectDetails.data.roles.map(
-                                      (role) => role.name,
+                                      (
+                                          role: PersonalDashboardProjectDetailsSchemaRolesItem,
+                                      ) => role.name,
                                   )
                                 : []
                         }

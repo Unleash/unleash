@@ -45,8 +45,12 @@ const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
 }));
 
 const StyledMarkdown = styled(Markdown)(({ theme }) => ({
-    wordBreak: 'break-all',
+    wordBreak: 'break-word',
 }));
+
+const BreakLongWordsFallback = styled('div')({
+    wordBreak: 'break-all',
+});
 
 export const LatestProjectEvents: FC<{
     latestEvents: PersonalDashboardProjectDetailsSchema['latestEvents'];
@@ -77,10 +81,12 @@ export const LatestProjectEvents: FC<{
                                         locationSettings.locale,
                                     )}
                                 </Timestamp>
-                                <StyledMarkdown>
-                                    {event.summary ||
-                                        'No preview available for this event'}
-                                </StyledMarkdown>
+                                <BreakLongWordsFallback>
+                                    <StyledMarkdown>
+                                        {event.summary ||
+                                            'No preview available for this event'}
+                                    </StyledMarkdown>
+                                </BreakLongWordsFallback>
                             </div>
                         </Event>
                     );

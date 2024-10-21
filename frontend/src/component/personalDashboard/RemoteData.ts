@@ -1,11 +1,10 @@
 import type { IPersonalDashboardProjectDetailsOutput } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
 import type { PersonalDashboardProjectDetailsSchema } from 'openapi';
 
-type RemoteData<T> = { refetch: () => void } & (
+export type RemoteData<T> =
     | { state: 'error'; error: Error }
     | { state: 'loading' }
-    | { state: 'success'; data: T }
-);
+    | { state: 'success'; data: T };
 
 export const fromPersonalDashboardProjectDetailsOutput = ({
     personalDashboardProjectDetails,

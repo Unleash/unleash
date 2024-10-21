@@ -634,6 +634,9 @@ export function registerPrometheusMetrics(
         help: 'The maximum number of resources allowed.',
         labelNames: ['resource'],
     });
+    for (const [resource, limit] of Object.entries(config.resourceLimits)) {
+        resourceLimit.labels({ resource }).set(limit);
+    }
 
     const addonEventsHandledCounter = createCounter({
         name: 'addon_events_handled',
@@ -976,12 +979,6 @@ export function registerPrometheusMetrics(
 
                 legacyTokensActive.reset();
                 legacyTokensActive.set(deprecatedTokens.activeLegacyTokens);
-
-                for (const [resource, limit] of Object.entries(
-                    config.resourceLimits,
-                )) {
-                    resourceLimit.labels({ resource }).set(limit);
-                }
 
                 const previousDayMetricsBucketsCount =
                     await instanceStatsService.countPreviousDayHourlyMetricsBuckets();

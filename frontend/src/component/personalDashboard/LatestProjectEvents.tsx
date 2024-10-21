@@ -44,9 +44,9 @@ const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
     marginTop: theme.spacing(0.5),
 }));
 
-const StyledMarkdown = styled(Markdown)(({ theme }) => ({
-    wordBreak: 'break-all',
-}));
+const StyledMarkdown = styled(Markdown)({
+    overflowWrap: 'anywhere',
+});
 
 export const LatestProjectEvents: FC<{
     latestEvents: PersonalDashboardProjectDetailsSchema['latestEvents'];

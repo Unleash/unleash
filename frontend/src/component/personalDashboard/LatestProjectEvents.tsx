@@ -44,6 +44,10 @@ const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
     marginTop: theme.spacing(0.5),
 }));
 
+const StyledMarkdown = styled(Markdown)(({ theme }) => ({
+    wordBreak: 'break-all',
+}));
+
 export const LatestProjectEvents: FC<{
     latestEvents: PersonalDashboardProjectDetailsSchema['latestEvents'];
 }> = ({ latestEvents }) => {
@@ -73,10 +77,10 @@ export const LatestProjectEvents: FC<{
                                         locationSettings.locale,
                                     )}
                                 </Timestamp>
-                                <Markdown>
+                                <StyledMarkdown>
                                     {event.summary ||
                                         'No preview available for this event'}
-                                </Markdown>
+                                </StyledMarkdown>
                             </div>
                         </Event>
                     );

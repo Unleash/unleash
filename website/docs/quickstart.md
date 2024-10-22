@@ -29,7 +29,7 @@ password: unleash4all
 2. Click 'New feature flag'
 3. Give it a unique name, and click 'Create feature flag'
 
-For a detailed guide on how to create a flag through the UI, [you can follow this guide](/how-to/how-to-create-feature-toggles).
+For a detailed guide on how to create a flag through the UI, [you can follow this guide](/how-to-create-feature-flag).
 
 ## 4a. Connect a client-side SDK {#connect-a-client-side-sdk}
 

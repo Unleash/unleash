@@ -720,7 +720,7 @@
       "source": "/how-to/how-to-create-feature-toggles",
       "destination": "/how-to-create-feature-flag",
       "permanent": true
-    }
+    },
     {
       "source": "/reference/deploy",
       "destination": "/using-unleash/deploy",

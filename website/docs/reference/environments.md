@@ -10,7 +10,7 @@ title: Environments
 :::
 ## Overview
 
-Environments represent different stages in your development lifecycle. They allow you to manage your product releases from local development to production. [Projects](/reference/projects) and [feature flags](/reference/feature-toggles) are accessible in all environments, but each environment has different configurations. This allows you to enable a feature flag in development or test without enabling it in production.
+Environments represent different stages in your development lifecycle. They allow you to manage your product releases from local development to production. [Projects](/reference/projects) and [feature flags](/reference/feature-toggles) are accessible in all environments, but each environment has different feature flag configurations. This allows you to enable a flag in development or test without enabling it in production.
 
 The default environments are **development** and **production**. Unleash instances created before version `4.3` also have an environment called **default**. [Enterprise](https://www.getunleash.io/pricing) customers can create, clone, deprecate, and delete environments.
 
@@ -24,7 +24,7 @@ Each environment has a name and one of the following types:
 - Pre-production
 - Production
 
-Environments of type production show additional confirmation prompts when making changes that may affect users. The default **production** environment is of type production.
+Receiving metrics in a given environment type affects a feature's [lifecycle stage](/reference/feature-toggles#feature-flag-lifecycle). For example, receiving metrics in a production environment moves the feature flag to the [live](/reference/feature-toggles#live) stage. Production environments also display additional confirmation prompts for changes that may impact users. The default **production** environment is of type production.
 
 ## Activation strategies
 

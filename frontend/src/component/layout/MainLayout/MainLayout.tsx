@@ -18,6 +18,7 @@ import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
 import { MainLayoutEventTimeline } from './MainLayoutEventTimeline';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { AIChat } from 'component/ai/AIChat';
+import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -124,7 +125,11 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         >
                             <ConditionallyRender
                                 condition={!isSmallScreen}
-                                show={<NavigationSidebar />}
+                                show={
+                                    <NavigationSidebar
+                                        NewInUnleash={NewInUnleash}
+                                    />
+                                }
                             />
 
                             <Box

@@ -125,11 +125,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         >
                             <ConditionallyRender
                                 condition={!isSmallScreen}
-                                show={
-                                    <NavigationSidebar
-                                        NewInUnleash={NewInUnleash}
-                                    />
-                                }
+                                show={<NavigationSidebar NewInUnleash={NewInUnleash} />}
                             />
 
                             <Box

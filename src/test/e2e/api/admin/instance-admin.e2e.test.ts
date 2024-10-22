@@ -29,14 +29,14 @@ beforeAll(async () => {
         db.rawDatabase,
     );
 
-    const { collectDbMetrics } = registerPrometheusMetrics(
+    const { collectAggDbMetrics } = registerPrometheusMetrics(
         app.config,
         stores,
         undefined as unknown as string,
         app.config.eventBus,
         app.services.instanceStatsService,
     );
-    refreshDbMetrics = collectDbMetrics;
+    refreshDbMetrics = collectAggDbMetrics;
 });
 
 afterAll(async () => {

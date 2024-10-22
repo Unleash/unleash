@@ -14,7 +14,7 @@ type MapResult<R, L extends string> = (
 type GaugeDefinition<T, L extends string> = {
     name: string;
     help: string;
-    labelNames: L[];
+    labelNames?: L[];
     query: Query<T>;
     map: MapResult<T, L>;
 };
@@ -37,17 +37,39 @@ export class DbMetricsMonitor {
         return Array.isArray(value) ? value : [value];
     }
 
+    private async fetch<T, L extends string>(
+        definition: GaugeDefinition<T, L>,
+    ): Promise<MetricValue<L>[]> {
+        const result = await definition.query();
+        if (
+            result !== undefined &&
+            result !== null &&
+            (!Array.isArray(result) || result.length > 0)
+        ) {
+            const resultArray = this.asArray(definition.map(result));
+            resultArray
+                .filter((r) => typeof r.value !== 'number')
+                .forEach((r) => {
+                    this.log.debug(
+                        `Invalid value for ${definition.name}: ${r.value}. Value must be an number.`,
+                    );
+                });
+            return resultArray.filter((r) => typeof r.value === 'number');
+        }
+        return [];
+    }
+
     registerGaugeDbMetric<T, L extends string>(
         definition: GaugeDefinition<T, L>,
     ): Task {
         const gauge = createGauge(definition);
         const task = async () => {
             try {
-                const result = await definition.query();
-                if (result !== null && result !== undefined) {
-                    const results = this.asArray(definition.map(result));
+                const results = await this.fetch(definition);
+                if (results.length > 0) {
                     gauge.reset();
                     for (const r of results) {
+                        // when r.value is zero, we are writing a zero value to the gauge which might not be what we want in some cases
                         if (r.labels) {
                             gauge.labels(r.labels).set(r.value);
                         } else {
@@ -63,7 +85,7 @@ export class DbMetricsMonitor {
         return task;
     }
 
-    refreshDbMetrics = async () => {
+    refreshMetrics = async () => {
         const tasks = Array.from(this.updaters.entries()).map(
             ([name, updater]) => ({ name, task: updater.task }),
         );

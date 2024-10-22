@@ -1,7 +1,7 @@
 // biome-ignore lint/correctness/noUnusedImports: Needs this for React to work
 import React, { useState, useEffect } from 'react';
 import { getContributors } from './contributors';
-import styles from './contributors.module.scss';
+import styles from './contributors.module.css';
 
 const unleashTeam = new Map([
     ['alvinometric', 'developer advocate, Unleash'],

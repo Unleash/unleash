@@ -529,10 +529,6 @@ module.exports = {
                         to: '/reference/unleash-proxy',
                     },
                     {
-                        to: '/how-to/how-to-create-feature-toggles',
-                        from: '/user_guide/create_feature_toggle',
-                    },
-                    {
                         to: '/reference/activation-strategies',
                         from: [
                             '/user_guide/control_rollout',

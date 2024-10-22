@@ -388,7 +388,7 @@
     },
     {
       "source": "/user_guide/create_feature_toggle",
-      "destination": "/how-to/how-to-create-feature-toggles",
+      "destination": "/how-to-create-feature-flag",
       "permanent": true
     },
     {

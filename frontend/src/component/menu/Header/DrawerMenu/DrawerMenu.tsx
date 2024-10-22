@@ -8,7 +8,6 @@ import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
 import theme from 'themes/theme';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { MobileNavigationSidebar } from 'component/layout/MainLayout/NavigationSidebar/NavigationSidebar';
-import { NewInUnleash } from '../../../layout/MainLayout/NavigationSidebar/NewInUnleash/NewInUnleash';
 import { NewInUnleash } from 'component/layout/MainLayout/NavigationSidebar/NewInUnleash/NewInUnleash';
 
 const StyledDrawerHeader = styled('div')(({ theme }) => ({
@@ -73,7 +72,10 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
                     </Link>
                 </StyledDrawerHeader>
                 <Divider />
-                <MobileNavigationSidebar onClick={toggleDrawer} NewInUnleash={NewInUnleash} />
+                <MobileNavigationSidebar
+                    onClick={toggleDrawer}
+                    NewInUnleash={NewInUnleash}
+                />
             </nav>
         </Drawer>
     );

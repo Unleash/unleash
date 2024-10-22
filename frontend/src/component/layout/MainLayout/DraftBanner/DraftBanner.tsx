@@ -6,7 +6,6 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import type { ChangeRequestType } from 'component/changeRequest/changeRequest.types';
 import { changesCount } from 'component/changeRequest/changesCount';
 import { Sticky } from 'component/common/Sticky/Sticky';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IDraftBannerProps {
     project: string;
@@ -16,22 +15,6 @@ const StyledDraftBannerContentWrapper = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(1, 0),
-}));
-
-const OldStyledDraftBanner = styled(Box)(({ theme }) => ({
-    maxWidth: '1512px',
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    [theme.breakpoints.down(1024)]: {
-        width: '100%',
-        marginLeft: 0,
-        marginRight: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-        minWidth: '100%',
-    },
 }));
 
 const StyledDraftBanner = styled(Box)(({ theme }) => ({
@@ -55,7 +38,6 @@ const DraftBannerContent: FC<{
     changeRequests: ChangeRequestType[];
     onClick: () => void;
 }> = ({ changeRequests, onClick }) => {
-    const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
     const environments = changeRequests.map(({ environment }) => environment);
     const allChangesCount = changeRequests.reduce(
         (acc, curr) => acc + changesCount(curr),
@@ -73,12 +55,8 @@ const DraftBannerContent: FC<{
           }[changeRequests[0].state as 'Draft' | 'In review' | 'Approved']
         : '';
 
-    const Banner = sidebarNavigationEnabled
-        ? StyledDraftBanner
-        : OldStyledDraftBanner;
-
     return (
-        <Banner>
+        <StyledDraftBanner>
             <StyledDraftBannerContentWrapper>
                 <Typography variant='body2' sx={{ mr: 4 }}>
                     <strong>Change request mode</strong> – You have changes{' '}
@@ -114,7 +92,7 @@ const DraftBannerContent: FC<{
                     View changes ({allChangesCount})
                 </Button>
             </StyledDraftBannerContentWrapper>
-        </Banner>
+        </StyledDraftBanner>
     );
 };
 

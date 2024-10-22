@@ -15,16 +15,17 @@ import {
 import { useInitialPathname } from './useInitialPathname';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
-import { NewInUnleash } from './NewInUnleash/NewInUnleash';
+import type { NewInUnleash } from './NewInUnleash/NewInUnleash';
 
-export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
-    onClick,
-}) => {
+export const MobileNavigationSidebar: FC<{
+    onClick: () => void;
+    NewInUnleash: typeof NewInUnleash;
+}> = ({ onClick, NewInUnleash }) => {
     const { routes } = useRoutes();
 
     return (
         <>
-            <NewInUnleash onItemClick={onClick} />
+            <NewInUnleash />
             <PrimaryNavigationList mode='full' onClick={onClick} />
             <SecondaryNavigationList
                 routes={routes.mainNavRoutes}
@@ -66,7 +67,9 @@ const StickyContainer = styled(Box)(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-export const NavigationSidebar = () => {
+export const NavigationSidebar: FC<{ NewInUnleash: typeof NewInUnleash }> = ({
+    NewInUnleash,
+}) => {
     const { routes } = useRoutes();
 
     const [mode, setMode] = useNavigationMode();

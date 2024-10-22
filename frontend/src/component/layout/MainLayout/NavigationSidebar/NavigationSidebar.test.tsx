@@ -35,7 +35,7 @@ const TestNavigationSidebar: FC<{
 
     return (
         <EventTimelineProvider>
-            <NavigationSidebar />
+            <NavigationSidebar NewInUnleash={() => <>"New in Unleash"</>} />
         </EventTimelineProvider>
     );
 };

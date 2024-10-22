@@ -89,13 +89,11 @@ type NewItem = {
 
 interface INewInUnleashProps {
     mode?: NavigationMode;
-    onItemClick?: () => void;
     onMiniModeClick?: () => void;
 }
 
 export const NewInUnleash = ({
     mode = 'full',
-    onItemClick,
     onMiniModeClick,
 }: INewInUnleashProps) => {
     const navigate = useNavigate();

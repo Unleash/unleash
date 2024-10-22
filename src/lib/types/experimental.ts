@@ -62,7 +62,8 @@ export type IFlagKey =
     | 'unleashAI'
     | 'webhookDomainLogging'
     | 'addonUsageMetrics'
-    | 'releasePlans';
+    | 'releasePlans'
+    | 'navigationSidebar';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -310,6 +311,10 @@ const flags: IFlags = {
     releasePlans: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RELEASE_PLANS,
         false,
+    ),
+    navigationSidebar: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
+        true,
     ),
 };
 

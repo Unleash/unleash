@@ -4,4 +4,11 @@ import { ReactComponent as Svg } from 'assets/icons/projectIconSmall.svg';
 
 export const ProjectIcon: FC<ComponentProps<typeof SvgIcon>> = ({
     ...props
-}) => <SvgIcon component={Svg} viewBox={'0 0 14 10'} {...props} />;
+}) => (
+    <SvgIcon
+        component={Svg}
+        viewBox={'0 0 14 10'}
+        data-testid='UnleashProjectIcon'
+        {...props}
+    />
+);

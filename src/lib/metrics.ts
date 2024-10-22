@@ -941,7 +941,7 @@ export function registerPrometheusMetrics(
     });
 
     return {
-        collectDbMetrics: dbMetrics.refreshDbMetrics,
+        collectAggDbMetrics: dbMetrics.refreshMetrics,
         collectStaticCounters: async () => {
             try {
                 featureTogglesArchivedTotal.reset();
@@ -1031,7 +1031,7 @@ export default class MetricsMonitor {
 
         collectDefaultMetrics();
 
-        const { collectStaticCounters, collectDbMetrics } =
+        const { collectStaticCounters, collectAggDbMetrics } =
             registerPrometheusMetrics(
                 config,
                 stores,
@@ -1045,7 +1045,7 @@ export default class MetricsMonitor {
 
         await schedulerService.schedule(
             async () =>
-                Promise.all([collectStaticCounters(), collectDbMetrics()]),
+                Promise.all([collectStaticCounters(), collectAggDbMetrics()]),
             hoursToMilliseconds(2),
             'collectStaticCounters',
         );
@@ -1054,7 +1054,6 @@ export default class MetricsMonitor {
                 this.registerPoolMetrics.bind(this, db.client.pool, eventBus),
             minutesToMilliseconds(1),
             'registerPoolMetrics',
-            0, // no jitter
         );
 
         return Promise.resolve();

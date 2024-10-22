@@ -85,7 +85,7 @@ export class DbMetricsMonitor {
         return task;
     }
 
-    refreshDbMetrics = async () => {
+    refreshMetrics = async () => {
         const tasks = Array.from(this.updaters.entries()).map(
             ([name, updater]) => ({ name, task: updater.task }),
         );

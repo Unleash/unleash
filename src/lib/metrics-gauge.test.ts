@@ -28,7 +28,7 @@ test('should collect registered metrics', async () => {
         map: (result) => ({ value: result }),
     });
 
-    await dbMetrics.refreshDbMetrics();
+    await dbMetrics.refreshMetrics();
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/my_metric 42/);
@@ -43,7 +43,7 @@ test('should collect registered metrics with labels', async () => {
         map: (result) => ({ value: result, labels: { test: 'case' } }),
     });
 
-    await dbMetrics.refreshDbMetrics();
+    await dbMetrics.refreshMetrics();
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
@@ -68,7 +68,7 @@ test('should collect multiple registered metrics with and without labels', async
         map: (result) => ({ value: result, labels: { euler: 'number' } }),
     });
 
-    await dbMetrics.refreshDbMetrics();
+    await dbMetrics.refreshMetrics();
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/my_first_metric 42/);
@@ -91,7 +91,7 @@ test('should support different label and value pairs', async () => {
         ],
     });
 
-    await dbMetrics.refreshDbMetrics();
+    await dbMetrics.refreshMetrics();
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(

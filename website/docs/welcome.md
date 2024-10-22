@@ -1,9 +1,10 @@
 ---
-title: Welcome
+title: Unleash Documentation
 slug: /
-sidebar_position: 1
+description: 'Unleash is the largest open-soure feature management platform. In our documentation, you’ll find everything from core Unleash concepts and feature flag best practices to detailed SDK and API guides—giving you all the resources you need to get the most out of Unleash.'
+displayed_sidebar: documentation
+hide_table_of_contents: true
 ---
-
 
 Welcome to Unleash's documentation, your one-stop shop for everything Unleash. Whether you're just getting started or have been using Unleash for years, you should be able to find answers to all your questions here.
 

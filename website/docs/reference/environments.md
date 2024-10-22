@@ -24,7 +24,7 @@ Each environment has a name and one of the following types:
 - Pre-production
 - Production
 
-Receiving metrics in a given environment type affects a feature's [lifecycle stage](/reference/feature-toggles#feature-flag-lifecycle). For example, receiving metrics in a production environment moves the feature flag to the [live](/reference/feature-toggles#live) stage. Production environments also display additional confirmation prompts for changes that may impact users. The default **production** environment is of type production.
+Meeting specific conditions in a given environment type affects a feature's [lifecycle stage](/reference/feature-toggles#feature-flag-lifecycle). For example, a feature that is receiving metrics and is exposed to users in a production environment moves to the [live](/reference/feature-toggles#live) stage. Production environments also display additional confirmation prompts for changes that may impact users. The default **production** environment is of type production.
 
 ## Activation strategies
 

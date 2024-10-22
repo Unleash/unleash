@@ -19,13 +19,13 @@ import type { NewInUnleash } from './NewInUnleash/NewInUnleash';
 
 export const MobileNavigationSidebar: FC<{
     onClick: () => void;
-    NewInUnleash: typeof NewInUnleash;
+    NewInUnleash?: typeof NewInUnleash;
 }> = ({ onClick, NewInUnleash }) => {
     const { routes } = useRoutes();
 
     return (
         <>
-            <NewInUnleash />
+            {NewInUnleash ? <NewInUnleash /> : null}
             <PrimaryNavigationList mode='full' onClick={onClick} />
             <SecondaryNavigationList
                 routes={routes.mainNavRoutes}
@@ -67,7 +67,7 @@ const StickyContainer = styled(Box)(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-export const NavigationSidebar: FC<{ NewInUnleash: typeof NewInUnleash }> = ({
+export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
     NewInUnleash,
 }) => {
     const { routes } = useRoutes();
@@ -157,10 +157,12 @@ export const NavigationSidebar: FC<{ NewInUnleash: typeof NewInUnleash }> = ({
             <Box sx={{ flex: 1 }} />
 
             <StickyContainer>
-                <NewInUnleash
-                    mode={mode}
-                    onMiniModeClick={() => setMode('full')}
-                />
+                {NewInUnleash ? (
+                    <NewInUnleash
+                        mode={mode}
+                        onMiniModeClick={() => setMode('full')}
+                    />
+                ) : null}
                 <ShowHide
                     mode={mode}
                     onChange={() => {

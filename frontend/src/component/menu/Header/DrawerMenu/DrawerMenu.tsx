@@ -1,20 +1,13 @@
 import type { ReactNode, VFC } from 'react';
 import { Link } from 'react-router-dom';
-import { Divider, Drawer, List, styled } from '@mui/material';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import ExitToApp from '@mui/icons-material/ExitToApp';
+import { Divider, Drawer, styled } from '@mui/material';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
-import NavigationLink from '../NavigationLink/NavigationLink';
-import { basePath } from 'utils/formatPath';
 import type { INavigationMenuItem } from 'interfaces/route';
 import styles from './DrawerMenu.module.scss'; // FIXME: useStyle - theme
 import theme from 'themes/theme';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { MobileNavigationSidebar } from 'component/layout/MainLayout/NavigationSidebar/NavigationSidebar';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledDrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -51,32 +44,6 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
     toggleDrawer,
     routes,
 }) => {
-    const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
-
-    const renderLinks = () => {
-        return links.map((link) => {
-            let icon = null;
-            if (link.value === 'GitHub') {
-                icon = <GitHubIcon className={styles.navigationIcon} />;
-            } else if (link.value === 'Documentation') {
-                icon = <LibraryBooksIcon className={styles.navigationIcon} />;
-            }
-
-            return (
-                <a
-                    href={link.href}
-                    rel='noopener noreferrer'
-                    target='_blank'
-                    className={styles.iconLink}
-                    key={link.value}
-                >
-                    {icon}
-                    {link.value}
-                </a>
-            );
-        });
-    };
-
     return (
         <Drawer
             className={styles.drawer}
@@ -104,50 +71,7 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
                     </Link>
                 </StyledDrawerHeader>
                 <Divider />
-                <ConditionallyRender
-                    condition={Boolean(sidebarNavigationEnabled)}
-                    show={<MobileNavigationSidebar onClick={toggleDrawer} />}
-                    elseShow={
-                        <>
-                            <List className={styles.drawerList}>
-                                {routes.mobileRoutes.map((item) => (
-                                    <NavigationLink
-                                        handleClose={() => toggleDrawer()}
-                                        path={item.path}
-                                        text={item.title}
-                                        key={item.path}
-                                    />
-                                ))}
-                            </List>
-                            <Divider />
-
-                            <List className={styles.drawerList}>
-                                {routes.adminRoutes.map((item) => (
-                                    <NavigationLink
-                                        handleClose={() => toggleDrawer()}
-                                        path={item.path}
-                                        text={item.title}
-                                        key={item.path}
-                                        mode={item.menu?.mode}
-                                    />
-                                ))}
-                            </List>
-                            <Divider />
-                            <div className={styles.iconLinkList}>
-                                {renderLinks()}
-                                <a
-                                    className={styles.iconLink}
-                                    href={`${basePath}/logout`}
-                                >
-                                    <ExitToApp
-                                        className={styles.navigationIcon}
-                                    />
-                                    Sign out
-                                </a>
-                            </div>
-                        </>
-                    }
-                />
+                <MobileNavigationSidebar onClick={toggleDrawer} />
             </nav>
         </Drawer>
     );

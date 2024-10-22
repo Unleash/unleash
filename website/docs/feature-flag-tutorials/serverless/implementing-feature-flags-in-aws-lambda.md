@@ -1,6 +1,6 @@
 ---
 title: 'Serverless feature flags: How to'
-description: 'New to feature flags in serverless environments? This guide will walk you through a practical example using the Unleash Node.js SDK in AWS Lambda.'
+description: 'Use the Unleash Node.js SDK with AWS Lambda to implement feature flags in a serverless environment.'
 slug: /feature-flag-tutorials/serverless/lambda
 ---
 

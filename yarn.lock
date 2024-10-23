@@ -5052,9 +5052,9 @@ __metadata:
   linkType: hard
 
 "ip-address@npm:^10.0.0":
-  version: 10.0.0
-  resolution: "ip-address@npm:10.0.0"
-  checksum: 10c0/de28efeac726bce4a088ad2b31a3eefaf8d0f586ece6808366aef68029c0ad1387c1db98de23ddb1a888caf914de80424c1baf548e580dae65e0a9b24073f542
+  version: 10.0.1
+  resolution: "ip-address@npm:10.0.1"
+  checksum: 10c0/1634d79dae18394004775cb6d699dc46b7c23df6d2083164025a2b15240c1164fccde53d0e08bd5ee4fc53913d033ab6b5e395a809ad4b956a940c446e948843
   languageName: node
   linkType: hard
 

@@ -34,7 +34,6 @@ import { FeatureToggleFilters } from './FeatureToggleFilters/FeatureToggleFilter
 import { withTableState } from 'utils/withTableState';
 import { FeatureTagCell } from 'component/common/Table/cells/FeatureTagCell/FeatureTagCell';
 import { FeatureSegmentCell } from 'component/common/Table/cells/FeatureSegmentCell/FeatureSegmentCell';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureToggleListActions } from './FeatureToggleListActions/FeatureToggleListActions';
 import useLoading from 'hooks/useLoading';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -55,7 +54,7 @@ const feedbackCategory = 'search';
 
 export const FeatureToggleListTable: VFC = () => {
     const theme = useTheme();
-    const featureSearchFeedback = useUiFlag('featureSearchFeedback');
+    const featureSearchFeedback = true;
     const { trackEvent } = usePlausibleTracker();
     const { environments } = useEnvironments();
     const enabledEnvironments = environments
@@ -68,10 +67,7 @@ export const FeatureToggleListTable: VFC = () => {
     const { setToastApiError } = useToast();
     const { uiConfig } = useUiConfig();
 
-    const variant =
-        featureSearchFeedback !== false
-            ? featureSearchFeedback?.name ?? ''
-            : '';
+    const variant = featureSearchFeedback?.name ?? '';
 
     const { openFeedback } = useFeedback(
         feedbackCategory,
@@ -322,64 +318,53 @@ export const FeatureToggleListTable: VFC = () => {
                             <FeatureToggleListActions
                                 onExportClick={() => setShowExportDialog(true)}
                             />
-                            {featureSearchFeedback !== false &&
-                                featureSearchFeedback?.enabled && (
-                                    <>
-                                        <ConditionallyRender
-                                            condition={
-                                                variant === 'withoutText'
-                                            }
-                                            show={
-                                                <Tooltip
-                                                    title='Provide feedback'
-                                                    arrow
-                                                >
-                                                    <IconButton
-                                                        onClick={
-                                                            createFeedbackContext
-                                                        }
-                                                        size='large'
-                                                    >
-                                                        <ReviewsOutlined />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            }
-                                        />
-                                        <ConditionallyRender
-                                            condition={variant === 'withText'}
-                                            show={
-                                                <Button
-                                                    startIcon={
-                                                        <ReviewsOutlined />
-                                                    }
+                            {featureSearchFeedback?.enabled && (
+                                <>
+                                    <ConditionallyRender
+                                        condition={variant === 'withoutText'}
+                                        show={
+                                            <Tooltip
+                                                title='Provide feedback'
+                                                arrow
+                                            >
+                                                <IconButton
                                                     onClick={
                                                         createFeedbackContext
                                                     }
+                                                    size='large'
                                                 >
-                                                    Provide feedback
-                                                </Button>
-                                            }
-                                        />{' '}
-                                        <ConditionallyRender
-                                            condition={
-                                                variant === 'withTextOutlined'
-                                            }
-                                            show={
-                                                <Button
-                                                    startIcon={
-                                                        <ReviewsOutlined />
-                                                    }
-                                                    onClick={
-                                                        createFeedbackContext
-                                                    }
-                                                    variant='outlined'
-                                                >
-                                                    Provide feedback
-                                                </Button>
-                                            }
-                                        />
-                                    </>
-                                )}
+                                                    <ReviewsOutlined />
+                                                </IconButton>
+                                            </Tooltip>
+                                        }
+                                    />
+                                    <ConditionallyRender
+                                        condition={variant === 'withText'}
+                                        show={
+                                            <Button
+                                                startIcon={<ReviewsOutlined />}
+                                                onClick={createFeedbackContext}
+                                            >
+                                                Provide feedback
+                                            </Button>
+                                        }
+                                    />{' '}
+                                    <ConditionallyRender
+                                        condition={
+                                            variant === 'withTextOutlined'
+                                        }
+                                        show={
+                                            <Button
+                                                startIcon={<ReviewsOutlined />}
+                                                onClick={createFeedbackContext}
+                                                variant='outlined'
+                                            >
+                                                Provide feedback
+                                            </Button>
+                                        }
+                                    />
+                                </>
+                            )}
                         </>
                     }
                 >

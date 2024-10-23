@@ -1,5 +1,5 @@
 ---
-title: Quick Start
+title: Quickstart
 ---
 
 There are lots of options to get started with Unleash. If you're comfortable with Docker, this is the fastest way to get up and running. If that's not you, here are [some additional ways to try Unleash](#more-unleash).

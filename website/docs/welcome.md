@@ -1,9 +1,11 @@
 ---
-title: Unleash Documentation
 slug: /
+title: Feature Management Platform
 description: 'Unleash is the largest open-source feature management platform. In our documentation, you’ll find everything from core Unleash concepts and feature flag best practices to detailed SDK and API guides—giving you all the resources you need to get the most out of Unleash.'
 displayed_sidebar: documentation
 ---
+
+# Unleash Documentation
 
 Unleash is a **private**, **secure**, and **scalable feature management platform** built to reduce the risk of releasing new features and accelerate software development.
 

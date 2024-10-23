@@ -346,7 +346,6 @@ export default class ClientApplicationsStore
             .leftJoin('metrics as m', 'm.app_name', 'ca.app_name')
             .leftJoin('instances as i', 'i.environment', 'm.environment')
             .orderBy('m.environment', 'asc');
-        console.log(query.toQuery());
         const rows = await query;
         stopTimer();
         if (!rows.length) {

@@ -63,7 +63,8 @@ export type IFlagKey =
     | 'webhookDomainLogging'
     | 'addonUsageMetrics'
     | 'releasePlans'
-    | 'navigationSidebar';
+    | 'navigationSidebar'
+    | 'productivityReportEmail';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -315,6 +316,10 @@ const flags: IFlags = {
     navigationSidebar: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
         true,
+    ),
+    productivityReportEmail: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_EMAIL,
+        false,
     ),
 };
 

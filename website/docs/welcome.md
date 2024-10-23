@@ -7,7 +7,7 @@ sidebar_position: 1
 
 Welcome to Unleash's documentation, your one-stop shop for everything Unleash. Whether you're just getting started or have been using Unleash for years, you should be able to find answers to all your questions here.
 
-- [Quick Start](/quickstart): Get up and running with Unleash in just a few steps.
+- [Quickstart](/quickstart): Get up and running with Unleash in just a few steps.
 - [Unleash Academy](/unleash-academy/introduction): Video Tutorials to onboard you to Unleash’s full suite of capabilities.
 - [Feature Flag Best Practices](/topics): Maximize your effectiveness with feature flags, regardless of what technology you choose to use.
 - [Feature Flag Tutorials](/feature-flag-tutorials): Our small but growing collection of tutorials on using feature flags with different technologies.

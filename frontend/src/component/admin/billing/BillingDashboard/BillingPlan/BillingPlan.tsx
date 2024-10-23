@@ -121,7 +121,7 @@ export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
         );
         const totalTraffic = toTrafficUsageSum(trafficData);
         return calculateOverageCost(totalTraffic, includedTraffic);
-    }, [true, includedTraffic, traffic, currentPeriod, endpointsInfo]);
+    }, [includedTraffic, traffic, currentPeriod, endpointsInfo]);
 
     const totalCost = planPrice + paidAssignedPrice + overageCost;
 

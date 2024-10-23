@@ -40,7 +40,6 @@ const StyledContainer = styled(Box, {
             ? theme.palette.neutral.light
             : theme.palette.common.white,
     },
-    width: '100%',
 }));
 
 const CustomStrategyDeprecationWarning = () => (

@@ -3642,13 +3642,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"depd@npm:~1.1.0":
-  version: 1.1.2
-  resolution: "depd@npm:1.1.2"
-  checksum: 10c0/acb24aaf936ef9a227b6be6d495f0d2eb20108a9a6ad40585c5bda1a897031512fef6484e4fdbb80bd249fdaa82841fa1039f416ece03188e677ba11bcfda249
-  languageName: node
-  linkType: hard
-
 "dequal@npm:^2.0.3":
   version: 2.0.3
   resolution: "dequal@npm:2.0.3"
@@ -8150,12 +8143,12 @@ __metadata:
   linkType: hard
 
 "response-time@npm:^2.3.2":
-  version: 2.3.2
-  resolution: "response-time@npm:2.3.2"
+  version: 2.3.3
+  resolution: "response-time@npm:2.3.3"
   dependencies:
-    depd: "npm:~1.1.0"
+    depd: "npm:~2.0.0"
     on-headers: "npm:~1.0.1"
-  checksum: 10c0/9213579b1472f1dcb64cf58ee736d00230d090b2347ac0da6df363dc825a4de08879d3cbc6fdbe5526c785a188c87dbfbbee99f676a55d2ea07ee2f53d6d828d
+  checksum: 10c0/5e04c6a803fec93703b2bee8612f072fc3f2484220e6c3d69ed87bb5f6cda4b0f1354e057c114f860a0304550b874b00aeaeba48ac5942870fb6b05fa7d4acd5
   languageName: node
   linkType: hard
 

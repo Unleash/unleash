@@ -116,6 +116,11 @@ module.exports = {
                                     label: 'A/B Testing',
                                     id: 'feature-flag-tutorials/use-cases/a-b-testing',
                                 },
+                                {
+                                    type: 'doc',
+                                    label: 'Feature Flags for AI',
+                                    id: 'feature-flag-tutorials/use-cases/ai',
+                                },
                             ],
                         },
                         {
@@ -534,7 +539,6 @@ module.exports = {
                                 slug: '/how-to/env',
                             },
                             items: [
-                                'how-to/how-to-clone-environments',
                                 'how-to/how-to-import-export',
                                 'how-to/how-to-environment-import-export',
                             ],

@@ -150,7 +150,7 @@ export class PersonalDashboardService {
 
         const [latestEvents, owners, roles, healthScores] = await Promise.all([
             this.eventStore
-                .searchEvents({ limit: 4, offset: 0 }, [
+                .searchEvents({ limit: 10, offset: 0 }, [
                     {
                         field: 'project',
                         operator: 'IS',

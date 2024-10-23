@@ -176,7 +176,7 @@
     "@babel/core": "7.25.8",
     "@biomejs/biome": "^1.8.3",
     "@cyclonedx/yarn-plugin-cyclonedx": "^1.0.0-rc.7",
-    "@swc/core": "1.7.35",
+    "@swc/core": "1.7.36",
     "@swc/jest": "0.2.36",
     "@types/bcryptjs": "2.4.6",
     "@types/cors": "2.8.17",

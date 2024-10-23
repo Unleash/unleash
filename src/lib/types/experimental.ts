@@ -35,7 +35,6 @@ export type IFlagKey =
     | 'feedbackComments'
     | 'showInactiveUsers'
     | 'killScheduledChangeRequestCache'
-    | 'collectTrafficDataUsage'
     | 'estimateTrafficDataCost'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
@@ -48,7 +47,6 @@ export type IFlagKey =
     | 'projectOverviewRefactorFeedback'
     | 'manyStrategiesPagination'
     | 'enableLegacyVariants'
-    | 'navigationSidebar'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
     | 'onboardingMetrics'
@@ -62,7 +60,9 @@ export type IFlagKey =
     | 'unleashAI'
     | 'webhookDomainLogging'
     | 'addonUsageMetrics'
-    | 'releasePlans';
+    | 'releasePlans'
+    | 'navigationSidebar'
+    | 'productivityReportEmail';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -206,10 +206,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_KILL_SCHEDULED_CHANGE_REQUEST_CACHE,
         false,
     ),
-    collectTrafficDataUsage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_COLLECT_TRAFFIC_DATA_USAGE,
-        false,
-    ),
     estimateTrafficDataCost: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ESTIMATE_TRAFFIC_DATA_COST,
         false,
@@ -250,10 +246,6 @@ const flags: IFlags = {
     enableLegacyVariants: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ENABLE_LEGACY_VARIANTS,
         false,
-    ),
-    navigationSidebar: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
-        true,
     ),
     extendedMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_METRICS,
@@ -309,6 +301,14 @@ const flags: IFlags = {
     ),
     releasePlans: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RELEASE_PLANS,
+        false,
+    ),
+    navigationSidebar: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
+        true,
+    ),
+    productivityReportEmail: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_EMAIL,
         false,
     ),
 };

@@ -112,6 +112,11 @@
       "permanent": true
     },
     {
+      "source": "/how-to/how-to-clone-environments",
+      "destination": "/reference/environments#clone-an-environment",
+      "permanent": true
+    },
+    {
       "source": "/toggle_variants",
       "destination": "/reference/feature-toggle-variants",
       "permanent": true

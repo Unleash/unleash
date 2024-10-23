@@ -11,7 +11,6 @@ import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
-import useLoading from '../../hooks/useLoading';
 import { MyProjects } from './MyProjects';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -20,6 +19,7 @@ import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { useDashboardState } from './useDashboardState';
 import { MyFlags } from './MyFlags';
 import { usePageTitle } from 'hooks/usePageTitle';
+import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -130,15 +130,10 @@ export const PersonalDashboard = () => {
         splash?.personalDashboardKeyConcepts ? 'closed' : 'open',
     );
 
-    const { personalDashboardProjectDetails, error: detailsError } =
-        usePersonalDashboardProjectDetails(activeProject);
-
-    const activeProjectStage =
-        personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
-
-    const projectStageRef = useLoading(
-        !detailsError && activeProjectStage === 'loading',
-    );
+    const personalDashboardProjectDetails =
+        fromPersonalDashboardProjectDetailsOutput(
+            usePersonalDashboardProjectDetails(activeProject),
+        );
 
     return (
         <MainContent>
@@ -192,7 +187,6 @@ export const PersonalDashboard = () => {
                     <MyProjects
                         owners={personalDashboard?.projectOwners ?? []}
                         admins={personalDashboard?.admins ?? []}
-                        ref={projectStageRef}
                         projects={projects}
                         activeProject={activeProject || ''}
                         setActiveProject={setActiveProject}

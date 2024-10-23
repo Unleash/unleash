@@ -1,5 +1,5 @@
 import { Avatar, styled } from '@mui/material';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
+import { ReactComponent as AIIcon } from 'assets/icons/AI.svg';
 import { Markdown } from 'component/common/Markdown/Markdown';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import type { ChatMessage } from 'hooks/api/actions/useAIApi/useAIApi';
@@ -62,7 +62,10 @@ const StyledUserMessage = styled(StyledAIMessage)(({ theme }) => ({
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
     width: theme.spacing(4.5),
     height: theme.spacing(4.5),
-    backgroundColor: theme.palette.primary.light,
+    backgroundColor:
+        theme.mode === 'light'
+            ? theme.palette.primary.main
+            : theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
 }));
 
@@ -89,7 +92,7 @@ export const AIChatMessage = ({ from, children }: IAIChatMessageProps) => {
         return (
             <StyledMessageContainer>
                 <StyledAvatar>
-                    <SmartToyIcon />
+                    <AIIcon />
                 </StyledAvatar>
                 <StyledAIMessage>
                     <Markdown>{children}</Markdown>

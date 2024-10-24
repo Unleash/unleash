@@ -40,7 +40,7 @@ const addDocsRoutePrefix = ({ from, ...rest }) => {
 };
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-    title: 'Unleash',
+    title: 'Unleash Documentation',
     tagline: 'The enterprise ready feature flag service',
     url: 'https://docs.getunleash.io',
     baseUrl: '/',
@@ -56,6 +56,7 @@ module.exports = {
         environment: process.env.NODE_ENV,
     },
     themeConfig: {
+        titleTemplate: '%s',  
         defaultMode: 'light',
         disableSwitch: true,
         respectPrefersColorScheme: false,
@@ -527,10 +528,6 @@ module.exports = {
                             '/sdks/unleash-proxy',
                         ],
                         to: '/reference/unleash-proxy',
-                    },
-                    {
-                        to: '/how-to/how-to-create-feature-toggles',
-                        from: '/user_guide/create_feature_toggle',
                     },
                     {
                         to: '/reference/activation-strategies',

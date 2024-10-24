@@ -4,6 +4,7 @@ import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
 
 export const theme = {
+    mode: 'light',
     breakpoints: {
         values: {
             xs: 0,
@@ -294,7 +295,7 @@ export const theme = {
             series: colors.chartSeries,
         },
     },
-};
+} as const;
 
 export default createTheme({
     ...theme,

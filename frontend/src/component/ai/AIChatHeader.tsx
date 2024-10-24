@@ -1,10 +1,13 @@
 import { IconButton, styled, Tooltip, Typography } from '@mui/material';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
+import { ReactComponent as AIIcon } from 'assets/icons/AI.svg';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import CloseIcon from '@mui/icons-material/Close';
 
 const StyledHeader = styled('div')(({ theme }) => ({
-    background: theme.palette.primary.light,
+    background:
+        theme.mode === 'light'
+            ? theme.palette.primary.main
+            : theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
     display: 'flex',
     alignItems: 'center',
@@ -41,7 +44,7 @@ export const AIChatHeader = ({ onNew, onClose }: IAIChatHeaderProps) => {
     return (
         <StyledHeader>
             <StyledTitleContainer>
-                <SmartToyIcon />
+                <AIIcon />
                 <StyledTitle>Unleash AI</StyledTitle>
             </StyledTitleContainer>
             <StyledActionsContainer>

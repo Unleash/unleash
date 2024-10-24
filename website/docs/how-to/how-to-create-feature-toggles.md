@@ -1,5 +1,7 @@
 ---
 title: How to create a feature flag
+description: 'This guide shows you how to create feature flags in Unleash and how to add constraints, segments, variants, and more.'
+slug: /how-to-create-feature-flag
 ---
 
 [Feature flags](../reference/feature-toggles) are the foundation of Unleash. They are at the core of everything we do and are a fundamental building block in any feature management system. This guide shows you how to create feature flags in Unleash and how to add any optional constraints, segments, variants, and more. Links to learn more about these concepts will be scattered throughout the text.

@@ -1,651 +1,151 @@
-<html><head></head><body><div>
-    <u></u>
-    <div bgcolor="#edf0f1" text="#3b3f44" link="#817afe" style="background-color:#edf0f1">
-        <table cellpadding="0" border="0" cellspacing="0" style="display:none">
-            <tbody>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Unleash Productivity Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 600px;
+            margin: 24px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            border: 1px solid #f0f0f5;
+            overflow: hidden;
+        }
+        .header {
+            background-color: #6c65e5;
+            padding: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+        .header img {
+            margin-top: 8px;
+        }
+        .header-title {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .content {
+            padding: 20px;
+            text-align: left;
+        }
+        .intro {
+            margin: 0 4px;
+        }
+        .big-number {
+            font-size: 48px;
+            line-height: 36px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0 0 0;
+            text-align: center;
+        }
+        .shaded {
+            margin: 0;
+            padding: 36px 8px;
+            background: #f0f0f5;
+            border-width: 3px;
+            border-color: #ffffff;
+            border-style: solid;
+        }
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-width: 0;
+        }
+        .content-table td {
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 12px 25px;
+            background-color: #817afe;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f0f0f5;
+        }
+        .footer-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #333;
+        }
+        .unsubscribe {
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="cid:unleashLogo" alt="Unleash" width="210px" height="60px">
+            <div class="header-title">Your Monthly Productivity Report</div>
+        </div>
+        <div class="content">
+            <div class="intro">
+                <p style="color: #222">Hi {{userName}},</p>
+                <p style="color: #222">We are excited to share the latest insights for your instance. As always if you have any questions or concerns let us know - we are here for you.</p>
+                <p style="color: #222">Ready to dive into your numbers?</p>
+            </div>
+            <div class="big-number">
+                <div class="shaded">
+                    <div style="padding-top: 12px;">
+                        <span style="color: #1a4049;">{{health}}%</span><br>
+                        <span style="font-size: 16px; color: #888;">your instance health</span>
+                    </div>
+                </div>
+            </div>
+            <table class="content-table">
+                <colgroup>
+                    <col style="width: 50%;">
+                    <col style="width: 50%;">
+                </colgroup>
                 <tr>
                     <td>
-                        Insights about your Unleash usage.</td>
-                </tr>
-            </tbody>
-        </table>
-        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="background-color:#edf0f1;width:100%">
-            <tbody>
-                <tr>
+                        <div class="shaded">
+                            <span style="font-size: 24px; font-weight: bold; color: #1a4049;">{{flags_created}}</span><br>
+                            <span style="color: #888;">flags created last month</span>
+                        </div>
+                    </td>
                     <td>
-                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="600" align="center" style="table-layout:fixed;width:600px">
-                            <tbody>
-                                <tr>
-                                    <td valign="top" style="background-color:#edf0f1">
-                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" align="center" style="table-layout:fixed;width:100%">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="background-color:#eff2f7;padding-bottom:20px;padding-top:20px">
-                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th width="100%" valign="top" style="font-weight:normal">
-                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-left:15px;padding-right:15px">
-                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td align="left">
-                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="90" style="table-layout:fixed;width:90px">
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td style="font-size:0px;line-height:0px;padding-bottom:15px;padding-top:15px">
-                                                                                                                        <img src="https://ci3.googleusercontent.com/meips/ADKq_NZMlA8AfUh9pPE1j5wYAW56RtbWrVOg6GAjGGWkhi6_1z8g1JzZDyCcyOF9SBZo1w41kEira0y5MQrBu90j3R-X7vA5pIL6Wmig7hVkVEk6OI2B_lBv6MnNHTPO3RM7Acc4IoXXkS28CCYc-gq_-Ww2Mw=s0-d-e1-ft#https://48380.img.bh.d.sendibt3.com/im/sh/VFTakkUh8DMK.png?u=7xwQLFBtniwQn1MANwrZu0PIfTQSHty" width="90" border="0" style="display:block;width:100%" class="CToWUd" data-bit="iit"/>
-                                                                                                                        {{ses:openTracker}}
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </th>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" align="center" style="table-layout:fixed;width:100%">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="background-color:#817afe;padding-bottom:20px;padding-top:20px">
-                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th width="50%" valign="middle" style="font-weight:normal">
-                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-left:15px;padding-right:15px">
-                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td align="center">
-                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="143" style="table-layout:fixed;width:143px">
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td style="font-size:0px;line-height:0px;padding-bottom:15px;padding-top:15px">
-                                                                                                                        <img src="https://ci3.googleusercontent.com/meips/ADKq_NYP50pb_hAwn0djM1cKPPD-esyWYpu4h7X1mqLaQypjS-UaAW9l9Tt1eu6Fg72sDPRDySRmFrszwK6i3WS3UJxaIANhTd07Q9IazArwUcx4Nj-SG4efxi8bTML7y_9j4QUhdj6xTk3fS99xnp22Dpmt6A=s0-d-e1-ft#https://48380.img.bh.d.sendibt3.com/im/sh/cTZTuTieW0Yv.png?u=7xwQLFBtniwQn8DcWlol49tOUmAQaUE" width="143" border="0" style="display:block;width:100%" class="CToWUd" data-bit="iit"/>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </th>
-                                                                    <th width="50%" valign="middle" style="font-weight:normal">
-                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-left:15px;padding-right:15px">
-                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td align="left">
-                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="94%" style="table-layout:fixed;width:94%">
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td align="left" valign="top" style="color:#3b3f44;font-family:arial,helvetica,sans-serif;font-size:18px;word-break:break-word;line-height:1.5;padding-bottom:15px;padding-top:15px;text-align:left">
-                                                                                                                        <div>
-                                                                                                                            <p style="margin:0">
-                                                                                                                                <span style="color:#ffffff;font-family:Tahoma,geneva,sans-serif;font-size:24px">
-                                                                                                                                    Your Unleash productivity report </span>
-                                                                                                                            </p>
-                                                                                                                        </div>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </th>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" align="center" style="table-layout:fixed;width:100%">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="background-color:#ffffff;padding-bottom:20px;padding-top:20px">
-                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th width="100%" valign="top" style="font-weight:normal">
-                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-left:15px;padding-right:15px">
-                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td align="left" style="color:#3b3f44;font-family:arial,helvetica,sans-serif;font-size:18px;word-break:break-word;line-height:1.15;padding-bottom:15px;padding-top:15px;text-align:left">
-                                                                                                        <div>
-                                                                                                            <p style="margin:0">
-                                                                                                                <span style="font-family:Tahoma,geneva,sans-serif;font-size:14px">
-                                                                                                                    Hi <!-- FIXME: name --></span>
-                                                                                                            </p>
-                                                                                                            <p style="margin:0">
-                                                                                                                 </p>
-                                                                                                            <p style="margin:0">
-                                                                                                                <span style="font-family:Tahoma,geneva,sans-serif;font-size:14px">
-                                                                                                                    We are excited to share the latest insights for your instance. As always if you have any questions or concerns let us know - we are here for you. </span>
-                                                                                                            </p>
-                                                                                                            <p style="margin:0">
-                                                                                                                 </p>
-                                                                                                            <p style="margin:0">
-                                                                                                                <span style="font-family:Tahoma,geneva,sans-serif;font-size:14px">
-                                                                                                                    Ready to dive into your numbers?</span>
-                                                                                                            </p>
-                                                                                                        </div>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td align="center" style="font-size:0px;line-height:0px;padding-bottom:15px;padding-top:15px">
-                                                                                                        <img src="https://ci3.googleusercontent.com/meips/ADKq_NaxAN1IcqLDX9boYJFVHE7d8SQYudpP7VO_qi2rkryST3JXUoqdfv5aZwx57yb3qKjzsM3S0HhSHIWj5aAVpnej7YPqk7hx88O_A4uDloR_E9x3UfIFd18cXG7ggluth4r9zV2hXuGeaLF1Eau07xCzcg=s0-d-e1-ft#https://48380.img.bh.d.sendibt3.com/im/sh/1bycbRSvMB4H.png?u=7xwQLFBtniwQnF54falwEJNUK4uOt4U" width="570" border="0" style="display:block;width:100%" class="CToWUd" data-bit="iit"/>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </th>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" align="center" style="table-layout:fixed;width:100%">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="background-color:#ffffff;padding-bottom:20px;padding-top:20px">
-                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th width="100%" valign="top" style="font-weight:normal">
-                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-left:15px;padding-right:15px">
-                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td align="left">
-                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="border-bottom-color:#817afe;border-bottom-width:1px;border-collapse:separate;border-left-color:#817afe;border-left-width:1px;border-radius:5px;border-right-color:#817afe;border-right-width:1px;border-style:solid;border-top-color:#817afe;border-top-width:1px;table-layout:fixed;width:100%">
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td align="center" valign="top" style="color:#3b3f44;font-family:arial,helvetica,sans-serif;font-size:18px;line-height:1.5;word-break:break-word;border-radius:4px;padding-top:15px;text-align:center">
-                                                                                                                        <div>
-                                                                                                                            <h2 style="margin:0;color:#1f2d3d;font-family:arial,helvetica,sans-serif;font-size:32px;word-break:break-word">
-                                                                                                                                 </h2>
-                                                                                                                            <h2 style="margin:0;color:#1f2d3d;font-family:arial,helvetica,sans-serif;font-size:32px;word-break:break-word">
-                                                                                                                                <span style="font-family:Tahoma,geneva,sans-serif;font-size:48px">
-                                                                                                                                    <strong>
-                                                                                                                                        50</strong>
-                                                                                                                                </span>
-                                                                                                                                <span style="font-family:Arial,helvetica,sans-serif;font-size:48px">
-                                                                                                                                    %</span>
-                                                                                                                            </h2>
-                                                                                                                            <p style="margin:0">
-                                                                                                                                <span style="font-family:Tahoma,geneva,sans-serif;font-size:14px"> your instance health</span>
-                                                                                                                            </p>
-                                                                                                                            <p style="margin:0">
-                                                                                                                                 </p>
-                                                                                                                            <p style="margin:0">
-                                                                                                                                 </p>
-                                                                                                                        </div>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </th>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" align="center" style="table-layout:fixed;width:100%">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="background-color:#ffffff;padding-bottom:20px;padding-top:20px">
-                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th width="50%" valign="top" style="font-weight:normal">
-                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-left:15px;padding-right:15px">
-                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td align="left">
-                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="border-bottom-color:#817afe;border-bottom-width:1px;border-collapse:separate;border-left-color:#817afe;border-left-width:1px;border-radius:5px;border-right-color:#817afe;border-right-width:1px;border-style:solid;border-top-color:#817afe;border-top-width:1px;table-layout:fixed;width:100%">
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td align="center" valign="top" style="color:#3b3f44;font-family:arial,helvetica,sans-serif;font-size:18px;line-height:1.5;word-break:break-word;border-radius:4px;padding-bottom:15px;padding-top:15px;text-align:center">
-                                                                                                                        <div>
-                                                                                                                            <p style="margin:0">
-                                                                                                                                 </p>
-                                                                                                                            <p style="margin:0">
-                                                                                                                                <span style="font-family:Tahoma,geneva,sans-serif;font-size:24px">
-                                                                                                                                    <strong>
-                                                                                                                                        10</strong>
-                                                                                                                                </span>
-                                                                                                                            </p>
-                                                                                                                            <p style="margin:0">
-                                                                                                                                <span style="font-family:Tahoma,geneva,sans-serif;font-size:14px">
-                                                                                                                                    flags created the last month</span>
-                                                                                                                            </p>
-                                                                                                                            <p style="margin:0">
-                                                                                                                                 </p>
-                                                                                                                        </div>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </th>
-                                                                    <th width="50%" valign="top" style="font-weight:normal">
-                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-left:15px;padding-right:15px">
-                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td align="left">
-                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="border-bottom-color:#817afe;border-bottom-width:1px;border-collapse:separate;border-left-color:#817afe;border-left-width:1px;border-radius:5px;border-right-color:#817afe;border-right-width:1px;border-style:solid;border-top-color:#817afe;border-top-width:1px;table-layout:fixed;width:100%">
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td align="center" valign="top" style="color:#3b3f44;font-family:arial,helvetica,sans-serif;font-size:18px;line-height:1.5;word-break:break-word;border-radius:4px;padding-bottom:15px;padding-top:15px;text-align:center">
-                                                                                                                        <div>
-                                                                                                                            <p style="margin:0">
-                                                                                                                                 </p>
-                                                                                                                            <p style="margin:0">
-                                                                                                                                <span style="font-size:24px">
-                                                                                                                                    <strong>
-                                                                                                                                        44</strong>
-                                                                                                                                </span>
-                                                                                                                            </p>
-                                                                                                                            <p style="margin:0">
-                                                                                                                                <span style="font-family:Tahoma,geneva,sans-serif;font-size:14px">
-                                                                                                                                    production updates the last month</span>
-                                                                                                                            </p>
-                                                                                                                            <p style="margin:0">
-                                                                                                                                 </p>
-                                                                                                                        </div>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </th>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" align="center" style="table-layout:fixed;width:100%">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="background-color:#ffffff;padding-bottom:20px;padding-top:20px">
-                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th width="100%" valign="top" style="font-weight:normal">
-                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-left:15px;padding-right:15px">
-                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td align="center" style="padding-bottom:15px;padding-top:15px">
-                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="200" style="background-color:#817afe;border-collapse:separate;border-color:#817afe;border-radius:4px;border-style:solid;border-width:1px;table-layout:fixed;width:200px">
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td height="19" align="center" valign="top" style="font-family:arial,helvetica,sans-serif;word-break:break-word;background-color:#817afe;border-radius:4px;color:#ffffff;font-size:16px;font-style:normal;line-height:1.15;padding-bottom:12px;padding-left:5px;padding-right:5px;padding-top:12px;text-align:center">
-                                                                                                                        <a href="https://48380.r.bh.d.sendibt3.com/mk/cl/f/sh/1t6Af4Oj9PgrH6j5PBo7SbQnRa0LNi/ym1tqpjofV6c" title="Sign-in" style="font-family:arial,helvetica,sans-serif;font-style:normal;font-weight:bold;line-height:1.15;text-decoration:none;word-break:break-word;word-wrap:break-word;display:block;color:#ffffff;font-size:16px" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://48380.r.bh.d.sendibt3.com/mk/cl/f/sh/1t6Af4Oj9PgrH6j5PBo7SbQnRa0LNi/ym1tqpjofV6c&amp;source=gmail&amp;ust=1729772114788000&amp;usg=AOvVaw08dYbc9awkixFByFPJebxt">
-                                                                                                                            <span>
-                                                                                                                                <span style="font-family:&#39;Trebuchet ms&#39;,helvetica,sans-serif">
-                                                                                                                                    Go
-                                                                                                                                    to
-                                                                                                                                    your
-                                                                                                                                    dashboard</span>
-                                                                                                                            </span>
-                                                                                                                        </a>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </th>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" align="center" style="table-layout:fixed;width:100%">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="background-color:#ffffff;padding-bottom:20px;padding-top:20px">
-                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th width="100%" valign="top" style="font-weight:normal">
-                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-left:15px;padding-right:15px">
-                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td align="center" style="font-size:0px;line-height:0px;padding-bottom:15px;padding-top:15px">
-                                                                                                        <img src="https://ci3.googleusercontent.com/meips/ADKq_NbmQNTp5OSCr4J64yMJc5992bjcqhv-CJRG_qQBNhva1Q-pRfKVH-v4H6blxBlcgV9va5dGZ2zpTlvxrQTXXB1cIH6qLD7swI94s-gFxOUoQJ_gBZYV3ugUtfVt3lz0_dRmZTTl3bqDhZL6LTQbwMkcSA=s0-d-e1-ft#https://48380.img.bh.d.sendibt3.com/im/sh/IFcvkReYj7_t.png?u=7xwQLFBtniwQnF54falwEJNUK4uOt4U" width="570" border="0" style="display:block;width:100%" class="CToWUd" data-bit="iit"/>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </th>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" align="center" style="table-layout:fixed;width:100%">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="background-color:#ffffff;padding-bottom:20px;padding-top:20px">
-                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th width="100%" valign="middle" style="font-weight:normal">
-                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-left:15px;padding-right:15px">
-                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td align="right">
-                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="570" align="right" style="table-layout:fixed;width:570px">
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td valign="top">
-                                                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                                                            <tbody>
-                                                                                                                                <tr>
-                                                                                                                                    <td align="right" style="display:inline-block">
-                                                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="570" align="right" style="table-layout:fixed;width:570px">
-                                                                                                                                            <tbody>
-                                                                                                                                                <tr>
-                                                                                                                                                    <td style="padding-bottom:15px;padding-left:378px;padding-top:15px">
-                                                                                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                                                                                            <tbody>
-                                                                                                                                                                <tr>
-                                                                                                                                                                    <th width="48" style="font-weight:normal">
-                                                                                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                                                                                                                            <tbody>
-                                                                                                                                                                                <tr>
-                                                                                                                                                                                    <td width="8" style="font-size:0px;line-height:1px">
-                                                                                                                                                                                        ­ </td>
-                                                                                                                                                                                    <td style="font-size:0px;line-height:0px">
-                                                                                                                                                                                        <a href="https://48380.r.bh.d.sendibt3.com/mk/cl/f/sh/1t6Af4Oj9PgrH6j5PBo7SbQnRa0LNi/aIsZwySGsBXy" style="color:#817afe;text-decoration:underline" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://48380.r.bh.d.sendibt3.com/mk/cl/f/sh/1t6Af4Oj9PgrH6j5PBo7SbQnRa0LNi/aIsZwySGsBXy&amp;source=gmail&amp;ust=1729772114788000&amp;usg=AOvVaw31BdG2MEeDMsmoAFniQdTL">
-                                                                                                                                                                                            <img src="https://ci3.googleusercontent.com/meips/ADKq_NZTJ31I0t2XhKSZ2nymb3oa8obZjQBjt8TnRl2iTB_590ED4hb2dZoW69hlrpAVp34fhI1dd6X5VrXoANbNuchUlDXgkeDx-wRn3MqCu3oQonrs8-43jvn9eQkXwvm6D99bNPtbGDdAZ4PvVflvSY_cow=s0-d-e1-ft#https://48380.img.bh.d.sendibt3.com/im/sh/ubQ0ux_IBlVF.png?u=7xwQLFBtniwQnLwWoPj7OSra9NeNBek" width="32" border="0" style="display:block;width:100%" class="CToWUd" data-bit="iit"/>
-                                                                                                                                                                                        </a>
-                                                                                                                                                                                    </td>
-                                                                                                                                                                                    <td width="8" style="font-size:0px;line-height:1px">
-                                                                                                                                                                                        ­ </td>
-                                                                                                                                                                                </tr>
-                                                                                                                                                                            </tbody>
-                                                                                                                                                                        </table>
-                                                                                                                                                                    </th>
-                                                                                                                                                                    <th width="48" style="font-weight:normal">
-                                                                                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                                                                                                                            <tbody>
-                                                                                                                                                                                <tr>
-                                                                                                                                                                                    <td width="8" style="font-size:0px;line-height:1px">
-                                                                                                                                                                                        ­ </td>
-                                                                                                                                                                                    <td style="font-size:0px;line-height:0px">
-                                                                                                                                                                                        <a href="https://48380.r.bh.d.sendibt3.com/mk/cl/f/sh/1t6Af4Oj9PgrH6j5PBo7SbQnRa0LNi/tglP67KdOchJ" style="color:#817afe;text-decoration:underline" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://48380.r.bh.d.sendibt3.com/mk/cl/f/sh/1t6Af4Oj9PgrH6j5PBo7SbQnRa0LNi/tglP67KdOchJ&amp;source=gmail&amp;ust=1729772114788000&amp;usg=AOvVaw1Z_PgCdKi3Fw88OD6PAJEg">
-                                                                                                                                                                                            <img src="https://ci3.googleusercontent.com/meips/ADKq_NaqXorHG9xnJBZTDmCX0QKimXwdiiDxQf4cVpWK3eOrlYQ5BBzVPirXKZtD3PmCg_vw5mvPCNmnbrYoBC_lrxuk9rxa-ZCeChfekbEK-qCdehu8SQUQETzm4vQdqaC66ZkZxPtRaonYC1irAgArohu4jg=s0-d-e1-ft#https://48380.img.bh.d.sendibt3.com/im/sh/kDVdPZh00W5D.png?u=7xwQLFBtniwQnSnyxEgIYcLfygOLUF0" width="32" border="0" style="display:block;width:100%" class="CToWUd" data-bit="iit"/>
-                                                                                                                                                                                        </a>
-                                                                                                                                                                                    </td>
-                                                                                                                                                                                    <td width="8" style="font-size:0px;line-height:1px">
-                                                                                                                                                                                        ­ </td>
-                                                                                                                                                                                </tr>
-                                                                                                                                                                            </tbody>
-                                                                                                                                                                        </table>
-                                                                                                                                                                    </th>
-                                                                                                                                                                    <th width="48" style="font-weight:normal">
-                                                                                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                                                                                                                            <tbody>
-                                                                                                                                                                                <tr>
-                                                                                                                                                                                    <td width="8" style="font-size:0px;line-height:1px">
-                                                                                                                                                                                        ­ </td>
-                                                                                                                                                                                    <td style="font-size:0px;line-height:0px;padding-bottom:5px;padding-top:5px">
-                                                                                                                                                                                        <a href="https://48380.r.bh.d.sendibt3.com/mk/cl/f/sh/1t6Af4Oj9PgrH6j5PBo7SbQnRa0LNi/1vX6vJnB5IGW" style="color:#817afe;text-decoration:underline" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://48380.r.bh.d.sendibt3.com/mk/cl/f/sh/1t6Af4Oj9PgrH6j5PBo7SbQnRa0LNi/1vX6vJnB5IGW&amp;source=gmail&amp;ust=1729772114788000&amp;usg=AOvVaw2wDEqdBQk0P0_dRya7qiNu">
-                                                                                                                                                                                            <img src="https://ci3.googleusercontent.com/meips/ADKq_NYm5cuFq2rsOcgG9ztK7_K6vZkzz_hUFUk6pCdhVkNAgt6tFsNg-_Z-KAmvqECS4DEj321PS3aXx31rJbxQzHm3PK54_mq4OgIZBjUvV_La2z2qH-QToFm1JU5sHQY-iqhnci_MW17cviivJReTWE77xg=s0-d-e1-ft#https://48380.img.bh.d.sendibt3.com/im/sh/QLP4-ymHS3Jo.png?u=7xwQLFBtniwQnZfR63dTilplnz8JmpG" width="32" border="0" style="display:block;width:100%" class="CToWUd" data-bit="iit"/>
-                                                                                                                                                                                        </a>
-                                                                                                                                                                                    </td>
-                                                                                                                                                                                    <td width="8" style="font-size:0px;line-height:1px">
-                                                                                                                                                                                        ­ </td>
-                                                                                                                                                                                </tr>
-                                                                                                                                                                            </tbody>
-                                                                                                                                                                        </table>
-                                                                                                                                                                    </th>
-                                                                                                                                                                    <th width="48" style="font-weight:normal">
-                                                                                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                                                                                                                            <tbody>
-                                                                                                                                                                                <tr>
-                                                                                                                                                                                    <td width="8" style="font-size:0px;line-height:1px">
-                                                                                                                                                                                        ­ </td>
-                                                                                                                                                                                    <td style="font-size:0px;line-height:0px;padding-bottom:5px;padding-top:5px">
-                                                                                                                                                                                        <a href="https://48380.r.bh.d.sendibt3.com/mk/cl/f/sh/1t6Af4Oj9PgrH6j5PBo7SbQnRa0LNi/LdSFuGvgDWKm" style="color:#817afe;text-decoration:underline" target="_blank" data-saferedirecturl="https://www.google.com/url?q=https://48380.r.bh.d.sendibt3.com/mk/cl/f/sh/1t6Af4Oj9PgrH6j5PBo7SbQnRa0LNi/LdSFuGvgDWKm&amp;source=gmail&amp;ust=1729772114788000&amp;usg=AOvVaw2byAJGRxptsdxhnksfUWfN">
-                                                                                                                                                                                            <img src="https://ci3.googleusercontent.com/meips/ADKq_Nby5sFL1wV1A1vrl7et8UGNwcSqDLEpOFDLk2sOT5cU66tXGkL29tTPc_N4xZi0szPhIRD4XQTWspAPBa8WdqJg6VE818cgcsfmirL6eg04ZS7sfoLNuELHJhoPIvJHKdcUO8dYixiWZ4w7JKNvJSjPBw=s0-d-e1-ft#https://48380.img.bh.d.sendibt3.com/im/sh/JzP1RzpcUH4q.png?u=7xwQLFBtniwQngWtEsaesvJrdHsI5PW" width="32" border="0" style="display:block;width:100%" class="CToWUd" data-bit="iit"/>
-                                                                                                                                                                                        </a>
-                                                                                                                                                                                    </td>
-                                                                                                                                                                                    <td width="8" style="font-size:0px;line-height:1px">
-                                                                                                                                                                                        ­ </td>
-                                                                                                                                                                                </tr>
-                                                                                                                                                                            </tbody>
-                                                                                                                                                                        </table>
-                                                                                                                                                                    </th>
-                                                                                                                                                                </tr>
-                                                                                                                                                            </tbody>
-                                                                                                                                                        </table>
-                                                                                                                                                    </td>
-                                                                                                                                                </tr>
-                                                                                                                                            </tbody>
-                                                                                                                                        </table>
-                                                                                                                                    </td>
-                                                                                                                                </tr>
-                                                                                                                            </tbody>
-                                                                                                                        </table>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </th>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" align="center" style="table-layout:fixed;width:100%">
-                                            <tbody>
-                                                <tr>
-                                                    <td style="background-color:#ffffff;padding-bottom:20px;padding-top:20px">
-                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                            <tbody>
-                                                                <tr>
-                                                                    <th width="100%" valign="top" style="font-weight:normal">
-                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                            <tbody>
-                                                                                <tr>
-                                                                                    <td valign="top" style="padding-left:15px;padding-right:15px">
-                                                                                        <table width="100%" cellspacing="0" cellpadding="0" border="0" role="presentation">
-                                                                                            <tbody>
-                                                                                                <tr>
-                                                                                                    <td align="left">
-                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td align="center" valign="top" style="font-family:arial,helvetica,sans-serif;word-break:break-word;color:#3b3f44;font-size:18px;line-height:1.5;padding-top:15px;text-align:center">
-                                                                                                                        <div>
-                                                                                                                            <p style="margin:0;font-size:14px">
-                                                                                                                                <span style="font-family:&#39;Trebuchet ms&#39;,helvetica,sans-serif;font-size:11px">
-                                                                                                                                    This email was sent to </span>
-                                                                                                                                <span style="color:#817afe;font-family:&#39;Trebuchet ms&#39;,helvetica,sans-serif;font-size:11px">
-                                                                                                                                    <!-- FIXME: email -->
-                                                                                                                                    <a href="mailto:aaaa@getunleash.io"  target="_blank">
-                                                                                                                                        <!-- FIXME: email -->
-                                                                                                                                        ...@getunleash.io</a>
-                                                                                                                                </span>
-                                                                                                                            </p>
-                                                                                                                        </div>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                                <tr>
-                                                                                                    <td align="left">
-                                                                                                        <table cellspacing="0" cellpadding="0" border="0" role="presentation" width="100%" style="table-layout:fixed;width:100%">
-                                                                                                            <tbody>
-                                                                                                                <tr>
-                                                                                                                    <td align="center" valign="top" style="font-family:arial,helvetica,sans-serif;word-break:break-word;color:#3b3f44;font-size:18px;line-height:1.5;text-align:center">
-                                                                                                                        <div>
-                                                                                                                            <p style="margin:0;font-size:14px">
-                                                                                                                                <span style="font-family:&#39;Trebuchet ms&#39;,helvetica,sans-serif;font-size:11px">
-                                                                                                                                    You&#39;ve received this as you are a user of Unleash</span>
-                                                                                                                            </p>
-                                                                                                                        </div>
-                                                                                                                    </td>
-                                                                                                                </tr>
-                                                                                                            </tbody>
-                                                                                                        </table>
-                                                                                                    </td>
-                                                                                                </tr>
-                                                                                            </tbody>
-                                                                                        </table>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </th>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="shaded">
+                            <span style="font-size: 24px; font-weight: bold; color: #1a4049;">{{production_updates}}</span><br>
+                            <span style="color: #888;">production updates last month</span>
+                        </div>
                     </td>
                 </tr>
-            </tbody>
-        </table>
-        <div align="center" style="color:#727272;font-size:10px;margin:20px">If you wish to unsubscribe from our
-            newsletter, click <a style="color:#01a4c6" href="" target="_blank">
-            here</a>
-
-            <!-- FIXME: test -->
-            {{amazonSESUnsubscribeUrl}}
-
+            </table>
+            <div style="text-align: center;">
+                <a href="{{unleashUrl}}/insights" class="button" style="color:#fefefe; text-decoration:none;" rel="noopener" target="_blank">Go to your Insights</a>
+            </div>
         </div>
-        <div class="adL" style="padding:10px"> </div>
-    </div>
-    <div class="adL">
+        <div class="footer">
+            <div class="footer-links">
 
+                <a href="https://getunleash.io" style="color: #1a4049;">getunleash.io</a> |
+                <a href="https://github.com/unleash" style="color: #1a4049;">GitHub</a> |
+                <a href="https://twitter.com/unleash" style="color: #1a4049;">Twitter</a>
+            </div>
+            <div class="unsubscribe">
+                This email was sent to {{userEmail}}. You’ve received this as you are a user of Unleash.<br>
+                If you wish to unsubscribe from our newsletter, click <a href="https://example.com/unsubscribe">here</a>.
+            </div>
+        </div>
     </div>
-</div>
-</body></html>
+</body>
+</html>

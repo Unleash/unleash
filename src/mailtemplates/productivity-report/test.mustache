@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Unleash Productivity Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #646cdc;
+            padding: 20px;
+            text-align: center;
+            color: #ffffff;
+        }
+        .header img {
+            margin-top: 8px;
+        }
+        .header-title {
+            font-size: 24px;
+            margin: 20px 0;
+        }
+        .content {
+            padding: 20px;
+            text-align: left;
+        }
+        .big-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0 0 0;
+            text-align: center;
+        }
+        .shaded {
+            padding: 36px 8px;
+            border: 1px solid #f0f0f5;
+            background: #f0f0f5;
+        }
+        .content-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .content-table td {
+            text-align: center;
+        }
+        .button {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 12px 25px;
+            background-color: #646cdc;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f0f0f5;
+        }
+        .footer-links a {
+            margin: 0 10px;
+            text-decoration: none;
+            color: #333;
+        }
+        .unsubscribe {
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAANIAAAA8CAMAAAAkCRSCAAAC61BMVEUAAAD///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////8aQEkoTFRCYmlKaHBWcnlfeoB1jJF7kZaBev6DmJ2KnqKSkO2VmtuXkf6fn+uqpf7////hhrjaAAAA6HRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRobHB0eHyAhIiMkJSYnKCkqKywtLi8wMTIzNDU2ODk7PD0+P0BBQkNERUhJSktMTU5PUFFSU1RVVldYWVpbXF1eX2BhY2RlZmdo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" alt="Unleash" width="210px" height="60px">
+            <div class="header-title">Your Monthly Productivity Report</div>
+        </div>
+        <div class="content">
+            <p>Hi Elise,</p>
+            <p>We are excited to share the latest insights for your instance. As always if you have any questions or concerns let us know - we are here for you.</p>
+            <p>Ready to dive into your numbers?</p>
+            <div class="big-number">
+                <div class="shaded">
+                    50%<br>
+                    <span style="font-size: 16px; color: #888;">your instance health</span>
+                </div>
+            </div>
+            <table class="content-table">
+                <colgroup>
+                    <col style="width: 50%;">
+                    <col style="width: 50%;">
+                </colgroup>
+                <tr>
+                    <td>
+                        <div class="shaded">
+                            <span style="font-size: 24px; font-weight: bold;">10</span><br>
+                            <span style="color: #888;">flags created last month</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="shaded">
+                            <span style="font-size: 24px; font-weight: bold;">44</span><br>
+                            <span style="color: #888;">production updates last month</span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div style="text-align: center;"><a href="https://example.com/insights" class="button">Go to your insights</a></div>
+        </div>
+        <div class="footer">
+            <div class="footer-links">
+                <a href="https://twitter.com/unleash">Twitter</a> |
+                <a href="https://github.com/unleash">GitHub</a> |
+                <a href="https://www.instagram.com/unleash">Instagram</a>
+            </div>
+            <div class="unsubscribe">
+                This email was sent to elise@getunleash.io. You’ve received this as you are a user of Unleash.<br>
+                If you wish to unsubscribe from our newsletter, click <a href="https://example.com/unsubscribe">here</a>.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

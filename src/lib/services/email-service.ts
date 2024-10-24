@@ -28,6 +28,11 @@ export interface IEmailEnvelope {
     subject: string;
     html: string;
     text: string;
+    attachments?: {
+        filename: string;
+        path: string;
+        cid: string;
+    }[];
 }
 
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
@@ -522,32 +527,48 @@ export class EmailService {
     }
 
     async sendProductivityReportEmail(
+        userName: string,
         userEmail: string,
-        customerId: string,
+        metrics: {
+            health: number;
+            flags_created: number;
+            production_updates: number;
+        },
     ): Promise<IEmailEnvelope> {
         if (this.configured()) {
             const context = {
+                userName,
                 userEmail,
-                customerId,
+                ...metrics,
+                unleashUrl: this.config.server.unleashUrl,
             };
 
+            const template = 'productivity-report';
+
             const bodyHtml = await this.compileTemplate(
-                'productivity-report',
+                template,
                 TemplateFormat.HTML,
                 context,
             );
             const bodyText = await this.compileTemplate(
-                'productivity-report',
+                template,
                 TemplateFormat.PLAIN,
                 context,
             );
-            const email = {
+            const email: IEmailEnvelope = {
                 from: this.sender,
                 to: userEmail,
                 bcc: '',
                 subject: PRODUCTIVITY_REPORT,
                 html: bodyHtml,
                 text: bodyText,
+                attachments: [
+                    this.resolveTemplateAttachment(
+                        template,
+                        'unleash-logo.png',
+                        'unleashLogo',
+                    ),
+                ],
             };
             process.nextTick(() => {
                 this.mailer!.sendMail(email).then(
@@ -611,6 +632,29 @@ export class EmailService {
             return readFileSync(template, 'utf-8');
         }
         throw new NotFoundError('Could not find template');
+    }
+
+    private resolveTemplateAttachment(
+        templateName: string,
+        filename: string,
+        cid: string,
+    ): {
+        filename: string;
+        path: string;
+        cid: string;
+    } {
+        const topPath = path.resolve(__dirname, '../../mailtemplates');
+        const attachment = path.join(topPath, templateName, filename);
+        console.log({ attachment });
+        if (existsSync(attachment)) {
+            return {
+                filename,
+                path: attachment,
+                cid,
+            };
+        }
+
+        throw new NotFoundError('Could not find email attachment');
     }
 
     configured(): boolean {

@@ -36,7 +36,6 @@ module.exports = {
         },
     ],
     documentation: [
-        'welcome',
         'quickstart',
         {
             label: 'Feature Flags Developer Guide',

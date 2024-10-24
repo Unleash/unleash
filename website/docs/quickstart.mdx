@@ -40,14 +40,14 @@ For more details on creating feature flags, see [How to create a feature flag](/
 
 ### Connect an SDK
 
-Next, use one of the [SDKs](/reference/sdks) to connect Unleash with your application.
+Next, use one of the client or server-side [SDKs](/reference/sdks) to connect Unleash with your application.
 
 1. Create an API token:
     - For client-side SDKs, use a [frontend token](/reference/api-tokens-and-client-keys#front-end-tokens). 
     - For server-side SDKs, use a [client token](/reference/api-tokens-and-client-keys#client-tokens).
 2. Determine your Unleash URL:
-    - For client-side SDKs use `<your-unleash-instance>/api/frontend`. 
-    - For server-side SDKs use `<your-unleash-instance>/api`.
+    - For client-side SDKs, use `<your-unleash-instance>/api/frontend`. 
+    - For server-side SDKs, use `<your-unleash-instance>/api`.
 3. Use the SDK to connect to Unleash in your application.
 
 The following example shows how to use the [JavaScript SDK](/reference/sdks/javascript-browser) and the [NodeJS SDK](/reference/sdks/node) to connect to your Unleash instance:
@@ -57,7 +57,7 @@ The following example shows how to use the [JavaScript SDK](/reference/sdks/java
 
 <TabItem value="sdk-client-side" label="Connect a client-side SDK">
 
-```javascript title="Javascript SDK"
+```javascript title="JavaScript SDK"
 import { UnleashClient } from "unleash-proxy-client";
 
 const unleash = new UnleashClient({
@@ -106,7 +106,7 @@ unleash.on("synchronized", () => {
 
 ### Unleash demo instance
 
-You can also use the [Unleash demo instance](https://app.unleash-hosted.com/demo/) to test different use cases before setting up your own instance. This is a Pro version available at `https://app.unleash-hosted.com/demo/`.
+You can also use the [Unleash demo instance](https://app.unleash-hosted.com/demo/) to test different use cases before setting up your own instance. This is a [Pro](https://www.getunleash.io/pricing) version available at `https://app.unleash-hosted.com/demo/`.
 
 To run tests on this instance, use the following API URLs and keys:
 
@@ -121,12 +121,12 @@ To test the credentials and retrieve feature flags, run this command:
 
 ```shell
 curl https://app.unleash-hosted.com/demo/api/client/features \
--H "Authorization: 56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d";
+-H "Authorization: 56907a2fa53c1d16101d509a10b78e36190b0f918d9f122d"
 ```
 
 ### Other local setup options
 
-For other ways to get started locally, see the [Unleash deployment guide](using-unleash/deploy/getting-started#start-unleash-server).
+For other ways to get started locally, see the steps for [starting an Unleash server](using-unleash/deploy/getting-started#start-unleash-server).
 
 ## Hosting Unleash
 
@@ -140,6 +140,6 @@ Self-hosting Unleash is available for [Open-Source](https://www.getunleash.io/pr
 
 ## Next steps
 
-Our reference documentation explains all [core concepts](/reference) you need to get the most out of Unleash.
+Check out our reference documentation that explains all [core concepts](/reference) you need to get the most out of Unleash.
 
 Explore feature flag best practices and language-specific tutorials in our [developer guides](/topics).

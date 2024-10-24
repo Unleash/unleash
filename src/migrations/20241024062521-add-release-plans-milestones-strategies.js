@@ -20,7 +20,7 @@ exports.up = function(db, cb) {
 
         CREATE TABLE IF NOT EXISTS milestones
         (
-            id SERIAL PRIMARY KEY NOT NULL,
+            id TEXT PRIMARY KEY NOT NULL,
             name TEXT NOT NULL,
             sort_order INTEGER NOT NULL,
             release_plan_definition_id TEXT NOT NULL REFERENCES release_plan_definitions(id) ON DELETE CASCADE
@@ -29,12 +29,12 @@ exports.up = function(db, cb) {
         CREATE INDEX IF NOT EXISTS idx_milestones_release_plan_definition_id ON milestones (release_plan_definition_id);
 
         ALTER TABLE IF EXISTS release_plan_definitions
-            ADD COLUMN IF NOT EXISTS active_milestone_id INT REFERENCES milestones(id);
+            ADD COLUMN IF NOT EXISTS active_milestone_id TEXT REFERENCES milestones(id);
         
         CREATE TABLE IF NOT EXISTS milestone_strategies
         (
-            id SERIAL PRIMARY KEY NOT NULL,
-            milestone_id INT NOT NULL REFERENCES milestones(id) ON DELETE CASCADE,
+            id TEXT PRIMARY KEY NOT NULL,
+            milestone_id TEXT NOT NULL REFERENCES milestones(id) ON DELETE CASCADE,
             sort_order INTEGER NOT NULL,
             title TEXT NOT NULL,
             strategy_name TEXT NOT NULL REFERENCES strategies(name),

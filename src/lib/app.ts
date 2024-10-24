@@ -197,12 +197,6 @@ export default async function getApp(
         services.openApiService.useErrorHandler(app);
     }
 
-    if (process.env.NODE_ENV !== 'production') {
-        app.use(errorHandler());
-    } else {
-        app.use(catchAllErrorHandler(config.getLogger));
-    }
-
     app.get(`${baseUriPath}`, (req, res) => {
         res.set('Content-Type', 'text/html');
         res.send(indexHTML);
@@ -228,6 +222,12 @@ export default async function getApp(
         }
         res.send(indexHTML);
     });
+
+    if (process.env.NODE_ENV !== 'production') {
+        app.use(errorHandler());
+    } else {
+        app.use(catchAllErrorHandler(config.getLogger));
+    }
 
     return app;
 }

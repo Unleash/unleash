@@ -10,7 +10,7 @@ exports.up = function(db, cb) {
             feature_name TEXT,
 			environment TEXT,
             created_by_user_id INTEGER NOT NULL REFERENCES users(id),
-            created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT now(),
+            created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT (now() at time zone 'utc'),
             CONSTRAINT release_plan_definitions_discriminator_values
                 CHECK (discriminator IN ('plan', 'template')),
             CONSTRAINT feature_environments_fkey FOREIGN KEY (environment, feature_name)

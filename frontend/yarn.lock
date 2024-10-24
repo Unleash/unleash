@@ -2652,9 +2652,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:6.6.1":
-  version: 6.6.1
-  resolution: "@testing-library/jest-dom@npm:6.6.1"
+"@testing-library/jest-dom@npm:6.6.2":
+  version: 6.6.2
+  resolution: "@testing-library/jest-dom@npm:6.6.2"
   dependencies:
     "@adobe/css-tools": "npm:^4.4.0"
     aria-query: "npm:^5.0.0"
@@ -2663,7 +2663,7 @@ __metadata:
     dom-accessibility-api: "npm:^0.6.3"
     lodash: "npm:^4.17.21"
     redent: "npm:^3.0.0"
-  checksum: 10c0/f04aca30cd4fc3fdeafb712e2d536c190761c229628b69b6b8f70816bb7efc4ceb12b4c5799c3647286b31c8c8f15fc6edfa6f75f69a7064c8b7ebdf53bc8159
+  checksum: 10c0/1c51390f97063ce8b06a7267534aac0d6ac9b1f27042a0ae43ca52d886b32c9d2b0ff85e62e7cfeb7e1f089ef03c4d75fda4f2b7b1f08afb4bdb09a5d56566d9
   languageName: node
   linkType: hard
 
@@ -9921,7 +9921,7 @@ __metadata:
     "@mui/x-date-pickers": "npm:^7.0.0"
     "@tanstack/react-table": "npm:^8.10.7"
     "@testing-library/dom": "npm:10.4.0"
-    "@testing-library/jest-dom": "npm:6.6.1"
+    "@testing-library/jest-dom": "npm:6.6.2"
     "@testing-library/react": "npm:16.0.1"
     "@testing-library/user-event": "npm:14.5.2"
     "@types/css-mediaquery": "npm:^0.1.4"

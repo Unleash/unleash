@@ -35,7 +35,6 @@ export type IFlagKey =
     | 'feedbackComments'
     | 'showInactiveUsers'
     | 'killScheduledChangeRequestCache'
-    | 'displayTrafficDataUsage'
     | 'estimateTrafficDataCost'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
@@ -205,10 +204,6 @@ const flags: IFlags = {
     ),
     killScheduledChangeRequestCache: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_KILL_SCHEDULED_CHANGE_REQUEST_CACHE,
-        false,
-    ),
-    displayTrafficDataUsage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DISPLAY_TRAFFIC_DATA_USAGE,
         false,
     ),
     estimateTrafficDataCost: parseEnvVarBoolean(

@@ -56,7 +56,6 @@ module.exports = {
         environment: process.env.NODE_ENV,
     },
     themeConfig: {
-        titleTemplate: '%s',  
         defaultMode: 'light',
         disableSwitch: true,
         respectPrefersColorScheme: false,

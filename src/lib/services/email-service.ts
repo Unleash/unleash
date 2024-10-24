@@ -523,12 +523,10 @@ export class EmailService {
 
     async sendProductivityReportEmail(
         userEmail: string,
-        customerId: string,
     ): Promise<IEmailEnvelope> {
         if (this.configured()) {
             const context = {
                 userEmail,
-                customerId,
             };
 
             const bodyHtml = await this.compileTemplate(

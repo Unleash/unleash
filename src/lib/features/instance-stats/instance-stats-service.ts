@@ -6,6 +6,7 @@ import type {
     IClientMetricsStoreV2,
     IEventStore,
     IFeatureStrategiesReadModel,
+    ITrafficDataUsageStore,
     IUnleashStores,
 } from '../../types/stores';
 import type { IContextFieldStore } from '../../types/stores/context-field-store';
@@ -29,6 +30,7 @@ import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import type { GetActiveUsers } from './getActiveUsers';
 import type { ProjectModeCount } from '../project/project-store';
 import type { GetProductionChanges } from './getProductionChanges';
+import { format } from 'date-fns';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -115,6 +117,8 @@ export class InstanceStatsService {
 
     private featureStrategiesReadModel: IFeatureStrategiesReadModel;
 
+    private trafficDataUsageStore: ITrafficDataUsageStore;
+
     constructor(
         {
             featureToggleStore,
@@ -132,6 +136,7 @@ export class InstanceStatsService {
             apiTokenStore,
             clientMetricsStoreV2,
             featureStrategiesReadModel,
+            trafficDataUsageStore,
         }: Pick<
             IUnleashStores,
             | 'featureToggleStore'
@@ -149,6 +154,7 @@ export class InstanceStatsService {
             | 'apiTokenStore'
             | 'clientMetricsStoreV2'
             | 'featureStrategiesReadModel'
+            | 'trafficDataUsageStore'
         >,
         {
             getLogger,
@@ -178,6 +184,7 @@ export class InstanceStatsService {
         this.clientMetricsStore = clientMetricsStoreV2;
         this.flagResolver = flagResolver;
         this.featureStrategiesReadModel = featureStrategiesReadModel;
+        this.trafficDataUsageStore = trafficDataUsageStore;
     }
 
     getProjectModeCount(): Promise<ProjectModeCount[]> {
@@ -359,6 +366,16 @@ export class InstanceStatsService {
 
     countServiceAccounts(): Promise<number> {
         return this.userStore.countServiceAccounts();
+    }
+
+    async getCurrentTrafficData(): Promise<number> {
+        const traffic =
+            await this.trafficDataUsageStore.getTrafficDataUsageForPeriod(
+                format(new Date(), 'yyyy-MM'),
+            );
+
+        const counts = traffic.map((item) => item.count);
+        return counts.reduce((total, current) => total + current, 0);
     }
 
     async getLabeledAppCounts(): Promise<

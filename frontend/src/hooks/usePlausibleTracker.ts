@@ -71,7 +71,8 @@ export type CustomEvents =
     | 'onboarding'
     | 'personal-dashboard'
     | 'order-environments'
-    | 'unleash-ai-chat';
+    | 'unleash-ai-chat'
+    | 'project-navigation';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

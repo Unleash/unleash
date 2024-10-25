@@ -1,30 +1,42 @@
 ---
-title: Welcome
 slug: /
-sidebar_position: 1
+title: Feature Management Platform
+description: 'Unleash is the largest open-source feature management platform. In our documentation, you’ll find everything from core Unleash concepts and feature flag best practices to detailed SDK and API guides—giving you all the resources you need to get the most out of Unleash.'
+displayed_sidebar: documentation
 ---
 
+# Unleash Documentation
 
-Welcome to Unleash's documentation, your one-stop shop for everything Unleash. Whether you're just getting started or have been using Unleash for years, you should be able to find answers to all your questions here.
+Unleash is a **private**, **secure**, and **scalable feature management platform** built to reduce the risk of releasing new features and accelerate software development.
 
-- [Quick Start](/quickstart): Get up and running with Unleash in just a few steps.
-- [Unleash Academy](/unleash-academy/introduction): Video Tutorials to onboard you to Unleash’s full suite of capabilities.
-- [Feature Flag Best Practices](/topics): Maximize your effectiveness with feature flags, regardless of what technology you choose to use.
-- [Feature Flag Tutorials](/feature-flag-tutorials): Our small but growing collection of tutorials on using feature flags with different technologies.
-- [Understanding Unleash](/understanding-unleash): Get a high-level view of Unleash's architecture, core functionalities, and concepts to leverage our platform to its full potential.
-- [Using Unleash](/using-unleash): Our comprehensive guides on APIs, SDKs, integrations, how-to guides, and troubleshooting will help you get things done with Unleash.
-- [Contributing to Unleash](/contributing): Join our community and contribute to the ongoing growth of Unleash.
+Whether you’re a small team or a large enterprise, Unleash enables you to **innovate faster** and make data-driven decisions that **enhance your user experience**.
 
-Dive in and start exploring—great things await. If you need a hand, our team is just a click away.
+With market-leading data governance, robust change and access controls, SaaS or self-hosted deployment options, multi-region support, and the flexibility of **open-source**, you have the freedom to choose the setup that works best for you while maintaining full control over your data.
 
-## Getting help
+## Quickstart
 
-Have questions that you can't find the answer to in these docs? 
+[Get up and running](/quickstart) with Unleash in less than 5 minutes.
 
-💬 If you've got questions or want to chat with the team and other Unleash users [join our Slack community](https://slack.unleash.run/) or a [GitHub Discussion](https://github.com/orgs/Unleash/discussions). Our Slack tends to be more active, but you're welcome to use whatever works best for you.
+## Tutorials and guides
 
-🤖 Ask our AI ‘intern’ (still in training, but not bad). The "Ask AI" button lives in the bottom right corner on every page. ↘  
+Explore [best practices](/topics) and step-by-step [tutorials](/feature-flag-tutorials), organized by programming languages and frameworks, to help you integrate Unleash into your stack.
 
-🐦 You can also follow us on [Twitter](https://twitter.com/getunleash 'Unleash on Twitter'), [LinkedIn](https://www.linkedin.com/company/getunleash/ 'Unleash on LinkedIn') and [visit our website](https://getunleash.io/) for ongoing updates and content.
+## SDKs
+
+With over 30 [SDKs](/reference/sdks), we enable fast and secure feature flagging across all major programming languages so you can deploy confidently in any environment.
+
+## Unleash Academy
+
+Enroll in [Unleash Academy](/unleash-academy/introduction) to learn the core concepts and best practices, earn certifications, and gain the expertise needed to manage feature flags.
+
+## Integrations
+
+[Connect Unleash](/reference/integrations) to your existing workflows. Integrate with popular tools like GitHub, Slack, CI/CD pipelines, and more.
+
+## Get in touch
+
+Have questions or ideas? We’d love to hear from you! Join our active [Slack community](https://slack.unleash.run/), contribute on [GitHub](https://github.com/orgs/Unleash), or [schedule a conversation](https://www.getunleash.io/plans/enterprise) with our team.
+
+You can also follow us on [Twitter](https://twitter.com/getunleash 'Unleash on Twitter'), [LinkedIn](https://www.linkedin.com/company/getunleash/ 'Unleash on LinkedIn'), and [visit our website](https://getunleash.io/) for ongoing updates and content.
 
 

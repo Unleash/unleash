@@ -28,12 +28,18 @@ export interface IEmailEnvelope {
     subject: string;
     html: string;
     text: string;
+    attachments?: {
+        filename: string;
+        path: string;
+        cid: string;
+    }[];
 }
 
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
 const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
 const ORDER_ENVIRONMENTS_SUBJECT =
     'Unleash - ordered environments successfully';
+const PRODUCTIVITY_REPORT = 'Unleash - productivity report';
 const SCHEDULED_CHANGE_CONFLICT_SUBJECT =
     'Unleash - Scheduled changes can no longer be applied';
 const SCHEDULED_EXECUTION_FAILED_SUBJECT =
@@ -520,6 +526,80 @@ export class EmailService {
         });
     }
 
+    async sendProductivityReportEmail(
+        userName: string,
+        userEmail: string,
+        metrics: {
+            health: number;
+            flagsCreated: number;
+            productionUpdates: number;
+        },
+    ): Promise<IEmailEnvelope> {
+        if (this.configured()) {
+            const context = {
+                userName,
+                userEmail,
+                ...metrics,
+                unleashUrl: this.config.server.unleashUrl,
+            };
+
+            const template = 'productivity-report';
+
+            const bodyHtml = await this.compileTemplate(
+                template,
+                TemplateFormat.HTML,
+                context,
+            );
+            const bodyText = await this.compileTemplate(
+                template,
+                TemplateFormat.PLAIN,
+                context,
+            );
+            const email: IEmailEnvelope = {
+                from: this.sender,
+                to: userEmail,
+                bcc: '',
+                subject: PRODUCTIVITY_REPORT,
+                html: bodyHtml,
+                text: bodyText,
+                attachments: [
+                    this.resolveTemplateAttachment(
+                        template,
+                        'unleash-logo.png',
+                        'unleashLogo',
+                    ),
+                ],
+            };
+            process.nextTick(() => {
+                this.mailer!.sendMail(email).then(
+                    () =>
+                        this.logger.info(
+                            'Successfully sent productivity report email',
+                        ),
+                    (e) =>
+                        this.logger.warn(
+                            'Failed to send productivity report email',
+                            e,
+                        ),
+                );
+            });
+            return Promise.resolve(email);
+        }
+        return new Promise((res) => {
+            this.logger.warn(
+                'No mailer is configured. Please read the docs on how to configure an email service',
+            );
+            res({
+                from: this.sender,
+                to: userEmail,
+                bcc: '',
+                subject: PRODUCTIVITY_REPORT,
+                html: '',
+                text: '',
+            });
+        });
+    }
+
     isEnabled(): boolean {
         return this.mailer !== undefined;
     }
@@ -552,6 +632,28 @@ export class EmailService {
             return readFileSync(template, 'utf-8');
         }
         throw new NotFoundError('Could not find template');
+    }
+
+    private resolveTemplateAttachment(
+        templateName: string,
+        filename: string,
+        cid: string,
+    ): {
+        filename: string;
+        path: string;
+        cid: string;
+    } {
+        const topPath = path.resolve(__dirname, '../../mailtemplates');
+        const attachment = path.join(topPath, templateName, filename);
+        if (existsSync(attachment)) {
+            return {
+                filename,
+                path: attachment,
+                cid,
+            };
+        }
+
+        throw new NotFoundError('Could not find email attachment');
     }
 
     configured(): boolean {

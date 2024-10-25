@@ -33,14 +33,14 @@ beforeEach(() => {
         createFakeGetProductionChanges(),
     );
 
-    const { collectDbMetrics } = registerPrometheusMetrics(
+    const { collectAggDbMetrics } = registerPrometheusMetrics(
         config,
         stores,
         undefined as unknown as string,
         config.eventBus,
         instanceStatsService,
     );
-    updateMetrics = collectDbMetrics;
+    updateMetrics = collectAggDbMetrics;
 
     jest.spyOn(clientInstanceStore, 'getDistinctApplicationsCount');
     jest.spyOn(instanceStatsService, 'getStats');

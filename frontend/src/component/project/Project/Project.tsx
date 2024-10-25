@@ -44,6 +44,7 @@ import { ProjectApplications } from '../ProjectApplications/ProjectApplications'
 import { ProjectInsights } from './ProjectInsights/ProjectInsights';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -65,6 +66,7 @@ interface ITab {
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
+    const { trackEvent } = usePlausibleTracker();
     const params = useQueryParams();
     const { project, loading, error, refetch } = useProjectOverview(projectId);
     const ref = useLoading(loading, '[data-loading-project=true]');
@@ -252,7 +254,16 @@ export const Project = () => {
                                     key={tab.title}
                                     label={tab.title}
                                     value={tab.path}
-                                    onClick={() => navigate(tab.path)}
+                                    onClick={() => {
+                                        if (tab.title !== 'Flags') {
+                                            trackEvent('project-navigation', {
+                                                props: {
+                                                    eventType: tab.title,
+                                                },
+                                            });
+                                        }
+                                        navigate(tab.path);
+                                    }}
                                     data-testid={`TAB_${tab.title}`}
                                     iconPosition={
                                         tab.isEnterprise ? 'end' : undefined

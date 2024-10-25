@@ -34,7 +34,7 @@
   "main": "./dist/lib/server-impl.js",
   "scripts": {
     "start": "TZ=UTC node ./dist/server.js",
-    "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
+    "copy-templates": "copyfiles -u 1 src/mailtemplates/**/* dist/",
     "build:backend": "tsc --pretty --strictNullChecks false",
     "build:frontend": "yarn --cwd ./frontend run build",
     "build:frontend:if-needed": "./scripts/build-frontend-if-needed.sh",
@@ -176,7 +176,7 @@
     "@babel/core": "7.25.8",
     "@biomejs/biome": "^1.8.3",
     "@cyclonedx/yarn-plugin-cyclonedx": "^1.0.0-rc.7",
-    "@swc/core": "1.7.35",
+    "@swc/core": "1.7.36",
     "@swc/jest": "0.2.36",
     "@types/bcryptjs": "2.4.6",
     "@types/cors": "2.8.17",

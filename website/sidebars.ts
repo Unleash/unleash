@@ -37,7 +37,6 @@ const sidebars: SidebarsConfig = {
         },
     ],
     documentation: [
-        'welcome',
         'quickstart',
         {
             label: 'Feature Flags Developer Guide',
@@ -540,7 +539,6 @@ const sidebars: SidebarsConfig = {
                                 slug: '/how-to/env',
                             },
                             items: [
-                                'how-to/how-to-clone-environments',
                                 'how-to/how-to-import-export',
                                 'how-to/how-to-environment-import-export',
                             ],

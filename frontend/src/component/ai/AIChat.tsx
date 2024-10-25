@@ -1,6 +1,6 @@
 import { mutate } from 'swr';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
-import { IconButton, styled } from '@mui/material';
+import { ReactComponent as AIIcon } from 'assets/icons/AI.svg';
+import { IconButton, styled, useMediaQuery } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -16,6 +16,7 @@ import { AIChatHeader } from './AIChatHeader';
 import { Resizable } from 'component/common/Resizable/Resizable';
 import { AIChatDisclaimer } from './AIChatDisclaimer';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import theme from 'themes/theme';
 
 const AI_ERROR_MESSAGE = {
     role: 'assistant',
@@ -26,10 +27,15 @@ type ScrollOptions = ScrollIntoViewOptions & {
     onlyIfAtEnd?: boolean;
 };
 
-const StyledAIIconContainer = styled('div')(({ theme }) => ({
+const StyledAIIconContainer = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'demoStepsVisible',
+})<{ demoStepsVisible: boolean }>(({ theme, demoStepsVisible }) => ({
     position: 'fixed',
     bottom: 20,
     right: 20,
+    ...(demoStepsVisible && {
+        right: 260,
+    }),
     zIndex: theme.zIndex.fab,
     animation: 'fadeInBottom 0.5s',
     '@keyframes fadeInBottom': {
@@ -44,10 +50,15 @@ const StyledAIIconContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledAIChatContainer = styled(StyledAIIconContainer)({
+const StyledAIChatContainer = styled(StyledAIIconContainer, {
+    shouldForwardProp: (prop) => prop !== 'demoStepsVisible',
+})<{ demoStepsVisible: boolean }>(({ demoStepsVisible }) => ({
     bottom: 10,
     right: 10,
-});
+    ...(demoStepsVisible && {
+        right: 250,
+    }),
+}));
 
 const StyledResizable = styled(Resizable)(({ theme }) => ({
     boxShadow: theme.boxShadows.popup,
@@ -55,12 +66,19 @@ const StyledResizable = styled(Resizable)(({ theme }) => ({
 }));
 
 const StyledAIIconButton = styled(IconButton)(({ theme }) => ({
-    background: theme.palette.primary.light,
+    background:
+        theme.mode === 'light'
+            ? theme.palette.primary.main
+            : theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
     boxShadow: theme.boxShadows.popup,
     transition: 'background 0.3s',
     '&:hover': {
         background: theme.palette.primary.dark,
+    },
+    '& > svg': {
+        width: theme.spacing(3),
+        height: theme.spacing(3),
     },
 }));
 
@@ -84,6 +102,8 @@ const StyledChatContent = styled('div')(({ theme }) => ({
 
 export const AIChat = () => {
     const unleashAIEnabled = useUiFlag('unleashAI');
+    const demoEnabled = useUiFlag('demo');
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down(768));
     const {
         uiConfig: { unleashAIAvailable },
     } = useUiConfig();
@@ -169,13 +189,15 @@ export const AIChat = () => {
         newChat();
     };
 
+    const demoStepsVisible = demoEnabled && !isSmallScreen;
+
     if (!unleashAIEnabled || !unleashAIAvailable) {
         return null;
     }
 
     if (!open) {
         return (
-            <StyledAIIconContainer>
+            <StyledAIIconContainer demoStepsVisible={demoStepsVisible}>
                 <StyledAIIconButton
                     size='large'
                     onClick={() => {
@@ -187,18 +209,18 @@ export const AIChat = () => {
                         setOpen(true);
                     }}
                 >
-                    <SmartToyIcon />
+                    <AIIcon />
                 </StyledAIIconButton>
             </StyledAIIconContainer>
         );
     }
 
     return (
-        <StyledAIChatContainer>
+        <StyledAIChatContainer demoStepsVisible={demoStepsVisible}>
             <StyledResizable
                 handlers={['top-left', 'top', 'left']}
                 minSize={{ width: '270px', height: '250px' }}
-                maxSize={{ width: '90vw', height: '90vh' }}
+                maxSize={{ width: '80vw', height: '90vh' }}
                 defaultSize={{ width: '320px', height: '500px' }}
                 onResize={() => scrollToEnd({ onlyIfAtEnd: true })}
             >

@@ -143,3 +143,34 @@ test('Can send order environments email', async () => {
     expect(content.html.includes(customerId)).toBe(true);
     expect(content.bcc).toBe('bcc@bcc.com');
 });
+
+test('Can send productivity report email', async () => {
+    const emailService = new EmailService({
+        server: {
+            unleashUrl: 'http://localhost',
+        },
+        email: {
+            host: 'test',
+            port: 587,
+            secure: false,
+            smtpuser: '',
+            smtppass: '',
+            sender: 'noreply@getunleash.ai',
+        },
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
+
+    const content = await emailService.sendProductivityReportEmail(
+        'user@user.com',
+        'customerId',
+        {
+            flagsCreated: 1,
+            productionUpdates: 2,
+            health: 99,
+        },
+    );
+    console.log(content);
+    expect(content.from).toBe('noreply@getunleash.ai');
+    expect(content.subject).toBe('Unleash - productivity report');
+    expect(content.html.includes(`Productivity Report`)).toBe(true);
+});

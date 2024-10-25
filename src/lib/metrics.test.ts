@@ -107,7 +107,7 @@ beforeAll(async () => {
         },
     };
 
-    const { collectDbMetrics, collectStaticCounters } =
+    const { collectAggDbMetrics, collectStaticCounters } =
         registerPrometheusMetrics(
             config,
             stores,
@@ -115,7 +115,7 @@ beforeAll(async () => {
             eventBus,
             statsService,
         );
-    refreshDbMetrics = collectDbMetrics;
+    refreshDbMetrics = collectAggDbMetrics;
     await collectStaticCounters();
 });
 
@@ -350,4 +350,10 @@ test('should collect limit exceeded metrics', async () => {
     expect(recordedMetric).toMatch(
         /exceeds_limit_error{resource=\"feature flags\",limit=\"5000\"} 1/,
     );
+});
+
+test('should collect traffic_total metrics', async () => {
+    const recordedMetric =
+        await prometheusRegister.getSingleMetricAsString('traffic_total');
+    expect(recordedMetric).toMatch(/traffic_total 0/);
 });

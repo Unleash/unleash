@@ -1,6 +1,6 @@
 exports.up = function(db, cb) {
     db.runSql(`
-    CREATE TABLE IF NOT EXISTS sent_emails
+    CREATE TABLE IF NOT EXISTS emails_sent
     (
         id VARCHAR(255) NOT NULL,
         type VARCHAR(255) NOT NULL,
@@ -12,5 +12,5 @@ exports.up = function(db, cb) {
 };
 
 exports.down = function(db, cb) {
-    db.runSql(`DROP TABLE sent_emails;`, cb);
+    db.runSql(`DROP TABLE emails_sent;`, cb);
 };

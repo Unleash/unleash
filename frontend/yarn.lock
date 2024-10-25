@@ -8348,8 +8348,8 @@ __metadata:
   linkType: hard
 
 "react-joyride@npm:^2.5.3":
-  version: 2.8.2
-  resolution: "react-joyride@npm:2.8.2"
+  version: 2.9.2
+  resolution: "react-joyride@npm:2.9.2"
   dependencies:
     "@gilbarbara/deep-equal": "npm:^0.3.1"
     deep-diff: "npm:^1.0.2"
@@ -8361,11 +8361,11 @@ __metadata:
     scroll: "npm:^3.0.1"
     scrollparent: "npm:^2.1.0"
     tree-changes: "npm:^0.11.2"
-    type-fest: "npm:^4.18.2"
+    type-fest: "npm:^4.26.1"
   peerDependencies:
     react: 15 - 18
     react-dom: 15 - 18
-  checksum: 10c0/c336836d1052cbe64d12a01d34e3e09b4429be9f92741f43c838aecc09ddf01ddaae645c1bda1df97482d34fb86e37d98524cc62f079d04aa999f8ecc13b1fc1
+  checksum: 10c0/2a20ae0c0f2139e59a61ae7367feac22415e95d23a3c779e4529634d9782cbcf3853f53b896824babdec4b12bd75636aa324baef546e02c1976f68186a40b30a
   languageName: node
   linkType: hard
 
@@ -9690,13 +9690,6 @@ __metadata:
   version: 0.21.3
   resolution: "type-fest@npm:0.21.3"
   checksum: 10c0/902bd57bfa30d51d4779b641c2bc403cdf1371fb9c91d3c058b0133694fcfdb817aef07a47f40faf79039eecbaa39ee9d3c532deff244f3a19ce68cea71a61e8
-  languageName: node
-  linkType: hard
-
-"type-fest@npm:^4.18.2":
-  version: 4.20.0
-  resolution: "type-fest@npm:4.20.0"
-  checksum: 10c0/d0b35152f7f0b34b3048fb14d93d8d6dfe6288d443a2ab7b7b8c1dd902278e092aa057ad7cfc30f269f17d42eeb14a19d4d147ecb14dff74a5941c5c82248efa
   languageName: node
   linkType: hard
 

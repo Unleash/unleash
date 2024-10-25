@@ -227,7 +227,7 @@ export const FeatureStrategyForm = ({
                 eventType: 'seen',
             },
         });
-    });
+    }, []);
 
     const stickiness =
         strategy?.parameters && 'stickiness' in strategy?.parameters

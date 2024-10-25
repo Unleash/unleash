@@ -20,6 +20,7 @@ import { useDashboardState } from './useDashboardState';
 import { MyFlags } from './MyFlags';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData';
+import { useEffect } from 'react';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -134,6 +135,14 @@ export const PersonalDashboard = () => {
         fromPersonalDashboardProjectDetailsOutput(
             usePersonalDashboardProjectDetails(activeProject),
         );
+
+    useEffect(() => {
+        trackEvent('personal-dashboard', {
+            props: {
+                eventType: 'seen',
+            },
+        });
+    }, []);
 
     return (
         <MainContent>

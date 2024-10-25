@@ -34,7 +34,7 @@
   "main": "./dist/lib/server-impl.js",
   "scripts": {
     "start": "TZ=UTC node ./dist/server.js",
-    "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
+    "copy-templates": "copyfiles -u 1 src/mailtemplates/**/* dist/",
     "build:backend": "tsc --pretty --strictNullChecks false",
     "build:frontend": "yarn --cwd ./frontend run build",
     "build:frontend:if-needed": "./scripts/build-frontend-if-needed.sh",

@@ -531,8 +531,8 @@ export class EmailService {
         userEmail: string,
         metrics: {
             health: number;
-            flags_created: number;
-            production_updates: number;
+            flagsCreated: number;
+            productionUpdates: number;
         },
     ): Promise<IEmailEnvelope> {
         if (this.configured()) {

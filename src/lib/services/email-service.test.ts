@@ -144,9 +144,11 @@ test('Can send order environments email', async () => {
     expect(content.bcc).toBe('bcc@bcc.com');
 });
 
-// TODO: test
-test.skip('Can send productivity report email', async () => {
+test('Can send productivity report email', async () => {
     const emailService = new EmailService({
+        server: {
+            unleashUrl: 'http://localhost',
+        },
         email: {
             host: 'test',
             port: 587,
@@ -162,11 +164,12 @@ test.skip('Can send productivity report email', async () => {
         'user@user.com',
         'customerId',
         {
-            flags_created: 1,
-            production_updates: 2,
+            flagsCreated: 1,
+            productionUpdates: 2,
             health: 99,
         },
     );
+    console.log(content);
     expect(content.from).toBe('noreply@getunleash.ai');
     expect(content.subject).toBe('Unleash - productivity report');
     expect(content.html.includes(`Productivity Report`)).toBe(true);

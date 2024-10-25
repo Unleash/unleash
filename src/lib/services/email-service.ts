@@ -645,7 +645,6 @@ export class EmailService {
     } {
         const topPath = path.resolve(__dirname, '../../mailtemplates');
         const attachment = path.join(topPath, templateName, filename);
-        console.log({ attachment });
         if (existsSync(attachment)) {
             return {
                 filename,

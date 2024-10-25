@@ -239,7 +239,7 @@ const sidebars: SidebarsConfig = {
                                     label: 'iOS',
                                     link: {
                                         type: 'doc',
-                                        id: 'feature-flag-tutorials/ios/implementing-feature-flags',
+                                        id: 'feature-flag-tutorials/ios/implementing-feature-flags-ios',
                                     },
                                     items: [
                                         {

@@ -515,7 +515,7 @@ const config: Config = {
                         to: '/reference/unleash-proxy',
                     },
                     {
-                        to: '/how-to/how-to-create-feature-toggles',
+                        to: '/how-to-create-feature-flag',
                         from: '/user_guide/create_feature_toggle',
                     },
                     {

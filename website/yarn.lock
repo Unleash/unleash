@@ -289,29 +289,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/core@npm:7.25.8, @babel/core@npm:^7.23.3":
-  version: 7.25.8
-  resolution: "@babel/core@npm:7.25.8"
-  dependencies:
-    "@ampproject/remapping": "npm:^2.2.0"
-    "@babel/code-frame": "npm:^7.25.7"
-    "@babel/generator": "npm:^7.25.7"
-    "@babel/helper-compilation-targets": "npm:^7.25.7"
-    "@babel/helper-module-transforms": "npm:^7.25.7"
-    "@babel/helpers": "npm:^7.25.7"
-    "@babel/parser": "npm:^7.25.8"
-    "@babel/template": "npm:^7.25.7"
-    "@babel/traverse": "npm:^7.25.7"
-    "@babel/types": "npm:^7.25.8"
-    convert-source-map: "npm:^2.0.0"
-    debug: "npm:^4.1.0"
-    gensync: "npm:^1.0.0-beta.2"
-    json5: "npm:^2.2.3"
-    semver: "npm:^6.3.1"
-  checksum: 10c0/8411ea506e6f7c8a39ab5c1524b00589fa3b087edb47389708f7fe07170929192171734666e3ea10b95a951643a531a6d09eedfe071572c9ea28516646265086
-  languageName: node
-  linkType: hard
-
 "@babel/core@npm:^7.21.3":
   version: 7.22.10
   resolution: "@babel/core@npm:7.22.10"
@@ -332,6 +309,29 @@ __metadata:
     json5: "npm:^2.2.2"
     semver: "npm:^6.3.1"
   checksum: 10c0/aebc08abfc4d4370d3023b1c5a22db2edd896ddbe21ed54f11c654660481f598b08fd456f9a5aa90cd2d81e0ea6767cd73f72fc11f7ad04d897f8fb20671cc1c
+  languageName: node
+  linkType: hard
+
+"@babel/core@npm:^7.23.3":
+  version: 7.25.8
+  resolution: "@babel/core@npm:7.25.8"
+  dependencies:
+    "@ampproject/remapping": "npm:^2.2.0"
+    "@babel/code-frame": "npm:^7.25.7"
+    "@babel/generator": "npm:^7.25.7"
+    "@babel/helper-compilation-targets": "npm:^7.25.7"
+    "@babel/helper-module-transforms": "npm:^7.25.7"
+    "@babel/helpers": "npm:^7.25.7"
+    "@babel/parser": "npm:^7.25.8"
+    "@babel/template": "npm:^7.25.7"
+    "@babel/traverse": "npm:^7.25.7"
+    "@babel/types": "npm:^7.25.8"
+    convert-source-map: "npm:^2.0.0"
+    debug: "npm:^4.1.0"
+    gensync: "npm:^1.0.0-beta.2"
+    json5: "npm:^2.2.3"
+    semver: "npm:^6.3.1"
+  checksum: 10c0/8411ea506e6f7c8a39ab5c1524b00589fa3b087edb47389708f7fe07170929192171734666e3ea10b95a951643a531a6d09eedfe071572c9ea28516646265086
   languageName: node
   linkType: hard
 
@@ -3556,14 +3556,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/remark-plugin-npm2yarn@npm:2.3.1":
-  version: 2.3.1
-  resolution: "@docusaurus/remark-plugin-npm2yarn@npm:2.3.1"
+"@docusaurus/remark-plugin-npm2yarn@npm:3.5.2":
+  version: 3.5.2
+  resolution: "@docusaurus/remark-plugin-npm2yarn@npm:3.5.2"
   dependencies:
-    npm-to-yarn: "npm:^1.0.1"
-    tslib: "npm:^2.4.0"
-    unist-util-visit: "npm:^2.0.3"
-  checksum: 10c0/daa30a8a2bcae395d4127678b3d2058184a39154ae4a38889999420f9062fb48c4e75da3eb12e996457875f8bfc0b67266c92fd0902801e6e87c95f63f852ac0
+    mdast-util-mdx: "npm:^3.0.0"
+    npm-to-yarn: "npm:^2.2.1"
+    tslib: "npm:^2.6.0"
+    unified: "npm:^11.0.3"
+    unist-util-visit: "npm:^5.0.0"
+  checksum: 10c0/a9a7f212e0fad41c9c74184259eca37a838b6637b382f4ddee47f533036c292b0d6bdfcde93d8d7bed259baf8d4a36c7dd1456bfeb8bde5c4d92d3b4c7a99db7
   languageName: node
   linkType: hard
 
@@ -4002,7 +4004,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mdx-js/react@npm:^3.0.0, @mdx-js/react@npm:^3.0.1":
+"@mdx-js/react@npm:^3.0.0":
   version: 3.0.1
   resolution: "@mdx-js/react@npm:3.0.1"
   dependencies:
@@ -4011,6 +4013,18 @@ __metadata:
     "@types/react": ">=16"
     react: ">=16"
   checksum: 10c0/d210d926ef488d39ad65f04d821936b668eadcdde3b6421e94ec4200ca7ad17f17d24c5cbc543882586af9f08b10e2eea715c728ce6277487945e05c5199f532
+  languageName: node
+  linkType: hard
+
+"@mdx-js/react@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@mdx-js/react@npm:3.1.0"
+  dependencies:
+    "@types/mdx": "npm:^2.0.0"
+  peerDependencies:
+    "@types/react": ">=16"
+    react: ">=16"
+  checksum: 10c0/381ed1211ba2b8491bf0ad9ef0d8d1badcdd114e1931d55d44019d4b827cc2752586708f9c7d2f9c3244150ed81f1f671a6ca95fae0edd5797fb47a22e06ceca
   languageName: node
   linkType: hard
 
@@ -4796,13 +4810,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^18.3.11":
-  version: 18.3.11
-  resolution: "@types/react@npm:18.3.11"
+"@types/react@npm:^18.3.12":
+  version: 18.3.12
+  resolution: "@types/react@npm:18.3.12"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10c0/ce80512246ca5bda69db85b9f4f1835189334acfb6b2c4f3eda8cabff1ff1a3ea9ce4f3b895bdbc18c94140aa45592331aa3fdeb557f525c1b048de7ce84fc0e
+  checksum: 10c0/8bae8d9a41619804561574792e29112b413044eb0d53746dde2b9720c1f9a59f71c895bbd7987cd8ce9500b00786e53bc032dced38cddf42910458e145675290
   languageName: node
   linkType: hard
 
@@ -5846,17 +5860,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"browserslist@npm:^4.16.5":
-  version: 4.23.3
-  resolution: "browserslist@npm:4.23.3"
+"browserslist@npm:^4.24.2":
+  version: 4.24.2
+  resolution: "browserslist@npm:4.24.2"
   dependencies:
-    caniuse-lite: "npm:^1.0.30001646"
-    electron-to-chromium: "npm:^1.5.4"
+    caniuse-lite: "npm:^1.0.30001669"
+    electron-to-chromium: "npm:^1.5.41"
     node-releases: "npm:^2.0.18"
-    update-browserslist-db: "npm:^1.1.0"
+    update-browserslist-db: "npm:^1.1.1"
   bin:
     browserslist: cli.js
-  checksum: 10c0/3063bfdf812815346447f4796c8f04601bf5d62003374305fd323c2a463e42776475bcc5309264e39bcf9a8605851e53560695991a623be988138b3ff8c66642
+  checksum: 10c0/d747c9fb65ed7b4f1abcae4959405707ed9a7b835639f8a9ba0da2911995a6ab9b0648fd05baf2a4d4e3cf7f9fdbad56d3753f91881e365992c1d49c8d88ff7a
   languageName: node
   linkType: hard
 
@@ -6034,7 +6048,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001663":
+"caniuse-lite@npm:^1.0.30001663, caniuse-lite@npm:^1.0.30001669":
   version: 1.0.30001669
   resolution: "caniuse-lite@npm:1.0.30001669"
   checksum: 10c0/f125f23440d3dbb6c25ffb8d55f4ce48af36a84d0932b152b3b74f143a4170cbe92e02b0a9676209c86609bf7bf34119ff10cc2bc7c1b7ea40e936cc16598408
@@ -7880,10 +7894,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.5.4":
-  version: 1.5.5
-  resolution: "electron-to-chromium@npm:1.5.5"
-  checksum: 10c0/6e5e12f729a74a78d9a7386ea32039262cb8a2f4611ab346da1f162c270d0569194c72169042080a1017220835ed30ee2d77ca5ba13c1acaa5fa0d373fbc0ad5
+"electron-to-chromium@npm:^1.5.41":
+  version: 1.5.45
+  resolution: "electron-to-chromium@npm:1.5.45"
+  checksum: 10c0/f361ceda3bedcdc531ec0c060759c3487efd894d16a379beffe82a372fbeadcd1ac3cfc74a103b946dd2d12923a547289916743a609adaf68e5c4eef806e9e49
   languageName: node
   linkType: hard
 
@@ -8055,6 +8069,13 @@ __metadata:
   version: 3.1.2
   resolution: "escalade@npm:3.1.2"
   checksum: 10c0/6b4adafecd0682f3aa1cd1106b8fff30e492c7015b178bc81b2d2f75106dabea6c6d6e8508fc491bd58e597c74abb0e8e2368f943ecb9393d4162e3c2f3cf287
+  languageName: node
+  linkType: hard
+
+"escalade@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "escalade@npm:3.2.0"
+  checksum: 10c0/ced4dd3a78e15897ed3be74e635110bbf3b08877b0a41be50dcb325ee0e0b5f65fc2d50e9845194d7c4633f327e2e1c6cce00a71b617c5673df0374201d67f65
   languageName: node
   linkType: hard
 
@@ -8807,12 +8828,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"git-url-parse@npm:^14.0.0":
-  version: 14.1.0
-  resolution: "git-url-parse@npm:14.1.0"
+"git-url-parse@npm:^15.0.0":
+  version: 15.0.0
+  resolution: "git-url-parse@npm:15.0.0"
   dependencies:
     git-up: "npm:^7.0.0"
-  checksum: 10c0/cd91547210eccdfaca92c41c5ab018c23a75e881f36aa8d7c46cef8e10dea790a455aeb4ca91426109fd5f645c6e874c0cf80a38be6a8675ed91abb08ed904d4
+  checksum: 10c0/1813a3ac8e97d348e46471db4710d776cc7b24a56a432339ab0c0f4f2323525a8627a1891aa80a53fd9be973191fe2902c0af8e17fb9b04f29445a83fbef3a4e
   languageName: node
   linkType: hard
 
@@ -12630,10 +12651,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"npm-to-yarn@npm:^1.0.1":
-  version: 1.3.0
-  resolution: "npm-to-yarn@npm:1.3.0"
-  checksum: 10c0/17bc7bf487c24464e8c9a0237d93f3741f2aaaab6d6b92efb5f1d09a96604c5ec5442de612d994370cfe9d74baca48612adb79b2cff618819c5d4091ab155256
+"npm-to-yarn@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "npm-to-yarn@npm:2.2.1"
+  checksum: 10c0/65c696a3e595facad802b6b13c04e504806ea88fd4f87ab758f8042c19f65b4c4822815a47095df944b0809a95e574c27323c33cca5533f8454515eaa6e14fac
   languageName: node
   linkType: hard
 
@@ -16246,7 +16267,7 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.3, tslib@npm:^2.4.0":
+"tslib@npm:^2.0.3":
   version: 2.4.1
   resolution: "tslib@npm:2.4.1"
   checksum: 10c0/9ac0e4fd1033861f0b4f0d848dc3009ebcc3aa4757a06e8602a2d8a7aed252810e3540e54e70709f06c0f95311faa8584f769bcbede48aff785eb7e4d399b9ec
@@ -16300,23 +16321,23 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   languageName: node
   linkType: hard
 
-"typescript@npm:5.4.5":
-  version: 5.4.5
-  resolution: "typescript@npm:5.4.5"
+"typescript@npm:5.6.3":
+  version: 5.6.3
+  resolution: "typescript@npm:5.6.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/2954022ada340fd3d6a9e2b8e534f65d57c92d5f3989a263754a78aba549f7e6529acc1921913560a4b816c46dce7df4a4d29f9f11a3dc0d4213bb76d043251e
+  checksum: 10c0/44f61d3fb15c35359bc60399cb8127c30bae554cd555b8e2b46d68fa79d680354b83320ad419ff1b81a0bdf324197b29affe6cc28988cd6a74d4ac60c94f9799
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>":
-  version: 5.4.5
-  resolution: "typescript@patch:typescript@npm%3A5.4.5#optional!builtin<compat/typescript>::version=5.4.5&hash=5adc0c"
+"typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>":
+  version: 5.6.3
+  resolution: "typescript@patch:typescript@npm%3A5.6.3#optional!builtin<compat/typescript>::version=5.6.3&hash=8c6c40"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 10c0/db2ad2a16ca829f50427eeb1da155e7a45e598eec7b086d8b4e8ba44e5a235f758e606d681c66992230d3fc3b8995865e5fd0b22a2c95486d0b3200f83072ec9
+  checksum: 10c0/7c9d2e07c81226d60435939618c91ec2ff0b75fbfa106eec3430f0fcf93a584bc6c73176676f532d78c3594fe28a54b36eb40b3d75593071a7ec91301533ace7
   languageName: node
   linkType: hard
 
@@ -16438,13 +16459,6 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   languageName: node
   linkType: hard
 
-"unist-util-is@npm:^4.0.0":
-  version: 4.1.0
-  resolution: "unist-util-is@npm:4.1.0"
-  checksum: 10c0/21ca3d7bacc88853b880b19cb1b133a056c501617d7f9b8cce969cd8b430ed7e1bc416a3a11b02540d5de6fb86807e169d00596108a459d034cf5faec97c055e
-  languageName: node
-  linkType: hard
-
 "unist-util-is@npm:^5.0.0":
   version: 5.1.1
   resolution: "unist-util-is@npm:5.1.1"
@@ -16506,16 +16520,6 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   languageName: node
   linkType: hard
 
-"unist-util-visit-parents@npm:^3.0.0":
-  version: 3.1.1
-  resolution: "unist-util-visit-parents@npm:3.1.1"
-  dependencies:
-    "@types/unist": "npm:^2.0.0"
-    unist-util-is: "npm:^4.0.0"
-  checksum: 10c0/231c80c5ba8e79263956fcaa25ed2a11ad7fe77ac5ba0d322e9d51bbc4238501e3bb52f405e518bcdc5471e27b33eff520db0aa4a3b1feb9fb6e2de6ae385d49
-  languageName: node
-  linkType: hard
-
 "unist-util-visit-parents@npm:^5.0.0":
   version: 5.1.3
   resolution: "unist-util-visit-parents@npm:5.1.3"
@@ -16543,17 +16547,6 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
     "@types/unist": "npm:^3.0.0"
     unist-util-is: "npm:^6.0.0"
   checksum: 10c0/51b1a5b0aa23c97d3e03e7288f0cdf136974df2217d0999d3de573c05001ef04cccd246f51d2ebdfb9e8b0ed2704451ad90ba85ae3f3177cf9772cef67f56206
-  languageName: node
-  linkType: hard
-
-"unist-util-visit@npm:^2.0.3":
-  version: 2.0.3
-  resolution: "unist-util-visit@npm:2.0.3"
-  dependencies:
-    "@types/unist": "npm:^2.0.0"
-    unist-util-is: "npm:^4.0.0"
-    unist-util-visit-parents: "npm:^3.0.0"
-  checksum: 10c0/7b11303d82271ca53a2ced2d56c87a689dd518596c99ff4a11cdff750f5cc5c0e4b64b146bd2363557cb29443c98713bfd1e8dc6d1c3f9d474b9eb1f23a60888
   languageName: node
   linkType: hard
 
@@ -16604,6 +16597,20 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   bin:
     update-browserslist-db: cli.js
   checksum: 10c0/a7452de47785842736fb71547651c5bbe5b4dc1e3722ccf48a704b7b34e4dcf633991eaa8e4a6a517ffb738b3252eede3773bef673ef9021baa26b056d63a5b9
+  languageName: node
+  linkType: hard
+
+"update-browserslist-db@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "update-browserslist-db@npm:1.1.1"
+  dependencies:
+    escalade: "npm:^3.2.0"
+    picocolors: "npm:^1.1.0"
+  peerDependencies:
+    browserslist: ">= 4.21.0"
+  bin:
+    update-browserslist-db: cli.js
+  checksum: 10c0/536a2979adda2b4be81b07e311bd2f3ad5e978690987956bc5f514130ad50cac87cd22c710b686d79731e00fbee8ef43efe5fcd72baa241045209195d43dcc80
   languageName: node
   linkType: hard
 
@@ -17127,31 +17134,30 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   version: 0.0.0-use.local
   resolution: "websitev-2@workspace:."
   dependencies:
-    "@babel/core": "npm:7.25.8"
     "@docusaurus/core": "npm:^3.5.2"
     "@docusaurus/module-type-aliases": "npm:^3.5.2"
     "@docusaurus/plugin-client-redirects": "npm:^3.5.2"
     "@docusaurus/plugin-google-analytics": "npm:^3.5.2"
     "@docusaurus/preset-classic": "npm:^3.5.2"
-    "@docusaurus/remark-plugin-npm2yarn": "npm:2.3.1"
+    "@docusaurus/remark-plugin-npm2yarn": "npm:3.5.2"
     "@docusaurus/theme-mermaid": "npm:^3.5.2"
     "@docusaurus/types": "npm:^3.5.2"
-    "@mdx-js/react": "npm:^3.0.1"
+    "@mdx-js/react": "npm:^3.1.0"
     "@svgr/webpack": "npm:8.1.0"
     "@tsconfig/docusaurus": "npm:2.0.3"
-    "@types/react": "npm:^18.3.11"
-    browserslist: "npm:^4.16.5"
+    "@types/react": "npm:^18.3.12"
+    browserslist: "npm:^4.24.2"
     docusaurus-plugin-openapi-docs: "npm:^4.1.0"
     docusaurus-plugin-remote-content: "npm:^4.0.0"
     docusaurus-theme-openapi-docs: "npm:^4.1.0"
-    git-url-parse: "npm:^14.0.0"
+    git-url-parse: "npm:^15.0.0"
     plugin-image-zoom: flexanalytics/plugin-image-zoom
     prism-react-renderer: "npm:^2.4.0"
     prism-svelte: "npm:^0.5.0"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
     replace-in-file: "npm:^8.2.0"
-    typescript: "npm:5.4.5"
+    typescript: "npm:5.6.3"
   languageName: unknown
   linkType: soft
 

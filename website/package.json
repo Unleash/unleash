@@ -24,15 +24,15 @@
     "@docusaurus/plugin-client-redirects": "^3.5.2",
     "@docusaurus/plugin-google-analytics": "^3.5.2",
     "@docusaurus/preset-classic": "^3.5.2",
-    "@docusaurus/remark-plugin-npm2yarn": "2.3.1",
+    "@docusaurus/remark-plugin-npm2yarn": "3.5.2",
     "@docusaurus/theme-mermaid": "^3.5.2",
-    "@mdx-js/react": "^3.0.1",
+    "@mdx-js/react": "^3.1.0",
     "@svgr/webpack": "8.1.0",
-    "browserslist": "^4.16.5",
+    "browserslist": "^4.24.2",
     "docusaurus-plugin-openapi-docs": "^4.1.0",
     "docusaurus-plugin-remote-content": "^4.0.0",
     "docusaurus-theme-openapi-docs": "^4.1.0",
-    "git-url-parse": "^14.0.0",
+    "git-url-parse": "^15.0.0",
     "plugin-image-zoom": "flexanalytics/plugin-image-zoom",
     "prism-react-renderer": "^2.4.0",
     "prism-svelte": "^0.5.0",
@@ -53,12 +53,11 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.25.8",
     "@docusaurus/module-type-aliases": "^3.5.2",
     "@docusaurus/types": "^3.5.2",
     "@tsconfig/docusaurus": "2.0.3",
-    "@types/react": "^18.3.11",
-    "typescript": "5.4.5"
+    "@types/react": "^18.3.12",
+    "typescript": "5.6.3"
   },
   "packageManager": "yarn@4.4.1"
 }

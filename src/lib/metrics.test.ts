@@ -351,3 +351,9 @@ test('should collect limit exceeded metrics', async () => {
         /exceeds_limit_error{resource=\"feature flags\",limit=\"5000\"} 1/,
     );
 });
+
+test('should collect traffic_total metrics', async () => {
+    const recordedMetric =
+        await prometheusRegister.getSingleMetricAsString('traffic_total');
+    expect(recordedMetric).toMatch(/traffic_total 0/);
+});

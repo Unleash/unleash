@@ -277,6 +277,10 @@ export function registerPrometheusMetrics(
         name: 'users_total',
         help: 'Number of users',
     });
+    const trafficTotal = createGauge({
+        name: 'traffic_total',
+        help: 'Traffic used current month',
+    });
     const serviceAccounts = createGauge({
         name: 'service_accounts_total',
         help: 'Number of service accounts',
@@ -955,6 +959,11 @@ export function registerPrometheusMetrics(
                 serviceAccounts.reset();
                 serviceAccounts.set(
                     await instanceStatsService.countServiceAccounts(),
+                );
+
+                trafficTotal.reset();
+                trafficTotal.set(
+                    await instanceStatsService.getCurrentTrafficData(),
                 );
 
                 apiTokens.reset();

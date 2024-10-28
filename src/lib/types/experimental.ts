@@ -52,7 +52,6 @@ export type IFlagKey =
     | 'onboardingMetrics'
     | 'onboardingUI'
     | 'projectRoleAssignment'
-    | 'eventTimeline'
     | 'personalDashboardUI'
     | 'trackLifecycleMetrics'
     | 'purchaseAdditionalEnvironments'
@@ -265,10 +264,6 @@ const flags: IFlags = {
     ),
     projectRoleAssignment: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_ROLE_ASSIGNMENT,
-        false,
-    ),
-    eventTimeline: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EVENT_TIMELINE,
         false,
     ),
     personalDashboardUI: parseEnvVarBoolean(

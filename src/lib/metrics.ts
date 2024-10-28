@@ -110,7 +110,7 @@ export function registerPrometheusMetrics(
     };
 
     const { eventStore, environmentStore } = stores;
-    const { flagResolver, db } = config;
+    const { flagResolver } = config;
     const dbMetrics = new DbMetricsMonitor(config);
 
     const cachedEnvironments: () => Promise<IEnvironment[]> = memoizee(
@@ -530,10 +530,7 @@ export function registerPrometheusMetrics(
         name: 'onboarding_duration',
         labelNames: ['event'],
         help: 'firstLogin, secondLogin, firstFeatureFlag, firstPreLive, firstLive from first user creation',
-        query: () =>
-            flagResolver.isEnabled('onboardingMetrics')
-                ? stores.onboardingReadModel.getInstanceOnboardingMetrics()
-                : Promise.resolve({}),
+        query: () => stores.onboardingReadModel.getInstanceOnboardingMetrics(),
         map: (result) =>
             Object.keys(result)
                 .filter((key) => Number.isInteger(result[key]))
@@ -549,10 +546,7 @@ export function registerPrometheusMetrics(
         name: 'project_onboarding_duration',
         labelNames: ['event', 'project'],
         help: 'firstFeatureFlag, firstPreLive, firstLive from project creation',
-        query: () =>
-            flagResolver.isEnabled('onboardingMetrics')
-                ? stores.onboardingReadModel.getProjectsOnboardingMetrics()
-                : Promise.resolve([]),
+        query: () => stores.onboardingReadModel.getProjectsOnboardingMetrics(),
         map: (projectsOnboardingMetrics) =>
             projectsOnboardingMetrics.flatMap(
                 ({ project, ...projectMetrics }) =>

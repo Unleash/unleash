@@ -24,7 +24,7 @@ let app: IUnleashTest;
 
 beforeAll(async () => {
     db = await dbInit('onboarding_read_model', getLogger, {
-        experimental: { flags: { onboardingMetrics: true } },
+        experimental: { flags: {} },
     });
 
     app = await setupAppWithCustomConfig(

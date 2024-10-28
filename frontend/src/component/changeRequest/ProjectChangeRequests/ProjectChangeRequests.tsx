@@ -16,8 +16,6 @@ export const ProjectChangeRequests = () => {
 
     const { changeRequests, loading } = useProjectChangeRequests(projectId);
 
-    console.log('changeRequests', changeRequests);
-
     if (isOss() || isPro()) {
         return (
             <PageContent sx={{ justifyContent: 'center' }}>

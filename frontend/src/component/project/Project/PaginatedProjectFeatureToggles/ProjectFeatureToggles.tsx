@@ -134,8 +134,8 @@ export const ProjectFeatureToggles = ({
         onboardingUIEnabled &&
         project.onboardingStatus.status !== 'onboarded' &&
         onboardingFlow === 'visible';
-    const showFeaturesTable =
-        (total !== undefined && total > 0) || notOnboarding;
+    const noFeaturesExistInProject = project.featureTypeCounts?.length === 0;
+    const showFeaturesTable = !noFeaturesExistInProject || notOnboarding;
 
     const trackOnboardingFinish = (sdkName: string) => {
         if (!isOnboarding) {

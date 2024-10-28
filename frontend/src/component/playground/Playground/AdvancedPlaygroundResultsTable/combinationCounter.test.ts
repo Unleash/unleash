@@ -97,6 +97,7 @@ it('counts the correct number of combinations', () => {
 });
 
 it('assigns bucket', () => {
+    expect(getBucket(-1)).toBe('invalid bucket');
     expect(getBucket(0)).toBe('0-100');
     expect(getBucket(100)).toBe('100-1000');
     expect(getBucket(1000)).toBe('1000-10000');

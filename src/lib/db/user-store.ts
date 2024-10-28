@@ -240,23 +240,21 @@ class UserStore implements IUserStore {
 
         let firstLoginOrder = 0;
 
-        if (this.flagResolver.isEnabled('onboardingMetrics')) {
-            const existingUser =
-                await this.buildSelectUser(user).first('first_seen_at');
+        const existingUser =
+            await this.buildSelectUser(user).first('first_seen_at');
 
-            if (!existingUser.first_seen_at) {
-                const countEarlierUsers = await this.db(TABLE)
-                    .whereNotNull('first_seen_at')
-                    .andWhere('first_seen_at', '<', currentDate)
-                    .count('*')
-                    .then((res) => Number(res[0].count));
+        if (!existingUser.first_seen_at) {
+            const countEarlierUsers = await this.db(TABLE)
+                .whereNotNull('first_seen_at')
+                .andWhere('first_seen_at', '<', currentDate)
+                .count('*')
+                .then((res) => Number(res[0].count));
 
-                firstLoginOrder = countEarlierUsers;
+            firstLoginOrder = countEarlierUsers;
 
-                await updateQuery.update({
-                    first_seen_at: currentDate,
-                });
-            }
+            await updateQuery.update({
+                first_seen_at: currentDate,
+            });
         }
 
         await updateQuery;

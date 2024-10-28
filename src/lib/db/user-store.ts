@@ -49,6 +49,7 @@ const rowToUser = (row) => {
     if (!row) {
         throw new NotFoundError('No user found');
     }
+    console.log(row);
     return new User({
         id: row.id,
         name: emptify(row.name),
@@ -180,7 +181,7 @@ class UserStore implements IUserStore {
 
     async getByQuery(idQuery: IUserLookup): Promise<User> {
         const row = await this.buildSelectUser(idQuery).first(USER_COLUMNS);
-        return rowToUser(row);
+        return rowToUser(row.rows[0]);
     }
 
     async delete(id: number): Promise<void> {
@@ -203,7 +204,9 @@ class UserStore implements IUserStore {
             throw new NotFoundError('User not found');
         }
 
-        return item.password_hash;
+        console.log(item);
+
+        return item.rows[0].password_hash;
     }
 
     async setPasswordHash(

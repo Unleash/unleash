@@ -19,6 +19,7 @@ process.nextTick(async () => {
                           schema: process.env.UNLEASH_DATABASE_SCHEMA,
                           ssl: false,
                           applicationName: 'unleash',
+                          disableMigration: true,
                       },
                 server: {
                     enableRequestLogger: true,

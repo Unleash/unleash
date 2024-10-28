@@ -185,6 +185,7 @@ class UserService {
             } catch (e) {
                 this.logger.error(
                     `Unable to create default user '${username}'`,
+                    e,
                 );
             }
         }
@@ -392,10 +393,14 @@ class UserService {
             : { username: usernameOrEmail };
 
         let user: IUser | undefined, passwordHash: string | undefined;
+        console.log('idQuery', idQuery);
         try {
             user = await this.store.getByQuery(idQuery);
             passwordHash = await this.store.getPasswordHash(user.id);
-        } catch (error) {}
+            console.log(passwordHash);
+        } catch (error) {
+            console.error(error);
+        }
         if (user && passwordHash) {
             const match = await bcrypt.compare(password, passwordHash);
             if (match) {

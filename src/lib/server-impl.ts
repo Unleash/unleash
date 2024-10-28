@@ -35,6 +35,7 @@ import { Db } from './db/db';
 import { defaultLockKey, defaultTimeout, withDbLock } from './util/db-lock';
 import { scheduleServices } from './features/scheduler/schedule-services';
 import { compareAndLogPostgresVersion } from './util/postgres-version-checker';
+import { createPg } from '../pglite';
 
 async function createApp(
     config: IUnleashConfig,
@@ -43,7 +44,10 @@ async function createApp(
     // Database dependencies (stateful)
     const logger = config.getLogger('server-impl.js');
     const serverVersion = config.enterpriseVersion ?? version;
-    const db = createDb(config);
+
+    const pg = await createPg();
+    const db = createDb(config, pg);
+
     const stores = createStores(config, db);
     await compareAndLogPostgresVersion(config, stores.settingStore);
     const services = createServices(stores, config, db);

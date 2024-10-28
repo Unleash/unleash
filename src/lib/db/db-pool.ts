@@ -1,19 +1,21 @@
 import { knex, type Knex } from 'knex';
+import ClientPgLite from 'knex-pglite';
 import type { IUnleashConfig } from '../types/option';
+import type { PGlite } from '@electric-sql/pglite';
 
-export function createDb({
-    db,
-    getLogger,
-}: Pick<IUnleashConfig, 'db' | 'getLogger'>): Knex {
+export function createDb(
+    { db, getLogger }: Pick<IUnleashConfig, 'db' | 'getLogger'>,
+    pg?: PGlite,
+): Knex {
     const logger = getLogger('db-pool.js');
     return knex({
-        client: 'pg',
-        version: db.version,
+        client: ClientPgLite,
+        dialect: 'postgres',
         connection: {
-            ...db,
-            application_name: db.applicationName,
+            //@ts-ignore
+            // pglite: pg || new PGlite(),
+            filename: '/tmp/unleash.db',
         },
-        pool: db.pool,
         searchPath: db.schema,
         asyncStackTraces: true,
         log: {

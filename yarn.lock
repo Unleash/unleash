@@ -967,6 +967,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@electric-sql/pglite@npm:^0.2.12, @electric-sql/pglite@npm:^0.2.6":
+  version: 0.2.12
+  resolution: "@electric-sql/pglite@npm:0.2.12"
+  checksum: 10c0/28414b26ec73c81eab649fe45b291e63db29f7ec780b47edabb16759c5b6ba66fa90134073c4c17fd78b96179f23ea66f78eedd3cc1cc355a4b062d525b847bb
+  languageName: node
+  linkType: hard
+
 "@ewoudenberg/difflib@npm:0.1.0":
   version: 0.1.0
   resolution: "@ewoudenberg/difflib@npm:0.1.0"
@@ -6150,7 +6157,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"knex@npm:3, knex@npm:^3.1.0":
+"knex-pglite@npm:^0.9.7":
+  version: 0.9.7
+  resolution: "knex-pglite@npm:0.9.7"
+  dependencies:
+    "@electric-sql/pglite": "npm:^0.2.6"
+    knex: "npm:3.1.0"
+  checksum: 10c0/892cc52bdafdb44c70aac70c8e44a320c65c21250dd1d1e09e264685514b03940285c3f8f135b16956b995fc9725e8f6bedd9d7019ead814f58e5463657e6174
+  languageName: node
+  linkType: hard
+
+"knex@npm:3, knex@npm:3.1.0, knex@npm:^3.1.0":
   version: 3.1.0
   resolution: "knex@npm:3.1.0"
   dependencies:
@@ -9334,6 +9351,7 @@ __metadata:
     "@babel/core": "npm:7.25.8"
     "@biomejs/biome": "npm:^1.8.3"
     "@cyclonedx/yarn-plugin-cyclonedx": "npm:^1.0.0-rc.7"
+    "@electric-sql/pglite": "npm:^0.2.12"
     "@slack/web-api": "npm:^7.3.4"
     "@swc/core": "npm:1.7.36"
     "@swc/jest": "npm:0.2.36"
@@ -9402,6 +9420,7 @@ __metadata:
     json-schema-to-ts: "npm:2.12.0"
     json2csv: "npm:^5.0.7"
     knex: "npm:^3.1.0"
+    knex-pglite: "npm:^0.9.7"
     lint-staged: "npm:15.2.10"
     lodash.get: "npm:^4.4.2"
     lodash.groupby: "npm:^4.6.0"

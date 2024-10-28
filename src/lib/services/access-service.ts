@@ -33,7 +33,6 @@ import {
     ALL_PROJECTS,
     CUSTOM_PROJECT_ROLE_TYPE,
     CUSTOM_ROOT_ROLE_TYPE,
-    ROOT_ROLE_TYPES,
 } from '../util/constants';
 import { DEFAULT_PROJECT } from '../types/project';
 import InvalidOperationError from '../error/invalid-operation-error';
@@ -433,11 +432,12 @@ export class AccessService {
         const newRootRole = await this.resolveRootRole(role);
         if (newRootRole) {
             try {
+                /*
                 await this.store.removeRolesOfTypeForUser(
                     userId,
                     ROOT_ROLE_TYPES,
                 );
-
+*/
                 await this.store.addUserToRole(
                     userId,
                     newRootRole.id,

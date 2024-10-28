@@ -89,12 +89,13 @@ export const scheduleServices = async (
         'announceUnannounced',
     );
 
+    /*
     schedulerService.schedule(
         projectService.statusJob.bind(projectService),
         hoursToMilliseconds(24),
         'statusJob',
     );
-
+*/
     schedulerService.schedule(
         projectHealthService.setHealthRating.bind(projectHealthService),
         hoursToMilliseconds(1),

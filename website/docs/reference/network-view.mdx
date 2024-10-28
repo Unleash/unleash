@@ -77,14 +77,7 @@ The `PROMETHEUS_API` environment variable should point to the base path of the P
 
 This setup means that there is a mutual dependency between Unleash and Prometheus, where Prometheus regularly fetches data from Unleash's backstage API and Unleash fetches and displays this data when you use the network view. This diagram provides a visual representation of that.
 
-```mermaid
-sequenceDiagram
-    participant Unleash
-    loop Scrape data
-    Prometheus-->>Unleash: fetch internal-backstage/prometheus
-    end
-    Unleash->>+Prometheus: Query data for network view
-```
+![](./network-view.png)
 
 
 [^1]: For instance: when using Unleash in an API setting, a common mistake is to instantiate a new SDK for every request instead of sharing a single instance across requests. This would be visible in the network overview graph as a large number of requests from the same app.

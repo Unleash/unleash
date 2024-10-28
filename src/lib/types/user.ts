@@ -15,6 +15,7 @@ export interface UserData {
     createdAt?: Date;
     isService?: boolean;
     scimId?: string;
+    settings?: Record<string, string>;
 }
 
 export interface IUser {
@@ -31,6 +32,7 @@ export interface IUser {
     imageUrl?: string;
     accountType?: AccountType;
     scimId?: string;
+    settings?: Record<string, string>;
 }
 
 export type MinimalUser = Pick<
@@ -73,6 +75,8 @@ export default class User implements IUser {
 
     scimId?: string;
 
+    settings?: Record<string, string>;
+
     constructor({
         id,
         name,
@@ -84,6 +88,7 @@ export default class User implements IUser {
         createdAt,
         isService,
         scimId,
+        settings,
     }: UserData) {
         if (!id) {
             throw new ValidationError('Id is required', [], undefined);
@@ -102,6 +107,7 @@ export default class User implements IUser {
         this.createdAt = createdAt;
         this.accountType = isService ? 'Service Account' : 'User';
         this.scimId = scimId;
+        this.settings = settings;
     }
 
     generateImageUrl(): string {

@@ -27,7 +27,12 @@ const USER_COLUMNS_PUBLIC = [
     'scim_id',
 ];
 
-const USER_COLUMNS = [...USER_COLUMNS_PUBLIC, 'login_attempts', 'created_at'];
+const USER_COLUMNS = [
+    ...USER_COLUMNS_PUBLIC,
+    'login_attempts',
+    'created_at',
+    'settings',
+];
 
 const emptify = (value) => {
     if (!value) {
@@ -60,6 +65,7 @@ const rowToUser = (row) => {
         createdAt: row.created_at,
         isService: row.is_service,
         scimId: row.scim_id,
+        settings: row.settings,
     });
 };
 
@@ -307,6 +313,31 @@ class UserStore implements IUserStore {
             .first();
 
         return firstInstanceUser ? firstInstanceUser.created_at : null;
+    }
+
+    async getSettings(userId: number): Promise<Record<string, string>> {
+        const row = await this.activeUsers()
+            .where({ id: userId })
+            .first('settings');
+        if (!row) {
+            throw new NotFoundError('User not found');
+        }
+        return row.settings || {};
+    }
+
+    async setSettings(
+        userId: number,
+        newSettings: Record<string, string | null>,
+    ): Promise<Record<string, string>> {
+        const oldSettings = await this.getSettings(userId);
+        const settings = { ...oldSettings, ...newSettings };
+        Object.keys(settings).forEach((key) => {
+            if (settings[key] === null) {
+                delete settings[key];
+            }
+        });
+        await this.activeUsers().where({ id: userId }).update({ settings });
+        return settings as Record<string, string>;
     }
 }
 

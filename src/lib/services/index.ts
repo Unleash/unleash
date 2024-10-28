@@ -153,6 +153,7 @@ import {
     createFakePersonalDashboardService,
     createPersonalDashboardService,
 } from '../features/personal-dashboard/createPersonalDashboardService';
+import { createUserSettingsService } from '../features/user-settings/createUserSettingsService';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -236,6 +237,12 @@ export const createServices = (
         sessionService,
         settingService,
     });
+    const userSettingsService = createUserSettingsService(
+        stores,
+        config,
+        eventService,
+    );
+
     const accountService = new AccountService(stores, config, {
         accessService,
     });
@@ -482,6 +489,7 @@ export const createServices = (
         integrationEventsService,
         onboardingService,
         personalDashboardService,
+        userSettingsService,
     };
 };
 

@@ -39,4 +39,9 @@ export interface IUserStore extends Store<IUser, number> {
     successfullyLogin(user: IUser): Promise<number>;
     count(): Promise<number>;
     countServiceAccounts(): Promise<number>;
+    getSettings(userId: number): Promise<Record<string, string>>;
+    setSettings(
+        userId: number,
+        settings: Record<string, string | null>,
+    ): Promise<Record<string, string>>;
 }

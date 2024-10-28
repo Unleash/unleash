@@ -182,6 +182,17 @@ class UserStoreMock implements IUserStore {
     async markSeenAt(secrets: string[]): Promise<void> {
         throw new Error('Not implemented');
     }
+
+    async getSettings(userId: number): Promise<Record<string, string>> {
+        throw new Error('Not implemented');
+    }
+
+    async setSettings(
+        userId: number,
+        settings: Record<string, string>,
+    ): Promise<Record<string, string>> {
+        throw new Error('Not implemented');
+    }
 }
 
 module.exports = UserStoreMock;

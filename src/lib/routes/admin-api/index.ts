@@ -36,6 +36,7 @@ import { InactiveUsersController } from '../../users/inactive/inactive-users-con
 import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller';
 import { SearchApi } from './search';
 import PersonalDashboardController from '../../features/personal-dashboard/personal-dashboard-controller';
+import UserSettingsController from '../../features/user-settings/user-settings-controller';
 
 export class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -79,6 +80,10 @@ export class AdminApi extends Controller {
         this.app.use(
             '/user/tokens',
             new PatController(config, services).router,
+        );
+        this.app.use(
+            '/user/settings',
+            new UserSettingsController(config, services).router,
         );
 
         this.app.use(

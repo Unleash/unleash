@@ -193,3 +193,26 @@ test('should delete user', async () => {
         new NotFoundError('No user found'),
     );
 });
+
+test('should set and update user settings', async () => {
+    const user = await stores.userStore.upsert({
+        email: 'user.with.settings@example.com',
+    });
+
+    await stores.userStore.setSettings(user.id, {
+        theme: 'dark',
+    });
+
+    expect(await stores.userStore.getSettings(user.id)).toEqual({
+        theme: 'dark',
+    });
+
+    await stores.userStore.setSettings(user.id, {
+        emailOptOut: 'true',
+        theme: null,
+    });
+
+    expect(await stores.userStore.getSettings(user.id)).toEqual({
+        emailOptOut: 'true',
+    });
+});

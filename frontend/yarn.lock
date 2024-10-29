@@ -7938,7 +7938,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"orval@npm:^6.17.0":
+"orval@npm:^6.31.0":
   version: 6.31.0
   resolution: "orval@npm:6.31.0"
   dependencies:
@@ -10138,7 +10138,7 @@ __metadata:
     lodash.omit: "npm:4.5.0"
     millify: "npm:^6.0.0"
     msw: "npm:2.4.12"
-    orval: "npm:^6.17.0"
+    orval: "npm:^6.31.0"
     pkginfo: "npm:0.4.1"
     plausible-tracker: "npm:0.3.9"
     prop-types: "npm:15.8.1"
@@ -10168,9 +10168,6 @@ __metadata:
     vite-tsconfig-paths: "npm:4.3.2"
     vitest: "npm:1.4.0"
     whatwg-fetch: "npm:3.6.20"
-  dependenciesMeta:
-    orval:
-      optional: true
   languageName: unknown
   linkType: soft
 

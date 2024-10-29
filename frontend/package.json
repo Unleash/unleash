@@ -94,6 +94,7 @@
     "lodash.omit": "4.5.0",
     "millify": "^6.0.0",
     "msw": "2.4.12",
+    "orval": "^6.31.0",
     "pkginfo": "0.4.1",
     "plausible-tracker": "0.3.9",
     "prop-types": "15.8.1",
@@ -123,9 +124,6 @@
     "vite-tsconfig-paths": "4.3.2",
     "vitest": "1.4.0",
     "whatwg-fetch": "3.6.20"
-  },
-  "optionalDependencies": {
-    "orval": "^6.17.0"
   },
   "resolutions": {
     "@codemirror/state": "6.4.1",

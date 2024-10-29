@@ -184,16 +184,22 @@ export default class EventService {
         }
 
         if (params.to) {
-            const [_, value] = params.to.split(':');
-            const inclusiveDate = formatISO(addDays(new Date(value), 1), {
-                representation: 'date',
-            });
+            const parsed = parseSearchOperatorValue('created_at', params.to);
+            if (parsed) {
+                const values = parsed.values
+                    .filter((v): v is string => v !== null)
+                    .map((date) =>
+                        formatISO(addDays(new Date(date), 1), {
+                            representation: 'date',
+                        }),
+                    );
 
-            queryParams.push({
-                field: `created_at`,
-                operator: 'IS_BEFORE',
-                values: [inclusiveDate],
-            });
+                queryParams.push({
+                    field: parsed.field,
+                    operator: 'IS_BEFORE',
+                    values,
+                });
+            }
         }
 
         if (params.createdBy) {

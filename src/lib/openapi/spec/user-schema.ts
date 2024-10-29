@@ -102,6 +102,7 @@ export const userSchema = {
         settings: {
             description: 'User settings',
             type: 'object',
+            nullable: true,
             additionalProperties: {
                 type: 'string',
             },

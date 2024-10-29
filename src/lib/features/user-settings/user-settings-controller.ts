@@ -68,7 +68,6 @@ export default class UserSettingsController extends Controller {
     }
 
     async getUserSettings(req, res) {
-        console.log({ req, flag: this.flagResolver.isEnabled('userSettings') });
         if (!this.flagResolver.isEnabled('userSettings')) {
             throw new ForbiddenError('User settings feature is not enabled');
         }

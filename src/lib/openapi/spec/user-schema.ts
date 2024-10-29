@@ -99,6 +99,16 @@ export const userSchema = {
             nullable: true,
             example: '01HTMEXAMPLESCIMID7SWWGHN6',
         },
+        settings: {
+            description: 'User settings',
+            type: 'object',
+            additionalProperties: {
+                type: 'string',
+            },
+            example: {
+                'productivity-insights-email': 'true',
+            },
+        },
     },
     components: {},
 } as const;

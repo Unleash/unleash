@@ -33,6 +33,7 @@ export interface IEmailEnvelope {
         path: string;
         cid: string;
     }[];
+    headers?: Record<string, string>;
 }
 
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
@@ -536,11 +537,14 @@ export class EmailService {
         },
     ): Promise<IEmailEnvelope> {
         if (this.configured()) {
+            const unsubscribeUrl = '{{amazonSESUnsubscribeUrl}}'; // FIXME: Add unsubscribe URL
+
             const context = {
                 userName,
                 userEmail,
                 ...metrics,
                 unleashUrl: this.config.server.unleashUrl,
+                unsubscribeUrl,
             };
 
             const template = 'productivity-report';
@@ -555,6 +559,16 @@ export class EmailService {
                 TemplateFormat.PLAIN,
                 context,
             );
+
+            const headers: Record<string, string> = {};
+            Object.entries(this.config.email.optionalHeaders || {}).forEach(
+                ([key, value]) => {
+                    if (typeof value === 'string') {
+                        headers[key] = value;
+                    }
+                },
+            );
+
             const email: IEmailEnvelope = {
                 from: this.sender,
                 to: userEmail,
@@ -569,7 +583,9 @@ export class EmailService {
                         'unleashLogo',
                     ),
                 ],
-            };
+                headers,
+            } satisfies IEmailEnvelope;
+
             process.nextTick(() => {
                 this.mailer!.sendMail(email).then(
                     () =>

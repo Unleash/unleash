@@ -126,6 +126,7 @@ export const Filters: FC<IFilterProps> = ({
                 if (!filter) {
                     return null;
                 }
+
                 const label = (
                     <>
                         <StyledCategoryIconWrapper>
@@ -150,6 +151,7 @@ export const Filters: FC<IFilterProps> = ({
                         />
                     );
                 }
+
                 return (
                     <FilterItem
                         key={filter.label}

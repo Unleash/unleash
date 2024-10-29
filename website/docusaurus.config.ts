@@ -172,7 +172,14 @@ const config: Config = {
             ],
         },
         prism: {
-            additionalLanguages: ['csharp', 'dart', 'java', 'php', 'ruby'],
+            additionalLanguages: [
+                'csharp',
+                'dart',
+                'java',
+                'php',
+                'ruby',
+                'bash',
+            ],
         },
         languageTabs: [
             {

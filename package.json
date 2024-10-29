@@ -173,7 +173,7 @@
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
-    "@babel/core": "7.25.8",
+    "@babel/core": "7.25.9",
     "@biomejs/biome": "^1.8.3",
     "@cyclonedx/yarn-plugin-cyclonedx": "^1.0.0-rc.7",
     "@swc/core": "1.7.39",

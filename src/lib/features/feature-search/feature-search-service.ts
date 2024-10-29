@@ -60,14 +60,6 @@ export class FeatureSearchService {
             if (parsed) queryParams.push(parsed);
         }
 
-        if (params.createdBy) {
-            const parsed = parseSearchOperatorValue(
-                'users.id',
-                params.createdBy,
-            );
-            if (parsed) queryParams.push(parsed);
-        }
-
         if (params.type) {
             const parsed = parseSearchOperatorValue(
                 'features.type',

@@ -57,6 +57,7 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+    await db.stores.dependentFeaturesStore.deleteAll();
     await db.stores.featureToggleStore.deleteAll();
     await db.stores.segmentStore.deleteAll();
 });
@@ -1146,16 +1147,16 @@ test('should return archived when query param set', async () => {
         archived: true,
     });
 
-    // const { body } = await searchFeatures({
-    //     query: 'my_feature',
-    // });
-    // expect(body).toMatchObject({
-    //     features: [
-    //         {
-    //             name: 'my_feature_a',
-    //         }
-    //     ],
-    // });
+    const { body } = await searchFeatures({
+        query: 'my_feature',
+    });
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+            },
+        ],
+    });
 
     const { body: archivedFeatures } = await searchFeatures({
         query: 'my_feature',

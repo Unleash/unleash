@@ -461,74 +461,9 @@ export class EmailService {
         });
     }
 
-    async sendOrderEnvironmentEmail(
-        userEmail: string,
-        customerId: string,
-        environments: OrderEnvironmentData[],
-    ): Promise<IEmailEnvelope> {
-        if (this.configured()) {
-            const context = {
-                userEmail,
-                customerId,
-                environments: environments.map((data) => ({
-                    name: this.stripSpecialCharacters(data.name),
-                    type: this.stripSpecialCharacters(data.type),
-                })),
-            };
-
-            const bodyHtml = await this.compileTemplate(
-                'order-environments',
-                TemplateFormat.HTML,
-                context,
-            );
-            const bodyText = await this.compileTemplate(
-                'order-environments',
-                TemplateFormat.PLAIN,
-                context,
-            );
-            const email = {
-                from: this.sender,
-                to: userEmail,
-                bcc:
-                    process.env.ORDER_ENVIRONMENTS_BCC ||
-                    'pro-sales@getunleash.io',
-                subject: ORDER_ENVIRONMENTS_SUBJECT,
-                html: bodyHtml,
-                text: bodyText,
-            };
-            process.nextTick(() => {
-                this.mailer!.sendMail(email).then(
-                    () =>
-                        this.logger.info(
-                            'Successfully sent order environments email',
-                        ),
-                    (e) =>
-                        this.logger.warn(
-                            'Failed to send order environments email',
-                            e,
-                        ),
-                );
-            });
-            return Promise.resolve(email);
-        }
-        return new Promise((res) => {
-            this.logger.warn(
-                'No mailer is configured. Please read the docs on how to configure an email service',
-            );
-            res({
-                from: this.sender,
-                to: userEmail,
-                bcc: '',
-                subject: ORDER_ENVIRONMENTS_SUBJECT,
-                html: '',
-                text: '',
-            });
-        });
-    }
-
     async sendProductivityReportEmail(
-        userName: string,
         userEmail: string,
+        userName: string,
         metrics: {
             health: number;
             flagsCreated: number;
@@ -594,6 +529,71 @@ export class EmailService {
                 to: userEmail,
                 bcc: '',
                 subject: PRODUCTIVITY_REPORT,
+                html: '',
+                text: '',
+            });
+        });
+    }
+
+    async sendOrderEnvironmentEmail(
+        userEmail: string,
+        customerId: string,
+        environments: OrderEnvironmentData[],
+    ): Promise<IEmailEnvelope> {
+        if (this.configured()) {
+            const context = {
+                userEmail,
+                customerId,
+                environments: environments.map((data) => ({
+                    name: this.stripSpecialCharacters(data.name),
+                    type: this.stripSpecialCharacters(data.type),
+                })),
+            };
+
+            const bodyHtml = await this.compileTemplate(
+                'order-environments',
+                TemplateFormat.HTML,
+                context,
+            );
+            const bodyText = await this.compileTemplate(
+                'order-environments',
+                TemplateFormat.PLAIN,
+                context,
+            );
+            const email = {
+                from: this.sender,
+                to: userEmail,
+                bcc:
+                    process.env.ORDER_ENVIRONMENTS_BCC ||
+                    'pro-sales@getunleash.io',
+                subject: ORDER_ENVIRONMENTS_SUBJECT,
+                html: bodyHtml,
+                text: bodyText,
+            };
+            process.nextTick(() => {
+                this.mailer!.sendMail(email).then(
+                    () =>
+                        this.logger.info(
+                            'Successfully sent order environments email',
+                        ),
+                    (e) =>
+                        this.logger.warn(
+                            'Failed to send order environments email',
+                            e,
+                        ),
+                );
+            });
+            return Promise.resolve(email);
+        }
+        return new Promise((res) => {
+            this.logger.warn(
+                'No mailer is configured. Please read the docs on how to configure an email service',
+            );
+            res({
+                from: this.sender,
+                to: userEmail,
+                bcc: '',
+                subject: ORDER_ENVIRONMENTS_SUBJECT,
                 html: '',
                 text: '',
             });

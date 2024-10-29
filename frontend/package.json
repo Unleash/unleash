@@ -68,7 +68,7 @@
     "@types/uuid": "^9.0.0",
     "@uiw/codemirror-theme-duotone": "4.23.5",
     "@uiw/react-codemirror": "4.23.5",
-    "@vitejs/plugin-react": "4.3.2",
+    "@vitejs/plugin-react": "4.3.3",
     "cartesian": "^1.0.1",
     "chart.js": "3.9.1",
     "chartjs-adapter-date-fns": "3.0.0",
@@ -93,7 +93,7 @@
     "lodash.mapvalues": "^4.6.0",
     "lodash.omit": "4.5.0",
     "millify": "^6.0.0",
-    "msw": "2.4.11",
+    "msw": "2.4.12",
     "pkginfo": "0.4.1",
     "plausible-tracker": "0.3.9",
     "prop-types": "15.8.1",
@@ -102,7 +102,7 @@
     "react-chartjs-2": "4.3.1",
     "react-confetti": "^6.1.0",
     "react-dom": "18.3.1",
-    "react-dropzone": "14.2.9",
+    "react-dropzone": "14.2.10",
     "react-error-boundary": "3.1.4",
     "react-hooks-global-state": "2.1.0",
     "react-joyride": "^2.5.3",
@@ -110,7 +110,7 @@
     "react-router-dom": "6.16.0",
     "react-table": "7.8.0",
     "react-test-renderer": "18.3.1",
-    "sass": "1.77.8",
+    "sass": "1.80.3",
     "semver": "7.6.3",
     "swr": "2.2.5",
     "tss-react": "4.9.13",
@@ -155,7 +155,7 @@
       "last 1 safari version"
     ]
   },
-  "packageManager": "yarn@4.4.1",
+  "packageManager": "yarn@4.5.1",
   "dependencies": {
     "json-2-csv": "^5.5.5"
   }

@@ -153,7 +153,7 @@ export const featureSearchQueryParameters = [
             example: 'IS:true',
         },
         description:
-            'The flag to filter for archived features. Set to true to retrieve only archived features; by default, it is set to false.',
+            'Whether to get results for archived feature flags or active feature flags. If `true`, Unleash will return only archived flags. If `false`, it will return only active flags.',
         in: 'query',
     },
     {

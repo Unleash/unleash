@@ -6,7 +6,7 @@
     <title>Your Unleash Productivity Report</title>
 </head>
 
-<body style="font-family: Arial, sans-serif;background-color: #f9f9f9;color: #333;margin: 0;padding: 0;font-size:16px">
+<body style="font-family: Arial, sans-serif;background-color: #f9f9f9;color: #333;margin: 0;padding: 12px 0;font-size:16px">
     <div class="container"
         style="max-width: 600px;margin: 24px auto;background-color: #ffffff;border-radius: 8px;border: 1px solid #f0f0f5;overflow: hidden;">
         <div class="header" style="background-color: #6c65e5;padding: 20px;text-align: center;color: #ffffff;">
@@ -72,8 +72,9 @@
             </div>
             <div class="unsubscribe" style="font-size: 12px;color: #888;margin-top: 10px;">
                 This email was sent to {{userEmail}}. You’ve received this as you are a user of Unleash.<br>
-                If you wish to unsubscribe from our newsletter, click <a
-                    href="https://example.com/unsubscribe">here</a>.
+                {{#unsubscribeUrl}}
+                If you wish to unsubscribe from updated, click <a href="{{unsubscribeUrl}}">here</a>.
+                {{/unsubscribeUrl}}
             </div>
         </div>
     </div>

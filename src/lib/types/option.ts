@@ -167,6 +167,7 @@ export interface IEmailOption {
     smtpuser?: string;
     smtppass?: string;
     transportOptions?: SMTPTransport.Options;
+    optionalHeaders?: Record<string, unknown>;
 }
 
 export interface IListeningPipe {

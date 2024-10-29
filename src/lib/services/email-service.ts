@@ -33,6 +33,7 @@ export interface IEmailEnvelope {
         path: string;
         cid: string;
     }[];
+    headers?: Record<string, string>;
 }
 
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
@@ -555,7 +556,8 @@ export class EmailService {
                 TemplateFormat.PLAIN,
                 context,
             );
-            const email: IEmailEnvelope = {
+
+            const email = {
                 from: this.sender,
                 to: userEmail,
                 bcc: '',
@@ -569,7 +571,11 @@ export class EmailService {
                         'unleashLogo',
                     ),
                 ],
-            };
+                headers: {
+                    ...this.config.email.optionalEmailHeaders,
+                },
+            } satisfies IEmailEnvelope;
+
             process.nextTick(() => {
                 this.mailer!.sendMail(email).then(
                     () =>
@@ -585,6 +591,7 @@ export class EmailService {
             });
             return Promise.resolve(email);
         }
+
         return new Promise((res) => {
             this.logger.warn(
                 'No mailer is configured. Please read the docs on how to configure an email service',

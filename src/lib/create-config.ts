@@ -341,6 +341,9 @@ const defaultImport: WithOptional<IImportOption, 'file'> = {
     environment: process.env.IMPORT_ENVIRONMENT ?? 'development',
 };
 
+const emailHeaderName = process.env.OPTIONAL_EMAIL_HEADER_NAME;
+const emailHeaderValue = process.env.OPTIONAL_EMAIL_HEADER_VALUE;
+
 const defaultEmail: IEmailOption = {
     host: process.env.EMAIL_HOST,
     secure: parseEnvVarBoolean(process.env.EMAIL_SECURE, false),
@@ -348,6 +351,12 @@ const defaultEmail: IEmailOption = {
     sender: process.env.EMAIL_SENDER || 'Unleash <noreply@getunleash.io>',
     smtpuser: process.env.EMAIL_USER,
     smtppass: process.env.EMAIL_PASSWORD,
+    optionalEmailHeaders:
+        emailHeaderName && emailHeaderValue
+            ? {
+                  [emailHeaderName]: emailHeaderValue,
+              }
+            : {},
 };
 
 const dbPort = (dbConfig: Partial<IDBOption>): Partial<IDBOption> => {

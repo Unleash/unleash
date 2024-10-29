@@ -95,14 +95,6 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
-            {
-                label: 'Show only archived',
-                icon: 'inventory',
-                options: [{ label: 'True', value: 'true' }],
-                filterKey: 'archived',
-                singularOperators: ['IS'],
-                pluralOperators: ['IS_ANY_OF'],
-            },
         ];
 
         setAvailableFilters(availableFilters);

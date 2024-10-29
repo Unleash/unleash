@@ -101,6 +101,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             limit,
             sortOrder,
             sortBy,
+            archived,
             favoritesFirst,
         }: IFeatureSearchParams,
         queryParams: IQueryParam[],
@@ -188,9 +189,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         }
                     });
                 }
-
                 query
-                    .modify(FeatureToggleStore.filterByArchived, false)
+                    .modify(FeatureToggleStore.filterByArchived, archived)
                     .leftJoin(
                         'feature_environments',
                         'feature_environments.feature_name',

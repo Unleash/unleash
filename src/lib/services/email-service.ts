@@ -505,7 +505,7 @@ export class EmailService {
                         ),
                     (e) =>
                         this.logger.warn(
-                            'Faileds to send order environments email',
+                            'Failed to send order environments email',
                             e,
                         ),
                 );

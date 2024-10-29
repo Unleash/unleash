@@ -39,6 +39,7 @@ import {
 } from './types/models/api-token';
 import {
     parseEnvVarBoolean,
+    parseEnvVarJSON,
     parseEnvVarNumber,
     parseEnvVarStrings,
 } from './util/parseEnvVar';
@@ -348,6 +349,7 @@ const defaultEmail: IEmailOption = {
     sender: process.env.EMAIL_SENDER || 'Unleash <noreply@getunleash.io>',
     smtpuser: process.env.EMAIL_USER,
     smtppass: process.env.EMAIL_PASSWORD,
+    optionalHeaders: parseEnvVarJSON(process.env.EMAIL_OPTIONAL_HEADERS, {}),
 };
 
 const dbPort = (dbConfig: Partial<IDBOption>): Partial<IDBOption> => {

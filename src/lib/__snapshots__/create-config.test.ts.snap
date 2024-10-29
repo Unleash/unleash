@@ -53,6 +53,7 @@ exports[`should create default config 1`] = `
   "disableScheduler": undefined,
   "email": {
     "host": undefined,
+    "optionalHeaders": {},
     "port": 587,
     "secure": false,
     "sender": "Unleash <noreply@getunleash.io>",

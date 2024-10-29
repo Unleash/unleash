@@ -43,7 +43,7 @@ const addDocsRoutePrefix = ({ from, ...rest }) => {
 };
 
 const config: Config = {
-    title: 'Unleash',
+    title: 'Unleash Documentation',
     tagline: 'The enterprise ready feature flag service',
     url: 'https://docs.getunleash.io',
     baseUrl: '/',
@@ -512,10 +512,6 @@ const config: Config = {
                             '/sdks/unleash-proxy',
                         ],
                         to: '/reference/unleash-proxy',
-                    },
-                    {
-                        to: '/how-to-create-feature-flag',
-                        from: '/user_guide/create_feature_toggle',
                     },
                     {
                         to: '/reference/activation-strategies',

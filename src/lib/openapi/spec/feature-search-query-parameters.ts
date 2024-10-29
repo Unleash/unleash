@@ -150,7 +150,7 @@ export const featureSearchQueryParameters = [
         name: 'archived',
         schema: {
             type: 'string',
-            example: 'true',
+            example: 'IS:true',
         },
         description:
             'The flag to filter for archived features. Set to true to retrieve only archived features; by default, it is set to false.',

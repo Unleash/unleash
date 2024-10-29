@@ -33,7 +33,7 @@
   "license": "Apache-2.0",
   "main": "./dist/lib/server-impl.js",
   "scripts": {
-    "start": "TZ=UTC node ./dist/server.js",
+    "start": "TZ=UTC node dist/server.js",
     "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
     "build:backend": "tsc --pretty --strictNullChecks false",
     "build:frontend": "yarn --cwd ./frontend run build",

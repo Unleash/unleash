@@ -21,8 +21,8 @@ export const ApiDetails = (props: IApiDetailsProps): ReactElement => {
     return (
         <section title='API details'>
             <FooterTitle>
-                {name} {environment ? environment : ''}{' '}
-                {billing === 'pay-as-you-go' ? 'Pay-as-You-Go' : ''} {version}{' '}
+                {name} {environment ? environment : ''}
+                {billing === 'pay-as-you-go' ? ' Pay-as-You-Go' : ''} {version}{' '}
                 {buildInfo}
             </FooterTitle>
             <ConditionallyRender

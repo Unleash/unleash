@@ -2,13 +2,70 @@
 title: Using Unleash through Terraform
 ---
 
+:::note Availability
+
+**Version**: `5.6+`
+
+:::
+
+
 ## Overview
 
-We'll look at managing an Unleash instance configuration through Terraform. Explore a typical Terraform workflow and how the unleash provider fits in with that. Look at the capabilities, setup requirements and best practices.
+The [Unleash Terraform provider](https://github.com/Unleash/terraform-provider-unleash) allows you to manage and configure your Unleash programmatically using Terraform, enabling automated and scalable management for your infrastructure.
+By integrating Unleash with Terraform, you can use infrastructure as code (IaC) to optimize the setup and maintenance of your Unleash instance configuration.
 
-Basic terraform configuration with the Unleash provider, execute a workflow to imoprt existing objects and create some new ones.
+The Unleash Terraform provider is designed to help you with the initial setup and configuration of an instance. The provider does not support managing feature flags through Terraform. Since most [feature flags are short-lived](/topics/feature-flags/feature-flag-best-practices#7-make-flags-short-lived), we recommend managing them through the Unleash Admin UI.
 
-Platform and devops teams managing projects and feature flags often have repetitive workflows locating specific configuration. Setting up permissions and manually inputting data. Domain specific knowledge requirements, needing familiarity with the UI.
-Manual error, scalability issues, lack of version control.
+For a detailed tutorial, follow along with [Managing Unleash through Terraform](https://www.youtube.com/watch?v=B4OIBC1u1ns).
+For more examples for the specific resources and data sources, visit the [Terraform registry](https://registry.terraform.io/providers/Unleash/unleash/latest/docs/data-sources/permission).
 
-Terraform answer: condified configurations with Terrafor (replace conplex UI steps with structured code), standardized onboarding, minimizwed human error, scalability and consistency, clear audit trails.
+## Manage Terraform access
+
+The API token permissions as well as your Unleash [plan](https://www.getunleash.io/pricing) determine what objects Terraform can manage.
+- For Open-Source and Pro, use an [admin token](/reference/api-tokens-and-client-keys#admin-tokens) or [personal access tokens](/reference/api-tokens-and-client-keys#personal-access-tokens).
+- For Enterprise, use [service accounts](/reference/service-accounts). For larger teams, we recommend multiple service accounts with different permissions and separate Terraform repositories for each team under their respective projects.
+
+## Resources
+
+### API tokens
+
+- `unleash_api_token`: Regulate access and maintain secure communication with verified integrations.
+
+```hcl
+resource "unleash_api_token" "client_token" {
+  token_name  = "client_token"
+  type        = "client"
+  expires_at  = "2024-12-31T23:59:59Z"
+  project     = "default"
+  environment = "development"
+}
+```
+
+### Projects
+
+- `unleash_project`: Create and manage projects.
+- `unleash_project_access`: Assign access roles and users to given project resources.
+
+### Users and roles
+
+- `unleash_role`: Define permissions systematically.
+- `unleash_user`: Automate user management. Use `send_email = true` to generate an invitation link.
+
+### Service accounts
+
+- `unleash_service_account`: Define and manage service accounts for secure automated access.
+- `unleash_service_account_token`: Generate tokens associated with service accounts.
+
+### Single sign-on protocols
+
+- `unleash_oidc`: Manage your [OpenID Connect configuration](../how-to/how-to-add-sso-open-id-connect).
+- `unleash_saml`: Manage your [SAML configuration](../how-to/sso).
+
+## Data sources
+
+You can use the following data sources to fetch resources from Unleash:
+
+- `unleash_project`
+- `unleash_user`
+- `unleash_role`
+- `unleash_permission`

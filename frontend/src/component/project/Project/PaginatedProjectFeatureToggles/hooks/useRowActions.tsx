@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureStaleDialog';
 import { MarkCompletedDialogue } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/MarkCompletedDialogue';
+import { ArchivedFeatureDeleteConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';
+import { ArchivedFeatureReviveConfirm } from '../../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureReviveConfirm/ArchivedFeatureReviveConfirm';
 
 export const useRowActions = (onChange: () => void, projectId: string) => {
     const [featureArchiveState, setFeatureArchiveState] = useState<
@@ -20,6 +22,21 @@ export const useRowActions = (onChange: () => void, projectId: string) => {
         featureId: 'default',
         open: false,
     });
+    const [showFeatureReviveDialogue, setShowFeatureReviveDialogue] = useState<{
+        featureId: string;
+        open: boolean;
+    }>({
+        featureId: 'default',
+        open: false,
+    });
+    const [showFeatureDeleteDialogue, setShowFeatureDeleteDialogue] = useState<{
+        featureId: string;
+        open: boolean;
+    }>({
+        featureId: 'default',
+        open: false,
+    });
+
     const rowActionsDialogs = (
         <>
             <FeatureStaleDialog
@@ -54,6 +71,36 @@ export const useRowActions = (onChange: () => void, projectId: string) => {
                 featureId={showMarkCompletedDialogue.featureId}
                 onComplete={onChange}
             />
+            <ArchivedFeatureDeleteConfirm
+                deletedFeatures={[showFeatureDeleteDialogue.featureId]}
+                projectId={projectId}
+                open={showFeatureDeleteDialogue.open}
+                setOpen={(open) => {
+                    setShowFeatureDeleteDialogue((prev) => ({
+                        ...prev,
+                        open,
+                    }));
+                }}
+                refetch={onChange}
+            />
+            <ArchivedFeatureReviveConfirm
+                revivedFeatures={[showFeatureReviveDialogue.featureId]}
+                projectId={projectId}
+                open={showFeatureReviveDialogue.open}
+                setOpen={(open) => {
+                    setShowFeatureReviveDialogue((prev) => ({
+                        ...prev,
+                        open,
+                    }));
+                }}
+                refetch={() => {
+                    setShowFeatureReviveDialogue((prev) => ({
+                        ...prev,
+                        open: false,
+                    }));
+                    onChange();
+                }}
+            />
         </>
     );
 
@@ -62,5 +109,7 @@ export const useRowActions = (onChange: () => void, projectId: string) => {
         setFeatureArchiveState,
         setFeatureStaleDialogState,
         setShowMarkCompletedDialogue,
+        setShowFeatureReviveDialogue,
+        setShowFeatureDeleteDialogue,
     };
 };

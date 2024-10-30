@@ -11,7 +11,7 @@ slug: /feature-flag-tutorials/use-cases/a-b-testing
 
 Feature flags are a great way to run A/B or multivariate tests with minimal code modifications, and Unleash offers built-in features that make it easy to get started. In this tutorial, we will walk through how to do an A/B test using Unleash with your application.
 
-## How to Perform A/B Testing with Unleash
+## How to Perform A/B Testing with Feature Flags
 
 <<<<<<< HEAD
 To follow along with this tutorial, you will need an Unleash instance. If you’d prefer to self-host Unleash, read our [Quickstart guide](/quickstart). Alternatively, if you’d like your project to be hosted by Unleash, go to [www.getunleash.io](https://www.getunleash.io/pricing?_gl=1*1ytmg93*_gcl_au*MTY3MTQxNjM4OS4xNzIxOTEwNTY5*_ga*OTkzMjI0MDMwLjE3MDYxNDc3ODM.*_ga_492KEZQRT8*MTcyNzQzNTQwOS4yMzcuMS4xNzI3NDM1NDExLjU4LjAuMA).

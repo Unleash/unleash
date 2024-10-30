@@ -1,10 +1,19 @@
-Subject: Unleash productivity report
+Subject: Unleash Productivity Report
 
-Hello,
+Hi {{userName}},
 
-Productivity report
-{{! FIXME: create plaintext template }}
+We are excited to share the latest insights for your instance. As always if you
+have any questions or concerns let us know - we are here for you.
 
+Your instance health: {{health}}
+
+Flags created last month: {{flagsCreated}}
+
+Production updates last month: {{productionUpdates}}
+
+Go to your Insights to learn more: {{unleashUrl}}/insights
+
+This email was sent to {{userEmail}}. You’ve received this as you are a user of Unleash.
 {{#unsubscribeUrl}}
-If you wish to unsubscribe from updated, open {{unsubscribeUrl}}.
+    If you wish to unsubscribe, click <a href="{{unsubscribeUrl}}">here</a>.
 {{/unsubscribeUrl}}

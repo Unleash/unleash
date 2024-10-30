@@ -73,8 +73,6 @@ export interface IUnleashHttpAPI {
         expectedResponseCode?: number,
     ): supertest.Test;
 
-    getFeatures(name?: string, expectedResponseCode?: number): supertest.Test;
-
     getProjectFeatures(
         project: string,
         name?: string,
@@ -150,17 +148,6 @@ function httpApis(
             return request
                 .post(`${base}/api/admin/projects/${project}/features`)
                 .send(body)
-                .set('Content-Type', 'application/json')
-                .expect(expectedResponseCode);
-        },
-
-        getFeatures(
-            name?: string,
-            expectedResponseCode: number = 200,
-        ): supertest.Test {
-            const featuresUrl = `/api/admin/features${name ? `/${name}` : ''}`;
-            return request
-                .get(featuresUrl)
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },

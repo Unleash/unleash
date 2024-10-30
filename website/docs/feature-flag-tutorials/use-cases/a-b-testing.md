@@ -7,7 +7,7 @@ slug: /feature-flag-tutorials/use-cases/a-b-testing
 
 **A/B testing** is a randomized controlled experiment where you test two or more versions of a feature to see which version performs better. If you have more than two versions, it's known as **A/B/n testing**. Coupled with analytics, A/B testing enables you to better understand your users and how to serve them better.
 
-**Multivariate testing** is used to test multiple variables simultaneously in order to determine the optimal combination of elements that will produce the best results. Different combinations of variables such as design, content and functionality can be tested to measure which combination has the greatest impact on user behavior or conversion rates.
+Multivariate testing is used to test multiple variables simultaneously to determine the optimal combination of elements that will produce the best results. Different combinations of variables such as design, content, and functionality can be tested to measure which combination has the greatest impact on user behavior or conversion rates.
 
 Feature flags are a great way to run A/B or multivariate tests with minimal code modifications, and Unleash offers built-in features that make it easy to get started. In this tutorial, we will walk through how to do an A/B test using Unleash with your application.
 

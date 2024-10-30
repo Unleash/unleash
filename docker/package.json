@@ -25,7 +25,6 @@
     "ip": "^2.0.1",
     "minimatch": "^5.0.0",
     "path-scurry": "1.11.1",
-    "path-to-regexp": "0.1.10",
     "semver": "^7.5.3"
   },
   "overrides": {

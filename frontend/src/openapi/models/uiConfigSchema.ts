@@ -55,6 +55,8 @@ export interface UiConfigSchema {
      * @deprecated
      */
     strategySegmentsLimit?: number;
+    /** Whether Unleash AI is available. */
+    unleashAIAvailable?: boolean;
     /** The URL of the Unleash instance. */
     unleashUrl: string;
     /** The current version of Unleash */

@@ -57,7 +57,6 @@ export type IFlagKey =
     | 'originMiddlewareRequestLogging'
     | 'unleashAI'
     | 'webhookDomainLogging'
-    | 'addonUsageMetrics'
     | 'releasePlans'
     | 'navigationSidebar'
     | 'productivityReportEmail'
@@ -284,10 +283,6 @@ const flags: IFlags = {
     ),
     webhookDomainLogging: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENT_WEBHOOK_DOMAIN_LOGGING,
-        false,
-    ),
-    addonUsageMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADDON_USAGE_METRICS,
         false,
     ),
     releasePlans: parseEnvVarBoolean(

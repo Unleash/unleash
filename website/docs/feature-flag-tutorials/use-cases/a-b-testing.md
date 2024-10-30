@@ -153,7 +153,7 @@ To use Unleash to conduct a multi-arm bandit test, you will need to:
 -   create signal endpoint(s) in Unleash that will point to your external analytics tools
 -   create actions in Unleash that will react to your signals that were integrated
 
-This approach minimizes the "regret" associated with allocating traffic to lower performing variants. Multi-arm bandit tests using Unleash can adapt to changing conditions, such as seasonal fluctuations or user behavior changes. In some cases, they can be used to ensure that users are not exposed to suboptimal experiences for extended periods.
+This approach minimizes the "regret" associated with allocating traffic to lower-performing variants. Multi-arm bandit tests using Unleash can adapt to changing conditions, such as seasonal fluctuations or user behavior changes. In some cases, they can be used to ensure that users are not exposed to suboptimal experiences for extended periods.
 
 A/B tests are performed safely and strategically with extra safeguards when you automate your flags based on user activity and other metrics of your choice.
 

@@ -179,6 +179,11 @@ const filterFeaturesByEnvironmentStatus = async (
 const searchFeaturesWithoutQueryParams = async (expectedCode = 200) => {
     return app.request.get(`/api/admin/search/features`).expect(expectedCode);
 };
+const getProjectArchive = async (projectId = 'default', expectedCode = 200) => {
+    return app.request
+        .get(`/api/admin/archive/features/${projectId}`)
+        .expect(expectedCode);
+};
 
 test('should search matching features by name', async () => {
     await app.createFeature('my_feature_a');
@@ -1154,6 +1159,7 @@ test('should return archived when query param set', async () => {
         features: [
             {
                 name: 'my_feature_a',
+                archivedAt: null,
             },
         ],
     });
@@ -1162,10 +1168,14 @@ test('should return archived when query param set', async () => {
         query: 'my_feature',
         archived: 'IS:true',
     });
+
+    const { body: archive } = await getProjectArchive();
+
     expect(archivedFeatures).toMatchObject({
         features: [
             {
                 name: 'my_feature_b',
+                archivedAt: archive.features[0].archivedAt,
             },
         ],
     });

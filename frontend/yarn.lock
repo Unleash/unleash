@@ -8981,9 +8981,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sass@npm:1.80.3":
-  version: 1.80.3
-  resolution: "sass@npm:1.80.3"
+"sass@npm:1.80.4":
+  version: 1.80.4
+  resolution: "sass@npm:1.80.4"
   dependencies:
     "@parcel/watcher": "npm:^2.4.1"
     chokidar: "npm:^4.0.0"
@@ -8991,7 +8991,7 @@ __metadata:
     source-map-js: "npm:>=0.6.2 <2.0.0"
   bin:
     sass: sass.js
-  checksum: 10c0/fa08043fc36b854717b6eaf6247ee11341d0aff5e17a645965071866bd677930c9c9467d82ed5a4a666d7897a82be8a61427cd81b808e6b9e2d3b32cf278bebd
+  checksum: 10c0/58ca0f2d10720cde6621ee62f4bdbb537ea2ac572c565d5f02309f8271a5e1e880ad8c163b933e52b22b3dc0550973fb5a6033a500248e6a0d89dd050c1743cf
   languageName: node
   linkType: hard
 
@@ -10174,7 +10174,7 @@ __metadata:
     react-router-dom: "npm:6.16.0"
     react-table: "npm:7.8.0"
     react-test-renderer: "npm:18.3.1"
-    sass: "npm:1.80.3"
+    sass: "npm:1.80.4"
     semver: "npm:7.6.3"
     swr: "npm:2.2.5"
     tss-react: "npm:4.9.13"

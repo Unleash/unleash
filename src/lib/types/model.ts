@@ -261,6 +261,7 @@ export type IFeatureSearchOverview = Exclude<
 > & {
     dependencyType: 'parent' | 'child' | null;
     environments: FeatureSearchEnvironmentSchema[];
+    archivedAt: string;
     createdBy: {
         id: number;
         name: string;

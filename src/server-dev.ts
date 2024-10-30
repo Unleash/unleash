@@ -55,8 +55,8 @@ process.nextTick(async () => {
                         originMiddlewareRequestLogging: true,
                         unleashAI: true,
                         webhookDomainLogging: true,
-                        addonUsageMetrics: true,
                         releasePlans: false,
+                        simplifyProjectOverview: true,
                     },
                 },
                 authentication: {

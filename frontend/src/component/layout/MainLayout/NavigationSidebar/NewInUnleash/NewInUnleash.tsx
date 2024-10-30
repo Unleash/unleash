@@ -104,7 +104,6 @@ export const NewInUnleash = ({
     );
     const { isOss, isEnterprise } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
-    const eventTimelineEnabled = useUiFlag('eventTimeline');
 
     const { setHighlighted } = useEventTimelineContext();
 
@@ -159,7 +158,7 @@ export const NewInUnleash = ({
             },
             docsLink:
                 'https://docs.getunleash.io/reference/events#event-timeline',
-            show: !isOss() && eventTimelineEnabled,
+            show: !isOss(),
             longDescription: (
                 <>
                     <p>
@@ -174,7 +173,6 @@ export const NewInUnleash = ({
                     </p>
                 </>
             ),
-            beta: true,
         },
     ];
 

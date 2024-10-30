@@ -51,17 +51,16 @@ export type IFlagKey =
     | 'removeUnsafeInlineStyleSrc'
     | 'onboardingUI'
     | 'projectRoleAssignment'
-    | 'eventTimeline'
     | 'personalDashboardUI'
     | 'trackLifecycleMetrics'
     | 'purchaseAdditionalEnvironments'
     | 'originMiddlewareRequestLogging'
     | 'unleashAI'
     | 'webhookDomainLogging'
-    | 'addonUsageMetrics'
     | 'releasePlans'
     | 'navigationSidebar'
-    | 'productivityReportEmail';
+    | 'productivityReportEmail'
+    | 'simplifyProjectOverview';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -262,10 +261,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_ROLE_ASSIGNMENT,
         false,
     ),
-    eventTimeline: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EVENT_TIMELINE,
-        false,
-    ),
     personalDashboardUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PERSONAL_DASHBOARD_UI,
         false,
@@ -290,10 +285,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENT_WEBHOOK_DOMAIN_LOGGING,
         false,
     ),
-    addonUsageMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADDON_USAGE_METRICS,
-        false,
-    ),
     releasePlans: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RELEASE_PLANS,
         false,
@@ -304,6 +295,10 @@ const flags: IFlags = {
     ),
     productivityReportEmail: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_EMAIL,
+        false,
+    ),
+    simplifyProjectOverview: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SIMPLIFY_PROJECT_OVERVIEW,
         false,
     ),
 };

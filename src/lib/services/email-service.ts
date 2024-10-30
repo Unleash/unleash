@@ -528,8 +528,8 @@ export class EmailService {
     }
 
     async sendProductivityReportEmail(
-        userName: string,
         userEmail: string,
+        userName: string,
         metrics: {
             health: number;
             flagsCreated: number;

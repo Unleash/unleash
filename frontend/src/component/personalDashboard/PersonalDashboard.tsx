@@ -105,9 +105,9 @@ export const PersonalDashboard = () => {
     const { trackEvent } = usePlausibleTracker();
     const { setSplashSeen } = useSplashApi();
     const { splash } = useAuthSplash();
-    const name = user?.name;
+    const name = user?.name || '';
 
-    usePageTitle(`Dashboard: ${name}`);
+    usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
 
     const { personalDashboard, refetch: refetchDashboard } =
         usePersonalDashboard();

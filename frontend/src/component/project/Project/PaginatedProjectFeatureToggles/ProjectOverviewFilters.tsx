@@ -6,6 +6,7 @@ import {
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
 import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectOverviewFilters {
     state: FilterItemParamHolder;
@@ -21,6 +22,7 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
     const { tags } = useAllTags();
     const { flagCreators } = useProjectFlagCreators(project);
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
+    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
 
     useEffect(() => {
         const tagsOptions = (tags || []).map((tag) => ({
@@ -95,6 +97,18 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
             },
+            ...(simplifyProjectOverview
+                ? ([
+                      {
+                          label: 'Show only archived',
+                          icon: 'inventory',
+                          options: [{ label: 'True', value: 'true' }],
+                          filterKey: 'archived',
+                          singularOperators: ['IS'],
+                          pluralOperators: ['IS_ANY_OF'],
+                      },
+                  ] as IFilterItem[])
+                : []),
         ];
 
         setAvailableFilters(availableFilters);

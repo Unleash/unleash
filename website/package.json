@@ -31,7 +31,7 @@
     "browserslist": "^4.16.5",
     "docusaurus-plugin-openapi-docs": "2.0.0-beta.3",
     "docusaurus-plugin-remote-content": "^3.1.0",
-    "docusaurus-theme-openapi-docs": "2.0.0-beta.2",
+    "docusaurus-theme-openapi-docs": "2.2.3",
     "git-url-parse": "^14.0.0",
     "plugin-image-zoom": "flexanalytics/plugin-image-zoom",
     "prism-svelte": "^0.5.0",

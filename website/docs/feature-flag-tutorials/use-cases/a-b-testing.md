@@ -98,7 +98,6 @@ Next, decide the percentage of users to target for each variant, known as the va
 
 ![You can configure multiple strategy variants for A/B testing within the gradual rollout form.](/img/use-case-variants.png)
 
-To learn more, read our documentation on [strategy variants](/reference/strategy-variants).
 
 ### Manage User Session Behavior
 

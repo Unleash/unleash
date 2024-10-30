@@ -184,7 +184,7 @@
     "@types/express-session": "1.18.0",
     "@types/faker": "5.5.9",
     "@types/hash-sum": "^1.0.0",
-    "@types/jest": "29.5.13",
+    "@types/jest": "29.5.14",
     "@types/js-yaml": "4.0.9",
     "@types/lodash.groupby": "4.6.9",
     "@types/make-fetch-happen": "10.0.4",

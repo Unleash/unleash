@@ -3,7 +3,6 @@ import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import { useEventTimelineContext } from 'component/events/EventTimeline/EventTimelineContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledHeaderEventTimelineButton = styled(IconButton, {
     shouldForwardProp: (prop) => prop !== 'highlighted',
@@ -34,14 +33,13 @@ const StyledHeaderEventTimelineButton = styled(IconButton, {
 export const HeaderEventTimelineButton = () => {
     const { trackEvent } = usePlausibleTracker();
     const { isOss } = useUiConfig();
-    const eventTimeline = useUiFlag('eventTimeline') && !isOss();
     const {
         open: showTimeline,
         setOpen: setShowTimeline,
         highlighted,
     } = useEventTimelineContext();
 
-    if (!eventTimeline) return null;
+    if (isOss()) return null;
 
     return (
         <Tooltip

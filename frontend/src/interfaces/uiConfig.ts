@@ -91,6 +91,7 @@ export type UiFlags = {
     purchaseAdditionalEnvironments?: boolean;
     unleashAI?: boolean;
     releasePlans?: boolean;
+    'enterprise-payg'?: boolean;
 };
 
 export interface IVersionInfo {

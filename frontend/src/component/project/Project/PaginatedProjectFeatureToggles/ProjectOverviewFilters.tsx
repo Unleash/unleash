@@ -6,7 +6,7 @@ import {
     type IFilterItem,
 } from 'component/filter/Filters/Filters';
 import { useProjectFlagCreators } from 'hooks/api/getters/useProjectFlagCreators/useProjectFlagCreators';
-import { useUiFlag } from '../../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IProjectOverviewFilters {
     state: FilterItemParamHolder;

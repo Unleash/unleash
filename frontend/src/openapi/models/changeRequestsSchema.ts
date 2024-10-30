@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestsSchemaItem } from './changeRequestsSchemaItem';
+import type { ChangeRequestSchema } from './changeRequestSchema';
 
 /**
  * A list of change requests
  */
-export type ChangeRequestsSchema = ChangeRequestsSchemaItem[];
+export type ChangeRequestsSchema = ChangeRequestSchema[];

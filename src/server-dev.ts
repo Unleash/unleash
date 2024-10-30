@@ -57,6 +57,7 @@ process.nextTick(async () => {
                         webhookDomainLogging: true,
                         addonUsageMetrics: true,
                         releasePlans: false,
+                        simplifyProjectOverview: true,
                     },
                 },
                 authentication: {

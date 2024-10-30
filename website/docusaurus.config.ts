@@ -1,5 +1,8 @@
-const { sdks } = require('./remote-content/sdks');
-const { docs: edgeAndProxy } = require('./remote-content/edge-proxy');
+import type { Config } from '@docusaurus/types';
+
+import { sdks } from './remote-content/sdks';
+import { docs as edgeAndProxy } from './remote-content/edge-proxy';
+import pluginNpm2Yarn from '@docusaurus/remark-plugin-npm2yarn';
 
 // for a given redirect object, modify it's `from` property such that for every
 // path that doesn't start with `/docs/`, a corresponding path that _does_ start
@@ -38,8 +41,8 @@ const addDocsRoutePrefix = ({ from, ...rest }) => {
         from: addDocs(from),
     };
 };
-/** @type {import('@docusaurus/types').DocusaurusConfig} */
-module.exports = {
+
+const config: Config = {
     title: 'Unleash Documentation',
     tagline: 'The enterprise ready feature flag service',
     url: 'https://docs.getunleash.io',
@@ -50,7 +53,6 @@ module.exports = {
     organizationName: 'Unleash', // Usually your GitHub org/user name.
     projectName: 'unleash.github.io', // Usually your repo name.
     trailingSlash: false,
-    markdown: { mermaid: true },
     customFields: {
         // expose env vars etc here
         environment: process.env.NODE_ENV,
@@ -170,17 +172,13 @@ module.exports = {
             ],
         },
         prism: {
-            theme: require('prism-react-renderer/themes/oceanicNext'),
             additionalLanguages: [
                 'csharp',
                 'dart',
-                'http',
                 'java',
-                'kotlin',
                 'php',
                 'ruby',
-                'rust',
-                'swift',
+                'bash',
             ],
         },
         languageTabs: [
@@ -290,22 +288,16 @@ module.exports = {
             '@docusaurus/preset-classic',
             {
                 docs: {
-                    sidebarPath: require.resolve('./sidebars.js'),
                     // Please change this to your repo.
                     editUrl:
                         'https://github.com/Unleash/unleash/edit/main/website/',
                     routeBasePath: '/',
-                    remarkPlugins: [
-                        [
-                            require('@docusaurus/remark-plugin-npm2yarn'),
-                            { sync: true },
-                        ],
-                    ],
-                    docLayoutComponent: '@theme/DocPage',
+                    remarkPlugins: [[pluginNpm2Yarn, { sync: true }]],
                     docItemComponent: '@theme/ApiItem',
+                    sidebarPath: './sidebars.ts',
                 },
                 theme: {
-                    customCss: require.resolve('./src/css/custom.css'),
+                    customCss: './src/css/custom.css',
                 },
                 googleAnalytics: {
                     trackingID: 'UA-134882379-1',
@@ -911,7 +903,6 @@ module.exports = {
     ],
     themes: [
         'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components
-        '@docusaurus/theme-mermaid',
     ],
     scripts: [
         {
@@ -924,5 +915,7 @@ module.exports = {
             defer: true,
         },
     ],
-    clientModules: [require.resolve('./global.js')],
+    clientModules: ['./global.js'],
 };
+
+export default config;

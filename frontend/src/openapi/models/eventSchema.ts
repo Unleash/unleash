@@ -42,7 +42,7 @@ export interface EventSchema {
      */
     id: number;
     /**
-     * **[Experimental]** The concise, human-readable name of the event.
+     * The concise, human-readable name of the event.
      * @nullable
      */
     label?: string | null;
@@ -57,7 +57,7 @@ export interface EventSchema {
      */
     project?: string | null;
     /**
-     * **[Experimental]** A markdown-formatted summary of the event.
+     * A markdown-formatted summary of the event.
      * @nullable
      */
     summary?: string | null;

@@ -47,6 +47,8 @@ import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { ProjectOnboarded } from 'component/onboarding/flow/ProjectOnboarded';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { ArchivedFeatureActionCell } from '../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell';
+import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -115,6 +117,8 @@ export const ProjectFeatureToggles = ({
         setFeatureArchiveState,
         setFeatureStaleDialogState,
         setShowMarkCompletedDialogue,
+        setShowFeatureReviveDialogue,
+        setShowFeatureDeleteDialogue,
     } = useRowActions(refetch, projectId);
 
     const isPlaceholder = Boolean(initialLoad || (loading && total));
@@ -321,14 +325,32 @@ export const ProjectFeatureToggles = ({
             columnHelper.display({
                 id: 'actions',
                 header: '',
-                cell: ({ row }) => (
-                    <ActionsCell
-                        row={row}
-                        projectId={projectId}
-                        onOpenArchiveDialog={setFeatureArchiveState}
-                        onOpenStaleDialog={setFeatureStaleDialogState}
-                    />
-                ),
+                cell: ({ row }) =>
+                    tableState.archived ? (
+                        <ArchivedFeatureActionCell
+                            project={projectId}
+                            onRevive={() => {
+                                setShowFeatureReviveDialogue({
+                                    featureId: row.id,
+                                    open: true,
+                                });
+                            }}
+                            onDelete={() => {
+                                setShowFeatureDeleteDialogue({
+                                    featureId: row.id,
+                                    open: true,
+                                });
+                            }}
+                        />
+                    ) : (
+                        <ActionsCell
+                            row={row}
+                            projectId={projectId}
+                            onOpenArchiveDialog={setFeatureArchiveState}
+                            onOpenStaleDialog={setFeatureStaleDialogState}
+                        />
+                    ),
+
                 enableSorting: false,
                 enableHiding: false,
                 meta: {
@@ -585,13 +607,24 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <BatchSelectionActionsBar count={selectedData.length}>
-                <ProjectFeaturesBatchActions
-                    selectedIds={Object.keys(rowSelection)}
-                    data={selectedData}
-                    projectId={projectId}
-                    onResetSelection={table.resetRowSelection}
-                    onChange={refetch}
-                />
+                {tableState.archived ? (
+                    <ArchiveBatchActions
+                        selectedIds={Object.keys(rowSelection)}
+                        projectId={projectId}
+                        onConfirm={() => {
+                            refetch();
+                            table.resetRowSelection();
+                        }}
+                    />
+                ) : (
+                    <ProjectFeaturesBatchActions
+                        selectedIds={Object.keys(rowSelection)}
+                        data={selectedData}
+                        projectId={projectId}
+                        onResetSelection={table.resetRowSelection}
+                        onChange={refetch}
+                    />
+                )}
             </BatchSelectionActionsBar>
         </Container>
     );

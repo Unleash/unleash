@@ -11,7 +11,7 @@
     "build": "yarn generate && yarn fetch-remote-content && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "fetch-remote-content": "docusaurus download-remote-content-external && docusaurus download-remote-content-sdks",
-    "generate": "docusaurus gen-api-docs all && node clean-generated-docs.js",
+    "generate": "docusaurus gen-api-docs all && node clean-generated-docs.mjs",
     "deploy": "yarn generate && yarn fetch-remote-content && docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
@@ -20,40 +20,22 @@
     "test": "NODE_ENV=test node --trace-warnings ../node_modules/.bin/jest remote-content"
   },
   "dependencies": {
-    "@docusaurus/core": "2.3.1",
-    "@docusaurus/plugin-client-redirects": "2.3.1",
-    "@docusaurus/plugin-google-analytics": "2.3.1",
-    "@docusaurus/preset-classic": "2.3.1",
-    "@docusaurus/remark-plugin-npm2yarn": "2.3.1",
-    "@docusaurus/theme-mermaid": "2.3.1",
-    "@mdx-js/react": "1.6.22",
-    "@svgr/webpack": "8.1.0",
-    "browserslist": "^4.16.5",
-    "docusaurus-plugin-openapi-docs": "2.0.0-beta.3",
-    "docusaurus-plugin-remote-content": "^3.1.0",
-    "docusaurus-theme-openapi-docs": "2.0.0-beta.2",
-    "git-url-parse": "^14.0.0",
+    "@docusaurus/core": "^3.5.2",
+    "@docusaurus/plugin-client-redirects": "^3.5.2",
+    "@docusaurus/plugin-google-analytics": "^3.5.2",
+    "@docusaurus/preset-classic": "^3.5.2",
+    "@docusaurus/remark-plugin-npm2yarn": "3.5.2",
+    "@mdx-js/react": "^3.1.0",
+    "docusaurus-plugin-openapi-docs": "^4.1.0",
+    "docusaurus-plugin-remote-content": "^4.0.0",
+    "docusaurus-theme-openapi-docs": "^4.1.0",
+    "git-url-parse": "^15.0.0",
     "plugin-image-zoom": "flexanalytics/plugin-image-zoom",
+    "prism-react-renderer": "^2.4.0",
     "prism-svelte": "^0.5.0",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "url-loader": "4.1.1"
-  },
-  "resolutions": {
-    "axios": "^0.28.0",
-    "async": "^3.2.4",
-    "trim": "^1.0.0",
-    "got": "^13.0.0",
-    "glob-parent": "^6.0.0",
-    "browserslist": "^4.16.5",
-    "set-value": "^4.0.1",
-    "ansi-regex": "^5.0.1",
-    "nth-check": "^2.0.1",
-    "minimatch": "^5.0.0",
-    "decode-uri-component": "^0.4.0",
-    "qs": "^6.9.7",
-    "ws": "^8.18.0",
-    "semver": "^7.5.3"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "replace-in-file": "^8.2.0"
   },
   "browserslist": {
     "production": [
@@ -68,14 +50,14 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.25.8",
-    "@docusaurus/module-type-aliases": "2.3.1",
+    "@docusaurus/module-type-aliases": "^3.5.2",
+    "@docusaurus/types": "^3.5.2",
     "@tsconfig/docusaurus": "2.0.3",
-    "babel-loader": "9.2.1",
-    "enhanced-resolve": "5.17.1",
-    "react-router": "6.27.0",
-    "replace-in-file": "7.2.0",
-    "typescript": "5.4.5"
+    "@types/react": "^18.3.12",
+    "typescript": "5.6.3"
+  },
+  "resolutions": {
+    "http-proxy-middleware": "3.0.3"
   },
   "packageManager": "yarn@4.5.1"
 }

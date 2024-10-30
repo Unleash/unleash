@@ -54,11 +54,6 @@ export const featureSearchResponseSchema = {
             description:
                 "The type of dependency. 'parent' means that the feature is a parent feature, 'child' means that the feature is a child feature.",
         },
-        archived: {
-            type: 'boolean',
-            example: true,
-            description: '`true` if the feature is archived',
-        },
         project: {
             type: 'string',
             example: 'dx-squad',

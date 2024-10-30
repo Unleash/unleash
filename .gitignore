@@ -58,7 +58,7 @@ frontend/src/openapi/apis
 frontend/src/openapi/index.ts
 
 # Generated docs
-website/docs/reference/api/**/sidebar.js
+website/docs/reference/api/**/sidebar.ts
 website/docs/reference/api/**/**.info.mdx
 website/docs/generated
 reports/jest-junit.xml

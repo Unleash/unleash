@@ -11,7 +11,7 @@ interface IArchivedFeatureDeleteConfirmProps {
     deletedFeatures: string[];
     projectId: string;
     open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpen: (open: boolean) => void;
     refetch: () => void;
 }
 

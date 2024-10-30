@@ -15,7 +15,7 @@
 // the bits that are specific to the generation source we use, and make the docs
 // easier to use. In particular, removing the leading `/ushosted` is likely to
 // save us loooots of questions.
-const replace = require('replace-in-file');
+import { replaceInFileSync } from 'replace-in-file';
 
 const options = {
     files: 'docs/reference/api/**/*.api.mdx',
@@ -27,4 +27,4 @@ const options = {
     to: ['', '"<your-unleash-url>"', '"path":['],
 };
 
-replace(options);
+replaceInFileSync(options);

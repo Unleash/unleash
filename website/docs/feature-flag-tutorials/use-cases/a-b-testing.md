@@ -1,5 +1,5 @@
 ---
-title: Effective A/B Testing
+title: Effective A/B Testing using Feature Flags
 slug: /feature-flag-tutorials/use-cases/a-b-testing
 ---
 

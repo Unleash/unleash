@@ -1,4 +1,4 @@
-const { docs } = require('./edge-proxy');
+import { docs } from './edge-proxy';
 
 test('Should get all sub pages', () => {
     expect(docs.urls).toStrictEqual([

@@ -53,7 +53,7 @@
     "@types/css-mediaquery": "^0.1.4",
     "@types/debounce": "1.2.4",
     "@types/deep-diff": "1.0.5",
-    "@types/jest": "29.5.13",
+    "@types/jest": "29.5.14",
     "@types/lodash.clonedeep": "4.5.9",
     "@types/lodash.isequal": "^4.5.8",
     "@types/lodash.mapvalues": "^4.6.9",

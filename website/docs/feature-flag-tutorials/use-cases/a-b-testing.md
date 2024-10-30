@@ -94,7 +94,7 @@ While teams may have different goals for measuring performance, Unleash enables 
 
 In your gradual rollout form, there is a ‘Variants’ section. Click on the ‘Add variant’ button. A form will appear where you can provide a unique name for the variant. For the purpose of this tutorial, we’ve created 2 variants shown in the image below: `variantA` and `variantB`. In a real world use case, we recommend more specific names to be comprehensible and relevant to the versions of the feature you’re referencing. Create additional variants if you need to test more versions.
 
-Next, decide on the percentage of users that will be targeted for each variant, which is known as the _variant weight_. By default, 50% of users will be targeted between 2 variants. For example, 50% users within the 35% of users targeted from the rollout percentage you defined earlier would experience `variantA`. Switch on the ‘Custom percentage’ toggle to change the default of the variant weights.
+Next, decide the percentage of users to target for each variant, known as the variant weight. By default, 50% of users will be targeted between 2 variants. For example, 50% of users within the 35% of users targeted from the rollout percentage you defined earlier would experience `variantA`. Toggle **Custom percentage** to change the default variant weights.
 
 ![You can configure multiple strategy variants for A/B testing within the gradual rollout form.](/img/use-case-variants.png)
 

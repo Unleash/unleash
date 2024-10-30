@@ -94,12 +94,10 @@ export default abstract class Addon {
         integrationEvent: IntegrationEventWriteModel,
     ): Promise<void> {
         await this.integrationEventsService.registerEvent(integrationEvent);
-        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                result: integrationEvent.state,
-                destination: this.name,
-            });
-        }
+        this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+            result: integrationEvent.state,
+            destination: this.name,
+        });
     }
 
     destroy?(): void;

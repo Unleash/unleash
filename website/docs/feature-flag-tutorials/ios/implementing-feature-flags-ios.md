@@ -13,12 +13,14 @@ In this tutorial, you will learn how to set up and use iOS feature flags with Un
 
 Here are the steps we will cover in this tutorial:
 
-1. [Feature flag best practices for client-side apps](#1-architect-to-limit-pii-and-configuration-leakage)
-2. [Spin up a local provider](#2-install-a-local-feature-flag-provider)
-3. [Configure a feature flag](#3-create-and-configure-the-feature-flag)
-4. [Add Unleash to an iOS app](#4-add-unleash-to-an-ios-app)
-5. [Log status of iOS feature flag](#5-configure-unleash-and-log-ios-feature-flag-status)
-6. [Verify the feature flag experience](#6-verify-the-feature-flag-experience)
+- [Prerequisites](#prerequisites)
+- [1. Architect to limit PII and configuration leakage](#1-architect-to-limit-pii-and-configuration-leakage)
+- [2. Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
+- [3. Create and configure the feature flag](#3-create-and-configure-the-feature-flag)
+- [4. Add Unleash to an iOS app](#4-add-unleash-to-an-ios-app)
+- [5. Configure Unleash and log iOS feature flag status](#5-configure-unleash-and-log-ios-feature-flag-status)
+- [6. Verify the feature flag experience](#6-verify-the-feature-flag-experience)
+- [Conclusion](#conclusion)
 
 ## Prerequisites
 
@@ -37,7 +39,7 @@ a. Limit PII (personally identifiable information) leakage from the end-user dev
 
 b. Avoid leakage of configuration information from the central feature flag control service to end-user devices.
 
-Solving both means you need to avoid evaluating feature flags on the user's machine due to security risks like exposing API keys and flag data. Instead, send application context (e.g. username, location, etc) to your feature flag evaluation service to evaluate the results. These results (and only these results) should be stored in the client-side application memory. By keeping the evaluated results for a specific context in memory, you avoid network roundtrips every time your application needs to check the status of a feature flag. This method prevents unauthorized access and data breaches by [keeping configurations and PII secure](/topics/feature-flags/never-expose-pii).
+Solving both means you need to avoid evaluating feature flags on the user's machine due to security risks like exposing API keys and flag data. Instead, send application context (e.g. username, location, etc) to your feature flag evaluation service to evaluate the results. These results (and only these results) should be stored in the client-side application memory. By keeping the evaluated results for a specific context in memory, you avoid network roundtrips every time your application needs to check the status of a feature flag. This method prevents unauthorized access and data breaches by [keeping configurations and PII secure](/topics/feature-flags/feature-flag-best-practices#2-protect-pii-by-evaluating-flags-server-side).
 
 ![Keep configurations and PII secure image](/img/react-tutorial-pii-diagram.png)
 

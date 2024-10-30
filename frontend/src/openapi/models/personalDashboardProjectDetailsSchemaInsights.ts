@@ -5,22 +5,44 @@
  */
 
 /**
- * Insights for the project
+ * Insights for the project, including flag data and project health information.
  */
 export type PersonalDashboardProjectDetailsSchemaInsights = {
     /**
-     * The average health score in the current window of the last 4 weeks
+     * The number of active flags that are not stale or potentially stale
+     * @minimum 0
+     */
+    activeFlags: number;
+    /**
+     * The project's average health score over the last 4 weeks
+     * @minimum 0
      * @nullable
      */
     avgHealthCurrentWindow: number | null;
     /**
-     * The average health score in the previous 4 weeks before the current window
+     * The project's average health score over the previous 4-week window
+     * @minimum 0
      * @nullable
      */
     avgHealthPastWindow: number | null;
-    totalFlags: number;
-    activeFlags: number;
-    staleFlags: number;
-    potentiallyStaleFlags: number;
+    /**
+     * The project's current health score
+     * @minimum 0
+     */
     health: number;
+    /**
+     * The number of potentially stale flags as calculated by Unleash
+     * @minimum 0
+     */
+    potentiallyStaleFlags: number;
+    /**
+     * The current number of flags that have been manually marked as stale
+     * @minimum 0
+     */
+    staleFlags: number;
+    /**
+     * The current number of non-archived flags
+     * @minimum 0
+     */
+    totalFlags: number;
 };

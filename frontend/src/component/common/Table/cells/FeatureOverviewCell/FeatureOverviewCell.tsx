@@ -253,7 +253,7 @@ const DependencyPreview: FC<{ feature: string; project: string }> = ({
 export const PrimaryFeatureInfo: FC<{
     project: string;
     feature: string;
-    archivedAt?: string | null;
+    archivedAt: string | null;
     searchQuery: string;
     type: string;
     dependencyType: string;

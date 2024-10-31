@@ -66,38 +66,39 @@ interface ITab {
     isEnterprise?: boolean;
 }
 
-const NotificationIndicator = styled('div')(({ theme }) => ({
+const CircleContainer = styled('div')(({ theme }) => ({
     position: 'absolute',
-    background: theme.palette.background.alternative,
-    color: theme.palette.primary.contrastText,
-    fontSize: theme.typography.body2.fontSize,
-    top: 10,
-    right: 0,
-    [theme.breakpoints.down('md')]: {
-        top: 2,
-    },
-
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
     display: 'grid',
     placeItems: 'center',
     borderRadius: '50%',
+
+    background: theme.palette.background.alternative,
+    color: theme.palette.primary.contrastText,
+    fontSize: theme.typography.body2.fontSize,
+
+    // todo: revisit these values later
+    top: 10,
+    [theme.breakpoints.down('md')]: {
+        top: 2,
+    },
 }));
 
 const ActionableChangeRequestsIndicator = () => {
-    // useSWR for this instead (maybe conditional)
+    // todo: useSWR for this instead (maybe conditional)
     const count = 5;
 
     const renderedCount = count > 9 ? '9+' : count;
 
     return (
-        <NotificationIndicator>
+        <CircleContainer>
             <ScreenReaderOnly>You can move</ScreenReaderOnly>
             {renderedCount}
             <ScreenReaderOnly>
                 change requests into their next phase.
             </ScreenReaderOnly>
-        </NotificationIndicator>
+        </CircleContainer>
     );
 };
 

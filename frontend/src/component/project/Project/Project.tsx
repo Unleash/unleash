@@ -45,6 +45,8 @@ import { ProjectInsights } from './ProjectInsights/ProjectInsights';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -64,6 +66,41 @@ interface ITab {
     isEnterprise?: boolean;
 }
 
+const NotificationIndicator = styled('div')(({ theme }) => ({
+    position: 'absolute',
+    background: theme.palette.background.alternative,
+    color: theme.palette.primary.contrastText,
+    fontSize: theme.typography.body2.fontSize,
+    top: 10,
+    right: 0,
+    [theme.breakpoints.down('md')]: {
+        top: 2,
+    },
+
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+    display: 'grid',
+    placeItems: 'center',
+    borderRadius: '50%',
+}));
+
+const ActionableChangeRequestsIndicator = () => {
+    // useSWR for this instead (maybe conditional)
+    const count = 5;
+
+    const renderedCount = count > 9 ? '9+' : count;
+
+    return (
+        <NotificationIndicator>
+            <ScreenReaderOnly>You can move</ScreenReaderOnly>
+            {renderedCount}
+            <ScreenReaderOnly>
+                change requests into their next phase.
+            </ScreenReaderOnly>
+        </NotificationIndicator>
+    );
+};
+
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const { trackEvent } = usePlausibleTracker();
@@ -78,6 +115,9 @@ export const Project = () => {
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
+    const useActionableChangeRequestIndicator = useUiFlag(
+        'simplifyProjectOverview',
+    );
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -281,6 +321,11 @@ export const Project = () => {
                                                     </span>
                                                 }
                                             />
+                                            {useActionableChangeRequestIndicator &&
+                                                tab.name ===
+                                                    'change-request' && (
+                                                    <ActionableChangeRequestsIndicator />
+                                                )}
                                             {(tab.isEnterprise &&
                                                 isPro() &&
                                                 enterpriseIcon) ||

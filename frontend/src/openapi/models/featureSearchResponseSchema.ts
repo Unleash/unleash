@@ -19,7 +19,7 @@ export interface FeatureSearchResponseSchema {
      * The date the feature was archived
      * @nullable
      */
-    archivedAt?: string | null;
+    archivedAt: string | null;
     /**
      * The date the feature was created
      * @nullable

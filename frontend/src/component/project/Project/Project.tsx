@@ -88,7 +88,7 @@ const CircleContainer = styled('div')(({ theme }) => ({
 
 const ActionableChangeRequestsIndicator = () => {
     // todo: useSWR for this instead (maybe conditional)
-    const count = 5;
+    const count = 0;
 
     if (count <= 0) {
         return null;

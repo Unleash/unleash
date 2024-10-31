@@ -3,15 +3,14 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import type { ActionableChangeRequestsSchema } from 'openapi/models/actionableChangeRequestsSchema';
 import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 
-type RemoteData<T> =
-    | { state: 'error'; error: Error }
-    | { state: 'loading' }
-    | { state: 'success'; data: T };
+interface IUseActionableChangeRequestsOutput {
+    total?: number;
+}
 
 export const useActionableChangeRequests = (
     projectId: string,
-): RemoteData<ActionableChangeRequestsSchema> => {
-    const { data, error } = useEnterpriseSWR<ActionableChangeRequestsSchema>(
+): IUseActionableChangeRequestsOutput => {
+    const { data } = useEnterpriseSWR<ActionableChangeRequestsSchema>(
         { total: 0 },
         formatApiPath(
             `api/admin/projects/${projectId}/change-requests/actionable`,
@@ -19,13 +18,9 @@ export const useActionableChangeRequests = (
         fetcher,
     );
 
-    if (data) {
-        return { state: 'success', data };
-    }
-    if (error) {
-        return { state: 'error', error };
-    }
-    return { state: 'loading' };
+    return {
+        total: data?.total,
+    };
 };
 
 const fetcher = (path: string) => {

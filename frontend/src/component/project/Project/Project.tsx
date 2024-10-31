@@ -73,35 +73,12 @@ interface ITab {
     isEnterprise?: boolean;
 }
 
-const CircleContainer = styled('div')(({ theme }) => ({
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
-    marginBottom: '1.5em',
-    display: 'grid',
-    placeItems: 'center',
-    borderRadius: '50%',
-
-    background: theme.palette.background.alternative,
-    color: theme.palette.primary.contrastText,
-    fontSize: theme.typography.body2.fontSize,
-
-    flex: 'none',
-}));
-
 const ActionableChangeRequestsIndicator = ({ children }: PropsWithChildren) => {
     const projectId = useRequiredPathParam('projectId');
-    const actionableChangeRequests = useActionableChangeRequests(projectId);
-
-    if (actionableChangeRequests.state !== 'success') {
-        return children;
-    }
-
-    const {
-        data: { total },
-    } = actionableChangeRequests;
+    const { total } = useActionableChangeRequests(projectId);
 
     return (
-        <CounterBadge badgeContent={total} color='primary'>
+        <CounterBadge badgeContent={total ?? 0} color='primary'>
             <span>{children}</span>
         </CounterBadge>
     );

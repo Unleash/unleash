@@ -11,6 +11,8 @@ import { Badge } from '../../../Badge/Badge';
 import { HtmlTooltip } from '../../../HtmlTooltip/HtmlTooltip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { getLocalizedDateString } from '../../../util';
 
 interface IFeatureNameCellProps {
     row: {
@@ -275,6 +277,11 @@ export const PrimaryFeatureInfo: FC<{
         (featureType) => featureType.id === type,
     )?.name;
     const title = `${typeName || type} flag`;
+    const { locationSettings } = useLocationSettings();
+    const archivedDate = getLocalizedDateString(
+        archivedAt,
+        locationSettings.locale,
+    );
 
     const TypeIcon = () => (
         <HtmlTooltip arrow title={title} describeChild>
@@ -333,7 +340,7 @@ export const PrimaryFeatureInfo: FC<{
                 }
             />
             {archivedAt && (
-                <HtmlTooltip arrow title={archivedAt} describeChild>
+                <HtmlTooltip arrow title={archivedDate} describeChild>
                     <Badge color='neutral'>Archived</Badge>
                 </HtmlTooltip>
             )}

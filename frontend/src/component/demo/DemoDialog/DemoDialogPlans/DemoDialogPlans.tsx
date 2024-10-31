@@ -122,18 +122,20 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                 {isEnterprisePaygEnabled ? (
                     <StyledPlan>
                         <Typography variant='h5' fontWeight='bold'>
-                            Enterprise Starter
+                            Enterprise
+                            <br />
+                            Pay-as-You-Go
                         </Typography>
                         <Typography variant='body2' color='textSecondary'>
-                            Free your team to collaborate. We'll do the heavy
-                            lifting.
+                            All the features of Enterprise with no long term
+                            commitment.
                         </Typography>
                         <div>
                             <Typography variant='h6' fontWeight='normal'>
-                                $375/month
+                                $75 per user/month
                             </Typography>
                             <Typography variant='body2'>
-                                includes 5 seats
+                                5 users minimum
                             </Typography>
                         </div>
                         <Button

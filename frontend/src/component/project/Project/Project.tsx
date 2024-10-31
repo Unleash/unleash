@@ -68,9 +68,9 @@ interface ITab {
 }
 
 const CircleContainer = styled('div')(({ theme }) => ({
-    position: 'absolute',
     width: theme.spacing(2.5),
     height: theme.spacing(2.5),
+    marginBottom: '1.5em',
     display: 'grid',
     placeItems: 'center',
     borderRadius: '50%',
@@ -79,12 +79,7 @@ const CircleContainer = styled('div')(({ theme }) => ({
     color: theme.palette.primary.contrastText,
     fontSize: theme.typography.body2.fontSize,
 
-    // todo: revisit these values later
-    top: 10,
-    right: 0,
-    [theme.breakpoints.down('md')]: {
-        top: 2,
-    },
+    flex: 'none',
 }));
 
 const ActionableChangeRequestsIndicator = () => {
@@ -110,7 +105,7 @@ const ActionableChangeRequestsIndicator = () => {
             <ScreenReaderOnly>You can move</ScreenReaderOnly>
             {renderedTotal}
             <ScreenReaderOnly>
-                change requests into their next phase.
+                change request(s) into their next phase.
             </ScreenReaderOnly>
         </CircleContainer>
     );

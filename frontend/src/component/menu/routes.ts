@@ -432,6 +432,7 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: {},
     },
+
     // Admin
     {
         path: '/admin/*',

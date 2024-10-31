@@ -25,6 +25,7 @@ export const featureSearchResponseSchema = {
         'createdBy',
         'environments',
         'segments',
+        'archivedAt',
     ],
     description: 'A feature flag definition',
     properties: {

@@ -22,6 +22,7 @@ interface IFeatureNameCellProps {
             | 'tags'
             | 'type'
             | 'dependencyType'
+            | 'archivedAt'
         >;
     };
 }
@@ -138,6 +139,22 @@ const FeatureName: FC<{
     );
 };
 
+const ArchivedFeatureName: FC<{
+    feature: string;
+    searchQuery: string;
+}> = ({ feature, searchQuery }) => {
+    return (
+        <Box
+            sx={(theme) => ({
+                fontWeight: theme.typography.fontWeightBold,
+                color: theme.palette.neutral.main,
+            })}
+        >
+            <Highlighter search={searchQuery}>{feature}</Highlighter>
+        </Box>
+    );
+};
+
 const RestTags: FC<{ tags: string[]; onClick: (tag: string) => void }> = ({
     tags,
     onClick,
@@ -236,6 +253,7 @@ const DependencyPreview: FC<{ feature: string; project: string }> = ({
 export const PrimaryFeatureInfo: FC<{
     project: string;
     feature: string;
+    archivedAt: string | null;
     searchQuery: string;
     type: string;
     dependencyType: string;
@@ -244,6 +262,7 @@ export const PrimaryFeatureInfo: FC<{
 }> = ({
     project,
     feature,
+    archivedAt,
     type,
     searchQuery,
     dependencyType,
@@ -275,11 +294,19 @@ export const PrimaryFeatureInfo: FC<{
     return (
         <FeatureNameAndType data-loading>
             <TypeIcon />
-            <FeatureName
-                project={project}
-                feature={feature}
-                searchQuery={searchQuery}
-            />
+            {archivedAt ? (
+                <ArchivedFeatureName
+                    feature={feature}
+                    searchQuery={searchQuery}
+                />
+            ) : (
+                <FeatureName
+                    project={project}
+                    feature={feature}
+                    searchQuery={searchQuery}
+                />
+            )}
+
             <ConditionallyRender
                 condition={Boolean(dependencyType)}
                 show={
@@ -305,6 +332,11 @@ export const PrimaryFeatureInfo: FC<{
                     </HtmlTooltip>
                 }
             />
+            {archivedAt && (
+                <HtmlTooltip arrow title={archivedAt} describeChild>
+                    <Badge color='neutral'>Archived</Badge>
+                </HtmlTooltip>
+            )}
         </FeatureNameAndType>
     );
 };
@@ -343,6 +375,7 @@ export const FeatureOverviewCell =
                 <PrimaryFeatureInfo
                     project={row.original.project || ''}
                     feature={row.original.name}
+                    archivedAt={row.original.archivedAt}
                     searchQuery={searchQuery}
                     type={row.original.type || ''}
                     dependencyType={row.original.dependencyType || ''}

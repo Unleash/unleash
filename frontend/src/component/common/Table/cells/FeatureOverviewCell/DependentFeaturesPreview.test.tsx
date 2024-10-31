@@ -17,6 +17,7 @@ test('Preview parent feature', async () => {
             feature='featureA'
             project='default'
             type='release'
+            archivedAt={null}
             searchQuery=''
             dependencyType='child'
             onTypeClick={() => {}}
@@ -44,6 +45,7 @@ test('Preview child features', async () => {
             feature='featureA'
             project='default'
             type='release'
+            archivedAt={null}
             searchQuery=''
             dependencyType='parent'
             onTypeClick={() => {}}

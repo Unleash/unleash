@@ -60,6 +60,7 @@ export type IFlagKey =
     | 'releasePlans'
     | 'navigationSidebar'
     | 'productivityReportEmail'
+    | 'enterprise-payg'
     | 'simplifyProjectOverview';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -295,6 +296,10 @@ const flags: IFlags = {
     ),
     productivityReportEmail: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_EMAIL,
+        false,
+    ),
+    'enterprise-payg': parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_PAYG,
         false,
     ),
     simplifyProjectOverview: parseEnvVarBoolean(

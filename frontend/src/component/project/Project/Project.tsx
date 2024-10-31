@@ -45,6 +45,8 @@ import { ProjectInsights } from './ProjectInsights/ProjectInsights';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -64,6 +66,47 @@ interface ITab {
     isEnterprise?: boolean;
 }
 
+const CircleContainer = styled('div')(({ theme }) => ({
+    position: 'absolute',
+    width: theme.spacing(2.5),
+    height: theme.spacing(2.5),
+    display: 'grid',
+    placeItems: 'center',
+    borderRadius: '50%',
+
+    background: theme.palette.background.alternative,
+    color: theme.palette.primary.contrastText,
+    fontSize: theme.typography.body2.fontSize,
+
+    // todo: revisit these values later
+    top: 10,
+    right: 0,
+    [theme.breakpoints.down('md')]: {
+        top: 2,
+    },
+}));
+
+const ActionableChangeRequestsIndicator = () => {
+    // todo: useSWR for this instead (maybe conditional)
+    const count = 0;
+
+    if (count <= 0) {
+        return null;
+    }
+
+    const renderedCount = count > 9 ? '9+' : count;
+
+    return (
+        <CircleContainer>
+            <ScreenReaderOnly>You can move</ScreenReaderOnly>
+            {renderedCount}
+            <ScreenReaderOnly>
+                change requests into their next phase.
+            </ScreenReaderOnly>
+        </CircleContainer>
+    );
+};
+
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const { trackEvent } = usePlausibleTracker();
@@ -78,6 +121,9 @@ export const Project = () => {
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
+    const useActionableChangeRequestIndicator = useUiFlag(
+        'simplifyProjectOverview',
+    );
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -281,6 +327,11 @@ export const Project = () => {
                                                     </span>
                                                 }
                                             />
+                                            {useActionableChangeRequestIndicator &&
+                                                tab.name ===
+                                                    'change-request' && (
+                                                    <ActionableChangeRequestsIndicator />
+                                                )}
                                             {(tab.isEnterprise &&
                                                 isPro() &&
                                                 enterpriseIcon) ||

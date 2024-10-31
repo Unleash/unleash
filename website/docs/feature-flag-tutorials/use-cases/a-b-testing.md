@@ -27,18 +27,21 @@ With Unleash set up, you can use your application to talk to Unleash through one
 
 In this tutorial, you will learn how to set up and run an A/B testing using feature flags. You will learn:
 
-how to use feature flags to define variants of your application for testing,
-target specific users for each test variant,
-manage cross-session visibility of test variants,
-connect feature flag impression data to conversion outcomes, and
-roll out the winning variant to all users.
+1. How to use feature flags to define variants of your application for testing,
+2. Target specific users for each test variant,
+3. Manage cross-session visibility of test variants,
+4. Connect feature flag impression data to conversion outcomes, and
+5. Roll out the winning variant to all users.
+
 You will also learn about how to automate advanced A/B testing strategies such as multi-arm bandit testing using feature flags.
+
+### Create a Feature Flag
 
 To do A/B testing, we'll create a feature flag to implement the rollout strategy. After that, we'll explore what strategies are and how they are configured in Unleash.
 
 In the Unleash Admin UI, open a project and click **New feature flag**.
 
-![Create a new feature flag in Unleash.](/img/react-tutorial-create-new-flag.png)
+![Create a new feature flag in the Unleash Admin UI.](/img/use-case-new-flag.png)
 
 Next, you will create a feature flag on the platform and turn it on for your app.
 
@@ -73,11 +76,11 @@ Activation strategies are defined on the server. For server-side SDKs, activatio
 
 Open your feature flag and click **Add strategy**.
 
-![Add your first strategy from the flag view in Unleash.](/img/use-case-add-new-strategy.png)
+![Add your first strategy from the flag view in Unleash.](/img/use-case-experiment-add-strategy.png)
 
 The gradual rollout strategy form has multiple fields that control the rollout of your feature. You can name the strategy something relevant to the A/B test you’re creating, but this is an optional field.
 
-![In the gradual rollout form, you can configure the parameters of your A/B tests and releases.](/img/use-case-gradual-rollout.png)
+![In the gradual rollout form, you can configure the parameters of your A/B tests and releases.](/img/use-case-experiment-gradual-rollout.png)
 
 Next, configure the rollout percentage so only a certain portion of your users are targeted. For example, you can adjust the dial so that 35% of all users are targeted. The remaining percentage of users will not experience any variation of the new feature. Adjust the rollout dial to set the percentage of users the feature targets, or keep it at 100% to target all users.
 
@@ -97,17 +100,15 @@ Using strategy variants in your activation strategy is the canonical way to run 
 A variant has four components that define it:
 
 -   a name: This must be unique among the strategy's variants. You typically use the name to identify the variant in your client.
--   a weight: The[variant weight](<(/reference/strategy-variants#variant-weight)>) is the likelihood of any one user getting this specific variant.
+-   a weight: The [variant weight](/reference/strategy-variants#variant-weight) is the likelihood of any one user getting this specific variant.
 -   an optional payload: A variant can also have an associated [payload](/reference/strategy-variants#variant-payload) to deliver more data or context.
--   a value
-
-![You can review the anatomy of an Unleash strategy variants in relation to other Unleash features.](/img/anatomy-of-unleash-variants.png)
+-   a value: This describes the purpose of the variant. For example, "Most Read" or "Most Popular".
 
 Open the gradual rollout strategy, select the **Variants** tab, and click **Add variant**. Enter a unique name for the variant. For the purpose of this tutorial, we’ve created 2 variants: `variantA` and `variantB`. In a real-world use case, we recommend more specific names to be comprehensible and relevant to the versions of the feature you’re referencing. Create additional variants if you need to test more versions.
 
 Next, decide the percentage of users to target for each variant, known as the variant weight. By default, 50% of users will be targeted between 2 variants. For example, 50% of users within the 35% of users targeted from the rollout percentage you defined earlier would experience `variantA`. Toggle **Custom percentage** to change the default variant weights.
 
-![You can configure multiple strategy variants for A/B testing within the gradual rollout form.](/img/use-case-variants.png)
+![You can configure multiple strategy variants for A/B testing within the gradual rollout form.](/img/use-case-experiment-variants.png)
 
 ### Manage User Session Behavior
 
@@ -121,7 +122,7 @@ An A/B testing strategy is most useful when you can track the results of a featu
 
 To enable impression data for your rollout, navigate to your feature flag form and turn the toggle on.
 
-![Enable impression data in the strategy rollout form for your flag.](/img/enable-impression-data.png)
+![Enable impression data in the strategy rollout form for your flag.](/img/use-case-experiment-enable-impression-data.png)
 
 Next, in your application code, use the SDK to capture the impression events as they are being emitted in real time.
 
@@ -145,7 +146,7 @@ When running complex multivariate tests with numerous combinations, automating t
 
 The variants you created with Unleash would be the "arms" in the multi-bandit context. You can use a multi-arm bandit algorithm, such as [epsilon-greedy](https://www.geeksforgeeks.org/epsilon-greedy-algorithm-in-reinforcement-learning/) or [Thompson sampling](https://en.wikipedia.org/wiki/Thompson_sampling), to dynamically allocate traffic based on the performance of each variant. Experiment with different variants to gather more information. Allocate more traffic to the variants that are performing better. As the test progresses, the algorithm will adjust the traffic allocation to favor the variants that are showing promising results. After completing the test, you can analyze the data to determine the winning variant. By dynamically allocating traffic based on performance, multi-arm bandit tests can identify the winning variant more quickly than traditional A/B testing.
 
-![This is a graph comparing traditional A/B testing and multi-arm bandit selection.](/img/use-case-abvbandit.png)
+![This is a graph comparing traditional A/B testing and multi-arm bandit selection.](/img/use-case-ab-testing-vs-bandit.png)
 
 > [Image Source: Matt Gershoff](https://blog.conductrics.com/balancing-earning-with-learning-bandits-and-adaptive-optimization/)
 

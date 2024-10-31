@@ -90,6 +90,10 @@ const ActionableChangeRequestsIndicator = () => {
     // todo: useSWR for this instead (maybe conditional)
     const count = 5;
 
+    if (count <= 0) {
+        return null;
+    }
+
     const renderedCount = count > 9 ? '9+' : count;
 
     return (

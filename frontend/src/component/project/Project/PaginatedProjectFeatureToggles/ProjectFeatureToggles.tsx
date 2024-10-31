@@ -389,6 +389,7 @@ export const ProjectFeatureToggles = ({
                     project: 'project',
                     segments: [],
                     stale: false,
+                    archivedAt: null,
                     environments: [
                         {
                             name: 'development',

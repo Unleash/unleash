@@ -25,6 +25,15 @@ To follow along with this tutorial, you will need access to an Unleash Instance 
 
 With Unleash set up, you can use your application to talk to Unleash through one of our [SDKs](/reference/sdks).
 
+In this tutorial, you will learn how to set up and run an A/B testing using feature flags. You will learn:
+
+how to use feature flags to define variants of your application for testing,
+target specific users for each test variant,
+manage cross-session visibility of test variants,
+connect feature flag impression data to conversion outcomes, and
+roll out the winning variant to all users.
+You will also learn about how to automate advanced A/B testing strategies such as multi-arm bandit testing using feature flags.
+
 To do A/B testing, we'll create a feature flag to implement the rollout strategy. After that, we'll explore what strategies are and how they are configured in Unleash.
 
 In the Unleash Admin UI, open a project and click **New feature flag**.
@@ -91,8 +100,6 @@ A variant has four components that define it:
 -   a weight: The[variant weight](<(/reference/strategy-variants#variant-weight)>) is the likelihood of any one user getting this specific variant.
 -   an optional payload: A variant can also have an associated [payload](/reference/strategy-variants#variant-payload) to deliver more data or context.
 -   a value
-
-While teams may have different goals for measuring performance, Unleash enables you to configure strategy variants within your application/service and the platform.
 
 ![You can review the anatomy of an Unleash strategy variants in relation to other Unleash features.](/img/anatomy-of-unleash-variants.png)
 

@@ -1,43 +1,35 @@
-import useSWR from 'swr';
-import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import type { IUser } from 'interfaces/user';
-import type { IRole } from 'interfaces/role';
 import type { ActionableChangeRequestsSchema } from 'openapi/models/actionableChangeRequestsSchema';
+import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 
-interface IUseUsersOutput {
-    users: IUser[];
-    roles: IRole[];
-    loading: boolean;
-    refetch: () => void;
-    error?: Error;
-}
+type RemoteData<T> =
+    | { state: 'error'; error: Error }
+    | { state: 'loading' }
+    | { state: 'success'; data: T };
 
 export const useActionableChangeRequests = (
     projectId: string,
-): IUseUsersOutput => {
-    const { data, error, mutate } = useSWR<ActionableChangeRequestsSchema>(
+): RemoteData<ActionableChangeRequestsSchema> => {
+    const { data, error } = useEnterpriseSWR<ActionableChangeRequestsSchema>(
+        { total: 0 },
         formatApiPath(
             `api/admin/projects/${projectId}/change-requests/actionable`,
         ),
         fetcher,
     );
 
-    return useMemo(
-        () => ({
-            users: data?.users ?? [],
-            roles: data?.rootRoles ?? [],
-            loading: !error && !data,
-            refetch: () => mutate(),
-            error,
-        }),
-        [data, error, mutate],
-    );
+    if (data) {
+        return { state: 'success', data };
+    }
+    if (error) {
+        return { state: 'error', error };
+    }
+    return { state: 'loading' };
 };
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Users'))
+        .then(handleErrorResponses('Actionable change requests'))
         .then((res) => res.json());
 };

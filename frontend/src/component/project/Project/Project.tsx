@@ -47,6 +47,7 @@ import { ProjectArchived } from './ArchiveProject/ProjectArchived';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -87,19 +88,27 @@ const CircleContainer = styled('div')(({ theme }) => ({
 }));
 
 const ActionableChangeRequestsIndicator = () => {
-    // todo: useSWR for this instead (maybe conditional)
-    const count = 0;
+    const projectId = useRequiredPathParam('projectId');
+    const actionableChangeRequests = useActionableChangeRequests(projectId);
 
-    if (count <= 0) {
+    if (actionableChangeRequests.state !== 'success') {
         return null;
     }
 
-    const renderedCount = count > 9 ? '9+' : count;
+    const {
+        data: { total },
+    } = actionableChangeRequests;
+
+    if (total <= 0) {
+        return null;
+    }
+
+    const renderedTotal = total > 9 ? '9+' : total;
 
     return (
         <CircleContainer>
             <ScreenReaderOnly>You can move</ScreenReaderOnly>
-            {renderedCount}
+            {renderedTotal}
             <ScreenReaderOnly>
                 change requests into their next phase.
             </ScreenReaderOnly>

@@ -11,7 +11,7 @@ import { Badge } from '../../../Badge/Badge';
 import { HtmlTooltip } from '../../../HtmlTooltip/HtmlTooltip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import { useLocationSettings } from '../../../../../hooks/useLocationSettings';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../../../util';
 
 interface IFeatureNameCellProps {

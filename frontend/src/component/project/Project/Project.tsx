@@ -189,7 +189,12 @@ export const Project = () => {
 
     const activeTab = [...filteredTabs]
         .reverse()
-        .find((tab) => pathname.startsWith(tab.path));
+        .find((tab) => {
+            const tabPath = isOss() && tab.name === 'settings'
+                ? `${basePath}/settings`
+                : tab.path;
+            return pathname.startsWith(tabPath);
+        });
 
     useEffect(() => {
         const created = params.get('created');

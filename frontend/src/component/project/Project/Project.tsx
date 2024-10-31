@@ -14,10 +14,17 @@ import {
     StyledTabContainer,
     StyledTopRow,
 } from './Project.styles';
-import { Box, Paper, Tabs, Typography, styled } from '@mui/material';
+import {
+    Badge as CounterBadge,
+    Box,
+    Paper,
+    Tabs,
+    Typography,
+    styled,
+} from '@mui/material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { useEffect, useState } from 'react';
+import { type PropsWithChildren, useEffect, useState } from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectFlags from './ProjectFlags';
@@ -45,7 +52,6 @@ import { ProjectInsights } from './ProjectInsights/ProjectInsights';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
-import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 
@@ -82,32 +88,22 @@ const CircleContainer = styled('div')(({ theme }) => ({
     flex: 'none',
 }));
 
-const ActionableChangeRequestsIndicator = () => {
+const ActionableChangeRequestsIndicator = ({ children }: PropsWithChildren) => {
     const projectId = useRequiredPathParam('projectId');
     const actionableChangeRequests = useActionableChangeRequests(projectId);
 
     if (actionableChangeRequests.state !== 'success') {
-        return null;
+        return children;
     }
 
     const {
         data: { total },
     } = actionableChangeRequests;
 
-    if (total <= 0) {
-        return null;
-    }
-
-    const renderedTotal = total > 9 ? '9+' : total;
-
     return (
-        <CircleContainer>
-            <ScreenReaderOnly>You can move</ScreenReaderOnly>
-            {renderedTotal}
-            <ScreenReaderOnly>
-                change request(s) into their next phase.
-            </ScreenReaderOnly>
-        </CircleContainer>
+        <CounterBadge badgeContent={total} color='primary'>
+            <span>{children}</span>
+        </CounterBadge>
     );
 };
 
@@ -304,7 +300,16 @@ export const Project = () => {
                                 <StyledTab
                                     data-loading-project
                                     key={tab.title}
-                                    label={tab.title}
+                                    label={
+                                        simplifyProjectOverview &&
+                                        tab.name === 'change-request' ? (
+                                            <ActionableChangeRequestsIndicator>
+                                                {tab.title}
+                                            </ActionableChangeRequestsIndicator>
+                                        ) : (
+                                            tab.title
+                                        )
+                                    }
                                     value={tab.path}
                                     onClick={() => {
                                         if (tab.title !== 'Flags') {
@@ -333,11 +338,6 @@ export const Project = () => {
                                                     </span>
                                                 }
                                             />
-                                            {simplifyProjectOverview &&
-                                                tab.name ===
-                                                    'change-request' && (
-                                                    <ActionableChangeRequestsIndicator />
-                                                )}
                                             {(tab.isEnterprise &&
                                                 isPro() &&
                                                 enterpriseIcon) ||

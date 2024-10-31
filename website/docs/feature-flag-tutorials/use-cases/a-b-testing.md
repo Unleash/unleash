@@ -23,19 +23,19 @@ To follow along with this tutorial, you will need access to an Unleash Instance.
 To follow along with this tutorial, you will need access to an Unleash Instance which will be used to create and manage feature flags. Head over to our [Quick Start documentation](/quickstart) for options, including running locally, or using an [Unleash SaaS instance](https://www.getunleash.io/pricing?).
 >>>>>>> 7db166905 (update official getting started intro)
 
-With Unleash set up, you can use your application to talk to Unleash through one of our SDKs.
+With Unleash set up, you can use your application to talk to Unleash through one of our [SDKs](/reference/sdks).
 
-To do A/B testing, we will need to create the feature flag that will implement the rollout strategy. After that, we will explore what strategies are and how they are configured in Unleash.
+To do A/B testing, we'll create a feature flag to implement the rollout strategy. After that, we'll explore what strategies are and how they are configured in Unleash.
 
-In the projects view, the Unleash platform shows a list of feature flags that you’ve generated. Click on the ‘New Feature Flag' button to create a new feature flag.
+In the Unleash Admin UI, open a project and click **New feature flag**.
 
 ![Create a new feature flag in Unleash.](/img/react-tutorial-create-new-flag.png)
 
 Next, you will create a feature flag on the platform and turn it on for your app.
 
-Flags can be used with different purposes and we consider experimentation important enough to have its own flag type. Experimentation flags have a lifetime expectancy suited to let you run an experiment and gather enough data to know whether it was a success or not. Learn more about [feature flag types](/reference/feature-toggles#feature-flag-types) in our documentation.
+Feature flags can be used for different purposes and we consider experimentation important enough to have its own flag type. Experimentation flags have a lifetime expectancy suited for running an experiment and gathering enough data to know whether the experiment was a success or not.
 
-The feature flag we are creating is considered an ‘Experimentation’ flag type. The project will be ‘Default’ or the named project in which you are working in for the purpose of this tutorial. As the number of feature flags grows, you can organize them in your projects.
+The feature flag we are creating is considered an Experiment flag type.
 
 Read our docs on [Projects](/reference/projects) to learn more about how to configure and manage them for your team/organization. A description of the flag can help properly identify its specific purposes. However, this field is optional.
 
@@ -52,17 +52,17 @@ With an A/B testing strategy, you’ll be able to:
 -   Determine the percentage of users exposed to the new feature
 -   Determine the percentage of users that get exposed to each version of the feature
 
-To target users accordingly, we will create an [activation strategy](/reference/activation-strategies). This Unleash concept defines who will be exposed to a particular flag or flags. Unleash comes pre-configured with multiple activation strategies that let you enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
+To target users accordingly, let's create an [activation strategy](/reference/activation-strategies). This Unleash concept defines who will be exposed to a particular flag. Unleash comes pre-configured with multiple activation strategies that let you enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
 
 ![Anatomy of an activation strategy](/img/anatomy-of-unleash-strategy.png)
 
-Different strategies use different parameters. Predefined strategies are bundled with Unleash. The default strategy is the gradual rollout strategy with 100% rollout, which basically means that the feature is enabled for all users. In this tutorial, we will adjust the percentage of users who have access to the feature.
+Different strategies use different parameters. Predefined strategies are bundled with Unleash. The default strategy is a gradual rollout to 100%, which means that the feature is enabled for all users. In this tutorial, we'll adjust the percentage of users who have access to the feature.
 
 :::note
 Activation strategies are defined on the server. For server-side SDKs, activation strategy implementation is done on the client side. For frontend SDKs, the feature is calculated on the server side.
 :::
 
-On the feature flag view in Unleash, click on the ‘Add your first strategy’ button to navigate to a (default) gradual rollout strategy form.
+Open your feature flag and click **Add strategy**.
 
 ![Add your first strategy from the flag view in Unleash.](/img/use-case-add-new-strategy.png)
 
@@ -70,16 +70,16 @@ The gradual rollout strategy form has multiple fields that control the rollout o
 
 ![In the gradual rollout form, you can configure the parameters of your A/B tests and releases.](/img/use-case-gradual-rollout.png)
 
-In this form, you can configure the rollout percentage so only a certain portion of your users are targeted. For example, you can adjust the dial so that 35% of all users are targeted. The remaining percentage of users will not experience any variation of the new feature. Decide on the percentage of users that the feature will target by adjusting the rollout dial or keep it at 100% to target all users.
+Next, configure the rollout percentage so only a certain portion of your users are targeted. For example, you can adjust the dial so that 35% of all users are targeted. The remaining percentage of users will not experience any variation of the new feature. Adjust the rollout dial to set the percentage of users the feature targets, or keep it at 100% to target all users.
 
 There are two more advanced extensions of a default strategy that you will see available to customize in the form:
 
--   [Strategy Variants](/reference/strategy-variants)
--   [Strategy Constraints](/reference/strategy-constraints)
+-   [Strategy variants](/reference/strategy-variants)
+-   [Strategy constraints](/reference/strategy-constraints)
 
-Variants and constraints are additional Unleash customizations that can be built on top of the overall strategy should you need more granular conditions for your feature beyond the rollout percentage. We **recommend** using strategy variants to configure an A/B test.
+With strategy variants and constraints, you can extend your overall strategy. They help you define more granular conditions for your feature beyond the rollout percentage. We recommend using strategy variants to configure an A/B test.
 
-[Strategy variants](/reference/strategy-variants) can expose a particular version of a feature to select user bases when a flag is enabled. From there, a way to use the variants is to collect data to see which is one yields better results, which we will cover later in the tutorial.
+[Strategy variants](/reference/strategy-variants) let you expose a particular version of a feature to select user bases when a flag is enabled. You can then collect data to determine which variant performs better, which we'll cover later in this tutorial.
 
 Using strategy variants in your activation strategy is the canonical way to run A/B tests with Unleash and your application.
 
@@ -87,21 +87,20 @@ Using strategy variants in your activation strategy is the canonical way to run 
 
 A variant has four components that define it:
 
--   **a name**: This must be unique among the strategy's variants. When working with a feature with variants in a client, you will typically use the variant's name to find out which variant it is.
--   **a weight**: The weight is the likelihood of any one user getting this specific variant. See the [weights section](/reference/strategy-variants#variant-weight) for more info.
--   **an optional payload**: A variant can also have an associated payload. Use this to deliver more data or context. See the [payload section](/reference/strategy-variants#variant-payload) for more details.
--   **a value**
+-   a name: This must be unique among the strategy's variants. You typically use the name to identify the variant in your client.
+-   a weight: The[variant weight](<(/reference/strategy-variants#variant-weight)>) is the likelihood of any one user getting this specific variant.
+-   an optional payload: A variant can also have an associated [payload](/reference/strategy-variants#variant-payload) to deliver more data or context.
+-   a value
 
 While teams may have different goals for measuring performance, Unleash enables you to configure strategy variants within your application/service and the platform.
 
 ![You can review the anatomy of an Unleash strategy variants in relation to other Unleash features.](/img/anatomy-of-unleash-variants.png)
 
-In your gradual rollout form, there is a ‘Variants’ section. Click on the ‘Add variant’ button. A form will appear where you can provide a unique name for the variant. For the purpose of this tutorial, we’ve created 2 variants shown in the image below: `variantA` and `variantB`. In a real world use case, we recommend more specific names to be comprehensible and relevant to the versions of the feature you’re referencing. Create additional variants if you need to test more versions.
+Open the gradual rollout strategy, select the **Variants** tab, and click **Add variant**. Enter a unique name for the variant. For the purpose of this tutorial, we’ve created 2 variants: `variantA` and `variantB`. In a real-world use case, we recommend more specific names to be comprehensible and relevant to the versions of the feature you’re referencing. Create additional variants if you need to test more versions.
 
 Next, decide the percentage of users to target for each variant, known as the variant weight. By default, 50% of users will be targeted between 2 variants. For example, 50% of users within the 35% of users targeted from the rollout percentage you defined earlier would experience `variantA`. Toggle **Custom percentage** to change the default variant weights.
 
 ![You can configure multiple strategy variants for A/B testing within the gradual rollout form.](/img/use-case-variants.png)
-
 
 ### Manage User Session Behavior
 
@@ -111,7 +110,7 @@ For example, user `uuid1234` should be the target of `variantA` regardless of th
 
 ### Track A/B Testing for your Key Performance Metrics
 
-An A/B testing strategy is most useful when you can track the results of a feature rollout to users. When your team has clearly defined the goals for your A/B tests, you can use Unleash to analyze how results tie back to key metrics, like conversion rates or time spent on a page. One way to collect this data is through enabling impression data per feature flag. [Impression data](/reference/impression-data) contains information about a specific feature flag activation check.
+An A/B testing strategy is most useful when you can track the results of a feature rollout to users. When your team has clearly defined the goals for your A/B tests, you can use Unleash to analyze how results tie back to key metrics, like conversion rates or time spent on a page. One way to collect this data is by enabling [impression data](/reference/impression-data) per feature flag. Impression data contains information about a specific feature flag activation check.
 
 To enable impression data for your rollout, navigate to your feature flag form and turn the toggle on.
 
@@ -131,27 +130,25 @@ By enabling impression data for your feature flag and listening to events within
 
 Unleash provides the ability to automate your feature flags using [actions](/reference/actions) and [signals](/reference/signals). When running A/B tests, you can configure your projects to execute tasks in response to application metrics and thresholds you define. If an experimentation feature that targets a part of your user base logs errors, your actions can automatically disable the feature so your team is given the time to triage while still providing a seamless, alternative experience to users. In another case, you can use actions to modify the percentage of users targeted for variations of a feature based off users engaging with one variation more than the other.
 
-A/B tests are performed safely and strategically with extra safeguards when you automate your flags based on user activity and other metrics of your choice.
-
 Learn how to configure [actions](/reference/actions) and [signals](/reference/signals) from our documentation to get started.
 
-### Multi-arm bandit tests to find the winning variant
+### Multi-arm Bandit Tests to Find the Winning Variant
 
-When running complex multivariate tests with numerous combinations, automating the process of finding the best variation of a feature is the most optimal, cost-effective approach for organizations with a large user base. [Multi-arm bandit tests](https://en.wikipedia.org/wiki/Multi-armed_bandit) are a powerful technique used in A/B testing to allocate traffic to different versions of a feature or application in a way that maximizes the desired outcome, such as conversion rate or click-through rate. This approach offers several advantages over traditional A/B testing, and is a viable solution for large enterprise teams.
+When running complex multivariate tests with numerous combinations, automating the process of finding the best variation of a feature is the most optimal, cost-effective approach for organizations with a large user base. [Multi-arm bandit tests](https://en.wikipedia.org/wiki/Multi-armed_bandit) are a powerful technique used in A/B testing to allocate traffic to different versions of a feature or application in a way that maximizes the desired outcome, such as conversion rate or click-through rate. This approach offers several advantages over traditional A/B testing and is a viable solution for large enterprise teams.
 
-The variants you created with Unleash would be the “arms” in the multi-bandit context. You can use a multi-arm bandit algorithm, such as [epsilon-greedy](https://www.geeksforgeeks.org/epsilon-greedy-algorithm-in-reinforcement-learning/) or [Thompson sampling](https://en.wikipedia.org/wiki/Thompson_sampling), to dynamically allocate traffic based on the performance of each variant. Experiment with different variants to gather more information. Allocate more traffic to the variants that seem to be performing better. As the test progresses, the algorithm will adjust the traffic allocation to favor the variants that are showing promising results. Once the test is complete, you can analyze the data to determine the winning variant. By dynamically allocating traffic based on performance, multi-arm bandit tests can identify the winning variant more quickly than traditional A/B testing.
+The variants you created with Unleash would be the "arms" in the multi-bandit context. You can use a multi-arm bandit algorithm, such as [epsilon-greedy](https://www.geeksforgeeks.org/epsilon-greedy-algorithm-in-reinforcement-learning/) or [Thompson sampling](https://en.wikipedia.org/wiki/Thompson_sampling), to dynamically allocate traffic based on the performance of each variant. Experiment with different variants to gather more information. Allocate more traffic to the variants that are performing better. As the test progresses, the algorithm will adjust the traffic allocation to favor the variants that are showing promising results. After completing the test, you can analyze the data to determine the winning variant. By dynamically allocating traffic based on performance, multi-arm bandit tests can identify the winning variant more quickly than traditional A/B testing.
 
 ![This is a graph comparing traditional A/B testing and multi-arm bandit selection.](/img/use-case-abvbandit.png)
 
 > [Image Source: Matt Gershoff](https://blog.conductrics.com/balancing-earning-with-learning-bandits-and-adaptive-optimization/)
 
-To use Unleash to conduct a multi-arm bandit test, you will need to:
+To use Unleash to conduct a multi-arm bandit test, follow these steps:
 
--   collect the necessary data from each variant’s performance by enabling impression data for your feature flag
--   capture impression events in your application code
--   funnel the impression events captured from your application code to an external analytics tool
--   create signal endpoint(s) in Unleash that will point to your external analytics tools
--   create actions in Unleash that will react to your signals that were integrated
+1. Collect the necessary data from each variant’s performance by enabling impression data for your feature flag
+2. Capture impression events in your application code
+3. Funnel the impression events captured from your application code to an external analytics tool
+4. Create signal endpoints in Unleash that will point to your external analytics tools
+5. Create actions in Unleash that will react to your signals that were integrated
 
 This approach minimizes the "regret" associated with allocating traffic to lower-performing variants. Multi-arm bandit tests using Unleash can adapt to changing conditions, such as seasonal fluctuations or user behavior changes. In some cases, they can be used to ensure that users are not exposed to suboptimal experiences for extended periods.
 

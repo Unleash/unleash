@@ -121,9 +121,7 @@ export const Project = () => {
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
-    const useActionableChangeRequestIndicator = useUiFlag(
-        'simplifyProjectOverview',
-    );
+    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -148,11 +146,15 @@ export const Project = () => {
             path: `${basePath}/health`,
             name: 'health',
         },
-        {
-            title: 'Archived flags',
-            path: `${basePath}/archive`,
-            name: 'archive',
-        },
+        ...(simplifyProjectOverview
+            ? []
+            : [
+                  {
+                      title: 'Archived flags',
+                      path: `${basePath}/archive`,
+                      name: 'archive',
+                  } as ITab,
+              ]),
         {
             title: 'Change requests',
             path: `${basePath}/change-requests`,
@@ -327,7 +329,7 @@ export const Project = () => {
                                                     </span>
                                                 }
                                             />
-                                            {useActionableChangeRequestIndicator &&
+                                            {simplifyProjectOverview &&
                                                 tab.name ===
                                                     'change-request' && (
                                                     <ActionableChangeRequestsIndicator />

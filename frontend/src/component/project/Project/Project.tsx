@@ -80,6 +80,7 @@ const CircleContainer = styled('div')(({ theme }) => ({
 
     // todo: revisit these values later
     top: 10,
+    right: 0,
     [theme.breakpoints.down('md')]: {
         top: 2,
     },

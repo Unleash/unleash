@@ -58,7 +58,6 @@ export type IFlagKey =
     | 'unleashAI'
     | 'webhookDomainLogging'
     | 'releasePlans'
-    | 'navigationSidebar'
     | 'productivityReportEmail'
     | 'simplifyProjectOverview';
 
@@ -288,10 +287,6 @@ const flags: IFlags = {
     releasePlans: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RELEASE_PLANS,
         false,
-    ),
-    navigationSidebar: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
-        true,
     ),
     productivityReportEmail: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_EMAIL,

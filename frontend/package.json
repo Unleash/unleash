@@ -72,7 +72,7 @@
     "cartesian": "^1.0.1",
     "chart.js": "3.9.1",
     "chartjs-adapter-date-fns": "3.0.0",
-    "chartjs-plugin-annotation": "2.2.1",
+    "chartjs-plugin-annotation": "3.1.0",
     "classnames": "2.5.1",
     "copy-to-clipboard": "3.3.3",
     "countries-and-timezones": "^3.4.0",

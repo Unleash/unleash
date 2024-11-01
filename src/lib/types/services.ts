@@ -126,4 +126,5 @@ export interface IUnleashServices {
     integrationEventsService: IntegrationEventsService;
     onboardingService: OnboardingService;
     personalDashboardService: PersonalDashboardService;
+    projectStatusService: ProjectStatusService;
 }

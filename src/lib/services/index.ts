@@ -153,6 +153,11 @@ import {
     createFakePersonalDashboardService,
     createPersonalDashboardService,
 } from '../features/personal-dashboard/createPersonalDashboardService';
+import {
+    createFakeProjectStatusService,
+    createProjectStatusService,
+} from '../features/project-status/createProjectStatusService';
+import { ProjectStatusService } from '../features/project-status/project-status-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -324,6 +329,10 @@ export const createServices = (
         ? createProjectInsightsService(db, config)
         : createFakeProjectInsightsService().projectInsightsService;
 
+    const projectStatusService = db
+        ? createProjectStatusService(db, config)
+        : createFakeProjectStatusService().projectStatusService;
+
     const projectHealthService = new ProjectHealthService(
         stores,
         config,
@@ -482,6 +491,7 @@ export const createServices = (
         integrationEventsService,
         onboardingService,
         personalDashboardService,
+        projectStatusService,
     };
 };
 
@@ -533,4 +543,5 @@ export {
     IntegrationEventsService,
     OnboardingService,
     PersonalDashboardService,
+    ProjectStatusService,
 };

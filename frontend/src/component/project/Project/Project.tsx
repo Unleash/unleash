@@ -73,14 +73,25 @@ interface ITab {
     isEnterprise?: boolean;
 }
 
+const StyledCounterBadge = styled(CounterBadge)(({ theme }) => ({
+    '.MuiBadge-badge': {
+        backgroundColor: theme.palette.background.alternative,
+    },
+}));
+
+const TabText = styled('span')(({ theme }) => ({
+    color: theme.palette.text.primary,
+}));
+
 const ActionableChangeRequestsIndicator = ({ children }: PropsWithChildren) => {
     const projectId = useRequiredPathParam('projectId');
     const { total } = useActionableChangeRequests(projectId);
 
+    // work out the wrapping and styling of text color for this element
     return (
-        <CounterBadge badgeContent={total ?? 0} color='primary'>
-            <span>{children}</span>
-        </CounterBadge>
+        <StyledCounterBadge badgeContent={total ?? 0} color='primary'>
+            <TabText>{children}</TabText>
+        </StyledCounterBadge>
     );
 };
 

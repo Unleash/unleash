@@ -35,6 +35,6 @@ test('project insights happy path', async () => {
         .expect(200);
 
     expect(body).toMatchObject({
-        activities: [{ date: '2024-09-11', count: 0 }],
+        activityCountByDate: [{ date: '2024-09-11', count: 0 }],
     });
 });

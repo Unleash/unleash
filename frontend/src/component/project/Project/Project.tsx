@@ -74,7 +74,6 @@ interface ITab {
 }
 
 const StyledCounterBadge = styled(CounterBadge)(({ theme }) => ({
-    // todo: make this appear in the right place all the time
     '.MuiBadge-badge': {
         backgroundColor: theme.palette.background.alternative,
     },
@@ -89,7 +88,6 @@ const ActionableChangeRequestsIndicator = ({ children }: PropsWithChildren) => {
     const projectId = useRequiredPathParam('projectId');
     const { total } = useActionableChangeRequests(projectId);
 
-    // work out the wrapping and styling of text color for this element
     return (
         <StyledCounterBadge badgeContent={total ?? 0} color='primary'>
             <TabText>{children}</TabText>

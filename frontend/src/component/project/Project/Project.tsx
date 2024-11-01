@@ -107,7 +107,7 @@ const ProjectStatusButton = styled(Button)(({ theme }) => ({
     color: theme.palette.text.primary,
     fontSize: theme.typography.body1.fontSize,
     fontWeight: 'bold',
-    svg: {
+    'svg *': {
         fill: theme.palette.primary.main,
     },
 }));

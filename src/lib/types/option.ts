@@ -156,6 +156,7 @@ export interface IUnleashOptions {
             | 'segments'
         >
     >;
+    userInactivityThresholdInDays?: number;
 }
 
 export interface IEmailOption {
@@ -166,6 +167,7 @@ export interface IEmailOption {
     smtpuser?: string;
     smtppass?: string;
     transportOptions?: SMTPTransport.Options;
+    optionalHeaders?: Record<string, unknown>;
 }
 
 export interface IListeningPipe {
@@ -273,4 +275,6 @@ export interface IUnleashConfig {
     isEnterprise: boolean;
     rateLimiting: IRateLimiting;
     feedbackUriPath?: string;
+    openAIAPIKey?: string;
+    userInactivityThresholdInDays: number;
 }

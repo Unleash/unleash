@@ -7,6 +7,7 @@ import type { IntegrationEventsService } from '../features/integration-events/in
 import type { IntegrationEventWriteModel } from '../features/integration-events/integration-events-store';
 import type EventEmitter from 'events';
 import type { IFlagResolver } from '../types';
+import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 export default abstract class Addon {
     logger: Logger;
@@ -93,6 +94,10 @@ export default abstract class Addon {
         integrationEvent: IntegrationEventWriteModel,
     ): Promise<void> {
         await this.integrationEventsService.registerEvent(integrationEvent);
+        this.eventBus.emit(ADDON_EVENTS_HANDLED, {
+            result: integrationEvent.state,
+            destination: this.name,
+        });
     }
 
     destroy?(): void;

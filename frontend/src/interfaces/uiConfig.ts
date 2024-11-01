@@ -17,6 +17,7 @@ export interface IUiConfig {
     name: string;
     slogan: string;
     environment?: string;
+    billing?: 'subscription' | 'pay-as-you-go';
     unleashUrl?: string;
     version: string;
     versionInfo?: IVersionInfo;
@@ -32,6 +33,7 @@ export interface IUiConfig {
     resourceLimits: ResourceLimitsSchema;
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
+    unleashAIAvailable?: boolean;
 }
 
 export interface IProclamationToast {
@@ -77,19 +79,21 @@ export type UiFlags = {
     featureSearchFeedbackPosting?: boolean;
     userAccessUIEnabled?: boolean;
     outdatedSdksBanner?: boolean;
-    displayTrafficDataUsage?: boolean;
     estimateTrafficDataCost?: boolean;
     disableShowContextFieldSelectionValues?: boolean;
     projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
-    navigationSidebar?: boolean;
     flagCreator?: boolean;
-    newEventSearch?: boolean;
-    archiveProjects?: boolean;
-    projectListImprovements?: boolean;
     onboardingUI?: boolean;
+    eventTimeline?: boolean;
+    personalDashboardUI?: boolean;
+    purchaseAdditionalEnvironments?: boolean;
+    unleashAI?: boolean;
+    releasePlans?: boolean;
+    'enterprise-payg'?: boolean;
+    simplifyProjectOverview?: boolean;
 };
 
 export interface IVersionInfo {

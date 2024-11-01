@@ -15,6 +15,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import SearchIcon from '@mui/icons-material/Search';
 import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 import InsightsIcon from '@mui/icons-material/Insights';
+import PersonalDashboardIcon from '@mui/icons-material/DashboardOutlined';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -23,6 +24,7 @@ import FlagIcon from '@mui/icons-material/OutlinedFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledBadgeContainer = styled('div')(({ theme }) => ({
     paddingLeft: theme.spacing(2),
@@ -155,10 +157,22 @@ export const PrimaryNavigationList: FC<{
     activeItem?: string;
 }> = ({ mode, onClick, activeItem }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
+    const personalDashboardUIEnabled = useUiFlag('personalDashboardUI');
     const { isOss } = useUiConfig();
 
     return (
         <List>
+            {personalDashboardUIEnabled ? (
+                <DynamicListItem
+                    href='/personal'
+                    text='Dashboard'
+                    onClick={() => onClick('/personal')}
+                    selected={activeItem === '/personal'}
+                >
+                    <PersonalDashboardIcon />
+                </DynamicListItem>
+            ) : null}
+
             <DynamicListItem
                 href='/projects'
                 text='Projects'

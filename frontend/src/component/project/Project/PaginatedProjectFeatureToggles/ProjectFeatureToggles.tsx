@@ -33,17 +33,22 @@ import { useDefaultColumnVisibility } from './hooks/useDefaultColumnVisibility';
 import { TableEmptyState } from './TableEmptyState/TableEmptyState';
 import { useRowActions } from './hooks/useRowActions';
 import { useSelectedData } from './hooks/useSelectedData';
-import { FeatureOverviewCell } from '../../../common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
+import { FeatureOverviewCell } from 'component/common/Table/cells/FeatureOverviewCell/FeatureOverviewCell';
 import {
     useProjectFeatureSearch,
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch';
 import { AvatarCell } from './AvatarCell';
-import { ProjectOnboarding } from './ProjectOnboarding/ProjectOnboarding';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { ConnectSdkDialog } from '../../../onboarding/ConnectSdkDialog';
+import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog';
+import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
+import { ProjectOnboarded } from 'component/onboarding/flow/ProjectOnboarded';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { ArchivedFeatureActionCell } from '../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell';
+import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -64,6 +69,7 @@ const Container = styled('div')(({ theme }) => ({
 export const ProjectFeatureToggles = ({
     environments,
 }: IPaginatedProjectFeatureTogglesProps) => {
+    const { trackEvent } = usePlausibleTracker();
     const onboardingUIEnabled = useUiFlag('onboardingUI');
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
@@ -88,6 +94,7 @@ export const ProjectFeatureToggles = ({
         type: tableState.type,
         state: tableState.state,
         createdBy: tableState.createdBy,
+        archived: tableState.archived,
     };
 
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
@@ -110,14 +117,41 @@ export const ProjectFeatureToggles = ({
         setFeatureArchiveState,
         setFeatureStaleDialogState,
         setShowMarkCompletedDialogue,
+        setShowFeatureReviveDialogue,
+        setShowFeatureDeleteDialogue,
     } = useRowActions(refetch, projectId);
 
     const isPlaceholder = Boolean(initialLoad || (loading && total));
 
-    const onboardingStarted =
-        onboardingUIEnabled && project.onboardingStatus.status !== 'onboarded';
-    const hasMultipleFeaturesOrNotOnboarding =
-        (total !== undefined && total > 1) || !onboardingStarted;
+    const [onboardingFlow, setOnboardingFlow] = useLocalStorageState<
+        'visible' | 'closed'
+    >(`onboarding-flow:v1-${projectId}`, 'visible');
+    const [setupCompletedState, setSetupCompletedState] = useLocalStorageState<
+        'hide-setup' | 'show-setup'
+    >(`onboarding-state:v1-${projectId}`, 'hide-setup');
+
+    const notOnboarding =
+        !onboardingUIEnabled ||
+        (onboardingUIEnabled &&
+            project.onboardingStatus.status === 'onboarded') ||
+        onboardingFlow === 'closed';
+    const isOnboarding =
+        onboardingUIEnabled &&
+        project.onboardingStatus.status !== 'onboarded' &&
+        onboardingFlow === 'visible';
+    const noFeaturesExistInProject = project.featureTypeCounts?.length === 0;
+    const showFeaturesTable = !noFeaturesExistInProject || notOnboarding;
+
+    const trackOnboardingFinish = (sdkName: string) => {
+        if (!isOnboarding) {
+            trackEvent('onboarding', {
+                props: {
+                    eventType: 'onboarding-finished',
+                    onboardedSdk: sdkName,
+                },
+            });
+        }
+    };
 
     const columns = useMemo(
         () => [
@@ -291,14 +325,32 @@ export const ProjectFeatureToggles = ({
             columnHelper.display({
                 id: 'actions',
                 header: '',
-                cell: ({ row }) => (
-                    <ActionsCell
-                        row={row}
-                        projectId={projectId}
-                        onOpenArchiveDialog={setFeatureArchiveState}
-                        onOpenStaleDialog={setFeatureStaleDialogState}
-                    />
-                ),
+                cell: ({ row }) =>
+                    tableState.archived ? (
+                        <ArchivedFeatureActionCell
+                            project={projectId}
+                            onRevive={() => {
+                                setShowFeatureReviveDialogue({
+                                    featureId: row.id,
+                                    open: true,
+                                });
+                            }}
+                            onDelete={() => {
+                                setShowFeatureDeleteDialogue({
+                                    featureId: row.id,
+                                    open: true,
+                                });
+                            }}
+                        />
+                    ) : (
+                        <ActionsCell
+                            row={row}
+                            projectId={projectId}
+                            onOpenArchiveDialog={setFeatureArchiveState}
+                            onOpenStaleDialog={setFeatureStaleDialogState}
+                        />
+                    ),
+
                 enableSorting: false,
                 enableHiding: false,
                 meta: {
@@ -337,6 +389,7 @@ export const ProjectFeatureToggles = ({
                     project: 'project',
                     segments: [],
                     stale: false,
+                    archivedAt: null,
                     environments: [
                         {
                             name: 'development',
@@ -404,16 +457,31 @@ export const ProjectFeatureToggles = ({
     return (
         <Container>
             <ConditionallyRender
-                condition={onboardingStarted}
+                condition={isOnboarding}
                 show={
                     <ProjectOnboarding
                         projectId={projectId}
                         setConnectSdkOpen={setConnectSdkOpen}
+                        setOnboardingFlow={setOnboardingFlow}
+                        refetchFeatures={refetch}
                     />
                 }
             />
             <ConditionallyRender
-                condition={hasMultipleFeaturesOrNotOnboarding}
+                condition={
+                    setupCompletedState === 'show-setup' && !isOnboarding
+                }
+                show={
+                    <ProjectOnboarded
+                        projectId={projectId}
+                        onClose={() => {
+                            setSetupCompletedState('hide-setup');
+                        }}
+                    />
+                }
+            />
+            <ConditionallyRender
+                condition={showFeaturesTable}
                 show={
                     <PageContent
                         disableLoading
@@ -521,25 +589,43 @@ export const ProjectFeatureToggles = ({
                     </PageContent>
                 }
             />
-            {'feature' in project.onboardingStatus ? (
-                <ConnectSdkDialog
-                    open={connectSdkOpen}
-                    onClose={() => {
-                        setConnectSdkOpen(false);
-                    }}
-                    project={projectId}
-                    environments={environments}
-                    feature={project.onboardingStatus.feature}
-                />
-            ) : null}
+            <ConnectSdkDialog
+                open={connectSdkOpen}
+                onClose={() => {
+                    setConnectSdkOpen(false);
+                }}
+                onFinish={(sdkName: string) => {
+                    setConnectSdkOpen(false);
+                    setSetupCompletedState('show-setup');
+                    trackOnboardingFinish(sdkName);
+                }}
+                project={projectId}
+                environments={environments}
+                feature={
+                    'feature' in project.onboardingStatus
+                        ? project.onboardingStatus.feature
+                        : undefined
+                }
+            />
             <BatchSelectionActionsBar count={selectedData.length}>
-                <ProjectFeaturesBatchActions
-                    selectedIds={Object.keys(rowSelection)}
-                    data={selectedData}
-                    projectId={projectId}
-                    onResetSelection={table.resetRowSelection}
-                    onChange={refetch}
-                />
+                {tableState.archived ? (
+                    <ArchiveBatchActions
+                        selectedIds={Object.keys(rowSelection)}
+                        projectId={projectId}
+                        onConfirm={() => {
+                            refetch();
+                            table.resetRowSelection();
+                        }}
+                    />
+                ) : (
+                    <ProjectFeaturesBatchActions
+                        selectedIds={Object.keys(rowSelection)}
+                        data={selectedData}
+                        projectId={projectId}
+                        onResetSelection={table.resetRowSelection}
+                        onChange={refetch}
+                    />
+                )}
             </BatchSelectionActionsBar>
         </Container>
     );

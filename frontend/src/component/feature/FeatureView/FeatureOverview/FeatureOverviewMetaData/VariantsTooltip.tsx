@@ -11,8 +11,8 @@ export const VariantsTooltip: FC<{
         <TooltipLink
             tooltip={
                 <>
-                    {variants.map((child) => (
-                        <div>{child}</div>
+                    {variants.map((child, i) => (
+                        <div key={i}>{child}</div>
                     ))}
                 </>
             }

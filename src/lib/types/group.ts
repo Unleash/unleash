@@ -36,7 +36,6 @@ export interface IGroupModel extends IGroup {
 
 export interface ICreateGroupModel extends Omit<IGroup, 'id'> {
     users?: ICreateGroupUserModel[];
-    projects?: string[];
 }
 
 export interface IGroupProject {
@@ -54,8 +53,7 @@ export interface ICreateGroupUserModel {
     user: Pick<IUser, 'id'>;
 }
 
-export interface IGroupModelWithProjectRole extends IGroupModel {
-    roleId: number;
+export interface IGroupModelWithAddedAt extends IGroupModel {
     addedAt: Date;
 }
 

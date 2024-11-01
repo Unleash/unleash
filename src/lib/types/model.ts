@@ -261,6 +261,7 @@ export type IFeatureSearchOverview = Exclude<
 > & {
     dependencyType: 'parent' | 'child' | null;
     environments: FeatureSearchEnvironmentSchema[];
+    archivedAt: string;
     createdBy: {
         id: number;
         name: string;
@@ -419,7 +420,7 @@ export interface IPermission {
     name: string;
     displayName: string;
     type: string;
-    environment?: string;
+    environment?: string | null;
 }
 
 export interface IEnvironmentPermission {
@@ -572,17 +573,6 @@ export interface IProjectUpdate {
  */
 export interface ICustomRole extends IRole {
     description: string;
-}
-
-// @deprecated Remove with flag useProjectReadModel
-export interface IProjectWithCount extends IProject {
-    featureCount: number;
-    staleFeatureCount: number;
-    potentiallyStaleFeatureCount: number;
-    memberCount: number;
-    favorite?: boolean;
-    avgTimeToProduction: number;
-    archivedAt?: Date;
 }
 
 export interface IClientSegment {

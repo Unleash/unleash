@@ -1,5 +1,4 @@
 import { Alert, styled } from '@mui/material';
-import type React from 'react';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
@@ -11,7 +10,7 @@ interface IArchivedFeatureReviveConfirmProps {
     revivedFeatures: string[];
     projectId: string;
     open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpen: (open: boolean) => void;
     refetch: () => void;
 }
 

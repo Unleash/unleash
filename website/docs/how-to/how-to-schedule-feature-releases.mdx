@@ -27,7 +27,7 @@ This guide assumes that you've got the following:
 
 ## Schedule feature releases with strategy constraints {#strategy-constraints}
 
-[Strategy constraints](../reference/strategy-constraints.md#date-and-time-operators) are the easiest way to schedule feature releases ([as long as your SDKs are up to date](../reference/strategy-constraints.md#incompatibilities)). You can use this approach with _any_ strategy you want. The strategies will work just as they normally do, they just won't become active until the specified time. For example: with the standard strategy, the feature would become available to all your users at the specified time; with a gradual rollout, the rollout would start at the specified time.
+[Strategy constraints](../reference/strategy-constraints#date-and-time-operators) are the easiest way to schedule feature releases ([as long as your SDKs are up to date](../reference/strategy-constraints#incompatibilities)). You can use this approach with _any_ strategy you want. The strategies will work just as they normally do, they just won't become active until the specified time. For example: with the standard strategy, the feature would become available to all your users at the specified time; with a gradual rollout, the rollout would start at the specified time.
 
 ### Step 1: Add an activation strategy with a date-based constraint
 
@@ -41,9 +41,9 @@ To schedule a feature release via the UI:
 
 #### Scheduling a release via the API
 
-To add an activation strategy via the Admin API, use the feature's `strategies` endpoint to add a new strategy (see the [API documentation for adding strategies to feature flags](/reference/api/legacy/unleash/admin/features-v2.md#add-strategy) for more details).
+To add an activation strategy via the Admin API, use the feature's `strategies` endpoint to add a new strategy (see the [API documentation for adding strategies to feature flags](/reference/api/legacy/unleash/admin/features-v2#add-strategy) for more details).
 
-The payload's `"name"` property should contain the name of the strategy to apply (see [activation strategies reference documentation](../reference/activation-strategies.md) for all built-in strategies' _modeling names_).
+The payload's `"name"` property should contain the name of the strategy to apply (see [activation strategies reference documentation](../reference/activation-strategies) for all built-in strategies' _modeling names_).
 
 The `"constraint"` object should have the same format as described in the code sample below. The activation date must be in an [RFC 3339-compatible format](https://datatracker.ietf.org/doc/html/rfc3339#section-5.8), e.g. `"1990-12-31T23:59:60Z"`.
 
@@ -58,27 +58,27 @@ The `"constraint"` object should have the same format as described in the code s
       ]
   }} url="api/admin/projects/<project-id>/features/environments/<environment>/strategies" title="Add a feature activation strategy with a scheduled activation time."/>
 
-The `"operator"` property in the code sample can be replaced with [any of the other date and time-based operators](../reference/strategy-constraints.md#date-and-time-operators) according to your needs.
+The `"operator"` property in the code sample can be replaced with [any of the other date and time-based operators](../reference/strategy-constraints#date-and-time-operators) according to your needs.
 
 ## Schedule feature releases with custom activation strategies {#custom-activation-strategies}
 
 To schedule feature releases without using strategy constraints, you can use custom activation strategies. This requires defining a custom strategy and then implementing that strategy in your SDKs. For detailed instructions on how to do either of these things, refer to their respective how-to guides:
-- [How to _define_ custom strategies](../how-to/how-to-use-custom-strategies.md#step-1)
-- [How to _implement_ custom strategies](../how-to/how-to-use-custom-strategies.md#step-3)
+- [How to _define_ custom strategies](../how-to/how-to-use-custom-strategies#step-1)
+- [How to _implement_ custom strategies](../how-to/how-to-use-custom-strategies#step-3)
 
 ### Step 1: Define and apply a custom activation strategy
 
-**Define a strategy** that takes a parameter that tells it when to activate (visit [the custom activation strategy reference documentation](../reference/custom-activation-strategies.md#definition) for full details on definitions):
+**Define a strategy** that takes a parameter that tells it when to activate (visit [the custom activation strategy reference documentation](../reference/custom-activation-strategies#definition) for full details on definitions):
 
 1. Give the strategy a name. We'll use `enableAfter`.
 2. Give the strategy a required string parameter where the user can enter the time at which the feature should activate. Be sure to describe the format that the user must adhere to.
 3. Save the strategy
 
-[**Apply the strategy** to the feature flag](../how-to/how-to-use-custom-strategies.md#step-2) you want to schedule.
+[**Apply the strategy** to the feature flag](../how-to/how-to-use-custom-strategies#step-2) you want to schedule.
 
 
 ![A custom activation strategy definition for a strategy called `enableAfter`. It takes a required parameter called `start time`: a string in a date format.](/img/custom-strategy-enable-after.png)
 
 ### Step 2: Implement the custom activation strategy in your clients
 
-In each of the client SDKs that will interact with your feature, implement the strategy ([the implementation how-to guide](../how-to/how-to-use-custom-strategies.md#step-3) has steps for all SDK types).
+In each of the client SDKs that will interact with your feature, implement the strategy ([the implementation how-to guide](../how-to/how-to-use-custom-strategies#step-3) has steps for all SDK types).

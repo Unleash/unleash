@@ -1,45 +1,13 @@
 import type { FC } from 'react';
 import { styled } from '@mui/material';
 import type { ProjectSchema, ProjectSchemaOwners } from 'openapi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    AvatarGroup,
-    AvatarComponent,
-} from 'component/common/AvatarGroup/AvatarGroup';
+import { AvatarComponent } from 'component/common/AvatarGroup/AvatarGroup';
+import { AvatarGroupFromOwners } from 'component/common/AvatarGroupFromOwners/AvatarGroupFromOwners';
 
 export interface IProjectOwnersProps {
     owners?: ProjectSchema['owners'];
 }
-
-const useOwnersMap = () => {
-    const { uiConfig } = useUiConfig();
-
-    return (
-        owner: ProjectSchemaOwners[0],
-    ): {
-        name: string;
-        imageUrl?: string;
-        email?: string;
-    } => {
-        if (owner.ownerType === 'user') {
-            return {
-                name: owner.name,
-                imageUrl: owner.imageUrl || undefined,
-                email: owner.email || undefined,
-            };
-        }
-        if (owner.ownerType === 'group') {
-            return {
-                name: owner.name,
-            };
-        }
-        return {
-            name: 'System',
-            imageUrl: `${uiConfig.unleashUrl}/logo-unleash.png`,
-        };
-    };
-};
 
 const StyledUserName = styled('span')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
@@ -87,15 +55,22 @@ const StyledAvatarComponent = styled(AvatarComponent)(({ theme }) => ({
     cursor: 'default',
 }));
 
-export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
-    const ownersMap = useOwnersMap();
-    const users = owners.map(ownersMap);
+const getOwnerName = (owner?: ProjectSchemaOwners[number]) => {
+    switch (owner?.ownerType) {
+        case 'user':
+        case 'group':
+            return owner.name;
+        default:
+            return 'System';
+    }
+};
 
+export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
     return (
         <StyledWrapper data-testid='test'>
             <StyledContainer data-loading>
-                <AvatarGroup
-                    users={users}
+                <AvatarGroupFromOwners
+                    users={owners}
                     avatarLimit={6}
                     AvatarComponent={StyledAvatarComponent}
                 />
@@ -106,7 +81,7 @@ export const ProjectOwners: FC<IProjectOwnersProps> = ({ owners = [] }) => {
                     <StyledOwnerName>
                         <StyledHeader data-loading>Owner</StyledHeader>
                         <StyledUserName data-loading>
-                            {users[0]?.name}
+                            {getOwnerName(owners[0])}
                         </StyledUserName>
                     </StyledOwnerName>
                 }

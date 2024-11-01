@@ -67,6 +67,16 @@ Nested ternaries are easier to spot than nested `<ConditionallyRender />` elemen
 </div>
 ```
 
+Nested operator does not look like other JSX components.
+
+```tsx
+<div>
+    {a ? (
+        b ? <p>This is bad</p> : null
+    ) : 'Should be refactored'}
+</div>
+```
+
 ## Options considered
 
 To avoid these issues, safer alternatives to the `&&` operator can be used:
@@ -118,4 +128,4 @@ There already is a script developed that can convert files between `Conditionall
     4. More complex and critical pages, like strategy editing.
     5. Utilities and components used in many places (`/src/component/common`).
 
-3. Once all instances of `<ConditionallyRender />` have been refactored, remove the component from the codebase.
+4. Once all instances of `<ConditionallyRender />` have been refactored, remove the component from the codebase.

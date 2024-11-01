@@ -14,10 +14,22 @@ import {
     StyledTabContainer,
     StyledTopRow,
 } from './Project.styles';
-import { Box, Paper, Tabs, Typography, styled } from '@mui/material';
+import {
+    Badge as CounterBadge,
+    Box,
+    Paper,
+    Tabs,
+    Typography,
+    styled,
+} from '@mui/material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { useEffect, useState } from 'react';
+import {
+    type PropsWithChildren,
+    useEffect,
+    useState,
+    type ReactNode,
+} from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectFlags from './ProjectFlags';
@@ -44,7 +56,9 @@ import { ProjectApplications } from '../ProjectApplications/ProjectApplications'
 import { ProjectInsights } from './ProjectInsights/ProjectInsights';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived';
+import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -62,10 +76,38 @@ interface ITab {
     flag?: keyof UiFlags;
     new?: boolean;
     isEnterprise?: boolean;
+    label?: () => ReactNode;
 }
+
+const StyledCounterBadge = styled(CounterBadge)(({ theme }) => ({
+    '.MuiBadge-badge': {
+        backgroundColor: theme.palette.background.alternative,
+        right: '2px',
+    },
+    flex: 'auto',
+    justifyContent: 'center',
+    minHeight: '1.5em',
+    alignItems: 'center',
+}));
+
+const TabText = styled('span')(({ theme }) => ({
+    color: theme.palette.text.primary,
+}));
+
+const ChangeRequestsLabel = () => {
+    const projectId = useRequiredPathParam('projectId');
+    const { total } = useActionableChangeRequests(projectId);
+
+    return (
+        <StyledCounterBadge badgeContent={total ?? 0} color='primary'>
+            <TabText>Change requests</TabText>
+        </StyledCounterBadge>
+    );
+};
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
+    const { trackEvent } = usePlausibleTracker();
     const params = useQueryParams();
     const { project, loading, error, refetch } = useProjectOverview(projectId);
     const ref = useLoading(loading, '[data-loading-project=true]');
@@ -77,7 +119,7 @@ export const Project = () => {
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
-    const archiveProjectsEnabled = useUiFlag('archiveProjects');
+    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -102,16 +144,21 @@ export const Project = () => {
             path: `${basePath}/health`,
             name: 'health',
         },
-        {
-            title: 'Archived flags',
-            path: `${basePath}/archive`,
-            name: 'archive',
-        },
+        ...(simplifyProjectOverview
+            ? []
+            : [
+                  {
+                      title: 'Archived flags',
+                      path: `${basePath}/archive`,
+                      name: 'archive',
+                  } as ITab,
+              ]),
         {
             title: 'Change requests',
             path: `${basePath}/change-requests`,
             name: 'change-request',
             isEnterprise: true,
+            label: simplifyProjectOverview ? ChangeRequestsLabel : undefined,
         },
         {
             title: 'Applications',
@@ -192,7 +239,7 @@ export const Project = () => {
         </Box>
     );
 
-    if (archiveProjectsEnabled && Boolean(project.archivedAt)) {
+    if (project.archivedAt) {
         return <ProjectArchived name={project.name} />;
     }
 
@@ -252,9 +299,18 @@ export const Project = () => {
                                 <StyledTab
                                     data-loading-project
                                     key={tab.title}
-                                    label={tab.title}
+                                    label={tab.label ? tab.label() : tab.title}
                                     value={tab.path}
-                                    onClick={() => navigate(tab.path)}
+                                    onClick={() => {
+                                        if (tab.title !== 'Flags') {
+                                            trackEvent('project-navigation', {
+                                                props: {
+                                                    eventType: tab.title,
+                                                },
+                                            });
+                                        }
+                                        navigate(tab.path);
+                                    }}
                                     data-testid={`TAB_${tab.title}`}
                                     iconPosition={
                                         tab.isEnterprise ? 'end' : undefined

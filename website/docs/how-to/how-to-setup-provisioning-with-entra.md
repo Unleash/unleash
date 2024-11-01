@@ -2,9 +2,9 @@
 title: How to Setup Entra Provisioning
 ---
 
-:::info availability
+:::note Availability
 
-The **Provisioning capability** is only available for customers on the Enterprise subscription. Check out the [Unleash plans](https://www.getunleash.io/plans) for details.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.1+`
 
 :::
 
@@ -28,7 +28,7 @@ Enable SCIM by turning on the toggle and keep the token Unleash provides you for
 
 :::info Note
 
-This guide assumes you already have an SSO application setup for Unleash. If you don't already have an application configured, please see our [guide](../how-to/how-to-add-sso-azure-saml.md) on setting up SSO.
+This guide assumes you already have an SSO application setup for Unleash. If you don't already have an application configured, please see our [guide](./how-to-add-sso-azure-saml) on setting up SSO.
 
 :::
 

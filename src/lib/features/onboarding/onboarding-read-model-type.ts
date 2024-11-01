@@ -26,5 +26,7 @@ export type ProjectOnboarding = {
 export interface IOnboardingReadModel {
     getInstanceOnboardingMetrics(): Promise<InstanceOnboarding>;
     getProjectsOnboardingMetrics(): Promise<Array<ProjectOnboarding>>;
-    getOnboardingStatusForProject(projectId: string): Promise<OnboardingStatus>;
+    getOnboardingStatusForProject(
+        projectId: string,
+    ): Promise<OnboardingStatus | null>;
 }

@@ -63,8 +63,10 @@ import {
 } from '../features/change-request-segment-usage-service/createChangeRequestSegmentUsageReadModel';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import {
+    createAccessService,
     createEnvironmentService,
     createEventsService,
+    createFakeAccessService,
     createFakeEnvironmentService,
     createFakeEventsService,
     createFakeProjectService,
@@ -146,6 +148,11 @@ import {
     createOnboardingService,
 } from '../features/onboarding/createOnboardingService';
 import { OnboardingService } from '../features/onboarding/onboarding-service';
+import { PersonalDashboardService } from '../features/personal-dashboard/personal-dashboard-service';
+import {
+    createFakePersonalDashboardService,
+    createPersonalDashboardService,
+} from '../features/personal-dashboard/createPersonalDashboardService';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -160,6 +167,11 @@ export const createServices = (
         ? createEventsService(db, config)
         : createFakeEventsService(config, stores);
     const groupService = new GroupService(stores, config, eventService);
+
+    const transactionalAccessService = db
+        ? withTransactional((db) => createAccessService(db, config), db)
+        : withFakeTransactional(createFakeAccessService(config).accessService);
+
     const accessService = new AccessService(
         stores,
         config,
@@ -401,7 +413,12 @@ export const createServices = (
         : createFakeOnboardingService(config).onboardingService;
     onboardingService.listen();
 
+    const personalDashboardService = db
+        ? createPersonalDashboardService(db, config, stores)
+        : createFakePersonalDashboardService(config);
+
     return {
+        transactionalAccessService,
         accessService,
         accountService,
         addonService,
@@ -464,6 +481,7 @@ export const createServices = (
         transactionalFeatureLifecycleService,
         integrationEventsService,
         onboardingService,
+        personalDashboardService,
     };
 };
 
@@ -514,4 +532,5 @@ export {
     FeatureLifecycleService,
     IntegrationEventsService,
     OnboardingService,
+    PersonalDashboardService,
 };

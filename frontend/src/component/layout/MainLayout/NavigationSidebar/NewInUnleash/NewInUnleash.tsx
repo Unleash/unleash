@@ -16,6 +16,10 @@ import type { NavigationMode } from 'component/layout/MainLayout/NavigationSideb
 import { NewInUnleashItem } from './NewInUnleashItem';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ReactComponent as SignalsPreview } from 'assets/img/signals.svg';
+import LinearScaleIcon from '@mui/icons-material/LinearScale';
+import { useNavigate } from 'react-router-dom';
+import { useEventTimelineContext } from 'component/events/EventTimeline/EventTimelineContext';
+import { ReactComponent as EventTimelinePreview } from 'assets/img/eventTimeline.svg';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0, 1, 0),
@@ -67,35 +71,41 @@ const StyledSignalsIcon = styled(Signals)(({ theme }) => ({
     color: theme.palette.primary.main,
 }));
 
+const StyledLinearScaleIcon = styled(LinearScaleIcon)(({ theme }) => ({
+    color: theme.palette.primary.main,
+}));
+
 type NewItem = {
     label: string;
     summary: string;
     icon: ReactNode;
-    link: string;
+    onCheckItOut: () => void;
     docsLink: string;
     show: boolean;
     longDescription: ReactNode;
     preview?: ReactNode;
+    beta?: boolean;
 };
 
 interface INewInUnleashProps {
     mode?: NavigationMode;
-    onItemClick?: () => void;
     onMiniModeClick?: () => void;
 }
 
 export const NewInUnleash = ({
     mode = 'full',
-    onItemClick,
     onMiniModeClick,
 }: INewInUnleashProps) => {
+    const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const [seenItems, setSeenItems] = useLocalStorageState(
         'new-in-unleash-seen:v1',
         new Set(),
     );
-    const { isEnterprise } = useUiConfig();
+    const { isOss, isEnterprise } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
+
+    const { setHighlighted } = useEventTimelineContext();
 
     const items: NewItem[] = [
         {
@@ -103,7 +113,7 @@ export const NewInUnleash = ({
             summary: 'Listen to signals via Webhooks',
             icon: <StyledSignalsIcon />,
             preview: <SignalsPreview />,
-            link: '/integrations/signals',
+            onCheckItOut: () => navigate('/integrations/signals'),
             docsLink: 'https://docs.getunleash.io/reference/signals',
             show: isEnterprise() && signalsEnabled,
             longDescription: (
@@ -130,6 +140,36 @@ export const NewInUnleash = ({
                                 conditions.
                             </li>
                         </ul>
+                    </p>
+                </>
+            ),
+        },
+        {
+            label: 'Event timeline',
+            summary: 'Keep track of recent events across all your projects',
+            icon: <StyledLinearScaleIcon />,
+            preview: <EventTimelinePreview />,
+            onCheckItOut: () => {
+                setHighlighted(true);
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth',
+                });
+            },
+            docsLink:
+                'https://docs.getunleash.io/reference/events#event-timeline',
+            show: !isOss(),
+            longDescription: (
+                <>
+                    <p>
+                        Monitor recent events across all your projects in one
+                        unified timeline.
+                    </p>
+
+                    <p>
+                        You can access the event timeline from the top menu to
+                        get an overview of changes and quickly identify and
+                        debug any issues.
                     </p>
                 </>
             ),
@@ -172,11 +212,12 @@ export const NewInUnleash = ({
                     ({
                         label,
                         icon,
-                        link,
+                        onCheckItOut,
                         longDescription,
                         docsLink,
                         preview,
                         summary,
+                        beta = false,
                     }) => (
                         <NewInUnleashItem
                             key={label}
@@ -197,11 +238,12 @@ export const NewInUnleash = ({
                             }}
                             label={label}
                             icon={icon}
-                            link={link}
+                            onCheckItOut={onCheckItOut}
                             preview={preview}
                             longDescription={longDescription}
                             docsLink={docsLink}
                             summary={summary}
+                            beta={beta}
                         />
                     ),
                 )}

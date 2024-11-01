@@ -2,12 +2,9 @@ import type React from 'react';
 import type { FC } from 'react';
 import { Box, styled } from '@mui/material';
 import {
+    ProjectOwners,
     type IProjectOwnersProps,
-    ProjectOwners as LegacyProjectOwners,
-} from '../LegacyProjectOwners/LegacyProjectOwners';
-import { ProjectOwners } from './ProjectOwners/ProjectOwners';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+} from './ProjectOwners/ProjectOwners';
 
 interface IProjectCardFooterProps {
     id?: string;
@@ -31,20 +28,13 @@ const StyledFooter = styled(Box)<{ disabled: boolean }>(
 );
 
 export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
-    id,
     children,
     owners,
     disabled = false,
 }) => {
-    const projectListImprovementsEnabled = useUiFlag('projectListImprovements');
-
     return (
         <StyledFooter disabled={disabled}>
-            <ConditionallyRender
-                condition={Boolean(projectListImprovementsEnabled)}
-                show={<ProjectOwners owners={owners} />}
-                elseShow={<LegacyProjectOwners owners={owners} />}
-            />
+            <ProjectOwners owners={owners} />
             {children}
         </StyledFooter>
     );

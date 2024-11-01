@@ -4,9 +4,9 @@ title: Playground
 import Figure from '@site/src/components/Figure/Figure.tsx'
 import VideoContent from '@site/src/components/VideoContent.jsx'
 
-:::info Availability
+:::note Availability
 
-The Unleash playground is available in all Unleash versions from Unleash 4.14 onwards. Unleash 5.3 introduced a more advanced playground that allows you to query multiple environments and multiple values for a single context value at the same time.
+**Version**: `4.14+`
 
 :::
 
@@ -37,13 +37,13 @@ The playground will only evaluate features belonging to the projects you specify
 
 ### The Unleash context
 
-The [Unleash context](../reference/unleash-context.md) represents a client SDK's configuration and used for evaluating your features. You can construct your own context or use a JSON version of a context from a client.
+The [Unleash context](../reference/unleash-context) represents a client SDK's configuration and used for evaluating your features. You can construct your own context or use a JSON version of a context from a client.
 
 #### Multiple values for a single context field
 
-:::info Availability
+:::note Availability
 
-The ability to specifiy multiple values for a single context field was introduced in Unleash 5.3.
+**Version**: `5.3+`
 
 :::
 
@@ -56,7 +56,7 @@ When you specify multiple values for context field, each value will be used to p
 You can add any fields you want to the context used for the evaluation, and you can also leave out any fields you want. However, there are some fields that will be set for you if don't provide them:
 
 -   **`appName`**: Unleash clients all require an `appName` to start up. If you do not provide an `appName`, the playground will assign a default value to this property instead.
--   **`currentTime`**: The `currentTime` property of the [Unleash context](../reference/unleash-context.md) gets auto-populated with the current time. You can override this manually by providing a value of your own.
+-   **`currentTime`**: The `currentTime` property of the [Unleash context](../reference/unleash-context) gets auto-populated with the current time. You can override this manually by providing a value of your own.
 
 ## The response
 
@@ -68,11 +68,11 @@ In the UI, the playground displays the features in a table. Each row of the tabl
 
 <Figure caption='Each row contains a feature and columns for the selected environments. In this screenshot, the "development" and "production" environments have been selected.' img="/img/playground-results-row.png"/>
 
-Because you can add multiple values for each context field, each feature-environment cell contains the number of combinations that evaluated to `true` and `false` for the feature in the given environment. This can be expanded into a more detailed overview over what combinations of context fields evaluated to `true` and `false` along with any [variants](../reference/feature-toggle-variants.md).
+Because you can add multiple values for each context field, each feature-environment cell contains the number of combinations that evaluated to `true` and `false` for the feature in the given environment. This can be expanded into a more detailed overview over what combinations of context fields evaluated to `true` and `false` along with any [variants](../reference/feature-toggle-variants).
 
 <Figure caption='A small table showing the detailed evaluation for a feature in the "development" environment. The provided context contained three values for the "userId" property, so the table contains three rows, showing all different combinations of the context.' img="/img/playground-results-development.png"/>
 
-As with all of Unleash's client SDKs, the playground respects [stickiness](../reference/stickiness.md). The [stickiness algorithm](../reference/stickiness.md#calculation) guarantees that you'll always get the same variants and the same gradual rollout results if you provide the same context, as long as you provide the context field used for calculating stickiness.
+As with all of Unleash's client SDKs, the playground respects [stickiness](../reference/stickiness). The [stickiness algorithm](../reference/stickiness#calculation) guarantees that you'll always get the same variants and the same gradual rollout results if you provide the same context, as long as you provide the context field used for calculating stickiness.
 
 ### The diff view
 
@@ -83,9 +83,9 @@ You can compare how a feature evaluates in different environments. If you select
 
 ### Detailed evaluation results
 
-:::info Availability
+:::note Availability
 
-Detailed evaluation results were added to the playground in Unleash 4.15.
+**Version**: `4.15+`
 
 :::
 
@@ -108,14 +108,14 @@ There's currently two cases where the playground can't evaluate the strategy:
 1. The [strategy is a custom strategy](#custom-strategies) and the playground doesn't have an implementation for the strategy.
 2. The [strategy is the 'Application Hostname' strategy](#application-hostname).
 
-Even if the playground doesn't recognize or otherwise can't evaluate a specific strategy, it _may_ still evaluate the overall strategy result to `false` (and be certain that it is the right result). If a strategy has [constraints](../reference/strategy-constraints.md) or [segments](segments.mdx) that are not satisfied, the playground knows that the strategy result wouldn't be `true`, regardless of the actual strategy implementation. As such, if a strategy can't be evaluated, it can be **either** _unknown_ or _`false`_.
+Even if the playground doesn't recognize or otherwise can't evaluate a specific strategy, it _may_ still evaluate the overall strategy result to `false` (and be certain that it is the right result). If a strategy has [constraints](../reference/strategy-constraints) or [segments](segments) that are not satisfied, the playground knows that the strategy result wouldn't be `true`, regardless of the actual strategy implementation. As such, if a strategy can't be evaluated, it can be **either** _unknown_ or _`false`_.
 
 ### Custom Strategies
 
-The playground does not have any implementations for [custom strategies](../reference/custom-activation-strategies.md) and adding custom strategy implementations to Unleash is not currently supported. Because of this, custom strategies will never be evaluated as `true`.
+The playground does not have any implementations for [custom strategies](../reference/custom-activation-strategies) and adding custom strategy implementations to Unleash is not currently supported. Because of this, custom strategies will never be evaluated as `true`.
 
 ### The Application Hostname strategy {#application-hostname}
 
-The [application hostname strategy](../reference/activation-strategies.md#hostnames) is a little different from the other built-in strategies: it depends on external state and _not_ on the Unleash context to evaluate. In short, the strategy checks its application environment to get the hostname, so the Unleash context has no effect on the result of this strategy.
+The [application hostname strategy](../reference/activation-strategies#hostnames) is a little different from the other built-in strategies: it depends on external state and _not_ on the Unleash context to evaluate. In short, the strategy checks its application environment to get the hostname, so the Unleash context has no effect on the result of this strategy.
 
 Because the application hostname strategy depends on external state, the playground can't guarantee whether the strategy would be true or false in a client. Further, the result in the playground would most likely be different from what you'd see in a client. Because of this, the playground does not evaluate this strategy.

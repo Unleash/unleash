@@ -1,5 +1,5 @@
 import type { PermissionRef } from '../../services/access-service';
-import type { IGroupModelWithProjectRole } from '../group';
+import type { IGroupModelWithAddedAt } from '../group';
 import type { IPermission, IUserAccessOverview, IUserWithRole } from '../model';
 import type { Store } from './store';
 
@@ -62,7 +62,7 @@ export interface IUserWithProjectRoles
     extends IUserWithRole,
         IEntityWithProjectRoles {}
 export interface IGroupWithProjectRoles
-    extends IGroupModelWithProjectRole,
+    extends IGroupModelWithAddedAt,
         IEntityWithProjectRoles {}
 
 export interface IAccessStore extends Store<IRole, number> {

@@ -42,6 +42,11 @@ export interface EventSchema {
      */
     id: number;
     /**
+     * The concise, human-readable name of the event.
+     * @nullable
+     */
+    label?: string | null;
+    /**
      * Data relating to the previous state of the event's subject.
      * @nullable
      */
@@ -51,6 +56,11 @@ export interface EventSchema {
      * @nullable
      */
     project?: string | null;
+    /**
+     * A markdown-formatted summary of the event.
+     * @nullable
+     */
+    summary?: string | null;
     /**
      * Any tags related to the event, if applicable.
      * @nullable

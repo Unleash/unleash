@@ -17,21 +17,12 @@ import { InviteLink } from './users/InviteLink/InviteLink';
 import UsersAdmin from './users/UsersAdmin';
 import NotFound from 'component/common/NotFound/NotFound';
 import { AdminIndex } from './AdminIndex';
-import { AdminTabsMenu } from './menu/AdminTabsMenu';
 import { Banners } from './banners/Banners';
 import { License } from './license/License';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 export const Admin = () => {
-    const sidebarNavigationEnabled = useUiFlag('navigationSidebar');
-
     return (
         <>
-            <ConditionallyRender
-                condition={!sidebarNavigationEnabled}
-                show={<AdminTabsMenu />}
-            />
             <Routes>
                 <Route index element={<AdminIndex />} />
                 <Route path='users/*' element={<UsersAdmin />} />

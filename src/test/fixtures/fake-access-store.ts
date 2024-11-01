@@ -19,7 +19,7 @@ import {
 import FakeRoleStore from './fake-role-store';
 import type { PermissionRef } from '../../lib/services/access-service';
 
-class AccessStoreMock implements IAccessStore {
+export class FakeAccessStore implements IAccessStore {
     fakeRolesStore: IRoleStore;
 
     userToRoleMap: Map<number, number> = new Map();
@@ -327,6 +327,6 @@ class AccessStoreMock implements IAccessStore {
     }
 }
 
-module.exports = AccessStoreMock;
+module.exports = FakeAccessStore;
 
-export default AccessStoreMock;
+export default FakeAccessStore;

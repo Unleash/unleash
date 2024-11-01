@@ -12,7 +12,7 @@ import FakeGroupStore from '../../test/fixtures/fake-group-store';
 import { FakeAccountStore } from '../../test/fixtures/fake-account-store';
 import FakeRoleStore from '../../test/fixtures/fake-role-store';
 import FakeEnvironmentStore from '../features/project-environments/fake-environment-store';
-import AccessStoreMock from '../../test/fixtures/fake-access-store';
+import FakeAccessStore from '../../test/fixtures/fake-access-store';
 import { GroupService } from '../services/group-service';
 import type { IRole } from '../../lib/types/stores/access-store';
 import {
@@ -92,6 +92,33 @@ test('should accept empty permissions', async () => {
     };
     expect(await accessService.validateRole(withEmptyPermissions)).toEqual({
         name: 'name of the role',
+        description: 'description',
+        permissions: [],
+    });
+});
+
+test('should not accept empty names', async () => {
+    const { accessService } = getSetup();
+    const withWhitespaceName: IRoleValidation = {
+        name: '    ',
+        description: 'description',
+        permissions: [],
+    };
+
+    await expect(
+        accessService.validateRole(withWhitespaceName),
+    ).rejects.toThrow('"name" is not allowed to be empty');
+});
+
+test('should trim leading and trailing whitespace from names', async () => {
+    const { accessService } = getSetup();
+    const withUntrimmedName: IRoleValidation = {
+        name: '   untrimmed ',
+        description: 'description',
+        permissions: [],
+    };
+    expect(await accessService.validateRole(withUntrimmedName)).toEqual({
+        name: 'untrimmed',
         description: 'description',
         permissions: [],
     });
@@ -244,7 +271,7 @@ test('throws error when trying to delete a project role in use by group', async 
     const accountStore = new FakeAccountStore();
     const roleStore = new FakeRoleStore();
     const environmentStore = new FakeEnvironmentStore();
-    const accessStore = new AccessStoreMock();
+    const accessStore = new FakeAccessStore();
     accessStore.getGroupIdsForRole = groupIdResultOverride;
     accessStore.getUserIdsForRole = async (): Promise<number[]> => {
         return [];

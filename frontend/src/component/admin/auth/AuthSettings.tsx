@@ -12,6 +12,7 @@ import { ADMIN } from '@server/types/permissions';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { useState } from 'react';
 import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
+import { usePageTitle } from 'hooks/usePageTitle';
 
 export const AuthSettings = () => {
     const { authenticationType } = useUiConfig().uiConfig;
@@ -46,6 +47,7 @@ export const AuthSettings = () => {
     }
 
     const [activeTab, setActiveTab] = useState(0);
+    usePageTitle(`Single sign-on: ${tabs[activeTab].label}`);
 
     return (
         <div>

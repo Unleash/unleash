@@ -53,6 +53,7 @@ exports[`should create default config 1`] = `
   "disableScheduler": undefined,
   "email": {
     "host": undefined,
+    "optionalHeaders": {},
     "port": 587,
     "secure": false,
     "sender": "Unleash <noreply@getunleash.io>",
@@ -94,6 +95,7 @@ exports[`should create default config 1`] = `
     "frontendMetricsMaxPerMinute": 6000,
     "frontendRegisterMaxPerMinute": 6000,
   },
+  "openAIAPIKey": undefined,
   "preHook": undefined,
   "preRouterHook": undefined,
   "prometheusApi": undefined,
@@ -153,6 +155,7 @@ exports[`should create default config 1`] = `
   "ui": {
     "environment": "Open Source",
   },
+  "userInactivityThresholdInDays": 180,
   "versionCheck": {
     "enable": true,
     "url": "https://version.unleash.run",

@@ -1,12 +1,12 @@
 // biome-ignore lint/correctness/noUnusedImports: Needs this for React to work
 import React, { useState, useEffect } from 'react';
 import { getContributors } from './contributors';
-import styles from './contributors.module.scss';
+import styles from './contributors.module.css';
 
 const unleashTeam = new Map([
     ['alvinometric', 'developer advocate, Unleash'],
     ['ardeche07', 'head of marketing, Unleash'],
-    ['andreas-unleash', 'developer, Unleash'],
+    ['ferrantim', 'head of marketing, Unleash'],
     ['chriswk', 'principal developer, Unleash'],
     ['daveleek', 'developer, Unleash'],
     ['FredrikOseberg', 'principal developer, Unleash'],
@@ -20,6 +20,8 @@ const unleashTeam = new Map([
     ['sjaanus', 'senior developer, Unleash'],
     ['thomasheartman', 'developer, Unleash'],
     ['Tymek', 'developer, Unleash'],
+    ['sebastian-bury', 'implementation architect, Unleash'],
+    ['melindafekete', 'documentation lead, Unleash'],
 ]);
 
 const GitHubContributors = ({ owner, repo, filePath }) => {

@@ -9,9 +9,9 @@
  */
 export interface CreateServiceAccountSchema {
     /** The name of the service account */
-    name?: string;
+    name: string;
     /** The id of the root role for the service account */
     rootRole: number;
     /** The username of the service account */
-    username?: string;
+    username: string;
 }

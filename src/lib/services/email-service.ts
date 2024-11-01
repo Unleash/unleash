@@ -24,13 +24,23 @@ export enum TransporterType {
 export interface IEmailEnvelope {
     from: string;
     to: string;
+    bcc?: string;
     subject: string;
     html: string;
     text: string;
+    attachments?: {
+        filename: string;
+        path: string;
+        cid: string;
+    }[];
+    headers?: Record<string, string>;
 }
 
 const RESET_MAIL_SUBJECT = 'Unleash - Reset your password';
 const GETTING_STARTED_SUBJECT = 'Welcome to Unleash';
+const ORDER_ENVIRONMENTS_SUBJECT =
+    'Unleash - ordered environments successfully';
+const PRODUCTIVITY_REPORT = 'Unleash - productivity report';
 const SCHEDULED_CHANGE_CONFLICT_SUBJECT =
     'Unleash - Scheduled changes can no longer be applied';
 const SCHEDULED_EXECUTION_FAILED_SUBJECT =
@@ -59,6 +69,11 @@ export type ChangeRequestScheduleConflictData =
           flagName: string;
           environment: string;
       };
+
+export type OrderEnvironmentData = {
+    name: string;
+    type: string;
+};
 
 export class EmailService {
     private logger: Logger;
@@ -447,6 +462,160 @@ export class EmailService {
         });
     }
 
+    async sendOrderEnvironmentEmail(
+        userEmail: string,
+        customerId: string,
+        environments: OrderEnvironmentData[],
+    ): Promise<IEmailEnvelope> {
+        if (this.configured()) {
+            const context = {
+                userEmail,
+                customerId,
+                environments: environments.map((data) => ({
+                    name: this.stripSpecialCharacters(data.name),
+                    type: this.stripSpecialCharacters(data.type),
+                })),
+            };
+
+            const bodyHtml = await this.compileTemplate(
+                'order-environments',
+                TemplateFormat.HTML,
+                context,
+            );
+            const bodyText = await this.compileTemplate(
+                'order-environments',
+                TemplateFormat.PLAIN,
+                context,
+            );
+            const email = {
+                from: this.sender,
+                to: userEmail,
+                bcc:
+                    process.env.ORDER_ENVIRONMENTS_BCC ||
+                    'pro-sales@getunleash.io',
+                subject: ORDER_ENVIRONMENTS_SUBJECT,
+                html: bodyHtml,
+                text: bodyText,
+            };
+            process.nextTick(() => {
+                this.mailer!.sendMail(email).then(
+                    () =>
+                        this.logger.info(
+                            'Successfully sent order environments email',
+                        ),
+                    (e) =>
+                        this.logger.warn(
+                            'Failed to send order environments email',
+                            e,
+                        ),
+                );
+            });
+            return Promise.resolve(email);
+        }
+        return new Promise((res) => {
+            this.logger.warn(
+                'No mailer is configured. Please read the docs on how to configure an email service',
+            );
+            res({
+                from: this.sender,
+                to: userEmail,
+                bcc: '',
+                subject: ORDER_ENVIRONMENTS_SUBJECT,
+                html: '',
+                text: '',
+            });
+        });
+    }
+
+    async sendProductivityReportEmail(
+        userEmail: string,
+        userName: string,
+        metrics: {
+            health: number;
+            flagsCreated: number;
+            productionUpdates: number;
+        },
+    ): Promise<IEmailEnvelope> {
+        if (this.configured()) {
+            const unsubscribeUrl = '{{amazonSESUnsubscribeUrl}}'; // FIXME: Add unsubscribe URL
+
+            const context = {
+                userName,
+                userEmail,
+                ...metrics,
+                unleashUrl: this.config.server.unleashUrl,
+                unsubscribeUrl,
+            };
+
+            const template = 'productivity-report';
+
+            const bodyHtml = await this.compileTemplate(
+                template,
+                TemplateFormat.HTML,
+                context,
+            );
+            const bodyText = await this.compileTemplate(
+                template,
+                TemplateFormat.PLAIN,
+                context,
+            );
+
+            const headers: Record<string, string> = {};
+            Object.entries(this.config.email.optionalHeaders || {}).forEach(
+                ([key, value]) => {
+                    if (typeof value === 'string') {
+                        headers[key] = value;
+                    }
+                },
+            );
+
+            const email: IEmailEnvelope = {
+                from: this.sender,
+                to: userEmail,
+                bcc: '',
+                subject: PRODUCTIVITY_REPORT,
+                html: bodyHtml,
+                text: bodyText,
+                attachments: [
+                    this.resolveTemplateAttachment(
+                        template,
+                        'unleash-logo.png',
+                        'unleashLogo',
+                    ),
+                ],
+                headers,
+            } satisfies IEmailEnvelope;
+
+            process.nextTick(() => {
+                this.mailer!.sendMail(email).then(
+                    () =>
+                        this.logger.info(
+                            'Successfully sent productivity report email',
+                        ),
+                    (e) =>
+                        this.logger.warn(
+                            'Failed to send productivity report email',
+                            e,
+                        ),
+                );
+            });
+            return Promise.resolve(email);
+        }
+        return new Promise((res) => {
+            this.logger.warn(
+                'No mailer is configured. Please read the docs on how to configure an email service',
+            );
+            res({
+                from: this.sender,
+                to: userEmail,
+                bcc: '',
+                subject: PRODUCTIVITY_REPORT,
+                html: '',
+                text: '',
+            });
+        });
+    }
+
     isEnabled(): boolean {
         return this.mailer !== undefined;
     }
@@ -479,6 +648,28 @@ export class EmailService {
             return readFileSync(template, 'utf-8');
         }
         throw new NotFoundError('Could not find template');
+    }
+
+    private resolveTemplateAttachment(
+        templateName: string,
+        filename: string,
+        cid: string,
+    ): {
+        filename: string;
+        path: string;
+        cid: string;
+    } {
+        const topPath = path.resolve(__dirname, '../../mailtemplates');
+        const attachment = path.join(topPath, templateName, filename);
+        if (existsSync(attachment)) {
+            return {
+                filename,
+                path: attachment,
+                cid,
+            };
+        }
+
+        throw new NotFoundError('Could not find email attachment');
     }
 
     configured(): boolean {

@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -33,6 +33,7 @@ import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
+import { HeaderEventTimelineButton } from './HeaderEventTimelineButton';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -96,7 +97,7 @@ const StyledIconButton = styled(IconButton)<{
     },
 }));
 
-const Header: VFC = () => {
+const Header = () => {
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
 
@@ -180,6 +181,7 @@ const Header: VFC = () => {
                 <StyledNav>
                     <StyledUserContainer>
                         <CommandBar />
+                        <HeaderEventTimelineButton />
                         <InviteLinkButton />
                         <Tooltip
                             title={

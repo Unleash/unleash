@@ -101,6 +101,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             limit,
             sortOrder,
             sortBy,
+            archived,
             favoritesFirst,
         }: IFeatureSearchParams,
         queryParams: IQueryParam[],
@@ -120,6 +121,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'features.name as feature_name',
                     'features.description as description',
                     'features.type as type',
+                    'features.archived_at as archived_at',
                     'features.project as project',
                     'features.created_at as created_at',
                     'features.stale as stale',
@@ -188,9 +190,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         }
                     });
                 }
-
                 query
-                    .modify(FeatureToggleStore.filterByArchived, false)
+                    .modify(FeatureToggleStore.filterByArchived, archived)
                     .leftJoin(
                         'feature_environments',
                         'feature_environments.feature_name',
@@ -475,6 +476,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     name: row.feature_name,
                     createdAt: row.created_at,
                     stale: row.stale,
+                    archivedAt: row.archived_at,
                     impressionData: row.impression_data,
                     lastSeenAt: row.last_seen_at,
                     dependencyType: row.dependency,

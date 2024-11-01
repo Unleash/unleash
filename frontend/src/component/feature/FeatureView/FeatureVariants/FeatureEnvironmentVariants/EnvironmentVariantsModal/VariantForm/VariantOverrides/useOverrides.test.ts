@@ -1,5 +1,6 @@
-import { renderHook, act } from '@testing-library/react';
+import { renderHook } from '@testing-library/react';
 import { useOverrides } from './useOverrides';
+import { act } from 'react';
 
 describe('useOverrides', () => {
     it('should return initial value', () => {

@@ -18,8 +18,12 @@ import {
 import { normalizeQueryParams } from '../../features/feature-search/search-utils';
 import Controller from '../../routes/controller';
 import type { IAuthRequest } from '../../server-impl';
-import type { IEvent } from '../../types';
+import type { IEnrichedEvent, IEvent } from '../../types';
 import { anonymiseKeys, extractUserIdFromUser } from '../../util';
+import {
+    FeatureEventFormatterMd,
+    type FeatureEventFormatter,
+} from '../../addons/feature-event-formatter-md';
 
 const ANON_KEYS = ['email', 'username', 'createdBy'];
 const version = 1 as const;
@@ -27,6 +31,8 @@ export default class EventSearchController extends Controller {
     private eventService: EventService;
 
     private flagResolver: IFlagResolver;
+
+    private msgFormatter: FeatureEventFormatter;
 
     private openApiService: OpenApiService;
 
@@ -41,6 +47,10 @@ export default class EventSearchController extends Controller {
         this.eventService = eventService;
         this.flagResolver = config.flagResolver;
         this.openApiService = openApiService;
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: config.server.unleashUrl,
+            formatStyle: 'markdown',
+        });
 
         this.route({
             method: 'get',
@@ -53,7 +63,7 @@ export default class EventSearchController extends Controller {
                     tags: ['Events'],
                     summary: 'Search for events',
                     description:
-                        'Allows searching for events matching the search criteria in the request body. This operation is deprecated. You should perform a GET request to the same endpoint with your query encoded as query parameters instead.',
+                        'Allows searching for events that match the query parameter criteria.',
                     parameters: [...eventSearchQueryParameters],
                     responses: {
                         200: createResponseSchema('eventSearchResponseSchema'),
@@ -85,15 +95,31 @@ export default class EventSearchController extends Controller {
             extractUserIdFromUser(user),
         );
 
+        const enrichedEvents = this.enrichEvents(events);
+
         this.openApiService.respondWithValidation(
             200,
             res,
             eventSearchResponseSchema.$id,
             serializeDates({
-                events: serializeDates(this.maybeAnonymiseEvents(events)),
+                events: serializeDates(
+                    this.maybeAnonymiseEvents(enrichedEvents),
+                ),
                 total: totalEvents,
             }),
         );
+    }
+
+    enrichEvents(events: IEvent[]): IEvent[] | IEnrichedEvent[] {
+        return events.map((event) => {
+            const { label, text: summary } = this.msgFormatter.format(event);
+
+            return {
+                ...event,
+                label,
+                summary,
+            };
+        });
     }
 
     maybeAnonymiseEvents(events: IEvent[]): IEvent[] {

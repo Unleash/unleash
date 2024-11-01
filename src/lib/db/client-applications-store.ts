@@ -313,28 +313,38 @@ export default class ClientApplicationsStore
                     ),
                 ])
                     .from('client_metrics_env as cme')
+                    .where('cme.app_name', appName)
                     .leftJoin('features as f', 'f.name', 'cme.feature_name')
                     .groupBy('cme.app_name', 'cme.environment', 'f.project');
+            })
+            .with('instances', (qb) => {
+                qb.select([
+                    'ci.app_name',
+                    'ci.environment',
+                    this.db.raw(
+                        'COUNT(DISTINCT ci.instance_id) as unique_instance_count',
+                    ),
+                    this.db.raw(
+                        'ARRAY_AGG(DISTINCT ci.sdk_version) as sdk_versions',
+                    ),
+                    this.db.raw('MAX(ci.last_seen) as latest_last_seen'),
+                ])
+                    .from('client_instances as ci')
+                    .where('ci.app_name', appName)
+                    .groupBy('ci.app_name', 'ci.environment');
             })
             .select([
                 'm.project',
                 'm.environment',
                 'm.features',
-                'ci.instance_id',
-                'ci.sdk_version',
-                'ci.last_seen',
-                'a.strategies',
+                'i.unique_instance_count',
+                'i.sdk_versions',
+                'i.latest_last_seen',
+                'ca.strategies',
             ])
-            .from({ a: 'client_applications' })
-            .leftJoin('metrics as m', 'm.app_name', 'a.app_name')
-            .leftJoin('client_instances as ci', function () {
-                this.on('ci.app_name', '=', 'm.app_name').andOn(
-                    'ci.environment',
-                    '=',
-                    'm.environment',
-                );
-            })
-            .where('a.app_name', appName)
+            .from('client_applications as ca')
+            .leftJoin('metrics as m', 'm.app_name', 'ca.app_name')
+            .leftJoin('instances as i', 'i.environment', 'm.environment')
             .orderBy('m.environment', 'asc');
         const rows = await query;
         stopTimer();
@@ -358,9 +368,9 @@ export default class ClientApplicationsStore
         const environments = rows.reduce((acc, row) => {
             const {
                 environment,
-                instance_id,
-                sdk_version,
-                last_seen,
+                unique_instance_count,
+                sdk_versions,
+                latest_last_seen,
                 project,
                 features,
                 strategies,
@@ -383,12 +393,9 @@ export default class ClientApplicationsStore
             if (!env) {
                 env = {
                     name: environment,
-                    instanceCount: instance_id ? 1 : 0,
-                    sdks: sdk_version ? [sdk_version] : [],
-                    lastSeen: last_seen,
-                    uniqueInstanceIds: new Set(
-                        instance_id ? [instance_id] : [],
-                    ),
+                    instanceCount: Number(unique_instance_count),
+                    sdks: sdk_versions,
+                    lastSeen: latest_last_seen,
                     issues: {
                         missingFeatures: featuresNotMappedToProject
                             ? features
@@ -397,25 +404,14 @@ export default class ClientApplicationsStore
                 };
                 acc.push(env);
             } else {
-                if (instance_id) {
-                    env.uniqueInstanceIds.add(instance_id);
-                    env.instanceCount = env.uniqueInstanceIds.size;
-                }
                 if (featuresNotMappedToProject) {
                     env.issues.missingFeatures = features;
-                }
-                if (sdk_version && !env.sdks.includes(sdk_version)) {
-                    env.sdks.push(sdk_version);
-                }
-                if (new Date(last_seen) > new Date(env.lastSeen)) {
-                    env.lastSeen = last_seen;
                 }
             }
 
             return acc;
         }, []);
         environments.forEach((env) => {
-            delete env.uniqueInstanceIds;
             env.sdks.sort();
         });
 

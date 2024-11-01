@@ -7,7 +7,6 @@ import type {
     IFeatureNaming,
     IProject,
     IProjectApplications,
-    IProjectWithCount,
     ProjectMode,
 } from '../../types/model';
 import type { Store } from '../../types/stores/store';
@@ -47,6 +46,10 @@ export interface IProjectHealthUpdate {
 export interface IProjectQuery {
     id?: string;
     archived?: boolean;
+}
+
+export interface IProjectsQuery {
+    ids?: string[];
 }
 
 export type ProjectEnvironment = {
@@ -96,16 +99,6 @@ export interface IProjectStore extends Store<IProject, string> {
         projectId: string,
         date: string,
     ): Promise<number>;
-
-    getProjectsByUser(userId: number): Promise<string[]>;
-
-    /**
-     * @deprecated Use the appropriate method in the project read model instead.
-     */
-    getProjectsWithCounts(
-        query?: IProjectQuery,
-        userId?: number,
-    ): Promise<IProjectWithCount[]>;
 
     count(): Promise<number>;
 

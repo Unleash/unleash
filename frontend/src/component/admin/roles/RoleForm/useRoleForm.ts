@@ -27,6 +27,7 @@ export const useRoleForm = (
     const { roles, projectRoles } = useRoles();
 
     const [name, setName] = useState(initialName);
+    const setTrimmedName = (newName: string) => setName(newName.trim());
     const [description, setDescription] = useState(initialDescription);
     const [checkedPermissions, setCheckedPermissions] =
         useState<ICheckedPermissions>({});
@@ -78,12 +79,13 @@ export const useRoleForm = (
     };
 
     const validateName = (name: string) => {
-        if (!isNotEmpty(name)) {
+        const trimmedName = name.trim();
+        if (!isNotEmpty(trimmedName)) {
             setError(ErrorField.NAME, 'Name is required.');
             return false;
         }
 
-        if (!isNameUnique(name)) {
+        if (!isNameUnique(trimmedName)) {
             setError(ErrorField.NAME, 'Name must be unique.');
             return false;
         }
@@ -93,7 +95,8 @@ export const useRoleForm = (
     };
 
     const validateDescription = (description: string) => {
-        if (!isNotEmpty(description)) {
+        const trimmedDescription = description.trim();
+        if (!isNotEmpty(trimmedDescription)) {
             setError(ErrorField.DESCRIPTION, 'Description is required.');
             return false;
         }
@@ -139,7 +142,7 @@ export const useRoleForm = (
 
     return {
         name,
-        setName,
+        setName: setTrimmedName,
         validateName,
         description,
         setDescription,

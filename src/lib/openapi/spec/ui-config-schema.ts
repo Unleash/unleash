@@ -33,6 +33,12 @@ export const uiConfigSchema = {
                 'What kind of Unleash instance it is: Enterprise, Pro, or Open source',
             example: 'Enterprise',
         },
+        billing: {
+            type: 'string',
+            description: 'The billing model in use for this Unleash instance.',
+            example: 'subscription',
+            enum: ['subscription', 'pay-as-you-go'],
+        },
         unleashUrl: {
             type: 'string',
             description: 'The URL of the Unleash instance.',
@@ -178,6 +184,11 @@ export const uiConfigSchema = {
             type: 'boolean',
             description:
                 'Whether the SAML configuration is set through environment variables or not.',
+            example: false,
+        },
+        unleashAIAvailable: {
+            type: 'boolean',
+            description: 'Whether Unleash AI is available.',
             example: false,
         },
     },

@@ -57,16 +57,23 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+    await db.stores.dependentFeaturesStore.deleteAll();
     await db.stores.featureToggleStore.deleteAll();
     await db.stores.segmentStore.deleteAll();
 });
 
 const searchFeatures = async (
-    { query = '', project = 'IS:default' }: FeatureSearchQueryParameters,
+    {
+        query = '',
+        project = 'IS:default',
+        archived = 'IS:false',
+    }: FeatureSearchQueryParameters,
     expectedCode = 200,
 ) => {
     return app.request
-        .get(`/api/admin/search/features?query=${query}&project=${project}`)
+        .get(
+            `/api/admin/search/features?query=${query}&project=${project}&archived=${archived}`,
+        )
         .expect(expectedCode);
 };
 
@@ -171,6 +178,11 @@ const filterFeaturesByEnvironmentStatus = async (
 
 const searchFeaturesWithoutQueryParams = async (expectedCode = 200) => {
     return app.request.get(`/api/admin/search/features`).expect(expectedCode);
+};
+const getProjectArchive = async (projectId = 'default', expectedCode = 200) => {
+    return app.request
+        .get(`/api/admin/archive/features/${projectId}`)
+        .expect(expectedCode);
 };
 
 test('should search matching features by name', async () => {
@@ -1124,6 +1136,46 @@ test('should return dependencyType', async () => {
             {
                 name: 'my_feature_d',
                 dependencyType: null,
+            },
+        ],
+    });
+});
+
+test('should return archived when query param set', async () => {
+    await app.createFeature({
+        name: 'my_feature_a',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
+    await app.createFeature({
+        name: 'my_feature_b',
+        createdAt: '2023-01-29T15:21:39.975Z',
+        archived: true,
+    });
+
+    const { body } = await searchFeatures({
+        query: 'my_feature',
+    });
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                archivedAt: null,
+            },
+        ],
+    });
+
+    const { body: archivedFeatures } = await searchFeatures({
+        query: 'my_feature',
+        archived: 'IS:true',
+    });
+
+    const { body: archive } = await getProjectArchive();
+
+    expect(archivedFeatures).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_b',
+                archivedAt: archive.features[0].archivedAt,
             },
         ],
     });

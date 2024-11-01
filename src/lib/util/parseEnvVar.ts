@@ -38,3 +38,18 @@ export function parseEnvVarStrings(
 
     return defaultVal;
 }
+
+export function parseEnvVarJSON(
+    envVar: string | undefined,
+    defaultVal: Record<string, unknown>,
+): Record<string, unknown> {
+    if (envVar) {
+        try {
+            return JSON.parse(envVar);
+        } catch (e) {
+            return defaultVal;
+        }
+    }
+
+    return defaultVal;
+}

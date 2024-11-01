@@ -14,7 +14,7 @@ type Props = {
 
 export const ProjectStatusModal = ({ open, close }: Props) => {
     return (
-        <SidebarModal open={open} onClose={close} label='Import toggles'>
+        <SidebarModal open={open} onClose={close} label='Project status'>
             <ModalContentContainer />
         </SidebarModal>
     );

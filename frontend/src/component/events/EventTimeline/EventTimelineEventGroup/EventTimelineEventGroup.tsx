@@ -56,7 +56,6 @@ export const EventTimelineEventGroup = ({
             >
                 <StyledBadge
                     badgeContent={group.length}
-                    color='primary'
                     invisible={group.length < 2}
                 >
                     <EventTimelineEventCircle group={group} />

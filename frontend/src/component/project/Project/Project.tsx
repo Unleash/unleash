@@ -84,6 +84,7 @@ const StyledCounterBadge = styled(CounterBadge)(({ theme }) => ({
         backgroundColor: theme.palette.background.alternative,
     },
     flex: 'auto',
+    justifyContent: 'center',
 }));
 
 const TabText = styled('span')(({ theme }) => ({

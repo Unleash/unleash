@@ -77,7 +77,6 @@ export const ProjectSettings = () => {
                 </StyledBadgeContainer>
             ) : undefined,
         }),
-        ...(isPro() || isEnterprise() ? [] : []),
     ];
 
     if (actionsEnabled) {

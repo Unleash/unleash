@@ -41,7 +41,7 @@ export default class ProjectStatusController extends Controller {
                 this.openApiService.validPath({
                     tags: ['Projects'],
                     operationId: 'getProjectStatus',
-                    summary: 'Get an overview of a project status.',
+                    summary: 'Get project status',
                     description:
                         'This endpoint returns status for the project, including activities.',
                     responses: {

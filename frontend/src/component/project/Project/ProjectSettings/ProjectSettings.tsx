@@ -1,5 +1,4 @@
 import {
-    //no
     Navigate,
     Route,
     Routes,
@@ -36,44 +35,49 @@ export const ProjectSettings = () => {
 
     const actionsEnabled = useUiFlag('automatedActions');
 
+    const gatedTabs = (...tabs: ITab[]) =>
+        isPro() || isEnterprise() ? tabs : [];
+
     const tabs: ITab[] = [
-        ...(isPro() || isEnterprise()
-            ? [
-                  {
-                      id: '',
-                      label: 'Settings',
-                  },
-                  {
-                      id: 'access',
-                      label: 'Access',
-                  },
-                  {
-                      id: 'segments',
-                      label: 'Segments',
-                  },
-                  {
-                      id: 'change-requests',
-                      label: 'Change request configuration',
-                      icon: isPro() ? (
-                          <StyledBadgeContainer>
-                              <EnterpriseBadge />
-                          </StyledBadgeContainer>
-                      ) : undefined,
-                  },
-              ]
-            : []),
-        {
-            id: 'environments',
-            label: 'Environments',
-        },
+        ...gatedTabs(
+            {
+                id: '',
+                label: 'Project settings',
+            },
+            {
+                id: 'access',
+                label: 'User access',
+            },
+        ),
+
         {
             id: 'api-access',
             label: 'API access',
         },
+        ...gatedTabs({
+            id: 'segments',
+            label: 'Segments',
+        }),
+
+        {
+            id: 'environments',
+            label: 'Environments',
+        },
+
         {
             id: 'default-strategy',
             label: 'Default strategy',
         },
+        ...gatedTabs({
+            id: 'change-requests',
+            label: 'Change request configuration',
+            icon: isPro() ? (
+                <StyledBadgeContainer>
+                    <EnterpriseBadge />
+                </StyledBadgeContainer>
+            ) : undefined,
+        }),
+        ...(isPro() || isEnterprise() ? [] : []),
     ];
 
     if (actionsEnabled) {

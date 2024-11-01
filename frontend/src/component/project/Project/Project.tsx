@@ -56,7 +56,7 @@ import { ProjectArchived } from './ArchiveProject/ProjectArchived';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
-import { ProjectStatusModal } from './ProjectStatusModal';
+import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',

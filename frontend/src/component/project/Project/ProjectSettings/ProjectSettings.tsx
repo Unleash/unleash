@@ -35,11 +35,11 @@ export const ProjectSettings = () => {
 
     const actionsEnabled = useUiFlag('automatedActions');
 
-    const gatedTabs = (...tabs: ITab[]) =>
+    const paidTabs = (...tabs: ITab[]) =>
         isPro() || isEnterprise() ? tabs : [];
 
     const tabs: ITab[] = [
-        ...gatedTabs(
+        ...paidTabs(
             {
                 id: '',
                 label: 'Project settings',
@@ -49,12 +49,11 @@ export const ProjectSettings = () => {
                 label: 'User access',
             },
         ),
-
         {
             id: 'api-access',
             label: 'API access',
         },
-        ...gatedTabs({
+        ...paidTabs({
             id: 'segments',
             label: 'Segments',
         }),
@@ -68,7 +67,7 @@ export const ProjectSettings = () => {
             id: 'default-strategy',
             label: 'Default strategy',
         },
-        ...gatedTabs({
+        ...paidTabs({
             id: 'change-requests',
             label: 'Change request configuration',
             icon: isPro() ? (

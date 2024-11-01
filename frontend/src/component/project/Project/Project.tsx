@@ -21,7 +21,7 @@ import {
     Tabs,
     Typography,
     styled,
-    IconButton,
+    Button,
 } from '@mui/material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
@@ -101,6 +101,12 @@ const ChangeRequestsLabel = () => {
         </StyledCounterBadge>
     );
 };
+
+const ProjectStatusButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.text.primary,
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: 'bold',
+}));
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -281,13 +287,13 @@ export const Project = () => {
                                 }
                             />
                             {simplifyProjectOverview && (
-                                <IconButton
-                                    variant='text'
+                                <ProjectStatusButton
                                     onClick={() => setProjectStatusOpen(true)}
-                                    // data-loading-project
+                                    startIcon={<ImportSvg />}
+                                    data-loading-project
                                 >
-                                    HEY
-                                </IconButton>
+                                    Project status
+                                </ProjectStatusButton>
                             )}
                         </StyledDiv>
                     </StyledTopRow>

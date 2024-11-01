@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ReactComponent as ImportSvg } from 'assets/icons/import.svg';
+import { ReactComponent as ProjectStatusSvg } from 'assets/icons/projectStatus.svg';
 import {
     StyledDiv,
     StyledFavoriteIconButton,
@@ -106,6 +107,9 @@ const ProjectStatusButton = styled(Button)(({ theme }) => ({
     color: theme.palette.text.primary,
     fontSize: theme.typography.body1.fontSize,
     fontWeight: 'bold',
+    svg: {
+        fill: theme.palette.primary.main,
+    },
 }));
 
 export const Project = () => {
@@ -289,7 +293,7 @@ export const Project = () => {
                             {simplifyProjectOverview && (
                                 <ProjectStatusButton
                                     onClick={() => setProjectStatusOpen(true)}
-                                    startIcon={<ImportSvg />}
+                                    startIcon={<ProjectStatusSvg />}
                                     data-loading-project
                                 >
                                     Project status

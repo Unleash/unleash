@@ -23,6 +23,12 @@ interface IEventTimelineEventProps {
     endTime: number;
 }
 
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    '.MuiBadge-badge': {
+        backgroundColor: theme.palette.background.alternative,
+    },
+}));
+
 export const EventTimelineEventGroup = ({
     group,
     startTime,
@@ -48,13 +54,12 @@ export const EventTimelineEventGroup = ({
                 maxWidth={350}
                 arrow
             >
-                <Badge
+                <StyledBadge
                     badgeContent={group.length}
-                    color='primary'
                     invisible={group.length < 2}
                 >
                     <EventTimelineEventCircle group={group} />
-                </Badge>
+                </StyledBadge>
             </HtmlTooltip>
         </StyledEvent>
     );

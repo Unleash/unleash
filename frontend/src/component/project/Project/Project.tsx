@@ -21,6 +21,7 @@ import {
     Tabs,
     Typography,
     styled,
+    IconButton,
 } from '@mui/material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
@@ -54,6 +55,7 @@ import { ProjectArchived } from './ArchiveProject/ProjectArchived';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
+import { ProjectStatusModal } from './ProjectStatusModal';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -115,6 +117,7 @@ export const Project = () => {
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
     const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
+    const [projectStatusOpen, setProjectStatusOpen] = useState(false);
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -277,6 +280,15 @@ export const Project = () => {
                                     </PermissionIconButton>
                                 }
                             />
+                            {simplifyProjectOverview && (
+                                <IconButton
+                                    variant='text'
+                                    onClick={() => setProjectStatusOpen(true)}
+                                    // data-loading-project
+                                >
+                                    HEY
+                                </IconButton>
+                            )}
                         </StyledDiv>
                     </StyledTopRow>
                 </StyledInnerContainer>
@@ -388,6 +400,10 @@ export const Project = () => {
                 open={modalOpen}
                 setOpen={setModalOpen}
                 project={projectId}
+            />
+            <ProjectStatusModal
+                open={projectStatusOpen}
+                close={() => setProjectStatusOpen(false)}
             />
         </div>
     );

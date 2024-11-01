@@ -57,6 +57,7 @@ import type { FeatureLifecycleService } from '../features/feature-lifecycle/feat
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
 import type { OnboardingService } from '../features/onboarding/onboarding-service';
 import type { PersonalDashboardService } from '../features/personal-dashboard/personal-dashboard-service';
+import type { ProjectStatusService } from '../features/project-status/project-status-service';
 
 export interface IUnleashServices {
     transactionalAccessService: WithTransactional<AccessService>;

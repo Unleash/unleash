@@ -82,9 +82,12 @@ interface ITab {
 const StyledCounterBadge = styled(CounterBadge)(({ theme }) => ({
     '.MuiBadge-badge': {
         backgroundColor: theme.palette.background.alternative,
+        right: '2px',
     },
     flex: 'auto',
     justifyContent: 'center',
+    minHeight: '1.5em',
+    alignItems: 'center',
 }));
 
 const TabText = styled('span')(({ theme }) => ({

@@ -24,7 +24,12 @@ import {
 } from '@mui/material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { type PropsWithChildren, useEffect, useState } from 'react';
+import {
+    type PropsWithChildren,
+    useEffect,
+    useState,
+    type ReactNode,
+} from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectFlags from './ProjectFlags';
@@ -71,6 +76,7 @@ interface ITab {
     flag?: keyof UiFlags;
     new?: boolean;
     isEnterprise?: boolean;
+    label?: () => ReactNode;
 }
 
 const StyledCounterBadge = styled(CounterBadge)(({ theme }) => ({
@@ -148,6 +154,13 @@ export const Project = () => {
             path: `${basePath}/change-requests`,
             name: 'change-request',
             isEnterprise: true,
+            label: simplifyProjectOverview
+                ? () => (
+                      <ActionableChangeRequestsIndicator>
+                          Change requests
+                      </ActionableChangeRequestsIndicator>
+                  )
+                : undefined,
         },
         {
             title: 'Applications',
@@ -288,16 +301,7 @@ export const Project = () => {
                                 <StyledTab
                                     data-loading-project
                                     key={tab.title}
-                                    label={
-                                        simplifyProjectOverview &&
-                                        tab.name === 'change-request' ? (
-                                            <ActionableChangeRequestsIndicator>
-                                                {tab.title}
-                                            </ActionableChangeRequestsIndicator>
-                                        ) : (
-                                            tab.title
-                                        )
-                                    }
+                                    label={tab.label ? tab.label() : tab.title}
                                     value={tab.path}
                                     onClick={() => {
                                         if (tab.title !== 'Flags') {

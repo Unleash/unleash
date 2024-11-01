@@ -43,7 +43,7 @@ export default class ProjectStatusController extends Controller {
                     operationId: 'getProjectStatus',
                     summary: 'Get project status',
                     description:
-                        'This endpoint returns status for the project, including activities.',
+                        'This endpoint returns information on the status the project, including activities, health, resources, and aggregated flag lifecycle data.',
                     responses: {
                         200: createResponseSchema('projectStatusSchema'),
                         ...getStandardResponses(401, 403, 404),

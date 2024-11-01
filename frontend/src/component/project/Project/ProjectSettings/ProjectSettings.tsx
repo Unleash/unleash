@@ -57,12 +57,10 @@ export const ProjectSettings = () => {
             id: 'segments',
             label: 'Segments',
         }),
-
         {
             id: 'environments',
             label: 'Environments',
         },
-
         {
             id: 'default-strategy',
             label: 'Default strategy',

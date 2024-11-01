@@ -24,12 +24,7 @@ import {
 } from '@mui/material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import {
-    type PropsWithChildren,
-    useEffect,
-    useState,
-    type ReactNode,
-} from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectFlags from './ProjectFlags';

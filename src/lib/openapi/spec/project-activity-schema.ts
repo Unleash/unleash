@@ -4,7 +4,7 @@ export const projectActivitySchema = {
     $id: '#/components/schemas/projectActivitySchema',
     type: 'array',
     description:
-        'An array of project activity information. Each item contains a date and the total number of activities for that date.,
+        'An array of project activity information. Each item contains a date and the total number of activities for that date.',
     items: {
         type: 'object',
         additionalProperties: false,

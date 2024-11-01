@@ -3,6 +3,8 @@ import type { FromSchema } from 'json-schema-to-ts';
 export const projectActivitySchema = {
     $id: '#/components/schemas/projectActivitySchema',
     type: 'array',
+    description:
+        'An array of project activities, each containing a date and activity count',
     items: {
         type: 'object',
         additionalProperties: false,

@@ -14,10 +14,22 @@ import {
     StyledTabContainer,
     StyledTopRow,
 } from './Project.styles';
-import { Box, Paper, Tabs, Typography, styled } from '@mui/material';
+import {
+    Badge as CounterBadge,
+    Box,
+    Paper,
+    Tabs,
+    Typography,
+    styled,
+} from '@mui/material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { useEffect, useState } from 'react';
+import {
+    type PropsWithChildren,
+    useEffect,
+    useState,
+    type ReactNode,
+} from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectFlags from './ProjectFlags';
@@ -45,8 +57,8 @@ import { ProjectInsights } from './ProjectInsights/ProjectInsights';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
-import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -64,46 +76,32 @@ interface ITab {
     flag?: keyof UiFlags;
     new?: boolean;
     isEnterprise?: boolean;
+    label?: () => ReactNode;
 }
 
-const CircleContainer = styled('div')(({ theme }) => ({
-    position: 'absolute',
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
-    display: 'grid',
-    placeItems: 'center',
-    borderRadius: '50%',
-
-    background: theme.palette.background.alternative,
-    color: theme.palette.primary.contrastText,
-    fontSize: theme.typography.body2.fontSize,
-
-    // todo: revisit these values later
-    top: 10,
-    right: 0,
-    [theme.breakpoints.down('md')]: {
-        top: 2,
+const StyledCounterBadge = styled(CounterBadge)(({ theme }) => ({
+    '.MuiBadge-badge': {
+        backgroundColor: theme.palette.background.alternative,
+        right: '2px',
     },
+    flex: 'auto',
+    justifyContent: 'center',
+    minHeight: '1.5em',
+    alignItems: 'center',
 }));
 
-const ActionableChangeRequestsIndicator = () => {
-    // todo: useSWR for this instead (maybe conditional)
-    const count = 0;
+const TabText = styled('span')(({ theme }) => ({
+    color: theme.palette.text.primary,
+}));
 
-    if (count <= 0) {
-        return null;
-    }
-
-    const renderedCount = count > 9 ? '9+' : count;
+const ChangeRequestsLabel = () => {
+    const projectId = useRequiredPathParam('projectId');
+    const { total } = useActionableChangeRequests(projectId);
 
     return (
-        <CircleContainer>
-            <ScreenReaderOnly>You can move</ScreenReaderOnly>
-            {renderedCount}
-            <ScreenReaderOnly>
-                change requests into their next phase.
-            </ScreenReaderOnly>
-        </CircleContainer>
+        <StyledCounterBadge badgeContent={total ?? 0} color='primary'>
+            <TabText>Change requests</TabText>
+        </StyledCounterBadge>
     );
 };
 
@@ -160,6 +158,7 @@ export const Project = () => {
             path: `${basePath}/change-requests`,
             name: 'change-request',
             isEnterprise: true,
+            label: simplifyProjectOverview ? ChangeRequestsLabel : undefined,
         },
         {
             title: 'Applications',
@@ -300,7 +299,7 @@ export const Project = () => {
                                 <StyledTab
                                     data-loading-project
                                     key={tab.title}
-                                    label={tab.title}
+                                    label={tab.label ? tab.label() : tab.title}
                                     value={tab.path}
                                     onClick={() => {
                                         if (tab.title !== 'Flags') {
@@ -329,11 +328,6 @@ export const Project = () => {
                                                     </span>
                                                 }
                                             />
-                                            {simplifyProjectOverview &&
-                                                tab.name ===
-                                                    'change-request' && (
-                                                    <ActionableChangeRequestsIndicator />
-                                                )}
                                             {(tab.isEnterprise &&
                                                 isPro() &&
                                                 enterpriseIcon) ||

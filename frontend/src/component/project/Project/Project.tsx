@@ -91,13 +91,13 @@ const TabText = styled('span')(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-const ActionableChangeRequestsIndicator = ({ children }: PropsWithChildren) => {
+const ChangeRequestsLabel = () => {
     const projectId = useRequiredPathParam('projectId');
     const { total } = useActionableChangeRequests(projectId);
 
     return (
         <StyledCounterBadge badgeContent={total ?? 0} color='primary'>
-            <TabText>{children}</TabText>
+            <TabText>Change requests</TabText>
         </StyledCounterBadge>
     );
 };
@@ -155,13 +155,7 @@ export const Project = () => {
             path: `${basePath}/change-requests`,
             name: 'change-request',
             isEnterprise: true,
-            label: simplifyProjectOverview
-                ? () => (
-                      <ActionableChangeRequestsIndicator>
-                          Change requests
-                      </ActionableChangeRequestsIndicator>
-                  )
-                : undefined,
+            label: simplifyProjectOverview ? ChangeRequestsLabel : undefined,
         },
         {
             title: 'Applications',

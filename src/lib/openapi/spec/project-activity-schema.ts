@@ -12,6 +12,7 @@ export const projectActivitySchema = {
         properties: {
             date: {
                 type: 'string',
+                example: '2022-12-14',
                 description: 'Activity date',
             },
             count: {

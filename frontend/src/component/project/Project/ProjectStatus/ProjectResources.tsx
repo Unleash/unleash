@@ -37,6 +37,13 @@ const ListItemRow = styled('li')(({ theme }) => ({
     justifyContent: 'space-between',
     alignItems: 'center',
     gap: theme.spacing(1),
+    // display: 'contents',
+}));
+const LinkWrapper = styled('span')(({ theme }) => ({
+    // display: 'inline-flex',
+    // justifyContent: 'flex-end',
+    // whiteSpace: 'nowrap',
+    // flex: 'auto',
 }));
 
 const ListItem: FC<{ icon: ReactNode; text: string; link: ReactNode }> = ({
@@ -49,7 +56,7 @@ const ListItem: FC<{ icon: ReactNode; text: string; link: ReactNode }> = ({
             <ItemContent>
                 {icon} <span>{text}</span>
             </ItemContent>
-            {link}
+            <LinkWrapper>{link}</LinkWrapper>
         </ListItemRow>
     );
 };
@@ -57,6 +64,12 @@ const ListItem: FC<{ icon: ReactNode; text: string; link: ReactNode }> = ({
 const ResourceList = styled('ul')(({ theme }) => ({
     listStyle: 'none',
     padding: 0,
+    'li + li': {
+        marginTop: theme.spacing(2),
+    },
+    // display: 'grid',
+    // gap: theme.spacing(1.5),
+    // gridTemplateColumns: 'auto 1fr',
 }));
 
 export const ProjectResources = () => {
@@ -88,7 +101,7 @@ export const ProjectResources = () => {
             text: `${tokens.length} API key(s)`,
             link: (
                 <Link to={`/projects/${projectId}/settings/access`}>
-                    Add members
+                    Add new key
                 </Link>
             ),
         },
@@ -97,7 +110,7 @@ export const ProjectResources = () => {
             text: '1 connected environment(s)',
             link: (
                 <Link to={`/projects/${projectId}/settings/access`}>
-                    Add members
+                    View connections
                 </Link>
             ),
         },
@@ -106,7 +119,7 @@ export const ProjectResources = () => {
             text: `${segmentCount} project segment(s)`,
             link: (
                 <Link to={`/projects/${projectId}/settings/access`}>
-                    Add members
+                    Add segments
                 </Link>
             ),
         },

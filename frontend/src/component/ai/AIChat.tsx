@@ -1,6 +1,6 @@
 import { mutate } from 'swr';
 import { ReactComponent as AIIcon } from 'assets/icons/AI.svg';
-import { IconButton, styled, useMediaQuery } from '@mui/material';
+import { IconButton, styled, Tooltip, useMediaQuery } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -198,19 +198,21 @@ export const AIChat = () => {
     if (!open) {
         return (
             <StyledAIIconContainer demoStepsVisible={demoStepsVisible}>
-                <StyledAIIconButton
-                    size='large'
-                    onClick={() => {
-                        trackEvent('unleash-ai-chat', {
-                            props: {
-                                eventType: 'open',
-                            },
-                        });
-                        setOpen(true);
-                    }}
-                >
-                    <AIIcon />
-                </StyledAIIconButton>
+                <Tooltip arrow title='Unleash AI'>
+                    <StyledAIIconButton
+                        size='large'
+                        onClick={() => {
+                            trackEvent('unleash-ai-chat', {
+                                props: {
+                                    eventType: 'open',
+                                },
+                            });
+                            setOpen(true);
+                        }}
+                    >
+                        <AIIcon />
+                    </StyledAIIconButton>
+                </Tooltip>
             </StyledAIIconContainer>
         );
     }

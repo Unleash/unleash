@@ -13,6 +13,18 @@ import { NewInUnleashTooltip } from './NewInUnleashTooltip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
 
+export type NewInUnleashItemDetails = {
+    label: string;
+    summary: string;
+    icon: ReactNode;
+    onCheckItOut?: () => void;
+    docsLink?: string;
+    show: boolean;
+    longDescription: ReactNode;
+    preview?: ReactNode;
+    beta?: boolean;
+};
+
 const StyledItemButton = styled(ListItemButton)(({ theme }) => ({
     outline: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
@@ -32,22 +44,17 @@ const StyledItemTitle = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'center',
+    height: theme.spacing(3),
 }));
 
 const StyledItemButtonClose = styled(IconButton)(({ theme }) => ({
     padding: theme.spacing(0.25),
 }));
 
-interface INewInUnleashItemProps {
-    icon: ReactNode;
+interface INewInUnleashItemProps
+    extends Omit<NewInUnleashItemDetails, 'show' | 'beta'> {
     onClick: () => void;
     onDismiss: () => void;
-    label: string;
-    longDescription: ReactNode;
-    onCheckItOut: () => void;
-    docsLink: string;
-    preview?: ReactNode;
-    summary: string;
     beta: boolean;
 }
 

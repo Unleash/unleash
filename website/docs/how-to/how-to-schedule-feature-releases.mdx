@@ -3,20 +3,12 @@ title: How to schedule feature releases
 ---
 import ApiRequest from '@site/src/components/ApiRequest'
 
-:::info Placeholders
-Placeholders in the code samples below are delimited by angle brackets (i.e. `<placeholder-name>`). You will need to replace them with the values that are correct in _your_ situation for the code samples to run properly.
-:::
+Scheduling feature releases can be a powerful tool for your product's marketing strategy. For example, you might plan to launch a feature on a specific date and time for a product release, limit availability to a contest deadline, or make it accessible during a brief window, such as a 24-hour flash sale.
 
-There's a whole host of reasons why you may want to schedule the release of a feature, such as:
-- **to release a feature at a specific date and time** (for a product launch, for instance)
-- **to make a feature available only up until a specific moment** (for a contest cutoff, for instance)
-- **to make a feature available during a limited period** (for a 24 hour flash sale, for instance)
+Depending on which version of Unleash you are using, there are two ways to schedule a feature release. If you are using [Pro](/availability#plans) or [Enterprise](https://www.getunleash.io/pricing) version 4.9 or later, you can use [strategy constraints](#strategy-constraints).
+Otherwise, you can use [custom activation strategies](#custom-activation-strategies).
 
-There are two distinct ways to do this, depending on which version of Unleash you are running:
-- If you're using version 4.9 or later of Unleash Pro or Enterprise, you can (and should) [use strategy constraints](#strategy-constraints)
-- Otherwise, [use custom activation strategies](#custom-activation-strategies)
-
-In this guide we'll schedule a feature for release at some point in time. The exact same logic applies if you want to make a feature available until some point in the future. Finally, if you want to only make a feature available during a limited time period, you can easily combine the two options.
+This guide shows you how to schedule a feature for release at a specific point in time. The same approach applies if you want to make a feature available until a future point. To make a feature available only during a limited time period, you can combine the two options.
 
 ## Prerequisites
 
@@ -25,7 +17,7 @@ This guide assumes that you've got the following:
 - a running instance of Unleash and connected clients (where applicable)
 - an existing feature flag that you want to schedule the release for
 
-## Schedule feature releases with strategy constraints {#strategy-constraints}
+## Schedule feature releases with strategy constraints
 
 [Strategy constraints](../reference/strategy-constraints#date-and-time-operators) are the easiest way to schedule feature releases ([as long as your SDKs are up to date](../reference/strategy-constraints#incompatibilities)). You can use this approach with _any_ strategy you want. The strategies will work just as they normally do, they just won't become active until the specified time. For example: with the standard strategy, the feature would become available to all your users at the specified time; with a gradual rollout, the rollout would start at the specified time.
 
@@ -60,7 +52,7 @@ The `"constraint"` object should have the same format as described in the code s
 
 The `"operator"` property in the code sample can be replaced with [any of the other date and time-based operators](../reference/strategy-constraints#date-and-time-operators) according to your needs.
 
-## Schedule feature releases with custom activation strategies {#custom-activation-strategies}
+## Schedule feature releases with custom activation strategies
 
 To schedule feature releases without using strategy constraints, you can use custom activation strategies. This requires defining a custom strategy and then implementing that strategy in your SDKs. For detailed instructions on how to do either of these things, refer to their respective how-to guides:
 - [How to _define_ custom strategies](../how-to/how-to-use-custom-strategies#step-1)

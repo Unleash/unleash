@@ -9,8 +9,25 @@ class ResizeObserver {
     disconnect() {}
 }
 
+class IntersectionObserver {
+    root: any;
+    rootMargin: any;
+    thresholds: any;
+
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+    takeRecords() {
+        return [];
+    }
+}
+
 if (!window.ResizeObserver) {
     window.ResizeObserver = ResizeObserver;
+}
+
+if (!window.IntersectionObserver) {
+    window.IntersectionObserver = IntersectionObserver;
 }
 
 process.env.TZ = 'UTC';

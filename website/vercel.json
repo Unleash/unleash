@@ -112,6 +112,11 @@
       "permanent": true
     },
     {
+      "source": "/how-to/how-to-clone-environments",
+      "destination": "/reference/environments#clone-an-environment",
+      "permanent": true
+    },
+    {
       "source": "/toggle_variants",
       "destination": "/reference/feature-toggle-variants",
       "permanent": true
@@ -388,7 +393,7 @@
     },
     {
       "source": "/user_guide/create_feature_toggle",
-      "destination": "/how-to/how-to-create-feature-toggles",
+      "destination": "/how-to-create-feature-flag",
       "permanent": true
     },
     {
@@ -714,6 +719,11 @@
     {
       "source": "/how-to/how-to-troubleshoot-feature-not-available",
       "destination": "/using-unleash/troubleshooting/feature-not-available",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-feature-toggles",
+      "destination": "/how-to-create-feature-flag",
       "permanent": true
     },
     {

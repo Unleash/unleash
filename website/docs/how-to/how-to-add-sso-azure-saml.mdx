@@ -65,18 +65,18 @@ To save the SAML certificate, go to the single sign-on settings of your applicat
 <Figure caption="Save the X509 Certificate from the SAML certificate XML file. The example has been redacted." img="/img/x509cert.png" />
 
 #### Login URL
-To find your login URL, go to the single sign-on settings of your application. In the **Set up {your-application-name}** section, copy and save **Login URL**. For example: `https://login.microsoftonline.com/<your_identifier>/saml2`.
+To find your login URL, go to the single sign-on settings of your application. In the **Set up `<your-application-name>`** section, copy and save **Login URL**. For example: `https://login.microsoftonline.com/<your_identifier>/saml2`.
 
 #### Microsoft Entra identifier
 
-To find your Microsoft Entra identifier, go to the single sign-on settings of your application. In the **Set up {your-application-name}** section, copy and save **Microsoft Entra Identifier**. For example: `https://sts.windows.net/<your_identifier>/`
+To find your Microsoft Entra identifier, go to the single sign-on settings of your application. In the **Set up `<your-application-name>`** section, copy and save **Microsoft Entra Identifier**. For example: `https://sts.windows.net/<your_identifier>`
 
 
 ## Configure the SAML 2.0 provider in Unleash
 
 To finalize the configuration, do the following:
 
-1. In the Unleash Admin UI, go to **Admin > Single sign-on> SAML 2.0**.
+1. In the Unleash Admin UI, go to **Admin > Single sign-on > SAML 2.0**.
 2. In **Entity ID**, enter your [Microsoft Entra identifier](#microsoft-entra-identifier).
 3. In **Single sign-on URL**, enter your [Login URL](#login-url).
 4. In **X.509 Certificate**, [enter your SAML certificate](#saml-certificate).

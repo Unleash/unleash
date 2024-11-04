@@ -115,7 +115,6 @@ export const MyFlags: FC<Props> = ({
                             disablePadding={true}
                             sx={{
                                 height: '100%',
-                                overflow: 'auto',
                             }}
                         >
                             {flagData.flags.map((flag) => (

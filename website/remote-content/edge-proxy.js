@@ -1,10 +1,10 @@
-const {
+import {
     enrich,
     mapObject,
     modifyContent,
     getRepoData,
     getUrls,
-} = require('./shared');
+} from './shared';
 
 const DOCS = mapObject(enrich)({
     'unleash-proxy': {
@@ -46,7 +46,7 @@ const modifyContent2 = modifyContent({
     getAdditionalAdmonitions: getAdmonitions,
 });
 
-module.exports.docs = {
+export const docs = {
     urls: getUrls(DOCS),
     modifyContent: modifyContent2,
 };

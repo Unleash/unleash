@@ -106,7 +106,6 @@ export const listItemStyle = (theme: Theme) => ({
 });
 
 export const StyledList = styled(List)(({ theme }) => ({
-    overflowY: 'auto',
     maxHeight: '400px',
 
     ...onWideContainer({

@@ -17,6 +17,7 @@ export interface IUiConfig {
     name: string;
     slogan: string;
     environment?: string;
+    billing?: 'subscription' | 'pay-as-you-go';
     unleashUrl?: string;
     version: string;
     versionInfo?: IVersionInfo;
@@ -78,14 +79,12 @@ export type UiFlags = {
     featureSearchFeedbackPosting?: boolean;
     userAccessUIEnabled?: boolean;
     outdatedSdksBanner?: boolean;
-    displayTrafficDataUsage?: boolean;
     estimateTrafficDataCost?: boolean;
     disableShowContextFieldSelectionValues?: boolean;
     projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
-    navigationSidebar?: boolean;
     flagCreator?: boolean;
     onboardingUI?: boolean;
     eventTimeline?: boolean;
@@ -93,6 +92,8 @@ export type UiFlags = {
     purchaseAdditionalEnvironments?: boolean;
     unleashAI?: boolean;
     releasePlans?: boolean;
+    'enterprise-payg'?: boolean;
+    simplifyProjectOverview?: boolean;
 };
 
 export interface IVersionInfo {

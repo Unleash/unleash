@@ -35,8 +35,6 @@ export type IFlagKey =
     | 'feedbackComments'
     | 'showInactiveUsers'
     | 'killScheduledChangeRequestCache'
-    | 'collectTrafficDataUsage'
-    | 'displayTrafficDataUsage'
     | 'estimateTrafficDataCost'
     | 'useMemoizedActiveTokens'
     | 'queryMissingTokens'
@@ -49,21 +47,20 @@ export type IFlagKey =
     | 'projectOverviewRefactorFeedback'
     | 'manyStrategiesPagination'
     | 'enableLegacyVariants'
-    | 'navigationSidebar'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
-    | 'onboardingMetrics'
     | 'onboardingUI'
     | 'projectRoleAssignment'
-    | 'eventTimeline'
     | 'personalDashboardUI'
     | 'trackLifecycleMetrics'
     | 'purchaseAdditionalEnvironments'
     | 'originMiddlewareRequestLogging'
     | 'unleashAI'
     | 'webhookDomainLogging'
-    | 'addonUsageMetrics'
-    | 'releasePlans';
+    | 'releasePlans'
+    | 'productivityReportEmail'
+    | 'enterprise-payg'
+    | 'simplifyProjectOverview';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -207,14 +204,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_KILL_SCHEDULED_CHANGE_REQUEST_CACHE,
         false,
     ),
-    collectTrafficDataUsage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_COLLECT_TRAFFIC_DATA_USAGE,
-        false,
-    ),
-    displayTrafficDataUsage: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_DISPLAY_TRAFFIC_DATA_USAGE,
-        false,
-    ),
     estimateTrafficDataCost: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ESTIMATE_TRAFFIC_DATA_COST,
         false,
@@ -256,10 +245,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ENABLE_LEGACY_VARIANTS,
         false,
     ),
-    navigationSidebar: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
-        true,
-    ),
     extendedMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_METRICS,
         false,
@@ -268,20 +253,12 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
         false,
     ),
-    onboardingMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_METRICS,
-        false,
-    ),
     onboardingUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_UI,
         false,
     ),
     projectRoleAssignment: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_ROLE_ASSIGNMENT,
-        false,
-    ),
-    eventTimeline: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_EVENT_TIMELINE,
         false,
     ),
     personalDashboardUI: parseEnvVarBoolean(
@@ -308,12 +285,20 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENT_WEBHOOK_DOMAIN_LOGGING,
         false,
     ),
-    addonUsageMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADDON_USAGE_METRICS,
-        false,
-    ),
     releasePlans: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RELEASE_PLANS,
+        false,
+    ),
+    productivityReportEmail: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_EMAIL,
+        false,
+    ),
+    'enterprise-payg': parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_PAYG,
+        false,
+    ),
+    simplifyProjectOverview: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SIMPLIFY_PROJECT_OVERVIEW,
         false,
     ),
 };

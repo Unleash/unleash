@@ -147,14 +147,22 @@ main img {
     box-shadow: var(--ifm-global-shadow-lw);
 }
 
-main p>img:not([src^="https://img.shields.io/" i], [src*="badge.svg?branch=" i])
-{
+main
+    p
+    > img:not(
+        [src^="https://img.shields.io/" i],
+        [src*="badge.svg?branch=" i]
+    ) {
     /* give inline images a border */
     border: var(--ifm-global-border-width) solid var(--unleash-color-gray);
 }
 
-main :is(p, figure)>img:not([src^="https://img.shields.io/" i], [src*="badge.svg?branch=" i])
-{
+main
+    :is(p, figure)
+    > img:not(
+        [src^="https://img.shields.io/" i],
+        [src*="badge.svg?branch=" i]
+    ) {
     /* round corners to match the rest of the page */
     border-radius: var(--ifm-global-radius);
 
@@ -226,7 +234,7 @@ li.theme-doc-sidebar-item-category-level-1 > div::before {
 }
 
 .unleash-video-container iframe {
-    aspect-ratio: 16/9;
+    aspect-ratio: 16 / 9;
 }
 
 /* end video content container */

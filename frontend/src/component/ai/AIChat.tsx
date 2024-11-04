@@ -1,6 +1,6 @@
 import { mutate } from 'swr';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
-import { IconButton, styled } from '@mui/material';
+import { ReactComponent as AIIcon } from 'assets/icons/AI.svg';
+import { IconButton, styled, useMediaQuery } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -14,16 +14,28 @@ import { AIChatInput } from './AIChatInput';
 import { AIChatMessage } from './AIChatMessage';
 import { AIChatHeader } from './AIChatHeader';
 import { Resizable } from 'component/common/Resizable/Resizable';
+import { AIChatDisclaimer } from './AIChatDisclaimer';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import theme from 'themes/theme';
 
 const AI_ERROR_MESSAGE = {
     role: 'assistant',
     content: `I'm sorry, I'm having trouble understanding you right now. I've reported the issue to the team. Please try again later.`,
 } as const;
 
-const StyledAIIconContainer = styled('div')(({ theme }) => ({
+type ScrollOptions = ScrollIntoViewOptions & {
+    onlyIfAtEnd?: boolean;
+};
+
+const StyledAIIconContainer = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'demoStepsVisible',
+})<{ demoStepsVisible: boolean }>(({ theme, demoStepsVisible }) => ({
     position: 'fixed',
     bottom: 20,
     right: 20,
+    ...(demoStepsVisible && {
+        right: 260,
+    }),
     zIndex: theme.zIndex.fab,
     animation: 'fadeInBottom 0.5s',
     '@keyframes fadeInBottom': {
@@ -38,10 +50,15 @@ const StyledAIIconContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledAIChatContainer = styled(StyledAIIconContainer)({
+const StyledAIChatContainer = styled(StyledAIIconContainer, {
+    shouldForwardProp: (prop) => prop !== 'demoStepsVisible',
+})<{ demoStepsVisible: boolean }>(({ demoStepsVisible }) => ({
     bottom: 10,
     right: 10,
-});
+    ...(demoStepsVisible && {
+        right: 250,
+    }),
+}));
 
 const StyledResizable = styled(Resizable)(({ theme }) => ({
     boxShadow: theme.boxShadows.popup,
@@ -49,12 +66,19 @@ const StyledResizable = styled(Resizable)(({ theme }) => ({
 }));
 
 const StyledAIIconButton = styled(IconButton)(({ theme }) => ({
-    background: theme.palette.primary.light,
+    background:
+        theme.mode === 'light'
+            ? theme.palette.primary.main
+            : theme.palette.primary.light,
     color: theme.palette.primary.contrastText,
     boxShadow: theme.boxShadows.popup,
     transition: 'background 0.3s',
     '&:hover': {
         background: theme.palette.primary.dark,
+    },
+    '& > svg': {
+        width: theme.spacing(3),
+        height: theme.spacing(3),
     },
 }));
 
@@ -78,6 +102,8 @@ const StyledChatContent = styled('div')(({ theme }) => ({
 
 export const AIChat = () => {
     const unleashAIEnabled = useUiFlag('unleashAI');
+    const demoEnabled = useUiFlag('demo');
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down(768));
     const {
         uiConfig: { unleashAIAvailable },
     } = useUiConfig();
@@ -85,27 +111,58 @@ export const AIChat = () => {
     const [loading, setLoading] = useState(false);
     const { setToastApiError } = useToast();
     const { chat, newChat } = useAIApi();
+    const { trackEvent } = usePlausibleTracker();
 
     const [messages, setMessages] = useState<ChatMessage[]>([]);
 
+    const isAtEndRef = useRef(true);
     const chatEndRef = useRef<HTMLDivElement | null>(null);
 
-    const scrollToEnd = (options?: ScrollIntoViewOptions) => {
+    const scrollToEnd = (options?: ScrollOptions) => {
         if (chatEndRef.current) {
-            chatEndRef.current.scrollIntoView(options);
+            const shouldScroll = !options?.onlyIfAtEnd || isAtEndRef.current;
+
+            if (shouldScroll) {
+                chatEndRef.current.scrollIntoView(options);
+            }
         }
     };
 
     useEffect(() => {
-        scrollToEnd({ behavior: 'smooth' });
-    }, [messages]);
+        requestAnimationFrame(() => {
+            scrollToEnd();
+        });
+
+        const intersectionObserver = new IntersectionObserver(
+            ([entry]) => {
+                isAtEndRef.current = entry.isIntersecting;
+            },
+            { threshold: 1.0 },
+        );
+
+        if (chatEndRef.current) {
+            intersectionObserver.observe(chatEndRef.current);
+        }
+
+        return () => {
+            if (chatEndRef.current) {
+                intersectionObserver.unobserve(chatEndRef.current);
+            }
+        };
+    }, [open]);
 
     useEffect(() => {
-        scrollToEnd();
-    }, [open]);
+        scrollToEnd({ behavior: 'smooth', onlyIfAtEnd: true });
+    }, [messages]);
 
     const onSend = async (content: string) => {
         if (!content.trim() || loading) return;
+
+        trackEvent('unleash-ai-chat', {
+            props: {
+                eventType: 'send',
+            },
+        });
 
         try {
             setLoading(true);
@@ -132,35 +189,55 @@ export const AIChat = () => {
         newChat();
     };
 
+    const demoStepsVisible = demoEnabled && !isSmallScreen;
+
     if (!unleashAIEnabled || !unleashAIAvailable) {
         return null;
     }
 
     if (!open) {
         return (
-            <StyledAIIconContainer>
-                <StyledAIIconButton size='large' onClick={() => setOpen(true)}>
-                    <SmartToyIcon />
+            <StyledAIIconContainer demoStepsVisible={demoStepsVisible}>
+                <StyledAIIconButton
+                    size='large'
+                    onClick={() => {
+                        trackEvent('unleash-ai-chat', {
+                            props: {
+                                eventType: 'open',
+                            },
+                        });
+                        setOpen(true);
+                    }}
+                >
+                    <AIIcon />
                 </StyledAIIconButton>
             </StyledAIIconContainer>
         );
     }
 
     return (
-        <StyledAIChatContainer>
+        <StyledAIChatContainer demoStepsVisible={demoStepsVisible}>
             <StyledResizable
                 handlers={['top-left', 'top', 'left']}
-                minSize={{ width: '270px', height: '200px' }}
-                maxSize={{ width: '90vw', height: '90vh' }}
-                defaultSize={{ width: '320px', height: '450px' }}
-                onResize={scrollToEnd}
+                minSize={{ width: '270px', height: '250px' }}
+                maxSize={{ width: '80vw', height: '90vh' }}
+                defaultSize={{ width: '320px', height: '500px' }}
+                onResize={() => scrollToEnd({ onlyIfAtEnd: true })}
             >
                 <StyledChat>
                     <AIChatHeader
                         onNew={onNewChat}
-                        onClose={() => setOpen(false)}
+                        onClose={() => {
+                            trackEvent('unleash-ai-chat', {
+                                props: {
+                                    eventType: 'close',
+                                },
+                            });
+                            setOpen(false);
+                        }}
                     />
                     <StyledChatContent>
+                        <AIChatDisclaimer />
                         <AIChatMessage from='assistant'>
                             Hello, how can I assist you?
                         </AIChatMessage>
@@ -176,7 +253,13 @@ export const AIChat = () => {
                         )}
                         <div ref={chatEndRef} />
                     </StyledChatContent>
-                    <AIChatInput onSend={onSend} loading={loading} />
+                    <AIChatInput
+                        onSend={onSend}
+                        loading={loading}
+                        onHeightChange={() =>
+                            scrollToEnd({ onlyIfAtEnd: true })
+                        }
+                    />
                 </StyledChat>
             </StyledResizable>
         </StyledAIChatContainer>

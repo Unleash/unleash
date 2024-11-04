@@ -48,6 +48,7 @@ import {
     projectFlagCreatorsSchema,
     type ProjectFlagCreatorsSchema,
 } from '../../openapi/spec/project-flag-creators-schema';
+import ProjectStatusController from '../project-status/project-status-controller';
 
 export default class ProjectController extends Controller {
     private projectService: ProjectService;
@@ -242,6 +243,7 @@ export default class ProjectController extends Controller {
             ).router,
         );
         this.use('/', new ProjectInsightsController(config, services).router);
+        this.use('/', new ProjectStatusController(config, services).router);
         this.use('/', new FeatureLifecycleController(config, services).router);
     }
 

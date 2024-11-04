@@ -42,6 +42,8 @@ import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
 import { FeatureStrategiesReadModel } from '../feature-toggle/feature-strategies-read-model';
 import { FakeFeatureStrategiesReadModel } from '../feature-toggle/fake-feature-strategies-read-model';
+import { TrafficDataUsageStore } from '../traffic-data-usage/traffic-data-usage-store';
+import { FakeTrafficDataUsageStore } from '../traffic-data-usage/fake-traffic-data-usage-store';
 
 export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     const { eventBus, getLogger, flagResolver } = config;
@@ -93,6 +95,9 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     );
 
     const featureStrategiesReadModel = new FeatureStrategiesReadModel(db);
+
+    const trafficDataUsageStore = new TrafficDataUsageStore(db, getLogger);
+
     const instanceStatsServiceStores = {
         featureToggleStore,
         userStore,
@@ -109,6 +114,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         apiTokenStore,
         clientMetricsStoreV2,
         featureStrategiesReadModel,
+        trafficDataUsageStore,
     };
     const featureStrategiesStore = new FeatureStrategyStore(
         db,
@@ -157,6 +163,7 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
     const apiTokenStore = new FakeApiTokenStore();
     const clientMetricsStoreV2 = new FakeClientMetricsStoreV2();
     const featureStrategiesReadModel = new FakeFeatureStrategiesReadModel();
+    const trafficDataUsageStore = new FakeTrafficDataUsageStore();
 
     const instanceStatsServiceStores = {
         featureToggleStore,
@@ -174,6 +181,7 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         apiTokenStore,
         clientMetricsStoreV2,
         featureStrategiesReadModel,
+        trafficDataUsageStore,
     };
     const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const versionServiceStores = {

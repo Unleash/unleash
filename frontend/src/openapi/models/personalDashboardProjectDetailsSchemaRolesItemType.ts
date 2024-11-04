@@ -14,6 +14,4 @@ export type PersonalDashboardProjectDetailsSchemaRolesItemType =
 export const PersonalDashboardProjectDetailsSchemaRolesItemType = {
     custom: 'custom',
     project: 'project',
-    root: 'root',
-    'custom-root': 'custom-root',
 } as const;

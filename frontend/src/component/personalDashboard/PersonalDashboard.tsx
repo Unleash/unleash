@@ -11,7 +11,6 @@ import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
-import useLoading from '../../hooks/useLoading';
 import { MyProjects } from './MyProjects';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
@@ -19,6 +18,9 @@ import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { useDashboardState } from './useDashboardState';
 import { MyFlags } from './MyFlags';
+import { usePageTitle } from 'hooks/usePageTitle';
+import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData';
+import { useEffect } from 'react';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -103,8 +105,9 @@ export const PersonalDashboard = () => {
     const { trackEvent } = usePlausibleTracker();
     const { setSplashSeen } = useSplashApi();
     const { splash } = useAuthSplash();
+    const name = user?.name || '';
 
-    const name = user?.name;
+    usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
 
     const { personalDashboard, refetch: refetchDashboard } =
         usePersonalDashboard();
@@ -128,15 +131,18 @@ export const PersonalDashboard = () => {
         splash?.personalDashboardKeyConcepts ? 'closed' : 'open',
     );
 
-    const { personalDashboardProjectDetails, error: detailsError } =
-        usePersonalDashboardProjectDetails(activeProject);
+    const personalDashboardProjectDetails =
+        fromPersonalDashboardProjectDetailsOutput(
+            usePersonalDashboardProjectDetails(activeProject),
+        );
 
-    const activeProjectStage =
-        personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
-
-    const projectStageRef = useLoading(
-        !detailsError && activeProjectStage === 'loading',
-    );
+    useEffect(() => {
+        trackEvent('personal-dashboard', {
+            props: {
+                eventType: 'seen',
+            },
+        });
+    }, []);
 
     return (
         <MainContent>
@@ -190,7 +196,6 @@ export const PersonalDashboard = () => {
                     <MyProjects
                         owners={personalDashboard?.projectOwners ?? []}
                         admins={personalDashboard?.admins ?? []}
-                        ref={projectStageRef}
                         projects={projects}
                         activeProject={activeProject || ''}
                         setActiveProject={setActiveProject}

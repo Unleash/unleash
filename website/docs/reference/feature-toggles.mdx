@@ -71,7 +71,7 @@ Marking a flag as stale helps you deprecate a feature flag without removing the 
 
 You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [technical debt dashboard](./technical-debt).
 
-Marking a flag as stale generates the `feature-stale-on` [event](./reference/events#feature-stale-on). You can use [an integration](/integrations/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
+Marking a flag as stale generates the `feature-stale-on` [event](/reference/events#feature-stale-on). You can use [an integration](/reference/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
 
 ### Configure expected lifetime
 
@@ -95,23 +95,23 @@ These insights can help you improve the efficiency of your software development 
 
 #### Initial
 
-The feature flag is created, but Unleash hasn't detected any metrics in any environments. Once Unleash receives metrics from a non-production environment, the flag moves to the [pre-live](#pre-live) stage.
+The feature flag is created, but Unleash hasn't detected any metrics in any environments. Once Unleash receives metrics from a [non-production environment](/reference/environments#environment-types), the flag moves to the [pre-live](#pre-live) stage.
 
 A feature stuck in an initial stage can indicate integration issues in pre-production setups. 
 
 #### Pre-live
 
-The feature flag has received metrics in a non-production environment or a production environment that is disabled. Too much time in the pre-live stage can suggest challenges in achieving production readiness. 
+The feature flag has received metrics in a non-production environment or a [production environment](/reference/environments#environment-types) that is disabled. Too much time in the pre-live stage can suggest challenges in achieving production readiness. 
 
 #### Live
 
-The first users have been exposed to the feature in a production environment. Once you have enough production usage data, you can mark the feature as completed. Marking the feature flag as complete does not affect any configuration; you decide whether to keep the feature, keep just one variant of it, or archive it entirely.
+The first users have been exposed to the feature in a [production environment](/reference/environments#environment-types). Once you have enough production usage data, you can mark the feature as completed. Marking the feature flag as complete does not affect any configuration; you decide whether to keep the feature, keep just one variant of it, or archive it entirely.
 
 This stage serves as a reminder to start cleaning up the feature toggle and removing it from the code. A feature flag stuck in the live stage can indicate difficulties in data gathering or decision-making.
 
 #### Completed
 
-The feature has been completed but Unleash still receives usage metrics in production. This is an indication that you should clean up the feature flag from your code before archiving it.
+The feature has been completed but Unleash still receives usage metrics in [production](/reference/environments#environment-types). This is an indication that you should clean up the feature flag from your code before archiving it.
 If you've accidentally marked the feature as completed, you can revert it to the [live](#live) stage.
 
 Too much time in the completed stage can indicate delays in decommissioning the feature and cleaning up resources.

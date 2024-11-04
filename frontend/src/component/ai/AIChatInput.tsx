@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     IconButton,
     InputAdornment,
@@ -32,10 +32,39 @@ const StyledIconButton = styled(IconButton)({
 export interface IAIChatInputProps {
     onSend: (message: string) => void;
     loading: boolean;
+    onHeightChange?: () => void;
 }
 
-export const AIChatInput = ({ onSend, loading }: IAIChatInputProps) => {
+export const AIChatInput = ({
+    onSend,
+    loading,
+    onHeightChange,
+}: IAIChatInputProps) => {
     const [message, setMessage] = useState('');
+
+    const inputContainerRef = useRef<HTMLDivElement | null>(null);
+    const previousHeightRef = useRef<number>(0);
+
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver(([entry]) => {
+            const newHeight = entry.contentRect.height;
+
+            if (newHeight !== previousHeightRef.current) {
+                previousHeightRef.current = newHeight;
+                onHeightChange?.();
+            }
+        });
+
+        if (inputContainerRef.current) {
+            resizeObserver.observe(inputContainerRef.current);
+        }
+
+        return () => {
+            if (inputContainerRef.current) {
+                resizeObserver.unobserve(inputContainerRef.current);
+            }
+        };
+    }, [onHeightChange]);
 
     const send = () => {
         if (!message.trim() || loading) return;
@@ -44,7 +73,7 @@ export const AIChatInput = ({ onSend, loading }: IAIChatInputProps) => {
     };
 
     return (
-        <StyledAIChatInputContainer>
+        <StyledAIChatInputContainer ref={inputContainerRef}>
             <StyledAIChatInput
                 autoFocus
                 size='small'
@@ -52,10 +81,11 @@ export const AIChatInput = ({ onSend, loading }: IAIChatInputProps) => {
                 placeholder='Type your message here'
                 fullWidth
                 multiline
-                maxRows={20}
+                maxRows={5}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={(e) => {
+                    e.stopPropagation();
                     if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
                         send();

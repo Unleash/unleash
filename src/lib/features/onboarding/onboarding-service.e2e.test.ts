@@ -17,7 +17,7 @@ let onboardingReadModel: IOnboardingReadModel;
 beforeAll(async () => {
     db = await dbInit('onboarding_store', getLogger);
     const config = createTestConfig({
-        experimental: { flags: { onboardingMetrics: true } },
+        experimental: { flags: {} },
     });
     stores = db.stores;
     eventBus = config.eventBus;
@@ -41,8 +41,7 @@ beforeEach(async () => {
 test('Default project should take first user created instead of project created as start time', async () => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date());
-    const { userStore, featureToggleStore, projectStore, projectReadModel } =
-        stores;
+    const { userStore, featureToggleStore, projectStore } = stores;
 
     // default projects are created in advance and should be ignored
     await projectStore.create({ id: 'default', name: 'irrelevant' });
@@ -106,8 +105,7 @@ test('Ignore system user in onboarding events', async () => {
 test('Storing onboarding events', async () => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date());
-    const { userStore, featureToggleStore, projectStore, projectReadModel } =
-        stores;
+    const { userStore, featureToggleStore, projectStore } = stores;
     const user = await userStore.insert({});
     await projectStore.create({ id: 'test_project', name: 'irrelevant' });
     await featureToggleStore.create('test_project', {
@@ -172,8 +170,7 @@ const reachedOnboardingEvents = (count: number) => {
 test('Reacting to events', async () => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date());
-    const { userStore, featureToggleStore, projectStore, projectReadModel } =
-        stores;
+    const { userStore, featureToggleStore, projectStore } = stores;
     const user = await userStore.insert({});
     await projectStore.create({ id: 'test_project', name: 'irrelevant' });
     await featureToggleStore.create('test_project', {

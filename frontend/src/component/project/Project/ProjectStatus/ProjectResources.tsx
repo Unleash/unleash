@@ -3,7 +3,7 @@ import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/usePr
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { type FC, type ReactNode, useMemo } from 'react';
+import { type ReactNode, useMemo } from 'react';
 import UsersIcon from '@mui/icons-material/Group';
 import { Link } from 'react-router-dom';
 import ApiKeyIcon from '@mui/icons-material/Key';
@@ -57,21 +57,6 @@ const ListItemRow = styled('li')(({ theme }) => {
     };
 });
 
-const ListItem: FC<{ icon: ReactNode; text: string; link: ReactNode }> = ({
-    icon,
-    text,
-    link,
-}) => {
-    return (
-        <ListItemRow>
-            <ItemContent>
-                {icon} <span>{text}</span>
-            </ItemContent>
-            {link}
-        </ListItemRow>
-    );
-};
-
 const ResourceList = styled('ul')(({ theme }) => {
     const narrowStyles = {
         'li + li': {
@@ -118,9 +103,9 @@ export const ProjectResources = () => {
         <ListItemRow>
             <ItemContent>
                 {icon}
-                <span>text</span>
+                <span>{text}</span>
             </ItemContent>
-            <Link to={link}>linkText</Link>
+            <Link to={link}>{linkText}</Link>
         </ListItemRow>
     );
 

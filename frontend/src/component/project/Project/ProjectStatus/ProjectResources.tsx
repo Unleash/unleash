@@ -32,53 +32,46 @@ const ItemContent = styled('span')(({ theme }) => ({
     },
 }));
 
+const onNarrowWidget = (css: object) => ({
+    '@container (max-width: 400px)': css,
+    '@supports not (container-type: inline-size)': {
+        '@media (max-width: 400px)': css,
+    },
+});
+
 const ListItemRow = styled('li')(({ theme }) => {
-    const narrowListStyle = {
-        flexFlow: 'column',
-        alignItems: 'flex-start',
-        justifyContent: 'unset',
-        '& + li': {
-            marginTop: theme.spacing(5),
-        },
-    };
-
     return {
-        '@container (max-width: 400px)': narrowListStyle,
-
-        '@supports not (container-type: inline-size)': {
-            [theme.breakpoints.down('sm')]: narrowListStyle,
-        },
-
         display: 'flex',
         flexFlow: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         gap: theme.spacing(1),
+
+        ...onNarrowWidget({
+            flexFlow: 'column',
+            alignItems: 'flex-start',
+            justifyContent: 'unset',
+            '& + li': {
+                marginTop: theme.spacing(5),
+            },
+        }),
     };
 });
 
-const ResourceList = styled('ul')(({ theme }) => {
-    const narrowStyles = {
+const ResourceList = styled('ul')(({ theme }) => ({
+    margin: 0,
+    listStyle: 'none',
+    padding: 0,
+    'li + li': {
+        marginTop: theme.spacing(2),
+    },
+
+    ...onNarrowWidget({
         'li + li': {
             marginTop: theme.spacing(4),
         },
-    };
-
-    return {
-        margin: 0,
-        listStyle: 'none',
-        padding: 0,
-        'li + li': {
-            marginTop: theme.spacing(2),
-        },
-
-        '@container (max-width: 400px)': narrowStyles,
-
-        '@supports not (container-type: inline-size)': {
-            [theme.breakpoints.down('sm')]: narrowStyles,
-        },
-    };
-});
+    }),
+}));
 
 export const ProjectResources = () => {
     const projectId = useRequiredPathParam('projectId');

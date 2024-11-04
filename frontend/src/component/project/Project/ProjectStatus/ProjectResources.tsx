@@ -14,7 +14,6 @@ const Wrapper = styled('article')(({ theme }) => ({
     backgroundColor: theme.palette.envAccordion.expanded,
     padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusExtraLarge,
-    maxWidth: '600px',
 }));
 
 const ProjectResourcesInner = styled('div')(({ theme }) => ({

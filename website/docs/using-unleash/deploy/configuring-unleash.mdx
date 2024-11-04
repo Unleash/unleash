@@ -383,6 +383,7 @@ Unleash options' `db` object.
 | `pool.idleTimeoutMillis` | `DATABASE_POOL_IDLE_TIMEOUT_MS`    | 30000                                            | The amount of time (in milliseconds) that a connection must be idle for before it is marked as a candidate for eviction.                                                       |
 | `applicationName`        | `DATABASE_APPLICATION_NAME`        | `unleash`                                        | The name of the application that created this Client instance.                                                                                                                 |
 | `schema`                 | `DATABASE_SCHEMA`                  | `public`                                         | The schema to use in the database.                                                                                                                                             |
+| `disableMigration`       | `DATABASE_DISABLE_MIGRATION`       | false                                            | The option not to use database migration.                                                                                                                                      |
 
 Alternatively, you can use a
 single-host [libpq connection string](https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING) to

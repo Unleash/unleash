@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
+import { useConnectedEnvironmentCount } from 'hooks/api/getters/useProjectApplications/useConnectedEnvironmentCount';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -22,6 +23,10 @@ export const ProjectResources = () => {
     const { project, loading: loadingProject } = useProjectOverview(projectId);
     const { tokens, loading: loadingTokens } = useProjectApiTokens(projectId);
     const { segments, loading: loadingSegments } = useSegments();
+    const { data, loading: loadingEnvCount } =
+        useConnectedEnvironmentCount(projectId);
+
+    console.log(data);
     // todo: add sdk connections
 
     const segmentCount = useMemo(

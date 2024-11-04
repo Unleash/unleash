@@ -402,7 +402,7 @@ export const ProjectAccessTable: VFC = () => {
             header={
                 <PageHeader
                     secondary
-                    title={`Access (${
+                    title={`User access (${
                         rows.length < data.length
                             ? `${rows.length} of ${data.length}`
                             : data.length

@@ -58,8 +58,8 @@ export type IFlagKey =
     | 'unleashAI'
     | 'webhookDomainLogging'
     | 'releasePlans'
-    | 'navigationSidebar'
     | 'productivityReportEmail'
+    | 'enterprise-payg'
     | 'simplifyProjectOverview';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -289,12 +289,12 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_RELEASE_PLANS,
         false,
     ),
-    navigationSidebar: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIDEBAR_NAVIGATION,
-        true,
-    ),
     productivityReportEmail: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_EMAIL,
+        false,
+    ),
+    'enterprise-payg': parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_PAYG,
         false,
     ),
     simplifyProjectOverview: parseEnvVarBoolean(

@@ -23,7 +23,7 @@
     display: block;
     position: absolute;
     z-index: 2;
-    content: '';
+    content: "";
     top: -5px;
     right: -5px;
     width: 30px;
@@ -40,8 +40,9 @@
     margin: 0;
     padding: 0;
     border: 2px solid var(--unleash-color-gray);
-    transition: border-color var(--ifm-transition-fast) var(--ifm-transition-timing-default),
-        scale var(--ifm-transition-fast) var(--ifm-transition-timing-default);
+    transition: border-color var(--ifm-transition-fast)
+        var(--ifm-transition-timing-default), scale var(--ifm-transition-fast)
+        var(--ifm-transition-timing-default);
 }
 
 .contributor img:hover {

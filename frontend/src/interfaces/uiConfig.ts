@@ -92,7 +92,9 @@ export type UiFlags = {
     purchaseAdditionalEnvironments?: boolean;
     unleashAI?: boolean;
     releasePlans?: boolean;
+    'enterprise-payg'?: boolean;
     simplifyProjectOverview?: boolean;
+    productivityReportEmail?: boolean;
 };
 
 export interface IVersionInfo {

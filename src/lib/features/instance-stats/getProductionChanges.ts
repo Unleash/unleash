@@ -9,7 +9,8 @@ export type GetProductionChanges = () => Promise<{
 export const createGetProductionChanges =
     (db: Db): GetProductionChanges =>
     async () => {
-        const productionChanges = await db.raw(`SELECT SUM(CASE WHEN seu.day > NOW() - INTERVAL '30 days' THEN seu.updates END) AS last_month,
+        const productionChanges =
+            await db.raw(`SELECT SUM(CASE WHEN seu.day > NOW() - INTERVAL '30 days' THEN seu.updates END) AS last_month,
                          SUM(CASE WHEN seu.day > NOW() - INTERVAL '60 days' THEN seu.updates END) AS last_two_months,
                          SUM(CASE WHEN seu.day > NOW() - INTERVAL '90 days' THEN seu.updates END) AS last_quarter
                   FROM stat_environment_updates seu

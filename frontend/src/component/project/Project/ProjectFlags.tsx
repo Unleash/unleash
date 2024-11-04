@@ -51,10 +51,14 @@ const ProjectOverview: FC = () => {
         setLastViewed(projectId);
     }, [projectId, setLastViewed]);
 
+    const hideChangeRequestOverview = useUiFlag('simplifyProjectOverview');
+
     return (
         <StyledContainer key={projectId}>
             <StyledContentContainer>
-                <ProjectOverviewChangeRequests project={projectId} />
+                {hideChangeRequestOverview ? null : (
+                    <ProjectOverviewChangeRequests project={projectId} />
+                )}
                 <ConditionallyRender
                     condition={outdatedSdksBannerEnabled}
                     show={<OutdatedSdksBanner project={projectId} />}

@@ -1,6 +1,9 @@
 import type { IBaseEvent, IEvent } from '../events';
 import type { Store } from './store';
-import type { DeprecatedSearchEventsSchema } from '../../openapi';
+import type {
+    DeprecatedSearchEventsSchema,
+    ProjectActivitySchema,
+} from '../../openapi';
 import type EventEmitter from 'events';
 import type { IQueryOperations } from '../../features/events/event-store';
 import type { IQueryParam } from '../../features/feature-toggle/types/feature-toggle-strategies-store-type';
@@ -44,4 +47,5 @@ export interface IEventStore
     queryCount(operations: IQueryOperations[]): Promise<number>;
     setCreatedByUserId(batchSize: number): Promise<number | undefined>;
     getEventCreators(): Promise<Array<{ id: number; name: string }>>;
+    getProjectEventActivity(project: string): Promise<ProjectActivitySchema>;
 }

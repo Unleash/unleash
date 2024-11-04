@@ -16,6 +16,15 @@ let eventService: EventService;
 const TEST_USER_ID = -9999;
 const config: IUnleashConfig = createTestConfig();
 
+const getCurrentDateStrings = () => {
+    const today = new Date();
+    const todayString = today.toISOString().split('T')[0];
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    const yesterdayString = yesterday.toISOString().split('T')[0];
+    return { todayString, yesterdayString };
+};
+
 beforeAll(async () => {
     db = await dbInit('projects_status', getLogger);
     app = await setupAppWithCustomConfig(
@@ -67,12 +76,12 @@ test('project insights should return correct count for each day', async () => {
 
     const { events } = await eventService.getEvents();
 
-    const lateEvent = events.find(
+    const yesterdayEvent = events.find(
         (e) => e.data.featureName === 'yesterday-event',
     );
     await db.rawDatabase.raw(
-        `UPDATE events SET created_at = created_at - interval '1 day' where id = ?`,
-        [lateEvent?.id],
+        `UPDATE events SET created_at = '2024-11-03' where id = ?`,
+        [yesterdayEvent?.id],
     );
 
     const { body } = await app.request
@@ -80,11 +89,7 @@ test('project insights should return correct count for each day', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    const today = new Date();
-    const todayString = today.toISOString().split('T')[0];
-    const yesterday = new Date(today);
-    yesterday.setDate(today.getDate() - 1);
-    const yesterdayString = yesterday.toISOString().split('T')[0];
+    const { todayString, yesterdayString } = getCurrentDateStrings();
 
     expect(body).toMatchObject({
         activityCountByDate: [

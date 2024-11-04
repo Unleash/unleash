@@ -19,6 +19,8 @@ import { useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
+import { useUiFlag } from '../../../../hooks/useUiFlag';
+import { ProductivityEmailSubscription } from './ProductivityEmailSubscription';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -121,6 +123,8 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
         setLocationSettings({ locale });
     };
 
+    const productivityReportEmailEnabled = useUiFlag('productivityReportEmail');
+
     return (
         <>
             <StyledHeader>
@@ -187,7 +191,7 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                     </Box>
                 </StyledAccess>
                 <StyledDivider />
-                <StyledSectionLabel>Settings</StyledSectionLabel>
+                <StyledSectionLabel>Date/Time Settings</StyledSectionLabel>
                 <Typography variant='body2'>
                     This is the format used across the system for time and date
                 </Typography>
@@ -215,6 +219,13 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                         })}
                     </Select>
                 </StyledFormControl>
+                {productivityReportEmailEnabled ? (
+                    <>
+                        <StyledDivider />
+                        <StyledSectionLabel>Email Settings</StyledSectionLabel>
+                        <ProductivityEmailSubscription />
+                    </>
+                ) : null}
             </PageContent>
         </>
     );

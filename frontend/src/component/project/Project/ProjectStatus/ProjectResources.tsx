@@ -123,7 +123,7 @@ export const ProjectResources = () => {
             icon: <ApiKeyIcon />,
             text: `${tokens.length} API key(s)`,
             link: (
-                <Link to={`/projects/${projectId}/settings/access`}>
+                <Link to={`/projects/${projectId}/settings/api-access`}>
                     Add new key
                 </Link>
             ),
@@ -132,7 +132,7 @@ export const ProjectResources = () => {
             icon: <ConnectedIcon />,
             text: '1 connected environment(s)',
             link: (
-                <Link to={`/projects/${projectId}/settings/access`}>
+                <Link to={`/projects/${projectId}/settings/placeholder`}>
                     View connections
                 </Link>
             ),
@@ -141,7 +141,7 @@ export const ProjectResources = () => {
             icon: <SegmentsIcon />,
             text: `${segmentCount} project segment(s)`,
             link: (
-                <Link to={`/projects/${projectId}/settings/access`}>
+                <Link to={`/projects/${projectId}/settings/segments`}>
                     Add segments
                 </Link>
             ),

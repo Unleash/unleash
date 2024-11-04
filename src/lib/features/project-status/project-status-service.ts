@@ -1,9 +1,13 @@
 import type { ProjectStatusSchema } from '../../openapi';
+import type { IEventStore, IUnleashStores } from '../../types';
 
 export class ProjectStatusService {
-    constructor() {}
+    private eventStore: IEventStore;
+    constructor({ eventStore }: Pick<IUnleashStores, 'eventStore'>) {
+        this.eventStore = eventStore;
+    }
 
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
-        return { activityCountByDate: [{ date: '2024-09-11', count: 0 }] };
+        return this.eventStore.getEventCounts(projectId);
     }
 }

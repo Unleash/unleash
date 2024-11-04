@@ -140,6 +140,26 @@ export default class EventController extends Controller {
                 }),
             ],
         });
+
+        this.route({
+            method: 'get',
+            path: '/event-creators',
+            handler: this.getEventCreators,
+            permission: NONE,
+            middleware: [
+                this.openApiService.validPath({
+                    tags: ['Events'],
+                    operationId: 'getEventCreators',
+                    summary: 'Get a list of all users that have created events',
+                    description:
+                        'Returns a list of all users that have created events in the system.',
+                    responses: {
+                        200: createResponseSchema('eventCreatorsSchema'),
+                        ...getStandardResponses(401, 403, 404),
+                    },
+                }),
+            ],
+        });
     }
 
     maybeAnonymiseEvents(events: IEvent[]): IEvent[] {

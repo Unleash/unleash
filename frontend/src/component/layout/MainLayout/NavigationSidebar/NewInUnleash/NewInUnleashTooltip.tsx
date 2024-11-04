@@ -78,15 +78,20 @@ const StyledTitle = styled('div')(({ theme }) => ({
 }));
 
 const ReadMore = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(3, 0),
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(1),
+}));
+
+const StyledCheckItOutButton = styled(Button)(({ theme }) => ({
+    marginTop: theme.spacing(2),
 }));
 
 export const NewInUnleashTooltip: FC<{
     children: React.ReactElement<any, any>;
     title: string;
     longDescription: ReactNode;
-    docsLink: string;
-    onCheckItOut: () => void;
+    docsLink?: string;
+    onCheckItOut?: () => void;
     open: boolean;
     preview?: ReactNode;
     onClose: () => void;
@@ -134,31 +139,41 @@ export const NewInUnleashTooltip: FC<{
                             />
                         </StyledTitle>
                         <LongDescription>{longDescription}</LongDescription>
-                        <ReadMore>
-                            <StyledLink
-                                component='a'
-                                href={docsLink}
-                                underline='hover'
-                                rel='noopener noreferrer'
-                                target='_blank'
-                            >
-                                <StyledOpenInNew /> Read more in our
-                                documentation
-                            </StyledLink>
-                        </ReadMore>
-                        <Button
-                            variant='contained'
-                            color='primary'
-                            type='submit'
-                            size='small'
-                            onClick={(event) => {
-                                event.stopPropagation();
-                                onClose();
-                                onCheckItOut();
-                            }}
-                        >
-                            Check it out
-                        </Button>
+                        <ConditionallyRender
+                            condition={Boolean(docsLink)}
+                            show={
+                                <ReadMore>
+                                    <StyledLink
+                                        component='a'
+                                        href={docsLink}
+                                        underline='hover'
+                                        rel='noopener noreferrer'
+                                        target='_blank'
+                                    >
+                                        <StyledOpenInNew /> Read more in our
+                                        documentation
+                                    </StyledLink>
+                                </ReadMore>
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={Boolean(onCheckItOut)}
+                            show={
+                                <StyledCheckItOutButton
+                                    variant='contained'
+                                    color='primary'
+                                    type='submit'
+                                    size='small'
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+                                        onClose();
+                                        onCheckItOut!();
+                                    }}
+                                >
+                                    Check it out
+                                </StyledCheckItOutButton>
+                            }
+                        />
                     </Body>
                 </Box>
             </ClickAwayListener>

@@ -1,3 +1,4 @@
+import { ReactComponent as ImportSvg } from 'assets/icons/import.svg';
 import { useCallback, useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -49,6 +50,10 @@ import { ProjectOnboarded } from 'component/onboarding/flow/ProjectOnboarded';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ArchivedFeatureActionCell } from '../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell';
 import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { UPDATE_FEATURE } from '@server/types/permissions';
+import { ImportModal } from '../Import/ImportModal';
+import { IMPORT_BUTTON } from 'utils/testIds';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -66,6 +71,19 @@ const Container = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const FilterRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row wrap',
+    gap: theme.spacing(2),
+    justifyContent: 'space-between',
+}));
+
+const ButtonGroup = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    paddingInline: theme.spacing(1.5),
+}));
+
 export const ProjectFeatureToggles = ({
     environments,
 }: IPaginatedProjectFeatureTogglesProps) => {
@@ -74,6 +92,8 @@ export const ProjectFeatureToggles = ({
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
+    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
+    const [modalOpen, setModalOpen] = useState(false);
 
     const {
         features,
@@ -561,11 +581,27 @@ export const ProjectFeatureToggles = ({
                             aria-busy={isPlaceholder}
                             aria-live='polite'
                         >
-                            <ProjectOverviewFilters
-                                project={projectId}
-                                onChange={setTableState}
-                                state={filterState}
-                            />
+                            <FilterRow>
+                                <ProjectOverviewFilters
+                                    project={projectId}
+                                    onChange={setTableState}
+                                    state={filterState}
+                                />
+                                {simplifyProjectOverview && (
+                                    <ButtonGroup>
+                                        <PermissionIconButton
+                                            permission={UPDATE_FEATURE}
+                                            projectId={projectId}
+                                            onClick={() => setModalOpen(true)}
+                                            tooltipProps={{ title: 'Import' }}
+                                            data-testid={IMPORT_BUTTON}
+                                            data-loading-project
+                                        >
+                                            <ImportSvg />
+                                        </PermissionIconButton>
+                                    </ButtonGroup>
+                                )}
+                            </FilterRow>
                             <SearchHighlightProvider
                                 value={tableState.query || ''}
                             >
@@ -583,7 +619,6 @@ export const ProjectFeatureToggles = ({
                                 }
                             />
                             {rowActionsDialogs}
-
                             {featureToggleModals}
                         </div>
                     </PageContent>
@@ -627,6 +662,12 @@ export const ProjectFeatureToggles = ({
                     />
                 )}
             </BatchSelectionActionsBar>
+
+            <ImportModal
+                open={modalOpen}
+                setOpen={setModalOpen}
+                project={projectId}
+            />
         </Container>
     );
 };

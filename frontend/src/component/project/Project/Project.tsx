@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ReactComponent as ImportSvg } from 'assets/icons/import.svg';
+import { ReactComponent as ProjectStatusSvg } from 'assets/icons/projectStatus.svg';
 import {
     StyledDiv,
     StyledFavoriteIconButton,
@@ -21,15 +22,11 @@ import {
     Tabs,
     Typography,
     styled,
+    Button,
 } from '@mui/material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import {
-    type PropsWithChildren,
-    useEffect,
-    useState,
-    type ReactNode,
-} from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectFlags from './ProjectFlags';
@@ -59,6 +56,7 @@ import { ProjectArchived } from './ArchiveProject/ProjectArchived';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
+import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -105,6 +103,15 @@ const ChangeRequestsLabel = () => {
     );
 };
 
+const ProjectStatusButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.text.primary,
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: 'bold',
+    'svg *': {
+        fill: theme.palette.primary.main,
+    },
+}));
+
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const { trackEvent } = usePlausibleTracker();
@@ -120,6 +127,7 @@ export const Project = () => {
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
     const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
+    const [projectStatusOpen, setProjectStatusOpen] = useState(false);
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -266,7 +274,8 @@ export const Project = () => {
                         <StyledDiv>
                             <ConditionallyRender
                                 condition={Boolean(
-                                    uiConfig?.flags?.featuresExportImport,
+                                    !simplifyProjectOverview &&
+                                        uiConfig?.flags?.featuresExportImport,
                                 )}
                                 show={
                                     <PermissionIconButton
@@ -281,6 +290,15 @@ export const Project = () => {
                                     </PermissionIconButton>
                                 }
                             />
+                            {simplifyProjectOverview && (
+                                <ProjectStatusButton
+                                    onClick={() => setProjectStatusOpen(true)}
+                                    startIcon={<ProjectStatusSvg />}
+                                    data-loading-project
+                                >
+                                    Project status
+                                </ProjectStatusButton>
+                            )}
                         </StyledDiv>
                     </StyledTopRow>
                 </StyledInnerContainer>
@@ -392,6 +410,10 @@ export const Project = () => {
                 open={modalOpen}
                 setOpen={setModalOpen}
                 project={projectId}
+            />
+            <ProjectStatusModal
+                open={projectStatusOpen}
+                close={() => setProjectStatusOpen(false)}
             />
         </div>
     );

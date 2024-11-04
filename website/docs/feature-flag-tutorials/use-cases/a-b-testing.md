@@ -125,12 +125,92 @@ To enable impression data for your rollout, navigate to your feature flag form a
 ![Enable impression data in the strategy rollout form for your flag.](/img/use-case-experiment-enable-impression-data.png)
 
 Next, in your application code, use the SDK to capture the impression events as they are being emitted in real time.
-
-Now that the application is capturing impression events, you can configure the correct data fields and formatting to send to any analytics tool or data warehouse you use.
+Your client SDK will emit an impression event when it calls `isEnabled` or `getVariant`. Some front-end SDKs emit impression events only when a flag is enabled. You can define custom event types to track specific user actions. If you want to confirm that users from your A/B test have the new feature, Unleash will receive the `isEnabled` event. If you have created variants, the `getVariant` event type will be sent to Unleash.
 
 Strategy variants are meant to work with impression data. You get the name of the variant sent to your analytics tool, which allows you a better understanding of what happened, rather than seeing a simple true/false from your logs.
 
-Next, in your application code, use the SDK to capture the impression events as they are being emitted in real time. Follow [language and framework-specific tutorials](/languages-and-frameworks) to learn how to capture the events and send them to data analytics and warehouse platforms of your choice. Your client SDK will emit an impression event when it calls `isEnabled` or `getVariant`. Some front-end SDKs emit impression events only when a flag is enabled. You can define custom event types to track specific user actions. If you want to confirm that users from your A/B test have the new feature, Unleash will receive the `isEnabled` event. If you have created variants, the `getVariant` event type will be sent to Unleash.
+The output from the impression data in your app may look like this code snippet:
+
+```js
+{
+    "eventType": "getVariant",
+    "eventId": "c41aa58b-d2c7-45cf-b668-7267f465e01a",
+    "context": {
+        "sessionId": 386689528,
+        "appName": "my-example-app",
+        "environment": "default"
+    },
+    "enabled": true,
+    "featureName": "ab-testing-example",
+    "impressionData": true,
+    "variant": "variantA"
+}
+```
+
+In order to capture impression events in your app, follow our [language and framework-specific tutorials](/languages-and-frameworks).
+
+Now that your application is capturing impression events, you can configure the correct data fields and formatting to send to any analytics tool or data warehouse you use.
+
+Here are two code examples of collecting impression data in an application to send to Google Analytics:
+
+Example 1
+
+```js
+unleash.on(UnleashEvents.Impression, (e: ImpressionEvent) => {
+    // send to google analytics, something like
+    gtag("event", "screen_view", {
+        app_name: e.context.appName,
+        feature: e.featureName,
+        treatment: e.enabled ? e.variant : "Control", // in case we use feature disabled for control
+    });
+});
+```
+
+Example 2
+
+```js
+unleash.on(UnleashEvents.Impression, (e: ImpressionEvent) => {
+    if (e.enabled) {
+        // send to google analytics, something like
+        gtag("event", "screen_view", {
+            app_name: e.context.appName,
+            feature: e.featureName,
+            treatment: e.variant, // in case we use a variant for the control treatment
+        });
+    }
+});
+```
+
+In these example code snippets, `e` references the event object from the impression data output. Map these values to plug into the appropriate functions that make calls to your analytics tools and data warehouses.
+
+In some cases like in Example 1, you may want to use the "disabled feature" state as the "Control group".
+
+Alternatively, in Example 2, you can expose the feature to 100% of users and use two variants: "Control" and "Test". In either case, the variants are always used for the "Test" group. The difference is determined by how you use the "Control" group.
+
+An advantage of having your feature disabled for the Control group is that you can use metrics to see how many of the users are exposed to experiment(s) in comparison to the ones that are not. If you use only variants (for both the test and control group), you may see the feature metric as 100% exposed and would have to look deeper into the variant to know how many were exposed.
+
+Here is an example of a payload that is returned from Google Analytics that includes impression event data:
+
+```js
+{
+    "client_id": "unleash_client"
+    "user_id": "uuid1234"
+    "timestamp_micros": "1730407349525000"
+    "non_personalized_ads": true
+    "events": [
+        {
+            "name":"select_item"
+            "params": {
+                "items":[]
+                "event":"screen_view"
+                "app_name":"myAppName"
+                "feature":"myFeatureName"
+                "treatment":"variantValue"
+            }
+        }
+    ]
+}
+```
 
 By enabling impression data for your feature flag and listening to events within your application code, you can leverage this data flowing to your integrated analytics tools to make informed decisions faster and adjust your strategies based on real user behavior.
 
@@ -158,8 +238,8 @@ To use Unleash to conduct a multi-arm bandit test, follow these steps:
 4. Create signal endpoints in Unleash that will point to your external analytics tools
 5. Create actions in Unleash that will react to your signals that were integrated
 
+Learn how to configure [actions](/reference/actions) and [signals](/reference/signals) from our documentation to get started.
+
 This approach minimizes the "regret" associated with allocating traffic to lower-performing variants. Multi-arm bandit tests using Unleash can adapt to changing conditions, such as seasonal fluctuations or user behavior changes. In some cases, they can be used to ensure that users are not exposed to suboptimal experiences for extended periods.
 
 A/B tests are performed safely and strategically with extra safeguards when you automate your flags based on user activity and other metrics of your choice.
-
-Learn how to configure [actions](/reference/actions) and [signals](/reference/signals) from our documentation to get started.

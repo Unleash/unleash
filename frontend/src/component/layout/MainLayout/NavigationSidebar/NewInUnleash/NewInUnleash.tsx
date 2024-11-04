@@ -190,8 +190,7 @@ export const NewInUnleash = ({
                     <p>
                         Meet the Unleash AI assistant, designed to make your
                         experience with Unleash easier and more intuitive,
-                        whether you're managing feature flags or seeking
-                        guidance.
+                        whether you're handling tasks or looking for guidance.
                     </p>
 
                     <p>

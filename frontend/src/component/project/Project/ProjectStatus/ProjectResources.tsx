@@ -109,44 +109,20 @@ export const ProjectResources = () => {
         [segments, projectId],
     );
 
-    const items = [
-        {
-            icon: <UsersIcon />,
-            text: `${project.members} project member(s)`,
-            link: (
-                <Link to={`/projects/${projectId}/settings/access`}>
-                    Add members
-                </Link>
-            ),
-        },
-        {
-            icon: <ApiKeyIcon />,
-            text: `${tokens.length} API key(s)`,
-            link: (
-                <Link to={`/projects/${projectId}/settings/api-access`}>
-                    Add new key
-                </Link>
-            ),
-        },
-        {
-            icon: <ConnectedIcon />,
-            text: '1 connected environment(s)',
-            link: (
-                <Link to={`/projects/${projectId}/settings/placeholder`}>
-                    View connections
-                </Link>
-            ),
-        },
-        {
-            icon: <SegmentsIcon />,
-            text: `${segmentCount} project segment(s)`,
-            link: (
-                <Link to={`/projects/${projectId}/settings/segments`}>
-                    Add segments
-                </Link>
-            ),
-        },
-    ];
+    const makeListItem = (
+        icon: ReactNode,
+        text: string,
+        link: string,
+        linkText: string,
+    ) => (
+        <ListItemRow>
+            <ItemContent>
+                {icon}
+                <span>text</span>
+            </ItemContent>
+            <Link to={link}>linkText</Link>
+        </ListItemRow>
+    );
 
     return (
         <Wrapper>
@@ -155,14 +131,32 @@ export const ProjectResources = () => {
                     Project Resources
                 </Typography>
                 <ResourceList>
-                    {items.map((item, index) => (
-                        <ListItem
-                            key={index}
-                            icon={item.icon}
-                            text={item.text}
-                            link={item.link}
-                        />
-                    ))}
+                    {makeListItem(
+                        <UsersIcon />,
+                        `${project.members} project member(s)`,
+                        `/projects/${projectId}/settings/access`,
+                        'Add members',
+                    )}
+                    {makeListItem(
+                        <ApiKeyIcon />,
+                        `${tokens.length} API key(s)`,
+                        `/projects/${projectId}/settings/api-access`,
+                        'Add new key',
+                    )}
+
+                    {makeListItem(
+                        <ConnectedIcon />,
+                        '1 connected environment(s)',
+                        `/projects/${projectId}/settings/placeholder`,
+                        'View connections',
+                    )}
+
+                    {makeListItem(
+                        <SegmentsIcon />,
+                        `${segmentCount} project segment(s)`,
+                        `/projects/${projectId}/settings/segments`,
+                        'Add segments',
+                    )}
                 </ResourceList>
             </ProjectResourcesInner>
         </Wrapper>

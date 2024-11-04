@@ -3,7 +3,12 @@ import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/usePr
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useMemo } from 'react';
+import { type FC, type ReactNode, useMemo } from 'react';
+import UsersIcon from '@mui/icons-material/Group';
+import { Link } from 'react-router-dom';
+import ApiKeyIcon from '@mui/icons-material/Key';
+import SegmentsIcon from '@mui/icons-material/DonutLarge';
+import ConnectedIcon from '@mui/icons-material/Cable';
 
 const Wrapper = styled('article')(({ theme }) => ({
     backgroundColor: theme.palette.envAccordion.expanded,
@@ -15,6 +20,43 @@ const ProjectResourcesInner = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: '1rem',
+}));
+
+const ItemContent = styled('span')(({ theme }) => ({
+    display: 'inline-flex',
+    flexFlow: 'row nowrap',
+    gap: theme.spacing(1),
+    svg: {
+        fill: theme.palette.primary.main,
+    },
+}));
+
+const ListItemRow = styled('li')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row wrap',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
+
+const ListItem: FC<{ icon: ReactNode; text: string; link: ReactNode }> = ({
+    icon,
+    text,
+    link,
+}) => {
+    return (
+        <ListItemRow>
+            <ItemContent>
+                {icon} <span>{text}</span>
+            </ItemContent>
+            {link}
+        </ListItemRow>
+    );
+};
+
+const ResourceList = styled('ul')(({ theme }) => ({
+    listStyle: 'none',
+    padding: 0,
 }));
 
 export const ProjectResources = () => {
@@ -31,14 +73,59 @@ export const ProjectResources = () => {
         [segments, projectId],
     );
 
+    const items = [
+        {
+            icon: <UsersIcon />,
+            text: `${project.members} project member(s)`,
+            link: (
+                <Link to={`/projects/${projectId}/settings/access`}>
+                    Add members
+                </Link>
+            ),
+        },
+        {
+            icon: <ApiKeyIcon />,
+            text: `${tokens.length} API key(s)`,
+            link: (
+                <Link to={`/projects/${projectId}/settings/access`}>
+                    Add members
+                </Link>
+            ),
+        },
+        {
+            icon: <ConnectedIcon />,
+            text: '1 connected environment(s)',
+            link: (
+                <Link to={`/projects/${projectId}/settings/access`}>
+                    Add members
+                </Link>
+            ),
+        },
+        {
+            icon: <SegmentsIcon />,
+            text: `${segmentCount} project segment(s)`,
+            link: (
+                <Link to={`/projects/${projectId}/settings/access`}>
+                    Add members
+                </Link>
+            ),
+        },
+    ];
+
     return (
         <Wrapper>
             <ProjectResourcesInner>
                 <h3>Project Resources</h3>
-                <span>{project.members} project member(s)</span>
-                <span>{tokens.length} API key(s)</span>
-                <span>1 SDK connection(s)</span>
-                <span>{segmentCount} project segment(s)</span>
+                <ResourceList>
+                    {items.map((item, index) => (
+                        <ListItem
+                            key={index}
+                            icon={item.icon}
+                            text={item.text}
+                            link={item.link}
+                        />
+                    ))}
+                </ResourceList>
             </ProjectResourcesInner>
         </Wrapper>
     );

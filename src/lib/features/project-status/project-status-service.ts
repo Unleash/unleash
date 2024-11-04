@@ -10,7 +10,7 @@ export class ProjectStatusService {
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
         return {
             activityCountByDate:
-                await this.eventStore.getEventCounts(projectId),
+                await this.eventStore.getProjectEventActivity(projectId),
         };
     }
 }

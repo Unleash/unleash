@@ -409,7 +409,9 @@ class EventStore implements IEventStore {
             }));
     }
 
-    async getEventCounts(project: string): Promise<ProjectActivitySchema> {
+    async getProjectEventActivity(
+        project: string,
+    ): Promise<ProjectActivitySchema> {
         const result = await this.db('events')
             .select(
                 this.db.raw("TO_CHAR(created_at::date, 'YYYY-MM-DD') AS date"),

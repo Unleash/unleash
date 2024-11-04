@@ -2,7 +2,10 @@ import type { IEventStore } from '../../lib/types/stores/event-store';
 import type { IBaseEvent, IEvent } from '../../lib/types/events';
 import { sharedEventEmitter } from '../../lib/util/anyEventEmitter';
 import type { IQueryOperations } from '../../lib/features/events/event-store';
-import type { DeprecatedSearchEventsSchema } from '../../lib/openapi';
+import type {
+    DeprecatedSearchEventsSchema,
+    ProjectActivitySchema,
+} from '../../lib/openapi';
 import type EventEmitter from 'events';
 
 class FakeEventStore implements IEventStore {
@@ -15,7 +18,7 @@ class FakeEventStore implements IEventStore {
         this.events = [];
     }
 
-    getEventCounts(project: string): Promise<ProjectActivitySchema> {
+    getProjectEventActivity(project: string): Promise<ProjectActivitySchema> {
         throw new Error('Method not implemented.');
     }
 

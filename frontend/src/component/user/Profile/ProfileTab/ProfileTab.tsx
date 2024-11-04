@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
-import { useUiFlag } from '../../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { ProductivityEmailSubscription } from './ProductivityEmailSubscription';
 
 const StyledHeader = styled('div')(({ theme }) => ({

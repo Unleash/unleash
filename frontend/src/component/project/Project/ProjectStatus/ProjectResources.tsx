@@ -3,7 +3,7 @@ import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/usePr
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { type ReactNode, useMemo } from 'react';
+import { type ReactNode, useMemo, type FC } from 'react';
 import UsersIcon from '@mui/icons-material/Group';
 import { Link } from 'react-router-dom';
 import ApiKeyIcon from '@mui/icons-material/Key';
@@ -73,6 +73,21 @@ const ResourceList = styled('ul')(({ theme }) => ({
     }),
 }));
 
+const ListItem: FC<{
+    text: string;
+    linkUrl: string;
+    linkText: string;
+    icon: ReactNode;
+}> = ({ text, linkUrl, linkText, icon }) => (
+    <ListItemRow>
+        <ItemContent>
+            {icon}
+            <span>{text}</span>
+        </ItemContent>
+        <Link to={linkUrl}>{linkText}</Link>
+    </ListItemRow>
+);
+
 export const ProjectResources = () => {
     const projectId = useRequiredPathParam('projectId');
     const { project, loading: loadingProject } = useProjectOverview(projectId);
@@ -87,21 +102,6 @@ export const ProjectResources = () => {
         [segments, projectId],
     );
 
-    const makeListItem = (
-        icon: ReactNode,
-        text: string,
-        link: string,
-        linkText: string,
-    ) => (
-        <ListItemRow>
-            <ItemContent>
-                {icon}
-                <span>{text}</span>
-            </ItemContent>
-            <Link to={link}>{linkText}</Link>
-        </ListItemRow>
-    );
-
     return (
         <Wrapper>
             <ProjectResourcesInner>
@@ -109,33 +109,33 @@ export const ProjectResources = () => {
                     Project Resources
                 </Typography>
                 <ResourceList>
-                    {makeListItem(
-                        <UsersIcon />,
-                        `${project.members} project member(s)`,
-                        `/projects/${projectId}/settings/access`,
-                        'Add members',
-                    )}
+                    <ListItem
+                        text={`${project.members} project member(s)`}
+                        linkUrl={`/projects/${projectId}/settings/access`}
+                        linkText='Add members'
+                        icon={<UsersIcon />}
+                    />
 
-                    {makeListItem(
-                        <ApiKeyIcon />,
-                        `${tokens.length} API key(s)`,
-                        `/projects/${projectId}/settings/api-access`,
-                        'Add new key',
-                    )}
+                    <ListItem
+                        text={`${tokens.length} API key(s)`}
+                        linkUrl={`/projects/${projectId}/settings/api-access`}
+                        linkText='Add new key'
+                        icon={<ApiKeyIcon />}
+                    />
 
-                    {makeListItem(
-                        <ConnectedIcon />,
-                        '1 connected environment(s)',
-                        `/projects/${projectId}/settings/placeholder`,
-                        'View connections',
-                    )}
+                    <ListItem
+                        text='1 connected environment(s)'
+                        linkUrl={`/projects/${projectId}/settings/placeholder`}
+                        linkText='View connections'
+                        icon={<ConnectedIcon />}
+                    />
 
-                    {makeListItem(
-                        <SegmentsIcon />,
-                        `${segmentCount} project segment(s)`,
-                        `/projects/${projectId}/settings/segments`,
-                        'Add segments',
-                    )}
+                    <ListItem
+                        text={`${segmentCount} project segment(s)`}
+                        linkUrl={`/projects/${projectId}/settings/segments`}
+                        linkText='Add segments'
+                        icon={<SegmentsIcon />}
+                    />
                 </ResourceList>
             </ProjectResourcesInner>
         </Wrapper>

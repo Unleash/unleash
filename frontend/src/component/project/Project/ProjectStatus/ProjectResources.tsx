@@ -57,13 +57,6 @@ const ListItemRow = styled('li')(({ theme }) => {
     };
 });
 
-const LinkWrapper = styled('span')(({ theme }) => ({
-    // display: 'inline-flex',
-    // justifyContent: 'flex-end',
-    // whiteSpace: 'nowrap',
-    // flex: 'auto',
-}));
-
 const ListItem: FC<{ icon: ReactNode; text: string; link: ReactNode }> = ({
     icon,
     text,
@@ -74,7 +67,7 @@ const ListItem: FC<{ icon: ReactNode; text: string; link: ReactNode }> = ({
             <ItemContent>
                 {icon} <span>{text}</span>
             </ItemContent>
-            <LinkWrapper>{link}</LinkWrapper>
+            {link}
         </ListItemRow>
     );
 };
@@ -98,10 +91,6 @@ const ResourceList = styled('ul')(({ theme }) => {
         '@supports not (container-type: inline-size)': {
             [theme.breakpoints.down('sm')]: narrowStyles,
         },
-        // display: 'grid',
-        // gap: theme.spacing(1.5),
-        // // gridTemplateColumns: 'auto 1fr',
-        // gridAutoColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
     };
 });
 

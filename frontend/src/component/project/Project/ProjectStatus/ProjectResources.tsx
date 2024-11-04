@@ -137,6 +137,7 @@ export const ProjectResources = () => {
                         `/projects/${projectId}/settings/access`,
                         'Add members',
                     )}
+
                     {makeListItem(
                         <ApiKeyIcon />,
                         `${tokens.length} API key(s)`,

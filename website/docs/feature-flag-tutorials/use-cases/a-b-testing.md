@@ -1,13 +1,7 @@
 ---
-title: Effective A/B Testing using Feature Flags
+title: A/B Testing using Feature Flags
 slug: /feature-flag-tutorials/use-cases/a-b-testing
 ---
-
-## What is A/B Testing?
-
-A/B testing is a randomized controlled experiment where you test two or more versions of a feature to see which version performs better. If you have more than two versions, it's known as A/B/n testing. Coupled with analytics, A/B testing enables you to better understand your users and how to serve them better.
-
-Multivariate testing is used to test multiple variables simultaneously to determine the optimal combination of elements that will produce the best results. Different combinations of variables such as design, content, and functionality can be tested to measure which combination has the greatest impact on user behavior or conversion rates.
 
 Feature flags are a great way to run A/B or multivariate tests with minimal code modifications, and Unleash offers built-in features that make it easy to get started. In this tutorial, we will walk through how to do an A/B test using Unleash with your application.
 
@@ -25,15 +19,15 @@ To follow along with this tutorial, you will need access to an Unleash Instance 
 
 With Unleash set up, you can use your application to talk to Unleash through one of our [SDKs](/reference/sdks).
 
-In this tutorial, you will learn how to set up and run an A/B testing using feature flags. You will learn:
+In this tutorial, you will learn how to set up and run an A/B test using feature flags. You will learn:
 
-1. How to use feature flags to define variants of your application for testing,
-2. Target specific users for each test variant,
-3. Manage cross-session visibility of test variants,
-4. Connect feature flag impression data to conversion outcomes, and
-5. Roll out the winning variant to all users.
+1. [How to use feature flags to define variants of your application for testing](#create-a-feature-flag)
+2. [Target specific users for each test variant](#target-users-for-ab-testing)
+3. [Manage cross-session visibility of test variants](#manage-user-session-behavior)
+4. [Connect feature flag impression data to conversion outcomes](#track-ab-testing-for-your-key-performance-metrics)
+5. [Roll out the winning variant to all users](#multi-arm-bandit-tests-to-find-the-winning-variant)
 
-You will also learn about how to automate advanced A/B testing strategies such as multi-arm bandit testing using feature flags.
+You will also learn about how to [automate advanced A/B testing strategies](#multi-arm-bandit-tests-to-find-the-winning-variant) such as multi-arm bandit testing using feature flags.
 
 ### Create a Feature Flag
 
@@ -214,9 +208,17 @@ Here is an example of a payload that is returned from Google Analytics that incl
 
 By enabling impression data for your feature flag and listening to events within your application code, you can leverage this data flowing to your integrated analytics tools to make informed decisions faster and adjust your strategies based on real user behavior.
 
+### Rollout the Winning Variant to All Users
+
+After you have implemented your A/B test and measured the performance of a feature to a subset of users, you can decide which variant is the most optimal experience to roll out to all users in production.
+
+Unleash gives you control over which environments you release your feature to, when you release the feature, and to whom. Every team's release strategy may vary, but the overarching goal of A/B testing is to select the most effective experience for users, whether it be a change in your app's UI, a web performance improvement, or backend optimizations.
+
+When rolling out the winning variant, your flag may already be on in your production environment. Adjust the rollout strategy configurations to release to 100% of your user base in the Unleash Admin.
+
 ## A/B Testing with Enterprise Automation
 
-Unleash provides the ability to automate your feature flags using [actions](/reference/actions) and [signals](/reference/signals). When running A/B tests, you can configure your projects to execute tasks in response to application metrics and thresholds you define. If an experimentation feature that targets a part of your user base logs errors, your actions can automatically disable the feature so your team is given the time to triage while still providing a seamless, alternative experience to users. In another case, you can use actions to modify the percentage of users targeted for variations of a feature based off users engaging with one variation more than the other.
+With Unleash, you can automate your feature flags using [actions](/reference/actions) and [signals](/reference/signals). When running A/B tests, configure your projects to execute tasks in response to application metrics and thresholds you define. If an experimentation feature that targets a part of your user base logs errors, your actions can automatically disable the feature so your team is given the time to triage while still providing a seamless, alternative experience to users. In another case, you can use actions to modify the percentage of users targeted for variations of a feature based off users engaging with one variation more than the other.
 
 Learn how to configure [actions](/reference/actions) and [signals](/reference/signals) from our documentation to get started.
 

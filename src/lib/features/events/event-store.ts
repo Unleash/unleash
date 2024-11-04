@@ -19,7 +19,7 @@ import type EventEmitter from 'events';
 import { ADMIN_TOKEN_USER, SYSTEM_USER, SYSTEM_USER_ID } from '../../types';
 import type {
     DeprecatedSearchEventsSchema,
-    ProjectStatusSchema,
+    ProjectActivitySchema,
 } from '../../openapi';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { applyGenericQueryParams } from '../feature-search/search-utils';
@@ -409,22 +409,20 @@ class EventStore implements IEventStore {
             }));
     }
 
-    async getEventCounts(project: string): Promise<ProjectStatusSchema> {
+    async getEventCounts(project: string): Promise<ProjectActivitySchema> {
         const result = await this.db('events')
             .select(
                 this.db.raw("TO_CHAR(created_at::date, 'YYYY-MM-DD') AS date"),
             )
             .count('* AS count')
-            .where('project', 'default')
+            .where('project', project)
             .groupBy(this.db.raw("TO_CHAR(created_at::date, 'YYYY-MM-DD')"))
             .orderBy('date', 'asc');
 
-        return {
-            activityCountByDate: result.map((row) => ({
-                date: row.date,
-                count: Number(row.count),
-            })),
-        };
+        return result.map((row) => ({
+            date: row.date,
+            count: Number(row.count),
+        }));
     }
 
     async deprecatedSearchEvents(

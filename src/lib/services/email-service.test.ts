@@ -169,8 +169,11 @@ test('Can send productivity report email', async () => {
             health: 99,
         },
     );
-    console.log(content);
     expect(content.from).toBe('noreply@getunleash.ai');
     expect(content.subject).toBe('Unleash - productivity report');
     expect(content.html.includes(`Productivity Report`)).toBe(true);
+    expect(content.html.includes(`localhost/insights`)).toBe(true);
+    expect(content.html.includes(`localhost/profile`)).toBe(true);
+    expect(content.text.includes(`localhost/insights`)).toBe(true);
+    expect(content.text.includes(`localhost/profile`)).toBe(true);
 });

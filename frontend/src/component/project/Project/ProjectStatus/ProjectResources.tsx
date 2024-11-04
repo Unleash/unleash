@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { Typography, styled } from '@mui/material';
 import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
@@ -12,14 +12,15 @@ import ConnectedIcon from '@mui/icons-material/Cable';
 
 const Wrapper = styled('article')(({ theme }) => ({
     backgroundColor: theme.palette.envAccordion.expanded,
-    padding: theme.spacing(2),
+    padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusExtraLarge,
+    maxWidth: '600px',
 }));
 
 const ProjectResourcesInner = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: '1rem',
+    gap: theme.spacing(2),
     containerType: 'inline-size',
 }));
 
@@ -80,6 +81,7 @@ const ResourceList = styled('ul')(({ theme }) => {
     };
 
     return {
+        margin: 0,
         listStyle: 'none',
         padding: 0,
         'li + li': {
@@ -150,7 +152,9 @@ export const ProjectResources = () => {
     return (
         <Wrapper>
             <ProjectResourcesInner>
-                <h3>Project Resources</h3>
+                <Typography variant='h3' sx={{ margin: 0 }}>
+                    Project Resources
+                </Typography>
                 <ResourceList>
                     {items.map((item, index) => (
                         <ListItem

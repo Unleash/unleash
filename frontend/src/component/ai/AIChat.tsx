@@ -1,12 +1,6 @@
 import { mutate } from 'swr';
 import { ReactComponent as AIIcon } from 'assets/icons/AI.svg';
-import {
-    alpha,
-    IconButton,
-    styled,
-    Tooltip,
-    useMediaQuery,
-} from '@mui/material';
+import { IconButton, styled, Tooltip, useMediaQuery } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -67,27 +61,9 @@ const StyledAIChatContainer = styled(StyledAIIconContainer, {
     }),
 }));
 
-const StyledResizable = styled(Resizable, {
-    shouldForwardProp: (prop) => prop !== 'highlighted',
-})<{ highlighted?: boolean }>(({ theme, highlighted }) => ({
+const StyledResizable = styled(Resizable)(({ theme }) => ({
     boxShadow: theme.boxShadows.popup,
     borderRadius: theme.shape.borderRadiusLarge,
-    animation: highlighted ? 'pulse 1.5s infinite linear' : 'none',
-    zIndex: highlighted ? theme.zIndex.tooltip : 'auto',
-    '@keyframes pulse': {
-        '0%': {
-            boxShadow: `0 0 0 0px ${alpha(theme.palette.primary.main, 0.5)}`,
-            transform: 'scale(1)',
-        },
-        '50%': {
-            boxShadow: `0 0 0 15px ${alpha(theme.palette.primary.main, 0.2)}`,
-            transform: 'scale(1.1)',
-        },
-        '100%': {
-            boxShadow: `0 0 0 30px ${alpha(theme.palette.primary.main, 0)}`,
-            transform: 'scale(1)',
-        },
-    },
 }));
 
 const StyledAIIconButton = styled(IconButton)(({ theme }) => ({

@@ -20,6 +20,7 @@ const ProjectResourcesInner = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: '1rem',
+    containerType: 'inline-size',
 }));
 
 const ItemContent = styled('span')(({ theme }) => ({
@@ -31,14 +32,31 @@ const ItemContent = styled('span')(({ theme }) => ({
     },
 }));
 
-const ListItemRow = styled('li')(({ theme }) => ({
-    display: 'flex',
-    flexFlow: 'row wrap',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    // display: 'contents',
-}));
+const ListItemRow = styled('li')(({ theme }) => {
+    const narrowListStyle = {
+        flexFlow: 'column',
+        alignItems: 'flex-start',
+        justifyContent: 'unset',
+        '& + li': {
+            marginTop: theme.spacing(5),
+        },
+    };
+
+    return {
+        '@container (max-width: 400px)': narrowListStyle,
+
+        '@supports not (container-type: inline-size)': {
+            [theme.breakpoints.down('sm')]: narrowListStyle,
+        },
+
+        display: 'flex',
+        flexFlow: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        gap: theme.spacing(1),
+    };
+});
+
 const LinkWrapper = styled('span')(({ theme }) => ({
     // display: 'inline-flex',
     // justifyContent: 'flex-end',
@@ -61,16 +79,31 @@ const ListItem: FC<{ icon: ReactNode; text: string; link: ReactNode }> = ({
     );
 };
 
-const ResourceList = styled('ul')(({ theme }) => ({
-    listStyle: 'none',
-    padding: 0,
-    'li + li': {
-        marginTop: theme.spacing(2),
-    },
-    // display: 'grid',
-    // gap: theme.spacing(1.5),
-    // gridTemplateColumns: 'auto 1fr',
-}));
+const ResourceList = styled('ul')(({ theme }) => {
+    const narrowStyles = {
+        'li + li': {
+            marginTop: theme.spacing(4),
+        },
+    };
+
+    return {
+        listStyle: 'none',
+        padding: 0,
+        'li + li': {
+            marginTop: theme.spacing(2),
+        },
+
+        '@container (max-width: 400px)': narrowStyles,
+
+        '@supports not (container-type: inline-size)': {
+            [theme.breakpoints.down('sm')]: narrowStyles,
+        },
+        // display: 'grid',
+        // gap: theme.spacing(1.5),
+        // // gridTemplateColumns: 'auto 1fr',
+        // gridAutoColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    };
+});
 
 export const ProjectResources = () => {
     const projectId = useRequiredPathParam('projectId');

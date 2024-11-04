@@ -537,14 +537,11 @@ export class EmailService {
         },
     ): Promise<IEmailEnvelope> {
         if (this.configured()) {
-            const unsubscribeUrl = '{{amazonSESUnsubscribeUrl}}'; // FIXME: Add unsubscribe URL
-
             const context = {
                 userName,
                 userEmail,
                 ...metrics,
                 unleashUrl: this.config.server.unleashUrl,
-                unsubscribeUrl,
             };
 
             const template = 'productivity-report';

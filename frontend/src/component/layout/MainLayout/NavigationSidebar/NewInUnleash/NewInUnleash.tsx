@@ -20,10 +20,10 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ReactComponent as SignalsPreview } from 'assets/img/signals.svg';
 import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import { useNavigate } from 'react-router-dom';
-import { useEventTimelineContext } from 'component/events/EventTimeline/EventTimelineContext';
 import { ReactComponent as EventTimelinePreview } from 'assets/img/eventTimeline.svg';
 import { ReactComponent as AIIcon } from 'assets/icons/AI.svg';
 import { ReactComponent as AIPreview } from 'assets/img/aiPreview.svg';
+import { useHighlightContext } from 'component/common/Highlight/HighlightContext';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0, 1, 0),
@@ -95,6 +95,7 @@ export const NewInUnleash = ({
     onMiniModeClick,
 }: INewInUnleashProps) => {
     const navigate = useNavigate();
+    const { highlight } = useHighlightContext();
     const { trackEvent } = usePlausibleTracker();
     const [seenItems, setSeenItems] = useLocalStorageState(
         'new-in-unleash-seen:v1',
@@ -107,8 +108,6 @@ export const NewInUnleash = ({
     } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
     const unleashAIEnabled = useUiFlag('unleashAI');
-
-    const { setHighlighted } = useEventTimelineContext();
 
     const items: NewInUnleashItemDetails[] = [
         {
@@ -153,7 +152,7 @@ export const NewInUnleash = ({
             icon: <StyledLinearScaleIcon />,
             preview: <EventTimelinePreview />,
             onCheckItOut: () => {
-                setHighlighted(true);
+                highlight('eventTimeline');
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth',
@@ -183,6 +182,7 @@ export const NewInUnleash = ({
                 'Enhance your Unleash experience with the help of the Unleash AI assistant',
             icon: <StyledAIIcon />,
             preview: <AIPreview />,
+            onCheckItOut: () => highlight('unleashAI'),
             show: Boolean(unleashAIAvailable) && unleashAIEnabled,
             beta: true,
             longDescription: (

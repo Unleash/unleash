@@ -2887,13 +2887,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chroma-js@npm:^2.4.3":
-  version: 2.4.4
-  resolution: "@types/chroma-js@npm:2.4.4"
-  checksum: 10c0/8acd341c523fc960686ed9e60f23ae643da35bddf012b4b18cb0d941ee3bf82087262245ffa8c886ea31571cd5dc6eb553e849fab3c0509ea2c3a045a246178c
-  languageName: node
-  linkType: hard
-
 "@types/cookie@npm:^0.6.0":
   version: 0.6.0
   resolution: "@types/cookie@npm:0.6.0"
@@ -4104,13 +4097,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chroma-js@npm:^2.4.2":
-  version: 2.6.0
-  resolution: "chroma-js@npm:2.6.0"
-  checksum: 10c0/6e17f43246f9b3eba8a9db67f5ee9a2d0ef1360077211887da09ec1f0934bb98a358eefaf021003c0bd47cbab540f573a373f362d6b2ba04d0e80ab7677e1640
-  languageName: node
-  linkType: hard
-
 "ci-info@npm:^3.2.0":
   version: 3.9.0
   resolution: "ci-info@npm:3.9.0"
@@ -4592,10 +4578,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^3.6.0":
-  version: 3.6.0
-  resolution: "date-fns@npm:3.6.0"
-  checksum: 10c0/0b5fb981590ef2f8e5a3ba6cd6d77faece0ea7f7158948f2eaae7bbb7c80a8f63ae30b01236c2923cf89bb3719c33aeb150c715ea4fe4e86e37dcf06bed42fb6
+"date-fns@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "date-fns@npm:4.1.0"
+  checksum: 10c0/b79ff32830e6b7faa009590af6ae0fb8c3fd9ffad46d930548fbb5acf473773b4712ae887e156ba91a7b3dc30591ce0f517d69fd83bd9c38650fdc03b4e0bac8
   languageName: node
   linkType: hard
 
@@ -8387,17 +8373,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-activity-calendar@npm:^2.5.1":
-  version: 2.5.1
-  resolution: "react-activity-calendar@npm:2.5.1"
+"react-activity-calendar@npm:^2.7.1":
+  version: 2.7.1
+  resolution: "react-activity-calendar@npm:2.7.1"
   dependencies:
-    "@types/chroma-js": "npm:^2.4.3"
-    chroma-js: "npm:^2.4.2"
-    date-fns: "npm:^3.6.0"
+    date-fns: "npm:^4.1.0"
   peerDependencies:
     react: ^18.0.0
     react-dom: ^18.0.0
-  checksum: 10c0/9814d265a23cec6499e7a23d1f0f8477a9d74da0f1ebf5c4ef2c2e4dd53de623e539a6240c22cad50b35741b4c318e8d030bf65b76ec6d58b8a05e46d956a7e5
+  checksum: 10c0/2d4c9dd688c1187b75b8878094365ee7ef8cec361ac6a2a8088cf83296025c7849fe909487c415ce3e739642821800a6452f7ce4873b52270a3b47834ca2498e
   languageName: node
   linkType: hard
 
@@ -8472,14 +8456,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:^4.0.12":
-  version: 4.0.13
-  resolution: "react-error-boundary@npm:4.0.13"
+"react-error-boundary@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "react-error-boundary@npm:4.1.2"
   dependencies:
     "@babel/runtime": "npm:^7.12.5"
   peerDependencies:
     react: ">=16.13.1"
-  checksum: 10c0/6f3e0e4d7669f680ccf49c08c9571519c6e31f04dcfc30a765a7136c7e6fbbbe93423dd5a9fce12107f8166e54133e9dd5c2079a00c7a38201ac811f7a28b8e7
+  checksum: 10c0/0737e5259bed40ce14eb0823b3c7b152171921f2179e604f48f3913490cdc594d6c22d43d7abb4ffb1512c832850228db07aa69d3b941db324953a5e393cb399
   languageName: node
   linkType: hard
 
@@ -8506,16 +8490,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-github-calendar@npm:^4.3.0":
-  version: 4.3.0
-  resolution: "react-github-calendar@npm:4.3.0"
+"react-github-calendar@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "react-github-calendar@npm:4.5.1"
   dependencies:
-    react-activity-calendar: "npm:^2.5.1"
-    react-error-boundary: "npm:^4.0.12"
+    react-activity-calendar: "npm:^2.7.1"
+    react-error-boundary: "npm:^4.1.2"
   peerDependencies:
     react: ^17.0.0 || ^18.0.0
     react-dom: ^17.0.0 || ^18.0.0
-  checksum: 10c0/7c7517b5166e6945bc44865c34ebe3fdf3c71627faf07ebdc0fb2edacb94ee073b1172241037a7d9c3473d5922ce606df713fe857678a9896103c80ea914395f
+  checksum: 10c0/51688983b28da92718cf2276e6c947b9639b529a93212d77a6c65040af2768b74153b32dee44eed4f706cf0cb4c025864327c51c9c666d1f5b88080f523ef672
   languageName: node
   linkType: hard
 
@@ -10211,7 +10195,7 @@ __metadata:
     react-dom: "npm:18.3.1"
     react-dropzone: "npm:14.2.10"
     react-error-boundary: "npm:3.1.4"
-    react-github-calendar: "npm:^4.3.0"
+    react-github-calendar: "npm:^4.5.1"
     react-hooks-global-state: "npm:2.1.0"
     react-joyride: "npm:^2.5.3"
     react-markdown: "npm:^8.0.4"

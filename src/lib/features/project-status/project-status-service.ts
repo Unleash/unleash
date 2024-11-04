@@ -9,6 +9,9 @@ export class ProjectStatusService {
 
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
         return {
+            resources: {
+                connectedEnvironments: 0,
+            },
             activityCountByDate:
                 await this.eventStore.getProjectEventActivity(projectId),
         };

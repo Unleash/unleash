@@ -175,5 +175,5 @@ test('Can send productivity report email', async () => {
     expect(content.html.includes(`localhost/insights`)).toBe(true);
     expect(content.html.includes(`localhost/profile`)).toBe(true);
     expect(content.text.includes(`localhost/insights`)).toBe(true);
-    expect(content.text.includes(`localhost/insights`)).toBe(true);
+    expect(content.text.includes(`localhost/profile`)).toBe(true);
 });

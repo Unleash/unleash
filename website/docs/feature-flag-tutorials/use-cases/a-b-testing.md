@@ -7,15 +7,7 @@ Feature flags are a great way to run A/B or multivariate tests with minimal code
 
 ## How to Perform A/B Testing with Feature Flags
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-To follow along with this tutorial, you will need an Unleash instance. If you’d prefer to self-host Unleash, read our [Quickstart guide](/quickstart). Alternatively, if you’d like your project to be hosted by Unleash, go to [www.getunleash.io](https://www.getunleash.io/pricing?_gl=1*1ytmg93*_gcl_au*MTY3MTQxNjM4OS4xNzIxOTEwNTY5*_ga*OTkzMjI0MDMwLjE3MDYxNDc3ODM.*_ga_492KEZQRT8*MTcyNzQzNTQwOS4yMzcuMS4xNzI3NDM1NDExLjU4LjAuMA).
-=======
-To follow along with this tutorial, you will need access to an Unleash Instance. Head over to our [Quick Start documentation](/quickstart) for options, including running locally, or using an [Unleash SaaS instance](https://www.getunleash.io/pricing?).
->>>>>>> 471f6a231 (updating a/b testing doc: v2)
-=======
 To follow along with this tutorial, you will need access to an Unleash Instance which will be used to create and manage feature flags. Head over to our [Quick Start documentation](/quickstart) for options, including running locally, or using an [Unleash SaaS instance](https://www.getunleash.io/pricing?).
->>>>>>> 7db166905 (update official getting started intro)
 
 With Unleash set up, you can use your application to talk to Unleash through one of our [SDKs](/reference/sdks).
 
@@ -25,7 +17,7 @@ In this tutorial, you will learn how to set up and run an A/B test using feature
 2. [Target specific users for each test variant](#target-users-for-ab-testing)
 3. [Manage cross-session visibility of test variants](#manage-user-session-behavior)
 4. [Connect feature flag impression data to conversion outcomes](#track-ab-testing-for-your-key-performance-metrics)
-5. [Roll out the winning variant to all users](#multi-arm-bandit-tests-to-find-the-winning-variant)
+5. [Roll out the winning variant to all users](#rollout-the-winning-variant-to-all-users)
 
 You will also learn about how to [automate advanced A/B testing strategies](#multi-arm-bandit-tests-to-find-the-winning-variant) such as multi-arm bandit testing using feature flags.
 

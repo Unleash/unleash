@@ -73,6 +73,7 @@ import {
     createFeatureLifecycleService,
     createFeatureToggleService,
     createProjectService,
+    createUserSubscriptionsService,
 } from '../features';
 import EventAnnouncerService from './event-announcer-service';
 import { createGroupService } from '../features/group/createGroupService';
@@ -127,6 +128,7 @@ import {
     createProjectInsightsService,
 } from '../features/project-insights/createProjectInsightsService';
 import { JobService } from '../features/scheduler/job-service';
+import { UserSubscriptionsService } from '../features/user-subscriptions/user-subscriptions-service';
 import { JobStore } from '../features/scheduler/job-store';
 import { FeatureLifecycleService } from '../features/feature-lifecycle/feature-lifecycle-service';
 import { createFakeFeatureLifecycleService } from '../features/feature-lifecycle/createFeatureLifecycle';
@@ -426,6 +428,10 @@ export const createServices = (
         ? createPersonalDashboardService(db, config, stores)
         : createFakePersonalDashboardService(config);
 
+    const transactionalUserSubscriptionsService = db
+        ? withTransactional(createUserSubscriptionsService(config), db)
+        : withFakeTransactional(createUserSubscriptionsService(config));
+
     return {
         transactionalAccessService,
         accessService,
@@ -492,6 +498,7 @@ export const createServices = (
         onboardingService,
         personalDashboardService,
         projectStatusService,
+        transactionalUserSubscriptionsService,
     };
 };
 
@@ -544,4 +551,5 @@ export {
     OnboardingService,
     PersonalDashboardService,
     ProjectStatusService,
+    UserSubscriptionsService,
 };

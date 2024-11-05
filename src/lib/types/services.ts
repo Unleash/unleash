@@ -58,6 +58,7 @@ import type { IntegrationEventsService } from '../features/integration-events/in
 import type { OnboardingService } from '../features/onboarding/onboarding-service';
 import type { PersonalDashboardService } from '../features/personal-dashboard/personal-dashboard-service';
 import type { ProjectStatusService } from '../features/project-status/project-status-service';
+import type { UserSubscriptionsService } from '../features/user-subscriptions/user-subscriptions-service';
 
 export interface IUnleashServices {
     transactionalAccessService: WithTransactional<AccessService>;
@@ -128,4 +129,5 @@ export interface IUnleashServices {
     onboardingService: OnboardingService;
     personalDashboardService: PersonalDashboardService;
     projectStatusService: ProjectStatusService;
+    transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
 }

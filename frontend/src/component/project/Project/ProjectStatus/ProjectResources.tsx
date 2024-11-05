@@ -99,6 +99,9 @@ export const ProjectResources = () => {
     const { project, loading: loadingProject } = useProjectOverview(projectId);
     const { tokens, loading: loadingTokens } = useProjectApiTokens(projectId);
     const { segments, loading: loadingSegments } = useSegments();
+    const { data: projectStatus, loading: loadingResources } =
+        useProjectStatus(projectId);
+
     // todo: add sdk connections
 
     const segmentCount = useMemo(

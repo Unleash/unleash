@@ -22,6 +22,7 @@ export const projectStatusSchema = {
             properties: {
                 connectedEnvironments: {
                     type: 'number',
+                    minimum: 0,
                     description:
                         'The number of environments that have received SDK traffic in this project.',
                 },

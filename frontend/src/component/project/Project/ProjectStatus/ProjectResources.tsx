@@ -104,8 +104,6 @@ export const ProjectResources = () => {
     const { data: projectStatus, loading: loadingResources } =
         useProjectStatus(projectId);
 
-    // todo: add sdk connections
-
     const segmentCount = useMemo(
         () =>
             segments?.filter((segment) => segment.project === projectId)

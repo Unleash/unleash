@@ -390,6 +390,22 @@ class ProjectStore implements IProjectStore {
         return rows.map(this.mapProjectEnvironmentRow);
     }
 
+    async getConnectedEnvironmentCountForProject(id: string): Promise<number> {
+        const [{ count }] = (await this.db
+            .countDistinct('cme.environment')
+            .from('client_metrics_env as cme')
+            .innerJoin('features', 'cme.feature_name', 'features.name')
+            .innerJoin('projects', 'features.project', 'projects.id')
+            .innerJoin(
+                'project_environments',
+                'cme.environment',
+                'project_environments.environment_name',
+            )
+            .where('features.project', id)) as { count: string }[];
+
+        return Number(count);
+    }
+
     async getMembersCountByProject(projectId: string): Promise<number> {
         const members = await this.db
             .from((db) => {

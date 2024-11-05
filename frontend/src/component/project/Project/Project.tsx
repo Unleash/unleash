@@ -338,7 +338,7 @@ export const Project = () => {
                                             <ConditionallyRender
                                                 condition={Boolean(tab.new)}
                                                 show={
-                                                    // hextra span to avoid badge getting color override from the overly specific parent component
+                                                    // extra span to avoid badge getting color override from the overly specific parent component
                                                     <span>
                                                         <StyledBadge color='success'>
                                                             Beta

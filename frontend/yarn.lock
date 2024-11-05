@@ -4578,6 +4578,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"date-fns@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "date-fns@npm:4.1.0"
+  checksum: 10c0/b79ff32830e6b7faa009590af6ae0fb8c3fd9ffad46d930548fbb5acf473773b4712ae887e156ba91a7b3dc30591ce0f517d69fd83bd9c38650fdc03b4e0bac8
+  languageName: node
+  linkType: hard
+
 "dayjs@npm:^1.10.4":
   version: 1.11.11
   resolution: "dayjs@npm:1.11.11"
@@ -8366,6 +8373,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-activity-calendar@npm:^2.7.1":
+  version: 2.7.1
+  resolution: "react-activity-calendar@npm:2.7.1"
+  dependencies:
+    date-fns: "npm:^4.1.0"
+  peerDependencies:
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: 10c0/2d4c9dd688c1187b75b8878094365ee7ef8cec361ac6a2a8088cf83296025c7849fe909487c415ce3e739642821800a6452f7ce4873b52270a3b47834ca2498e
+  languageName: node
+  linkType: hard
+
 "react-archer@npm:4.4.0":
   version: 4.4.0
   resolution: "react-archer@npm:4.4.0"
@@ -8437,6 +8456,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-error-boundary@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "react-error-boundary@npm:4.1.2"
+  dependencies:
+    "@babel/runtime": "npm:^7.12.5"
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: 10c0/0737e5259bed40ce14eb0823b3c7b152171921f2179e604f48f3913490cdc594d6c22d43d7abb4ffb1512c832850228db07aa69d3b941db324953a5e393cb399
+  languageName: node
+  linkType: hard
+
 "react-fast-compare@npm:^2.0.4":
   version: 2.0.4
   resolution: "react-fast-compare@npm:2.0.4"
@@ -8457,6 +8487,19 @@ __metadata:
     react: 15 - 18
     react-dom: 15 - 18
   checksum: 10c0/3fa58e968a405fb95a004897ed19c87b4991e52ebd45d837b8577eb9175ddc1dfab223bb653a0fa73ffc22fc2b2a30f2d07e924f41f41a040299793e4d2decd4
+  languageName: node
+  linkType: hard
+
+"react-github-calendar@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "react-github-calendar@npm:4.5.1"
+  dependencies:
+    react-activity-calendar: "npm:^2.7.1"
+    react-error-boundary: "npm:^4.1.2"
+  peerDependencies:
+    react: ^17.0.0 || ^18.0.0
+    react-dom: ^17.0.0 || ^18.0.0
+  checksum: 10c0/51688983b28da92718cf2276e6c947b9639b529a93212d77a6c65040af2768b74153b32dee44eed4f706cf0cb4c025864327c51c9c666d1f5b88080f523ef672
   languageName: node
   linkType: hard
 
@@ -10152,6 +10195,7 @@ __metadata:
     react-dom: "npm:18.3.1"
     react-dropzone: "npm:14.2.10"
     react-error-boundary: "npm:3.1.4"
+    react-github-calendar: "npm:^4.5.1"
     react-hooks-global-state: "npm:2.1.0"
     react-joyride: "npm:^2.5.3"
     react-markdown: "npm:^8.0.4"

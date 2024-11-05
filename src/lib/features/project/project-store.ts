@@ -390,7 +390,7 @@ class ProjectStore implements IProjectStore {
         return rows.map(this.mapProjectEnvironmentRow);
     }
 
-    async getConnectedEnvironmentsForProject(id: string): Promise<number> {
+    async getConnectedEnvironmentCountForProject(id: string): Promise<number> {
         return 0;
 
         // .from('client_metrics_env as cme')

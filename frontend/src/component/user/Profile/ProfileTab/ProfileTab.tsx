@@ -22,6 +22,8 @@ import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
 import ActivityCalendar, { type ThemeInput } from 'react-activity-calendar';
 import { useEventSearch } from '../../../../hooks/api/getters/useEventSearch/useEventSearch';
 import { transformData } from 'component/insights/InsightsCharts';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ProductivityEmailSubscription } from './ProductivityEmailSubscription';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -159,6 +161,8 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                   },
               ];
 
+    const productivityReportEmailEnabled = useUiFlag('productivityReportEmail');
+
     return (
         <>
             <StyledHeader>
@@ -239,7 +243,7 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                     </Box>
                 </StyledAccess>
                 <StyledDivider />
-                <StyledSectionLabel>Settings</StyledSectionLabel>
+                <StyledSectionLabel>Date/Time Settings</StyledSectionLabel>
                 <Typography variant='body2'>
                     This is the format used across the system for time and date
                 </Typography>
@@ -267,6 +271,13 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                         })}
                     </Select>
                 </StyledFormControl>
+                {productivityReportEmailEnabled ? (
+                    <>
+                        <StyledDivider />
+                        <StyledSectionLabel>Email Settings</StyledSectionLabel>
+                        <ProductivityEmailSubscription />
+                    </>
+                ) : null}
             </PageContent>
         </>
     );

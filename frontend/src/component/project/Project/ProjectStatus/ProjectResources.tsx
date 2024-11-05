@@ -15,7 +15,6 @@ import ApiKeyIcon from '@mui/icons-material/Key';
 import SegmentsIcon from '@mui/icons-material/DonutLarge';
 import ConnectedIcon from '@mui/icons-material/Cable';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
-import useLoading from 'hooks/useLoading';
 
 const Wrapper = styled('article')(({ theme }) => ({
     backgroundColor: theme.palette.envAccordion.expanded,
@@ -90,7 +89,7 @@ const ListItem: FC<
     <ListItemRow>
         <ItemContent>
             {icon}
-            {children}
+            <span>{children}</span>
         </ItemContent>
         <Link to={linkUrl}>{linkText}</Link>
     </ListItemRow>
@@ -98,9 +97,9 @@ const ListItem: FC<
 
 export const ProjectResources = () => {
     const projectId = useRequiredPathParam('projectId');
-    const { project, loading: loadingProject } = useProjectOverview(projectId);
-    const { tokens, loading: loadingTokens } = useProjectApiTokens(projectId);
-    const { segments, loading: loadingSegments } = useSegments();
+    const { project } = useProjectOverview(projectId);
+    const { tokens } = useProjectApiTokens(projectId);
+    const { segments } = useSegments();
     const { data: projectStatus, loading: loadingResources } =
         useProjectStatus(projectId);
 
@@ -111,25 +110,8 @@ export const ProjectResources = () => {
         [segments, projectId],
     );
 
-    const loadingResourcesRef = useLoading(
-        loadingResources,
-        '[data-loading-resources=true]',
-    );
-    const loadingProjectRef = useLoading(
-        loadingProject,
-        '[data-loading-project=true]',
-    );
-    const loadingTokensRef = useLoading(
-        loadingTokens,
-        '[data-loading-tokens=true]',
-    );
-    const loadingSegmentsRef = useLoading(
-        loadingSegments,
-        '[data-loading-segments=true]',
-    );
-
     return (
-        <Wrapper ref={loadingProjectRef}>
+        <Wrapper>
             <ProjectResourcesInner>
                 <Typography variant='h3' sx={{ margin: 0 }}>
                     Project Resources
@@ -140,9 +122,7 @@ export const ProjectResources = () => {
                         linkText='Add members'
                         icon={<UsersIcon />}
                     >
-                        <span ref={loadingProjectRef} data-loading-project>
-                            {project.members} project member(s)
-                        </span>
+                        {project.members} project member(s)
                     </ListItem>
 
                     <ListItem
@@ -150,9 +130,7 @@ export const ProjectResources = () => {
                         linkText='Add new key'
                         icon={<ApiKeyIcon />}
                     >
-                        <span ref={loadingTokensRef} data-loading-tokens>
-                            {tokens.length} API key(s)
-                        </span>
+                        {tokens.length} API key(s)
                     </ListItem>
 
                     <ListItem
@@ -160,10 +138,8 @@ export const ProjectResources = () => {
                         linkText='View connections'
                         icon={<ConnectedIcon />}
                     >
-                        <span ref={loadingResourcesRef} data-loading-resources>
-                            {projectStatus.resources.connectedEnvironments}{' '}
-                            connected environment(s)
-                        </span>
+                        {projectStatus?.resources?.connectedEnvironments}{' '}
+                        connected environment(s)
                     </ListItem>
 
                     <ListItem
@@ -171,9 +147,7 @@ export const ProjectResources = () => {
                         linkText='Add segments'
                         icon={<SegmentsIcon />}
                     >
-                        <span ref={loadingSegmentsRef} data-loading-segments>
-                            {segmentCount} project segment(s)
-                        </span>
+                        {segmentCount} project segment(s)
                     </ListItem>
                 </ResourceList>
             </ProjectResourcesInner>

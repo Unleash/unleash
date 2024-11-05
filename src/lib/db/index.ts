@@ -189,7 +189,7 @@ export const createStores = (
             eventBus,
             config.flagResolver,
         ),
-        userUnsubscribeStore: new UserUnsubscribeStore(db, getLogger),
+        userUnsubscribeStore: new UserUnsubscribeStore(db),
         userSubscriptionsReadModel: new UserSubscriptionsReadModel(
             db,
             eventBus,

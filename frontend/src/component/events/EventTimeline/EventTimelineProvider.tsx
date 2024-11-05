@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { EventTimelineContext } from './EventTimelineContext';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import type { IEnvironment } from 'interfaces/environments';
@@ -17,21 +17,15 @@ type EventTimelinePersistentState = {
     signalsSuggestionSeen?: boolean;
 };
 
-type EventTimelineTemporaryState = {
-    highlighted: boolean;
-};
-
 type EventTimelineStateSetters = {
     setOpen: (open: boolean) => void;
     setTimeSpan: (timeSpan: TimeSpanOption) => void;
     setEnvironment: (environment: IEnvironment) => void;
     setSignalsSuggestionSeen: (seen: boolean) => void;
-    setHighlighted: (highlighted: boolean) => void;
 };
 
 export interface IEventTimelineContext
     extends EventTimelinePersistentState,
-        EventTimelineTemporaryState,
         EventTimelineStateSetters {}
 
 export const timeSpanOptions: TimeSpanOption[] = [
@@ -100,7 +94,6 @@ export const EventTimelineProvider = ({
             'event-timeline:v1',
             defaultState,
         );
-    const [highlighted, setHighlighted] = useState(false);
 
     const setField = <K extends keyof EventTimelinePersistentState>(
         key: K,
@@ -109,16 +102,8 @@ export const EventTimelineProvider = ({
         setState((prevState) => ({ ...prevState, [key]: value }));
     };
 
-    const onSetHighlighted = (highlighted: boolean) => {
-        setHighlighted(highlighted);
-        if (highlighted) {
-            setTimeout(() => setHighlighted(false), 3000);
-        }
-    };
-
     const contextValue: IEventTimelineContext = {
         ...state,
-        highlighted,
         setOpen: (open: boolean) => setField('open', open),
         setTimeSpan: (timeSpan: TimeSpanOption) =>
             setField('timeSpan', timeSpan),
@@ -126,7 +111,6 @@ export const EventTimelineProvider = ({
             setField('environment', environment),
         setSignalsSuggestionSeen: (seen: boolean) =>
             setField('signalsSuggestionSeen', seen),
-        setHighlighted: onSetHighlighted,
     };
 
     return (

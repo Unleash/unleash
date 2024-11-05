@@ -12,6 +12,7 @@ import type { IPermission } from '../../interfaces/user';
 import { SWRConfig } from 'swr';
 import type { ProjectMode } from '../project/Project/hooks/useProjectEnterpriseSettingsForm';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
+import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 
 const server = testServerSetup();
 
@@ -196,12 +197,14 @@ const UnleashUiSetup: FC<{
                     <ThemeProvider>
                         <AnnouncerProvider>
                             <StickyProvider>
-                                <Routes>
-                                    <Route
-                                        path={pathTemplate}
-                                        element={children}
-                                    />
-                                </Routes>
+                                <HighlightProvider>
+                                    <Routes>
+                                        <Route
+                                            path={pathTemplate}
+                                            element={children}
+                                        />
+                                    </Routes>
+                                </HighlightProvider>
                             </StickyProvider>
                         </AnnouncerProvider>
                     </ThemeProvider>

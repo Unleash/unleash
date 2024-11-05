@@ -5,11 +5,13 @@ import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-mode
 import EventEmitter from 'events';
 import { SUBSCRIPTION_TYPES } from './user-subscriptions-read-model-type';
 import type { IUnleashStores, IUserStore } from '../../types';
+import type { IUserUnsubscribeStore } from './user-unsubscribe-store-type';
 
 let db: ITestDb;
 let stores: IUnleashStores;
-let userSubscriptionsReadModel: IUserSubscriptionsReadModel;
 let userStore: IUserStore;
+let userUnsubscribeStore: IUserUnsubscribeStore;
+let userSubscriptionsReadModel: IUserSubscriptionsReadModel;
 
 const subscription =
     'productivity-report' satisfies (typeof SUBSCRIPTION_TYPES)[number];
@@ -18,11 +20,16 @@ beforeAll(async () => {
     db = await dbInit('user_subscriptions_read_model_test', getLogger);
     stores = db.stores;
     userStore = stores.userStore;
+    userUnsubscribeStore = stores.userUnsubscribeStore;
     const eventBus = new EventEmitter();
     userSubscriptionsReadModel = new UserSubscriptionsReadModel(
         db.rawDatabase,
         eventBus,
     );
+});
+
+beforeEach(async () => {
+    await db.stores.userStore.deleteAll();
 });
 
 afterAll(async () => {
@@ -44,8 +51,8 @@ describe('getSubscribedUsers', () => {
             name: 'User Three',
         });
 
-        await db.rawDatabase('user_unsubscription').insert({
-            user_id: user2.id,
+        await userUnsubscribeStore.insert({
+            userId: user2.id,
             subscription,
         });
 
@@ -75,11 +82,10 @@ describe('getSubscribedUsers', () => {
             ]),
         );
 
-        await db.rawDatabase('user_unsubscription').insert({
-            user_id: user.id,
+        await userUnsubscribeStore.insert({
+            userId: user.id,
             subscription,
         });
-
         subscribers =
             await userSubscriptionsReadModel.getSubscribedUsers(subscription);
         expect(subscribers).not.toEqual(
@@ -88,13 +94,10 @@ describe('getSubscribedUsers', () => {
             ]),
         );
 
-        await db
-            .rawDatabase('user_unsubscription')
-            .where({
-                user_id: user.id,
-                subscription,
-            })
-            .del();
+        await userUnsubscribeStore.delete({
+            userId: user.id,
+            subscription,
+        });
 
         subscribers =
             await userSubscriptionsReadModel.getSubscribedUsers(subscription);
@@ -103,6 +106,20 @@ describe('getSubscribedUsers', () => {
                 { email: 'user7@example.com', name: 'User Seven' },
             ]),
         );
+    });
+
+    test('should not include deleted users', async () => {
+        const user = await userStore.insert({
+            email: 'todelete@getunleash.io',
+            name: 'To Delete',
+        });
+
+        await userStore.delete(user.id);
+
+        const subscribers =
+            await userSubscriptionsReadModel.getSubscribedUsers(subscription);
+
+        expect(subscribers).toHaveLength(0);
     });
 });
 
@@ -127,8 +144,8 @@ describe('getUserSubscriptions', () => {
         const subscription =
             'productivity-report' satisfies (typeof SUBSCRIPTION_TYPES)[number];
 
-        await db.rawDatabase('user_unsubscription').insert({
-            user_id: user.id,
+        await userUnsubscribeStore.insert({
+            userId: user.id,
             subscription,
         });
 
@@ -137,13 +154,10 @@ describe('getUserSubscriptions', () => {
 
         expect(userSubscriptions).not.toContain(subscription);
 
-        await db
-            .rawDatabase('user_unsubscription')
-            .where({
-                user_id: user.id,
-                subscription,
-            })
-            .del();
+        await userUnsubscribeStore.delete({
+            userId: user.id,
+            subscription,
+        });
 
         const userSubscriptionsAfterResubscribe =
             await userSubscriptionsReadModel.getUserSubscriptions(user.id);

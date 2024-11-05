@@ -124,7 +124,7 @@ describe('getSubscribedUsers', () => {
 });
 
 describe('getUserSubscriptions', () => {
-    test(' returns all subscriptions if user has not unsubscribed', async () => {
+    test('returns all subscriptions if user has not unsubscribed', async () => {
         const user = await userStore.insert({
             email: 'user4@example.com',
             name: 'User Four',

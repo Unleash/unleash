@@ -15,4 +15,6 @@ export interface ProfileSchema {
     /** Which projects this user is a member of */
     projects: string[];
     rootRole: RoleSchema;
+    /** Which email subscriptions this user is subscribed to */
+    subscriptions: string[];
 }

@@ -330,7 +330,7 @@ export const Project = () => {
                                             });
                                         }
                                         navigate(
-                                            isOss && tab.ossPath
+                                            isOss() && tab.ossPath
                                                 ? tab.ossPath
                                                 : tab.path,
                                         );

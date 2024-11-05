@@ -57,6 +57,7 @@ process.nextTick(async () => {
                         webhookDomainLogging: true,
                         releasePlans: false,
                         simplifyProjectOverview: true,
+                        flagOverviewRedesign: true,
                     },
                 },
                 authentication: {

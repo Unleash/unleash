@@ -394,16 +394,14 @@ class ProjectStore implements IProjectStore {
         const result = await this.db
             .countDistinct('cme.environment')
             .from('client_metrics_env as cme')
-            .leftJoin('features', 'cme.feature_name', 'features.name')
-            .leftJoin('projects', 'features.project', 'projects.name')
+            .innerJoin('features', 'cme.feature_name', 'features.name')
+            .innerJoin('projects', 'features.project', 'projects.id')
             .innerJoin(
                 'project_environments',
                 'cme.environment',
                 'project_environments.environment_name',
             )
-            .where('project', id);
-
-        // const [result] = await query;
+            .where('features.project', id);
 
         const result2 = Number(result[0].count);
         // const { count } = result;

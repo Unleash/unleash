@@ -9,6 +9,7 @@ test('profileSchema', () => {
             name: 'Admin',
         },
         projects: ['default', 'secretproject'],
+        subscriptions: ['productivity-report'],
         features: [
             { name: 'firstFeature', project: 'default' },
             { name: 'secondFeature', project: 'secretproject' },

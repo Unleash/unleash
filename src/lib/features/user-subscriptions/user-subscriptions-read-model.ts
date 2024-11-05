@@ -45,9 +45,13 @@ export class UserSubscriptionsReadModel implements IUserSubscriptionsReadModel {
     }
 
     async getUserSubscriptions(userId: number) {
-        const unsubscriptions = await this.db(UNSUBSCRIPTION_TABLE)
+        const unsubscriptionsList = await this.db(UNSUBSCRIPTION_TABLE)
             .select('subscription')
             .where('user_id', userId);
+
+        const unsubscriptions: string[] = unsubscriptionsList.map(
+            (item) => item.subscription,
+        );
 
         return SUBSCRIPTION_TYPES.filter(
             (subscription) => !unsubscriptions.includes(subscription),

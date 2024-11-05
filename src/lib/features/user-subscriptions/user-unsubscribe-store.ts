@@ -1,9 +1,5 @@
-import type { Logger, LogProvider } from '../../logger';
 import type { Db } from '../../db/db';
-import type {
-    UnsubscribeEntry,
-    IUserUnsubscribeStore,
-} from './user-unsubscribe-store-type';
+import type { IUserUnsubscribeStore } from './user-unsubscribe-store-type';
 
 const COLUMNS = ['user_id', 'subscription', 'created_at'];
 export const TABLE = 'user_unsubscription';
@@ -14,20 +10,11 @@ interface IUserUnsubscribeTable {
     created_at?: Date;
 }
 
-const rowToField = (row: IUserUnsubscribeTable): UnsubscribeEntry => ({
-    userId: row.user_id,
-    subscription: row.subscription,
-    createdAt: row.created_at,
-});
-
 export class UserUnsubscribeStore implements IUserUnsubscribeStore {
     private db: Db;
 
-    private logger: Logger;
-
-    constructor(db: Db, getLogger: LogProvider) {
+    constructor(db: Db) {
         this.db = db;
-        this.logger = getLogger('user-unsubscribe-store.ts');
     }
 
     async insert({ userId, subscription }) {

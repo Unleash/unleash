@@ -79,17 +79,18 @@ test('project insights should return correct count for each day', async () => {
     const yesterdayEvent = events.find(
         (e) => e.data.featureName === 'yesterday-event',
     );
-    await db.rawDatabase.raw(
-        `UPDATE events SET created_at = '2024-11-03' where id = ?`,
-        [yesterdayEvent?.id],
-    );
+
+    const { todayString, yesterdayString } = getCurrentDateStrings();
+
+    await db.rawDatabase.raw(`UPDATE events SET created_at = ? where id = ?`, [
+        yesterdayString,
+        yesterdayEvent?.id,
+    ]);
 
     const { body } = await app.request
         .get('/api/admin/projects/default/status')
         .expect('Content-Type', /json/)
         .expect(200);
-
-    const { todayString, yesterdayString } = getCurrentDateStrings();
 
     expect(body).toMatchObject({
         activityCountByDate: [

@@ -10,6 +10,7 @@ import {
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import EditProject from './EditProject/EditProject';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
@@ -19,6 +20,17 @@ export const Settings = () => {
     const { hasAccess } = useContext(AccessContext);
     const { isOss } = useUiConfig();
     usePageTitle(`Project configuration – ${projectName}`);
+
+    if (isOss()) {
+        return (
+            <PageContent
+                header={<PageHeader title='General settings' />}
+                sx={{ justifyContent: 'center' }}
+            >
+                <PremiumFeature feature='project-settings' />
+            </PageContent>
+        );
+    }
 
     if (!hasAccess([UPDATE_PROJECT, PROJECT_SETTINGS_READ], projectId)) {
         return (

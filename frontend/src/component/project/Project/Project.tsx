@@ -70,6 +70,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 interface ITab {
     title: string;
     path: string;
+    ossPath?: string;
     name: string;
     flag?: keyof UiFlags;
     new?: boolean;
@@ -181,6 +182,7 @@ export const Project = () => {
         {
             title: 'Project settings',
             path: `${basePath}/settings`,
+            ossPath: `${basePath}/settings/api-access`,
             name: 'settings',
         },
     ];
@@ -327,7 +329,11 @@ export const Project = () => {
                                                 },
                                             });
                                         }
-                                        navigate(tab.path);
+                                        navigate(
+                                            isOss && tab.ossPath
+                                                ? tab.ossPath
+                                                : tab.path,
+                                        );
                                     }}
                                     data-testid={`TAB_${tab.title}`}
                                     iconPosition={

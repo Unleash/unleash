@@ -87,7 +87,7 @@ interface IProfileTabProps {
 }
 
 export const ProfileTab = ({ user }: IProfileTabProps) => {
-    const { profile } = useProfile();
+    const { profile, refetchProfile } = useProfile();
     const navigate = useNavigate();
     const { locationSettings, setLocationSettings } = useLocationSettings();
     const [currentLocale, setCurrentLocale] = useState<string>();
@@ -223,7 +223,18 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                     <>
                         <StyledDivider />
                         <StyledSectionLabel>Email Settings</StyledSectionLabel>
-                        <ProductivityEmailSubscription />
+                        {profile?.subscriptions && (
+                            <ProductivityEmailSubscription
+                                status={
+                                    profile.subscriptions.includes(
+                                        'productivity-report',
+                                    )
+                                        ? 'subscribed'
+                                        : 'unsubscribed'
+                                }
+                                onChange={refetchProfile}
+                            />
+                        )}
                     </>
                 ) : null}
             </PageContent>

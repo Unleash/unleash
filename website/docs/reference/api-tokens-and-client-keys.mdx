@@ -55,24 +55,19 @@ By default, only admin users can create API tokens, and only admins can see thei
 However, any [client](#client-tokens client tokens) and [front-end tokens](#front-end-tokens) that are applicable to a project, will also be visible to any members of that project that have the `READ_PROJECT_API_TOKEN` permission (all project members by default).
 
 Similarly, any project members with the `CREATE_PROJECT_API_TOKEN` permission can also create client and front-end tokens for that specific project ([how to create project API tokens](../how-to/how-to-create-project-api-tokens)).
+
 ### Admin tokens
+
+:::warning
+
+Admin tokens are deprecated. Use other tokens types:
+- With [Open Source](https://www.getunleash.io/pricing) and [Pro](../availability#plans), use [personal access tokens](#personal-access-tokens).
+- With [Enterprise](https://www.getunleash.io/pricing), use [service accounts](./service-accounts).
+
+:::
 
 **Admin tokens** grant _full read and write access_ to all resources in the Unleash server API. Admin tokens have access to all projects, all environments, and all root resources (find out more about [resources in the RBAC document](../reference/rbac#core-principles)).
 
-Use admin tokens to:
-
--   Automate Unleash behavior such as creating feature flags, projects, etc.
--   Write custom Unleash UIs to replace the default Unleash admin UI.
-Do **not** use admin tokens for:
-
--   [Client SDKs](../reference/sdks): You will _not_ be able to read flag data from multiple environments. Use [client tokens](#client-tokens) instead.
-
-Support for scoped admin tokens with more fine-grained permissions is currently in the planning stage.
-
-**Deprecation Notice**
-We do not recommend using admin tokens anymore, they are not connected to any user, and as such is a lot harder to track.
-* For [Open Source](https://www.getunleash.io/pricing) and [Pro](../availability#plans) users, we recommend using [personal access yokens](#personal-access-tokens) instead.
-* [Enterprise](https://www.getunleash.io/pricing) customers have the option to use [service accounts](./service-accounts).
 
 ### Personal access tokens
 

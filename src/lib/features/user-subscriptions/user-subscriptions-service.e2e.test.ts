@@ -1,7 +1,8 @@
 import {
+    type IEventStore,
     type IUnleashConfig,
     type IUnleashStores,
-    type IUser,
+    type IUserStore,
     TEST_AUDIT_USER,
 } from '../../types';
 import type { UserSubscriptionsService } from './user-subscriptions-service';
@@ -13,25 +14,27 @@ import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-mode
 
 let stores: IUnleashStores;
 let db: ITestDb;
+let userStore: IUserStore;
 let userSubscriptionService: UserSubscriptionsService;
 let userSubscriptionsReadModel: IUserSubscriptionsReadModel;
+let eventsStore: IEventStore;
 let config: IUnleashConfig;
-let user: IUser;
 
 beforeAll(async () => {
     db = await dbInit('user_subscriptions', getLogger);
     stores = db.stores;
     config = createTestConfig({});
 
+    userStore = stores.userStore;
     userSubscriptionService = createUserSubscriptionsService(config)(
         db.rawDatabase,
     );
     userSubscriptionsReadModel = db.stores.userSubscriptionsReadModel;
+    eventsStore = db.stores.eventStore;
+});
 
-    user = await stores.userStore.insert({
-        email: 'test@getunleash.io',
-        name: 'Sample Name',
-    });
+beforeEach(async () => {
+    await userStore.deleteAll();
 });
 
 afterAll(async () => {
@@ -39,6 +42,11 @@ afterAll(async () => {
 });
 
 test('Subscribe and unsubscribe', async () => {
+    const user = await userStore.insert({
+        email: 'test@getunleash.io',
+        name: 'Sample Name',
+    });
+
     const subscribers = await userSubscriptionsReadModel.getSubscribedUsers(
         'productivity-report',
     );
@@ -47,7 +55,7 @@ test('Subscribe and unsubscribe', async () => {
     ]);
 
     const userSubscriptions =
-        await userSubscriptionsReadModel.getUserSubscriptions(user.id);
+        await userSubscriptionService.getUserSubscriptions(user.id);
     expect(userSubscriptions).toMatchObject(['productivity-report']);
 
     await userSubscriptionService.unsubscribe(
@@ -62,6 +70,49 @@ test('Subscribe and unsubscribe', async () => {
     expect(noSubscribers).toMatchObject([]);
 
     const noUserSubscriptions =
-        await userSubscriptionsReadModel.getUserSubscriptions(user.id);
+        await userSubscriptionService.getUserSubscriptions(user.id);
     expect(noUserSubscriptions).toMatchObject([]);
+});
+
+test('Event log for subscription actions', async () => {
+    const user = await userStore.insert({
+        email: 'test@getunleash.io',
+        name: 'Sample Name',
+    });
+
+    await userSubscriptionService.unsubscribe(
+        user.id,
+        'productivity-report',
+        TEST_AUDIT_USER,
+    );
+
+    const unsubscribeEvent = (await eventsStore.getAll())[0];
+
+    expect(unsubscribeEvent).toEqual(
+        expect.objectContaining({
+            type: 'user-preference-updated',
+            data: {
+                subscription: 'productivity-report',
+                action: 'unsubscribed',
+            },
+        }),
+    );
+
+    await userSubscriptionService.subscribe(
+        user.id,
+        'productivity-report',
+        TEST_AUDIT_USER,
+    );
+
+    const subscribeEvent = (await eventsStore.getAll())[0];
+
+    expect(subscribeEvent).toEqual(
+        expect.objectContaining({
+            type: 'user-preference-updated',
+            data: {
+                subscription: 'productivity-report',
+                action: 'subscribed',
+            },
+        }),
+    );
 });

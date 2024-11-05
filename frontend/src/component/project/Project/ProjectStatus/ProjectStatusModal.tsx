@@ -23,6 +23,9 @@ const HealthRow = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
     gap: theme.spacing(2),
     '&>*': {
+        // todo: reconsider this value when the health widget is
+        // implemented. It may not be right, but it works for the
+        // placeholder
         flex: '30%',
     },
 }));

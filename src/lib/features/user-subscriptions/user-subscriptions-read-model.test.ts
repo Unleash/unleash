@@ -2,7 +2,6 @@ import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { UserSubscriptionsReadModel } from './user-subscriptions-read-model';
 import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type';
-import EventEmitter from 'events';
 import { SUBSCRIPTION_TYPES } from './user-subscriptions-read-model-type';
 import type { IUnleashStores, IUserStore } from '../../types';
 import type { IUserUnsubscribeStore } from './user-unsubscribe-store-type';
@@ -21,11 +20,7 @@ beforeAll(async () => {
     stores = db.stores;
     userStore = stores.userStore;
     userUnsubscribeStore = stores.userUnsubscribeStore;
-    const eventBus = new EventEmitter();
-    userSubscriptionsReadModel = new UserSubscriptionsReadModel(
-        db.rawDatabase,
-        eventBus,
-    );
+    userSubscriptionsReadModel = new UserSubscriptionsReadModel(db.rawDatabase);
 });
 
 beforeEach(async () => {

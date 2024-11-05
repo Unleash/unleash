@@ -32,6 +32,7 @@ import {
     type RolesSchema,
 } from '../../../openapi/spec/roles-schema';
 import type { IFlagResolver } from '../../../types';
+import type { UserSubscriptionsService } from '../../../features/user-subscriptions/user-subscriptions-service';
 
 class UserController extends Controller {
     private accessService: AccessService;
@@ -48,6 +49,8 @@ class UserController extends Controller {
 
     private flagResolver: IFlagResolver;
 
+    private userSubscriptionsService: UserSubscriptionsService;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -57,6 +60,7 @@ class UserController extends Controller {
             userSplashService,
             openApiService,
             projectService,
+            transactionalUserSubscriptionsService,
         }: Pick<
             IUnleashServices,
             | 'accessService'
@@ -65,6 +69,7 @@ class UserController extends Controller {
             | 'userSplashService'
             | 'openApiService'
             | 'projectService'
+            | 'transactionalUserSubscriptionsService'
         >,
     ) {
         super(config);
@@ -74,6 +79,7 @@ class UserController extends Controller {
         this.userSplashService = userSplashService;
         this.openApiService = openApiService;
         this.projectService = projectService;
+        this.userSubscriptionsService = transactionalUserSubscriptionsService;
         this.flagResolver = config.flagResolver;
 
         this.route({
@@ -237,12 +243,16 @@ class UserController extends Controller {
     ): Promise<void> {
         const { user } = req;
 
-        const projects = await this.projectService.getProjectsByUser(user.id);
+        const [projects, rootRole, subscriptions] = await Promise.all([
+            this.projectService.getProjectsByUser(user.id),
+            this.accessService.getRootRoleForUser(user.id),
+            this.userSubscriptionsService.getUserSubscriptions(user.id),
+        ]);
 
-        const rootRole = await this.accessService.getRootRoleForUser(user.id);
         const responseData: ProfileSchema = {
             projects,
             rootRole,
+            subscriptions,
             features: [],
         };
 

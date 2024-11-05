@@ -190,10 +190,7 @@ export const createStores = (
             config.flagResolver,
         ),
         userUnsubscribeStore: new UserUnsubscribeStore(db),
-        userSubscriptionsReadModel: new UserSubscriptionsReadModel(
-            db,
-            eventBus,
-        ),
+        userSubscriptionsReadModel: new UserSubscriptionsReadModel(db),
     };
 };
 

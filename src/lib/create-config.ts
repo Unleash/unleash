@@ -259,7 +259,10 @@ const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =
             propagateCreateError: false,
         },
         schema: process.env.DATABASE_SCHEMA || 'public',
-        disableMigration: parseEnvVarBoolean(process.env.DATABASE_DISABLE_MIGRATION, false),
+        disableMigration: parseEnvVarBoolean(
+            process.env.DATABASE_DISABLE_MIGRATION,
+            false,
+        ),
         applicationName: process.env.DATABASE_APPLICATION_NAME || 'unleash',
     };
 

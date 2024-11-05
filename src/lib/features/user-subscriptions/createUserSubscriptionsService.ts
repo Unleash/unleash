@@ -22,7 +22,9 @@ export const createUserSubscriptionsService =
         return userSubscriptionsService;
     };
 
-export const createFakeUserSubscriptionsService = (config: IUnleashConfig) => {
+export const createFakeUserSubscriptionsService = (
+    config: IUnleashConfig,
+): UserSubscriptionsService => {
     const userUnsubscribeStore = new FakeUserUnsubscribeStore();
     const eventService = createFakeEventsService(config);
 

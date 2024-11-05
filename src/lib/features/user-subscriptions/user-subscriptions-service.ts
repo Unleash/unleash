@@ -7,7 +7,7 @@ import type {
 } from './user-unsubscribe-store-type';
 import type EventService from '../events/event-service';
 
-export default class UserSubscriptionService {
+export class UserSubscriptionsService {
     private userUnsubscribeStore: IUserUnsubscribeStore;
 
     private eventService: EventService;

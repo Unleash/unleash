@@ -4,7 +4,7 @@ import {
     type IUser,
     TEST_AUDIT_USER,
 } from '../../types';
-import type UserSubscriptionService from './user-subscriptions-service';
+import type { UserSubscriptionsService } from './user-subscriptions-service';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import { createTestConfig } from '../../../test/config/test-config';
 import getLogger from '../../../test/fixtures/no-logger';
@@ -13,7 +13,7 @@ import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-mode
 
 let stores: IUnleashStores;
 let db: ITestDb;
-let userSubscriptionService: UserSubscriptionService;
+let userSubscriptionService: UserSubscriptionsService;
 let userSubscriptionsReadModel: IUserSubscriptionsReadModel;
 let config: IUnleashConfig;
 let user: IUser;

@@ -197,6 +197,7 @@ export const Project = () => {
     const activeTab = [...filteredTabs]
         .reverse()
         .find((tab) => pathname.startsWith(tab.path));
+
     useEffect(() => {
         const created = params.get('created');
         const edited = params.get('edited');

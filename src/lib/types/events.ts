@@ -204,6 +204,8 @@ export const ACTIONS_CREATED = 'actions-created' as const;
 export const ACTIONS_UPDATED = 'actions-updated' as const;
 export const ACTIONS_DELETED = 'actions-deleted' as const;
 
+export const USER_PREFERENCE_UPDATED = 'user-preference-updated' as const;
+
 export const IEventTypes = [
     APPLICATION_CREATED,
     FEATURE_CREATED,
@@ -351,6 +353,7 @@ export const IEventTypes = [
     ACTIONS_CREATED,
     ACTIONS_UPDATED,
     ACTIONS_DELETED,
+    USER_PREFERENCE_UPDATED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
@@ -2023,4 +2026,19 @@ function mapUserToData(user: IUserEventData): any {
         email: user.email,
         rootRole: user.rootRole,
     };
+}
+
+export class UserPreferenceEvent extends BaseEvent {
+    readonly userId;
+    readonly data: any;
+
+    constructor(eventData: {
+        userId: number;
+        data: any;
+        auditUser: IAuditUser;
+    }) {
+        super(USER_PREFERENCE_UPDATED, eventData.auditUser);
+        this.userId = eventData.userId;
+        this.data = eventData.data;
+    }
 }

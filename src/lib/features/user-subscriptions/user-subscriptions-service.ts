@@ -1,4 +1,8 @@
-import type { IUnleashConfig, IUnleashStores } from '../../types';
+import {
+    UserPreferenceEvent,
+    type IUnleashConfig,
+    type IUnleashStores,
+} from '../../types';
 import type { Logger } from '../../logger';
 import type { IAuditUser } from '../../types/user';
 import type {
@@ -49,13 +53,13 @@ export class UserSubscriptionsService {
         };
 
         await this.userUnsubscribeStore.delete(entry);
-        // TODO: log an event
-        // await this.eventService.storeEvent(
-        //     new UserSubscriptionEvent({
-        //         data: { ...entry, action: 'subscribed' },
-        //         auditUser,
-        //     }),
-        // );
+        await this.eventService.storeEvent(
+            new UserPreferenceEvent({
+                userId,
+                data: { subscription, action: 'subscribed' },
+                auditUser,
+            }),
+        );
     }
 
     async unsubscribe(
@@ -69,12 +73,12 @@ export class UserSubscriptionsService {
         };
 
         await this.userUnsubscribeStore.insert(entry);
-        // TODO: log an event
-        // await this.eventService.storeEvent(
-        //     new UserSubscriptionEvent({
-        //         data: { ...entry, action: 'unsubscribed' },
-        //         auditUser,
-        //     }),
-        // );
+        await this.eventService.storeEvent(
+            new UserPreferenceEvent({
+                userId,
+                data: { subscription, action: 'unsubscribed' },
+                auditUser,
+            }),
+        );
     }
 }

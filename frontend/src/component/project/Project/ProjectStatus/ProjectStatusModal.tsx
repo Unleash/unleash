@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ProjectResources } from './ProjectResources';
+import { ProjectActivity } from './ProjectActivity';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
     minHeight: '100vh',
@@ -17,6 +18,7 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
         <SidebarModal open={open} onClose={close} label='Project status'>
             <ModalContentContainer>
                 <ProjectResources />
+                <ProjectActivity />
             </ModalContentContainer>
         </SidebarModal>
     );

@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useState } from 'react';
+import { type FC, useState } from 'react';
 import {
     IconButton,
     ListItemIcon,
@@ -16,27 +16,16 @@ import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import MoreVert from '@mui/icons-material/MoreVert';
 
-const StyledIconButton = styled(IconButton)(({ theme }) => ({
-    height: theme.spacing(3.5),
-    width: theme.spacing(3.5),
-}));
-
 const StyledPopover = styled(Popover)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(1, 1.5),
 }));
 
-interface IDependencyActionsProps {
+export const OldDependencyActions: FC<{
     feature: string;
     onEdit: () => void;
     onDelete: () => void;
-}
-
-export const DependencyActions = ({
-    feature,
-    onEdit,
-    onDelete,
-}: IDependencyActionsProps) => {
+}> = ({ feature, onEdit, onDelete }) => {
     const id = `dependency-${feature}-actions`;
     const menuId = `${id}-menu`;
 
@@ -53,7 +42,8 @@ export const DependencyActions = ({
     return (
         <Box>
             <Tooltip title='Dependency actions' arrow describeChild>
-                <StyledIconButton
+                <IconButton
+                    sx={{ mr: 0.25 }}
                     id={id}
                     aria-controls={open ? menuId : undefined}
                     aria-haspopup='true'
@@ -62,7 +52,7 @@ export const DependencyActions = ({
                     type='button'
                 >
                     <MoreVert />
-                </StyledIconButton>
+                </IconButton>
             </Tooltip>
             <StyledPopover
                 id={menuId}

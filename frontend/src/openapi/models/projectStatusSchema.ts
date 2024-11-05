@@ -11,4 +11,10 @@ import type { ProjectActivitySchema } from './projectActivitySchema';
 export interface ProjectStatusSchema {
     /** Array of activity records with date and count, representing the project’s daily activity statistics. */
     activityCountByDate: ProjectActivitySchema;
+
+    /** Key resources within the project */
+    resources: {
+        /** Handwritten placeholder */
+        connectedEnvironments: number;
+    };
 }

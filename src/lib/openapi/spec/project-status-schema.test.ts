@@ -7,6 +7,7 @@ test('projectStatusSchema', () => {
             { date: '2022-12-14', count: 2 },
             { date: '2022-12-15', count: 5 },
         ],
+        resources: { connectedEnvironments: 2 },
     };
 
     expect(

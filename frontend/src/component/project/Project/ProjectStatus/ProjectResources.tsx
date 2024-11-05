@@ -15,6 +15,7 @@ import ApiKeyIcon from '@mui/icons-material/Key';
 import SegmentsIcon from '@mui/icons-material/DonutLarge';
 import ConnectedIcon from '@mui/icons-material/Cable';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
+import useLoading from 'hooks/useLoading';
 
 const Wrapper = styled('article')(({ theme }) => ({
     backgroundColor: theme.palette.envAccordion.expanded,
@@ -89,7 +90,7 @@ const ListItem: FC<
     <ListItemRow>
         <ItemContent>
             {icon}
-            <span>{children}</span>
+            <span data-loading-resources>{children}</span>
         </ItemContent>
         <Link to={linkUrl}>{linkText}</Link>
     </ListItemRow>
@@ -110,8 +111,10 @@ export const ProjectResources = () => {
         [segments, projectId],
     );
 
+    const loadingStatusRef = useLoading(true, '[data-loading-resources=true]');
+
     return (
-        <Wrapper>
+        <Wrapper ref={loadingStatusRef}>
             <ProjectResourcesInner>
                 <Typography variant='h3' sx={{ margin: 0 }}>
                     Project Resources

@@ -94,6 +94,7 @@ export type UiFlags = {
     'enterprise-payg'?: boolean;
     simplifyProjectOverview?: boolean;
     productivityReportEmail?: boolean;
+    flagOverviewRedesign?: boolean;
 };
 
 export interface IVersionInfo {

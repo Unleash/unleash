@@ -5,6 +5,6 @@ export type UnsubscribeEntry = {
 };
 
 export interface IUserUnsubscribeStore {
-    insert(item: UnsubscribeEntry): Promise<Partial<UnsubscribeEntry>>;
+    insert(item: UnsubscribeEntry): Promise<void>;
     delete(item: UnsubscribeEntry): Promise<void>;
 }

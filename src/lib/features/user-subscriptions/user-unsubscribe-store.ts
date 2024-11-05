@@ -20,7 +20,7 @@ const rowToField = (row: IUserUnsubscribeTable): UnsubscribeEntry => ({
     createdAt: row.created_at,
 });
 
-export default class UserUnsubscribeStore implements IUserUnsubscribeStore {
+export class UserUnsubscribeStore implements IUserUnsubscribeStore {
     private db: Db;
 
     private logger: Logger;
@@ -31,14 +31,12 @@ export default class UserUnsubscribeStore implements IUserUnsubscribeStore {
     }
 
     async insert({ userId, subscription }) {
-        const unsubscribeEntry = await this.db
+        await this.db
             .table<IUserUnsubscribeTable>(TABLE)
             .insert({ user_id: userId, subscription: subscription })
             .onConflict(['user_id', 'subscription'])
             .ignore()
             .returning(COLUMNS);
-
-        return rowToField(unsubscribeEntry[0] as IUserUnsubscribeTable);
     }
 
     async delete({ userId, subscription }): Promise<void> {
@@ -50,5 +48,3 @@ export default class UserUnsubscribeStore implements IUserUnsubscribeStore {
 
     destroy(): void {}
 }
-
-module.exports = UserUnsubscribeStore;

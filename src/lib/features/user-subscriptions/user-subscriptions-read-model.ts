@@ -1,9 +1,9 @@
 import type { Db } from '../../db/db';
-import metricsHelper from '../../util/metrics-helper';
 import type EventEmitter from 'events';
-import type {
-    IUserSubscriptionsReadModel,
-    Subscriber,
+import {
+    SUBSCRIPTION_TYPES,
+    type IUserSubscriptionsReadModel,
+    type Subscriber,
 } from './user-subscriptions-read-model-type';
 
 const USERS_TABLE = 'users';
@@ -17,8 +17,6 @@ const USER_COLUMNS = [
 ];
 const UNSUBSCRIPTION_TABLE = 'user_unsubscription';
 
-const DB_TIME = 'db_time';
-
 const mapRowToSubscriber = (row) =>
     ({
         name: row.name || row.username || '',
@@ -28,19 +26,11 @@ const mapRowToSubscriber = (row) =>
 export class UserSubscriptionsReadModel implements IUserSubscriptionsReadModel {
     private db: Db;
 
-    private timer: Function;
-
     constructor(db: Db, eventBus: EventEmitter) {
         this.db = db;
-        this.timer = (action: string) =>
-            metricsHelper.wrapTimer(eventBus, DB_TIME, {
-                store: 'user_subscriptions',
-                action,
-            });
     }
 
     async getSubscribedUsers(subscription: string) {
-        const timer = this.timer('getSubscribedUsers');
         const unsubscribedUserIdsQuery = this.db(UNSUBSCRIPTION_TABLE)
             .select('user_id')
             .where('subscription', subscription);
@@ -48,18 +38,19 @@ export class UserSubscriptionsReadModel implements IUserSubscriptionsReadModel {
         const users = await this.db(USERS_TABLE)
             .select(USER_COLUMNS)
             .whereNotIn('id', unsubscribedUserIdsQuery)
-            .andWhere('is_service', false);
+            .andWhere('is_service', false)
+            .andWhereNot('email', null);
 
-        timer();
-        return users.filter((row) => row.email).map(mapRowToSubscriber);
+        return users.map(mapRowToSubscriber);
     }
 
     async getUserSubscriptions(userId: number) {
-        const timer = this.timer('getUserSubscriptions');
-        const subscriptions = await this.db(UNSUBSCRIPTION_TABLE)
+        const unsubscriptions = await this.db(UNSUBSCRIPTION_TABLE)
             .select('subscription')
             .where('user_id', userId);
-        timer();
-        return subscriptions.map((row) => row.subscription);
+
+        return SUBSCRIPTION_TYPES.filter(
+            (subscription) => !unsubscriptions.includes(subscription),
+        );
     }
 }

@@ -6,30 +6,20 @@ import type {
     UnsubscribeEntry,
 } from './user-unsubscribe-store-type';
 import type EventService from '../events/event-service';
-import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type';
 
 export default class UserSubscriptionService {
     private userUnsubscribeStore: IUserUnsubscribeStore;
-
-    private userSubscriptionsReadModel: IUserSubscriptionsReadModel;
 
     private eventService: EventService;
 
     private logger: Logger;
 
     constructor(
-        {
-            userUnsubscribeStore,
-            userSubscriptionsReadModel,
-        }: Pick<
-            IUnleashStores,
-            'userUnsubscribeStore' | 'userSubscriptionsReadModel'
-        >,
+        { userUnsubscribeStore }: Pick<IUnleashStores, 'userUnsubscribeStore'>,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         eventService: EventService,
     ) {
         this.userUnsubscribeStore = userUnsubscribeStore;
-        this.userSubscriptionsReadModel = userSubscriptionsReadModel;
         this.eventService = eventService;
         this.logger = getLogger('services/user-subscription-service.ts');
     }
@@ -72,9 +62,5 @@ export default class UserSubscriptionService {
         //         auditUser,
         //     }),
         // );
-    }
-
-    async getSubscribed(subscription: string) {
-        return this.userSubscriptionsReadModel.getSubscribedUsers(subscription);
     }
 }

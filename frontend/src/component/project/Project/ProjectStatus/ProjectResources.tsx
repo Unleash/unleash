@@ -14,6 +14,8 @@ import { Link } from 'react-router-dom';
 import ApiKeyIcon from '@mui/icons-material/Key';
 import SegmentsIcon from '@mui/icons-material/DonutLarge';
 import ConnectedIcon from '@mui/icons-material/Cable';
+import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
+import useLoading from 'hooks/useLoading';
 
 const Wrapper = styled('article')(({ theme }) => ({
     backgroundColor: theme.palette.envAccordion.expanded,
@@ -88,7 +90,7 @@ const ListItem: FC<
     <ListItemRow>
         <ItemContent>
             {icon}
-            <span>{children}</span>
+            {children}
         </ItemContent>
         <Link to={linkUrl}>{linkText}</Link>
     </ListItemRow>
@@ -111,8 +113,25 @@ export const ProjectResources = () => {
         [segments, projectId],
     );
 
+    const loadingResourcesRef = useLoading(
+        loadingResources,
+        '[data-loading-resources=true]',
+    );
+    const loadingProjectRef = useLoading(
+        loadingProject,
+        '[data-loading-project=true]',
+    );
+    const loadingTokensRef = useLoading(
+        loadingTokens,
+        '[data-loading-tokens=true]',
+    );
+    const loadingSegmentsRef = useLoading(
+        loadingSegments,
+        '[data-loading-segments=true]',
+    );
+
     return (
-        <Wrapper>
+        <Wrapper ref={loadingProjectRef}>
             <ProjectResourcesInner>
                 <Typography variant='h3' sx={{ margin: 0 }}>
                     Project Resources
@@ -123,7 +142,9 @@ export const ProjectResources = () => {
                         linkText='Add members'
                         icon={<UsersIcon />}
                     >
-                        {project.members} project member(s)
+                        <span ref={loadingProjectRef} data-loading-project>
+                            {project.members} project member(s)
+                        </span>
                     </ListItem>
 
                     <ListItem
@@ -131,7 +152,9 @@ export const ProjectResources = () => {
                         linkText='Add new key'
                         icon={<ApiKeyIcon />}
                     >
-                        {tokens.length} API key(s)
+                        <span ref={loadingTokensRef} data-loading-tokens>
+                            {tokens.length} API key(s)
+                        </span>
                     </ListItem>
 
                     <ListItem
@@ -139,7 +162,10 @@ export const ProjectResources = () => {
                         linkText='View connections'
                         icon={<ConnectedIcon />}
                     >
-                        1 connected environment(s)
+                        <span ref={loadingResourcesRef} data-loading-resources>
+                            {projectStatus.resources.connectedEnvironments}{' '}
+                            connected environment(s)
+                        </span>
                     </ListItem>
 
                     <ListItem
@@ -147,7 +173,9 @@ export const ProjectResources = () => {
                         linkText='Add segments'
                         icon={<SegmentsIcon />}
                     >
-                        {segmentCount} project segment(s)
+                        <span ref={loadingSegmentsRef} data-loading-segments>
+                            {segmentCount} project segment(s)
+                        </span>
                     </ListItem>
                 </ResourceList>
             </ProjectResourcesInner>

@@ -2028,7 +2028,7 @@ function mapUserToData(user: IUserEventData): any {
     };
 }
 
-export class UserPreferenceEvent extends BaseEvent {
+export class UserPreferenceUpdatedEvent extends BaseEvent {
     readonly userId;
     readonly data: any;
 

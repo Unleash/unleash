@@ -1,5 +1,5 @@
 import {
-    UserPreferenceEvent,
+    UserPreferenceUpdatedEvent,
     type IUnleashConfig,
     type IUnleashStores,
 } from '../../types';
@@ -54,7 +54,7 @@ export class UserSubscriptionsService {
 
         await this.userUnsubscribeStore.delete(entry);
         await this.eventService.storeEvent(
-            new UserPreferenceEvent({
+            new UserPreferenceUpdatedEvent({
                 userId,
                 data: { subscription, action: 'subscribed' },
                 auditUser,
@@ -74,7 +74,7 @@ export class UserSubscriptionsService {
 
         await this.userUnsubscribeStore.insert(entry);
         await this.eventService.storeEvent(
-            new UserPreferenceEvent({
+            new UserPreferenceUpdatedEvent({
                 userId,
                 data: { subscription, action: 'unsubscribed' },
                 auditUser,

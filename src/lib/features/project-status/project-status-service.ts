@@ -50,7 +50,7 @@ export class ProjectStatusService {
                 ),
 
             this.segmentStore.getProjectSegmentCount(projectId),
-            this.eventStore.getProjectEventActivity(projectId),
+            this.eventStore.getProjectRecentEventActivity(projectId),
         ]);
 
         return {

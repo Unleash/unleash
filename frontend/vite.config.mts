@@ -23,6 +23,13 @@ const vitestConfig = vitestDefineConfig({
         environment: 'jsdom',
         exclude: [...configDefaults.exclude, '**/cypress/**'],
     },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                api: 'modern-compiler'
+            }
+        }
+    }
 });
 
 export default mergeConfig(

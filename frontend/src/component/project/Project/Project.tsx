@@ -94,11 +94,14 @@ const TabText = styled('span')(({ theme }) => ({
 }));
 
 const ChangeRequestsLabel = () => {
+    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
     const projectId = useRequiredPathParam('projectId');
     const { total } = useActionableChangeRequests(projectId);
 
+    const count = simplifyProjectOverview ? 0 : (total ?? 0);
+
     return (
-        <StyledCounterBadge badgeContent={total ?? 0} color='primary'>
+        <StyledCounterBadge badgeContent={count} color='primary'>
             <TabText>Change requests</TabText>
         </StyledCounterBadge>
     );
@@ -167,7 +170,7 @@ export const Project = () => {
             path: `${basePath}/change-requests`,
             name: 'change-request',
             isEnterprise: true,
-            label: simplifyProjectOverview ? ChangeRequestsLabel : undefined,
+            label: ChangeRequestsLabel,
         },
         {
             title: 'Applications',

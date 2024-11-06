@@ -4,13 +4,12 @@ const LifecycleBox = styled('article')(({ theme }) => ({
     padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusExtraLarge,
     border: `2px solid ${theme.palette.divider}`,
-    minWidth: '200px',
     aspectRatio: '1/1',
 }));
 
 const Wrapper = styled('article')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
     gap: theme.spacing(2),
 }));
 

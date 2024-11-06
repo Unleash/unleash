@@ -53,6 +53,10 @@ afterAll(async () => {
     await db.destroy();
 });
 
+beforeEach(async () => {
+    await db.stores.clientMetricsStoreV2.deleteAll();
+});
+
 test('project insights should return correct count for each day', async () => {
     await eventService.storeEvent({
         type: FEATURE_CREATED,

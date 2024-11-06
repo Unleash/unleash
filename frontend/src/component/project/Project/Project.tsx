@@ -98,10 +98,12 @@ const ChangeRequestsLabel = () => {
     const projectId = useRequiredPathParam('projectId');
     const { total } = useActionableChangeRequests(projectId);
 
-    const count = simplifyProjectOverview ? 0 : (total ?? 0);
+    if (!simplifyProjectOverview) {
+        return 'Change requests';
+    }
 
     return (
-        <StyledCounterBadge badgeContent={count} color='primary'>
+        <StyledCounterBadge badgeContent={total ?? 0} color='primary'>
             <TabText>Change requests</TabText>
         </StyledCounterBadge>
     );

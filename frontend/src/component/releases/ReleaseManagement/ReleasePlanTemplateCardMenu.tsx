@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
     IconButton,
     Tooltip,
@@ -8,12 +8,34 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
+import { useReleasePlanTemplatesApi } from 'hooks/api/actions/useReleasePlanTemplatesApi/useReleasePlanTemplatesApi';
+import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
+import { TemplateDeleteDialog } from './TemplateDeleteDialog';
 
 export const ReleasePlanTemplateCardMenu = ({
     template,
 }: { template: IReleasePlanTemplate }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
+    const { deleteReleasePlanTemplate } = useReleasePlanTemplatesApi();
+    const { refetch } = useReleasePlanTemplates();
+    const { setToastData, setToastApiError } = useToast();
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const deleteReleasePlan = useCallback(async () => {
+        try {
+            await deleteReleasePlanTemplate(template.id);
+            refetch();
+            setToastData({
+                type: 'success',
+                title: 'Success',
+                text: 'Release plan template deleted',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    }, [setToastApiError, refetch, setToastData, deleteReleasePlanTemplate]);
 
     const closeMenu = () => {
         setIsMenuOpen(false);
@@ -66,12 +88,19 @@ export const ReleasePlanTemplateCardMenu = ({
                 </MenuItem>
                 <MenuItem
                     onClick={() => {
+                        setDeleteOpen(true);
                         closeMenu();
                     }}
                 >
-                    <ListItemText>Delete template </ListItemText>
+                    <ListItemText>Delete template</ListItemText>
                 </MenuItem>
             </Menu>
+            <TemplateDeleteDialog
+                template={template}
+                open={deleteOpen}
+                setOpen={setDeleteOpen}
+                onConfirm={deleteReleasePlan}
+            />
         </>
     );
 };

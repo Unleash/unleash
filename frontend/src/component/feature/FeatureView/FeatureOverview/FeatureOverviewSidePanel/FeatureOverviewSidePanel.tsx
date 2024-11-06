@@ -33,7 +33,7 @@ const StyledHeader = styled('h3')(({ theme }) => ({
 
 const StyledVerticalTabs = styled(VerticalTabs)(({ theme }) => ({
     '&&& .selected': {
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: theme.palette.neutral.light,
     },
 }));
 

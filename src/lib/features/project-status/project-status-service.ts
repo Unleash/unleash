@@ -20,6 +20,9 @@ export class ProjectStatusService {
                     await this.projectStore.getConnectedEnvironmentCountForProject(
                         projectId,
                     ),
+                members: 0,
+                apiTokens: 0,
+                segments: 0,
             },
             activityCountByDate:
                 await this.eventStore.getProjectEventActivity(projectId),

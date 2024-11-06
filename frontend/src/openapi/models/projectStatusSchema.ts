@@ -13,8 +13,11 @@ export interface ProjectStatusSchema {
     activityCountByDate: ProjectActivitySchema;
 
     /** Key resources within the project */
+    /** Handwritten placeholder */
     resources: {
-        /** Handwritten placeholder */
         connectedEnvironments: number;
+        apiTokens: number;
+        members: number;
+        segments: number;
     };
 }

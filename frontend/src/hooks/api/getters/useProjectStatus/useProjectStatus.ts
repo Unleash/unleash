@@ -6,7 +6,12 @@ const path = (projectId: string) => `api/admin/projects/${projectId}/status`;
 
 const placeholderData: ProjectStatusSchema = {
     activityCountByDate: [],
-    resources: { connectedEnvironments: 0 },
+    resources: {
+        connectedEnvironments: 0,
+        members: 0,
+        apiTokens: 0,
+        segments: 0,
+    },
 };
 
 export const useProjectStatus = (projectId: string) => {

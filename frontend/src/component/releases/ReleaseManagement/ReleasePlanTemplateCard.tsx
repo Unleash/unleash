@@ -2,7 +2,6 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
 import { styled, Typography } from '@mui/material';
 import { ReleasePlanTemplateCardMenu } from './ReleasePlanTemplateCardMenu';
-import useUserInfo from 'hooks/api/getters/useUserInfo/useUserInfo';
 
 const StyledTemplateCard = styled('aside')(({ theme }) => ({
     height: '100%',
@@ -59,8 +58,6 @@ const StyledMenu = styled('div')(({ theme }) => ({
 export const ReleasePlanTemplateCard = ({
     template,
 }: { template: IReleasePlanTemplate }) => {
-    const { user } = useUserInfo(template.createdByUserId.toString());
-
     return (
         <StyledTemplateCard>
             <TemplateCardHeader>
@@ -71,7 +68,9 @@ export const ReleasePlanTemplateCard = ({
             <TemplateCardBody>
                 <div>{template.name}</div>
                 <StyledDiv>
-                    <StyledCreatedBy>Created by {user.name}</StyledCreatedBy>
+                    <StyledCreatedBy>
+                        Created by {template.createdByUserId}
+                    </StyledCreatedBy>
                     <StyledMenu onClick={(e) => e.preventDefault()}>
                         <ReleasePlanTemplateCardMenu template={template} />
                     </StyledMenu>

@@ -38,17 +38,7 @@ export class ProjectStatusService {
         ] = await Promise.all([
             this.projectStore.getConnectedEnvironmentCountForProject(projectId),
             this.projectStore.getMembersCountByProject(projectId),
-            this.apiTokenStore
-                .getAll()
-                .then(
-                    (tokens) =>
-                        tokens.filter(
-                            (token) =>
-                                token.project === projectId ||
-                                token.projects.includes(projectId),
-                        ).length,
-                ),
-
+            this.apiTokenStore.countProjectTokens(projectId),
             this.segmentStore.getProjectSegmentCount(projectId),
             this.eventStore.getProjectRecentEventActivity(projectId),
         ]);

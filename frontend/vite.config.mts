@@ -26,10 +26,10 @@ const vitestConfig = vitestDefineConfig({
     css: {
         preprocessorOptions: {
             scss: {
-                api: 'modern-compiler'
-            }
-        }
-    }
+                api: 'modern-compiler',
+            },
+        },
+    },
 });
 
 export default mergeConfig(

@@ -192,7 +192,7 @@ export class ProjectReadModel implements IProjectReadModel {
                 'projects.id, projects.health, ' +
                     'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
                     'count(features.name) FILTER (WHERE features.archived_at is null and features.stale IS TRUE) AS stale_feature_count, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count',
+                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE and features.stale IS FALSE) AS potentially_stale_feature_count',
             ),
             'project_stats.avg_time_to_prod_current_window',
             'projects.archived_at',

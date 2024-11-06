@@ -1,78 +1,83 @@
 import { Box, styled } from '@mui/material';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { FeatureOverviewSidePanelEnvironmentSwitches } from './FeatureOverviewSidePanelEnvironmentSwitches/FeatureOverviewSidePanelEnvironmentSwitches';
 import { Sticky } from 'component/common/Sticky/Sticky';
+import {
+    type ITab,
+    VerticalTabs,
+} from 'component/common/VerticalTabs/VerticalTabs';
+import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
+import { useEffect } from 'react';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
-    top: theme.spacing(2),
+    margin: theme.spacing(2),
+    marginLeft: 0,
+    padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
-    maxWidth: '350px',
-    minWidth: '350px',
-    marginRight: '1rem',
-    marginTop: '1rem',
+    gap: theme.spacing(2),
+    width: '350px',
     [theme.breakpoints.down(1000)]: {
-        marginBottom: '1rem',
         width: '100%',
-        maxWidth: 'none',
-        minWidth: 'auto',
     },
 }));
 
 const StyledHeader = styled('h3')(({ theme }) => ({
     display: 'flex',
-    gap: theme.spacing(1),
-    alignItems: 'center',
     fontSize: theme.fontSizes.bodySize,
     margin: 0,
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(1),
+}));
 
-    // Make the help icon align with the text.
-    '& > :last-child': {
-        position: 'relative',
-        top: 1,
+const StyledVerticalTabs = styled(VerticalTabs)(({ theme }) => ({
+    '&&& .selected': {
+        backgroundColor: theme.palette.secondary.light,
     },
 }));
 
 interface IFeatureOverviewSidePanelProps {
-    hiddenEnvironments: Set<String>;
-    setHiddenEnvironments: (environment: string) => void;
+    environmentId: string;
+    setEnvironmentId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const FeatureOverviewSidePanel = ({
-    hiddenEnvironments,
-    setHiddenEnvironments,
+    environmentId,
+    setEnvironmentId,
 }: IFeatureOverviewSidePanelProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { feature } = useFeature(projectId, featureId);
     const isSticky = feature.environments?.length <= 3;
 
+    const tabs: ITab[] = feature.environments.map(
+        ({ name, enabled, strategies }) => ({
+            id: name,
+            label: name,
+            description:
+                strategies.length === 1
+                    ? '1 strategy'
+                    : `${strategies.length || 'No'} strategies`,
+            startIcon: <EnvironmentIcon enabled={enabled} />,
+        }),
+    );
+
+    useEffect(() => {
+        if (!environmentId) {
+            setEnvironmentId(tabs[0]?.id);
+        }
+    }, [tabs]);
+
     return (
         <StyledContainer as={isSticky ? Sticky : Box}>
-            <FeatureOverviewSidePanelEnvironmentSwitches
-                header={
-                    <StyledHeader data-loading>
-                        Enabled in environments (
-                        {
-                            feature.environments.filter(
-                                ({ enabled }) => enabled,
-                            ).length
-                        }
-                        )
-                        <HelpIcon
-                            tooltip='When a feature is switched off in an environment, it will always return false. When switched on, it will return true or false depending on its strategies.'
-                            placement='top'
-                        />
-                    </StyledHeader>
-                }
-                feature={feature}
-                hiddenEnvironments={hiddenEnvironments}
-                setHiddenEnvironments={setHiddenEnvironments}
+            <StyledHeader data-loading>
+                Environments ({feature.environments.length})
+            </StyledHeader>
+            <StyledVerticalTabs
+                tabs={tabs}
+                value={environmentId}
+                onChange={({ id }) => setEnvironmentId(id)}
             />
         </StyledContainer>
     );

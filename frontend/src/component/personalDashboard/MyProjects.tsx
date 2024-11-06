@@ -194,9 +194,8 @@ export const MyProjects: React.FC<{
                     const activeProjectStage =
                         personalDashboardProjectDetails.data.onboardingStatus
                             .status ?? 'loading';
-                    const setupIncomplete =
-                        activeProjectStage === 'onboarding-started' ||
-                        activeProjectStage === 'first-flag-created';
+                    const onboardingStarted =
+                        activeProjectStage === 'onboarding-started';
 
                     if (activeProjectStage === 'onboarded') {
                         return [
@@ -214,7 +213,7 @@ export const MyProjects: React.FC<{
                                 }
                             />,
                         ];
-                    } else if (setupIncomplete) {
+                    } else if (onboardingStarted) {
                         return [
                             <CreateFlag project={activeProject} />,
                             <ConnectSDK project={activeProject} />,

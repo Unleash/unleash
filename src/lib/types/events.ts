@@ -204,9 +204,12 @@ export const ACTIONS_CREATED = 'actions-created' as const;
 export const ACTIONS_UPDATED = 'actions-updated' as const;
 export const ACTIONS_DELETED = 'actions-deleted' as const;
 
-export const RELEASE_PLAN_TEMPLATE_CREATED = 'release-plan-template-created';
-export const RELEASE_PLAN_TEMPLATE_UPDATED = 'release-plan-template-updated';
-export const RELEASE_PLAN_TEMPLATE_DELETED = 'release-plan-template-deleted';
+export const RELEASE_PLAN_TEMPLATE_CREATED =
+    'release-plan-template-created' as const;
+export const RELEASE_PLAN_TEMPLATE_UPDATED =
+    'release-plan-template-updated' as const;
+export const RELEASE_PLAN_TEMPLATE_DELETED =
+    'release-plan-template-deleted' as const;
 export const USER_PREFERENCE_UPDATED = 'user-preference-updated' as const;
 
 export const IEventTypes = [

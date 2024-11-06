@@ -1,10 +1,10 @@
 import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import type { IProfile } from 'interfaces/profile';
+import type { ProfileSchema } from '../../../../openapi';
 
 export interface IUseProfileOutput {
-    profile?: IProfile;
+    profile?: ProfileSchema;
     refetchProfile: () => void;
     loading: boolean;
     error?: Error;

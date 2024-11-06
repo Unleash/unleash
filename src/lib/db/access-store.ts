@@ -943,7 +943,8 @@ export class AccessStore implements IAccessStore {
     }
 
     async getUserAccessOverview(): Promise<IUserAccessOverview[]> {
-        const result = await this.db.raw(`SELECT u.id, u.created_at, u.name, u.email, u.seen_at, up.p_array as projects, gr.p_array as groups, gp.p_array as group_projects, r.name as root_role
+        const result =
+            await this.db.raw(`SELECT u.id, u.created_at, u.name, u.email, u.seen_at, up.p_array as projects, gr.p_array as groups, gp.p_array as group_projects, r.name as root_role
                 FROM users u, LATERAL (
                 SELECT ARRAY (
                     SELECT ru.project

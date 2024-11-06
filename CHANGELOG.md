@@ -2,6 +2,408 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.4.0] - 2024-10-30
+
+### Bug Fixes
+
+- Fix tracking of menu bar for no search results ([#8326](https://github.com/Unleash/unleash/issues/8326))
+
+- Update go snippet ([#8333](https://github.com/Unleash/unleash/issues/8333))
+
+- Node.js SDK link ([#8334](https://github.com/Unleash/unleash/issues/8334))
+
+- Event styling personal dashboard ([#8337](https://github.com/Unleash/unleash/issues/8337))
+
+- Only ask for project details if we have a project ID ([#8339](https://github.com/Unleash/unleash/issues/8339))
+
+- Add grid w/container query for projects ([#8344](https://github.com/Unleash/unleash/issues/8344))
+
+- Make gaps 1px instead of 2px ([#8351](https://github.com/Unleash/unleash/issues/8351))
+
+- Add back flex container. ([#8356](https://github.com/Unleash/unleash/issues/8356))
+
+- Vertically center owners and roles content ([#8357](https://github.com/Unleash/unleash/issues/8357))
+
+- Return 404 if the project doesn't exist ([#8362](https://github.com/Unleash/unleash/issues/8362))
+
+- Small breakathon fixes ([#8368](https://github.com/Unleash/unleash/issues/8368))
+
+- No owners listed in personal dashboard for default project ([#8373](https://github.com/Unleash/unleash/issues/8373))
+
+- Use ip-address for remote-strategy ([#8380](https://github.com/Unleash/unleash/issues/8380))
+
+- Import svg viewbox misalignment ([#8216](https://github.com/Unleash/unleash/issues/8216))
+
+- Handle project fetching error ([#8375](https://github.com/Unleash/unleash/issues/8375))
+
+- Handle lots of project roles better ([#8383](https://github.com/Unleash/unleash/issues/8383))
+
+- Removes welcome message and updates view details button ([#8385](https://github.com/Unleash/unleash/issues/8385))
+
+- Route for environments for pro customers ([#8390](https://github.com/Unleash/unleash/issues/8390))
+
+- Make no data look like no data ([#8396](https://github.com/Unleash/unleash/issues/8396))
+
+- Environments route should be hidden from menu for open-source ([#8397](https://github.com/Unleash/unleash/issues/8397))
+
+- Display tick values for chart Y axis ([#8412](https://github.com/Unleash/unleash/issues/8412))
+
+- Chart issues in dark mode ([#8414](https://github.com/Unleash/unleash/issues/8414))
+
+- Show empty chart when we're loading flag metrics ([#8419](https://github.com/Unleash/unleash/issues/8419))
+
+- Fix title sizes ([#8420](https://github.com/Unleash/unleash/issues/8420))
+
+- Revert link changes ([#8425](https://github.com/Unleash/unleash/issues/8425))
+
+- Section sizes ([#8423](https://github.com/Unleash/unleash/issues/8423))
+
+- Adjust the height of the flag section ([#8426](https://github.com/Unleash/unleash/issues/8426))
+
+- Handle narrow screens better ([#8430](https://github.com/Unleash/unleash/issues/8430))
+
+- Order API integration update ([#8431](https://github.com/Unleash/unleash/issues/8431))
+
+- Now health widget will match will chart ([#8432](https://github.com/Unleash/unleash/issues/8432))
+
+- Spacing between lifecycle metrics and env/period selector ([#8433](https://github.com/Unleash/unleash/issues/8433))
+
+- Handle cases where the flag name causes API errors (or other errors occur) ([#8439](https://github.com/Unleash/unleash/issues/8439))
+
+- Archived flags without metrics do not count towards onboarding ([#8443](https://github.com/Unleash/unleash/issues/8443))
+
+- Fix environment order form state ([#8449](https://github.com/Unleash/unleash/issues/8449))
+
+- Same site api call with session cookie ([#8435](https://github.com/Unleash/unleash/issues/8435))
+
+- Unleash AI chat message code not breaking to new line ([#8455](https://github.com/Unleash/unleash/issues/8455))
+
+- Group and user has at least 1 project owner counter respects multirole project groups ([#8453](https://github.com/Unleash/unleash/issues/8453))
+
+- Wrap the UserAvatar component in forwardRef ([#8461](https://github.com/Unleash/unleash/issues/8461))
+
+- Fix two disabled tooltips ([#8464](https://github.com/Unleash/unleash/issues/8464))
+
+- Traffic estimate should Math.floor price estimate to full million ([#8468](https://github.com/Unleash/unleash/issues/8468))
+
+- Add the dashboard icon to the iconrenderer ([#8474](https://github.com/Unleash/unleash/issues/8474))
+
+- Allow you to add spaces to role descriptions ([#8475](https://github.com/Unleash/unleash/issues/8475))
+
+- Missing page titles ([#8477](https://github.com/Unleash/unleash/issues/8477))
+
+- Handle loading states for project details for a single project ([#8492](https://github.com/Unleash/unleash/issues/8492))
+
+- Break words first, break all second ([#8495](https://github.com/Unleash/unleash/issues/8495))
+
+- Don't allow . or .. in feature url ([#8479](https://github.com/Unleash/unleash/issues/8479))
+
+- Update dependency cookie-parser to v1.4.7 ([#8503](https://github.com/Unleash/unleash/issues/8503))
+
+- Fontend dev command to start in sandbox pro environment ([#8376](https://github.com/Unleash/unleash/issues/8376))
+
+- Enable nav sidebar for previous uis ([#8508](https://github.com/Unleash/unleash/issues/8508))
+
+- Update dependency express to v4.21.1 ([#8511](https://github.com/Unleash/unleash/issues/8511))
+
+- Update dependency express-rate-limit to v7.4.1 ([#8512](https://github.com/Unleash/unleash/issues/8512))
+
+- Update dependency express-session to v1.18.1 ([#8513](https://github.com/Unleash/unleash/issues/8513))
+
+- Update dependency ip-address to v10.0.1 ([#8515](https://github.com/Unleash/unleash/issues/8515))
+
+- Update dependency json-2-csv to v5.5.6 ([#8516](https://github.com/Unleash/unleash/issues/8516))
+
+- Stretch strategies ([#8519](https://github.com/Unleash/unleash/issues/8519))
+
+- Stretch strategies underlying root cause ([#8520](https://github.com/Unleash/unleash/issues/8520))
+
+- Update dependency response-time to v2.3.3 ([#8524](https://github.com/Unleash/unleash/issues/8524))
+
+- Invalid spreading of keys into table rows everywhere ([#8551](https://github.com/Unleash/unleash/issues/8551))
+
+- Now feature table does not dissapear ([#8554](https://github.com/Unleash/unleash/issues/8554))
+
+- Correctly filter for `to` dates ([#8567](https://github.com/Unleash/unleash/issues/8567))
+
+- Set path-to-regexp version in docker ([#8572](https://github.com/Unleash/unleash/issues/8572))
+
+- Productivity report email ([#8574](https://github.com/Unleash/unleash/issues/8574))
+
+- Update dependency @slack/web-api to v7.6.0 ([#8584](https://github.com/Unleash/unleash/issues/8584))
+
+- Update dependency pg to v8.13.0 ([#8585](https://github.com/Unleash/unleash/issues/8585))
+
+- Welcome message with no name ([#8588](https://github.com/Unleash/unleash/issues/8588))
+
+
+### Chore
+
+- Rename Project Insight -> Project health ([#8374](https://github.com/Unleash/unleash/issues/8374))
+
+
+### Documentation
+
+- Remove old A/B testing doc ([#8258](https://github.com/Unleash/unleash/issues/8258))
+
+- Update intro to point to quickstart and unleash plans ([#8292](https://github.com/Unleash/unleash/issues/8292))
+
+
+### Features
+
+- Personal dashboard project avg health scores ([#8328](https://github.com/Unleash/unleash/issues/8328))
+
+- Handle owners and project roles in the UI ([#8315](https://github.com/Unleash/unleash/issues/8315))
+
+- Improve onboarding flow ([#8327](https://github.com/Unleash/unleash/issues/8327))
+
+- Improve styles ([#8323](https://github.com/Unleash/unleash/issues/8323))
+
+- Add all outlined icons ([#8332](https://github.com/Unleash/unleash/issues/8332))
+
+- Health trend insight ([#8335](https://github.com/Unleash/unleash/issues/8335))
+
+- Add logging for lifecycle prom metrics ([#8341](https://github.com/Unleash/unleash/issues/8341))
+
+- Health score components in personal dashboard ([#8348](https://github.com/Unleash/unleash/issues/8348))
+
+- Archived features will be included in onboarding ([#8350](https://github.com/Unleash/unleash/issues/8350))
+
+- Improve steps dividers ([#8346](https://github.com/Unleash/unleash/issues/8346))
+
+- Add plausible for onboarding ([#8352](https://github.com/Unleash/unleash/issues/8352))
+
+- Update congratulations message ([#8354](https://github.com/Unleash/unleash/issues/8354))
+
+- Make personal dashboard UI more compact ([#8359](https://github.com/Unleash/unleash/issues/8359))
+
+- Add comments to snippets ([#8361](https://github.com/Unleash/unleash/issues/8361))
+
+- Add flag to purchase additional environments ([#8366](https://github.com/Unleash/unleash/issues/8366))
+
+- Store dashboard state ([#8382](https://github.com/Unleash/unleash/issues/8382))
+
+- Start capturing onboarded status also from register endpoint ([#8386](https://github.com/Unleash/unleash/issues/8386))
+
+- Android/swift slow metric info ([#8387](https://github.com/Unleash/unleash/issues/8387))
+
+- Add timestamps to project events ([#8389](https://github.com/Unleash/unleash/issues/8389))
+
+- Order additional environments email templates ([#8401](https://github.com/Unleash/unleash/issues/8401))
+
+- Make panels collapsible ([#8395](https://github.com/Unleash/unleash/issues/8395))
+
+- Order environments service implementation ([#8415](https://github.com/Unleash/unleash/issues/8415))
+
+- Handle cases where user has no flags ([#8416](https://github.com/Unleash/unleash/issues/8416))
+
+- Order environment plausible events ([#8427](https://github.com/Unleash/unleash/issues/8427))
+
+- Additional environments - API integration ([#8424](https://github.com/Unleash/unleash/issues/8424))
+
+- More clear pricing text ([#8429](https://github.com/Unleash/unleash/issues/8429))
+
+- Now you can add env type to env order ([#8442](https://github.com/Unleash/unleash/issues/8442))
+
+- Ability to configure when users are considered inactive ([#8454](https://github.com/Unleash/unleash/issues/8454))
+
+- Prompt for feedback after second flag created ([#8467](https://github.com/Unleash/unleash/issues/8467))
+
+- Release plans nav menu item and icon suggestion ([#8469](https://github.com/Unleash/unleash/issues/8469))
+
+- Increase latest events in personal dashboard ([#8491](https://github.com/Unleash/unleash/issues/8491))
+
+- Personal dashboard scrollbars and spacing ([#8493](https://github.com/Unleash/unleash/issues/8493))
+
+- Email service for productivity report ([#8517](https://github.com/Unleash/unleash/issues/8517))
+
+- Rework application overview db query ([#8518](https://github.com/Unleash/unleash/issues/8518))
+
+- Start tracking project tab navigation
+
+- Track personal dashboard seen ([#8539](https://github.com/Unleash/unleash/issues/8539))
+
+- Emails sent table migration ([#8528](https://github.com/Unleash/unleash/issues/8528))
+
+- Send traffic info to prometheus ([#8541](https://github.com/Unleash/unleash/issues/8541))
+
+- Playground result count buckets ([#8555](https://github.com/Unleash/unleash/issues/8555))
+
+- Email config ([#8571](https://github.com/Unleash/unleash/issues/8571))
+
+- Archived features can be searched now ([#8568](https://github.com/Unleash/unleash/issues/8568))
+
+- Archive is now part of project feature list ([#8587](https://github.com/Unleash/unleash/issues/8587))
+
+- Hide archive UI behind flag ([#8591](https://github.com/Unleash/unleash/issues/8591))
+
+- Search endpoint should return archived at date ([#8592](https://github.com/Unleash/unleash/issues/8592))
+
+
+### Miscellaneous Tasks
+
+- Timeline ux alignment ([#8283](https://github.com/Unleash/unleash/issues/8283))
+
+- Bump version to 6.3.0
+
+- Timeline event group icon when events are all same type ([#8322](https://github.com/Unleash/unleash/issues/8322))
+
+- Test that owners and roles are returned ([#8319](https://github.com/Unleash/unleash/issues/8319))
+
+- Remove the projects? Property from ICreateGroupModel ([#8246](https://github.com/Unleash/unleash/issues/8246))
+
+- Update metrics interval from 5 to 1 ([#8331](https://github.com/Unleash/unleash/issues/8331))
+
+- Add labels to env/period selectors ([#8329](https://github.com/Unleash/unleash/issues/8329))
+
+- Remove unused flag ([#8340](https://github.com/Unleash/unleash/issues/8340))
+
+- Event timeline signals tip ([#8342](https://github.com/Unleash/unleash/issues/8342))
+
+- Timeline plausible tracking ([#8338](https://github.com/Unleash/unleash/issues/8338))
+
+- Event timeline help icon ([#8345](https://github.com/Unleash/unleash/issues/8345))
+
+- Plausible event for event timeline signals tip click ([#8349](https://github.com/Unleash/unleash/issues/8349))
+
+- Add event timeline to new in unleash ([#8358](https://github.com/Unleash/unleash/issues/8358))
+
+- Update the copy to align between project view and personal dashboard ([#8365](https://github.com/Unleash/unleash/issues/8365))
+
+- A feature flag -> one ([#8367](https://github.com/Unleash/unleash/issues/8367))
+
+- Make signals visible on event timeline for non admins ([#8364](https://github.com/Unleash/unleash/issues/8364))
+
+- Add beta badge to event timeline in new in unleash ([#8377](https://github.com/Unleash/unleash/issues/8377))
+
+- Better show hide event timeline tooltips ([#8379](https://github.com/Unleash/unleash/issues/8379))
+
+- Update debugging lifecycle format ([#8371](https://github.com/Unleash/unleash/issues/8371))
+
+- Update jsdom to 25.0.1 ([#8355](https://github.com/Unleash/unleash/issues/8355))
+
+- Removes setup badge from personal dashboard ([#8384](https://github.com/Unleash/unleash/issues/8384))
+
+- Update docs URL for event timeline ([#8388](https://github.com/Unleash/unleash/issues/8388))
+
+- Add timers to count queries ([#8393](https://github.com/Unleash/unleash/issues/8393))
+
+- Add unleashAI feature flag ([#8399](https://github.com/Unleash/unleash/issues/8399))
+
+- Move flag activity info to the left ([#8411](https://github.com/Unleash/unleash/issues/8411))
+
+- Remove graph, update health message ([#8403](https://github.com/Unleash/unleash/issues/8403))
+
+- Add OpenAI API key configuration ([#8400](https://github.com/Unleash/unleash/issues/8400))
+
+- Add unleashAI chat schemas ([#8405](https://github.com/Unleash/unleash/issues/8405))
+
+- Flag for webhook domain logging ([#8413](https://github.com/Unleash/unleash/issues/8413))
+
+- Debug lifecycle only when have new stages ([#8418](https://github.com/Unleash/unleash/issues/8418))
+
+- Track personal dashboard navigation ([#8417](https://github.com/Unleash/unleash/issues/8417))
+
+- Origin middleware flag cleanup ([#8402](https://github.com/Unleash/unleash/issues/8402))
+
+- Use new signal meta properties in event timeline ([#8421](https://github.com/Unleash/unleash/issues/8421))
+
+- Improve addon metrics usage
+
+- Unleash AI API hook ([#8441](https://github.com/Unleash/unleash/issues/8441))
+
+- Unleash AI chat UI ([#8445](https://github.com/Unleash/unleash/issues/8445))
+
+- Rename personal dashboard menu item to dashboard ([#8437](https://github.com/Unleash/unleash/issues/8437))
+
+- WrapTimer function types ([#8428](https://github.com/Unleash/unleash/issues/8428))
+
+- Make onboarding concepts img more readable ([#8448](https://github.com/Unleash/unleash/issues/8448))
+
+- Remove all deprecated imports of act ([#8398](https://github.com/Unleash/unleash/issues/8398))
+
+- Add descriptions to accordion headers ([#8452](https://github.com/Unleash/unleash/issues/8452))
+
+- Fix invalid dom nesting ([#8451](https://github.com/Unleash/unleash/issues/8451))
+
+- ReleasePlans feature flag ([#8458](https://github.com/Unleash/unleash/issues/8458))
+
+- Make the Unleash AI chat resizable ([#8456](https://github.com/Unleash/unleash/issues/8456))
+
+- AI chats db migration ([#8460](https://github.com/Unleash/unleash/issues/8460))
+
+- Fix "key" prop issues in front end tests ([#8459](https://github.com/Unleash/unleash/issues/8459))
+
+- Update schemas related to Unleash AI chat ([#8463](https://github.com/Unleash/unleash/issues/8463))
+
+- Adapt UI to server-side Unleash AI chat ownership ([#8466](https://github.com/Unleash/unleash/issues/8466))
+
+- Patch text when trying to add a root role group ([#8470](https://github.com/Unleash/unleash/issues/8470))
+
+- Silence remaining front end test warnings ([#8465](https://github.com/Unleash/unleash/issues/8465))
+
+- Add a class to handle aggreggation queries ([#8446](https://github.com/Unleash/unleash/issues/8446))
+
+- Scroll-related UX adjustments in the Unleash AI chat ([#8478](https://github.com/Unleash/unleash/issues/8478))
+
+- Add an initial disclaimer to Unleash AI ([#8482](https://github.com/Unleash/unleash/issues/8482))
+
+- Unleash AI chat UX bug fixes ([#8488](https://github.com/Unleash/unleash/issues/8488))
+
+- Add Plausible events to Unleash AI chat ([#8494](https://github.com/Unleash/unleash/issues/8494))
+
+- Remove navigation sidebar leftover flag ([#8504](https://github.com/Unleash/unleash/issues/8504))
+
+- Prometheus metrics refactor ([#8484](https://github.com/Unleash/unleash/issues/8484))
+
+- Add 0BSD license ([#8506](https://github.com/Unleash/unleash/issues/8506))
+
+- Unleash AI UX adjustments: placement, icon, color ([#8521](https://github.com/Unleash/unleash/issues/8521))
+
+- Add migration for release plans ([#8529](https://github.com/Unleash/unleash/issues/8529))
+
+- Bump unleash client to 6.1.2 ([#8558](https://github.com/Unleash/unleash/issues/8558))
+
+- Allow CC-BY-4.0 ([#8570](https://github.com/Unleash/unleash/issues/8570))
+
+- Move orval to dev dependency ([#8569](https://github.com/Unleash/unleash/issues/8569))
+
+- Event timeline GA ([#8552](https://github.com/Unleash/unleash/issues/8552))
+
+- Add migration for milestone strategy segments ([#8593](https://github.com/Unleash/unleash/issues/8593))
+
+- Remove the addonUsageMetrics flag ([#8590](https://github.com/Unleash/unleash/issues/8590))
+
+
+### Refactor
+
+- Implement an event timeline context and provider ([#8321](https://github.com/Unleash/unleash/issues/8321))
+
+- Use promise.all instead of sequential awaited calls ([#8316](https://github.com/Unleash/unleash/issues/8316))
+
+- Use css grid for flags and no content grid ([#8347](https://github.com/Unleash/unleash/issues/8347))
+
+- Use splash api to store splash state ([#8422](https://github.com/Unleash/unleash/issues/8422))
+
+- Refactor personal dashboard front end code pt1 ([#8440](https://github.com/Unleash/unleash/issues/8440))
+
+- Front end code pt II ([#8444](https://github.com/Unleash/unleash/issues/8444))
+
+- Composable new in unleash ([#8505](https://github.com/Unleash/unleash/issues/8505))
+
+
+### Testing
+
+- Personal dashboard ([#8343](https://github.com/Unleash/unleash/issues/8343))
+
+- Snapshot sidebar for different plans ([#8507](https://github.com/Unleash/unleash/issues/8507))
+
+
+### Openapi
+
+- Small adjustments to dashboard schemas ([#8363](https://github.com/Unleash/unleash/issues/8363))
+
+
 ## [6.3.0] - 2024-10-01
 
 ### Bug Fixes

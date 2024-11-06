@@ -5,6 +5,7 @@ export interface IPartialUiConfig {
     version: string;
     slogan?: string;
     environment?: string;
+    billing?: string;
     versionInfo?: IVersionInfo;
 }
 

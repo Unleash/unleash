@@ -4,6 +4,8 @@
 
 <head>
     <title>Your Unleash Productivity Report</title>
+    <meta name="color-scheme" content="light">
+    <meta name="supported-color-schemes" content="light">
 </head>
 
 <body style="font-family: Arial, sans-serif;background-color: #f9f9f9;color: #333;margin: 0;padding: 12px 0;font-size:16px">
@@ -11,7 +13,7 @@
         style="max-width: 600px;margin: 24px auto;background-color: #ffffff;border-radius: 8px;border: 1px solid #f0f0f5;overflow: hidden;">
         <div class="header" style="background-color: #6c65e5;padding: 20px;text-align: center;color: #ffffff;">
             <img src="cid:unleashLogo" alt="Unleash" width="210px" height="60px" style="margin-top: 8px;">
-            <div class="header-title" style="font-size: 24px;margin: 20px 0;">Your Monthly Productivity Report</div>
+            <div style="font-size: 24px;margin: 20px 0;">Your Monthly Productivity Report</div>
         </div>
         <div class="content" style="padding: 20px;text-align: left;">
             <div class="intro" style="margin: 0 4px;">
@@ -38,24 +40,24 @@
                 <tr>
                     <td style="text-align: center;">
                         <div class="shaded"
-                            style="margin: 0;padding: 36px 8px;background: #f0f0f5;border-width: 3px;border-color: #ffffff;border-style: solid;">
+                            style="margin: 0;padding: 42px 8px;background: #f0f0f5;border-width: 3px;border-color: #ffffff;border-style: solid;">
                             <span
                                 style="font-size: 24px; font-weight: bold; color: #1a4049;">{{flagsCreated}}</span><br>
-                            <span style="color: #888;">flags created last month</span>
+                            <span style="color: #888;display: block;height: 20px;">flags created last month</span>
                         </div>
                     </td>
                     <td style="text-align: center;">
                         <div class="shaded"
-                            style="margin: 0;padding: 36px 8px;background: #f0f0f5;border-width: 3px;border-color: #ffffff;border-style: solid;">
+                            style="margin: 0;padding: 42px 8px;background: #f0f0f5;border-width: 3px;border-color: #ffffff;border-style: solid;">
                             <span
                                 style="font-size: 24px; font-weight: bold; color: #1a4049;">{{productionUpdates}}</span><br>
-                            <span style="color: #888;">production updates last month</span>
+                            <span style="color: #888;display: block;height: 20px;">production updates last month</span>
                         </div>
                     </td>
                 </tr>
             </table>
             <div style="text-align: center;">
-                <a href="{{unleashUrl}}/insights" class="button"
+                <a href="{{unleashUrl}}/insights"
                     style="color: #fefefe;text-decoration: none;display: inline-block;margin: 20px 0;padding: 12px 25px;background-color: #817afe;border-radius: 25px;font-weight: bold;"
                     rel="noopener" target="_blank">Go to your Insights</a>
             </div>
@@ -72,9 +74,7 @@
             </div>
             <div class="unsubscribe" style="font-size: 12px;color: #888;margin-top: 10px;">
                 This email was sent to {{userEmail}}. You’ve received this as you are a user of Unleash.<br>
-                {{#unsubscribeUrl}}
-                If you wish to unsubscribe, click <a href="{{unsubscribeUrl}}">here</a>.
-                {{/unsubscribeUrl}}
+                If you wish to unsubscribe, go to you profile settings <a href="{{unleashUrl}}/profile">here</a>.
             </div>
         </div>
     </div>

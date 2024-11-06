@@ -31,6 +31,7 @@ import {
 } from 'hooks/useTrafficData';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { formatTickValue } from 'component/common/Chart/formatTickValue';
+import { useTrafficLimit } from './hooks/useTrafficLimit';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -136,13 +137,11 @@ const createBarChartOptions = (
     },
 });
 
-const proPlanIncludedRequests = 53_000_000;
-
 export const NetworkTrafficUsage: VFC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
 
-    const { isOss, isPro } = useUiConfig();
+    const { isOss } = useUiConfig();
 
     const {
         record,
@@ -157,7 +156,7 @@ export const NetworkTrafficUsage: VFC = () => {
         calculateEstimatedMonthlyCost,
     } = useTrafficDataEstimation();
 
-    const includedTraffic = isPro() ? proPlanIncludedRequests : 0;
+    const includedTraffic = useTrafficLimit();
 
     const options = useMemo(() => {
         return createBarChartOptions(

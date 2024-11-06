@@ -35,44 +35,45 @@ export const ProjectSettings = () => {
 
     const actionsEnabled = useUiFlag('automatedActions');
 
+    const paidTabs = (...tabs: ITab[]) =>
+        isPro() || isEnterprise() ? tabs : [];
+
     const tabs: ITab[] = [
-        ...(isPro() || isEnterprise()
-            ? [
-                  {
-                      id: '',
-                      label: 'Settings',
-                  },
-                  {
-                      id: 'access',
-                      label: 'Access',
-                  },
-                  {
-                      id: 'segments',
-                      label: 'Segments',
-                  },
-                  {
-                      id: 'change-requests',
-                      label: 'Change request configuration',
-                      icon: isPro() ? (
-                          <StyledBadgeContainer>
-                              <EnterpriseBadge />
-                          </StyledBadgeContainer>
-                      ) : undefined,
-                  },
-              ]
-            : []),
-        {
-            id: 'environments',
-            label: 'Environments',
-        },
+        ...paidTabs(
+            {
+                id: '',
+                label: 'Project settings',
+            },
+            {
+                id: 'access',
+                label: 'User access',
+            },
+        ),
         {
             id: 'api-access',
             label: 'API access',
         },
         {
+            id: 'segments',
+            label: 'Segments',
+        },
+        {
+            id: 'environments',
+            label: 'Environments',
+        },
+        {
             id: 'default-strategy',
             label: 'Default strategy',
         },
+        ...paidTabs({
+            id: 'change-requests',
+            label: 'Change request configuration',
+            icon: isPro() ? (
+                <StyledBadgeContainer>
+                    <EnterpriseBadge />
+                </StyledBadgeContainer>
+            ) : undefined,
+        }),
     ];
 
     if (actionsEnabled) {

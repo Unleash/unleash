@@ -17,6 +17,7 @@ export interface IUiConfig {
     name: string;
     slogan: string;
     environment?: string;
+    billing?: 'subscription' | 'pay-as-you-go';
     unleashUrl?: string;
     version: string;
     versionInfo?: IVersionInfo;
@@ -86,12 +87,14 @@ export type UiFlags = {
     enableLegacyVariants?: boolean;
     flagCreator?: boolean;
     onboardingUI?: boolean;
-    eventTimeline?: boolean;
     personalDashboardUI?: boolean;
     purchaseAdditionalEnvironments?: boolean;
     unleashAI?: boolean;
     releasePlans?: boolean;
+    'enterprise-payg'?: boolean;
     simplifyProjectOverview?: boolean;
+    productivityReportEmail?: boolean;
+    flagOverviewRedesign?: boolean;
 };
 
 export interface IVersionInfo {

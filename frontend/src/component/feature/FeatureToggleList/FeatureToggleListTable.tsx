@@ -70,7 +70,7 @@ export const FeatureToggleListTable: VFC = () => {
 
     const variant =
         featureSearchFeedback !== false
-            ? featureSearchFeedback?.name ?? ''
+            ? (featureSearchFeedback?.name ?? '')
             : '';
 
     const { openFeedback } = useFeedback(

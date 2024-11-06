@@ -240,7 +240,7 @@ exports[`returns all baseRoutes 1`] = `
         "enterprise",
       ],
     },
-    "path": "/releases-management",
+    "path": "/release-management",
     "title": "Release management",
     "type": "protected",
   },

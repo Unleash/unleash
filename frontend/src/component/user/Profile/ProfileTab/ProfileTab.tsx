@@ -19,6 +19,8 @@ import { useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ProductivityEmailSubscription } from './ProductivityEmailSubscription';
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -85,7 +87,7 @@ interface IProfileTabProps {
 }
 
 export const ProfileTab = ({ user }: IProfileTabProps) => {
-    const { profile } = useProfile();
+    const { profile, refetchProfile } = useProfile();
     const navigate = useNavigate();
     const { locationSettings, setLocationSettings } = useLocationSettings();
     const [currentLocale, setCurrentLocale] = useState<string>();
@@ -120,6 +122,8 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
         setCurrentLocale(locale);
         setLocationSettings({ locale });
     };
+
+    const productivityReportEmailEnabled = useUiFlag('productivityReportEmail');
 
     return (
         <>
@@ -187,7 +191,7 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                     </Box>
                 </StyledAccess>
                 <StyledDivider />
-                <StyledSectionLabel>Settings</StyledSectionLabel>
+                <StyledSectionLabel>Date/Time Settings</StyledSectionLabel>
                 <Typography variant='body2'>
                     This is the format used across the system for time and date
                 </Typography>
@@ -215,6 +219,24 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                         })}
                     </Select>
                 </StyledFormControl>
+                {productivityReportEmailEnabled ? (
+                    <>
+                        <StyledDivider />
+                        <StyledSectionLabel>Email Settings</StyledSectionLabel>
+                        {profile?.subscriptions && (
+                            <ProductivityEmailSubscription
+                                status={
+                                    profile.subscriptions.includes(
+                                        'productivity-report',
+                                    )
+                                        ? 'subscribed'
+                                        : 'unsubscribed'
+                                }
+                                onChange={refetchProfile}
+                            />
+                        )}
+                    </>
+                ) : null}
             </PageContent>
         </>
     );

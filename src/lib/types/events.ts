@@ -204,6 +204,12 @@ export const ACTIONS_CREATED = 'actions-created' as const;
 export const ACTIONS_UPDATED = 'actions-updated' as const;
 export const ACTIONS_DELETED = 'actions-deleted' as const;
 
+export const RELEASE_PLAN_TEMPLATE_CREATED =
+    'release-plan-template-created' as const;
+export const RELEASE_PLAN_TEMPLATE_UPDATED =
+    'release-plan-template-updated' as const;
+export const RELEASE_PLAN_TEMPLATE_DELETED =
+    'release-plan-template-deleted' as const;
 export const USER_PREFERENCE_UPDATED = 'user-preference-updated' as const;
 
 export const IEventTypes = [
@@ -353,6 +359,9 @@ export const IEventTypes = [
     ACTIONS_CREATED,
     ACTIONS_UPDATED,
     ACTIONS_DELETED,
+    RELEASE_PLAN_TEMPLATE_CREATED,
+    RELEASE_PLAN_TEMPLATE_UPDATED,
+    RELEASE_PLAN_TEMPLATE_DELETED,
     USER_PREFERENCE_UPDATED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
@@ -2008,6 +2017,42 @@ export class GroupDeletedEvent extends BaseEvent {
         auditUser: IAuditUser;
     }) {
         super(GROUP_DELETED, eventData.auditUser);
+        this.preData = eventData.preData;
+    }
+}
+
+export class ReleasePlanTemplateCreatedEvent extends BaseEvent {
+    readonly data: any;
+    constructor(eventData: {
+        data: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_TEMPLATE_CREATED, eventData.auditUser);
+        this.data = eventData.data;
+    }
+}
+
+export class ReleasePlanTemplateUpdatedEvent extends BaseEvent {
+    readonly preData: any;
+    readonly data: any;
+    constructor(eventData: {
+        data: any;
+        preData: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_TEMPLATE_UPDATED, eventData.auditUser);
+        this.data = eventData.data;
+        this.preData = eventData.preData;
+    }
+}
+
+export class ReleasePlanTemplateDeletedEvent extends BaseEvent {
+    readonly preData: any;
+    constructor(eventData: {
+        preData: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_TEMPLATE_DELETED, eventData.auditUser);
         this.preData = eventData.preData;
     }
 }

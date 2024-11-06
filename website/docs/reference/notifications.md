@@ -4,7 +4,7 @@ title: Notifications
 
 :::note Availability
 
-**Plan**: [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.22+`
+**Plan**: [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.22+`
 
 :::
 

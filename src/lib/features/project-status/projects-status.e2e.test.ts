@@ -6,6 +6,7 @@ import {
 import getLogger from '../../../test/fixtures/no-logger';
 import {
     FEATURE_CREATED,
+    RoleName,
     type IAuditUser,
     type IUnleashConfig,
 } from '../../types';
@@ -195,15 +196,19 @@ test('project resources should contain the right data', async () => {
         {} as IAuditUser,
     );
 
-    // add project member
-    // await app.services.segmentService.create(
-    //     {
-    //         name: 'test-segment',
-    //         project: 'default',
-    //         constraints: [],
-    //     },
-    //     {} as IAuditUser,
-    // );
+    const admin = await app.services.userService.createUser({
+        username: 'admin',
+        rootRole: RoleName.ADMIN,
+    });
+    const user = await app.services.userService.createUser({
+        username: 'test-user',
+        rootRole: RoleName.EDITOR,
+    });
+
+    await app.services.projectService.addAccess('default', [4], [], [user.id], {
+        ...admin,
+        ip: '',
+    } as IAuditUser);
 
     const { body } = await app.request
         .get('/api/admin/projects/default/status')

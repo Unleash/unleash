@@ -305,6 +305,16 @@ const config: Config = {
                 googleTagManager: {
                     containerId: 'GTM-KV5PRR2',
                 },
+                sitemap: {
+                    lastmod: 'datetime',
+                    changefreq: 'weekly',
+                    priority: 0.5,
+                    createSitemapItems: async (params) => {
+                      const {defaultCreateSitemapItems, ...rest} = params;
+                      const items = await defaultCreateSitemapItems(rest);
+                      return items.filter((item) => !item.url.includes('/page/'));
+                    },
+                  },
             },
         ],
     ],

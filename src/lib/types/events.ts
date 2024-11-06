@@ -209,7 +209,6 @@ export const RELEASE_PLAN_TEMPLATE_UPDATED = 'release-plan-template-updated';
 export const RELEASE_PLAN_TEMPLATE_DELETED = 'release-plan-template-deleted';
 export const USER_PREFERENCE_UPDATED = 'user-preference-updated' as const;
 
-
 export const IEventTypes = [
     APPLICATION_CREATED,
     FEATURE_CREATED,

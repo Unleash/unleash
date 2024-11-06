@@ -1,5 +1,5 @@
 import { alpha, styled } from '@mui/material';
-import type { ReactNode } from 'react';
+import { forwardRef, type HTMLAttributes, type ReactNode } from 'react';
 import { useHighlightContext } from './HighlightContext';
 import type { HighlightKey } from './HighlightProvider';
 
@@ -27,17 +27,23 @@ const StyledHighlight = styled('div', {
     },
 }));
 
-interface IHighlightProps {
+interface IHighlightProps extends HTMLAttributes<HTMLDivElement> {
     highlightKey: HighlightKey;
     children: ReactNode;
 }
 
-export const Highlight = ({ highlightKey, children }: IHighlightProps) => {
-    const { isHighlighted } = useHighlightContext();
+export const Highlight = forwardRef<HTMLDivElement, IHighlightProps>(
+    ({ highlightKey, children, ...props }, ref) => {
+        const { isHighlighted } = useHighlightContext();
 
-    return (
-        <StyledHighlight highlighted={isHighlighted(highlightKey)}>
-            {children}
-        </StyledHighlight>
-    );
-};
+        return (
+            <StyledHighlight
+                ref={ref}
+                highlighted={isHighlighted(highlightKey)}
+                {...props}
+            >
+                {children}
+            </StyledHighlight>
+        );
+    },
+);

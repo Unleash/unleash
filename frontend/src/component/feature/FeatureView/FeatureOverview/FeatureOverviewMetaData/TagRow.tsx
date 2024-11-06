@@ -128,13 +128,13 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
                                 const tagLabel = `${tag.type}:${tag.value}`;
                                 return (
                                     <Tooltip
+                                        key={tagLabel}
                                         title={
                                             tagLabel.length > 35 ? tagLabel : ''
                                         }
                                         arrow
                                     >
                                         <StyledAddedTag
-                                            key={tagLabel}
                                             label={tagLabel}
                                             size='small'
                                             deleteIcon={

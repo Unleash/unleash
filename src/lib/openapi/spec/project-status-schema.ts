@@ -17,7 +17,12 @@ export const projectStatusSchema = {
         resources: {
             type: 'object',
             additionalProperties: false,
-            required: ['connectedEnvironments'],
+            required: [
+                'connectedEnvironments',
+                'apiTokens',
+                'members',
+                'segments',
+            ],
             description: 'Key resources within the project',
             properties: {
                 connectedEnvironments: {
@@ -25,6 +30,24 @@ export const projectStatusSchema = {
                     minimum: 0,
                     description:
                         'The number of environments that have received SDK traffic in this project.',
+                },
+                apiTokens: {
+                    type: 'number',
+                    minimum: 0,
+                    description:
+                        'The number of API tokens created specifically for this project.',
+                },
+                members: {
+                    type: 'number',
+                    minimum: 0,
+                    description:
+                        'The number of users who have been granted roles in this project. Does not include users who have access via groups.',
+                },
+                segments: {
+                    type: 'number',
+                    minimum: 0,
+                    description:
+                        'The number of segments that are scoped to this project.',
                 },
             },
         },

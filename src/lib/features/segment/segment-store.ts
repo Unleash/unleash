@@ -370,6 +370,15 @@ export default class SegmentStore implements ISegmentStore {
         return Boolean(rows[0]);
     }
 
+    async getProjectSegmentCount(projectId: string): Promise<number> {
+        const result = await this.db.raw(
+            `SELECT COUNT(*) FROM ${T.segments} WHERE segment_project_id = ?`,
+            [projectId],
+        );
+
+        return Number(result.rows[0].count);
+    }
+
     prefixColumns(): string[] {
         return COLUMNS.map((c) => `${T.segments}.${c}`);
     }

@@ -62,4 +62,8 @@ export default class FakeSegmentStore implements ISegmentStore {
     }
 
     destroy(): void {}
+
+    async getProjectSegmentCount(): Promise<number> {
+        return 0;
+    }
 }

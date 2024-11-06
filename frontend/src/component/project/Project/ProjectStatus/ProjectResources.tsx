@@ -1,14 +1,6 @@
 import { Typography, styled } from '@mui/material';
-import { useProjectApiTokens } from 'hooks/api/getters/useProjectApiTokens/useProjectApiTokens';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
-import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import {
-    type ReactNode,
-    useMemo,
-    type FC,
-    type PropsWithChildren,
-} from 'react';
+import type { ReactNode, FC, PropsWithChildren } from 'react';
 import UsersIcon from '@mui/icons-material/Group';
 import { Link } from 'react-router-dom';
 import ApiKeyIcon from '@mui/icons-material/Key';
@@ -97,25 +89,32 @@ const ListItem: FC<
     </ListItemRow>
 );
 
+const useProjectResources = (projectId: string) => {
+    const { data, loading } = useProjectStatus(projectId);
+
+    const { resources } = data ?? {
+        resources: {
+            members: 0,
+            apiTokens: 0,
+            connectedEnvironments: 0,
+            segments: 0,
+        },
+    };
+
+    return {
+        resources,
+        loading,
+    };
+};
+
 export const ProjectResources = () => {
     const projectId = useRequiredPathParam('projectId');
-    const { project } = useProjectOverview(projectId);
-    const { tokens } = useProjectApiTokens(projectId);
-    const { segments } = useSegments();
-    const { data: projectStatus, loading: loadingResources } =
-        useProjectStatus(projectId);
+    const { resources, loading } = useProjectResources(projectId);
 
-    const segmentCount = useMemo(
-        () =>
-            segments?.filter((segment) => segment.project === projectId)
-                .length ?? 0,
-        [segments, projectId],
-    );
-
-    const loadingStatusRef = useLoading(true, '[data-loading-resources=true]');
+    const loadingRef = useLoading(loading, '[data-loading-resources=true]');
 
     return (
-        <Wrapper ref={loadingStatusRef}>
+        <Wrapper ref={loadingRef}>
             <ProjectResourcesInner>
                 <Typography variant='h3' sx={{ margin: 0 }}>
                     Project Resources
@@ -126,7 +125,7 @@ export const ProjectResources = () => {
                         linkText='Add members'
                         icon={<UsersIcon />}
                     >
-                        {project.members} project member(s)
+                        {resources.members} project member(s)
                     </ListItem>
 
                     <ListItem
@@ -134,7 +133,7 @@ export const ProjectResources = () => {
                         linkText='Add new key'
                         icon={<ApiKeyIcon />}
                     >
-                        {tokens.length} API key(s)
+                        {resources.apiTokens} API key(s)
                     </ListItem>
 
                     <ListItem
@@ -142,8 +141,8 @@ export const ProjectResources = () => {
                         linkText='View connections'
                         icon={<ConnectedIcon />}
                     >
-                        {projectStatus?.resources?.connectedEnvironments}{' '}
-                        connected environment(s)
+                        {resources.connectedEnvironments} connected
+                        environment(s)
                     </ListItem>
 
                     <ListItem
@@ -151,7 +150,7 @@ export const ProjectResources = () => {
                         linkText='Add segments'
                         icon={<SegmentsIcon />}
                     >
-                        {segmentCount} project segment(s)
+                        {resources.segments} project segment(s)
                     </ListItem>
                 </ResourceList>
             </ProjectResourcesInner>

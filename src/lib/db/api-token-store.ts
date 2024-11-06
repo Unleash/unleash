@@ -332,6 +332,6 @@ export class ApiTokenStore implements IApiTokenStore {
             .where({ project: projectId })
             .count()
             .first();
-        return Number(count?.count) ?? 0;
+        return Number(count?.count ?? 0);
     }
 }

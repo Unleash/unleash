@@ -20,6 +20,6 @@ This is an example of a feature that is only available to Enterprise customers w
 
 ## Versioning
 
-Unleash uses [semantic versioning](https://semver.org/) with release notes available on [GitHub](https://github.com/Unleash/unleash/releases). For detailed instructions on upgrades, see [Upgrading Unleash](../using-unleash/deploy/upgrading-unleash).
+Unleash uses [semantic versioning](https://semver.org/) with release notes available on [GitHub](https://github.com/Unleash/unleash/releases). For detailed instructions on upgrading your version, see [Upgrading Unleash](../using-unleash/deploy/upgrading-unleash).
 
 [Unleash Edge](https://github.com/Unleash/unleash-edge) and our [SDKs](/reference/sdks) are versioned and released independently of Unleash. We recommend upgrading your SDKs and Unleash Edge to the latest version to ensure compatibility, optimal performance, and access to the latest features and security updates.

@@ -53,10 +53,10 @@ export const ProjectSettings = () => {
             id: 'api-access',
             label: 'API access',
         },
-        ...paidTabs({
+        {
             id: 'segments',
             label: 'Segments',
-        }),
+        },
         {
             id: 'environments',
             label: 'Environments',

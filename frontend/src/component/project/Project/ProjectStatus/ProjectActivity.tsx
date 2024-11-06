@@ -12,10 +12,9 @@ const StyledContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const TitleContainer = styled('div')({
+const TitleContainer = styled('h4')({
+    margin: 0,
     width: '100%',
-    display: 'flex',
-    justifyContent: 'flex-start',
 });
 
 type Output = { date: string; count: number; level: number };

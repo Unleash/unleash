@@ -48,6 +48,12 @@ const StyledTagContainer = styled('div')(({ theme }) => ({
 const StyledChip = styled(Chip)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     overflowWrap: 'anywhere',
+    backgroundColor: theme.palette.neutral.light,
+    color: theme.palette.neutral.dark,
+    '&&& > svg': {
+        color: theme.palette.neutral.dark,
+        fontSize: theme.fontSizes.smallBody,
+    },
 }));
 
 const StyledAddedTag = styled(StyledChip)(({ theme }) => ({

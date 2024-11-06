@@ -1,11 +1,8 @@
 import { capitalize, styled } from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import Edit from '@mui/icons-material/Edit';
-import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { useState } from 'react';
@@ -79,11 +76,6 @@ export const StyledMetaDataItemValue = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const StyledIconButton = styled(PermissionIconButton)(({ theme }) => ({
-    height: theme.spacing(3.5),
-    width: theme.spacing(3.5),
-}));
-
 const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
     height: theme.spacing(3.5),
     width: theme.spacing(3.5),
@@ -114,22 +106,16 @@ const FeatureOverviewMetaData = () => {
                     <FlagTypeIcon />
                     <h2>{capitalize(type || '')} flag</h2>
                 </StyledMetaDataHeader>
-                <StyledMetaDataItem data-loading>
-                    <StyledMetaDataItemText>
-                        {description ? description : <i>No description</i>}
-                    </StyledMetaDataItemText>
-                    <StyledIconButton
-                        projectId={projectId}
-                        permission={UPDATE_FEATURE}
-                        component={Link}
-                        to={`/projects/${projectId}/features/${featureId}/settings`}
-                        tooltipProps={{
-                            title: 'Edit description',
-                        }}
-                    >
-                        <Edit />
-                    </StyledIconButton>
-                </StyledMetaDataItem>
+                <ConditionallyRender
+                    condition={Boolean(description)}
+                    show={
+                        <StyledMetaDataItem data-loading>
+                            <StyledMetaDataItemText>
+                                {description}
+                            </StyledMetaDataItemText>
+                        </StyledMetaDataItem>
+                    }
+                />
                 <StyledBody>
                     <StyledMetaDataItem>
                         <StyledMetaDataItemLabel>

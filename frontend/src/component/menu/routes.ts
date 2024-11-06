@@ -48,7 +48,7 @@ import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
 import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject';
 import { PersonalDashboard } from '../personalDashboard/PersonalDashboard';
-import { ReleaseManagement } from 'component/releases/ReleaseManagement';
+import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseManagement';
 
 export const routes: IRoute[] = [
     // Splash

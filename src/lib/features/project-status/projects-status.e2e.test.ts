@@ -4,11 +4,17 @@ import {
     setupAppWithCustomConfig,
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
-import { FEATURE_CREATED, type IUnleashConfig } from '../../types';
+import {
+    FEATURE_CREATED,
+    RoleName,
+    type IAuditUser,
+    type IUnleashConfig,
+} from '../../types';
 import type { EventService } from '../../services';
 import { createEventsService } from '../events/createEventsService';
 import { createTestConfig } from '../../../test/config/test-config';
 import { randomId } from '../../util';
+import { ApiTokenType } from '../../types/models/api-token';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -45,6 +51,10 @@ beforeAll(async () => {
 afterAll(async () => {
     await app.destroy();
     await db.destroy();
+});
+
+beforeEach(async () => {
+    await db.stores.clientMetricsStoreV2.deleteAll();
 });
 
 test('project insights should return correct count for each day', async () => {
@@ -144,4 +154,75 @@ test('project status should return environments with connected SDKs', async () =
         .expect(200);
 
     expect(body.resources.connectedEnvironments).toBe(1);
+});
+
+test('project resources should contain the right data', async () => {
+    const { body: noResourcesBody } = await app.request
+        .get('/api/admin/projects/default/status')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(noResourcesBody.resources).toMatchObject({
+        members: 0,
+        apiTokens: 0,
+        segments: 0,
+        connectedEnvironments: 0,
+    });
+
+    const flagName = randomId();
+    await app.createFeature(flagName);
+
+    const environment = 'default';
+    await db.stores.clientMetricsStoreV2.batchInsertMetrics([
+        {
+            featureName: flagName,
+            appName: `web2`,
+            environment,
+            timestamp: new Date(),
+            yes: 5,
+            no: 2,
+        },
+    ]);
+
+    await app.services.apiTokenService.createApiTokenWithProjects({
+        tokenName: 'test-token',
+        projects: ['default'],
+        type: ApiTokenType.CLIENT,
+        environment: 'default',
+    });
+
+    await app.services.segmentService.create(
+        {
+            name: 'test-segment',
+            project: 'default',
+            constraints: [],
+        },
+        {} as IAuditUser,
+    );
+
+    const admin = await app.services.userService.createUser({
+        username: 'admin',
+        rootRole: RoleName.ADMIN,
+    });
+    const user = await app.services.userService.createUser({
+        username: 'test-user',
+        rootRole: RoleName.EDITOR,
+    });
+
+    await app.services.projectService.addAccess('default', [4], [], [user.id], {
+        ...admin,
+        ip: '',
+    } as IAuditUser);
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/status')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.resources).toMatchObject({
+        members: 1,
+        apiTokens: 1,
+        segments: 1,
+        connectedEnvironments: 1,
+    });
 });

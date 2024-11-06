@@ -306,7 +306,6 @@ const config: Config = {
                     containerId: 'GTM-KV5PRR2',
                 },
                 sitemap: {
-                    lastmod: 'datetime',
                     changefreq: 'weekly',
                     priority: 0.5,
                     createSitemapItems: async (params) => {

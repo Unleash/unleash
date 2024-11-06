@@ -88,7 +88,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
                 tagsToOptions(tags.filter((tag) => tag.type === tagType.name)),
             );
         }
-    }, [JSON.stringify(tags), tagType]);
+    }, [JSON.stringify(tags), tagType, open]);
 
     const onCancel = () => {
         setOpen(false);

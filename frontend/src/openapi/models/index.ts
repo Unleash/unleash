@@ -1022,6 +1022,7 @@ export * from './projectSettingsSchemaDefaultStickiness';
 export * from './projectSettingsSchemaMode';
 export * from './projectStatsSchema';
 export * from './projectStatusSchema';
+export * from './projectStatusSchemaResources';
 export * from './projectUsersSchema';
 export * from './projectsSchema';
 export * from './provideFeedbackSchema';

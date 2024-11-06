@@ -409,7 +409,7 @@ class EventStore implements IEventStore {
             }));
     }
 
-    async getProjectEventActivity(
+    async getProjectRecentEventActivity(
         project: string,
     ): Promise<ProjectActivitySchema> {
         const result = await this.db('events')
@@ -418,6 +418,11 @@ class EventStore implements IEventStore {
             )
             .count('* AS count')
             .where('project', project)
+            .andWhere(
+                'created_at',
+                '>=',
+                this.db.raw("NOW() - INTERVAL '1 year'"),
+            )
             .groupBy(this.db.raw("TO_CHAR(created_at::date, 'YYYY-MM-DD')"))
             .orderBy('date', 'asc');
 

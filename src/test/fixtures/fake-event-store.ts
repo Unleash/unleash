@@ -18,7 +18,9 @@ class FakeEventStore implements IEventStore {
         this.events = [];
     }
 
-    getProjectEventActivity(project: string): Promise<ProjectActivitySchema> {
+    getProjectRecentEventActivity(
+        project: string,
+    ): Promise<ProjectActivitySchema> {
         throw new Error('Method not implemented.');
     }
 

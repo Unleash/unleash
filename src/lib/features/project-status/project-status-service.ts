@@ -22,7 +22,7 @@ export class ProjectStatusService {
                     ),
             },
             activityCountByDate:
-                await this.eventStore.getProjectEventActivity(projectId),
+                await this.eventStore.getProjectRecentEventActivity(projectId),
         };
     }
 }

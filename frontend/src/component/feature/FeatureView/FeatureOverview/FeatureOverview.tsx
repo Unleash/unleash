@@ -1,4 +1,4 @@
-import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData';
+import NewFeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData';
 import FeatureOverviewEnvironments from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
@@ -8,12 +8,15 @@ import {
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { FeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
+import { FeatureOverviewSidePanel as NewFeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/FeatureOverviewSidePanel';
 import { useHiddenEnvironments } from 'hooks/useHiddenEnvironments';
 import { styled } from '@mui/material';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import { useEffect } from 'react';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
+import { useUiFlag } from 'hooks/useUiFlag';
+import OldFeatureOverviewMetaData from './FeatureOverviewMetaData/OldFeatureOverviewMetaData';
+import { OldFeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/OldFeatureOverviewSidePanel';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -45,6 +48,14 @@ const FeatureOverview = () => {
     useEffect(() => {
         setLastViewed({ featureId, projectId });
     }, [featureId]);
+
+    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
+    const FeatureOverviewMetaData = flagOverviewRedesign
+        ? NewFeatureOverviewMetaData
+        : OldFeatureOverviewMetaData;
+    const FeatureOverviewSidePanel = flagOverviewRedesign
+        ? NewFeatureOverviewSidePanel
+        : OldFeatureOverviewSidePanel;
 
     return (
         <StyledContainer>

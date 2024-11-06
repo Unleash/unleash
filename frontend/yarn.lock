@@ -3285,18 +3285,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-theme-duotone@npm:4.23.5":
-  version: 4.23.5
-  resolution: "@uiw/codemirror-theme-duotone@npm:4.23.5"
+"@uiw/codemirror-theme-duotone@npm:4.23.6":
+  version: 4.23.6
+  resolution: "@uiw/codemirror-theme-duotone@npm:4.23.6"
   dependencies:
-    "@uiw/codemirror-themes": "npm:4.23.5"
-  checksum: 10c0/01cb5fee0d1f689387ba131f84338f289e2d83a4c5d50856475533132d5f3b06d65d650669b73df4df02ad35d4f087d110126a26aeb74a8879d35fee5465f4e2
+    "@uiw/codemirror-themes": "npm:4.23.6"
+  checksum: 10c0/3e5b1672d7425eb659447ca11e5a7c54daf50fa648a00dd197991cf3becf8f7670cec77a04fcf8479640013b6f327f0e3df2b2ba1d475888bb1806f511673640
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-themes@npm:4.23.5":
-  version: 4.23.5
-  resolution: "@uiw/codemirror-themes@npm:4.23.5"
+"@uiw/codemirror-themes@npm:4.23.6":
+  version: 4.23.6
+  resolution: "@uiw/codemirror-themes@npm:4.23.6"
   dependencies:
     "@codemirror/language": "npm:^6.0.0"
     "@codemirror/state": "npm:^6.0.0"
@@ -3305,7 +3305,7 @@ __metadata:
     "@codemirror/language": ">=6.0.0"
     "@codemirror/state": ">=6.0.0"
     "@codemirror/view": ">=6.0.0"
-  checksum: 10c0/b1aef6b5160afd3676a2156c09afb5ee05e4f1f90fec7eb6f37aeb526d8962adc80a75877eda7cb38a358d06289e441eceea695d3877b661cbbb1b445276d660
+  checksum: 10c0/937c346768fe9c615f6868342ec52e9cf27753961b615ae55d65201982364af6c22e99f0214548cd45359055cec839648db65a185a69d0191379abc311f42859
   languageName: node
   linkType: hard
 
@@ -4575,6 +4575,13 @@ __metadata:
   dependencies:
     "@babel/runtime": "npm:^7.21.0"
   checksum: 10c0/e4b521fbf22bc8c3db332bbfb7b094fd3e7627de0259a9d17c7551e2d2702608a7307a449206065916538e384f37b181565447ce2637ae09828427aed9cb5581
+  languageName: node
+  linkType: hard
+
+"date-fns@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "date-fns@npm:4.1.0"
+  checksum: 10c0/b79ff32830e6b7faa009590af6ae0fb8c3fd9ffad46d930548fbb5acf473773b4712ae887e156ba91a7b3dc30591ce0f517d69fd83bd9c38650fdc03b4e0bac8
   languageName: node
   linkType: hard
 
@@ -8366,6 +8373,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-activity-calendar@npm:^2.7.1":
+  version: 2.7.1
+  resolution: "react-activity-calendar@npm:2.7.1"
+  dependencies:
+    date-fns: "npm:^4.1.0"
+  peerDependencies:
+    react: ^18.0.0
+    react-dom: ^18.0.0
+  checksum: 10c0/2d4c9dd688c1187b75b8878094365ee7ef8cec361ac6a2a8088cf83296025c7849fe909487c415ce3e739642821800a6452f7ce4873b52270a3b47834ca2498e
+  languageName: node
+  linkType: hard
+
 "react-archer@npm:4.4.0":
   version: 4.4.0
   resolution: "react-archer@npm:4.4.0"
@@ -8437,6 +8456,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-error-boundary@npm:^4.1.2":
+  version: 4.1.2
+  resolution: "react-error-boundary@npm:4.1.2"
+  dependencies:
+    "@babel/runtime": "npm:^7.12.5"
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: 10c0/0737e5259bed40ce14eb0823b3c7b152171921f2179e604f48f3913490cdc594d6c22d43d7abb4ffb1512c832850228db07aa69d3b941db324953a5e393cb399
+  languageName: node
+  linkType: hard
+
 "react-fast-compare@npm:^2.0.4":
   version: 2.0.4
   resolution: "react-fast-compare@npm:2.0.4"
@@ -8457,6 +8487,19 @@ __metadata:
     react: 15 - 18
     react-dom: 15 - 18
   checksum: 10c0/3fa58e968a405fb95a004897ed19c87b4991e52ebd45d837b8577eb9175ddc1dfab223bb653a0fa73ffc22fc2b2a30f2d07e924f41f41a040299793e4d2decd4
+  languageName: node
+  linkType: hard
+
+"react-github-calendar@npm:^4.5.1":
+  version: 4.5.1
+  resolution: "react-github-calendar@npm:4.5.1"
+  dependencies:
+    react-activity-calendar: "npm:^2.7.1"
+    react-error-boundary: "npm:^4.1.2"
+  peerDependencies:
+    react: ^17.0.0 || ^18.0.0
+    react-dom: ^17.0.0 || ^18.0.0
+  checksum: 10c0/51688983b28da92718cf2276e6c947b9639b529a93212d77a6c65040af2768b74153b32dee44eed4f706cf0cb4c025864327c51c9c666d1f5b88080f523ef672
   languageName: node
   linkType: hard
 
@@ -10112,7 +10155,7 @@ __metadata:
     "@types/react-test-renderer": "npm:18.3.0"
     "@types/semver": "npm:7.5.8"
     "@types/uuid": "npm:^9.0.0"
-    "@uiw/codemirror-theme-duotone": "npm:4.23.5"
+    "@uiw/codemirror-theme-duotone": "npm:4.23.6"
     "@uiw/react-codemirror": "npm:4.23.5"
     "@vitejs/plugin-react": "npm:4.3.3"
     cartesian: "npm:^1.0.1"
@@ -10152,6 +10195,7 @@ __metadata:
     react-dom: "npm:18.3.1"
     react-dropzone: "npm:14.2.10"
     react-error-boundary: "npm:3.1.4"
+    react-github-calendar: "npm:^4.5.1"
     react-hooks-global-state: "npm:2.1.0"
     react-joyride: "npm:^2.5.3"
     react-markdown: "npm:^8.0.4"

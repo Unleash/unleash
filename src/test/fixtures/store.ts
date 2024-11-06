@@ -54,6 +54,8 @@ import { FakeFeatureCollaboratorsReadModel } from '../../lib/features/feature-to
 import { createFakeProjectReadModel } from '../../lib/features/project/createProjectReadModel';
 import { FakeOnboardingStore } from '../../lib/features/onboarding/fake-onboarding-store';
 import { createFakeOnboardingReadModel } from '../../lib/features/onboarding/createOnboardingReadModel';
+import { FakeUserUnsubscribeStore } from '../../lib/features/user-subscriptions/fake-user-unsubscribe-store';
+import { FakeUserSubscriptionsReadModel } from '../../lib/features/user-subscriptions/fake-user-subscriptions-read-model';
 
 const db = {
     select: () => ({
@@ -117,6 +119,8 @@ const createStores: () => IUnleashStores = () => {
         featureCollaboratorsReadModel: new FakeFeatureCollaboratorsReadModel(),
         projectReadModel: createFakeProjectReadModel(),
         onboardingStore: new FakeOnboardingStore(),
+        userUnsubscribeStore: new FakeUserUnsubscribeStore(),
+        userSubscriptionsReadModel: new FakeUserSubscriptionsReadModel(),
     };
 };
 

@@ -87,13 +87,14 @@ export type UiFlags = {
     enableLegacyVariants?: boolean;
     flagCreator?: boolean;
     onboardingUI?: boolean;
-    eventTimeline?: boolean;
     personalDashboardUI?: boolean;
     purchaseAdditionalEnvironments?: boolean;
     unleashAI?: boolean;
     releasePlans?: boolean;
     'enterprise-payg'?: boolean;
     simplifyProjectOverview?: boolean;
+    productivityReportEmail?: boolean;
+    flagOverviewRedesign?: boolean;
 };
 
 export interface IVersionInfo {

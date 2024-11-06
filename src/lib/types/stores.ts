@@ -51,6 +51,8 @@ import { IFeatureCollaboratorsReadModel } from '../features/feature-toggle/types
 import type { IProjectReadModel } from '../features/project/project-read-model-type';
 import { IOnboardingReadModel } from '../features/onboarding/onboarding-read-model-type';
 import { IOnboardingStore } from '../features/onboarding/onboarding-store-type';
+import type { IUserUnsubscribeStore } from '../features/user-subscriptions/user-unsubscribe-store-type';
+import type { IUserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -106,6 +108,8 @@ export interface IUnleashStores {
     projectReadModel: IProjectReadModel;
     onboardingReadModel: IOnboardingReadModel;
     onboardingStore: IOnboardingStore;
+    userUnsubscribeStore: IUserUnsubscribeStore;
+    userSubscriptionsReadModel: IUserSubscriptionsReadModel;
 }
 
 export {
@@ -160,4 +164,5 @@ export {
     type IntegrationEventsStore,
     type IProjectReadModel,
     IOnboardingStore,
+    type IUserSubscriptionsReadModel,
 };

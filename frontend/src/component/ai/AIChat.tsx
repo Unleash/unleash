@@ -1,6 +1,6 @@
 import { mutate } from 'swr';
 import { ReactComponent as AIIcon } from 'assets/icons/AI.svg';
-import { IconButton, styled, useMediaQuery } from '@mui/material';
+import { IconButton, styled, Tooltip, useMediaQuery } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
@@ -17,6 +17,7 @@ import { Resizable } from 'component/common/Resizable/Resizable';
 import { AIChatDisclaimer } from './AIChatDisclaimer';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import theme from 'themes/theme';
+import { Highlight } from 'component/common/Highlight/Highlight';
 
 const AI_ERROR_MESSAGE = {
     role: 'assistant',
@@ -198,70 +199,76 @@ export const AIChat = () => {
     if (!open) {
         return (
             <StyledAIIconContainer demoStepsVisible={demoStepsVisible}>
-                <StyledAIIconButton
-                    size='large'
-                    onClick={() => {
-                        trackEvent('unleash-ai-chat', {
-                            props: {
-                                eventType: 'open',
-                            },
-                        });
-                        setOpen(true);
-                    }}
-                >
-                    <AIIcon />
-                </StyledAIIconButton>
+                <Tooltip arrow title='Unleash AI'>
+                    <Highlight highlightKey='unleashAI'>
+                        <StyledAIIconButton
+                            size='large'
+                            onClick={() => {
+                                trackEvent('unleash-ai-chat', {
+                                    props: {
+                                        eventType: 'open',
+                                    },
+                                });
+                                setOpen(true);
+                            }}
+                        >
+                            <AIIcon />
+                        </StyledAIIconButton>
+                    </Highlight>
+                </Tooltip>
             </StyledAIIconContainer>
         );
     }
 
     return (
         <StyledAIChatContainer demoStepsVisible={demoStepsVisible}>
-            <StyledResizable
-                handlers={['top-left', 'top', 'left']}
-                minSize={{ width: '270px', height: '250px' }}
-                maxSize={{ width: '80vw', height: '90vh' }}
-                defaultSize={{ width: '320px', height: '500px' }}
-                onResize={() => scrollToEnd({ onlyIfAtEnd: true })}
-            >
-                <StyledChat>
-                    <AIChatHeader
-                        onNew={onNewChat}
-                        onClose={() => {
-                            trackEvent('unleash-ai-chat', {
-                                props: {
-                                    eventType: 'close',
-                                },
-                            });
-                            setOpen(false);
-                        }}
-                    />
-                    <StyledChatContent>
-                        <AIChatDisclaimer />
-                        <AIChatMessage from='assistant'>
-                            Hello, how can I assist you?
-                        </AIChatMessage>
-                        {messages.map(({ role, content }, index) => (
-                            <AIChatMessage key={index} from={role}>
-                                {content}
-                            </AIChatMessage>
-                        ))}
-                        {loading && (
+            <Highlight highlightKey='unleashAI'>
+                <StyledResizable
+                    handlers={['top-left', 'top', 'left']}
+                    minSize={{ width: '270px', height: '250px' }}
+                    maxSize={{ width: '80vw', height: '90vh' }}
+                    defaultSize={{ width: '320px', height: '500px' }}
+                    onResize={() => scrollToEnd({ onlyIfAtEnd: true })}
+                >
+                    <StyledChat>
+                        <AIChatHeader
+                            onNew={onNewChat}
+                            onClose={() => {
+                                trackEvent('unleash-ai-chat', {
+                                    props: {
+                                        eventType: 'close',
+                                    },
+                                });
+                                setOpen(false);
+                            }}
+                        />
+                        <StyledChatContent>
+                            <AIChatDisclaimer />
                             <AIChatMessage from='assistant'>
-                                _Unleash AI is typing..._
+                                Hello, how can I assist you?
                             </AIChatMessage>
-                        )}
-                        <div ref={chatEndRef} />
-                    </StyledChatContent>
-                    <AIChatInput
-                        onSend={onSend}
-                        loading={loading}
-                        onHeightChange={() =>
-                            scrollToEnd({ onlyIfAtEnd: true })
-                        }
-                    />
-                </StyledChat>
-            </StyledResizable>
+                            {messages.map(({ role, content }, index) => (
+                                <AIChatMessage key={index} from={role}>
+                                    {content}
+                                </AIChatMessage>
+                            ))}
+                            {loading && (
+                                <AIChatMessage from='assistant'>
+                                    _Unleash AI is typing..._
+                                </AIChatMessage>
+                            )}
+                            <div ref={chatEndRef} />
+                        </StyledChatContent>
+                        <AIChatInput
+                            onSend={onSend}
+                            loading={loading}
+                            onHeightChange={() =>
+                                scrollToEnd({ onlyIfAtEnd: true })
+                            }
+                        />
+                    </StyledChat>
+                </StyledResizable>
+            </Highlight>
         </StyledAIChatContainer>
     );
 };

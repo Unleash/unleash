@@ -26,6 +26,7 @@ interface IEventTimelineEventProps {
 const StyledBadge = styled(Badge)(({ theme }) => ({
     '.MuiBadge-badge': {
         backgroundColor: theme.palette.background.alternative,
+        color: theme.palette.primary.contrastText,
     },
 }));
 

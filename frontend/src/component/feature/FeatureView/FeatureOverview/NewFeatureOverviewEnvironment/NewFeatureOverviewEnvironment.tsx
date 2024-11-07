@@ -3,7 +3,7 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { getFeatureMetrics } from 'utils/getFeatureMetrics';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import EnvironmentAccordionBody from '../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
+import { FeatureOverviewEnvironmentBody } from './FeatureOverviewEnvironmentBody';
 import FeatureOverviewEnvironmentMetrics from '../FeatureOverviewEnvironments/FeatureOverviewEnvironment/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -17,7 +17,7 @@ const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
-const StyledEnvironmentAccordionBody = styled(EnvironmentAccordionBody)(
+const StyledEnvironmentAccordionBody = styled(FeatureOverviewEnvironmentBody)(
     ({ theme }) => ({
         width: '100%',
         position: 'relative',
@@ -93,7 +93,12 @@ export const NewFeatureOverviewEnvironment = ({
             onSuccess: refetchFeature,
         });
 
-    if (!featureEnvironment) return null;
+    if (!featureEnvironment)
+        return (
+            <StyledFeatureOverviewEnvironment className='skeleton'>
+                <Box sx={{ height: '400px' }} />
+            </StyledFeatureOverviewEnvironment>
+        );
 
     return (
         <StyledFeatureOverviewEnvironment>

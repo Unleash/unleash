@@ -7,7 +7,7 @@ Feature flags are a great way to run A/B or multivariate tests with minimal code
 
 ## How to Perform A/B Testing with Feature Flags
 
-To follow along with this tutorial, you will need access to an Unleash Instance which will be used to create and manage feature flags. Head over to our [Quick Start documentation](/quickstart) for options, including running locally, or using an [Unleash SaaS instance](https://www.getunleash.io/pricing?).
+To follow along with this tutorial, you need access to an Unleash instance to create and manage feature flags. Head over to our [Quick Start documentation](/quickstart) for options, including running locally or using an [Unleash SaaS instance](https://www.getunleash.io/pricing?).
 
 With Unleash set up, you can use your application to talk to Unleash through one of our [SDKs](/reference/sdks).
 

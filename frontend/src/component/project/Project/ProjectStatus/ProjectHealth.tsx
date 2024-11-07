@@ -72,8 +72,7 @@ export const ProjectHealth: React.FC<ProjectHealthProps> = ({ health }) => {
                         textAnchor='middle'
                         dominantBaseline='middle'
                         fill={theme.palette.text.primary}
-                        fontSize='16px'
-                        fontWeight='bold'
+                        fontSize='24px'
                     >
                         {health}%
                     </text>

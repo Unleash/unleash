@@ -307,7 +307,7 @@ const config: Config = {
                 },
                 sitemap: {
                     changefreq: 'weekly',
-                    lastMod: 'date',
+                    lastmod: 'date',
                     priority: 0.5,
                     createSitemapItems: async (params) => {
                       const {defaultCreateSitemapItems, ...rest} = params;

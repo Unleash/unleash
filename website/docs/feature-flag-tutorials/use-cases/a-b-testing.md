@@ -1,5 +1,5 @@
 ---
-title: A/B Testing using Feature Flags
+title: How to do A/B Testing using Feature Flags
 slug: /feature-flag-tutorials/use-cases/a-b-testing
 ---
 
@@ -83,8 +83,8 @@ A variant has four components that define it:
 
 -   a name: This must be unique among the strategy's variants. You typically use the name to identify the variant in your client.
 -   a weight: The [variant weight](/reference/strategy-variants#variant-weight) is the likelihood of any one user getting this specific variant.
--   an optional payload: A variant can also have an associated [payload](/reference/strategy-variants#variant-payload) to deliver more data or context.
--   a value: This describes the purpose of the variant. For example, "Most Read" or "Most Popular".
+-   an optional payload: A variant can also have an associated [payload](/reference/strategy-variants#variant-payload) to deliver more data or context. The type defines the data format of the payload and can be one of the following options: `string`, `json`, `csv`, or `number`.
+-   a value: specifies the payload data associated with the variant. Define this if you want to return a value other than `enabled`/`disabled`. It must correspond with the payload type.
 
 Open the gradual rollout strategy, select the **Variants** tab, and click **Add variant**. Enter a unique name for the variant. For the purpose of this tutorial, we’ve created 2 variants: `variantA` and `variantB`. In a real-world use case, we recommend more specific names to be comprehensible and relevant to the versions of the feature you’re referencing. Create additional variants if you need to test more versions.
 
@@ -204,10 +204,11 @@ Unleash gives you control over which environments you release your feature to, w
 
 When rolling out the winning variant, your flag may already be on in your production environment. Adjust the rollout strategy configurations to release to 100% of your user base in the Unleash Admin.
 
+After the flag has been available to 100% of users over time, archive the flag and clean up your codebase.
+
 ## A/B Testing with Enterprise Automation
 
 With Unleash, you can automate your feature flags using [actions](/reference/actions) and [signals](/reference/signals). When running A/B tests, configure your projects to execute tasks in response to application metrics and thresholds you define. If an experimentation feature that targets a part of your user base logs errors, your actions can automatically disable the feature so your team is given the time to triage while still providing a seamless, alternative experience to users. In another case, you can use actions to modify the percentage of users targeted for variations of a feature based off users engaging with one variation more than the other.
-
 
 ### Multi-arm Bandit Tests to Find the Winning Variant
 

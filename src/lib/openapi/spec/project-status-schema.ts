@@ -15,7 +15,7 @@ export const projectStatusSchema = {
                 'Array of activity records with date and count, representing the project’s daily activity statistics.',
         },
         averageHealth: {
-            type: 'number',
+            type: 'integer',
             minimum: 0,
             description:
                 'The average health score over the last 4 weeks, indicating whether features are stale or active.',

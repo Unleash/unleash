@@ -1,54 +1,65 @@
-import { Typography, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { FeatureLifecycleStageIcon } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FeatureLifecycleStageIcon';
 
 const LifecycleBox = styled('article')(({ theme }) => ({
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusExtraLarge,
     border: `2px solid ${theme.palette.divider}`,
     aspectRatio: '1/1',
-    display: 'grid',
-
-    gridTemplateAreas: `
-        "count icon"
-        "description description"
-        "stats stats"
-    `,
-
-    gridTemplateColumns: '1fr auto',
-}));
-
-const GridCell = styled('span', {
-    shouldForwardProp: (prop) => prop !== 'gridArea',
-})<{ gridArea: string }>(({ gridArea }) => ({
-    gridArea,
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'space-between',
 }));
 
 const Wrapper = styled('article')(({ theme }) => ({
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+
+    gridTemplateColumns: 'repeat(auto-fit, 200px)',
     gap: theme.spacing(2),
+    justifyContent: 'center',
+}));
+
+const Counter = styled('span')({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+});
+
+const BigNumber = styled('span')(({ theme }) => ({
+    fontSize: `calc(2 * ${theme.typography.body1.fontSize})`,
+}));
+
+const Stats = styled('dl')(({ theme }) => ({
+    margin: 0,
+    fontSize: theme.typography.body2.fontSize,
+    '& dd': {
+        margin: 0,
+        fontWeight: 'bold',
+    },
 }));
 
 export const ProjectLifecycleSummary = () => {
     return (
         <Wrapper>
             <LifecycleBox>
-                <GridCell gridArea='count'>
-                    <Typography variant='h1' component='span'>
-                        15
-                    </Typography>
-                </GridCell>
-                <GridCell gridArea='icon'>
-                    <FeatureLifecycleStageIcon
-                        stage={{
-                            name: 'live',
-                            enteredStageAt: '',
-                            environments: [],
-                        }}
-                    />
-                </GridCell>
-                <GridCell gridArea='description'>flags in live</GridCell>
-                <GridCell gridArea='stats'>Avg. time in stage 10 days</GridCell>
+                <p>
+                    <Counter>
+                        <BigNumber>15</BigNumber>
+
+                        <FeatureLifecycleStageIcon
+                            stage={{
+                                name: 'live',
+                                enteredStageAt: '',
+                                environments: [],
+                            }}
+                        />
+                    </Counter>
+                    <span>flags in live</span>
+                </p>
+                <Stats>
+                    <dt>Avg. time in stage</dt>
+                    <dd>10 days</dd>
+                </Stats>
             </LifecycleBox>
             <LifecycleBox />
             <LifecycleBox />

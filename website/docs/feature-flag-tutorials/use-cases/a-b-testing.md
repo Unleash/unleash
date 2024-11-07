@@ -212,7 +212,6 @@ When rolling out the winning variant, your flag may already be on in your produc
 
 With Unleash, you can automate your feature flags using [actions](/reference/actions) and [signals](/reference/signals). When running A/B tests, configure your projects to execute tasks in response to application metrics and thresholds you define. If an experimentation feature that targets a part of your user base logs errors, your actions can automatically disable the feature so your team is given the time to triage while still providing a seamless, alternative experience to users. In another case, you can use actions to modify the percentage of users targeted for variations of a feature based off users engaging with one variation more than the other.
 
-Learn how to configure [actions](/reference/actions) and [signals](/reference/signals) from our documentation to get started.
 
 ### Multi-arm Bandit Tests to Find the Winning Variant
 

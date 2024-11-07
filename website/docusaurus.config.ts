@@ -295,7 +295,7 @@ const config: Config = {
                     remarkPlugins: [[pluginNpm2Yarn, { sync: true }]],
                     docItemComponent: '@theme/ApiItem',
                     sidebarPath: './sidebars.ts',
-                    showLastUpdateTime: true
+                    showLastUpdateTime: true,
                 },
                 theme: {
                     customCss: './src/css/custom.css',

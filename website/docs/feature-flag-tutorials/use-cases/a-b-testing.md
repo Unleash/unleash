@@ -29,19 +29,15 @@ In the Unleash Admin UI, open a project and click **New feature flag**.
 
 ![Create a new feature flag in the Unleash Admin UI.](/img/use-case-new-flag.png)
 
-Next, you will create a feature flag on the platform and turn it on for your app.
+Next, you will create a feature flag and turn it on.
 
-Feature flags can be used for different purposes and we consider experimentation important enough to have its own flag type. Experimentation flags have a lifetime expectancy suited for running an experiment and gathering enough data to know whether the experiment was a success or not.
-
-The feature flag we are creating is considered an Experiment flag type.
-
-Read our docs on [Projects](/reference/projects) to learn more about how to configure and manage them for your team/organization. A description of the flag can help properly identify its specific purposes. However, this field is optional.
+Feature flags can be used for different purposes and we consider experimentation important enough to have its own flag type. Experimentation flags have a lifetime expectancy suited for running an experiment and gathering enough data to know whether the experiment was a success or not. The feature flag we are creating is considered an Experiment flag type.
 
 ![Create a feature flag by filling out the form fields.](/img/use-case-create-experiment-flag.png)
 
-Once you have completed the form, you can click ‘Create feature flag’.
+Once you have completed the form, click **Create feature flag**.
 
-Your new feature flag has been created and is ready to be used. Next, we will configure the A/B testing strategy for your new flag.
+Your new feature flag is now ready to be used. Next, we will configure the A/B testing strategy for your flag.
 
 ### Target Users for A/B Testing
 

@@ -3,6 +3,7 @@ import type { ProjectStatusSchema } from './project-status-schema';
 
 test('projectStatusSchema', () => {
     const data: ProjectStatusSchema = {
+        averageHealth: 50,
         activityCountByDate: [
             { date: '2022-12-14', count: 2 },
             { date: '2022-12-15', count: 5 },

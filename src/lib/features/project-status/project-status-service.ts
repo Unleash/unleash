@@ -6,26 +6,32 @@ import type {
     ISegmentStore,
     IUnleashStores,
 } from '../../types';
+import type { IPersonalDashboardReadModel } from '../personal-dashboard/personal-dashboard-read-model-type';
 
 export class ProjectStatusService {
     private eventStore: IEventStore;
     private projectStore: IProjectStore;
     private apiTokenStore: IApiTokenStore;
     private segmentStore: ISegmentStore;
+    private personalDashboardReadModel: IPersonalDashboardReadModel;
 
-    constructor({
-        eventStore,
-        projectStore,
-        apiTokenStore,
-        segmentStore,
-    }: Pick<
-        IUnleashStores,
-        'eventStore' | 'projectStore' | 'apiTokenStore' | 'segmentStore'
-    >) {
+    constructor(
+        {
+            eventStore,
+            projectStore,
+            apiTokenStore,
+            segmentStore,
+        }: Pick<
+            IUnleashStores,
+            'eventStore' | 'projectStore' | 'apiTokenStore' | 'segmentStore'
+        >,
+        personalDashboardReadModel: IPersonalDashboardReadModel,
+    ) {
         this.eventStore = eventStore;
         this.projectStore = projectStore;
         this.apiTokenStore = apiTokenStore;
         this.segmentStore = segmentStore;
+        this.personalDashboardReadModel = personalDashboardReadModel;
     }
 
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
@@ -35,13 +41,20 @@ export class ProjectStatusService {
             apiTokens,
             segments,
             activityCountByDate,
+            healthScores,
         ] = await Promise.all([
             this.projectStore.getConnectedEnvironmentCountForProject(projectId),
             this.projectStore.getMembersCountByProject(projectId),
             this.apiTokenStore.countProjectTokens(projectId),
             this.segmentStore.getProjectSegmentCount(projectId),
             this.eventStore.getProjectRecentEventActivity(projectId),
+            this.personalDashboardReadModel.getLatestHealthScores(projectId, 4),
         ]);
+
+        const averageHealth = healthScores.length
+            ? healthScores.reduce((acc, num) => acc + num, 0) /
+              healthScores.length
+            : 0;
 
         return {
             resources: {
@@ -51,6 +64,7 @@ export class ProjectStatusService {
                 segments,
             },
             activityCountByDate,
+            averageHealth,
         };
     }
 }

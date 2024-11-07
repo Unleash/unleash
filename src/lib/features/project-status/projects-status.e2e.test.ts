@@ -23,6 +23,20 @@ let eventService: EventService;
 const TEST_USER_ID = -9999;
 const config: IUnleashConfig = createTestConfig();
 
+const insertHealthScore = (id: string, health: number) => {
+    const irrelevantFlagTrendDetails = {
+        total_flags: 10,
+        stale_flags: 10,
+        potentially_stale_flags: 10,
+    };
+    return db.rawDatabase('flag_trends').insert({
+        ...irrelevantFlagTrendDetails,
+        id,
+        project: 'default',
+        health,
+    });
+};
+
 const getCurrentDateStrings = () => {
     const today = new Date();
     const todayString = today.toISOString().split('T')[0];
@@ -225,4 +239,20 @@ test('project resources should contain the right data', async () => {
         segments: 1,
         connectedEnvironments: 1,
     });
+});
+
+test('project health should be correct average', async () => {
+    await insertHealthScore('2024-04', 100);
+
+    await insertHealthScore('2024-05', 0);
+    await insertHealthScore('2024-06', 0);
+    await insertHealthScore('2024-07', 90);
+    await insertHealthScore('2024-08', 70);
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/status')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.averageHealth).toBe(40);
 });

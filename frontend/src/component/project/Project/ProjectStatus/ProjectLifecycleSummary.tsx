@@ -1,11 +1,14 @@
 import { styled } from '@mui/material';
 import { FeatureLifecycleStageIcon } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FeatureLifecycleStageIcon';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { Link } from 'react-router-dom';
 
 const LifecycleBox = styled('li')(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusExtraLarge,
     border: `2px solid ${theme.palette.divider}`,
-    aspectRatio: '1/1',
+    width: '170px',
+    height: '152px',
     display: 'flex',
     flexFlow: 'column',
     justifyContent: 'space-between',
@@ -14,8 +17,8 @@ const LifecycleBox = styled('li')(({ theme }) => ({
 const Wrapper = styled('ul')(({ theme }) => ({
     display: 'grid',
     listStyle: 'none',
-    gridTemplateColumns: 'repeat(auto-fit, 200px)',
-    gap: theme.spacing(2),
+    gridTemplateColumns: 'repeat(auto-fit, 170px)',
+    gap: theme.spacing(1),
     justifyContent: 'center',
 }));
 
@@ -38,7 +41,20 @@ const Stats = styled('dl')(({ theme }) => ({
     },
 }));
 
+const NegativeStat = styled('span')(({ theme }) => ({
+    color: theme.palette.warning.contrastText,
+}));
+
+const NoData = styled('span')({
+    fontWeight: 'normal',
+});
+
+const LinkNoUnderline = styled(Link)({
+    textDecoration: 'none',
+});
+
 export const ProjectLifecycleSummary = () => {
+    const projectId = useRequiredPathParam('projectId');
     return (
         <Wrapper>
             <LifecycleBox>
@@ -57,7 +73,9 @@ export const ProjectLifecycleSummary = () => {
                 </p>
                 <Stats>
                     <dt>Avg. time in stage</dt>
-                    <dd>21 days</dd>
+                    <dd>
+                        <NegativeStat>21 days</NegativeStat>
+                    </dd>
                 </Stats>
             </LifecycleBox>
             <LifecycleBox>
@@ -114,11 +132,20 @@ export const ProjectLifecycleSummary = () => {
                             }}
                         />
                     </Counter>
-                    <span>flags in cleanup</span>
+                    <span>
+                        <LinkNoUnderline
+                            to={`/projects/${projectId}/placeholder`}
+                        >
+                            flags
+                        </LinkNoUnderline>{' '}
+                        in cleanup
+                    </span>
                 </p>
                 <Stats>
                     <dt>Avg. time in stage</dt>
-                    <dd>No data</dd>
+                    <dd>
+                        <NoData>No data</NoData>
+                    </dd>
                 </Stats>
             </LifecycleBox>
             <LifecycleBox>

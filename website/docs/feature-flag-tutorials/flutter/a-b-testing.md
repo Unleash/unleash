@@ -11,7 +11,7 @@ This article is a contribution by **[Ayush Bherwani](https://www.linkedin.com/in
 
 After successfully integrating the first feature flag in the Unsplash sample app, let’s talk about how you can use Unleash to perform experimentation, also known as A/B testing, in Flutter to ship features more confidently.
 
-For this article, we’ll integrate feature flags for A/B testing to experiment with “like image” feature user experience. As an overview, the app is quite simple, with two screens displaying images and image details respectively. The behavior of the “image details” feature is controlled through an Unleash instance. You can check out the previous article, “[How to set up feature flags in Flutter](https://www.getunleash.io/blog/from-the-community-how-to-set-up-feature-flags-in-flutter)” for an overview of the code structure and implementation. For those who want to skip straight to the code, you can find it on [GitHub](https://github.com/AyushBherwani1998/unsplash_sample/).
+For this article, we’ll integrate feature flags for A/B testing to experiment with “like image” feature user experience. As an overview, the app is quite simple, with two screens displaying images and image details respectively. The behavior of the “image details” feature is controlled through an Unleash instance. For those who want to skip straight to the code, you can find it on [GitHub](https://github.com/AyushBherwani1998/unsplash_sample/).
 
 Here’s a screenshot of the application:
 ![Unsplash App built on Flutter](/img/unsplash-demo-flutter.png)

@@ -22,7 +22,7 @@ In your Unleash instance, create a new feature flag called `likeOptionExperiment
 
 ![Set Up Variant in Unleash](/img/variant-setup-1.png)
 
-Now that you have created your feature flag, let’s create two new [variants](https://docs.getunleash.io/reference/feature-toggle-variants) “gridTile'' and “imageDetails” respectively. These variants will help you position your “like image” button.
+Now that you have created your feature flag, let’s create two new [variants](https://docs.getunleash.io/reference/feature-toggle-variants) `gridTile` and `imageDetails` respectively. These variants will help you position your **like image** button.
 
 ![Succesfully setting up variant in Unleash](/img/setup-variant-2.png)
 
@@ -34,7 +34,7 @@ Below is a screenshot of experimentation in action based on the `likeOptionExper
 
 For analytics and metrics, we’ll use [Mixpanel](https://mixpanel.com/) to track user behavior and usage patterns. We have chosen Mixpanel because it offers a user-friendly setup and in-depth user analytics and segmentation. Given that the project follows clean architecture and Test-Driven Development (TDD) principles, you’ll want to create an abstract layer to interact with the Mixpanel.
 
-Whenever a user opens the app, we track `like-variant` if `likeOptionExperiment` is enabled to tag them with their assigned variant (gridTile or imageDetails). The stored variant in Mixpanel can be used later to analyze how each variant impacts user behavior to like an image.
+Whenever a user opens the app, we track `like-variant` if `likeOptionExperiment` is enabled to tag them with their assigned variant (`gridTile` or `imageDetails`). The stored variant in Mixpanel can be used later to analyze how each variant impacts user behavior to like an image.
 
 Whenever a user interacts with the `LikeButton`, we track `trackLikeEventForExperimentation`, along with their assigned variants. By correlating the `trackLikeEventForExperimentation` with the `like-variant`, you can effectively measure the impact of a variant on user behavior and make data-driven decisions. To learn how to correlate and generate reports, see the [Mixpanel docs](https://docs.mixpanel.com/docs/analysis/reports).
 

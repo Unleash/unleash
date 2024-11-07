@@ -2,6 +2,7 @@ import { styled } from '@mui/material';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ProjectResources } from './ProjectResources';
 import { ProjectActivity } from './ProjectActivity';
+import { ProjectHealth } from './ProjectHealth';
 import { ProjectLifecycleSummary } from './ProjectLifecycleSummary';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
@@ -36,7 +37,7 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
         <SidebarModal open={open} onClose={close} label='Project status'>
             <ModalContentContainer>
                 <HealthRow>
-                    <div>Health widget placeholder</div>
+                    <ProjectHealth health={50} />
                     <ProjectResources />
                 </HealthRow>
 

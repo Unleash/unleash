@@ -272,14 +272,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "featureSearchFeedbackPosting",
-    "menu": {},
-    "path": "/feedback",
-    "title": "Feedback",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
     "menu": {},
     "parent": "/tag-types",
     "path": "/tag-types/create",

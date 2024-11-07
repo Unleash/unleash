@@ -17,13 +17,13 @@ const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
 }));
 
-const StyledEnvironmentAccordionBody = styled(FeatureOverviewEnvironmentBody)(
-    ({ theme }) => ({
-        width: '100%',
-        position: 'relative',
-        paddingBottom: theme.spacing(2),
-    }),
-);
+const StyledFeatureOverviewEnvironmentBody = styled(
+    FeatureOverviewEnvironmentBody,
+)(({ theme }) => ({
+    width: '100%',
+    position: 'relative',
+    paddingBottom: theme.spacing(2),
+}));
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -124,7 +124,7 @@ export const NewFeatureOverviewEnvironment = ({
                 />
             </StyledHeader>
 
-            <StyledEnvironmentAccordionBody
+            <StyledFeatureOverviewEnvironmentBody
                 featureEnvironment={featureEnvironment}
                 isDisabled={!featureEnvironment.enabled}
                 otherEnvironments={feature?.environments

@@ -21,6 +21,7 @@ import usePagination from 'hooks/usePagination';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
+import isEqual from 'lodash/isEqual';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -65,9 +66,17 @@ export const FeatureOverviewEnvironmentBody = ({
         index: number;
         height: number;
     } | null>(null);
+
+    const [isReordering, setIsReordering] = useState(false);
+
     useEffect(() => {
-        // Use state to enable drag and drop, but switch to API output when it arrives
-        setStrategies(featureEnvironment?.strategies || []);
+        if (isReordering) {
+            if (isEqual(featureEnvironment?.strategies, strategies)) {
+                setIsReordering(false);
+            }
+        } else {
+            setStrategies(featureEnvironment?.strategies || []);
+        }
     }, [featureEnvironment?.strategies]);
 
     useEffect(() => {
@@ -139,6 +148,7 @@ export const FeatureOverviewEnvironmentBody = ({
             index: number,
         ): DragEventHandler<HTMLButtonElement> =>
         (event) => {
+            setIsReordering(true);
             setDragItem({
                 id: strategies[index].id,
                 index,
@@ -197,11 +207,15 @@ export const FeatureOverviewEnvironmentBody = ({
         );
     };
 
+    const strategiesToDisplay = isReordering
+        ? strategies
+        : featureEnvironment.strategies;
+
     return (
         <StyledAccordionBody>
             <StyledAccordionBodyInnerContainer>
                 <ConditionallyRender
-                    condition={strategies.length > 0 && isDisabled}
+                    condition={strategiesToDisplay.length > 0 && isDisabled}
                     show={() => (
                         <Alert severity='warning' sx={{ mb: 2 }}>
                             This environment is disabled, which means that none
@@ -210,34 +224,38 @@ export const FeatureOverviewEnvironmentBody = ({
                     )}
                 />
                 <ConditionallyRender
-                    condition={strategies.length > 0}
+                    condition={strategiesToDisplay.length > 0}
                     show={
                         <ConditionallyRender
                             condition={
-                                strategies.length < 50 ||
+                                strategiesToDisplay.length < 50 ||
                                 !manyStrategiesPagination
                             }
                             show={
                                 <>
-                                    {strategies.map((strategy, index) => (
-                                        <StrategyDraggableItem
-                                            key={strategy.id}
-                                            strategy={strategy}
-                                            index={index}
-                                            environmentName={
-                                                featureEnvironment.name
-                                            }
-                                            otherEnvironments={
-                                                otherEnvironments
-                                            }
-                                            isDragging={
-                                                dragItem?.id === strategy.id
-                                            }
-                                            onDragStartRef={onDragStartRef}
-                                            onDragOver={onDragOver(strategy.id)}
-                                            onDragEnd={onDragEnd}
-                                        />
-                                    ))}
+                                    {strategiesToDisplay.map(
+                                        (strategy, index) => (
+                                            <StrategyDraggableItem
+                                                key={strategy.id}
+                                                strategy={strategy}
+                                                index={index}
+                                                environmentName={
+                                                    featureEnvironment.name
+                                                }
+                                                otherEnvironments={
+                                                    otherEnvironments
+                                                }
+                                                isDragging={
+                                                    dragItem?.id === strategy.id
+                                                }
+                                                onDragStartRef={onDragStartRef}
+                                                onDragOver={onDragOver(
+                                                    strategy.id,
+                                                )}
+                                                onDragEnd={onDragEnd}
+                                            />
+                                        ),
+                                    )}
                                 </>
                             }
                             elseShow={

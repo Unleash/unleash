@@ -2,7 +2,7 @@ import type React from 'react';
 import { useTheme, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { Link } from 'react-router-dom';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface ProjectHealthProps {
     health: number;
@@ -87,7 +87,7 @@ export const ProjectHealth: React.FC<ProjectHealthProps> = ({ health }) => {
                 Remember to archive your stale feature flags to keep the project
                 health growing
             </DescriptionText>
-            {isOss() && <Link to='/insights'>View health over time</Link>}
+            {!isOss() && <Link to='/insights'>View health over time</Link>}
         </HealthContainer>
     );
 };

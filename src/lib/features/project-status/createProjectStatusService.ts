@@ -8,6 +8,8 @@ import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store';
 import { ApiTokenStore } from '../../db/api-token-store';
 import SegmentStore from '../segment/segment-store';
 import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
+import { PersonalDashboardReadModel } from '../personal-dashboard/personal-dashboard-read-model';
+import { FakePersonalDashboardReadModel } from '../personal-dashboard/fake-personal-dashboard-read-model';
 
 export const createProjectStatusService = (
     db: Db,
@@ -33,12 +35,15 @@ export const createProjectStatusService = (
         config.flagResolver,
     );
 
-    return new ProjectStatusService({
-        eventStore,
-        projectStore,
-        apiTokenStore,
-        segmentStore,
-    });
+    return new ProjectStatusService(
+        {
+            eventStore,
+            projectStore,
+            apiTokenStore,
+            segmentStore,
+        },
+        new PersonalDashboardReadModel(db),
+    );
 };
 
 export const createFakeProjectStatusService = () => {
@@ -46,12 +51,15 @@ export const createFakeProjectStatusService = () => {
     const projectStore = new FakeProjectStore();
     const apiTokenStore = new FakeApiTokenStore();
     const segmentStore = new FakeSegmentStore();
-    const projectStatusService = new ProjectStatusService({
-        eventStore,
-        projectStore,
-        apiTokenStore,
-        segmentStore,
-    });
+    const projectStatusService = new ProjectStatusService(
+        {
+            eventStore,
+            projectStore,
+            apiTokenStore,
+            segmentStore,
+        },
+        new FakePersonalDashboardReadModel(),
+    );
 
     return {
         projectStatusService,

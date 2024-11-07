@@ -3,6 +3,7 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ProjectResources } from './ProjectResources';
 import { ProjectActivity } from './ProjectActivity';
 import { ProjectHealth } from './ProjectHealth';
+import { ProjectLifecycleSummary } from './ProjectLifecycleSummary';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
     minHeight: '100vh',
@@ -41,6 +42,8 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                 </HealthRow>
 
                 <ProjectActivity />
+
+                <ProjectLifecycleSummary />
             </ModalContentContainer>
         </SidebarModal>
     );

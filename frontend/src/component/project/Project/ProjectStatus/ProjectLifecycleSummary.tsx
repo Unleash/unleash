@@ -63,6 +63,7 @@ export const ProjectLifecycleSummary = () => {
                         <BigNumber>15</BigNumber>
 
                         <FeatureLifecycleStageIcon
+                            aria-hidden='true'
                             stage={{
                                 name: 'initial',
                                 enteredStageAt: '',
@@ -84,6 +85,7 @@ export const ProjectLifecycleSummary = () => {
                         <BigNumber>3</BigNumber>
 
                         <FeatureLifecycleStageIcon
+                            aria-hidden='true'
                             stage={{
                                 name: 'pre-live',
                                 enteredStageAt: '',
@@ -104,6 +106,7 @@ export const ProjectLifecycleSummary = () => {
                         <BigNumber>2</BigNumber>
 
                         <FeatureLifecycleStageIcon
+                            aria-hidden='true'
                             stage={{
                                 name: 'live',
                                 enteredStageAt: '',
@@ -124,6 +127,7 @@ export const ProjectLifecycleSummary = () => {
                         <BigNumber>6</BigNumber>
 
                         <FeatureLifecycleStageIcon
+                            aria-hidden='true'
                             stage={{
                                 name: 'completed',
                                 enteredStageAt: '',
@@ -154,6 +158,7 @@ export const ProjectLifecycleSummary = () => {
                         <BigNumber>15</BigNumber>
 
                         <FeatureLifecycleStageIcon
+                            aria-hidden='true'
                             stage={{
                                 name: 'archived',
                                 enteredStageAt: '',

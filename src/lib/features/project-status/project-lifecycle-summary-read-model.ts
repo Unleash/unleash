@@ -50,48 +50,49 @@ export class ProjectLifecycleSummaryReadModel
             .with(
                 'stage_durations',
                 this.db('feature_lifecycles as fl1')
-                    .select('fl1.feature', 'fl1.stage')
-                    .min(
+                    .select(
+                        'fl1.feature',
+                        'fl1.stage',
                         this.db.raw(
-                            'EXTRACT(EPOCH FROM (fl2.created_at - fl1.created_at)) / 86400',
+                            'EXTRACT(EPOCH FROM (MIN(fl2.created_at) - fl1.created_at)) / 86400 AS days_in_stage',
                         ),
                     )
-                    .as('days_in_stage')
                     .join('feature_lifecycles as fl2', function () {
                         this.on('fl1.feature', '=', 'fl2.feature').andOn(
                             'fl2.created_at',
                             '>',
                             'fl1.created_at',
-                        ); // Join with the next row based on created_at
+                        );
                     })
-                    .innerJoin('features as f', 'fl1.feature', 'f.id')
-                    .where('f.project', projectId)
+                    .innerJoin('features as f', 'fl1.feature', 'f.name') // Join with features table to filter by project
+                    .where('f.project', projectId) // Filter for the specific project
                     .whereNot('fl1.stage', 'archived') // Exclude 'archived' stage
                     .groupBy('fl1.feature', 'fl1.stage', 'fl1.created_at'),
             )
             .select('stage_durations.stage')
-            .avg(this.db.raw('ROUND(days_in_stage) as avg_days_in_stage'))
+            .select(
+                this.db.raw('ROUND(AVG(days_in_stage)) AS avg_days_in_stage'),
+            )
             .from('stage_durations')
             .groupBy('stage_durations.stage')
             .orderByRaw(
                 `array_position(array[${stages.map((stage) => `'${stage}'`).join(',')}], stage_durations.stage)`,
             );
 
+        // Execute the query and map results to the output structure
         const result = await q;
-        console.log(result);
-
-        return q.then((rows) => {
-            const result = {
+        return result.reduce(
+            (acc, row) => {
+                acc[row.stage] = Number(row.avg_days_in_stage);
+                return acc;
+            },
+            {
                 initial: 0,
                 'pre-live': 0,
                 live: 0,
                 completed: 0,
-            };
-            rows.forEach((row) => {
-                result[row.stage] = row.avg_days_in_stage;
-            });
-            return result;
-        });
+            },
+        );
     }
 
     async getCurrentFlagsInEachStage(projectId: string) {

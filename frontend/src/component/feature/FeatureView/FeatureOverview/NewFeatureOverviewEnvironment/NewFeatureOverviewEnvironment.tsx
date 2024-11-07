@@ -7,9 +7,7 @@ import { FeatureOverviewEnvironmentBody } from './FeatureOverviewEnvironmentBody
 import FeatureOverviewEnvironmentMetrics from '../FeatureOverviewEnvironments/FeatureOverviewEnvironment/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useFeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
-import { FeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/FeatureToggleSwitch';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { FeatureOverviewEnvironmentToggle } from './FeatureOverviewEnvironmentToggle';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 3),
@@ -63,7 +61,7 @@ export const NewFeatureOverviewEnvironment = ({
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { metrics } = useFeatureMetrics(projectId, featureId);
-    const { feature, refetchFeature } = useFeature(projectId, featureId);
+    const { feature } = useFeature(projectId, featureId);
 
     const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
     const environmentMetric = featureMetrics.find(
@@ -72,26 +70,6 @@ export const NewFeatureOverviewEnvironment = ({
     const featureEnvironment = feature?.environments.find(
         ({ name }) => name === environmentId,
     );
-
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-
-    const { onToggle: onFeatureToggle, modals: featureToggleModals } =
-        useFeatureToggleSwitch(projectId);
-
-    const onToggle = (newState: boolean, onRollback: () => void) =>
-        onFeatureToggle(newState, {
-            projectId,
-            featureId,
-            environmentName: environmentId,
-            environmentType: featureEnvironment!.type,
-            hasStrategies: featureEnvironment!.strategies.length > 0,
-            hasEnabledStrategies: featureEnvironment!.strategies.some(
-                (strategy) => !strategy.disabled,
-            ),
-            isChangeRequestEnabled: isChangeRequestConfigured(environmentId),
-            onRollback,
-            onSuccess: refetchFeature,
-        });
 
     if (!featureEnvironment)
         return (
@@ -104,12 +82,8 @@ export const NewFeatureOverviewEnvironment = ({
         <StyledFeatureOverviewEnvironment>
             <StyledHeader data-loading>
                 <StyledHeaderToggleContainer>
-                    <FeatureToggleSwitch
-                        projectId={projectId}
-                        value={featureEnvironment.enabled}
-                        featureId={featureId}
-                        environmentName={environmentId}
-                        onToggle={onToggle}
+                    <FeatureOverviewEnvironmentToggle
+                        environment={featureEnvironment}
                     />
                     <StyledHeaderTitleContainer>
                         <StyledHeaderTitleLabel>
@@ -152,7 +126,6 @@ export const NewFeatureOverviewEnvironment = ({
                     </>
                 }
             />
-            {featureToggleModals}
         </StyledFeatureOverviewEnvironment>
     );
 };

@@ -19,7 +19,31 @@ const TitleContainer = styled('h4')({
 
 type Output = { date: string; count: number; level: number };
 
-export function transformData(inputData: ProjectActivitySchema): Output[] {
+const ensureFullYearData = (data: Output[]): Output[] => {
+    const today = new Date();
+    const oneYearBack = new Date();
+    oneYearBack.setFullYear(today.getFullYear() - 1);
+
+    const formattedToday = today.toISOString().split('T')[0];
+    const formattedOneYearBack = oneYearBack.toISOString().split('T')[0];
+
+    const hasToday = data.some((item) => item.date === formattedToday);
+    const hasOneYearBack = data.some(
+        (item) => item.date === formattedOneYearBack,
+    );
+
+    if (!hasOneYearBack) {
+        data.unshift({ count: 0, date: formattedOneYearBack, level: 0 });
+    }
+
+    if (!hasToday) {
+        data.push({ count: 0, date: formattedToday, level: 0 });
+    }
+
+    return data;
+};
+
+const transformData = (inputData: ProjectActivitySchema): Output[] => {
     const countArray = inputData.map((item) => item.count);
 
     // Step 2: Get all counts, sort them, and find the cut-off values for percentiles
@@ -46,14 +70,12 @@ export function transformData(inputData: ProjectActivitySchema): Output[] {
     };
 
     // Step 4: Convert the map back to an array and assign levels
-    return inputData
-        .map(({ date, count }) => ({
-            date,
-            count,
-            level: calculateLevel(count),
-        }))
-        .reverse();
-}
+    return inputData.map(({ date, count }) => ({
+        date,
+        count,
+        level: calculateLevel(count),
+    }));
+};
 
 export const ProjectActivity = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -65,6 +87,7 @@ export const ProjectActivity = () => {
     };
 
     const levelledData = transformData(data.activityCountByDate);
+    const fullData = ensureFullYearData(levelledData);
 
     return (
         <>
@@ -73,7 +96,7 @@ export const ProjectActivity = () => {
                     <TitleContainer>Activity in project</TitleContainer>
                     <ActivityCalendar
                         theme={explicitTheme}
-                        data={levelledData}
+                        data={fullData}
                         maxLevel={4}
                         showWeekdayLabels={true}
                         renderBlock={(block, activity) => (

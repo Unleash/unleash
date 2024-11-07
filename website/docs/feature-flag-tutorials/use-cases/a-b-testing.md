@@ -230,7 +230,7 @@ To use Unleash to conduct a multi-arm bandit test, follow these steps:
 2. Capture impression events in your application code
 3. Funnel the impression events captured from your application code to an external analytics tool
 4. Create signal endpoints in Unleash that will point to your external analytics tools
-5. Create actions in Unleash that will react to your signals that were integrated
+5. Create [actions](/reference/actions) in Unleash that can react to your signals
 
 Learn how to configure [actions](/reference/actions) and [signals](/reference/signals) from our documentation to get started.
 

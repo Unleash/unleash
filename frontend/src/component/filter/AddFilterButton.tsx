@@ -12,7 +12,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
-import { useOptionalPathParam } from '../../hooks/useOptionalPathParam';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(0, 1.25, 0, 1.25),

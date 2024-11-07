@@ -10,16 +10,16 @@ export const FeatureLifecycleStageIcon: FC<{ stage: LifecycleStage }> = ({
     stage,
 }) => {
     if (stage.name === 'archived') {
-        return <ArchivedStageIcon aria-hidden='true' />;
+        return <ArchivedStageIcon />;
     } else if (stage.name === 'pre-live') {
-        return <PreLiveStageIcon aria-hidden='true' />;
+        return <PreLiveStageIcon />;
     } else if (stage.name === 'live') {
-        return <LiveStageIcon aria-hidden='true' />;
+        return <LiveStageIcon />;
     } else if (stage.name === 'completed' && stage.status === 'kept') {
-        return <CompletedStageIcon aria-hidden='true' />;
+        return <CompletedStageIcon />;
     } else if (stage.name === 'completed' && stage.status === 'discarded') {
-        return <CompletedStageIcon aria-hidden='true' />;
+        return <CompletedStageIcon />;
     } else {
-        return <InitialStageIcon aria-hidden='true' />;
+        return <InitialStageIcon />;
     }
 };

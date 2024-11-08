@@ -226,7 +226,7 @@ To use Unleash to conduct a multi-arm bandit test, follow these steps:
 1. Collect the necessary data from each variant’s performance by enabling impression data for your feature flag.
 2. Capture impression events in your application code.
 3. Funnel the impression events captured from your application code to an external analytics tool.
-4. Use the Unleash API to dynamically to adjust the traffic for each variant based on performance.
+4. Use the Unleash API to dynamically adjust the traffic for each variant based on performance.
 
 This approach minimizes the "regret" associated with allocating traffic to lower-performing variants. Multi-arm bandit tests using Unleash can adapt to changing conditions, such as seasonal fluctuations or user behavior changes. In some cases, they can be used to ensure that users are not exposed to suboptimal experiences for extended periods.
 

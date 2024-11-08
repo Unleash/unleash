@@ -1,5 +1,7 @@
 import * as permissions from '../../types/permissions';
 import type { Db } from '../../db/db';
+import type { IFeatureToggleStore } from '../../types';
+import { subDays } from 'date-fns';
 
 const { ADMIN } = permissions;
 
@@ -32,6 +34,7 @@ export class ProjectLifecycleSummaryReadModel
     implements IProjectLifecycleSummaryReadModel
 {
     private db: Db;
+    private featureToggleStore: IFeatureToggleStore;
 
     constructor(db: Db) {
         this.db = db;
@@ -113,8 +116,17 @@ export class ProjectLifecycleSummaryReadModel
         );
     }
 
-    async getArchivedFlagsOverLastMonth(projectId: string) {
-        return 0;
+    async getArchivedFlagsOverLastMonth(projectId: string, now: Date) {
+        const dateMinusThirtyDays = subDays(now, 30).toISOString();
+
+        const results = await this.featureToggleStore.countByDate({
+            project: projectId,
+            archived: true,
+            dateAccessor: 'archived_at',
+            date: dateMinusThirtyDays,
+        });
+
+        console.log(results);
     }
 
     async getProjectLifecycleSummary(

@@ -7,23 +7,15 @@ export class FakeProjectLifecycleSummaryReadModel
     implements IProjectLifecycleSummaryReadModel
 {
     async getProjectLifecycleSummary(): Promise<ProjectLifecycleSummary> {
+        const placeholderData = {
+            averageDays: 0,
+            currentFlags: 0,
+        };
         return {
-            initial: {
-                averageDays: 0,
-                currentFlags: 0,
-            },
-            preLive: {
-                averageDays: 0,
-                currentFlags: 0,
-            },
-            live: {
-                averageDays: 0,
-                currentFlags: 0,
-            },
-            completed: {
-                averageDays: 0,
-                currentFlags: 0,
-            },
+            initial: placeholderData,
+            preLive: placeholderData,
+            live: placeholderData,
+            completed: placeholderData,
             archived: {
                 currentFlags: 0,
                 last30Days: 0,

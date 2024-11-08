@@ -67,7 +67,7 @@ export class ProjectLifecycleSummaryReadModel
                     .innerJoin('features as f', 'fl1.feature', 'f.name')
                     .where('f.project', projectId)
                     .whereNot('fl1.stage', 'archived')
-                    .groupBy('fl1.feature', 'fl1.stage', 'fl1.created_at'),
+                    .groupBy('fl1.feature', 'fl1.stage'),
             )
             .select('stage_durations.stage')
             .select(

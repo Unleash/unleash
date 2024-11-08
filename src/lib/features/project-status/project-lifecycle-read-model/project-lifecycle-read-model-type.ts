@@ -4,23 +4,16 @@ export interface IProjectLifecycleSummaryReadModel {
     ): Promise<ProjectLifecycleSummary>;
 }
 
+type StageDataWithAverageDays = {
+    averageDays: number | null;
+    currentFlags: number;
+};
+
 export type ProjectLifecycleSummary = {
-    initial: {
-        averageDays: number | null;
-        currentFlags: number;
-    };
-    preLive: {
-        averageDays: number | null;
-        currentFlags: number;
-    };
-    live: {
-        averageDays: number | null;
-        currentFlags: number;
-    };
-    completed: {
-        averageDays: number | null;
-        currentFlags: number;
-    };
+    initial: StageDataWithAverageDays;
+    preLive: StageDataWithAverageDays;
+    live: StageDataWithAverageDays;
+    completed: StageDataWithAverageDays;
     archived: {
         currentFlags: number;
         archivedFlagsLast30Days: number;

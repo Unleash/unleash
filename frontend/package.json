@@ -23,7 +23,7 @@
     "test:snapshot": "NODE_OPTIONS=\"${NODE_OPTIONS:-0} --no-experimental-fetch\" yarn test -u",
     "test:watch": "NODE_OPTIONS=\"${NODE_OPTIONS:-0} --no-experimental-fetch\" vitest watch",
     "lint:material:icons": "./check-imports.rc",
-    "lint": "biome lint src --apply",
+    "lint": "biome lint src --write",
     "lint:check": "biome check src",
     "fmt": "biome format src --write",
     "fmt:check": "biome check src",

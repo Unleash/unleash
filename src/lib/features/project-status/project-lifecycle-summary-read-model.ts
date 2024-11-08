@@ -1,32 +1,29 @@
-import * as permissions from '../../types/permissions';
 import type { Db } from '../../db/db';
 import type { IFeatureToggleStore } from '../../types';
 import { subDays } from 'date-fns';
-
-const { ADMIN } = permissions;
 
 export type IProjectLifecycleSummaryReadModel = {};
 
 type ProjectLifecycleSummary = {
     initial: {
-        averageDays: number;
+        averageDays: number | null;
         currentFlags: number;
     };
     preLive: {
-        averageDays: number;
+        averageDays: number | null;
         currentFlags: number;
     };
     live: {
-        averageDays: number;
+        averageDays: number | null;
         currentFlags: number;
     };
     completed: {
-        averageDays: number;
+        averageDays: number | null;
         currentFlags: number;
     };
     archived: {
         currentFlags: number;
-        archivedFlagsOverLastMonth: number;
+        archivedFlagsLast30Days: number;
     };
 };
 
@@ -91,7 +88,13 @@ export class ProjectLifecycleSummaryReadModel
         );
     }
 
-    async getCurrentFlagsInEachStage(projectId: string) {
+    async getCurrentFlagsInEachStage(projectId: string): Promise<{
+        initial: number;
+        'pre-live': number;
+        live: number;
+        completed: number;
+        archived: number;
+    }> {
         const query = this.db('feature_lifecycles as fl')
             .innerJoin('features as f', 'fl.feature', 'f.name')
             .where('f.project', projectId)
@@ -116,17 +119,15 @@ export class ProjectLifecycleSummaryReadModel
         );
     }
 
-    async getArchivedFlagsOverLastMonth(projectId: string, now: Date) {
-        const dateMinusThirtyDays = subDays(now, 30).toISOString();
+    async getArchivedFlagsLast30Days(projectId: string): Promise<number> {
+        const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
 
-        const results = await this.featureToggleStore.countByDate({
+        return this.featureToggleStore.countByDate({
             project: projectId,
             archived: true,
             dateAccessor: 'archived_at',
             date: dateMinusThirtyDays,
         });
-
-        console.log(results);
     }
 
     async getProjectLifecycleSummary(
@@ -135,34 +136,34 @@ export class ProjectLifecycleSummaryReadModel
         const [
             averageTimeInEachStage,
             currentFlagsInEachStage,
-            archivedFlagsOverLastMonth,
+            archivedFlagsLast30Days,
         ] = await Promise.all([
             this.getAverageTimeInEachStage(projectId),
             this.getCurrentFlagsInEachStage(projectId),
-            this.getArchivedFlagsOverLastMonth(projectId),
+            this.getArchivedFlagsLast30Days(projectId),
         ]);
 
         // collate the data
         return {
             initial: {
-                averageDays: 0,
-                currentFlags: 0,
+                averageDays: averageTimeInEachStage.initial,
+                currentFlags: currentFlagsInEachStage.initial,
             },
             preLive: {
-                averageDays: 0,
-                currentFlags: 0,
+                averageDays: averageTimeInEachStage['pre-live'],
+                currentFlags: currentFlagsInEachStage['pre-live'],
             },
             live: {
-                averageDays: 0,
-                currentFlags: 0,
+                averageDays: averageTimeInEachStage.live,
+                currentFlags: currentFlagsInEachStage.live,
             },
             completed: {
-                averageDays: 0,
-                currentFlags: 0,
+                averageDays: averageTimeInEachStage.completed,
+                currentFlags: currentFlagsInEachStage.completed,
             },
             archived: {
-                currentFlags: 0,
-                archivedFlagsOverLastMonth: 0,
+                currentFlags: currentFlagsInEachStage.archived,
+                archivedFlagsLast30Days,
             },
         };
     }

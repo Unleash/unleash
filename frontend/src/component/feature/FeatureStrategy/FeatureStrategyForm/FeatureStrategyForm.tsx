@@ -171,11 +171,11 @@ const EnvironmentIconBox = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
-const EnvironmentTypography = styled(Typography)<{ enabled: boolean }>(
-    ({ theme, enabled }) => ({
-        fontWeight: enabled ? 'bold' : 'normal',
-    }),
-);
+const EnvironmentTypography = styled(Typography, {
+    shouldForwardProp: (prop) => prop !== 'enabled',
+})<{ enabled: boolean }>(({ enabled }) => ({
+    fontWeight: enabled ? 'bold' : 'normal',
+}));
 
 const EnvironmentTypographyHeader = styled(Typography)(({ theme }) => ({
     marginRight: theme.spacing(0.5),

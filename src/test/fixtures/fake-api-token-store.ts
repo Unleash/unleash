@@ -92,4 +92,8 @@ export default class FakeApiTokenStore
             activeLegacyTokens: 0,
         };
     }
+
+    async countProjectTokens(): Promise<number> {
+        return 0;
+    }
 }

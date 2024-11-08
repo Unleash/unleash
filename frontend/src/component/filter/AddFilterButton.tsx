@@ -12,6 +12,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(0, 1.25, 0, 1.25),
@@ -46,6 +47,7 @@ export const AddFilterButton = ({
     setHiddenOptions,
     availableFilters,
 }: IAddFilterButtonProps) => {
+    const projectId = useOptionalPathParam('projectId');
     const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
     const { setSplashSeen } = useSplashApi();
     const { splash } = useAuthSplash();
@@ -95,7 +97,7 @@ export const AddFilterButton = ({
     };
     return (
         <div>
-            {simplifyProjectOverview ? (
+            {simplifyProjectOverview && projectId ? (
                 <HtmlTooltip
                     placement='right'
                     arrow

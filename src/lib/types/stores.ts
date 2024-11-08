@@ -164,4 +164,5 @@ export {
     type IntegrationEventsStore,
     type IProjectReadModel,
     IOnboardingStore,
+    type IUserSubscriptionsReadModel,
 };

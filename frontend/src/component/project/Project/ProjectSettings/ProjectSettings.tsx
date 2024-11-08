@@ -53,10 +53,10 @@ export const ProjectSettings = () => {
             id: 'api-access',
             label: 'API access',
         },
-        ...paidTabs({
+        {
             id: 'segments',
             label: 'Segments',
-        }),
+        },
         {
             id: 'environments',
             label: 'Environments',
@@ -68,7 +68,7 @@ export const ProjectSettings = () => {
         ...paidTabs({
             id: 'change-requests',
             label: 'Change request configuration',
-            icon: isPro() ? (
+            endIcon: isPro() ? (
                 <StyledBadgeContainer>
                     <EnterpriseBadge />
                 </StyledBadgeContainer>
@@ -80,7 +80,7 @@ export const ProjectSettings = () => {
         tabs.push({
             id: 'actions',
             label: 'Actions',
-            icon: isPro() ? (
+            endIcon: isPro() ? (
                 <StyledBadgeContainer>
                     <EnterpriseBadge />
                 </StyledBadgeContainer>

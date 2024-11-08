@@ -43,12 +43,11 @@ import { ViewIntegration } from 'component/integrations/ViewIntegration/ViewInte
 import { PaginatedApplicationList } from '../application/ApplicationList/PaginatedApplicationList';
 import { AddonRedirect } from 'component/integrations/AddonRedirect/AddonRedirect';
 import { Insights } from '../insights/Insights';
-import { FeedbackList } from '../feedbackNew/FeedbackList';
 import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
 import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject';
 import { PersonalDashboard } from '../personalDashboard/PersonalDashboard';
-import { ReleaseManagement } from 'component/releases/ReleaseManagement';
+import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseManagement';
 
 export const routes: IRoute[] = [
     // Splash
@@ -248,7 +247,7 @@ export const routes: IRoute[] = [
         menu: { mobile: true, advanced: true },
     },
     {
-        path: '/releases-management',
+        path: '/release-management',
         title: 'Release management',
         component: ReleaseManagement,
         type: 'protected',
@@ -278,14 +277,6 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: { mobile: true, advanced: true },
         enterprise: true,
-    },
-    {
-        path: '/feedback',
-        title: 'Feedback',
-        component: FeedbackList,
-        type: 'protected',
-        flag: 'featureSearchFeedbackPosting',
-        menu: {},
     },
 
     // Tags

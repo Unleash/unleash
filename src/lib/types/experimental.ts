@@ -28,8 +28,6 @@ export type IFlagKey =
     | 'signals'
     | 'automatedActions'
     | 'celebrateUnleash'
-    | 'featureSearchFeedback'
-    | 'featureSearchFeedbackPosting'
     | 'extendedUsageMetrics'
     | 'adminTokenKillSwitch'
     | 'feedbackComments'
@@ -44,7 +42,6 @@ export type IFlagKey =
     | 'outdatedSdksBanner'
     | 'responseTimeMetricsFix'
     | 'disableShowContextFieldSelectionValues'
-    | 'projectOverviewRefactorFeedback'
     | 'manyStrategiesPagination'
     | 'enableLegacyVariants'
     | 'extendedMetrics'
@@ -60,7 +57,8 @@ export type IFlagKey =
     | 'releasePlans'
     | 'productivityReportEmail'
     | 'enterprise-payg'
-    | 'simplifyProjectOverview';
+    | 'simplifyProjectOverview'
+    | 'flagOverviewRedesign';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -146,23 +144,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CELEBRATE_UNLEASH,
         false,
     ),
-    featureSearchFeedback: {
-        name: 'withText',
-        enabled: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
-            false,
-        ),
-        payload: {
-            type: PayloadType.JSON,
-            value:
-                process.env
-                    .UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_PAYLOAD ?? '',
-        },
-    },
-    featureSearchFeedbackPosting: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_POSTING,
-        false,
-    ),
     encryptEmails: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ENCRYPT_EMAILS,
         false,
@@ -233,10 +214,6 @@ const flags: IFlags = {
             .UNLEASH_EXPERIMENTAL_DISABLE_SHOW_CONTEXT_FIELD_SELECTION_VALUES,
         false,
     ),
-    projectOverviewRefactorFeedback: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR_FEEDBACK,
-        false,
-    ),
     manyStrategiesPagination: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MANY_STRATEGIES_PAGINATION,
         false,
@@ -299,6 +276,10 @@ const flags: IFlags = {
     ),
     simplifyProjectOverview: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SIMPLIFY_PROJECT_OVERVIEW,
+        false,
+    ),
+    flagOverviewRedesign: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
         false,
     ),
 };

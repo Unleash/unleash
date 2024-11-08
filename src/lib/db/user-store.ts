@@ -281,6 +281,19 @@ class UserStore implements IUserStore {
             .then((res) => Number(res[0].count));
     }
 
+    async countRecentlyDeleted(): Promise<number> {
+        return this.db(TABLE)
+            .whereNotNull('deleted_at')
+            .andWhere(
+                'deleted_at',
+                '>=',
+                this.db.raw(`NOW() - INTERVAL '1 month'`),
+            )
+            .andWhere({ is_service: false, is_system: false })
+            .count('*')
+            .then((res) => Number(res[0].count));
+    }
+
     destroy(): void {}
 
     async exists(id: number): Promise<boolean> {

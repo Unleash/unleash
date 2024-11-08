@@ -75,7 +75,7 @@ interface ITab {
     flag?: keyof UiFlags;
     new?: boolean;
     isEnterprise?: boolean;
-    label?: () => ReactNode;
+    labelOverride?: () => ReactNode;
 }
 
 const StyledCounterBadge = styled(CounterBadge)(({ theme }) => ({
@@ -94,8 +94,13 @@ const TabText = styled('span')(({ theme }) => ({
 }));
 
 const ChangeRequestsLabel = () => {
+    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
     const projectId = useRequiredPathParam('projectId');
     const { total } = useActionableChangeRequests(projectId);
+
+    if (!simplifyProjectOverview) {
+        return 'Change requests';
+    }
 
     return (
         <StyledCounterBadge badgeContent={total ?? 0} color='primary'>
@@ -167,7 +172,7 @@ export const Project = () => {
             path: `${basePath}/change-requests`,
             name: 'change-request',
             isEnterprise: true,
-            label: simplifyProjectOverview ? ChangeRequestsLabel : undefined,
+            labelOverride: ChangeRequestsLabel,
         },
         {
             title: 'Applications',
@@ -319,7 +324,13 @@ export const Project = () => {
                                 <StyledTab
                                     data-loading-project
                                     key={tab.title}
-                                    label={tab.label ? tab.label() : tab.title}
+                                    label={
+                                        tab.labelOverride ? (
+                                            <tab.labelOverride />
+                                        ) : (
+                                            tab.title
+                                        )
+                                    }
                                     value={tab.path}
                                     onClick={() => {
                                         if (tab.title !== 'Flags') {

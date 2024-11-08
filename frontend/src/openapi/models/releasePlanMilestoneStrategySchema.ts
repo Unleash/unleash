@@ -31,7 +31,7 @@ export interface ReleasePlanMilestoneStrategySchema {
      * A descriptive title for the strategy
      * @nullable
      */
-    title: string | null;
+    title?: string | null;
     /** Strategy level variants */
     variants?: CreateStrategyVariantSchema[];
 }

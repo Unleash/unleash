@@ -1,5 +1,4 @@
 import type { Db } from '../../db/db';
-import type EventEmitter from 'events';
 import {
     SUBSCRIPTION_TYPES,
     type IUserSubscriptionsReadModel,
@@ -26,7 +25,7 @@ const mapRowToSubscriber = (row) =>
 export class UserSubscriptionsReadModel implements IUserSubscriptionsReadModel {
     private db: Db;
 
-    constructor(db: Db, eventBus: EventEmitter) {
+    constructor(db: Db) {
         this.db = db;
     }
 
@@ -39,6 +38,7 @@ export class UserSubscriptionsReadModel implements IUserSubscriptionsReadModel {
             .select(USER_COLUMNS)
             .whereNotIn('id', unsubscribedUserIdsQuery)
             .andWhere('is_service', false)
+            .andWhere('deleted_at', null)
             .andWhereNot('email', null);
 
         return users.map(mapRowToSubscriber);

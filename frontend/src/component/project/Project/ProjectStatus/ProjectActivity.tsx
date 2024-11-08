@@ -5,22 +5,49 @@ import type { ProjectActivitySchema } from '../../../../openapi';
 import { styled, Tooltip } from '@mui/material';
 
 const StyledContainer = styled('div')(({ theme }) => ({
-    gap: theme.spacing(1),
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: theme.spacing(2),
 }));
+
+const TitleContainer = styled('h4')({
+    margin: 0,
+    width: '100%',
+});
 
 type Output = { date: string; count: number; level: number };
 
-export function transformData(inputData: ProjectActivitySchema): Output[] {
-    const resultMap: Record<string, number> = {};
+const ensureFullYearData = (data: Output[]): Output[] => {
+    const today = new Date();
+    const oneYearBack = new Date();
+    oneYearBack.setFullYear(today.getFullYear() - 1);
 
-    // Step 1: Count the occurrences of each date
-    inputData.forEach((item) => {
-        const formattedDate = new Date(item.date).toISOString().split('T')[0];
-        resultMap[formattedDate] = (resultMap[formattedDate] || 0) + 1;
-    });
+    const formattedToday = today.toISOString().split('T')[0];
+    const formattedOneYearBack = oneYearBack.toISOString().split('T')[0];
+
+    const hasToday = data.some((item) => item.date === formattedToday);
+    const hasOneYearBack = data.some(
+        (item) => item.date === formattedOneYearBack,
+    );
+
+    if (!hasOneYearBack) {
+        data.unshift({ count: 0, date: formattedOneYearBack, level: 0 });
+    }
+
+    if (!hasToday) {
+        data.push({ count: 0, date: formattedToday, level: 0 });
+    }
+
+    return data;
+};
+
+const transformData = (inputData: ProjectActivitySchema): Output[] => {
+    const countArray = inputData.map((item) => item.count);
 
     // Step 2: Get all counts, sort them, and find the cut-off values for percentiles
-    const counts = Object.values(resultMap).sort((a, b) => a - b);
+    const counts = Object.values(countArray).sort((a, b) => a - b);
 
     const percentile = (percent: number) => {
         const index = Math.floor((percent / 100) * counts.length);
@@ -43,14 +70,12 @@ export function transformData(inputData: ProjectActivitySchema): Output[] {
     };
 
     // Step 4: Convert the map back to an array and assign levels
-    return Object.entries(resultMap)
-        .map(([date, count]) => ({
-            date,
-            count,
-            level: calculateLevel(count),
-        }))
-        .reverse(); // Optional: reverse the order if needed
-}
+    return inputData.map(({ date, count }) => ({
+        date,
+        count,
+        level: calculateLevel(count),
+    }));
+};
 
 export const ProjectActivity = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -62,15 +87,16 @@ export const ProjectActivity = () => {
     };
 
     const levelledData = transformData(data.activityCountByDate);
+    const fullData = ensureFullYearData(levelledData);
 
     return (
-        <StyledContainer>
+        <>
             {data.activityCountByDate.length > 0 ? (
-                <>
-                    <span>Activity in project</span>
+                <StyledContainer>
+                    <TitleContainer>Activity in project</TitleContainer>
                     <ActivityCalendar
                         theme={explicitTheme}
-                        data={levelledData}
+                        data={fullData}
                         maxLevel={4}
                         showWeekdayLabels={true}
                         renderBlock={(block, activity) => (
@@ -81,10 +107,10 @@ export const ProjectActivity = () => {
                             </Tooltip>
                         )}
                     />
-                </>
+                </StyledContainer>
             ) : (
                 <span>No activity</span>
             )}
-        </StyledContainer>
+        </>
     );
 };

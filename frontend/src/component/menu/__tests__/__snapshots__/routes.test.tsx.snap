@@ -240,7 +240,7 @@ exports[`returns all baseRoutes 1`] = `
         "enterprise",
       ],
     },
-    "path": "/releases-management",
+    "path": "/release-management",
     "title": "Release management",
     "type": "protected",
   },
@@ -268,14 +268,6 @@ exports[`returns all baseRoutes 1`] = `
     },
     "path": "/environments",
     "title": "Environments",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
-    "flag": "featureSearchFeedbackPosting",
-    "menu": {},
-    "path": "/feedback",
-    "title": "Feedback",
     "type": "protected",
   },
   {

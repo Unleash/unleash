@@ -7,7 +7,7 @@ import VideoContent from '@site/src/components/VideoContent.jsx'
 
 :::note Availability
 
-**Version**: `4.13+` for [Pro](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing).
+**Version**: `4.13+` for [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing).
 **Version**: `5.5+` for [Open Source](https://www.getunleash.io/pricing).
 
 :::
@@ -42,11 +42,11 @@ If an activation strategy has a segment _and_ additional constraints applied, th
 
 In theory, you could create segments with a thousand constraints, each with a million values. But this wouldn't scale well, so there are limitations in place to stop you from doing this. Unleash enforces the following limits on use of segments:
 
-- If you're on a Pro plan
+- If you're on a [Pro](/availability#plans) plan:
 
     A segment can have **at most 250 values** specified across all of its constraints. That means that if you add a constraint that uses 10 values, you will have 240 more values to use for any other constraints you add to the same segment.
 
-- If you're on an Enterprise plan
+- If you're on an [Enterprise](https://www.getunleash.io/pricing) plan:
 
     A segment can have **at most 1000 values** specified across all of its constraints. That means that if you add a constraint that uses 70 values, you will have 930 more values to use for any other constraints you add to the same segment.
 

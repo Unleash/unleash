@@ -1,4 +1,8 @@
-import type { IUnleashConfig, IUnleashStores } from '../../types';
+import {
+    UserPreferenceUpdatedEvent,
+    type IUnleashConfig,
+    type IUnleashStores,
+} from '../../types';
 import type { Logger } from '../../logger';
 import type { IAuditUser } from '../../types/user';
 import type {
@@ -6,22 +10,36 @@ import type {
     UnsubscribeEntry,
 } from './user-unsubscribe-store-type';
 import type EventService from '../events/event-service';
+import type { IUserSubscriptionsReadModel } from './user-subscriptions-read-model-type';
 
 export class UserSubscriptionsService {
     private userUnsubscribeStore: IUserUnsubscribeStore;
+
+    private userSubscriptionsReadModel: IUserSubscriptionsReadModel;
 
     private eventService: EventService;
 
     private logger: Logger;
 
     constructor(
-        { userUnsubscribeStore }: Pick<IUnleashStores, 'userUnsubscribeStore'>,
+        {
+            userUnsubscribeStore,
+            userSubscriptionsReadModel,
+        }: Pick<
+            IUnleashStores,
+            'userUnsubscribeStore' | 'userSubscriptionsReadModel'
+        >,
         { getLogger }: Pick<IUnleashConfig, 'getLogger'>,
         eventService: EventService,
     ) {
         this.userUnsubscribeStore = userUnsubscribeStore;
+        this.userSubscriptionsReadModel = userSubscriptionsReadModel;
         this.eventService = eventService;
         this.logger = getLogger('services/user-subscription-service.ts');
+    }
+
+    async getUserSubscriptions(userId: number) {
+        return this.userSubscriptionsReadModel.getUserSubscriptions(userId);
     }
 
     async subscribe(
@@ -35,13 +53,13 @@ export class UserSubscriptionsService {
         };
 
         await this.userUnsubscribeStore.delete(entry);
-        // TODO: log an event
-        // await this.eventService.storeEvent(
-        //     new UserSubscriptionEvent({
-        //         data: { ...entry, action: 'subscribed' },
-        //         auditUser,
-        //     }),
-        // );
+        await this.eventService.storeEvent(
+            new UserPreferenceUpdatedEvent({
+                userId,
+                data: { subscription, action: 'subscribed' },
+                auditUser,
+            }),
+        );
     }
 
     async unsubscribe(
@@ -55,12 +73,12 @@ export class UserSubscriptionsService {
         };
 
         await this.userUnsubscribeStore.insert(entry);
-        // TODO: log an event
-        // await this.eventService.storeEvent(
-        //     new UserSubscriptionEvent({
-        //         data: { ...entry, action: 'unsubscribed' },
-        //         auditUser,
-        //     }),
-        // );
+        await this.eventService.storeEvent(
+            new UserPreferenceUpdatedEvent({
+                userId,
+                data: { subscription, action: 'unsubscribed' },
+                auditUser,
+            }),
+        );
     }
 }

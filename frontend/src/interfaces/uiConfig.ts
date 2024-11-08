@@ -71,12 +71,10 @@ export type UiFlags = {
     signals?: boolean;
     automatedActions?: boolean;
     celebrateUnleash?: boolean;
-    featureSearchFeedback?: Variant;
     enableLicense?: boolean;
     adminTokenKillSwitch?: boolean;
     feedbackComments?: Variant;
     showInactiveUsers?: boolean;
-    featureSearchFeedbackPosting?: boolean;
     userAccessUIEnabled?: boolean;
     outdatedSdksBanner?: boolean;
     estimateTrafficDataCost?: boolean;
@@ -94,6 +92,7 @@ export type UiFlags = {
     'enterprise-payg'?: boolean;
     simplifyProjectOverview?: boolean;
     productivityReportEmail?: boolean;
+    flagOverviewRedesign?: boolean;
 };
 
 export interface IVersionInfo {

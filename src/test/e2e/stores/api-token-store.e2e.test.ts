@@ -2,6 +2,7 @@ import dbInit, { type ITestDb } from '../helpers/database-init';
 import getLogger from '../../fixtures/no-logger';
 import type { IUnleashStores } from '../../../lib/types';
 import { ApiTokenType } from '../../../lib/types/models/api-token';
+import { randomId } from '../../../lib/util';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -180,5 +181,48 @@ describe('count deprecated tokens', () => {
             legacyTokens: 1,
             orphanedTokens: 1,
         });
+    });
+});
+
+describe('count project tokens', () => {
+    test('counts only tokens belonging to the specified project', async () => {
+        const project = await stores.projectStore.create({
+            id: randomId(),
+            name: 'project A',
+        });
+
+        const store = stores.apiTokenStore;
+        await store.insert({
+            secret: `default:default.${randomId()}`,
+            environment: 'default',
+            type: ApiTokenType.CLIENT,
+            projects: ['default'],
+            tokenName: 'token1',
+        });
+        await store.insert({
+            secret: `*:*.${randomId()}`,
+            environment: 'default',
+            type: ApiTokenType.CLIENT,
+            projects: ['*'],
+            tokenName: 'token2',
+        });
+
+        await store.insert({
+            secret: `${project.id}:default.${randomId()}`,
+            environment: 'default',
+            type: ApiTokenType.CLIENT,
+            projects: [project.id],
+            tokenName: 'token3',
+        });
+
+        await store.insert({
+            secret: `[]:default.${randomId()}`,
+            environment: 'default',
+            type: ApiTokenType.CLIENT,
+            projects: [project.id, 'default'],
+            tokenName: 'token4',
+        });
+
+        expect(await store.countProjectTokens(project.id)).toBe(2);
     });
 });

@@ -445,7 +445,7 @@ const sidebars: SidebarsConfig = {
                     ],
                 },
                 {
-                    label: 'Integrations',
+                    label: 'Integrations and automation',
                     type: 'category',
                     link: { type: 'doc', id: 'reference/integrations/index' },
                     items: [
@@ -461,9 +461,100 @@ const sidebars: SidebarsConfig = {
                             ],
                         },
                         'reference/integrations/slack-app',
-                        'reference/integrations/slack',
                         'reference/integrations/teams',
                         'reference/integrations/webhook',
+                        {
+                            type: 'doc',
+                            label: 'Terraform',
+                            id: 'reference/terraform',
+                        },
+                    ],
+                },
+                {
+                    type: 'category',
+                    link: {
+                        type: 'generated-index',
+                        title: 'Self-Hosting Unleash',
+                        description:
+                            'All you need to learn how to deploy and manage your own Unleash instance.',
+                        slug: '/using-unleash/deploy',
+                    },
+                    label: 'Self-hosting',
+                    items: [
+                        'using-unleash/deploy/getting-started',
+                        'using-unleash/deploy/configuring-unleash',
+                        'using-unleash/deploy/database-setup',
+                        'using-unleash/deploy/database-backup',
+                        'using-unleash/deploy/email-service',
+                        'using-unleash/deploy/google-auth-hook',
+                        'using-unleash/deploy/upgrading-unleash',
+                        'using-unleash/deploy/securing-unleash',
+                        'using-unleash/deploy/license-keys',
+                    ],
+                },
+                {
+                    label: 'Single sign-on',
+                    items: [
+                        'how-to/how-to-add-sso-open-id-connect',
+                        'how-to/how-to-add-sso-saml',
+                        'how-to/how-to-add-sso-saml-keycloak',
+                        'how-to/how-to-add-sso-azure-saml',
+                        'how-to/how-to-setup-sso-keycloak-group-sync',
+                    ],
+                    type: 'category',
+                    link: {
+                        type: 'generated-index',
+                        title: 'How-to: Single sign-on',
+                        description: 'Single sign-on guides.',
+                        slug: '/how-to/sso',
+                    },
+                },
+                {
+                    label: 'Automatic provisioning',
+                    items: [
+                        'how-to/how-to-setup-provisioning-with-okta',
+                        'how-to/how-to-setup-provisioning-with-entra',
+                    ],
+                    type: 'category',
+                    link: {
+                        type: 'generated-index',
+                        title: 'How to: Provisioning',
+                        description: 'Provisioning how-to guides.',
+                        slug: '/how-to/provisioning',
+                    },
+                },
+                {
+                    type: 'category',
+                    label: 'Unleash Edge',
+                    collapsed: true,
+                    link: {
+                        type: 'doc',
+                        id: 'generated/unleash-edge',
+                    },
+                    items: [
+                        'generated/unleash-edge/concepts',
+                        'generated/unleash-edge/deploying',
+                    ],
+                },
+                'generated/unleash-proxy',
+                {
+                    label: 'Troubleshooting',
+                    type: 'category',
+                    link: {
+                        type: 'generated-index',
+                        title: 'How-to: troubleshooting',
+                        description:
+                            'Troubleshooting common problems. If you want to suggest new items, please phrase the title as a concrete problem',
+                        slug: '/using-unleash/troubleshooting',
+                    },
+                    items: [
+                        'using-unleash/troubleshooting/cors',
+                        'using-unleash/troubleshooting/https',
+                        'using-unleash/troubleshooting/email-service',
+                        'using-unleash/troubleshooting/feature-not-available',
+                        'using-unleash/troubleshooting/flag-exposure',
+                        'using-unleash/troubleshooting/flag-not-returned',
+                        'using-unleash/troubleshooting/flag-abn-test-unexpected-result',
                     ],
                 },
                 {
@@ -538,10 +629,7 @@ const sidebars: SidebarsConfig = {
                                 description: 'Environments how-to guides.',
                                 slug: '/how-to/env',
                             },
-                            items: [
-                                'how-to/how-to-import-export',
-                                'how-to/how-to-environment-import-export',
-                            ],
+                            items: ['how-to/how-to-environment-import-export'],
                         },
                         {
                             label: 'Users and permissions',
@@ -561,96 +649,8 @@ const sidebars: SidebarsConfig = {
                                 slug: '/how-to/users-and-permissions',
                             },
                         },
-                        {
-                            label: 'Single sign-on SSO',
-                            items: [
-                                'how-to/how-to-add-sso-open-id-connect',
-                                'how-to/how-to-add-sso-saml',
-                                'how-to/how-to-add-sso-saml-keycloak',
-                                'how-to/how-to-add-sso-azure-saml',
-                                'how-to/how-to-setup-sso-keycloak-group-sync',
-                                'how-to/how-to-add-sso-google',
-                            ],
-                            type: 'category',
-                            link: {
-                                type: 'generated-index',
-                                title: 'How-to: Single sign-on',
-                                description: 'Single sign-on guides.',
-                                slug: '/how-to/sso',
-                            },
-                        },
-                        {
-                            label: 'Automatic provisioning',
-                            items: [
-                                'how-to/how-to-setup-provisioning-with-okta',
-                                'how-to/how-to-setup-provisioning-with-entra',
-                            ],
-                            type: 'category',
-                            link: {
-                                type: 'generated-index',
-                                title: 'How to: Provisioning',
-                                description: 'Provisioning how-to guides.',
-                                slug: '/how-to/provisioning',
-                            },
-                        },
                     ],
                 },
-                {
-                    type: 'category',
-                    link: {
-                        type: 'generated-index',
-                        title: 'Self-Hosting Unleash',
-                        description:
-                            'All you need to learn how to deploy and manage your own Unleash instance.',
-                        slug: '/using-unleash/deploy',
-                    },
-                    label: 'Self-Hosting Unleash',
-                    items: [
-                        'using-unleash/deploy/getting-started',
-                        'using-unleash/deploy/configuring-unleash',
-                        'using-unleash/deploy/database-setup',
-                        'using-unleash/deploy/database-backup',
-                        'using-unleash/deploy/email-service',
-                        'using-unleash/deploy/google-auth-hook',
-                        'using-unleash/deploy/upgrading-unleash',
-                        'using-unleash/deploy/securing-unleash',
-                        'using-unleash/deploy/license-keys',
-                    ],
-                },
-                {
-                    label: 'Troubleshooting',
-                    type: 'category',
-                    link: {
-                        type: 'generated-index',
-                        title: 'How-to: troubleshooting',
-                        description:
-                            'Troubleshooting common problems. If you want to suggest new items, please phrase the title as a concrete problem',
-                        slug: '/using-unleash/troubleshooting',
-                    },
-                    items: [
-                        'using-unleash/troubleshooting/cors',
-                        'using-unleash/troubleshooting/https',
-                        'using-unleash/troubleshooting/email-service',
-                        'using-unleash/troubleshooting/feature-not-available',
-                        'using-unleash/troubleshooting/flag-exposure',
-                        'using-unleash/troubleshooting/flag-not-returned',
-                        'using-unleash/troubleshooting/flag-abn-test-unexpected-result',
-                    ],
-                },
-                {
-                    type: 'category',
-                    label: 'Unleash Edge',
-                    collapsed: true,
-                    link: {
-                        type: 'doc',
-                        id: 'generated/unleash-edge',
-                    },
-                    items: [
-                        'generated/unleash-edge/concepts',
-                        'generated/unleash-edge/deploying',
-                    ],
-                },
-                'generated/unleash-proxy',
             ],
         },
         {

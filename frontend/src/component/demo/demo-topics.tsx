@@ -131,7 +131,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step2`,
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button`,
+                target: 'button[data-testid="ADD_STRATEGY_BUTTON"]',
                 content: (
                     <Description>
                         Add a new strategy to this environment by using this
@@ -363,9 +363,10 @@ export const TOPICS: ITutorialTopic[] = [
                         strategies by using the arrow button.
                     </Description>
                 ),
+                optional: true,
             },
             {
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"].Mui-expanded a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
+                target: `a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
                 content: (
                     <Description>
                         Edit the existing gradual rollout strategy by using the
@@ -471,7 +472,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step4`,
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button`,
+                target: 'button[data-testid="ADD_STRATEGY_BUTTON"]',
                 content: (
                     <Description>
                         Add a new strategy to this environment by using this

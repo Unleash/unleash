@@ -1,4 +1,3 @@
-import type { StageName } from '../../types';
 import * as permissions from '../../types/permissions';
 import type { Db } from '../../db/db';
 
@@ -28,8 +27,6 @@ type ProjectLifecycleSummary = {
         archivedFlagsOverLastMonth: number;
     };
 };
-
-const stages: StageName[] = ['initial', 'pre-live', 'live', 'completed'];
 
 export class ProjectLifecycleSummaryReadModel
     implements IProjectLifecycleSummaryReadModel
@@ -74,11 +71,9 @@ export class ProjectLifecycleSummaryReadModel
                 this.db.raw('ROUND(AVG(days_in_stage)) AS avg_days_in_stage'),
             )
             .from('stage_durations')
-            .groupBy('stage_durations.stage')
-            .orderByRaw(
-                `array_position(array[${stages.map((stage) => `'${stage}'`).join(',')}], stage_durations.stage)`,
-            );
+            .groupBy('stage_durations.stage');
 
+        console.log(q.toQuery());
         const result = await q;
         return result.reduce(
             (acc, row) => {

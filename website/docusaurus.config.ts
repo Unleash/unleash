@@ -294,7 +294,7 @@ const config: Config = {
                     routeBasePath: '/',
                     remarkPlugins: [[pluginNpm2Yarn, { sync: true }]],
                     docItemComponent: '@theme/ApiItem',
-                    sidebarPath: './sidebars.ts'
+                    sidebarPath: './sidebars.ts',
                 },
                 theme: {
                     customCss: './src/css/custom.css',

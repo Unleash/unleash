@@ -80,6 +80,7 @@ export const FeatureStrategyMenu = ({
     return (
         <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
             <PermissionButton
+                data-testid='ADD_STRATEGY_BUTTON'
                 permission={CREATE_FEATURE_STRATEGY}
                 projectId={projectId}
                 environmentId={environmentId}

@@ -4,7 +4,7 @@ import dbInit, {
 } from '../../../../test/e2e/helpers/database-init';
 import getLogger from '../../../../test/fixtures/no-logger';
 import { ProjectLifecycleSummaryReadModel } from './project-lifecycle-summary-read-model';
-import type { StageName } from '../../../types';
+import type { IFeatureToggleStore, StageName } from '../../../types';
 import { randomId } from '../../../util';
 
 let db: ITestDb;
@@ -24,6 +24,12 @@ afterEach(async () => {
     await db.stores.featureToggleStore.deleteAll();
     await db.stores.featureLifecycleStore.deleteAll();
 });
+
+const createReadModel = () =>
+    new ProjectLifecycleSummaryReadModel(
+        db.rawDatabase,
+        {} as unknown as IFeatureToggleStore,
+    );
 
 const updateFeatureStageDate = async (
     flagName: string,
@@ -95,8 +101,7 @@ describe('Average time calculation', () => {
             }
         }
 
-        const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
-
+        const readModel = createReadModel();
         const result = await readModel.getAverageTimeInEachStage(project.id);
 
         expect(result).toMatchObject({
@@ -112,7 +117,7 @@ describe('Average time calculation', () => {
             name: 'project',
             id: randomId(),
         });
-        const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
+        const readModel = createReadModel();
 
         const result1 = await readModel.getAverageTimeInEachStage(project.id);
 
@@ -162,7 +167,7 @@ describe('Average time calculation', () => {
             name: 'project',
             id: randomId(),
         });
-        const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
+        const readModel = createReadModel();
 
         const flag = await db.stores.featureToggleStore.create(project.id, {
             name: randomId(),
@@ -262,7 +267,7 @@ describe('count current flags in each stage', () => {
             },
         ]);
 
-        const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
+        const readModel = createReadModel();
 
         const result = await readModel.getCurrentFlagsInEachStage(project.id);
 

@@ -1,12 +1,9 @@
-import type React from 'react';
 import { useTheme, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { Link } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-
-interface ProjectHealthProps {
-    health: number;
-}
+import { useProjectStatus } from '../../../../hooks/api/getters/useProjectStatus/useProjectStatus';
+import { useRequiredPathParam } from '../../../../hooks/useRequiredPathParam';
 
 const HealthContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.envAccordion.expanded,
@@ -30,7 +27,11 @@ const DescriptionText = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-export const ProjectHealth: React.FC<ProjectHealthProps> = ({ health }) => {
+export const ProjectHealth = () => {
+    const projectId = useRequiredPathParam('projectId');
+    const {
+        data: { averageHealth },
+    } = useProjectStatus(projectId);
     const { isOss } = useUiConfig();
     const theme = useTheme();
     const radius = 40;
@@ -40,7 +41,7 @@ export const ProjectHealth: React.FC<ProjectHealthProps> = ({ health }) => {
     const gapLength = 0.3;
     const filledLength = 1 - gapLength;
     const offset = 0.75 - gapLength / 2;
-    const healthLength = (health / 100) * circumference * 0.7;
+    const healthLength = (averageHealth / 100) * circumference * 0.7;
 
     return (
         <HealthContainer>
@@ -74,12 +75,12 @@ export const ProjectHealth: React.FC<ProjectHealthProps> = ({ health }) => {
                         fill={theme.palette.text.primary}
                         fontSize='24px'
                     >
-                        {health}%
+                        {averageHealth}%
                     </text>
                 </StyledSVG>
                 <Typography variant='body2'>
-                    On average, your project health has remained at {health}%
-                    the last 4 weeks
+                    On average, your project health has remained at{' '}
+                    {averageHealth}% the last 4 weeks
                 </Typography>
             </ChartRow>
             <DescriptionText variant='body2'>

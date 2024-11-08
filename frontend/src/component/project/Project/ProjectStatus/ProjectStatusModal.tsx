@@ -37,7 +37,7 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
         <SidebarModal open={open} onClose={close} label='Project status'>
             <ModalContentContainer>
                 <HealthRow>
-                    <ProjectHealth health={50} />
+                    <ProjectHealth />
                     <ProjectResources />
                 </HealthRow>
 

@@ -20,12 +20,8 @@ afterAll(async () => {
 const updateFeatureStageDate = async (
     flagName: string,
     stage: string,
-    newDate: Date | null,
+    newDate: Date,
 ) => {
-    if (newDate === null) {
-        return;
-    }
-
     await db
         .rawDatabase('feature_lifecycles')
         .where({ feature: flagName, stage: stage })

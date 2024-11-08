@@ -73,7 +73,6 @@ export class ProjectLifecycleSummaryReadModel
             .from('stage_durations')
             .groupBy('stage_durations.stage');
 
-        console.log(q.toQuery());
         const result = await q;
         return result.reduce(
             (acc, row) => {

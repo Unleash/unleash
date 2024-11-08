@@ -17,6 +17,12 @@ afterAll(async () => {
     }
 });
 
+afterEach(async () => {
+    await db.stores.projectStore.deleteAll();
+    await db.stores.featureToggleStore.deleteAll();
+    await db.stores.featureLifecycleStore.deleteAll();
+});
+
 const updateFeatureStageDate = async (
     flagName: string,
     stage: string,
@@ -96,10 +102,95 @@ describe('Average time calculation', () => {
         });
     });
 
-    test('it returns `null` if it has no data for something', async () => {});
-    test('it rounds to the nearest whole number', async () => {});
-    test('it ignores flags in other projects', async () => {});
-    test('it ignores flags in other projects', async () => {});
+    test('it returns `null` if it has no data for something', async () => {
+        const project = await db.stores.projectStore.create({
+            name: 'project',
+            id: randomId(),
+        });
+        const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
 
-    test("it ignores rows that don't have a next stage", async () => {});
+        const result1 = await readModel.getAverageTimeInEachStage(project.id);
+
+        expect(result1).toMatchObject({
+            initial: null,
+            'pre-live': null,
+            live: null,
+            completed: null,
+        });
+
+        const flag = await db.stores.featureToggleStore.create(project.id, {
+            name: randomId(),
+            createdByUserId: 1,
+        });
+        await db.stores.featureLifecycleStore.insert([
+            {
+                feature: flag.name,
+                stage: 'initial',
+            },
+        ]);
+
+        await db.stores.featureLifecycleStore.insert([
+            {
+                feature: flag.name,
+                stage: 'pre-live',
+            },
+        ]);
+
+        await updateFeatureStageDate(
+            flag.name,
+            'pre-live',
+            addDays(new Date(), 5),
+        );
+
+        const result2 = await readModel.getAverageTimeInEachStage(project.id);
+
+        expect(result2).toMatchObject({
+            initial: 5,
+            'pre-live': null,
+            live: null,
+            completed: null,
+        });
+    });
+
+    test('it ignores flags in other projects', async () => {
+        const project = await db.stores.projectStore.create({
+            name: 'project',
+            id: randomId(),
+        });
+        const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
+
+        const flag = await db.stores.featureToggleStore.create(project.id, {
+            name: randomId(),
+            createdByUserId: 1,
+        });
+        await db.stores.featureLifecycleStore.insert([
+            {
+                feature: flag.name,
+                stage: 'initial',
+            },
+        ]);
+
+        await db.stores.featureLifecycleStore.insert([
+            {
+                feature: flag.name,
+                stage: 'pre-live',
+            },
+        ]);
+
+        await updateFeatureStageDate(
+            flag.name,
+            'pre-live',
+            addDays(new Date(), 5),
+        );
+
+        const result =
+            await readModel.getAverageTimeInEachStage('some-other-project');
+
+        expect(result).toMatchObject({
+            initial: null,
+            'pre-live': null,
+            live: null,
+            completed: null,
+        });
+    });
 });

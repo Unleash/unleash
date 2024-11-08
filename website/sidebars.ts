@@ -522,7 +522,7 @@ const sidebars: SidebarsConfig = {
                         description: 'Provisioning how-to guides.',
                         slug: '/how-to/provisioning',
                     },
-                }, 
+                },
                 {
                     type: 'category',
                     label: 'Unleash Edge',
@@ -629,9 +629,7 @@ const sidebars: SidebarsConfig = {
                                 description: 'Environments how-to guides.',
                                 slug: '/how-to/env',
                             },
-                            items: [
-                                'how-to/how-to-environment-import-export',
-                            ],
+                            items: ['how-to/how-to-environment-import-export'],
                         },
                         {
                             label: 'Users and permissions',
@@ -650,9 +648,9 @@ const sidebars: SidebarsConfig = {
                                     'Users and permission how-to guides.',
                                 slug: '/how-to/users-and-permissions',
                             },
-                        }
+                        },
                     ],
-                },    
+                },
             ],
         },
         {

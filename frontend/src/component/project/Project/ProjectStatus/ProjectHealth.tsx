@@ -2,8 +2,8 @@ import { useTheme, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import { Link } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useProjectStatus } from '../../../../hooks/api/getters/useProjectStatus/useProjectStatus';
-import { useRequiredPathParam } from '../../../../hooks/useRequiredPathParam';
+import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
+import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 
 const HealthContainer = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.envAccordion.expanded,

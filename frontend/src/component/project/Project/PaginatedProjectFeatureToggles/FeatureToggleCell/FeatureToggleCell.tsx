@@ -22,6 +22,12 @@ const StyledSwitchContainer = styled('div', {
     }),
 }));
 
+const StyledDiv = styled('div')(({ theme }) => ({
+    flexGrow: 0,
+    ...flexRow,
+    justifyContent: 'center',
+}));
+
 interface IFeatureToggleCellProps {
     projectId: string;
     environmentName: string;
@@ -89,4 +95,7 @@ export const PlaceholderFeatureToggleCell = () => (
     <StyledSwitchContainer>
         <div data-loading>toggle</div>
     </StyledSwitchContainer>
+);
+export const ArchivedFeatureToggleCell = () => (
+    <StyledDiv aria-hidden='true'>-</StyledDiv>
 );

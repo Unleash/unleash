@@ -1,4 +1,4 @@
-import { addDays } from 'date-fns';
+import { addDays, addMinutes } from 'date-fns';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { ProjectLifecycleSummaryReadModel } from './project-lifecycle-summary-read-model';
@@ -36,22 +36,22 @@ const updateFeatureStageDate = async (
 
 describe('Average time calculation', () => {
     test('it calculates the average time for each stage', async () => {
-        const project1 = await db.stores.projectStore.create({
-            name: 'project1',
-            id: 'project1',
+        const project = await db.stores.projectStore.create({
+            name: 'project',
+            id: randomId(),
         });
         const now = new Date();
 
         const flags = [
             { name: randomId(), offsets: [2, 5, 6, 10] },
             { name: randomId(), offsets: [1, null, 4, 7] },
-            { name: randomId(), offsets: [12, 25, 8, 9] },
+            { name: randomId(), offsets: [12, 25, 0, 9] },
             { name: randomId(), offsets: [1, 2, 3, null] },
         ];
 
         for (const { name, offsets } of flags) {
             const created = await db.stores.featureToggleStore.create(
-                project1.id,
+                project.id,
                 {
                     name,
                     createdByUserId: 1,
@@ -85,19 +85,22 @@ describe('Average time calculation', () => {
                 await updateFeatureStageDate(
                     created.name,
                     stage,
-                    addDays(now, offsetFromInitial),
+                    addMinutes(
+                        addDays(now, offsetFromInitial),
+                        1 * (index + 1),
+                    ),
                 );
             }
         }
 
         const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
 
-        const result = await readModel.getAverageTimeInEachStage(project1.id);
+        const result = await readModel.getAverageTimeInEachStage(project.id);
 
         expect(result).toMatchObject({
             initial: 4, // (2 + 1 + 12 + 1) / 4 = 4
-            'pre-live': 9, // (5 + 25 + 2 + 4) / 4 = 9
-            live: 6, // (6 + 8 + 3) / 3 ~= 5.67 ~= 6
+            'pre-live': 9, // (5 + 4 + 25 + 2) / 4 = 9
+            live: 3, // (6 + 0 + 3) / 3 = 3
             completed: 9, // (10 + 7 + 9) / 3 ~= 8.67 ~= 9
         });
     });

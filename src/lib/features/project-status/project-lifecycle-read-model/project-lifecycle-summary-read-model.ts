@@ -27,8 +27,9 @@ export class ProjectLifecycleSummaryReadModel
     private db: Db;
     private featureToggleStore: IFeatureToggleStore;
 
-    constructor(db: Db) {
+    constructor(db: Db, featureToggleStore: IFeatureToggleStore) {
         this.db = db;
+        this.featureToggleStore = featureToggleStore;
     }
 
     async getAverageTimeInEachStage(

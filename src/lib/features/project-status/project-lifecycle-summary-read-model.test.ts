@@ -62,12 +62,8 @@ describe('Average time calculation', () => {
                 },
             ]);
 
-            for (const [index, stage] of [
-                'pre-live',
-                'live',
-                'completed',
-                'archived',
-            ].entries()) {
+            const stages = ['pre-live', 'live', 'completed', 'archived'];
+            for (const [index, stage] of stages.entries()) {
                 const offset = offsets[index];
                 if (offset === null) {
                     continue;

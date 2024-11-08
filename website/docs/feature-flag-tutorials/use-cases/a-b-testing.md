@@ -197,7 +197,7 @@ Here is an example of a payload that is returned from Google Analytics that incl
 
 By enabling impression data for your feature flag and listening to events within your application code, you can leverage this data flowing to your integrated analytics tools to make informed decisions faster and adjust your strategies based on real user behavior.
 
-### Roll out the Winning Variant to All Users
+### Roll Out the Winning Variant to All Users
 
 After you have implemented your A/B test and measured the performance of a feature to a subset of users, you can decide which variant is the most optimal experience to roll out to all users in production.
 

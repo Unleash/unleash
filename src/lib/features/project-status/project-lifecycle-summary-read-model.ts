@@ -27,6 +27,21 @@ type ProjectLifecycleSummary = {
     };
 };
 
+type FlagsInStage = {
+    initial: number;
+    'pre-live': number;
+    live: number;
+    completed: number;
+    archived: number;
+};
+
+type AverageTimeInStage = {
+    initial: number | null;
+    'pre-live': number | null;
+    live: number | null;
+    completed: number | null;
+};
+
 export class ProjectLifecycleSummaryReadModel
     implements IProjectLifecycleSummaryReadModel
 {
@@ -37,12 +52,9 @@ export class ProjectLifecycleSummaryReadModel
         this.db = db;
     }
 
-    async getAverageTimeInEachStage(projectId: string): Promise<{
-        initial: number | null;
-        'pre-live': number | null;
-        live: number | null;
-        completed: number | null;
-    }> {
+    async getAverageTimeInEachStage(
+        projectId: string,
+    ): Promise<AverageTimeInStage> {
         const q = this.db
             .with(
                 'stage_durations',
@@ -88,13 +100,7 @@ export class ProjectLifecycleSummaryReadModel
         );
     }
 
-    async getCurrentFlagsInEachStage(projectId: string): Promise<{
-        initial: number;
-        'pre-live': number;
-        live: number;
-        completed: number;
-        archived: number;
-    }> {
+    async getCurrentFlagsInEachStage(projectId: string): Promise<FlagsInStage> {
         const query = this.db('feature_lifecycles as fl')
             .innerJoin('features as f', 'fl.feature', 'f.name')
             .where('f.project', projectId)
@@ -116,7 +122,7 @@ export class ProjectLifecycleSummaryReadModel
                 completed: 0,
                 archived: 0,
             },
-        );
+        ) as FlagsInStage;
     }
 
     async getArchivedFlagsLast30Days(projectId: string): Promise<number> {

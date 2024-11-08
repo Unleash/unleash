@@ -322,8 +322,6 @@ export const ProjectFeatureToggles = ({
                                 archived,
                             } = getValue();
 
-                            console.log(getValue());
-
                             return isPlaceholder ? (
                                 <PlaceholderFeatureToggleCell />
                             ) : archived ? (

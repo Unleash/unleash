@@ -96,4 +96,6 @@ export const PlaceholderFeatureToggleCell = () => (
         <div data-loading>toggle</div>
     </StyledSwitchContainer>
 );
-export const ArchivedFeatureToggleCell = () => <StyledDiv>-</StyledDiv>;
+export const ArchivedFeatureToggleCell = () => (
+    <StyledDiv aria-hidden='true'>-</StyledDiv>
+);

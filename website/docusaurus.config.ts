@@ -294,7 +294,7 @@ const config: Config = {
                     routeBasePath: '/',
                     remarkPlugins: [[pluginNpm2Yarn, { sync: true }]],
                     docItemComponent: '@theme/ApiItem',
-                    sidebarPath: './sidebars.ts',
+                    sidebarPath: './sidebars.ts'
                 },
                 theme: {
                     customCss: './src/css/custom.css',
@@ -304,6 +304,18 @@ const config: Config = {
                 },
                 googleTagManager: {
                     containerId: 'GTM-KV5PRR2',
+                },
+                sitemap: {
+                    changefreq: 'weekly',
+                    lastmod: 'date',
+                    priority: 0.5,
+                    createSitemapItems: async (params) => {
+                        const { defaultCreateSitemapItems, ...rest } = params;
+                        const items = await defaultCreateSitemapItems(rest);
+                        return items.filter(
+                            (item) => !item.url.includes('/page/'),
+                        );
+                    },
                 },
             },
         ],

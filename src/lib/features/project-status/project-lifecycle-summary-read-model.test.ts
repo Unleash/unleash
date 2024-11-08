@@ -197,3 +197,79 @@ describe('Average time calculation', () => {
         });
     });
 });
+
+describe('count current flags in each stage', () => {
+    test('it counts the number of flags in each stage for the given project', async () => {
+        const project = await db.stores.projectStore.create({
+            name: 'project',
+            id: randomId(),
+        });
+
+        const flags = [
+            {
+                name: randomId(),
+                stages: ['initial', 'pre-live', 'live', 'archived'],
+            },
+            {
+                name: randomId(),
+                stages: ['initial', 'archived'],
+            },
+            {
+                name: randomId(),
+                stages: ['initial', 'pre-live', 'live', 'archived'],
+            },
+            { name: randomId(), stages: ['initial', 'pre-live', 'live'] },
+        ];
+
+        for (const { name, stages } of flags) {
+            const flag = await db.stores.featureToggleStore.create(project.id, {
+                name,
+                createdByUserId: 1,
+            });
+
+            for (const stage of stages) {
+                await db.stores.featureLifecycleStore.insert([
+                    {
+                        feature: flag.name,
+                        stage: stage as StageName,
+                    },
+                ]);
+            }
+        }
+
+        const otherProject = await db.stores.projectStore.create({
+            name: 'project',
+            id: randomId(),
+        });
+        const flagInOtherProject = await db.stores.featureToggleStore.create(
+            otherProject.id,
+            {
+                name: randomId(),
+                createdByUserId: 1,
+            },
+        );
+
+        await db.stores.featureLifecycleStore.insert([
+            {
+                feature: flagInOtherProject.name,
+                stage: 'initial',
+            },
+            {
+                feature: flagInOtherProject.name,
+                stage: 'pre-live',
+            },
+        ]);
+
+        const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
+
+        const result = await readModel.getCurrentFlagsInEachStage(project.id);
+
+        expect(result).toMatchObject({
+            initial: 4,
+            'pre-live': 3,
+            live: 3,
+            completed: 0,
+            archived: 3,
+        });
+    });
+});

@@ -26,6 +26,7 @@ import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { withTableState } from 'utils/withTableState';
 import type { FeatureSearchResponseSchema } from 'openapi';
 import {
+    ArchivedFeatureToggleCell,
     FeatureToggleCell,
     PlaceholderFeatureToggleCell,
 } from './FeatureToggleCell/FeatureToggleCell';
@@ -292,6 +293,7 @@ export const ProjectFeatureToggles = ({
 
                 return columnHelper.accessor(
                     (row) => ({
+                        archived: row.archivedAt !== null,
                         featureId: row.name,
                         environment: row.environments?.find(
                             (featureEnvironment) =>
@@ -317,10 +319,15 @@ export const ProjectFeatureToggles = ({
                                 featureId,
                                 environment,
                                 someEnabledEnvironmentHasVariants,
+                                archived,
                             } = getValue();
+
+                            console.log(getValue());
 
                             return isPlaceholder ? (
                                 <PlaceholderFeatureToggleCell />
+                            ) : archived ? (
+                                <ArchivedFeatureToggleCell />
                             ) : (
                                 <FeatureToggleCell
                                     value={environment?.enabled || false}

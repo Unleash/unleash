@@ -1,14 +1,21 @@
 import { addDays, addMinutes } from 'date-fns';
-import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
-import getLogger from '../../../test/fixtures/no-logger';
+import dbInit, {
+    type ITestDb,
+} from '../../../../test/e2e/helpers/database-init';
+import getLogger from '../../../../test/fixtures/no-logger';
 import { ProjectLifecycleSummaryReadModel } from './project-lifecycle-summary-read-model';
-import type { StageName } from '../../types';
-import { randomId } from '../../util';
+import type { IFeatureToggleStore, StageName } from '../../../types';
+import { randomId } from '../../../util';
 
 let db: ITestDb;
+let readModel: ProjectLifecycleSummaryReadModel;
 
 beforeAll(async () => {
     db = await dbInit('project_lifecycle_summary_read_model_serial', getLogger);
+    readModel = new ProjectLifecycleSummaryReadModel(
+        db.rawDatabase,
+        {} as unknown as IFeatureToggleStore,
+    );
 });
 
 afterAll(async () => {
@@ -93,8 +100,6 @@ describe('Average time calculation', () => {
             }
         }
 
-        const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
-
         const result = await readModel.getAverageTimeInEachStage(project.id);
 
         expect(result).toMatchObject({
@@ -110,7 +115,6 @@ describe('Average time calculation', () => {
             name: 'project',
             id: randomId(),
         });
-        const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
 
         const result1 = await readModel.getAverageTimeInEachStage(project.id);
 
@@ -160,7 +164,6 @@ describe('Average time calculation', () => {
             name: 'project',
             id: randomId(),
         });
-        const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
 
         const flag = await db.stores.featureToggleStore.create(project.id, {
             name: randomId(),
@@ -259,8 +262,6 @@ describe('count current flags in each stage', () => {
                 stage: 'pre-live',
             },
         ]);
-
-        const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
 
         const result = await readModel.getCurrentFlagsInEachStage(project.id);
 

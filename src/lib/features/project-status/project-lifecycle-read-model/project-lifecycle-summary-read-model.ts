@@ -1,48 +1,40 @@
-import * as permissions from '../../types/permissions';
-import type { Db } from '../../db/db';
+import type { Db } from '../../../db/db';
+import type { IFeatureToggleStore } from '../../../types';
+import { subDays } from 'date-fns';
+import type {
+    IProjectLifecycleSummaryReadModel,
+    ProjectLifecycleSummary,
+} from './project-lifecycle-read-model-type';
 
-const { ADMIN } = permissions;
+type FlagsInStage = {
+    initial: number;
+    'pre-live': number;
+    live: number;
+    completed: number;
+    archived: number;
+};
 
-export type IProjectLifecycleSummaryReadModel = {};
-
-type ProjectLifecycleSummary = {
-    initial: {
-        averageDays: number;
-        currentFlags: number;
-    };
-    preLive: {
-        averageDays: number;
-        currentFlags: number;
-    };
-    live: {
-        averageDays: number;
-        currentFlags: number;
-    };
-    completed: {
-        averageDays: number;
-        currentFlags: number;
-    };
-    archived: {
-        currentFlags: number;
-        archivedFlagsOverLastMonth: number;
-    };
+type AverageTimeInStage = {
+    initial: number | null;
+    'pre-live': number | null;
+    live: number | null;
+    completed: number | null;
 };
 
 export class ProjectLifecycleSummaryReadModel
     implements IProjectLifecycleSummaryReadModel
 {
     private db: Db;
+    private featureToggleStore: IFeatureToggleStore;
 
-    constructor(db: Db) {
+    constructor(db: Db, featureToggleStore: IFeatureToggleStore) {
         this.db = db;
+        this.featureToggleStore = featureToggleStore;
     }
 
-    async getAverageTimeInEachStage(projectId: string): Promise<{
-        initial: number | null;
-        'pre-live': number | null;
-        live: number | null;
-        completed: number | null;
-    }> {
+    async getAverageTimeInEachStage(
+        projectId: string,
+    ): Promise<AverageTimeInStage> {
         const q = this.db
             .with(
                 'stage_durations',
@@ -88,7 +80,7 @@ export class ProjectLifecycleSummaryReadModel
         );
     }
 
-    async getCurrentFlagsInEachStage(projectId: string) {
+    async getCurrentFlagsInEachStage(projectId: string): Promise<FlagsInStage> {
         const query = this.db('feature_lifecycles as fl')
             .innerJoin('features as f', 'fl.feature', 'f.name')
             .where('f.project', projectId)
@@ -110,11 +102,18 @@ export class ProjectLifecycleSummaryReadModel
                 completed: 0,
                 archived: 0,
             },
-        );
+        ) as FlagsInStage;
     }
 
-    async getArchivedFlagsOverLastMonth(projectId: string) {
-        return 0;
+    async getArchivedFlagsLast30Days(projectId: string): Promise<number> {
+        const dateMinusThirtyDays = subDays(new Date(), 30).toISOString();
+
+        return this.featureToggleStore.countByDate({
+            project: projectId,
+            archived: true,
+            dateAccessor: 'archived_at',
+            date: dateMinusThirtyDays,
+        });
     }
 
     async getProjectLifecycleSummary(
@@ -123,34 +122,33 @@ export class ProjectLifecycleSummaryReadModel
         const [
             averageTimeInEachStage,
             currentFlagsInEachStage,
-            archivedFlagsOverLastMonth,
+            archivedFlagsLast30Days,
         ] = await Promise.all([
             this.getAverageTimeInEachStage(projectId),
             this.getCurrentFlagsInEachStage(projectId),
-            this.getArchivedFlagsOverLastMonth(projectId),
+            this.getArchivedFlagsLast30Days(projectId),
         ]);
 
-        // collate the data
         return {
             initial: {
-                averageDays: 0,
-                currentFlags: 0,
+                averageDays: averageTimeInEachStage.initial,
+                currentFlags: currentFlagsInEachStage.initial,
             },
             preLive: {
-                averageDays: 0,
-                currentFlags: 0,
+                averageDays: averageTimeInEachStage['pre-live'],
+                currentFlags: currentFlagsInEachStage['pre-live'],
             },
             live: {
-                averageDays: 0,
-                currentFlags: 0,
+                averageDays: averageTimeInEachStage.live,
+                currentFlags: currentFlagsInEachStage.live,
             },
             completed: {
-                averageDays: 0,
-                currentFlags: 0,
+                averageDays: averageTimeInEachStage.completed,
+                currentFlags: currentFlagsInEachStage.completed,
             },
             archived: {
-                currentFlags: 0,
-                archivedFlagsOverLastMonth: 0,
+                currentFlags: currentFlagsInEachStage.archived,
+                last30Days: archivedFlagsLast30Days,
             },
         };
     }

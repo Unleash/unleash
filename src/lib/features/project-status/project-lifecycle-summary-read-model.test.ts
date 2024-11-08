@@ -96,10 +96,10 @@ describe('Average time calculation', () => {
         const result = await readModel.getAverageTimeInEachStage(project1.id);
 
         expect(result).toMatchObject({
-            initial: 4, // (2 + 1 + 12 + 1) / 4 === 4
-            'pre-live': 9, // (5 + 25 + 2 + 4) / 4 === 9
-            live: 6, // (6 + 8 + 3) / 3 === 5.67 ~= 6
-            completed: 9, // (10 + 7 + 9) / 3 === 8.67 ~= 9
+            initial: 4, // (2 + 1 + 12 + 1) / 4 = 4
+            'pre-live': 9, // (5 + 25 + 2 + 4) / 4 = 9
+            live: 6, // (6 + 8 + 3) / 3 ~= 5.67 ~= 6
+            completed: 9, // (10 + 7 + 9) / 3 ~= 8.67 ~= 9
         });
     });
 

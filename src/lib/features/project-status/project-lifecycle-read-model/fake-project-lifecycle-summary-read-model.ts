@@ -26,7 +26,7 @@ export class FakeProjectLifecycleSummaryReadModel
             },
             archived: {
                 currentFlags: 0,
-                archivedFlagsLast30Days: 0,
+                last30Days: 0,
             },
         };
     }

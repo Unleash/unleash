@@ -16,6 +16,6 @@ export type ProjectLifecycleSummary = {
     completed: StageDataWithAverageDays;
     archived: {
         currentFlags: number;
-        archivedFlagsLast30Days: number;
+        last30Days: number;
     };
 };

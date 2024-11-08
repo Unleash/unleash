@@ -148,7 +148,7 @@ export class ProjectLifecycleSummaryReadModel
             },
             archived: {
                 currentFlags: currentFlagsInEachStage.archived,
-                archivedFlagsLast30Days,
+                last30Days: archivedFlagsLast30Days,
             },
         };
     }

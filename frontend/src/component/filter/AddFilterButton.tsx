@@ -13,7 +13,7 @@ import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { useAuthUser } from '../../hooks/api/getters/useAuth/useAuthUser';
+import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(0, 1.25, 0, 1.25),

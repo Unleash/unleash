@@ -62,9 +62,12 @@ describe('Average time calculation', () => {
                 },
             ]);
 
-            const stagesToAdd = ['pre-live', 'live', 'completed', 'archived'];
-
-            for (const index of [0, 1, 2, 3]) {
+            for (const [index, stage] of [
+                'pre-live',
+                'live',
+                'completed',
+                'archived',
+            ].entries()) {
                 const offset = offsets[index];
                 if (offset === null) {
                     continue;
@@ -74,12 +77,10 @@ describe('Average time calculation', () => {
                     .slice(0, index + 1)
                     .reduce((a, b) => (a ?? 0) + (b ?? 0), 0) as number;
 
-                const stage = stagesToAdd[index] as StageName;
-
                 await db.stores.featureLifecycleStore.insert([
                     {
                         feature: created.name,
-                        stage,
+                        stage: stage as StageName,
                     },
                 ]);
 

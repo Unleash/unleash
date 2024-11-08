@@ -209,7 +209,7 @@ After the flag has been available to 100% of users over time, archive the flag a
 
 ## A/B Testing with Enterprise Automation
 
-With Unleash, you can automate your feature flags using [actions](/reference/actions) and [signals](/reference/signals). When running A/B tests, configure your projects to execute tasks in response to application metrics and thresholds you define. If an experimentation feature that targets a part of your user base logs errors, your actions can automatically disable the feature so your team is given the time to triage while still providing a seamless, alternative experience to users. In another case, you can use actions to modify the percentage of users targeted for variations of a feature based off users engaging with one variation more than the other.
+With Unleash, you can automate feature flags through APIs and even rely on [actions](/reference/actions) and [signals](/reference/signals) to enable and disable flags dynamically. When running A/B tests, you can configure your projects to execute tasks in response to application metrics and thresholds you define. For example, if an experimentation feature that targets a part of your user base logs errors, your actions can automatically disable the feature so your team is given the time to triage while still providing a seamless, alternative experience to users. Similarly, you can use the APIs to modify the percentage of users targeted for variations of a feature based off users engaging with one variation more than the other.
 
 ### Multi-arm Bandit Tests to Find the Winning Variant
 
@@ -223,13 +223,10 @@ The variants you created with Unleash would be the "arms" in the multi-bandit co
 
 To use Unleash to conduct a multi-arm bandit test, follow these steps:
 
-1. Collect the necessary data from each variant’s performance by enabling impression data for your feature flag
-2. Capture impression events in your application code
-3. Funnel the impression events captured from your application code to an external analytics tool
-4. Create [signal endpoints](/reference/signals) in Unleash and point them to your external analytics tools
-5. Create [actions](/reference/actions) in Unleash that can react to your signals
-
-Learn how to configure [actions](/reference/actions) and [signals](/reference/signals) from our documentation to get started.
+1. Collect the necessary data from each variant’s performance by enabling impression data for your feature flag.
+2. Capture impression events in your application code.
+3. Funnel the impression events captured from your application code to an external analytics tool.
+4. Use the Unleash API to dynamically to adjust the traffic for each variant based on performance.
 
 This approach minimizes the "regret" associated with allocating traffic to lower-performing variants. Multi-arm bandit tests using Unleash can adapt to changing conditions, such as seasonal fluctuations or user behavior changes. In some cases, they can be used to ensure that users are not exposed to suboptimal experiences for extended periods.
 

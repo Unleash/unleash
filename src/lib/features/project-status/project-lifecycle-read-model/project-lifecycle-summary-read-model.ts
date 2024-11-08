@@ -1,31 +1,10 @@
-import type { Db } from '../../db/db';
-import type { IFeatureToggleStore } from '../../types';
+import type { Db } from '../../../db/db';
+import type { IFeatureToggleStore } from '../../../types';
 import { subDays } from 'date-fns';
-
-export type IProjectLifecycleSummaryReadModel = {};
-
-type ProjectLifecycleSummary = {
-    initial: {
-        averageDays: number | null;
-        currentFlags: number;
-    };
-    preLive: {
-        averageDays: number | null;
-        currentFlags: number;
-    };
-    live: {
-        averageDays: number | null;
-        currentFlags: number;
-    };
-    completed: {
-        averageDays: number | null;
-        currentFlags: number;
-    };
-    archived: {
-        currentFlags: number;
-        archivedFlagsLast30Days: number;
-    };
-};
+import type {
+    IProjectLifecycleSummaryReadModel,
+    ProjectLifecycleSummary,
+} from './project-lifecycle-read-model-type';
 
 type FlagsInStage = {
     initial: number;
@@ -149,7 +128,6 @@ export class ProjectLifecycleSummaryReadModel
             this.getArchivedFlagsLast30Days(projectId),
         ]);
 
-        // collate the data
         return {
             initial: {
                 averageDays: averageTimeInEachStage.initial,

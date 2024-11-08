@@ -38,10 +38,10 @@ export class ProjectLifecycleSummaryReadModel
     }
 
     async getAverageTimeInEachStage(projectId: string): Promise<{
-        initial: number;
-        'pre-live': number;
-        live: number;
-        completed: number;
+        initial: number | null;
+        'pre-live': number | null;
+        live: number | null;
+        completed: number | null;
     }> {
         const q = this.db
             .with(
@@ -80,10 +80,10 @@ export class ProjectLifecycleSummaryReadModel
                 return acc;
             },
             {
-                initial: 0,
-                'pre-live': 0,
-                live: 0,
-                completed: 0,
+                initial: null,
+                'pre-live': null,
+                live: null,
+                completed: null,
             },
         );
     }

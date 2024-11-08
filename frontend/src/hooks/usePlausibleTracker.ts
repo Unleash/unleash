@@ -73,7 +73,8 @@ export type CustomEvents =
     | 'order-environments'
     | 'unleash-ai-chat'
     | 'project-navigation'
-    | 'productivity-report';
+    | 'productivity-report'
+    | 'release-plans';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

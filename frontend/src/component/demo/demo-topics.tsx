@@ -140,12 +140,9 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
-                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=default&defaultStrategy=false"]`,
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
                 content: (
-                    <Description>
-                        Select the <Badge as='span'>Standard</Badge> strategy
-                        type.
-                    </Description>
+                    <Description>Select the default strategy.</Description>
                 ),
                 placement: 'right',
                 optional: true,
@@ -479,6 +476,15 @@ export const TOPICS: ITutorialTopic[] = [
                         button.
                     </Description>
                 ),
+            },
+            {
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4/strategies/create?environmentId=${ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
+                content: (
+                    <Description>Select the default strategy.</Description>
+                ),
+                placement: 'right',
+                optional: true,
+                backCloseModal: true,
             },
             {
                 target: 'button[data-testid="STRATEGY_TARGETING_TAB"]',

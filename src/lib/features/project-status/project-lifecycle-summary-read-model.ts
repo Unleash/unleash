@@ -89,7 +89,28 @@ export class ProjectLifecycleSummaryReadModel
     }
 
     async getCurrentFlagsInEachStage(projectId: string) {
-        return 0;
+        const query = this.db('feature_lifecycles as fl')
+            .innerJoin('features as f', 'fl.feature', 'f.name')
+            .where('f.project', projectId)
+            .select('fl.stage')
+            .count('fl.feature as flag_count')
+            .groupBy('fl.stage');
+
+        const result = await query;
+
+        return result.reduce(
+            (acc, row) => {
+                acc[row.stage] = Number(row.flag_count);
+                return acc;
+            },
+            {
+                initial: 0,
+                'pre-live': 0,
+                live: 0,
+                completed: 0,
+                archived: 0,
+            },
+        );
     }
 
     async getArchivedFlagsOverLastMonth(projectId: string) {

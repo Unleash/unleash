@@ -1,6 +1,5 @@
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 import useUiConfig from '../useUiConfig/useUiConfig';
-import AccessContext from 'contexts/AccessContext';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
@@ -12,12 +11,11 @@ const ENDPOINT = 'api/admin/release-plan-templates';
 const DEFAULT_DATA: IReleasePlanTemplate[] = [];
 
 export const useReleasePlanTemplates = () => {
-    const { isAdmin } = useContext(AccessContext);
     const { isEnterprise } = useUiConfig();
-    const signalsEnabled = useUiFlag('releasePlans');
+    const releasePlansEnabled = useUiFlag('releasePlans');
 
     const { data, error, mutate } = useConditionalSWR<IReleasePlanTemplate[]>(
-        isEnterprise() && isAdmin && signalsEnabled,
+        isEnterprise() && releasePlansEnabled,
         DEFAULT_DATA,
         formatApiPath(ENDPOINT),
         fetcher,

@@ -45,6 +45,7 @@ export default class MaintenanceService implements IMaintenanceStatus {
     }
 
     async getMaintenanceSetting(): Promise<MaintenanceSchema> {
+        this.logger.debug('getMaintenanceSetting called');
         return this.settingService.getWithDefault(maintenanceSettingsKey, {
             enabled: false,
         });

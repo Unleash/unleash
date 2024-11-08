@@ -64,9 +64,9 @@ export class ProjectLifecycleSummaryReadModel
                             'fl1.created_at',
                         );
                     })
-                    .innerJoin('features as f', 'fl1.feature', 'f.name') // Join with features table to filter by project
-                    .where('f.project', projectId) // Filter for the specific project
-                    .whereNot('fl1.stage', 'archived') // Exclude 'archived' stage
+                    .innerJoin('features as f', 'fl1.feature', 'f.name')
+                    .where('f.project', projectId)
+                    .whereNot('fl1.stage', 'archived')
                     .groupBy('fl1.feature', 'fl1.stage', 'fl1.created_at'),
             )
             .select('stage_durations.stage')
@@ -79,7 +79,6 @@ export class ProjectLifecycleSummaryReadModel
                 `array_position(array[${stages.map((stage) => `'${stage}'`).join(',')}], stage_durations.stage)`,
             );
 
-        // Execute the query and map results to the output structure
         const result = await q;
         return result.reduce(
             (acc, row) => {
@@ -117,6 +116,27 @@ export class ProjectLifecycleSummaryReadModel
         ]);
 
         // collate the data
-        return;
+        return {
+            initial: {
+                averageDays: 0,
+                currentFlags: 0,
+            },
+            preLive: {
+                averageDays: 0,
+                currentFlags: 0,
+            },
+            live: {
+                averageDays: 0,
+                currentFlags: 0,
+            },
+            completed: {
+                averageDays: 0,
+                currentFlags: 0,
+            },
+            archived: {
+                currentFlags: 0,
+                archivedFlagsOverLastMonth: 0,
+            },
+        };
     }
 }

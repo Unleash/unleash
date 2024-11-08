@@ -2,6 +2,8 @@ import { addDays } from 'date-fns';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import { ProjectLifecycleSummaryReadModel } from './project-lifecycle-summary-read-model';
+import type { StageName } from '../../types';
+import { randomId } from '../../util';
 
 let db: ITestDb;
 
@@ -15,10 +17,18 @@ afterAll(async () => {
     }
 });
 
-const updateFeatureStageDate = async (featureId, stage, newDate) => {
+const updateFeatureStageDate = async (
+    flagName: string,
+    stage: string,
+    newDate: Date | null,
+) => {
+    if (newDate === null) {
+        return;
+    }
+
     await db
         .rawDatabase('feature_lifecycles')
-        .where({ feature: featureId, stage: stage })
+        .where({ feature: flagName, stage: stage })
         .update({ created_at: newDate });
 };
 
@@ -28,53 +38,75 @@ describe('Average time calculation', () => {
             name: 'project1',
             id: 'project1',
         });
-        const flag1 = await db.stores.featureToggleStore.create(project1.id, {
-            name: 'flag1',
-            createdByUserId: 1,
-        });
-
         const now = new Date();
 
-        const newStage = await db.stores.featureLifecycleStore.insert([
-            {
-                feature: flag1.name,
-                stage: 'initial',
-            },
-            {
-                feature: flag1.name,
-                stage: 'pre-live',
-            },
-            {
-                feature: flag1.name,
-                stage: 'live',
-            },
-            {
-                feature: flag1.name,
-                stage: 'completed',
-            },
-            {
-                feature: flag1.name,
-                stage: 'archived',
-            },
-        ]);
+        const flags = [
+            { name: randomId(), offsets: [2, 5, 6, 10] },
+            { name: randomId(), offsets: [1, null, 4, 7] },
+            { name: randomId(), offsets: [12, 25, 8, 9] },
+            { name: randomId(), offsets: [1, 2, 3, null] },
+        ];
 
-        // modify insertion times
-        await updateFeatureStageDate(flag1.name, 'pre-live', addDays(now, 2));
-        await updateFeatureStageDate(flag1.name, 'live', addDays(now, 5));
-        await updateFeatureStageDate(flag1.name, 'completed', addDays(now, 6));
-        await updateFeatureStageDate(flag1.name, 'archived', addDays(now, 10));
+        for (const { name, offsets } of flags) {
+            const created = await db.stores.featureToggleStore.create(
+                project1.id,
+                {
+                    name,
+                    createdByUserId: 1,
+                },
+            );
+            await db.stores.featureLifecycleStore.insert([
+                {
+                    feature: name,
+                    stage: 'initial',
+                },
+            ]);
+
+            const stagesToAdd = ['pre-live', 'live', 'completed', 'archived'];
+
+            for (const index of [0, 1, 2, 3]) {
+                const offset = offsets[index];
+                if (offset === null) {
+                    continue;
+                }
+
+                const offsetFromInitial = offsets
+                    .slice(0, index + 1)
+                    .reduce((a, b) => (a ?? 0) + (b ?? 0), 0) as number;
+
+                const stage = stagesToAdd[index] as StageName;
+
+                await db.stores.featureLifecycleStore.insert([
+                    {
+                        feature: created.name,
+                        stage,
+                    },
+                ]);
+
+                await updateFeatureStageDate(
+                    created.name,
+                    stage,
+                    addDays(now, offsetFromInitial),
+                );
+            }
+        }
 
         const readModel = new ProjectLifecycleSummaryReadModel(db.rawDatabase);
 
         const result = await readModel.getAverageTimeInEachStage(project1.id);
 
         expect(result).toMatchObject({
-            initial: 2,
-            'pre-live': 3,
-            live: 1,
-            completed: 4,
+            initial: 4, // (2 + 1 + 12 + 1) / 4 === 4
+            'pre-live': 9, // (5 + 25 + 2 + 4) / 4 === 9
+            live: 6, // (6 + 8 + 3) / 3 === 5.67 ~= 6
+            completed: 9, // (10 + 7 + 9) / 3 === 8.67 ~= 9
         });
     });
+
+    test('it returns `null` if it has no data for something', async () => {});
+    test('it rounds to the nearest whole number', async () => {});
+    test('it ignores flags in other projects', async () => {});
+    test('it ignores flags in other projects', async () => {});
 
     test("it ignores rows that don't have a next stage", async () => {});
 });

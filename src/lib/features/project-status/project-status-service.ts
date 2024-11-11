@@ -15,7 +15,7 @@ export class ProjectStatusService {
     private apiTokenStore: IApiTokenStore;
     private segmentStore: ISegmentStore;
     private personalDashboardReadModel: IPersonalDashboardReadModel;
-    private projectLifecycleReadModel: IProjectLifecycleSummaryReadModel;
+    private projectLifecycleSummaryReadModel: IProjectLifecycleSummaryReadModel;
 
     constructor(
         {
@@ -35,7 +35,7 @@ export class ProjectStatusService {
         this.apiTokenStore = apiTokenStore;
         this.segmentStore = segmentStore;
         this.personalDashboardReadModel = personalDashboardReadModel;
-        this.projectLifecycleReadModel = projectLifecycleReadModel;
+        this.projectLifecycleSummaryReadModel = projectLifecycleReadModel;
     }
 
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
@@ -54,7 +54,7 @@ export class ProjectStatusService {
             this.segmentStore.getProjectSegmentCount(projectId),
             this.eventStore.getProjectRecentEventActivity(projectId),
             this.personalDashboardReadModel.getLatestHealthScores(projectId, 4),
-            this.projectLifecycleReadModel.getProjectLifecycleSummary(
+            this.projectLifecycleSummaryReadModel.getProjectLifecycleSummary(
                 projectId,
             ),
         ]);

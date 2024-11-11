@@ -10,6 +10,10 @@ import SegmentStore from '../segment/segment-store';
 import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
 import { PersonalDashboardReadModel } from '../personal-dashboard/personal-dashboard-read-model';
 import { FakePersonalDashboardReadModel } from '../personal-dashboard/fake-personal-dashboard-read-model';
+import {
+    createFakeProjectLifecycleSummaryReadModel,
+    createProjectLifecycleSummaryReadModel,
+} from './project-lifecycle-read-model/createProjectLifecycleSummaryReadModel';
 
 export const createProjectStatusService = (
     db: Db,
@@ -34,6 +38,8 @@ export const createProjectStatusService = (
         config.getLogger,
         config.flagResolver,
     );
+    const projectLifecycleSummaryReadModel =
+        createProjectLifecycleSummaryReadModel(db, config);
 
     return new ProjectStatusService(
         {
@@ -43,6 +49,7 @@ export const createProjectStatusService = (
             segmentStore,
         },
         new PersonalDashboardReadModel(db),
+        projectLifecycleSummaryReadModel,
     );
 };
 
@@ -59,6 +66,7 @@ export const createFakeProjectStatusService = () => {
             segmentStore,
         },
         new FakePersonalDashboardReadModel(),
+        createFakeProjectLifecycleSummaryReadModel(),
     );
 
     return {

@@ -1,9 +1,11 @@
 import { styled } from '@mui/material';
 import { FeatureLifecycleStageIcon } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FeatureLifecycleStageIcon';
+import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
+import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { Link } from 'react-router-dom';
 
-const LifecycleBox = styled('li')(({ theme }) => ({
+const LifecycleBoxWrapper = styled('li')(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusExtraLarge,
     border: `2px solid ${theme.palette.divider}`,
@@ -55,12 +57,20 @@ const LinkNoUnderline = styled(Link)({
 
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
+    const { data, loading } = useProjectStatus(projectId);
+    console.log(data?.lifecycleSummary);
+    const loadingRef = useLoading<HTMLUListElement>(
+        true,
+        '[data-loading-project-lifecycle-summary=true]',
+    );
     return (
-        <Wrapper>
-            <LifecycleBox>
+        <Wrapper ref={loadingRef}>
+            <LifecycleBoxWrapper>
                 <p>
                     <Counter>
-                        <BigNumber>15</BigNumber>
+                        <BigNumber data-loading-project-lifecycle-summary>
+                            15
+                        </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -75,14 +85,18 @@ export const ProjectLifecycleSummary = () => {
                 <Stats>
                     <dt>Avg. time in stage</dt>
                     <dd>
-                        <NegativeStat>21 days</NegativeStat>
+                        <NegativeStat data-loading-project-lifecycle-summary>
+                            21 days
+                        </NegativeStat>
                     </dd>
                 </Stats>
-            </LifecycleBox>
-            <LifecycleBox>
+            </LifecycleBoxWrapper>
+            <LifecycleBoxWrapper>
                 <p>
                     <Counter>
-                        <BigNumber>3</BigNumber>
+                        <BigNumber data-loading-project-lifecycle-summary>
+                            3
+                        </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -99,11 +113,13 @@ export const ProjectLifecycleSummary = () => {
                     <dt>Avg. time in stage</dt>
                     <dd>18 days</dd>
                 </Stats>
-            </LifecycleBox>
-            <LifecycleBox>
+            </LifecycleBoxWrapper>
+            <LifecycleBoxWrapper>
                 <p>
                     <Counter>
-                        <BigNumber>2</BigNumber>
+                        <BigNumber data-loading-project-lifecycle-summary>
+                            2
+                        </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -120,11 +136,13 @@ export const ProjectLifecycleSummary = () => {
                     <dt>Avg. time in stage</dt>
                     <dd>10 days</dd>
                 </Stats>
-            </LifecycleBox>
-            <LifecycleBox>
+            </LifecycleBoxWrapper>
+            <LifecycleBoxWrapper>
                 <p>
                     <Counter>
-                        <BigNumber>6</BigNumber>
+                        <BigNumber data-loading-project-lifecycle-summary>
+                            6
+                        </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -148,14 +166,18 @@ export const ProjectLifecycleSummary = () => {
                 <Stats>
                     <dt>Avg. time in stage</dt>
                     <dd>
-                        <NoData>No data</NoData>
+                        <NoData data-loading-project-lifecycle-summary>
+                            No data
+                        </NoData>
                     </dd>
                 </Stats>
-            </LifecycleBox>
-            <LifecycleBox>
+            </LifecycleBoxWrapper>
+            <LifecycleBoxWrapper>
                 <p>
                     <Counter>
-                        <BigNumber>15</BigNumber>
+                        <BigNumber data-loading-project-lifecycle-summary>
+                            15
+                        </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -171,7 +193,7 @@ export const ProjectLifecycleSummary = () => {
                     <dt>This month</dt>
                     <dd>3 flags archived</dd>
                 </Stats>
-            </LifecycleBox>
+            </LifecycleBoxWrapper>
         </Wrapper>
     );
 };

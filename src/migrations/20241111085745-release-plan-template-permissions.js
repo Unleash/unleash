@@ -7,15 +7,13 @@ exports.up = (db, cb) => {
     ('RELEASE_PLAN_TEMPLATE_UPDATE', 'Update release plan template', 'root'),
     ('RELEASE_PLAN_TEMPLATE_DELETE', 'Delete release plan template', 'root');
     INSERT INTO role_permission(role_id, permission, created_by_user_id)
-            SELECT id, 'RELEASE_PLAN_TEMPLATE_VIEW_OVERVIEW', '-1337' FROM roles WHERE type = 'root';
+            SELECT id, 'RELEASE_PLAN_TEMPLATE_VIEW_OVERVIEW', '-1337' FROM roles WHERE name IN ('Viewer', 'Editor') AND type = 'root';
     INSERT INTO role_permission(role_id, permission, created_by_user_id)
-            SELECT id, 'RELEASE_PLAN_TEMPLATE_VIEW', '-1337' FROM roles WHERE name IN ('Editor', 'Admin') AND type = 'root';
+            SELECT id, 'RELEASE_PLAN_TEMPLATE_VIEW', '-1337' FROM roles WHERE name = 'Editor' AND type = 'root';
     INSERT INTO role_permission(role_id, permission, created_by_user_id)
-            SELECT id, 'RELEASE_PLAN_TEMPLATE_CREATE', '-1337' FROM roles WHERE name IN ('Editor', 'Admin') AND type = 'root';
+            SELECT id, 'RELEASE_PLAN_TEMPLATE_CREATE', '-1337' FROM roles WHERE name = 'Editor' AND type = 'root';
     INSERT INTO role_permission(role_id, permission, created_by_user_id)
-            SELECT id, 'RELEASE_PLAN_TEMPLATE_UPDATE', '-1337' FROM roles WHERE name IN ('Editor', 'Admin') AND type = 'root';
-    INSERT INTO role_permission(role_id, permission, created_by_user_id)
-            SELECT id, 'RELEASE_PLAN_TEMPLATE_DELETE', '-1337' FROM roles WHERE name = 'Admin' AND type = 'root';
+            SELECT id, 'RELEASE_PLAN_TEMPLATE_UPDATE', '-1337' FROM roles WHERE name = 'Editor' AND type = 'root';
   `, cb);
 
 };

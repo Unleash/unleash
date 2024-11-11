@@ -10,8 +10,9 @@ const stageDataWithAverageDaysSchema = {
     properties: {
         averageDays: {
             type: 'number',
+            nullable: true,
             description:
-                'The average number of days a feature flag remains in a stage in this project.',
+                "The average number of days a feature flag remains in a stage in this project. Will be null if Unleash doesn't have any data for this stage yet.",
             example: 5,
         },
         currentFlags: {

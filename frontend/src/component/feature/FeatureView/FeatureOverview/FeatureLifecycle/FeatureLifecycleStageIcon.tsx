@@ -6,18 +6,16 @@ import { ReactComponent as CompletedStageIcon } from 'assets/icons/stage-complet
 import { ReactComponent as ArchivedStageIcon } from 'assets/icons/stage-archived.svg';
 import type { LifecycleStage } from './LifecycleStage';
 
-export const FeatureLifecycleStageIcon: FC<{ stage: LifecycleStage }> = ({
-    stage,
-}) => {
+export const FeatureLifecycleStageIcon: FC<{
+    stage: Pick<LifecycleStage, 'name'>;
+}> = ({ stage }) => {
     if (stage.name === 'archived') {
         return <ArchivedStageIcon />;
     } else if (stage.name === 'pre-live') {
         return <PreLiveStageIcon />;
     } else if (stage.name === 'live') {
         return <LiveStageIcon />;
-    } else if (stage.name === 'completed' && stage.status === 'kept') {
-        return <CompletedStageIcon />;
-    } else if (stage.name === 'completed' && stage.status === 'discarded') {
+    } else if (stage.name === 'completed') {
         return <CompletedStageIcon />;
     } else {
         return <InitialStageIcon />;

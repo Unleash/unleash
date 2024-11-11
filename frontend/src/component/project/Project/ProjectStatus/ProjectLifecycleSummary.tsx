@@ -58,7 +58,6 @@ const LinkNoUnderline = styled(Link)({
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data, loading } = useProjectStatus(projectId);
-    console.log(data?.lifecycleSummary);
     const loadingRef = useLoading<HTMLUListElement>(
         true,
         '[data-loading-project-lifecycle-summary=true]',
@@ -76,7 +75,6 @@ export const ProjectLifecycleSummary = () => {
                             aria-hidden='true'
                             stage={{
                                 name: 'initial',
-                                enteredStageAt: '',
                             }}
                         />
                     </Counter>
@@ -102,8 +100,6 @@ export const ProjectLifecycleSummary = () => {
                             aria-hidden='true'
                             stage={{
                                 name: 'pre-live',
-                                enteredStageAt: '',
-                                environments: [],
                             }}
                         />
                     </Counter>
@@ -125,8 +121,6 @@ export const ProjectLifecycleSummary = () => {
                             aria-hidden='true'
                             stage={{
                                 name: 'live',
-                                enteredStageAt: '',
-                                environments: [],
                             }}
                         />
                     </Counter>
@@ -148,9 +142,6 @@ export const ProjectLifecycleSummary = () => {
                             aria-hidden='true'
                             stage={{
                                 name: 'completed',
-                                enteredStageAt: '',
-                                environments: [],
-                                status: 'kept',
                             }}
                         />
                     </Counter>
@@ -183,7 +174,6 @@ export const ProjectLifecycleSummary = () => {
                             aria-hidden='true'
                             stage={{
                                 name: 'archived',
-                                enteredStageAt: '',
                             }}
                         />
                     </Counter>

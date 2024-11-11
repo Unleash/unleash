@@ -6,6 +6,11 @@
 import type { ProjectActivitySchema } from './projectActivitySchema';
 import type { ProjectStatusSchemaResources } from './projectStatusSchemaResources';
 
+type LifecycleSummaryPlaceholder = {
+    averageDays: number | null;
+    currentFlags: number;
+};
+
 /**
  * Schema representing the overall status of a project, including an array of activity records. Each record in the activity array contains a date and a count, providing a snapshot of the project’s activity level over time.
  */
@@ -19,4 +24,15 @@ export interface ProjectStatusSchema {
     averageHealth: number;
     /** Key resources within the project */
     resources: ProjectStatusSchemaResources;
+    /** Feature flag lifecycle statistics for this project. (placeholder)*/
+    lifecycleSummary: {
+        initial: LifecycleSummaryPlaceholder;
+        preLive: LifecycleSummaryPlaceholder;
+        live: LifecycleSummaryPlaceholder;
+        completed: LifecycleSummaryPlaceholder;
+        archived: {
+            currentFlags: number;
+            last30Days: number;
+        };
+    };
 }

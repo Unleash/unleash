@@ -3,7 +3,7 @@ title: "11 principles for building and scaling feature flag systems"
 toc_max_heading_level: 2
 ---
 
-import Figure from '@site/src/components/Figure/Figure.tsx'
+import VideoContent from '@site/src/components/VideoContent.jsx';
 
 Feature flags, sometimes called feature toggles or feature switches, are a powerful software development technique that allows engineering teams to decouple the release of new functionality from software deployments. 
 
@@ -41,7 +41,7 @@ Let's break down these components.
 - **Feature flag SDK**: An easy-to-use interface for fetching flag configurations and evaluating feature flags at runtime. When considering feature flags in your application, the call to the SDK should query the local cache, and the SDK should ask the central service for updates in the background.
 - **Continuous update mechanism**: An update mechanism that enables dynamic updates to feature flag configurations without requiring application restarts or redeployments. The SDK should handle subscriptions or polling to the _Feature Flag Control Service_ for updates.
 
-<Figure caption="The SDK holds an in-memory feature flag configuration cache which is continuously synced with the Feature Flag Control Service. You can then use the SDK to check the state of feature flags in your application." img="/img/feature-flag-scalable-architecture.png"/>
+![The SDK holds an in-memory feature flag configuration cache which is continuously synced with the Feature Flag Control Service. You can then use the SDK to check the state of feature flags in your application.](/img/feature-flag-scalable-architecture.png)
 
 ## 2. Prioritize availability over consistency
 
@@ -101,13 +101,13 @@ To implement the principle of least privilege, ensure that your _Feature Flag Co
 
 Let's look at an example where feature flag evaluation happens inside the server-side application. This is where all the contextual application data lives. The flag configuration—all the information needed to evaluate the flags—is fetched from the _Feature Flag Control Service_.
 
-<Figure caption="Evaluating flags on the server side without exposing sensitive information." img="/img/feature-flag-server-side-evaluation.png"/>
+![Evaluating flags on the server side without exposing sensitive information.](/img/feature-flag-server-side-evaluation.png)
 
 Client-side applications where the code resides on the user's machine in browsers or mobile devices, require a different approach. You can't evaluate flags on the client side because it raises significant security concerns by exposing potentially sensitive information such as API keys, flag data, and flag configurations. Placing these critical elements on the client side increases the risk of unauthorized access, tampering, or data breaches.
 
 Instead of performing client-side evaluation, a more secure and maintainable approach is to evaluate feature flags within a self-hosted environment. Doing so can safeguard sensitive elements like API keys and flag configurations from potential client-side exposure. This strategy involves a server-side evaluation of feature flags, where the server makes decisions based on user and application parameters and then securely passes down the evaluated results to the frontend without any configuration leaking.
 
-<Figure caption="In client-side setups, perform the feature flag evaluation on the server side. Connected client-side applications receive only evaluated feature flags to avoid leaking configuration." img="/img/feature-flag-architecture-client-side.png"/>
+![In client-side setups, perform the feature flag evaluation on the server side. Connected client-side applications receive only evaluated feature flags to avoid leaking configuration.](/img/feature-flag-architecture-client-side.png)
 
 Here's how you can architect your solution to protect PII and flag configuration data:
 
@@ -133,11 +133,13 @@ For optimal performance, you should evaluate feature flags as close to your user
 
 In summary, this principle emphasizes optimizing performance while protecting end-user privacy by evaluating feature flags as close to the end user as possible. This also leads to a highly available feature flag system that scales with your applications.
 
-## 8. Scale horizontally by decoupling reads and writes
+<VideoContent videoUrls={["https://www.youtube.com/embed/mCXSAWzdn3I"]}/>
+
+## 4. Scale horizontally by decoupling reads and writes
 
 When designing a scalable feature flag system, one of the most effective strategies is to separate read and write operations into distinct APIs. This architectural decision not only allows you to scale each component independently but also provides better performance, reliability, and control.
 
-<Figure caption="Separating the reading and writing of the database allows you to horizontally scale out the read APIs without scaling the write APIs." img="/img/feature-flag-horizontal-scaling.png"/>
+![Separating the reading and writing of the database allows you to horizontally scale out the read APIs without scaling the write APIs.](/img/feature-flag-horizontal-scaling.png)
 
 By decoupling read and write operations, you gain the flexibility to scale horizontally based on the unique demands of your application. For example, if read traffic increases, you can add more servers or containers to handle the load without needing to scale the write operations.
 
@@ -166,6 +168,96 @@ Keeping the feature flag payload small results in:
 
 For more insights into reducing payload size, visit our [Best practices for using feature flags at scale](/topics/feature-flags/best-practices-using-feature-flags-at-scale#14-avoid-giant-feature-flag-targeting-lists) guide.
 
+## 6. Prioritize availability over consistency
+
+Your application shouldn't have any dependency on the availability of your feature flag system. Robust feature flag systems avoid relying on real-time flag evaluations because the unavailability of the feature flag system will cause application downtime, outages, degraded performance, or even a complete failure of your application.
+
+If the feature flag system fails, your application should continue running smoothly. Feature flagging should degrade gracefully, preventing any unexpected behavior or disruptions for users.
+
+You can implement the following strategies to achieve a resilient architecture:
+
+- **Bootstrap SDKs with data**: Feature flagging SDKs should work with locally cached data, even when the network connection to the _Feature Flag Control Service_ is unavailable, using the last known configuration or defaults to ensure uninterrupted functionality.
+- **Use local cache**: Maintaining a local cache of feature flag configurations helps reduce network round trips and dependency on external services. The local cache can periodically synchronize with the central _Feature Flag Control Service_ when it's available. This approach minimizes the impact of network failures or service downtime on your application.
+- **Evaluate feature flags locally**: Whenever possible, the SDKs or application components should evaluate feature flags locally without relying on external services, ensuring uninterrupted feature flag evaluations even if the feature flagging service is down.
+- **Prioritize availability over consistency**: In line with the [CAP theorem](https://www.ibm.com/topics/cap-theorem), design for availability over strict consistency. In the face of network partitions or downtime of external services, your application should favor maintaining its availability rather than enforcing perfectly consistent feature flag configuration caches. Eventually consistent systems can tolerate temporary inconsistencies in flag evaluations without compromising availability.
+
+## 7. Make flags short-lived
+
+The most common use case for feature flags is to manage the rollout of new functionality. Once a rollout is complete, you should remove the feature flag from your code and archive it. Remove any old code paths that the new functionality replaces.
+
+Avoid using feature flags for static application configuration. Application configuration should be consistent, long-lived, and loaded during application startup. In contrast, feature flags are intended to be short-lived, dynamic, and updated at runtime. They prioritize availability over consistency and are designed to be modified frequently.
+
+<table>
+  <thead>
+    <tr>
+      <th></th>
+      <th>Configuration system</th>
+      <th>Feature flag system</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Lifetime and runtime behavior</td>
+      <td>Long-lived, static during runtime</td>
+      <td>Short-lived, changes during runtime</td>
+    </tr>
+    <tr>
+      <td>Example use cases</td>
+      <td>
+        <ul>
+          <li>Database or server credentials</li>
+          <li>Server port</li>
+          <li>CORS headers</li>
+          <li>API base URL</li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li>A/B or multivariate testing</li>
+          <li>Gradual rollout</li>
+          <li>Permission flags (i.e., beta testing programs) </li>
+          <li>Operational testing in production</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+To succeed with feature flags in a large organization, follow these strategies:
+
+- **Set flag expiration dates**: Assign expiration dates to feature flags to track which flags are no longer needed. A good feature flag management tool will alert you to expired flags, making it easier to maintain your codebase.
+- **Treat feature flags like technical debt**: Incorporate tasks to remove outdated feature flags into your sprint or project planning, just as you would with technical debt. Feature flags add complexity to your code by introducing multiple code paths that need context and maintenance. If you don't clean up feature flags in a timely manner, you risk losing the context as time passes or personnel changes, making them harder to manage or remove.
+- **Archive old flags**: When feature flags are no longer in use, archive them after removing them from the codebase. This archive serves as an important audit log of feature flags and allows you to revive flags if you need to restore an older version of your application.
+
+While most feature flags should be short-lived, there are valid exceptions for long-lived flags, including:
+- **Kill switches**: These act as inverted feature flags, allowing you to gracefully disable parts of a system with known weak spots.
+- **Internal flags**: Used to enable additional debugging, tracing, and metrics at runtime, which are too costly to run continuously. Engineers can enable these flags while debugging issues.
+
+## 8. Ensure unique flag names
+
+Ensure that all flags within the same _Feature Flag Control Service_ have unique names across your entire system. Unique naming prevents the reuse of old flag names, reducing the risk of accidentally re-enabling outdated features with the same name.
+
+![Creating a feature flag with a unique name referencing the project and related jira ticket.](/img/feature-flag-unique-name.png)
+
+Unique naming has the following advantages:
+- **Flexibility over time**: Large enterprise systems are not static. Monoliths may split into microservices, microservices may merge, and applications change responsibility. Unique flag naming across your organization means that you can reorganize your flags to match the changing needs of your organization.
+- **Fewer conflicts**: If two applications use the same feature flag name, it can become difficult to identify which flag controls which application. Even with separate namespaces, you risk toggling the wrong flag, leading to unexpected consequences.
+- **Easier flag management**: Unique names make it simpler to track and identify feature flags. Searching across codebases becomes more straightforward, and it's easier to understand a flag's purpose and where it's used.
+- **Improved collaboration**: A feature flag with a unique name in the organization simplifies collaboration across teams, products, and applications, ensuring that everyone refers to the same feature.
+
+## 9. Choose open by default
+
+At Unleash, we believe in democratizing feature flag access. Making feature flag systems open by default enables engineers, product owners, and support teams to collaborate effectively and make informed decisions. Open access encourages productive discussions about feature releases, experiments, and their impact on the user experience.
+
+Access control and visibility are also key considerations for security and compliance. Tracking and auditing feature flag changes help maintain data integrity and meet regulatory requirements. While open access is key, it's equally important to integrate with corporate access controls, such as SSO, to ensure security. In some cases, additional controls like feature flag approvals using the [four-eyes principle](/reference/change-requests) are necessary for critical changes.
+
+![Preview of a change request to enable gradual rollout in production.](/img/feature-flag-change-requests-preview.png)
+
+For open collaboration, consider providing the following:
+- **Access to the codebase**: Engineers need direct access to the codebase where feature flags are implemented. This allows them to quickly diagnose and fix issues, minimizing downtime and performance problems.
+- **Access to configuration**: Engineers, product owners, and even technical support should be able to view feature flag configuration. This transparency provides insights into which features are currently active, what conditions trigger them, and how they impact the application's behavior. Product owners can also make real-time decisions on feature rollouts or adjustments without relying solely on engineering resources.
+- **Access to analytics**: Both engineers and product owners should be able to correlate feature flag changes with production metrics. This helps assess how flags impact user behavior, performance, and system health, enabling data-driven decisions for feature rollouts, optimizations, or rollbacks.
+
 ## 10. Prioritize consistent user experience
 
 Feature flagging solutions are indispensable tools in modern software development, enabling teams to manage feature releases and experiment with new functionality. However, one aspect that is absolutely non-negotiable in any feature flag solution is the need to ensure a consistent user experience. Feature flagging solutions must prioritize consistency and guarantee the same user experience every time, especially with percentage-based gradual rollouts.
@@ -193,11 +285,16 @@ To ensure a good developer experience, you should provide the following:
 
 ## Additional resources
 
-Thank you for reading. Our motivation for writing these principles is to share what we've learned building a large-scale feature flag solution with other architects and engineers solving similar challenges. Unleash is open-source, and so are these principles. Have something to contribute? [Open a PR](https://github.com/Unleash/unleash/pulls) or [discussion](https://github.com/orgs/Unleash/discussions) on our GitHub.
+Thank you for reading. Our motivation for writing these principles is to share what we've learned building a large-scale feature flag solution with other architects and engineers solving similar challenges. Unleash is open-source, and so are these principles.
+Have something to contribute? [Open a PR](https://github.com/Unleash/unleash/pulls) or [discussion](https://github.com/orgs/Unleash/discussions) on our GitHub.
 
 To learn more about Unleash architecture and implementation basics, check out this webinar: 
+
+<VideoContent videoUrls={["https://www.youtube.com/embed/_kYAQsuTtqQ?si=tbMDZOyiZSILW70H"]}/>
 
 
 ### Best practices for deploying Unleash at scale
 
-An introduction to Unleash Edge and its scaling capabilities:
+An introduction to Unleash Edge product and its scaling capabilities:
+
+<VideoContent videoUrls={["https://www.youtube.com/embed/6uIdF-yByWs?si=kk5OGb-1nVfea06B"]}/>

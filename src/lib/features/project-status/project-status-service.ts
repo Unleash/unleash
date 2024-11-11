@@ -7,6 +7,7 @@ import type {
     IUnleashStores,
 } from '../../types';
 import type { IPersonalDashboardReadModel } from '../personal-dashboard/personal-dashboard-read-model-type';
+import type { IProjectLifecycleSummaryReadModel } from './project-lifecycle-read-model/project-lifecycle-read-model-type';
 
 export class ProjectStatusService {
     private eventStore: IEventStore;
@@ -14,6 +15,7 @@ export class ProjectStatusService {
     private apiTokenStore: IApiTokenStore;
     private segmentStore: ISegmentStore;
     private personalDashboardReadModel: IPersonalDashboardReadModel;
+    private projectLifecycleSummaryReadModel: IProjectLifecycleSummaryReadModel;
 
     constructor(
         {
@@ -26,12 +28,14 @@ export class ProjectStatusService {
             'eventStore' | 'projectStore' | 'apiTokenStore' | 'segmentStore'
         >,
         personalDashboardReadModel: IPersonalDashboardReadModel,
+        projectLifecycleReadModel: IProjectLifecycleSummaryReadModel,
     ) {
         this.eventStore = eventStore;
         this.projectStore = projectStore;
         this.apiTokenStore = apiTokenStore;
         this.segmentStore = segmentStore;
         this.personalDashboardReadModel = personalDashboardReadModel;
+        this.projectLifecycleSummaryReadModel = projectLifecycleReadModel;
     }
 
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
@@ -42,6 +46,7 @@ export class ProjectStatusService {
             segments,
             activityCountByDate,
             healthScores,
+            lifecycleSummary,
         ] = await Promise.all([
             this.projectStore.getConnectedEnvironmentCountForProject(projectId),
             this.projectStore.getMembersCountByProject(projectId),
@@ -49,6 +54,9 @@ export class ProjectStatusService {
             this.segmentStore.getProjectSegmentCount(projectId),
             this.eventStore.getProjectRecentEventActivity(projectId),
             this.personalDashboardReadModel.getLatestHealthScores(projectId, 4),
+            this.projectLifecycleSummaryReadModel.getProjectLifecycleSummary(
+                projectId,
+            ),
         ]);
 
         const averageHealth = healthScores.length
@@ -65,6 +73,7 @@ export class ProjectStatusService {
             },
             activityCountByDate,
             averageHealth,
+            lifecycleSummary,
         };
     }
 }

@@ -256,3 +256,33 @@ test('project health should be correct average', async () => {
 
     expect(body.averageHealth).toBe(40);
 });
+
+test('project status contains lifecycle data', async () => {
+    const { body } = await app.request
+        .get('/api/admin/projects/default/status')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.lifecycleSummary).toMatchObject({
+        initial: {
+            averageDays: null,
+            currentFlags: 0,
+        },
+        preLive: {
+            averageDays: null,
+            currentFlags: 0,
+        },
+        live: {
+            averageDays: null,
+            currentFlags: 0,
+        },
+        completed: {
+            averageDays: null,
+            currentFlags: 0,
+        },
+        archived: {
+            currentFlags: 0,
+            last30Days: 0,
+        },
+    });
+});

@@ -30,7 +30,7 @@ const Counter = styled('span')({
     justifyContent: 'space-between',
 });
 
-const BigNumber = styled('span')(({ theme }) => ({
+const BigText = styled('span')(({ theme }) => ({
     fontSize: `calc(2 * ${theme.typography.body1.fontSize})`,
 }));
 
@@ -70,15 +70,15 @@ const AverageDaysStat: FC<{ averageDays?: number | null }> = ({
     );
 };
 
-const BigNumberWithTooltip: FC<{ value?: number }> = ({ value }) => {
+const BigNumber: FC<{ value?: number }> = ({ value }) => {
     return (
-        <BigNumber data-loading-project-lifecycle-summary>
+        <BigText data-loading-project-lifecycle-summary>
             <PrettifyLargeNumber
                 value={value ?? 0}
                 threshold={1000}
                 precision={2}
             />
-        </BigNumber>
+        </BigText>
     );
 };
 
@@ -95,7 +95,7 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumberWithTooltip
+                        <BigNumber
                             value={data?.lifecycleSummary.initial.currentFlags}
                         />
 
@@ -113,7 +113,7 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumberWithTooltip
+                        <BigNumber
                             value={data?.lifecycleSummary.preLive.currentFlags}
                         />
 
@@ -131,7 +131,7 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumberWithTooltip
+                        <BigNumber
                             value={data?.lifecycleSummary.live.currentFlags}
                         />
 
@@ -149,7 +149,7 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumberWithTooltip
+                        <BigNumber
                             value={
                                 data?.lifecycleSummary.completed.currentFlags
                             }
@@ -169,7 +169,7 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumberWithTooltip
+                        <BigNumber
                             value={data?.lifecycleSummary.archived.currentFlags}
                         />
 

@@ -76,7 +76,7 @@ const BigNumber: FC<{ value?: number }> = ({ value }) => {
             <PrettifyLargeNumber
                 value={value ?? 0}
                 threshold={1000}
-                precision={2}
+                precision={1}
             />
         </BigText>
     );

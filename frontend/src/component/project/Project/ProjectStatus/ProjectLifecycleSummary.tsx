@@ -5,6 +5,7 @@ import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { FC } from 'react';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
+import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
 const LifecycleBox = styled('li')(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusExtraLarge,
@@ -89,6 +90,13 @@ export const ProjectLifecycleSummary = () => {
         loading,
         '[data-loading-project-lifecycle-summary=true]',
     );
+    const flagWord = (stage: keyof ProjectStatusSchemaLifecycleSummary) => {
+        if (data?.lifecycleSummary[stage].currentFlags === 1) {
+            return 'flag';
+        } else {
+            return 'flags';
+        }
+    };
     return (
         <Wrapper ref={loadingRef}>
             <LifecycleBox>
@@ -103,7 +111,7 @@ export const ProjectLifecycleSummary = () => {
                             stage={{ name: 'initial' }}
                         />
                     </Counter>
-                    <span>flags in initial</span>
+                    <span>{flagWord('initial')} in initial</span>
                 </p>
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.initial.averageDays}
@@ -121,7 +129,7 @@ export const ProjectLifecycleSummary = () => {
                             stage={{ name: 'pre-live' }}
                         />
                     </Counter>
-                    <span>flags in pre-live</span>
+                    <span>{flagWord('preLive')} in pre-live</span>
                 </p>
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.preLive.averageDays}
@@ -139,7 +147,7 @@ export const ProjectLifecycleSummary = () => {
                             stage={{ name: 'live' }}
                         />
                     </Counter>
-                    <span>flags in live</span>
+                    <span>{flagWord('live')} in live</span>
                 </p>
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.live.averageDays}
@@ -159,7 +167,7 @@ export const ProjectLifecycleSummary = () => {
                             stage={{ name: 'completed' }}
                         />
                     </Counter>
-                    <span>flags in cleanup</span>
+                    <span>{flagWord('completed')} in cleanup</span>
                 </p>
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.completed.averageDays}
@@ -177,7 +185,7 @@ export const ProjectLifecycleSummary = () => {
                             stage={{ name: 'archived' }}
                         />
                     </Counter>
-                    <span>flags in archived</span>
+                    <span>{flagWord('archived')} in archived</span>
                 </p>
                 <Stats>
                     <dt>This month</dt>

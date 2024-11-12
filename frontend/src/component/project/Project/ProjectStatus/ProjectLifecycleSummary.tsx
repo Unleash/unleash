@@ -60,6 +60,9 @@ const AverageDaysStat: FC<{ averageDays?: number | null }> = ({
             return <NoData>No data</NoData>;
         }
 
+        if (averageDays < 1) {
+            return 'less than a day';
+        }
         return `${averageDays} days`;
     };
     return (

@@ -4579,7 +4579,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chalk@npm:^5.0.1, chalk@npm:^5.2.0, chalk@npm:^5.3.0":
+"chalk@npm:^5.0.1, chalk@npm:^5.2.0":
   version: 5.3.0
   resolution: "chalk@npm:5.3.0"
   checksum: 10c0/8297d436b2c0f95801103ff2ef67268d362021b8210daf8ddbe349695333eb3610a71122172ff3b0272f1ef2cf7cc2c41fdaa4715f52e49ffe04c56340feed09
@@ -6893,7 +6893,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.2.2, glob@npm:^10.3.10, glob@npm:^10.3.7, glob@npm:^10.4.2":
+"glob@npm:^10.2.2, glob@npm:^10.3.10, glob@npm:^10.3.7":
   version: 10.4.5
   resolution: "glob@npm:10.4.5"
   dependencies:
@@ -12637,19 +12637,6 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   languageName: node
   linkType: hard
 
-"replace-in-file@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "replace-in-file@npm:8.2.0"
-  dependencies:
-    chalk: "npm:^5.3.0"
-    glob: "npm:^10.4.2"
-    yargs: "npm:^17.7.2"
-  bin:
-    replace-in-file: bin/cli.js
-  checksum: 10c0/a6e4283a774c155c484f222ac11f9dbc21ce64f180b240e95206e05ac856e23205ed0b0b6b0286746b453df0ec3b37a64f93c23b7df9b70cdda8eab57fc6d2d8
-  languageName: node
-  linkType: hard
-
 "require-directory@npm:^2.1.1":
   version: 2.1.1
   resolution: "require-directory@npm:2.1.1"
@@ -14750,7 +14737,6 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
     prism-svelte: "npm:^0.5.0"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
-    replace-in-file: "npm:^8.2.0"
     typescript: "npm:5.6.3"
   languageName: unknown
   linkType: soft
@@ -14999,7 +14985,7 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   languageName: node
   linkType: hard
 
-"yargs@npm:^17.0.1, yargs@npm:^17.7.2":
+"yargs@npm:^17.0.1":
   version: 17.7.2
   resolution: "yargs@npm:17.7.2"
   dependencies:

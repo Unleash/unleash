@@ -9,7 +9,6 @@ const LifecycleBox = styled('li')(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusExtraLarge,
     border: `2px solid ${theme.palette.divider}`,
-    width: '180px',
     height: '175px',
     display: 'flex',
     flexFlow: 'column',
@@ -19,7 +18,7 @@ const LifecycleBox = styled('li')(({ theme }) => ({
 const Wrapper = styled('ul')(({ theme }) => ({
     display: 'grid',
     listStyle: 'none',
-    gridTemplateColumns: 'repeat(auto-fit, 180px)',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
     gap: theme.spacing(1),
     justifyContent: 'center',
 }));

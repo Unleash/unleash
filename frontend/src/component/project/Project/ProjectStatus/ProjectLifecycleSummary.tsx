@@ -44,10 +44,6 @@ const Stats = styled('dl')(({ theme }) => ({
     },
 }));
 
-const NegativeStat = styled('span')(({ theme }) => ({
-    color: theme.palette.warning.contrastText,
-}));
-
 const NoData = styled('span')({
     fontWeight: 'normal',
 });
@@ -65,10 +61,6 @@ const FormatAverageDays: FC<{ averageDays: number | null } | undefined> = (
     const { averageDays } = props;
     if (averageDays === null) {
         return <NoData>No data</NoData>;
-    }
-    const threshold = 20;
-    if (averageDays > threshold) {
-        return <NegativeStat>{`${averageDays} days`}</NegativeStat>;
     }
 
     return `${averageDays} days`;

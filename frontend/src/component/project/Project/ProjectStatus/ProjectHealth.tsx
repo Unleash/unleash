@@ -32,6 +32,7 @@ export const ProjectHealth = () => {
     const {
         data: { averageHealth },
     } = useProjectStatus(projectId);
+    const averageHealthRounded = Math.round(averageHealth);
     const { isOss } = useUiConfig();
     const theme = useTheme();
     const radius = 40;
@@ -41,7 +42,7 @@ export const ProjectHealth = () => {
     const gapLength = 0.3;
     const filledLength = 1 - gapLength;
     const offset = 0.75 - gapLength / 2;
-    const healthLength = (averageHealth / 100) * circumference * 0.7;
+    const healthLength = (averageHealthRounded / 100) * circumference * 0.7;
 
     return (
         <HealthContainer>
@@ -75,12 +76,12 @@ export const ProjectHealth = () => {
                         fill={theme.palette.text.primary}
                         fontSize='24px'
                     >
-                        {averageHealth}%
+                        {averageHealthRounded}%
                     </text>
                 </StyledSVG>
                 <Typography variant='body2'>
                     On average, your project health has remained at{' '}
-                    {averageHealth}% the last 4 weeks
+                    {averageHealthRounded}% the last 4 weeks
                 </Typography>
             </ChartRow>
             <DescriptionText variant='body2'>

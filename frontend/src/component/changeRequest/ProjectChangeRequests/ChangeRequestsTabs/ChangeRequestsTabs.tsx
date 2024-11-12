@@ -1,3 +1,4 @@
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import {
@@ -13,7 +14,6 @@ import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightC
 import { Box, styled, Tab, Tabs, useMediaQuery } from '@mui/material';
 import { Link, useSearchParams } from 'react-router-dom';
 import { sortTypes } from 'utils/sortTypes';
-import { useEffect, useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Search } from 'component/common/Search/Search';
 import { featuresPlaceholder } from 'component/feature/FeatureToggleList/FeatureToggleListTable';
@@ -34,6 +34,7 @@ export interface IChangeRequestTableProps {
     changeRequests: any[];
     loading: boolean;
     projectId: string;
+    placeholder?: ReactNode;
 }
 
 const defaultSort: SortingRule<string> & {
@@ -62,6 +63,7 @@ const ConftigurationLinkBox = styled(Box)(({ theme }) => ({
 
 export const ChangeRequestsTabs = ({
     changeRequests = [],
+    placeholder,
     loading,
     projectId,
 }: IChangeRequestTableProps) => {
@@ -355,7 +357,8 @@ export const ChangeRequestsTabs = ({
                         }
                         elseShow={
                             <TablePlaceholder>
-                                None of the changes were submitted yet.
+                                {placeholder ||
+                                    'None of the changes were submitted yet.'}
                             </TablePlaceholder>
                         }
                     />

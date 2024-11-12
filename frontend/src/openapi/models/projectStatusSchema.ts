@@ -4,12 +4,8 @@
  * See `gen:api` script in package.json
  */
 import type { ProjectActivitySchema } from './projectActivitySchema';
+import type { ProjectStatusSchemaLifecycleSummary } from './projectStatusSchemaLifecycleSummary';
 import type { ProjectStatusSchemaResources } from './projectStatusSchemaResources';
-
-type LifecycleSummaryPlaceholder = {
-    averageDays: number | null;
-    currentFlags: number;
-};
 
 /**
  * Schema representing the overall status of a project, including an array of activity records. Each record in the activity array contains a date and a count, providing a snapshot of the project’s activity level over time.
@@ -22,17 +18,8 @@ export interface ProjectStatusSchema {
      * @minimum 0
      */
     averageHealth: number;
+    /** Feature flag lifecycle statistics for this project. */
+    lifecycleSummary: ProjectStatusSchemaLifecycleSummary;
     /** Key resources within the project */
     resources: ProjectStatusSchemaResources;
-    /** Feature flag lifecycle statistics for this project. (placeholder)*/
-    lifecycleSummary: {
-        initial: LifecycleSummaryPlaceholder;
-        preLive: LifecycleSummaryPlaceholder;
-        live: LifecycleSummaryPlaceholder;
-        completed: LifecycleSummaryPlaceholder;
-        archived: {
-            currentFlags: number;
-            last30Days: number;
-        };
-    };
 }

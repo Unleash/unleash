@@ -4,8 +4,7 @@ import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectS
 import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { FC } from 'react';
-import { Link } from 'react-router-dom';
-
+import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 const LifecycleBox = styled('li')(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusExtraLarge,
@@ -31,7 +30,7 @@ const Counter = styled('span')({
     justifyContent: 'space-between',
 });
 
-const BigNumber = styled('span')(({ theme }) => ({
+const BigText = styled('span')(({ theme }) => ({
     fontSize: `calc(2 * ${theme.typography.body1.fontSize})`,
 }));
 
@@ -48,10 +47,6 @@ const NoData = styled('span')({
     fontWeight: 'normal',
 });
 
-const LinkNoUnderline = styled(Link)({
-    textDecoration: 'none',
-});
-
 const AverageDaysStat: FC<{ averageDays?: number | null }> = ({
     averageDays,
 }) => {
@@ -60,6 +55,9 @@ const AverageDaysStat: FC<{ averageDays?: number | null }> = ({
             return <NoData>No data</NoData>;
         }
 
+        if (averageDays < 1) {
+            return 'less than a day';
+        }
         return `${averageDays} days`;
     };
     return (
@@ -69,6 +67,18 @@ const AverageDaysStat: FC<{ averageDays?: number | null }> = ({
                 <Content />
             </dd>
         </Stats>
+    );
+};
+
+const BigNumber: FC<{ value?: number }> = ({ value }) => {
+    return (
+        <BigText data-loading-project-lifecycle-summary>
+            <PrettifyLargeNumber
+                value={value ?? 0}
+                threshold={1000}
+                precision={1}
+            />
+        </BigText>
     );
 };
 
@@ -85,9 +95,9 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber data-loading-project-lifecycle-summary>
-                            {data?.lifecycleSummary.initial.currentFlags ?? 0}
-                        </BigNumber>
+                        <BigNumber
+                            value={data?.lifecycleSummary.initial.currentFlags}
+                        />
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -103,9 +113,9 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber data-loading-project-lifecycle-summary>
-                            {data?.lifecycleSummary.preLive.currentFlags ?? 0}
-                        </BigNumber>
+                        <BigNumber
+                            value={data?.lifecycleSummary.preLive.currentFlags}
+                        />
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -121,9 +131,9 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber data-loading-project-lifecycle-summary>
-                            {data?.lifecycleSummary.live.currentFlags ?? 0}
-                        </BigNumber>
+                        <BigNumber
+                            value={data?.lifecycleSummary.live.currentFlags}
+                        />
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -139,9 +149,11 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber data-loading-project-lifecycle-summary>
-                            {data?.lifecycleSummary.completed.currentFlags ?? 0}
-                        </BigNumber>
+                        <BigNumber
+                            value={
+                                data?.lifecycleSummary.completed.currentFlags
+                            }
+                        />
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -157,9 +169,9 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber data-loading-project-lifecycle-summary>
-                            {data?.lifecycleSummary.archived.currentFlags ?? 0}
-                        </BigNumber>
+                        <BigNumber
+                            value={data?.lifecycleSummary.archived.currentFlags}
+                        />
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'

@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { ProjectActivitySchema } from './projectActivitySchema';
+import type { ProjectStatusSchemaLifecycleSummary } from './projectStatusSchemaLifecycleSummary';
 import type { ProjectStatusSchemaResources } from './projectStatusSchemaResources';
 
 /**
@@ -17,6 +18,8 @@ export interface ProjectStatusSchema {
      * @minimum 0
      */
     averageHealth: number;
+    /** Feature flag lifecycle statistics for this project. */
+    lifecycleSummary: ProjectStatusSchemaLifecycleSummary;
     /** Key resources within the project */
     resources: ProjectStatusSchemaResources;
 }

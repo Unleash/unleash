@@ -28,7 +28,12 @@ export const projectStatusSchema = {
     $id: '#/components/schemas/projectStatusSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['activityCountByDate', 'resources', 'averageHealth'],
+    required: [
+        'activityCountByDate',
+        'resources',
+        'averageHealth',
+        'lifecycleSummary',
+    ],
     description:
         'Schema representing the overall status of a project, including an array of activity records. Each record in the activity array contains a date and a count, providing a snapshot of the project’s activity level over time.',
     properties: {

@@ -10,7 +10,8 @@ import { Link } from 'react-router-dom';
 
 const LifecycleRow = styled('div')(({ theme }) => ({
     display: 'flex',
-    gap: theme.spacing(4),
+    flexFlow: 'column',
+    gap: theme.spacing(1),
 }));
 
 const HeaderRow = styled('div')(({ theme }) => ({
@@ -18,6 +19,9 @@ const HeaderRow = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
     justifyContent: 'space-between',
     flex: 'auto',
+    '& > *': {
+        margin: 0,
+    },
 }));
 
 const LifecycleBox = styled('li')(({ theme }) => ({

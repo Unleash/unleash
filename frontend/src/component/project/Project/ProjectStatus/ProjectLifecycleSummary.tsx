@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import { FeatureLifecycleStageIcon } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FeatureLifecycleStageIcon';
+import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { FC } from 'react';
@@ -59,7 +60,7 @@ const AverageDaysStat: FC<{ averageDays: number | null } | undefined> = (
             return 'loading data';
         }
         const { averageDays } = props;
-        if (averageDays === null) {
+        if (averageDays === null || averageDays === undefined) {
             return <NoData>No data</NoData>;
         }
 
@@ -77,9 +78,7 @@ const AverageDaysStat: FC<{ averageDays: number | null } | undefined> = (
 
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
-    // const { data, loading } = useProjectStatus(projectId);
-    const data = undefined;
-    const loading = true;
+    const { data, loading } = useProjectStatus(projectId);
 
     const loadingRef = useLoading<HTMLUListElement>(
         loading,
@@ -91,14 +90,12 @@ export const ProjectLifecycleSummary = () => {
                 <p>
                     <Counter>
                         <BigNumber data-loading-project-lifecycle-summary>
-                            {data?.lifecycleSummary.initial.currentFlags ?? 15}
+                            {data?.lifecycleSummary.initial.currentFlags ?? 0}
                         </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
-                            stage={{
-                                name: 'initial',
-                            }}
+                            stage={{ name: 'initial' }}
                         />
                     </Counter>
                     <span>flags in initial</span>
@@ -112,14 +109,12 @@ export const ProjectLifecycleSummary = () => {
                 <p>
                     <Counter>
                         <BigNumber data-loading-project-lifecycle-summary>
-                            3
+                            {data?.lifecycleSummary.preLive.currentFlags ?? 0}
                         </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
-                            stage={{
-                                name: 'pre-live',
-                            }}
+                            stage={{ name: 'pre-live' }}
                         />
                     </Counter>
                     <span>flags in pre-live</span>
@@ -133,14 +128,12 @@ export const ProjectLifecycleSummary = () => {
                 <p>
                     <Counter>
                         <BigNumber data-loading-project-lifecycle-summary>
-                            2
+                            {data?.lifecycleSummary.live.currentFlags ?? 0}
                         </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
-                            stage={{
-                                name: 'live',
-                            }}
+                            stage={{ name: 'live' }}
                         />
                     </Counter>
                     <span>flags in live</span>
@@ -154,14 +147,12 @@ export const ProjectLifecycleSummary = () => {
                 <p>
                     <Counter>
                         <BigNumber data-loading-project-lifecycle-summary>
-                            6
+                            {data?.lifecycleSummary.completed.currentFlags ?? 0}
                         </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
-                            stage={{
-                                name: 'completed',
-                            }}
+                            stage={{ name: 'completed' }}
                         />
                     </Counter>
                     <span>
@@ -182,14 +173,12 @@ export const ProjectLifecycleSummary = () => {
                 <p>
                     <Counter>
                         <BigNumber data-loading-project-lifecycle-summary>
-                            15
+                            {data?.lifecycleSummary.archived.currentFlags ?? 0}
                         </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
-                            stage={{
-                                name: 'archived',
-                            }}
+                            stage={{ name: 'archived' }}
                         />
                     </Counter>
                     <span>flags in archived</span>
@@ -197,7 +186,8 @@ export const ProjectLifecycleSummary = () => {
                 <Stats>
                     <dt>This month</dt>
                     <dd data-loading-project-lifecycle-summary>
-                        3 flags archived
+                        {data?.lifecycleSummary.archived.currentFlags ?? 0}{' '}
+                        flags archived
                     </dd>
                 </Stats>
             </LifecycleBoxWrapper>

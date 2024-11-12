@@ -4,7 +4,6 @@ import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectS
 import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { FC } from 'react';
-import { Link } from 'react-router-dom';
 
 const LifecycleBox = styled('li')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -46,10 +45,6 @@ const Stats = styled('dl')(({ theme }) => ({
 
 const NoData = styled('span')({
     fontWeight: 'normal',
-});
-
-const LinkNoUnderline = styled(Link)({
-    textDecoration: 'none',
 });
 
 const AverageDaysStat: FC<{ averageDays?: number | null }> = ({

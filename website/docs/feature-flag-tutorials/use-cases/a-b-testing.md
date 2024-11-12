@@ -79,12 +79,13 @@ Using strategy variants in your activation strategy is the canonical way to run 
 
 ![This diagram breaks down how strategy variants sit on top activation strategies for flags in Unleash.](/img/tutorial-building-blocks-strategy-variants.png)
 
-A variant has four components that define it:
+A variant has three components that define it:
 
 -   a name: This must be unique among the strategy's variants. You typically use the name to identify the variant in your client.
 -   a weight: The [variant weight](/reference/strategy-variants#variant-weight) is the likelihood of any one user getting this specific variant.
--   an optional payload: A variant can also have an associated [payload](/reference/strategy-variants#variant-payload) to deliver more data or context. The type defines the data format of the payload and can be one of the following options: `string`, `json`, `csv`, or `number`.
--   a value: specifies the payload data associated with the variant. Define this if you want to return a value other than `enabled`/`disabled`. It must correspond with the payload type.
+-   an optional payload: A variant can also have an associated [payload](/reference/strategy-variants#variant-payload) to deliver more data or context. Define this if you want to return data in addition to the `enabled`/`disabled` value of the flag. The payload has:
+    - a type: This defines the data format of the payload and can be one of the following options: `string`, `json`, `csv`, or `number`.
+    - a value: The payload data associated with the variant. The format of the data must correspond with the one specified in the type property.
 
 Open the gradual rollout strategy, select the **Variants** tab, and click **Add variant**. Enter a unique name for the variant. For the purpose of this tutorial, we’ve created 2 variants: `variantA` and `variantB`. In a real-world use case, we recommend more specific names to be comprehensible and relevant to the versions of the feature you’re referencing. Create additional variants if you need to test more versions.
 
@@ -165,7 +166,7 @@ unleash.on(UnleashEvents.Impression, (e: ImpressionEvent) => {
 
 In these example code snippets, `e` references the event object from the impression data output. Map these values to plug into the appropriate functions that make calls to your analytics tools and data warehouses.
 
-In some cases like in Example 1, you may want to use the "disabled feature" state as the "Control group".
+In some cases, like in Example 1, you may want to use the "disabled feature" state as the "Control group".
 
 Alternatively, in Example 2, you can expose the feature to 100% of users and use two variants: "Control" and "Test". In either case, the variants are always used for the "Test" group. The difference is determined by how you use the "Control" group.
 
@@ -196,7 +197,7 @@ Here is an example of a payload that is returned from Google Analytics that incl
 
 By enabling impression data for your feature flag and listening to events within your application code, you can leverage this data flowing to your integrated analytics tools to make informed decisions faster and adjust your strategies based on real user behavior.
 
-### Rollout the Winning Variant to All Users
+### Roll Out the Winning Variant to All Users
 
 After you have implemented your A/B test and measured the performance of a feature to a subset of users, you can decide which variant is the most optimal experience to roll out to all users in production.
 
@@ -208,7 +209,7 @@ After the flag has been available to 100% of users over time, archive the flag a
 
 ## A/B Testing with Enterprise Automation
 
-With Unleash, you can automate your feature flags using [actions](/reference/actions) and [signals](/reference/signals). When running A/B tests, configure your projects to execute tasks in response to application metrics and thresholds you define. If an experimentation feature that targets a part of your user base logs errors, your actions can automatically disable the feature so your team is given the time to triage while still providing a seamless, alternative experience to users. In another case, you can use actions to modify the percentage of users targeted for variations of a feature based off users engaging with one variation more than the other.
+With Unleash, you can automate feature flags through APIs and even rely on [actions](/reference/actions) and [signals](/reference/signals) to enable and disable flags dynamically. When running A/B tests, you can configure your projects to execute tasks in response to application metrics and thresholds you define. For example, if an experimentation feature that targets a part of your user base logs errors, your actions can automatically disable the feature so your team is given the time to triage while still providing a seamless, alternative experience to users. Similarly, you can use the APIs to modify the percentage of users targeted for variations of a feature based off users engaging with one variation more than the other.
 
 ### Multi-arm Bandit Tests to Find the Winning Variant
 
@@ -222,13 +223,10 @@ The variants you created with Unleash would be the "arms" in the multi-bandit co
 
 To use Unleash to conduct a multi-arm bandit test, follow these steps:
 
-1. Collect the necessary data from each variant’s performance by enabling impression data for your feature flag
-2. Capture impression events in your application code
-3. Funnel the impression events captured from your application code to an external analytics tool
-4. Create [signal endpoints](/reference/signals) in Unleash and point them to your external analytics tools
-5. Create [actions](/reference/actions) in Unleash that can react to your signals
-
-Learn how to configure [actions](/reference/actions) and [signals](/reference/signals) from our documentation to get started.
+1. Collect the necessary data from each variant’s performance by enabling impression data for your feature flag.
+2. Capture impression events in your application code.
+3. Funnel the impression events captured from your application code to an external analytics tool.
+4. Use the Unleash API to dynamically adjust the traffic for each variant based on performance.
 
 This approach minimizes the "regret" associated with allocating traffic to lower-performing variants. Multi-arm bandit tests using Unleash can adapt to changing conditions, such as seasonal fluctuations or user behavior changes. In some cases, they can be used to ensure that users are not exposed to suboptimal experiences for extended periods.
 

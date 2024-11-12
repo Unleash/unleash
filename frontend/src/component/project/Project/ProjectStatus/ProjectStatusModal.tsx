@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ProjectResources } from './ProjectResources';
 import { ProjectActivity } from './ProjectActivity';
 import { ProjectHealth } from './ProjectHealth';
@@ -34,7 +34,7 @@ const HealthRow = styled('div')(({ theme }) => ({
 
 export const ProjectStatusModal = ({ open, close }: Props) => {
     return (
-        <SidebarModal open={open} onClose={close} label='Project status'>
+        <DynamicSidebarModal open={open} onClose={close} label='Project status'>
             <ModalContentContainer>
                 <HealthRow>
                     <ProjectHealth />
@@ -45,6 +45,6 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
 
                 <ProjectLifecycleSummary />
             </ModalContentContainer>
-        </SidebarModal>
+        </DynamicSidebarModal>
     );
 };

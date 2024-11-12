@@ -13,6 +13,28 @@ const placeholderData: ProjectStatusSchema = {
         segments: 0,
     },
     averageHealth: 0,
+    lifecycleSummary: {
+        initial: {
+            currentFlags: 0,
+            averageDays: null,
+        },
+        preLive: {
+            currentFlags: 0,
+            averageDays: null,
+        },
+        live: {
+            currentFlags: 0,
+            averageDays: null,
+        },
+        completed: {
+            currentFlags: 0,
+            averageDays: null,
+        },
+        archived: {
+            currentFlags: 0,
+            last30Days: 0,
+        },
+    },
 };
 
 export const useProjectStatus = (projectId: string) => {

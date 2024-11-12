@@ -20,6 +20,10 @@ const StyledButton = styled(Button)(({ theme }) => ({
     height: theme.spacing(3.75),
 }));
 
+const StyledHtmlTooltip = styled(HtmlTooltip)(({ theme }) => ({
+    zIndex: theme.zIndex.drawer,
+}));
+
 const StyledIconContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -109,7 +113,7 @@ export const AddFilterButton = ({
     return (
         <div>
             {showArchiveTooltip ? (
-                <HtmlTooltip
+                <StyledHtmlTooltip
                     placement='right'
                     arrow
                     title={<ArchiveTooltip />}
@@ -119,7 +123,7 @@ export const AddFilterButton = ({
                     <StyledButton onClick={handleClick} startIcon={<Add />}>
                         Add Filter
                     </StyledButton>
-                </HtmlTooltip>
+                </StyledHtmlTooltip>
             ) : (
                 <StyledButton onClick={handleClick} startIcon={<Add />}>
                     Add Filter

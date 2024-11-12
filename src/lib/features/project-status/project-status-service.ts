@@ -72,7 +72,7 @@ export class ProjectStatusService {
                 segments,
             },
             activityCountByDate,
-            averageHealth,
+            averageHealth: Math.round(averageHealth),
             lifecycleSummary,
         };
     }

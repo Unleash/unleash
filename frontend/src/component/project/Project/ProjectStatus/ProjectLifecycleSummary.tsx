@@ -22,6 +22,7 @@ const Wrapper = styled('ul')(({ theme }) => ({
     gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
     gap: theme.spacing(1),
     justifyContent: 'center',
+    padding: 0,
 }));
 
 const Counter = styled('span')({

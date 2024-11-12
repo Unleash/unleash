@@ -52,14 +52,10 @@ const LinkNoUnderline = styled(Link)({
     textDecoration: 'none',
 });
 
-const AverageDaysStat: FC<{ averageDays: number | null } | undefined> = (
-    props,
-) => {
+const AverageDaysStat: FC<{ averageDays?: number | null }> = ({
+    averageDays,
+}) => {
     const Content = () => {
-        if (!props) {
-            return 'loading data';
-        }
-        const { averageDays } = props;
         if (averageDays === null || averageDays === undefined) {
             return <NoData>No data</NoData>;
         }

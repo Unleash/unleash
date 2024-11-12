@@ -1,6 +1,9 @@
 import { styled } from '@mui/material';
 import { FeatureLifecycleStageIcon } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FeatureLifecycleStageIcon';
+import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
+import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 
 const LifecycleBox = styled('li')(({ theme }) => ({
@@ -41,10 +44,6 @@ const Stats = styled('dl')(({ theme }) => ({
     },
 }));
 
-const NegativeStat = styled('span')(({ theme }) => ({
-    color: theme.palette.warning.contrastText,
-}));
-
 const NoData = styled('span')({
     fontWeight: 'normal',
 });
@@ -53,123 +52,128 @@ const LinkNoUnderline = styled(Link)({
     textDecoration: 'none',
 });
 
+const AverageDaysStat: FC<{ averageDays?: number | null }> = ({
+    averageDays,
+}) => {
+    const Content = () => {
+        if (averageDays === null || averageDays === undefined) {
+            return <NoData>No data</NoData>;
+        }
+
+        return `${averageDays} days`;
+    };
+    return (
+        <Stats>
+            <dt>Avg. time in stage</dt>
+            <dd data-loading-project-lifecycle-summary>
+                <Content />
+            </dd>
+        </Stats>
+    );
+};
+
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
+    const { data, loading } = useProjectStatus(projectId);
+
+    const loadingRef = useLoading<HTMLUListElement>(
+        loading,
+        '[data-loading-project-lifecycle-summary=true]',
+    );
     return (
-        <Wrapper>
+        <Wrapper ref={loadingRef}>
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber>15</BigNumber>
+                        <BigNumber data-loading-project-lifecycle-summary>
+                            {data?.lifecycleSummary.initial.currentFlags ?? 0}
+                        </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
-                            stage={{
-                                name: 'initial',
-                                enteredStageAt: '',
-                            }}
+                            stage={{ name: 'initial' }}
                         />
                     </Counter>
                     <span>flags in initial</span>
                 </p>
-                <Stats>
-                    <dt>Avg. time in stage</dt>
-                    <dd>
-                        <NegativeStat>21 days</NegativeStat>
-                    </dd>
-                </Stats>
+                <AverageDaysStat
+                    averageDays={data?.lifecycleSummary.initial.averageDays}
+                />
             </LifecycleBox>
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber>3</BigNumber>
+                        <BigNumber data-loading-project-lifecycle-summary>
+                            {data?.lifecycleSummary.preLive.currentFlags ?? 0}
+                        </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
-                            stage={{
-                                name: 'pre-live',
-                                enteredStageAt: '',
-                                environments: [],
-                            }}
+                            stage={{ name: 'pre-live' }}
                         />
                     </Counter>
                     <span>flags in pre-live</span>
                 </p>
-                <Stats>
-                    <dt>Avg. time in stage</dt>
-                    <dd>18 days</dd>
-                </Stats>
+                <AverageDaysStat
+                    averageDays={data?.lifecycleSummary.preLive.averageDays}
+                />
             </LifecycleBox>
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber>2</BigNumber>
+                        <BigNumber data-loading-project-lifecycle-summary>
+                            {data?.lifecycleSummary.live.currentFlags ?? 0}
+                        </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
-                            stage={{
-                                name: 'live',
-                                enteredStageAt: '',
-                                environments: [],
-                            }}
+                            stage={{ name: 'live' }}
                         />
                     </Counter>
                     <span>flags in live</span>
                 </p>
-                <Stats>
-                    <dt>Avg. time in stage</dt>
-                    <dd>10 days</dd>
-                </Stats>
+                <AverageDaysStat
+                    averageDays={data?.lifecycleSummary.live.averageDays}
+                />
             </LifecycleBox>
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber>6</BigNumber>
+                        <BigNumber data-loading-project-lifecycle-summary>
+                            {data?.lifecycleSummary.completed.currentFlags ?? 0}
+                        </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
-                            stage={{
-                                name: 'completed',
-                                enteredStageAt: '',
-                                environments: [],
-                                status: 'kept',
-                            }}
+                            stage={{ name: 'completed' }}
                         />
                     </Counter>
-                    <span>
-                        <LinkNoUnderline
-                            to={`/projects/${projectId}/placeholder`}
-                        >
-                            flags
-                        </LinkNoUnderline>{' '}
-                        in cleanup
-                    </span>
+                    <span>flags in cleanup</span>
                 </p>
-                <Stats>
-                    <dt>Avg. time in stage</dt>
-                    <dd>
-                        <NoData>No data</NoData>
-                    </dd>
-                </Stats>
+                <AverageDaysStat
+                    averageDays={data?.lifecycleSummary.completed.averageDays}
+                />
             </LifecycleBox>
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber>15</BigNumber>
+                        <BigNumber data-loading-project-lifecycle-summary>
+                            {data?.lifecycleSummary.archived.currentFlags ?? 0}
+                        </BigNumber>
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
-                            stage={{
-                                name: 'archived',
-                                enteredStageAt: '',
-                            }}
+                            stage={{ name: 'archived' }}
                         />
                     </Counter>
                     <span>flags in archived</span>
                 </p>
                 <Stats>
                     <dt>This month</dt>
-                    <dd>3 flags archived</dd>
+                    <dd data-loading-project-lifecycle-summary>
+                        {data?.lifecycleSummary.archived.currentFlags ?? 0}{' '}
+                        flags archived
+                    </dd>
                 </Stats>
             </LifecycleBox>
         </Wrapper>

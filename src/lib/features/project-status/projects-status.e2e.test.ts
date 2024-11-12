@@ -69,6 +69,7 @@ afterAll(async () => {
 
 beforeEach(async () => {
     await db.stores.clientMetricsStoreV2.deleteAll();
+    await db.rawDatabase('flag_trends').delete();
 });
 
 test('project insights should return correct count for each day', async () => {
@@ -255,6 +256,19 @@ test('project health should be correct average', async () => {
         .expect(200);
 
     expect(body.averageHealth).toBe(40);
+});
+
+test('project health stats should round to nearest integer', async () => {
+    await insertHealthScore('2024-04', 7);
+
+    await insertHealthScore('2024-05', 4);
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/status')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.averageHealth).toBe(5);
 });
 
 test('project status contains lifecycle data', async () => {

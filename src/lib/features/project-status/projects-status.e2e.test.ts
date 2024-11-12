@@ -259,16 +259,16 @@ test('project health should be correct average', async () => {
 });
 
 test('project health stats should round to nearest integer', async () => {
-    await insertHealthScore('2024-04', 7);
+    await insertHealthScore('2024-04', 6);
 
-    await insertHealthScore('2024-05', 4);
+    await insertHealthScore('2024-05', 5);
 
     const { body } = await app.request
         .get('/api/admin/projects/default/status')
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body.averageHealth).toBe(5);
+    expect(body.averageHealth).toBe(6);
 });
 
 test('project status contains lifecycle data', async () => {

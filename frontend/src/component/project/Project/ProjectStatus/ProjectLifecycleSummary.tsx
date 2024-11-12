@@ -51,7 +51,7 @@ const LinkNoUnderline = styled(Link)({
     textDecoration: 'none',
 });
 
-const FormatAverageDays: FC<{ averageDays: number | null } | undefined> = (
+const AverageDaysStat: FC<{ averageDays: number | null } | undefined> = (
     props,
 ) => {
     const Content = () => {
@@ -66,9 +66,12 @@ const FormatAverageDays: FC<{ averageDays: number | null } | undefined> = (
         return `${averageDays} days`;
     };
     return (
-        <dd data-loading-project-lifecycle-summary>
-            <Content />
-        </dd>
+        <Stats>
+            <dt>Avg. time in stage</dt>
+            <dd data-loading-project-lifecycle-summary>
+                <Content />
+            </dd>
+        </Stats>
     );
 };
 
@@ -100,12 +103,10 @@ export const ProjectLifecycleSummary = () => {
                     </Counter>
                     <span>flags in initial</span>
                 </p>
-                <Stats>
-                    <dt>Avg. time in stage</dt>
-                    <FormatAverageDays
-                        averageDays={data?.lifecycleSummary.initial.averageDays}
-                    />
-                </Stats>
+
+                <AverageDaysStat
+                    averageDays={data?.lifecycleSummary.initial.averageDays}
+                />
             </LifecycleBoxWrapper>
             <LifecycleBoxWrapper>
                 <p>
@@ -123,12 +124,10 @@ export const ProjectLifecycleSummary = () => {
                     </Counter>
                     <span>flags in pre-live</span>
                 </p>
-                <Stats>
-                    <dt>Avg. time in stage</dt>
-                    <FormatAverageDays
-                        averageDays={data?.lifecycleSummary.preLive.averageDays}
-                    />
-                </Stats>
+
+                <AverageDaysStat
+                    averageDays={data?.lifecycleSummary.preLive.averageDays}
+                />
             </LifecycleBoxWrapper>
             <LifecycleBoxWrapper>
                 <p>
@@ -146,13 +145,10 @@ export const ProjectLifecycleSummary = () => {
                     </Counter>
                     <span>flags in live</span>
                 </p>
-                <Stats>
-                    <dt>Avg. time in stage</dt>
 
-                    <FormatAverageDays
-                        averageDays={data?.lifecycleSummary.live.averageDays}
-                    />
-                </Stats>
+                <AverageDaysStat
+                    averageDays={data?.lifecycleSummary.live.averageDays}
+                />
             </LifecycleBoxWrapper>
             <LifecycleBoxWrapper>
                 <p>
@@ -177,14 +173,10 @@ export const ProjectLifecycleSummary = () => {
                         in cleanup
                     </span>
                 </p>
-                <Stats>
-                    <dt>Avg. time in stage</dt>
-                    <FormatAverageDays
-                        averageDays={
-                            data?.lifecycleSummary.completed.averageDays
-                        }
-                    />
-                </Stats>
+
+                <AverageDaysStat
+                    averageDays={data?.lifecycleSummary.completed.averageDays}
+                />
             </LifecycleBoxWrapper>
             <LifecycleBoxWrapper>
                 <p>

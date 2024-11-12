@@ -1,6 +1,5 @@
 import { styled } from '@mui/material';
 import { FeatureLifecycleStageIcon } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FeatureLifecycleStageIcon';
-import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { FC } from 'react';
@@ -55,20 +54,30 @@ const LinkNoUnderline = styled(Link)({
 const FormatAverageDays: FC<{ averageDays: number | null } | undefined> = (
     props,
 ) => {
-    if (!props) {
-        return 'loading data';
-    }
-    const { averageDays } = props;
-    if (averageDays === null) {
-        return <NoData>No data</NoData>;
-    }
+    const Content = () => {
+        if (!props) {
+            return 'loading data';
+        }
+        const { averageDays } = props;
+        if (averageDays === null) {
+            return <NoData>No data</NoData>;
+        }
 
-    return `${averageDays} days`;
+        return `${averageDays} days`;
+    };
+    return (
+        <dd data-loading-project-lifecycle-summary>
+            <Content />
+        </dd>
+    );
 };
 
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
-    const { data, loading } = useProjectStatus(projectId);
+    // const { data, loading } = useProjectStatus(projectId);
+    const data = undefined;
+    const loading = true;
+
     const loadingRef = useLoading<HTMLUListElement>(
         loading,
         '[data-loading-project-lifecycle-summary=true]',
@@ -93,13 +102,9 @@ export const ProjectLifecycleSummary = () => {
                 </p>
                 <Stats>
                     <dt>Avg. time in stage</dt>
-                    <dd data-loading-project-lifecycle-summary>
-                        <FormatAverageDays
-                            averageDays={
-                                data?.lifecycleSummary.initial.averageDays
-                            }
-                        />
-                    </dd>
+                    <FormatAverageDays
+                        averageDays={data?.lifecycleSummary.initial.averageDays}
+                    />
                 </Stats>
             </LifecycleBoxWrapper>
             <LifecycleBoxWrapper>
@@ -120,13 +125,9 @@ export const ProjectLifecycleSummary = () => {
                 </p>
                 <Stats>
                     <dt>Avg. time in stage</dt>
-                    <dd data-loading-project-lifecycle-summary>
-                        <FormatAverageDays
-                            averageDays={
-                                data?.lifecycleSummary.preLive.averageDays
-                            }
-                        />
-                    </dd>
+                    <FormatAverageDays
+                        averageDays={data?.lifecycleSummary.preLive.averageDays}
+                    />
                 </Stats>
             </LifecycleBoxWrapper>
             <LifecycleBoxWrapper>
@@ -147,13 +148,10 @@ export const ProjectLifecycleSummary = () => {
                 </p>
                 <Stats>
                     <dt>Avg. time in stage</dt>
-                    <dd data-loading-project-lifecycle-summary>
-                        <FormatAverageDays
-                            averageDays={
-                                data?.lifecycleSummary.live.averageDays
-                            }
-                        />
-                    </dd>
+
+                    <FormatAverageDays
+                        averageDays={data?.lifecycleSummary.live.averageDays}
+                    />
                 </Stats>
             </LifecycleBoxWrapper>
             <LifecycleBoxWrapper>
@@ -181,13 +179,11 @@ export const ProjectLifecycleSummary = () => {
                 </p>
                 <Stats>
                     <dt>Avg. time in stage</dt>
-                    <dd data-loading-project-lifecycle-summary>
-                        <FormatAverageDays
-                            averageDays={
-                                data?.lifecycleSummary.completed.averageDays
-                            }
-                        />
-                    </dd>
+                    <FormatAverageDays
+                        averageDays={
+                            data?.lifecycleSummary.completed.averageDays
+                        }
+                    />
                 </Stats>
             </LifecycleBoxWrapper>
             <LifecycleBoxWrapper>

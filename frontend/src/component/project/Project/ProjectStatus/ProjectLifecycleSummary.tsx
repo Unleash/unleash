@@ -7,6 +7,7 @@ import type { FC } from 'react';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
 import { Link } from 'react-router-dom';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const LifecycleRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -14,7 +15,7 @@ const LifecycleRow = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const HeaderRow = styled('div')(({ theme }) => ({
+const HeaderRow = styled('hgroup')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(2),
     justifyContent: 'space-between',
@@ -105,6 +106,7 @@ const BigNumber: FC<{ value?: number }> = ({ value }) => {
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data, loading } = useProjectStatus(projectId);
+    const { isEnterprise } = useUiConfig();
 
     const loadingRef = useLoading<HTMLUListElement>(
         loading,
@@ -121,7 +123,11 @@ export const ProjectLifecycleSummary = () => {
         <LifecycleRow>
             <HeaderRow>
                 <h4>Flag lifecycle</h4>
-                <Link to='/lifecycle'>View graph over time</Link>
+                {isEnterprise() && (
+                    <p>
+                        <Link to='/lifecycle'>View graph over time</Link>
+                    </p>
+                )}
             </HeaderRow>
             <LifecycleList ref={loadingRef}>
                 <LifecycleBox>

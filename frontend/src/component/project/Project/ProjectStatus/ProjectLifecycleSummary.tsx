@@ -4,7 +4,7 @@ import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectS
 import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { FC } from 'react';
-
+import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 const LifecycleBox = styled('li')(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusExtraLarge,
@@ -70,6 +70,18 @@ const AverageDaysStat: FC<{ averageDays?: number | null }> = ({
     );
 };
 
+const BigNumberWithTooltip: FC<{ value?: number }> = ({ value }) => {
+    return (
+        <BigNumber data-loading-project-lifecycle-summary>
+            <PrettifyLargeNumber
+                value={value ?? 0}
+                threshold={1000}
+                precision={2}
+            />
+        </BigNumber>
+    );
+};
+
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data, loading } = useProjectStatus(projectId);
@@ -83,9 +95,9 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber data-loading-project-lifecycle-summary>
-                            {data?.lifecycleSummary.initial.currentFlags ?? 0}
-                        </BigNumber>
+                        <BigNumberWithTooltip
+                            value={data?.lifecycleSummary.initial.currentFlags}
+                        />
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -101,9 +113,9 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber data-loading-project-lifecycle-summary>
-                            {data?.lifecycleSummary.preLive.currentFlags ?? 0}
-                        </BigNumber>
+                        <BigNumberWithTooltip
+                            value={data?.lifecycleSummary.preLive.currentFlags}
+                        />
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -119,9 +131,9 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber data-loading-project-lifecycle-summary>
-                            {data?.lifecycleSummary.live.currentFlags ?? 0}
-                        </BigNumber>
+                        <BigNumberWithTooltip
+                            value={data?.lifecycleSummary.live.currentFlags}
+                        />
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -137,9 +149,11 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber data-loading-project-lifecycle-summary>
-                            {data?.lifecycleSummary.completed.currentFlags ?? 0}
-                        </BigNumber>
+                        <BigNumberWithTooltip
+                            value={
+                                data?.lifecycleSummary.completed.currentFlags
+                            }
+                        />
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'
@@ -155,9 +169,9 @@ export const ProjectLifecycleSummary = () => {
             <LifecycleBox>
                 <p>
                     <Counter>
-                        <BigNumber data-loading-project-lifecycle-summary>
-                            {data?.lifecycleSummary.archived.currentFlags ?? 0}
-                        </BigNumber>
+                        <BigNumberWithTooltip
+                            value={data?.lifecycleSummary.archived.currentFlags}
+                        />
 
                         <FeatureLifecycleStageIcon
                             aria-hidden='true'

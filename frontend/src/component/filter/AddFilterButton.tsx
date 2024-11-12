@@ -21,7 +21,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 const StyledHtmlTooltip = styled(HtmlTooltip)(({ theme }) => ({
-    zIndex: 1200,
+    zIndex: theme.zIndex.drawer,
 }));
 
 const StyledIconContainer = styled(Box)(({ theme }) => ({

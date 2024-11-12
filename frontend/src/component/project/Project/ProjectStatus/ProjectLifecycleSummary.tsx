@@ -6,7 +6,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 
-const LifecycleBoxWrapper = styled('li')(({ theme }) => ({
+const LifecycleBox = styled('li')(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusExtraLarge,
     border: `2px solid ${theme.palette.divider}`,
@@ -86,7 +86,7 @@ export const ProjectLifecycleSummary = () => {
     );
     return (
         <Wrapper ref={loadingRef}>
-            <LifecycleBoxWrapper>
+            <LifecycleBox>
                 <p>
                     <Counter>
                         <BigNumber data-loading-project-lifecycle-summary>
@@ -104,8 +104,8 @@ export const ProjectLifecycleSummary = () => {
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.initial.averageDays}
                 />
-            </LifecycleBoxWrapper>
-            <LifecycleBoxWrapper>
+            </LifecycleBox>
+            <LifecycleBox>
                 <p>
                     <Counter>
                         <BigNumber data-loading-project-lifecycle-summary>
@@ -123,8 +123,8 @@ export const ProjectLifecycleSummary = () => {
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.preLive.averageDays}
                 />
-            </LifecycleBoxWrapper>
-            <LifecycleBoxWrapper>
+            </LifecycleBox>
+            <LifecycleBox>
                 <p>
                     <Counter>
                         <BigNumber data-loading-project-lifecycle-summary>
@@ -142,8 +142,8 @@ export const ProjectLifecycleSummary = () => {
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.live.averageDays}
                 />
-            </LifecycleBoxWrapper>
-            <LifecycleBoxWrapper>
+            </LifecycleBox>
+            <LifecycleBox>
                 <p>
                     <Counter>
                         <BigNumber data-loading-project-lifecycle-summary>
@@ -168,8 +168,8 @@ export const ProjectLifecycleSummary = () => {
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.completed.averageDays}
                 />
-            </LifecycleBoxWrapper>
-            <LifecycleBoxWrapper>
+            </LifecycleBox>
+            <LifecycleBox>
                 <p>
                     <Counter>
                         <BigNumber data-loading-project-lifecycle-summary>
@@ -190,7 +190,7 @@ export const ProjectLifecycleSummary = () => {
                         flags archived
                     </dd>
                 </Stats>
-            </LifecycleBoxWrapper>
+            </LifecycleBox>
         </Wrapper>
     );
 };

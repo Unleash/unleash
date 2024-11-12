@@ -108,8 +108,13 @@ class UserStore implements IUserStore {
     }
 
     async insert(user: ICreateUser): Promise<User> {
+        const emailHash = this.db.raw('md5(?)', [user.email]);
         const rows = await this.db(TABLE)
-            .insert({ ...mapUserToColumns(user), created_at: new Date() })
+            .insert({
+                ...mapUserToColumns(user),
+                email_hash: emailHash,
+                created_at: new Date(),
+            })
             .returning(USER_COLUMNS);
         return rowToUser(rows[0]);
     }

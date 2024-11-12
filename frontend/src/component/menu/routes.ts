@@ -48,6 +48,7 @@ import { Signals } from 'component/signals/Signals';
 import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject';
 import { PersonalDashboard } from '../personalDashboard/PersonalDashboard';
 import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseManagement';
+import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
 
 export const routes: IRoute[] = [
     // Splash
@@ -247,15 +248,6 @@ export const routes: IRoute[] = [
         menu: { mobile: true, advanced: true },
     },
     {
-        path: '/release-management',
-        title: 'Release management',
-        component: ReleaseManagement,
-        type: 'protected',
-        menu: { advanced: true, mode: ['enterprise'] },
-        flag: 'releasePlans',
-        enterprise: true,
-    },
-    {
         path: '/environments/create',
         title: 'Environments',
         component: CreateEnvironment,
@@ -276,6 +268,27 @@ export const routes: IRoute[] = [
         component: EnvironmentTable,
         type: 'protected',
         menu: { mobile: true, advanced: true },
+        enterprise: true,
+    },
+
+    // Release management/plans
+    {
+        path: '/release-management',
+        title: 'Release management',
+        component: ReleaseManagement,
+        type: 'protected',
+        menu: { advanced: true, mode: ['enterprise'] },
+        flag: 'releasePlans',
+        enterprise: true,
+    },
+    {
+        path: '/release-management/edit/:templateId',
+        title: 'Edit release plan template',
+        parent: '/release-management',
+        component: EditReleasePlanTemplate,
+        type: 'protected',
+        menu: { mode: ['enterprise'] },
+        flag: 'releasePlans',
         enterprise: true,
     },
 

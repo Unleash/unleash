@@ -99,6 +99,9 @@ export const ProjectActivity = () => {
                         data={fullData}
                         maxLevel={4}
                         showWeekdayLabels={true}
+                        labels={{
+                            totalCount: '{{count}} activities in the last year',
+                        }}
                         renderBlock={(block, activity) => (
                             <Tooltip
                                 title={`${activity.count} activities on ${activity.date}`}

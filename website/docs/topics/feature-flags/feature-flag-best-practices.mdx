@@ -159,6 +159,8 @@ In [Principle 1](#1-enable-runtime-control), we proposed a set of architectural 
 
 For client-side feature flags, SDKs should send the context to an evaluation server and receive the evaluated results. The evaluated results are then cached in memory in the client-side application, allowing quick lookups without additional network overhead. This provides the performance benefits of local evaluation while minimizing the exposure of sensitive data.
 
+<VideoContent videoUrls={["https://www.youtube.com/embed/mCXSAWzdn3I"]}/>
+
 ## 7. Evaluate flags as close to the user as possible
 
 For optimal performance, you should evaluate feature flags as close to your users as possible. Building on the server-side evaluation approach from [Principle 2](#6-protect-pii-by-evaluating-flags-server-side), let's look at how evaluating flags locally can bring key benefits in terms of performance, cost, and reliability:
@@ -170,8 +172,6 @@ For optimal performance, you should evaluate feature flags as close to your user
 - **Resilience during service downtime**: If the feature flag service experiences downtime or outages, local evaluation allows your application to continue functioning without interruptions. This is important for maintaining service reliability and ensuring your application remains available even when the service is down.
 
 In summary, this principle emphasizes optimizing performance while protecting end-user privacy by evaluating feature flags as close to the end user as possible. This also leads to a highly available feature flag system that scales with your applications.
-
-<VideoContent videoUrls={["https://www.youtube.com/embed/mCXSAWzdn3I"]}/>
 
 ## 8. Scale horizontally by decoupling reads and writes
 

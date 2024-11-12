@@ -10,7 +10,7 @@ const LifecycleBox = styled('li')(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusExtraLarge,
     border: `2px solid ${theme.palette.divider}`,
-    height: '175px',
+    gap: theme.spacing(4),
     display: 'flex',
     flexFlow: 'column',
     justifyContent: 'space-between',

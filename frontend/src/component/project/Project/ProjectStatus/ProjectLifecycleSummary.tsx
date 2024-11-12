@@ -96,7 +96,6 @@ export const ProjectLifecycleSummary = () => {
                     </Counter>
                     <span>flags in initial</span>
                 </p>
-
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.initial.averageDays}
                 />
@@ -115,7 +114,6 @@ export const ProjectLifecycleSummary = () => {
                     </Counter>
                     <span>flags in pre-live</span>
                 </p>
-
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.preLive.averageDays}
                 />
@@ -134,7 +132,6 @@ export const ProjectLifecycleSummary = () => {
                     </Counter>
                     <span>flags in live</span>
                 </p>
-
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.live.averageDays}
                 />
@@ -160,7 +157,6 @@ export const ProjectLifecycleSummary = () => {
                         in cleanup
                     </span>
                 </p>
-
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.completed.averageDays}
                 />

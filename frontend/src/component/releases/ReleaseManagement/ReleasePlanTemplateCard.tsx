@@ -60,12 +60,12 @@ export const ReleasePlanTemplateCard = ({
     template,
 }: { template: IReleasePlanTemplate }) => {
     const navigate = useNavigate();
-    const clickHandler = () => {
+    const onClick = () => {
         navigate(`/release-management/edit/${template.id}`);
     };
 
     return (
-        <StyledTemplateCard onClick={clickHandler}>
+        <StyledTemplateCard onClick={onClick}>
             <TemplateCardHeader>
                 <StyledCenter>
                     <ReleaseTemplateIcon />
@@ -85,7 +85,7 @@ export const ReleasePlanTemplateCard = ({
                     >
                         <ReleasePlanTemplateCardMenu
                             template={template}
-                            clickHandler={clickHandler}
+                            clickHandler={onClick}
                         />
                     </StyledMenu>
                 </StyledDiv>

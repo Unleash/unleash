@@ -4,12 +4,12 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import { useUiFlag } from 'hooks/useUiFlag';
-import type { IReleasePlanTemplateInstance } from 'interfaces/releasePlans';
+import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 
 const path = (templateId: string) =>
     `api/admin/release-plan-templates/${templateId}`;
 
-const DEFAULT_DATA: IReleasePlanTemplateInstance = {
+const DEFAULT_DATA: IReleasePlanTemplate = {
     id: '',
     name: '',
     description: '',
@@ -18,17 +18,16 @@ const DEFAULT_DATA: IReleasePlanTemplateInstance = {
     createdByUserId: 0,
 };
 
-export const useReleasePlanTemplateInstance = (templateId: string) => {
+export const useReleasePlanTemplate = (templateId: string) => {
     const { isEnterprise } = useUiConfig();
     const releasePlansEnabled = useUiFlag('releasePlans');
 
-    const { data, error, mutate } =
-        useConditionalSWR<IReleasePlanTemplateInstance>(
-            isEnterprise() && releasePlansEnabled,
-            DEFAULT_DATA,
-            formatApiPath(path(templateId)),
-            fetcher,
-        );
+    const { data, error, mutate } = useConditionalSWR<IReleasePlanTemplate>(
+        isEnterprise() && releasePlansEnabled,
+        DEFAULT_DATA,
+        formatApiPath(path(templateId)),
+        fetcher,
+    );
 
     return useMemo(
         () => ({

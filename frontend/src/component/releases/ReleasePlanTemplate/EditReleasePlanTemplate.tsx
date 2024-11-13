@@ -1,7 +1,7 @@
 import { useUiFlag } from 'hooks/useUiFlag';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useReleasePlanTemplateInstance } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplateInstance';
+import { useReleasePlanTemplate } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplate';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useTemplateForm } from '../hooks/useTemplateForm';
 import { TemplateForm } from './TemplateForm';
@@ -58,13 +58,9 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 
 export const EditReleasePlanTemplate = () => {
     const releasePlansEnabled = useUiFlag('releasePlans');
-    if (!releasePlansEnabled) {
-        return null;
-    }
-
     const templateId = useRequiredPathParam('templateId');
     const { template, loading, error, refetch } =
-        useReleasePlanTemplateInstance(templateId);
+        useReleasePlanTemplate(templateId);
     usePageTitle(`Edit template: ${template.name}`);
     const navigate = useNavigate();
     const { setToastApiError } = useToast();
@@ -80,7 +76,9 @@ export const EditReleasePlanTemplate = () => {
         getTemplatePayload,
     } = useTemplateForm(template.name, template.description);
 
-    const handleCancel = () => {};
+    const handleCancel = () => {
+        navigate('/release-management');
+    };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         clearErrors();
@@ -88,18 +86,21 @@ export const EditReleasePlanTemplate = () => {
         if (isValid) {
             const payload = getTemplatePayload();
             try {
-                updateReleasePlanTemplate({
+                await updateReleasePlanTemplate({
                     ...payload,
                     id: templateId,
                     milestones: template.milestones,
-                }).then(() => {
-                    navigate('/release-management');
                 });
+                navigate('/release-management');
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
         }
     };
+
+    if (!releasePlansEnabled) {
+        return null;
+    }
 
     return (
         <>
@@ -118,7 +119,7 @@ export const EditReleasePlanTemplate = () => {
                     />
 
                     {template.milestones.map((milestone) => (
-                        <StyledMilestoneCard>
+                        <StyledMilestoneCard key={milestone.id}>
                             <StyledMilestoneCardBody>
                                 <StyledMilestoneCardTitle>
                                     {milestone.name}

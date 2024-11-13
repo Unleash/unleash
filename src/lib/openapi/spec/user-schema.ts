@@ -99,6 +99,12 @@ export const userSchema = {
             nullable: true,
             example: '01HTMEXAMPLESCIMID7SWWGHN6',
         },
+        activeSessions: {
+            description: 'Count of active browser sessions for this user',
+            type: 'integer',
+            nullable: true,
+            example: 2,
+        },
     },
     components: {},
 } as const;

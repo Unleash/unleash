@@ -1,9 +1,9 @@
-import { styled } from '@mui/material';
+import { CardActionArea, styled } from '@mui/material';
 import { FeatureLifecycleStageIcon } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FeatureLifecycleStageIcon';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import type { FC } from 'react';
+import { useState, type FC } from 'react';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -24,15 +24,44 @@ const HeaderRow = styled('div')(({ theme }) => ({
     },
 }));
 
-const LifecycleBox = styled('li')(({ theme }) => ({
+const LifecycleBoxContent = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    border: `2px solid ${theme.palette.divider}`,
     gap: theme.spacing(4),
     display: 'flex',
     flexFlow: 'column',
     justifyContent: 'space-between',
+    transition: 'border-color 200ms',
+    borderRadius: theme.shape.borderRadiusExtraLarge,
+    border: `2px solid ${theme.palette.divider}`,
 }));
+
+const StyledCardActionArea = styled(CardActionArea)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadiusExtraLarge,
+    '&[aria-pressed="true"] > *': {
+        borderColor: theme.palette.primary.main,
+    },
+}));
+
+const LifecycleBox = ({
+    children,
+    isActive,
+    onClick,
+}: {
+    children: React.ReactNode;
+    isActive?: boolean;
+    onClick?: () => void;
+}) => {
+    return (
+        <li>
+            <StyledCardActionArea
+                onClick={onClick}
+                aria-pressed={isActive ? 'true' : 'false'}
+            >
+                <LifecycleBoxContent>{children}</LifecycleBoxContent>
+            </StyledCardActionArea>
+        </li>
+    );
+};
 
 const LifecycleList = styled('ul')(({ theme }) => ({
     display: 'grid',
@@ -144,6 +173,9 @@ export const ProjectLifecycleSummary = () => {
     const { data, loading } = useProjectStatus(projectId);
     const { isEnterprise } = useUiConfig();
 
+    const [activeLifecycleStage, setActiveLifecycleStage] = useState<
+        keyof ProjectStatusSchemaLifecycleSummary | null
+    >(null);
     const loadingRef = useLoading<HTMLUListElement>(
         loading,
         '[data-loading-project-lifecycle-summary=true]',
@@ -162,7 +194,10 @@ export const ProjectLifecycleSummary = () => {
                 <LifecycleTooltip />
             </HeaderRow>
             <LifecycleList ref={loadingRef}>
-                <LifecycleBox>
+                <LifecycleBox
+                    onClick={() => setActiveLifecycleStage('initial')}
+                    isActive={activeLifecycleStage === 'initial'}
+                >
                     <p>
                         <Counter>
                             <BigNumber
@@ -182,7 +217,10 @@ export const ProjectLifecycleSummary = () => {
                         averageDays={data?.lifecycleSummary.initial.averageDays}
                     />
                 </LifecycleBox>
-                <LifecycleBox>
+                <LifecycleBox
+                    onClick={() => setActiveLifecycleStage('preLive')}
+                    isActive={activeLifecycleStage === 'preLive'}
+                >
                     <p>
                         <Counter>
                             <BigNumber
@@ -202,7 +240,10 @@ export const ProjectLifecycleSummary = () => {
                         averageDays={data?.lifecycleSummary.preLive.averageDays}
                     />
                 </LifecycleBox>
-                <LifecycleBox>
+                <LifecycleBox
+                    onClick={() => setActiveLifecycleStage('live')}
+                    isActive={activeLifecycleStage === 'live'}
+                >
                     <p>
                         <Counter>
                             <BigNumber
@@ -220,7 +261,10 @@ export const ProjectLifecycleSummary = () => {
                         averageDays={data?.lifecycleSummary.live.averageDays}
                     />
                 </LifecycleBox>
-                <LifecycleBox>
+                <LifecycleBox
+                    onClick={() => setActiveLifecycleStage('completed')}
+                    isActive={activeLifecycleStage === 'completed'}
+                >
                     <p>
                         <Counter>
                             <BigNumber
@@ -243,7 +287,10 @@ export const ProjectLifecycleSummary = () => {
                         }
                     />
                 </LifecycleBox>
-                <LifecycleBox>
+                <LifecycleBox
+                    onClick={() => setActiveLifecycleStage('archived')}
+                    isActive={activeLifecycleStage === 'archived'}
+                >
                     <p>
                         <Counter>
                             <BigNumber

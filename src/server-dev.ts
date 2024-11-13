@@ -55,6 +55,7 @@ process.nextTick(async () => {
                         webhookDomainLogging: true,
                         releasePlans: false,
                         simplifyProjectOverview: true,
+                        showUserDeviceCount: true,
                         flagOverviewRedesign: true,
                     },
                 },

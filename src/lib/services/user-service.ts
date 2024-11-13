@@ -40,7 +40,7 @@ import type { TokenUserSchema } from '../openapi/spec/token-user-schema';
 import PasswordMismatch from '../error/password-mismatch';
 import type EventService from '../features/events/event-service';
 
-import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../types';
+import { SYSTEM_USER, SYSTEM_USER_AUDIT, type IFlagResolver } from '../types';
 import { PasswordPreviouslyUsedError } from '../error/password-previously-used';
 import { RateLimitError } from '../error/rate-limit-error';
 import type EventEmitter from 'events';
@@ -80,6 +80,8 @@ class UserService {
 
     private eventBus: EventEmitter;
 
+    private flagResolver: IFlagResolver;
+
     private accessService: AccessService;
 
     private resetTokenService: ResetTokenService;
@@ -101,11 +103,16 @@ class UserService {
         {
             server,
             getLogger,
+            flagResolver,
             authentication,
             eventBus,
         }: Pick<
             IUnleashConfig,
-            'getLogger' | 'authentication' | 'server' | 'eventBus'
+            | 'getLogger'
+            | 'authentication'
+            | 'server'
+            | 'eventBus'
+            | 'flagResolver'
         >,
         services: {
             accessService: AccessService;
@@ -125,6 +132,7 @@ class UserService {
         this.emailService = services.emailService;
         this.sessionService = services.sessionService;
         this.settingService = services.settingService;
+        this.flagResolver = flagResolver;
 
         process.nextTick(() => this.initAdminUser(authentication));
 
@@ -201,12 +209,17 @@ class UserService {
             const roleId = rootRole ? rootRole.roleId : defaultRole.id;
             return { ...u, rootRole: roleId };
         });
-        const sessionCounts = await this.sessionService.getUserSessionsCount();
-        const usersWithSessionCounts = usersWithRootRole.map((u) => ({
-            ...u,
-            sessionCount: sessionCounts[u.id] || 0,
-        }));
-        return usersWithSessionCounts;
+        if (this.flagResolver.isEnabled('showUserDeviceCount')) {
+            const sessionCounts =
+                await this.sessionService.getUserSessionsCount();
+            const usersWithSessionCounts = usersWithRootRole.map((u) => ({
+                ...u,
+                sessionCount: sessionCounts[u.id] || 0,
+            }));
+            return usersWithSessionCounts;
+        }
+
+        return usersWithRootRole;
     }
 
     async getUser(id: number): Promise<IUserWithRootRole> {

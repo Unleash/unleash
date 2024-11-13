@@ -1,9 +1,6 @@
 const path = require("node:path");
 const fs = require("node:fs");
-const dotenv = require("dotenv");
 const { Client } = require("pg");
-
-dotenv.config();
 
 const configPath = path.join(__dirname, "database.json");
 const config_ = JSON.parse(fs.readFileSync(configPath, "utf-8"));

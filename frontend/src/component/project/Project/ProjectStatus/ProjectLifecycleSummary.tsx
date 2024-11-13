@@ -20,6 +20,7 @@ const HeaderRow = styled('div')(({ theme }) => ({
     flex: 'auto',
     '& > *': {
         marginBlock: 0,
+        fontWeight: 'normal',
     },
 }));
 

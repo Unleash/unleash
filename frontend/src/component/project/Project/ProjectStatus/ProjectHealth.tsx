@@ -10,8 +10,6 @@ const HealthContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusExtraLarge,
     minWidth: '300px',
-    display: 'flex',
-    flexDirection: 'column',
 }));
 
 const ChartRow = styled('div')(({ theme }) => ({

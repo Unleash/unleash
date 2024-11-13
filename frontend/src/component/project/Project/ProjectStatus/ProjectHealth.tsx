@@ -10,7 +10,8 @@ const HealthContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusExtraLarge,
     minWidth: '300px',
-    fontSize: theme.spacing(1.75),
+    display: 'flex',
+    flexDirection: 'column',
 }));
 
 const ChartRow = styled('div')(({ theme }) => ({
@@ -25,6 +26,7 @@ const StyledSVG = styled('svg')({
 
 const DescriptionText = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
+    marginBottom: theme.spacing(2),
 }));
 
 export const ProjectHealth = () => {
@@ -43,10 +45,17 @@ export const ProjectHealth = () => {
     const offset = 0.75 - gapLength / 2;
     const healthLength = (averageHealth / 100) * circumference * 0.7;
 
+    const healthColor =
+        averageHealth >= 0 && averageHealth <= 24
+            ? theme.palette.error.main
+            : averageHealth >= 25 && averageHealth <= 74
+              ? theme.palette.warning.border
+              : theme.palette.success.border;
+
     return (
         <HealthContainer>
             <ChartRow>
-                <StyledSVG viewBox='0 0 100'>
+                <StyledSVG viewBox='0 0 100 100'>
                     <circle
                         cx='50'
                         cy='50'
@@ -62,7 +71,7 @@ export const ProjectHealth = () => {
                         cy='50'
                         r={radius}
                         fill='none'
-                        stroke={theme.palette.warning.border}
+                        stroke={healthColor}
                         strokeWidth={strokeWidth}
                         strokeDasharray={`${healthLength} ${circumference - healthLength}`}
                         strokeDashoffset={offset * circumference}
@@ -87,7 +96,7 @@ export const ProjectHealth = () => {
                 Remember to archive your stale feature flags to keep the project
                 health growing
             </DescriptionText>
-            {!isOss() && <Link to='/insights'>View health over time</Link>}
+            {isOss() && <Link to='/insights'>View health over time</Link>}
         </HealthContainer>
     );
 };

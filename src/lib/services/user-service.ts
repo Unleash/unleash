@@ -40,7 +40,7 @@ import type { TokenUserSchema } from '../openapi/spec/token-user-schema';
 import PasswordMismatch from '../error/password-mismatch';
 import type EventService from '../features/events/event-service';
 
-import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../types';
+import { type IFlagResolver, SYSTEM_USER, SYSTEM_USER_AUDIT } from '../types';
 import { PasswordPreviouslyUsedError } from '../error/password-previously-used';
 import { RateLimitError } from '../error/rate-limit-error';
 import type EventEmitter from 'events';
@@ -90,6 +90,8 @@ class UserService {
 
     private settingService: SettingService;
 
+    private flagResolver: IFlagResolver;
+
     private passwordResetTimeouts: { [key: string]: NodeJS.Timeout } = {};
 
     private baseUriPath: string;
@@ -103,9 +105,14 @@ class UserService {
             getLogger,
             authentication,
             eventBus,
+            flagResolver,
         }: Pick<
             IUnleashConfig,
-            'getLogger' | 'authentication' | 'server' | 'eventBus'
+            | 'getLogger'
+            | 'authentication'
+            | 'server'
+            | 'eventBus'
+            | 'flagResolver'
         >,
         services: {
             accessService: AccessService;
@@ -125,6 +132,7 @@ class UserService {
         this.emailService = services.emailService;
         this.sessionService = services.sessionService;
         this.settingService = services.settingService;
+        this.flagResolver = flagResolver;
 
         process.nextTick(() => this.initAdminUser(authentication));
 
@@ -400,6 +408,19 @@ class UserService {
             const match = await bcrypt.compare(password, passwordHash);
             if (match) {
                 const loginOrder = await this.store.successfullyLogin(user);
+                const deleteStaleUserSessions = this.flagResolver.getVariant(
+                    'deleteStaleUserSessions',
+                );
+                if (deleteStaleUserSessions.feature_enabled) {
+                    const allowedSessions = Number(
+                        deleteStaleUserSessions.payload?.value || 30,
+                    );
+                    // subtract current user session that will be created
+                    await this.sessionService.deleteStaleSessionsForUser(
+                        user.id,
+                        Math.max(allowedSessions - 1, 0),
+                    );
+                }
                 this.eventBus.emit(USER_LOGIN, { loginOrder });
                 return user;
             }

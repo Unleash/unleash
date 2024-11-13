@@ -3,6 +3,7 @@ import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
 import { BillingInformationButton } from './BillingInformationButton/BillingInformationButton';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { type IInstanceStatus, InstanceState } from 'interfaces/instance';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledInfoBox = styled('aside')(({ theme }) => ({
     padding: theme.spacing(4),
@@ -35,6 +36,12 @@ interface IBillingInformationProps {
 export const BillingInformation: FC<IBillingInformationProps> = ({
     instanceStatus,
 }) => {
+    const {
+        uiConfig: { billing },
+    } = useUiConfig();
+    const isPAYG = billing === 'pay-as-you-go';
+    const plan = `${instanceStatus.plan}${isPAYG ? ' Pay-as-You-Go' : ''}`;
+
     const inactive = instanceStatus.state !== InstanceState.ACTIVE;
 
     return (
@@ -58,7 +65,9 @@ export const BillingInformation: FC<IBillingInformationProps> = ({
                 </StyledInfoLabel>
                 <StyledDivider />
                 <StyledInfoLabel>
-                    <a href='mailto:support@getunleash.io?subject=PRO plan clarifications'>
+                    <a
+                        href={`mailto:support@getunleash.io?subject=${plan} plan clarifications`}
+                    >
                         Get in touch with us
                     </a>{' '}
                     for any clarification

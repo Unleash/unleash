@@ -408,12 +408,12 @@ class UserService {
             const match = await bcrypt.compare(password, passwordHash);
             if (match) {
                 const loginOrder = await this.store.successfullyLogin(user);
-                const deleteStaleSessionsForUser = this.flagResolver.getVariant(
+                const deleteStaleUserSessions = this.flagResolver.getVariant(
                     'deleteStaleUserSessions',
                 );
-                if (deleteStaleSessionsForUser.feature_enabled) {
+                if (deleteStaleUserSessions.feature_enabled) {
                     const allowedSessions = Number(
-                        deleteStaleSessionsForUser.payload?.value || 30,
+                        deleteStaleUserSessions.payload?.value || 30,
                     );
                     // subtract current user session that will be created
                     await this.sessionService.deleteStaleSessionsForUser(

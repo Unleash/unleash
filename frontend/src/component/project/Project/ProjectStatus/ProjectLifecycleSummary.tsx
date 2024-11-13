@@ -123,9 +123,7 @@ export const LifecycleTooltip: FC = () => {
                         feature flags can go through five distinct lifecycle
                         stages. These stages mirror the typical software
                         development process and allow you to identify
-                        bottlenecks at any stage of the lifecycle. These
-                        insights can help you improve the efficiency of your
-                        software development process.
+                        bottlenecks at any stage of the lifecycle.
                     </TooltipText>
 
                     <TooltipText>

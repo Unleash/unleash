@@ -49,16 +49,16 @@ export const HelpIcon = ({
     ...props
 }: IHelpIconProps) => {
     if (htmlTooltip) {
+        const { htmlTooltipMaxWidth } = props as {
+            htmlTooltipMaxWidth?: IHtmlTooltipProps['maxWidth'];
+        };
+
         return (
             <HtmlTooltip
                 title={tooltip}
                 placement={placement}
                 arrow
-                maxWidth={
-                    'htmlTooltipMaxWidth' in props
-                        ? props.htmlTooltipMaxWidth
-                        : undefined
-                }
+                maxWidth={htmlTooltipMaxWidth}
             >
                 <StyledContainer size={size} tabIndex={0} aria-label='Help'>
                     {children ?? <HelpOutline />}

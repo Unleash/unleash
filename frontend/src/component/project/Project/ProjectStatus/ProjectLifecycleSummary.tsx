@@ -6,7 +6,6 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { FC } from 'react';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
-import { Link } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const LifecycleRow = styled('div')(({ theme }) => ({
@@ -123,11 +122,6 @@ export const ProjectLifecycleSummary = () => {
         <LifecycleRow>
             <HeaderRow>
                 <h4>Flag lifecycle</h4>
-                {isEnterprise() && (
-                    <p>
-                        <Link to='/lifecycle'>View graph over time</Link>
-                    </p>
-                )}
             </HeaderRow>
             <LifecycleList ref={loadingRef}>
                 <LifecycleBox>

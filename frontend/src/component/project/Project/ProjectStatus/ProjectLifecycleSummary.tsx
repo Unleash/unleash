@@ -47,6 +47,7 @@ const LifecycleBoxTooltip: FC<{ text: string }> = ({ text }) => {
         alignItems: 'flex-start',
         gap: theme.spacing(1),
         fontSize: theme.typography.body1.fontSize,
+        padding: theme.spacing(1),
     }));
     return (
         <Container>
@@ -55,10 +56,6 @@ const LifecycleBoxTooltip: FC<{ text: string }> = ({ text }) => {
         </Container>
     );
 };
-
-const StyledHtmlTooltip = styled(HtmlTooltip)(({ theme }) => ({
-    backgroundColor: theme.palette.envAccordion.expanded,
-}));
 
 const LifecycleBox = ({
     children,
@@ -71,7 +68,7 @@ const LifecycleBox = ({
         <li>
             <HtmlTooltip
                 arrow
-                maxWidth='550px'
+                maxWidth='850px'
                 title={<LifecycleBoxTooltip text={tooltipText} />}
             >
                 <LifecycleBoxContent tabIndex={0}>

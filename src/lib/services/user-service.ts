@@ -80,8 +80,6 @@ class UserService {
 
     private eventBus: EventEmitter;
 
-    private flagResolver: IFlagResolver;
-
     private accessService: AccessService;
 
     private resetTokenService: ResetTokenService;
@@ -105,7 +103,6 @@ class UserService {
         {
             server,
             getLogger,
-            flagResolver,
             authentication,
             eventBus,
             flagResolver,

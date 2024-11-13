@@ -112,10 +112,12 @@ const TooltipText = styled('p')(({ theme }) => ({
         marginTop: theme.spacing(1),
     },
 }));
+
 export const LifecycleTooltip: FC = () => {
     return (
         <HelpIcon
             htmlTooltip
+            htmlTooltipMaxWidth='550px'
             tooltip={
                 <TooltipContent>
                     <TooltipText>

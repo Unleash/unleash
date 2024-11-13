@@ -112,3 +112,18 @@ test('Can delete session by sid', async () => {
         sessionService.getSession('abc123'),
     ).rejects.toThrow(NotFoundError);
 });
+
+test('Can delete stale sessions', async () => {
+    await sessionService.insertSession(newSession);
+    await sessionService.insertSession({ ...newSession, sid: 'new' });
+
+    const sessionsToKeep = 1;
+    await sessionService.deleteStaleSessionsForUser(
+        newSession.sess.user.id,
+        sessionsToKeep,
+    );
+
+    const sessions = await sessionService.getSessionsForUser(1);
+    expect(sessions.length).toBe(1);
+    expect(sessions[0].sid).toBe('new');
+});

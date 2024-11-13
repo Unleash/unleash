@@ -210,8 +210,7 @@ class UserService {
             return { ...u, rootRole: roleId };
         });
         if (this.flagResolver.isEnabled('showUserDeviceCount')) {
-            const sessionCounts =
-                await this.sessionService.getSessionCountPerUser();
+            const sessionCounts = await this.sessionService.getSessionsCount();
             const usersWithSessionCounts = usersWithRootRole.map((u) => ({
                 ...u,
                 activeSessions: sessionCounts[u.id] || 0,

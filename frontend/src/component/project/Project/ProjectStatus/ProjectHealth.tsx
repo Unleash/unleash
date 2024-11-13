@@ -94,7 +94,7 @@ export const ProjectHealth = () => {
                 Remember to archive your stale feature flags to keep the project
                 health growing
             </DescriptionText>
-            {isOss() && <Link to='/insights'>View health over time</Link>}
+            {!isOss() && <Link to='/insights'>View health over time</Link>}
         </HealthContainer>
     );
 };

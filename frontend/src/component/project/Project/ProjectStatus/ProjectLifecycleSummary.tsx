@@ -7,6 +7,7 @@ import type { FC } from 'react';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const LifecycleRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -14,13 +15,11 @@ const LifecycleRow = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const HeaderRow = styled('hgroup')(({ theme }) => ({
+const HeaderRow = styled('div')(({ theme }) => ({
     display: 'flex',
-    gap: theme.spacing(2),
-    justifyContent: 'space-between',
     flex: 'auto',
     '& > *': {
-        margin: 0,
+        marginBlock: 0,
     },
 }));
 
@@ -102,6 +101,43 @@ const BigNumber: FC<{ value?: number }> = ({ value }) => {
     );
 };
 
+const TooltipContent = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0.5),
+}));
+
+const TooltipText = styled('p')(({ theme }) => ({
+    fontSize: theme.typography.body1.fontSize,
+    '& + p': {
+        marginTop: theme.spacing(1),
+    },
+}));
+export const LifecycleTooltip: FC = () => {
+    return (
+        <HelpIcon
+            htmlTooltip
+            tooltip={
+                <TooltipContent>
+                    <TooltipText>
+                        Based on usage metrics and interactions with Unleash,
+                        feature flags can go through five distinct lifecycle
+                        stages. These stages mirror the typical software
+                        development process and allow you to identify
+                        bottlenecks at any stage of the lifecycle. These
+                        insights can help you improve the efficiency of your
+                        software development process.
+                    </TooltipText>
+
+                    <TooltipText>
+                        <a href='https://docs.getunleash.io/reference/feature-toggles#feature-flag-lifecycle'>
+                            Read more in our documentation
+                        </a>
+                    </TooltipText>
+                </TooltipContent>
+            }
+        />
+    );
+};
+
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data, loading } = useProjectStatus(projectId);
@@ -122,6 +158,7 @@ export const ProjectLifecycleSummary = () => {
         <LifecycleRow>
             <HeaderRow>
                 <h4>Flag lifecycle</h4>
+                <LifecycleTooltip />
             </HeaderRow>
             <LifecycleList ref={loadingRef}>
                 <LifecycleBox>

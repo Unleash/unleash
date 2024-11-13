@@ -21,6 +21,24 @@ export const useReleasePlanTemplatesApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const createReleasePlanTemplate = async (
+        template: IReleasePlanTemplatePayload,
+    ): Promise<IReleasePlanTemplatePayload> => {
+        const requestId = 'createReleasePlanTemplate';
+        const path = 'api/admin/release-plan-templates';
+        const req = createRequest(
+            path,
+            {
+                method: 'POST',
+                body: JSON.stringify(template),
+            },
+            requestId,
+        );
+
+        const res = await makeRequest(req.caller, req.id);
+        return res.json();
+    };
+
     const updateReleasePlanTemplate = async (
         template: IReleasePlanTemplatePayload,
     ) => {
@@ -41,6 +59,7 @@ export const useReleasePlanTemplatesApi = () => {
     return {
         deleteReleasePlanTemplate,
         updateReleasePlanTemplate,
+        createReleasePlanTemplate,
     };
 };
 

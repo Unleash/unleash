@@ -48,6 +48,7 @@ import { Signals } from 'component/signals/Signals';
 import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject';
 import { PersonalDashboard } from '../personalDashboard/PersonalDashboard';
 import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseManagement';
+import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
 import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
 
 export const routes: IRoute[] = [
@@ -278,6 +279,16 @@ export const routes: IRoute[] = [
         component: ReleaseManagement,
         type: 'protected',
         menu: { advanced: true, mode: ['enterprise'] },
+        flag: 'releasePlans',
+        enterprise: true,
+    },
+    {
+        path: '/release-management/create-template',
+        title: 'Create release plan template',
+        parent: '/release-management',
+        component: CreateReleasePlanTemplate,
+        type: 'protected',
+        menu: { mode: ['enterprise'] },
         flag: 'releasePlans',
         enterprise: true,
     },

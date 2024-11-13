@@ -280,6 +280,20 @@ exports[`returns all baseRoutes 1`] = `
       ],
     },
     "parent": "/release-management",
+    "path": "/release-management/create-template",
+    "title": "Create release plan template",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "enterprise": true,
+    "flag": "releasePlans",
+    "menu": {
+      "mode": [
+        "enterprise",
+      ],
+    },
+    "parent": "/release-management",
     "path": "/release-management/edit/:templateId",
     "title": "Edit release plan template",
     "type": "protected",

@@ -85,7 +85,7 @@ export const ReleasePlanTemplateCard = ({
                     >
                         <ReleasePlanTemplateCardMenu
                             template={template}
-                            clickHandler={onClick}
+                            onClick={onClick}
                         />
                     </StyledMenu>
                 </StyledDiv>

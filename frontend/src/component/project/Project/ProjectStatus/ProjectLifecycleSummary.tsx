@@ -1,4 +1,4 @@
-import { Box, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { FeatureLifecycleStageIcon } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FeatureLifecycleStageIcon';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
@@ -205,16 +205,6 @@ export const ProjectLifecycleSummary = () => {
                 <h4>Flag lifecycle</h4>
                 <LifecycleTooltip />
             </HeaderRow>
-            <Box
-                sx={{
-                    maxWidth: '800px',
-                    border: '1px solid red',
-                    padding: '12px',
-                    borderRadius: '12px',
-                }}
-            >
-                <LifecycleBoxTooltip text={lifecycleMessages.initial} />
-            </Box>
 
             <LifecycleList ref={loadingRef}>
                 <LifecycleBox tooltipText={lifecycleMessages.initial}>

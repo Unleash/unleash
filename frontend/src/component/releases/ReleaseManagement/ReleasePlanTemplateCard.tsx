@@ -2,6 +2,7 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
 import { styled, Typography } from '@mui/material';
 import { ReleasePlanTemplateCardMenu } from './ReleasePlanTemplateCardMenu';
+import { useNavigate } from 'react-router-dom';
 
 const StyledTemplateCard = styled('aside')(({ theme }) => ({
     height: '100%',
@@ -58,8 +59,13 @@ const StyledMenu = styled('div')(({ theme }) => ({
 export const ReleasePlanTemplateCard = ({
     template,
 }: { template: IReleasePlanTemplate }) => {
+    const navigate = useNavigate();
+    const onClick = () => {
+        navigate(`/release-management/edit/${template.id}`);
+    };
+
     return (
-        <StyledTemplateCard>
+        <StyledTemplateCard onClick={onClick}>
             <TemplateCardHeader>
                 <StyledCenter>
                     <ReleaseTemplateIcon />
@@ -71,8 +77,16 @@ export const ReleasePlanTemplateCard = ({
                     <StyledCreatedBy>
                         Created by {template.createdByUserId}
                     </StyledCreatedBy>
-                    <StyledMenu onClick={(e) => e.preventDefault()}>
-                        <ReleasePlanTemplateCardMenu template={template} />
+                    <StyledMenu
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }}
+                    >
+                        <ReleasePlanTemplateCardMenu
+                            template={template}
+                            onClick={onClick}
+                        />
                     </StyledMenu>
                 </StyledDiv>
             </TemplateCardBody>

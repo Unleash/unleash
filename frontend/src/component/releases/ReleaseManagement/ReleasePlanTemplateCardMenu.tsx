@@ -16,7 +16,8 @@ import { TemplateDeleteDialog } from './TemplateDeleteDialog';
 
 export const ReleasePlanTemplateCardMenu = ({
     template,
-}: { template: IReleasePlanTemplate }) => {
+    onClick,
+}: { template: IReleasePlanTemplate; onClick: () => void }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
     const { deleteReleasePlanTemplate } = useReleasePlanTemplatesApi();
@@ -43,6 +44,7 @@ export const ReleasePlanTemplateCardMenu = ({
     };
 
     const handleMenuClick = (event: React.SyntheticEvent) => {
+        event.stopPropagation();
         if (isMenuOpen) {
             closeMenu();
         } else {
@@ -81,7 +83,7 @@ export const ReleasePlanTemplateCardMenu = ({
             >
                 <MenuItem
                     onClick={() => {
-                        closeMenu();
+                        onClick();
                     }}
                 >
                     <ListItemText>Edit template</ListItemText>

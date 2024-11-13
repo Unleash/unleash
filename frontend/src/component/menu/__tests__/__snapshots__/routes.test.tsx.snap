@@ -232,20 +232,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "enterprise": true,
-    "flag": "releasePlans",
-    "menu": {
-      "advanced": true,
-      "mode": [
-        "enterprise",
-      ],
-    },
-    "path": "/release-management",
-    "title": "Release management",
-    "type": "protected",
-  },
-  {
-    "component": [Function],
     "menu": {},
     "parent": "/environments",
     "path": "/environments/create",
@@ -268,6 +254,34 @@ exports[`returns all baseRoutes 1`] = `
     },
     "path": "/environments",
     "title": "Environments",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "enterprise": true,
+    "flag": "releasePlans",
+    "menu": {
+      "advanced": true,
+      "mode": [
+        "enterprise",
+      ],
+    },
+    "path": "/release-management",
+    "title": "Release management",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "enterprise": true,
+    "flag": "releasePlans",
+    "menu": {
+      "mode": [
+        "enterprise",
+      ],
+    },
+    "parent": "/release-management",
+    "path": "/release-management/edit/:templateId",
+    "title": "Edit release plan template",
     "type": "protected",
   },
   {

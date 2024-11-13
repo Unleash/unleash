@@ -650,6 +650,11 @@ export function registerPrometheusMetrics(
         resourceLimit.labels({ resource }).set(limit);
     }
 
+    const licensedUsers = createGauge({
+        name: 'licensed_users',
+        help: 'The number of licensed users.',
+    });
+
     const addonEventsHandledCounter = createCounter({
         name: 'addon_events_handled',
         help: 'Events handled by addons and the result.',
@@ -1017,6 +1022,11 @@ export function registerPrometheusMetrics(
                 usersActive60days.set(activeUsers.last60);
                 usersActive90days.reset();
                 usersActive90days.set(activeUsers.last90);
+
+                const licensedUsersStat =
+                    await instanceStatsService.getLicencedUsers();
+                licensedUsers.reset();
+                licensedUsers.set(licensedUsersStat);
 
                 const productionChanges =
                     await instanceStatsService.getProductionChanges();

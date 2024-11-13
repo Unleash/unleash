@@ -38,7 +38,7 @@ const StyledMilestoneCard = styled(Card)(({ theme }) => ({
 }));
 
 const StyledMilestoneCardBody = styled(Box)(({ theme }) => ({
-    padding: theme.spacing(3, 2, 3, 2),
+    padding: theme.spacing(3, 2),
 }));
 
 const StyledMilestoneCardTitle = styled('span')(({ theme }) => ({

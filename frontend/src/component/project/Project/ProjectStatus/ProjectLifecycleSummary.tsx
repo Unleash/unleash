@@ -113,7 +113,7 @@ const TooltipText = styled('p')(({ theme }) => ({
     },
 }));
 
-export const LifecycleTooltip: FC = () => {
+const LifecycleTooltip: FC = () => {
     return (
         <HelpIcon
             htmlTooltip

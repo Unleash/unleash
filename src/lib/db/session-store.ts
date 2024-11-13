@@ -118,8 +118,8 @@ export default class SessionStore implements ISessionStore {
             .groupBy('user_id');
 
         return rows.map((row) => ({
-            userId: Number.parseInt(`${row.user_id}`, 10),
-            count: Number.parseInt(`${row.count}`, 10),
+            userId: Number(row.user_id),
+            count: Number(row.count),
         }));
     }
 }

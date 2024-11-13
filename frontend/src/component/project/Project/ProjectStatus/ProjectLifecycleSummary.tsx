@@ -3,10 +3,9 @@ import { FeatureLifecycleStageIcon } from 'component/feature/FeatureView/Feature
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useState, type FC } from 'react';
+import type { FC } from 'react';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { lifecycleMessages } from './LifecycleMessages';
@@ -167,11 +166,7 @@ const LifecycleTooltip: FC = () => {
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data, loading } = useProjectStatus(projectId);
-    const { isEnterprise } = useUiConfig();
 
-    const [activeLifecycleStage, setActiveLifecycleStage] = useState<
-        keyof ProjectStatusSchemaLifecycleSummary | null
-    >(null);
     const loadingRef = useLoading<HTMLUListElement>(
         loading,
         '[data-loading-project-lifecycle-summary=true]',

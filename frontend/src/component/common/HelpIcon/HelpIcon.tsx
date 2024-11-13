@@ -27,22 +27,26 @@ const StyledContainer = styled('span')<{ size: string | undefined }>(
     }),
 );
 
-interface IHelpIconProps {
+type IHelpIconProps = {
     tooltip: React.ReactNode;
-    htmlTooltip?: boolean;
-    htmlTooltipMaxWidth?: IHtmlTooltipProps['maxWidth'];
     placement?: TooltipProps['placement'];
     children?: React.ReactNode;
     size?: string;
-}
+} & (
+    | {
+          htmlTooltip: true;
+          htmlTooltipMaxWidth?: IHtmlTooltipProps['maxWidth'];
+      }
+    | { htmlTooltip?: false }
+);
 
 export const HelpIcon = ({
     tooltip,
     htmlTooltip,
-    htmlTooltipMaxWidth,
     placement,
     children,
     size,
+    ...props
 }: IHelpIconProps) => {
     if (htmlTooltip) {
         return (
@@ -50,7 +54,11 @@ export const HelpIcon = ({
                 title={tooltip}
                 placement={placement}
                 arrow
-                maxWidth={htmlTooltipMaxWidth}
+                maxWidth={
+                    'htmlTooltipMaxWidth' in props
+                        ? props.htmlTooltipMaxWidth
+                        : undefined
+                }
             >
                 <StyledContainer size={size} tabIndex={0} aria-label='Help'>
                     {children ?? <HelpOutline />}

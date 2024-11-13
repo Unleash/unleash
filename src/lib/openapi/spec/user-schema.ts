@@ -100,7 +100,7 @@ export const userSchema = {
             example: '01HTMEXAMPLESCIMID7SWWGHN6',
         },
         activeSessions: {
-            description: 'The number of active sessions for this user',
+            description: 'Count of active browser sessions for this user',
             type: 'integer',
             nullable: true,
             example: 2,

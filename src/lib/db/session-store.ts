@@ -43,9 +43,7 @@ export default class SessionStore implements ISessionStore {
         if (rows && rows.length > 0) {
             return rows.map(this.rowToSession);
         }
-        throw new NotFoundError(
-            `Could not find sessions for user with id ${userId}`,
-        );
+        return [];
     }
 
     async get(sid: string): Promise<ISession> {

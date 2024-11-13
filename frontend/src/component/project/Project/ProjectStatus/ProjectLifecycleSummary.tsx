@@ -9,6 +9,7 @@ import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { lifecycleMessages } from './LifecycleMessages';
+import InfoIcon from '@mui/icons-material/Info';
 
 const LifecycleRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -40,6 +41,20 @@ const LifecycleBoxContent = styled('div')(({ theme }) => ({
     },
 }));
 
+const LifecycleBoxTooltip: FC<{ text: string }> = ({ text }) => {
+    const Container = styled('span')(({ theme }) => ({
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: theme.spacing(1),
+    }));
+    return (
+        <Container>
+            <InfoIcon color='primary' />
+            <p>{text}</p>
+        </Container>
+    );
+};
+
 const LifecycleBox = ({
     children,
     tooltipText,
@@ -49,7 +64,11 @@ const LifecycleBox = ({
 }) => {
     return (
         <li>
-            <HtmlTooltip arrow title={tooltipText}>
+            <HtmlTooltip
+                arrow
+                maxWidth='550px'
+                title={<LifecycleBoxTooltip text={tooltipText} />}
+            >
                 <LifecycleBoxContent tabIndex={0}>
                     {children}
                 </LifecycleBoxContent>

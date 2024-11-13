@@ -5,12 +5,12 @@ export const lifecycleMessages: Record<
     string
 > = {
     initial:
-        'Feature flags in the initial phase indicate you have created flags that is not detected in any environments which mean either integration issues or unused flags',
+        'Feature flags in the initial phase are flags that have not yet received metrics from any environments. This might mean that the flags have not been used yet, or it could indicate integration issues.',
     preLive:
-        'In the pre-live phase the feature is being developed and tested in controlled environments. Once the feature is ready the flag can be enabled in production.',
-    live: 'The feature is being rolled out in production according to the decided strategy targeting user segments and/or using percentage rollout. ',
+        'In the pre-live phase, the feature is being developed and tested in controlled environments. Once the feature is ready, the flag can be enabled in production.',
+    live: 'The feature is being rolled out in production according to its assigned strategies (targeting user segments and/or using percentage rollout).',
     completed:
-        'Flags that are in cleanup are potentially stale flags. View the flags to evaluate whether you should archive them in Unleash and clean up your codebase to reduce technical debt',
+        'Flags that are in the completed phase still receive metrics in production. Consider archiving them to clean up your codebase to reduce technical debt.',
     archived:
         'Flags that have been archived and are no longer in use, but kept for future reference.',
 };

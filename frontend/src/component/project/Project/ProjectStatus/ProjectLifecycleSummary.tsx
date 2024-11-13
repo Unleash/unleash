@@ -1,13 +1,15 @@
-import { CardActionArea, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { FeatureLifecycleStageIcon } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FeatureLifecycleStageIcon';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { useState, type FC } from 'react';
+import type { FC } from 'react';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { lifecycleMessages } from './LifecycleMessages';
+import InfoIcon from '@mui/icons-material/Info';
 
 const LifecycleRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -33,32 +35,46 @@ const LifecycleBoxContent = styled('div')(({ theme }) => ({
     transition: 'border-color 200ms',
     borderRadius: theme.shape.borderRadiusExtraLarge,
     border: `2px solid ${theme.palette.divider}`,
-}));
-
-const StyledCardActionArea = styled(CardActionArea)(({ theme }) => ({
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    '&[aria-pressed="true"] > *': {
+    '&:focus-visible': {
+        outline: 'none',
         borderColor: theme.palette.primary.main,
     },
 }));
 
+const LifecycleBoxTooltip: FC<{ text: string }> = ({ text }) => {
+    const Container = styled('span')(({ theme }) => ({
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: theme.spacing(1),
+        fontSize: theme.typography.body1.fontSize,
+        padding: theme.spacing(1),
+    }));
+    return (
+        <Container>
+            <InfoIcon fontSize='small' color='primary' />
+            <p>{text}</p>
+        </Container>
+    );
+};
+
 const LifecycleBox = ({
     children,
-    isActive,
-    onClick,
+    tooltipText,
 }: {
     children: React.ReactNode;
-    isActive?: boolean;
-    onClick?: () => void;
+    tooltipText: string;
 }) => {
     return (
         <li>
-            <StyledCardActionArea
-                onClick={onClick}
-                aria-pressed={isActive ? 'true' : 'false'}
+            <HtmlTooltip
+                arrow
+                maxWidth='850px'
+                title={<LifecycleBoxTooltip text={tooltipText} />}
             >
-                <LifecycleBoxContent>{children}</LifecycleBoxContent>
-            </StyledCardActionArea>
+                <LifecycleBoxContent tabIndex={0}>
+                    {children}
+                </LifecycleBoxContent>
+            </HtmlTooltip>
         </li>
     );
 };
@@ -171,11 +187,7 @@ const LifecycleTooltip: FC = () => {
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data, loading } = useProjectStatus(projectId);
-    const { isEnterprise } = useUiConfig();
 
-    const [activeLifecycleStage, setActiveLifecycleStage] = useState<
-        keyof ProjectStatusSchemaLifecycleSummary | null
-    >(null);
     const loadingRef = useLoading<HTMLUListElement>(
         loading,
         '[data-loading-project-lifecycle-summary=true]',
@@ -193,11 +205,9 @@ export const ProjectLifecycleSummary = () => {
                 <h4>Flag lifecycle</h4>
                 <LifecycleTooltip />
             </HeaderRow>
+
             <LifecycleList ref={loadingRef}>
-                <LifecycleBox
-                    onClick={() => setActiveLifecycleStage('initial')}
-                    isActive={activeLifecycleStage === 'initial'}
-                >
+                <LifecycleBox tooltipText={lifecycleMessages.initial}>
                     <p>
                         <Counter>
                             <BigNumber
@@ -217,10 +227,7 @@ export const ProjectLifecycleSummary = () => {
                         averageDays={data?.lifecycleSummary.initial.averageDays}
                     />
                 </LifecycleBox>
-                <LifecycleBox
-                    onClick={() => setActiveLifecycleStage('preLive')}
-                    isActive={activeLifecycleStage === 'preLive'}
-                >
+                <LifecycleBox tooltipText={lifecycleMessages.preLive}>
                     <p>
                         <Counter>
                             <BigNumber
@@ -240,10 +247,7 @@ export const ProjectLifecycleSummary = () => {
                         averageDays={data?.lifecycleSummary.preLive.averageDays}
                     />
                 </LifecycleBox>
-                <LifecycleBox
-                    onClick={() => setActiveLifecycleStage('live')}
-                    isActive={activeLifecycleStage === 'live'}
-                >
+                <LifecycleBox tooltipText={lifecycleMessages.live}>
                     <p>
                         <Counter>
                             <BigNumber
@@ -261,10 +265,7 @@ export const ProjectLifecycleSummary = () => {
                         averageDays={data?.lifecycleSummary.live.averageDays}
                     />
                 </LifecycleBox>
-                <LifecycleBox
-                    onClick={() => setActiveLifecycleStage('completed')}
-                    isActive={activeLifecycleStage === 'completed'}
-                >
+                <LifecycleBox tooltipText={lifecycleMessages.completed}>
                     <p>
                         <Counter>
                             <BigNumber
@@ -287,10 +288,7 @@ export const ProjectLifecycleSummary = () => {
                         }
                     />
                 </LifecycleBox>
-                <LifecycleBox
-                    onClick={() => setActiveLifecycleStage('archived')}
-                    isActive={activeLifecycleStage === 'archived'}
-                >
+                <LifecycleBox tooltipText={lifecycleMessages.archived}>
                     <p>
                         <Counter>
                             <BigNumber

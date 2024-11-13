@@ -6,8 +6,10 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { FC } from 'react';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import { lifecycleMessages } from './LifecycleMessages';
+import InfoIcon from '@mui/icons-material/Info';
 
 const LifecycleRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -24,15 +26,58 @@ const HeaderRow = styled('div')(({ theme }) => ({
     },
 }));
 
-const LifecycleBox = styled('li')(({ theme }) => ({
+const LifecycleBoxContent = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    border: `2px solid ${theme.palette.divider}`,
     gap: theme.spacing(4),
     display: 'flex',
     flexFlow: 'column',
     justifyContent: 'space-between',
+    transition: 'border-color 200ms',
+    borderRadius: theme.shape.borderRadiusExtraLarge,
+    border: `2px solid ${theme.palette.divider}`,
+    '&:focus-visible': {
+        outline: 'none',
+        borderColor: theme.palette.primary.main,
+    },
 }));
+
+const LifecycleBoxTooltip: FC<{ text: string }> = ({ text }) => {
+    const Container = styled('span')(({ theme }) => ({
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: theme.spacing(1),
+        fontSize: theme.typography.body1.fontSize,
+        padding: theme.spacing(1),
+    }));
+    return (
+        <Container>
+            <InfoIcon fontSize='small' color='primary' />
+            <p>{text}</p>
+        </Container>
+    );
+};
+
+const LifecycleBox = ({
+    children,
+    tooltipText,
+}: {
+    children: React.ReactNode;
+    tooltipText: string;
+}) => {
+    return (
+        <li>
+            <HtmlTooltip
+                arrow
+                maxWidth='850px'
+                title={<LifecycleBoxTooltip text={tooltipText} />}
+            >
+                <LifecycleBoxContent tabIndex={0}>
+                    {children}
+                </LifecycleBoxContent>
+            </HtmlTooltip>
+        </li>
+    );
+};
 
 const LifecycleList = styled('ul')(({ theme }) => ({
     display: 'grid',
@@ -142,7 +187,6 @@ const LifecycleTooltip: FC = () => {
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data, loading } = useProjectStatus(projectId);
-    const { isEnterprise } = useUiConfig();
 
     const loadingRef = useLoading<HTMLUListElement>(
         loading,
@@ -161,8 +205,9 @@ export const ProjectLifecycleSummary = () => {
                 <h4>Flag lifecycle</h4>
                 <LifecycleTooltip />
             </HeaderRow>
+
             <LifecycleList ref={loadingRef}>
-                <LifecycleBox>
+                <LifecycleBox tooltipText={lifecycleMessages.initial}>
                     <p>
                         <Counter>
                             <BigNumber
@@ -182,7 +227,7 @@ export const ProjectLifecycleSummary = () => {
                         averageDays={data?.lifecycleSummary.initial.averageDays}
                     />
                 </LifecycleBox>
-                <LifecycleBox>
+                <LifecycleBox tooltipText={lifecycleMessages.preLive}>
                     <p>
                         <Counter>
                             <BigNumber
@@ -202,7 +247,7 @@ export const ProjectLifecycleSummary = () => {
                         averageDays={data?.lifecycleSummary.preLive.averageDays}
                     />
                 </LifecycleBox>
-                <LifecycleBox>
+                <LifecycleBox tooltipText={lifecycleMessages.live}>
                     <p>
                         <Counter>
                             <BigNumber
@@ -220,7 +265,7 @@ export const ProjectLifecycleSummary = () => {
                         averageDays={data?.lifecycleSummary.live.averageDays}
                     />
                 </LifecycleBox>
-                <LifecycleBox>
+                <LifecycleBox tooltipText={lifecycleMessages.completed}>
                     <p>
                         <Counter>
                             <BigNumber
@@ -243,7 +288,7 @@ export const ProjectLifecycleSummary = () => {
                         }
                     />
                 </LifecycleBox>
-                <LifecycleBox>
+                <LifecycleBox tooltipText={lifecycleMessages.archived}>
                     <p>
                         <Counter>
                             <BigNumber

@@ -2,6 +2,7 @@ import type { IUnleashStores } from '../types/stores';
 import type { IUnleashConfig } from '../types/option';
 import type { Logger } from '../logger';
 import type { ISession, ISessionStore } from '../types/stores/session-store';
+import { compareDesc } from 'date-fns';
 
 export default class SessionService {
     private logger: Logger;
@@ -30,6 +31,26 @@ export default class SessionService {
 
     async deleteSessionsForUser(userId: number): Promise<void> {
         return this.sessionStore.deleteSessionsForUser(userId);
+    }
+
+    async deleteStaleSessionsForUser(
+        userId: number,
+        maxSessions: number,
+    ): Promise<void> {
+        let userSessions: ISession[] = [];
+        try {
+            // this method may throw errors when no session
+            userSessions = await this.sessionStore.getSessionsForUser(userId);
+        } catch (e) {}
+        const newestFirst = userSessions.sort((a, b) =>
+            compareDesc(a.createdAt, b.createdAt),
+        );
+        const sessionsToDelete = newestFirst.slice(maxSessions);
+        await Promise.all(
+            sessionsToDelete.map((session) =>
+                this.sessionStore.delete(session.sid),
+            ),
+        );
     }
 
     async deleteSession(sid: string): Promise<void> {

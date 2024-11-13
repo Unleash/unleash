@@ -407,6 +407,20 @@ export function registerPrometheusMetrics(
         map: (result) => ({ value: result ? 1 : 0 }),
     });
 
+    dbMetrics.registerGaugeDbMetric({
+        name: 'password_auth',
+        help: 'Whether password auth is enabled',
+        query: () => instanceStatsService.hasPasswordAuth(),
+        map: (result) => ({ value: result ? 1 : 0 }),
+    });
+
+    dbMetrics.registerGaugeDbMetric({
+        name: 'scim_enabled',
+        help: 'Whether SCIM is enabled',
+        query: () => instanceStatsService.hasSCIM(),
+        map: (result) => ({ value: result ? 1 : 0 }),
+    });
+
     const clientSdkVersionUsage = createCounter({
         name: 'client_sdk_versions',
         help: 'Which sdk versions are being used',

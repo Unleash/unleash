@@ -359,3 +359,9 @@ test('should collect traffic_total metrics', async () => {
         await prometheusRegister.getSingleMetricAsString('traffic_total');
     expect(recordedMetric).toMatch(/traffic_total 0/);
 });
+
+test('should collect licensed_users metrics', async () => {
+    const recordedMetric =
+        await prometheusRegister.getSingleMetricAsString('licensed_users');
+    expect(recordedMetric).toMatch(/licensed_users 0/);
+});

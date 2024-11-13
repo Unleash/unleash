@@ -220,11 +220,11 @@ export class InstanceStatsService {
     }
 
     async hasPasswordAuth(): Promise<boolean> {
-        const settings = await this.settingStore.get<{ enabled: boolean }>(
+        const settings = await this.settingStore.get<{ disabled: boolean }>(
             'unleash.auth.simple',
         );
 
-        return settings?.enabled || false;
+        return settings?.disabled !== false;
     }
 
     async hasSCIM(): Promise<boolean> {

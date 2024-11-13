@@ -64,9 +64,9 @@ export default class SessionService {
         return this.sessionStore.insertSession({ sid, sess });
     }
 
-    async getUserSessionsCount() {
+    async getSessionCountPerUser() {
         return Object.fromEntries(
-            (await this.sessionStore.getUserSessionsCount()).map(
+            (await this.sessionStore.getSessionCountPerUser()).map(
                 ({ userId, count }) => [userId, count],
             ),
         );

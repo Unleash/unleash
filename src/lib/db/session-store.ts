@@ -111,7 +111,9 @@ export default class SessionStore implements ISessionStore {
         };
     }
 
-    async getUserSessionsCount(): Promise<{ userId: number; count: number }[]> {
+    async getSessionCountPerUser(): Promise<
+        { userId: number; count: number }[]
+    > {
         const rows = await this.db(TABLE)
             .select(this.db.raw("sess->'user'->>'id' AS user_id"))
             .count('* as count')

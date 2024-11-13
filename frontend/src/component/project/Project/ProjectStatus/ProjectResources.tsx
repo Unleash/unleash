@@ -14,6 +14,7 @@ const Wrapper = styled('article')(({ theme }) => ({
     padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusExtraLarge,
     minWidth: '300px',
+    gridArea: 'resources',
 }));
 
 const ProjectResourcesInner = styled('div')(({ theme }) => ({

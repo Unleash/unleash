@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ProjectResources } from './ProjectResources';
 import { ProjectActivity } from './ProjectActivity';
@@ -19,27 +19,32 @@ type Props = {
     close: () => void;
 };
 
-const HealthRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexFlow: 'row wrap',
-    padding: theme.spacing(2),
+const HealthContainer = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateAreas: `
+        "health resources"
+        "stale resources"
+    `,
+    gridTemplateColumns: '1fr 1fr',
+    // padding: theme.spacing(2),
     gap: theme.spacing(2),
-    '&>*': {
-        // todo: reconsider this value when the health widget is
-        // implemented. It may not be right, but it works for the
-        // placeholder
-        flex: '30%',
-    },
 }));
 
 export const ProjectStatusModal = ({ open, close }: Props) => {
     return (
         <DynamicSidebarModal open={open} onClose={close} label='Project status'>
             <ModalContentContainer>
-                <HealthRow>
+                <HealthContainer>
                     <ProjectHealth />
                     <ProjectResources />
-                </HealthRow>
+                    <Box gridArea='stale'>
+                        <Typography variant='h3'>Stale flags</Typography>
+                        <Typography>
+                            Flags that have not been used for a long time and
+                            can be archived.
+                        </Typography>
+                    </Box>
+                </HealthContainer>
 
                 <ProjectActivity />
 

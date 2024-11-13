@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { FeatureLifecycleStageIcon } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FeatureLifecycleStageIcon';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
@@ -46,14 +46,19 @@ const LifecycleBoxTooltip: FC<{ text: string }> = ({ text }) => {
         display: 'flex',
         alignItems: 'flex-start',
         gap: theme.spacing(1),
+        fontSize: theme.typography.body1.fontSize,
     }));
     return (
         <Container>
-            <InfoIcon color='primary' />
+            <InfoIcon fontSize='small' color='primary' />
             <p>{text}</p>
         </Container>
     );
 };
+
+const StyledHtmlTooltip = styled(HtmlTooltip)(({ theme }) => ({
+    backgroundColor: theme.palette.envAccordion.expanded,
+}));
 
 const LifecycleBox = ({
     children,
@@ -203,6 +208,17 @@ export const ProjectLifecycleSummary = () => {
                 <h4>Flag lifecycle</h4>
                 <LifecycleTooltip />
             </HeaderRow>
+            <Box
+                sx={{
+                    maxWidth: '800px',
+                    border: '1px solid red',
+                    padding: '12px',
+                    borderRadius: '12px',
+                }}
+            >
+                <LifecycleBoxTooltip text={lifecycleMessages.initial} />
+            </Box>
+
             <LifecycleList ref={loadingRef}>
                 <LifecycleBox tooltipText={lifecycleMessages.initial}>
                     <p>

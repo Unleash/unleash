@@ -38,6 +38,7 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 strictSchemaValidation: true,
+                showUserDeviceCount: true,
             },
         },
     });
@@ -427,4 +428,37 @@ test('creates user with email md5 hash', async () => {
         .digest('hex');
 
     expect(user.email_hash).toBe(expectedHash);
+});
+
+test('should return number of sessions per user', async () => {
+    const user = await userStore.insert({ email: 'tester@example.com' });
+    await sessionStore.insertSession({
+        sid: '1',
+        sess: { user: { id: user.id } },
+    });
+    await sessionStore.insertSession({
+        sid: '2',
+        sess: { user: { id: user.id } },
+    });
+
+    const user2 = await userStore.insert({ email: 'tester2@example.com' });
+    await sessionStore.insertSession({
+        sid: '3',
+        sess: { user: { id: user2.id } },
+    });
+
+    const response = await app.request.get(`/api/admin/user-admin`).expect(200);
+
+    expect(response.body).toMatchObject({
+        users: expect.arrayContaining([
+            expect.objectContaining({
+                email: 'tester@example.com',
+                activeSessions: 2,
+            }),
+            expect.objectContaining({
+                email: 'tester2@example.com',
+                activeSessions: 1,
+            }),
+        ]),
+    });
 });

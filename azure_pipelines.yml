@@ -1,0 +1,103 @@
+# OGCIO
+
+trigger:
+  - dev
+  - uat
+  - sta
+
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - "*"
+
+parameters:
+  - name: buildBranches
+    type: object
+    default: ["dev", "sta", "uat"]
+
+  - name: validEnvironments
+    type: object
+    displayName: List of valid environments to deploy (do not change)
+    default: ['dev','sta', 'uat', 'prd']
+
+variables:
+  - name: pushArtefacts
+    value: ${{ containsValue(parameters.buildBranches, variables['Build.SourceBranchName']) }}
+  - ${{ if containsValue(parameters.validEnvironments ,variables['Build.SourceBranchName']) }}:
+    - template: pipeline-variables/${{ coalesce(variables['Build.SourceBranchName'], 'fallback') }}.yml
+  - ${{ else }}:
+    - template: pipeline-variables/dev.yml
+
+resources:
+  repositories:
+    - repository: pipeline-templates
+      type: github
+      name: ogcio/building-blocks-pipelines
+      ref: refs/tags/v0.5
+      endpoint: ogcio
+    - repository: unleash-k8s-apps
+      type: github
+      name: ogcio/unleash-k8s-apps
+      ref: main
+      endpoint: ogcio
+
+stages:
+  - stage: securityScan
+    displayName: Security Scans
+    jobs:
+      - template: security/gitleaks.yml@pipeline-templates
+  - stage: Build_Unleash
+    displayName: Build Unleash
+    dependsOn: 
+      - securityScan
+    jobs:  
+    - template: pipeline-templates/build_service.yml
+      parameters:
+        serviceName: unleash
+        pushArtefacts: ${{ variables.pushArtefacts }}
+        buildArguments: $(buildArguments)
+  - stage: EnvApproval
+    displayName: Approvals for deployments - ${{ upper(variables.environment) }}
+    dependsOn:
+      - Build_Unleash
+    condition: ${{ variables.pushArtefacts }}
+    jobs:
+    - deployment: VerifyDeployment
+      displayName: Verify conditions for deployment
+      environment: ${{ variables.environment }}
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - script: |
+                date
+              displayName: Show current date
+  - stage: Push_Unleash
+    displayName: Push Unleash to ECR
+    dependsOn: EnvApproval
+    condition: and(${{ variables.pushArtefacts }}, succeeded())
+    jobs:
+    - template: build/push_image_ecr.yml@pipeline-templates
+      parameters:
+        awsServiceConnection: ${{ variables.awsServiceConnection }}
+        awsRegion: ${{ variables.awsRegion }}
+        serviceName: unleash
+        repositoryName: bb-unleash
+        pushTag: $(Build.BuildId)
+  - stage: Deploy_Openshift_Unleash
+    displayName: GitOps deploy Unleash
+    dependsOn:
+      - EnvApproval
+      - Push_Unleash
+    condition: succeeded()
+    jobs:
+    - template: deploy/gitops.yml@pipeline-templates
+      parameters:
+        serviceName: unleash
+        newName: ${{ variables.ecrEndpoint }}/bb-unleash
+        newTag: $(Build.BuildId)
+        ${{ if containsValue(parameters.validEnvironments ,variables['Build.SourceBranchName']) }}:
+          environment: ${{ variables['Build.SourceBranchName'] }}
+        ${{ else }}:
+          environment: dev

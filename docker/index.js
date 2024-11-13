@@ -1,7 +1,13 @@
 'use strict';
 
 const unleash = require('unleash-server');
+const oidcAuthHook = require('./ogcio/oidc-auth-hook');
 
-let options = {};
+const options = {
+  authentication: {
+    type: "custom",
+    customAuthHandler: oidcAuthHook,
+  }
+};
 
 unleash.start(options);

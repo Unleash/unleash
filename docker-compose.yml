@@ -18,7 +18,10 @@ services:
   # The Unleash server contains the Unleash configuration and
   # communicates with server-side SDKs and the Unleash Proxy
   web:
-    image: unleashorg/unleash-server:latest
+    build:
+      # OGCIO
+      context: .
+      dockerfile: Dockerfile
     ports:
       - "4242:4242"
     environment:

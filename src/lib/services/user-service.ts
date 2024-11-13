@@ -214,7 +214,7 @@ class UserService {
                 await this.sessionService.getUserSessionsCount();
             const usersWithSessionCounts = usersWithRootRole.map((u) => ({
                 ...u,
-                sessionCount: sessionCounts[u.id] || 0,
+                activeSessions: sessionCounts[u.id] || 0,
             }));
             return usersWithSessionCounts;
         }

@@ -418,7 +418,7 @@ class UserService {
                     // subtract current user session that will be created
                     await this.sessionService.deleteStaleSessionsForUser(
                         user.id,
-                        allowedSessions - 1,
+                        Math.max(allowedSessions - 1, 0),
                     );
                 }
                 this.eventBus.emit(USER_LOGIN, { loginOrder });

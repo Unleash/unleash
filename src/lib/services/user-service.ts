@@ -201,7 +201,12 @@ class UserService {
             const roleId = rootRole ? rootRole.roleId : defaultRole.id;
             return { ...u, rootRole: roleId };
         });
-        return usersWithRootRole;
+        const sessionCounts = await this.sessionService.getUserSessionsCount();
+        const usersWithSessionCounts = usersWithRootRole.map((u) => ({
+            ...u,
+            sessionCount: sessionCounts[u.id] || 0,
+        }));
+        return usersWithSessionCounts;
     }
 
     async getUser(id: number): Promise<IUserWithRootRole> {

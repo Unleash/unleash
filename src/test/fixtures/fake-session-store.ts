@@ -52,4 +52,8 @@ export default class FakeSessionStore implements ISessionStore {
         this.sessions.push(session);
         return session;
     }
+
+    async getUserSessionsCount(): Promise<{ userId: number; count: number }[]> {
+        return [];
+    }
 }

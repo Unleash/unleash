@@ -110,6 +110,18 @@ export default class SessionStore implements ISessionStore {
             expired: row.expired,
         };
     }
+
+    async getUserSessionsCount(): Promise<{ userId: number; count: number }[]> {
+        const rows = await this.db(TABLE)
+            .select(this.db.raw("sess->'user'->>'id' AS user_id"))
+            .count('* as count')
+            .groupBy('user_id');
+
+        return rows.map((row) => ({
+            userId: Number.parseInt(`${row.user_id}`, 10),
+            count: Number.parseInt(`${row.count}`, 10),
+        }));
+    }
 }
 
 module.exports = SessionStore;

@@ -38,6 +38,7 @@ import getLogger from '../test/fixtures/no-logger';
 import dbInit, { type ITestDb } from '../test/e2e/helpers/database-init';
 import { FeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store';
 import { FeatureLifecycleReadModel } from './features/feature-lifecycle/feature-lifecycle-read-model';
+import { createFakeGetLicensedUsers } from './features/instance-stats/getLicensedUsers';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
@@ -84,6 +85,7 @@ beforeAll(async () => {
         versionService,
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
+        createFakeGetLicensedUsers(),
     );
 
     schedulerService = new SchedulerService(

@@ -7,6 +7,7 @@ import { createFakeGetProductionChanges } from './getProductionChanges';
 import { registerPrometheusMetrics } from '../../metrics';
 import { register } from 'prom-client';
 import type { IClientInstanceStore } from '../../types';
+import { createFakeGetLicensedUsers } from './getLicensedUsers';
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;
 let clientInstanceStore: IClientInstanceStore;
@@ -31,6 +32,7 @@ beforeEach(() => {
         versionService,
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
+        createFakeGetLicensedUsers(),
     );
 
     const { collectAggDbMetrics } = registerPrometheusMetrics(

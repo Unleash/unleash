@@ -31,6 +31,7 @@ import type { GetActiveUsers } from './getActiveUsers';
 import type { ProjectModeCount } from '../project/project-store';
 import type { GetProductionChanges } from './getProductionChanges';
 import { format } from 'date-fns';
+import type { GetLicensedUsers } from './getLicensedUsers';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -59,6 +60,7 @@ export interface InstanceStats {
     OIDCenabled: boolean;
     clientApps: { range: TimeRange; count: number }[];
     activeUsers: Awaited<ReturnType<GetActiveUsers>>;
+    licensedUsers: Awaited<ReturnType<GetLicensedUsers>>;
     productionChanges: Awaited<ReturnType<GetProductionChanges>>;
     previousDayMetricsBucketsCount: {
         enabledCount: number;
@@ -113,6 +115,8 @@ export class InstanceStatsService {
 
     getActiveUsers: GetActiveUsers;
 
+    getLicencedUsers: GetLicensedUsers;
+
     getProductionChanges: GetProductionChanges;
 
     private featureStrategiesReadModel: IFeatureStrategiesReadModel;
@@ -163,6 +167,7 @@ export class InstanceStatsService {
         versionService: VersionService,
         getActiveUsers: GetActiveUsers,
         getProductionChanges: GetProductionChanges,
+        getLicencedUsers: GetLicensedUsers,
     ) {
         this.strategyStore = strategyStore;
         this.userStore = userStore;
@@ -179,6 +184,7 @@ export class InstanceStatsService {
         this.clientInstanceStore = clientInstanceStore;
         this.logger = getLogger('services/stats-service.js');
         this.getActiveUsers = getActiveUsers;
+        this.getLicencedUsers = getLicencedUsers;
         this.getProductionChanges = getProductionChanges;
         this.apiTokenStore = apiTokenStore;
         this.clientMetricsStore = clientMetricsStoreV2;
@@ -247,6 +253,7 @@ export class InstanceStatsService {
             serviceAccounts,
             apiTokens,
             activeUsers,
+            licensedUsers,
             projects,
             contextFields,
             groups,
@@ -275,6 +282,7 @@ export class InstanceStatsService {
             this.countServiceAccounts(),
             this.countApiTokensByType(),
             this.getActiveUsers(),
+            this.getLicencedUsers(),
             this.getProjectModeCount(),
             this.contextFieldCount(),
             this.groupCount(),
@@ -311,6 +319,7 @@ export class InstanceStatsService {
             serviceAccounts,
             apiTokens,
             activeUsers,
+            licensedUsers,
             featureToggles,
             archivedFeatureToggles,
             projects,

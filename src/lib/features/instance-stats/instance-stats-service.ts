@@ -224,7 +224,10 @@ export class InstanceStatsService {
             'unleash.auth.simple',
         );
 
-        return settings?.disabled !== false;
+        return (
+            typeof settings?.disabled === 'undefined' ||
+            settings.disabled === false
+        );
     }
 
     async hasSCIM(): Promise<boolean> {

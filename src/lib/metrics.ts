@@ -408,7 +408,7 @@ export function registerPrometheusMetrics(
     });
 
     dbMetrics.registerGaugeDbMetric({
-        name: 'password_auth',
+        name: 'password_auth_enabled',
         help: 'Whether password auth is enabled',
         query: () => instanceStatsService.hasPasswordAuth(),
         map: (result) => ({ value: result ? 1 : 0 }),

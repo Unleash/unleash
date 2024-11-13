@@ -1,3 +1,5 @@
+import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
+
 export const lifecycleMessages: Record<
     keyof ProjectStatusSchemaLifecycleSummary,
     string

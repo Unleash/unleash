@@ -621,16 +621,16 @@ export default class UserAdminController extends Controller {
         const { id } = params;
         const { name, email, rootRole } = body;
 
-        await this.throwIfScimUser({ id: id });
+        await this.throwIfScimUser({ id });
         const normalizedRootRole = Number.isInteger(Number(rootRole))
             ? Number(rootRole)
             : (rootRole as RoleName);
 
         const updateUser = await this.userService.updateUser(
             {
-                id: id,
-                name: name,
-                email: email,
+                id,
+                name,
+                email,
                 rootRole: normalizedRootRole,
             },
             req.audit,
@@ -654,7 +654,7 @@ export default class UserAdminController extends Controller {
         const { user, params } = req;
         const { id } = params;
 
-        await this.throwIfScimUser({ id: id });
+        await this.throwIfScimUser({ id });
 
         await this.userService.deleteUser(+id, req.audit);
         res.status(200).send();
@@ -677,7 +677,7 @@ export default class UserAdminController extends Controller {
         const { id } = req.params;
         const { password } = req.body;
 
-        await this.throwIfScimUser({ id: id });
+        await this.throwIfScimUser({ id });
 
         await this.userService.changePassword(+id, password);
         res.status(200).send();

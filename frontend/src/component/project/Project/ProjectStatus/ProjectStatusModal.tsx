@@ -8,6 +8,7 @@ import { StaleFlags } from './StaleFlags';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
     minHeight: '100vh',
+    maxWidth: 1000,
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(4),
     display: 'flex',

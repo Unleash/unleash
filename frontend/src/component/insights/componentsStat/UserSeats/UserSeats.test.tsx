@@ -2,18 +2,15 @@ import { testServerRoute, testServerSetup } from '../../../../utils/testServer';
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { UserSeats } from './UserSeats';
+import { BILLING_PRO_DEFAULT_INCLUDED_SEATS } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
 
 const server = testServerSetup();
 const user1 = {};
 const user2 = {};
 
-const setupApiWithSeats = (seats: number | undefined) => {
+const setupApi = () => {
     testServerRoute(server, '/api/admin/user-admin', {
         users: [user1, user2],
-    });
-    testServerRoute(server, '/api/instance/status', {
-        plan: 'Enterprise',
-        seats,
     });
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
@@ -23,18 +20,12 @@ const setupApiWithSeats = (seats: number | undefined) => {
 };
 
 test('User seats display when seats are available', async () => {
-    setupApiWithSeats(20);
+    setupApi();
 
     render(<UserSeats />);
 
     await screen.findByText('User seats');
-    await screen.findByText('2/20 seats used');
-});
-
-test('User seats does not display when seats are not available', async () => {
-    setupApiWithSeats(undefined);
-
-    render(<UserSeats />);
-
-    expect(screen.queryByText('User seats')).not.toBeInTheDocument();
+    await screen.findByText(
+        `2/${BILLING_PRO_DEFAULT_INCLUDED_SEATS} seats used`,
+    );
 });

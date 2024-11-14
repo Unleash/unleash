@@ -7,8 +7,8 @@ import type {
     IUnleashStores,
 } from '../../types';
 import type { IPersonalDashboardReadModel } from '../personal-dashboard/personal-dashboard-read-model-type';
-import type { IProjectStaleFlagsReadModel } from './IProjectStaleFlagsReadModel';
 import type { IProjectLifecycleSummaryReadModel } from './project-lifecycle-read-model/project-lifecycle-read-model-type';
+import type { IProjectStaleFlagsReadModel } from './project-stale-flags-read-model/project-stale-flags-read-model-type';
 
 export class ProjectStatusService {
     private eventStore: IEventStore;

@@ -117,7 +117,7 @@ export const ProjectResources = () => {
     return (
         <Wrapper ref={loadingRef}>
             <ProjectResourcesInner>
-                <Typography variant='h3' sx={{ margin: 0 }}>
+                <Typography variant='h4' sx={{ margin: 0 }}>
                     Project resources
                 </Typography>
                 <ResourceList>

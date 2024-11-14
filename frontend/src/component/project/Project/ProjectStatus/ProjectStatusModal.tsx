@@ -4,9 +4,12 @@ import { ProjectResources } from './ProjectResources';
 import { ProjectActivity } from './ProjectActivity';
 import { ProjectHealth } from './ProjectHealth';
 import { ProjectLifecycleSummary } from './ProjectLifecycleSummary';
+import { StaleFlags } from './StaleFlags';
 
-const ModalContentContainer = styled('div')(({ theme }) => ({
+const ModalContentContainer = styled('section')(({ theme }) => ({
     minHeight: '100vh',
+    maxWidth: 1100,
+    width: '95vw',
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(4),
     display: 'flex',
@@ -19,27 +22,43 @@ type Props = {
     close: () => void;
 };
 
-const HealthRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexFlow: 'row wrap',
-    padding: theme.spacing(2),
-    gap: theme.spacing(2),
-    '&>*': {
-        // todo: reconsider this value when the health widget is
-        // implemented. It may not be right, but it works for the
-        // placeholder
-        flex: '30%',
+const onNarrowGrid = (css: object) => ({
+    '@container (max-width: 650px)': css,
+    '@supports not (container-type: inline-size)': {
+        '@media (max-width: 712px)': css,
     },
+});
+
+const HealthContainer = styled('div')({
+    containerType: 'inline-size',
+});
+
+const HealthGrid = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateAreas: `
+        "health resources"
+        "stale resources"
+    `,
+    gridTemplateColumns: '1fr 1fr',
+    gap: theme.spacing(1, 2),
+    ...onNarrowGrid({
+        display: 'flex',
+        flexDirection: 'column',
+        gap: theme.spacing(1),
+    }),
 }));
 
 export const ProjectStatusModal = ({ open, close }: Props) => {
     return (
         <DynamicSidebarModal open={open} onClose={close} label='Project status'>
             <ModalContentContainer>
-                <HealthRow>
-                    <ProjectHealth />
-                    <ProjectResources />
-                </HealthRow>
+                <HealthContainer>
+                    <HealthGrid>
+                        <ProjectHealth />
+                        <StaleFlags />
+                        <ProjectResources />
+                    </HealthGrid>
+                </HealthContainer>
 
                 <ProjectActivity />
 

@@ -14,6 +14,7 @@ const Wrapper = styled('article')(({ theme }) => ({
     padding: theme.spacing(3),
     borderRadius: theme.shape.borderRadiusExtraLarge,
     minWidth: '300px',
+    gridArea: 'resources',
 }));
 
 const ProjectResourcesInner = styled('div')(({ theme }) => ({
@@ -33,9 +34,9 @@ const ItemContent = styled('span')(({ theme }) => ({
 }));
 
 const onNarrowWidget = (css: object) => ({
-    '@container (max-width: 400px)': css,
+    '@container (max-width: 385px)': css,
     '@supports not (container-type: inline-size)': {
-        '@media (max-width: 400px)': css,
+        '@media (max-width: 385px)': css,
     },
 });
 
@@ -116,8 +117,8 @@ export const ProjectResources = () => {
     return (
         <Wrapper ref={loadingRef}>
             <ProjectResourcesInner>
-                <Typography variant='h3' sx={{ margin: 0 }}>
-                    Project Resources
+                <Typography variant='h4' sx={{ margin: 0 }}>
+                    Project resources
                 </Typography>
                 <ResourceList>
                     <ListItem

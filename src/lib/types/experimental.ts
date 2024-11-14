@@ -28,6 +28,7 @@ export type IFlagKey =
     | 'signals'
     | 'automatedActions'
     | 'celebrateUnleash'
+    | 'feedbackPosting'
     | 'extendedUsageMetrics'
     | 'adminTokenKillSwitch'
     | 'feedbackComments'
@@ -144,6 +145,10 @@ const flags: IFlags = {
     ),
     celebrateUnleash: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CELEBRATE_UNLEASH,
+        false,
+    ),
+    feedbackPosting: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_POSTING,
         false,
     ),
     encryptEmails: parseEnvVarBoolean(

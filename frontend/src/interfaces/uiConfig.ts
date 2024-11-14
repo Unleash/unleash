@@ -75,6 +75,7 @@ export type UiFlags = {
     adminTokenKillSwitch?: boolean;
     feedbackComments?: Variant;
     showInactiveUsers?: boolean;
+    feedbackPosting?: boolean;
     userAccessUIEnabled?: boolean;
     outdatedSdksBanner?: boolean;
     estimateTrafficDataCost?: boolean;

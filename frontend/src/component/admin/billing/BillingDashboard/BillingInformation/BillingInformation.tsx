@@ -1,9 +1,9 @@
-import type { FC } from 'react';
 import { Alert, Divider, Grid, styled, Typography } from '@mui/material';
 import { BillingInformationButton } from './BillingInformationButton/BillingInformationButton';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { type IInstanceStatus, InstanceState } from 'interfaces/instance';
+import { InstanceState } from 'interfaces/instance';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
 const StyledInfoBox = styled('aside')(({ theme }) => ({
     padding: theme.spacing(4),
@@ -29,19 +29,22 @@ const StyledDivider = styled(Divider)(({ theme }) => ({
     margin: `${theme.spacing(2.5)} 0`,
     borderColor: theme.palette.divider,
 }));
-interface IBillingInformationProps {
-    instanceStatus: IInstanceStatus;
-}
 
-export const BillingInformation: FC<IBillingInformationProps> = ({
-    instanceStatus,
-}) => {
+export const BillingInformation = () => {
+    const { instanceStatus } = useInstanceStatus();
     const {
         uiConfig: { billing },
     } = useUiConfig();
     const isPAYG = billing === 'pay-as-you-go';
-    const plan = `${instanceStatus.plan}${isPAYG ? ' Pay-as-You-Go' : ''}`;
 
+    if (!instanceStatus)
+        return (
+            <Grid item xs={12} md={5}>
+                <StyledInfoBox data-loading sx={{ flex: 1, height: '400px' }} />
+            </Grid>
+        );
+
+    const plan = `${instanceStatus.plan}${isPAYG ? ' Pay-as-You-Go' : ''}`;
     const inactive = instanceStatus.state !== InstanceState.ACTIVE;
 
     return (

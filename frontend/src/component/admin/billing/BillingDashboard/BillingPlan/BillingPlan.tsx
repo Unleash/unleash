@@ -1,17 +1,13 @@
-import type { FC } from 'react';
 import { Alert, Grid, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    type IInstanceStatus,
-    InstanceState,
-    InstancePlan,
-} from 'interfaces/instance';
+import { InstanceState, InstancePlan } from 'interfaces/instance';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { trialHasExpired, isTrialInstance } from 'utils/instanceTrial';
 import { GridRow } from 'component/common/GridRow/GridRow';
 import { GridCol } from 'component/common/GridCol/GridCol';
 import { Badge } from 'component/common/Badge/Badge';
 import { BillingDetails } from './BillingDetails';
+import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
 export const BILLING_PLAN_PRICES: Record<string, number> = {
     [InstancePlan.PRO]: 80,
@@ -64,21 +60,24 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     },
 }));
 
-interface IBillingPlanProps {
-    instanceStatus: IInstanceStatus;
-}
-
-export const BillingPlan: FC<IBillingPlanProps> = ({ instanceStatus }) => {
-    const expired = trialHasExpired(instanceStatus);
+export const BillingPlan = () => {
     const {
         uiConfig: { billing },
     } = useUiConfig();
-
-    const planPrice = BILLING_PLAN_PRICES[instanceStatus.plan] ?? 0;
+    const { instanceStatus } = useInstanceStatus();
 
     const isPAYG = billing === 'pay-as-you-go';
-    const plan = `${instanceStatus.plan}${isPAYG ? ' Pay-as-You-Go' : ''}`;
 
+    if (!instanceStatus)
+        return (
+            <Grid item xs={12} md={7}>
+                <StyledPlanBox data-loading sx={{ flex: 1, height: '400px' }} />
+            </Grid>
+        );
+
+    const expired = trialHasExpired(instanceStatus);
+    const planPrice = BILLING_PLAN_PRICES[instanceStatus.plan] ?? 0;
+    const plan = `${instanceStatus.plan}${isPAYG ? ' Pay-as-You-Go' : ''}`;
     const inactive = instanceStatus.state !== InstanceState.ACTIVE;
 
     return (

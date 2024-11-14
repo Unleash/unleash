@@ -425,10 +425,13 @@ class UserService {
                         deleteStaleUserSessions.payload?.value || 30,
                     );
                     // subtract current user session that will be created
-                    await this.sessionService.deleteStaleSessionsForUser(
-                        user.id,
-                        Math.max(allowedSessions - 1, 0),
-                    );
+                    const deletedSessionsCount =
+                        await this.sessionService.deleteStaleSessionsForUser(
+                            user.id,
+                            Math.max(allowedSessions - 1, 0),
+                        );
+                    user.deletedSessions = deletedSessionsCount;
+                    user.activeSessions = allowedSessions;
                 }
                 this.eventBus.emit(USER_LOGIN, { loginOrder });
                 return user;

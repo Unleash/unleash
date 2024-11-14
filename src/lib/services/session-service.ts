@@ -36,7 +36,7 @@ export default class SessionService {
     async deleteStaleSessionsForUser(
         userId: number,
         maxSessions: number,
-    ): Promise<void> {
+    ): Promise<number> {
         const userSessions: ISession[] =
             await this.sessionStore.getSessionsForUser(userId);
         const newestFirst = userSessions.sort((a, b) =>
@@ -48,6 +48,7 @@ export default class SessionService {
                 this.sessionStore.delete(session.sid),
             ),
         );
+        return sessionsToDelete.length;
     }
 
     async deleteSession(sid: string): Promise<void> {

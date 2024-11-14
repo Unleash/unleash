@@ -15,7 +15,6 @@ const Wrapper = styled('article')(({ theme }) => ({
 
 const BigText = styled('span')(({ theme }) => ({
     fontSize: `calc(2 * ${theme.typography.body1.fontSize})`,
-    color: theme.palette.primary.main,
 }));
 
 const BigNumber: FC<{ value?: number }> = ({ value }) => {

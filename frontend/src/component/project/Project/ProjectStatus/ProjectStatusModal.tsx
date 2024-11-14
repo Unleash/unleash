@@ -27,7 +27,7 @@ const HealthContainer = styled('div')(({ theme }) => ({
         "stale resources"
     `,
     gridTemplateColumns: '1fr 1fr',
-    gap: theme.spacing(2),
+    gap: theme.spacing(1, 2),
 }));
 
 export const ProjectStatusModal = ({ open, close }: Props) => {
@@ -36,8 +36,8 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
             <ModalContentContainer>
                 <HealthContainer>
                     <ProjectHealth />
-                    <ProjectResources />
                     <StaleFlags />
+                    <ProjectResources />
                 </HealthContainer>
 
                 <ProjectActivity />

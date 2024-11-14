@@ -103,7 +103,7 @@
     "react-chartjs-2": "4.3.1",
     "react-confetti": "^6.1.0",
     "react-dom": "18.3.1",
-    "react-dropzone": "14.2.10",
+    "react-dropzone": "14.3.5",
     "react-error-boundary": "3.1.4",
     "react-github-calendar": "^4.5.1",
     "react-hooks-global-state": "2.1.0",

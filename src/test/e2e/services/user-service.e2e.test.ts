@@ -410,12 +410,13 @@ test('user login should remove stale sessions', async () => {
         await sessionService.insertSession(userSession(i));
     }
 
-    const insertedUser = await userService.loginUser(
+    const loggedInUser = await userService.loginUser(
         email,
         'A very strange P4ssw0rd_',
     );
 
-    expect(insertedUser.deletedSessions).toBe(1);
+    expect(loggedInUser.deletedSessions).toBe(1);
+    expect(loggedInUser.activeSessions).toBe(allowedSessions);
 });
 
 test('updating a user without an email should not strip the email', async () => {

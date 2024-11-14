@@ -2,7 +2,7 @@ exports.up = (db, cb) => {
   db.runSql(`
       CREATE TABLE IF NOT EXISTS licensed_users (
         count INT,
-        date DATE
+        date DATE PRIMARY KEY
       );
   `, cb);
 

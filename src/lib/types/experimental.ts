@@ -298,7 +298,7 @@ const flags: IFlags = {
         payload: {
             type: PayloadType.NUMBER,
             value: `${parseEnvVarNumber(
-                process.env.UNLEASH_EXPERIMENTAL_USER_DEVICE_COUNT,
+                process.env.UNLEASH_EXPERIMENTAL_WARN_ABOVE_SESSION_COUNT,
                 0,
             )}`,
         },

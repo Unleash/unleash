@@ -2,7 +2,13 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import ActivityCalendar, { type ThemeInput } from 'react-activity-calendar';
 import type { ProjectActivitySchema } from '../../../../openapi';
-import { Tooltip } from '@mui/material';
+import { styled, Tooltip } from '@mui/material';
+
+const StyledContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+}));
 
 type Output = { date: string; count: number; level: number };
 
@@ -76,26 +82,30 @@ export const ProjectActivity = () => {
     const levelledData = transformData(data.activityCountByDate);
     const fullData = ensureFullYearData(levelledData);
 
-    if (data.activityCountByDate.length === 0) {
-        return <span>No activity</span>;
-    }
-
     return (
-        <ActivityCalendar
-            theme={explicitTheme}
-            data={fullData}
-            maxLevel={4}
-            showWeekdayLabels={true}
-            labels={{
-                totalCount: '{{count}} activities in the last year',
-            }}
-            renderBlock={(block, activity) => (
-                <Tooltip
-                    title={`${activity.count} activities on ${activity.date}`}
-                >
-                    {block}
-                </Tooltip>
+        <>
+            {data.activityCountByDate.length > 0 ? (
+                <StyledContainer>
+                    <ActivityCalendar
+                        theme={explicitTheme}
+                        data={fullData}
+                        maxLevel={4}
+                        showWeekdayLabels={true}
+                        labels={{
+                            totalCount: '{{count}} activities in the last year',
+                        }}
+                        renderBlock={(block, activity) => (
+                            <Tooltip
+                                title={`${activity.count} activities on ${activity.date}`}
+                            >
+                                {block}
+                            </Tooltip>
+                        )}
+                    />
+                </StyledContainer>
+            ) : (
+                <span>No activity</span>
             )}
-        />
+        </>
     );
 };

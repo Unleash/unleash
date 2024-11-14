@@ -2,12 +2,12 @@ import type { ProjectStatusSchema } from '../../openapi';
 import type {
     IApiTokenStore,
     IEventStore,
-    IFeatureToggleStore,
     IProjectStore,
     ISegmentStore,
     IUnleashStores,
 } from '../../types';
 import type { IPersonalDashboardReadModel } from '../personal-dashboard/personal-dashboard-read-model-type';
+import type { GetStaleFlagsForProject } from './getStaleFlagsForProject';
 import type { IProjectLifecycleSummaryReadModel } from './project-lifecycle-read-model/project-lifecycle-read-model-type';
 
 export class ProjectStatusService {
@@ -17,7 +17,7 @@ export class ProjectStatusService {
     private segmentStore: ISegmentStore;
     private personalDashboardReadModel: IPersonalDashboardReadModel;
     private projectLifecycleSummaryReadModel: IProjectLifecycleSummaryReadModel;
-    private featureToggleStore: IFeatureToggleStore;
+    private getStaleFlagsForProject: GetStaleFlagsForProject;
 
     constructor(
         {
@@ -25,17 +25,13 @@ export class ProjectStatusService {
             projectStore,
             apiTokenStore,
             segmentStore,
-            featureToggleStore,
         }: Pick<
             IUnleashStores,
-            | 'eventStore'
-            | 'projectStore'
-            | 'apiTokenStore'
-            | 'segmentStore'
-            | 'featureToggleStore'
+            'eventStore' | 'projectStore' | 'apiTokenStore' | 'segmentStore'
         >,
         personalDashboardReadModel: IPersonalDashboardReadModel,
         projectLifecycleReadModel: IProjectLifecycleSummaryReadModel,
+        getStaleFlagsForProject: GetStaleFlagsForProject,
     ) {
         this.eventStore = eventStore;
         this.projectStore = projectStore;
@@ -43,7 +39,7 @@ export class ProjectStatusService {
         this.segmentStore = segmentStore;
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectLifecycleSummaryReadModel = projectLifecycleReadModel;
-        this.featureToggleStore = featureToggleStore;
+        this.getStaleFlagsForProject = getStaleFlagsForProject;
     }
 
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
@@ -66,7 +62,7 @@ export class ProjectStatusService {
             this.projectLifecycleSummaryReadModel.getProjectLifecycleSummary(
                 projectId,
             ),
-            this.featureToggleStore.getStaleFlagCountForProject(projectId),
+            this.getStaleFlagsForProject(projectId),
         ]);
 
         const averageHealth = healthScores.length

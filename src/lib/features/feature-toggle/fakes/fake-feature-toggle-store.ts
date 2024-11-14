@@ -352,8 +352,4 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
     setCreatedByUserId(batchSize: number): Promise<number | undefined> {
         throw new Error('Method not implemented.');
     }
-
-    async getStaleFlagCountForProject(): Promise<number> {
-        return 0;
-    }
 }

@@ -105,6 +105,4 @@ export interface IFeatureToggleStore extends Store<FeatureToggle, string> {
     ): Promise<IFeatureTypeCount[]>;
 
     setCreatedByUserId(batchSize: number): Promise<number | undefined>;
-
-    getStaleFlagCountForProject(projectId: string): Promise<number>;
 }

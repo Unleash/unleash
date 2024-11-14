@@ -36,6 +36,9 @@ test('projectStatusSchema', () => {
             members: 1,
             segments: 0,
         },
+        staleFlags: {
+            total: 0,
+        },
     };
 
     expect(

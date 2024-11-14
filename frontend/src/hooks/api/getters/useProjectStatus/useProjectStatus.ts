@@ -35,6 +35,9 @@ const placeholderData: ProjectStatusSchema = {
             last30Days: 0,
         },
     },
+    staleFlags: {
+        total: 0,
+    },
 };
 
 export const useProjectStatus = (projectId: string) => {

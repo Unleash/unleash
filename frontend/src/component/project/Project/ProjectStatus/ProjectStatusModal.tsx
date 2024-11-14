@@ -21,7 +21,18 @@ type Props = {
     close: () => void;
 };
 
-const HealthContainer = styled('div')(({ theme }) => ({
+const onNarrowGrid = (css: object) => ({
+    '@container (max-width: 650px)': css,
+    '@supports not (container-type: inline-size)': {
+        '@media (max-width: 712px)': css,
+    },
+});
+
+const HealthContainer = styled('div')({
+    containerType: 'inline-size',
+});
+
+const HealthGrid = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateAreas: `
         "health resources"
@@ -29,6 +40,11 @@ const HealthContainer = styled('div')(({ theme }) => ({
     `,
     gridTemplateColumns: '1fr 1fr',
     gap: theme.spacing(1, 2),
+    ...onNarrowGrid({
+        display: 'flex',
+        flexDirection: 'column',
+        gap: theme.spacing(1),
+    }),
 }));
 
 export const ProjectStatusModal = ({ open, close }: Props) => {
@@ -36,9 +52,11 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
         <DynamicSidebarModal open={open} onClose={close} label='Project status'>
             <ModalContentContainer>
                 <HealthContainer>
-                    <ProjectHealth />
-                    <StaleFlags />
-                    <ProjectResources />
+                    <HealthGrid>
+                        <ProjectHealth />
+                        <StaleFlags />
+                        <ProjectResources />
+                    </HealthGrid>
                 </HealthContainer>
 
                 <ProjectActivity />

@@ -311,28 +311,35 @@ test('project status includes stale flags', async () => {
         {} as IUser,
         {} as IAuditUser,
     );
-    const createFlag = app.createFeature;
+    const createFlagInState = async (
+        name: string,
+        state?: Object,
+        projectId?: string,
+    ) => {
+        await app.createFeature(name, projectId);
+        if (state) {
+            await db.rawDatabase('features').update(state).where({ name });
+        }
+    };
 
-    const updateFlag = async (name: string, update: any) =>
-        await db.rawDatabase('features').update(update).where({ name });
-
-    await createFlag('stale-flag');
-    await createFlag('potentially-stale-flag');
-    await createFlag('potentially-stale-and-stale-flag');
-    await createFlag('non-stale-flag');
-    await createFlag('archived-stale-flag');
-    await createFlag('stale-other-project', otherProject.id);
-
-    await updateFlag('stale-flag', { stale: true });
-    await updateFlag('potentially-stale-flag', {
+    await createFlagInState('stale-flag', { stale: true });
+    await createFlagInState('potentially-stale-flag', {
         potentially_stale: true,
     });
-    await updateFlag('potentially-stale-and-stale-flag', {
+    await createFlagInState('potentially-stale-and-stale-flag', {
         potentially_stale: true,
         stale: true,
     });
-    await updateFlag('archived-stale-flag', { archived: true, stale: true });
-    await updateFlag('stale-other-project', { stale: true });
+    await createFlagInState('non-stale-flag');
+    await createFlagInState('archived-stale-flag', {
+        archived: true,
+        stale: true,
+    });
+    await createFlagInState(
+        'stale-other-project',
+        { stale: true },
+        otherProject.id,
+    );
 
     const { body } = await app.request
         .get('/api/admin/projects/default/status')

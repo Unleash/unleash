@@ -5,9 +5,9 @@ export type GetStaleFlagsForProject = (projectId: string) => Promise<number>;
 export const createGetStaleFlagsForProject =
     (db: Db): GetStaleFlagsForProject =>
     async (projectId) => {
-        const result = await db('feature_toggles')
+        const result = await db('features')
             .count()
-            .where({ project: projectId })
+            .where({ project: projectId, archived: false })
             .where((builder) =>
                 builder
                     .orWhere({ stale: true })

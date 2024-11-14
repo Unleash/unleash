@@ -6,6 +6,7 @@ import {
 import getLogger from '../../../test/fixtures/no-logger';
 import {
     FEATURE_CREATED,
+    type IUser,
     RoleName,
     type IAuditUser,
     type IUnleashConfig,
@@ -298,5 +299,47 @@ test('project status contains lifecycle data', async () => {
             currentFlags: 0,
             last30Days: 0,
         },
+    });
+});
+
+test('project status includes stale flags', async () => {
+    const otherProject = await app.services.projectService.createProject(
+        {
+            name: 'otherProject',
+            id: randomId(),
+        },
+        {} as IUser,
+        {} as IAuditUser,
+    );
+    const createFlag = app.createFeature;
+
+    const updateFlag = async (name: string, update: any) =>
+        await db.rawDatabase('features').update(update).where({ name });
+
+    await createFlag('stale-flag');
+    await createFlag('potentially-stale-flag');
+    await createFlag('potentially-stale-and-stale-flag');
+    await createFlag('non-stale-flag');
+    await createFlag('archived-stale-flag');
+    await createFlag('stale-other-project', otherProject.id);
+
+    await updateFlag('stale-flag', { stale: true });
+    await updateFlag('potentially-stale-flag', {
+        potentially_stale: true,
+    });
+    await updateFlag('potentially-stale-and-stale-flag', {
+        potentially_stale: true,
+        stale: true,
+    });
+    await updateFlag('archived-stale-flag', { archived: true, stale: true });
+    await updateFlag('stale-other-project', { stale: true });
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/status')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.staleFlags).toMatchObject({
+        total: 3,
     });
 });

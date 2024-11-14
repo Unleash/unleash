@@ -14,10 +14,8 @@ import {
     createFakeProjectLifecycleSummaryReadModel,
     createProjectLifecycleSummaryReadModel,
 } from './project-lifecycle-read-model/createProjectLifecycleSummaryReadModel';
-import {
-    createFakeGetStaleFlagsForProject,
-    createGetStaleFlagsForProject,
-} from './getStaleFlagsForProject';
+import { ProjectStaleFlagsReadModel } from './project-stale-flags-read-model/project-stale-flags-read-model';
+import { FakeProjectStaleFlagsReadModel } from './project-stale-flags-read-model/fake-project-stale-flags-read-model';
 
 export const createProjectStatusService = (
     db: Db,
@@ -44,7 +42,7 @@ export const createProjectStatusService = (
     );
     const projectLifecycleSummaryReadModel =
         createProjectLifecycleSummaryReadModel(db, config);
-    const getStaleFlagsForProject = createGetStaleFlagsForProject(db);
+    const projectStaleFlagsReadModel = new ProjectStaleFlagsReadModel(db);
 
     return new ProjectStatusService(
         {
@@ -55,7 +53,7 @@ export const createProjectStatusService = (
         },
         new PersonalDashboardReadModel(db),
         projectLifecycleSummaryReadModel,
-        getStaleFlagsForProject,
+        projectStaleFlagsReadModel,
     );
 };
 
@@ -64,7 +62,6 @@ export const createFakeProjectStatusService = () => {
     const projectStore = new FakeProjectStore();
     const apiTokenStore = new FakeApiTokenStore();
     const segmentStore = new FakeSegmentStore();
-    const getStaleFlagsForProject = createFakeGetStaleFlagsForProject();
     const projectStatusService = new ProjectStatusService(
         {
             eventStore,
@@ -74,7 +71,7 @@ export const createFakeProjectStatusService = () => {
         },
         new FakePersonalDashboardReadModel(),
         createFakeProjectLifecycleSummaryReadModel(),
-        getStaleFlagsForProject,
+        new FakeProjectStaleFlagsReadModel(),
     );
 
     return {

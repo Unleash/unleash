@@ -7,7 +7,7 @@ import type {
     IUnleashStores,
 } from '../../types';
 import type { IPersonalDashboardReadModel } from '../personal-dashboard/personal-dashboard-read-model-type';
-import type { GetStaleFlagsForProject } from './getStaleFlagsForProject';
+import type { IProjectStaleFlagsReadModel } from './IProjectStaleFlagsReadModel';
 import type { IProjectLifecycleSummaryReadModel } from './project-lifecycle-read-model/project-lifecycle-read-model-type';
 
 export class ProjectStatusService {
@@ -17,7 +17,7 @@ export class ProjectStatusService {
     private segmentStore: ISegmentStore;
     private personalDashboardReadModel: IPersonalDashboardReadModel;
     private projectLifecycleSummaryReadModel: IProjectLifecycleSummaryReadModel;
-    private getStaleFlagsForProject: GetStaleFlagsForProject;
+    private projectStaleFlagsReadModel: IProjectStaleFlagsReadModel;
 
     constructor(
         {
@@ -31,7 +31,7 @@ export class ProjectStatusService {
         >,
         personalDashboardReadModel: IPersonalDashboardReadModel,
         projectLifecycleReadModel: IProjectLifecycleSummaryReadModel,
-        getStaleFlagsForProject: GetStaleFlagsForProject,
+        projectStaleFlagsReadModel: IProjectStaleFlagsReadModel,
     ) {
         this.eventStore = eventStore;
         this.projectStore = projectStore;
@@ -39,7 +39,7 @@ export class ProjectStatusService {
         this.segmentStore = segmentStore;
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectLifecycleSummaryReadModel = projectLifecycleReadModel;
-        this.getStaleFlagsForProject = getStaleFlagsForProject;
+        this.projectStaleFlagsReadModel = projectStaleFlagsReadModel;
     }
 
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
@@ -62,7 +62,9 @@ export class ProjectStatusService {
             this.projectLifecycleSummaryReadModel.getProjectLifecycleSummary(
                 projectId,
             ),
-            this.getStaleFlagsForProject(projectId),
+            this.projectStaleFlagsReadModel.getStaleFlagCountForProject(
+                projectId,
+            ),
         ]);
 
         const averageHealth = healthScores.length

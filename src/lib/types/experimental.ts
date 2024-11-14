@@ -59,6 +59,7 @@ export type IFlagKey =
     | 'enterprise-payg'
     | 'simplifyProjectOverview'
     | 'flagOverviewRedesign'
+    | 'showUserDeviceCount'
     | 'deleteStaleUserSessions';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -281,6 +282,10 @@ const flags: IFlags = {
     ),
     flagOverviewRedesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
+        false,
+    ),
+    showUserDeviceCount: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
         false,
     ),
 };

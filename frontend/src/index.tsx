@@ -49,11 +49,11 @@ const ApplicationRoot = () => {
                     <QueryParamProvider adapter={ReactRouter6Adapter}>
                         <ThemeProvider>
                             <AnnouncerProvider>
-                                <ErrorBoundary
-                                    FallbackComponent={LayoutError}
-                                    onError={sendErrorToApi}
-                                >
-                                    <PlausibleProvider>
+                                <PlausibleProvider>
+                                    <ErrorBoundary
+                                        FallbackComponent={LayoutError}
+                                        onError={sendErrorToApi}
+                                    >
                                         <FeedbackProvider>
                                             <FeedbackCESProvider>
                                                 <StickyProvider>
@@ -66,8 +66,8 @@ const ApplicationRoot = () => {
                                                 </StickyProvider>
                                             </FeedbackCESProvider>
                                         </FeedbackProvider>
-                                    </PlausibleProvider>
-                                </ErrorBoundary>
+                                    </ErrorBoundary>
+                                </PlausibleProvider>
                             </AnnouncerProvider>
                         </ThemeProvider>
                     </QueryParamProvider>

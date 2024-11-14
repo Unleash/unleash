@@ -95,9 +95,8 @@ test('Can delete sessions by user', async () => {
     const sessions = await sessionService.getActiveSessions();
     expect(sessions.length).toBe(2);
     await sessionService.deleteSessionsForUser(2);
-    await expect(async () => {
-        await sessionService.getSessionsForUser(2);
-    }).rejects.toThrow(NotFoundError);
+    const noSessions = await sessionService.getSessionsForUser(2);
+    expect(noSessions.length).toBe(0);
 });
 
 test('Can delete session by sid', async () => {

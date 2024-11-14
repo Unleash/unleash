@@ -375,9 +375,8 @@ test("deleting a user should delete the user's sessions", async () => {
     const userSessions = await sessionService.getSessionsForUser(user.id);
     expect(userSessions.length).toBe(1);
     await userService.deleteUser(user.id, TEST_AUDIT_USER);
-    await expect(async () =>
-        sessionService.getSessionsForUser(user.id),
-    ).rejects.toThrow(NotFoundError);
+    const noSessions = await sessionService.getSessionsForUser(user.id);
+    expect(noSessions.length).toBe(0);
 });
 
 test('user login should remove stale sessions', async () => {

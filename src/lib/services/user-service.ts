@@ -209,6 +209,15 @@ class UserService {
             const roleId = rootRole ? rootRole.roleId : defaultRole.id;
             return { ...u, rootRole: roleId };
         });
+        if (this.flagResolver.isEnabled('showUserDeviceCount')) {
+            const sessionCounts = await this.sessionService.getSessionsCount();
+            const usersWithSessionCounts = usersWithRootRole.map((u) => ({
+                ...u,
+                activeSessions: sessionCounts[u.id] || 0,
+            }));
+            return usersWithSessionCounts;
+        }
+
         return usersWithRootRole;
     }
 

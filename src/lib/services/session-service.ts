@@ -64,6 +64,14 @@ export default class SessionService {
     }: Pick<ISession, 'sid' | 'sess'>): Promise<ISession> {
         return this.sessionStore.insertSession({ sid, sess });
     }
+
+    async getSessionsCount() {
+        return Object.fromEntries(
+            (await this.sessionStore.getSessionsCount()).map(
+                ({ userId, count }) => [userId, count],
+            ),
+        );
+    }
 }
 
 module.exports = SessionService;

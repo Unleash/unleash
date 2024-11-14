@@ -25,9 +25,15 @@ const ChartRow = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const StyledSVG = styled('svg')({
-    height: 100,
+const SVGWrapper = styled('div')(({ theme }) => ({
     flex: 'none',
+    height: 85,
+    width: 100,
+    position: 'relative',
+}));
+
+const StyledSVG = styled('svg')({
+    position: 'absolute',
 });
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -60,38 +66,40 @@ export const ProjectHealth = () => {
     return (
         <HealthContainer>
             <ChartRow>
-                <StyledSVG viewBox='0 0 100 100'>
-                    <circle
-                        cx='50'
-                        cy='50'
-                        r={radius}
-                        fill='none'
-                        stroke={theme.palette.grey[300]}
-                        strokeWidth={strokeWidth}
-                        strokeDasharray={`${filledLength * circumference} ${gapLength * circumference}`}
-                        strokeDashoffset={offset * circumference}
-                    />
-                    <circle
-                        cx='50'
-                        cy='50'
-                        r={radius}
-                        fill='none'
-                        stroke={healthColor}
-                        strokeWidth={strokeWidth}
-                        strokeDasharray={`${healthLength} ${circumference - healthLength}`}
-                        strokeDashoffset={offset * circumference}
-                    />
-                    <text
-                        x='50'
-                        y='50'
-                        textAnchor='middle'
-                        dominantBaseline='middle'
-                        fill={theme.palette.text.primary}
-                        fontSize='24px'
-                    >
-                        {averageHealth}%
-                    </text>
-                </StyledSVG>
+                <SVGWrapper>
+                    <StyledSVG viewBox='0 0 100 100'>
+                        <circle
+                            cx='50'
+                            cy='50'
+                            r={radius}
+                            fill='none'
+                            stroke={theme.palette.grey[300]}
+                            strokeWidth={strokeWidth}
+                            strokeDasharray={`${filledLength * circumference} ${gapLength * circumference}`}
+                            strokeDashoffset={offset * circumference}
+                        />
+                        <circle
+                            cx='50'
+                            cy='50'
+                            r={radius}
+                            fill='none'
+                            stroke={healthColor}
+                            strokeWidth={strokeWidth}
+                            strokeDasharray={`${healthLength} ${circumference - healthLength}`}
+                            strokeDashoffset={offset * circumference}
+                        />
+                        <text
+                            x='50'
+                            y='50'
+                            textAnchor='middle'
+                            dominantBaseline='middle'
+                            fill={theme.palette.text.primary}
+                            fontSize='24px'
+                        >
+                            {averageHealth}%
+                        </text>
+                    </StyledSVG>
+                </SVGWrapper>
                 <TextContainer>
                     <Typography variant='body2'>
                         On average, your project health has remained at{' '}

@@ -30,6 +30,10 @@ const StyledSVG = styled('svg')({
     flex: 'none',
 });
 
+const StyledLink = styled(Link)(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+}));
+
 export const ProjectHealth = () => {
     const projectId = useRequiredPathParam('projectId');
     const {
@@ -94,7 +98,9 @@ export const ProjectHealth = () => {
                         {averageHealth}% the last 4 weeks
                     </Typography>
                     {!isOss() && (
-                        <Link to='/insights'>View health over time</Link>
+                        <StyledLink to='/insights'>
+                            View health over time
+                        </StyledLink>
                     )}
                 </TextContainer>
             </ChartRow>

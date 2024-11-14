@@ -37,11 +37,8 @@ export default class SessionService {
         userId: number,
         maxSessions: number,
     ): Promise<number> {
-        let userSessions: ISession[] = [];
-        try {
-            // this method may throw errors when no session
-            userSessions = await this.sessionStore.getSessionsForUser(userId);
-        } catch (e) {}
+        const userSessions: ISession[] =
+            await this.sessionStore.getSessionsForUser(userId);
         const newestFirst = userSessions.sort((a, b) =>
             compareDesc(a.createdAt, b.createdAt),
         );

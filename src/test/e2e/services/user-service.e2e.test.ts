@@ -67,6 +67,9 @@ beforeAll(async () => {
     settingService = new SettingService(stores, config, eventService);
 
     const flagResolver = {
+        isEnabled() {
+            return true;
+        },
         getVariant() {
             return {
                 feature_enabled: true,

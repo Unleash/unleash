@@ -107,7 +107,7 @@ export const userSchema = {
         },
         deletedSessions: {
             description:
-                'Experimental. The number of deleted sessions after last login',
+                'Experimental. The number of deleted browser sessions after last login',
             type: 'number',
             example: 1,
         },

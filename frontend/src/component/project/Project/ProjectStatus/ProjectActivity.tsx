@@ -76,28 +76,26 @@ export const ProjectActivity = () => {
     const levelledData = transformData(data.activityCountByDate);
     const fullData = ensureFullYearData(levelledData);
 
+    if (data.activityCountByDate.length === 0) {
+        return <span>No activity</span>;
+    }
+
     return (
-        <>
-            {data.activityCountByDate.length > 0 ? (
-                <ActivityCalendar
-                    theme={explicitTheme}
-                    data={fullData}
-                    maxLevel={4}
-                    showWeekdayLabels={true}
-                    labels={{
-                        totalCount: '{{count}} activities in the last year',
-                    }}
-                    renderBlock={(block, activity) => (
-                        <Tooltip
-                            title={`${activity.count} activities on ${activity.date}`}
-                        >
-                            {block}
-                        </Tooltip>
-                    )}
-                />
-            ) : (
-                <span>No activity</span>
+        <ActivityCalendar
+            theme={explicitTheme}
+            data={fullData}
+            maxLevel={4}
+            showWeekdayLabels={true}
+            labels={{
+                totalCount: '{{count}} activities in the last year',
+            }}
+            renderBlock={(block, activity) => (
+                <Tooltip
+                    title={`${activity.count} activities on ${activity.date}`}
+                >
+                    {block}
+                </Tooltip>
             )}
-        </>
+        />
     );
 };

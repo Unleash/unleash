@@ -7,15 +7,8 @@ import { styled, Tooltip } from '@mui/material';
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
     alignItems: 'center',
-    gap: theme.spacing(2),
 }));
-
-const TitleContainer = styled('h4')({
-    margin: 0,
-    width: '100%',
-});
 
 type Output = { date: string; count: number; level: number };
 
@@ -93,7 +86,6 @@ export const ProjectActivity = () => {
         <>
             {data.activityCountByDate.length > 0 ? (
                 <StyledContainer>
-                    <TitleContainer>Activity in project</TitleContainer>
                     <ActivityCalendar
                         theme={explicitTheme}
                         data={fullData}

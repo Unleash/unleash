@@ -8,14 +8,7 @@ import SegmentsIcon from '@mui/icons-material/DonutLarge';
 import ConnectedIcon from '@mui/icons-material/Cable';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
-
-const Wrapper = styled('article')(({ theme }) => ({
-    backgroundColor: theme.palette.envAccordion.expanded,
-    padding: theme.spacing(3),
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    minWidth: '300px',
-    gridArea: 'resources',
-}));
+import { HealthGridTile } from './ProjectHealthGrid.styles';
 
 const ProjectResourcesInner = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -115,7 +108,7 @@ export const ProjectResources = () => {
     const loadingRef = useLoading(loading, '[data-loading-resources=true]');
 
     return (
-        <Wrapper ref={loadingRef}>
+        <HealthGridTile ref={loadingRef}>
             <ProjectResourcesInner>
                 <Typography variant='h4' sx={{ margin: 0 }}>
                     Project resources
@@ -155,6 +148,6 @@ export const ProjectResources = () => {
                     </ListItem>
                 </ResourceList>
             </ProjectResourcesInner>
-        </Wrapper>
+        </HealthGridTile>
     );
 };

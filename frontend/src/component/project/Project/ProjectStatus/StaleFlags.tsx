@@ -4,13 +4,9 @@ import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/Pretti
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
+import { HealthGridTile } from './ProjectHealthGrid.styles';
 
-const Wrapper = styled('article')(({ theme }) => ({
-    backgroundColor: theme.palette.envAccordion.expanded,
-    padding: theme.spacing(3),
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    minWidth: '300px',
-    gridArea: 'stale',
+const Wrapper = styled(HealthGridTile)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),

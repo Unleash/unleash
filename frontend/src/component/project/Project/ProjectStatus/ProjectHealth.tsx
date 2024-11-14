@@ -3,14 +3,7 @@ import { Link } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-
-const HealthContainer = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.envAccordion.expanded,
-    padding: theme.spacing(3),
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    minWidth: '300px',
-    gridArea: 'health',
-}));
+import { HealthGridTile } from './ProjectHealthGrid.styles';
 
 const TextContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -63,7 +56,7 @@ export const ProjectHealth = () => {
               : theme.palette.success.border;
 
     return (
-        <HealthContainer>
+        <HealthGridTile>
             <ChartRow>
                 <SVGWrapper>
                     <StyledSVG viewBox='0 0 100 100'>
@@ -111,6 +104,6 @@ export const ProjectHealth = () => {
                     )}
                 </TextContainer>
             </ChartRow>
-        </HealthContainer>
+        </HealthGridTile>
     );
 };

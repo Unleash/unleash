@@ -6,25 +6,9 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { FC } from 'react';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
-import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { lifecycleMessages } from './LifecycleMessages';
 import InfoIcon from '@mui/icons-material/Info';
-
-const LifecycleRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexFlow: 'column',
-    gap: theme.spacing(1),
-}));
-
-const HeaderRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flex: 'auto',
-    '& > *': {
-        marginBlock: 0,
-        fontWeight: 'normal',
-    },
-}));
 
 const LifecycleBoxContent = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
@@ -87,6 +71,7 @@ const LifecycleList = styled('ul')(({ theme }) => ({
     justifyContent: 'center',
     padding: 0,
     flex: 'auto',
+    margin: 0,
 }));
 
 const Counter = styled('span')({
@@ -146,44 +131,6 @@ const BigNumber: FC<{ value?: number }> = ({ value }) => {
         </BigText>
     );
 };
-
-const TooltipContent = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0.5),
-}));
-
-const TooltipText = styled('p')(({ theme }) => ({
-    fontSize: theme.typography.body1.fontSize,
-    '& + p': {
-        marginTop: theme.spacing(1),
-    },
-}));
-
-const LifecycleTooltip: FC = () => {
-    return (
-        <HelpIcon
-            htmlTooltip
-            htmlTooltipMaxWidth='550px'
-            tooltip={
-                <TooltipContent>
-                    <TooltipText>
-                        Based on usage metrics and interactions with Unleash,
-                        feature flags can go through five distinct lifecycle
-                        stages. These stages mirror the typical software
-                        development process and allow you to identify
-                        bottlenecks at any stage of the lifecycle.
-                    </TooltipText>
-
-                    <TooltipText>
-                        <a href='https://docs.getunleash.io/reference/feature-toggles#feature-flag-lifecycle'>
-                            Read more in our documentation
-                        </a>
-                    </TooltipText>
-                </TooltipContent>
-            }
-        />
-    );
-};
-
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data, loading } = useProjectStatus(projectId);
@@ -200,119 +147,103 @@ export const ProjectLifecycleSummary = () => {
         }
     };
     return (
-        <LifecycleRow>
-            <HeaderRow>
-                <h4>Flag lifecycle</h4>
-                <LifecycleTooltip />
-            </HeaderRow>
+        <LifecycleList ref={loadingRef}>
+            <LifecycleBox tooltipText={lifecycleMessages.initial}>
+                <p>
+                    <Counter>
+                        <BigNumber
+                            value={data?.lifecycleSummary.initial.currentFlags}
+                        />
 
-            <LifecycleList ref={loadingRef}>
-                <LifecycleBox tooltipText={lifecycleMessages.initial}>
-                    <p>
-                        <Counter>
-                            <BigNumber
-                                value={
-                                    data?.lifecycleSummary.initial.currentFlags
-                                }
-                            />
+                        <FeatureLifecycleStageIcon
+                            aria-hidden='true'
+                            stage={{ name: 'initial' }}
+                        />
+                    </Counter>
+                    <span>{flagWord('initial')} in initial</span>
+                </p>
+                <AverageDaysStat
+                    averageDays={data?.lifecycleSummary.initial.averageDays}
+                />
+            </LifecycleBox>
+            <LifecycleBox tooltipText={lifecycleMessages.preLive}>
+                <p>
+                    <Counter>
+                        <BigNumber
+                            value={data?.lifecycleSummary.preLive.currentFlags}
+                        />
 
-                            <FeatureLifecycleStageIcon
-                                aria-hidden='true'
-                                stage={{ name: 'initial' }}
-                            />
-                        </Counter>
-                        <span>{flagWord('initial')} in initial</span>
-                    </p>
-                    <AverageDaysStat
-                        averageDays={data?.lifecycleSummary.initial.averageDays}
-                    />
-                </LifecycleBox>
-                <LifecycleBox tooltipText={lifecycleMessages.preLive}>
-                    <p>
-                        <Counter>
-                            <BigNumber
-                                value={
-                                    data?.lifecycleSummary.preLive.currentFlags
-                                }
-                            />
+                        <FeatureLifecycleStageIcon
+                            aria-hidden='true'
+                            stage={{ name: 'pre-live' }}
+                        />
+                    </Counter>
+                    <span>{flagWord('preLive')} in pre-live</span>
+                </p>
+                <AverageDaysStat
+                    averageDays={data?.lifecycleSummary.preLive.averageDays}
+                />
+            </LifecycleBox>
+            <LifecycleBox tooltipText={lifecycleMessages.live}>
+                <p>
+                    <Counter>
+                        <BigNumber
+                            value={data?.lifecycleSummary.live.currentFlags}
+                        />
 
-                            <FeatureLifecycleStageIcon
-                                aria-hidden='true'
-                                stage={{ name: 'pre-live' }}
-                            />
-                        </Counter>
-                        <span>{flagWord('preLive')} in pre-live</span>
-                    </p>
-                    <AverageDaysStat
-                        averageDays={data?.lifecycleSummary.preLive.averageDays}
-                    />
-                </LifecycleBox>
-                <LifecycleBox tooltipText={lifecycleMessages.live}>
-                    <p>
-                        <Counter>
-                            <BigNumber
-                                value={data?.lifecycleSummary.live.currentFlags}
-                            />
+                        <FeatureLifecycleStageIcon
+                            aria-hidden='true'
+                            stage={{ name: 'live' }}
+                        />
+                    </Counter>
+                    <span>{flagWord('live')} in live</span>
+                </p>
+                <AverageDaysStat
+                    averageDays={data?.lifecycleSummary.live.averageDays}
+                />
+            </LifecycleBox>
+            <LifecycleBox tooltipText={lifecycleMessages.completed}>
+                <p>
+                    <Counter>
+                        <BigNumber
+                            value={
+                                data?.lifecycleSummary.completed.currentFlags
+                            }
+                        />
 
-                            <FeatureLifecycleStageIcon
-                                aria-hidden='true'
-                                stage={{ name: 'live' }}
-                            />
-                        </Counter>
-                        <span>{flagWord('live')} in live</span>
-                    </p>
-                    <AverageDaysStat
-                        averageDays={data?.lifecycleSummary.live.averageDays}
-                    />
-                </LifecycleBox>
-                <LifecycleBox tooltipText={lifecycleMessages.completed}>
-                    <p>
-                        <Counter>
-                            <BigNumber
-                                value={
-                                    data?.lifecycleSummary.completed
-                                        .currentFlags
-                                }
-                            />
+                        <FeatureLifecycleStageIcon
+                            aria-hidden='true'
+                            stage={{ name: 'completed' }}
+                        />
+                    </Counter>
+                    <span>{flagWord('completed')} in cleanup</span>
+                </p>
+                <AverageDaysStat
+                    averageDays={data?.lifecycleSummary.completed.averageDays}
+                />
+            </LifecycleBox>
+            <LifecycleBox tooltipText={lifecycleMessages.archived}>
+                <p>
+                    <Counter>
+                        <BigNumber
+                            value={data?.lifecycleSummary.archived.currentFlags}
+                        />
 
-                            <FeatureLifecycleStageIcon
-                                aria-hidden='true'
-                                stage={{ name: 'completed' }}
-                            />
-                        </Counter>
-                        <span>{flagWord('completed')} in cleanup</span>
-                    </p>
-                    <AverageDaysStat
-                        averageDays={
-                            data?.lifecycleSummary.completed.averageDays
-                        }
-                    />
-                </LifecycleBox>
-                <LifecycleBox tooltipText={lifecycleMessages.archived}>
-                    <p>
-                        <Counter>
-                            <BigNumber
-                                value={
-                                    data?.lifecycleSummary.archived.currentFlags
-                                }
-                            />
-
-                            <FeatureLifecycleStageIcon
-                                aria-hidden='true'
-                                stage={{ name: 'archived' }}
-                            />
-                        </Counter>
-                        <span>{flagWord('archived')} in archived</span>
-                    </p>
-                    <Stats>
-                        <dt>This month</dt>
-                        <dd data-loading-project-lifecycle-summary>
-                            {data?.lifecycleSummary.archived.currentFlags ?? 0}{' '}
-                            flags archived
-                        </dd>
-                    </Stats>
-                </LifecycleBox>
-            </LifecycleList>
-        </LifecycleRow>
+                        <FeatureLifecycleStageIcon
+                            aria-hidden='true'
+                            stage={{ name: 'archived' }}
+                        />
+                    </Counter>
+                    <span>{flagWord('archived')} in archived</span>
+                </p>
+                <Stats>
+                    <dt>This month</dt>
+                    <dd data-loading-project-lifecycle-summary>
+                        {data?.lifecycleSummary.archived.currentFlags ?? 0}{' '}
+                        flags archived
+                    </dd>
+                </Stats>
+            </LifecycleBox>
+        </LifecycleList>
     );
 };

@@ -758,6 +758,18 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
         await Promise.all(updatePromises);
         return toUpdate.length;
     }
+
+    async getStaleFlagCountForProject(projectId: string): Promise<number> {
+        const row = await this.db(TABLE)
+            .count()
+            .where({ project: projectId })
+            .where((builder) =>
+                builder
+                    .orWhere({ stale: true })
+                    .orWhere({ potentially_stale: true }),
+            );
+        return Number(row[0].count);
+    }
 }
 
 module.exports = FeatureToggleStore;

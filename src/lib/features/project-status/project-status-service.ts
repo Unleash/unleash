@@ -2,6 +2,7 @@ import type { ProjectStatusSchema } from '../../openapi';
 import type {
     IApiTokenStore,
     IEventStore,
+    IFeatureToggleStore,
     IProjectStore,
     ISegmentStore,
     IUnleashStores,
@@ -16,6 +17,7 @@ export class ProjectStatusService {
     private segmentStore: ISegmentStore;
     private personalDashboardReadModel: IPersonalDashboardReadModel;
     private projectLifecycleSummaryReadModel: IProjectLifecycleSummaryReadModel;
+    private featureToggleStore: IFeatureToggleStore;
 
     constructor(
         {
@@ -23,9 +25,14 @@ export class ProjectStatusService {
             projectStore,
             apiTokenStore,
             segmentStore,
+            featureToggleStore,
         }: Pick<
             IUnleashStores,
-            'eventStore' | 'projectStore' | 'apiTokenStore' | 'segmentStore'
+            | 'eventStore'
+            | 'projectStore'
+            | 'apiTokenStore'
+            | 'segmentStore'
+            | 'featureToggleStore'
         >,
         personalDashboardReadModel: IPersonalDashboardReadModel,
         projectLifecycleReadModel: IProjectLifecycleSummaryReadModel,
@@ -36,6 +43,7 @@ export class ProjectStatusService {
         this.segmentStore = segmentStore;
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectLifecycleSummaryReadModel = projectLifecycleReadModel;
+        this.featureToggleStore = featureToggleStore;
     }
 
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
@@ -47,6 +55,7 @@ export class ProjectStatusService {
             activityCountByDate,
             healthScores,
             lifecycleSummary,
+            staleFlagCount,
         ] = await Promise.all([
             this.projectStore.getConnectedEnvironmentCountForProject(projectId),
             this.projectStore.getMembersCountByProject(projectId),
@@ -57,6 +66,7 @@ export class ProjectStatusService {
             this.projectLifecycleSummaryReadModel.getProjectLifecycleSummary(
                 projectId,
             ),
+            this.featureToggleStore.getStaleFlagCountForProject(projectId),
         ]);
 
         const averageHealth = healthScores.length
@@ -74,6 +84,9 @@ export class ProjectStatusService {
             activityCountByDate,
             averageHealth: Math.round(averageHealth),
             lifecycleSummary,
+            staleFlags: {
+                total: staleFlagCount,
+            },
         };
     }
 }

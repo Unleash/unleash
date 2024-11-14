@@ -1,4 +1,4 @@
-import { styled } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ReactComponent as ProjectStatusSvg } from 'assets/icons/projectStatus.svg';
 import { ProjectActivity } from './ProjectActivity';
@@ -17,6 +17,12 @@ const ModalContentContainer = styled('section')(({ theme }) => ({
     gap: theme.spacing(4),
     paddingInline: theme.spacing(4),
     paddingBlock: theme.spacing(10),
+}));
+
+const WidgetContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(9),
 }));
 
 type Props = {
@@ -92,6 +98,12 @@ const LifecycleTooltip: FC = () => {
     );
 };
 
+const CloseRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginBlockStart: 'auto',
+}));
+
 export const ProjectStatusModal = ({ open, close }: Props) => {
     return (
         <DynamicSidebarModal open={open} onClose={close} label='Project status'>
@@ -100,23 +112,30 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                     <StyledProjectStatusSvg aria-hidden='true' />
                     <ModalHeader>Project status</ModalHeader>
                 </HeaderRow>
-                <Row>
-                    <RowHeader>Health</RowHeader>
-                    <ProjectHealthGrid />
-                </Row>
+                <WidgetContainer>
+                    <Row>
+                        <RowHeader>Health</RowHeader>
+                        <ProjectHealthGrid />
+                    </Row>
 
-                <Row>
-                    <RowHeader>Activity in project</RowHeader>
-                    <ProjectActivity />
-                </Row>
+                    <Row>
+                        <RowHeader>Activity in project</RowHeader>
+                        <ProjectActivity />
+                    </Row>
 
-                <Row>
-                    <LifecycleHeaderRow>
-                        <RowHeader>Flag lifecycle</RowHeader>
-                        <LifecycleTooltip />
-                    </LifecycleHeaderRow>
-                    <ProjectLifecycleSummary />
-                </Row>
+                    <Row>
+                        <LifecycleHeaderRow>
+                            <RowHeader>Flag lifecycle</RowHeader>
+                            <LifecycleTooltip />
+                        </LifecycleHeaderRow>
+                        <ProjectLifecycleSummary />
+                    </Row>
+                </WidgetContainer>
+                <CloseRow>
+                    <Button variant='outlined' onClick={close}>
+                        Close
+                    </Button>
+                </CloseRow>
             </ModalContentContainer>
         </DynamicSidebarModal>
     );

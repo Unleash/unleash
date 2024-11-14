@@ -29,24 +29,20 @@ if (!response.ok) {
 
 const data = await response.json();
 
-data.servers = [{
-    url: '<your-unleash-url>',
-}];
+data.servers = [
+    {
+        url: '<your-unleash-url>',
+    },
+];
 
-const outputDir = './docs/generated/'
+const outputDir = './docs/generated/';
 
 // Write the JSON to file
-const outputPath = path.join(outputDir, 'openapi.json')
+const outputPath = path.join(outputDir, 'openapi.json');
 
 // Ensure directory exists
 await fs.mkdir(outputDir, { recursive: true });
 
-await fs.writeFile(
-    outputPath,
-    JSON.stringify(data, null, 2),
-    'utf8'
-);
+await fs.writeFile(outputPath, JSON.stringify(data, null, 2), 'utf8');
 
 console.log(`OpenAPI spec saved to ${outputPath}`);
-
-

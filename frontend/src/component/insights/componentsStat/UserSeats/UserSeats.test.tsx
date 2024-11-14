@@ -2,6 +2,7 @@ import { testServerRoute, testServerSetup } from '../../../../utils/testServer';
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { UserSeats } from './UserSeats';
+import { BILLING_PRO_DEFAULT_INCLUDED_SEATS } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
 
 const server = testServerSetup();
 const user1 = {};
@@ -24,5 +25,7 @@ test('User seats display when seats are available', async () => {
     render(<UserSeats />);
 
     await screen.findByText('User seats');
-    await screen.findByText('2/5 seats used');
+    await screen.findByText(
+        `2/${BILLING_PRO_DEFAULT_INCLUDED_SEATS} seats used`,
+    );
 });

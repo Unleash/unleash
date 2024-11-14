@@ -1,9 +1,10 @@
-import { Box, styled, Typography } from '@mui/material';
+import { styled } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ProjectResources } from './ProjectResources';
 import { ProjectActivity } from './ProjectActivity';
 import { ProjectHealth } from './ProjectHealth';
 import { ProjectLifecycleSummary } from './ProjectLifecycleSummary';
+import { StaleFlags } from './StaleFlags';
 
 const ModalContentContainer = styled('div')(({ theme }) => ({
     minHeight: '100vh',
@@ -26,7 +27,6 @@ const HealthContainer = styled('div')(({ theme }) => ({
         "stale resources"
     `,
     gridTemplateColumns: '1fr 1fr',
-    // padding: theme.spacing(2),
     gap: theme.spacing(2),
 }));
 
@@ -37,13 +37,7 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                 <HealthContainer>
                     <ProjectHealth />
                     <ProjectResources />
-                    <Box gridArea='stale'>
-                        <Typography variant='h3'>Stale flags</Typography>
-                        <Typography>
-                            Flags that have not been used for a long time and
-                            can be archived.
-                        </Typography>
-                    </Box>
+                    <StaleFlags />
                 </HealthContainer>
 
                 <ProjectActivity />

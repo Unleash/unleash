@@ -13,20 +13,22 @@ const HealthContainer = styled('div')(({ theme }) => ({
     gridArea: 'health',
 }));
 
+const TextContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+}));
+
 const ChartRow = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    gap: theme.spacing(2),
 }));
 
 const StyledSVG = styled('svg')({
-    width: 200,
     height: 100,
+    flex: 'none',
 });
-
-const DescriptionText = styled(Typography)(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginBottom: theme.spacing(2),
-}));
 
 export const ProjectHealth = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -86,16 +88,16 @@ export const ProjectHealth = () => {
                         {averageHealth}%
                     </text>
                 </StyledSVG>
-                <Typography variant='body2'>
-                    On average, your project health has remained at{' '}
-                    {averageHealth}% the last 4 weeks
-                </Typography>
+                <TextContainer>
+                    <Typography variant='body2'>
+                        On average, your project health has remained at{' '}
+                        {averageHealth}% the last 4 weeks
+                    </Typography>
+                    {!isOss() && (
+                        <Link to='/insights'>View health over time</Link>
+                    )}
+                </TextContainer>
             </ChartRow>
-            <DescriptionText variant='body2'>
-                Remember to archive your stale feature flags to keep the project
-                health growing
-            </DescriptionText>
-            {!isOss() && <Link to='/insights'>View health over time</Link>}
         </HealthContainer>
     );
 };

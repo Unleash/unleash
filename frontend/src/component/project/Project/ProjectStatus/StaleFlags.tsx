@@ -11,10 +11,14 @@ const Wrapper = styled('article')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusExtraLarge,
     minWidth: '300px',
     gridArea: 'stale',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
 }));
 
 const BigText = styled('span')(({ theme }) => ({
     fontSize: `calc(2 * ${theme.typography.body1.fontSize})`,
+    lineHeight: 0,
 }));
 
 const BigNumber: FC<{ value?: number }> = ({ value }) => {
@@ -41,7 +45,7 @@ export const StaleFlags = () => {
             </Typography>
             <Typography variant='body2'>
                 Remember to archive your stale feature flags to keep the project
-                health
+                healthy
             </Typography>
         </Wrapper>
     );

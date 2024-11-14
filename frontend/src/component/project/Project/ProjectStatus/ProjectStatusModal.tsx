@@ -6,9 +6,10 @@ import { ProjectHealth } from './ProjectHealth';
 import { ProjectLifecycleSummary } from './ProjectLifecycleSummary';
 import { StaleFlags } from './StaleFlags';
 
-const ModalContentContainer = styled('div')(({ theme }) => ({
+const ModalContentContainer = styled('section')(({ theme }) => ({
     minHeight: '100vh',
-    maxWidth: 1000,
+    maxWidth: 1100,
+    width: '95vw',
     backgroundColor: theme.palette.background.default,
     padding: theme.spacing(4),
     display: 'flex',

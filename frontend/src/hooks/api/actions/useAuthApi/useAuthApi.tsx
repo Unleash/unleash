@@ -6,7 +6,7 @@ type PasswordLogin = (
     path: string,
     username: string,
     password: string,
-) => Promise<Response>;
+) => Promise<UserSchema>;
 
 type EmailLogin = (path: string, email: string) => Promise<Response>;
 

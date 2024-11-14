@@ -10,8 +10,6 @@ import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectS
 import useLoading from 'hooks/useLoading';
 import { HealthGridTile } from './ProjectHealthGrid.styles';
 
-const Wrapper = HealthGridTile('resources');
-
 const ProjectResourcesInner = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -110,7 +108,7 @@ export const ProjectResources = () => {
     const loadingRef = useLoading(loading, '[data-loading-resources=true]');
 
     return (
-        <Wrapper ref={loadingRef}>
+        <HealthGridTile ref={loadingRef}>
             <ProjectResourcesInner>
                 <Typography variant='h4' sx={{ margin: 0 }}>
                     Project resources
@@ -150,6 +148,6 @@ export const ProjectResources = () => {
                     </ListItem>
                 </ResourceList>
             </ProjectResourcesInner>
-        </Wrapper>
+        </HealthGridTile>
     );
 };

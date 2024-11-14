@@ -6,7 +6,7 @@ import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import { HealthGridTile } from './ProjectHealthGrid.styles';
 
-const Wrapper = styled(HealthGridTile('stale'))(({ theme }) => ({
+const Wrapper = styled(HealthGridTile)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),

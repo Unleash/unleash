@@ -5,8 +5,6 @@ import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectS
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HealthGridTile } from './ProjectHealthGrid.styles';
 
-const HealthContainer = HealthGridTile('health');
-
 const TextContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
@@ -58,7 +56,7 @@ export const ProjectHealth = () => {
               : theme.palette.success.border;
 
     return (
-        <HealthContainer>
+        <HealthGridTile>
             <ChartRow>
                 <SVGWrapper>
                     <StyledSVG viewBox='0 0 100 100'>
@@ -106,6 +104,6 @@ export const ProjectHealth = () => {
                     )}
                 </TextContainer>
             </ChartRow>
-        </HealthContainer>
+        </HealthGridTile>
     );
 };

@@ -29,13 +29,28 @@ const HealthGrid = styled('div')(({ theme }) => ({
     }),
 }));
 
+const Tile = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'gridArea',
+})<{ gridArea: string }>(({ theme, gridArea }) => ({
+    gridArea,
+    '&>*': {
+        height: '100%',
+    },
+}));
+
 export const ProjectHealthGrid = () => {
     return (
         <HealthContainer>
             <HealthGrid>
-                <ProjectHealth />
-                <StaleFlags />
-                <ProjectResources />
+                <Tile gridArea='health'>
+                    <ProjectHealth />
+                </Tile>
+                <Tile gridArea='stale'>
+                    <StaleFlags />
+                </Tile>
+                <Tile gridArea='resources'>
+                    <ProjectResources />
+                </Tile>
             </HealthGrid>
         </HealthContainer>
     );

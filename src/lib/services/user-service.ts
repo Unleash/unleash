@@ -431,6 +431,7 @@ class UserService {
                             Math.max(allowedSessions - 1, 0),
                         );
                     user.deletedSessions = deletedSessionsCount;
+                    user.activeSessions = allowedSessions;
                 }
                 this.eventBus.emit(USER_LOGIN, { loginOrder });
                 return user;

@@ -60,4 +60,5 @@ export interface UserSchema {
      */
     username?: string | null;
     deletedSessions?: number;
+    activeSessions?: number;
 }

@@ -32,6 +32,7 @@ export interface IUser {
     accountType?: AccountType;
     scimId?: string;
     deletedSessions?: number;
+    activeSessions?: number;
 }
 
 export type MinimalUser = Pick<

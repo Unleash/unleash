@@ -874,10 +874,7 @@ const config: Config = {
                 docsPluginId: 'classic',
                 config: {
                     server: {
-                        specPath:
-                            process.env.OPENAPI_SOURCE === 'localhost'
-                                ? 'http://localhost:4242/docs/openapi.json'
-                                : 'https://us.app.unleash-hosted.com/ushosted/docs/openapi.json',
+                        specPath: 'docs/generated/openapi.json',
                         outputDir: 'docs/reference/api/unleash',
                         sidebarOptions: {
                             groupPathsBy: 'tag',

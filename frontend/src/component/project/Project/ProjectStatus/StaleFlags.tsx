@@ -1,6 +1,8 @@
 import { Typography } from '@mui/material';
 import { styled } from '@mui/material';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
+import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
+import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { FC } from 'react';
 import { Link } from 'react-router-dom';
@@ -19,7 +21,7 @@ const BigText = styled('span')(({ theme }) => ({
 
 const BigNumber: FC<{ value?: number }> = ({ value }) => {
     return (
-        <BigText>
+        <BigText data-loading-stale-flags>
             <PrettifyLargeNumber
                 value={value ?? 0}
                 threshold={1000}
@@ -31,10 +33,13 @@ const BigNumber: FC<{ value?: number }> = ({ value }) => {
 
 export const StaleFlags = () => {
     const projectId = useRequiredPathParam('projectId');
+    const { data, loading } = useProjectStatus(projectId);
+    const loadingRef = useLoading(loading, '[data-loading-stale-flags=true]');
+
     return (
-        <Wrapper>
+        <Wrapper ref={loadingRef}>
             <Typography component='h4'>
-                <BigNumber value={6} />{' '}
+                <BigNumber value={data?.staleFlags.total ?? 0} />{' '}
                 <Link to={`/projects/${projectId}?state=IS%3Astale`}>
                     stale flags
                 </Link>

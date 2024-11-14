@@ -76,10 +76,11 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
                 username,
                 password,
             );
-            if (data.deletedSessions) {
+            if (data.deletedSessions && data.activeSessions) {
                 setToastData({
                     type: 'success',
-                    title: `You have been logged out of ${data.deletedSessions} stale session(s)`,
+                    title: 'Maximum Session Limit Reached',
+                    text: `You can have up to ${data.activeSessions} active sessions at a time. To allow this login, we’ve logged out ${data.deletedSessions} session(s) from other browsers.`,
                 });
             }
             refetchUser();

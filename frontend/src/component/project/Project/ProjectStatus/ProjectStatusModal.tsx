@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { ReactComponent as ProjectStatusSvg } from 'assets/icons/projectStatus.svg';
 import { ProjectResources } from './ProjectResources';
 import { ProjectActivity } from './ProjectActivity';
 import { ProjectHealth } from './ProjectHealth';
@@ -11,10 +12,11 @@ const ModalContentContainer = styled('section')(({ theme }) => ({
     maxWidth: 1100,
     width: '95vw',
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(4),
     display: 'flex',
     flexFlow: 'column',
     gap: theme.spacing(4),
+    paddingInline: theme.spacing(4),
+    paddingBlock: theme.spacing(10),
 }));
 
 type Props = {
@@ -48,10 +50,29 @@ const HealthGrid = styled('div')(({ theme }) => ({
     }),
 }));
 
+const HeaderRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1.5),
+}));
+
+const StyledProjectStatusSvg = styled(ProjectStatusSvg)(({ theme }) => ({
+    fill: theme.palette.primary.main,
+}));
+
+const ModalHeader = styled('h3')(({ theme }) => ({
+    fontSize: theme.typography.h2.fontSize,
+    margin: 0,
+}));
+
 export const ProjectStatusModal = ({ open, close }: Props) => {
     return (
         <DynamicSidebarModal open={open} onClose={close} label='Project status'>
             <ModalContentContainer>
+                <HeaderRow>
+                    <StyledProjectStatusSvg aria-hidden='true' />
+                    <ModalHeader>Project status</ModalHeader>
+                </HeaderRow>
                 <HealthContainer>
                     <HealthGrid>
                         <ProjectHealth />

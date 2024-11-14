@@ -52,14 +52,19 @@ const HealthGrid = styled('div')(({ theme }) => ({
     }),
 }));
 
+const LifecycleHeaderRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'end',
+}));
+
 const HeaderRow = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    gap: theme.spacing(1.5),
 }));
 
 const StyledProjectStatusSvg = styled(ProjectStatusSvg)(({ theme }) => ({
     fill: theme.palette.primary.main,
-    marginRight: theme.spacing(1.5),
 }));
 
 const ModalHeader = styled('h3')(({ theme }) => ({
@@ -75,7 +80,7 @@ const RowHeader = styled('h4')(({ theme }) => ({
 const Row = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(1),
+    gap: theme.spacing(2),
 }));
 
 const TooltipContent = styled('div')(({ theme }) => ({
@@ -140,10 +145,10 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                 </Row>
 
                 <Row>
-                    <HeaderRow>
+                    <LifecycleHeaderRow>
                         <RowHeader>Flag lifecycle</RowHeader>
                         <LifecycleTooltip />
-                    </HeaderRow>
+                    </LifecycleHeaderRow>
                     <ProjectLifecycleSummary />
                 </Row>
             </ModalContentContainer>

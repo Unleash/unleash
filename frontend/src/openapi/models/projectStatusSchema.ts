@@ -22,4 +22,9 @@ export interface ProjectStatusSchema {
     lifecycleSummary: ProjectStatusSchemaLifecycleSummary;
     /** Key resources within the project */
     resources: ProjectStatusSchemaResources;
+    /** Information on stale and potentially stale flags in this project. */
+    staleFlags: {
+        /** The total number of flags in this project that are stale or potentially stale. */
+        total: number;
+    };
 }

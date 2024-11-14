@@ -33,6 +33,7 @@ export const projectStatusSchema = {
         'resources',
         'averageHealth',
         'lifecycleSummary',
+        'staleFlags',
     ],
     description:
         'Schema representing the overall status of a project, including an array of activity records. Each record in the activity array contains a date and a count, providing a snapshot of the project’s activity level over time.',
@@ -82,6 +83,21 @@ export const projectStatusSchema = {
                     minimum: 0,
                     description:
                         'The number of segments that are scoped to this project.',
+                },
+            },
+        },
+        staleFlags: {
+            type: 'object',
+            additionalProperties: false,
+            description:
+                'Information on stale and potentially stale flags in this project.',
+            required: ['total'],
+            properties: {
+                total: {
+                    type: 'integer',
+                    minimum: 0,
+                    description:
+                        'The total number of flags in this project that are stale or potentially stale.',
                 },
             },
         },

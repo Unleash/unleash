@@ -14,6 +14,8 @@ import {
     createFakeProjectLifecycleSummaryReadModel,
     createProjectLifecycleSummaryReadModel,
 } from './project-lifecycle-read-model/createProjectLifecycleSummaryReadModel';
+import { ProjectStaleFlagsReadModel } from './project-stale-flags-read-model/project-stale-flags-read-model';
+import { FakeProjectStaleFlagsReadModel } from './project-stale-flags-read-model/fake-project-stale-flags-read-model';
 
 export const createProjectStatusService = (
     db: Db,
@@ -40,6 +42,7 @@ export const createProjectStatusService = (
     );
     const projectLifecycleSummaryReadModel =
         createProjectLifecycleSummaryReadModel(db, config);
+    const projectStaleFlagsReadModel = new ProjectStaleFlagsReadModel(db);
 
     return new ProjectStatusService(
         {
@@ -50,6 +53,7 @@ export const createProjectStatusService = (
         },
         new PersonalDashboardReadModel(db),
         projectLifecycleSummaryReadModel,
+        projectStaleFlagsReadModel,
     );
 };
 
@@ -67,6 +71,7 @@ export const createFakeProjectStatusService = () => {
         },
         new FakePersonalDashboardReadModel(),
         createFakeProjectLifecycleSummaryReadModel(),
+        new FakeProjectStaleFlagsReadModel(),
     );
 
     return {

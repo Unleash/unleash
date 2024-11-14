@@ -8,6 +8,7 @@ import type {
 } from '../../types';
 import type { IPersonalDashboardReadModel } from '../personal-dashboard/personal-dashboard-read-model-type';
 import type { IProjectLifecycleSummaryReadModel } from './project-lifecycle-read-model/project-lifecycle-read-model-type';
+import type { IProjectStaleFlagsReadModel } from './project-stale-flags-read-model/project-stale-flags-read-model-type';
 
 export class ProjectStatusService {
     private eventStore: IEventStore;
@@ -16,6 +17,7 @@ export class ProjectStatusService {
     private segmentStore: ISegmentStore;
     private personalDashboardReadModel: IPersonalDashboardReadModel;
     private projectLifecycleSummaryReadModel: IProjectLifecycleSummaryReadModel;
+    private projectStaleFlagsReadModel: IProjectStaleFlagsReadModel;
 
     constructor(
         {
@@ -29,6 +31,7 @@ export class ProjectStatusService {
         >,
         personalDashboardReadModel: IPersonalDashboardReadModel,
         projectLifecycleReadModel: IProjectLifecycleSummaryReadModel,
+        projectStaleFlagsReadModel: IProjectStaleFlagsReadModel,
     ) {
         this.eventStore = eventStore;
         this.projectStore = projectStore;
@@ -36,6 +39,7 @@ export class ProjectStatusService {
         this.segmentStore = segmentStore;
         this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectLifecycleSummaryReadModel = projectLifecycleReadModel;
+        this.projectStaleFlagsReadModel = projectStaleFlagsReadModel;
     }
 
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
@@ -47,6 +51,7 @@ export class ProjectStatusService {
             activityCountByDate,
             healthScores,
             lifecycleSummary,
+            staleFlagCount,
         ] = await Promise.all([
             this.projectStore.getConnectedEnvironmentCountForProject(projectId),
             this.projectStore.getMembersCountByProject(projectId),
@@ -55,6 +60,9 @@ export class ProjectStatusService {
             this.eventStore.getProjectRecentEventActivity(projectId),
             this.personalDashboardReadModel.getLatestHealthScores(projectId, 4),
             this.projectLifecycleSummaryReadModel.getProjectLifecycleSummary(
+                projectId,
+            ),
+            this.projectStaleFlagsReadModel.getStaleFlagCountForProject(
                 projectId,
             ),
         ]);
@@ -74,6 +82,9 @@ export class ProjectStatusService {
             activityCountByDate,
             averageHealth: Math.round(averageHealth),
             lifecycleSummary,
+            staleFlags: {
+                total: staleFlagCount,
+            },
         };
     }
 }

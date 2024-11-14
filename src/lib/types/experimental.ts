@@ -1,5 +1,5 @@
 import { PayloadType, type Variant } from 'unleash-client';
-import { parseEnvVarBoolean } from '../util';
+import { parseEnvVarBoolean, parseEnvVarNumber } from '../util';
 import { getDefaultVariant } from 'unleash-client/lib/variant';
 
 export type IFlagKey =
@@ -289,10 +289,20 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
         false,
     ),
-    showUserDeviceCount: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
-        false,
-    ),
+    showUserDeviceCount: {
+        name: 'showUserDeviceCount',
+        enabled: parseEnvVarBoolean(
+            process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
+            false,
+        ),
+        payload: {
+            type: PayloadType.NUMBER,
+            value: `${parseEnvVarNumber(
+                process.env.UNLEASH_EXPERIMENTAL_USER_DEVICE_COUNT,
+                0,
+            )}`,
+        },
+    },
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

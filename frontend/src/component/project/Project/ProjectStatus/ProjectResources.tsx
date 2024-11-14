@@ -8,14 +8,9 @@ import SegmentsIcon from '@mui/icons-material/DonutLarge';
 import ConnectedIcon from '@mui/icons-material/Cable';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
+import { HealthGridTile } from './ProjectHealthGrid.styles';
 
-const Wrapper = styled('article')(({ theme }) => ({
-    backgroundColor: theme.palette.envAccordion.expanded,
-    padding: theme.spacing(3),
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    minWidth: '300px',
-    gridArea: 'resources',
-}));
+const Wrapper = HealthGridTile('resources');
 
 const ProjectResourcesInner = styled('div')(({ theme }) => ({
     display: 'flex',

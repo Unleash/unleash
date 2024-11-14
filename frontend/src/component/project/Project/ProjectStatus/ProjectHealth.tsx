@@ -3,14 +3,9 @@ import { Link } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
+import { HealthGridTile } from './ProjectHealthGrid.styles';
 
-const HealthContainer = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.envAccordion.expanded,
-    padding: theme.spacing(3),
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    minWidth: '300px',
-    gridArea: 'health',
-}));
+const HealthContainer = HealthGridTile('health');
 
 const TextContainer = styled('div')(({ theme }) => ({
     display: 'flex',

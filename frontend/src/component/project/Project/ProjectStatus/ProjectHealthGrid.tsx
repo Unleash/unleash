@@ -1,5 +1,4 @@
 import { ProjectHealth } from './ProjectHealth';
-
 import { styled } from '@mui/material';
 import { StaleFlags } from './StaleFlags';
 import { ProjectResources } from './ProjectResources';
@@ -21,7 +20,7 @@ const HealthGrid = styled('div')(({ theme }) => ({
         "health resources"
         "stale resources"
     `,
-    gridTemplateColumns: '1fr 1fr',
+    gridTemplateColumns: 'repeat(2, minmax(300px, 1fr))',
     gap: theme.spacing(1, 2),
     ...onNarrowGrid({
         display: 'flex',

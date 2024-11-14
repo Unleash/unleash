@@ -258,6 +258,14 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
+    "flag": "feedbackPosting",
+    "menu": {},
+    "path": "/feedback",
+    "title": "Feedback",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
     "enterprise": true,
     "flag": "releasePlans",
     "menu": {

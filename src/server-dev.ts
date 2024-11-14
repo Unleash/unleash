@@ -44,6 +44,7 @@ process.nextTick(async () => {
                         userAccessUIEnabled: true,
                         outdatedSdksBanner: true,
                         disableShowContextFieldSelectionValues: false,
+                        feedbackPosting: true,
                         manyStrategiesPagination: true,
                         enableLegacyVariants: false,
                         extendedMetrics: true,

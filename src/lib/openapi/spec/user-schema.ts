@@ -99,6 +99,12 @@ export const userSchema = {
             nullable: true,
             example: '01HTMEXAMPLESCIMID7SWWGHN6',
         },
+        deletedSessions: {
+            description:
+                'Experimental. The number of deleted sessions after the last login',
+            type: 'number',
+            example: 1,
+        },
     },
     components: {},
 } as const;

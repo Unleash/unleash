@@ -31,6 +31,7 @@ export interface IUser {
     imageUrl?: string;
     accountType?: AccountType;
     scimId?: string;
+    deletedSessions?: number;
 }
 
 export type MinimalUser = Pick<

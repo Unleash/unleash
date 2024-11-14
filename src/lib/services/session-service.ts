@@ -36,7 +36,7 @@ export default class SessionService {
     async deleteStaleSessionsForUser(
         userId: number,
         maxSessions: number,
-    ): Promise<void> {
+    ): Promise<number> {
         let userSessions: ISession[] = [];
         try {
             // this method may throw errors when no session
@@ -51,6 +51,7 @@ export default class SessionService {
                 this.sessionStore.delete(session.sid),
             ),
         );
+        return sessionsToDelete.length;
     }
 
     async deleteSession(sid: string): Promise<void> {

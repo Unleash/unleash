@@ -18,6 +18,7 @@ import PasswordMismatch from '../../../lib/error/password-mismatch';
 import type { EventService } from '../../../lib/services';
 import {
     CREATE_ADDON,
+    type IFlagResolver,
     type IUnleashStores,
     type IUserStore,
     SYSTEM_USER_AUDIT,
@@ -45,6 +46,8 @@ let eventService: EventService;
 let accessService: AccessService;
 let eventBus: EventEmitter;
 
+const allowedSessions = 2;
+
 beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
@@ -63,14 +66,28 @@ beforeAll(async () => {
     sessionService = new SessionService(stores, config);
     settingService = new SettingService(stores, config, eventService);
 
-    userService = new UserService(stores, config, {
-        accessService,
-        resetTokenService,
-        emailService,
-        eventService,
-        sessionService,
-        settingService,
-    });
+    const flagResolver = {
+        getVariant() {
+            return {
+                feature_enabled: true,
+                payload: {
+                    value: String(allowedSessions),
+                },
+            };
+        },
+    } as unknown as IFlagResolver;
+    userService = new UserService(
+        stores,
+        { ...config, flagResolver },
+        {
+            accessService,
+            resetTokenService,
+            emailService,
+            eventService,
+            sessionService,
+            settingService,
+        },
+    );
     userStore = stores.userStore;
     const rootRoles = await accessService.getRootRoles();
     adminRole = rootRoles.find((r) => r.name === RoleName.ADMIN)!;
@@ -95,8 +112,9 @@ afterAll(async () => {
     await db.destroy();
 });
 
-afterEach(async () => {
+beforeEach(async () => {
     await userStore.deleteAll();
+    await settingService.deleteAll();
 });
 
 test('should create initial admin user', async () => {
@@ -360,6 +378,42 @@ test("deleting a user should delete the user's sessions", async () => {
     await expect(async () =>
         sessionService.getSessionsForUser(user.id),
     ).rejects.toThrow(NotFoundError);
+});
+
+test('user login should remove stale sessions', async () => {
+    const email = 'some@test.com';
+    const user = await userService.createUser(
+        {
+            email,
+            password: 'A very strange P4ssw0rd_',
+            rootRole: adminRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
+    const userSession = (index: number) => ({
+        sid: `sid${index}`,
+        sess: {
+            cookie: {
+                originalMaxAge: minutesToMilliseconds(48),
+                expires: addDays(Date.now(), 1).toDateString(),
+                secure: false,
+                httpOnly: true,
+                path: '/',
+            },
+            user,
+        },
+    });
+
+    for (let i = 0; i < allowedSessions; i++) {
+        await sessionService.insertSession(userSession(i));
+    }
+
+    const insertedUser = await userService.loginUser(
+        email,
+        'A very strange P4ssw0rd_',
+    );
+
+    expect(insertedUser.deletedSessions).toBe(1);
 });
 
 test('updating a user without an email should not strip the email', async () => {

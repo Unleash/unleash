@@ -59,4 +59,5 @@ export interface UserSchema {
      * @nullable
      */
     username?: string | null;
+    deletedSessions?: number;
 }

@@ -12,6 +12,7 @@ import { LOGIN_BUTTON, LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from 'utils/testIds';
 import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { BadRequestError, NotFoundError } from 'utils/apiUtils';
 import { contentSpacingY } from 'themes/themeStyles';
+import useToast from 'hooks/useToast';
 
 interface IHostedAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
@@ -47,6 +48,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
         passwordError?: string;
         apiError?: string;
     }>({});
+    const { setToastData } = useToast();
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (evt) => {
         evt.preventDefault();
@@ -69,7 +71,17 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
         }
 
         try {
-            await passwordAuth(authDetails.path, username, password);
+            const data = await passwordAuth(
+                authDetails.path,
+                username,
+                password,
+            );
+            if (data.deletedSessions) {
+                setToastData({
+                    type: 'success',
+                    title: `You have been logged out of ${data.deletedSessions} stale session(s)`,
+                });
+            }
             refetchUser();
             navigate(redirect, { replace: true });
         } catch (error: any) {

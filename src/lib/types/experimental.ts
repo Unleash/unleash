@@ -60,7 +60,8 @@ export type IFlagKey =
     | 'releasePlans'
     | 'productivityReportEmail'
     | 'enterprise-payg'
-    | 'simplifyProjectOverview';
+    | 'simplifyProjectOverview'
+    | 'memorizeStats';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

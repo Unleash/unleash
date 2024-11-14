@@ -190,14 +190,29 @@ export class InstanceStatsService {
 
     memory = new Map<string, () => Promise<any>>();
     memorize<T>(key: string, fn: () => Promise<T>): Promise<T> {
-        const memoizedFunction =
-            this.memory.get(key) ??
-            memoizee(() => fn(), {
-                promise: true,
-                maxAge: minutesToMilliseconds(1),
-            });
-        this.memory.set(key, memoizedFunction);
-        return memoizedFunction();
+        const enabled = this.flagResolver.isEnabled('memorizeStats', {
+            memoryKey: key,
+        });
+        console.log('enabled', enabled);
+        if (enabled) {
+            const variant = this.flagResolver.getVariant('memorizeStats', {
+                memoryKey: key,
+            }).payload;
+            const minutes =
+                variant?.type === 'number' ? Number(variant.value) : 1;
+
+            let memoizedFunction = this.memory.get(key);
+            if (!memoizedFunction) {
+                memoizedFunction = memoizee(() => fn(), {
+                    promise: true,
+                    maxAge: minutesToMilliseconds(minutes),
+                });
+                this.memory.set(key, memoizedFunction);
+            }
+            return memoizedFunction();
+        } else {
+            return fn();
+        }
     }
 
     getProjectModeCount(): Promise<ProjectModeCount[]> {

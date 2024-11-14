@@ -12,6 +12,7 @@ import { LOGIN_BUTTON, LOGIN_EMAIL_ID, LOGIN_PASSWORD_ID } from 'utils/testIds';
 import type { IAuthEndpointDetailsResponse } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { BadRequestError, NotFoundError } from 'utils/apiUtils';
 import { contentSpacingY } from 'themes/themeStyles';
+import useToast from 'hooks/useToast';
 
 interface IHostedAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
@@ -47,6 +48,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
         passwordError?: string;
         apiError?: string;
     }>({});
+    const { setToastData } = useToast();
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (evt) => {
         evt.preventDefault();
@@ -69,7 +71,18 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
         }
 
         try {
-            await passwordAuth(authDetails.path, username, password);
+            const data = await passwordAuth(
+                authDetails.path,
+                username,
+                password,
+            );
+            if (data.deletedSessions && data.activeSessions) {
+                setToastData({
+                    type: 'success',
+                    title: 'Maximum Session Limit Reached',
+                    text: `You can have up to ${data.activeSessions} active sessions at a time. To allow this login, we’ve logged out ${data.deletedSessions} session(s) from other browsers.`,
+                });
+            }
             refetchUser();
             navigate(redirect, { replace: true });
         } catch (error: any) {

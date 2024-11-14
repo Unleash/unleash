@@ -2,7 +2,7 @@ import LicenseIcon from '@mui/icons-material/ReceiptLongOutlined';
 import { Box, styled, Typography } from '@mui/material';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
+import { BILLING_PRO_DEFAULT_INCLUDED_SEATS } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
 
 const SeatsUsageBar = styled(LinearProgress)(({ theme }) => ({
     marginTop: theme.spacing(0.5),
@@ -32,8 +32,7 @@ const SeatsUsageText = styled(Box)(({ theme }) => ({
 
 export const UserSeats = () => {
     const { users } = useUsers();
-    const { instanceStatus } = useInstanceStatus();
-    const seats = instanceStatus?.seats;
+    const seats = BILLING_PRO_DEFAULT_INCLUDED_SEATS;
 
     if (typeof seats === 'number') {
         const percentageSeats = Math.floor((users.length / seats) * 100);

@@ -11,7 +11,7 @@
     "build": "yarn generate && yarn fetch-remote-content && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "fetch-remote-content": "docusaurus download-remote-content-external && docusaurus download-remote-content-sdks",
-    "generate": "docusaurus gen-api-docs all && node clean-generated-docs.mjs",
+    "generate": "node prepare-generated-docs.mjs && docusaurus gen-api-docs all",
     "deploy": "yarn generate && yarn fetch-remote-content && docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
@@ -34,8 +34,7 @@
     "prism-react-renderer": "^2.4.0",
     "prism-svelte": "^0.5.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "replace-in-file": "^8.2.0"
+    "react-dom": "^18.3.1"
   },
   "browserslist": {
     "production": [

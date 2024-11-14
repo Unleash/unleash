@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { Box, Card, styled, Typography } from '@mui/material';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
+import { BILLING_PRO_DEFAULT_INCLUDED_SEATS } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
 
 type OrderEnvironmentsDialogPricingProps = {
     pricingOptions: Array<{ environments: number; price: number }>;
@@ -61,8 +62,9 @@ export const OrderEnvironmentsDialogPricing: FC<
         ))}
         <StyledExtraText>
             <Typography variant='body2' color='white'>
-                With Pro, there is a minimum of 5 users, meaning an additional
-                environment will cost at least $50 per month.
+                With Pro, there is a minimum of{' '}
+                {BILLING_PRO_DEFAULT_INCLUDED_SEATS} users, meaning an
+                additional environment will cost at least $50 per month.
             </Typography>
         </StyledExtraText>
     </StyledContainer>

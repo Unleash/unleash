@@ -39,12 +39,14 @@ This command generates static content into the `build` directory and can be serv
 
 ## Cleaning dependencies and caches
 
-If you're upgrading a lot of dependencies, it's always good to delete the `node_modules` directory and clean the various caches.
+If you're upgrading many dependencies, it's always good to delete the `node_modules` directory, refresh `yarn.lock` and clean the various caches.
 
 ```console
 rm -rf node_modules
 rm -rf .docusaurus
 rm -rf docs/reference/api/unleash
+rm -rf yarn.lock
+touch yarn.lock
 ```
 
 ## Troubleshooting

@@ -2,7 +2,7 @@ import type { IUser } from 'interfaces/user';
 import { useMemo } from 'react';
 import { useInstanceStatus } from './api/getters/useInstanceStatus/useInstanceStatus';
 import { InstancePlan } from 'interfaces/instance';
-import useUiConfig from './api/getters/useUiConfig/useUiConfig';
+import { BILLING_PRO_DEFAULT_INCLUDED_SEATS } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
 
 export interface IUsersPlanOutput {
     planUsers: IUser[];
@@ -13,10 +13,9 @@ export interface IUsersPlanOutput {
 
 export const useUsersPlan = (users: IUser[]): IUsersPlanOutput => {
     const { instanceStatus } = useInstanceStatus();
-    const { uiConfig } = useUiConfig();
 
     const isBillingUsers = Boolean(instanceStatus?.plan === InstancePlan.PRO);
-    const seats = instanceStatus?.seats ?? 5;
+    const seats = BILLING_PRO_DEFAULT_INCLUDED_SEATS;
 
     const planUsers = useMemo(
         () => calculatePaidUsers(users, isBillingUsers, seats),

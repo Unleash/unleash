@@ -40,8 +40,8 @@ services:
       # comma (`token1,token2`).
       INIT_CLIENT_API_TOKENS: "default:development.unleash-insecure-api-token"
       # OGCIO
-      AUTH_APP_ID: "a12do5q2ccgn1p58h2u4f"
-      AUTH_APP_SECRET: "Zc2E4xZ7N9F5K26MvJ3nrLY0DbXDygeU"
+      AUTH_APP_ID: "43geanp0dwznxw412mxme"
+      AUTH_APP_SECRET: "unleash_app_local_secret"
       AUTH_HOST: "http://localhost:3301"
     depends_on:
       db:

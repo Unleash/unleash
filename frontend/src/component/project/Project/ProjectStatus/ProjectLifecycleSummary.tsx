@@ -16,12 +16,15 @@ const LifecycleBoxContent = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'column',
     justifyContent: 'space-between',
-    transition: 'border-color 200ms',
+    transition: 'all 200ms',
     borderRadius: theme.shape.borderRadiusExtraLarge,
     border: `2px solid ${theme.palette.divider}`,
     '&:focus-visible': {
         outline: 'none',
         borderColor: theme.palette.primary.main,
+    },
+    '&:hover': {
+        backgroundColor: theme.palette.table.rowHover,
     },
 }));
 

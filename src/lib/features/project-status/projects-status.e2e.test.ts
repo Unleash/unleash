@@ -127,51 +127,6 @@ test('project insights should return correct count for each day', async () => {
     });
 });
 
-test('project status should return environments with connected SDKs', async () => {
-    const flagName = randomId();
-    await app.createFeature(flagName);
-
-    const envs =
-        await app.services.environmentService.getProjectEnvironments('default');
-    expect(envs.some((env) => env.name === 'default')).toBeTruthy();
-
-    const appName = 'blah';
-    const environment = 'default';
-    await db.stores.clientMetricsStoreV2.batchInsertMetrics([
-        {
-            featureName: `flag-doesnt-exist`,
-            appName,
-            environment,
-            timestamp: new Date(),
-            yes: 5,
-            no: 2,
-        },
-        {
-            featureName: flagName,
-            appName: `web2`,
-            environment,
-            timestamp: new Date(),
-            yes: 5,
-            no: 2,
-        },
-        {
-            featureName: flagName,
-            appName,
-            environment: 'not-a-real-env',
-            timestamp: new Date(),
-            yes: 2,
-            no: 2,
-        },
-    ]);
-
-    const { body } = await app.request
-        .get('/api/admin/projects/default/status')
-        .expect('Content-Type', /json/)
-        .expect(200);
-
-    expect(body.resources.connectedEnvironments).toBe(1);
-});
-
 test('project resources should contain the right data', async () => {
     const { body: noResourcesBody } = await app.request
         .get('/api/admin/projects/default/status')
@@ -182,7 +137,6 @@ test('project resources should contain the right data', async () => {
         members: 0,
         apiTokens: 0,
         segments: 0,
-        connectedEnvironments: 0,
     });
 
     const flagName = randomId();
@@ -239,7 +193,6 @@ test('project resources should contain the right data', async () => {
         members: 1,
         apiTokens: 1,
         segments: 1,
-        connectedEnvironments: 1,
     });
 });
 

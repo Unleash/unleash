@@ -28,10 +28,6 @@ const StyledSVG = styled('svg')({
     position: 'absolute',
 });
 
-const StyledLink = styled(Link)(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
-}));
-
 export const ProjectHealth = () => {
     const projectId = useRequiredPathParam('projectId');
     const {
@@ -93,14 +89,14 @@ export const ProjectHealth = () => {
                     </StyledSVG>
                 </SVGWrapper>
                 <TextContainer>
-                    <Typography variant='body2'>
+                    <Typography>
                         On average, your project health has remained at{' '}
                         {averageHealth}% the last 4 weeks
                     </Typography>
                     {!isOss() && (
-                        <StyledLink to='/insights'>
+                        <Link to={`/insights?project=IS%3A${projectId}`}>
                             View health over time
-                        </StyledLink>
+                        </Link>
                     )}
                 </TextContainer>
             </ChartRow>

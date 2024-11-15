@@ -317,16 +317,21 @@ export class InstanceStatsService {
             this.countPreviousDayHourlyMetricsBuckets(),
             this.memorize(
                 'maxFeatureEnvironmentStrategies',
-                this.featureStrategiesReadModel
-                    .getMaxFeatureEnvironmentStrategies,
+                this.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies.bind(
+                    this.featureStrategiesReadModel,
+                ),
             ),
             this.memorize(
                 'maxConstraintValues',
-                this.featureStrategiesReadModel.getMaxConstraintValues,
+                this.featureStrategiesReadModel.getMaxConstraintValues.bind(
+                    this.featureStrategiesReadModel,
+                ),
             ),
             this.memorize(
                 'maxConstraintsPerStrategy',
-                this.featureStrategiesReadModel.getMaxConstraintsPerStrategy,
+                this.featureStrategiesReadModel.getMaxConstraintsPerStrategy.bind(
+                    this.featureStrategiesReadModel,
+                ),
             ),
         ]);
 

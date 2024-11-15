@@ -324,8 +324,8 @@ export class InstanceStatsService {
             this.getRegisteredUsers(),
             this.countServiceAccounts(),
             this.countApiTokensByType(),
-            this.getActiveUsers(),
-            this.getLicencedUsers(),
+            this.memorize('getActiveUsers', this.getActiveUsers.bind(this)),
+            this.memorize('getLicencedUsers', this.getLicencedUsers.bind(this)),
             this.getProjectModeCount(),
             this.contextFieldCount(),
             this.groupCount(),
@@ -350,7 +350,10 @@ export class InstanceStatsService {
                     type: FEATURES_IMPORTED,
                 }),
             ),
-            this.getProductionChanges(),
+            this.memorize(
+                'getProductionChanges',
+                this.getProductionChanges.bind(this),
+            ),
             this.countPreviousDayHourlyMetricsBuckets(),
             this.memorize(
                 'maxFeatureEnvironmentStrategies',

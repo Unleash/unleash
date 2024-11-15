@@ -106,7 +106,16 @@ const CloseRow = styled('div')(({ theme }) => ({
 
 export const ProjectStatusModal = ({ open, close }: Props) => {
     return (
-        <DynamicSidebarModal open={open} onClose={close} label='Project status'>
+        <DynamicSidebarModal
+            open={open}
+            onClose={close}
+            label='Project status'
+            onClick={(e: React.SyntheticEvent) => {
+                if (e.target instanceof HTMLAnchorElement) {
+                    close();
+                }
+            }}
+        >
             <ModalContentContainer>
                 <HeaderRow>
                     <StyledProjectStatusSvg aria-hidden='true' />

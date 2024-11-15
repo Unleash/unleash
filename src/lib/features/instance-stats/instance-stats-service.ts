@@ -193,7 +193,6 @@ export class InstanceStatsService {
         const enabled = this.flagResolver.isEnabled('memorizeStats', {
             memoryKey: key,
         });
-        console.log('enabled', enabled);
         if (enabled) {
             const variant = this.flagResolver.getVariant('memorizeStats', {
                 memoryKey: key,

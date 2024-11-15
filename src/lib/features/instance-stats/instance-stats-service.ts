@@ -59,6 +59,8 @@ export interface InstanceStats {
     strategies: number;
     SAMLenabled: boolean;
     OIDCenabled: boolean;
+    passwordAuthEnabled: boolean;
+    SCIMenabled: boolean;
     clientApps: { range: TimeRange; count: number }[];
     activeUsers: Awaited<ReturnType<GetActiveUsers>>;
     licensedUsers: Awaited<ReturnType<GetLicensedUsers>>;
@@ -306,6 +308,8 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
+            passwordAuthEnabled,
+            SCIMenabled,
             clientApps,
             featureExports,
             featureImports,
@@ -333,6 +337,8 @@ export class InstanceStatsService {
             this.strategiesCount(),
             this.hasSAML(),
             this.hasOIDC(),
+            this.hasPasswordAuth(),
+            this.hasSCIM(),
             this.appCount ? this.appCount : this.getLabeledAppCounts(),
             this.memorize('deprecatedFilteredCountFeaturesExported', () =>
                 this.eventStore.deprecatedFilteredCount({
@@ -389,6 +395,8 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
+            passwordAuthEnabled,
+            SCIMenabled,
             clientApps: Object.entries(clientApps).map(([range, count]) => ({
                 range: range as TimeRange,
                 count,

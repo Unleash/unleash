@@ -35,7 +35,7 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
+const StyledAddMilestoneButton = styled(Button)(({ theme }) => ({
     marginTop: theme.spacing(1),
     maxWidth: theme.spacing(20),
 }));
@@ -88,21 +88,6 @@ export const CreateReleasePlanTemplate = () => {
         }
     };
 
-    const updateMilestone = (
-        index: number,
-        milestone: IReleasePlanMilestonePayload,
-    ) => {
-        /*
-        setMilestones(() => {
-            return milestones.map((m, i) => {
-                if (i === index) {
-                    return milestone;
-                }
-                return m;
-            });
-        });*/
-    };
-
     const onSidebarClose = () => {};
 
     if (!releasePlansEnabled) {
@@ -130,7 +115,7 @@ export const CreateReleasePlanTemplate = () => {
                     errors={errors}
                     clearErrors={clearErrors}
                 />
-                <StyledButton
+                <StyledAddMilestoneButton
                     variant='text'
                     color='primary'
                     onClick={(e) => {
@@ -145,7 +130,7 @@ export const CreateReleasePlanTemplate = () => {
                     }}
                 >
                     + Add milestone
-                </StyledButton>
+                </StyledAddMilestoneButton>
                 <StyledButtonContainer>
                     <CreateButton name='template' permission={ADMIN} />
                     <StyledCancelButton onClick={handleCancel}>

@@ -29,6 +29,11 @@ const StyledButtonContainer = styled('div')(() => ({
     justifyContent: 'flex-end',
 }));
 
+const StyledAddMilestoneButton = styled(Button)(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    maxWidth: theme.spacing(20),
+}));
+
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
@@ -50,9 +55,15 @@ export const EditReleasePlanTemplate = () => {
         setDescription,
         errors,
         clearErrors,
+        milestones,
+        setMilestones,
         validate,
         getTemplatePayload,
-    } = useTemplateForm(template.name, template.description);
+    } = useTemplateForm(
+        template.name,
+        template.description,
+        template.milestones,
+    );
 
     const handleCancel = () => {
         navigate('/release-management');
@@ -67,7 +78,7 @@ export const EditReleasePlanTemplate = () => {
                 await updateReleasePlanTemplate({
                     ...payload,
                     id: templateId,
-                    milestones: template.milestones,
+                    milestones,
                 });
                 navigate('/release-management');
             } catch (error: unknown) {
@@ -85,6 +96,7 @@ export const EditReleasePlanTemplate = () => {
         <FormTemplate
             title={`Edit template ${template.name}`}
             description='Edit a release plan template that makes it easier for you and your team to release features.'
+            loading={loading}
         >
             <StyledForm onSubmit={handleSubmit}>
                 <TemplateForm
@@ -97,12 +109,27 @@ export const EditReleasePlanTemplate = () => {
                 />
 
                 <MilestoneList
-                    milestones={template.milestones}
+                    milestones={milestones}
                     setAddStrategyOpen={setAddStrategyOpen}
                     errors={errors}
                     clearErrors={clearErrors}
                 />
-
+                <StyledAddMilestoneButton
+                    variant='text'
+                    color='primary'
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setMilestones([
+                            ...milestones,
+                            {
+                                name: `Milestone ${milestones.length + 1}`,
+                                sortOrder: milestones.length,
+                            },
+                        ]);
+                    }}
+                >
+                    + Add milestone
+                </StyledAddMilestoneButton>
                 <StyledButtonContainer>
                     <UpdateButton name='template' permission={ADMIN} />
                     <StyledCancelButton onClick={handleCancel}>

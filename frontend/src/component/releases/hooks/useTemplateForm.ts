@@ -42,10 +42,6 @@ export const useTemplateForm = (
         };
     };
 
-    const addMilestone = (milestone: IReleasePlanMilestonePayload) => {
-        setMilestones(() => [...milestones, milestone]);
-    };
-
     return {
         name,
         setName,

@@ -6,6 +6,8 @@ import { ProjectLifecycleSummary } from './ProjectLifecycleSummary';
 import type { FC } from 'react';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ProjectHealthGrid } from './ProjectHealthGrid';
+import { useFeedback } from 'component/feedbackNew/useFeedback';
+import FeedbackIcon from '@mui/icons-material/ChatOutlined';
 
 const ModalContentContainer = styled('section')(({ theme }) => ({
     minHeight: '100vh',
@@ -24,11 +26,6 @@ const WidgetContainer = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(9),
 }));
-
-type Props = {
-    open: boolean;
-    close: () => void;
-};
 
 const LifecycleHeaderRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -102,9 +99,43 @@ const CloseRow = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     marginBlockStart: 'auto',
+    gap: theme.spacing(4),
 }));
 
+const FeedbackContainer = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.neutral.light,
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    padding: theme.spacing(1, 2.5),
+    borderRadius: theme.shape.borderRadiusLarge,
+}));
+
+const FeedbackButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    fontWeight: 'normal',
+    padding: 0,
+    textDecoration: 'underline',
+    verticalAlign: 'baseline',
+}));
+
+type Props = {
+    open: boolean;
+    close: () => void;
+};
+
 export const ProjectStatusModal = ({ open, close }: Props) => {
+    const { openFeedback } = useFeedback('projectStatus', 'manual');
+    const createFeedbackContext = () => {
+        openFeedback({
+            title: 'How easy was it to use the project status overview?',
+            positiveLabel:
+                'What do you like most about the project status overview?',
+            areasForImprovementsLabel:
+                'What should be improved on the project status overview?',
+        });
+    };
+
     return (
         <DynamicSidebarModal
             open={open}
@@ -141,6 +172,24 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                     </Row>
                 </WidgetContainer>
                 <CloseRow>
+                    <FeedbackContainer>
+                        <FeedbackIcon color='primary' />
+                        <p>
+                            Help us improve the project status overview; give us
+                            your{' '}
+                            <FeedbackButton
+                                variant='text'
+                                onClick={() => {
+                                    createFeedbackContext();
+                                    close();
+                                }}
+                                size='small'
+                            >
+                                feedback
+                            </FeedbackButton>
+                        </p>
+                    </FeedbackContainer>
+
                     <Button variant='outlined' onClick={close}>
                         Close
                     </Button>

@@ -179,7 +179,10 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                             your{' '}
                             <FeedbackButton
                                 variant='text'
-                                onClick={createFeedbackContext}
+                                onClick={() => {
+                                    createFeedbackContext();
+                                    close();
+                                }}
                                 size='small'
                             >
                                 feedback

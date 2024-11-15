@@ -94,7 +94,9 @@ export const ProjectHealth = () => {
                         {averageHealth}% the last 4 weeks
                     </Typography>
                     {!isOss() && (
-                        <Link to='/insights'>View health over time</Link>
+                        <Link to={`/insights?project=IS%3A${projectId}`}>
+                            View health over time
+                        </Link>
                     )}
                 </TextContainer>
             </ChartRow>

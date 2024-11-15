@@ -294,7 +294,7 @@ export const FeedbackComponent = ({
                             </Tooltip>
                             <StyledContent>
                                 <StyledTitle>
-                                    Help us to improve Unleash
+                                    Help us improve Unleash
                                 </StyledTitle>
                                 <StyledForm onSubmit={onSubmission}>
                                     <input

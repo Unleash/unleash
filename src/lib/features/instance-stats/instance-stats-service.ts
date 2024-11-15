@@ -307,6 +307,8 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
+            passwordAuthEnabled,
+            SCIMenabled,
             clientApps,
             featureExports,
             featureImports,
@@ -334,6 +336,8 @@ export class InstanceStatsService {
             this.strategiesCount(),
             this.hasSAML(),
             this.hasOIDC(),
+            this.hasPasswordAuth(),
+            this.hasSCIM(),
             this.appCount ? this.appCount : this.getLabeledAppCounts(),
             this.memorize('deprecatedFilteredCountFeaturesExported', () =>
                 this.eventStore.deprecatedFilteredCount({

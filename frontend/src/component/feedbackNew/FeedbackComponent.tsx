@@ -150,7 +150,7 @@ const StyledScoreValue = styled('label')(({ theme }) => ({
         background: theme.palette.primary.main,
         color: theme.palette.primary.contrastText,
     },
-    '& input:hover + span': {
+    '& input:is(:hover, :focus) + span': {
         outline: '2px solid',
         outlineOffset: 2,
         outlineColor: theme.palette.primary.main,

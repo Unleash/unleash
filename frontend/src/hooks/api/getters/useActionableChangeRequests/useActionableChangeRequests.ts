@@ -5,12 +5,13 @@ import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
 
 interface IUseActionableChangeRequestsOutput {
     total?: number;
+    refetch: () => void;
 }
 
 export const useActionableChangeRequests = (
     projectId: string,
 ): IUseActionableChangeRequestsOutput => {
-    const { data } = useEnterpriseSWR<ActionableChangeRequestsSchema>(
+    const { data, mutate } = useEnterpriseSWR<ActionableChangeRequestsSchema>(
         { total: 0 },
         formatApiPath(
             `api/admin/projects/${projectId}/change-requests/actionable`,
@@ -20,6 +21,7 @@ export const useActionableChangeRequests = (
 
     return {
         total: data?.total,
+        refetch: mutate,
     };
 };
 

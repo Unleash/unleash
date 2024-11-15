@@ -56,3 +56,16 @@ test('should get ui config', async () => {
     expect(body.segmentValuesLimit).toEqual(DEFAULT_SEGMENT_VALUES_LIMIT);
     expect(body.strategySegmentsLimit).toEqual(DEFAULT_STRATEGY_SEGMENTS_LIMIT);
 });
+
+test('should return max sessions count', async () => {
+    stores.sessionStore.getMaxSessionsCount = jest.fn().mockReturnValue(10);
+
+    const { body } = await request
+        .get(`${base}/api/admin/ui-config`)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.maxSessions).toEqual(0);
+
+    // FIXME: add more tests
+});

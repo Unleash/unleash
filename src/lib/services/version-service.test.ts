@@ -43,7 +43,7 @@ test('yields current versions', async () => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
     );
-    await service.checkLatestVersion();
+    await service.checkLatestVersion(() => service.getFeatureUsageInfo());
     const versionInfo = await service.getVersionInfo();
     expect(scope.isDone()).toEqual(true);
     expect(versionInfo.current.oss).toBe(version);
@@ -82,7 +82,7 @@ test('supports setting enterprise version as well', async () => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
     );
-    await service.checkLatestVersion();
+    await service.checkLatestVersion(() => service.getFeatureUsageInfo());
     const versionInfo = await service.getVersionInfo();
     expect(scope.isDone()).toEqual(true);
     expect(versionInfo.current.oss).toBe(version);
@@ -121,7 +121,7 @@ test('if version check is not enabled should not make any calls', async () => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
     );
-    await service.checkLatestVersion();
+    await service.checkLatestVersion(() => service.getFeatureUsageInfo());
     const versionInfo = await service.getVersionInfo();
     expect(scope.isDone()).toEqual(false);
     expect(versionInfo.current.oss).toBe(version);
@@ -168,7 +168,7 @@ test('sets featureinfo', async () => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
     );
-    await service.checkLatestVersion();
+    await service.checkLatestVersion(() => service.getFeatureUsageInfo());
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();
 });
@@ -225,7 +225,7 @@ test('counts toggles', async () => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
     );
-    await service.checkLatestVersion();
+    await service.checkLatestVersion(() => service.getFeatureUsageInfo());
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();
 });
@@ -297,7 +297,7 @@ test('counts custom strategies', async () => {
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
     );
-    await service.checkLatestVersion();
+    await service.checkLatestVersion(() => service.getFeatureUsageInfo());
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();
 });
@@ -346,7 +346,7 @@ test('counts active users', async () => {
         fakeActiveUsers,
         fakeProductionChanges,
     );
-    await service.checkLatestVersion();
+    await service.checkLatestVersion(() => service.getFeatureUsageInfo());
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();
 });
@@ -393,7 +393,7 @@ test('Counts production changes', async () => {
         fakeActiveUsers,
         fakeProductionChanges,
     );
-    await service.checkLatestVersion();
+    await service.checkLatestVersion(() => service.getFeatureUsageInfo());
     expect(scope.isDone()).toEqual(true);
     nock.cleanAll();
 });

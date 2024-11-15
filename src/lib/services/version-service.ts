@@ -199,7 +199,9 @@ export default class VersionService {
         return this.instanceId;
     }
 
-    async checkLatestVersion(): Promise<void> {
+    async checkLatestVersion(
+        telemetryDataProvider: () => Promise<IFeatureUsageInfo>,
+    ): Promise<void> {
         const instanceId = await this.getInstanceId();
         this.logger.debug(
             `Checking for newest version for instanceId=${instanceId}`,
@@ -212,8 +214,7 @@ export default class VersionService {
                 };
 
                 if (this.telemetryEnabled) {
-                    versionPayload.featureInfo =
-                        await this.getFeatureUsageInfo();
+                    versionPayload.featureInfo = await telemetryDataProvider();
                 }
                 if (this.versionCheckUrl) {
                     const res = await fetch(this.versionCheckUrl, {
@@ -242,6 +243,7 @@ export default class VersionService {
         }
     }
 
+    /** @deprecated look into stats service getFeatureUsageInfo */
     async getFeatureUsageInfo(): Promise<IFeatureUsageInfo> {
         const [
             featureToggles,

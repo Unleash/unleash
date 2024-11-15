@@ -6,6 +6,7 @@ import type {
     IClientMetricsStoreV2,
     IEventStore,
     IFeatureStrategiesReadModel,
+    IFeatureStrategiesStore,
     ITrafficDataUsageStore,
     IUnleashStores,
 } from '../../types/stores';
@@ -33,6 +34,7 @@ import type { GetProductionChanges } from './getProductionChanges';
 import { format, minutesToMilliseconds } from 'date-fns';
 import memoizee from 'memoizee';
 import type { GetLicensedUsers } from './getLicensedUsers';
+import type { IFeatureUsageInfo } from '../../services/version-service';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -124,6 +126,8 @@ export class InstanceStatsService {
 
     private featureStrategiesReadModel: IFeatureStrategiesReadModel;
 
+    private featureStrategiesStore: IFeatureStrategiesStore;
+
     private trafficDataUsageStore: ITrafficDataUsageStore;
 
     constructor(
@@ -186,9 +190,15 @@ export class InstanceStatsService {
         this.eventStore = eventStore;
         this.clientInstanceStore = clientInstanceStore;
         this.logger = getLogger('services/stats-service.js');
-        this.getActiveUsers = getActiveUsers;
-        this.getLicencedUsers = getLicencedUsers;
-        this.getProductionChanges = getProductionChanges;
+        this.getActiveUsers = () =>
+            this.memorize('getActiveUsers', getActiveUsers.bind(this));
+        this.getLicencedUsers = () =>
+            this.memorize('getLicencedUsers', getLicencedUsers.bind(this));
+        this.getProductionChanges = () =>
+            this.memorize(
+                'getProductionChanges',
+                getProductionChanges.bind(this),
+            );
         this.apiTokenStore = apiTokenStore;
         this.clientMetricsStore = clientMetricsStoreV2;
         this.flagResolver = flagResolver;
@@ -323,8 +333,8 @@ export class InstanceStatsService {
             this.getRegisteredUsers(),
             this.countServiceAccounts(),
             this.countApiTokensByType(),
-            this.memorize('getActiveUsers', this.getActiveUsers.bind(this)),
-            this.memorize('getLicencedUsers', this.getLicencedUsers.bind(this)),
+            this.getActiveUsers(),
+            this.getLicencedUsers(),
             this.getProjectModeCount(),
             this.contextFieldCount(),
             this.groupCount(),
@@ -339,20 +349,9 @@ export class InstanceStatsService {
             this.hasPasswordAuth(),
             this.hasSCIM(),
             this.appCount ? this.appCount : this.getLabeledAppCounts(),
-            this.memorize('deprecatedFilteredCountFeaturesExported', () =>
-                this.eventStore.deprecatedFilteredCount({
-                    type: FEATURES_EXPORTED,
-                }),
-            ),
-            this.memorize('deprecatedFilteredCountFeaturesImported', () =>
-                this.eventStore.deprecatedFilteredCount({
-                    type: FEATURES_IMPORTED,
-                }),
-            ),
-            this.memorize(
-                'getProductionChanges',
-                this.getProductionChanges.bind(this),
-            ),
+            this.featuresExported(),
+            this.featuresImported(),
+            this.getProductionChanges(),
             this.countPreviousDayHourlyMetricsBuckets(),
             this.memorize(
                 'maxFeatureEnvironmentStrategies',
@@ -411,6 +410,124 @@ export class InstanceStatsService {
             maxConstraintValues: maxConstraintValues?.count ?? 0,
             maxConstraints: maxConstraints?.count ?? 0,
         };
+    }
+
+    async getFeatureUsageInfo(): Promise<IFeatureUsageInfo> {
+        const [
+            featureToggles,
+            users,
+            projectModeCount,
+            contextFields,
+            groups,
+            roles,
+            customRootRoles,
+            customRootRolesInUse,
+            environments,
+            segments,
+            strategies,
+            SAMLenabled,
+            OIDCenabled,
+            featureExports,
+            featureImports,
+            customStrategies,
+            customStrategiesInUse,
+            userActive,
+            productionChanges,
+            postgresVersion,
+        ] = await Promise.all([
+            this.getToggleCount(),
+            this.getRegisteredUsers(),
+            this.getProjectModeCount(),
+            this.contextFieldCount(),
+            this.groupCount(),
+            this.roleCount(),
+            this.customRolesCount(),
+            this.customRolesCountInUse(),
+            this.environmentCount(),
+            this.segmentCount(),
+            this.strategiesCount(),
+            this.hasSAML(),
+            this.hasOIDC(),
+            this.featuresExported(),
+            this.featuresImported(),
+            this.customStrategiesCount(),
+            this.customStrategiesInUseCount(),
+            this.getActiveUsers(),
+            this.getProductionChanges(),
+            this.postgresVersion(),
+        ]);
+        const versionInfo = await this.versionService.getVersionInfo();
+
+        const featureInfo = {
+            featureToggles,
+            users,
+            projects: projectModeCount
+                .map((p) => p.count)
+                .reduce((a, b) => a + b, 0),
+            contextFields,
+            groups,
+            roles,
+            customRootRoles,
+            customRootRolesInUse,
+            environments,
+            segments,
+            strategies,
+            SAMLenabled,
+            OIDCenabled,
+            featureExports,
+            featureImports,
+            customStrategies,
+            customStrategiesInUse,
+            instanceId: versionInfo.instanceId,
+            versionOSS: versionInfo.current.oss,
+            versionEnterprise: versionInfo.current.enterprise,
+            activeUsers30: userActive.last30,
+            activeUsers60: userActive.last60,
+            activeUsers90: userActive.last90,
+            productionChanges30: productionChanges.last30,
+            productionChanges60: productionChanges.last60,
+            productionChanges90: productionChanges.last90,
+            postgresVersion,
+        };
+        return featureInfo;
+    }
+
+    featuresExported(): Promise<number> {
+        return this.memorize('deprecatedFilteredCountFeaturesExported', () =>
+            this.eventStore.deprecatedFilteredCount({
+                type: FEATURES_EXPORTED,
+            }),
+        );
+    }
+
+    featuresImported(): Promise<number> {
+        return this.memorize('deprecatedFilteredCountFeaturesImported', () =>
+            this.eventStore.deprecatedFilteredCount({
+                type: FEATURES_IMPORTED,
+            }),
+        );
+    }
+
+    customStrategiesCount(): Promise<number> {
+        return this.memorize(
+            'customStrategiesCount',
+            async () =>
+                (await this.strategyStore.getEditableStrategies()).length,
+        );
+    }
+
+    customStrategiesInUseCount(): Promise<number> {
+        return this.memorize(
+            'customStrategiesInUseCount',
+            async () =>
+                await this.featureStrategiesStore.getCustomStrategiesInUseCount(),
+        );
+    }
+
+    postgresVersion(): Promise<string> {
+        return this.memorize('postgresVersion', () =>
+            this.settingStore.postgresVersion(),
+        );
     }
 
     groupCount(): Promise<number> {

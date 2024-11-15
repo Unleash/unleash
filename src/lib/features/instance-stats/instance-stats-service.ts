@@ -263,22 +263,26 @@ export class InstanceStatsService {
     }
 
     async hasPasswordAuth(): Promise<boolean> {
-        const settings = await this.settingStore.get<{ disabled: boolean }>(
-            'unleash.auth.simple',
-        );
+        return this.memorize('hasPasswordAuth', async () => {
+            const settings = await this.settingStore.get<{ disabled: boolean }>(
+                'unleash.auth.simple',
+            );
 
-        return (
-            typeof settings?.disabled === 'undefined' ||
-            settings.disabled === false
-        );
+            return (
+                typeof settings?.disabled === 'undefined' ||
+                settings.disabled === false
+            );
+        });
     }
 
     async hasSCIM(): Promise<boolean> {
-        const settings = await this.settingStore.get<{ enabled: boolean }>(
-            'scim',
-        );
+        return this.memorize('hasSCIM', async () => {
+            const settings = await this.settingStore.get<{ enabled: boolean }>(
+                'scim',
+            );
 
-        return settings?.enabled || false;
+            return settings?.enabled || false;
+        });
     }
 
     async getStats(): Promise<InstanceStats> {
@@ -302,8 +306,6 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
-            passwordAuthEnabled,
-            SCIMenabled,
             clientApps,
             featureExports,
             featureImports,
@@ -331,8 +333,6 @@ export class InstanceStatsService {
             this.strategiesCount(),
             this.hasSAML(),
             this.hasOIDC(),
-            this.hasPasswordAuth(),
-            this.hasSCIM(),
             this.appCount ? this.appCount : this.getLabeledAppCounts(),
             this.memorize('deprecatedFilteredCountFeaturesExported', () =>
                 this.eventStore.deprecatedFilteredCount({

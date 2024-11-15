@@ -11,6 +11,7 @@ import type {
     IFlagResolver,
     IUnleashStores,
 } from '../../types';
+import { createFakeGetLicensedUsers } from './getLicensedUsers';
 let instanceStatsService: InstanceStatsService;
 let versionService: VersionService;
 let clientInstanceStore: IClientInstanceStore;

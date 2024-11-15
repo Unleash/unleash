@@ -12,6 +12,12 @@ import { scrollToTop } from 'component/common/util';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
+import ReleaseTemplateIcon from '@mui/icons-material/DashboardOutlined';
+import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
+import { MilestoneList } from './MilestoneList';
+import { useState } from 'react';
+import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { ReleasePlanTemplateAddStrategyForm } from './ReleasePlanTemplateAddStrategyForm';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -29,12 +35,21 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
+const StyledButton = styled(Button)(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    maxWidth: theme.spacing(20),
+}));
+
 export const CreateReleasePlanTemplate = () => {
     const releasePlansEnabled = useUiFlag('releasePlans');
     usePageTitle('Create release plan template');
     const { setToastApiError, setToastData } = useToast();
     const navigate = useNavigate();
     const { createReleasePlanTemplate } = useReleasePlanTemplatesApi();
+    const [milestones, setMilestones] = useState<
+        IReleasePlanMilestonePayload[]
+    >([{ name: 'Milestone 1', sortOrder: 0 }]);
+    const [addStrategyOpen, setAddStrategyOpen] = useState<boolean>(false);
     const {
         name,
         setName,
@@ -57,7 +72,10 @@ export const CreateReleasePlanTemplate = () => {
         if (isValid) {
             const payload = getTemplatePayload();
             try {
-                const template = await createReleasePlanTemplate(payload);
+                const template = await createReleasePlanTemplate({
+                    ...payload,
+                    milestones,
+                });
                 scrollToTop();
                 setToastData({
                     type: 'success',
@@ -70,33 +88,84 @@ export const CreateReleasePlanTemplate = () => {
         }
     };
 
+    const updateMilestone = (
+        index: number,
+        milestone: IReleasePlanMilestonePayload,
+    ) => {
+        /*
+        setMilestones(() => {
+            return milestones.map((m, i) => {
+                if (i === index) {
+                    return milestone;
+                }
+                return m;
+            });
+        });*/
+    };
+
+    const onSidebarClose = () => {};
+
     if (!releasePlansEnabled) {
         return null;
     }
 
     return (
-        <>
-            <FormTemplate
-                title='Create release plan template'
-                description='Create a release plan template to make it easier for you and your team to release features.'
+        <FormTemplate
+            title='Create release plan template'
+            documentationIcon={<ReleaseTemplateIcon />}
+            description='Create a release plan template to make it easier for you and your team to release features.'
+        >
+            <StyledForm onSubmit={handleSubmit}>
+                <TemplateForm
+                    name={name}
+                    setName={setName}
+                    description={description}
+                    setDescription={setDescription}
+                    errors={errors}
+                    clearErrors={clearErrors}
+                />
+                <MilestoneList
+                    milestones={milestones}
+                    setAddStrategyOpen={setAddStrategyOpen}
+                    errors={errors}
+                    clearErrors={clearErrors}
+                />
+                <StyledButton
+                    variant='text'
+                    color='primary'
+                    onClick={(e) => {
+                        e.preventDefault();
+                        setMilestones([
+                            ...milestones,
+                            {
+                                name: `Milestone ${milestones.length + 1}`,
+                                sortOrder: milestones.length,
+                            },
+                        ]);
+                    }}
+                >
+                    + Add milestone
+                </StyledButton>
+                <StyledButtonContainer>
+                    <CreateButton name='template' permission={ADMIN} />
+                    <StyledCancelButton onClick={handleCancel}>
+                        Cancel
+                    </StyledCancelButton>
+                </StyledButtonContainer>
+            </StyledForm>
+            <SidebarModal
+                label='Add strategy to template milestone'
+                onClose={onSidebarClose}
+                open={addStrategyOpen}
             >
-                <StyledForm onSubmit={handleSubmit}>
-                    <TemplateForm
-                        name={name}
-                        setName={setName}
-                        description={description}
-                        setDescription={setDescription}
-                        errors={errors}
-                        clearErrors={clearErrors}
+                <>
+                    <ReleasePlanTemplateAddStrategyForm
+                        onCancel={() => {
+                            setAddStrategyOpen(false);
+                        }}
                     />
-                    <StyledButtonContainer>
-                        <CreateButton name='template' permission={ADMIN} />
-                        <StyledCancelButton onClick={handleCancel}>
-                            Cancel
-                        </StyledCancelButton>
-                    </StyledButtonContainer>
-                </StyledForm>
-            </FormTemplate>
-        </>
+                </>
+            </SidebarModal>
+        </FormTemplate>
     );
 };

@@ -112,7 +112,6 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
             label='Project status'
             onClick={(e: React.SyntheticEvent) => {
                 if (e.target instanceof HTMLAnchorElement) {
-                    // close sidebar when you click a link inside it
                     close();
                 }
             }}

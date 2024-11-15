@@ -47,6 +47,9 @@ test('should show deleted stale sessions info for Password Auth', async () => {
     button.click();
 
     await screen.findByText('Maximum Session Limit Reached');
+    await screen.findByText(
+        'You can have up to 3 active sessions at a time. To enhance your account security, we’ve ended 1 session(s) on other browsers.',
+    );
 });
 
 test('should show deleted stale sessions info for Hosted Auth', async () => {
@@ -73,4 +76,7 @@ test('should show deleted stale sessions info for Hosted Auth', async () => {
     button.click();
 
     await screen.findByText('Maximum Session Limit Reached');
+    await screen.findByText(
+        'You can have up to 3 active sessions at a time. To enhance your account security, we’ve ended 1 session(s) on other browsers.',
+    );
 });

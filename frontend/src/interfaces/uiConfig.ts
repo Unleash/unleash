@@ -93,7 +93,7 @@ export type UiFlags = {
     'enterprise-payg'?: boolean;
     simplifyProjectOverview?: boolean;
     productivityReportEmail?: boolean;
-    showUserDeviceCount?: Variant;
+    showUserDeviceCount?: boolean;
     flagOverviewRedesign?: boolean;
 };
 

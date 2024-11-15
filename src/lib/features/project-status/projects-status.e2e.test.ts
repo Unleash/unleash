@@ -341,6 +341,7 @@ test('project status includes stale flags', async () => {
         otherProject.id,
     );
 
+    // something is wrong somewhere. fix it
     const { body } = await app.request
         .get('/api/admin/projects/default/status')
         .expect('Content-Type', /json/)

@@ -23,7 +23,9 @@ export const UserSessionsCell: FC<UserSessionsCellProps> = ({ count }) => {
         <IconCell
             icon={
                 <>
-                    <Tooltip title={`Multiple parallel browser sessions (${count})`}>
+                    <Tooltip
+                        title={`Multiple parallel browser sessions (${count})`}
+                    >
                         <WarningIcon
                             aria-label='Multiple parallel browser sessions'
                             color='warning'

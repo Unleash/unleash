@@ -147,6 +147,7 @@ export class InstanceStatsService {
             apiTokenStore,
             clientMetricsStoreV2,
             featureStrategiesReadModel,
+            featureStrategiesStore,
             trafficDataUsageStore,
         }: Pick<
             IUnleashStores,
@@ -165,6 +166,7 @@ export class InstanceStatsService {
             | 'apiTokenStore'
             | 'clientMetricsStoreV2'
             | 'featureStrategiesReadModel'
+            | 'featureStrategiesStore'
             | 'trafficDataUsageStore'
         >,
         {
@@ -203,6 +205,7 @@ export class InstanceStatsService {
         this.clientMetricsStore = clientMetricsStoreV2;
         this.flagResolver = flagResolver;
         this.featureStrategiesReadModel = featureStrategiesReadModel;
+        this.featureStrategiesStore = featureStrategiesStore;
         this.trafficDataUsageStore = trafficDataUsageStore;
     }
 

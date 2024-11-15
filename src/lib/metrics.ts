@@ -407,6 +407,20 @@ export function registerPrometheusMetrics(
         map: (result) => ({ value: result ? 1 : 0 }),
     });
 
+    dbMetrics.registerGaugeDbMetric({
+        name: 'password_auth_enabled',
+        help: 'Whether password auth is enabled',
+        query: () => instanceStatsService.hasPasswordAuth(),
+        map: (result) => ({ value: result ? 1 : 0 }),
+    });
+
+    dbMetrics.registerGaugeDbMetric({
+        name: 'scim_enabled',
+        help: 'Whether SCIM is enabled',
+        query: () => instanceStatsService.hasSCIM(),
+        map: (result) => ({ value: result ? 1 : 0 }),
+    });
+
     const clientSdkVersionUsage = createCounter({
         name: 'client_sdk_versions',
         help: 'Which sdk versions are being used',
@@ -635,6 +649,11 @@ export function registerPrometheusMetrics(
     for (const [resource, limit] of Object.entries(config.resourceLimits)) {
         resourceLimit.labels({ resource }).set(limit);
     }
+
+    const licensedUsers = createGauge({
+        name: 'licensed_users',
+        help: 'The number of licensed users.',
+    });
 
     const addonEventsHandledCounter = createCounter({
         name: 'addon_events_handled',
@@ -1003,6 +1022,11 @@ export function registerPrometheusMetrics(
                 usersActive60days.set(activeUsers.last60);
                 usersActive90days.reset();
                 usersActive90days.set(activeUsers.last90);
+
+                const licensedUsersStat =
+                    await instanceStatsService.getLicencedUsers();
+                licensedUsers.reset();
+                licensedUsers.set(licensedUsersStat);
 
                 const productionChanges =
                     await instanceStatsService.getProductionChanges();

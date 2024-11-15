@@ -40,6 +40,33 @@ const setupApi = () => {
     ]);
 };
 
+test('filters by flag type', async () => {
+    setupApi();
+
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default',
+        },
+    );
+    await screen.findByText('featureA');
+    const [icon] = await screen.findAllByTestId('feature-type-icon');
+
+    fireEvent.click(icon);
+
+    await screen.findByText('Flag type');
+    await screen.findByText('Operational');
+});
+
 test('selects project features', async () => {
     setupApi();
     render(
@@ -105,32 +132,6 @@ test('filters by tag', async () => {
 
     await screen.findByText('include');
     expect(await screen.findAllByText('backend:sdk')).toHaveLength(2);
-});
-
-test('filters by flag type', async () => {
-    setupApi();
-    render(
-        <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={
-                    <ProjectFeatureToggles
-                        environments={['development', 'production']}
-                    />
-                }
-            />
-        </Routes>,
-        {
-            route: '/projects/default',
-        },
-    );
-    await screen.findByText('featureA');
-    const [icon] = await screen.findAllByTestId('feature-type-icon');
-
-    fireEvent.click(icon);
-
-    await screen.findByText('Flag type');
-    await screen.findByText('Operational');
 });
 
 test('filters by flag author', async () => {

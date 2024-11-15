@@ -326,4 +326,12 @@ export class ApiTokenStore implements IApiTokenStore {
             activeLegacyTokens,
         };
     }
+
+    async countProjectTokens(projectId: string): Promise<number> {
+        const count = await this.db(API_LINK_TABLE)
+            .where({ project: projectId })
+            .count()
+            .first();
+        return Number(count?.count ?? 0);
+    }
 }

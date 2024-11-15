@@ -13,6 +13,7 @@ import {
     isTrialInstance,
 } from 'utils/instanceTrial';
 import { formatDistanceToNowStrict, parseISO } from 'date-fns';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledWarningBar = styled('aside')(({ theme }) => ({
     position: 'relative',
@@ -132,13 +133,17 @@ const StatusBarExpiresLater = ({ instanceStatus }: IInstanceStatusBarProps) => {
 
 const BillingLink = ({ instanceStatus }: IInstanceStatusBarProps) => {
     const { hasAccess } = useContext(AccessContext);
+    const { uiConfig } = useUiConfig();
     const navigate = useNavigate();
 
     if (!hasAccess(ADMIN)) {
         return null;
     }
 
-    if (instanceStatus.plan === InstancePlan.ENTERPRISE) {
+    if (
+        instanceStatus.plan === InstancePlan.ENTERPRISE &&
+        uiConfig.billing !== 'pay-as-you-go'
+    ) {
         return null;
     }
 

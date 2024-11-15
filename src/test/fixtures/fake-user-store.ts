@@ -67,6 +67,10 @@ class UserStoreMock implements IUserStore {
         return this.data.length;
     }
 
+    async countRecentlyDeleted(): Promise<number> {
+        return Promise.resolve(0);
+    }
+
     async get(key: number): Promise<IUser> {
         return this.data.find((u) => u.id === key)!;
     }

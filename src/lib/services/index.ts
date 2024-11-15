@@ -70,9 +70,11 @@ import {
     createFakeEnvironmentService,
     createFakeEventsService,
     createFakeProjectService,
+    createFakeUserSubscriptionsService,
     createFeatureLifecycleService,
     createFeatureToggleService,
     createProjectService,
+    createUserSubscriptionsService,
 } from '../features';
 import EventAnnouncerService from './event-announcer-service';
 import { createGroupService } from '../features/group/createGroupService';
@@ -127,6 +129,7 @@ import {
     createProjectInsightsService,
 } from '../features/project-insights/createProjectInsightsService';
 import { JobService } from '../features/scheduler/job-service';
+import { UserSubscriptionsService } from '../features/user-subscriptions/user-subscriptions-service';
 import { JobStore } from '../features/scheduler/job-store';
 import { FeatureLifecycleService } from '../features/feature-lifecycle/feature-lifecycle-service';
 import { createFakeFeatureLifecycleService } from '../features/feature-lifecycle/createFeatureLifecycle';
@@ -153,6 +156,11 @@ import {
     createFakePersonalDashboardService,
     createPersonalDashboardService,
 } from '../features/personal-dashboard/createPersonalDashboardService';
+import {
+    createFakeProjectStatusService,
+    createProjectStatusService,
+} from '../features/project-status/createProjectStatusService';
+import { ProjectStatusService } from '../features/project-status/project-status-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -324,6 +332,10 @@ export const createServices = (
         ? createProjectInsightsService(db, config)
         : createFakeProjectInsightsService().projectInsightsService;
 
+    const projectStatusService = db
+        ? createProjectStatusService(db, config)
+        : createFakeProjectStatusService().projectStatusService;
+
     const projectHealthService = new ProjectHealthService(
         stores,
         config,
@@ -417,6 +429,10 @@ export const createServices = (
         ? createPersonalDashboardService(db, config, stores)
         : createFakePersonalDashboardService(config);
 
+    const transactionalUserSubscriptionsService = db
+        ? withTransactional(createUserSubscriptionsService(config), db)
+        : withFakeTransactional(createFakeUserSubscriptionsService(config));
+
     return {
         transactionalAccessService,
         accessService,
@@ -482,6 +498,8 @@ export const createServices = (
         integrationEventsService,
         onboardingService,
         personalDashboardService,
+        projectStatusService,
+        transactionalUserSubscriptionsService,
     };
 };
 
@@ -533,4 +551,6 @@ export {
     IntegrationEventsService,
     OnboardingService,
     PersonalDashboardService,
+    ProjectStatusService,
+    UserSubscriptionsService,
 };

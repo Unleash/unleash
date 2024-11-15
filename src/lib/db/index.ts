@@ -54,6 +54,8 @@ import { FeatureCollaboratorsReadModel } from '../features/feature-toggle/featur
 import { createProjectReadModel } from '../features/project/createProjectReadModel';
 import { OnboardingStore } from '../features/onboarding/onboarding-store';
 import { createOnboardingReadModel } from '../features/onboarding/createOnboardingReadModel';
+import { UserUnsubscribeStore } from '../features/user-subscriptions/user-unsubscribe-store';
+import { UserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -187,6 +189,8 @@ export const createStores = (
             eventBus,
             config.flagResolver,
         ),
+        userUnsubscribeStore: new UserUnsubscribeStore(db),
+        userSubscriptionsReadModel: new UserSubscriptionsReadModel(db),
     };
 };
 

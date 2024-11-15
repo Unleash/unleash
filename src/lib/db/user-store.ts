@@ -108,8 +108,15 @@ class UserStore implements IUserStore {
     }
 
     async insert(user: ICreateUser): Promise<User> {
+        const emailHash = user.email
+            ? this.db.raw('md5(?)', [user.email])
+            : null;
         const rows = await this.db(TABLE)
-            .insert({ ...mapUserToColumns(user), created_at: new Date() })
+            .insert({
+                ...mapUserToColumns(user),
+                email_hash: emailHash,
+                created_at: new Date(),
+            })
             .returning(USER_COLUMNS);
         return rowToUser(rows[0]);
     }
@@ -277,6 +284,19 @@ class UserStore implements IUserStore {
                 deleted_at: null,
                 is_service: true,
             })
+            .count('*')
+            .then((res) => Number(res[0].count));
+    }
+
+    async countRecentlyDeleted(): Promise<number> {
+        return this.db(TABLE)
+            .whereNotNull('deleted_at')
+            .andWhere(
+                'deleted_at',
+                '>=',
+                this.db.raw(`NOW() - INTERVAL '1 month'`),
+            )
+            .andWhere({ is_service: false, is_system: false })
             .count('*')
             .then((res) => Number(res[0].count));
     }

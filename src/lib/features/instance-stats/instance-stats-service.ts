@@ -32,6 +32,7 @@ import type { ProjectModeCount } from '../project/project-store';
 import type { GetProductionChanges } from './getProductionChanges';
 import { format, minutesToMilliseconds } from 'date-fns';
 import memoizee from 'memoizee';
+import type { GetLicensedUsers } from './getLicensedUsers';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
 
@@ -60,6 +61,7 @@ export interface InstanceStats {
     OIDCenabled: boolean;
     clientApps: { range: TimeRange; count: number }[];
     activeUsers: Awaited<ReturnType<GetActiveUsers>>;
+    licensedUsers: Awaited<ReturnType<GetLicensedUsers>>;
     productionChanges: Awaited<ReturnType<GetProductionChanges>>;
     previousDayMetricsBucketsCount: {
         enabledCount: number;
@@ -114,6 +116,8 @@ export class InstanceStatsService {
 
     getActiveUsers: GetActiveUsers;
 
+    getLicencedUsers: GetLicensedUsers;
+
     getProductionChanges: GetProductionChanges;
 
     private featureStrategiesReadModel: IFeatureStrategiesReadModel;
@@ -164,6 +168,7 @@ export class InstanceStatsService {
         versionService: VersionService,
         getActiveUsers: GetActiveUsers,
         getProductionChanges: GetProductionChanges,
+        getLicencedUsers: GetLicensedUsers,
     ) {
         this.strategyStore = strategyStore;
         this.userStore = userStore;
@@ -180,6 +185,7 @@ export class InstanceStatsService {
         this.clientInstanceStore = clientInstanceStore;
         this.logger = getLogger('services/stats-service.js');
         this.getActiveUsers = getActiveUsers;
+        this.getLicencedUsers = getLicencedUsers;
         this.getProductionChanges = getProductionChanges;
         this.apiTokenStore = apiTokenStore;
         this.clientMetricsStore = clientMetricsStoreV2;
@@ -256,6 +262,25 @@ export class InstanceStatsService {
         });
     }
 
+    async hasPasswordAuth(): Promise<boolean> {
+        const settings = await this.settingStore.get<{ disabled: boolean }>(
+            'unleash.auth.simple',
+        );
+
+        return (
+            typeof settings?.disabled === 'undefined' ||
+            settings.disabled === false
+        );
+    }
+
+    async hasSCIM(): Promise<boolean> {
+        const settings = await this.settingStore.get<{ enabled: boolean }>(
+            'scim',
+        );
+
+        return settings?.enabled || false;
+    }
+
     async getStats(): Promise<InstanceStats> {
         const versionInfo = await this.versionService.getVersionInfo();
         const [
@@ -265,6 +290,7 @@ export class InstanceStatsService {
             serviceAccounts,
             apiTokens,
             activeUsers,
+            licensedUsers,
             projects,
             contextFields,
             groups,
@@ -276,6 +302,8 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
+            passwordAuthEnabled,
+            SCIMenabled,
             clientApps,
             featureExports,
             featureImports,
@@ -291,6 +319,7 @@ export class InstanceStatsService {
             this.countServiceAccounts(),
             this.countApiTokensByType(),
             this.getActiveUsers(),
+            this.getLicencedUsers(),
             this.getProjectModeCount(),
             this.contextFieldCount(),
             this.groupCount(),
@@ -302,6 +331,8 @@ export class InstanceStatsService {
             this.strategiesCount(),
             this.hasSAML(),
             this.hasOIDC(),
+            this.hasPasswordAuth(),
+            this.hasSCIM(),
             this.appCount ? this.appCount : this.getLabeledAppCounts(),
             this.memorize('deprecatedFilteredCountFeaturesExported', () =>
                 this.eventStore.deprecatedFilteredCount({
@@ -344,6 +375,7 @@ export class InstanceStatsService {
             serviceAccounts,
             apiTokens,
             activeUsers,
+            licensedUsers,
             featureToggles,
             archivedFeatureToggles,
             projects,

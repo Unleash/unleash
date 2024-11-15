@@ -305,6 +305,18 @@ const config: Config = {
                 googleTagManager: {
                     containerId: 'GTM-KV5PRR2',
                 },
+                sitemap: {
+                    changefreq: 'weekly',
+                    lastmod: 'date',
+                    priority: 0.5,
+                    createSitemapItems: async (params) => {
+                        const { defaultCreateSitemapItems, ...rest } = params;
+                        const items = await defaultCreateSitemapItems(rest);
+                        return items.filter(
+                            (item) => !item.url.includes('/page/'),
+                        );
+                    },
+                },
             },
         ],
     ],
@@ -862,10 +874,7 @@ const config: Config = {
                 docsPluginId: 'classic',
                 config: {
                     server: {
-                        specPath:
-                            process.env.OPENAPI_SOURCE === 'localhost'
-                                ? 'http://localhost:4242/docs/openapi.json'
-                                : 'https://us.app.unleash-hosted.com/ushosted/docs/openapi.json',
+                        specPath: 'docs/generated/openapi.json',
                         outputDir: 'docs/reference/api/unleash',
                         sidebarOptions: {
                             groupPathsBy: 'tag',

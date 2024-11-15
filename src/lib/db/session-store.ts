@@ -43,9 +43,7 @@ export default class SessionStore implements ISessionStore {
         if (rows && rows.length > 0) {
             return rows.map(this.rowToSession);
         }
-        throw new NotFoundError(
-            `Could not find sessions for user with id ${userId}`,
-        );
+        return [];
     }
 
     async get(sid: string): Promise<ISession> {
@@ -109,6 +107,18 @@ export default class SessionStore implements ISessionStore {
             createdAt: row.created_at,
             expired: row.expired,
         };
+    }
+
+    async getSessionsCount(): Promise<{ userId: number; count: number }[]> {
+        const rows = await this.db(TABLE)
+            .select(this.db.raw("sess->'user'->>'id' AS user_id"))
+            .count('* as count')
+            .groupBy('user_id');
+
+        return rows.map((row) => ({
+            userId: Number(row.user_id),
+            count: Number(row.count),
+        }));
     }
 }
 

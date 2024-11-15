@@ -131,7 +131,7 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step2`,
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button`,
+                target: 'button[data-testid="ADD_STRATEGY_BUTTON"]',
                 content: (
                     <Description>
                         Add a new strategy to this environment by using this
@@ -140,12 +140,9 @@ export const TOPICS: ITutorialTopic[] = [
                 ),
             },
             {
-                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=default&defaultStrategy=false"]`,
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step2/strategies/create?environmentId=${ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
                 content: (
-                    <Description>
-                        Select the <Badge as='span'>Standard</Badge> strategy
-                        type.
-                    </Description>
+                    <Description>Select the default strategy.</Description>
                 ),
                 placement: 'right',
                 optional: true,
@@ -363,9 +360,10 @@ export const TOPICS: ITutorialTopic[] = [
                         strategies by using the arrow button.
                     </Description>
                 ),
+                optional: true,
             },
             {
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"].Mui-expanded a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
+                target: `a[data-testid="STRATEGY_EDIT-flexibleRollout"]`,
                 content: (
                     <Description>
                         Edit the existing gradual rollout strategy by using the
@@ -471,13 +469,22 @@ export const TOPICS: ITutorialTopic[] = [
             },
             {
                 href: `/projects/${PROJECT}/features/demoApp.step4`,
-                target: `div[data-testid="FEATURE_ENVIRONMENT_ACCORDION_${ENVIRONMENT}"] button`,
+                target: 'button[data-testid="ADD_STRATEGY_BUTTON"]',
                 content: (
                     <Description>
                         Add a new strategy to this environment by using this
                         button.
                     </Description>
                 ),
+            },
+            {
+                target: `a[href="${basePath}/projects/${PROJECT}/features/demoApp.step4/strategies/create?environmentId=${ENVIRONMENT}&strategyName=flexibleRollout&defaultStrategy=true"]`,
+                content: (
+                    <Description>Select the default strategy.</Description>
+                ),
+                placement: 'right',
+                optional: true,
+                backCloseModal: true,
             },
             {
                 target: 'button[data-testid="STRATEGY_TARGETING_TAB"]',

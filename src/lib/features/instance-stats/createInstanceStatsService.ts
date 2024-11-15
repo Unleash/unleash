@@ -44,6 +44,10 @@ import { FeatureStrategiesReadModel } from '../feature-toggle/feature-strategies
 import { FakeFeatureStrategiesReadModel } from '../feature-toggle/fake-feature-strategies-read-model';
 import { TrafficDataUsageStore } from '../traffic-data-usage/traffic-data-usage-store';
 import { FakeTrafficDataUsageStore } from '../traffic-data-usage/fake-traffic-data-usage-store';
+import {
+    createFakeGetLicensedUsers,
+    createGetLicensedUsers,
+} from './getLicensedUsers';
 
 export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     const { eventBus, getLogger, flagResolver } = config;
@@ -128,6 +132,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     };
     const getActiveUsers = createGetActiveUsers(db);
     const getProductionChanges = createGetProductionChanges(db);
+    const getLicencedUsers = createGetLicensedUsers(db);
     const versionService = new VersionService(
         versionServiceStores,
         config,
@@ -141,6 +146,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         versionService,
         getActiveUsers,
         getProductionChanges,
+        getLicencedUsers,
     );
 
     return instanceStatsService;
@@ -189,6 +195,7 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         featureStrategiesStore,
     };
     const getActiveUsers = createFakeGetActiveUsers();
+    const getLicensedUsers = createFakeGetLicensedUsers();
     const getProductionChanges = createFakeGetProductionChanges();
     const versionService = new VersionService(
         versionServiceStores,
@@ -203,6 +210,7 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         versionService,
         getActiveUsers,
         getProductionChanges,
+        getLicensedUsers,
     );
 
     return instanceStatsService;

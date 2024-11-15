@@ -1,5 +1,5 @@
 ---
-title: Email service
+title: Email Service
 ---
 
 :::note Availability

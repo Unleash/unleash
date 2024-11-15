@@ -2,6 +2,8 @@ import { List, ListItem, styled, Typography } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
+import { FeatureReleasePlanCard } from '../FeatureReleasePlanCard/FeatureReleasePlanCard';
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
@@ -20,6 +22,7 @@ export const FeatureStrategyMenuCards = ({
     environmentId,
 }: IFeatureStrategyMenuCardsProps) => {
     const { strategies } = useStrategies();
+    const { templates } = useReleasePlanTemplates();
 
     const preDefinedStrategies = strategies.filter(
         (strategy) => !strategy.deprecated && !strategy.editable,
@@ -39,7 +42,7 @@ export const FeatureStrategyMenuCards = ({
         <List dense>
             <>
                 <StyledTypography color='textSecondary'>
-                    {environmentId} environment default strategy
+                    Default strategy for {environmentId} environment
                 </StyledTypography>
                 <ListItem key={defaultStrategy.name}>
                     <FeatureStrategyMenuCard
@@ -51,6 +54,26 @@ export const FeatureStrategyMenuCards = ({
                     />
                 </ListItem>
             </>
+            <ConditionallyRender
+                condition={templates.length > 0}
+                show={
+                    <>
+                        <StyledTypography color='textSecondary'>
+                            Release templates
+                        </StyledTypography>
+                        {templates.map((template) => (
+                            <ListItem key={template.id}>
+                                <FeatureReleasePlanCard
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={environmentId}
+                                    releasePlanTemplate={template}
+                                />
+                            </ListItem>
+                        ))}
+                    </>
+                }
+            />
             <StyledTypography color='textSecondary'>
                 Predefined strategy types
             </StyledTypography>

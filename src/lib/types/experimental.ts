@@ -28,8 +28,7 @@ export type IFlagKey =
     | 'signals'
     | 'automatedActions'
     | 'celebrateUnleash'
-    | 'featureSearchFeedback'
-    | 'featureSearchFeedbackPosting'
+    | 'feedbackPosting'
     | 'extendedUsageMetrics'
     | 'adminTokenKillSwitch'
     | 'feedbackComments'
@@ -44,7 +43,6 @@ export type IFlagKey =
     | 'outdatedSdksBanner'
     | 'responseTimeMetricsFix'
     | 'disableShowContextFieldSelectionValues'
-    | 'projectOverviewRefactorFeedback'
     | 'manyStrategiesPagination'
     | 'enableLegacyVariants'
     | 'extendedMetrics'
@@ -61,6 +59,9 @@ export type IFlagKey =
     | 'productivityReportEmail'
     | 'enterprise-payg'
     | 'simplifyProjectOverview'
+    | 'flagOverviewRedesign'
+    | 'showUserDeviceCount'
+    | 'deleteStaleUserSessions'
     | 'memorizeStats';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -147,21 +148,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_CELEBRATE_UNLEASH,
         false,
     ),
-    featureSearchFeedback: {
-        name: 'withText',
-        enabled: parseEnvVarBoolean(
-            process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK,
-            false,
-        ),
-        payload: {
-            type: PayloadType.JSON,
-            value:
-                process.env
-                    .UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_PAYLOAD ?? '',
-        },
-    },
-    featureSearchFeedbackPosting: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURE_SEARCH_FEEDBACK_POSTING,
+    feedbackPosting: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_POSTING,
         false,
     ),
     encryptEmails: parseEnvVarBoolean(
@@ -234,10 +222,6 @@ const flags: IFlags = {
             .UNLEASH_EXPERIMENTAL_DISABLE_SHOW_CONTEXT_FIELD_SELECTION_VALUES,
         false,
     ),
-    projectOverviewRefactorFeedback: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PROJECT_OVERVIEW_REFACTOR_FEEDBACK,
-        false,
-    ),
     manyStrategiesPagination: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_MANY_STRATEGIES_PAGINATION,
         false,
@@ -300,6 +284,14 @@ const flags: IFlags = {
     ),
     simplifyProjectOverview: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SIMPLIFY_PROJECT_OVERVIEW,
+        false,
+    ),
+    flagOverviewRedesign: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
+        false,
+    ),
+    showUserDeviceCount: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
         false,
     ),
 };

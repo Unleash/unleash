@@ -11,7 +11,7 @@
     "build": "yarn generate && yarn fetch-remote-content && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "fetch-remote-content": "docusaurus download-remote-content-external && docusaurus download-remote-content-sdks",
-    "generate": "docusaurus gen-api-docs all && node clean-generated-docs.mjs",
+    "generate": "node prepare-generated-docs.mjs && docusaurus gen-api-docs all",
     "deploy": "yarn generate && yarn fetch-remote-content && docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
@@ -20,22 +20,21 @@
     "test": "NODE_ENV=test node --trace-warnings ../node_modules/.bin/jest remote-content"
   },
   "dependencies": {
-    "@docusaurus/core": "^3.5.2",
-    "@docusaurus/plugin-client-redirects": "^3.5.2",
-    "@docusaurus/plugin-google-analytics": "^3.5.2",
-    "@docusaurus/preset-classic": "^3.5.2",
-    "@docusaurus/remark-plugin-npm2yarn": "3.5.2",
+    "@docusaurus/core": "^3.6.0",
+    "@docusaurus/plugin-client-redirects": "^3.6.0",
+    "@docusaurus/plugin-google-analytics": "^3.6.0",
+    "@docusaurus/preset-classic": "^3.6.0",
+    "@docusaurus/remark-plugin-npm2yarn": "3.6.0",
     "@mdx-js/react": "^3.1.0",
-    "docusaurus-plugin-openapi-docs": "^4.1.0",
+    "docusaurus-plugin-openapi-docs": "^4.2.0",
     "docusaurus-plugin-remote-content": "^4.0.0",
-    "docusaurus-theme-openapi-docs": "^4.1.0",
+    "docusaurus-theme-openapi-docs": "^4.2.0",
     "git-url-parse": "^15.0.0",
     "plugin-image-zoom": "flexanalytics/plugin-image-zoom",
     "prism-react-renderer": "^2.4.0",
     "prism-svelte": "^0.5.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "replace-in-file": "^8.2.0"
+    "react-dom": "^18.3.1"
   },
   "browserslist": {
     "production": [
@@ -50,8 +49,8 @@
     ]
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "^3.5.2",
-    "@docusaurus/types": "^3.5.2",
+    "@docusaurus/module-type-aliases": "^3.6.0",
+    "@docusaurus/types": "^3.6.0",
     "@tsconfig/docusaurus": "2.0.3",
     "@types/react": "^18.3.12",
     "typescript": "5.6.3"

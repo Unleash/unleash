@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ReactComponent as ImportSvg } from 'assets/icons/import.svg';
+import { ReactComponent as ProjectStatusSvg } from 'assets/icons/projectStatus.svg';
 import {
     StyledDiv,
     StyledFavoriteIconButton,
@@ -14,10 +15,18 @@ import {
     StyledTabContainer,
     StyledTopRow,
 } from './Project.styles';
-import { Box, Paper, Tabs, Typography, styled } from '@mui/material';
+import {
+    Badge as CounterBadge,
+    Box,
+    Paper,
+    Tabs,
+    Typography,
+    styled,
+    Button,
+} from '@mui/material';
 import useToast from 'hooks/useToast';
 import useQueryParams from 'hooks/useQueryParams';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectFlags from './ProjectFlags';
@@ -45,8 +54,9 @@ import { ProjectInsights } from './ProjectInsights/ProjectInsights';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
-import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
+import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal';
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     position: 'absolute',
@@ -60,52 +70,53 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 interface ITab {
     title: string;
     path: string;
+    ossPath?: string;
     name: string;
     flag?: keyof UiFlags;
     new?: boolean;
     isEnterprise?: boolean;
+    labelOverride?: () => ReactNode;
 }
 
-const CircleContainer = styled('div')(({ theme }) => ({
-    position: 'absolute',
-    width: theme.spacing(2.5),
-    height: theme.spacing(2.5),
-    display: 'grid',
-    placeItems: 'center',
-    borderRadius: '50%',
-
-    background: theme.palette.background.alternative,
-    color: theme.palette.primary.contrastText,
-    fontSize: theme.typography.body2.fontSize,
-
-    // todo: revisit these values later
-    top: 10,
-    right: 0,
-    [theme.breakpoints.down('md')]: {
-        top: 2,
+const StyledCounterBadge = styled(CounterBadge)(({ theme }) => ({
+    '.MuiBadge-badge': {
+        backgroundColor: theme.palette.background.alternative,
+        right: '2px',
     },
+    flex: 'auto',
+    justifyContent: 'center',
+    minHeight: '1.5em',
+    alignItems: 'center',
 }));
 
-const ActionableChangeRequestsIndicator = () => {
-    // todo: useSWR for this instead (maybe conditional)
-    const count = 0;
+const TabText = styled('span')(({ theme }) => ({
+    color: theme.palette.text.primary,
+}));
 
-    if (count <= 0) {
-        return null;
+const ChangeRequestsLabel = () => {
+    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
+    const projectId = useRequiredPathParam('projectId');
+    const { total } = useActionableChangeRequests(projectId);
+
+    if (!simplifyProjectOverview) {
+        return 'Change requests';
     }
 
-    const renderedCount = count > 9 ? '9+' : count;
-
     return (
-        <CircleContainer>
-            <ScreenReaderOnly>You can move</ScreenReaderOnly>
-            {renderedCount}
-            <ScreenReaderOnly>
-                change requests into their next phase.
-            </ScreenReaderOnly>
-        </CircleContainer>
+        <StyledCounterBadge badgeContent={total ?? 0} color='primary'>
+            <TabText>Change requests</TabText>
+        </StyledCounterBadge>
     );
 };
+
+const ProjectStatusButton = styled(Button)(({ theme }) => ({
+    color: theme.palette.text.primary,
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: 'bold',
+    'svg *': {
+        fill: theme.palette.primary.main,
+    },
+}));
 
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -122,6 +133,7 @@ export const Project = () => {
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
     const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
+    const [projectStatusOpen, setProjectStatusOpen] = useState(false);
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -160,6 +172,7 @@ export const Project = () => {
             path: `${basePath}/change-requests`,
             name: 'change-request',
             isEnterprise: true,
+            labelOverride: ChangeRequestsLabel,
         },
         {
             title: 'Applications',
@@ -173,7 +186,8 @@ export const Project = () => {
         },
         {
             title: 'Project settings',
-            path: `${basePath}/settings${isOss() ? '/environments' : ''}`,
+            path: `${basePath}/settings`,
+            ossPath: `${basePath}/settings/api-access`,
             name: 'settings',
         },
     ];
@@ -267,7 +281,8 @@ export const Project = () => {
                         <StyledDiv>
                             <ConditionallyRender
                                 condition={Boolean(
-                                    uiConfig?.flags?.featuresExportImport,
+                                    !simplifyProjectOverview &&
+                                        uiConfig?.flags?.featuresExportImport,
                                 )}
                                 show={
                                     <PermissionIconButton
@@ -282,6 +297,15 @@ export const Project = () => {
                                     </PermissionIconButton>
                                 }
                             />
+                            {simplifyProjectOverview && (
+                                <ProjectStatusButton
+                                    onClick={() => setProjectStatusOpen(true)}
+                                    startIcon={<ProjectStatusSvg />}
+                                    data-loading-project
+                                >
+                                    Project status
+                                </ProjectStatusButton>
+                            )}
                         </StyledDiv>
                     </StyledTopRow>
                 </StyledInnerContainer>
@@ -300,7 +324,13 @@ export const Project = () => {
                                 <StyledTab
                                     data-loading-project
                                     key={tab.title}
-                                    label={tab.title}
+                                    label={
+                                        tab.labelOverride ? (
+                                            <tab.labelOverride />
+                                        ) : (
+                                            tab.title
+                                        )
+                                    }
                                     value={tab.path}
                                     onClick={() => {
                                         if (tab.title !== 'Flags') {
@@ -310,7 +340,11 @@ export const Project = () => {
                                                 },
                                             });
                                         }
-                                        navigate(tab.path);
+                                        navigate(
+                                            isOss() && tab.ossPath
+                                                ? tab.ossPath
+                                                : tab.path,
+                                        );
                                     }}
                                     data-testid={`TAB_${tab.title}`}
                                     iconPosition={
@@ -329,11 +363,6 @@ export const Project = () => {
                                                     </span>
                                                 }
                                             />
-                                            {simplifyProjectOverview &&
-                                                tab.name ===
-                                                    'change-request' && (
-                                                    <ActionableChangeRequestsIndicator />
-                                                )}
                                             {(tab.isEnterprise &&
                                                 isPro() &&
                                                 enterpriseIcon) ||
@@ -398,6 +427,10 @@ export const Project = () => {
                 open={modalOpen}
                 setOpen={setModalOpen}
                 project={projectId}
+            />
+            <ProjectStatusModal
+                open={projectStatusOpen}
+                close={() => setProjectStatusOpen(false)}
             />
         </div>
     );

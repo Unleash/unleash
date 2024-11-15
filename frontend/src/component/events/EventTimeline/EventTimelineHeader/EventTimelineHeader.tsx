@@ -96,7 +96,7 @@ export const EventTimelineHeader = ({
             <EventTimelineHeaderTip />
             <StyledCol>
                 <ConditionallyRender
-                    condition={Boolean(environment)}
+                    condition={Boolean(environment) && environments.length > 0}
                     show={() => (
                         <StyledFilter
                             select

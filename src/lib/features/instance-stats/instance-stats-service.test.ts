@@ -39,6 +39,7 @@ beforeEach(() => {
         versionService,
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
+        createFakeGetLicensedUsers(),
     );
 
     const { collectAggDbMetrics } = registerPrometheusMetrics(

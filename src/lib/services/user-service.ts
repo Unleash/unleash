@@ -393,7 +393,11 @@ class UserService {
         );
     }
 
-    async loginUser(usernameOrEmail: string, password: string): Promise<IUser> {
+    async loginUser(
+        usernameOrEmail: string,
+        password: string,
+        device?: { userAgent: string; ip: string },
+    ): Promise<IUser> {
         const settings = await this.settingService.get<SimpleAuthSettings>(
             simpleAuthSettingsKey,
         );
@@ -417,12 +421,22 @@ class UserService {
             const match = await bcrypt.compare(password, passwordHash);
             if (match) {
                 const loginOrder = await this.store.successfullyLogin(user);
+
+                const sessions = await this.sessionService.getSessionsForUser(
+                    user.id,
+                );
+                if (sessions.length >= 5 && device) {
+                    this.logger.info(
+                        `Excessive login (user id: ${user.id}, user agent: ${device.userAgent}, IP: ${device.ip})`,
+                    );
+                }
+
                 const deleteStaleUserSessions = this.flagResolver.getVariant(
                     'deleteStaleUserSessions',
                 );
                 if (deleteStaleUserSessions.feature_enabled) {
                     const allowedSessions = Number(
-                        deleteStaleUserSessions.payload?.value || 30,
+                        deleteStaleUserSessions.payload?.value || 5,
                     );
                     // subtract current user session that will be created
                     const deletedSessionsCount =
@@ -433,6 +447,7 @@ class UserService {
                     user.deletedSessions = deletedSessionsCount;
                     user.activeSessions = allowedSessions;
                 }
+
                 this.eventBus.emit(USER_LOGIN, { loginOrder });
                 return user;
             }

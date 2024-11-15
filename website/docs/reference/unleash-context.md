@@ -54,9 +54,7 @@ When interacting with custom context fields in code, they must be accessed via t
 
 ### Creating and updating custom context fields
 
-You can create as many custom context fields as you wish. Refer to ["how to define custom context fields"](../how-to/how-to-define-custom-context-fields) for information on how you define your own custom context fields.
-
-You can update custom context fields after they have been created. You can change everything about the definition except for the name.
+You can create as many custom context fields as you need. You can update custom context fields after they have been created. You can change everything about the definition except for the name.
 
 ### Legal values
 
@@ -75,7 +73,7 @@ Custom stickiness is supported by all of our SDKs except for the Rust SDK. You c
 
 :::
 
-Any context field _can_ be used to [calculate custom stickiness](../reference/stickiness#custom-stickiness). However, you need to explicitly tell Unleash that you want a field to be used for custom stickiness for it to be possible. You can enable this functionality either when you create the context field or at any later point. For steps on how to do this, see [the _How to define custom context fields_ guide](../how-to/how-to-define-custom-context-fields).
+Any context field _can_ be used to [calculate custom stickiness](../reference/stickiness#custom-stickiness). However, you need to explicitly tell Unleash that you want a field to be used for custom stickiness for it to be possible. You can enable this functionality either when you create the context field or at any later point. 
 
 
 

@@ -727,6 +727,21 @@
       "permanent": true
     },
     {
+      "source": "/how-to/how-to-add-strategy-constraints",
+      "destination": "/reference/activation-strategies#add-strategy-constraint",
+      "permanent": true
+    },
+    {
+      "source": "/reference/strategy-constraints",
+      "destination": "/reference/activation-strategies#constraints",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-define-custom-context-fields",
+      "destination": "/reference/activation-strategies#create-a-custom-context-field",
+      "permanent": true
+    },
+    {
       "source": "/reference/deploy",
       "destination": "/using-unleash/deploy",
       "permanent": true

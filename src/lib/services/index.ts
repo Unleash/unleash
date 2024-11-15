@@ -82,10 +82,6 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../features/private-project/createPrivateProjectChecker';
-import {
-    createFakeGetActiveUsers,
-    createGetActiveUsers,
-} from '../features/instance-stats/getActiveUsers';
 import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
 import {
     createDependentFeaturesService,
@@ -97,10 +93,6 @@ import {
     createFakeLastSeenService,
     createLastSeenService,
 } from '../features/metrics/last-seen/createLastSeenService';
-import {
-    createFakeGetProductionChanges,
-    createGetProductionChanges,
-} from '../features/instance-stats/getProductionChanges';
 import {
     createClientFeatureToggleService,
     createFakeClientFeatureToggleService,
@@ -247,19 +239,8 @@ export const createServices = (
     const accountService = new AccountService(stores, config, {
         accessService,
     });
-    const getActiveUsers = db
-        ? createGetActiveUsers(db)
-        : createFakeGetActiveUsers();
-    const getProductionChanges = db
-        ? createGetProductionChanges(db)
-        : createFakeGetProductionChanges();
 
-    const versionService = new VersionService(
-        stores,
-        config,
-        getActiveUsers,
-        getProductionChanges,
-    );
+    const versionService = new VersionService(stores, config);
     const healthService = new HealthService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
     const changeRequestAccessReadModel = db

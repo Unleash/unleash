@@ -1,26 +1,9 @@
 import fetch from 'make-fetch-happen';
-import type {
-    IContextFieldStore,
-    IEnvironmentStore,
-    IEventStore,
-    IFeatureStrategiesStore,
-    IFeatureToggleStore,
-    IGroupStore,
-    IProjectStore,
-    IRoleStore,
-    ISegmentStore,
-    IUnleashStores,
-    IUserStore,
-} from '../types/stores';
+import type { IUnleashStores } from '../types/stores';
 import type { IUnleashConfig } from '../types/option';
 import version from '../util/version';
 import type { Logger } from '../logger';
 import type { ISettingStore } from '../types/stores/settings-store';
-import type { IStrategyStore } from '../types';
-import { FEATURES_EXPORTED, FEATURES_IMPORTED } from '../types';
-import { CUSTOM_ROOT_ROLE_TYPE } from '../util';
-import type { GetActiveUsers } from '../features/instance-stats/getActiveUsers';
-import type { GetProductionChanges } from '../features/instance-stats/getProductionChanges';
 
 export interface IVersionInfo {
     oss: string;
@@ -73,32 +56,6 @@ export default class VersionService {
 
     private settingStore: ISettingStore;
 
-    private strategyStore: IStrategyStore;
-
-    private userStore: IUserStore;
-
-    private featureToggleStore: IFeatureToggleStore;
-
-    private projectStore: IProjectStore;
-
-    private environmentStore: IEnvironmentStore;
-
-    private contextFieldStore: IContextFieldStore;
-
-    private groupStore: IGroupStore;
-
-    private roleStore: IRoleStore;
-
-    private segmentStore: ISegmentStore;
-
-    private eventStore: IEventStore;
-
-    private featureStrategiesStore: IFeatureStrategiesStore;
-
-    private getActiveUsers: GetActiveUsers;
-
-    private getProductionChanges: GetProductionChanges;
-
     private current: IVersionInfo;
 
     private latest?: IVersionInfo;
@@ -116,34 +73,7 @@ export default class VersionService {
     private timer: NodeJS.Timeout;
 
     constructor(
-        {
-            settingStore,
-            strategyStore,
-            userStore,
-            featureToggleStore,
-            projectStore,
-            environmentStore,
-            contextFieldStore,
-            groupStore,
-            roleStore,
-            segmentStore,
-            eventStore,
-            featureStrategiesStore,
-        }: Pick<
-            IUnleashStores,
-            | 'settingStore'
-            | 'strategyStore'
-            | 'userStore'
-            | 'featureToggleStore'
-            | 'projectStore'
-            | 'environmentStore'
-            | 'contextFieldStore'
-            | 'groupStore'
-            | 'roleStore'
-            | 'segmentStore'
-            | 'eventStore'
-            | 'featureStrategiesStore'
-        >,
+        { settingStore }: Pick<IUnleashStores, 'settingStore'>,
         {
             getLogger,
             versionCheck,
@@ -153,24 +83,9 @@ export default class VersionService {
             IUnleashConfig,
             'getLogger' | 'versionCheck' | 'enterpriseVersion' | 'telemetry'
         >,
-        getActiveUsers: GetActiveUsers,
-        getProductionChanges: GetProductionChanges,
     ) {
         this.logger = getLogger('lib/services/version-service.js');
         this.settingStore = settingStore;
-        this.strategyStore = strategyStore;
-        this.userStore = userStore;
-        this.featureToggleStore = featureToggleStore;
-        this.projectStore = projectStore;
-        this.environmentStore = environmentStore;
-        this.contextFieldStore = contextFieldStore;
-        this.groupStore = groupStore;
-        this.roleStore = roleStore;
-        this.segmentStore = segmentStore;
-        this.eventStore = eventStore;
-        this.getActiveUsers = getActiveUsers;
-        this.getProductionChanges = getProductionChanges;
-        this.featureStrategiesStore = featureStrategiesStore;
         this.current = {
             oss: version,
             enterprise: enterpriseVersion || '',
@@ -242,130 +157,6 @@ export default class VersionService {
             }
         }
     }
-
-    /** @deprecated look into stats service getFeatureUsageInfo */
-    async getFeatureUsageInfo(): Promise<IFeatureUsageInfo> {
-        const [
-            featureToggles,
-            users,
-            projects,
-            contextFields,
-            groups,
-            roles,
-            customRootRoles,
-            customRootRolesInUse,
-            environments,
-            segments,
-            strategies,
-            SAMLenabled,
-            OIDCenabled,
-            featureExports,
-            featureImports,
-            userActive,
-            productionChanges,
-            postgresVersion,
-        ] = await Promise.all([
-            this.featureToggleStore.count({
-                archived: false,
-            }),
-            this.userStore.count(),
-            this.projectStore.count(),
-            this.contextFieldStore.count(),
-            this.groupStore.count(),
-            this.roleStore.count(),
-            this.roleStore.filteredCount({
-                type: CUSTOM_ROOT_ROLE_TYPE,
-            }),
-            this.roleStore.filteredCountInUse({ type: CUSTOM_ROOT_ROLE_TYPE }),
-            this.environmentStore.count(),
-            this.segmentStore.count(),
-            this.strategyStore.count(),
-            this.hasSAML(),
-            this.hasOIDC(),
-            this.eventStore.deprecatedFilteredCount({
-                type: FEATURES_EXPORTED,
-            }),
-            this.eventStore.deprecatedFilteredCount({
-                type: FEATURES_IMPORTED,
-            }),
-            this.userStats(),
-            this.productionChanges(),
-            this.postgresVersion(),
-        ]);
-        const versionInfo = await this.getVersionInfo();
-        const customStrategies =
-            await this.strategyStore.getEditableStrategies();
-        const customStrategiesInUse =
-            await this.featureStrategiesStore.getCustomStrategiesInUseCount();
-        const featureInfo = {
-            featureToggles,
-            users,
-            projects,
-            contextFields,
-            groups,
-            roles,
-            customRootRoles,
-            customRootRolesInUse,
-            environments,
-            segments,
-            strategies,
-            SAMLenabled,
-            OIDCenabled,
-            featureExports,
-            featureImports,
-            customStrategies: customStrategies.length,
-            customStrategiesInUse: customStrategiesInUse,
-            instanceId: versionInfo.instanceId,
-            versionOSS: versionInfo.current.oss,
-            versionEnterprise: versionInfo.current.enterprise,
-            activeUsers30: userActive.last30,
-            activeUsers60: userActive.last60,
-            activeUsers90: userActive.last90,
-            productionChanges30: productionChanges.last30,
-            productionChanges60: productionChanges.last60,
-            productionChanges90: productionChanges.last90,
-            postgresVersion,
-        };
-        return featureInfo;
-    }
-
-    async userStats(): Promise<{
-        last30: number;
-        last60: number;
-        last90: number;
-    }> {
-        const { last30, last60, last90 } = await this.getActiveUsers();
-        return { last30, last60, last90 };
-    }
-
-    async productionChanges(): Promise<{
-        last30: number;
-        last60: number;
-        last90: number;
-    }> {
-        return this.getProductionChanges();
-    }
-
-    async postgresVersion(): Promise<string> {
-        return this.settingStore.postgresVersion();
-    }
-
-    async hasOIDC(): Promise<boolean> {
-        const settings = await this.settingStore.get<{ enabled: boolean }>(
-            'unleash.enterprise.auth.oidc',
-        );
-
-        return settings?.enabled || false;
-    }
-
-    async hasSAML(): Promise<boolean> {
-        const settings = await this.settingStore.get<{ enabled: boolean }>(
-            'unleash.enterprise.auth.saml',
-        );
-
-        return settings?.enabled || false;
-    }
-
     async getVersionInfo(): Promise<IVersionHolder> {
         const instanceId = await this.getInstanceId();
         return {

@@ -127,16 +127,11 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         featureStrategiesStore,
         trafficDataUsageStore,
     };
-    const versionServiceStores = instanceStatsServiceStores;
+    const versionServiceStores = { settingStore };
     const getActiveUsers = createGetActiveUsers(db);
     const getProductionChanges = createGetProductionChanges(db);
     const getLicencedUsers = createGetLicensedUsers(db);
-    const versionService = new VersionService(
-        versionServiceStores,
-        config,
-        getActiveUsers,
-        getProductionChanges,
-    );
+    const versionService = new VersionService(versionServiceStores, config);
 
     const instanceStatsService = new InstanceStatsService(
         instanceStatsServiceStores,
@@ -189,16 +184,11 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         trafficDataUsageStore,
     };
 
-    const versionServiceStores = instanceStatsServiceStores;
+    const versionServiceStores = { settingStore };
     const getActiveUsers = createFakeGetActiveUsers();
     const getLicensedUsers = createFakeGetLicensedUsers();
     const getProductionChanges = createFakeGetProductionChanges();
-    const versionService = new VersionService(
-        versionServiceStores,
-        config,
-        getActiveUsers,
-        getProductionChanges,
-    );
+    const versionService = new VersionService(versionServiceStores, config);
 
     const instanceStatsService = new InstanceStatsService(
         instanceStatsServiceStores,

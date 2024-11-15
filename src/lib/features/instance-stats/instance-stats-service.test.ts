@@ -27,12 +27,7 @@ beforeEach(() => {
     const config = createTestConfig();
     flagResolver = config.flagResolver;
     stores = createStores();
-    versionService = new VersionService(
-        stores,
-        config,
-        createFakeGetActiveUsers(),
-        createFakeGetProductionChanges(),
-    );
+    versionService = new VersionService(stores, config);
     clientInstanceStore = stores.clientInstanceStore;
     instanceStatsService = new InstanceStatsService(
         stores,

@@ -128,11 +128,7 @@ export const scheduleServices = async (
     schedulerService.schedule(
         () =>
             versionService.checkLatestVersion(() =>
-                config.flagResolver.isEnabled('memorizeStats', {
-                    memoryKey: 'getFeatureUsageInfo',
-                })
-                    ? instanceStatsService.getFeatureUsageInfo()
-                    : versionService.getFeatureUsageInfo(),
+                instanceStatsService.getFeatureUsageInfo(),
             ),
         hoursToMilliseconds(48),
         'checkLatestVersion',

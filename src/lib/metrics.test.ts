@@ -63,12 +63,7 @@ beforeAll(async () => {
     eventStore = stores.eventStore;
     environmentStore = new FakeEnvironmentStore();
     stores.environmentStore = environmentStore;
-    const versionService = new VersionService(
-        stores,
-        config,
-        createFakeGetActiveUsers(),
-        createFakeGetProductionChanges(),
-    );
+    const versionService = new VersionService(stores, config);
     db = await dbInit('metrics_test', getLogger);
 
     featureLifeCycleReadModel = new FeatureLifecycleReadModel(

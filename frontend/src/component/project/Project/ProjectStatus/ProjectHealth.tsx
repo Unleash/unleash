@@ -55,6 +55,7 @@ const UnhealthyStatText = styled('p')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
     width: ChartTotalWidth,
     height: ChartTotalWidth,
+    overflow: 'hidden',
 }));
 
 const UnhealthyFlagBox = ({ flagCount }: { flagCount: number }) => {

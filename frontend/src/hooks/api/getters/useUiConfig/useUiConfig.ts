@@ -17,9 +17,7 @@ interface IUseUIConfigOutput {
 
 const useUiConfig = (): IUseUIConfigOutput => {
     const path = formatApiPath(`api/admin/ui-config`);
-    const { data, error, mutate } = useSWR<IUiConfig>(path, fetcher, {
-        refreshInterval: 30000,
-    });
+    const { data, error, mutate } = useSWR<IUiConfig>(path, fetcher);
 
     const isOss = useCallback(() => {
         return !data?.versionInfo?.current?.enterprise;

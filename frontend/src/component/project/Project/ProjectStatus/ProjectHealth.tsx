@@ -55,7 +55,7 @@ const UnhealthyStatText = styled('p')(({ theme }) => ({
     backgroundColor:
         theme.mode === 'light'
             ? theme.palette.background.elevation2
-            : '#302E42',
+            : '#302E42', // in dark mode, elevation2 and elevation1 are the same color. This is an alternative
     width: ChartTotalWidth,
     height: ChartTotalWidth,
     overflow: 'hidden',

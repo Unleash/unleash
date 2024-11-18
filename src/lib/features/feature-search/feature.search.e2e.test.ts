@@ -968,6 +968,78 @@ test('should search features by state with operators', async () => {
     });
 });
 
+test('should search features by potentially stale', async () => {
+    await app.createFeature({
+        name: 'my_feature_a',
+        stale: false,
+    });
+    await app.createFeature({
+        name: 'my_feature_b',
+        stale: true,
+    });
+    await app.createFeature({
+        name: 'my_feature_c',
+        potentiallyStale: true,
+        stale: false,
+    });
+    await app.createFeature({
+        name: 'my_feature_d',
+        stale: true,
+        potentiallyStale: true,
+    });
+
+    // filter works
+    const { body: potentiallyStaleBody } = await filterFeaturesByState(
+        'IS:potentiallyStale',
+    );
+    expect(potentiallyStaleBody).toMatchObject({
+        features: [{ name: 'my_feature_d' }],
+    });
+
+    const { body: isNotPotentiallyStaleBody } = await filterFeaturesByState(
+        'IS_NOT:potentiallyStale',
+    );
+    expect(isNotPotentiallyStaleBody).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_d' },
+        ],
+    });
+
+    // results are still included in active
+    const { body: activeBody } = await filterFeaturesByState('IS:active');
+    expect(activeBody).toMatchObject({
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_c' }],
+    });
+
+    // you can exclude potentially stale from active
+    const { body: isNotActiveBody } = await filterFeaturesByState(
+        'IS:active&IS_NOT:potentiallyStale',
+    );
+    expect(isNotActiveBody).toMatchObject({
+        features: [{ name: 'my_feature_a' }],
+    });
+
+    const { body: isAnyOfBody } = await filterFeaturesByState(
+        'IS_ANY_OF:active, stale, potentiallyStale',
+    );
+    expect(isAnyOfBody).toMatchObject({
+        features: [
+            { name: 'my_feature_a' },
+            { name: 'my_feature_b' },
+            { name: 'my_feature_c' },
+            { name: 'my_feature_d' },
+        ],
+    });
+
+    const { body: isNotActiveIsPotentiallyStaleBody } =
+        await filterFeaturesByState('IS_NOT:active&IS:potentiallyStale');
+    expect(isNotActiveIsPotentiallyStaleBody).toMatchObject({
+        features: [],
+    });
+});
+
 test('should search features by created date with operators', async () => {
     await app.createFeature({
         name: 'my_feature_a',

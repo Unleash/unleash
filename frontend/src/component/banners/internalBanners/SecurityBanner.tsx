@@ -20,7 +20,7 @@ export const SecurityBanner = () => {
     }
 
     const banner = {
-        message: `Potencial security issue: there are ${uiConfig.maxSessionsCount} parallel sessions for a single user account.`,
+        message: `Potential security issue: there are ${uiConfig.maxSessionsCount} parallel sessions for a single user account.`,
         variant: 'warning' as BannerVariant,
         sticky: false,
         link: '/admin/users',

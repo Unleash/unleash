@@ -144,23 +144,23 @@ export const Project = () => {
 
     const tabs: ITab[] = [
         {
-            title: 'Flags',
+            title: simplifyProjectOverview ? 'Overview' : 'Flags',
             path: basePath,
             name: 'flags',
-        },
-        {
-            title: 'Insights',
-            path: `${basePath}/insights`,
-            name: 'insights',
-        },
-        {
-            title: 'Health',
-            path: `${basePath}/health`,
-            name: 'health',
         },
         ...(simplifyProjectOverview
             ? []
             : [
+                  {
+                      title: 'Insights',
+                      path: `${basePath}/insights`,
+                      name: 'insights',
+                  },
+                  {
+                      title: 'Health',
+                      path: `${basePath}/health`,
+                      name: 'health',
+                  },
                   {
                       title: 'Archived flags',
                       path: `${basePath}/archive`,
@@ -185,7 +185,7 @@ export const Project = () => {
             name: 'logs',
         },
         {
-            title: 'Project settings',
+            title: simplifyProjectOverview ? 'Settings' : 'Project settings',
             path: `${basePath}/settings`,
             ossPath: `${basePath}/settings/api-access`,
             name: 'settings',

@@ -290,10 +290,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
         false,
     ),
-    showUserDeviceCount: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
-        false,
-    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

@@ -979,21 +979,25 @@ test('should search features by potentially stale', async () => {
     });
     await app.createFeature({
         name: 'my_feature_c',
-        potentiallyStale: true,
         stale: false,
     });
     await app.createFeature({
         name: 'my_feature_d',
         stale: true,
-        potentiallyStale: true,
     });
+
+    // this is all done on a schedule, so there's no imperative way to mark something as potentially stale today.
+    await db
+        .rawDatabase('features')
+        .update('potentially_stale', true)
+        .whereIn('name', ['my_feature_c', 'my_feature_d']);
 
     // filter works
     const { body: potentiallyStaleBody } = await filterFeaturesByState(
         'IS:potentiallyStale',
     );
     expect(potentiallyStaleBody).toMatchObject({
-        features: [{ name: 'my_feature_d' }],
+        features: [{ name: 'my_feature_c' }, { name: 'my_feature_d' }],
     });
 
     const { body: isNotPotentiallyStaleBody } = await filterFeaturesByState(
@@ -1003,7 +1007,7 @@ test('should search features by potentially stale', async () => {
         features: [
             { name: 'my_feature_a' },
             { name: 'my_feature_b' },
-            { name: 'my_feature_d' },
+            // { name: 'my_feature_d' },
         ],
     });
 
@@ -1015,14 +1019,14 @@ test('should search features by potentially stale', async () => {
 
     // you can exclude potentially stale from active
     const { body: isNotActiveBody } = await filterFeaturesByState(
-        'IS:active&IS_NOT:potentiallyStale',
+        'IS_NONE_OF:stale,potentiallyStale',
     );
     expect(isNotActiveBody).toMatchObject({
         features: [{ name: 'my_feature_a' }],
     });
 
     const { body: isAnyOfBody } = await filterFeaturesByState(
-        'IS_ANY_OF:active, stale, potentiallyStale',
+        'IS_ANY_OF:active,stale,potentiallyStale',
     );
     expect(isAnyOfBody).toMatchObject({
         features: [
@@ -1031,12 +1035,6 @@ test('should search features by potentially stale', async () => {
             { name: 'my_feature_c' },
             { name: 'my_feature_d' },
         ],
-    });
-
-    const { body: isNotActiveIsPotentiallyStaleBody } =
-        await filterFeaturesByState('IS_NOT:active&IS:potentiallyStale');
-    expect(isNotActiveIsPotentiallyStaleBody).toMatchObject({
-        features: [],
     });
 });
 

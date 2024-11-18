@@ -53,6 +53,16 @@ When interacting with custom context fields in code, they must be accessed via t
 
 You can create as many custom context fields as you need. You can update custom context fields after they have been created. You can change everything about the definition except for the name.
 
+## Add a custom context field
+
+To add a custom context field in the Admin UI, do the following:
+
+1. Go to **Configure** > **Context fields** and click **New context field**. 
+2. Enter a context name.
+3. In **Legal value**, enter a value you want the field to support and click **Add**. You can add additional values if needed.
+4. Optionally, enable [custom stickiness](/reference/stickiness#custom-stickiness) if you'd like to use this field to group users for a gradual rollout strategy.
+5. Click **Create context**.
+6. 
 ### Legal values
 
 By using the **legal values** option when creating a context field, you can create a set of valid options for a context field's values.

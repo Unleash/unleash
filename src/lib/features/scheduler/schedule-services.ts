@@ -126,7 +126,10 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
-        versionService.checkLatestVersion.bind(versionService),
+        () =>
+            versionService.checkLatestVersion(() =>
+                instanceStatsService.getFeatureUsageInfo(),
+            ),
         hoursToMilliseconds(48),
         'checkLatestVersion',
     );

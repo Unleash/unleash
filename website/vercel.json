@@ -178,7 +178,7 @@
     },
     {
       "source": "/advanced/strategy_constraints",
-      "destination": "/reference/strategy-constraints",
+      "destination": "/reference/activation-strategies#constraints",
       "permanent": true
     },
     {

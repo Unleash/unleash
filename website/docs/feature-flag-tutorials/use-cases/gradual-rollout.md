@@ -66,7 +66,7 @@ You can configure your gradual rollout strategy using the following parameters i
 
 There are two more advanced extensions of the gradual rollout strategy that you can customize in the gradual rollout form:
 
--   [Strategy Constraints](/reference/strategy-constraints)
+-   [Strategy Constraints](/reference/activation-strategies#constraints)
 -   [Strategy Variants](/reference/strategy-variants)
 
 Constraints and variants are not required for a gradual rollout. These additional customizations can be built on top of the overall rollout strategy should you need more granular conditions for your feature beyond the rollout percentage.
@@ -77,7 +77,7 @@ For gradual rollouts, _strategy constraints_ are most applicable for more granul
 
 ## Applying Strategy Constraints
 
-When utilizing an activation strategy such as a gradual rollout, it may be necessary to further define which subset of users get access to a feature and when the rollout takes place, depending on the complexity of your use case. Unleash provides [strategy constraints](/reference/strategy-constraints) as a way to fine-tune conditions under which a feature flag is evaluated.
+When utilizing an activation strategy such as a gradual rollout, it may be necessary to further define which subset of users get access to a feature and when the rollout takes place, depending on the complexity of your use case. Unleash provides [strategy constraints](/reference/activation-strategies#constraints) as a way to fine-tune conditions under which a feature flag is evaluated.
 
 ![This diagram breaks down how strategy constraints sit on top activation strategies for flags in Unleash.](/img/tutorial-building-blocks-strategy-constraints.png)
 
@@ -100,7 +100,7 @@ If you want to create new types of constraints that are not built into Unleash, 
 
 ## Leveraging Segments
 
-A [segment](/reference/segments) is a reusable collection of [strategy constraints](/reference/strategy-constraints). Like with strategy constraints, you apply segments to feature flag activation strategies.
+A [segment](/reference/segments) is a reusable collection of [strategy constraints](/reference/activation-strategies#constraints). Like with strategy constraints, you apply segments to feature flag activation strategies.
 
 You can apply the same segment to multiple activation strategies. If you update the segment, the changes will affect every strategy that uses that segment.
 

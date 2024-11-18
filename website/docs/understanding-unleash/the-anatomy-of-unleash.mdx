@@ -91,7 +91,7 @@ When you check a [feature flag](../reference/feature-toggles) in an application,
 
 Activation strategies tie feature flags and [environments](../reference/environments) together. When you assign an activation strategy to a feature flag, you do so in one environment at a time. You can assign the same strategy to the same flag in different environments, but they will be different instances of the same strategy and do not stay in sync. Unleash also lets you copy strategies from one environment to another.
 
-Unleash comes with a number of [built-in strategies](../reference/activation-strategies). You can also create your own [custom activation strategies](../reference/custom-activation-strategies). All strategies can be further augmented by [**strategy constraints**](../reference/strategy-constraints).
+Unleash comes with a number of [built-in strategies](../reference/activation-strategies). You can also create your own [custom activation strategies](../reference/custom-activation-strategies). All strategies can be further augmented by [**strategy constraints**](../reference/activation-strategies#constraints).
 
 <Figure
     img="/img/anatomy-of-unleash-environments-strategies.png"
@@ -105,7 +105,7 @@ Unleash comes with a number of [built-in strategies](../reference/activation-str
 
 ## Strategy constraints
 
-[**Strategy constraints**](../reference/strategy-constraints) (or just **constraints**) help you fine-tune your strategies. They are an extra layer of prerequisites that help you narrow the audience of a strategy down. Strategy constraints are applied to [**activation strategies**](../reference/activation-strategies).
+[**Strategy constraints**](../reference/activation-strategies#constraints) (or just **constraints**) help you fine-tune your strategies. They are an extra layer of prerequisites that help you narrow the audience of a strategy down. Strategy constraints are applied to [**activation strategies**](../reference/activation-strategies).
 
 For example, if you wanted to roll a feature out to 50% of users with **a specific email domain **(such as “@mycompany.com”), then strategy constraints would let you target only users with that email domain.
 
@@ -138,7 +138,7 @@ Constraints are applied to individual strategies and do not stay in sync with ea
 
 ## Segments
 
-[**Segments**](../reference/segments) add extra functionality on top of [**strategy constraints**](../reference/strategy-constraints). A segment is a reusable collection of strategy constraints with a name and an optional description. When you apply a segment to a [strategy](../reference/activation-strategies), the strategy will be evaluated as if all of the segment's constraints were applied to it.
+[**Segments**](../reference/segments) add extra functionality on top of [**strategy constraints**](../reference/activation-strategies#constraints). A segment is a reusable collection of strategy constraints with a name and an optional description. When you apply a segment to a [strategy](../reference/activation-strategies), the strategy will be evaluated as if all of the segment's constraints were applied to it.
 
 Segments let you apply a set of constraints to multiple strategies **and** keep the constraints in sync between those strategies. Whenever you apply a segment to a strategy, you essentially create a **reference** to that segment. This means that whenever you change the segment by adding, removing, or changing constraints, this change propagates to all the strategies that reference this segment.
 

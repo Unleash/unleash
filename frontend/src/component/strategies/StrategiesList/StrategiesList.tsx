@@ -116,7 +116,7 @@ const StrategyDeprecationWarning = () => (
         version. We recommend not using custom strategies going forward and
         instead using the predefined strategies with{' '}
         <Link
-            href={'https://docs.getunleash.io/reference/strategy-constraints'}
+            href={'https://docs.getunleash.io/reference/activation-strategies#constraints'}
             target='_blank'
             variant='body2'
         >

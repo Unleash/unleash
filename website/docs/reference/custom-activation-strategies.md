@@ -6,7 +6,7 @@ title: Custom Activation Strategies
 
 This document is a reference for custom activation strategies. If you're looking for a guide on how to use them, see the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md).
 
-Custom activation strategies should be considered an advanced feature. In most cases [strategy constraints](https://docs.getunleash.io/reference/strategy-constraints) provides enough control without the additional complexity.
+Custom activation strategies should be considered an advanced feature. In most cases [strategy constraints](https://docs.getunleash.io/reference/activation-strategies#constraints) provides enough control without the additional complexity.
 
 :::
 

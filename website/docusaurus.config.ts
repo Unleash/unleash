@@ -406,7 +406,7 @@ const config: Config = {
                     },
                     {
                         from: '/advanced/strategy_constraints',
-                        to: '/reference/strategy-constraints',
+                        to: '/reference/activation-strategies#constraints',
                     },
                     {
                         from: '/advanced/tags',

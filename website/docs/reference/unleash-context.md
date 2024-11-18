@@ -2,7 +2,7 @@
 title: Unleash Context
 ---
 
-The **Unleash Context** contains information relating to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies) and [strategy constraints](../reference/strategy-constraints) and to calculate [flag stickiness](../reference/stickiness). The Unleash Context is an important feature of all the [Unleash client SDKs](../reference/sdks).
+The **Unleash Context** contains information relating to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies) and [strategy constraints](../reference/activation-strategies#constraints) and to calculate [flag stickiness](../reference/stickiness). The Unleash Context is an important feature of all the [Unleash client SDKs](../reference/sdks).
 
 ## Structure
 
@@ -29,7 +29,7 @@ The below table gives a brief overview over what the fields' intended usage is, 
 
 ### The `properties` field
 
-The `properties` field is different from the others. You can use the `properties` field to provide arbitrary data to [custom strategies](../reference/custom-activation-strategies) or to [strategy constraints](../reference/strategy-constraints). The `properties` field is also where you add values for [custom context fields](#custom-context-fields).
+The `properties` field is different from the others. You can use the `properties` field to provide arbitrary data to [custom strategies](../reference/custom-activation-strategies) or to [strategy constraints](../reference/activation-strategies#constraints). The `properties` field is also where you add values for [custom context fields](#custom-context-fields).
 
 
 #### A note on properties and constraints
@@ -61,7 +61,7 @@ You can create as many custom context fields as you need. You can update custom 
 By using the **legal values** option when creating a context field, you can create a set of valid options for a context field's values.
 If a context field has a defined set of legal values, the Unleash Admin UI will only allow users to enter one or more of the specified values. If a context field _doesn't_ have any defined legal values, the user can enter whatever they want.
 
-Using a custom context field called _region_ as an example: if you define the field's legal values as _Africa_, _Asia_, _Europe_, and _North America_, then you would only be allowed to use one or more of those four values when using the custom context field as a [strategy constraint](../reference/strategy-constraints).
+Using a custom context field called _region_ as an example: if you define the field's legal values as _Africa_, _Asia_, _Europe_, and _North America_, then you would only be allowed to use one or more of those four values when using the custom context field as a [strategy constraint](../reference/activation-strategies#constraints).
 
 ![A strategy constraint form with a constraint set to "region". The "values" input is a dropdown menu containing the options "Africa", "Asia", "Europe", and "North America", as defined in the preceding paragraph.](/img/constraints_legal_values.png)
 

@@ -4,9 +4,9 @@ title: How to use custom activation strategies
 
 :::tip
 
-Use custom activation strategies only for cases where [strategy constraints](https://docs.getunleash.io/reference/strategy-constraints) don't give you enough control. 
+Use custom activation strategies only for cases where [strategy constraints](https://docs.getunleash.io/reference/activation-strategies#constraints) don't give you enough control. 
 
-The downside of using a custom activation strategy instead of constraints is that you need to distribute the code of your strategy with Unleash client SDK while on the other hand, [strategy constraints](https://docs.getunleash.io/reference/strategy-constraints) work without any extra code or maintenance.
+The downside of using a custom activation strategy instead of constraints is that you need to distribute the code of your strategy with Unleash client SDK while on the other hand, [strategy constraints](https://docs.getunleash.io/reference/activation-strategies#constraints) work without any extra code or maintenance.
 :::
 
 

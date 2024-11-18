@@ -81,7 +81,7 @@ These optional steps allow you to further configure your feature flags to add op
 
 ### Add constraints and segmentation
 
-Constraints and segmentation allow you to set filters on your strategies, so that they will only be evaluated for users and applications that match the specified preconditions. Refer to the [strategy constraints](../reference/strategy-constraints) and [segments reference documentation](../reference/segments) for more information.
+Constraints and segmentation allow you to set filters on your strategies, so that they will only be evaluated for users and applications that match the specified preconditions. Refer to the [strategy constraints](../reference/activation-strategies#constraints) and [segments reference documentation](../reference/segments) for more information.
 
 To add constraints and segmentation, use the "edit strategy" button for the desired strategy.
 

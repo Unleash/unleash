@@ -34,39 +34,6 @@ const StyledSVG = styled('svg')({
     position: 'absolute',
 });
 
-const UnhealthyFlags = ({ flagCount }: { flagCount: number }) => {
-    const projectId = useRequiredPathParam('projectId');
-    const flagWord = flagCount === 1 ? 'flag' : 'flags';
-    return (
-        <ChartRow>
-            <UnhealthyStatContainer>
-                <UnhealthyStatText>
-                    <BigText>
-                        <PrettifyLargeNumber
-                            value={flagCount}
-                            threshold={1000}
-                            precision={1}
-                        />
-                    </BigText>
-                    <span>unhealthy</span>
-                    <span>{flagWord}</span>
-                </UnhealthyStatText>
-            </UnhealthyStatContainer>
-
-            <TextContainer>
-                <Typography variant='body2'>
-                    To keep your project healthy, archive stale feature flags
-                    and remove code from your code base to reduce technical
-                    debt.
-                </Typography>
-                <Link to={`/projects/${projectId}?state=IS%3Astale`}>
-                    View unhealthy flags
-                </Link>
-            </TextContainer>
-        </ChartRow>
-    );
-};
-
 const BigText = styled('span')(({ theme }) => ({
     fontSize: theme.typography.h1.fontSize,
 }));
@@ -89,6 +56,25 @@ const UnhealthyStatText = styled('p')(({ theme }) => ({
     width: ChartTotalWidth,
     height: ChartTotalWidth,
 }));
+
+const UnhealthyFlagBox = ({ flagCount }: { flagCount: number }) => {
+    const flagWord = flagCount === 1 ? 'flag' : 'flags';
+    return (
+        <UnhealthyStatContainer>
+            <UnhealthyStatText>
+                <BigText>
+                    <PrettifyLargeNumber
+                        value={flagCount}
+                        threshold={1000}
+                        precision={1}
+                    />
+                </BigText>
+                <span>unhealthy</span>
+                <span>{flagWord}</span>
+            </UnhealthyStatText>
+        </UnhealthyStatContainer>
+    );
+};
 
 const Wrapper = styled(HealthGridTile)(({ theme }) => ({
     display: 'flex',
@@ -167,7 +153,19 @@ export const ProjectHealth = () => {
                     )}
                 </TextContainer>
             </ChartRow>
-            <UnhealthyFlags flagCount={staleFlags.total} />
+            <ChartRow>
+                <UnhealthyFlagBox flagCount={staleFlags.total} />
+                <TextContainer>
+                    <Typography variant='body2'>
+                        To keep your project healthy, archive stale feature
+                        flags and remove code from your code base to reduce
+                        technical debt.
+                    </Typography>
+                    <Link to={`/projects/${projectId}?state=IS%3Astale`}>
+                        View unhealthy flags
+                    </Link>
+                </TextContainer>
+            </ChartRow>
         </Wrapper>
     );
 };

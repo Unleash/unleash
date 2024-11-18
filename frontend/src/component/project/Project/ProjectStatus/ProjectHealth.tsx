@@ -4,6 +4,12 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { HealthGridTile } from './ProjectHealthGrid.styles';
+import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
+
+const ChartRadius = 40;
+const ChartStrokeWidth = 13;
+const ChartTotalWidth = ChartRadius * 2 + ChartStrokeWidth;
+const ChartContainerWidth = 100;
 
 const TextContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -20,7 +26,7 @@ const ChartRow = styled('div')(({ theme }) => ({
 const SVGWrapper = styled('div')(({ theme }) => ({
     flex: 'none',
     height: 85,
-    width: 100,
+    width: ChartContainerWidth,
     position: 'relative',
 }));
 
@@ -28,16 +34,75 @@ const StyledSVG = styled('svg')({
     position: 'absolute',
 });
 
+const UnhealthyFlags = ({ flagCount }: { flagCount: number }) => {
+    const projectId = useRequiredPathParam('projectId');
+    return (
+        <ChartRow>
+            <UnhealthyStatContainerContainer>
+                <UnhealthyStatContainer>
+                    <UnhealthyStatText>
+                        <BigText>
+                            <PrettifyLargeNumber
+                                value={flagCount}
+                                threshold={1000}
+                                precision={1}
+                            />
+                        </BigText>
+                        <span>unhealthy</span>
+                        <span>flags</span>
+                    </UnhealthyStatText>
+                </UnhealthyStatContainer>
+            </UnhealthyStatContainerContainer>
+
+            <div>
+                <p>
+                    To keep you project healthy, archive stale feature flags and
+                    remove code from your code base to reduce technical debt.
+                </p>
+                <Link to={`/projects/${projectId}?state=IS%3Astale`}>
+                    View unhealthy flags
+                </Link>
+            </div>
+        </ChartRow>
+    );
+};
+
+const BigText = styled('span')(({ theme }) => ({
+    fontSize: theme.typography.h1.fontSize,
+}));
+
+const UnhealthyStatContainerContainer = styled('div')(({ theme }) => ({
+    flex: 'none',
+    display: 'grid',
+    placeItems: 'center',
+    width: ChartContainerWidth,
+}));
+
+const UnhealthyStatContainer = styled('article')(({ theme }) => ({
+    display: 'grid',
+    placeItems: 'center',
+    borderRadius: '50%',
+    backgroundColor: theme.palette.background.elevation2,
+    width: ChartTotalWidth,
+    height: ChartTotalWidth,
+}));
+
+const UnhealthyStatText = styled('p')(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    // justifyContent: sp
+}));
+
 export const ProjectHealth = () => {
     const projectId = useRequiredPathParam('projectId');
     const {
-        data: { averageHealth },
+        data: { averageHealth, staleFlags },
     } = useProjectStatus(projectId);
     const { isOss } = useUiConfig();
     const theme = useTheme();
-    const radius = 40;
-    const strokeWidth = 13;
-    const circumference = 2 * Math.PI * radius;
+    const circumference = 2 * Math.PI * ChartRadius; //
 
     const gapLength = 0.3;
     const filledLength = 1 - gapLength;
@@ -59,20 +124,20 @@ export const ProjectHealth = () => {
                         <circle
                             cx='50'
                             cy='50'
-                            r={radius}
+                            r={ChartRadius}
                             fill='none'
                             stroke={theme.palette.grey[300]}
-                            strokeWidth={strokeWidth}
+                            strokeWidth={ChartStrokeWidth}
                             strokeDasharray={`${filledLength * circumference} ${gapLength * circumference}`}
                             strokeDashoffset={offset * circumference}
                         />
                         <circle
                             cx='50'
                             cy='50'
-                            r={radius}
+                            r={ChartRadius}
                             fill='none'
                             stroke={healthColor}
-                            strokeWidth={strokeWidth}
+                            strokeWidth={ChartStrokeWidth}
                             strokeDasharray={`${healthLength} ${circumference - healthLength}`}
                             strokeDashoffset={offset * circumference}
                         />
@@ -100,6 +165,7 @@ export const ProjectHealth = () => {
                     )}
                 </TextContainer>
             </ChartRow>
+            <UnhealthyFlags flagCount={staleFlags.total} />
         </HealthGridTile>
     );
 };

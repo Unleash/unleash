@@ -51,17 +51,38 @@ export const applyGenericQueryParams = (
 ): void => {
     queryParams.forEach((param) => {
         const isSingleParam = param.values.length === 1;
+        const containsNulls = param.values.includes(null);
         switch (param.operator) {
             case 'IS':
             case 'IS_ANY_OF':
-                query.whereIn(param.field, param.values);
+                if (isSingleParam) {
+                    query.where(param.field, param.values[0]);
+                } else {
+                    if (containsNulls) {
+                        query.where((qb) =>
+                            qb
+                                .whereIn(param.field, param.values)
+                                .orWhereNull(param.field),
+                        );
+                    } else {
+                        query.whereIn(param.field, param.values);
+                    }
+                }
                 break;
             case 'IS_NOT':
             case 'IS_NONE_OF':
                 if (isSingleParam) {
                     query.whereNot(param.field, param.values[0]);
                 } else {
-                    query.whereNotIn(param.field, param.values);
+                    if (containsNulls) {
+                        query.where((qb) =>
+                            qb
+                                .whereNotIn(param.field, param.values)
+                                .orWhereNotNull(param.field),
+                        );
+                    } else {
+                        query.whereNotIn(param.field, param.values);
+                    }
                 }
                 break;
             case 'IS_BEFORE':

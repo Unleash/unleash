@@ -9287,9 +9287,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unleash-client@npm:6.1.2":
-  version: 6.1.2
-  resolution: "unleash-client@npm:6.1.2"
+"unleash-client@npm:6.1.3":
+  version: 6.1.3
+  resolution: "unleash-client@npm:6.1.3"
   dependencies:
     http-proxy-agent: "npm:^7.0.2"
     https-proxy-agent: "npm:^7.0.5"
@@ -9297,7 +9297,7 @@ __metadata:
     make-fetch-happen: "npm:^13.0.1"
     murmurhash3js: "npm:^3.0.1"
     semver: "npm:^7.6.2"
-  checksum: 10c0/957ddbde9de79c6a2097672de845a7b1e9c439cec532d3d022799e196ac0f00a6fecb18aaea376304d5981ccd298b57693463f8a90c87764fdd69357496ba961
+  checksum: 10c0/a86d4c5446d6ba867c00d8ac8c0539acb9b6d969eba2b3cd1eea0fe32b436fb2a1c88a5b4910a0793dc65773894e6e8f6a980ebfd0f13cc354f1424b9f2fd464
   languageName: node
   linkType: hard
 
@@ -9412,7 +9412,7 @@ __metadata:
     tsc-watch: "npm:6.2.0"
     type-is: "npm:^1.6.18"
     typescript: "npm:5.4.5"
-    unleash-client: "npm:6.1.2"
+    unleash-client: "npm:6.1.3"
     uuid: "npm:^9.0.0"
     wait-on: "npm:^7.2.0"
   languageName: unknown

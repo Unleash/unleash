@@ -992,21 +992,6 @@ test('should search features by potentially stale', async () => {
         .update('potentially_stale', true)
         .whereIn('name', ['my_feature_c', 'my_feature_d']);
 
-    // filter works
-    const { body: potentiallyStaleBody } = await filterFeaturesByState(
-        'IS:potentiallyStale',
-    );
-    expect(potentiallyStaleBody).toMatchObject({
-        features: [{ name: 'my_feature_c' }],
-    });
-
-    const { body: isNotPotentiallyStaleBody } = await filterFeaturesByState(
-        'IS_NOT:potentiallyStale',
-    );
-    expect(isNotPotentiallyStaleBody).toMatchObject({
-        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
-    });
-
     const check = async (filter: string, expectedFlags: string[]) => {
         const { body } = await filterFeaturesByState(filter);
         expect(body).toMatchObject({
@@ -1014,6 +999,15 @@ test('should search features by potentially stale', async () => {
         });
     };
 
+    // single filters work
+    await check('IS:potentiallyStale', ['my_feature_c']);
+    await check('IS_NOT:potentiallyStale', [
+        'my_feature_a',
+        'my_feature_b',
+        'my_feature_d',
+    ]);
+
+    // combo filters work
     await check('IS_ANY_OF:active,potentiallyStale', [
         'my_feature_a',
         'my_feature_c',

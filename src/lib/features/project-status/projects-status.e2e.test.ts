@@ -311,33 +311,25 @@ test('project status includes stale flags', async () => {
         {} as IUser,
         {} as IAuditUser,
     );
-    const createFlagInState = async (
-        name: string,
-        state?: Object,
-        projectId?: string,
-    ) => {
-        await app.createFeature(name, projectId);
-        if (state) {
-            await db.rawDatabase('features').update(state).where({ name });
-        }
-    };
 
-    await createFlagInState('stale-flag', { stale: true });
-    await createFlagInState('potentially-stale-flag', {
-        potentially_stale: true,
+    await app.createFeature({ name: 'stale-flag', stale: true });
+    await app.createFeature({
+        name: 'potentially-stale-flag',
+        potentiallyStale: true,
     });
-    await createFlagInState('potentially-stale-and-stale-flag', {
+    await app.createFeature({
+        name: 'potentially-stale-and-stale-flag',
         potentially_stale: true,
         stale: true,
     });
-    await createFlagInState('non-stale-flag');
-    await createFlagInState('archived-stale-flag', {
+    await app.createFeature({ name: 'non-stale-flag' });
+    await app.createFeature({
+        name: 'archived-stale-flag',
         archived: true,
         stale: true,
     });
-    await createFlagInState(
-        'stale-other-project',
-        { stale: true },
+    await app.createFeature(
+        { name: 'stale-other-project', stale: true },
         otherProject.id,
     );
 

@@ -49,7 +49,7 @@ export const CreateReleasePlanTemplate = () => {
     const [milestones, setMilestones] = useState<
         IReleasePlanMilestonePayload[]
     >([{ name: 'Milestone 1', sortOrder: 0 }]);
-    const [addStrategyOpen, setAddStrategyOpen] = useState<boolean>(false);
+    const [addStrategyOpen, setAddStrategyOpen] = useState(false);
     const {
         name,
         setName,

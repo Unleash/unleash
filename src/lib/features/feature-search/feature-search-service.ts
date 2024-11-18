@@ -55,10 +55,20 @@ export class FeatureSearchService {
                 // the potential combinations that include potentiallyStale are:
                 // IS ANY OF: active, stale, potentiallyStale = no filters => a, b, c, d
                 // IS ANY OF: active, potentially stale = filter out stale => a, c
-                // IS ANY OF: stale, potentially stale = I think this is a problem => b, c, d
+                // IS ANY OF: stale, potentially stale = I think this is a problem => b, c, d (active and not potentially stale or stale)
                 // IS NONE OF: active, stale, potentiallyStale = empty set => [nothing]
                 // IS NONE OF: active, potentially stale => only return stale => b, d
                 // IS NONE OF: stale, potentially stale => return active without potentially stale => a
+                //
+                //
+                // if potentiallyStale *does* include stale,
+                // the potential combinations that include potentiallyStale are:
+                // IS ANY OF: active, stale, potentiallyStale => a, b, c, d
+                // IS ANY OF: active, potentially stale => a, c, d
+                // IS ANY OF: stale, potentially stale => b, c, d (active and potentiallyStale or stale)
+                // IS NONE OF: active, stale, potentiallyStale => [nothing]
+                // IS NONE OF: active, potentially stale => d
+                // IS NONE OF: stale, potentially stale => a
                 const potentiallyStale = parsedState.values.some((value) =>
                     value?.includes('potentiallyStale'),
                 );

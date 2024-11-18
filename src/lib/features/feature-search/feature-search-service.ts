@@ -45,23 +45,24 @@ export class FeatureSearchService {
         if (params.state) {
             const parsedState = parseSearchOperatorValue('stale', params.state);
             if (parsedState) {
-                // there's 4 possible states to handle:
-                // active and potentiallyStale
-                // active and not potentiallyStale
-                // stale and potentiallyStale
-                // stale and not potentiallyStale
+                // there's 4 possible flag states to handle:
+                // a: active and not potentiallyStale
+                // b: stale and not potentiallyStale
+                // c: active and potentiallyStale
+                // d: stale and potentiallyStale
                 //
-                //
-                // the potential combinations are:
-                // IS ANY OF: active, stale, potentiallyStale = no filters
-                // IS ANY OF: active, potentially stale = filter out stale
-                // IS ANY OF: stale, potentially stale = no additional filtering needed
-                // IS NONE OF: active, stale, potentiallyStale = empty set
-                // IS NONE OF: active, potentially stale => only return stale
-                // IS NONE OF: stale, potentially stale => return active without potentially stale, no additional stuff needed
+                // if stale does not include potentiallyStale,
+                // the potential combinations that include potentiallyStale are:
+                // IS ANY OF: active, stale, potentiallyStale = no filters => a, b, c, d
+                // IS ANY OF: active, potentially stale = filter out stale => a, c
+                // IS ANY OF: stale, potentially stale = I think this is a problem => b, c, d
+                // IS NONE OF: active, stale, potentiallyStale = empty set => [nothing]
+                // IS NONE OF: active, potentially stale => only return stale => b, d
+                // IS NONE OF: stale, potentially stale => return active without potentially stale => a
                 const potentiallyStale = parsedState.values.some((value) =>
                     value?.includes('potentiallyStale'),
                 );
+
                 if (potentiallyStale) {
                     if (
                         parsedState.operator === 'IS' ||
@@ -93,6 +94,7 @@ export class FeatureSearchService {
                         ),
                     });
                 }
+                console.log(params, queryParams);
             }
         }
 

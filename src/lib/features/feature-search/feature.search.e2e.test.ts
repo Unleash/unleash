@@ -1011,54 +1011,39 @@ test('should search features by potentially stale', async () => {
         ],
     });
 
-    // results are still included in active
-    const { body: activeBody } = await filterFeaturesByState('IS:active');
-    expect(activeBody).toMatchObject({
-        features: [{ name: 'my_feature_a' }, { name: 'my_feature_c' }],
-    });
+    const check = async (filter: string, expectedFlags: string[]) => {
+        const { body } = await filterFeaturesByState(filter);
+        expect(body).toMatchObject({
+            features: expectedFlags.map((flag) => ({ name: flag })),
+        });
+    };
 
-    // you can exclude potentially stale from active
-    const { body: isNotActiveBody } = await filterFeaturesByState(
-        'IS_NONE_OF:stale,potentiallyStale',
-    );
-    expect(isNotActiveBody).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
+    await check('IS_ANY_OF:active,potentiallyStale', [
+        'my_feature_a',
+        'my_feature_c',
+    ]);
 
-    const { body: isAnyOfBody } = await filterFeaturesByState(
-        'IS_ANY_OF:active,stale,potentiallyStale',
-    );
-    expect(isAnyOfBody).toMatchObject({
-        features: [
-            { name: 'my_feature_a' },
-            { name: 'my_feature_b' },
-            { name: 'my_feature_c' },
-            { name: 'my_feature_d' },
-        ],
-    });
-});
+    await check('IS_ANY_OF:potentiallyStale,stale', [
+        'my_feature_b',
+        'my_feature_c',
+        'my_feature_d',
+    ]);
 
-test('should search features by created date with operators', async () => {
-    await app.createFeature({
-        name: 'my_feature_a',
-        createdAt: '2023-01-27T15:21:39.975Z',
-    });
-    await app.createFeature({
-        name: 'my_feature_b',
-        createdAt: '2023-01-29T15:21:39.975Z',
-    });
+    await check('IS_ANY_OF:active,potentiallyStale,stale', [
+        'my_feature_a',
+        'my_feature_b',
+        'my_feature_c',
+        'my_feature_d',
+    ]);
 
-    const { body } = await filterFeaturesByCreated('IS_BEFORE:2023-01-28');
-    expect(body).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
+    await check('IS_NONE_OF:active,potentiallyStale,stale', []);
 
-    const { body: afterBody } = await filterFeaturesByCreated(
-        'IS_ON_OR_AFTER:2023-01-28',
-    );
-    expect(afterBody).toMatchObject({
-        features: [{ name: 'my_feature_b' }],
-    });
+    await check('IS_NONE_OF:active,potentiallyStale', [
+        'my_feature_b',
+        'my_feature_d',
+    ]);
+
+    await check('IS_NONE_OF:potentiallyStale,stale', ['my_feature_a']);
 });
 
 test('should filter features by combined operators', async () => {

@@ -198,15 +198,14 @@ export class InstanceStatsService {
 
     memory = new Map<string, () => Promise<any>>();
     memorize<T>(key: string, fn: () => Promise<T>): Promise<T> {
-        const enabled = this.flagResolver.isEnabled('memorizeStats', {
+        const variant = this.flagResolver.getVariant('memorizeStats', {
             memoryKey: key,
         });
-        if (enabled) {
-            const variant = this.flagResolver.getVariant('memorizeStats', {
-                memoryKey: key,
-            }).payload;
+        if (variant.feature_enabled) {
             const minutes =
-                variant?.type === 'number' ? Number(variant.value) : 1;
+                variant.payload?.type === 'number'
+                    ? Number(variant.payload.value)
+                    : 1;
 
             let memoizedFunction = this.memory.get(key);
             if (!memoizedFunction) {

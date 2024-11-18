@@ -87,9 +87,11 @@ describe.each([true, false])(
     'When feature enabled is %s',
     (featureEnabled: boolean) => {
         beforeEach(() => {
-            jest.spyOn(flagResolver, 'isEnabled').mockReturnValue(
-                featureEnabled,
-            );
+            jest.spyOn(flagResolver, 'getVariant').mockReturnValue({
+                name: 'memorizeStats',
+                enabled: featureEnabled,
+                feature_enabled: featureEnabled,
+            });
         });
 
         test(`should${featureEnabled ? ' ' : ' not '}memoize query results`, async () => {

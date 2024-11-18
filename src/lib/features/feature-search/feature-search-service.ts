@@ -45,10 +45,40 @@ export class FeatureSearchService {
         if (params.state) {
             const parsedState = parseSearchOperatorValue('stale', params.state);
             if (parsedState) {
-                parsedState.values = parsedState.values.map((value) =>
-                    value === 'active' ? 'false' : 'true',
+                const potentiallyStale = parsedState.values.some((value) =>
+                    value?.includes('potentiallyStale'),
                 );
-                queryParams.push(parsedState);
+                if (potentiallyStale) {
+                    if (
+                        parsedState.operator === 'IS' ||
+                        parsedState.operator === 'IS_ANY_OF'
+                    ) {
+                        queryParams.push({
+                            field: 'features.potentially_stale',
+                            operator: 'IS',
+                            values: ['true'],
+                        });
+                    } else {
+                        queryParams.push({
+                            field: 'features.potentially_stale',
+                            operator: 'IS_ANY_OF',
+                            values: [null, 'false'],
+                        });
+                    }
+                }
+                const otherValues = parsedState.values.filter(
+                    (value) => !value?.includes('potentiallyStale'),
+                );
+
+                if (otherValues.length) {
+                    queryParams.push({
+                        field: 'stale',
+                        operator: parsedState.operator,
+                        values: otherValues.map((value) =>
+                            value === 'active' ? 'false' : 'true',
+                        ),
+                    });
+                }
             }
         }
 

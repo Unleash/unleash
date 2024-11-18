@@ -8,7 +8,7 @@ import VideoContent from '@site/src/components/VideoContent.jsx'
 
 An activation strategy determines who should get a feature. They allow you to enable and disable features for certain users without having to redeploy your application. For example, you can release features only to users with a specific user ID, email, IP address, and more. They allow you to implement gradual rollouts to specific user segments, for example, those on a specific subscription plan or region. You can also use them to schedule feature releases or make features available for a limited time.
 
-An activation strategy is assigned to one [feature flag](/reference/feature-toggles) in one [environment](/reference/environment). For a feature flag to be enabled in a given context, such as for a user or application, at least one of the feature flag's activation strategies must resolve to true.
+An activation strategy is assigned to one [feature flag](/reference/feature-toggles) in one [environment](/reference/environments). For a feature flag to be enabled in a given context, such as for a user or application, at least one of the feature flag's activation strategies must resolve to true.
 
 You can copy activation strategies from one environment to the other, but the different strategy configurations do not stay in sync. The `default` activation strategy is a gradual rollout to 100% of users, which means that the flag is enabled for everyone. You can use rollout percentage, [constraints](#constraints), targeting, and strategy variants to further define your activation strategies. You can also define custom activation strategies.
 

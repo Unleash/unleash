@@ -31,7 +31,6 @@ test('projectStatusSchema', () => {
             { date: '2022-12-15', count: 5 },
         ],
         resources: {
-            connectedEnvironments: 2,
             apiTokens: 2,
             members: 1,
             segments: 0,

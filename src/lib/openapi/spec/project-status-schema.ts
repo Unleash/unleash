@@ -52,20 +52,9 @@ export const projectStatusSchema = {
         resources: {
             type: 'object',
             additionalProperties: false,
-            required: [
-                'connectedEnvironments',
-                'apiTokens',
-                'members',
-                'segments',
-            ],
+            required: ['apiTokens', 'members', 'segments'],
             description: 'Key resources within the project',
             properties: {
-                connectedEnvironments: {
-                    type: 'integer',
-                    minimum: 0,
-                    description:
-                        'The number of environments that have received SDK traffic in this project.',
-                },
                 apiTokens: {
                     type: 'integer',
                     minimum: 0,

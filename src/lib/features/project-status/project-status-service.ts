@@ -44,7 +44,6 @@ export class ProjectStatusService {
 
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
         const [
-            connectedEnvironments,
             members,
             apiTokens,
             segments,
@@ -53,7 +52,6 @@ export class ProjectStatusService {
             lifecycleSummary,
             staleFlagCount,
         ] = await Promise.all([
-            this.projectStore.getConnectedEnvironmentCountForProject(projectId),
             this.projectStore.getMembersCountByProject(projectId),
             this.apiTokenStore.countProjectTokens(projectId),
             this.segmentStore.getProjectSegmentCount(projectId),
@@ -74,7 +72,6 @@ export class ProjectStatusService {
 
         return {
             resources: {
-                connectedEnvironments,
                 members,
                 apiTokens,
                 segments,

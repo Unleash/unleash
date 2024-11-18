@@ -127,7 +127,7 @@ describe('maxSessionsCount', () => {
         expect(noLoggedInUsers.maxSessionsCount).toEqual(0);
     });
 
-    test('should return max sessions count', async () => {
+    test('should count number of session per user', async () => {
         const email = 'user@getunleash.io';
 
         const adminRole = (await db.stores.roleStore.getRootRoles()).find(
@@ -141,6 +141,7 @@ describe('maxSessionsCount', () => {
             },
             TEST_AUDIT_USER,
         );
+
         const userSession = (index: number) => ({
             sid: `sid${index}`,
             sess: {
@@ -165,7 +166,5 @@ describe('maxSessionsCount', () => {
             .expect(200);
 
         expect(withSessions.maxSessionsCount).toEqual(5);
-
-        await app.services.sessionService.deleteSessionsForUser(user.id);
     });
 });

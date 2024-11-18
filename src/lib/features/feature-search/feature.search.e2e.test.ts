@@ -997,18 +997,14 @@ test('should search features by potentially stale', async () => {
         'IS:potentiallyStale',
     );
     expect(potentiallyStaleBody).toMatchObject({
-        features: [{ name: 'my_feature_c' }, { name: 'my_feature_d' }],
+        features: [{ name: 'my_feature_c' }],
     });
 
     const { body: isNotPotentiallyStaleBody } = await filterFeaturesByState(
         'IS_NOT:potentiallyStale',
     );
     expect(isNotPotentiallyStaleBody).toMatchObject({
-        features: [
-            { name: 'my_feature_a' },
-            { name: 'my_feature_b' },
-            // { name: 'my_feature_d' },
-        ],
+        features: [{ name: 'my_feature_a' }, { name: 'my_feature_b' }],
     });
 
     const check = async (filter: string, expectedFlags: string[]) => {

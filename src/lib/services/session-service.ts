@@ -2,12 +2,14 @@ import type { IUnleashStores } from '../types/stores';
 import type { IUnleashConfig } from '../types/option';
 import type { Logger } from '../logger';
 import type { ISession, ISessionStore } from '../types/stores/session-store';
-import { compareDesc } from 'date-fns';
+import { compareDesc, minutesToMilliseconds } from 'date-fns';
+import memoizee from 'memoizee';
 
 export default class SessionService {
     private logger: Logger;
 
     private sessionStore: ISessionStore;
+    private resolveMaxSessions: () => Promise<number>;
 
     constructor(
         { sessionStore }: Pick<IUnleashStores, 'sessionStore'>,
@@ -15,6 +17,14 @@ export default class SessionService {
     ) {
         this.logger = getLogger('lib/services/session-service.ts');
         this.sessionStore = sessionStore;
+
+        this.resolveMaxSessions = memoizee(
+            async () => await this.sessionStore.getMaxSessionsCount(),
+            {
+                promise: true,
+                maxAge: minutesToMilliseconds(1),
+            },
+        );
     }
 
     async getActiveSessions(): Promise<ISession[]> {
@@ -68,6 +78,10 @@ export default class SessionService {
                 ({ userId, count }) => [userId, count],
             ),
         );
+    }
+
+    async getMaxSessionsCount() {
+        return this.resolveMaxSessions();
     }
 }
 

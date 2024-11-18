@@ -34,6 +34,7 @@ export interface IUiConfig {
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
     unleashAIAvailable?: boolean;
+    maxSessionsCount?: number;
 }
 
 export interface IProclamationToast {

@@ -282,6 +282,10 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_PAYG,
         false,
     ),
+    showUserDeviceCount: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
+        false,
+    ),
     simplifyProjectOverview: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SIMPLIFY_PROJECT_OVERVIEW,
         false,

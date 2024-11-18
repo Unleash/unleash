@@ -172,7 +172,7 @@ class ConfigController extends Controller {
             maintenanceMode,
             feedbackUriPath: this.config.feedbackUriPath,
             unleashAIAvailable: this.config.openAIAPIKey !== undefined,
-            maxSessions: maxSessionsCount,
+            maxSessionsCount,
         };
 
         this.openApiService.respondWithValidation(

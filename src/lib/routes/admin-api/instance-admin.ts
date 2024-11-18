@@ -85,6 +85,8 @@ class InstanceAdminController extends Controller {
         return {
             OIDCenabled: true,
             SAMLenabled: false,
+            passwordAuthEnabled: true,
+            SCIMenabled: false,
             clientApps: [
                 { range: 'allTime', count: 15 },
                 { range: '30d', count: 9 },

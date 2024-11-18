@@ -30,7 +30,8 @@ import { CUSTOM_ROOT_ROLE_TYPE } from '../../util';
 import type { GetActiveUsers } from './getActiveUsers';
 import type { ProjectModeCount } from '../project/project-store';
 import type { GetProductionChanges } from './getProductionChanges';
-import { format } from 'date-fns';
+import { format, minutesToMilliseconds } from 'date-fns';
+import memoizee from 'memoizee';
 import type { GetLicensedUsers } from './getLicensedUsers';
 
 export type TimeRange = 'allTime' | '30d' | '7d';
@@ -58,6 +59,8 @@ export interface InstanceStats {
     strategies: number;
     SAMLenabled: boolean;
     OIDCenabled: boolean;
+    passwordAuthEnabled: boolean;
+    SCIMenabled: boolean;
     clientApps: { range: TimeRange; count: number }[];
     activeUsers: Awaited<ReturnType<GetActiveUsers>>;
     licensedUsers: Awaited<ReturnType<GetLicensedUsers>>;
@@ -193,55 +196,94 @@ export class InstanceStatsService {
         this.trafficDataUsageStore = trafficDataUsageStore;
     }
 
+    memory = new Map<string, () => Promise<any>>();
+    memorize<T>(key: string, fn: () => Promise<T>): Promise<T> {
+        const variant = this.flagResolver.getVariant('memorizeStats', {
+            memoryKey: key,
+        });
+        if (variant.feature_enabled) {
+            const minutes =
+                variant.payload?.type === 'number'
+                    ? Number(variant.payload.value)
+                    : 1;
+
+            let memoizedFunction = this.memory.get(key);
+            if (!memoizedFunction) {
+                memoizedFunction = memoizee(() => fn(), {
+                    promise: true,
+                    maxAge: minutesToMilliseconds(minutes),
+                });
+                this.memory.set(key, memoizedFunction);
+            }
+            return memoizedFunction();
+        } else {
+            return fn();
+        }
+    }
+
     getProjectModeCount(): Promise<ProjectModeCount[]> {
-        return this.projectStore.getProjectModeCounts();
+        return this.memorize('getProjectModeCount', () =>
+            this.projectStore.getProjectModeCounts(),
+        );
     }
 
     getToggleCount(): Promise<number> {
-        return this.featureToggleStore.count({
-            archived: false,
-        });
+        return this.memorize('getToggleCount', () =>
+            this.featureToggleStore.count({
+                archived: false,
+            }),
+        );
     }
 
     getArchivedToggleCount(): Promise<number> {
-        return this.featureToggleStore.count({
-            archived: true,
-        });
+        return this.memorize('hasOIDC', () =>
+            this.featureToggleStore.count({
+                archived: true,
+            }),
+        );
     }
 
     async hasOIDC(): Promise<boolean> {
-        const settings = await this.settingStore.get<{ enabled: boolean }>(
-            'unleash.enterprise.auth.oidc',
-        );
+        return this.memorize('hasOIDC', async () => {
+            const settings = await this.settingStore.get<{ enabled: boolean }>(
+                'unleash.enterprise.auth.oidc',
+            );
 
-        return settings?.enabled || false;
+            return settings?.enabled || false;
+        });
     }
 
     async hasSAML(): Promise<boolean> {
-        const settings = await this.settingStore.get<{ enabled: boolean }>(
-            'unleash.enterprise.auth.saml',
-        );
+        return this.memorize('hasSAML', async () => {
+            const settings = await this.settingStore.get<{ enabled: boolean }>(
+                'unleash.enterprise.auth.saml',
+            );
 
-        return settings?.enabled || false;
+            return settings?.enabled || false;
+        });
     }
 
     async hasPasswordAuth(): Promise<boolean> {
-        const settings = await this.settingStore.get<{ disabled: boolean }>(
-            'unleash.auth.simple',
-        );
+        return this.memorize('hasPasswordAuth', async () => {
+            const settings = await this.settingStore.get<{ disabled: boolean }>(
+                'unleash.auth.simple',
+            );
 
-        return (
-            typeof settings?.disabled === 'undefined' ||
-            settings.disabled === false
-        );
+            return (
+                typeof settings?.disabled === 'undefined' ||
+                settings.disabled === false
+            );
+        });
     }
 
     async hasSCIM(): Promise<boolean> {
-        const settings = await this.settingStore.get<{ enabled: boolean }>(
-            'scim',
-        );
+        return this.memorize('hasSCIM', async () => {
+            const settings = await this.settingStore.get<{ enabled: boolean }>(
+                'scim',
+            );
 
-        return settings?.enabled || false;
+            return settings?.enabled || false;
+        });
     }
 
     async getStats(): Promise<InstanceStats> {
@@ -281,8 +323,8 @@ export class InstanceStatsService {
             this.getRegisteredUsers(),
             this.countServiceAccounts(),
             this.countApiTokensByType(),
-            this.getActiveUsers(),
-            this.getLicencedUsers(),
+            this.memorize('getActiveUsers', this.getActiveUsers.bind(this)),
+            this.memorize('getLicencedUsers', this.getLicencedUsers.bind(this)),
             this.getProjectModeCount(),
             this.contextFieldCount(),
             this.groupCount(),
@@ -297,17 +339,39 @@ export class InstanceStatsService {
             this.hasPasswordAuth(),
             this.hasSCIM(),
             this.appCount ? this.appCount : this.getLabeledAppCounts(),
-            this.eventStore.deprecatedFilteredCount({
-                type: FEATURES_EXPORTED,
-            }),
-            this.eventStore.deprecatedFilteredCount({
-                type: FEATURES_IMPORTED,
-            }),
-            this.getProductionChanges(),
+            this.memorize('deprecatedFilteredCountFeaturesExported', () =>
+                this.eventStore.deprecatedFilteredCount({
+                    type: FEATURES_EXPORTED,
+                }),
+            ),
+            this.memorize('deprecatedFilteredCountFeaturesImported', () =>
+                this.eventStore.deprecatedFilteredCount({
+                    type: FEATURES_IMPORTED,
+                }),
+            ),
+            this.memorize(
+                'getProductionChanges',
+                this.getProductionChanges.bind(this),
+            ),
             this.countPreviousDayHourlyMetricsBuckets(),
-            this.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies(),
-            this.featureStrategiesReadModel.getMaxConstraintValues(),
-            this.featureStrategiesReadModel.getMaxConstraintsPerStrategy(),
+            this.memorize(
+                'maxFeatureEnvironmentStrategies',
+                this.featureStrategiesReadModel.getMaxFeatureEnvironmentStrategies.bind(
+                    this.featureStrategiesReadModel,
+                ),
+            ),
+            this.memorize(
+                'maxConstraintValues',
+                this.featureStrategiesReadModel.getMaxConstraintValues.bind(
+                    this.featureStrategiesReadModel,
+                ),
+            ),
+            this.memorize(
+                'maxConstraintsPerStrategy',
+                this.featureStrategiesReadModel.getMaxConstraintsPerStrategy.bind(
+                    this.featureStrategiesReadModel,
+                ),
+            ),
         ]);
 
         return {
@@ -333,6 +397,8 @@ export class InstanceStatsService {
             strategies,
             SAMLenabled,
             OIDCenabled,
+            passwordAuthEnabled,
+            SCIMenabled,
             clientApps: Object.entries(clientApps).map(([range, count]) => ({
                 range: range as TimeRange,
                 count,
@@ -348,82 +414,104 @@ export class InstanceStatsService {
     }
 
     groupCount(): Promise<number> {
-        return this.groupStore.count();
+        return this.memorize('groupCount', () => this.groupStore.count());
     }
 
     roleCount(): Promise<number> {
-        return this.roleStore.count();
+        return this.memorize('roleCount', () => this.roleStore.count());
     }
 
     customRolesCount(): Promise<number> {
-        return this.roleStore.filteredCount({ type: CUSTOM_ROOT_ROLE_TYPE });
+        return this.memorize('customRolesCount', () =>
+            this.roleStore.filteredCount({ type: CUSTOM_ROOT_ROLE_TYPE }),
+        );
     }
 
     customRolesCountInUse(): Promise<number> {
-        return this.roleStore.filteredCountInUse({
-            type: CUSTOM_ROOT_ROLE_TYPE,
-        });
+        return this.memorize('customRolesCountInUse', () =>
+            this.roleStore.filteredCountInUse({
+                type: CUSTOM_ROOT_ROLE_TYPE,
+            }),
+        );
     }
 
     segmentCount(): Promise<number> {
-        return this.segmentStore.count();
+        return this.memorize('segmentCount', () => this.segmentStore.count());
     }
 
     contextFieldCount(): Promise<number> {
-        return this.contextFieldStore.count();
+        return this.memorize('contextFieldCount', () =>
+            this.contextFieldStore.count(),
+        );
     }
 
     strategiesCount(): Promise<number> {
-        return this.strategyStore.count();
+        return this.memorize('strategiesCount', () =>
+            this.strategyStore.count(),
+        );
     }
 
     environmentCount(): Promise<number> {
-        return this.environmentStore.count();
+        return this.memorize('environmentCount', () =>
+            this.environmentStore.count(),
+        );
     }
 
     countPreviousDayHourlyMetricsBuckets(): Promise<{
         enabledCount: number;
         variantCount: number;
     }> {
-        return this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets();
+        return this.memorize('countPreviousDayHourlyMetricsBuckets', () =>
+            this.clientMetricsStore.countPreviousDayHourlyMetricsBuckets(),
+        );
     }
 
     countApiTokensByType(): Promise<Map<string, number>> {
-        return this.apiTokenStore.countByType();
+        return this.memorize('countApiTokensByType', () =>
+            this.apiTokenStore.countByType(),
+        );
     }
 
     getRegisteredUsers(): Promise<number> {
-        return this.userStore.count();
+        return this.memorize('getRegisteredUsers', () =>
+            this.userStore.count(),
+        );
     }
 
     countServiceAccounts(): Promise<number> {
-        return this.userStore.countServiceAccounts();
+        return this.memorize('countServiceAccounts', () =>
+            this.userStore.countServiceAccounts(),
+        );
     }
 
     async getCurrentTrafficData(): Promise<number> {
-        const traffic =
-            await this.trafficDataUsageStore.getTrafficDataUsageForPeriod(
-                format(new Date(), 'yyyy-MM'),
-            );
+        return this.memorize('getCurrentTrafficData', async () => {
+            const traffic =
+                await this.trafficDataUsageStore.getTrafficDataUsageForPeriod(
+                    format(new Date(), 'yyyy-MM'),
+                );
 
-        const counts = traffic.map((item) => item.count);
-        return counts.reduce((total, current) => total + current, 0);
+            const counts = traffic.map((item) => item.count);
+            return counts.reduce((total, current) => total + current, 0);
+        });
     }
 
     async getLabeledAppCounts(): Promise<
         Partial<{ [key in TimeRange]: number }>
     > {
-        const [t7d, t30d, allTime] = await Promise.all([
-            this.clientInstanceStore.getDistinctApplicationsCount(7),
-            this.clientInstanceStore.getDistinctApplicationsCount(30),
-            this.clientInstanceStore.getDistinctApplicationsCount(),
-        ]);
-        this.appCount = {
-            '7d': t7d,
-            '30d': t30d,
-            allTime,
-        };
-        return this.appCount;
+        return this.memorize('getLabeledAppCounts', async () => {
+            const [t7d, t30d, allTime] = await Promise.all([
+                this.clientInstanceStore.getDistinctApplicationsCount(7),
+                this.clientInstanceStore.getDistinctApplicationsCount(30),
+                this.clientInstanceStore.getDistinctApplicationsCount(),
+            ]);
+            this.appCount = {
+                '7d': t7d,
+                '30d': t30d,
+                allTime,
+            };
+            return this.appCount;
+        });
     }
 
     getAppCountSnapshot(range: TimeRange): number | undefined {

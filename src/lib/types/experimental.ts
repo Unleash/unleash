@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'simplifyProjectOverview'
     | 'flagOverviewRedesign'
     | 'showUserDeviceCount'
-    | 'deleteStaleUserSessions';
+    | 'deleteStaleUserSessions'
+    | 'memorizeStats';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 

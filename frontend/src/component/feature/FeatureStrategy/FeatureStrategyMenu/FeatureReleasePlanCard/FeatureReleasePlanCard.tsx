@@ -3,6 +3,9 @@ import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { Link, styled } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
+import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
+import useToast from 'hooks/useToast';
+import { formatUnknownError } from 'utils/formatUnknownError';
 
 const StyledIcon = styled('div')(({ theme }) => ({
     width: theme.spacing(4),
@@ -57,15 +60,31 @@ export const FeatureReleasePlanCard = ({
 }: IFeatureReleasePlanCardProps) => {
     const Icon = getFeatureStrategyIcon('releasePlanTemplate');
     const { trackEvent } = usePlausibleTracker();
+    const { addReleasePlanToFeature } = useReleasePlansApi();
+    const { setToastApiError, setToastData } = useToast();
 
-    const addReleasePlan = () => {
+    const addReleasePlan = async () => {
+        try {
+            await addReleasePlanToFeature(
+                featureId,
+                releasePlanTemplate.id,
+                projectId,
+                environmentId,
+            );
+            setToastData({
+                type: 'success',
+                title: 'Release plan added',
+            });
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+
         trackEvent('release-plans', {
             props: {
                 eventType: 'add',
                 name: releasePlanTemplate.name,
             },
         });
-        console.log('TODO: call and implement addReleasePlan');
     };
 
     return (

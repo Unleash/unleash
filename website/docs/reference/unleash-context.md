@@ -29,10 +29,7 @@ The below table gives a brief overview over what the fields' intended usage is, 
 
 ### The `properties` field
 
-The `properties` field is different from the others. You can use the `properties` field to provide arbitrary data to [custom strategies](../reference/custom-activation-strategies) or to [strategy constraints](../reference/activation-strategies#constraints). The `properties` field is also where you add values for [custom context fields](#custom-context-fields).
-
-
-#### A note on properties and constraints
+The `properties` field is different from the others. You can use the `properties` field to provide arbitrary data to [strategy constraints](../reference/activation-strategies#constraints) and add values for [custom context fields](#custom-context-fields).
 
 Some SDK implementations of the Unleash Context allow for the values in the `properties` map to be of other types than a string type. Using non-string types as values may cause issues if you're using the property in a constraint. Because the Unleash Admin UI accepts any string as input for constraint checking, the SDKs must also assume that the value is a string.
 

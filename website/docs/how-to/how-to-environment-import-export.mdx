@@ -111,6 +111,10 @@ If you permanently delete the archived `feature-a` from the target instance, the
 
 #### Custom strategies
 
+:::caution
+[Custom activation strategies](/reference/custom-activation-strategies) are deprecated. Please use the [default activation strategy](/reference/activation-strategies) with constraints.
+:::
+
 Unleash will verify that any custom strategies you are trying to import have already been defined on the target instance. However, it only does this verification by name. It does **not** validate that the definitions are otherwise the same or that they have the same [configuration parameters](/reference/custom-activation-strategies.md#parameters).
 
 ### Required permissions

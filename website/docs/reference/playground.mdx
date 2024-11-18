@@ -112,7 +112,11 @@ Even if the playground doesn't recognize or otherwise can't evaluate a specific 
 
 ### Custom Strategies
 
-The playground does not have any implementations for [custom strategies](../reference/custom-activation-strategies) and adding custom strategy implementations to Unleash is not currently supported. Because of this, custom strategies will never be evaluated as `true`.
+:::caution
+[Custom activation strategies](/reference/custom-activation-strategies) are deprecated. Please use the [default activation strategy](/reference/activation-strategies) with constraints.
+:::
+
+The playground does not have any implementations for [custom strategies](../reference/custom-activation-strategies). As a result, custom strategies do not evaluate to `true` regarless of the context.
 
 ### The Application Hostname strategy {#application-hostname}
 

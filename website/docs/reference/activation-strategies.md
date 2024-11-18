@@ -10,7 +10,7 @@ An activation strategy determines who should get a feature. They allow you to en
 
 An activation strategy is assigned to one [feature flag](/reference/feature-toggles) in one [environment](/reference/environments). For a feature flag to be enabled in a given context, such as for a user or application, at least one of the feature flag's activation strategies must resolve to true.
 
-You can copy activation strategies from one environment to the other, but the different strategy configurations do not stay in sync. The `default` activation strategy is a gradual rollout to 100% of users, which means that the flag is enabled for everyone. You can use rollout percentage, [constraints](#constraints), targeting, and strategy variants to further define your activation strategies. You can also define custom activation strategies.
+You can copy activation strategies from one environment to the other, but the different strategy configurations do not stay in sync. The `default` activation strategy is a gradual rollout to 100% of users, which means that the flag is enabled for everyone. You can use rollout percentage, [constraints](#constraints), targeting, and strategy variants to further define your activation strategies.
 
 ![A feature flag with two strategies](/img/activation-strategies-example.png)
 
@@ -46,7 +46,7 @@ These parts turn the constraint into an expression that evaluates to true or fal
 | `currentTime`   | `DATE_AFTER`    | `2022-06-05 21:43:22Z`         | Evaluates to `true` if the current time is after `2022-06-05 21:43:22Z`.                                                                            |
 | `plan` | `IN`       | `Premium`, `Plus`                         | Evaluates to `true` if the [custom context field](../reference/unleash-context#custom-context-fields) `plan` is either 'Premium' or 'Plus'. |
 
-## Constraint operators
+### Constraint operators
 
 Constraint operators help you define the conditional statements that get evaluated as part of the constraint. [Basic operators](#basic-operators) are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](/reference/sdks#strategy-constraints).
 
@@ -57,14 +57,14 @@ All constraints can be negated. For example:
 | `STR_ENDS_WITH`  | "@user.com" | "hello@user.com" | true |
 | NOT `STR_ENDS_WITH`  | "@user.com" | "hello@user.com" | false |
 
-### Basic operators
+#### Basic operators
 
 | Operator      | Description
 |-----------|--------------------------------------------------------------------------------|
 | `IN`  | The context field is equal to any of the provided values; case sensitive. |
 | `NOT_IN`  | The context field is not equal to any of the values provided; case sensitive. |
 
-### Numeric operators
+#### Numeric operators
 
 Numeric operators compare the numeric value of context fields with your provided value. Numeric operators only accept single values.
 
@@ -77,7 +77,7 @@ Numeric operators compare the numeric value of context fields with your provided
 | `NUM_LTE` | The context field is less than or equal to the provided value.    |
 
 
-### Date and time operators
+#### Date and time operators
 
 All date and time operators require `currentTime` context field. Similarly, the `currentTime` context field can only be used with date and time operators. With the date and time operators, you can enable a feature before or after a specified time or make it available for a specific time span by combining the two operators.
 
@@ -88,7 +88,7 @@ Date and time operators only support single values.
 | `DATE_AFTER`  | `currentTime` is a date after the provided value. |
 | `DATE_BEFORE` | `currentTime` is a date before the provided date. |
 
-### String operators
+#### String operators
 
 String operators accept multiple values and can be set to be case-sensitive or case-insensitive.
 
@@ -99,7 +99,7 @@ String operators accept multiple values and can be set to be case-sensitive or c
 | `STR_STARTS_WITH` | The context field starts with any of the provided string values.    |
 
 
-### Versioning (SemVer) operators
+#### Versioning (SemVer) operators
 
 SemVer operators are used to compare version numbers such as application versions or dependency versions. SemVer operators only support single values.
 
@@ -111,7 +111,7 @@ The value must start with and contain at least major, minor, and patch versions.
 | `SEMVER_GT` | The context field is strictly greater than the provided value. |
 | `SEMVER_LT` | The context field is strictly less than the provided value.    |
 
-## Best practices
+### Best practices
 
 Server-side SDKs fetch the full feature flag configuration from Unleash, so every value that you add to that constraint value list increases the payload size. Therefore, we recommend avoiding large constraint value lists.
 
@@ -152,9 +152,9 @@ To add a custom context field in the Admin UI, do the following:
 
 While activation strategies are defined on the server, the server does not implement the strategies. Instead, activation strategy implementation is done client-side. This means that it is the client that decides whether a feature should be enabled or not.
 
-All [server-side client SDKs](../reference/sdks#server-side-sdks) and [Unleash Edge](../reference/unleash-edge) implement the default strategies (and allow you to add your own [custom strategy implementations](../reference/custom-activation-strategies#implementation)). The [front-end client SDKs](../reference/sdks#front-end-sdks) do not do the evaluation themselves, instead relying on the [Unleash Edge](../reference/unleash-edge) to take care of the implementation and evaluation.
+All [server-side client SDKs](../reference/sdks#server-side-sdks) and [Unleash Edge](../reference/unleash-edge) implement the default activation strategy. The [front-end client SDKs](../reference/sdks#front-end-sdks) do not do the evaluation themselves, instead relying on the [Unleash Edge](../reference/unleash-edge) to take care of the implementation and evaluation.
 
-When using strategies with constraints, the client must provide the current [Unleash context](unleash-context) to the flag evaluation function for the evaluation to be done correctly. All official Unleash client SDKs support the option to pass dynamic context values to the isEnabled function (or the SDK's equivalent).
+When using strategies with constraints, the client must provide the current [Unleash context](unleash-context) to the flag evaluation function for the evaluation to be done correctly. All official Unleash client SDKs support the option to pass dynamic context values to the `isEnabled()` function (or the SDK's equivalent).
 
 If the constraint uses a standard Unleash Context field, set the context field to the value you wish to give it.
 
@@ -170,3 +170,8 @@ If you set a context field to a value that the SDKs cannot parse correctly for a
 [Predefined strategy type](/reference/predefined-strategy-types), such as UserIDs, IPs, and Hosts are deprecated. Please use the default strategy with constraints to achieve your desired targeting.
 :::
 
+# Custom activation strategies
+
+:::caution
+[Custom activation strategies](/reference/custom-activation-strategies) are deprecated. Please use the default strategy with constraints.
+:::

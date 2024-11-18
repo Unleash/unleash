@@ -15,7 +15,7 @@ Some things in Unleash are configured and defined on the root level. These optio
 -   [API access tokens](../reference/api-tokens-and-client-keys)
 -   [Projects](../reference/projects)
 -   [Segments](../reference/segments)
--   [Strategy types](../reference/activation-strategies) (including [custom activation strategy types](../reference/custom-activation-strategies))
+-   [Strategy types](../reference/activation-strategies)
 -   [Tag types](../reference/tags)
 -   [Unleash context](../reference/unleash-context) fields (including [custom context fields](../reference/unleash-context#custom-context-fields))
 -   Users, [user groups](../reference/rbac#user-groups) and [roles](../reference/rbac)
@@ -91,7 +91,7 @@ When you check a [feature flag](../reference/feature-toggles) in an application,
 
 Activation strategies tie feature flags and [environments](../reference/environments) together. When you assign an activation strategy to a feature flag, you do so in one environment at a time. You can assign the same strategy to the same flag in different environments, but they will be different instances of the same strategy and do not stay in sync. Unleash also lets you copy strategies from one environment to another.
 
-Unleash comes with a number of [built-in strategies](../reference/activation-strategies). You can also create your own [custom activation strategies](../reference/custom-activation-strategies). All strategies can be further augmented by [**strategy constraints**](../reference/activation-strategies#constraints).
+Unleash comes with a number of [built-in strategies](../reference/activation-strategies). All strategies can be further augmented by [**strategy constraints**](../reference/activation-strategies#constraints).
 
 <Figure
     img="/img/anatomy-of-unleash-environments-strategies.png"

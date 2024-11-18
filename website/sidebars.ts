@@ -340,7 +340,6 @@ const sidebars: SidebarsConfig = {
                             },
                             items: [
                                 'reference/activation-strategies',
-                                'reference/custom-activation-strategies',
                                 'reference/strategy-variants',
                                 'reference/segments',
                             ],
@@ -675,7 +674,6 @@ const sidebars: SidebarsConfig = {
                                 'how-to/how-to-capture-impression-data',
                                 'how-to/how-to-create-feature-toggles',
                                 'how-to/how-to-create-and-display-banners',
-                                'how-to/how-to-use-custom-strategies',
                                 'how-to/how-to-schedule-feature-releases',
                                 'how-to/how-to-synchronize-unleash-instances',
                             ],

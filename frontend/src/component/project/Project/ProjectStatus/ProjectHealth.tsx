@@ -135,7 +135,7 @@ export const ProjectHealth = () => {
                             textAnchor='middle'
                             dominantBaseline='middle'
                             fill={theme.palette.text.primary}
-                            fontSize='24px'
+                            fontSize={theme.typography.h1.fontSize}
                         >
                             {averageHealth}%
                         </text>

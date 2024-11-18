@@ -19,7 +19,7 @@ const TextContainer = styled('div')(({ theme }) => ({
 
 const ChartRow = styled('div')(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     gap: theme.spacing(2),
 }));
 
@@ -36,33 +36,33 @@ const StyledSVG = styled('svg')({
 
 const UnhealthyFlags = ({ flagCount }: { flagCount: number }) => {
     const projectId = useRequiredPathParam('projectId');
+    const flagWord = flagCount === 1 ? 'flag' : 'flags';
     return (
         <ChartRow>
-            <UnhealthyStatContainerContainer>
-                <UnhealthyStatContainer>
-                    <UnhealthyStatText>
-                        <BigText>
-                            <PrettifyLargeNumber
-                                value={flagCount}
-                                threshold={1000}
-                                precision={1}
-                            />
-                        </BigText>
-                        <span>unhealthy</span>
-                        <span>flags</span>
-                    </UnhealthyStatText>
-                </UnhealthyStatContainer>
-            </UnhealthyStatContainerContainer>
+            <UnhealthyStatContainer>
+                <UnhealthyStatText>
+                    <BigText>
+                        <PrettifyLargeNumber
+                            value={flagCount}
+                            threshold={1000}
+                            precision={1}
+                        />
+                    </BigText>
+                    <span>unhealthy</span>
+                    <span>{flagWord}</span>
+                </UnhealthyStatText>
+            </UnhealthyStatContainer>
 
-            <div>
-                <p>
-                    To keep you project healthy, archive stale feature flags and
-                    remove code from your code base to reduce technical debt.
-                </p>
+            <TextContainer>
+                <Typography variant='body2'>
+                    To keep your project healthy, archive stale feature flags
+                    and remove code from your code base to reduce technical
+                    debt.
+                </Typography>
                 <Link to={`/projects/${projectId}?state=IS%3Astale`}>
                     View unhealthy flags
                 </Link>
-            </div>
+            </TextContainer>
         </ChartRow>
     );
 };
@@ -71,20 +71,11 @@ const BigText = styled('span')(({ theme }) => ({
     fontSize: theme.typography.h1.fontSize,
 }));
 
-const UnhealthyStatContainerContainer = styled('div')(({ theme }) => ({
+const UnhealthyStatContainer = styled('div')(({ theme }) => ({
     flex: 'none',
     display: 'grid',
     placeItems: 'center',
     width: ChartContainerWidth,
-}));
-
-const UnhealthyStatContainer = styled('article')(({ theme }) => ({
-    display: 'grid',
-    placeItems: 'center',
-    borderRadius: '50%',
-    backgroundColor: theme.palette.background.elevation2,
-    width: ChartTotalWidth,
-    height: ChartTotalWidth,
 }));
 
 const UnhealthyStatText = styled('p')(({ theme }) => ({
@@ -92,7 +83,18 @@ const UnhealthyStatText = styled('p')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    // justifyContent: sp
+    justifyContent: 'center',
+    borderRadius: '50%',
+    backgroundColor: theme.palette.background.elevation2,
+    width: ChartTotalWidth,
+    height: ChartTotalWidth,
+}));
+
+const Wrapper = styled(HealthGridTile)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    gap: theme.spacing(2),
 }));
 
 export const ProjectHealth = () => {
@@ -117,7 +119,7 @@ export const ProjectHealth = () => {
               : theme.palette.success.border;
 
     return (
-        <HealthGridTile>
+        <Wrapper>
             <ChartRow>
                 <SVGWrapper>
                     <StyledSVG viewBox='0 0 100 100'>
@@ -166,6 +168,6 @@ export const ProjectHealth = () => {
                 </TextContainer>
             </ChartRow>
             <UnhealthyFlags flagCount={staleFlags.total} />
-        </HealthGridTile>
+        </Wrapper>
     );
 };

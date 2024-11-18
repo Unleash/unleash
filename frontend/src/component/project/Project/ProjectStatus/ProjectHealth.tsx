@@ -52,7 +52,10 @@ const UnhealthyStatText = styled('p')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: '50%',
-    backgroundColor: theme.palette.background.elevation2,
+    backgroundColor:
+        theme.mode === 'light'
+            ? theme.palette.background.elevation2
+            : '#302E42',
     width: ChartTotalWidth,
     height: ChartTotalWidth,
     overflow: 'hidden',

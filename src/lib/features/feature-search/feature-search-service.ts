@@ -152,7 +152,7 @@ export class FeatureSearchService {
                                 parsedState.operator === 'IS_ANY_OF'
                             ) {
                                 // problem! we need an OR-clause here:
-                                // where potentially_stale is true OR stale is true
+                                // where potentially_stale is true OR stale is true (regardless of potentially_stale status)
                             } else if (
                                 parsedState.operator === 'IS_NOT' ||
                                 parsedState.operator === 'IS_NONE_OF'

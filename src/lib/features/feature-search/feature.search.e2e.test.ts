@@ -1001,6 +1001,7 @@ test('should search features by potentially stale', async () => {
 
     // single filters work
     await check('IS:potentiallyStale', ['my_feature_c']);
+    // (stale or !potentiallyStale)
     await check('IS_NOT:potentiallyStale', [
         'my_feature_a',
         'my_feature_b',
@@ -1013,6 +1014,7 @@ test('should search features by potentially stale', async () => {
         'my_feature_c',
     ]);
 
+    // (potentiallyStale OR stale)
     await check('IS_ANY_OF:potentiallyStale,stale', [
         'my_feature_b',
         'my_feature_c',

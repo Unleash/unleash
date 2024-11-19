@@ -8,7 +8,7 @@ type UserSessionsCellProps = {
 };
 
 export const UserSessionsCell: FC<UserSessionsCellProps> = ({ count }) => {
-    if (!count || count < 5) {
+    if (!count || count < 4) {
         return null;
     }
 

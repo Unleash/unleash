@@ -114,10 +114,6 @@ test('print recent projects and flags', async () => {
 });
 
 describe('order of items in navigation', () => {
-    const flags = {
-        personalDashboardUI: true,
-    };
-
     const getLinks = async () => {
         const configureButton = await screen.findByRole('button', {
             name: /configure/i,
@@ -142,9 +138,6 @@ describe('order of items in navigation', () => {
     };
 
     test('menu for open-source', async () => {
-        testServerRoute(server, '/api/admin/ui-config', {
-            flags,
-        });
         render(<NavigationSidebar />);
 
         expect(await getLinks()).toMatchSnapshot();
@@ -152,7 +145,6 @@ describe('order of items in navigation', () => {
 
     test('menu for pro plan', async () => {
         testServerRoute(server, '/api/admin/ui-config', {
-            flags,
             versionInfo: {
                 current: { enterprise: 'version' },
             },
@@ -166,7 +158,6 @@ describe('order of items in navigation', () => {
 
     test('menu for enterprise plan', async () => {
         testServerRoute(server, '/api/admin/ui-config', {
-            flags,
             versionInfo: {
                 current: { enterprise: 'version' },
             },

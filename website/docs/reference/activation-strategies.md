@@ -6,11 +6,19 @@ import VideoContent from '@site/src/components/VideoContent.jsx'
 
 ## Overview 
 
-An activation strategy determines who should get a feature. They allow you to enable and disable features for certain users without having to redeploy your application. For example, you can release features only to users with a specific user ID, email, IP address, and more. You can to implement gradual rollouts to specific user segments, for example, those on a specific subscription plan or region. You can also use them to schedule feature releases or make features available for a limited time.
+An activation strategy determines who should get a feature. They allow you to enable and disable features for certain users without having to redeploy your application. For example, you can release features only to users with a specific user ID, email, IP address, and more. You can implement gradual rollouts to specific user segments, for example, those on a specific subscription plan or region. You can also use them to schedule feature releases or make features available for a limited time.
 
 An activation strategy is assigned to one [feature flag](/reference/feature-toggles) in one [environment](/reference/environments). A feature flag is enabled in a given context (for example, user or application) if at least one of its activation strategies resolves to true.
 
-You can copy activation strategies from one environment to the other, but the different strategy configurations do not stay in sync. The default activation strategy is a 100% gradual rollout, enabling the flag for all users. You can refine this using [rollout percentage](#rollout-percentage), [targeting](#targeting), and [variants](/strategy-variants).
+You can copy activation strategies from one environment to the other, but the different strategy configurations do not stay in sync. The default activation strategy is a 100% gradual rollout, enabling the flag for all users. You can refine this using [rollout percentage](#rollout-percentage), [targeting](#targeting), and [variants](/reference/strategy-variants).
+
+Feature flags can have multiple activation strategies. Unleash evaluates each strategy independently, enabling the flag if any resolves to true. This behavior is equivalent to the OR logical operator.
+
+For example, to roll out a feature to 75% of users while granting access to internal users, you can add two activation strategies as follows: 
+1. Gradual rollout to 75%.
+2. Gradual rollout to 100% with a constraint on the email address.
+   
+![A feature flag with two strategies](/img/activation-strategies-example.png)
 
 ## Rollout percentage
 
@@ -18,7 +26,7 @@ The rollout percentage determines the proportion of users exposed to a feature. 
 
 ## Targeting
 
-Segmentation and constraints allow you to define conditions for your activation strategies so that they will only be evaluated for users and applications that match the specified preconditions. Constraints are individual conditional statements, while [segments](/reference/segments) are a reusable set of constraints that you can apply to multiple strategies.
+Segmentation and constraints allow you to define conditions for your activation strategies so that they will only be evaluated for users and applications that match those criteria. Constraints are individual conditional statements, while [segments](/reference/segments) are a reusable set of constraints that you can apply to multiple strategies.
 
 ### Constraints
 
@@ -28,7 +36,7 @@ Segmentation and constraints allow you to define conditions for your activation 
 
 :::
 
-Constraints are conditional rules that determine whether a strategy applies, based on fields from the [Unleash context](/reference/unleash-context). onstraints can reference both [standard context fields](../reference/unleash-context#structure) and [custom context fields](../reference/unleash-context#custom-context-fields).
+Constraints are conditional rules that determine whether a strategy applies, based on fields from the [Unleash context](/reference/unleash-context). Constraints can reference both [standard context fields](../reference/unleash-context#structure) and [custom context fields](../reference/unleash-context#custom-context-fields).
 
 An activation strategy can have as many constraints as needed. When an activation strategy has multiple constraints, then every constraint must be evaluated to true for the strategy to be evaluated. This behavior is equivalent to the AND logical operator. For example, if you have two constraints: one where the user email must have the domain "@mycompany.com" and one where the user must have signed up for a beta program, then the strategy would only be evaluated for users with "@mycompany.com" emails that have signed up for the beta program.
 
@@ -82,7 +90,7 @@ Numeric operators compare the numeric value of context fields with your provided
 
 ##### Date and time operators
 
-All date and time operators require `currentTime` context field. Similarly, the `currentTime` context field can only be used with date and time operators. With the date and time operators, you can enable a feature before or after a specified time or make it available for a specific time span by combining the two operators.
+All date and time operators require the `currentTime` context field, and the `currentTime` context field can only be used with date and time operators. With these operators, you can enable a feature before or after a specified time or make it available for a specific time span by combining the two operators.
 
 Date and time operators only support single values.
 
@@ -98,7 +106,7 @@ String operators accept multiple values and can be set to be case-sensitive or c
 | Operator              | Description |
 |-------------------|------------------------------------------------|
 | `STR_CONTAINS`    | The context field contains any of the provided string values.       |
-| `STR_ENDS_WITH`   | The context field ends with any of the provided strings values.     |
+| `STR_ENDS_WITH`   | The context field ends with any of the provided string values.     |
 | `STR_STARTS_WITH` | The context field starts with any of the provided string values.    |
 
 
@@ -118,17 +126,8 @@ The value must start with and contain at least major, minor, and patch versions.
 
 Server-side SDKs fetch the full feature flag configuration from Unleash, so every value that you add to that constraint value list increases the payload size.
 
-We recommend avoiding large constraint value lists. For example, if you considered adding hundreds of user IDs or emails to the constraint value list, consider what properties those users share. This typically helps define and use a [custom context field](/reference/unleash-context#custom-context-field) instead.
+We recommend avoiding large constraint value lists. For example, instead of adding many user IDs or emails to the constraint value list, consider what properties those users share. This typically helps define and use a [custom context field](/reference/unleash-context#custom-context-field) instead.
 
-## Multiple activation strategies
-
-Feature flags can have multiple activation strategies. Unleash evaluates each strategy independently, enabling the flag if any resolves to true. This behavior is equivalent to the OR logical operator.
-
-For example, to roll out a feature to 75% of users while granting access to internal users, you can create an activation strategy with two constraints: 
-1. Gradual rollout to 75%.
-2. Graduall rollout to 100% with a contraints on the email address.
-   
-![A feature flag with two strategies](/img/activation-strategies-example.png)
 
 ## Add an activation strategy with a constraint
 
@@ -139,7 +138,7 @@ To add an activation strategy with a constraint to a feature flag, do the follow
 3. In the **Targeting** tab, go to the **Constraints** section, and click **Add constraint**.
 4. Select a context field to constrain on, for example, `email`
 5. Set your desired operator, for example, `STR_ENDS_WITH`.
-6. Enter a values that the operator should evaluate, such as `@user.com`, and click **Add values**. Then click **Done**.
+6. Enter a value that the operator should evaluate, such as `@user.com`, and click **Add values**. Then click **Done**.
 7. Click **Save strategy**.
 
 ## Client-side implementation
@@ -157,7 +156,7 @@ Unleash SDKs expect all context values to be strings. If you use an operator tha
 ## Predefined strategy types
 
 :::caution
-[Predefined strategy type](/reference/predefined-strategy-types), such as UserIDs, IPs, and Hosts are deprecated. Please use the default strategy with constraints to achieve your desired targeting.
+[Predefined strategy types](/reference/predefined-strategy-types), such as UserIDs, IPs, and Hosts are deprecated. Please use the default strategy with constraints to achieve your desired targeting.
 :::
 
 # Custom activation strategies

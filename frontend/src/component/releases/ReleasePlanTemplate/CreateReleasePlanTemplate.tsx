@@ -74,7 +74,6 @@ export const CreateReleasePlanTemplate = () => {
 
     return (
         <TemplateForm
-            mode='create'
             name={name}
             setName={setName}
             description={description}

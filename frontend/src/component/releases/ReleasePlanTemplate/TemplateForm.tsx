@@ -24,7 +24,6 @@ const StyledForm = styled('form')(() => ({
 }));
 
 interface ITemplateFormProps {
-    mode: 'create' | 'edit';
     name: string;
     setName: React.Dispatch<React.SetStateAction<string>>;
     description: string;

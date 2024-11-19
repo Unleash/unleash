@@ -80,7 +80,6 @@ export const EditReleasePlanTemplate = () => {
 
     return (
         <TemplateForm
-            mode='edit'
             name={name}
             setName={setName}
             description={description}

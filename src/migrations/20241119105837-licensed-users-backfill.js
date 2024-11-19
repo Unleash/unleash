@@ -47,22 +47,27 @@ exports.up = (db, cb) => {
                ue.email
         ),
         result AS (
-           SELECT
-               d.date,
-               COUNT(DISTINCT ae.email) AS active_emails_count
-           FROM
-               dates d
-                   LEFT JOIN active_emails ae ON d.date = ae.date
-           WHERE
-               (
-                   ae.deleted_date IS NULL
-                       OR ae.deleted_date >= ae.date - INTERVAL '30 days'
-                       OR ae.deleted_date < ae.created_date
-                   )
-           GROUP BY
-               d.date
-           ORDER BY
-               d.date
+            SELECT
+                d.date,
+                COALESCE(
+                    COUNT(
+                        DISTINCT CASE
+                                     WHEN ae.deleted_date IS NULL
+                                         OR ae.deleted_date >= d.date - INTERVAL '30 days'
+                                         OR ae.deleted_date < ae.created_date
+                                         THEN ae.email
+                                     ELSE NULL
+                        END
+                    ),
+                    0
+                ) AS active_emails_count
+            FROM
+                dates d
+                    LEFT JOIN active_emails ae ON d.date = ae.date
+            GROUP BY
+                d.date
+            ORDER BY
+                d.date
         ) INSERT INTO licensed_users (date, count)
             SELECT date, active_emails_count
             FROM result

@@ -577,7 +577,7 @@ const applyStaleConditions = (
 
     const { values, operator } = staleConditions;
 
-    if (!values.includes('potentiallyStale')) {
+    if (!values.includes('potentially-stale')) {
         applyGenericQueryParams(query, [
             {
                 ...staleConditions,
@@ -591,7 +591,7 @@ const applyStaleConditions = (
 
     const valueSet = new Set(
         values.filter((value) =>
-            ['stale', 'active', 'potentiallyStale'].includes(value || ''),
+            ['stale', 'active', 'potentially-stale'].includes(value || ''),
         ),
     );
     const allSelected = valueSet.size === 3;

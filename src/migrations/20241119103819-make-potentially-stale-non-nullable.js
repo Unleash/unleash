@@ -8,6 +8,8 @@ exports.up = function (db, cb) {
         WHERE potentially_stale IS NULL;
 
         ALTER TABLE features
+        ALTER COLUMN potentially_stale SET DEFAULT FALSE;
+        ALTER TABLE features
         ALTER COLUMN potentially_stale SET NOT NULL;
         `,
         cb
@@ -17,6 +19,8 @@ exports.up = function (db, cb) {
 exports.down = function (db, cb) {
     db.runSql(
         `
+        ALTER TABLE features
+        ALTER COLUMN potentially_stale DROP DEFAULT;
         ALTER TABLE features
         ALTER COLUMN potentially_stale DROP NOT NULL;
         `,

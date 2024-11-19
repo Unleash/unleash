@@ -77,7 +77,7 @@ test('select active item', async () => {
 
     const links = screen.getAllByRole('link');
 
-    expect(links[1]).toHaveClass(classes.selected);
+    expect(links[2]).toHaveClass(classes.selected);
 });
 
 test('print recent projects and flags', async () => {

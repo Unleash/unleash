@@ -569,18 +569,44 @@ class FeatureSearchStore implements IFeatureSearchStore {
     }
 }
 
+const applyStaleConditions = (
+    query: Knex.QueryBuilder,
+    staleConditions?: IQueryParam,
+): void => {
+    if (!staleConditions) {
+        return;
+    }
+
+    if (!staleConditions.values.includes('potentiallyStale')) {
+        applyGenericQueryParams(query, [staleConditions]);
+    } else {
+        query.where(
+            'features.potentially_stale',
+            staleConditions.operator,
+            staleConditions.values,
+        );
+
+        return;
+    }
+};
+
 const applyQueryParams = (
     query: Knex.QueryBuilder,
     queryParams: IQueryParam[],
 ): void => {
     const tagConditions = queryParams.filter((param) => param.field === 'tag');
+    const staleConditions = queryParams.find(
+        (param) => param.field === 'stale',
+    );
     const segmentConditions = queryParams.filter(
         (param) => param.field === 'segment',
     );
     const genericConditions = queryParams.filter(
-        (param) => param.field !== 'tag',
+        (param) => !['tag', 'stale'].includes(param.field),
     );
     applyGenericQueryParams(query, genericConditions);
+
+    applyStaleConditions(query, staleConditions);
 
     applyMultiQueryParams(
         query,

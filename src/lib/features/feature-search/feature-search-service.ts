@@ -45,6 +45,8 @@ export class FeatureSearchService {
         if (params.state) {
             const parsedState = parseSearchOperatorValue('stale', params.state);
             if (parsedState) {
+                queryParams.push(parsedState);
+                console.log(queryParams, parsedState);
                 // there's 4 possible flag states to handle:
                 // a: active and not potentiallyStale
                 // b: stale and not potentiallyStale
@@ -69,119 +71,6 @@ export class FeatureSearchService {
                 // IS NONE OF: active, stale, potentiallyStale => [nothing]
                 // IS NONE OF: active, potentially stale => d
                 // IS NONE OF: stale, potentially stale => a
-                const potentiallyStale = parsedState.values.some((value) =>
-                    value?.includes('potentiallyStale'),
-                );
-
-                if (potentiallyStale) {
-                    if (parsedState.values.length === 1) {
-                        if (
-                            parsedState.operator === 'IS' ||
-                            parsedState.operator === 'IS_ANY_OF'
-                        ) {
-                            // exclude stale
-                            queryParams.push({
-                                field: 'features.potentially_stale',
-                                operator: 'IS',
-                                values: ['true'],
-                            });
-                            queryParams.push({
-                                field: 'features.stale',
-                                operator: 'IS',
-                                values: ['false'],
-                            });
-                        } else if (
-                            parsedState.operator === 'IS_NOT' ||
-                            parsedState.operator === 'IS_NONE_OF'
-                        ) {
-                            // problem? active and not potentiallyStale OR stale and any potentiallyStale state
-                            queryParams.push({
-                                field: 'features.potentially_stale',
-                                operator: 'IS_ANY_OF',
-                                values: ['false', null],
-                            });
-                        }
-                    } else if (
-                        ['stale', 'active', 'potentiallyStale'].every((value) =>
-                            parsedState.values.includes(value),
-                        )
-                    ) {
-                        if (
-                            parsedState.operator === 'IS' ||
-                            parsedState.operator === 'IS_ANY_OF'
-                        ) {
-                            // do nothing
-                        } else if (
-                            parsedState.operator === 'IS_NOT' ||
-                            parsedState.operator === 'IS_NONE_OF'
-                        ) {
-                            queryParams.push({
-                                field: 'features.stale',
-                                operator: 'IS_NONE_OF',
-                                values: ['false', 'true'],
-                            });
-                        }
-                    } else if (parsedState.values.length === 2) {
-                        if (parsedState.values.includes('active')) {
-                            // active && potentially stale
-                            if (
-                                parsedState.operator === 'IS' ||
-                                parsedState.operator === 'IS_ANY_OF'
-                            ) {
-                                // potentially stale are a subset of active
-                                queryParams.push({
-                                    field: 'features.stale',
-                                    operator: 'IS',
-                                    values: ['false'],
-                                });
-                            } else if (
-                                parsedState.operator === 'IS_NOT' ||
-                                parsedState.operator === 'IS_NONE_OF'
-                            ) {
-                                // we don't care about potentially stale here
-                                queryParams.push({
-                                    field: 'features.stale',
-                                    operator: 'IS',
-                                    values: ['true'],
-                                });
-                            }
-                        } else if (parsedState.values.includes('stale')) {
-                            // stale && potentially stale
-                            if (
-                                parsedState.operator === 'IS' ||
-                                parsedState.operator === 'IS_ANY_OF'
-                            ) {
-                                // problem! we need an OR-clause here:
-                                // where potentially_stale is true OR stale is true (regardless of potentially_stale status)
-                            } else if (
-                                parsedState.operator === 'IS_NOT' ||
-                                parsedState.operator === 'IS_NONE_OF'
-                            ) {
-                                queryParams.push({
-                                    field: 'features.potentially_stale',
-                                    operator: 'IS_ANY_OF',
-                                    values: ['false', null],
-                                });
-                                queryParams.push({
-                                    field: 'features.stale',
-                                    operator: 'IS',
-                                    values: ['false'],
-                                });
-                            }
-                        }
-                    }
-                } else {
-                    // do the same thing as before
-                    queryParams.push({
-                        field: 'stale',
-                        operator: parsedState.operator,
-                        values: parsedState.values.map((value) =>
-                            value === 'active' ? 'false' : 'true',
-                        ),
-                    });
-                }
-
-                console.log(params, queryParams);
             }
         }
 

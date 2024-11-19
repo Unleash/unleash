@@ -23,7 +23,7 @@ const StyledForm = styled('form')(() => ({
     height: '100%',
 }));
 
-interface ITemplateForm {
+interface ITemplateFormProps {
     mode: 'create' | 'edit';
     name: string;
     setName: React.Dispatch<React.SetStateAction<string>>;

@@ -573,32 +573,34 @@ const applyStaleConditions = (
     query: Knex.QueryBuilder,
     staleConditions?: IQueryParam,
 ): void => {
-    if (!staleConditions) {
-        return;
-    }
+    if (!staleConditions) return;
 
-    if (!staleConditions.values.includes('potentiallyStale')) {
+    const { values, operator } = staleConditions;
+
+    if (!values.includes('potentiallyStale')) {
         applyGenericQueryParams(query, [staleConditions]);
         return;
     }
 
-    if (staleConditions.values.length === 3) {
-        switch (staleConditions.operator) {
+    if (values.length === 3) {
+        switch (operator) {
             case 'IS':
             case 'IS_ANY_OF':
-                // this includes all flags; we don't need to do anything
+                // All flags included; no action needed
                 break;
             case 'IS_NOT':
             case 'IS_NONE_OF':
-                // this excludes all flags; simplified:
+                // All flags excluded
                 query
                     .where('features.stale', false)
                     .where('features.stale', true);
                 break;
         }
         return;
-    } else if (staleConditions.values.length === 1) {
-        switch (staleConditions.operator) {
+    }
+
+    if (values.length === 1) {
+        switch (operator) {
             case 'IS':
             case 'IS_ANY_OF':
                 query
@@ -615,39 +617,38 @@ const applyStaleConditions = (
                 break;
         }
         return;
+    }
+
+    if (values.includes('stale')) {
+        switch (operator) {
+            case 'IS':
+            case 'IS_ANY_OF':
+                query.where((qb) =>
+                    qb
+                        .where('features.stale', true)
+                        .orWhere('features.potentially_stale', true),
+                );
+                break;
+            case 'IS_NOT':
+            case 'IS_NONE_OF':
+                query
+                    .where('features.stale', false)
+                    .where('features.potentially_stale', false);
+                break;
+        }
     } else {
-        if (staleConditions.values.includes('stale')) {
-            switch (staleConditions.operator) {
-                case 'IS':
-                case 'IS_ANY_OF':
-                    query.where((qb) =>
-                        qb
-                            .where('features.stale', true)
-                            .orWhere('features.potentially_stale', true),
-                    );
-                    break;
-                case 'IS_NOT':
-                case 'IS_NONE_OF':
-                    query
-                        .where('features.stale', false)
-                        .where('features.potentially_stale', false);
-                    break;
-            }
-        } else {
-            switch (staleConditions.operator) {
-                case 'IS':
-                case 'IS_ANY_OF':
-                    query.where('features.stale', false);
-                    break;
-                case 'IS_NOT':
-                case 'IS_NONE_OF':
-                    query.where('features.stale', true);
-                    break;
-            }
+        switch (operator) {
+            case 'IS':
+            case 'IS_ANY_OF':
+                query.where('features.stale', false);
+                break;
+            case 'IS_NOT':
+            case 'IS_NONE_OF':
+                query.where('features.stale', true);
+                break;
         }
     }
 };
-
 const applyQueryParams = (
     query: Knex.QueryBuilder,
     queryParams: IQueryParam[],

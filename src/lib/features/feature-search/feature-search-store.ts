@@ -579,14 +579,71 @@ const applyStaleConditions = (
 
     if (!staleConditions.values.includes('potentiallyStale')) {
         applyGenericQueryParams(query, [staleConditions]);
-    } else {
-        query.where(
-            'features.potentially_stale',
-            staleConditions.operator,
-            staleConditions.values,
-        );
-
         return;
+    }
+
+    if (staleConditions.values.length === 3) {
+        switch (staleConditions.operator) {
+            case 'IS':
+            case 'IS_ANY_OF':
+                // this includes all flags; we don't need to do anything
+                break;
+            case 'IS_NOT':
+            case 'IS_NONE_OF':
+                // this excludes all flags; simplified:
+                query
+                    .where('features.stale', false)
+                    .where('features.stale', true);
+                break;
+        }
+        return;
+    }
+
+    if (staleConditions.values.length === 1) {
+        switch (staleConditions.operator) {
+            case 'IS':
+            case 'IS_ANY_OF':
+                query
+                    .where('features.stale', false)
+                    .where('features.potentially_stale', true);
+                break;
+            case 'IS_NOT':
+            case 'IS_NONE_OF':
+                query.where((qb) =>
+                    qb
+                        .where('features.stale', true)
+                        .orWhere('features.potentially_stale', false),
+                );
+                break;
+        }
+        return;
+    }
+
+    switch (
+        [staleConditions.values.includes('stale'), staleConditions.operator]
+    ) {
+        case [true, 'IS']:
+        case [true, 'IS_ANY_OF']:
+            query.where((qb) =>
+                qb
+                    .where('features.stale', true)
+                    .orWhere('features.potentially_stale', true),
+            );
+            break;
+        case [true, 'IS_NOT']:
+        case [true, 'IS_NONE_OF']:
+            query
+                .where('features.stale', false)
+                .where('features.potentially_stale', false);
+            break;
+        case [false, 'IS']:
+        case [false, 'IS_ANY_OF']:
+            query.where('features.stale', false);
+            break;
+        case [false, 'IS_NOT']:
+        case [false, 'IS_NONE_OF']:
+            query.where('features.stale', true);
+            break;
     }
 };
 

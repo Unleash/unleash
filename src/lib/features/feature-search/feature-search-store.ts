@@ -578,7 +578,14 @@ const applyStaleConditions = (
     const { values, operator } = staleConditions;
 
     if (!values.includes('potentiallyStale')) {
-        applyGenericQueryParams(query, [staleConditions]);
+        applyGenericQueryParams(query, [
+            {
+                ...staleConditions,
+                values: staleConditions.values.map((value) =>
+                    value === 'active' ? 'false' : 'true',
+                ),
+            },
+        ]);
         return;
     }
 

@@ -606,7 +606,7 @@ const applyStaleConditions = (
         return;
     }
 
-    if (values.length === 1) {
+    if (valueSet.size === 1) {
         switch (operator) {
             case 'IS':
             case 'IS_ANY_OF':

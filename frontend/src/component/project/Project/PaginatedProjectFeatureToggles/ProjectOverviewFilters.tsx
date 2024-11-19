@@ -44,6 +44,10 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 label: 'Stale',
                 value: 'stale',
             },
+            {
+                label: 'Potentially stale',
+                value: 'potentiallyStale',
+            },
         ];
 
         const availableFilters: IFilterItem[] = [

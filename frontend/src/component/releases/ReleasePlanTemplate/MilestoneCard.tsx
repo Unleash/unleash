@@ -49,7 +49,7 @@ const StyledMilestoneCardTitle = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
 }));
 
-interface IMilestoneCard {
+interface IMilestoneCardProps {
     index: number;
     milestone: IReleasePlanMilestonePayload;
     milestoneNameChanged: (index: number, name: string) => void;

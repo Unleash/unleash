@@ -11,9 +11,13 @@ const StyledButtonContainer = styled('div')(() => ({
     justifyContent: 'flex-end',
 }));
 
+interface IReleasePlanTemplateAddStrategyFormProps {
+    onCancel: () => void;
+}
+
 export const ReleasePlanTemplateAddStrategyForm = ({
     onCancel,
-}: { onCancel: () => void }) => {
+}: IReleasePlanTemplateAddStrategyFormProps) => {
     return (
         <FormTemplate
             modal

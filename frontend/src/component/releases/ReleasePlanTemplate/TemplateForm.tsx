@@ -42,7 +42,7 @@ interface ITemplateFormProps {
     children?: React.ReactNode;
 }
 
-export const TemplateForm: React.FC<ITemplateForm> = ({
+export const TemplateForm: React.FC<ITemplateFormProps> = ({
     name,
     setName,
     description,

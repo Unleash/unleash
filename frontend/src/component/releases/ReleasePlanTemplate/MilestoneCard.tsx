@@ -65,7 +65,7 @@ export const MilestoneCard = ({
     showAddStrategyDialog,
     errors,
     clearErrors,
-}: IMilestoneCard) => {
+}: IMilestoneCardProps) => {
     const [editMode, setEditMode] = useState(false);
 
     return (

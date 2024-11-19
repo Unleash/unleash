@@ -1,5 +1,4 @@
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
-import { useState } from 'react';
 import { MilestoneCard } from './MilestoneCard';
 import { styled } from '@mui/material';
 import { Button } from '@mui/material';
@@ -26,11 +25,8 @@ export const MilestoneList = ({
     setAddStrategyOpen,
     errors,
     clearErrors,
-}: IMilestoneList) => {
-    const [currentMilestone, setCurrentMilestone] = useState(-1);
-
+}: IMilestoneListProps) => {
     const showAddStrategyDialog = (index: number) => {
-        setCurrentMilestone(index);
         setAddStrategyOpen(true);
     };
 

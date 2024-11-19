@@ -1,8 +1,16 @@
+import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import { useEffect, useState } from 'react';
 
-export const useTemplateForm = (initialName = '', initialDescription = '') => {
+export const useTemplateForm = (
+    initialName = '',
+    initialDescription = '',
+    initialMilestones: IReleasePlanMilestonePayload[] = [
+        { name: 'Milestone 1', sortOrder: 0 },
+    ],
+) => {
     const [name, setName] = useState(initialName);
     const [description, setDescription] = useState(initialDescription);
+    const [milestones, setMilestones] = useState(initialMilestones);
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
@@ -12,6 +20,10 @@ export const useTemplateForm = (initialName = '', initialDescription = '') => {
     useEffect(() => {
         setDescription(initialDescription);
     }, [initialDescription]);
+
+    useEffect(() => {
+        setMilestones(initialMilestones);
+    }, [initialMilestones.length]);
 
     const validate = () => {
         if (name.length === 0) {
@@ -37,6 +49,8 @@ export const useTemplateForm = (initialName = '', initialDescription = '') => {
         setName,
         description,
         setDescription,
+        milestones,
+        setMilestones,
         errors,
         clearErrors,
         validate,

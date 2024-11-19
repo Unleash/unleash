@@ -12,7 +12,7 @@ export interface IReleasePlanTemplate {
     description: string;
     createdAt: string;
     createdByUserId: number;
-    milestones: IReleasePlanMilestone[];
+    milestones: IReleasePlanMilestonePayload[];
 }
 
 export interface IReleasePlanMilestone {
@@ -24,5 +24,17 @@ export interface IReleasePlanTemplatePayload {
     id?: string;
     name: string;
     description: string;
-    milestones?: IReleasePlanMilestone[];
+    milestones?: IReleasePlanMilestonePayload[];
+}
+
+export interface IReleasePlanMilestonePayload {
+    id?: string;
+    name: string;
+    sortOrder: number;
+    strategies?: IReleasePlanStrategyPayload[];
+}
+
+export interface IReleasePlanStrategyPayload {
+    id?: string;
+    name: string;
 }

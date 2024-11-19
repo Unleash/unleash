@@ -597,9 +597,7 @@ const applyStaleConditions = (
                 break;
         }
         return;
-    }
-
-    if (staleConditions.values.length === 1) {
+    } else if (staleConditions.values.length === 1) {
         switch (staleConditions.operator) {
             case 'IS':
             case 'IS_ANY_OF':
@@ -617,33 +615,36 @@ const applyStaleConditions = (
                 break;
         }
         return;
-    }
-
-    switch (
-        [staleConditions.values.includes('stale'), staleConditions.operator]
-    ) {
-        case [true, 'IS']:
-        case [true, 'IS_ANY_OF']:
-            query.where((qb) =>
-                qb
-                    .where('features.stale', true)
-                    .orWhere('features.potentially_stale', true),
-            );
-            break;
-        case [true, 'IS_NOT']:
-        case [true, 'IS_NONE_OF']:
-            query
-                .where('features.stale', false)
-                .where('features.potentially_stale', false);
-            break;
-        case [false, 'IS']:
-        case [false, 'IS_ANY_OF']:
-            query.where('features.stale', false);
-            break;
-        case [false, 'IS_NOT']:
-        case [false, 'IS_NONE_OF']:
-            query.where('features.stale', true);
-            break;
+    } else {
+        if (staleConditions.values.includes('stale')) {
+            switch (staleConditions.operator) {
+                case 'IS':
+                case 'IS_ANY_OF':
+                    query.where((qb) =>
+                        qb
+                            .where('features.stale', true)
+                            .orWhere('features.potentially_stale', true),
+                    );
+                    break;
+                case 'IS_NOT':
+                case 'IS_NONE_OF':
+                    query
+                        .where('features.stale', false)
+                        .where('features.potentially_stale', false);
+                    break;
+            }
+        } else {
+            switch (staleConditions.operator) {
+                case 'IS':
+                case 'IS_ANY_OF':
+                    query.where('features.stale', false);
+                    break;
+                case 'IS_NOT':
+                case 'IS_NONE_OF':
+                    query.where('features.stale', true);
+                    break;
+            }
+        }
     }
 };
 

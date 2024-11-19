@@ -5,7 +5,7 @@ import { styled } from '@mui/material';
 import { Button } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 
-interface IMilestoneList {
+interface IMilestoneListProps {
     milestones: IReleasePlanMilestonePayload[];
     setMilestones: React.Dispatch<
         React.SetStateAction<IReleasePlanMilestonePayload[]>

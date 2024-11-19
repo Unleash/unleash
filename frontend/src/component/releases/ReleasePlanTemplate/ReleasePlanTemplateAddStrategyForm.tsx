@@ -5,11 +5,6 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
-const StyledButton = styled(Button)(({ theme }) => ({
-    marginTop: theme.spacing(1),
-    maxWidth: theme.spacing(20),
-}));
-
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
     display: 'flex',

@@ -4,7 +4,9 @@ import { useEffect, useState } from 'react';
 export const useTemplateForm = (
     initialName = '',
     initialDescription = '',
-    initialMilestones: IReleasePlanMilestonePayload[] = [],
+    initialMilestones: IReleasePlanMilestonePayload[] = [
+        { name: 'Milestone 1', sortOrder: 0 },
+    ],
 ) => {
     const [name, setName] = useState(initialName);
     const [description, setDescription] = useState(initialDescription);
@@ -21,7 +23,7 @@ export const useTemplateForm = (
 
     useEffect(() => {
         setMilestones(initialMilestones);
-    }, [initialMilestones]);
+    }, [initialMilestones.length]);
 
     const validate = () => {
         if (name.length === 0) {

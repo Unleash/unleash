@@ -1,10 +1,8 @@
-import { StyledMilestoneCard, StyledMilestoneCardBody } from './TemplateForm';
 import Input from 'component/common/Input/Input';
-import { Button, Grid, styled } from '@mui/material';
+import { Box, Button, Card, Grid, styled } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
-import { useEffect, useState } from 'react';
-import { useTheme } from '@mui/material';
+import { useState } from 'react';
 
 const StyledEditIcon = styled(Edit)(({ theme }) => ({
     cursor: 'pointer',
@@ -13,6 +11,28 @@ const StyledEditIcon = styled(Edit)(({ theme }) => ({
     height: theme.spacing(2.5),
     width: theme.spacing(2.5),
     color: theme.palette.text.secondary,
+}));
+
+const StyledMilestoneCard = styled(Card)(({ theme }) => ({
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    boxShadow: 'none',
+    border: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.down('sm')]: {
+        justifyContent: 'center',
+    },
+    transition: 'background-color 0.2s ease-in-out',
+    backgroundColor: theme.palette.background.default,
+    '&:hover': {
+        backgroundColor: theme.palette.neutral.light,
+    },
+    borderRadius: theme.shape.borderRadiusMedium,
+}));
+
+const StyledMilestoneCardBody = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(2, 2),
 }));
 
 const StyledGridItem = styled(Grid)(({ theme }) => ({
@@ -32,6 +52,7 @@ const StyledMilestoneCardTitle = styled('span')(({ theme }) => ({
 interface IMilestoneCard {
     index: number;
     milestone: IReleasePlanMilestonePayload;
+    milestoneNameChanged: (index: number, name: string) => void;
     showAddStrategyDialog: (index: number) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
@@ -40,21 +61,12 @@ interface IMilestoneCard {
 export const MilestoneCard = ({
     index,
     milestone,
+    milestoneNameChanged,
     showAddStrategyDialog,
     errors,
     clearErrors,
 }: IMilestoneCard) => {
-    const [milestoneName, setMilestoneName] = useState<string>(milestone.name);
-    const [editMode, setEditMode] = useState<boolean>(false);
-    const theme = useTheme();
-
-    useEffect(() => {
-        milestone.name = milestoneName;
-    }, [milestoneName]);
-
-    const editMilestoneNameClick = () => {
-        setEditMode(true);
-    };
+    const [editMode, setEditMode] = useState(false);
 
     return (
         <StyledMilestoneCard>
@@ -64,9 +76,9 @@ export const MilestoneCard = ({
                         {editMode && (
                             <StyledInput
                                 label=''
-                                value={milestoneName}
+                                value={milestone.name}
                                 onChange={(e) =>
-                                    setMilestoneName(e.target.value)
+                                    milestoneNameChanged(index, e.target.value)
                                 }
                                 error={Boolean(errors?.name)}
                                 errorText={errors?.name}
@@ -83,14 +95,16 @@ export const MilestoneCard = ({
                             />
                         )}
                         {!editMode && (
-                            <StyledMilestoneCardTitle
-                                onClick={editMilestoneNameClick}
-                            >
-                                {milestoneName}
-                            </StyledMilestoneCardTitle>
-                        )}
-                        {!editMode && (
-                            <StyledEditIcon onClick={editMilestoneNameClick} />
+                            <>
+                                <StyledMilestoneCardTitle
+                                    onClick={() => setEditMode(true)}
+                                >
+                                    {milestone.name}
+                                </StyledMilestoneCardTitle>
+                                <StyledEditIcon
+                                    onClick={() => setEditMode(true)}
+                                />
+                            </>
                         )}
                     </StyledGridItem>
                     <Grid item xs={2} md={2}>

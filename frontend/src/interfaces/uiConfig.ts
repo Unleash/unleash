@@ -86,7 +86,6 @@ export type UiFlags = {
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
     flagCreator?: boolean;
-    onboardingUI?: boolean;
     personalDashboardUI?: boolean;
     purchaseAdditionalEnvironments?: boolean;
     unleashAI?: boolean;

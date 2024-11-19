@@ -79,15 +79,13 @@ export const RolePermissionCategories = ({
     return useMemo(
         () => (
             <>
-                {categories.map(({ label, type, permissions }) => {
-                    if (
-                        label === 'Release plan templates' &&
-                        !releasePlansEnabled
-                    ) {
-                        return null;
-                    }
-
-                    return (
+                {categories
+                    .filter(
+                        ({ label }) =>
+                            releasePlansEnabled ||
+                            label !== 'Release plan templates',
+                    )
+                    .map(({ label, type, permissions }) => (
                         <RolePermissionCategory
                             key={label}
                             title={`${label} permissions`}
@@ -114,8 +112,7 @@ export const RolePermissionCategories = ({
                             }
                             onCheckAll={() => onCheckAll(permissions)}
                         />
-                    );
-                })}
+                    ))}
             </>
         ),
         [categories, checkedPermissions],

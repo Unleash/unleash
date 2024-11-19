@@ -48,7 +48,7 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 ? [
                       {
                           label: 'Potentially stale',
-                          value: 'potentiallyStale',
+                          value: 'potentially-stale',
                       },
                   ]
                 : []),

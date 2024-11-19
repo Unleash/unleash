@@ -1000,42 +1000,42 @@ test('should search features by potentially stale', async () => {
     };
 
     // single filters work
-    await check('IS:potentiallyStale', ['my_feature_c']);
-    // (stale or !potentiallyStale)
-    await check('IS_NOT:potentiallyStale', [
+    await check('IS:potentially-stale', ['my_feature_c']);
+    // (stale or !potentially-stale)
+    await check('IS_NOT:potentially-stale', [
         'my_feature_a',
         'my_feature_b',
         'my_feature_d',
     ]);
 
     // combo filters work
-    await check('IS_ANY_OF:active,potentiallyStale', [
+    await check('IS_ANY_OF:active,potentially-stale', [
         'my_feature_a',
         'my_feature_c',
     ]);
 
-    // (potentiallyStale OR stale)
-    await check('IS_ANY_OF:potentiallyStale,stale', [
+    // (potentially-stale OR stale)
+    await check('IS_ANY_OF:potentially-stale, stale', [
         'my_feature_b',
         'my_feature_c',
         'my_feature_d',
     ]);
 
-    await check('IS_ANY_OF:active,potentiallyStale,stale', [
+    await check('IS_ANY_OF:active,potentially-stale,stale', [
         'my_feature_a',
         'my_feature_b',
         'my_feature_c',
         'my_feature_d',
     ]);
 
-    await check('IS_NONE_OF:active,potentiallyStale,stale', []);
+    await check('IS_NONE_OF:active,potentially-stale,stale', []);
 
-    await check('IS_NONE_OF:active,potentiallyStale', [
+    await check('IS_NONE_OF:active,potentially-stale', [
         'my_feature_b',
         'my_feature_d',
     ]);
 
-    await check('IS_NONE_OF:potentiallyStale,stale', ['my_feature_a']);
+    await check('IS_NONE_OF:potentially-stale,stale', ['my_feature_a']);
 });
 
 test('should filter features by combined operators', async () => {

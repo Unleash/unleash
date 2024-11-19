@@ -28,7 +28,6 @@ const setupApi = () => {
     testServerRoute(server, '/api/admin/ui-config', {
         flags: {
             flagCreator: true,
-            onboardingUI: true,
         },
     });
     testServerRoute(server, '/api/admin/tags', {

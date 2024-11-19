@@ -74,36 +74,113 @@ export class FeatureSearchService {
                 );
 
                 if (potentiallyStale) {
-                    if (
-                        parsedState.operator === 'IS' ||
-                        parsedState.operator === 'IS_ANY_OF'
+                    if (parsedState.values.length === 1) {
+                        if (
+                            parsedState.operator === 'IS' ||
+                            parsedState.operator === 'IS_ANY_OF'
+                        ) {
+                            // exclude stale
+                            queryParams.push({
+                                field: 'features.potentially_stale',
+                                operator: 'IS',
+                                values: ['true'],
+                            });
+                            queryParams.push({
+                                field: 'features.stale',
+                                operator: 'IS',
+                                values: ['false'],
+                            });
+                        } else if (
+                            parsedState.operator === 'IS_NOT' ||
+                            parsedState.operator === 'IS_NONE_OF'
+                        ) {
+                            // problem? active and not potentiallyStale OR stale and any potentiallyStale state
+                            queryParams.push({
+                                field: 'features.potentially_stale',
+                                operator: 'IS_ANY_OF',
+                                values: ['false', null],
+                            });
+                        }
+                    } else if (
+                        ['stale', 'active', 'potentiallyStale'].every((value) =>
+                            parsedState.values.includes(value),
+                        )
                     ) {
-                        queryParams.push({
-                            field: 'features.potentially_stale',
-                            operator: 'IS',
-                            values: ['true'],
-                        });
-                    } else {
-                        queryParams.push({
-                            field: 'features.potentially_stale',
-                            operator: 'IS_ANY_OF',
-                            values: [null, 'false'],
-                        });
+                        if (
+                            parsedState.operator === 'IS' ||
+                            parsedState.operator === 'IS_ANY_OF'
+                        ) {
+                            // do nothing
+                        } else if (
+                            parsedState.operator === 'IS_NOT' ||
+                            parsedState.operator === 'IS_NONE_OF'
+                        ) {
+                            queryParams.push({
+                                field: 'features.stale',
+                                operator: 'IS_NONE_OF',
+                                values: ['false', 'true'],
+                            });
+                        }
+                    } else if (parsedState.values.length === 2) {
+                        if (parsedState.values.includes('active')) {
+                            // active && potentially stale
+                            if (
+                                parsedState.operator === 'IS' ||
+                                parsedState.operator === 'IS_ANY_OF'
+                            ) {
+                                // potentially stale are a subset of active
+                                queryParams.push({
+                                    field: 'features.stale',
+                                    operator: 'IS',
+                                    values: ['false'],
+                                });
+                            } else if (
+                                parsedState.operator === 'IS_NOT' ||
+                                parsedState.operator === 'IS_NONE_OF'
+                            ) {
+                                // we don't care about potentially stale here
+                                queryParams.push({
+                                    field: 'features.stale',
+                                    operator: 'IS',
+                                    values: ['true'],
+                                });
+                            }
+                        } else if (parsedState.values.includes('stale')) {
+                            // stale && potentially stale
+                            if (
+                                parsedState.operator === 'IS' ||
+                                parsedState.operator === 'IS_ANY_OF'
+                            ) {
+                                // problem! we need an OR-clause here:
+                                // where potentially_stale is true OR stale is true
+                            } else if (
+                                parsedState.operator === 'IS_NOT' ||
+                                parsedState.operator === 'IS_NONE_OF'
+                            ) {
+                                queryParams.push({
+                                    field: 'features.potentially_stale',
+                                    operator: 'IS_ANY_OF',
+                                    values: ['false', null],
+                                });
+                                queryParams.push({
+                                    field: 'features.stale',
+                                    operator: 'IS',
+                                    values: ['false'],
+                                });
+                            }
+                        }
                     }
-                }
-                const otherValues = parsedState.values.filter(
-                    (value) => !value?.includes('potentiallyStale'),
-                );
-
-                if (otherValues.length) {
+                } else {
+                    // do the same thing as before
                     queryParams.push({
                         field: 'stale',
                         operator: parsedState.operator,
-                        values: otherValues.map((value) =>
+                        values: parsedState.values.map((value) =>
                             value === 'active' ? 'false' : 'true',
                         ),
                     });
                 }
+
                 console.log(params, queryParams);
             }
         }

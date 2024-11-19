@@ -14,7 +14,7 @@ export const SecurityBanner = () => {
         !isAdmin ||
         !showUserDeviceCount ||
         !uiConfig.maxSessionsCount ||
-        uiConfig.maxSessionsCount < 5
+        uiConfig.maxSessionsCount < 4
     ) {
         return null;
     }

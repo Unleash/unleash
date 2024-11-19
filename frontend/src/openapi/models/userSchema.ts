@@ -10,8 +10,15 @@
 export interface UserSchema {
     /** A user is either an actual User or a Service Account */
     accountType?: string;
+    /**
+     * Count of active browser sessions for this user
+     * @nullable
+     */
+    activeSessions?: number | null;
     /** The user was created at this time */
     createdAt?: string;
+    /** Experimental. The number of deleted browser sessions after last login */
+    deletedSessions?: number;
     /** Email of the user */
     email?: string;
     /** Is the welcome email sent to the user or not */
@@ -59,6 +66,4 @@ export interface UserSchema {
      * @nullable
      */
     username?: string | null;
-    deletedSessions?: number;
-    activeSessions?: number;
 }

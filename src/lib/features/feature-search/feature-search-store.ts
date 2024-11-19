@@ -581,7 +581,7 @@ const applyStaleConditions = (
         applyGenericQueryParams(query, [
             {
                 ...staleConditions,
-                values: staleConditions.values.map((value) =>
+                values: values.map((value) =>
                     value === 'active' ? 'false' : 'true',
                 ),
             },
@@ -589,7 +589,9 @@ const applyStaleConditions = (
         return;
     }
 
-    if (values.length === 3) {
+    const valueSet = new Set(values);
+
+    if (valueSet.size === 3) {
         switch (operator) {
             case 'IS':
             case 'IS_ANY_OF':
@@ -624,7 +626,7 @@ const applyStaleConditions = (
         return;
     }
 
-    if (values.includes('stale')) {
+    if (valueSet.has('stale')) {
         switch (operator) {
             case 'IS':
             case 'IS_ANY_OF':

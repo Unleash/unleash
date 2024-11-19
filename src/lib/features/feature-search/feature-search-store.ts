@@ -589,9 +589,17 @@ const applyStaleConditions = (
         return;
     }
 
-    const valueSet = new Set(values);
+    const valueSet = new Set(
+        values.filter((value) =>
+            ['stale', 'active', 'potentiallyStale'].includes(value || ''),
+        ),
+    );
+    const allSelected = valueSet.size === 3;
+    const onlyPotentiallyStale = valueSet.size === 1;
+    const staleAndPotentiallyStale =
+        valueSet.has('stale') && valueSet.size === 2;
 
-    if (valueSet.size === 3) {
+    if (allSelected) {
         switch (operator) {
             case 'IS':
             case 'IS_ANY_OF':
@@ -606,7 +614,7 @@ const applyStaleConditions = (
         return;
     }
 
-    if (valueSet.size === 1) {
+    if (onlyPotentiallyStale) {
         switch (operator) {
             case 'IS':
             case 'IS_ANY_OF':
@@ -626,7 +634,7 @@ const applyStaleConditions = (
         return;
     }
 
-    if (valueSet.has('stale')) {
+    if (staleAndPotentiallyStale) {
         switch (operator) {
             case 'IS':
             case 'IS_ANY_OF':

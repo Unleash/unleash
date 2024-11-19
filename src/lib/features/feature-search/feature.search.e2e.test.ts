@@ -968,27 +968,74 @@ test('should search features by state with operators', async () => {
     });
 });
 
-test('should search features by created date with operators', async () => {
+test('should search features by potentially stale', async () => {
     await app.createFeature({
         name: 'my_feature_a',
-        createdAt: '2023-01-27T15:21:39.975Z',
+        stale: false,
     });
     await app.createFeature({
         name: 'my_feature_b',
-        createdAt: '2023-01-29T15:21:39.975Z',
+        stale: true,
+    });
+    await app.createFeature({
+        name: 'my_feature_c',
+        stale: false,
+    });
+    await app.createFeature({
+        name: 'my_feature_d',
+        stale: true,
     });
 
-    const { body } = await filterFeaturesByCreated('IS_BEFORE:2023-01-28');
-    expect(body).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
+    // this is all done on a schedule, so there's no imperative way to mark something as potentially stale today.
+    await db
+        .rawDatabase('features')
+        .update('potentially_stale', true)
+        .whereIn('name', ['my_feature_c', 'my_feature_d']);
 
-    const { body: afterBody } = await filterFeaturesByCreated(
-        'IS_ON_OR_AFTER:2023-01-28',
-    );
-    expect(afterBody).toMatchObject({
-        features: [{ name: 'my_feature_b' }],
-    });
+    const check = async (filter: string, expectedFlags: string[]) => {
+        const { body } = await filterFeaturesByState(filter);
+        expect(body).toMatchObject({
+            features: expectedFlags.map((flag) => ({ name: flag })),
+        });
+    };
+
+    // single filters work
+    await check('IS:potentiallyStale', ['my_feature_c']);
+    // (stale or !potentiallyStale)
+    await check('IS_NOT:potentiallyStale', [
+        'my_feature_a',
+        'my_feature_b',
+        'my_feature_d',
+    ]);
+
+    // combo filters work
+    await check('IS_ANY_OF:active,potentiallyStale', [
+        'my_feature_a',
+        'my_feature_c',
+    ]);
+
+    // (potentiallyStale OR stale)
+    await check('IS_ANY_OF:potentiallyStale,stale', [
+        'my_feature_b',
+        'my_feature_c',
+        'my_feature_d',
+    ]);
+
+    await check('IS_ANY_OF:active,potentiallyStale,stale', [
+        'my_feature_a',
+        'my_feature_b',
+        'my_feature_c',
+        'my_feature_d',
+    ]);
+
+    await check('IS_NONE_OF:active,potentiallyStale,stale', []);
+
+    await check('IS_NONE_OF:active,potentiallyStale', [
+        'my_feature_b',
+        'my_feature_d',
+    ]);
+
+    await check('IS_NONE_OF:potentiallyStale,stale', ['my_feature_a']);
 });
 
 test('should filter features by combined operators', async () => {

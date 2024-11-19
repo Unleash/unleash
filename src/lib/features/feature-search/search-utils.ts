@@ -116,7 +116,7 @@ export const parseSearchOperatorValue = (
         return {
             field,
             operator: match[1] as IQueryOperator,
-            values: match[2].split(','),
+            values: match[2].split(',').map((value) => value.trim()),
         };
     }
 

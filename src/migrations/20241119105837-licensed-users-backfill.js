@@ -64,11 +64,12 @@ exports.up = (db, cb) => {
            ORDER BY
                d.date
         ) INSERT INTO licensed_users (date, count)
-              SELECT
-                  date,
-                  active_emails_count
-              FROM
-                  result ON CONFLICT (date) DO NOTHING;
+            SELECT date, active_emails_count
+            FROM result
+            WHERE EXISTS (
+                SELECT 1 FROM user_events
+            )
+        ON CONFLICT (date) DO NOTHING;
   `, cb);
 
 };

@@ -591,9 +591,7 @@ const applyStaleConditions = (
             case 'IS_NOT':
             case 'IS_NONE_OF':
                 // All flags excluded
-                query
-                    .where('features.stale', false)
-                    .where('features.stale', true);
+                query.whereNotIn('features.stale', [false, true]);
                 break;
         }
         return;

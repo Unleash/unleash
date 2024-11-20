@@ -2,7 +2,7 @@ import { Box, IconButton, Link, styled, Tooltip } from '@mui/material';
 import upgradeEnvironments from 'assets/img/upgradeEnvironments.png';
 import { formatAssetPath } from 'utils/formatPath';
 import Close from '@mui/icons-material/Close';
-import { useLocalStorageState } from '../../../hooks/useLocalStorageState';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
 
 const Wrapper = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(3),

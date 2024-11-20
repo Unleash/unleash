@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'flagOverviewRedesign'
     | 'showUserDeviceCount'
     | 'deleteStaleUserSessions'
-    | 'memorizeStats';
+    | 'memorizeStats'
+    | 'licensedUsers';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -287,6 +288,10 @@ const flags: IFlags = {
     ),
     flagOverviewRedesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
+        false,
+    ),
+    licensedUsers: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLAG_LICENSED_USERS,
         false,
     ),
 };

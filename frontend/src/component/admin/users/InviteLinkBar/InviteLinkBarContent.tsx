@@ -104,9 +104,8 @@ export const InviteLinkBarContent = ({
                     }
                     elseShow={
                         <Typography variant='body2' data-loading>
-                            You can easily create an invite link here that you
-                            can share and use to invite people from your company
-                            to your Unleash setup.
+                            Create a link to invite people from your company to
+                            your Unleash setup.
                         </Typography>
                     }
                 />

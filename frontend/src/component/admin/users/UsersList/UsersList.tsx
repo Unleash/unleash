@@ -40,6 +40,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
 import { UserSessionsCell } from './UserSessionsCell/UserSessionsCell';
+import { UsersHeader } from '../UsersHeader/UsersHeader';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -353,6 +354,7 @@ const UsersList = () => {
                     </StyledUsersLinkDiv>
                 }
             />
+            <UsersHeader />
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}
@@ -360,6 +362,7 @@ const UsersList = () => {
                     prepareRow={prepareRow}
                 />
             </SearchHighlightProvider>
+
             <ConditionallyRender
                 condition={rows.length === 0}
                 show={

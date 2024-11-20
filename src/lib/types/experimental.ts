@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'simplifyProjectOverview'
     | 'flagOverviewRedesign'
     | 'showUserDeviceCount'
-    | 'deleteStaleUserSessions';
+    | 'deleteStaleUserSessions'
+    | 'memorizeStats';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -281,16 +282,16 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_PAYG,
         false,
     ),
+    showUserDeviceCount: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
+        false,
+    ),
     simplifyProjectOverview: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SIMPLIFY_PROJECT_OVERVIEW,
         false,
     ),
     flagOverviewRedesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
-        false,
-    ),
-    showUserDeviceCount: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
         false,
     ),
 };

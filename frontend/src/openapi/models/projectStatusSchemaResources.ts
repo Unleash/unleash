@@ -14,11 +14,6 @@ export type ProjectStatusSchemaResources = {
      */
     apiTokens: number;
     /**
-     * The number of environments that have received SDK traffic in this project.
-     * @minimum 0
-     */
-    connectedEnvironments: number;
-    /**
      * The number of users who have been granted roles in this project. Does not include users who have access via groups.
      * @minimum 0
      */

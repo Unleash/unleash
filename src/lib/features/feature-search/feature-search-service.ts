@@ -45,9 +45,6 @@ export class FeatureSearchService {
         if (params.state) {
             const parsedState = parseSearchOperatorValue('stale', params.state);
             if (parsedState) {
-                parsedState.values = parsedState.values.map((value) =>
-                    value === 'active' ? 'false' : 'true',
-                );
                 queryParams.push(parsedState);
             }
         }

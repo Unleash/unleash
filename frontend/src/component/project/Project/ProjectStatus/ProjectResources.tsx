@@ -5,7 +5,6 @@ import UsersIcon from '@mui/icons-material/Group';
 import { Link } from 'react-router-dom';
 import ApiKeyIcon from '@mui/icons-material/Key';
 import SegmentsIcon from '@mui/icons-material/DonutLarge';
-import ConnectedIcon from '@mui/icons-material/Cable';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
 import { HealthGridTile } from './ProjectHealthGrid.styles';
@@ -90,7 +89,6 @@ const useProjectResources = (projectId: string) => {
         resources: {
             members: 0,
             apiTokens: 0,
-            connectedEnvironments: 0,
             segments: 0,
         },
     };
@@ -128,15 +126,6 @@ export const ProjectResources = () => {
                         icon={<ApiKeyIcon />}
                     >
                         {resources.apiTokens} API key(s)
-                    </ListItem>
-
-                    <ListItem
-                        linkUrl={`/projects/${projectId}/settings/placeholder`}
-                        linkText='View connections'
-                        icon={<ConnectedIcon />}
-                    >
-                        {resources.connectedEnvironments} connected
-                        environment(s)
                     </ListItem>
 
                     <ListItem

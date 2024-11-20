@@ -120,6 +120,17 @@ export default class SessionStore implements ISessionStore {
             count: Number(row.count),
         }));
     }
+
+    async getMaxSessionsCount(): Promise<number> {
+        const result = await this.db(TABLE)
+            .select(this.db.raw("sess->'user'->>'id' AS user_id"))
+            .count('* as count')
+            .groupBy('user_id')
+            .orderBy('count', 'desc')
+            .first();
+
+        return result ? Number(result.count) : 0;
+    }
 }
 
 module.exports = SessionStore;

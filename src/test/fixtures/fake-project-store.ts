@@ -214,8 +214,4 @@ export default class FakeProjectStore implements IProjectStore {
             project.id === id ? { ...project, archivedAt: null } : project,
         );
     }
-
-    async getConnectedEnvironmentCountForProject(): Promise<number> {
-        return 0;
-    }
 }

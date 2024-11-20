@@ -34,6 +34,7 @@ export interface IUiConfig {
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
     unleashAIAvailable?: boolean;
+    maxSessionsCount?: number;
 }
 
 export interface IProclamationToast {
@@ -93,6 +94,7 @@ export type UiFlags = {
     'enterprise-payg'?: boolean;
     simplifyProjectOverview?: boolean;
     productivityReportEmail?: boolean;
+    showUserDeviceCount?: boolean;
     flagOverviewRedesign?: boolean;
 };
 

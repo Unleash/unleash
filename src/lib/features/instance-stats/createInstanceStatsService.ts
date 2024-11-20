@@ -102,6 +102,12 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
 
     const trafficDataUsageStore = new TrafficDataUsageStore(db, getLogger);
 
+    const featureStrategiesStore = new FeatureStrategyStore(
+        db,
+        eventBus,
+        getLogger,
+        flagResolver,
+    );
     const instanceStatsServiceStores = {
         featureToggleStore,
         userStore,
@@ -118,27 +124,14 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         apiTokenStore,
         clientMetricsStoreV2,
         featureStrategiesReadModel,
+        featureStrategiesStore,
         trafficDataUsageStore,
     };
-    const featureStrategiesStore = new FeatureStrategyStore(
-        db,
-        eventBus,
-        getLogger,
-        flagResolver,
-    );
-    const versionServiceStores = {
-        ...instanceStatsServiceStores,
-        featureStrategiesStore,
-    };
+    const versionServiceStores = { settingStore };
     const getActiveUsers = createGetActiveUsers(db);
     const getProductionChanges = createGetProductionChanges(db);
     const getLicencedUsers = createGetLicensedUsers(db);
-    const versionService = new VersionService(
-        versionServiceStores,
-        config,
-        getActiveUsers,
-        getProductionChanges,
-    );
+    const versionService = new VersionService(versionServiceStores, config);
 
     const instanceStatsService = new InstanceStatsService(
         instanceStatsServiceStores,
@@ -170,7 +163,7 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
     const clientMetricsStoreV2 = new FakeClientMetricsStoreV2();
     const featureStrategiesReadModel = new FakeFeatureStrategiesReadModel();
     const trafficDataUsageStore = new FakeTrafficDataUsageStore();
-
+    const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const instanceStatsServiceStores = {
         featureToggleStore,
         userStore,
@@ -187,22 +180,15 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         apiTokenStore,
         clientMetricsStoreV2,
         featureStrategiesReadModel,
+        featureStrategiesStore,
         trafficDataUsageStore,
     };
-    const featureStrategiesStore = new FakeFeatureStrategiesStore();
-    const versionServiceStores = {
-        ...instanceStatsServiceStores,
-        featureStrategiesStore,
-    };
+
+    const versionServiceStores = { settingStore };
     const getActiveUsers = createFakeGetActiveUsers();
     const getLicensedUsers = createFakeGetLicensedUsers();
     const getProductionChanges = createFakeGetProductionChanges();
-    const versionService = new VersionService(
-        versionServiceStores,
-        config,
-        getActiveUsers,
-        getProductionChanges,
-    );
+    const versionService = new VersionService(versionServiceStores, config);
 
     const instanceStatsService = new InstanceStatsService(
         instanceStatsServiceStores,

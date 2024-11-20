@@ -13,4 +13,5 @@ export interface ISessionStore extends Store<ISession, string> {
     deleteSessionsForUser(userId: number): Promise<void>;
     insertSession(data: Omit<ISession, 'createdAt'>): Promise<ISession>;
     getSessionsCount(): Promise<{ userId: number; count: number }[]>;
+    getMaxSessionsCount(): Promise<number>;
 }

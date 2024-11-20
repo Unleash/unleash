@@ -1,6 +1,5 @@
 import { ProjectHealth } from './ProjectHealth';
 import { styled } from '@mui/material';
-import { StaleFlags } from './StaleFlags';
 import { ProjectResources } from './ProjectResources';
 
 const onNarrowGrid = (css: object) => ({
@@ -18,7 +17,7 @@ const HealthGrid = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateAreas: `
         "health resources"
-        "stale resources"
+        "health resources"
     `,
     gridTemplateColumns: 'repeat(2, minmax(300px, 1fr))',
     gap: theme.spacing(1, 2),
@@ -44,9 +43,6 @@ export const ProjectHealthGrid = () => {
             <HealthGrid>
                 <Tile gridArea='health'>
                     <ProjectHealth />
-                </Tile>
-                <Tile gridArea='stale'>
-                    <StaleFlags />
                 </Tile>
                 <Tile gridArea='resources'>
                     <ProjectResources />

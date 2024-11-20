@@ -2,8 +2,8 @@ import { useState } from 'react';
 import type { IInstanceTrafficMetricsResponse } from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { ChartDataset } from 'chart.js';
 
-const TRAFFIC_DATA_UNIT_COST = 5;
-const TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
+const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
+const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
 
 export type SelectablePeriod = {
     key: string;
@@ -39,9 +39,13 @@ const endpointsInfo: Record<string, EndpointInfo> = {
     },
 };
 
-const calculateTrafficDataCost = (trafficData: number) => {
-    const unitCount = Math.ceil(trafficData / TRAFFIC_DATA_UNIT_SIZE);
-    return unitCount * TRAFFIC_DATA_UNIT_COST;
+const calculateTrafficDataCost = (
+    trafficData: number,
+    trafficUnitCost = DEFAULT_TRAFFIC_DATA_UNIT_COST,
+    trafficUnitSize = DEFAULT_TRAFFIC_DATA_UNIT_SIZE,
+) => {
+    const unitCount = Math.ceil(trafficData / trafficUnitSize);
+    return unitCount * trafficUnitCost;
 };
 
 const padMonth = (month: number): string =>
@@ -167,6 +171,8 @@ const getDayLabels = (dayCount: number): number[] => {
 export const calculateOverageCost = (
     dataUsage: number,
     includedTraffic: number,
+    trafficUnitCost = DEFAULT_TRAFFIC_DATA_UNIT_COST,
+    trafficUnitSize = DEFAULT_TRAFFIC_DATA_UNIT_SIZE,
 ): number => {
     if (dataUsage === 0) {
         return 0;
@@ -174,7 +180,9 @@ export const calculateOverageCost = (
 
     const overage =
         Math.floor((dataUsage - includedTraffic) / 1_000_000) * 1_000_000;
-    return overage > 0 ? calculateTrafficDataCost(overage) : 0;
+    return overage > 0
+        ? calculateTrafficDataCost(overage, trafficUnitCost, trafficUnitSize)
+        : 0;
 };
 
 export const calculateProjectedUsage = (
@@ -203,6 +211,8 @@ export const calculateEstimatedMonthlyCost = (
     trafficData: ChartDatasetType[],
     includedTraffic: number,
     currentDate: Date,
+    trafficUnitCost = DEFAULT_TRAFFIC_DATA_UNIT_COST,
+    trafficUnitSize = DEFAULT_TRAFFIC_DATA_UNIT_SIZE,
 ) => {
     if (period !== currentPeriod.key) {
         return 0;
@@ -214,7 +224,12 @@ export const calculateEstimatedMonthlyCost = (
         trafficData,
         currentPeriod.dayCount,
     );
-    return calculateOverageCost(projectedUsage, includedTraffic);
+    return calculateOverageCost(
+        projectedUsage,
+        includedTraffic,
+        trafficUnitCost,
+        trafficUnitSize,
+    );
 };
 
 export const useTrafficDataEstimation = () => {

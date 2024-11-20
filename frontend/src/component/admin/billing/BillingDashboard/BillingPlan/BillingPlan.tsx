@@ -18,6 +18,7 @@ export const BILLING_PAYG_DEFAULT_MINIMUM_SEATS = 5;
 export const BILLING_PRO_USER_PRICE = 15;
 export const BILLING_PRO_DEFAULT_INCLUDED_SEATS = 5;
 export const BILLING_INCLUDED_REQUESTS = 53_000_000;
+export const BILLING_TRAFFIC_BUNDLE_PRICE = 5;
 
 const StyledPlanBox = styled('aside')(({ theme }) => ({
     padding: theme.spacing(2.5),

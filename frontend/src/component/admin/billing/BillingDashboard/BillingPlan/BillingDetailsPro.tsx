@@ -14,6 +14,7 @@ import {
     BILLING_PLAN_PRICES,
     BILLING_PRO_DEFAULT_INCLUDED_SEATS,
     BILLING_PRO_USER_PRICE,
+    BILLING_TRAFFIC_BUNDLE_PRICE,
 } from './BillingPlan';
 import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 
@@ -70,7 +71,11 @@ export const BillingDetailsPro = ({
             endpointsInfo,
         );
         const totalTraffic = toTrafficUsageSum(trafficData);
-        return calculateOverageCost(totalTraffic, includedTraffic);
+        return calculateOverageCost(
+            totalTraffic,
+            includedTraffic,
+            BILLING_TRAFFIC_BUNDLE_PRICE,
+        );
     }, [includedTraffic, traffic, currentPeriod, endpointsInfo]);
 
     const totalCost = planPrice + paidAssignedPrice + overageCost;
@@ -146,8 +151,8 @@ export const BillingDetailsPro = ({
                                     </GridColLink>
                                 </Typography>
                                 <StyledInfoLabel>
-                                    $5 dollar per 1 million started above
-                                    included data
+                                    ${BILLING_TRAFFIC_BUNDLE_PRICE} per 1
+                                    million started above included data
                                 </StyledInfoLabel>
                             </GridCol>
                             <GridCol>

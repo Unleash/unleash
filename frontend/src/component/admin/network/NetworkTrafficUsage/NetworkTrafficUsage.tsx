@@ -32,6 +32,7 @@ import {
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { formatTickValue } from 'component/common/Chart/formatTickValue';
 import { useTrafficLimit } from './hooks/useTrafficLimit';
+import { BILLING_TRAFFIC_BUNDLE_PRICE } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -214,6 +215,7 @@ export const NetworkTrafficUsage: VFC = () => {
                 const calculatedOverageCost = calculateOverageCost(
                     usage,
                     includedTraffic,
+                    BILLING_TRAFFIC_BUNDLE_PRICE,
                 );
                 setOverageCost(calculatedOverageCost);
 
@@ -223,6 +225,7 @@ export const NetworkTrafficUsage: VFC = () => {
                         data.datasets,
                         includedTraffic,
                         new Date(),
+                        BILLING_TRAFFIC_BUNDLE_PRICE,
                     ),
                 );
             }

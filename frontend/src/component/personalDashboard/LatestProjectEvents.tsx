@@ -1,4 +1,4 @@
-import type { FC } from 'react';
+import type { FC, HTMLAttributes } from 'react';
 import { Markdown } from '../common/Markdown/Markdown';
 import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
 import { UserAvatar } from '../common/UserAvatar/UserAvatar';

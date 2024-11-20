@@ -97,7 +97,7 @@ const EmptyFlagMetricsChart = () => {
 const useMetricsEnvironments = (project: string, flagName: string) => {
     const [environment, setEnvironment] = useState<string | null>(null);
     const { feature } = useFeature(project, flagName);
-    const activeEnvironments = feature.environments.map((env) => ({
+    const activeEnvironments = (feature?.environments ?? []).map((env) => ({
         name: env.name,
         type: env.type,
     }));
@@ -215,7 +215,7 @@ export const PlaceholderFlagMetricsChartWithWrapper: React.FC<{
     );
 };
 
-export const FlagMetricsChart: FC<{
+const FlagMetricsChartInner: FC<{
     flag: { name: string; project: string };
     onArchive: () => void;
 }> = ({ flag, onArchive }) => {
@@ -235,7 +235,7 @@ export const FlagMetricsChart: FC<{
         return (
             <ChartContainer>
                 <PlaceholderFlagMetricsChart
-                    label={`Couldn't fetch metrics for the current flag. This may be a transient error, or your flag name ("${flag.name}") may be causing issues.`}
+                    label={`Couldn't fetch metrics for the current flag right now. Please try again. Report this if it doesn't resolve itself.`}
                 />
             </ChartContainer>
         );
@@ -281,6 +281,24 @@ export const FlagMetricsChart: FC<{
             )}
         </ChartContainer>
     );
+};
+
+export const FlagMetricsChart: FC<{
+    flag: { name: string; project: string };
+    onArchive: () => void;
+}> = (props) => {
+    const breakingNames = ['.', '..'];
+    if (breakingNames.includes(props.flag.name)) {
+        return (
+            <ChartContainer>
+                <PlaceholderFlagMetricsChart
+                    label={`The current flag name ('${props.flag.name}') is known to cause issues due how it affects URLs. We cannot show you a chart for it.`}
+                />
+            </ChartContainer>
+        );
+    }
+
+    return <FlagMetricsChartInner {...props} />;
 };
 
 ChartJS.register(

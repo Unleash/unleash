@@ -300,10 +300,7 @@ test('project status includes stale flags', async () => {
                 .where({ name });
         }
         if (archived) {
-            await db
-                .rawDatabase('features')
-                .update('archived', true)
-                .where({ name });
+            await app.archiveFeature(name, project, 202);
         }
     }
 

@@ -16,6 +16,8 @@ import { ProjectCreationButton } from './ProjectCreationButton/ProjectCreationBu
 import { useGroupedProjects } from './hooks/useGroupedProjects';
 import { useProjectsSearchAndSort } from './hooks/useProjectsSearchAndSort';
 import { ProjectArchiveLink } from './ProjectArchiveLink/ProjectArchiveLink';
+import { ProjectsListHeader } from './ProjectsListHeader/ProjectsListHeader';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledApiError = styled(ApiError)(({ theme }) => ({
     maxWidth: '500px',
@@ -30,6 +32,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
 
 export const ProjectList = () => {
     const { projects, loading, error, refetch } = useProjects();
+    const { isOss } = useUiConfig();
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -63,7 +66,7 @@ export const ProjectList = () => {
                     actions={
                         <>
                             <ConditionallyRender
-                                condition={!isSmallScreen}
+                                condition={!isOss && !isSmallScreen}
                                 show={
                                     <>
                                         <Search
@@ -88,7 +91,7 @@ export const ProjectList = () => {
                     }
                 >
                     <ConditionallyRender
-                        condition={isSmallScreen}
+                        condition={!isOss() && isSmallScreen}
                         show={
                             <Search
                                 initialValue={state.query || ''}
@@ -110,29 +113,42 @@ export const ProjectList = () => {
                     )}
                 />
                 <SearchHighlightProvider value={state.query || ''}>
-                    <ProjectGroup
-                        sectionTitle='My projects'
-                        sectionSubtitle='Favorite projects, projects you own, and projects you are a member of'
-                        HeaderActions={
-                            <ProjectsListSort
-                                sortBy={state.sortBy}
-                                setSortBy={(sortBy) =>
-                                    setState({
-                                        sortBy: sortBy as typeof state.sortBy,
-                                    })
-                                }
+                    <div>
+                        <ProjectsListHeader
+                            subtitle='Favorite projects, projects you own, and projects you are a member of'
+                            actions={
+                                <ProjectsListSort
+                                    sortBy={state.sortBy}
+                                    setSortBy={(sortBy) =>
+                                        setState({
+                                            sortBy: sortBy as typeof state.sortBy,
+                                        })
+                                    }
+                                />
+                            }
+                        >
+                            My projects
+                        </ProjectsListHeader>
+                        <ProjectGroup
+                            loading={loading}
+                            projects={
+                                isOss()
+                                    ? sortedProjects
+                                    : groupedProjects.myProjects
+                            }
+                        />
+                    </div>
+                    {!isOss() ? (
+                        <div>
+                            <ProjectsListHeader subtitle='Projects in Unleash that you have access to.'>
+                                Other projects
+                            </ProjectsListHeader>
+                            <ProjectGroup
+                                loading={loading}
+                                projects={groupedProjects.otherProjects}
                             />
-                        }
-                        loading={loading}
-                        projects={groupedProjects.myProjects}
-                    />
-
-                    <ProjectGroup
-                        sectionTitle='Other projects'
-                        sectionSubtitle='Projects in Unleash that you have access to.'
-                        loading={loading}
-                        projects={groupedProjects.otherProjects}
-                    />
+                        </div>
+                    ) : null}
                 </SearchHighlightProvider>
             </StyledContainer>
         </PageContent>

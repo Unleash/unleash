@@ -538,6 +538,21 @@ const sidebars: SidebarsConfig = {
                 },
                 'generated/unleash-proxy',
                 {
+                    type: 'category',
+                    label: 'Compliance',
+                    link: {
+                        type: 'doc',
+                        id: 'using-unleash/compliance/compliance-overview',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'FedRAMP',
+                            id: 'using-unleash/compliance/fedramp',
+                        },
+                    ],
+                },
+                {
                     label: 'Troubleshooting',
                     type: 'category',
                     link: {

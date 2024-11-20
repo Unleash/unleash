@@ -265,28 +265,53 @@ test('project status includes stale flags', async () => {
         {} as IAuditUser,
     );
 
-    await app.createFeature({ name: 'stale-flag', stale: true });
-    await app.createFeature({
-        name: 'potentially-stale-flag',
-        potentiallyStale: true,
-    });
-    await app.createFeature({
-        name: 'potentially-stale-and-stale-flag',
-        potentially_stale: true,
-        stale: true,
-    });
-    await app.createFeature({ name: 'non-stale-flag' });
-    await app.createFeature({
-        name: 'archived-stale-flag',
-        archived: true,
-        stale: true,
-    });
-    await app.createFeature(
-        { name: 'stale-other-project', stale: true },
-        otherProject.id,
-    );
+    // 3 out of 4 combinations should be counted
+    const staleCombinations = [
+        { stale: false, potentiallyStale: false },
+        { stale: true, potentiallyStale: false },
+        { stale: false, potentiallyStale: true },
+        { stale: true, potentiallyStale: true },
+    ];
 
-    // something is wrong somewhere. fix it
+    // only un-archived flags should be counted
+    const archivedCombinations = [{ archived: false }, { archived: true }];
+
+    // only flags in the default project should be counted
+    const projects = [otherProject.id, 'default'];
+
+    for (const project of projects) {
+        for (const stale of staleCombinations) {
+            for (const archived of archivedCombinations) {
+                const name = `flag-${project}-stale-${stale.stale}-potentially-stale-${stale.potentiallyStale}-archived-${archived.archived}`;
+                await app.createFeature(
+                    {
+                        name,
+                        stale: stale.stale,
+                    },
+                    project,
+                );
+                if (stale.potentiallyStale) {
+                    await db
+                        .rawDatabase('features')
+                        .update('potentially_stale', true)
+                        .where({ name });
+                }
+                if (archived.archived) {
+                    await app.services.featureToggleService.archiveToggle(
+                        name,
+                        {} as IUser,
+                        {} as IAuditUser,
+                        project,
+                    );
+                    await db
+                        .rawDatabase('features')
+                        .update('archived', true)
+                        .where({ name });
+                }
+            }
+        }
+    }
+
     const { body } = await app.request
         .get('/api/admin/projects/default/status')
         .expect('Content-Type', /json/)

@@ -6,7 +6,7 @@ export class ProjectStaleFlagsReadModel implements IProjectStaleFlagsReadModel {
 
     async getStaleFlagCountForProject(projectId: string): Promise<number> {
         const result = await this.db('features')
-            .count()
+            .countDistinct('name')
             .where({ project: projectId, archived: false })
             .where((builder) =>
                 builder

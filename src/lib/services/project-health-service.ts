@@ -22,7 +22,7 @@ export default class ProjectHealthService {
 
     private projectService: ProjectService;
 
-    calculateHealthRating: ({ id }: Pick<IProject, 'id'>) => Promise<number>;
+    calculateHealthRating: (project: IProject) => Promise<number>;
 
     constructor(
         {

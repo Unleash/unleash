@@ -1,12 +1,11 @@
 import useSWR, { type SWRConfiguration } from 'swr';
 import { useCallback } from 'react';
-import { emptyFeature } from './emptyFeature';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { formatApiPath } from 'utils/formatPath';
-import type { IFeatureToggle } from 'interfaces/featureToggle';
+import type { FeatureSchema } from 'openapi';
 
 export interface IUseFeatureOutput {
-    feature: IFeatureToggle;
+    feature: FeatureSchema;
     refetchFeature: () => void;
     loading: boolean;
     status?: number;
@@ -15,7 +14,7 @@ export interface IUseFeatureOutput {
 
 export interface IFeatureResponse {
     status: number;
-    body?: IFeatureToggle;
+    body?: FeatureSchema;
 }
 
 export const useFeature = (
@@ -36,7 +35,7 @@ export const useFeature = (
     }, [mutate]);
 
     return {
-        feature: data?.body || emptyFeature,
+        feature: data?.body || { name: '' },
         refetchFeature,
         loading: !error && !data,
         status: data?.status,

@@ -25,6 +25,7 @@ export interface INavigationMenuItem {
     notFlag?: keyof UiFlags;
     configFlag?: keyof IUiConfig;
     group?: string;
+    enterprise?: boolean;
 }
 
 interface IRouteMenu {

@@ -29,8 +29,6 @@ export const useRoleForm = (
     const [name, setName] = useState(initialName);
     const setTrimmedName = (newName: string) => setName(newName.trim());
     const [description, setDescription] = useState(initialDescription);
-    const setTrimmedDescription = (newDescription: string) =>
-        setDescription(newDescription.trim());
     const [checkedPermissions, setCheckedPermissions] =
         useState<ICheckedPermissions>({});
     const [errors, setErrors] = useState<IRoleFormErrors>(DEFAULT_ERRORS);
@@ -147,7 +145,7 @@ export const useRoleForm = (
         setName: setTrimmedName,
         validateName,
         description,
-        setDescription: setTrimmedDescription,
+        setDescription,
         validateDescription,
         checkedPermissions,
         setCheckedPermissions,

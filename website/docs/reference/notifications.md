@@ -2,9 +2,9 @@
 title: Notifications
 ---
 
-:::info Availability
+:::note Availability
 
-Notifications were introduced in Unleash 4.22.0 for pro and enteprise customers.
+**Plan**: [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.22+`
 
 :::
 

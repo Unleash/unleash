@@ -26,7 +26,7 @@ import { relative } from 'themes/themeStyles';
 
 interface ICreateProps {
     title?: ReactNode;
-    description: string;
+    description: ReactNode;
     documentationLink?: string;
     documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
@@ -210,7 +210,7 @@ const StyledDescriptionCard = styled('article')(({ theme }) => ({
     marginBlockEnd: theme.spacing(3),
 }));
 
-const StyledDescription = styled('p')(({ theme }) => ({
+const StyledDescription = styled('div')(() => ({
     width: '100%',
 }));
 
@@ -370,7 +370,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
 };
 
 interface IMobileGuidance {
-    description: string;
+    description: ReactNode;
     documentationLink?: string;
     documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
@@ -410,7 +410,7 @@ const MobileGuidance = ({
 };
 
 interface IGuidanceProps {
-    description: string;
+    description: ReactNode;
     documentationIcon?: ReactNode;
     documentationLink?: string;
     documentationLinkLabel?: string;

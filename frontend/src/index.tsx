@@ -21,6 +21,7 @@ import { PlausibleProvider } from 'component/providers/PlausibleProvider/Plausib
 import { Error as LayoutError } from './component/layout/Error/Error';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRecordUiErrorApi';
+import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 
 window.global ||= window;
 
@@ -48,23 +49,25 @@ const ApplicationRoot = () => {
                     <QueryParamProvider adapter={ReactRouter6Adapter}>
                         <ThemeProvider>
                             <AnnouncerProvider>
-                                <ErrorBoundary
-                                    FallbackComponent={LayoutError}
-                                    onError={sendErrorToApi}
-                                >
-                                    <PlausibleProvider>
+                                <PlausibleProvider>
+                                    <ErrorBoundary
+                                        FallbackComponent={LayoutError}
+                                        onError={sendErrorToApi}
+                                    >
                                         <FeedbackProvider>
                                             <FeedbackCESProvider>
                                                 <StickyProvider>
-                                                    <InstanceStatus>
-                                                        <ScrollTop />
-                                                        <App />
-                                                    </InstanceStatus>
+                                                    <HighlightProvider>
+                                                        <InstanceStatus>
+                                                            <ScrollTop />
+                                                            <App />
+                                                        </InstanceStatus>
+                                                    </HighlightProvider>
                                                 </StickyProvider>
                                             </FeedbackCESProvider>
                                         </FeedbackProvider>
-                                    </PlausibleProvider>
-                                </ErrorBoundary>
+                                    </ErrorBoundary>
+                                </PlausibleProvider>
                             </AnnouncerProvider>
                         </ThemeProvider>
                     </QueryParamProvider>

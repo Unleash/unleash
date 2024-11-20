@@ -17,23 +17,67 @@ export const personalDashboardProjectDetailsSchema = {
     properties: {
         insights: {
             type: 'object',
-            description: 'Insights for the project',
+            description:
+                'Insights for the project, including flag data and project health information.',
             additionalProperties: false,
-            required: ['avgHealthCurrentWindow', 'avgHealthPastWindow'],
+            required: [
+                'avgHealthCurrentWindow',
+                'avgHealthPastWindow',
+                'totalFlags',
+                'activeFlags',
+                'staleFlags',
+                'potentiallyStaleFlags',
+                'health',
+            ],
             properties: {
                 avgHealthCurrentWindow: {
-                    type: 'number',
+                    type: 'integer',
+                    minimum: 0,
                     description:
-                        'The average health score in the current window of the last 4 weeks',
+                        "The project's average health score over the last 4 weeks",
                     example: 80,
                     nullable: true,
                 },
                 avgHealthPastWindow: {
-                    type: 'number',
+                    type: 'integer',
+                    minimum: 0,
                     description:
-                        'The average health score in the previous 4 weeks before the current window',
+                        "The project's average health score over the previous 4-week window",
                     example: 70,
                     nullable: true,
+                },
+                totalFlags: {
+                    type: 'integer',
+                    minimum: 0,
+                    example: 100,
+                    description: 'The current number of non-archived flags',
+                },
+                activeFlags: {
+                    type: 'integer',
+                    minimum: 0,
+                    example: 98,
+                    description:
+                        'The number of active flags that are not stale or potentially stale',
+                },
+                staleFlags: {
+                    type: 'integer',
+                    minimum: 0,
+                    example: 0,
+                    description:
+                        'The current number of flags that have been manually marked as stale',
+                },
+                potentiallyStaleFlags: {
+                    type: 'integer',
+                    minimum: 0,
+                    example: 2,
+                    description:
+                        'The number of potentially stale flags as calculated by Unleash',
+                },
+                health: {
+                    type: 'integer',
+                    minimum: 0,
+                    description: "The project's current health score",
+                    example: 80,
                 },
             },
         },
@@ -45,7 +89,13 @@ export const personalDashboardProjectDetailsSchema = {
                 type: 'object',
                 description: 'An event summary',
                 additionalProperties: false,
-                required: ['summary', 'createdBy', 'createdByImageUrl', 'id'],
+                required: [
+                    'summary',
+                    'createdBy',
+                    'createdByImageUrl',
+                    'id',
+                    'createdAt',
+                ],
                 properties: {
                     id: {
                         type: 'integer',
@@ -68,6 +118,12 @@ export const personalDashboardProjectDetailsSchema = {
                         description: `URL used for the user profile image of the event author`,
                         example: 'https://example.com/242x200.png',
                     },
+                    createdAt: {
+                        type: 'string',
+                        format: 'date-time',
+                        description: 'When the event was recorded',
+                        example: '2021-09-01T12:00:00Z',
+                    },
                 },
             },
         },
@@ -75,7 +131,6 @@ export const personalDashboardProjectDetailsSchema = {
         roles: {
             type: 'array',
             description: 'The list of roles that the user has in this project.',
-            minItems: 1,
             items: {
                 type: 'object',
                 description: 'An Unleash role.',
@@ -94,7 +149,7 @@ export const personalDashboardProjectDetailsSchema = {
                     },
                     type: {
                         type: 'string',
-                        enum: ['custom', 'project', 'root', 'custom-root'],
+                        enum: ['custom', 'project'],
                         example: 'project',
                         description: 'The type of the role',
                     },

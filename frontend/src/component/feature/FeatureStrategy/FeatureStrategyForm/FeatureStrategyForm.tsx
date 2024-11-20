@@ -46,6 +46,7 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
 import { Badge } from 'component/common/Badge/Badge';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
+import { UpgradeChangeRequests } from '../../FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/UpgradeChangeRequests';
 
 interface IFeatureStrategyFormProps {
     feature: IFeatureToggle;
@@ -171,11 +172,11 @@ const EnvironmentIconBox = styled(Box)(({ theme }) => ({
     alignItems: 'center',
 }));
 
-const EnvironmentTypography = styled(Typography)<{ enabled: boolean }>(
-    ({ theme, enabled }) => ({
-        fontWeight: enabled ? 'bold' : 'normal',
-    }),
-);
+const EnvironmentTypography = styled(Typography, {
+    shouldForwardProp: (prop) => prop !== 'enabled',
+})<{ enabled: boolean }>(({ enabled }) => ({
+    fontWeight: enabled ? 'bold' : 'normal',
+}));
 
 const EnvironmentTypographyHeader = styled(Typography)(({ theme }) => ({
     marginRight: theme.spacing(0.5),
@@ -227,7 +228,7 @@ export const FeatureStrategyForm = ({
                 eventType: 'seen',
             },
         });
-    });
+    }, []);
 
     const stickiness =
         strategy?.parameters && 'stickiness' in strategy?.parameters
@@ -261,6 +262,10 @@ export const FeatureStrategyForm = ({
     const changeRequestButtonText = hasChangeRequestInReviewForEnvironment
         ? 'Add to existing change request'
         : 'Add change to draft';
+
+    const { isOss } = useUiConfig();
+    const showChangeRequestUpgrade =
+        foundEnvironment?.type === 'production' && isOss();
 
     const navigate = useNavigate();
 
@@ -537,6 +542,8 @@ export const FeatureStrategyForm = ({
                 <Box sx={{ flex: 1, display: 'flex', alignItems: 'flex-end' }}>
                     {Limit}
                 </Box>
+
+                {showChangeRequestUpgrade ? <UpgradeChangeRequests /> : null}
 
                 <StyledButtons>
                     <PermissionButton

@@ -1,5 +1,4 @@
 import { type FC, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import type { ILastSeenEnvironments } from 'interfaces/featureToggle';
 import { Box } from '@mui/material';
@@ -13,8 +12,8 @@ export const FlagExposure: FC<{
     project: string;
     flagName: string;
     onArchive: () => void;
-}> = ({ project, flagName, onArchive }) => {
-    const navigate = useNavigate();
+    className?: string;
+}> = ({ project, flagName, onArchive, className }) => {
     const { feature, refetchFeature } = useFeature(project, flagName);
     const lastSeenEnvironments: ILastSeenEnvironments[] =
         feature.environments?.map((env) => ({
@@ -29,8 +28,9 @@ export const FlagExposure: FC<{
         useState(false);
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex' }} className={className}>
             <FeatureEnvironmentSeen
+                sx={{ pt: 0, pb: 0 }}
                 featureLastSeen={feature.lastSeenAt}
                 environments={lastSeenEnvironments}
             />

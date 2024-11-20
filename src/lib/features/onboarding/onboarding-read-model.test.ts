@@ -7,21 +7,43 @@ import {
     SYSTEM_USER,
 } from '../../types';
 import type { IOnboardingReadModel } from './onboarding-read-model-type';
+import type ClientInstanceService from '../metrics/instance/instance-service';
+import {
+    type IUnleashTest,
+    setupAppWithCustomConfig,
+} from '../../../test/e2e/helpers/test-helper';
+import { ApiTokenType } from '../../types/models/api-token';
 
 let db: ITestDb;
 let onboardingReadModel: IOnboardingReadModel;
 let onBoardingStore: IOnboardingStore;
 let featureToggleStore: IFeatureToggleStore;
 let lastSeenStore: ILastSeenStore;
+let instanceService: ClientInstanceService;
+let app: IUnleashTest;
 
 beforeAll(async () => {
     db = await dbInit('onboarding_read_model', getLogger, {
-        experimental: { flags: { onboardingMetrics: true } },
+        experimental: { flags: {} },
     });
+
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
+            },
+        },
+        db.rawDatabase,
+    );
+
     onboardingReadModel = db.stores.onboardingReadModel;
     onBoardingStore = db.stores.onboardingStore;
     featureToggleStore = db.stores.featureToggleStore;
     lastSeenStore = db.stores.lastSeenStore;
+    instanceService = app.services.clientInstanceService;
 });
 
 afterAll(async () => {
@@ -30,7 +52,9 @@ afterAll(async () => {
     }
 });
 
-beforeEach(async () => {});
+beforeEach(async () => {
+    await featureToggleStore.deleteAll();
+});
 
 test('can get instance onboarding durations', async () => {
     const initialResult =
@@ -145,6 +169,64 @@ test('can get project onboarding status', async () => {
             featureName: 'my-flag',
         },
     ]);
+
+    const onboardedResult =
+        await onboardingReadModel.getOnboardingStatusForProject('default');
+
+    expect(onboardedResult).toMatchObject({
+        status: 'onboarded',
+    });
+});
+
+test('archived feature counts as onboarded', async () => {
+    await featureToggleStore.create('default', {
+        name: 'my-flag',
+        createdByUserId: SYSTEM_USER.id,
+    });
+
+    await lastSeenStore.setLastSeen([
+        {
+            environment: 'default',
+            featureName: 'my-flag',
+        },
+    ]);
+
+    await featureToggleStore.archive('my-flag');
+
+    const onboardedResult =
+        await onboardingReadModel.getOnboardingStatusForProject('default');
+
+    expect(onboardedResult).toMatchObject({
+        status: 'onboarded',
+    });
+});
+
+test('sdk register also onboards a project', async () => {
+    await featureToggleStore.create('default', {
+        name: 'my-flag',
+        createdByUserId: SYSTEM_USER.id,
+    });
+
+    const defaultProjectToken =
+        await app.services.apiTokenService.createApiTokenWithProjects({
+            type: ApiTokenType.CLIENT,
+            projects: ['default'],
+            environment: 'default',
+            tokenName: 'tester',
+        });
+
+    await app.request
+        .post('/api/client/register')
+        .set('Authorization', defaultProjectToken.secret)
+        .send({
+            appName: 'multi-project-app',
+            instanceId: 'instance-1',
+            strategies: ['default'],
+            started: Date.now(),
+            interval: 10,
+        });
+
+    await instanceService.bulkAdd();
 
     const onboardedResult =
         await onboardingReadModel.getOnboardingStatusForProject('default');

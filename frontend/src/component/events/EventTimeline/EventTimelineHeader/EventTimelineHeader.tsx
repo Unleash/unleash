@@ -11,6 +11,9 @@ import { useEffect, useMemo } from 'react';
 import { timeSpanOptions } from '../EventTimelineProvider';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEventTimelineContext } from '../EventTimelineContext';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { EventTimelineHeaderTip } from './EventTimelineHeaderTip';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const StyledCol = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -31,6 +34,8 @@ const StyledFilter = styled(TextField)(({ theme }) => ({
 }));
 
 const StyledTimelineEventsCount = styled('span')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
     marginTop: theme.spacing(0.25),
 }));
 
@@ -49,6 +54,7 @@ export const EventTimelineHeader = ({
         () => environments.filter(({ enabled }) => enabled),
         [environments],
     );
+    const { trackEvent } = usePlausibleTracker();
 
     useEffect(() => {
         if (activeEnvironments.length > 0 && !environment) {
@@ -65,6 +71,7 @@ export const EventTimelineHeader = ({
                 <StyledTimelineEventsCount>
                     {totalEvents} event
                     {totalEvents === 1 ? '' : 's'}
+                    <HelpIcon tooltip='These are key events per environment across all your projects. For more details, visit the event log.' />
                 </StyledTimelineEventsCount>
                 <StyledFilter
                     select
@@ -86,9 +93,10 @@ export const EventTimelineHeader = ({
                     ))}
                 </StyledFilter>
             </StyledCol>
+            <EventTimelineHeaderTip />
             <StyledCol>
                 <ConditionallyRender
-                    condition={Boolean(environment)}
+                    condition={Boolean(environment) && environments.length > 0}
                     show={() => (
                         <StyledFilter
                             select
@@ -111,11 +119,18 @@ export const EventTimelineHeader = ({
                         </StyledFilter>
                     )}
                 />
-                <Tooltip title='Hide timeline' arrow>
+                <Tooltip title='Hide event timeline' arrow>
                     <IconButton
                         aria-label='close'
                         size='small'
-                        onClick={() => setOpen(false)}
+                        onClick={() => {
+                            trackEvent('event-timeline', {
+                                props: {
+                                    eventType: 'close',
+                                },
+                            });
+                            setOpen(false);
+                        }}
                     >
                         <CloseIcon />
                     </IconButton>

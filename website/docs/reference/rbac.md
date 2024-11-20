@@ -3,9 +3,11 @@ id: rbac
 title: Role-based Access control
 ---
 
-This document forms the specifications
-for [Role-Based Access Control](https://en.wikipedia.org/wiki/Role-based_access_control) (RBAC) which was introduced as part of
-the **Unleash v4 release**.
+:::note Availability
+
+**Version**: `4.0+`
+
+:::
 
 ## Core principles {#core-principles}
 
@@ -24,13 +26,11 @@ Unleash has two levels in its hierarchy of resources:
 
 ![RBAC overview](/img/rbac.png)
 
-Unleash v4 allows you control access to both root resources and individual project resources.
-
 ## Predefined roles
 
 Unleash comes with a set of built-in predefined roles that you can use. The _root roles_ are available to all Unleash
-users, while the _project-based roles_ are only available to Pro and Enterprise users. The below table lists the roles,
-what they do, and what plans they are available in. Additionally, Enterprise users can create their
+users, while the _project-based roles_ are only available to [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) users. The below table lists the roles,
+what they do, and what plans they are available in. Additionally, [Enterprise](https://www.getunleash.io/pricing) users can create their
 own [custom root roles](#custom-root-roles) and [custom project roles](#custom-project-roles).
 
 When you add a new user, you can assign them one of the root roles listed below.
@@ -40,14 +40,14 @@ When you add a new user, you can assign them one of the root roles listed below.
 | **Admin**  | Root    | Users with the root admin role have superuser access to Unleash and can perform any operation within the Unleash platform.                                                                                                                                                                                                                                          | All versions       |
 | **Editor** | Root    | Users with the root editor role have access to most features in Unleash, but can not manage users and roles in the root scope. Editors will be added as project owners when creating projects and get superuser rights within the context of these projects. Users with the editor role will also get access to most permissions on the default project by default. | All versions       |
 | **Viewer** | Root    | Users with the root viewer role can only read root resources in Unleash. Viewers can be added to specific projects as project members. Users with the viewer role may not view API tokens.                                                                                                                                                                          | All versions       |
-| **Owner**  | Project | Users with the project owner role have full control over the project, and can add and manage other users within the project context, manage feature flags within the project, and control advanced project features like archiving and deleting the project.                                                                                                      | Pro and Enterprise |
-| **Member** | Project | Users with the project member role are allowed to view, create, and update feature flags within a project, but have limited permissions in regards to managing the project's user access and can not archive or delete the project.                                                                                                                               | Pro and Enterprise |
+| **Owner**  | Project | Users with the project owner role have full control over the project, and can add and manage other users within the project context, manage feature flags within the project, and control advanced project features like archiving and deleting the project.                                                                                                      | [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) |
+| **Member** | Project | Users with the project member role are allowed to view, create, and update feature flags within a project, but have limited permissions in regards to managing the project's user access and can not archive or delete the project.                                                                                                                               | [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) |
 
 ## Custom Root Roles
 
-:::info availability
+:::note Availability
 
-Custom root roles were introduced in **Unleash 5.4** and are only available in Unleash Enterprise.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.4+`
 
 :::
 
@@ -138,9 +138,9 @@ You can assign the following root permissions:
 
 ## Custom Project Roles
 
-:::info availability
+:::note Availability
 
-Custom project roles were introduced in **Unleash 4.6** and are only available in Unleash Enterprise.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.6+`
 
 :::
 
@@ -148,7 +148,7 @@ Custom project roles let you define your own project roles with a specific set o
 environment level. The roles can then be assigned to users in specific projects. All users have viewer access to all
 projects and resources, but must be assigned a project role to be allowed to edit a project's resources. For a
 step-by-step walkthrough of how to create and assign custom project roles, see [_how to create and assign custom project
-roles_](../how-to/how-to-create-and-assign-custom-project-roles.md).
+roles_](../how-to/how-to-create-and-assign-custom-project-roles).
 
 Each custom project role consists of:
 
@@ -190,15 +190,15 @@ You can assign the following permissions on a per-environment level within the p
 | **delete activation strategies** | Lets the user delete feature flag activation strategies within the environment.                                                                                                                                                                                                                                                                       |
 | **enable/disable flags**         | Lets the user enable and disable flags within the environment.                                                                                                                                                                                                                                                                                        |
 | **update variants**              | Lets the user create, edit and remove variants within the environment.                                                                                                                                                                                                                                                                                |
-| **approve a change request**     | Lets the user approve [change requests](change-requests.md) in the environment.                                                                                                                                                                                                                                                                       |
+| **approve a change request**     | Lets the user approve [change requests](./change-requests) in the environment.                                                                                                                                                                                                                                                                       |
 | **apply a change request**       | Lets the user apply change requests in the environment.                                                                                                                                                                                                                                                                                               |
-| **skip change requests**         | Lets the user ignore change request requirements. This applies **only when using the API** directly; when using the admin UI, users with this permission will still need to go through the normal change request flow. You can find more details in the section on [circumventing change requests](change-requests.md#circumventing-change-requests). |
+| **skip change requests**         | Lets the user ignore change request requirements. This applies **only when using the API** directly; when using the admin UI, users with this permission will still need to go through the normal change request flow. You can find more details in the section on [circumventing change requests](./change-requests#circumventing-change-requests). |
 
 ## Multiple Project Roles
 
-:::info availability
+:::note Availability
 
-Multiple project roles is an enterprise feature available from **Unleash 5.6** onwards.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.6+`
 
 :::
 
@@ -214,10 +214,9 @@ role that encapsulates the needed permissions.
 
 ## User Groups
 
-:::info availability
+:::note Availability
 
-User groups are available to Unleash Enterprise users since **Unleash 4.14**. Root role groups are planned to be
-released in **Unleash 5.1**.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.14+`
 
 :::
 
@@ -231,7 +230,7 @@ A user group consists of the following:
 - a **description** (optional)
 - a **list of users** (required)
 - a list of SSO groups to sync from (optional)
-- a root role associated with the group (optional) (only available in **Unleash 5.1** and later)
+- a root role associated with the group (optional; available in v5.1+)
 
 Groups do nothing on their own. They must either be given a root role directly or a role on a project to assign
 permissions.
@@ -247,9 +246,9 @@ user will inherit most permissive permissions of all their groups in that projec
 
 ## User Group SSO Integration
 
-:::info availability
+:::note Availability
 
-User group syncing is planned to be released in Unleash 4.18 and will be available for Enterprise customers.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.18+`
 
 :::
 

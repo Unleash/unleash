@@ -39,6 +39,7 @@ import {
 } from './types/models/api-token';
 import {
     parseEnvVarBoolean,
+    parseEnvVarJSON,
     parseEnvVarNumber,
     parseEnvVarStrings,
 } from './util/parseEnvVar';
@@ -258,7 +259,10 @@ const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =
             propagateCreateError: false,
         },
         schema: process.env.DATABASE_SCHEMA || 'public',
-        disableMigration: false,
+        disableMigration: parseEnvVarBoolean(
+            process.env.DATABASE_DISABLE_MIGRATION,
+            false,
+        ),
         applicationName: process.env.DATABASE_APPLICATION_NAME || 'unleash',
     };
 
@@ -348,6 +352,7 @@ const defaultEmail: IEmailOption = {
     sender: process.env.EMAIL_SENDER || 'Unleash <noreply@getunleash.io>',
     smtpuser: process.env.EMAIL_USER,
     smtppass: process.env.EMAIL_PASSWORD,
+    optionalHeaders: parseEnvVarJSON(process.env.EMAIL_OPTIONAL_HEADERS, {}),
 };
 
 const dbPort = (dbConfig: Partial<IDBOption>): Partial<IDBOption> => {
@@ -711,6 +716,16 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ),
     };
 
+    const openAIAPIKey = process.env.OPENAI_API_KEY;
+
+    const defaultDaysToBeConsideredInactive = 180;
+    const userInactivityThresholdInDays =
+        options.userInactivityThresholdInDays ??
+        parseEnvVarNumber(
+            process.env.USER_INACTIVITY_THRESHOLD_IN_DAYS,
+            defaultDaysToBeConsideredInactive,
+        );
+
     return {
         db,
         session,
@@ -749,6 +764,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         rateLimiting,
         feedbackUriPath,
         dailyMetricsStorageDays,
+        openAIAPIKey,
+        userInactivityThresholdInDays,
     };
 }
 

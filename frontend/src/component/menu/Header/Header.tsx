@@ -33,8 +33,7 @@ import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
-import LinearScaleIcon from '@mui/icons-material/LinearScale';
-import { useEventTimelineContext } from 'component/events/EventTimeline/EventTimelineContext';
+import { HeaderEventTimelineButton } from './HeaderEventTimelineButton';
 
 const HeaderComponent = styled(AppBar)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -108,9 +107,6 @@ const Header = () => {
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
-    const eventTimeline = useUiFlag('eventTimeline') && !isOss();
-    const { open: showTimeline, setOpen: setShowTimeline } =
-        useEventTimelineContext();
 
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
@@ -185,28 +181,7 @@ const Header = () => {
                 <StyledNav>
                     <StyledUserContainer>
                         <CommandBar />
-                        <ConditionallyRender
-                            condition={eventTimeline}
-                            show={
-                                <Tooltip
-                                    title={
-                                        showTimeline
-                                            ? 'Hide timeline'
-                                            : 'Show timeline'
-                                    }
-                                    arrow
-                                >
-                                    <StyledIconButton
-                                        onClick={() =>
-                                            setShowTimeline(!showTimeline)
-                                        }
-                                        size='large'
-                                    >
-                                        <LinearScaleIcon />
-                                    </StyledIconButton>
-                                </Tooltip>
-                            }
-                        />
+                        <HeaderEventTimelineButton />
                         <InviteLinkButton />
                         <Tooltip
                             title={

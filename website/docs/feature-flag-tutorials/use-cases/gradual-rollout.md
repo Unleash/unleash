@@ -15,7 +15,7 @@ The key benefits of gradual rollouts are that you can experiment rapidly on a co
 
 ## How to Perform a Gradual Rollout with Unleash
 
-To follow along with this tutorial, you will need an Unleash instance. Follow our documentation on [Self-Hosting with Unleash](/using-unleash/deploy/getting-started) to get started using your infrastructure. Alternatively, read our [Quickstart documentation](/quickstart) if you’d like your project to be hosted by Unleash.
+To follow along with this tutorial, you will need an Unleash instance. If you’d prefer to self-host Unleash, read our [Quickstart guide](/quickstart). Alternatively, if you’d like your project to be hosted by Unleash, go to [getunleash.io](https://www.getunleash.io/pricing).
 
 With Unleash set up, you can use your application to talk to Unleash through one of our SDKs.
 
@@ -164,9 +164,9 @@ Fortunately, this is straightforward in Unleash Enterprise.
 
 Unleash provides the data to log any change that has happened over time, at the flag level from a global level. In conjunction with Unleash, tools like Splunk can help you combine logs and run advanced queries against them. Logs are useful for downstream data warehouses or data lakes.
 
-![The event log for a feature flag. The "Event log" tab is highlighted and the UI shows the most recent changes, including a JSON diff and the change details.](/img/unleash-toggle-history.png)
+![Events for a feature flag. The Event log tab is highlighted and the UI shows the most recent changes, including a JSON diff and the change details.](/img/unleash-toggle-history.png)
 
-Learn more about [event logs](/reference/event-log/) in our documentation.
+Learn more about [Event Log](/reference/events#event-log/) in our documentation.
 
 ### Managing Change Requests
 

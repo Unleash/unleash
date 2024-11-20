@@ -11,7 +11,7 @@ This article is a contribution by **[Ayush Bherwani](https://www.linkedin.com/in
 
 After successfully integrating the first feature flag in the Unsplash sample app, let’s talk about how you can use Unleash to perform experimentation, also known as A/B testing, in Flutter to ship features more confidently.
 
-For this article, we’ll integrate feature flags for A/B testing to experiment with “like image” feature user experience. As an overview, the app is quite simple, with two screens displaying images and image details respectively. The behavior of the “image details” feature is controlled through an Unleash instance. You can check out the previous article, “[How to set up feature flags in Flutter](https://www.getunleash.io/blog/from-the-community-how-to-set-up-feature-flags-in-flutter)” for an overview of the code structure and implementation. For those who want to skip straight to the code, you can find it on [GitHub](https://github.com/AyushBherwani1998/unsplash_sample/).
+For this article, we’ll integrate feature flags for A/B testing to experiment with “like image” feature user experience. As an overview, the app is quite simple, with two screens displaying images and image details respectively. The behavior of the “image details” feature is controlled through an Unleash instance. For those who want to skip straight to the code, you can find it on [GitHub](https://github.com/AyushBherwani1998/unsplash_sample/).
 
 Here’s a screenshot of the application:
 ![Unsplash App built on Flutter](/img/unsplash-demo-flutter.png)
@@ -22,7 +22,7 @@ In your Unleash instance, create a new feature flag called `likeOptionExperiment
 
 ![Set Up Variant in Unleash](/img/variant-setup-1.png)
 
-Now that you have created your feature flag, let’s create two new [variants](https://docs.getunleash.io/reference/feature-toggle-variants) “gridTile'' and “imageDetails” respectively. These variants will help you position your “like image” button.
+Now that you have created your feature flag, let’s create two new [variants](https://docs.getunleash.io/reference/feature-toggle-variants) `gridTile` and `imageDetails` respectively. These variants will help you position your **like image** button.
 
 ![Succesfully setting up variant in Unleash](/img/setup-variant-2.png)
 
@@ -34,7 +34,7 @@ Below is a screenshot of experimentation in action based on the `likeOptionExper
 
 For analytics and metrics, we’ll use [Mixpanel](https://mixpanel.com/) to track user behavior and usage patterns. We have chosen Mixpanel because it offers a user-friendly setup and in-depth user analytics and segmentation. Given that the project follows clean architecture and Test-Driven Development (TDD) principles, you’ll want to create an abstract layer to interact with the Mixpanel.
 
-Whenever a user opens the app, we track `like-variant` if `likeOptionExperiment` is enabled to tag them with their assigned variant (gridTile or imageDetails). The stored variant in Mixpanel can be used later to analyze how each variant impacts user behavior to like an image.
+Whenever a user opens the app, we track `like-variant` if `likeOptionExperiment` is enabled to tag them with their assigned variant (`gridTile` or `imageDetails`). The stored variant in Mixpanel can be used later to analyze how each variant impacts user behavior to like an image.
 
 Whenever a user interacts with the `LikeButton`, we track `trackLikeEventForExperimentation`, along with their assigned variants. By correlating the `trackLikeEventForExperimentation` with the `like-variant`, you can effectively measure the impact of a variant on user behavior and make data-driven decisions. To learn how to correlate and generate reports, see the [Mixpanel docs](https://docs.mixpanel.com/docs/analysis/reports).
 

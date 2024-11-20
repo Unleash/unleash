@@ -99,19 +99,22 @@ export const personalDashboardSchema = {
                         description: 'The name of the project',
                     },
                     health: {
-                        type: 'number',
+                        type: 'integer',
                         example: 50,
+                        minimum: 0,
                         description:
                             "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100",
                     },
                     memberCount: {
-                        type: 'number',
+                        type: 'integer',
                         example: 4,
+                        minimum: 0,
                         description: 'The number of members this project has',
                     },
                     featureCount: {
-                        type: 'number',
+                        type: 'integer',
                         example: 10,
+                        minimum: 0,
                         description: 'The number of features this project has',
                     },
                 },

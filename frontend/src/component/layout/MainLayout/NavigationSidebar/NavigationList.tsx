@@ -24,7 +24,6 @@ import FlagIcon from '@mui/icons-material/OutlinedFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledBadgeContainer = styled('div')(({ theme }) => ({
     paddingLeft: theme.spacing(2),
@@ -157,21 +156,18 @@ export const PrimaryNavigationList: FC<{
     activeItem?: string;
 }> = ({ mode, onClick, activeItem }) => {
     const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
-    const personalDashboardUIEnabled = useUiFlag('personalDashboardUI');
     const { isOss } = useUiConfig();
 
     return (
         <List>
-            {personalDashboardUIEnabled ? (
-                <DynamicListItem
-                    href='/personal'
-                    text='Personal Dashboard'
-                    onClick={() => onClick('/personal')}
-                    selected={activeItem === '/personal'}
-                >
-                    <PersonalDashboardIcon />
-                </DynamicListItem>
-            ) : null}
+            <DynamicListItem
+                href='/personal'
+                text='Dashboard'
+                onClick={() => onClick('/personal')}
+                selected={activeItem === '/personal'}
+            >
+                <PersonalDashboardIcon />
+            </DynamicListItem>
 
             <DynamicListItem
                 href='/projects'

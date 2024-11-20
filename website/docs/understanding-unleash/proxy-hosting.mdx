@@ -23,7 +23,7 @@ In general, we recommend you use Edge over the [Frontend API](https://docs.getun
 
 If you want Unleash to host the Frontend API for you, you should be aware of the following limitations:
 
--   This is only available to Pro and Enterprise customers who have signed up for a managed Unleash instance.
+-   This is only available to [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) customers who have signed up for a managed Unleash instance.
 -   We allow short spikes in traffic and our adaptive infrastructure will automatically scale to your needs.
 -   Please check the [Fair Use Policy](https://www.getunleash.io/fair-use-policy) to see the limits of the Unleash-hosted Frontend API.
 -   There's no guarantee that it'll be geographically close to your end users, this means your end users might be getting slower response times on feature flag evaluations.
@@ -43,14 +43,14 @@ Hosting Edge requires a little more setup than the Unleash-hosted Frontend API d
 
 ## Unleash hosts everything
 
-:::info Availability
+:::note Availability
 
-This setup is only available to Pro and Enterprise customers.
+**Plan**: [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing).
 
 :::
 
 
-Unleash no longer hosts instances of the proxy, but makes the [Frontend API](../reference/front-end-api) available to all Pro and Enterprise customers. The API is backed by an Amazon RDS database. Your applications can connect to the frontend API from your own cloud or from other hosting solutions.
+Unleash no longer hosts instances of the proxy, but makes the [Frontend API](../reference/front-end-api) available to all [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) customers. The API is backed by an Amazon RDS database. Your applications can connect to the frontend API from your own cloud or from other hosting solutions.
 
 In order to access the frontend API you'll need:
 - A [Frontend API key](../reference/api-tokens-and-client-keys#front-end-tokens) for the environment you'd like to use.
@@ -64,11 +64,12 @@ While this is easy to get started with, it comes with the limitations described 
 
 ## Unleash hosts the API, you host Edge
 
-:::info Availability
+:::note Availability
 
-This setup is only available to Pro and Enterprise customers.
+**Plan**: [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing).
 
 :::
+
 
 ![An architecture diagram of using Edge in a setup where Unleash hosts the API and you host the proxy.](/img/proxy-hosting-unleash-api-customer-proxy-edge.svg)
 
@@ -117,11 +118,12 @@ The following can be used to pass new tokens to Edge for different project/envir
 
 ## You host everything
 
-:::info Availability
+:::note Availability
 
-This setup is only available open-source and Enterprise customers.
+**Plan**: [Open Source](https://www.getunleash.io/pricing) and [Enterprise](https://www.getunleash.io/pricing).
 
 :::
+
 
 ![An architecture diagram of using the proxy in a single-region, self-hosted setup.](/img/proxy-hosting-customer-single-edge.svg)
 
@@ -151,11 +153,12 @@ If you are an existing Proxy user, see our [Edge migration guide](https://github
 Please take note of the section covering features Edge does not currently support in the same linked document before planning a migration.
 :::
 
-:::info Availability
+:::note Availability
 
-This setup is only available to Pro and Enterprise customers.
+**Plan**: [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing).
 
 :::
+
 
 ![An architecture diagram of using the proxy in a setup where Unleash hosts the API and you host the proxy.](/img/proxy-hosting-unleash-api-customer-proxy.svg)
 

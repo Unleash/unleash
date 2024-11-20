@@ -40,6 +40,33 @@ const setupApi = () => {
     ]);
 };
 
+test('filters by flag type', async () => {
+    setupApi();
+
+    render(
+        <Routes>
+            <Route
+                path={'/projects/:projectId'}
+                element={
+                    <ProjectFeatureToggles
+                        environments={['development', 'production']}
+                    />
+                }
+            />
+        </Routes>,
+        {
+            route: '/projects/default',
+        },
+    );
+    await screen.findByText('featureA');
+    const [icon] = await screen.findAllByTestId('feature-type-icon');
+
+    fireEvent.click(icon);
+
+    await screen.findByText('Flag type');
+    await screen.findByText('Operational');
+});
+
 test('selects project features', async () => {
     setupApi();
     render(
@@ -82,8 +109,7 @@ test('selects project features', async () => {
     expect(screen.queryByTestId(BATCH_SELECTED_COUNT)).not.toBeInTheDocument();
 });
 
-// TODO: stopped working after react v18 upgrade
-test.skip('filters by tag', async () => {
+test('filters by tag', async () => {
     setupApi();
     render(
         <Routes>
@@ -108,34 +134,7 @@ test.skip('filters by tag', async () => {
     expect(await screen.findAllByText('backend:sdk')).toHaveLength(2);
 });
 
-test('filters by flag type', async () => {
-    setupApi();
-    render(
-        <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={
-                    <ProjectFeatureToggles
-                        environments={['development', 'production']}
-                    />
-                }
-            />
-        </Routes>,
-        {
-            route: '/projects/default',
-        },
-    );
-    await screen.findByText('featureA');
-    const [icon] = await screen.findAllByTestId('feature-type-icon');
-
-    fireEvent.click(icon);
-
-    await screen.findByText('Flag type');
-    await screen.findByText('Operational');
-});
-
-// TODO: stopped working after react v18 upgrade
-test.skip('filters by flag author', async () => {
+test('filters by flag author', async () => {
     setupApi();
     render(
         <Routes>

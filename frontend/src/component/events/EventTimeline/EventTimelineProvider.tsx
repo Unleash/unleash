@@ -10,22 +10,22 @@ type TimeSpanOption = {
     markers: string[];
 };
 
-type EventTimelineState = {
+type EventTimelinePersistentState = {
     open: boolean;
     timeSpan: TimeSpanOption;
     environment?: IEnvironment;
-    signalsAlertSeen?: boolean;
+    signalsSuggestionSeen?: boolean;
 };
 
 type EventTimelineStateSetters = {
     setOpen: (open: boolean) => void;
     setTimeSpan: (timeSpan: TimeSpanOption) => void;
     setEnvironment: (environment: IEnvironment) => void;
-    setSignalsAlertSeen: (seen: boolean) => void;
+    setSignalsSuggestionSeen: (seen: boolean) => void;
 };
 
 export interface IEventTimelineContext
-    extends EventTimelineState,
+    extends EventTimelinePersistentState,
         EventTimelineStateSetters {}
 
 export const timeSpanOptions: TimeSpanOption[] = [
@@ -77,7 +77,7 @@ export const timeSpanOptions: TimeSpanOption[] = [
     },
 ];
 
-const defaultState: EventTimelineState = {
+const defaultState: EventTimelinePersistentState = {
     open: false,
     timeSpan: timeSpanOptions[0],
 };
@@ -89,14 +89,15 @@ interface IEventTimelineProviderProps {
 export const EventTimelineProvider = ({
     children,
 }: IEventTimelineProviderProps) => {
-    const [state, setState] = useLocalStorageState<EventTimelineState>(
-        'event-timeline:v1',
-        defaultState,
-    );
+    const [state, setState] =
+        useLocalStorageState<EventTimelinePersistentState>(
+            'event-timeline:v1',
+            defaultState,
+        );
 
-    const setField = <K extends keyof EventTimelineState>(
+    const setField = <K extends keyof EventTimelinePersistentState>(
         key: K,
-        value: EventTimelineState[K],
+        value: EventTimelinePersistentState[K],
     ) => {
         setState((prevState) => ({ ...prevState, [key]: value }));
     };
@@ -108,8 +109,8 @@ export const EventTimelineProvider = ({
             setField('timeSpan', timeSpan),
         setEnvironment: (environment: IEnvironment) =>
             setField('environment', environment),
-        setSignalsAlertSeen: (seen: boolean) =>
-            setField('signalsAlertSeen', seen),
+        setSignalsSuggestionSeen: (seen: boolean) =>
+            setField('signalsSuggestionSeen', seen),
     };
 
     return (

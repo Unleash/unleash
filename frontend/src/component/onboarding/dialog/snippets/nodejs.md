@@ -10,8 +10,9 @@ const { initialize } = require('unleash-client');
 const unleash = initialize({
   url: '<YOUR_API_URL>',
   appName: 'unleash-onboarding-node',
-  customHeaders: { Authorization: '<YOUR_API_TOKEN>' },
-  metricsInterval: 5000,
+  customHeaders: {
+    Authorization: '<YOUR_API_TOKEN>' // in production use environment variable
+  },
 });
 
 setInterval(() => {
@@ -32,5 +33,5 @@ const unleash = initialize({
 
 ---
 - [SDK repository with documentation](https://github.com/Unleash/unleash-client-node)
-- [Node.js SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/NodeJS)
+- [Node.js SDK example with CodeSandbox](https://github.com/Unleash/unleash-sdk-examples/tree/main/Node.js)
 - [Node.js SDK tutorial](https://dev.to/reeshee/how-to-implement-feature-flags-in-nodejs-using-unleash-3907)

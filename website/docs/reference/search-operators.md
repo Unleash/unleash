@@ -2,9 +2,9 @@
 title: Search with filters/operators
 ---
 
-:::info Availability
+:::note Availability
 
-Search with filters/operators was introduced in **Unleash 5.9**.
+**Version**: `5.9+`
 
 :::
 

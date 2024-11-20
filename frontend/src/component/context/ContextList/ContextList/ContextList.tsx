@@ -199,13 +199,19 @@ const ContextList: VFC = () => {
                     <TableBody {...getTableBodyProps()}>
                         {rows.map((row) => {
                             prepareRow(row);
+                            const { key, ...rowProps } = row.getRowProps();
                             return (
-                                <TableRow hover {...row.getRowProps()}>
-                                    {row.cells.map((cell) => (
-                                        <TableCell {...cell.getCellProps()}>
-                                            {cell.render('Cell')}
-                                        </TableCell>
-                                    ))}
+                                <TableRow hover key={key} {...rowProps}>
+                                    {row.cells.map((cell) => {
+                                        const { key, ...cellProps } =
+                                            cell.getCellProps();
+
+                                        return (
+                                            <TableCell key={key} {...cellProps}>
+                                                {cell.render('Cell')}
+                                            </TableCell>
+                                        );
+                                    })}
                                 </TableRow>
                             );
                         })}

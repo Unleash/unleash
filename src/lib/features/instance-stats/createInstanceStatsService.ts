@@ -42,6 +42,12 @@ import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
 import { FeatureStrategiesReadModel } from '../feature-toggle/feature-strategies-read-model';
 import { FakeFeatureStrategiesReadModel } from '../feature-toggle/fake-feature-strategies-read-model';
+import { TrafficDataUsageStore } from '../traffic-data-usage/traffic-data-usage-store';
+import { FakeTrafficDataUsageStore } from '../traffic-data-usage/fake-traffic-data-usage-store';
+import {
+    createFakeGetLicensedUsers,
+    createGetLicensedUsers,
+} from './getLicensedUsers';
 
 export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     const { eventBus, getLogger, flagResolver } = config;
@@ -93,6 +99,15 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
     );
 
     const featureStrategiesReadModel = new FeatureStrategiesReadModel(db);
+
+    const trafficDataUsageStore = new TrafficDataUsageStore(db, getLogger);
+
+    const featureStrategiesStore = new FeatureStrategyStore(
+        db,
+        eventBus,
+        getLogger,
+        flagResolver,
+    );
     const instanceStatsServiceStores = {
         featureToggleStore,
         userStore,
@@ -109,25 +124,14 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         apiTokenStore,
         clientMetricsStoreV2,
         featureStrategiesReadModel,
-    };
-    const featureStrategiesStore = new FeatureStrategyStore(
-        db,
-        eventBus,
-        getLogger,
-        flagResolver,
-    );
-    const versionServiceStores = {
-        ...instanceStatsServiceStores,
         featureStrategiesStore,
+        trafficDataUsageStore,
     };
+    const versionServiceStores = { settingStore };
     const getActiveUsers = createGetActiveUsers(db);
     const getProductionChanges = createGetProductionChanges(db);
-    const versionService = new VersionService(
-        versionServiceStores,
-        config,
-        getActiveUsers,
-        getProductionChanges,
-    );
+    const getLicencedUsers = createGetLicensedUsers(db);
+    const versionService = new VersionService(versionServiceStores, config);
 
     const instanceStatsService = new InstanceStatsService(
         instanceStatsServiceStores,
@@ -135,6 +139,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         versionService,
         getActiveUsers,
         getProductionChanges,
+        getLicencedUsers,
     );
 
     return instanceStatsService;
@@ -157,7 +162,8 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
     const apiTokenStore = new FakeApiTokenStore();
     const clientMetricsStoreV2 = new FakeClientMetricsStoreV2();
     const featureStrategiesReadModel = new FakeFeatureStrategiesReadModel();
-
+    const trafficDataUsageStore = new FakeTrafficDataUsageStore();
+    const featureStrategiesStore = new FakeFeatureStrategiesStore();
     const instanceStatsServiceStores = {
         featureToggleStore,
         userStore,
@@ -174,20 +180,15 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         apiTokenStore,
         clientMetricsStoreV2,
         featureStrategiesReadModel,
-    };
-    const featureStrategiesStore = new FakeFeatureStrategiesStore();
-    const versionServiceStores = {
-        ...instanceStatsServiceStores,
         featureStrategiesStore,
+        trafficDataUsageStore,
     };
+
+    const versionServiceStores = { settingStore };
     const getActiveUsers = createFakeGetActiveUsers();
+    const getLicensedUsers = createFakeGetLicensedUsers();
     const getProductionChanges = createFakeGetProductionChanges();
-    const versionService = new VersionService(
-        versionServiceStores,
-        config,
-        getActiveUsers,
-        getProductionChanges,
-    );
+    const versionService = new VersionService(versionServiceStores, config);
 
     const instanceStatsService = new InstanceStatsService(
         instanceStatsServiceStores,
@@ -195,6 +196,7 @@ export const createFakeInstanceStatsService = (config: IUnleashConfig) => {
         versionService,
         getActiveUsers,
         getProductionChanges,
+        getLicensedUsers,
     );
 
     return instanceStatsService;

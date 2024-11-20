@@ -51,6 +51,7 @@ function GeneralSelect<T extends string = string>({
     classes,
     fullWidth,
     visuallyHideLabel,
+    labelId,
     ...rest
 }: IGeneralSelectProps<T>) {
     const onSelectChange = (event: SelectChangeEvent) => {
@@ -65,12 +66,15 @@ function GeneralSelect<T extends string = string>({
             classes={classes}
             fullWidth={fullWidth}
         >
-            <InputLabel
-                sx={visuallyHideLabel ? visuallyHidden : null}
-                htmlFor={id}
-            >
-                {label}
-            </InputLabel>
+            {label ? (
+                <InputLabel
+                    sx={visuallyHideLabel ? visuallyHidden : null}
+                    htmlFor={id}
+                    id={labelId}
+                >
+                    {label}
+                </InputLabel>
+            ) : null}
             <Select
                 name={name}
                 disabled={disabled}
@@ -87,6 +91,7 @@ function GeneralSelect<T extends string = string>({
                     },
                 }}
                 IconComponent={KeyboardArrowDownOutlined}
+                labelId={labelId}
                 {...rest}
             >
                 {options.map((option) => (

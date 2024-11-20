@@ -1,5 +1,5 @@
 ---
-title: '[Deprecated] How to add SSO with Google'
+title: 'How to add SSO with Google'
 ---
 
 :::caution Deprecation notice

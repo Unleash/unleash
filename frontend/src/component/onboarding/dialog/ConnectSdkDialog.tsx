@@ -19,7 +19,7 @@ import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectO
 interface IConnectSDKDialogProps {
     open: boolean;
     onClose: () => void;
-    onFinish: () => void;
+    onFinish: (sdkName: string) => void;
     project: string;
     environments: string[];
     feature?: string;
@@ -169,7 +169,12 @@ export const ConnectSdkDialog = ({
                                     </Button>
                                 ) : null}
 
-                                <Button variant='contained' onClick={onFinish}>
+                                <Button
+                                    variant='contained'
+                                    onClick={() => {
+                                        onFinish(sdk.name);
+                                    }}
+                                >
                                     Complete
                                 </Button>
                             </NextStepSectionSpacedContainer>

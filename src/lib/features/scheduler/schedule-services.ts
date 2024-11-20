@@ -59,8 +59,12 @@ export const scheduleServices = async (
         'updateLastSeen',
     );
 
+    // TODO this works fine for keeping labeledAppCounts up to date, but
+    // it would be nice if we can keep client_apps_total prometheus metric
+    // up to date. We'd need to have access to DbMetricsMonitor, which is
+    // where the metric is registered and call an update only for that metric
     schedulerService.schedule(
-        instanceStatsService.refreshAppCountSnapshot.bind(instanceStatsService),
+        instanceStatsService.getLabeledAppCounts.bind(instanceStatsService),
         minutesToMilliseconds(5),
         'refreshAppCountSnapshot',
     );
@@ -122,7 +126,10 @@ export const scheduleServices = async (
     );
 
     schedulerService.schedule(
-        versionService.checkLatestVersion.bind(versionService),
+        () =>
+            versionService.checkLatestVersion(() =>
+                instanceStatsService.getFeatureUsageInfo(),
+            ),
         hoursToMilliseconds(48),
         'checkLatestVersion',
     );

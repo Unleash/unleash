@@ -1,249 +1,255 @@
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import {
-    IconButton,
-    Link,
-    List,
-    ListItem,
-    ListItemButton,
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Button,
     styled,
     Typography,
 } from '@mui/material';
-import React, { type FC, useEffect, useState } from 'react';
-import LinkIcon from '@mui/icons-material/Link';
 import { WelcomeDialog } from './WelcomeDialog';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { usePersonalDashboard } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboard';
-import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
-import type {
-    PersonalDashboardSchema,
-    PersonalDashboardSchemaProjectsItem,
-} from '../../openapi';
-import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 import { usePersonalDashboardProjectDetails } from 'hooks/api/getters/usePersonalDashboard/usePersonalDashboardProjectDetails';
-import HelpOutline from '@mui/icons-material/HelpOutline';
-import useLoading from '../../hooks/useLoading';
 import { MyProjects } from './MyProjects';
-import {
-    ContentGrid,
-    ListItemBox,
-    listItemStyle,
-    SpacedGridItem,
-} from './Grid';
-import { ContentGridNoProjects } from './ContentGridNoProjects';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
+import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
+import { useDashboardState } from './useDashboardState';
+import { MyFlags } from './MyFlags';
+import { usePageTitle } from 'hooks/usePageTitle';
+import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData';
+import { useEffect } from 'react';
 
-const ScreenExplanation = styled('div')(({ theme }) => ({
-    marginBottom: theme.spacing(4),
+const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
-    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: theme.spacing(1),
+    flexFlow: 'row wrap',
+    alignItems: 'baseline',
 }));
 
-export const StyledCardTitle = styled('div')<{ lines?: number }>(
-    ({ theme, lines = 2 }) => ({
-        fontWeight: theme.typography.fontWeightRegular,
-        fontSize: theme.typography.body1.fontSize,
-        lineClamp: `${lines}`,
-        WebkitLineClamp: lines,
-        lineHeight: '1.2',
-        display: '-webkit-box',
-        boxOrient: 'vertical',
-        textOverflow: 'ellipsis',
-        overflow: 'hidden',
-        alignItems: 'flex-start',
-        WebkitBoxOrient: 'vertical',
-        wordBreak: 'break-word',
-    }),
-);
+const ViewKeyConceptsButton = styled(Button)({
+    fontWeight: 'normal',
+    padding: 0,
+    margin: 0,
+});
 
-const FlagListItem: FC<{
-    flag: { name: string; project: string; type: string };
-    selected: boolean;
-    onClick: () => void;
-}> = ({ flag, selected, onClick }) => {
-    const IconComponent = getFeatureTypeIcons(flag.type);
-    return (
-        <ListItem key={flag.name} disablePadding={true} sx={{ mb: 1 }}>
-            <ListItemButton
-                sx={listItemStyle}
-                selected={selected}
-                onClick={onClick}
-            >
-                <ListItemBox>
-                    <IconComponent color='primary' />
-                    <StyledCardTitle>{flag.name}</StyledCardTitle>
-                    <IconButton
-                        component={Link}
-                        href={`projects/${flag.project}/features/${flag.name}`}
-                        size='small'
-                        sx={{ ml: 'auto' }}
-                    >
-                        <LinkIcon
-                            titleAccess={`projects/${flag.project}/features/${flag.name}`}
-                        />
-                    </IconButton>
-                </ListItemBox>
-            </ListItemButton>
-        </ListItem>
-    );
-};
+const SectionAccordion = styled(Accordion)(({ theme }) => ({
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: 'none',
+    '& .expanded': {
+        '&:before': {
+            opacity: '0 !important',
+        },
+    },
 
-const useActiveProject = (projects: PersonalDashboardSchemaProjectsItem[]) => {
-    const [activeProject, setActiveProject] = useState(projects[0]?.id);
+    // add a top border to the region when the accordion is collapsed.
+    // This retains the border between the summary and the region
+    // during the collapsing animation
+    "[aria-expanded='false']+.MuiCollapse-root .MuiAccordion-region": {
+        borderTop: `1px solid ${theme.palette.divider}`,
+    },
 
-    useEffect(() => {
-        if (!activeProject && projects.length > 0) {
-            setActiveProject(projects[0].id);
-        }
-    }, [JSON.stringify(projects)]);
+    overflow: 'hidden',
+}));
 
-    return [activeProject, setActiveProject] as const;
-};
+const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+    border: 'none',
+    padding: theme.spacing(2, 4),
+    margin: 0,
+    // increase specificity to override the default margin
+    '&>.MuiAccordionSummary-content.MuiAccordionSummary-content': {
+        margin: '0',
+    },
+    "&[aria-expanded='true']": {
+        // only add the border when it's open
+        borderBottom: `1px solid ${theme.palette.divider}`,
+    },
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails)({
+    padding: 0,
+});
+
+const MainContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
+}));
+
+const AccordionSummaryText = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.5),
+}));
+
+const AccordionSummaryHeader = styled('h3')(({ theme }) => ({
+    color: theme.palette.text.primary,
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: theme.typography.body2.fontWeight,
+    margin: 0,
+}));
+
+const AccordionSummarySubtitle = styled(Typography)(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.typography.body2.fontSize,
+    fontWeight: theme.typography.body2.fontWeight,
+}));
 
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
+    const { trackEvent } = usePlausibleTracker();
+    const { setSplashSeen } = useSplashApi();
+    const { splash } = useAuthSplash();
+    const name = user?.name || '';
 
-    const name = user?.name;
+    usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
+
+    const { personalDashboard, refetch: refetchDashboard } =
+        usePersonalDashboard();
+
+    const projects = personalDashboard?.projects || [];
 
     const {
-        personalDashboard,
-        refetch: refetchDashboard,
-        loading: personalDashboardLoading,
-    } = usePersonalDashboard();
-    const [activeFlag, setActiveFlag] = useState<
-        PersonalDashboardSchema['flags'][0] | null
-    >(null);
-    useEffect(() => {
-        if (personalDashboard?.flags.length) {
-            setActiveFlag(personalDashboard.flags[0]);
-        }
-    }, [JSON.stringify(personalDashboard?.flags)]);
+        activeProject,
+        setActiveProject,
+        activeFlag,
+        setActiveFlag,
+        toggleSectionState,
+        expandFlags,
+        expandProjects,
+    } = useDashboardState(projects, personalDashboard?.flags ?? []);
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'open' | 'closed'
-    >('welcome-dialog:v1', 'open');
+    >(
+        'welcome-dialog:v1',
+        splash?.personalDashboardKeyConcepts ? 'closed' : 'open',
+    );
 
-    const projects = personalDashboard?.projects || [];
-    const [activeProject, setActiveProject] = useActiveProject(projects);
+    const personalDashboardProjectDetails =
+        fromPersonalDashboardProjectDetailsOutput(
+            usePersonalDashboardProjectDetails(activeProject),
+        );
 
-    const { personalDashboardProjectDetails, loading: loadingDetails } =
-        usePersonalDashboardProjectDetails(activeProject);
-
-    const activeProjectStage =
-        personalDashboardProjectDetails?.onboardingStatus.status ?? 'loading';
-    const setupIncomplete =
-        activeProjectStage === 'onboarding-started' ||
-        activeProjectStage === 'first-flag-created';
-
-    const noProjects = projects.length === 0;
-
-    const projectStageRef = useLoading(activeProjectStage === 'loading');
+    useEffect(() => {
+        trackEvent('personal-dashboard', {
+            props: {
+                eventType: 'seen',
+            },
+        });
+    }, []);
 
     return (
-        <div ref={projectStageRef}>
-            <Typography component='h2' variant='h2'>
-                Welcome {name}
-            </Typography>
-            <ScreenExplanation>
-                <p data-loading>
-                    {activeProjectStage === 'onboarded'
-                        ? 'We have gathered projects and flags you have favorited or owned'
-                        : null}
-                    {setupIncomplete
-                        ? 'Here are some tasks we think would be useful in order to get the most out of Unleash'
-                        : null}
-                    {activeProjectStage === 'loading'
-                        ? 'We have gathered projects and flags you have favorited or owned'
-                        : null}
-                </p>
-                <IconButton
-                    data-loading
+        <MainContent>
+            <WelcomeSection>
+                <Typography component='h2' variant='h2'>
+                    Welcome {name}
+                </Typography>
+
+                <ViewKeyConceptsButton
+                    sx={{
+                        fontWeight: 'normal',
+                    }}
                     size={'small'}
-                    title='Key concepts'
-                    onClick={() => setWelcomeDialog('open')}
+                    variant='text'
+                    onClick={() => {
+                        trackEvent('personal-dashboard', {
+                            props: {
+                                eventType: 'open key concepts',
+                            },
+                        });
+                        setWelcomeDialog('open');
+                    }}
                 >
-                    <HelpOutline />
-                </IconButton>
-            </ScreenExplanation>
+                    View key concepts
+                </ViewKeyConceptsButton>
+            </WelcomeSection>
 
-            {noProjects && personalDashboard ? (
-                <ContentGridNoProjects
-                    owners={personalDashboard.projectOwners}
-                    admins={personalDashboard.admins}
-                />
-            ) : (
-                <MyProjects
-                    projects={projects}
-                    activeProject={activeProject}
-                    setActiveProject={setActiveProject}
-                    personalDashboardProjectDetails={
-                        personalDashboardProjectDetails
+            <SectionAccordion
+                disableGutters
+                expanded={expandProjects ?? true}
+                onChange={() => toggleSectionState('projects')}
+            >
+                <StyledAccordionSummary
+                    expandIcon={
+                        <ExpandMore titleAccess='Toggle projects section' />
                     }
-                />
-            )}
-
-            <ContentGrid container columns={{ lg: 12, md: 1 }} sx={{ mt: 2 }}>
-                <SpacedGridItem item lg={4} md={1}>
-                    <Typography variant='h3'>My feature flags</Typography>
-                </SpacedGridItem>
-                <SpacedGridItem
-                    item
-                    lg={8}
-                    md={1}
-                    sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                    id='projects-panel-header'
+                    aria-controls='projects-panel-content'
                 >
-                    {activeFlag ? (
-                        <FlagExposure
-                            project={activeFlag.project}
-                            flagName={activeFlag.name}
-                            onArchive={refetchDashboard}
-                        />
-                    ) : null}
-                </SpacedGridItem>
-                <SpacedGridItem item lg={4} md={1}>
-                    {personalDashboard && personalDashboard.flags.length > 0 ? (
-                        <List
-                            disablePadding={true}
-                            sx={{ maxHeight: '400px', overflow: 'auto' }}
-                        >
-                            {personalDashboard.flags.map((flag) => (
-                                <FlagListItem
-                                    key={flag.name}
-                                    flag={flag}
-                                    selected={flag.name === activeFlag?.name}
-                                    onClick={() => setActiveFlag(flag)}
-                                />
-                            ))}
-                        </List>
-                    ) : (
-                        <Typography>
-                            You have not created or favorited any feature flags.
-                            Once you do, they will show up here.
-                        </Typography>
-                    )}
-                </SpacedGridItem>
+                    <AccordionSummaryText>
+                        <AccordionSummaryHeader>
+                            My projects
+                        </AccordionSummaryHeader>
+                        <AccordionSummarySubtitle>
+                            Favorite projects, projects you own, and projects
+                            you are a member of
+                        </AccordionSummarySubtitle>
+                    </AccordionSummaryText>
+                </StyledAccordionSummary>
+                <StyledAccordionDetails>
+                    <MyProjects
+                        owners={personalDashboard?.projectOwners ?? []}
+                        admins={personalDashboard?.admins ?? []}
+                        projects={projects}
+                        activeProject={activeProject || ''}
+                        setActiveProject={setActiveProject}
+                        personalDashboardProjectDetails={
+                            personalDashboardProjectDetails
+                        }
+                    />
+                </StyledAccordionDetails>
+            </SectionAccordion>
 
-                <SpacedGridItem item lg={8} md={1}>
-                    {activeFlag ? (
-                        <FlagMetricsChart flag={activeFlag} />
-                    ) : (
-                        <PlaceholderFlagMetricsChart />
-                    )}
-                </SpacedGridItem>
-            </ContentGrid>
+            <SectionAccordion
+                expanded={expandFlags ?? true}
+                onChange={() => toggleSectionState('flags')}
+            >
+                <StyledAccordionSummary
+                    expandIcon={
+                        <ExpandMore titleAccess='Toggle flags section' />
+                    }
+                    id='flags-panel-header'
+                    aria-controls='flags-panel-content'
+                >
+                    <AccordionSummaryText>
+                        <AccordionSummaryHeader>
+                            My feature flags
+                        </AccordionSummaryHeader>
+                        <AccordionSummarySubtitle>
+                            Feature flags you have created or favorited
+                        </AccordionSummarySubtitle>
+                    </AccordionSummaryText>
+                </StyledAccordionSummary>
+                <StyledAccordionDetails>
+                    <MyFlags
+                        hasProjects={projects?.length > 0}
+                        flagData={
+                            personalDashboard?.flags.length
+                                ? {
+                                      state: 'flags' as const,
+                                      activeFlag,
+                                      flags: personalDashboard.flags,
+                                  }
+                                : { state: 'no flags' as const }
+                        }
+                        setActiveFlag={setActiveFlag}
+                        refetchDashboard={refetchDashboard}
+                    />
+                </StyledAccordionDetails>
+            </SectionAccordion>
             <WelcomeDialog
                 open={welcomeDialog === 'open'}
-                onClose={() => setWelcomeDialog('closed')}
+                onClose={() => {
+                    setSplashSeen('personalDashboardKeyConcepts');
+                    setWelcomeDialog('closed');
+                }}
             />
-        </div>
+        </MainContent>
     );
 };
-
-const FlagMetricsChart = React.lazy(() =>
-    import('./FlagMetricsChart').then((module) => ({
-        default: module.FlagMetricsChart,
-    })),
-);
-const PlaceholderFlagMetricsChart = React.lazy(() =>
-    import('./FlagMetricsChart').then((module) => ({
-        default: module.PlaceholderFlagMetricsChart,
-    })),
-);

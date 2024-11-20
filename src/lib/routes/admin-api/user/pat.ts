@@ -28,7 +28,6 @@ import {
     createPatSchema,
 } from '../../../openapi/spec/create-pat-schema';
 import { ForbiddenError, NotFoundError } from '../../../error';
-import idNumberMiddleware from '../../../middleware/id-number-middleware';
 
 export default class PatController extends Controller {
     private patService: PatService;
@@ -107,12 +106,22 @@ export default class PatController extends Controller {
                         'Delete a personal access token (PAT) for the current user.',
                     description:
                         'Deletes a [personal access token](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens) (PAT) belonging to the current user.',
+                    parameters: [
+                        {
+                            name: 'id',
+                            in: 'path',
+                            required: true,
+                            schema: {
+                                type: 'integer',
+                            },
+                            description: 'a personal access token id',
+                        },
+                    ],
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
-                idNumberMiddleware(),
             ],
         });
     }

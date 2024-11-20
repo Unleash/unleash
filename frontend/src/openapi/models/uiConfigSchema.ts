@@ -4,6 +4,7 @@
  * See `gen:api` script in package.json
  */
 import type { UiConfigSchemaAuthenticationType } from './uiConfigSchemaAuthenticationType';
+import type { UiConfigSchemaBilling } from './uiConfigSchemaBilling';
 import type { UiConfigSchemaFlags } from './uiConfigSchemaFlags';
 import type { UiConfigSchemaLinksItem } from './uiConfigSchemaLinksItem';
 import type { ResourceLimitsSchema } from './resourceLimitsSchema';
@@ -17,6 +18,8 @@ export interface UiConfigSchema {
     authenticationType?: UiConfigSchemaAuthenticationType;
     /** The base URI path at which this Unleash instance is listening. */
     baseUriPath: string;
+    /** The billing model in use for this Unleash instance. */
+    billing?: UiConfigSchemaBilling;
     /** Whether password authentication should be disabled or not. */
     disablePasswordAuth?: boolean;
     /** Whether this instance can send out emails or not. */
@@ -33,6 +36,8 @@ export interface UiConfigSchema {
     links?: UiConfigSchemaLinksItem[];
     /** Whether maintenance mode is currently active or not. */
     maintenanceMode?: boolean;
+    /** The maximum number of sessions that a user has. */
+    maxSessionsCount?: number;
     /** The name of this Unleash instance. Used to build the text in the footer. */
     name?: string;
     /** Whether to enable the Unleash network view or not. */
@@ -55,6 +60,8 @@ export interface UiConfigSchema {
      * @deprecated
      */
     strategySegmentsLimit?: number;
+    /** Whether Unleash AI is available. */
+    unleashAIAvailable?: boolean;
     /** The URL of the Unleash instance. */
     unleashUrl: string;
     /** The current version of Unleash */

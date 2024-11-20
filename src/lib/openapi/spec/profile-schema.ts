@@ -7,7 +7,7 @@ export const profileSchema = {
     type: 'object',
     additionalProperties: false,
     description: 'User profile overview',
-    required: ['rootRole', 'projects', 'features'],
+    required: ['rootRole', 'projects', 'features', 'subscriptions'],
     properties: {
         rootRole: {
             $ref: '#/components/schemas/roleSchema',
@@ -19,6 +19,14 @@ export const profileSchema = {
                 type: 'string',
             },
             example: ['my-projectA', 'my-projectB'],
+        },
+        subscriptions: {
+            description: 'Which email subscriptions this user is subscribed to',
+            type: 'array',
+            items: {
+                type: 'string',
+            },
+            example: ['productivity-report'],
         },
         features: {
             description: 'Deprecated, always returns empty array',

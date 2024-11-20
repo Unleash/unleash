@@ -10,7 +10,7 @@ import 'dart:async';
 
 final unleash = UnleashClient(
     url: Uri.parse('<YOUR_API_URL>'),
-    clientKey: '<YOUR_API_TOKEN>',
+    clientKey: '<YOUR_API_TOKEN>', // in production use environment variable
     appName: 'unleash-onboarding-flutter');
 
 unleash.start();

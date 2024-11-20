@@ -23,9 +23,10 @@ import type { IAuthRequest } from '../unleash-types';
 import NotFoundError from '../../error/notfound-error';
 import type { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
-import type { FrontendApiService } from '../../services';
+import type { FrontendApiService, SessionService } from '../../services';
 import type MaintenanceService from '../../features/maintenance/maintenance-service';
 import type ClientInstanceService from '../../features/metrics/instance/instance-service';
+import type { IFlagResolver } from '../../types';
 
 class ConfigController extends Controller {
     private versionService: VersionService;
@@ -38,7 +39,11 @@ class ConfigController extends Controller {
 
     private clientInstanceService: ClientInstanceService;
 
+    private sessionService: SessionService;
+
     private maintenanceService: MaintenanceService;
+
+    private flagResolver: IFlagResolver;
 
     private readonly openApiService: OpenApiService;
 
@@ -52,6 +57,7 @@ class ConfigController extends Controller {
             frontendApiService,
             maintenanceService,
             clientInstanceService,
+            sessionService,
         }: Pick<
             IUnleashServices,
             | 'versionService'
@@ -61,6 +67,7 @@ class ConfigController extends Controller {
             | 'frontendApiService'
             | 'maintenanceService'
             | 'clientInstanceService'
+            | 'sessionService'
         >,
     ) {
         super(config);
@@ -71,6 +78,8 @@ class ConfigController extends Controller {
         this.frontendApiService = frontendApiService;
         this.maintenanceService = maintenanceService;
         this.clientInstanceService = clientInstanceService;
+        this.sessionService = sessionService;
+        this.flagResolver = config.flagResolver;
         this.route({
             method: 'get',
             path: '',
@@ -113,14 +122,24 @@ class ConfigController extends Controller {
         req: AuthedRequest,
         res: Response<UiConfigSchema>,
     ): Promise<void> {
-        const [frontendSettings, simpleAuthSettings, maintenanceMode] =
-            await Promise.all([
-                this.frontendApiService.getFrontendSettings(false),
-                this.settingService.get<SimpleAuthSettings>(
-                    simpleAuthSettingsKey,
-                ),
-                this.maintenanceService.isMaintenanceMode(),
-            ]);
+        const getMaxSessionsCount = async () => {
+            if (this.flagResolver.isEnabled('showUserDeviceCount')) {
+                return this.sessionService.getMaxSessionsCount();
+            }
+            return 0;
+        };
+
+        const [
+            frontendSettings,
+            simpleAuthSettings,
+            maintenanceMode,
+            maxSessionsCount,
+        ] = await Promise.all([
+            this.frontendApiService.getFrontendSettings(false),
+            this.settingService.get<SimpleAuthSettings>(simpleAuthSettingsKey),
+            this.maintenanceService.isMaintenanceMode(),
+            getMaxSessionsCount(),
+        ]);
 
         const disablePasswordAuth =
             simpleAuthSettings?.disabled ||
@@ -152,6 +171,8 @@ class ConfigController extends Controller {
             disablePasswordAuth,
             maintenanceMode,
             feedbackUriPath: this.config.feedbackUriPath,
+            unleashAIAvailable: this.config.openAIAPIKey !== undefined,
+            maxSessionsCount,
         };
 
         this.openApiService.respondWithValidation(

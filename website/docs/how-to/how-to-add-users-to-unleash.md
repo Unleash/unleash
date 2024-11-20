@@ -2,7 +2,12 @@
 title: How to add new users to your Unleash instance
 ---
 
-> This feature was introduced in Unleash v4 for Unleash Open-Source.
+:::note Availability
+
+**Version**: `4.0+`
+
+:::
+    
 
 You can add new users to Unleash in `Admin > Users`.
 

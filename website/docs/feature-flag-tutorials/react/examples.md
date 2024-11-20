@@ -400,15 +400,15 @@ Fortunately, this is straightforward in Unleash Enterprise.
 
 Unleash provides the data to log any change that has happened over time, at the flag level from a global level. In conjunction with Unleash, tools like [Splunk](https://www.splunk.com/) can help you combine logs and run advanced queries against them. Logs are useful for downstream data warehouses or data lakes.
 
-In our React tutorial application, we can view Event logs to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
+For our React tutorial application, we can view events in [Event Log](/reference/events#event-log) to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
 
 -   When the `newNotificationsBadge` flag was created
 -   How the gradual rollout strategy was configured
 -   When and how the variants were created and configured
 
-![Feature flag event log. The flag's variant's have been updated.](/img/react-ex-event-log.png)
+![Feature flag events showing that the flag's variants have been updated.](/img/react-ex-event-log.png)
 
-You can also retrieve event log data by using an API command below:
+You can also retrieve events by using the API command below:
 
 ```
 curl -L -X GET '<your-unleash-url>/api/admin/events/:featureName' \
@@ -416,7 +416,7 @@ curl -L -X GET '<your-unleash-url>/api/admin/events/:featureName' \
 -H 'Authorization: <API_KEY_VALUE>'
 ```
 
-Read our documentation on [Event logs](/reference/event-log) and [APIs](/reference/api/unleash/events) to learn more.
+Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/reference/api/unleash/events) to learn more.
 
 ## Change Management & Feature Flag Approvals in React
 

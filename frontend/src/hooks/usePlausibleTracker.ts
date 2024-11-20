@@ -66,7 +66,15 @@ export type CustomEvents =
     | 'new-in-unleash-click'
     | 'new-in-unleash-dismiss'
     | 'search-opened'
-    | 'events-exported';
+    | 'events-exported'
+    | 'event-timeline'
+    | 'onboarding'
+    | 'personal-dashboard'
+    | 'order-environments'
+    | 'unleash-ai-chat'
+    | 'project-navigation'
+    | 'productivity-report'
+    | 'release-plans';
 
 export const usePlausibleTracker = () => {
     const plausible = useContext(PlausibleContext);

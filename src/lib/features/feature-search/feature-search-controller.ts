@@ -102,6 +102,7 @@ export default class FeatureSearchController extends Controller {
             state,
             status,
             favoritesFirst,
+            archived,
             sortBy,
         } = req.query;
         const userId = req.user.id;
@@ -131,6 +132,7 @@ export default class FeatureSearchController extends Controller {
                     ['enabled', 'disabled'].includes(tag[1]),
             );
         const normalizedFavoritesFirst = favoritesFirst === 'true';
+        const normalizedArchived = archived === 'IS:true';
         const { features, total } = await this.featureSearchService.search({
             searchParams: normalizedQuery,
             project,
@@ -147,6 +149,7 @@ export default class FeatureSearchController extends Controller {
             limit: normalizedLimit,
             sortOrder: normalizedSortOrder,
             favoritesFirst: normalizedFavoritesFirst,
+            archived: normalizedArchived,
         });
 
         this.openApiService.respondWithValidation(

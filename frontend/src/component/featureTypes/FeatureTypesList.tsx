@@ -5,7 +5,7 @@ import { sortTypes } from 'utils/sortTypes';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import {
     Table,
     TableBody,
@@ -150,31 +150,26 @@ export const FeatureTypesList = () => {
     return (
         <PageContent
             isLoading={loading}
-            header={
-                <PageHeader>
-                    <Typography
-                        component='h2'
-                        sx={(theme) => ({
-                            fontSize: theme.fontSizes.mainHeader,
-                        })}
-                    >
-                        Feature flag types
-                    </Typography>
-                </PageHeader>
-            }
+            header={<PageHeader title='Feature flag types' />}
         >
             <Table {...getTableProps()}>
                 <SortableTableHeader headerGroups={headerGroups} />
                 <TableBody {...getTableBodyProps()}>
                     {rows.map((row) => {
                         prepareRow(row);
+                        const { key, ...rowProps } = row.getRowProps();
                         return (
-                            <TableRow hover {...row.getRowProps()}>
-                                {row.cells.map((cell) => (
-                                    <TableCell {...cell.getCellProps()}>
-                                        {cell.render('Cell')}
-                                    </TableCell>
-                                ))}
+                            <TableRow hover key={key} {...rowProps}>
+                                {row.cells.map((cell) => {
+                                    const { key, ...cellProps } =
+                                        cell.getCellProps();
+
+                                    return (
+                                        <TableCell key={key} {...cellProps}>
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    );
+                                })}
                             </TableRow>
                         );
                     })}

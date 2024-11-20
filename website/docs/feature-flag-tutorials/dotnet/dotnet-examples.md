@@ -312,15 +312,15 @@ This is especially true in very regulated environments like health care, insuran
 
 Unleash provides the data to log any change over time at the flag level and at the project level. Logs are useful for downstream data warehouses or data lakes.
 
-You can view Event logs to monitor the changes to flag strategies and statuses, like:
+You can view [Event Log](/reference/events#event-log) to monitor the changes to flag strategies and statuses, like:
 
 -   When the flag was created
 -   How the gradual rollout strategy was configured
 -   When and how the variants were created and configured
 
-![Event logs in Unleash track every single change made to flags, similar to Git commit history.](../ruby/event-logs.png)
+![Event Log in Unleash tracks every single change made to flags, similar to Git commit history.](../ruby/event-logs.png)
 
-You can also retrieve event logs by using an API command, like below:
+You can also retrieve events by using an API command, like below:
 
 ```csharp
 HttpClient client = new HttpClient();
@@ -336,7 +336,7 @@ var responseBody = await response.Content.ReadAsStringAsync();
 Console.WriteLine(responseBody);
 ```
 
-Read our documentation on [Event logs](/reference/event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
+Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
 
 ## Flag Automation and Workflow Integration for .NET Apps
 

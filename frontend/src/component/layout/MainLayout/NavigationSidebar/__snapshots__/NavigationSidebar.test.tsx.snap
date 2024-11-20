@@ -1,0 +1,284 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`order of items in navigation > menu for enterprise plan 1`] = `
+[
+  {
+    "icon": "DashboardOutlinedIcon",
+    "text": "Dashboard",
+  },
+  {
+    "icon": "UnleashProjectIcon",
+    "text": "Projects",
+  },
+  {
+    "icon": "SearchIcon",
+    "text": "Search",
+  },
+  {
+    "icon": "AutoFixNormalIcon",
+    "text": "Playground",
+  },
+  {
+    "icon": "InsightsIcon",
+    "text": "Insights",
+  },
+  {
+    "icon": "AppsOutlinedIcon",
+    "text": "Applications",
+  },
+  {
+    "icon": "AccountTreeOutlinedIcon",
+    "text": "Context fields",
+  },
+  {
+    "icon": "OutlinedFlagIcon",
+    "text": "Feature flag types",
+  },
+  {
+    "icon": "ExtensionOutlinedIcon",
+    "text": "Strategy types",
+  },
+  {
+    "icon": "CloudOutlinedIcon",
+    "text": "Environments",
+  },
+  {
+    "icon": "LabelImportantOutlinedIcon",
+    "text": "Tag types",
+  },
+  {
+    "icon": "IntegrationInstructionsOutlinedIcon",
+    "text": "Integrations",
+  },
+  {
+    "icon": "DonutLargeOutlinedIcon",
+    "text": "Segments",
+  },
+  {
+    "icon": "GroupOutlinedIcon",
+    "text": "Users",
+  },
+  {
+    "icon": "ComputerIcon",
+    "text": "Service accounts",
+  },
+  {
+    "icon": "GroupsOutlinedIcon",
+    "text": "Groups",
+  },
+  {
+    "icon": "AdminPanelSettingsOutlinedIcon",
+    "text": "Roles",
+  },
+  {
+    "icon": "KeyOutlinedIcon",
+    "text": "API access",
+  },
+  {
+    "icon": "AssignmentOutlinedIcon",
+    "text": "Single sign-on",
+  },
+  {
+    "icon": "BuildOutlinedIcon",
+    "text": "Maintenance",
+  },
+  {
+    "icon": "ViewCarouselIcon",
+    "text": "Banners",
+  },
+  {
+    "icon": "QueryStatsOutlinedIcon",
+    "text": "Instance stats",
+  },
+  {
+    "icon": "ShieldOutlinedIcon",
+    "text": "Instance privacy",
+  },
+  {
+    "icon": "HistoryOutlinedIcon",
+    "text": "Login history",
+  },
+  {
+    "icon": "EventNoteOutlinedIcon",
+    "text": "Event log",
+  },
+]
+`;
+
+exports[`order of items in navigation > menu for open-source 1`] = `
+[
+  {
+    "icon": "DashboardOutlinedIcon",
+    "text": "Dashboard",
+  },
+  {
+    "icon": "UnleashProjectIcon",
+    "text": "Projects",
+  },
+  {
+    "icon": "SearchIcon",
+    "text": "Search",
+  },
+  {
+    "icon": "AutoFixNormalIcon",
+    "text": "Playground",
+  },
+  {
+    "icon": "AppsOutlinedIcon",
+    "text": "Applications",
+  },
+  {
+    "icon": "AccountTreeOutlinedIcon",
+    "text": "Context fields",
+  },
+  {
+    "icon": "OutlinedFlagIcon",
+    "text": "Feature flag types",
+  },
+  {
+    "icon": "ExtensionOutlinedIcon",
+    "text": "Strategy types",
+  },
+  {
+    "icon": "LabelImportantOutlinedIcon",
+    "text": "Tag types",
+  },
+  {
+    "icon": "IntegrationInstructionsOutlinedIcon",
+    "text": "Integrations",
+  },
+  {
+    "icon": "DonutLargeOutlinedIcon",
+    "text": "Segments",
+  },
+  {
+    "icon": "GroupOutlinedIcon",
+    "text": "Users",
+  },
+  {
+    "icon": "KeyOutlinedIcon",
+    "text": "API access",
+  },
+  {
+    "icon": "BuildOutlinedIcon",
+    "text": "Maintenance",
+  },
+  {
+    "icon": "QueryStatsOutlinedIcon",
+    "text": "Instance stats",
+  },
+  {
+    "icon": "ShieldOutlinedIcon",
+    "text": "Instance privacy",
+  },
+  {
+    "icon": "EventNoteOutlinedIcon",
+    "text": "Event log",
+  },
+]
+`;
+
+exports[`order of items in navigation > menu for pro plan 1`] = `
+[
+  {
+    "icon": "DashboardOutlinedIcon",
+    "text": "Dashboard",
+  },
+  {
+    "icon": "UnleashProjectIcon",
+    "text": "Projects",
+  },
+  {
+    "icon": "SearchIcon",
+    "text": "Search",
+  },
+  {
+    "icon": "AutoFixNormalIcon",
+    "text": "Playground",
+  },
+  {
+    "icon": "InsightsIcon",
+    "text": "Insights",
+  },
+  {
+    "icon": "AppsOutlinedIcon",
+    "text": "Applications",
+  },
+  {
+    "icon": "AccountTreeOutlinedIcon",
+    "text": "Context fields",
+  },
+  {
+    "icon": "OutlinedFlagIcon",
+    "text": "Feature flag types",
+  },
+  {
+    "icon": "ExtensionOutlinedIcon",
+    "text": "Strategy types",
+  },
+  {
+    "icon": "CloudOutlinedIcon",
+    "text": "Environments",
+  },
+  {
+    "icon": "LabelImportantOutlinedIcon",
+    "text": "Tag types",
+  },
+  {
+    "icon": "IntegrationInstructionsOutlinedIcon",
+    "text": "Integrations",
+  },
+  {
+    "icon": "DonutLargeOutlinedIcon",
+    "text": "Segments",
+  },
+  {
+    "icon": "GroupOutlinedIcon",
+    "text": "Users",
+  },
+  {
+    "icon": "ComputerIcon",
+    "text": "Service accounts",
+  },
+  {
+    "icon": "GroupsOutlinedIcon",
+    "text": "Groups",
+  },
+  {
+    "icon": "AdminPanelSettingsOutlinedIcon",
+    "text": "Roles",
+  },
+  {
+    "icon": "KeyOutlinedIcon",
+    "text": "API access",
+  },
+  {
+    "icon": "AssignmentOutlinedIcon",
+    "text": "Single sign-on",
+  },
+  {
+    "icon": "BuildOutlinedIcon",
+    "text": "Maintenance",
+  },
+  {
+    "icon": "ViewCarouselIcon",
+    "text": "Banners",
+  },
+  {
+    "icon": "QueryStatsOutlinedIcon",
+    "text": "Instance stats",
+  },
+  {
+    "icon": "ShieldOutlinedIcon",
+    "text": "Instance privacy",
+  },
+  {
+    "icon": "HistoryOutlinedIcon",
+    "text": "Login history",
+  },
+  {
+    "icon": "EventNoteOutlinedIcon",
+    "text": "Event log",
+  },
+]
+`;

@@ -31,7 +31,9 @@ test('Project can start onboarding', async () => {
             route: `/projects/${projectId}`,
         },
     );
-    await screen.findByText('The project currently holds no feature flags.');
+    await screen.findByText(
+        'The project currently holds no feature flags. Create one to get started.',
+    );
 });
 
 test('Project can connect SDK', async () => {

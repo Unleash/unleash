@@ -21,6 +21,20 @@ import type { FeatureEventFormatter } from '../../addons/feature-event-formatter
 import { generateImageUrl } from '../../util';
 import type { PersonalDashboardProjectDetailsSchema } from '../../openapi';
 import type { IRoleWithProject } from '../../types/stores/access-store';
+import { NotFoundError } from '../../error';
+
+type PersonalDashboardProjectDetailsUnserialized = Omit<
+    PersonalDashboardProjectDetailsSchema,
+    'latestEvents'
+> & {
+    latestEvents: {
+        createdBy: string;
+        summary: string;
+        createdByImageUrl: string;
+        id: number;
+        createdAt: Date;
+    }[];
+};
 
 export class PersonalDashboardService {
     private personalDashboardReadModel: IPersonalDashboardReadModel;
@@ -104,9 +118,21 @@ export class PersonalDashboardService {
     async getPersonalProjectDetails(
         userId: number,
         projectId: string,
-    ): Promise<PersonalDashboardProjectDetailsSchema> {
+    ): Promise<PersonalDashboardProjectDetailsUnserialized> {
+        const onboardingStatus =
+            await this.onboardingReadModel.getOnboardingStatusForProject(
+                projectId,
+            );
+
+        if (!onboardingStatus) {
+            throw new NotFoundError(
+                `No project with id "${projectId}" exists.`,
+            );
+        }
+
         const formatEvents = (recentEvents: IEvent[]) =>
             recentEvents.map((event) => ({
+                createdAt: event.createdAt,
                 summary: this.featureEventFormatter.format(event).text,
                 createdBy: event.createdBy,
                 id: event.id,
@@ -122,29 +148,22 @@ export class PersonalDashboardService {
                     type: role.type as PersonalDashboardProjectDetailsSchema['roles'][number]['type'],
                 }));
 
-        const [latestEvents, onboardingStatus, owners, roles, healthScores] =
-            await Promise.all([
-                this.eventStore
-                    .searchEvents({ limit: 4, offset: 0 }, [
-                        {
-                            field: 'project',
-                            operator: 'IS',
-                            values: [projectId],
-                        },
-                    ])
-                    .then(formatEvents),
-                this.onboardingReadModel.getOnboardingStatusForProject(
-                    projectId,
-                ),
-                this.projectOwnersReadModel.getProjectOwners(projectId),
-                this.accessStore
-                    .getAllProjectRolesForUser(userId, projectId)
-                    .then(filterRoles),
-                this.personalDashboardReadModel.getLatestHealthScores(
-                    projectId,
-                    8,
-                ),
-            ]);
+        const [latestEvents, owners, roles, healthScores] = await Promise.all([
+            this.eventStore
+                .searchEvents({ limit: 10, offset: 0 }, [
+                    {
+                        field: 'project',
+                        operator: 'IS',
+                        values: [projectId],
+                    },
+                ])
+                .then(formatEvents),
+            this.projectOwnersReadModel.getProjectOwners(projectId),
+            this.accessStore
+                .getAllProjectRolesForUser(userId, projectId)
+                .then(filterRoles),
+            this.personalDashboardReadModel.getLatestHealthScores(projectId, 8),
+        ]);
 
         let avgHealthCurrentWindow: number | null = null;
         let avgHealthPastWindow: number | null = null;
@@ -165,6 +184,16 @@ export class PersonalDashboardService {
             );
         }
 
+        const [projectInsights] =
+            await this.projectReadModel.getProjectsForInsights({
+                id: projectId,
+            });
+        const totalFlags = projectInsights?.featureCount || 0;
+        const potentiallyStaleFlags =
+            projectInsights?.potentiallyStaleFeatureCount || 0;
+        const staleFlags = projectInsights?.staleFeatureCount || 0;
+        const currentHealth = projectInsights?.health || 0;
+
         return {
             latestEvents,
             onboardingStatus,
@@ -173,6 +202,11 @@ export class PersonalDashboardService {
             insights: {
                 avgHealthCurrentWindow,
                 avgHealthPastWindow,
+                totalFlags,
+                potentiallyStaleFlags,
+                staleFlags,
+                activeFlags: totalFlags - staleFlags - potentiallyStaleFlags,
+                health: currentHealth,
             },
         };
     }

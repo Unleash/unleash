@@ -12,7 +12,7 @@ export const DependenciesUpgradeAlert = () => {
 const DependenciesDocsLink = () => {
     return (
         <a
-            href='https://docs.getunleash.io/reference/dependent-features#client-sdk-support'
+            href='https://docs.getunleash.io/reference/feature-toggles#feature-flag-dependencies'
             target='_blank'
             rel='noreferrer'
         >

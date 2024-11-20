@@ -53,6 +53,24 @@ test('should return current user', async () => {
 });
 const owaspPassword = 't7GTx&$Y9pcsnxRv6';
 
+test('should return current profile', async () => {
+    expect.assertions(1);
+    const { request, base } = await getSetup();
+
+    return request
+        .get(`${base}/api/admin/user/profile`)
+        .expect(200)
+        .expect('Content-Type', /json/)
+        .expect((res) => {
+            expect(res.body).toMatchObject({
+                projects: [],
+                rootRole: { id: -1, name: 'Viewer', type: 'root' },
+                subscriptions: ['productivity-report'],
+                features: [],
+            });
+        });
+});
+
 test('should allow user to change password', async () => {
     const { request, base, userStore } = await getSetup();
     await request

@@ -25,4 +25,6 @@ export interface ISegmentStore extends Store<ISegment, number> {
     existsByName(name: string): Promise<boolean>;
 
     count(): Promise<number>;
+
+    getProjectSegmentCount(projectId: string): Promise<number>;
 }

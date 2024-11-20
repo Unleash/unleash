@@ -4,7 +4,7 @@ title: How to Set Up User Group SSO Syncing
 
 :::note Availability
 
-**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: 4.18+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.18+`
 
 :::
 

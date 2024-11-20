@@ -1,5 +1,5 @@
 import { Box, Link, styled, Typography } from '@mui/material';
-import { HelpIcon } from '../../../common/HelpIcon/HelpIcon';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -35,14 +35,8 @@ export const LicensedUsersBox = () => {
                 />
             </StyledRow>
             <StyledRow>
-                <Typography variant='body2'>
-                    {' '}
-                    Seats used last 30 days
-                </Typography>
-                <StyledLink onClick={() => {}}>
-                    {' '}
-                    View graph over time
-                </StyledLink>
+                <Typography variant='body2'>Seats used last 30 days</Typography>
+                <StyledLink onClick={() => {}}>View graph over time</StyledLink>
             </StyledRow>
         </StyledContainer>
     );

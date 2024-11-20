@@ -39,7 +39,7 @@ export const UsersHeader = () => {
 
             {licensedUsersEnabled && (
                 <StyledElement>
-                    <LicensedUsersBox />{' '}
+                    <LicensedUsersBox />
                 </StyledElement>
             )}
         </StyledContainer>

@@ -265,50 +265,45 @@ test('project status includes stale flags', async () => {
         {} as IAuditUser,
     );
 
-    // 3 out of 4 combinations should be counted
-    const staleCombinations = [
-        { stale: false, potentiallyStale: false },
-        { stale: true, potentiallyStale: false },
-        { stale: false, potentiallyStale: true },
-        { stale: true, potentiallyStale: true },
-    ];
-
-    // only un-archived flags should be counted
-    const archivedCombinations = [{ archived: false }, { archived: true }];
-
-    // only flags in the default project should be counted
-    const projects = [otherProject.id, 'default'];
-
-    for (const project of projects) {
-        for (const stale of staleCombinations) {
-            for (const archived of archivedCombinations) {
-                const name = `flag-${project}-stale-${stale.stale}-potentially-stale-${stale.potentiallyStale}-archived-${archived.archived}`;
-                await app.createFeature(
-                    {
-                        name,
-                        stale: stale.stale,
-                    },
-                    project,
+    function cartesianProduct(...arrays: any[][]): any[][] {
+        return arrays.reduce(
+            (acc, array) => {
+                return acc.flatMap((accItem) =>
+                    array.map((item) => [...accItem, item]),
                 );
-                if (stale.potentiallyStale) {
-                    await db
-                        .rawDatabase('features')
-                        .update('potentially_stale', true)
-                        .where({ name });
-                }
-                if (archived.archived) {
-                    await app.services.featureToggleService.archiveToggle(
-                        name,
-                        {} as IUser,
-                        {} as IAuditUser,
-                        project,
-                    );
-                    await db
-                        .rawDatabase('features')
-                        .update('archived', true)
-                        .where({ name });
-                }
-            }
+            },
+            [[]] as any[][],
+        );
+    }
+
+    // of all 16 (2^4) permutations, only 3 are unhealthy flags in a given project.
+    const combinations = cartesianProduct(
+        [false, true], // stale
+        [false, true], // potentially stale
+        [false, true], // archived
+        ['default', otherProject.id], // project
+    );
+
+    for (const [stale, potentiallyStale, archived, project] of combinations) {
+        const name = `flag-${project}-stale-${stale}-potentially-stale-${potentiallyStale}-archived-${archived}`;
+        await app.createFeature(
+            {
+                name,
+                stale,
+            },
+            project,
+        );
+        if (potentiallyStale) {
+            await db
+                .rawDatabase('features')
+                .update('potentially_stale', true)
+                .where({ name });
+        }
+        if (archived) {
+            await db
+                .rawDatabase('features')
+                .update('archived', true)
+                .where({ name });
         }
     }
 

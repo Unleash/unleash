@@ -92,7 +92,7 @@ export const ProjectHealth = () => {
     const {
         data: { health, staleFlags },
     } = useProjectStatus(projectId);
-    const averageHealth = health.current;
+    const healthRating = health.current;
     const { isOss } = useUiConfig();
     const theme = useTheme();
     const circumference = 2 * Math.PI * ChartRadius; //
@@ -100,12 +100,12 @@ export const ProjectHealth = () => {
     const gapLength = 0.3;
     const filledLength = 1 - gapLength;
     const offset = 0.75 - gapLength / 2;
-    const healthLength = (averageHealth / 100) * circumference * 0.7;
+    const healthLength = (healthRating / 100) * circumference * 0.7;
 
     const healthColor =
-        averageHealth >= 0 && averageHealth <= 24
+        healthRating >= 0 && healthRating <= 24
             ? theme.palette.error.main
-            : averageHealth >= 25 && averageHealth <= 74
+            : healthRating >= 25 && healthRating <= 74
               ? theme.palette.warning.border
               : theme.palette.success.border;
 
@@ -142,14 +142,13 @@ export const ProjectHealth = () => {
                             fill={theme.palette.text.primary}
                             fontSize={theme.typography.h1.fontSize}
                         >
-                            {averageHealth}%
+                            {healthRating}%
                         </text>
                     </StyledSVG>
                 </SVGWrapper>
                 <TextContainer>
                     <Typography>
-                        On average, your project health has remained at{' '}
-                        {averageHealth}% the last 4 weeks
+                        Your current project health rating is {healthRating}%
                     </Typography>
                     {!isOss() && (
                         <Link to={`/insights?project=IS%3A${projectId}`}>

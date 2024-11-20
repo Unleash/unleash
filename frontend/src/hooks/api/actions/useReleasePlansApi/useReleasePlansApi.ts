@@ -11,13 +11,13 @@ export const useReleasePlansApi = () => {
         projectId: string,
         environment: string,
     ): Promise<void> => {
-        const requestId = 'createReleasePlanTemplate';
-        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release_plans/${releasePlanTemplateId}`;
+        const requestId = 'addReleasePlanToFeature';
+        const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release_plans`;
         const req = createRequest(
             path,
             {
                 method: 'POST',
-                body: JSON.stringify({}),
+                body: JSON.stringify({ templateId: releasePlanTemplateId }),
             },
             requestId,
         );

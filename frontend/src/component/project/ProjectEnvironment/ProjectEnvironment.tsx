@@ -32,6 +32,7 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import useProjectOverview, {
     useProjectOverviewNameOrId,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { UpgradeMoreEnvironments } from './UpgradeMoreEnvironments';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -317,6 +318,7 @@ const ProjectEnvironmentList = () => {
                         />
                     }
                 />
+                {isOss() ? <UpgradeMoreEnvironments /> : null}
                 <EnvironmentHideDialog
                     environment={selectedEnvironment}
                     open={hideDialog}

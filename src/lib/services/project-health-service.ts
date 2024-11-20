@@ -1,14 +1,14 @@
 import type { IUnleashStores } from '../types/stores';
 import type { IUnleashConfig } from '../types/option';
 import type { Logger } from '../logger';
-import type { IProject, IProjectHealthReport } from '../types/model';
+import type { IProjectHealthReport } from '../types/model';
 import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import type { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import type { IProjectStore } from '../features/project/project-store-type';
 import type ProjectService from '../features/project/project-service';
 import {
-    calculateHealthRating,
     calculateProjectHealth,
+    calculateProjectHealthRating,
 } from '../domain/project-health/project-health';
 
 export default class ProjectHealthService {
@@ -64,23 +64,15 @@ export default class ProjectHealthService {
         };
     }
 
-    async calculateHealthRating(project: IProject): Promise<number> {
-        const featureTypes = await this.featureTypeStore.getAll();
-
-        const toggles = await this.featureToggleStore.getAll({
-            project: project.id,
-            archived: false,
-        });
-
-        return calculateHealthRating(toggles, featureTypes);
-    }
-
     async setHealthRating(): Promise<void> {
         const projects = await this.projectStore.getAll();
 
         await Promise.all(
             projects.map(async (project) => {
-                const newHealth = await this.calculateHealthRating(project);
+                const newHealth = await calculateProjectHealthRating(
+                    this.featureTypeStore,
+                    this.featureToggleStore,
+                )(project.id);
                 await this.projectStore.updateHealth({
                     id: project.id,
                     health: newHealth,

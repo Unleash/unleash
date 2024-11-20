@@ -1,4 +1,4 @@
-import { calculateHealthRating } from '../../domain/project-health/project-health';
+import { calculateProjectHealthRating } from '../../domain/project-health/project-health';
 import type { ProjectStatusSchema } from '../../openapi';
 import type {
     IApiTokenStore,
@@ -52,17 +52,6 @@ export class ProjectStatusService {
         this.featureToggleStore = featureToggleStore;
     }
 
-    private async calculateHealthRating(projectId: string): Promise<number> {
-        const featureTypes = await this.featureTypeStore.getAll();
-
-        const toggles = await this.featureToggleStore.getAll({
-            project: projectId,
-            archived: false,
-        });
-
-        return calculateHealthRating(toggles, featureTypes);
-    }
-
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
         const [
             members,
@@ -77,7 +66,10 @@ export class ProjectStatusService {
             this.apiTokenStore.countProjectTokens(projectId),
             this.segmentStore.getProjectSegmentCount(projectId),
             this.eventStore.getProjectRecentEventActivity(projectId),
-            this.calculateHealthRating(projectId),
+            calculateProjectHealthRating(
+                this.featureTypeStore,
+                this.featureToggleStore,
+            )(projectId),
             this.projectLifecycleSummaryReadModel.getProjectLifecycleSummary(
                 projectId,
             ),

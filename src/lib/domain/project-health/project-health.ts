@@ -1,6 +1,9 @@
 import { hoursToMilliseconds } from 'date-fns';
-import type { IProjectHealthReport } from '../../types';
-import type { IFeatureType } from '../../types/stores/feature-type-store';
+import type { IFeatureToggleStore, IProjectHealthReport } from '../../types';
+import type {
+    IFeatureType,
+    IFeatureTypeStore,
+} from '../../types/stores/feature-type-store';
 
 type IPartialFeatures = Array<{
     stale?: boolean;
@@ -58,3 +61,19 @@ export const calculateHealthRating = (
 
     return rating;
 };
+
+export const calculateProjectHealthRating =
+    (
+        featureTypeStore: IFeatureTypeStore,
+        featureToggleStore: IFeatureToggleStore,
+    ) =>
+    async (projectId: string): Promise<number> => {
+        const featureTypes = await featureTypeStore.getAll();
+
+        const toggles = await featureToggleStore.getAll({
+            project: projectId,
+            archived: false,
+        });
+
+        return calculateHealthRating(toggles, featureTypes);
+    };

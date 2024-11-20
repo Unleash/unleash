@@ -204,6 +204,20 @@ export const ACTIONS_CREATED = 'actions-created' as const;
 export const ACTIONS_UPDATED = 'actions-updated' as const;
 export const ACTIONS_DELETED = 'actions-deleted' as const;
 
+export const RELEASE_PLAN_TEMPLATE_CREATED =
+    'release-plan-template-created' as const;
+export const RELEASE_PLAN_TEMPLATE_UPDATED =
+    'release-plan-template-updated' as const;
+export const RELEASE_PLAN_TEMPLATE_DELETED =
+    'release-plan-template-deleted' as const;
+
+export const RELEASE_PLAN_ADDED = 'release-plan-added' as const;
+export const RELEASE_PLAN_REMOVED = 'release-plan-removed' as const;
+export const RELEASE_PLAN_MILESTONE_STARTED =
+    'release-plan-milestone-started' as const;
+
+export const USER_PREFERENCE_UPDATED = 'user-preference-updated' as const;
+
 export const IEventTypes = [
     APPLICATION_CREATED,
     FEATURE_CREATED,
@@ -351,6 +365,13 @@ export const IEventTypes = [
     ACTIONS_CREATED,
     ACTIONS_UPDATED,
     ACTIONS_DELETED,
+    RELEASE_PLAN_TEMPLATE_CREATED,
+    RELEASE_PLAN_TEMPLATE_UPDATED,
+    RELEASE_PLAN_TEMPLATE_DELETED,
+    RELEASE_PLAN_ADDED,
+    RELEASE_PLAN_REMOVED,
+    RELEASE_PLAN_MILESTONE_STARTED,
+    USER_PREFERENCE_UPDATED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
@@ -2009,6 +2030,78 @@ export class GroupDeletedEvent extends BaseEvent {
     }
 }
 
+export class ReleasePlanTemplateCreatedEvent extends BaseEvent {
+    readonly data: any;
+    constructor(eventData: {
+        data: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_TEMPLATE_CREATED, eventData.auditUser);
+        this.data = eventData.data;
+    }
+}
+
+export class ReleasePlanTemplateUpdatedEvent extends BaseEvent {
+    readonly preData: any;
+    readonly data: any;
+    constructor(eventData: {
+        data: any;
+        preData: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_TEMPLATE_UPDATED, eventData.auditUser);
+        this.data = eventData.data;
+        this.preData = eventData.preData;
+    }
+}
+
+export class ReleasePlanTemplateDeletedEvent extends BaseEvent {
+    readonly preData: any;
+    constructor(eventData: {
+        preData: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_TEMPLATE_DELETED, eventData.auditUser);
+        this.preData = eventData.preData;
+    }
+}
+
+export class ReleasePlanAddedEvent extends BaseEvent {
+    readonly data: any;
+    constructor(eventData: {
+        data: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_ADDED, eventData.auditUser);
+        this.data = eventData.data;
+    }
+}
+
+export class ReleasePlanRemovedEvent extends BaseEvent {
+    readonly preData: any;
+    constructor(eventData: {
+        preData: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_REMOVED, eventData.auditUser);
+        this.preData = eventData.preData;
+    }
+}
+
+export class ReleasePlanMilestoneStartedEvent extends BaseEvent {
+    readonly preData: any;
+    readonly data: any;
+    constructor(eventData: {
+        preData: any;
+        data: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_MILESTONE_STARTED, eventData.auditUser);
+        this.preData = eventData.preData;
+        this.data = eventData.data;
+    }
+}
+
 interface IUserEventData
     extends Pick<
         IUserWithRootRole,
@@ -2023,4 +2116,19 @@ function mapUserToData(user: IUserEventData): any {
         email: user.email,
         rootRole: user.rootRole,
     };
+}
+
+export class UserPreferenceUpdatedEvent extends BaseEvent {
+    readonly userId;
+    readonly data: any;
+
+    constructor(eventData: {
+        userId: number;
+        data: any;
+        auditUser: IAuditUser;
+    }) {
+        super(USER_PREFERENCE_UPDATED, eventData.auditUser);
+        this.userId = eventData.userId;
+        this.data = eventData.data;
+    }
 }

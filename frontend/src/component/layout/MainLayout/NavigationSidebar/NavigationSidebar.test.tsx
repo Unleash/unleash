@@ -77,33 +77,33 @@ test('select active item', async () => {
 
     const links = screen.getAllByRole('link');
 
-    expect(links[1]).toHaveClass(classes.selected);
+    expect(links[2]).toHaveClass(classes.selected);
 });
-
-const SetupComponent: FC<{ project: string; flags: LastViewedFlag[] }> = ({
-    project,
-    flags,
-}) => {
-    const { setLastViewed: setProject } = useLastViewedProject();
-    const { setLastViewed: setFlag } = useLastViewedFlags();
-
-    useEffect(() => {
-        setProject(project);
-        flags.forEach((flag) => {
-            setFlag(flag);
-        });
-    }, []);
-
-    return <NavigationSidebar />;
-};
 
 test('print recent projects and flags', async () => {
     testServerRoute(server, `/api/admin/projects/projectA/overview`, {
         name: 'projectNameA',
     });
 
+    const TestNavigationSidebar: FC<{
+        project?: string;
+        flags?: LastViewedFlag[];
+    }> = ({ project, flags }) => {
+        const { setLastViewed: setProject } = useLastViewedProject();
+        const { setLastViewed: setFlag } = useLastViewedFlags();
+
+        useEffect(() => {
+            setProject(project);
+            flags?.forEach((flag) => {
+                setFlag(flag);
+            });
+        }, []);
+
+        return <NavigationSidebar />;
+    };
+
     render(
-        <SetupComponent
+        <TestNavigationSidebar
             project={'projectA'}
             flags={[{ featureId: 'featureA', projectId: 'projectB' }]}
         />,
@@ -111,4 +111,60 @@ test('print recent projects and flags', async () => {
 
     await screen.findByText('projectNameA');
     await screen.findByText('featureA');
+});
+
+describe('order of items in navigation', () => {
+    const getLinks = async () => {
+        const configureButton = await screen.findByRole('button', {
+            name: /configure/i,
+        });
+        configureButton.click();
+        await waitFor(() =>
+            expect(configureButton.getAttribute('aria-expanded')).toBe('true'),
+        );
+        const adminButton = await screen.findByRole('button', {
+            name: /admin/i,
+        });
+        adminButton.click();
+        await waitFor(() =>
+            expect(adminButton.getAttribute('aria-expanded')).toBe('true'),
+        );
+
+        const links = await screen.findAllByRole('link');
+        return links.map((el: HTMLElement) => ({
+            text: el.textContent,
+            icon: el.querySelector('svg')?.getAttribute('data-testid'),
+        }));
+    };
+
+    test('menu for open-source', async () => {
+        render(<NavigationSidebar />);
+
+        expect(await getLinks()).toMatchSnapshot();
+    });
+
+    test('menu for pro plan', async () => {
+        testServerRoute(server, '/api/admin/ui-config', {
+            versionInfo: {
+                current: { enterprise: 'version' },
+            },
+            environment: 'Pro',
+        });
+
+        render(<NavigationSidebar />);
+
+        expect(await getLinks()).toMatchSnapshot();
+    });
+
+    test('menu for enterprise plan', async () => {
+        testServerRoute(server, '/api/admin/ui-config', {
+            versionInfo: {
+                current: { enterprise: 'version' },
+            },
+            environment: 'Enterprise',
+        });
+        render(<NavigationSidebar />);
+
+        expect(await getLinks()).toMatchSnapshot();
+    });
 });

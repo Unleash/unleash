@@ -347,15 +347,15 @@ Because a feature flag service controls how an application behaves in production
 
 Unleash provides the data to log any change over time at the flag level and at the project level. Logs are useful for downstream data warehouses or data lakes. Tools like [Splunk](https://www.splunk.com/) can help you combine logs and run advanced queries against them.
 
-For our Python app, we can view Event logs to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
+For our Python app, we can view events in [Event Log](/reference/events#event-log) to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
 
 -   When the flag was created
 -   How the gradual rollout strategy was configured
 -   When and how the variants were created and configured
 
-![Event logs in Unleash track every single change made to flags, similar to Git commit history.](/img/python-ex-logs.png)
+![Event Log in Unleash tracks every single change made to flags, similar to Git commit history.](/img/python-ex-logs.png)
 
-You can also retrieve event log data by using an API command below:
+You can also retrieve events by using the API command below:
 
 ```py
 import requests
@@ -373,7 +373,7 @@ response = requests.request("GET", url, headers=headers, data=payload)
 print(response.text)
 ```
 
-Read our documentation on [Event logs](/reference/event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
+Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
 
 ## Flag Automation & Workflow Integration for Python Apps
 

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -6,9 +7,8 @@ import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
 import ApiError from 'component/common/ApiError/ApiError';
 import useToast from 'hooks/useToast';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { Alert, styled, TableBody, TableRow } from '@mui/material';
+import { Alert, styled, TableBody, TableRow, Link } from '@mui/material';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
-import { Link } from 'react-router-dom';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
 import type { IProjectEnvironment } from 'interfaces/environments';
 import { getEnabledEnvs } from './helpers';
@@ -32,6 +32,7 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import useProjectOverview, {
     useProjectOverviewNameOrId,
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { UpgradeMoreEnvironments } from './UpgradeMoreEnvironments';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -225,10 +226,20 @@ const ProjectEnvironmentList = () => {
         <PageHeader
             title={`Environments (${rows.length})`}
             actions={
-                <Search
-                    initialValue={globalFilter}
-                    onChange={setGlobalFilter}
-                />
+                <>
+                    <Search
+                        initialValue={globalFilter}
+                        onChange={setGlobalFilter}
+                    />
+                    {!isOss() ? (
+                        <>
+                            <PageHeader.Divider />
+                            <Link component={RouterLink} to='/environments'>
+                                Configure environments
+                            </Link>
+                        </>
+                    ) : null}
+                </>
             }
         />
     );
@@ -245,12 +256,15 @@ const ProjectEnvironmentList = () => {
                     retrieve configured activation strategies for a specific
                     environment, the application must use an environment
                     specific API token. You can look up the environment-specific{' '}
-                    <Link to='/admin/api'>API tokens here</Link>.
+                    <RouterLink to='/admin/api'>API tokens here</RouterLink>.
                     <br />
                     <br />
                     Your administrator can configure an environment-specific API
                     token to be used in the SDK. If you are an administrator you
-                    can <Link to='/admin/api'>create a new API token here</Link>
+                    can{' '}
+                    <RouterLink to='/admin/api'>
+                        create a new API token here
+                    </RouterLink>
                     .
                 </StyledAlert>
                 <SearchHighlightProvider value={globalFilter}>
@@ -261,13 +275,22 @@ const ProjectEnvironmentList = () => {
                         <TableBody {...getTableBodyProps()}>
                             {rows.map((row) => {
                                 prepareRow(row);
+                                const { key, ...rowProps } = row.getRowProps();
                                 return (
-                                    <TableRow hover {...row.getRowProps()}>
-                                        {row.cells.map((cell) => (
-                                            <TableCell {...cell.getCellProps()}>
-                                                {cell.render('Cell')}
-                                            </TableCell>
-                                        ))}
+                                    <TableRow hover key={key} {...rowProps}>
+                                        {row.cells.map((cell) => {
+                                            const { key, ...cellProps } =
+                                                cell.getCellProps();
+
+                                            return (
+                                                <TableCell
+                                                    key={key}
+                                                    {...cellProps}
+                                                >
+                                                    {cell.render('Cell')}
+                                                </TableCell>
+                                            );
+                                        })}
                                     </TableRow>
                                 );
                             })}
@@ -295,6 +318,7 @@ const ProjectEnvironmentList = () => {
                         />
                     }
                 />
+                {isOss() ? <UpgradeMoreEnvironments /> : null}
                 <EnvironmentHideDialog
                     environment={selectedEnvironment}
                     open={hideDialog}

@@ -1,11 +1,12 @@
 import { headers } from 'utils/apiUtils';
 import useAPI from '../useApi/useApi';
+import type { UserSchema } from 'openapi';
 
 type PasswordLogin = (
     path: string,
     username: string,
     password: string,
-) => Promise<Response>;
+) => Promise<UserSchema>;
 
 type EmailLogin = (path: string, email: string) => Promise<Response>;
 
@@ -21,7 +22,11 @@ export const useAuthApi = (): IUseAuthApiOutput => {
         propagateErrors: true,
     });
 
-    const passwordAuth = (path: string, username: string, password: string) => {
+    const passwordAuth = async (
+        path: string,
+        username: string,
+        password: string,
+    ): Promise<UserSchema> => {
         const req = {
             caller: () => {
                 return fetch(path, {
@@ -33,7 +38,10 @@ export const useAuthApi = (): IUseAuthApiOutput => {
             id: 'passwordAuth',
         };
 
-        return makeRequest(req.caller, req.id);
+        const res = await makeRequest(req.caller, req.id);
+        const data = await res.json();
+
+        return data;
     };
 
     const emailAuth = (path: string, email: string) => {

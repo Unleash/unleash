@@ -147,6 +147,16 @@ export const featureSearchQueryParameters = [
         in: 'query',
     },
     {
+        name: 'archived',
+        schema: {
+            type: 'string',
+            example: 'IS:true',
+        },
+        description:
+            'Whether to get results for archived feature flags or active feature flags. If `true`, Unleash will return only archived flags. If `false`, it will return only active flags.',
+        in: 'query',
+    },
+    {
         name: 'createdAt',
         schema: {
             type: 'string',

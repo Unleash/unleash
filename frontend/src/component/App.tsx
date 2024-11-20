@@ -21,6 +21,8 @@ import { InternalBanners } from './banners/internalBanners/InternalBanners';
 import { ExternalBanners } from './banners/externalBanners/ExternalBanners';
 import { LicenseBanner } from './banners/internalBanners/LicenseBanner';
 import { Demo } from './demo/Demo';
+import { LoginRedirect } from './common/LoginRedirect/LoginRedirect';
+import { SecurityBanner } from './banners/internalBanners/SecurityBanner';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -47,6 +49,8 @@ export const App = () => {
         }
     }, [authDetails, user]);
 
+    const isLoggedIn = Boolean(user?.id);
+
     return (
         <SWRProvider>
             <Suspense fallback={<Loader type='fullscreen' />}>
@@ -63,6 +67,7 @@ export const App = () => {
                                     show={<MaintenanceBanner />}
                                 />
                                 <LicenseBanner />
+                                <SecurityBanner />
                                 <ExternalBanners />
                                 <InternalBanners />
                                 <StyledContainer>
@@ -92,7 +97,13 @@ export const App = () => {
                                         />
                                         <Route
                                             path='*'
-                                            element={<NotFound />}
+                                            element={
+                                                isLoggedIn ? (
+                                                    <NotFound />
+                                                ) : (
+                                                    <LoginRedirect />
+                                                )
+                                            }
                                         />
                                     </Routes>
 

@@ -1,13 +1,8 @@
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDependencyDialogue';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
-import { type FC, useState } from 'react';
-import {
-    FlexRow,
-    StyledDetail,
-    StyledLabel,
-    StyledLink,
-} from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
+import { useState } from 'react';
+import { StyledLink } from '../FeatureOverviewSidePanel/FeatureOverviewSidePanelDetails/StyledRow';
 import { DependencyActions } from './DependencyActions';
 import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesApi/useDependentFeaturesApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -23,6 +18,20 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { VariantsTooltip } from './VariantsTooltip';
+import { styled } from '@mui/material';
+import {
+    StyledMetaDataItem,
+    StyledMetaDataItemLabel,
+    StyledMetaDataItemValue,
+} from './FeatureOverviewMetaData';
+
+const StyledPermissionButton = styled(PermissionButton)(({ theme }) => ({
+    '&&&': {
+        fontSize: theme.fontSizes.smallBody,
+        lineHeight: 1,
+        margin: 0,
+    },
+}));
 
 const useDeleteDependency = (project: string, featureId: string) => {
     const { trackEvent } = usePlausibleTracker();
@@ -83,7 +92,11 @@ const useDeleteDependency = (project: string, featureId: string) => {
     return deleteDependency;
 };
 
-export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
+interface IDependencyRowProps {
+    feature: IFeatureToggle;
+}
+
+export const DependencyRow = ({ feature }: IDependencyRowProps) => {
     const [showDependencyDialogue, setShowDependencyDialogue] = useState(false);
     const canAddParentDependency =
         Boolean(feature.project) &&
@@ -103,55 +116,54 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
             <ConditionallyRender
                 condition={canAddParentDependency}
                 show={
-                    <FlexRow>
-                        <StyledDetail>
-                            <StyledLabel>Dependency:</StyledLabel>
-                            <PermissionButton
-                                size='small'
-                                permission={UPDATE_FEATURE_DEPENDENCY}
-                                projectId={feature.project}
-                                variant='text'
-                                onClick={() => {
-                                    setShowDependencyDialogue(true);
-                                }}
-                                sx={(theme) => ({
-                                    marginBottom: theme.spacing(0.4),
-                                })}
-                            >
-                                Add parent feature
-                            </PermissionButton>
-                        </StyledDetail>
-                    </FlexRow>
+                    <StyledMetaDataItem>
+                        <StyledMetaDataItemLabel>
+                            Dependency:
+                        </StyledMetaDataItemLabel>
+                        <StyledPermissionButton
+                            size='small'
+                            permission={UPDATE_FEATURE_DEPENDENCY}
+                            projectId={feature.project}
+                            variant='text'
+                            onClick={() => {
+                                setShowDependencyDialogue(true);
+                            }}
+                        >
+                            Add parent feature
+                        </StyledPermissionButton>
+                    </StyledMetaDataItem>
                 }
             />
             <ConditionallyRender
                 condition={hasParentDependency}
                 show={
-                    <FlexRow>
-                        <StyledDetail>
-                            <StyledLabel>Dependency:</StyledLabel>
+                    <StyledMetaDataItem>
+                        <StyledMetaDataItemLabel>
+                            Dependency:
+                        </StyledMetaDataItemLabel>
+                        <StyledMetaDataItemValue>
                             <StyledLink
                                 to={`/projects/${feature.project}/features/${feature.dependencies[0]?.feature}`}
                             >
                                 {feature.dependencies[0]?.feature}
                             </StyledLink>
-                        </StyledDetail>
-                        <ConditionallyRender
-                            condition={checkAccess(
-                                UPDATE_FEATURE_DEPENDENCY,
-                                environment,
-                            )}
-                            show={
-                                <DependencyActions
-                                    feature={feature.name}
-                                    onEdit={() =>
-                                        setShowDependencyDialogue(true)
-                                    }
-                                    onDelete={deleteDependency}
-                                />
-                            }
-                        />
-                    </FlexRow>
+                            <ConditionallyRender
+                                condition={checkAccess(
+                                    UPDATE_FEATURE_DEPENDENCY,
+                                    environment,
+                                )}
+                                show={
+                                    <DependencyActions
+                                        feature={feature.name}
+                                        onEdit={() =>
+                                            setShowDependencyDialogue(true)
+                                        }
+                                        onDelete={deleteDependency}
+                                    />
+                                }
+                            />
+                        </StyledMetaDataItemValue>
+                    </StyledMetaDataItem>
                 }
             />
             <ConditionallyRender
@@ -159,12 +171,12 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                     hasParentDependency && !feature.dependencies[0]?.enabled
                 }
                 show={
-                    <FlexRow>
-                        <StyledDetail>
-                            <StyledLabel>Dependency value:</StyledLabel>
-                            <span>disabled</span>
-                        </StyledDetail>
-                    </FlexRow>
+                    <StyledMetaDataItem>
+                        <StyledMetaDataItemLabel>
+                            Dependency value:
+                        </StyledMetaDataItemLabel>
+                        <span>disabled</span>
+                    </StyledMetaDataItem>
                 }
             />
             <ConditionallyRender
@@ -173,30 +185,28 @@ export const DependencyRow: FC<{ feature: IFeatureToggle }> = ({ feature }) => {
                     Boolean(feature.dependencies[0]?.variants?.length)
                 }
                 show={
-                    <FlexRow>
-                        <StyledDetail>
-                            <StyledLabel>Dependency value:</StyledLabel>
-                            <VariantsTooltip
-                                variants={
-                                    feature.dependencies[0]?.variants || []
-                                }
-                            />
-                        </StyledDetail>
-                    </FlexRow>
+                    <StyledMetaDataItem>
+                        <StyledMetaDataItemLabel>
+                            Dependency value:
+                        </StyledMetaDataItemLabel>
+                        <VariantsTooltip
+                            variants={feature.dependencies[0]?.variants || []}
+                        />
+                    </StyledMetaDataItem>
                 }
             />
             <ConditionallyRender
                 condition={hasChildren}
                 show={
-                    <FlexRow>
-                        <StyledDetail>
-                            <StyledLabel>Children:</StyledLabel>
-                            <ChildrenTooltip
-                                childFeatures={feature.children}
-                                project={feature.project}
-                            />
-                        </StyledDetail>
-                    </FlexRow>
+                    <StyledMetaDataItem>
+                        <StyledMetaDataItemLabel>
+                            Children:
+                        </StyledMetaDataItemLabel>
+                        <ChildrenTooltip
+                            childFeatures={feature.children}
+                            project={feature.project}
+                        />
+                    </StyledMetaDataItem>
                 }
             />
 

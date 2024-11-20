@@ -10,6 +10,20 @@ import {
 } from '@mui/material';
 import Close from '@mui/icons-material/Close';
 import { NewInUnleashTooltip } from './NewInUnleashTooltip';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Badge } from 'component/common/Badge/Badge';
+
+export type NewInUnleashItemDetails = {
+    label: string;
+    summary: string;
+    icon: ReactNode;
+    onCheckItOut?: () => void;
+    docsLink?: string;
+    show: boolean;
+    longDescription: ReactNode;
+    preview?: ReactNode;
+    beta?: boolean;
+};
 
 const StyledItemButton = styled(ListItemButton)(({ theme }) => ({
     outline: `1px solid ${theme.palette.divider}`,
@@ -26,20 +40,22 @@ const LabelWithSummary = styled('div')(({ theme }) => ({
     flex: 1,
 }));
 
+const StyledItemTitle = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    alignItems: 'center',
+    height: theme.spacing(3),
+}));
+
 const StyledItemButtonClose = styled(IconButton)(({ theme }) => ({
     padding: theme.spacing(0.25),
 }));
 
-interface INewInUnleashItemProps {
-    icon: ReactNode;
+interface INewInUnleashItemProps
+    extends Omit<NewInUnleashItemDetails, 'show' | 'beta'> {
     onClick: () => void;
     onDismiss: () => void;
-    label: string;
-    longDescription: ReactNode;
-    link: string;
-    docsLink: string;
-    preview?: ReactNode;
-    summary: string;
+    beta: boolean;
 }
 
 const useTooltip = () => {
@@ -62,10 +78,11 @@ export const NewInUnleashItem = ({
     onDismiss,
     label,
     longDescription,
-    link,
+    onCheckItOut,
     docsLink,
     preview,
     summary,
+    beta,
 }: INewInUnleashItemProps) => {
     const { open, handleTooltipOpen, handleTooltipClose } = useTooltip();
 
@@ -87,16 +104,23 @@ export const NewInUnleashItem = ({
                 onClose={handleTooltipClose}
                 title={label}
                 longDescription={longDescription}
-                link={link}
+                onCheckItOut={onCheckItOut}
                 docsLink={docsLink}
                 preview={preview}
+                beta={beta}
             >
                 <StyledItemButton>
                     {icon}
                     <LabelWithSummary>
-                        <Typography fontWeight='bold' fontSize='small'>
-                            {label}
-                        </Typography>
+                        <StyledItemTitle>
+                            <Typography fontWeight='bold' fontSize='small'>
+                                {label}
+                            </Typography>
+                            <ConditionallyRender
+                                condition={beta}
+                                show={<Badge color='secondary'>Beta</Badge>}
+                            />
+                        </StyledItemTitle>
                         <Typography fontSize='small'>{summary}</Typography>
                     </LabelWithSummary>
                     <Tooltip title='Dismiss' arrow sx={{ marginLeft: 'auto' }}>

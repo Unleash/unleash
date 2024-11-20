@@ -14,6 +14,7 @@ import Add from '@mui/icons-material/Add';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import type { IRole } from 'interfaces/role';
 import { TabLink } from 'component/common/TabNav/TabLink';
+import { usePageTitle } from 'hooks/usePageTitle';
 
 const StyledHeader = styled('div')(() => ({
     display: 'flex',
@@ -31,6 +32,7 @@ const StyledActions = styled('div')({
 });
 
 export const RolesPage = () => {
+    usePageTitle('Roles');
     const { pathname } = useLocation();
 
     const { roles, projectRoles, loading } = useRoles();

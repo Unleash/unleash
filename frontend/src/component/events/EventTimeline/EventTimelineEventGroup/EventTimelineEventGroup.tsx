@@ -23,6 +23,13 @@ interface IEventTimelineEventProps {
     endTime: number;
 }
 
+const StyledBadge = styled(Badge)(({ theme }) => ({
+    '.MuiBadge-badge': {
+        backgroundColor: theme.palette.background.alternative,
+        color: theme.palette.primary.contrastText,
+    },
+}));
+
 export const EventTimelineEventGroup = ({
     group,
     startTime,
@@ -34,7 +41,11 @@ export const EventTimelineEventGroup = ({
 
     const position = `${((eventTime - startTime) / timelineDuration) * 100}%`;
     const trackHover = () => {
-        trackEvent('event-timeline-event-hover');
+        trackEvent('event-timeline', {
+            props: {
+                eventType: 'event hover',
+            },
+        });
     };
 
     return (
@@ -44,13 +55,12 @@ export const EventTimelineEventGroup = ({
                 maxWidth={350}
                 arrow
             >
-                <Badge
+                <StyledBadge
                     badgeContent={group.length}
-                    color='primary'
                     invisible={group.length < 2}
                 >
                     <EventTimelineEventCircle group={group} />
-                </Badge>
+                </StyledBadge>
             </HtmlTooltip>
         </StyledEvent>
     );

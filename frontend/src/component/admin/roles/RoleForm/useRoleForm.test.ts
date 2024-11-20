@@ -1,7 +1,7 @@
 import { renderHook } from '@testing-library/react';
 import { useRoleForm } from './useRoleForm';
-import { act } from 'react-test-renderer';
 import { test } from 'vitest';
+import { act } from 'react';
 
 describe('trim names and description', () => {
     test('name is trimmed before being set', () => {
@@ -14,14 +14,14 @@ describe('trim names and description', () => {
         expect(result.current.name).toBe('my role');
     });
 
-    test('description is trimmed before being set', () => {
+    test('description is not trimmed before being set', () => {
         const { result } = renderHook(() => useRoleForm());
 
         act(() => {
             result.current.setDescription('  my description    ');
         });
 
-        expect(result.current.description).toBe('my description');
+        expect(result.current.description).toBe('  my description    ');
     });
 
     test('name that is just whitespace triggers an error', () => {

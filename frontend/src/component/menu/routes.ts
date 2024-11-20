@@ -4,7 +4,7 @@ import { StrategiesList } from 'component/strategies/StrategiesList/StrategiesLi
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import { IntegrationList } from 'component/integrations/IntegrationList/IntegrationList';
 import Login from 'component/user/Login/Login';
-import { EEA, P } from 'component/common/flags';
+import { P } from 'component/common/flags';
 import { NewUser } from 'component/user/NewUser/NewUser';
 import ResetPassword from 'component/user/ResetPassword/ResetPassword';
 import ForgottenPassword from 'component/user/ForgottenPassword/ForgottenPassword';
@@ -48,6 +48,9 @@ import { Application } from 'component/application/Application';
 import { Signals } from 'component/signals/Signals';
 import { LazyCreateProject } from '../project/Project/CreateProject/LazyCreateProject';
 import { PersonalDashboard } from '../personalDashboard/PersonalDashboard';
+import { ReleaseManagement } from 'component/releases/ReleaseManagement/ReleaseManagement';
+import { CreateReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/CreateReleasePlanTemplate';
+import { EditReleasePlanTemplate } from 'component/releases/ReleasePlanTemplate/EditReleasePlanTemplate';
 
 export const routes: IRoute[] = [
     // Splash
@@ -62,7 +65,7 @@ export const routes: IRoute[] = [
     // Personal Dashboard
     {
         path: '/personal',
-        title: 'Personal Dashboard',
+        title: 'Dashboard',
         component: PersonalDashboard,
         type: 'protected',
         menu: { mobile: true },
@@ -266,16 +269,47 @@ export const routes: IRoute[] = [
         title: 'Environments',
         component: EnvironmentTable,
         type: 'protected',
-        flag: EEA,
         menu: { mobile: true, advanced: true },
+        enterprise: true,
     },
     {
         path: '/feedback',
         title: 'Feedback',
         component: FeedbackList,
         type: 'protected',
-        flag: 'featureSearchFeedbackPosting',
+        flag: 'feedbackPosting',
         menu: {},
+    },
+
+    // Release management/plans
+    {
+        path: '/release-management',
+        title: 'Release management',
+        component: ReleaseManagement,
+        type: 'protected',
+        menu: { advanced: true, mode: ['enterprise'] },
+        flag: 'releasePlans',
+        enterprise: true,
+    },
+    {
+        path: '/release-management/create-template',
+        title: 'Create release plan template',
+        parent: '/release-management',
+        component: CreateReleasePlanTemplate,
+        type: 'protected',
+        menu: { mode: ['enterprise'] },
+        flag: 'releasePlans',
+        enterprise: true,
+    },
+    {
+        path: '/release-management/edit/:templateId',
+        title: 'Edit release plan template',
+        parent: '/release-management',
+        component: EditReleasePlanTemplate,
+        type: 'protected',
+        menu: { mode: ['enterprise'] },
+        flag: 'releasePlans',
+        enterprise: true,
     },
 
     // Tags
@@ -511,6 +545,7 @@ export const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
             menu: route.menu,
             configFlag: route.configFlag,
             notFlag: route.notFlag,
+            enterprise: route.enterprise,
         };
     });
 };

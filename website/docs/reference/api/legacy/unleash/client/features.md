@@ -114,9 +114,9 @@ Used to fetch details about a specific feature flag. This is mainly provided to 
 
 ### Strategy Constraints {#strategy-constraints}
 
-:::info Availability
+:::note Availability
 
-Before Unleash 4.16, strategy constraints were only available to Unleash Pro and Enterprise users. From 4.16 onwards, they're **available to everyone**.
+**Version**: `4.16+`
 
 :::
 

@@ -10,6 +10,7 @@ import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStra
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -51,6 +52,7 @@ export const FeatureStrategyMenu = ({
     const { trackEvent } = usePlausibleTracker();
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen ? 'FeatureStrategyMenuPopover' : undefined;
+    const flagOverviewRedesignEnabled = useUiFlag('flagOverviewRedesign');
 
     const onClose = () => {
         setAnchor(undefined);
@@ -77,9 +79,52 @@ export const FeatureStrategyMenu = ({
         true,
     );
 
+    if (flagOverviewRedesignEnabled) {
+        return (
+            <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
+                <PermissionButton
+                    data-testid='ADD_STRATEGY_BUTTON'
+                    permission={CREATE_FEATURE_STRATEGY}
+                    projectId={projectId}
+                    environmentId={environmentId}
+                    onClick={openMoreStrategies}
+                    aria-labelledby={popoverId}
+                    variant={variant}
+                    size={size}
+                    sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
+                    disabled={Boolean(disableReason)}
+                    tooltipProps={{
+                        title: disableReason ? disableReason : undefined,
+                    }}
+                >
+                    {label}
+                </PermissionButton>
+                <Popover
+                    id={popoverId}
+                    open={isPopoverOpen}
+                    anchorEl={anchor}
+                    onClose={onClose}
+                    onClick={onClose}
+                    PaperProps={{
+                        sx: (theme) => ({
+                            paddingBottom: theme.spacing(1),
+                        }),
+                    }}
+                >
+                    <FeatureStrategyMenuCards
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                    />
+                </Popover>
+            </StyledStrategyMenu>
+        );
+    }
+
     return (
         <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
             <PermissionButton
+                data-testid='ADD_STRATEGY_BUTTON'
                 permission={CREATE_FEATURE_STRATEGY}
                 projectId={projectId}
                 environmentId={environmentId}

@@ -2,7 +2,7 @@
 title: Unleash Context
 ---
 
-The **Unleash Context** contains information relating to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies.md) and [strategy constraints](../reference/strategy-constraints.md) and to calculate [flag stickiness](../reference/stickiness.md). The Unleash Context is an important feature of all the [Unleash client SDKs](../reference/sdks/index.md).
+The **Unleash Context** contains information relating to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies) and [strategy constraints](../reference/strategy-constraints) and to calculate [flag stickiness](../reference/stickiness). The Unleash Context is an important feature of all the [Unleash client SDKs](../reference/sdks).
 
 ## Structure
 
@@ -12,7 +12,7 @@ You can group the Unleash Context fields into two separate groups based on how t
 
 **Dynamic** fields, however, can change with every request. You'll typically provide these when checking whether a flag is enabled in your client.
 
-_All fields are optional_, but some strategies depend on certain fields being present. For instance, [the UserIDs strategy](activation-strategies.md#userids) requires that the `userId` field is present on the Context.
+_All fields are optional_, but some strategies depend on certain fields being present. For instance, [the UserIDs strategy](activation-strategies#userids) requires that the `userId` field is present on the Context.
 
 The below table gives a brief overview over what the fields' intended usage is, their lifetime, and their type. Note that the exact type can vary between programming languages and implementations. Be sure to consult your specific client SDK for more information on its implementation of the Unleash Context.
 
@@ -29,7 +29,7 @@ The below table gives a brief overview over what the fields' intended usage is, 
 
 ### The `properties` field
 
-The `properties` field is different from the others. You can use the `properties` field to provide arbitrary data to [custom strategies](../reference/custom-activation-strategies.md) or to [strategy constraints](../reference/strategy-constraints.md). The `properties` field is also where you add values for [custom context fields](#custom-context-fields).
+The `properties` field is different from the others. You can use the `properties` field to provide arbitrary data to [custom strategies](../reference/custom-activation-strategies) or to [strategy constraints](../reference/strategy-constraints). The `properties` field is also where you add values for [custom context fields](#custom-context-fields).
 
 
 #### A note on properties and constraints
@@ -42,13 +42,13 @@ For operators that work on non-string types, such as numeric and date time opera
 
 ## Custom context fields
 
-:::info Availability
+:::note Availability
 
-Before Unleash 4.16, custom context fields were only available to Unleash Pro and Enterprise users. From 4.16 onwards, they're **available to everyone**. They were introduced in Unleash 3.2.28.
+**Version**: `4.16+`
 
 :::
 
-Custom context fields allow you to extend the Unleash Context with more data that is applicable to your situation. Each context field definition consists of a name and an optional description. Additionally, you can choose to define a set of [_legal values_](#legal-values "legal values for custom context fields"), and you can choose whether or not the context field can be used in [custom stickiness calculations](../reference/stickiness.md#custom-stickiness) for the [gradual rollout strategy](activation-strategies.md#customize-stickiness-beta) and for [feature flag variants](../reference/feature-toggle-variants.md).
+Custom context fields allow you to extend the Unleash Context with more data that is applicable to your situation. Each context field definition consists of a name and an optional description. Additionally, you can choose to define a set of [_legal values_](#legal-values "legal values for custom context fields"), and you can choose whether or not the context field can be used in [custom stickiness calculations](../reference/stickiness#custom-stickiness) for the [gradual rollout strategy](activation-strategies#customize-stickiness-beta) and for [feature flag variants](../reference/feature-toggle-variants).
 
 When interacting with custom context fields in code, they must be accessed via the Unleash Context's `properties` map, using the context field's name as the key.
 
@@ -63,7 +63,7 @@ You can update custom context fields after they have been created. You can chang
 By using the **legal values** option when creating a context field, you can create a set of valid options for a context field's values.
 If a context field has a defined set of legal values, the Unleash Admin UI will only allow users to enter one or more of the specified values. If a context field _doesn't_ have any defined legal values, the user can enter whatever they want.
 
-Using a custom context field called _region_ as an example: if you define the field's legal values as _Africa_, _Asia_, _Europe_, and _North America_, then you would only be allowed to use one or more of those four values when using the custom context field as a [strategy constraint](../reference/strategy-constraints.md).
+Using a custom context field called _region_ as an example: if you define the field's legal values as _Africa_, _Asia_, _Europe_, and _North America_, then you would only be allowed to use one or more of those four values when using the custom context field as a [strategy constraint](../reference/strategy-constraints).
 
 ![A strategy constraint form with a constraint set to "region". The "values" input is a dropdown menu containing the options "Africa", "Asia", "Europe", and "North America", as defined in the preceding paragraph.](/img/constraints_legal_values.png)
 
@@ -71,14 +71,14 @@ Using a custom context field called _region_ as an example: if you define the fi
 
 :::note SDK compatibility
 
-Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) for the full overview.
+Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks#server-side-sdk-compatibility-table) for the full overview.
 
 :::
 
-Any context field _can_ be used to [calculate custom stickiness](../reference/stickiness.md#custom-stickiness). However, you need to explicitly tell Unleash that you want a field to be used for custom stickiness for it to be possible. You can enable this functionality either when you create the context field or at any later point. For steps on how to do this, see [the _How to define custom context fields_ guide](../how-to/how-to-define-custom-context-fields).
+Any context field _can_ be used to [calculate custom stickiness](../reference/stickiness#custom-stickiness). However, you need to explicitly tell Unleash that you want a field to be used for custom stickiness for it to be possible. You can enable this functionality either when you create the context field or at any later point. For steps on how to do this, see [the _How to define custom context fields_ guide](../how-to/how-to-define-custom-context-fields).
 
 
 
-[^1]: If you're on Unleash 4.3 or higher, you'll probably want to use [the environments feature](../reference/environments.md) instead of relying on the `environment` context field when working with environments.
+[^1]: If you're on Unleash 4.3 or higher, you'll probably want to use [the environments feature](../reference/environments) instead of relying on the `environment` context field when working with environments.
 
-[^2]: Check the [*strategy constraints: advanced support* row of the compatibility table](../reference/sdks/index.md#strategy-constraints-advanced-support) for an overview of which SDKs provide the `currentTime` property.
+[^2]: Check the [*strategy constraints: advanced support* row of the compatibility table](../reference/sdks#strategy-constraints-advanced-support) for an overview of which SDKs provide the `currentTime` property.

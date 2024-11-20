@@ -12,6 +12,7 @@ const actionColors = {
 };
 
 const theme = {
+    mode: 'dark',
     breakpoints: {
         values: {
             xs: 0,
@@ -309,7 +310,7 @@ const theme = {
             series: colors.chartSeries,
         },
     },
-};
+} as const;
 
 export default createTheme({
     ...theme,

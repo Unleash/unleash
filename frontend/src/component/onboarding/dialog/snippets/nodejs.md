@@ -10,8 +10,9 @@ const { initialize } = require('unleash-client');
 const unleash = initialize({
   url: '<YOUR_API_URL>',
   appName: 'unleash-onboarding-node',
-  customHeaders: { Authorization: '<YOUR_API_TOKEN>' },
-  metricsInterval: 1000,
+  customHeaders: {
+    Authorization: '<YOUR_API_TOKEN>' // in production use environment variable
+  },
 });
 
 setInterval(() => {

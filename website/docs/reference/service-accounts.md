@@ -2,9 +2,9 @@
 title: Service Accounts
 ---
 
-:::info Availability
+:::note Availability
 
-Service accounts is an enterprise feature available from Unleash 4.21 onwards.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.21+`
 
 :::
 
@@ -26,7 +26,7 @@ Service account tokens allow service accounts to use the Admin API as themselves
 
 These tokens act just like [personal access tokens](./api-tokens-and-client-keys.mdx#personal-access-tokens) for the service accounts, except that they are managed by Unleash admins.
 
-When using a service account token to modify resources, the event log will display the service account name for that operation.
+When you use a service account token to modify resources, the events record the service account name for that operation.
 
 Service account tokens can be managed by editing the respective service account: 
 

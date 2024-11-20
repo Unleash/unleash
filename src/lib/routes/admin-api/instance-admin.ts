@@ -85,6 +85,8 @@ class InstanceAdminController extends Controller {
         return {
             OIDCenabled: true,
             SAMLenabled: false,
+            passwordAuthEnabled: true,
+            SCIMenabled: false,
             clientApps: [
                 { range: 'allTime', count: 15 },
                 { range: '30d', count: 9 },
@@ -107,6 +109,7 @@ class InstanceAdminController extends Controller {
             sum: 'some-sha256-hash',
             timestamp: new Date(2023, 6, 12, 10, 0, 0, 0),
             users: 10,
+            licensedUsers: 12,
             serviceAccounts: 2,
             apiTokens: new Map([]),
             versionEnterprise: '5.1.7',

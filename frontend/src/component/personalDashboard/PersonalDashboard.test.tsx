@@ -56,6 +56,12 @@ const setupLongRunningProject = () => {
         ],
     });
 
+    testServerRoute(
+        server,
+        '/api/admin/client-metrics/features/myFlag/raw',
+        [],
+    );
+
     testServerRoute(server, '/api/admin/projects/projectId/features/myFlag', {
         environments: [
             { name: 'development', type: 'development' },
@@ -148,8 +154,13 @@ const setupNoProject = () => {
     });
 };
 
-// @ts-ignore
+// @ts-expect-error The return type here isn't correct, but it's not
+// an issue for the tests. We just need to override it because it's
+// not implemented in jsdom.
 HTMLCanvasElement.prototype.getContext = () => {};
+
+//scrollIntoView is not implemented in jsdom
+HTMLElement.prototype.scrollIntoView = () => {};
 
 test('Render personal dashboard for a long running project', async () => {
     setupLongRunningProject();
@@ -165,21 +176,13 @@ test('Render personal dashboard for a long running project', async () => {
     await screen.findByText('projectName');
     await screen.findByText('10'); // members
     await screen.findByText('100'); // features
-    await screen.findByText('80%'); // health
+    await screen.findAllByText('80%'); // health
 
-    await screen.findByText(
-        'We have gathered projects and flags you have favorited or owned',
-    );
-    await screen.findByText('Project Insight');
+    await screen.findByText('Project health');
     await screen.findByText('70%'); // avg health past window
     await screen.findByText('someone created a flag');
     await screen.findByText('Member');
-    await screen.findByText('81%'); // current health score
-    await screen.findByText('12 feature flags'); // active flags
-    await screen.findByText('13 feature flags'); // stale flags
-    await screen.findByText('14 feature flags'); // potentially stale flags
     await screen.findByText('myFlag');
-    await screen.findByText('No feature flag metrics data');
     await screen.findByText('production');
     await screen.findByText('Last 48 hours');
 });
@@ -190,7 +193,6 @@ test('Render personal dashboard for a new project', async () => {
 
     await screen.findByText('Welcome Unleash User');
     await screen.findByText('projectName');
-    await screen.findByText('Setup incomplete');
     await screen.findByText('3'); // members
     await screen.findByText('0'); // features
     await screen.findByText('100%'); // health
@@ -201,8 +203,6 @@ test('Render personal dashboard for a new project', async () => {
     await screen.findByText(
         'You have not created or favorited any feature flags. Once you do, they will show up here.',
     );
-
-    await screen.findByText('No feature flag metrics data');
 });
 
 test('Render personal dashboard for a user with no projects', async () => {

@@ -1,9 +1,9 @@
-const {
+import {
     enrichAdditional,
     modifyContent,
     getRepoData,
     getUrls,
-} = require('./shared');
+} from './shared';
 
 // Type definitions
 //
@@ -117,7 +117,7 @@ const modifyContent2 = modifyContent({
     getAdditionalAdmonitions: getAdmonitions,
 });
 
-module.exports.sdks = {
+export const sdks = {
     urls: getUrls(SDKS),
     modifyContent: modifyContent2,
 };

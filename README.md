@@ -79,7 +79,7 @@ If you don't want to run Unleash locally, we also provide easy deployment setups
 
 ### Configure and run Unleash anywhere
 
-The above sections show you how to get up and running quickly and easily. When you're ready to start configuring and customizing Unleash for your own environment, check out the documentation for [getting started with self-managed deployments](https://docs.getunleash.io/reference/deploy/getting-started), [Unleash configuration options](https://docs.getunleash.io/reference/deploy/configuring-unleash), or [running Unleash locally via docker](https://docs.getunleash.io/tutorials/quickstart#i-want-to-run-unleash-locally).
+The above sections show you how to get up and running quickly and easily. When you're ready to start configuring and customizing Unleash for your own environment, check out the documentation for [getting started with self-managed deployments](https://docs.getunleash.io/reference/deploy/getting-started), [Unleash configuration options](https://docs.getunleash.io/reference/deploy/configuring-unleash), or [running Unleash locally via docker](https://docs.getunleash.io/tutorials/quickstart).
 
 <br/>
 
@@ -132,8 +132,8 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - Organise feature flags by [feature flag tags](https://docs.getunleash.io/reference/tags)
 - [Canary releases / gradual rollouts](https://docs.getunleash.io/reference/activation-strategies#gradual-rollout)
 - Targeted releases: release features to specific [users](https://docs.getunleash.io/reference/activation-strategies#userids), [IPs](https://docs.getunleash.io/reference/activation-strategies#ips), or [hostnames](https://docs.getunleash.io/reference/activation-strategies#hostnames)
-- [Kill switches](https://docs.getunleash.io/reference/feature-toggle-types#feature-toggle-types)
-- [A/B testing](https://docs.getunleash.io/topics/a-b-testing)
+- [Kill switches](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types)
+- [A/B testing](https://docs.getunleash.io/feature-flag-tutorials/use-cases/a-b-testing)
 - 2 [environments](https://docs.getunleash.io/reference/environments)
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
 - [Dashboard for managing technical debt](https://docs.getunleash.io/reference/technical-debt) and [stale flags](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles)

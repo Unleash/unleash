@@ -11,7 +11,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { Bar } from 'react-chartjs-2';
 import useTheme from '@mui/material/styles/useTheme';
 import { type FC, useEffect, useMemo, useState } from 'react';
-import { Box, styled, Typography } from '@mui/material';
+import { Box, type Theme, styled, Typography } from '@mui/material';
 import { FeatureMetricsHours } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsHours/FeatureMetricsHours';
 import GeneralSelect from '../common/GeneralSelect/GeneralSelect';
 import { useFeatureMetricsRaw } from 'hooks/api/getters/useFeatureMetricsRaw/useFeatureMetricsRaw';
@@ -23,63 +23,81 @@ import {
     createPlaceholderBarChartOptions,
 } from './createChartOptions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { FlagExposure } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FlagExposure';
 
-const defaultYes = [
-    45_000_000, 28_000_000, 28_000_000, 25_000_000, 50_000_000, 27_000_000,
-    26_000_000, 50_000_000, 32_000_000, 12_000_000, 13_000_000, 31_000_000,
-    12_000_000, 47_000_000, 29_000_000, 46_000_000, 45_000_000, 28_000_000,
-    28_000_000, 25_000_000, 50_000_000, 27_000_000, 26_000_000, 50_000_000,
-    32_000_000, 12_000_000, 13_000_000, 31_000_000, 12_000_000, 47_000_000,
-];
-const defaultNo = [
-    5_000_000, 8_000_000, 3_000_000, 2_000_000, 2_000_000, 5_000_000, 9_000_000,
-    3_000_000, 7_000_000, 2_000_000, 5_000_000, 8_000_000, 3_000_000, 2_000_000,
-    2_000_000, 5_000_000, 1_000_000, 3_000_000, 12_000_000, 2_000_000,
-    1_000_000, 1_000_000, 3_000_000, 2_000_000, 2_000_000, 5_000_000, 1_000_000,
-    3_000_000, 8_000_000, 2_000_000,
-];
+const defaultYes = [0, 14, 28, 21, 33, 31, 31, 22, 26, 37, 31, 14, 21, 14, 0];
 
-const placeholderData = {
-    labels: Array.from({ length: 30 }, (_, i) => i + 1),
+const placeholderData = (theme: Theme) => ({
+    labels: Array.from({ length: 15 }, (_, i) => i + 1),
     datasets: [
         {
             data: defaultYes,
-            label: 'yes',
-            backgroundColor: '#BEBEBE',
-            hoverBackgroundColor: '#BEBEBE',
-        },
-        {
-            data: defaultNo,
-            label: 'no',
-            backgroundColor: '#9A9A9A',
-            hoverBackgroundColor: '#9A9A9A',
+            backgroundColor: theme.palette.divider,
+            hoverBackgroundColor: theme.palette.divider,
+            label: '',
         },
     ],
-};
+});
 
-export const PlaceholderFlagMetricsChart = () => {
+const ChartWrapper = styled('div')({
+    width: '100%',
+    flexGrow: 1,
+});
+
+const PlaceholderFlagMetricsChart: React.FC<{ label: string }> = ({
+    label,
+}) => {
     const theme = useTheme();
 
     const options = useMemo(() => {
         return createPlaceholderBarChartOptions(theme);
     }, [theme]);
 
+    const data = useMemo(() => {
+        return placeholderData(theme);
+    }, [theme]);
+
+    const labelId = 'placeholder-chart-label';
+
     return (
         <>
-            <Typography sx={{ mb: 4 }}>No feature flag metrics data</Typography>
+            <Typography id={labelId}>{label}</Typography>
+            <ChartWrapper>
+                <Bar data={data} options={options} aria-describedby={labelId} />
+            </ChartWrapper>
+        </>
+    );
+};
+
+const EmptyFlagMetricsChart = () => {
+    const theme = useTheme();
+
+    const options = useMemo(() => {
+        return createPlaceholderBarChartOptions(theme);
+    }, [theme]);
+
+    const data = useMemo(() => {
+        return {
+            labels: [],
+            datasets: [],
+        };
+    }, [theme]);
+
+    return (
+        <ChartWrapper>
             <Bar
-                data={placeholderData}
+                data={data}
                 options={options}
                 aria-label='A placeholder bar chart with a single feature flag exposure metrics'
             />
-        </>
+        </ChartWrapper>
     );
 };
 
 const useMetricsEnvironments = (project: string, flagName: string) => {
     const [environment, setEnvironment] = useState<string | null>(null);
     const { feature } = useFeature(project, flagName);
-    const activeEnvironments = feature.environments.map((env) => ({
+    const activeEnvironments = (feature?.environments ?? []).map((env) => ({
         name: env.name,
         type: env.type,
     }));
@@ -103,10 +121,12 @@ const useFlagMetrics = (
     environment: string | null,
     hoursBack: number,
 ) => {
-    const { featureMetrics: metrics = [] } = useFeatureMetricsRaw(
-        flagName,
-        hoursBack,
-    );
+    const {
+        featureMetrics: metrics = [],
+        loading,
+        error,
+    } = useFeatureMetricsRaw(flagName, hoursBack);
+
     const sortedMetrics = useMemo(() => {
         return [...metrics].sort((metricA, metricB) => {
             return metricA.timestamp.localeCompare(metricB.timestamp);
@@ -133,7 +153,7 @@ const useFlagMetrics = (
         return createBarChartOptions(theme, hoursBack, locationSettings);
     }, [theme, hoursBack, locationSettings]);
 
-    return { data, options };
+    return { data, options, loading, error };
 };
 
 const EnvironmentSelect: FC<{
@@ -158,50 +178,127 @@ const EnvironmentSelect: FC<{
 
 const MetricsSelectors = styled(Box)(({ theme }) => ({
     display: 'flex',
-    justifyContent: 'flex-end',
+    justifyContent: 'flex-start',
+    flexFlow: 'row wrap',
     gap: theme.spacing(2),
-    mb: theme.spacing(6),
 }));
 
-export const FlagMetricsChart: FC<{
+const ChartContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(3),
+    alignItems: 'center',
+    height: '100%',
+    justifyContent: 'space-between',
+}));
+
+const StyledExposure = styled(FlagExposure)({
+    alignItems: 'center',
+    justifySelf: 'start',
+});
+
+const ExposureAndMetricsRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexFlow: 'row wrap',
+    width: '100%',
+    gap: theme.spacing(4),
+}));
+
+export const PlaceholderFlagMetricsChartWithWrapper: React.FC<{
+    label: string;
+}> = (props) => {
+    return (
+        <ChartContainer>
+            <PlaceholderFlagMetricsChart {...props} />
+        </ChartContainer>
+    );
+};
+
+const FlagMetricsChartInner: FC<{
     flag: { name: string; project: string };
-}> = ({ flag }) => {
+    onArchive: () => void;
+}> = ({ flag, onArchive }) => {
     const [hoursBack, setHoursBack] = useState(48);
 
     const { environment, setEnvironment, activeEnvironments } =
         useMetricsEnvironments(flag.project, flag.name);
 
-    const { data, options } = useFlagMetrics(flag.name, environment, hoursBack);
+    const {
+        data,
+        options,
+        loading,
+        error: metricsError,
+    } = useFlagMetrics(flag.name, environment, hoursBack);
+
+    if (metricsError) {
+        return (
+            <ChartContainer>
+                <PlaceholderFlagMetricsChart
+                    label={`Couldn't fetch metrics for the current flag right now. Please try again. Report this if it doesn't resolve itself.`}
+                />
+            </ChartContainer>
+        );
+    }
 
     const noData = data.datasets[0].data.length === 0;
 
     return (
-        <>
-            <MetricsSelectors>
-                {environment ? (
-                    <EnvironmentSelect
-                        environment={environment}
-                        setEnvironment={setEnvironment}
-                        activeEnvironments={activeEnvironments}
+        <ChartContainer>
+            <ExposureAndMetricsRow>
+                <StyledExposure
+                    project={flag.project}
+                    flagName={flag.name}
+                    onArchive={onArchive}
+                />
+                <MetricsSelectors>
+                    {environment ? (
+                        <EnvironmentSelect
+                            environment={environment}
+                            setEnvironment={setEnvironment}
+                            activeEnvironments={activeEnvironments}
+                        />
+                    ) : null}
+                    <FeatureMetricsHours
+                        hoursBack={hoursBack}
+                        setHoursBack={setHoursBack}
                     />
-                ) : null}
-                <FeatureMetricsHours
-                    hoursBack={hoursBack}
-                    setHoursBack={setHoursBack}
-                />
-            </MetricsSelectors>
+                </MetricsSelectors>
+            </ExposureAndMetricsRow>
 
-            {noData ? (
-                <PlaceholderFlagMetricsChart />
+            {loading ? (
+                <EmptyFlagMetricsChart />
+            ) : noData ? (
+                <PlaceholderFlagMetricsChart label='No metrics for this feature flag in the selected environment and time period' />
             ) : (
-                <Bar
-                    data={data}
-                    options={options}
-                    aria-label='A bar chart with a single feature flag exposure metrics'
-                />
+                <ChartWrapper>
+                    <Bar
+                        data={data}
+                        options={options}
+                        aria-label='A bar chart with a single feature flag exposure metrics'
+                    />
+                </ChartWrapper>
             )}
-        </>
+        </ChartContainer>
     );
+};
+
+export const FlagMetricsChart: FC<{
+    flag: { name: string; project: string };
+    onArchive: () => void;
+}> = (props) => {
+    const breakingNames = ['.', '..'];
+    if (breakingNames.includes(props.flag.name)) {
+        return (
+            <ChartContainer>
+                <PlaceholderFlagMetricsChart
+                    label={`The current flag name ('${props.flag.name}') is known to cause issues due how it affects URLs. We cannot show you a chart for it.`}
+                />
+            </ChartContainer>
+        );
+    }
+
+    return <FlagMetricsChartInner {...props} />;
 };
 
 ChartJS.register(

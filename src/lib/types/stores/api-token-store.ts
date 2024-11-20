@@ -14,4 +14,5 @@ export interface IApiTokenStore extends Store<IApiToken, string> {
         legacyTokens: number;
         activeLegacyTokens: number;
     }>;
+    countProjectTokens(projectId: string): Promise<number>;
 }

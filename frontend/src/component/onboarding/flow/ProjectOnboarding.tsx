@@ -40,11 +40,10 @@ const TitleBox = styled('div')(({ theme }) => ({
 const Actions = styled('div')(({ theme }) => ({
     display: 'flex',
     flexGrow: 1,
-    gap: theme.spacing(7),
-    padding: theme.spacing(3, 5),
+    padding: theme.spacing(0, 1),
     [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
-        gap: theme.spacing(7),
+        padding: theme.spacing(0),
     },
 }));
 
@@ -53,6 +52,15 @@ const ActionBox = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(3),
     flexDirection: 'column',
+    borderRight: `1px solid ${theme.palette.divider}`,
+    padding: theme.spacing(4),
+    [theme.breakpoints.down('md')]: {
+        borderRight: 0,
+        borderBottom: `1px solid ${theme.palette.divider}`,
+    },
+    '&:last-child': {
+        borderWidth: 0,
+    },
 }));
 
 const TitleContainer = styled('div')(({ theme }) => ({
@@ -112,7 +120,7 @@ export const ProjectOnboarding = ({
 }: IProjectOnboardingProps) => {
     const { project } = useProjectOverview(projectId);
     const isFirstFlagCreated =
-        project.onboardingStatus.status === 'first-flag-created';
+        project.onboardingStatus?.status === 'first-flag-created';
 
     const closeOnboardingFlow = () => {
         setOnboardingFlow('closed');
@@ -137,7 +145,7 @@ export const ProjectOnboarding = ({
             </TitleBox>
             <Actions>
                 <ActionBox>
-                    {project.onboardingStatus.status ===
+                    {project.onboardingStatus?.status ===
                     'first-flag-created' ? (
                         <ExistingFlag />
                     ) : (
@@ -186,8 +194,8 @@ const CreateFlag = ({ projectId, refetchFeatures }: ICreateFlagProps) => {
                 Create a feature flag
             </TitleContainer>
             <Typography>
-                <div>The project currently holds no feature flags.</div>
-                <div>Create one to get started.</div>
+                The project currently holds no feature flags. Create one to get
+                started.
             </Typography>
             <FlagCreationButton
                 text='Create flag'
@@ -210,10 +218,10 @@ const ExistingFlag = () => {
             </TitleContainer>
             <SuccessContainer>
                 <Typography fontWeight='bold' variant='body2'>
-                    Congratulations! You have created your first flag
+                    Congratulations, your first flag is ready!
                 </Typography>
                 <Typography variant='body2'>
-                    Click into the flag below to customize the flag further
+                    You can open it to customize further.
                 </Typography>
             </SuccessContainer>
         </ExistingFlagContainer>

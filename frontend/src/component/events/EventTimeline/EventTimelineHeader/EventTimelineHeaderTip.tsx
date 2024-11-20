@@ -1,12 +1,12 @@
 import { Chip, styled } from '@mui/material';
-import AccessContext from 'contexts/AccessContext';
-import { useSignalEndpoints } from 'hooks/api/getters/useSignalEndpoints/useSignalEndpoints';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { useContext } from 'react';
 import { useEventTimelineContext } from '../EventTimelineContext';
 import { Link, useNavigate } from 'react-router-dom';
 import SensorsIcon from '@mui/icons-material/Sensors';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useSignalQuery } from 'hooks/api/getters/useSignalQuery/useSignalQuery';
+import { startOfDay, sub } from 'date-fns';
 
 const StyledTip = styled('div')({
     display: 'flex',
@@ -21,23 +21,30 @@ const StyledSignalIcon = styled(SensorsIcon)(({ theme }) => ({
 
 const signalsLink = '/integrations/signals';
 
+const toISODateString = (date: Date) => date.toISOString().split('T')[0];
+
 export const EventTimelineHeaderTip = () => {
     const navigate = useNavigate();
+    const { timeSpan } = useEventTimelineContext();
+    const endDate = new Date();
+    const startDate = sub(endDate, timeSpan.value);
+    const { signals, loading: signalsLoading } = useSignalQuery({
+        from: `IS:${toISODateString(startOfDay(startDate))}`,
+        to: `IS:${toISODateString(endDate)}`,
+    });
     const { signalsSuggestionSeen, setSignalsSuggestionSeen } =
         useEventTimelineContext();
 
     const { isEnterprise } = useUiConfig();
-    const { isAdmin } = useContext(AccessContext);
     const signalsEnabled = useUiFlag('signals');
-    const { signalEndpoints, loading } = useSignalEndpoints();
+    const { trackEvent } = usePlausibleTracker();
 
     if (
         !signalsSuggestionSeen &&
         isEnterprise() &&
-        isAdmin &&
         signalsEnabled &&
-        !loading &&
-        signalEndpoints.length === 0
+        !signalsLoading &&
+        signals.length === 0
     ) {
         return (
             <StyledTip>
@@ -50,7 +57,14 @@ export const EventTimelineHeaderTip = () => {
                             external sources in real-time within Unleash
                         </>
                     }
-                    onClick={() => navigate(signalsLink)}
+                    onClick={() => {
+                        trackEvent('event-timeline', {
+                            props: {
+                                eventType: 'signals clicked',
+                            },
+                        });
+                        navigate(signalsLink);
+                    }}
                     onDelete={() => setSignalsSuggestionSeen(true)}
                 />
             </StyledTip>

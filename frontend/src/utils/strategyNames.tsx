@@ -6,6 +6,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import CodeIcon from '@mui/icons-material/Code';
 import { ReactComponent as RolloutIcon } from 'assets/icons/rollout.svg';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 
 export const formatStrategyName = (strategyName: string): string => {
     return formattedStrategyNames[strategyName] ?? strategyName;
@@ -31,6 +32,8 @@ export const getFeatureStrategyIcon = (strategyName: string) => {
             return PeopleIcon;
         case 'applicationHostname':
             return LocationOnIcon;
+        case 'releasePlanTemplate':
+            return FormatListNumberedIcon;
         default:
             return CodeIcon;
     }

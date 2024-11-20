@@ -1,3 +1,4 @@
+import { ReactComponent as ImportSvg } from 'assets/icons/import.svg';
 import { useCallback, useMemo, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { PageContent } from 'component/common/PageContent/PageContent';
@@ -25,6 +26,7 @@ import { createColumnHelper, useReactTable } from '@tanstack/react-table';
 import { withTableState } from 'utils/withTableState';
 import type { FeatureSearchResponseSchema } from 'openapi';
 import {
+    ArchivedFeatureToggleCell,
     FeatureToggleCell,
     PlaceholderFeatureToggleCell,
 } from './FeatureToggleCell/FeatureToggleCell';
@@ -46,6 +48,13 @@ import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog';
 import { ProjectOnboarding } from '../../../onboarding/flow/ProjectOnboarding';
 import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { ProjectOnboarded } from 'component/onboarding/flow/ProjectOnboarded';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { ArchivedFeatureActionCell } from '../../../archive/ArchiveTable/ArchivedFeatureActionCell/ArchivedFeatureActionCell';
+import { ArchiveBatchActions } from '../../../archive/ArchiveTable/ArchiveBatchActions';
+import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
+import { UPDATE_FEATURE } from '@server/types/permissions';
+import { ImportModal } from '../Import/ImportModal';
+import { IMPORT_BUTTON } from 'utils/testIds';
 
 interface IPaginatedProjectFeatureTogglesProps {
     environments: string[];
@@ -63,13 +72,29 @@ const Container = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const FilterRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row wrap',
+    gap: theme.spacing(2),
+    justifyContent: 'space-between',
+}));
+
+const ButtonGroup = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    paddingInline: theme.spacing(1.5),
+}));
+
 export const ProjectFeatureToggles = ({
     environments,
 }: IPaginatedProjectFeatureTogglesProps) => {
+    const { trackEvent } = usePlausibleTracker();
     const onboardingUIEnabled = useUiFlag('onboardingUI');
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
+    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
+    const [modalOpen, setModalOpen] = useState(false);
 
     const {
         features,
@@ -90,6 +115,7 @@ export const ProjectFeatureToggles = ({
         type: tableState.type,
         state: tableState.state,
         createdBy: tableState.createdBy,
+        archived: tableState.archived,
     };
 
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
@@ -112,6 +138,8 @@ export const ProjectFeatureToggles = ({
         setFeatureArchiveState,
         setFeatureStaleDialogState,
         setShowMarkCompletedDialogue,
+        setShowFeatureReviveDialogue,
+        setShowFeatureDeleteDialogue,
     } = useRowActions(refetch, projectId);
 
     const isPlaceholder = Boolean(initialLoad || (loading && total));
@@ -132,8 +160,19 @@ export const ProjectFeatureToggles = ({
         onboardingUIEnabled &&
         project.onboardingStatus.status !== 'onboarded' &&
         onboardingFlow === 'visible';
-    const showFeaturesTable =
-        (total !== undefined && total > 0) || notOnboarding;
+    const noFeaturesExistInProject = project.featureTypeCounts?.length === 0;
+    const showFeaturesTable = !noFeaturesExistInProject || notOnboarding;
+
+    const trackOnboardingFinish = (sdkName: string) => {
+        if (!isOnboarding) {
+            trackEvent('onboarding', {
+                props: {
+                    eventType: 'onboarding-finished',
+                    onboardedSdk: sdkName,
+                },
+            });
+        }
+    };
 
     const columns = useMemo(
         () => [
@@ -254,6 +293,7 @@ export const ProjectFeatureToggles = ({
 
                 return columnHelper.accessor(
                     (row) => ({
+                        archived: row.archivedAt !== null,
                         featureId: row.name,
                         environment: row.environments?.find(
                             (featureEnvironment) =>
@@ -279,10 +319,13 @@ export const ProjectFeatureToggles = ({
                                 featureId,
                                 environment,
                                 someEnabledEnvironmentHasVariants,
+                                archived,
                             } = getValue();
 
                             return isPlaceholder ? (
                                 <PlaceholderFeatureToggleCell />
+                            ) : archived ? (
+                                <ArchivedFeatureToggleCell />
                             ) : (
                                 <FeatureToggleCell
                                     value={environment?.enabled || false}
@@ -307,14 +350,32 @@ export const ProjectFeatureToggles = ({
             columnHelper.display({
                 id: 'actions',
                 header: '',
-                cell: ({ row }) => (
-                    <ActionsCell
-                        row={row}
-                        projectId={projectId}
-                        onOpenArchiveDialog={setFeatureArchiveState}
-                        onOpenStaleDialog={setFeatureStaleDialogState}
-                    />
-                ),
+                cell: ({ row }) =>
+                    tableState.archived ? (
+                        <ArchivedFeatureActionCell
+                            project={projectId}
+                            onRevive={() => {
+                                setShowFeatureReviveDialogue({
+                                    featureId: row.id,
+                                    open: true,
+                                });
+                            }}
+                            onDelete={() => {
+                                setShowFeatureDeleteDialogue({
+                                    featureId: row.id,
+                                    open: true,
+                                });
+                            }}
+                        />
+                    ) : (
+                        <ActionsCell
+                            row={row}
+                            projectId={projectId}
+                            onOpenArchiveDialog={setFeatureArchiveState}
+                            onOpenStaleDialog={setFeatureStaleDialogState}
+                        />
+                    ),
+
                 enableSorting: false,
                 enableHiding: false,
                 meta: {
@@ -353,6 +414,7 @@ export const ProjectFeatureToggles = ({
                     project: 'project',
                     segments: [],
                     stale: false,
+                    archivedAt: null,
                     environments: [
                         {
                             name: 'development',
@@ -524,11 +586,27 @@ export const ProjectFeatureToggles = ({
                             aria-busy={isPlaceholder}
                             aria-live='polite'
                         >
-                            <ProjectOverviewFilters
-                                project={projectId}
-                                onChange={setTableState}
-                                state={filterState}
-                            />
+                            <FilterRow>
+                                <ProjectOverviewFilters
+                                    project={projectId}
+                                    onChange={setTableState}
+                                    state={filterState}
+                                />
+                                {simplifyProjectOverview && (
+                                    <ButtonGroup>
+                                        <PermissionIconButton
+                                            permission={UPDATE_FEATURE}
+                                            projectId={projectId}
+                                            onClick={() => setModalOpen(true)}
+                                            tooltipProps={{ title: 'Import' }}
+                                            data-testid={IMPORT_BUTTON}
+                                            data-loading-project
+                                        >
+                                            <ImportSvg />
+                                        </PermissionIconButton>
+                                    </ButtonGroup>
+                                )}
+                            </FilterRow>
                             <SearchHighlightProvider
                                 value={tableState.query || ''}
                             >
@@ -546,7 +624,6 @@ export const ProjectFeatureToggles = ({
                                 }
                             />
                             {rowActionsDialogs}
-
                             {featureToggleModals}
                         </div>
                     </PageContent>
@@ -557,9 +634,10 @@ export const ProjectFeatureToggles = ({
                 onClose={() => {
                     setConnectSdkOpen(false);
                 }}
-                onFinish={() => {
+                onFinish={(sdkName: string) => {
                     setConnectSdkOpen(false);
                     setSetupCompletedState('show-setup');
+                    trackOnboardingFinish(sdkName);
                 }}
                 project={projectId}
                 environments={environments}
@@ -570,14 +648,31 @@ export const ProjectFeatureToggles = ({
                 }
             />
             <BatchSelectionActionsBar count={selectedData.length}>
-                <ProjectFeaturesBatchActions
-                    selectedIds={Object.keys(rowSelection)}
-                    data={selectedData}
-                    projectId={projectId}
-                    onResetSelection={table.resetRowSelection}
-                    onChange={refetch}
-                />
+                {tableState.archived ? (
+                    <ArchiveBatchActions
+                        selectedIds={Object.keys(rowSelection)}
+                        projectId={projectId}
+                        onConfirm={() => {
+                            refetch();
+                            table.resetRowSelection();
+                        }}
+                    />
+                ) : (
+                    <ProjectFeaturesBatchActions
+                        selectedIds={Object.keys(rowSelection)}
+                        data={selectedData}
+                        projectId={projectId}
+                        onResetSelection={table.resetRowSelection}
+                        onChange={refetch}
+                    />
+                )}
             </BatchSelectionActionsBar>
+
+            <ImportModal
+                open={modalOpen}
+                setOpen={setModalOpen}
+                project={projectId}
+            />
         </Container>
     );
 };

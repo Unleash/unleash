@@ -111,19 +111,15 @@ export default class EventSearchController extends Controller {
     }
 
     enrichEvents(events: IEvent[]): IEvent[] | IEnrichedEvent[] {
-        if (this.flagResolver.isEnabled('eventTimeline')) {
-            return events.map((event) => {
-                const { label, text: summary } =
-                    this.msgFormatter.format(event);
+        return events.map((event) => {
+            const { label, text: summary } = this.msgFormatter.format(event);
 
-                return {
-                    ...event,
-                    label,
-                    summary,
-                };
-            });
-        }
-        return events;
+            return {
+                ...event,
+                label,
+                summary,
+            };
+        });
     }
 
     maybeAnonymiseEvents(events: IEvent[]): IEvent[] {

@@ -95,16 +95,23 @@ export const VariantInformation: VFC<IVariantInformationProps> = ({
                         }
 
                         prepareRow(row);
+                        const { key, ...rowProps } = row.getRowProps();
                         return (
-                            <TableRow hover {...row.getRowProps()}>
-                                {row.cells.map((cell: any) => (
-                                    <TableCell
-                                        {...cell.getCellProps()}
-                                        style={styles}
-                                    >
-                                        {cell.render('Cell')}
-                                    </TableCell>
-                                ))}
+                            <TableRow hover key={key} {...rowProps}>
+                                {row.cells.map((cell: any) => {
+                                    const { key, ...cellProps } =
+                                        cell.getCellProps();
+
+                                    return (
+                                        <TableCell
+                                            key={key}
+                                            {...cellProps}
+                                            style={styles}
+                                        >
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    );
+                                })}
                             </TableRow>
                         );
                     })}

@@ -1146,8 +1146,8 @@ export default class ProjectService {
                 projectId,
             );
             const groups = await this.groupService.getProjectGroups(projectId);
-            const roleGroups = groups.filter(
-                (g) => g.roleId === currentRole.id,
+            const roleGroups = groups.filter((g) =>
+                g.roles?.includes(currentRole.id),
             );
             if (users.length + roleGroups.length < 2) {
                 throw new ProjectWithoutOwnerError();
@@ -1264,11 +1264,11 @@ export default class ProjectService {
         auditUser: IAuditUser,
     ): Promise<void> {
         const usersWithRoles = await this.getAccessToProject(projectId);
-        const user = usersWithRoles.groups.find((u) => u.id === userId);
-        if (!user)
+        const userGroup = usersWithRoles.groups.find((u) => u.id === userId);
+        if (!userGroup)
             throw new ValidationError('Unexpected empty user', [], undefined);
-        const currentRole = usersWithRoles.roles.find(
-            (r) => r.id === user.roleId,
+        const currentRole = usersWithRoles.roles.find((r) =>
+            userGroup.roles?.includes(r.id),
         );
         if (!currentRole)
             throw new ValidationError(
@@ -1546,7 +1546,9 @@ export default class ProjectService {
             updatedAt: project.updatedAt,
             archivedAt: project.archivedAt,
             createdAt: project.createdAt,
-            onboardingStatus,
+            onboardingStatus: onboardingStatus ?? {
+                status: 'onboarding-started',
+            },
             environments,
             featureTypeCounts,
             members,

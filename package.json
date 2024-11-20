@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
-  "version": "6.3.0",
+  "version": "6.4.1",
   "keywords": [
     "unleash",
     "feature toggle",
@@ -34,13 +34,14 @@
   "main": "./dist/lib/server-impl.js",
   "scripts": {
     "start": "TZ=UTC node ./dist/server.js",
-    "copy-templates": "copyfiles -u 1 src/mailtemplates/**/*.mustache dist/",
+    "copy-templates": "copyfiles -u 1 src/mailtemplates/**/* dist/",
     "build:backend": "tsc --pretty --strictNullChecks false",
     "build:frontend": "yarn --cwd ./frontend run build",
     "build:frontend:if-needed": "./scripts/build-frontend-if-needed.sh",
     "build": "yarn run clean && concurrently \"yarn:copy-templates\" \"yarn:build:frontend\" \"yarn:build:backend\"",
     "dev:backend": "TZ=UTC NODE_ENV=development tsc-watch --strictNullChecks false --onSuccess \"node dist/server-dev.js\"",
     "dev:frontend": "wait-on tcp:4242 && yarn --cwd ./frontend run dev",
+    "dev:frontend:cloud": "UNLEASH_BASE_PATH=/demo/ yarn run dev:frontend",
     "dev": "concurrently \"yarn:dev:backend\" \"yarn:dev:frontend\"",
     "prepare:backend": "concurrently \"yarn:copy-templates\" \"yarn:build:backend\"",
     "start:dev": "yarn run clean && TZ=UTC NODE_ENV=development tsc-watch --strictNullChecks false --onSuccess \"node dist/server-dev.js\"",
@@ -134,7 +135,7 @@
     "hash-sum": "^2.0.0",
     "helmet": "^6.0.0",
     "http-errors": "^2.0.0",
-    "ip": "^2.0.1",
+    "ip-address": "^10.0.0",
     "joi": "^17.13.3",
     "js-sha256": "^0.11.0",
     "js-yaml": "^4.1.0",
@@ -167,30 +168,30 @@
     "stoppable": "^1.1.0",
     "ts-toolbelt": "^9.6.0",
     "type-is": "^1.6.18",
-    "unleash-client": "6.1.1",
+    "unleash-client": "6.1.3",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@apidevtools/swagger-parser": "10.1.0",
-    "@babel/core": "7.25.2",
-    "@biomejs/biome": "^1.8.3",
+    "@babel/core": "7.26.0",
+    "@biomejs/biome": "^1.9.4",
     "@cyclonedx/yarn-plugin-cyclonedx": "^1.0.0-rc.7",
-    "@swc/core": "1.7.26",
-    "@swc/jest": "0.2.36",
+    "@swc/core": "1.9.2",
+    "@swc/jest": "0.2.37",
     "@types/bcryptjs": "2.4.6",
     "@types/cors": "2.8.17",
     "@types/express": "4.17.21",
     "@types/express-session": "1.18.0",
     "@types/faker": "5.5.9",
     "@types/hash-sum": "^1.0.0",
-    "@types/jest": "29.5.13",
+    "@types/jest": "29.5.14",
     "@types/js-yaml": "4.0.9",
     "@types/lodash.groupby": "4.6.9",
     "@types/make-fetch-happen": "10.0.4",
     "@types/memoizee": "0.4.11",
     "@types/mime": "4.0.0",
     "@types/mustache": "^4.2.5",
-    "@types/node": "20.16.3",
+    "@types/node": "20.17.6",
     "@types/nodemailer": "6.4.16",
     "@types/owasp-password-strength-test": "1.3.2",
     "@types/pg": "8.11.10",
@@ -205,13 +206,13 @@
     "coveralls": "3.1.1",
     "del-cli": "5.1.0",
     "faker": "5.5.3",
-    "fast-check": "3.22.0",
+    "fast-check": "3.23.1",
     "fetch-mock": "^11.1.3",
     "husky": "^9.0.11",
     "jest": "29.7.0",
     "jest-junit": "^16.0.0",
     "lint-staged": "15.2.10",
-    "nock": "13.5.5",
+    "nock": "13.5.6",
     "openapi-enforcer": "1.23.0",
     "proxyquire": "2.1.3",
     "source-map-support": "0.5.21",
@@ -236,7 +237,7 @@
     "semver": "^7.6.2",
     "tough-cookie": "4.1.4",
     "@wesleytodd/openapi/path-to-regexp": "6.3.0",
-    "router/path-to-regexp": "0.1.10"
+    "router/path-to-regexp": "1.9.0"
   },
   "lint-staged": {
     "*.{js,ts}": [
@@ -249,5 +250,5 @@
       "yarn biome format --write --no-errors-on-unmatched"
     ]
   },
-  "packageManager": "yarn@4.4.1"
+  "packageManager": "yarn@4.5.1"
 }

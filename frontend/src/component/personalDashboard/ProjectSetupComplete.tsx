@@ -3,34 +3,10 @@ import type { FC } from 'react';
 import { Link } from 'react-router-dom';
 import Lightbulb from '@mui/icons-material/LightbulbOutlined';
 import type { PersonalDashboardProjectDetailsSchemaInsights } from '../../openapi';
-import { ProjectHealthChart } from 'component/project/Project/ProjectInsights/ProjectHealth/ProjectHealthChart';
-import { FlagCounts } from '../project/Project/ProjectInsights/ProjectHealth/FlagCounts';
-
-const TitleContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    gap: theme.spacing(2),
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
-
-const Health = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: theme.spacing(3),
-}));
-
-const ActionBox = styled('article')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    display: 'flex',
-    gap: theme.spacing(3),
-    flexDirection: 'column',
-}));
+import { ActionBox } from './ActionBox';
 
 const PercentageScore = styled('span')(({ theme }) => ({
-    color: theme.palette.primary.main,
+    fontWeight: theme.typography.fontWeightBold,
 }));
 
 const ConnectedSdkProject: FC<{ project: string }> = ({ project }) => {
@@ -54,11 +30,11 @@ const ConnectedSdkProject: FC<{ project: string }> = ({ project }) => {
     );
 };
 
-type HeathTrend = 'consistent' | 'improved' | 'declined' | 'unknown';
+type HealthTrend = 'consistent' | 'improved' | 'declined' | 'unknown';
 
 const determineProjectHealthTrend = (
     insights: PersonalDashboardProjectDetailsSchemaInsights,
-): HeathTrend => {
+): HealthTrend => {
     const { avgHealthCurrentWindow, avgHealthPastWindow } = insights;
 
     if (avgHealthCurrentWindow === null || avgHealthPastWindow === null) {
@@ -77,48 +53,72 @@ const determineProjectHealthTrend = (
 };
 
 const ProjectHealthMessage: FC<{
-    trend: HeathTrend;
+    trend: HealthTrend;
     insights: PersonalDashboardProjectDetailsSchemaInsights;
     project: string;
 }> = ({ trend, insights, project }) => {
-    const { avgHealthCurrentWindow, avgHealthPastWindow } = insights;
+    const { avgHealthCurrentWindow, avgHealthPastWindow, health } = insights;
     const improveMessage =
         'Remember to archive your stale feature flags to keep the project health growing.';
     const keepDoingMessage =
-        'This indicates that you are doing a good job of arching your feature flags.';
+        'This indicates that you are doing a good job of archiving your feature flags.';
 
     if (trend === 'improved') {
         return (
-            <Typography>
-                On average, your project health went up from{' '}
-                <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
-                <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
-                during the last 4 weeks. <br /> {keepDoingMessage}
-            </Typography>
+            <>
+                <Typography>
+                    On average, your project health went up from{' '}
+                    <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
+                    <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
+                    during the last 4 weeks.
+                </Typography>
+                <Typography>{keepDoingMessage}</Typography>
+            </>
         );
     }
 
     if (trend === 'declined') {
         return (
-            <Typography>
-                On average, your project health went down from{' '}
-                <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
-                <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
-                during the last 4 weeks. <br /> {improveMessage}
-            </Typography>
+            <>
+                <Typography>
+                    On average, your project health went down from{' '}
+                    <PercentageScore>{avgHealthPastWindow}%</PercentageScore> to{' '}
+                    <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
+                    during the last 4 weeks.
+                </Typography>
+                <Typography>{improveMessage}</Typography>
+            </>
         );
     }
 
     if (trend === 'consistent') {
         return (
-            <Typography>
-                On average, your project health has remained at{' '}
-                <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
-                during the last 4 weeks. <br />
-                {avgHealthCurrentWindow && avgHealthCurrentWindow >= 70
-                    ? keepDoingMessage
-                    : improveMessage}
-            </Typography>
+            <>
+                <Typography>
+                    On average, your project health has remained at{' '}
+                    <PercentageScore>{avgHealthCurrentWindow}%</PercentageScore>{' '}
+                    during the last 4 weeks.
+                </Typography>
+                <Typography>
+                    {avgHealthCurrentWindow && avgHealthCurrentWindow >= 70
+                        ? keepDoingMessage
+                        : improveMessage}
+                </Typography>
+            </>
+        );
+    }
+
+    if (trend === 'unknown') {
+        return (
+            <>
+                <Typography>
+                    Your current health score is{' '}
+                    <PercentageScore>{health}%</PercentageScore>.
+                </Typography>
+                <Typography>
+                    {health >= 70 ? keepDoingMessage : improveMessage}
+                </Typography>
+            </>
         );
     }
 
@@ -132,28 +132,16 @@ export const ProjectSetupComplete: FC<{
     const projectHealthTrend = determineProjectHealthTrend(insights);
 
     return (
-        <ActionBox>
-            <TitleContainer>
-                <Lightbulb color='primary' />
-                <h3>Project Insight</h3>
-            </TitleContainer>
-
-            <Health>
-                <ProjectHealthChart
-                    health={insights.health}
-                    active={insights.activeFlags}
-                    potentiallyStale={insights.potentiallyStaleFlags}
-                    stale={insights.staleFlags}
-                />
-                <FlagCounts
-                    projectId={project}
-                    activeCount={insights.activeFlags}
-                    potentiallyStaleCount={insights.potentiallyStaleFlags}
-                    staleCount={insights.staleFlags}
-                    hideLinks={true}
-                />
-            </Health>
-
+        <ActionBox
+            title={
+                <>
+                    <Lightbulb color='primary' />
+                    <Typography sx={{ fontWeight: 'bold' }} component='h4'>
+                        Project health
+                    </Typography>
+                </>
+            }
+        >
             <ProjectHealthMessage
                 trend={projectHealthTrend}
                 insights={insights}

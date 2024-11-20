@@ -14,9 +14,8 @@ require 'vendor/autoload.php';
 $unleash = UnleashBuilder::create()
     ->withAppName('unleash-onboarding-php')
     ->withAppUrl('<YOUR_API_URL>')
-    ->withHeader('Authorization', '<YOUR_API_TOKEN>')
+    ->withHeader('Authorization', '<YOUR_API_TOKEN>') // in production use environment variable
     ->withInstanceId('unleash-onboarding-instance')
-    ->withMetricsInterval(1000)
     ->build();
 
 while (true) {

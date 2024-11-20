@@ -11,8 +11,7 @@ import asyncio
 client = UnleashClient(
     url="<YOUR_API_URL>",
     app_name="unleash-onboarding-python",
-    metrics_interval=1,
-    custom_headers={'Authorization': '<YOUR_API_TOKEN>'})
+    custom_headers={'Authorization': '<YOUR_API_TOKEN>'}) # in production use environment variable
 
 client.initialize_client()
 

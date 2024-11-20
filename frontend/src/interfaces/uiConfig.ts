@@ -17,6 +17,7 @@ export interface IUiConfig {
     name: string;
     slogan: string;
     environment?: string;
+    billing?: 'subscription' | 'pay-as-you-go';
     unleashUrl?: string;
     version: string;
     versionInfo?: IVersionInfo;
@@ -32,6 +33,8 @@ export interface IUiConfig {
     resourceLimits: ResourceLimitsSchema;
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
+    unleashAIAvailable?: boolean;
+    maxSessionsCount?: number;
 }
 
 export interface IProclamationToast {
@@ -69,26 +72,29 @@ export type UiFlags = {
     signals?: boolean;
     automatedActions?: boolean;
     celebrateUnleash?: boolean;
-    featureSearchFeedback?: Variant;
     enableLicense?: boolean;
     adminTokenKillSwitch?: boolean;
     feedbackComments?: Variant;
     showInactiveUsers?: boolean;
-    featureSearchFeedbackPosting?: boolean;
+    feedbackPosting?: boolean;
     userAccessUIEnabled?: boolean;
     outdatedSdksBanner?: boolean;
-    displayTrafficDataUsage?: boolean;
     estimateTrafficDataCost?: boolean;
     disableShowContextFieldSelectionValues?: boolean;
     projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
-    navigationSidebar?: boolean;
     flagCreator?: boolean;
     onboardingUI?: boolean;
-    eventTimeline?: boolean;
-    personalDashboardUI?: boolean;
+    purchaseAdditionalEnvironments?: boolean;
+    unleashAI?: boolean;
+    releasePlans?: boolean;
+    'enterprise-payg'?: boolean;
+    simplifyProjectOverview?: boolean;
+    productivityReportEmail?: boolean;
+    showUserDeviceCount?: boolean;
+    flagOverviewRedesign?: boolean;
 };
 
 export interface IVersionInfo {

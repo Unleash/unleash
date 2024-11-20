@@ -37,13 +37,17 @@ yarn build
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
-## Deployment
+## Cleaning dependencies and caches
+
+If you're upgrading many dependencies, it's always good to delete the `node_modules` directory, refresh `yarn.lock` and clean the various caches.
 
 ```console
-GIT_USER=<Your GitHub username> USE_SSH=true yarn deploy
+rm -rf node_modules
+rm -rf .docusaurus
+rm -rf docs/reference/api/unleash
+rm -rf yarn.lock
+touch yarn.lock
 ```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
 
 ## Troubleshooting
 
@@ -51,9 +55,9 @@ If you are using GitHub pages for hosting, this command is a convenient way to b
 
 If you get an error like this, it's probably due to a formatting issue within one of the markdown files. It could be
 
-- unescaped angle brackets (markdown will try to parse `<your-key>` (when it's not quoted) as HTML, which breaks the build)
-- incorrectly formatted titles or missing pieces of files
-- a lot of other stuff.
+-   unescaped angle brackets (markdown will try to parse `<your-key>` (when it's not quoted) as HTML, which breaks the build)
+-   incorrectly formatted titles or missing pieces of files
+-   a lot of other stuff.
 
 ```console
 Component Figure was not imported, exported, or provided by MDXProvider as global scope

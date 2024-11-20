@@ -3,7 +3,11 @@ id: datadog
 title: Datadog
 ---
 
-> This feature was introduced in _Unleash v4.0.0_.
+:::note Availability
+
+**Version**: `4.0+`
+
+:::
 
 The Datadog integration allows Unleash to post Updates to Datadog when a feature flag is updated. To set up this integration, you need to set up a webhook connector for your channel. You can follow [Submitting events to Datadog](https://docs.datadoghq.com/api/latest/events/#post-an-event) on how to do that.
 
@@ -16,7 +20,6 @@ The Datadog integration will perform a single retry if the HTTP POST against the
 You can choose to trigger updates for the following events:
 
 - feature-created
-- feature-updated (*)
 - feature-metadata-updated
 - feature-project-change
 - feature-archived
@@ -30,8 +33,7 @@ You can choose to trigger updates for the following events:
 - feature-environment-disabled
 - feature-environment-variants-updated
 - feature-potentially-stale-on
-
-> *) Deprecated, and will not be used after transition to environments in Unleash v4.3
+- feature-updated (deprecated in v4.3)
 
 #### Parameters {#parameters}
 
@@ -65,7 +67,7 @@ The body template property is available from **Unleash 5.6** onwards.
 
 :::
 
-- **Body template** - This is an optional property. The template is used to override the body template used by Unleash when performing the HTTP POST. You can format your message using a [Mustache template](https://mustache.github.io). Refer to the [Unleash event types](/reference/event-types) reference to find out which event properties you have access to in the template.
+- **Body template** - This is an optional property. The template is used to override the body template used by Unleash when performing the HTTP POST. You can format your message using a [Mustache template](https://mustache.github.io). Refer to the [Unleash event types](/reference/events#event-types) reference to find out which event properties you have access to in the template.
 
 Example:
 

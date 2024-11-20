@@ -19,9 +19,7 @@ export class FakeOnboardingReadModel implements IOnboardingReadModel {
         return Promise.resolve([]);
     }
 
-    getOnboardingStatusForProject(
-        projectId: string,
-    ): Promise<OnboardingStatus> {
-        throw new Error('Method not implemented.');
+    async getOnboardingStatusForProject(): Promise<OnboardingStatus | null> {
+        return null;
     }
 }

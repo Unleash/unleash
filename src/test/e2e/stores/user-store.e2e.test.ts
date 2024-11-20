@@ -8,7 +8,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('user_store_serial', getLogger, {
-        experimental: { flags: { onboardingMetrics: true } },
+        experimental: { flags: {} },
     });
     stores = db.stores;
 });
@@ -192,4 +192,7 @@ test('should delete user', async () => {
     await expect(() => stores.userStore.get(user.id)).rejects.toThrow(
         new NotFoundError('No user found'),
     );
+
+    const deletedCount = await stores.userStore.countRecentlyDeleted();
+    expect(deletedCount).toBe(1);
 });

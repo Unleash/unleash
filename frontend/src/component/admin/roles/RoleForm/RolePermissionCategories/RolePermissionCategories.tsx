@@ -18,6 +18,7 @@ import {
 } from 'utils/permissions';
 import { RolePermissionCategory } from './RolePermissionCategory';
 import { useMemo } from 'react';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IPermissionCategoriesProps {
     type: PredefinedRoleType;
@@ -39,6 +40,8 @@ export const RolePermissionCategories = ({
         revalidateOnReconnect: false,
         revalidateOnFocus: false,
     });
+
+    const releasePlansEnabled = useUiFlag('releasePlans');
 
     const isProjectRole = PROJECT_ROLE_TYPES.includes(type);
 
@@ -76,31 +79,40 @@ export const RolePermissionCategories = ({
     return useMemo(
         () => (
             <>
-                {categories.map(({ label, type, permissions }) => (
-                    <RolePermissionCategory
-                        key={label}
-                        title={`${label} permissions`}
-                        context={label.toLowerCase()}
-                        Icon={
-                            type === PROJECT_PERMISSION_TYPE ? (
-                                <TopicIcon color='disabled' sx={{ mr: 1 }} />
-                            ) : type === ENVIRONMENT_PERMISSION_TYPE ? (
-                                <CloudCircleIcon
-                                    color='disabled'
-                                    sx={{ mr: 1 }}
-                                />
-                            ) : (
-                                <UserIcon color='disabled' sx={{ mr: 1 }} />
-                            )
-                        }
-                        permissions={permissions}
-                        checkedPermissions={checkedPermissions}
-                        onPermissionChange={(permission: IPermission) =>
-                            onPermissionChange(permission)
-                        }
-                        onCheckAll={() => onCheckAll(permissions)}
-                    />
-                ))}
+                {categories
+                    .filter(
+                        ({ label }) =>
+                            releasePlansEnabled ||
+                            label !== 'Release plan templates',
+                    )
+                    .map(({ label, type, permissions }) => (
+                        <RolePermissionCategory
+                            key={label}
+                            title={`${label} permissions`}
+                            context={label.toLowerCase()}
+                            Icon={
+                                type === PROJECT_PERMISSION_TYPE ? (
+                                    <TopicIcon
+                                        color='disabled'
+                                        sx={{ mr: 1 }}
+                                    />
+                                ) : type === ENVIRONMENT_PERMISSION_TYPE ? (
+                                    <CloudCircleIcon
+                                        color='disabled'
+                                        sx={{ mr: 1 }}
+                                    />
+                                ) : (
+                                    <UserIcon color='disabled' sx={{ mr: 1 }} />
+                                )
+                            }
+                            permissions={permissions}
+                            checkedPermissions={checkedPermissions}
+                            onPermissionChange={(permission: IPermission) =>
+                                onPermissionChange(permission)
+                            }
+                            onCheckAll={() => onCheckAll(permissions)}
+                        />
+                    ))}
             </>
         ),
         [categories, checkedPermissions],

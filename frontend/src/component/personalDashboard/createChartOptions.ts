@@ -1,6 +1,5 @@
 import type { Theme } from '@mui/material/styles/createTheme';
 import type { ChartOptions } from 'chart.js';
-import { formatTickValue } from '../common/Chart/formatTickValue';
 import type { ILocationSettings } from '../../hooks/useLocationSettings';
 import type { IPoint } from '../feature/FeatureView/FeatureMetrics/FeatureMetricsChart/createChartData';
 import {
@@ -8,6 +7,7 @@ import {
     formatDateYMD,
     formatDateYMDHM,
 } from '../../utils/formatDate';
+import { formatTickValue } from 'component/common/Chart/formatTickValue';
 
 const formatVariantEntry = (
     variant: [string, number],
@@ -24,26 +24,28 @@ export const createPlaceholderBarChartOptions = (
 ): ChartOptions<'bar'> => ({
     plugins: {
         legend: {
-            position: 'bottom',
+            position: 'top',
             labels: {
                 color: theme.palette.text.primary,
-                pointStyle: 'circle',
                 usePointStyle: true,
-                boxHeight: 6,
+                pointStyle: 'none',
+                boxHeight: 0,
                 padding: 15,
                 boxPadding: 5,
             },
         },
+
         tooltip: {
             enabled: false,
         },
     },
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
         x: {
             stacked: true,
             ticks: {
-                color: theme.palette.text.secondary,
+                display: false,
             },
             grid: {
                 display: false,
@@ -52,12 +54,12 @@ export const createPlaceholderBarChartOptions = (
         y: {
             stacked: true,
             ticks: {
-                color: theme.palette.text.secondary,
                 maxTicksLimit: 5,
-                callback: formatTickValue,
+                display: false,
             },
             grid: {
                 drawBorder: false,
+                color: theme.palette.divider,
             },
         },
     },
@@ -77,11 +79,22 @@ export const createBarChartOptions = (
     hoursBack: number,
     locationSettings: ILocationSettings,
 ): ChartOptions<'bar'> => {
-    const { plugins, responsive, elements, interaction, scales } =
+    const { responsive, elements, interaction, scales, maintainAspectRatio } =
         createPlaceholderBarChartOptions(theme);
     return {
         plugins: {
-            legend: plugins?.legend,
+            legend: {
+                position: 'bottom',
+                labels: {
+                    color: theme.palette.text.primary,
+                    pointStyle: 'circle',
+                    usePointStyle: true,
+                    boxHeight: 6,
+                    padding: 15,
+                    boxPadding: 5,
+                },
+            },
+
             // required to avoid the highlight plugin highlighting empty annotation
             annotation: {
                 clip: false,
@@ -141,6 +154,7 @@ export const createBarChartOptions = (
             },
         },
         responsive,
+        maintainAspectRatio,
         scales: {
             x: {
                 ...(scales ? scales.x : {}),
@@ -158,7 +172,15 @@ export const createBarChartOptions = (
                     },
                 },
             },
-            y: scales ? scales.y : {},
+            y: {
+                ...(scales?.y ?? {}),
+                ticks: {
+                    ...(scales?.y?.ticks ?? {}),
+                    color: theme.palette.text.secondary,
+                    callback: formatTickValue,
+                    display: true,
+                },
+            },
         },
         elements,
         interaction,

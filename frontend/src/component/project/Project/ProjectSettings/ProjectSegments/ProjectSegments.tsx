@@ -1,10 +1,6 @@
-import { PageContent } from 'component/common/PageContent/PageContent';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { SegmentTable } from 'component/segments/SegmentTable/SegmentTable';
-import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { CreateSegment } from 'component/segments/CreateSegment/CreateSegment';
 import { EditSegment } from 'component/segments/EditSegment/EditSegment';
@@ -15,21 +11,9 @@ import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview
 export const ProjectSegments = () => {
     const projectId = useRequiredPathParam('projectId');
     const projectName = useProjectOverviewNameOrId(projectId);
-    const { isOss } = useUiConfig();
     const navigate = useNavigate();
 
     usePageTitle(`Project segments – ${projectName}`);
-
-    if (isOss()) {
-        return (
-            <PageContent
-                header={<PageHeader titleElement='Segments' />}
-                sx={{ justifyContent: 'center' }}
-            >
-                <PremiumFeature feature='segments' />
-            </PageContent>
-        );
-    }
 
     return (
         <Routes>

@@ -8,6 +8,8 @@
  * An event summary
  */
 export type PersonalDashboardProjectDetailsSchemaLatestEventsItem = {
+    /** When the event was recorded */
+    createdAt: string;
     /** Which user created this event */
     createdBy: string;
     /** URL used for the user profile image of the event author */

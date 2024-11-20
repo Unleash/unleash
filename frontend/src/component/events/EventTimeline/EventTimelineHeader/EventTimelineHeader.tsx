@@ -96,7 +96,7 @@ export const EventTimelineHeader = ({
             <EventTimelineHeaderTip />
             <StyledCol>
                 <ConditionallyRender
-                    condition={Boolean(environment)}
+                    condition={Boolean(environment) && environments.length > 0}
                     show={() => (
                         <StyledFilter
                             select
@@ -119,12 +119,16 @@ export const EventTimelineHeader = ({
                         </StyledFilter>
                     )}
                 />
-                <Tooltip title='Hide timeline' arrow>
+                <Tooltip title='Hide event timeline' arrow>
                     <IconButton
                         aria-label='close'
                         size='small'
                         onClick={() => {
-                            trackEvent('event-timeline-close');
+                            trackEvent('event-timeline', {
+                                props: {
+                                    eventType: 'close',
+                                },
+                            });
                             setOpen(false);
                         }}
                     >

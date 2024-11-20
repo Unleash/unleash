@@ -10,7 +10,7 @@ type TimeSpanOption = {
     markers: string[];
 };
 
-type EventTimelineState = {
+type EventTimelinePersistentState = {
     open: boolean;
     timeSpan: TimeSpanOption;
     environment?: IEnvironment;
@@ -25,7 +25,7 @@ type EventTimelineStateSetters = {
 };
 
 export interface IEventTimelineContext
-    extends EventTimelineState,
+    extends EventTimelinePersistentState,
         EventTimelineStateSetters {}
 
 export const timeSpanOptions: TimeSpanOption[] = [
@@ -77,7 +77,7 @@ export const timeSpanOptions: TimeSpanOption[] = [
     },
 ];
 
-const defaultState: EventTimelineState = {
+const defaultState: EventTimelinePersistentState = {
     open: false,
     timeSpan: timeSpanOptions[0],
 };
@@ -89,14 +89,15 @@ interface IEventTimelineProviderProps {
 export const EventTimelineProvider = ({
     children,
 }: IEventTimelineProviderProps) => {
-    const [state, setState] = useLocalStorageState<EventTimelineState>(
-        'event-timeline:v1',
-        defaultState,
-    );
+    const [state, setState] =
+        useLocalStorageState<EventTimelinePersistentState>(
+            'event-timeline:v1',
+            defaultState,
+        );
 
-    const setField = <K extends keyof EventTimelineState>(
+    const setField = <K extends keyof EventTimelinePersistentState>(
         key: K,
-        value: EventTimelineState[K],
+        value: EventTimelinePersistentState[K],
     ) => {
         setState((prevState) => ({ ...prevState, [key]: value }));
     };

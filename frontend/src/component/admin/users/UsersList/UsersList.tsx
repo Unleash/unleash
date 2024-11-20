@@ -39,6 +39,7 @@ import { StyledUsersLinkDiv } from '../Users.styles';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
+import { UserSessionsCell } from './UserSessionsCell/UserSessionsCell';
 
 const UsersList = () => {
     const navigate = useNavigate();
@@ -57,6 +58,8 @@ const UsersList = () => {
         open: false,
     });
     const userAccessUIEnabled = useUiFlag('userAccessUIEnabled');
+    const showUserDeviceCount = useUiFlag('showUserDeviceCount');
+
     const {
         settings: { enabled: scimEnabled },
     } = useScimSettings();
@@ -139,7 +142,7 @@ const UsersList = () => {
                 id: 'name',
                 Header: 'Name',
                 accessor: (row: any) => row.name || '',
-                minWidth: 200,
+                minWidth: 180,
                 Cell: ({ row: { original: user } }: any) => (
                     <HighlightCell
                         value={user.name}
@@ -148,6 +151,21 @@ const UsersList = () => {
                 ),
                 searchable: true,
             },
+            ...(showUserDeviceCount
+                ? [
+                      {
+                          id: 'warning',
+                          Header: ' ',
+                          accessor: (row: any) => row.name || '',
+                          maxWidth: 40,
+                          Cell: ({ row: { original: user } }: any) => (
+                              <UserSessionsCell count={user.activeSessions} />
+                          ),
+                          searchable: false,
+                          disableSortBy: true,
+                      },
+                  ]
+                : []),
             {
                 id: 'role',
                 Header: 'Role',
@@ -283,7 +301,7 @@ const UsersList = () => {
             },
             {
                 condition: isSmallScreen,
-                columns: ['createdAt', 'last-login'],
+                columns: ['createdAt', 'last-login', 'warning'],
             },
         ],
         setHiddenColumns,
@@ -356,7 +374,10 @@ const UsersList = () => {
                         }
                         elseShow={
                             <TablePlaceholder>
-                                No users available. Get started by adding one.
+                                <span data-loading>
+                                    No users available. Get started by adding
+                                    one.
+                                </span>
                             </TablePlaceholder>
                         }
                     />

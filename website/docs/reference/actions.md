@@ -2,11 +2,13 @@
 title: Actions
 ---
 
-:::info Availability
+:::note Availability
 
-Actions were introduced as a beta feature in **Unleash 5.11** and are only available in Unleash Enterprise.
+
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.11+` in BETA
 
 :::
+
 ## Overview
 
 Actions allow you to configure automated actions to be executed based on signals received from an external system.
@@ -32,11 +34,11 @@ When creating a new action you first need to specify a name and a description. T
 
 ### Source and filters
 
-Then you need to select a source. If you haven't created a signal endpoint yet, you can do so by using the **Create new signal endpoint** link (more information on this in the [Signals](./signals.md) section).
+Then you need to select a source. If you haven't created a signal endpoint yet, you can do so by using the **Create new signal endpoint** link (more information on this in the [Signals](./signals) section).
 
 If the source you selected already received at least one signal, you'll be able to see a preview of the latest signal received. This can help you define the different filters that need to match for the action to be executed.
 
-Filters work similarly to [feature flag strategy constraints](./strategy-constraints.md), where the signal payload acts as the context for the constraint evaluation.
+Filters work similarly to [feature flag strategy constraints](./strategy-constraints), where the signal payload acts as the context for the constraint evaluation.
 
 Filters are completely optional, so if you don't configure any filter your action will always be executed whenever you receive a new signal on the selected source.
 
@@ -44,7 +46,7 @@ Filters are completely optional, so if you don't configure any filter your actio
 
 ### Actions
 
-When these actions are triggered, they will execute under the identity of a [service account](./service-accounts.md). This means that when you later check the [event log](./event-log) you will see this service account as the actor for those events. In order to execute the configured actions successfully, this service account needs to have the necessary permissions. This service account doesn't need an API token, so when creating it you can skip the token generation step and simply make sure it has the necessary permissions.
+When these actions are triggered, they execute using the identity of a [service account](./service-accounts). As a result, when you later view events in [Event Log](./events#event-log), you’ll see this service account listed as the actor for those events. In order to execute the configured actions successfully, this service account needs to have the necessary permissions. This service account doesn't need an API token, so when creating it you can skip the token generation step and simply make sure it has the necessary permissions.
 
 The actions are executed in the same order that they are defined. If a previous action fails, the following actions will not be started. You can add multiple actions to an action set and you can add multiple action sets to a project. Depending on the action you want to execute you will have to provide different parameters.
 
@@ -78,4 +80,4 @@ The limits are as follows:
 Ref: [Unleash Config](https://github.com/Unleash/unleash/blob/859fe098fedc261d646833012d9d408039491075/src/lib/create-config.ts#L577-L604)
 
 ## Sending signals to Unleash
-See [Signals](./signals.md)
+See [Signals](./signals)

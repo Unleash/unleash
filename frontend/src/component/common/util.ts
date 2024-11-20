@@ -28,6 +28,11 @@ export const filterByConfig =
             return Boolean(config[r.configFlag]);
         }
 
+        const isOss = !config?.versionInfo?.current?.enterprise;
+        if (isOss && r.enterprise) {
+            return false;
+        }
+
         return true;
     };
 

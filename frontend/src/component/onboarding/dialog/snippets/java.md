@@ -13,8 +13,7 @@ UnleashConfig config = UnleashConfig.builder()
     .appName("unleash-onboarding-java")
     .instanceId("unleash-onboarding-instance")
     .unleashAPI("<YOUR_API_URL>")
-    .apiKey("<YOUR_API_TOKEN>")
-    .sendMetricsInterval(1)
+    .apiKey("<YOUR_API_TOKEN>") // in production use environment variable
     .build();
 
 Unleash unleash = new DefaultUnleash(config);

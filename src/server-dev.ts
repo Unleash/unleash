@@ -49,7 +49,6 @@ process.nextTick(async () => {
                         enableLegacyVariants: false,
                         extendedMetrics: true,
                         onboardingUI: true,
-                        personalDashboardUI: true,
                         purchaseAdditionalEnvironments: true,
                         originMiddlewareRequestLogging: true,
                         unleashAI: true,

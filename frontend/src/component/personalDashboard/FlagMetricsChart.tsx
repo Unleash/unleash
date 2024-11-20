@@ -97,7 +97,7 @@ const EmptyFlagMetricsChart = () => {
 const useMetricsEnvironments = (project: string, flagName: string) => {
     const [environment, setEnvironment] = useState<string | null>(null);
     const { feature } = useFeature(project, flagName);
-    const activeEnvironments = feature.environments.map((env) => ({
+    const activeEnvironments = (feature?.environments ?? []).map((env) => ({
         name: env.name,
         type: env.type,
     }));

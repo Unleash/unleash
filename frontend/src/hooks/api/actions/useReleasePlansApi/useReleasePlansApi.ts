@@ -11,7 +11,7 @@ export const useReleasePlansApi = () => {
         projectId: string,
         environment: string,
     ): Promise<void> => {
-        const requestId = 'createReleasePlanTemplate';
+        const requestId = 'addReleasePlanToFeature';
         const path = `api/admin/projects/${projectId}/features/${featureName}/environments/${environment}/release_plans`;
         const req = createRequest(
             path,

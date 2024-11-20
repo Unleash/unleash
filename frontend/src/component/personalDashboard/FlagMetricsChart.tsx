@@ -235,7 +235,7 @@ const FlagMetricsChartInner: FC<{
         return (
             <ChartContainer>
                 <PlaceholderFlagMetricsChart
-                    label={`Couldn't fetch metrics for the current flag. This may be a transient error, or your flag name ("${flag.name}") may be causing issues.`}
+                    label={`Couldn't fetch metrics for the current flag right now. Please try again. Report this if it doesn't resolve itself.`}
                 />
             </ChartContainer>
         );

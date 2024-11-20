@@ -1,32 +1,14 @@
 import type { ComponentType, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectCard as NewProjectCard } from '../ProjectCard/ProjectCard';
+import { ProjectCard as DefaultProjectCard } from '../ProjectCard/ProjectCard';
 import type { ProjectSchema } from 'openapi';
 import loadingData from './loadingData';
 import { TablePlaceholder } from 'component/common/Table';
-import { styled, Typography } from '@mui/material';
+import { styled } from '@mui/material';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { flexColumn } from 'themes/themeStyles';
-
-const StyledContainer = styled('article')(({ theme }) => ({
-    ...flexColumn,
-    gap: theme.spacing(2),
-}));
-
-const StyledHeaderContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column-reverse',
-    gap: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-    },
-}));
-
-const StyledHeaderTitle = styled('div')(() => ({
-    flexGrow: 0,
-}));
+import { UpgradeProjectCard } from '../ProjectCard/UpgradeProjectCard';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -56,41 +38,18 @@ type ProjectGroupProps = {
 };
 
 export const ProjectGroup = ({
-    sectionTitle,
-    sectionSubtitle,
-    HeaderActions,
     projects,
     loading,
     placeholder = 'No projects available.',
     ProjectCardComponent,
     link = true,
 }: ProjectGroupProps) => {
-    const ProjectCard = ProjectCardComponent ?? NewProjectCard;
+    const ProjectCard = ProjectCardComponent ?? DefaultProjectCard;
+    const { isOss } = useUiConfig();
     const { searchQuery } = useSearchHighlightContext();
 
     return (
-        <StyledContainer>
-            <StyledHeaderContainer>
-                <StyledHeaderTitle>
-                    <ConditionallyRender
-                        condition={Boolean(sectionTitle)}
-                        show={
-                            <Typography component='h2' variant='h2'>
-                                {sectionTitle}
-                            </Typography>
-                        }
-                    />
-                    <ConditionallyRender
-                        condition={Boolean(sectionSubtitle)}
-                        show={
-                            <Typography variant='body2' color='text.secondary'>
-                                {sectionSubtitle}
-                            </Typography>
-                        }
-                    />
-                </StyledHeaderTitle>
-                {HeaderActions}
-            </StyledHeaderContainer>
+        <>
             <ConditionallyRender
                 condition={projects.length < 1 && !loading}
                 show={
@@ -157,9 +116,10 @@ export const ProjectGroup = ({
                                 </>
                             )}
                         />
+                        {isOss() ? <UpgradeProjectCard /> : null}
                     </StyledGridContainer>
                 }
             />
-        </StyledContainer>
+        </>
     );
 };

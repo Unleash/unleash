@@ -22,6 +22,8 @@ export default class ProjectHealthService {
 
     private projectService: ProjectService;
 
+    calculateHealthRating: (projectId: string) => Promise<number>;
+
     constructor(
         {
             projectStore,
@@ -40,6 +42,10 @@ export default class ProjectHealthService {
         this.featureToggleStore = featureToggleStore;
 
         this.projectService = projectService;
+        this.calculateHealthRating = calculateProjectHealthRating(
+            this.featureTypeStore,
+            this.featureToggleStore,
+        );
     }
 
     async getProjectHealthReport(
@@ -69,10 +75,7 @@ export default class ProjectHealthService {
 
         await Promise.all(
             projects.map(async (project) => {
-                const newHealth = await calculateProjectHealthRating(
-                    this.featureTypeStore,
-                    this.featureToggleStore,
-                )(project.id);
+                const newHealth = await this.calculateHealthRating(project.id);
                 await this.projectStore.updateHealth({
                     id: project.id,
                     health: newHealth,

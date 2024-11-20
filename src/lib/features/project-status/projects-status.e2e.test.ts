@@ -264,35 +264,45 @@ test('project status includes stale flags', async () => {
         {} as IUser,
         {} as IAuditUser,
     );
-    const createFlagInState = async (
-        name: string,
-        state?: Object,
-        projectId?: string,
-    ) => {
-        await app.createFeature(name, projectId);
-        if (state) {
-            await db.rawDatabase('features').update(state).where({ name });
-        }
-    };
 
-    await createFlagInState('stale-flag', { stale: true });
-    await createFlagInState('potentially-stale-flag', {
-        potentially_stale: true,
-    });
-    await createFlagInState('potentially-stale-and-stale-flag', {
-        potentially_stale: true,
-        stale: true,
-    });
-    await createFlagInState('non-stale-flag');
-    await createFlagInState('archived-stale-flag', {
-        archived: true,
-        stale: true,
-    });
-    await createFlagInState(
-        'stale-other-project',
-        { stale: true },
-        otherProject.id,
+    function cartesianProduct(...arrays: any[][]): any[][] {
+        return arrays.reduce(
+            (acc, array) => {
+                return acc.flatMap((accItem) =>
+                    array.map((item) => [...accItem, item]),
+                );
+            },
+            [[]] as any[][],
+        );
+    }
+
+    // of all 16 (2^4) permutations, only 3 are unhealthy flags in a given project.
+    const combinations = cartesianProduct(
+        [false, true], // stale
+        [false, true], // potentially stale
+        [false, true], // archived
+        ['default', otherProject.id], // project
     );
+
+    for (const [stale, potentiallyStale, archived, project] of combinations) {
+        const name = `flag-${project}-stale-${stale}-potentially-stale-${potentiallyStale}-archived-${archived}`;
+        await app.createFeature(
+            {
+                name,
+                stale,
+            },
+            project,
+        );
+        if (potentiallyStale) {
+            await db
+                .rawDatabase('features')
+                .update('potentially_stale', true)
+                .where({ name });
+        }
+        if (archived) {
+            await app.archiveFeature(name, project);
+        }
+    }
 
     const { body } = await app.request
         .get('/api/admin/projects/default/status')

@@ -7,7 +7,8 @@ export class ProjectStaleFlagsReadModel implements IProjectStaleFlagsReadModel {
     async getStaleFlagCountForProject(projectId: string): Promise<number> {
         const result = await this.db('features')
             .count()
-            .where({ project: projectId, archived: false })
+            .whereNull('archived_at')
+            .where({ project: projectId })
             .where((builder) =>
                 builder
                     .orWhere({ stale: true })

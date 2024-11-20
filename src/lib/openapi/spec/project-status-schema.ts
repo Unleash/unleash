@@ -31,7 +31,7 @@ export const projectStatusSchema = {
     required: [
         'activityCountByDate',
         'resources',
-        'averageHealth',
+        'health',
         'lifecycleSummary',
         'staleFlags',
     ],
@@ -43,11 +43,17 @@ export const projectStatusSchema = {
             description:
                 'Array of activity records with date and count, representing the project’s daily activity statistics.',
         },
-        averageHealth: {
-            type: 'integer',
-            minimum: 0,
-            description:
-                'The average health score over the last 4 weeks, indicating whether features are stale or active.',
+        health: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['current'],
+            properties: {
+                current: {
+                    type: 'integer',
+                    minimum: 0,
+                    description: `The project's current health score, based on the ratio of healthy flags to stale and potentially stale flags.`,
+                },
+            },
         },
         resources: {
             type: 'object',

@@ -17,7 +17,9 @@ export interface ProjectStatusSchema {
      * The average health score over the last 4 weeks, indicating whether features are stale or active.
      * @minimum 0
      */
-    averageHealth: number;
+    health: {
+        current: number;
+    };
     /** Feature flag lifecycle statistics for this project. */
     lifecycleSummary: ProjectStatusSchemaLifecycleSummary;
     /** Key resources within the project */

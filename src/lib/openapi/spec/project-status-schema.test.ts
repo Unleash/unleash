@@ -3,7 +3,9 @@ import type { ProjectStatusSchema } from './project-status-schema';
 
 test('projectStatusSchema', () => {
     const data: ProjectStatusSchema = {
-        averageHealth: 50,
+        health: {
+            current: 50,
+        },
         lifecycleSummary: {
             initial: {
                 currentFlags: 0,

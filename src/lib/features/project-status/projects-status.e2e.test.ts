@@ -196,33 +196,13 @@ test('project resources should contain the right data', async () => {
     });
 });
 
-test('project health should be correct average', async () => {
-    await insertHealthScore('2024-04', 100);
-
-    await insertHealthScore('2024-05', 0);
-    await insertHealthScore('2024-06', 0);
-    await insertHealthScore('2024-07', 90);
-    await insertHealthScore('2024-08', 70);
-
+test('project health contains the current health score', async () => {
     const { body } = await app.request
         .get('/api/admin/projects/default/status')
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body.averageHealth).toBe(40);
-});
-
-test('project health stats should round to nearest integer', async () => {
-    await insertHealthScore('2024-04', 6);
-
-    await insertHealthScore('2024-05', 5);
-
-    const { body } = await app.request
-        .get('/api/admin/projects/default/status')
-        .expect('Content-Type', /json/)
-        .expect(200);
-
-    expect(body.averageHealth).toBe(6);
+    expect(body.health.current).toBe(100);
 });
 
 test('project status contains lifecycle data', async () => {

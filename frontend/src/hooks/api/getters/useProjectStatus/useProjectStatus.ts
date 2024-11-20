@@ -11,7 +11,9 @@ const placeholderData: ProjectStatusSchema = {
         apiTokens: 0,
         segments: 0,
     },
-    averageHealth: 0,
+    health: {
+        current: 0,
+    },
     lifecycleSummary: {
         initial: {
             currentFlags: 0,

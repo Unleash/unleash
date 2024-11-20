@@ -165,7 +165,9 @@ export const ProjectHealth = () => {
                         flags and remove code from your code base to reduce
                         technical debt.
                     </Typography>
-                    <Link to={`/projects/${projectId}?state=IS%3Astale`}>
+                    <Link
+                        to={`/projects/${projectId}?state=IS_ANY_OF%3Astale%2Cpotentially-stale`}
+                    >
                         View unhealthy flags
                     </Link>
                 </TextContainer>

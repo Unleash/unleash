@@ -1,12 +1,14 @@
+import { calculateHealthRating } from '../../domain/project-health/project-health';
 import type { ProjectStatusSchema } from '../../openapi';
 import type {
     IApiTokenStore,
     IEventStore,
+    IFeatureToggleStore,
+    IFeatureTypeStore,
     IProjectStore,
     ISegmentStore,
     IUnleashStores,
 } from '../../types';
-import type { IPersonalDashboardReadModel } from '../personal-dashboard/personal-dashboard-read-model-type';
 import type { IProjectLifecycleSummaryReadModel } from './project-lifecycle-read-model/project-lifecycle-read-model-type';
 import type { IProjectStaleFlagsReadModel } from './project-stale-flags-read-model/project-stale-flags-read-model-type';
 
@@ -15,9 +17,10 @@ export class ProjectStatusService {
     private projectStore: IProjectStore;
     private apiTokenStore: IApiTokenStore;
     private segmentStore: ISegmentStore;
-    private personalDashboardReadModel: IPersonalDashboardReadModel;
     private projectLifecycleSummaryReadModel: IProjectLifecycleSummaryReadModel;
     private projectStaleFlagsReadModel: IProjectStaleFlagsReadModel;
+    private featureTypeStore: IFeatureTypeStore;
+    private featureToggleStore: IFeatureToggleStore;
 
     constructor(
         {
@@ -25,11 +28,17 @@ export class ProjectStatusService {
             projectStore,
             apiTokenStore,
             segmentStore,
+            featureTypeStore,
+            featureToggleStore,
         }: Pick<
             IUnleashStores,
-            'eventStore' | 'projectStore' | 'apiTokenStore' | 'segmentStore'
+            | 'eventStore'
+            | 'projectStore'
+            | 'apiTokenStore'
+            | 'segmentStore'
+            | 'featureTypeStore'
+            | 'featureToggleStore'
         >,
-        personalDashboardReadModel: IPersonalDashboardReadModel,
         projectLifecycleReadModel: IProjectLifecycleSummaryReadModel,
         projectStaleFlagsReadModel: IProjectStaleFlagsReadModel,
     ) {
@@ -37,9 +46,21 @@ export class ProjectStatusService {
         this.projectStore = projectStore;
         this.apiTokenStore = apiTokenStore;
         this.segmentStore = segmentStore;
-        this.personalDashboardReadModel = personalDashboardReadModel;
         this.projectLifecycleSummaryReadModel = projectLifecycleReadModel;
         this.projectStaleFlagsReadModel = projectStaleFlagsReadModel;
+        this.featureTypeStore = featureTypeStore;
+        this.featureToggleStore = featureToggleStore;
+    }
+
+    private async calculateHealthRating(projectId: string): Promise<number> {
+        const featureTypes = await this.featureTypeStore.getAll();
+
+        const toggles = await this.featureToggleStore.getAll({
+            project: projectId,
+            archived: false,
+        });
+
+        return calculateHealthRating(toggles, featureTypes);
     }
 
     async getProjectStatus(projectId: string): Promise<ProjectStatusSchema> {
@@ -48,7 +69,7 @@ export class ProjectStatusService {
             apiTokens,
             segments,
             activityCountByDate,
-            healthScores,
+            currentHealth,
             lifecycleSummary,
             staleFlagCount,
         ] = await Promise.all([
@@ -56,7 +77,7 @@ export class ProjectStatusService {
             this.apiTokenStore.countProjectTokens(projectId),
             this.segmentStore.getProjectSegmentCount(projectId),
             this.eventStore.getProjectRecentEventActivity(projectId),
-            this.personalDashboardReadModel.getLatestHealthScores(projectId, 4),
+            this.calculateHealthRating(projectId),
             this.projectLifecycleSummaryReadModel.getProjectLifecycleSummary(
                 projectId,
             ),
@@ -65,11 +86,6 @@ export class ProjectStatusService {
             ),
         ]);
 
-        const averageHealth = healthScores.length
-            ? healthScores.reduce((acc, num) => acc + num, 0) /
-              healthScores.length
-            : 0;
-
         return {
             resources: {
                 members,
@@ -77,7 +93,9 @@ export class ProjectStatusService {
                 segments,
             },
             activityCountByDate,
-            averageHealth: Math.round(averageHealth),
+            health: {
+                current: currentHealth,
+            },
             lifecycleSummary,
             staleFlags: {
                 total: staleFlagCount,

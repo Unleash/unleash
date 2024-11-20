@@ -90,8 +90,9 @@ const Wrapper = styled(HealthGridTile)(({ theme }) => ({
 export const ProjectHealth = () => {
     const projectId = useRequiredPathParam('projectId');
     const {
-        data: { averageHealth, staleFlags },
+        data: { health, staleFlags },
     } = useProjectStatus(projectId);
+    const averageHealth = health.current;
     const { isOss } = useUiConfig();
     const theme = useTheme();
     const circumference = 2 * Math.PI * ChartRadius; //

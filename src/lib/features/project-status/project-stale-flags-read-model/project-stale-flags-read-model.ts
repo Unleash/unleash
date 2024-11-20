@@ -9,8 +9,8 @@ export class ProjectStaleFlagsReadModel implements IProjectStaleFlagsReadModel {
             .count()
             .whereNull('archived_at')
             .where({ project: projectId })
-            .where((qb) =>
-                qb
+            .where((builder) =>
+                builder
                     .orWhere({ stale: true })
                     .orWhere({ potentially_stale: true }),
             );

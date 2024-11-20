@@ -1,7 +1,7 @@
 import type { IUnleashStores } from '../types/stores';
 import type { IUnleashConfig } from '../types/option';
 import type { Logger } from '../logger';
-import type { IProjectHealthReport } from '../types/model';
+import type { IProject, IProjectHealthReport } from '../types/model';
 import type { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
 import type { IFeatureTypeStore } from '../types/stores/feature-type-store';
 import type { IProjectStore } from '../features/project/project-store-type';
@@ -22,7 +22,7 @@ export default class ProjectHealthService {
 
     private projectService: ProjectService;
 
-    calculateHealthRating: (projectId: string) => Promise<number>;
+    calculateHealthRating: ({ id }: Pick<IProject, 'id'>) => Promise<number>;
 
     constructor(
         {
@@ -75,7 +75,7 @@ export default class ProjectHealthService {
 
         await Promise.all(
             projects.map(async (project) => {
-                const newHealth = await this.calculateHealthRating(project.id);
+                const newHealth = await this.calculateHealthRating(project);
                 await this.projectStore.updateHealth({
                     id: project.id,
                     health: newHealth,

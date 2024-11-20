@@ -69,7 +69,7 @@ export class ProjectStatusService {
             calculateProjectHealthRating(
                 this.featureTypeStore,
                 this.featureToggleStore,
-            )(projectId),
+            )({ id: projectId }),
             this.projectLifecycleSummaryReadModel.getProjectLifecycleSummary(
                 projectId,
             ),

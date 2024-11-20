@@ -47,11 +47,13 @@ export const projectStatusSchema = {
             type: 'object',
             additionalProperties: false,
             required: ['current'],
+            description: "Information about the project's health rating",
             properties: {
                 current: {
                     type: 'integer',
                     minimum: 0,
                     description: `The project's current health score, based on the ratio of healthy flags to stale and potentially stale flags.`,
+                    example: 100,
                 },
             },
         },

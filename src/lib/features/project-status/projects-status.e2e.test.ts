@@ -300,7 +300,7 @@ test('project status includes stale flags', async () => {
                 .where({ name });
         }
         if (archived) {
-            await app.archiveFeature(name, project, 202);
+            await app.archiveFeature(name, project);
         }
     }
 

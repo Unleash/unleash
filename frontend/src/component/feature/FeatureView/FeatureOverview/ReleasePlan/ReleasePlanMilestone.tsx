@@ -30,6 +30,7 @@ const StyledAccordionSummary = styled(AccordionSummary)({
 
 const StyledTitleContainer = styled('div')(({ theme }) => ({
     display: 'flex',
+    alignItems: 'start',
     flexDirection: 'column',
     gap: theme.spacing(0.5),
 }));
@@ -44,16 +45,25 @@ const StyledStatus = styled('div', {
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
+    paddingRight: theme.spacing(1),
     fontSize: theme.fontSizes.smallerBody,
     borderRadius: theme.shape.borderRadiusMedium,
     backgroundColor:
         status === 'active' ? theme.palette.success.light : 'transparent',
     color:
         status === 'active'
-            ? theme.palette.success.main
+            ? theme.palette.success.contrastText
             : status === 'completed'
               ? theme.palette.text.secondary
               : theme.palette.text.primary,
+    '& svg': {
+        color:
+            status === 'active'
+                ? theme.palette.success.main
+                : status === 'completed'
+                  ? theme.palette.neutral.border
+                  : theme.palette.primary.main,
+    },
 }));
 
 const StyledSecondaryLabel = styled('span')(({ theme }) => ({

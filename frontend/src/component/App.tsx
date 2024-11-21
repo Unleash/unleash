@@ -23,6 +23,7 @@ import { LicenseBanner } from './banners/internalBanners/LicenseBanner';
 import { Demo } from './demo/Demo';
 import { LoginRedirect } from './common/LoginRedirect/LoginRedirect';
 import { SecurityBanner } from './banners/internalBanners/SecurityBanner';
+import { TrafficOverageBanner } from './banners/TrafficOverageBanner';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -68,6 +69,7 @@ export const App = () => {
                                 />
                                 <LicenseBanner />
                                 <SecurityBanner />
+                                <TrafficOverageBanner />
                                 <ExternalBanners />
                                 <InternalBanners />
                                 <StyledContainer>

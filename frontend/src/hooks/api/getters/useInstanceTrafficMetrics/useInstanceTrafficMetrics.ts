@@ -1,8 +1,14 @@
-import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import type { TrafficUsageDataSegmentedSchema } from 'openapi';
+import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
+import useUiConfig from '../useUiConfig/useUiConfig';
+
+const DEFAULT_DATA: TrafficUsageDataSegmentedSchema = {
+    apiData: [],
+    period: '',
+};
 
 export interface IInstanceTrafficMetricsResponse {
     usage: TrafficUsageDataSegmentedSchema;
@@ -17,14 +23,21 @@ export interface IInstanceTrafficMetricsResponse {
 export const useInstanceTrafficMetrics = (
     period: string,
 ): IInstanceTrafficMetricsResponse => {
-    const { data, error, mutate } = useSWR(
-        formatApiPath(`api/admin/metrics/traffic/${period}`),
-        fetcher,
-    );
+    const {
+        isPro,
+        uiConfig: { billing },
+    } = useUiConfig();
+    const { data, error, mutate } =
+        useConditionalSWR<TrafficUsageDataSegmentedSchema>(
+            isPro() || billing === 'pay-as-you-go',
+            DEFAULT_DATA,
+            formatApiPath(`api/admin/metrics/traffic/${period}`),
+            fetcher,
+        );
 
     return useMemo(
         () => ({
-            usage: data,
+            usage: data ?? DEFAULT_DATA,
             loading: !error && !data,
             refetch: () => mutate(),
             error,

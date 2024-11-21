@@ -239,20 +239,11 @@ export const NetworkTrafficUsage: VFC = () => {
             elseShow={
                 <>
                     <ConditionallyRender
-                        condition={includedTraffic > 0 && overageCost > 0}
+                        condition={includedTraffic > 0}
                         show={
-                            <Alert severity='warning' sx={{ mb: 4 }}>
-                                <b>Heads up!</b> You are currently consuming
-                                more requests than your plan includes and will
-                                be billed according to our terms. Please see{' '}
-                                <Link
-                                    component={RouterLink}
-                                    to='https://www.getunleash.io/pricing'
-                                >
-                                    this page
-                                </Link>{' '}
-                                for more information. In order to reduce your
-                                traffic consumption, you may configure an{' '}
+                            <Alert severity='info' sx={{ mb: 4 }}>
+                                In order to reduce your traffic consumption,
+                                consider setting up an{' '}
                                 <Link
                                     component={RouterLink}
                                     to='https://docs.getunleash.io/reference/unleash-edge'

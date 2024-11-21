@@ -81,7 +81,21 @@ export class ProjectLifecycleSummaryReadModel
     }
 
     async getCurrentFlagsInEachStage(projectId: string): Promise<FlagsInStage> {
-        const query = this.db('feature_lifecycles as fl')
+        const query = this.db
+            .with('latest_stage', (qb) => {
+                qb.select('fl.feature')
+                    .max('fl.created_at as max_created_at')
+                    .from('feature_lifecycles as fl')
+                    .groupBy('fl.feature');
+            })
+            .from('latest_stage as ls')
+            .innerJoin('feature_lifecycles as fl', function () {
+                this.on('ls.feature', '=', 'fl.feature').andOn(
+                    'ls.max_created_at',
+                    '=',
+                    'fl.created_at',
+                );
+            })
             .innerJoin('features as f', 'fl.feature', 'f.name')
             .where('f.project', projectId)
             .whereNot('fl.stage', 'archived')

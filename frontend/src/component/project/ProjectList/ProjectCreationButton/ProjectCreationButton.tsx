@@ -22,13 +22,18 @@ const NAVIGATE_TO_CREATE_PROJECT = 'NAVIGATE_TO_CREATE_PROJECT';
 function resolveCreateButtonData(
     isOss: boolean,
     hasAccess: boolean,
+    mode: 'plans' | 'upgrade' = 'plans',
 ): ICreateButtonData {
     if (isOss) {
         return {
             disabled: true,
             tooltip: {
                 titleComponent: (
-                    <PremiumFeature feature='adding-new-projects' tooltip />
+                    <PremiumFeature
+                        feature='adding-new-projects'
+                        mode={mode}
+                        tooltip
+                    />
                 ),
                 sx: { maxWidth: '320px' },
                 variant: 'custom',
@@ -70,6 +75,7 @@ export const ProjectCreationButton: FC<ProjectCreationButtonProps> = ({
     const createButtonData = resolveCreateButtonData(
         isOss(),
         hasAccess(CREATE_PROJECT),
+        'upgrade',
     );
 
     return (

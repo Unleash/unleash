@@ -57,7 +57,6 @@ const PremiumFeatures = {
         plan: FeaturePlan.ENTERPRISE,
         url: '',
         label: 'Adding new projects',
-        mode: 'upgrade',
     },
     access: {
         plan: FeaturePlan.PRO,

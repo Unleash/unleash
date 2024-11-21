@@ -202,9 +202,50 @@ test('should backfill initial stage when no stages', async () => {
 
     await featureLifecycleStore.backfill();
 
-    const backfilledCurrentStage = await getCurrentStage('my_feature_c');
-    expect(backfilledCurrentStage).toEqual({
-        stage: 'initial',
-        enteredStageAt: expect.any(Date),
-    });
+    const { body } = await getFeatureLifecycle('my_feature_c');
+
+    expect(body).toEqual([
+        { stage: 'initial', enteredStageAt: expect.any(String) },
+    ]);
+});
+
+test('should backfill archived stage when feature archived', async () => {
+    await app.createFeature('my_feature_d');
+    await app.archiveFeature('my_feature_d');
+
+    await featureLifecycleStore.delete('my_feature_d');
+
+    const currentStage = await getCurrentStage('my_feature_d');
+    expect(currentStage).toBe(undefined);
+
+    await featureLifecycleStore.backfill();
+
+    const { body } = await getFeatureLifecycle('my_feature_d');
+
+    expect(body).toEqual([
+        { stage: 'initial', enteredStageAt: expect.any(String) },
+        { stage: 'archived', enteredStageAt: expect.any(String) },
+    ]);
+});
+
+test('backfill should take no effect on live features', async () => {
+    await app.createFeature('my_feature_e');
+    await app.enableFeature('my_feature_e', 'default');
+    eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_e' });
+    eventBus.emit(CLIENT_METRICS_ADDED, [
+        {
+            featureName: 'my_feature_e',
+            environment: 'default',
+        },
+    ]);
+    await reachedStage('my_feature_e', 'live');
+
+    await featureLifecycleStore.backfill();
+
+    const { body } = await getFeatureLifecycle('my_feature_e');
+    expect(body).toEqual([
+        { stage: 'initial', enteredStageAt: expect.any(String) },
+        { stage: 'pre-live', enteredStageAt: expect.any(String) },
+        { stage: 'live', enteredStageAt: expect.any(String) },
+    ]);
 });

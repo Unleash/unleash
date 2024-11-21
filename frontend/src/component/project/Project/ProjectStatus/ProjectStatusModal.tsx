@@ -18,7 +18,7 @@ const ModalContentContainer = styled('section')(({ theme }) => ({
     flexFlow: 'column',
     gap: theme.spacing(4),
     paddingInline: theme.spacing(4),
-    paddingBlockStart: theme.spacing(3.5),
+    paddingBlockStart: 30, // align with the close button
     paddingBlockEnd: theme.spacing(10),
 }));
 

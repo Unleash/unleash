@@ -207,7 +207,6 @@ export const PremiumFeature = ({
                                 <StyledLink
                                     href={plansUrl}
                                     target='_blank'
-                                    rel='noreferrer'
                                     onClick={trackUpgradePlan}
                                 >
                                     Compare plans

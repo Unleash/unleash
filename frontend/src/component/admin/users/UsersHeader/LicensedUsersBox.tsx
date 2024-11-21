@@ -1,28 +1,42 @@
-import { Box, Link, styled, Typography } from '@mui/material';
+import { Box, Button, styled, Typography } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
 }));
 
-const StyledRow = styled(Box)({
+const StyledColumn = styled(Box)({
     display: 'flex',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
 });
 
-const StyledLink = styled(Link)(({ theme }) => ({
+const RightColumn = styled(StyledColumn)({
+    alignItems: 'flex-end',
+});
+
+const StyledButton = styled(Button)(({ theme }) => ({
     fontSize: theme.spacing(1.75),
+    textDecoration: 'underline',
+    '&:hover': {
+        backgroundColor: theme.palette.background.paper,
+    },
+    fontWeight: theme.typography.h4.fontWeight,
 }));
 
 export const LicensedUsersBox = () => {
     return (
         <StyledContainer>
-            <StyledRow>
+            <StyledColumn>
                 <Typography variant='body1' fontWeight='bold'>
                     11/25
                 </Typography>
+                <Typography variant='body2'>Seats used last 30 days</Typography>
+            </StyledColumn>
+            <RightColumn>
                 <HelpIcon
                     htmlTooltip
                     tooltip={
@@ -33,11 +47,10 @@ export const LicensedUsersBox = () => {
                         </Box>
                     }
                 />
-            </StyledRow>
-            <StyledRow>
-                <Typography variant='body2'>Seats used last 30 days</Typography>
-                <StyledLink onClick={() => {}}>View graph over time</StyledLink>
-            </StyledRow>
+                <StyledButton onClick={() => {}}>
+                    View graph over time
+                </StyledButton>
+            </RightColumn>
         </StyledContainer>
     );
 };

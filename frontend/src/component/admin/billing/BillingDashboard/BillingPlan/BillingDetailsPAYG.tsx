@@ -6,9 +6,15 @@ import { GridColLink } from './GridColLink/GridColLink';
 import type { IInstanceStatus } from 'interfaces/instance';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
 import {
+    BILLING_INCLUDED_REQUESTS,
     BILLING_PAYG_DEFAULT_MINIMUM_SEATS,
     BILLING_PAYG_USER_PRICE,
+    BILLING_TRAFFIC_BUNDLE_PRICE,
 } from './BillingPlan';
+import { useTrafficDataEstimation } from 'hooks/useTrafficData';
+import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import { useMemo } from 'react';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -27,6 +33,14 @@ export const BillingDetailsPAYG = ({
     instanceStatus,
 }: IBillingDetailsPAYGProps) => {
     const { users, loading } = useUsers();
+    const {
+        currentPeriod,
+        toChartData,
+        toTrafficUsageSum,
+        endpointsInfo,
+        getDayLabels,
+        calculateOverageCost,
+    } = useTrafficDataEstimation();
 
     const eligibleUsers = users.filter((user) => user.email);
 
@@ -36,7 +50,27 @@ export const BillingDetailsPAYG = ({
     const billableUsers = Math.max(eligibleUsers.length, minSeats);
     const usersCost = BILLING_PAYG_USER_PRICE * billableUsers;
 
-    const totalCost = usersCost;
+    const includedTraffic = BILLING_INCLUDED_REQUESTS;
+    const traffic = useInstanceTrafficMetrics(currentPeriod.key);
+
+    const overageCost = useMemo(() => {
+        if (!includedTraffic) {
+            return 0;
+        }
+        const trafficData = toChartData(
+            getDayLabels(currentPeriod.dayCount),
+            traffic,
+            endpointsInfo,
+        );
+        const totalTraffic = toTrafficUsageSum(trafficData);
+        return calculateOverageCost(
+            totalTraffic,
+            includedTraffic,
+            BILLING_TRAFFIC_BUNDLE_PRICE,
+        );
+    }, [includedTraffic, traffic, currentPeriod, endpointsInfo]);
+
+    const totalCost = usersCost + overageCost;
 
     if (loading) return null;
 
@@ -72,6 +106,36 @@ export const BillingDetailsPAYG = ({
                         </Typography>
                     </GridCol>
                 </GridRow>
+                <ConditionallyRender
+                    condition={overageCost > 0}
+                    show={
+                        <GridRow>
+                            <GridCol vertical>
+                                <Typography>
+                                    <strong>Accrued traffic charges</strong>
+                                    <GridColLink>
+                                        <Link to='/admin/network/data-usage'>
+                                            view details
+                                        </Link>
+                                    </GridColLink>
+                                </Typography>
+                                <StyledInfoLabel>
+                                    ${BILLING_TRAFFIC_BUNDLE_PRICE} per 1
+                                    million started above included data
+                                </StyledInfoLabel>
+                            </GridCol>
+                            <GridCol>
+                                <Typography
+                                    sx={(theme) => ({
+                                        fontSize: theme.fontSizes.mainHeader,
+                                    })}
+                                >
+                                    ${overageCost.toFixed(2)}
+                                </Typography>
+                            </GridCol>
+                        </GridRow>
+                    }
+                />
             </Grid>
             <StyledDivider />
             <Grid container>

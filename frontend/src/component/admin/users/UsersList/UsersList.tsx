@@ -41,10 +41,11 @@ import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
 import { UserSessionsCell } from './UserSessionsCell/UserSessionsCell';
 import { UsersHeader } from '../UsersHeader/UsersHeader';
+import { UpgradeSSO } from './UpgradeSSO';
 
 const UsersList = () => {
     const navigate = useNavigate();
-    const { isEnterprise } = useUiConfig();
+    const { isEnterprise, isOss } = useUiConfig();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
     const { removeUser, userLoading, userApiErrors } = useAdminUsersApi();
@@ -60,6 +61,7 @@ const UsersList = () => {
     });
     const userAccessUIEnabled = useUiFlag('userAccessUIEnabled');
     const showUserDeviceCount = useUiFlag('showUserDeviceCount');
+    const showSSOUpgrade = isOss() && users.length > 3;
 
     const {
         settings: { enabled: scimEnabled },
@@ -429,6 +431,8 @@ const UsersList = () => {
                     />
                 }
             />
+
+            {showSSOUpgrade ? <UpgradeSSO /> : null}
         </PageContent>
     );
 };

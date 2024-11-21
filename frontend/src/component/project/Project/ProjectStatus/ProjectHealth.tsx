@@ -19,7 +19,7 @@ const TextContainer = styled('div')(({ theme }) => ({
 
 const ChartRow = styled('div')(({ theme }) => ({
     display: 'flex',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     gap: theme.spacing(2),
 }));
 

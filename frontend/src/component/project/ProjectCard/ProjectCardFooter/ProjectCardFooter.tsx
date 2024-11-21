@@ -11,7 +11,7 @@ interface IProjectCardFooterProps {
     isFavorite?: boolean;
     children?: React.ReactNode;
     disabled?: boolean;
-    owners: IProjectOwnersProps['owners'];
+    owners?: IProjectOwnersProps['owners'];
 }
 
 const StyledFooter = styled(Box)<{ disabled: boolean }>(
@@ -34,7 +34,7 @@ export const ProjectCardFooter: FC<IProjectCardFooterProps> = ({
 }) => {
     return (
         <StyledFooter disabled={disabled}>
-            <ProjectOwners owners={owners} />
+            {owners ? <ProjectOwners owners={owners} /> : null}
             {children}
         </StyledFooter>
     );

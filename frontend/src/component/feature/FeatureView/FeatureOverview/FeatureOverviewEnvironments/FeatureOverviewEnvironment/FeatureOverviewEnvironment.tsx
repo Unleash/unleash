@@ -22,6 +22,8 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
 import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
 import { Badge } from 'component/common/Badge/Badge';
+import { UpgradeChangeRequests } from './UpgradeChangeRequests';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 interface IFeatureOverviewEnvironmentProps {
     env: IFeatureEnvironment;
@@ -131,6 +133,8 @@ const FeatureOverviewEnvironment = ({
     const featureEnvironment = feature?.environments.find(
         (featureEnvironment) => featureEnvironment.name === env.name,
     );
+    const { isOss } = useUiConfig();
+    const showChangeRequestUpgrade = env.type === 'production' && isOss();
 
     return (
         <ConditionallyRender
@@ -228,6 +232,9 @@ const FeatureOverviewEnvironment = ({
                                                 environmentMetric
                                             }
                                         />
+                                        {showChangeRequestUpgrade ? (
+                                            <UpgradeChangeRequests />
+                                        ) : null}
                                     </>
                                 }
                             />

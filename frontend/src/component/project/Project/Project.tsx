@@ -118,6 +118,29 @@ const ProjectStatusButton = styled(Button)(({ theme }) => ({
     },
 }));
 
+const ProjectStatusSvgWithMargin = styled(ProjectStatusSvg)(({ theme }) => ({
+    marginLeft: theme.spacing(0.5),
+}));
+
+const ProjectStatus = () => {
+    const [projectStatusOpen, setProjectStatusOpen] = useState(false);
+    return (
+        <>
+            <ProjectStatusButton
+                onClick={() => setProjectStatusOpen(true)}
+                startIcon={<ProjectStatusSvgWithMargin />}
+                data-loading-project
+            >
+                Project status
+            </ProjectStatusButton>
+            <ProjectStatusModal
+                open={projectStatusOpen}
+                close={() => setProjectStatusOpen(false)}
+            />
+        </>
+    );
+};
+
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const { trackEvent } = usePlausibleTracker();
@@ -133,7 +156,6 @@ export const Project = () => {
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
     const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
-    const [projectStatusOpen, setProjectStatusOpen] = useState(false);
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -297,15 +319,7 @@ export const Project = () => {
                                     </PermissionIconButton>
                                 }
                             />
-                            {simplifyProjectOverview && (
-                                <ProjectStatusButton
-                                    onClick={() => setProjectStatusOpen(true)}
-                                    startIcon={<ProjectStatusSvg />}
-                                    data-loading-project
-                                >
-                                    Project status
-                                </ProjectStatusButton>
-                            )}
+                            {simplifyProjectOverview && <ProjectStatus />}
                         </StyledDiv>
                     </StyledTopRow>
                 </StyledInnerContainer>
@@ -427,10 +441,6 @@ export const Project = () => {
                 open={modalOpen}
                 setOpen={setModalOpen}
                 project={projectId}
-            />
-            <ProjectStatusModal
-                open={projectStatusOpen}
-                close={() => setProjectStatusOpen(false)}
             />
         </div>
     );

@@ -89,8 +89,8 @@ export class ProjectLifecycleSummaryReadModel
                     .groupBy('fl.feature');
             })
             .from('latest_stage as ls')
-            .innerJoin('feature_lifecycles as fl', function () {
-                this.on('ls.feature', '=', 'fl.feature').andOn(
+            .innerJoin('feature_lifecycles as fl', (qb) => {
+                qb.on('ls.feature', '=', 'fl.feature').andOn(
                     'ls.max_created_at',
                     '=',
                     'fl.created_at',

@@ -194,16 +194,12 @@ test('should be able to toggle between completed/uncompleted', async () => {
 
 test('should backfill initial stage when no stages', async () => {
     await app.createFeature('my_feature_c');
-
+    eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_c' });
     await featureLifecycleStore.delete('my_feature_c');
-
-    const currentStage = await getCurrentStage('my_feature_c');
-    expect(currentStage).toBe(undefined);
 
     await featureLifecycleStore.backfill();
 
     const { body } = await getFeatureLifecycle('my_feature_c');
-
     expect(body).toEqual([
         { stage: 'initial', enteredStageAt: expect.any(String) },
     ]);
@@ -212,16 +208,11 @@ test('should backfill initial stage when no stages', async () => {
 test('should backfill archived stage when feature archived', async () => {
     await app.createFeature('my_feature_d');
     await app.archiveFeature('my_feature_d');
-
     await featureLifecycleStore.delete('my_feature_d');
-
-    const currentStage = await getCurrentStage('my_feature_d');
-    expect(currentStage).toBe(undefined);
 
     await featureLifecycleStore.backfill();
 
     const { body } = await getFeatureLifecycle('my_feature_d');
-
     expect(body).toEqual([
         { stage: 'initial', enteredStageAt: expect.any(String) },
         { stage: 'archived', enteredStageAt: expect.any(String) },

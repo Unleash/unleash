@@ -12,7 +12,7 @@ interface IMilestoneStrategyMenuCardsProps {
     milestoneId: string;
     openAddStrategy: (
         milestoneId: string,
-        strategy: IReleasePlanMilestoneStrategy,
+        strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => void;
 }
 
@@ -26,7 +26,9 @@ export const MilestoneStrategyMenuCards = ({
         (strategy) => !strategy.deprecated && !strategy.editable,
     );
 
-    const onClick = (strategy: IReleasePlanMilestoneStrategy) => {
+    const onClick = (
+        strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
+    ) => {
         openAddStrategy(milestoneId, strategy);
     };
 

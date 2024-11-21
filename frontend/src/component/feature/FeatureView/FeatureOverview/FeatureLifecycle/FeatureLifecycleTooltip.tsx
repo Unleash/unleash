@@ -245,11 +245,9 @@ const PreLiveStageDescription: FC<{ children?: React.ReactNode }> = ({
 
 const ArchivedStageDescription = () => {
     return (
-        <>
             <InfoText>
                 Your feature has been archived, it is now safe to delete it.
             </InfoText>
-        </>
     );
 };
 

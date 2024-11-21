@@ -54,7 +54,7 @@ enum FeaturePlan {
 
 const PremiumFeatures = {
     'adding-new-projects': {
-        plan: FeaturePlan.PRO,
+        plan: FeaturePlan.ENTERPRISE,
         url: '',
         label: 'Adding new projects',
     },
@@ -67,11 +67,6 @@ const PremiumFeatures = {
         plan: FeaturePlan.ENTERPRISE,
         url: 'https://docs.getunleash.io/reference/change-requests',
         label: 'Change Requests',
-    },
-    segments: {
-        plan: FeaturePlan.PRO,
-        url: 'https://docs.getunleash.io/reference/segments',
-        label: 'Segments',
     },
     'service-accounts': {
         plan: FeaturePlan.ENTERPRISE,
@@ -137,18 +132,21 @@ const PremiumFeatures = {
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;
 
-const UPGRADE_URL = 'https://www.getunleash.io/plans';
+const PLANS_URL = 'https://www.getunleash.io/plans';
+const UPGRADE_URL = 'https://www.getunleash.io/upgrade_unleash';
 
 export interface PremiumFeatureProps {
     feature: PremiumFeatureType;
     tooltip?: boolean;
     page?: boolean;
+    mode?: 'plans' | 'upgrade';
 }
 
 export const PremiumFeature = ({
     feature,
     tooltip,
     page,
+    mode = 'plans',
 }: PremiumFeatureProps) => {
     const { url, plan, label } = PremiumFeatures[feature];
 
@@ -182,7 +180,8 @@ export const PremiumFeature = ({
         </>
     );
 
-    const upgradeUrl = `${UPGRADE_URL}?feature=${feature}`;
+    const plansUrl = `${PLANS_URL}?feature=${feature}`;
+    const upgradeUrl = `${UPGRADE_URL}?utm_source=${feature}`;
 
     const content = (
         <PremiumFeatureWrapper tooltip={tooltip}>
@@ -204,14 +203,23 @@ export const PremiumFeature = ({
                             </StyledTypography>
                         </StyledBody>
                         <StyledButtonContainer>
-                            <StyledLink
-                                href={upgradeUrl}
-                                target='_blank'
-                                rel='noreferrer'
-                                onClick={trackUpgradePlan}
-                            >
-                                Compare plans
-                            </StyledLink>
+                            {mode === 'plans' ? (
+                                <StyledLink
+                                    href={plansUrl}
+                                    target='_blank'
+                                    onClick={trackUpgradePlan}
+                                >
+                                    Compare plans
+                                </StyledLink>
+                            ) : (
+                                <StyledLink
+                                    href={upgradeUrl}
+                                    target='_blank'
+                                    onClick={trackUpgradePlan}
+                                >
+                                    View our Enterprise offering
+                                </StyledLink>
+                            )}
                         </StyledButtonContainer>
                     </>
                 }
@@ -227,15 +235,26 @@ export const PremiumFeature = ({
                             </StyledTypography>
                         </StyledBody>
                         <StyledButtonContainer>
-                            <Button
-                                variant='contained'
-                                href={upgradeUrl}
-                                target='_blank'
-                                rel='noreferrer'
-                                onClick={trackUpgradePlan}
-                            >
-                                Compare plans
-                            </Button>
+                            {mode === 'plans' ? (
+                                <Button
+                                    variant='contained'
+                                    href={plansUrl}
+                                    target='_blank'
+                                    onClick={trackUpgradePlan}
+                                >
+                                    Compare plans
+                                </Button>
+                            ) : (
+                                <Button
+                                    variant='contained'
+                                    href={upgradeUrl}
+                                    target='_blank'
+                                    onClick={trackUpgradePlan}
+                                >
+                                    View our Enterprise offering
+                                </Button>
+                            )}
+
                             <Button
                                 href={url}
                                 target='_blank'

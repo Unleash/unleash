@@ -194,7 +194,6 @@ test('should be able to toggle between completed/uncompleted', async () => {
 
 test('should backfill intialized feature', async () => {
     await app.createFeature('my_feature_c');
-    eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_c' });
     await featureLifecycleStore.delete('my_feature_c');
 
     await featureLifecycleStore.backfill();

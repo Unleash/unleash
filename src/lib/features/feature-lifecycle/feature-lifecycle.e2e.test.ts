@@ -192,7 +192,7 @@ test('should be able to toggle between completed/uncompleted', async () => {
     expect(body).toEqual([]);
 });
 
-test('should backfill initial stage when no stages', async () => {
+test('should backfill intialized feature', async () => {
     await app.createFeature('my_feature_c');
     eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_c' });
     await featureLifecycleStore.delete('my_feature_c');
@@ -205,7 +205,7 @@ test('should backfill initial stage when no stages', async () => {
     ]);
 });
 
-test('should backfill archived stage when feature archived', async () => {
+test('should backfill archived feature', async () => {
     await app.createFeature('my_feature_d');
     await app.archiveFeature('my_feature_d');
     await featureLifecycleStore.delete('my_feature_d');
@@ -219,7 +219,7 @@ test('should backfill archived stage when feature archived', async () => {
     ]);
 });
 
-test('backfill should take no effect on live features', async () => {
+test('should not backfill for existing lifecycle', async () => {
     await app.createFeature('my_feature_e');
     await app.enableFeature('my_feature_e', 'default');
     eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_e' });

@@ -8,6 +8,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ProjectHealthGrid } from './ProjectHealthGrid';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import FeedbackIcon from '@mui/icons-material/ChatOutlined';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const ModalContentContainer = styled('section')(({ theme }) => ({
     minHeight: '100vh',
@@ -137,6 +138,7 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                 'What should be improved on the project status overview?',
         });
     };
+    const { isOss } = useUiConfig();
 
     return (
         <DynamicSidebarModal
@@ -159,19 +161,22 @@ export const ProjectStatusModal = ({ open, close }: Props) => {
                         <RowHeader>Health</RowHeader>
                         <ProjectHealthGrid />
                     </Row>
+                    {!isOss() && (
+                        <>
+                            <Row>
+                                <RowHeader>Activity in project</RowHeader>
+                                <ProjectActivity />
+                            </Row>
 
-                    <Row>
-                        <RowHeader>Activity in project</RowHeader>
-                        <ProjectActivity />
-                    </Row>
-
-                    <Row>
-                        <LifecycleHeaderRow>
-                            <RowHeader>Flag lifecycle</RowHeader>
-                            <LifecycleTooltip />
-                        </LifecycleHeaderRow>
-                        <ProjectLifecycleSummary />
-                    </Row>
+                            <Row>
+                                <LifecycleHeaderRow>
+                                    <RowHeader>Flag lifecycle</RowHeader>
+                                    <LifecycleTooltip />
+                                </LifecycleHeaderRow>
+                                <ProjectLifecycleSummary />
+                            </Row>
+                        </>
+                    )}
                 </WidgetContainer>
                 <CloseRow>
                     <FeedbackContainer>

@@ -84,13 +84,20 @@ export class ProjectLifecycleSummaryReadModel
         const query = this.db('feature_lifecycles as fl')
             .innerJoin('features as f', 'fl.feature', 'f.name')
             .where('f.project', projectId)
+            .whereNot('fl.stage', 'archived')
+            .whereNull('f.archived_at')
             .select('fl.stage')
             .count('fl.feature as flag_count')
             .groupBy('fl.stage');
 
         const result = await query;
 
-        return result.reduce(
+        const archivedCount = await this.featureToggleStore.count({
+            project: projectId,
+            archived: true,
+        });
+
+        const lifecycleStages = result.reduce(
             (acc, row) => {
                 acc[row.stage] = Number(row.flag_count);
                 return acc;
@@ -100,9 +107,12 @@ export class ProjectLifecycleSummaryReadModel
                 'pre-live': 0,
                 live: 0,
                 completed: 0,
-                archived: 0,
             },
         ) as FlagsInStage;
+        return {
+            ...lifecycleStages,
+            archived: archivedCount,
+        };
     }
 
     async getArchivedFlagsLast30Days(projectId: string): Promise<number> {

@@ -36,7 +36,7 @@ const StyledText = styled('div')(({ theme }) => ({
 }));
 
 const StyledTitle = styled('h2')(({ theme }) => ({
-    margin: 0,
+    margin: theme.spacing(0, 0, 0.5),
     fontSize: theme.typography.body1.fontSize,
     fontWeight: theme.typography.fontWeightBold,
     display: 'flex',
@@ -75,7 +75,7 @@ const StyledCloseButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const StyledImage = styled('img')(({ theme }) => ({
-    width: 230,
+    width: 235,
     margin: theme.spacing(1),
     [theme.breakpoints.down('md')]: {
         display: 'none',

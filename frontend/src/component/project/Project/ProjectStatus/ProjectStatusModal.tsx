@@ -36,10 +36,12 @@ const HeaderRow = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1.5),
+    marginInlineEnd: theme.spacing(5), // to account for the close button
 }));
 
 const StyledProjectStatusSvg = styled(ProjectStatusSvg)(({ theme }) => ({
     fill: theme.palette.primary.main,
+    flex: 'none',
 }));
 
 const ModalHeader = styled('h3')(({ theme }) => ({

@@ -8,7 +8,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { ProjectHealthGrid } from './ProjectHealthGrid';
 import { useFeedback } from 'component/feedbackNew/useFeedback';
 import FeedbackIcon from '@mui/icons-material/ChatOutlined';
-import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const ModalContentContainer = styled('section')(({ theme }) => ({
     minHeight: '100vh',

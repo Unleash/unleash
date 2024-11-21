@@ -219,7 +219,7 @@ export const ProjectLifecycleSummary = () => {
                             stage={{ name: 'completed' }}
                         />
                     </Counter>
-                    <span>{flagWord('completed')} in cleanup</span>
+                    <span>{flagWord('completed')} in completed</span>
                 </p>
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.completed.averageDays}

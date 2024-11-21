@@ -57,6 +57,7 @@ process.nextTick(async () => {
                         simplifyProjectOverview: true,
                         showUserDeviceCount: true,
                         flagOverviewRedesign: false,
+                        licensedUsers: true,
                     },
                 },
                 authentication: {

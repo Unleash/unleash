@@ -95,6 +95,7 @@ export type UiFlags = {
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
     flagOverviewRedesign?: boolean;
+    licensedUsers?: boolean;
 };
 
 export interface IVersionInfo {

@@ -243,6 +243,16 @@ const PreLiveStageDescription: FC<{ children?: React.ReactNode }> = ({
     );
 };
 
+const ArchivedStageDescription = () => {
+    return (
+        <>
+            <InfoText>
+                Your feature has been archived, it is now safe to delete it.
+            </InfoText>
+        </>
+    );
+};
+
 const BoldTitle = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
@@ -513,6 +523,7 @@ export const FeatureLifecycleTooltip: FC<{
                             <Environments environments={stage.environments} />
                         </CompletedStageDescription>
                     )}
+                    {stage.name === 'archived' && <ArchivedStageDescription />}
                 </ColorFill>
             </Box>
         }

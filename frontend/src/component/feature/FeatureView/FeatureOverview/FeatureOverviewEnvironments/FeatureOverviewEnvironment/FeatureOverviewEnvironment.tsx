@@ -124,11 +124,14 @@ const FeatureOverviewEnvironment = ({
     const { feature } = useFeature(projectId, featureId);
     const { value: globalStore } = useGlobalLocalStorage();
 
-    const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
+    const featureMetrics = getFeatureMetrics(
+        feature?.environments ?? [],
+        metrics,
+    );
     const environmentMetric = featureMetrics.find(
         (featureMetric) => featureMetric.environment === env.name,
     );
-    const featureEnvironment = feature?.environments.find(
+    const featureEnvironment = feature?.environments?.find(
         (featureEnvironment) => featureEnvironment.name === env.name,
     );
 

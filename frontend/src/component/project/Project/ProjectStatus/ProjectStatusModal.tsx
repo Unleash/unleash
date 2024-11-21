@@ -16,15 +16,15 @@ const ModalContentContainer = styled('section')(({ theme }) => ({
     backgroundColor: theme.palette.background.default,
     display: 'flex',
     flexFlow: 'column',
-    gap: theme.spacing(4),
+    gap: theme.spacing(2),
     paddingInline: theme.spacing(4),
-    paddingBlock: theme.spacing(10),
+    paddingBlock: theme.spacing(3.75),
 }));
 
 const WidgetContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(9),
+    gap: theme.spacing(4),
 }));
 
 const LifecycleHeaderRow = styled('div')(({ theme }) => ({

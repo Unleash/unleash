@@ -21,6 +21,8 @@ import { MyFlags } from './MyFlags';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData';
 import { useEffect } from 'react';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { InfoSection } from './InfoSection';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -105,6 +107,7 @@ export const PersonalDashboard = () => {
     const { trackEvent } = usePlausibleTracker();
     const { setSplashSeen } = useSplashApi();
     const { splash } = useAuthSplash();
+    const { isOss } = useUiConfig();
     const name = user?.name || '';
 
     usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
@@ -146,6 +149,8 @@ export const PersonalDashboard = () => {
 
     return (
         <MainContent>
+            {isOss() ? <InfoSection /> : null}
+
             <WelcomeSection>
                 <Typography component='h2' variant='h2'>
                     Welcome {name}

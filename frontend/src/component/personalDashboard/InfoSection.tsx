@@ -1,9 +1,11 @@
-import { styled } from '@mui/material';
+import { IconButton, styled, Tooltip } from '@mui/material';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';
 import { ReactComponent as ProPlanIconLight } from 'assets/icons/pro-enterprise-feature-badge-light.svg';
 import type { FC } from 'react';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { Button } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { useLocalStorageState } from 'hooks/useLocalStorageState';
 
 type InfoSectionProps = {};
 
@@ -16,6 +18,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     backgroundColor: theme.palette.background.paper,
     boxShadow: 'none',
+    position: 'relative',
 }));
 
 const StyledTitle = styled('h2')(({ theme }) => ({
@@ -51,9 +54,36 @@ const StyledListItem = styled('li')(({ theme }) => ({
     },
 }));
 
+const StyledCloseButton = styled(IconButton)(({ theme }) => ({
+    position: 'absolute',
+    top: theme.spacing(1),
+    right: theme.spacing(1),
+}));
+
 export const InfoSection: FC<InfoSectionProps> = () => {
+    const [dashboardUpgrade, setDashboardUpgrade] = useLocalStorageState<
+        'open' | 'closed'
+    >('upgrade-dashboard:v1', 'open');
+
+    if (dashboardUpgrade === 'closed') {
+        return null;
+    }
+
+    const onDismiss = () => {
+        setDashboardUpgrade('closed');
+    };
+
     return (
         <StyledContainer>
+            <Tooltip title='Dismiss' arrow>
+                <StyledCloseButton
+                    aria-label='dismiss'
+                    onClick={onDismiss}
+                    size='small'
+                >
+                    <CloseIcon fontSize='inherit' />
+                </StyledCloseButton>
+            </Tooltip>
             <StyledTitle>
                 <ThemeMode
                     darkmode={<ProPlanIconLight />}

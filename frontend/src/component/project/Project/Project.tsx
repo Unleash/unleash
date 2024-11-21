@@ -118,6 +118,10 @@ const ProjectStatusButton = styled(Button)(({ theme }) => ({
     },
 }));
 
+const ProjectStatusSvgWithMargin = styled(ProjectStatusSvg)(({ theme }) => ({
+    marginLeft: theme.spacing(0.5),
+}));
+
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const { trackEvent } = usePlausibleTracker();
@@ -300,7 +304,7 @@ export const Project = () => {
                             {simplifyProjectOverview && (
                                 <ProjectStatusButton
                                     onClick={() => setProjectStatusOpen(true)}
-                                    startIcon={<ProjectStatusSvg />}
+                                    startIcon={<ProjectStatusSvgWithMargin />}
                                     data-loading-project
                                 >
                                     Project status

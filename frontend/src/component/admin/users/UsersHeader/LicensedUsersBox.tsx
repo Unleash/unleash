@@ -21,6 +21,7 @@ const RightColumn = styled(StyledColumn)({
 const StyledButton = styled(Button)(({ theme }) => ({
     fontSize: theme.spacing(1.75),
     textDecoration: 'underline',
+    textAlign: 'right',
     '&:hover': {
         backgroundColor: theme.palette.background.paper,
     },

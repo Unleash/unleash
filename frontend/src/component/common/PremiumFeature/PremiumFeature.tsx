@@ -236,15 +236,27 @@ export const PremiumFeature = ({
                             </StyledTypography>
                         </StyledBody>
                         <StyledButtonContainer>
-                            <Button
-                                variant='contained'
-                                href={plansUrl}
-                                target='_blank'
-                                rel='noreferrer'
-                                onClick={trackUpgradePlan}
-                            >
-                                Compare plans
-                            </Button>
+                            {mode === 'plans' ? (
+                                <Button
+                                    variant='contained'
+                                    href={plansUrl}
+                                    target='_blank'
+                                    rel='noreferrer'
+                                    onClick={trackUpgradePlan}
+                                >
+                                    Compare plans
+                                </Button>
+                            ) : (
+                                <Button
+                                    variant='contained'
+                                    href={upgradeUrl}
+                                    target='_blank'
+                                    onClick={trackUpgradePlan}
+                                >
+                                    View our Enterprise offering
+                                </Button>
+                            )}
+
                             <Button
                                 href={url}
                                 target='_blank'

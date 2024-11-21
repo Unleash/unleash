@@ -240,7 +240,6 @@ export const PremiumFeature = ({
                                     variant='contained'
                                     href={plansUrl}
                                     target='_blank'
-                                    rel='noreferrer'
                                     onClick={trackUpgradePlan}
                                 >
                                     Compare plans

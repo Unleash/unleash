@@ -92,6 +92,7 @@ export const EditReleasePlanTemplate = () => {
             formDescription='Edit a release plan template that makes it easier for you and your team to release features.'
             handleSubmit={handleSubmit}
             loading={loading}
+            permission={RELEASE_PLAN_TEMPLATE_UPDATE}
         >
             <StyledButtonContainer>
                 <UpdateButton

@@ -85,6 +85,7 @@ export const CreateReleasePlanTemplate = () => {
             formTitle='Create release plan template'
             formDescription='Create a release plan template to make it easier for you and your team to release features.'
             handleSubmit={handleSubmit}
+            permission={RELEASE_PLAN_TEMPLATE_CREATE}
         >
             <StyledButtonContainer>
                 <CreateButton

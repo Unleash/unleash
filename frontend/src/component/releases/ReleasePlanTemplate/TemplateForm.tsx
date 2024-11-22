@@ -39,6 +39,7 @@ interface ITemplateFormProps {
     handleSubmit: (e: React.FormEvent) => void;
     loading?: boolean;
     children?: React.ReactNode;
+    permission: string;
 }
 
 export const TemplateForm: React.FC<ITemplateFormProps> = ({
@@ -54,6 +55,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     formDescription,
     handleSubmit,
     children,
+    permission,
 }) => {
     const [addStrategyOpen, setAddStrategyOpen] = useState(false);
 
@@ -106,6 +108,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                         onCancel={() => {
                             setAddStrategyOpen(false);
                         }}
+                        permission={permission}
                     />
                 </SidebarModal>
             </StyledForm>

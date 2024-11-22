@@ -1,5 +1,7 @@
 import { Box, Button, styled, Typography } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { useState } from 'react';
+import { LicensedUsersSidebar } from './LicensedUsersSidebar';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
@@ -28,6 +30,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 export const LicensedUsersBox = () => {
+    const [licensedUsersChartOpen, setLicensedUsersChartOpen] = useState(false);
     return (
         <StyledContainer>
             <StyledColumn>
@@ -47,9 +50,18 @@ export const LicensedUsersBox = () => {
                         </Box>
                     }
                 />
-                <StyledButton onClick={() => {}}>
+
+                <StyledButton
+                    onClick={() => {
+                        setLicensedUsersChartOpen(true);
+                    }}
+                >
                     View graph over time
                 </StyledButton>
+                <LicensedUsersSidebar
+                    open={licensedUsersChartOpen}
+                    close={() => setLicensedUsersChartOpen(false)}
+                />
             </RightColumn>
         </StyledContainer>
     );

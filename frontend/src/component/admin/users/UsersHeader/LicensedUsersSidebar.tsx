@@ -58,11 +58,10 @@ const InfoRow = styled('div')(({ theme }) => ({
 
 const LicenceBox = styled('div')(({ theme }) => ({
     display: 'flex',
-    gap: theme.spacing(2),
     flexDirection: 'column',
     width: '100%',
     background: theme.palette.background.elevation1,
-    padding: theme.spacing(2, 3),
+    padding: theme.spacing(3, 2, 3, 2),
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 

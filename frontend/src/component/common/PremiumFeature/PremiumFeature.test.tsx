@@ -9,7 +9,7 @@ test('Show plans comparison message and link by default - with tooltip', async (
 
     expect(link).toHaveAttribute(
         'href',
-        'https://www.getunleash.io/plans?utm_source=oss&utm_medium=feature&utm_content=environments',
+        'https://www.getunleash.io/plans?feature=environments',
     );
 });
 
@@ -20,7 +20,7 @@ test('Show plans comparison message and link by default - without tooltip', asyn
 
     expect(link).toHaveAttribute(
         'href',
-        'https://www.getunleash.io/plans?utm_source=oss&utm_medium=feature&utm_content=environments',
+        'https://www.getunleash.io/plans?feature=environments',
     );
 });
 
@@ -33,7 +33,7 @@ test('Show upgrade message and link - with tooltip', async () => {
 
     expect(link).toHaveAttribute(
         'href',
-        'https://www.getunleash.io/upgrade_unleash?utm_source=oss&utm_medium=feature&utm_content=environments',
+        'https://www.getunleash.io/upgrade_unleash?utm_medium=feature&utm_content=environments',
     );
 });
 
@@ -50,6 +50,6 @@ test('Show upgrade message and link - without tooltip', async () => {
 
     expect(link).toHaveAttribute(
         'href',
-        'https://www.getunleash.io/upgrade_unleash?utm_source=oss&utm_medium=feature&utm_content=environments',
+        'https://www.getunleash.io/upgrade_unleash?utm_medium=feature&utm_content=environments',
     );
 });

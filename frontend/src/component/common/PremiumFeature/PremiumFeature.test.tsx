@@ -33,7 +33,7 @@ test('Show upgrade message and link - with tooltip', async () => {
 
     expect(link).toHaveAttribute(
         'href',
-        'https://www.getunleash.io/upgrade_unleash?utm_source=environments',
+        'https://www.getunleash.io/upgrade_unleash?utm_medium=feature&utm_content=environments',
     );
 });
 
@@ -50,6 +50,6 @@ test('Show upgrade message and link - without tooltip', async () => {
 
     expect(link).toHaveAttribute(
         'href',
-        'https://www.getunleash.io/upgrade_unleash?utm_source=environments',
+        'https://www.getunleash.io/upgrade_unleash?utm_medium=feature&utm_content=environments',
     );
 });

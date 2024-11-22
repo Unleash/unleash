@@ -49,7 +49,6 @@ export type IFlagKey =
     | 'removeUnsafeInlineStyleSrc'
     | 'onboardingUI'
     | 'projectRoleAssignment'
-    | 'trackLifecycleMetrics'
     | 'purchaseAdditionalEnvironments'
     | 'originMiddlewareRequestLogging'
     | 'unleashAI'
@@ -244,10 +243,6 @@ const flags: IFlags = {
     ),
     projectRoleAssignment: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_ROLE_ASSIGNMENT,
-        false,
-    ),
-    trackLifecycleMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TRACK_LIFECYCLE_METRICS,
         false,
     ),
     purchaseAdditionalEnvironments: parseEnvVarBoolean(

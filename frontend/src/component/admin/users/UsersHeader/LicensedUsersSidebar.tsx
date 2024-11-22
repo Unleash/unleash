@@ -10,7 +10,7 @@ const ModalContentContainer = styled('section')(({ theme }) => ({
     flexFlow: 'column',
     gap: theme.spacing(4),
     paddingInline: theme.spacing(4),
-    paddingBlock: theme.spacing(10),
+    paddingBlock: theme.spacing(3.75),
 }));
 
 const WidgetContainer = styled('div')(({ theme }) => ({

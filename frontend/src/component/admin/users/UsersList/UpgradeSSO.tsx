@@ -67,7 +67,7 @@ export const UpgradeSSO = () => {
                         <b>Automatic User Provisioning via SCIM</b>.
                     </p>
                     <StyledLink
-                        href='https://www.getunleash.io/upgrade-unleash?utm_source=sso'
+                        href='https://www.getunleash.io/upgrade-unleash?utm_source=oss&utm_medium=feature&utm_content=sso'
                         target='_blank'
                     >
                         View our Enterprise offering

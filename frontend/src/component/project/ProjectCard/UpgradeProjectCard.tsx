@@ -64,7 +64,7 @@ export const UpgradeProjectCard = () => {
                     </StyledCloseButton>
                 </Tooltip>
                 <StyledInfo
-                    href='https://www.getunleash.io/upgrade-unleash?utm_source=projects'
+                    href='https://www.getunleash.io/upgrade-unleash?utm_source=oss&utm_medium=feature&utm_content=projects'
                     target='_blank'
                 >
                     <Typography component='span' fontWeight='bold'>
@@ -98,7 +98,7 @@ export const UpgradeProjectCard = () => {
                     </Typography>
                     <IconButton
                         color='primary'
-                        href='https://www.getunleash.io/upgrade-unleash?utm_source=projects'
+                        href='https://www.getunleash.io/upgrade-unleash?utm_source=oss&utm_medium=feature&utm_content=projects'
                         target='_blank'
                     >
                         <ArrowForwardIcon />

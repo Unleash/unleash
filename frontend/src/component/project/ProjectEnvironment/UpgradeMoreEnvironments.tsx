@@ -70,7 +70,7 @@ export const UpgradeMoreEnvironments = () => {
                         suit your organization's needs.
                     </p>
                     <StyledLink
-                        href='https://www.getunleash.io/upgrade-unleash?utm_source=environments'
+                        href='https://www.getunleash.io/upgrade-unleash?utm_source=oss&utm_medium=feature&utm_content=environments'
                         target='_blank'
                     >
                         View our Enterprise offering

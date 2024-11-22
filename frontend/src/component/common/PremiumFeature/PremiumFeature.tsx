@@ -181,7 +181,7 @@ export const PremiumFeature = ({
     );
 
     const plansUrl = `${PLANS_URL}?feature=${feature}`;
-    const upgradeUrl = `${UPGRADE_URL}?utm_source=${feature}`;
+    const upgradeUrl = `${UPGRADE_URL}?utm_medium=feature&utm_content=${feature}`;
 
     const content = (
         <PremiumFeatureWrapper tooltip={tooltip}>

@@ -66,7 +66,7 @@ export const UpgradeChangeRequests = () => {
                         principle.
                     </p>
                     <StyledLink
-                        href='https://www.getunleash.io/upgrade-unleash?utm_source=change-requests'
+                        href='https://www.getunleash.io/upgrade-unleash?utm_source=oss&utm_medium=feature&utm_content=change-requests'
                         target='_blank'
                     >
                         View our Enterprise offering

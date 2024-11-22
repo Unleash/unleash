@@ -62,6 +62,7 @@ const UsersList = () => {
     const userAccessUIEnabled = useUiFlag('userAccessUIEnabled');
     const showUserDeviceCount = useUiFlag('showUserDeviceCount');
     const showSSOUpgrade = isOss() && users.length > 3;
+    console.log(users.length, showSSOUpgrade);
 
     const {
         settings: { enabled: scimEnabled },

@@ -139,7 +139,7 @@ export const InfoSection: FC<InfoSectionProps> = () => {
                         </StyledListItem>
                     </StyledList>
                     <div>
-                        <Button href='https://www.getunleash.io/upgrade_unleash?utm_source=dashboard'>
+                        <Button href='https://www.getunleash.io/upgrade_unleash?utm_source=oss&utm_medium=feature&utm_content=dashboard'>
                             View full Enterprise offering
                         </Button>
                     </div>

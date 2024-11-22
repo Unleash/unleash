@@ -1,0 +1,91 @@
+import {
+    formatStrategyName,
+    getFeatureStrategyIcon,
+} from 'utils/strategyNames';
+import { styled } from '@mui/material';
+import type { IStrategy } from 'interfaces/strategy';
+import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
+import { v4 as uuidv4 } from 'uuid';
+
+const StyledIcon = styled('div')(({ theme }) => ({
+    width: theme.spacing(4),
+    height: 'auto',
+    '& > svg': {
+        // Styling for SVG icons.
+        fill: theme.palette.primary.main,
+    },
+    '& > div': {
+        // Styling for the Rollout icon.
+        height: theme.spacing(2),
+        marginLeft: '-.75rem',
+        color: theme.palette.primary.main,
+    },
+}));
+
+const StyledDescription = styled('div')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+}));
+
+const StyledName = styled(StringTruncator)(({ theme }) => ({
+    fontWeight: theme.fontWeight.bold,
+}));
+
+const StyledCard = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: '3rem 1fr',
+    width: '20rem',
+    padding: theme.spacing(2),
+    color: 'inherit',
+    textDecoration: 'inherit',
+    lineHeight: 1.25,
+    borderWidth: '1px',
+    borderStyle: 'solid',
+    borderColor: theme.palette.divider,
+    borderRadius: theme.spacing(1),
+    '&:hover, &:focus': {
+        borderColor: theme.palette.primary.main,
+    },
+}));
+
+interface IMilestoneStrategyMenuCardProps {
+    strategy: Pick<
+        IStrategy,
+        'name' | 'displayName' | 'description' | 'parameters'
+    > &
+        Partial<IStrategy>;
+    strategyClicked: (strategy: IReleasePlanMilestoneStrategy) => void;
+}
+
+export const MilestoneStrategyMenuCard = ({
+    strategy,
+    strategyClicked,
+}: IMilestoneStrategyMenuCardProps) => {
+    const StrategyIcon = getFeatureStrategyIcon(strategy.name);
+    const strategyName = formatStrategyName(strategy.name);
+    return (
+        <StyledCard
+            onClick={() =>
+                strategyClicked({
+                    id: uuidv4(),
+                    name: strategy.name,
+                    title: '',
+                    constraints: [],
+                    parameters: {},
+                })
+            }
+        >
+            <StyledIcon>
+                <StrategyIcon />
+            </StyledIcon>
+            <div>
+                <StyledName
+                    text={strategy.displayName || strategyName}
+                    maxWidth='200'
+                    maxLength={25}
+                />
+                <StyledDescription>{strategy.description}</StyledDescription>
+            </div>
+        </StyledCard>
+    );
+};

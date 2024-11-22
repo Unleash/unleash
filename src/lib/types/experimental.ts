@@ -47,7 +47,6 @@ export type IFlagKey =
     | 'enableLegacyVariants'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
-    | 'onboardingUI'
     | 'projectRoleAssignment'
     | 'purchaseAdditionalEnvironments'
     | 'originMiddlewareRequestLogging'
@@ -235,10 +234,6 @@ const flags: IFlags = {
     ),
     removeUnsafeInlineStyleSrc: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
-        false,
-    ),
-    onboardingUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_UI,
         false,
     ),
     projectRoleAssignment: parseEnvVarBoolean(

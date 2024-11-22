@@ -672,11 +672,6 @@ export function registerPrometheusMetrics(
     eventBus.on(
         events.STAGE_ENTERED,
         (entered: { stage: string; feature: string }) => {
-            if (flagResolver.isEnabled('trackLifecycleMetrics')) {
-                logger.info(
-                    `STAGE_ENTERED listened ${JSON.stringify(entered)}`,
-                );
-            }
             featureLifecycleStageEnteredCounter.increment({
                 stage: entered.stage,
             });

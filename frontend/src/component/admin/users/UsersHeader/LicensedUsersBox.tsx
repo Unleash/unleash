@@ -21,20 +21,33 @@ const RightColumn = styled(StyledColumn)({
 const StyledButton = styled(Button)(({ theme }) => ({
     fontSize: theme.spacing(1.75),
     textDecoration: 'underline',
+    textAlign: 'right',
     '&:hover': {
         backgroundColor: theme.palette.background.paper,
     },
     fontWeight: theme.typography.h4.fontWeight,
 }));
 
+const InvisibleParagraph = styled('p')({
+    display: 'contents',
+});
+
 export const LicensedUsersBox = () => {
     return (
         <StyledContainer>
             <StyledColumn>
-                <Typography variant='body1' fontWeight='bold'>
-                    11/25
-                </Typography>
-                <Typography variant='body2'>Seats used last 30 days</Typography>
+                <InvisibleParagraph>
+                    <Typography
+                        variant='body1'
+                        fontWeight='bold'
+                        component='span'
+                    >
+                        11/25
+                    </Typography>
+                    <Typography variant='body2' component='span'>
+                        Seats used last 30 days
+                    </Typography>
+                </InvisibleParagraph>
             </StyledColumn>
             <RightColumn>
                 <HelpIcon

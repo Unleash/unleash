@@ -52,8 +52,7 @@ interface IMilestoneStrategyMenuCardProps {
     strategy: Pick<
         IStrategy,
         'name' | 'displayName' | 'description' | 'parameters'
-    > &
-        Partial<IStrategy>;
+    >;
     strategyClicked: (strategy: IReleasePlanMilestoneStrategy) => void;
 }
 

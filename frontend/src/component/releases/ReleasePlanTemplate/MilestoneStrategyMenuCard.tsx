@@ -7,6 +7,7 @@ import type { IStrategy } from 'interfaces/strategy';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import { v4 as uuidv4 } from 'uuid';
+import { createFeatureStrategy } from 'utils/createFeatureStrategy';
 
 const StyledIcon = styled('div')(({ theme }) => ({
     width: theme.spacing(4),
@@ -49,10 +50,7 @@ const StyledCard = styled('div')(({ theme }) => ({
 }));
 
 interface IMilestoneStrategyMenuCardProps {
-    strategy: Pick<
-        IStrategy,
-        'name' | 'displayName' | 'description' | 'parameters'
-    >;
+    strategy: IStrategy;
     strategyClicked: (strategy: IReleasePlanMilestoneStrategy) => void;
 }
 
@@ -64,15 +62,16 @@ export const MilestoneStrategyMenuCard = ({
     const strategyName = formatStrategyName(strategy.name);
     return (
         <StyledCard
-            onClick={() =>
+            onClick={() => {
+                const strat = createFeatureStrategy('', strategy);
                 strategyClicked({
                     id: uuidv4(),
-                    name: strategy.name,
+                    name: strat.name,
                     title: '',
-                    constraints: [],
-                    parameters: {},
-                })
-            }
+                    constraints: strat.constraints,
+                    parameters: strat.parameters,
+                });
+            }}
         >
             <StyledIcon>
                 <StrategyIcon />

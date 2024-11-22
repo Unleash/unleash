@@ -6,11 +6,15 @@ import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useRele
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useToast from 'hooks/useToast';
-import type { IReleasePlan } from 'interfaces/releasePlans';
+import type {
+    IReleasePlan,
+    IReleasePlanMilestone,
+} from 'interfaces/releasePlans';
 import { useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ReleasePlanRemoveDialog } from './ReleasePlanRemoveDialog';
 import { ReleasePlanMilestone } from './ReleasePlanMilestone';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'disabled',
@@ -60,6 +64,13 @@ const StyledBody = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(3),
 }));
 
+const StyledConnection = styled('div')(({ theme }) => ({
+    width: 4,
+    height: theme.spacing(2),
+    backgroundColor: theme.palette.divider,
+    marginLeft: theme.spacing(3.25),
+}));
+
 interface IReleasePlanProps {
     plan: IReleasePlan;
 }
@@ -77,7 +88,8 @@ export const ReleasePlan = ({ plan }: IReleasePlanProps) => {
 
     const projectId = useRequiredPathParam('projectId');
     const { refetch } = useReleasePlans(projectId, featureName, environment);
-    const { removeReleasePlanFromFeature } = useReleasePlansApi();
+    const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
+        useReleasePlansApi();
     const { setToastData, setToastApiError } = useToast();
 
     const [removeOpen, setRemoveOpen] = useState(false);
@@ -96,6 +108,25 @@ export const ReleasePlan = ({ plan }: IReleasePlanProps) => {
             });
             refetch();
             setRemoveOpen(false);
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
+    };
+
+    const onStartMilestone = async (milestone: IReleasePlanMilestone) => {
+        try {
+            await startReleasePlanMilestone(
+                projectId,
+                featureName,
+                environment,
+                id,
+                milestone.id,
+            );
+            setToastData({
+                title: `Milestone "${milestone.name}" has started`,
+                type: 'success',
+            });
+            refetch();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
@@ -132,17 +163,23 @@ export const ReleasePlan = ({ plan }: IReleasePlanProps) => {
             </StyledHeader>
             <StyledBody>
                 {milestones.map((milestone, index) => (
-                    <ReleasePlanMilestone
-                        key={milestone.id}
-                        milestone={milestone}
-                        status={
-                            index === activeIndex
-                                ? 'active'
-                                : index < activeIndex
-                                  ? 'completed'
-                                  : 'not-started'
-                        }
-                    />
+                    <div key={milestone.id}>
+                        <ReleasePlanMilestone
+                            milestone={milestone}
+                            status={
+                                index === activeIndex
+                                    ? 'active'
+                                    : index < activeIndex
+                                      ? 'completed'
+                                      : 'not-started'
+                            }
+                            onStartMilestone={onStartMilestone}
+                        />
+                        <ConditionallyRender
+                            condition={index < milestones.length - 1}
+                            show={<StyledConnection />}
+                        />
+                    </div>
                 ))}
             </StyledBody>
             <ReleasePlanRemoveDialog

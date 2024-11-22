@@ -3,12 +3,15 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
+    Link,
     styled,
 } from '@mui/material';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import TripOriginIcon from '@mui/icons-material/TripOrigin';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ReleasePlanMilestoneStrategy } from './ReleasePlanMilestoneStrategy';
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 
 type MilestoneStatus = 'not-started' | 'active' | 'completed';
 
@@ -19,6 +22,9 @@ const StyledAccordion = styled(Accordion, {
     boxShadow: 'none',
     margin: 0,
     backgroundColor: theme.palette.background.paper,
+    '&:before': {
+        display: 'none',
+    },
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)({
@@ -71,14 +77,22 @@ const StyledSecondaryLabel = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
 }));
 
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    backgroundColor: theme.palette.envAccordion.expanded,
+    borderBottomLeftRadius: theme.shape.borderRadiusLarge,
+    borderBottomRightRadius: theme.shape.borderRadiusLarge,
+}));
+
 interface IReleasePlanMilestoneProps {
     milestone: IReleasePlanMilestone;
     status: MilestoneStatus;
+    onStartMilestone: (milestone: TReleasePlanMilestone) => void;
 }
 
 export const ReleasePlanMilestone = ({
     milestone,
     status,
+    onStartMilestone,
 }: IReleasePlanMilestoneProps) => {
     const statusText =
         status === 'active'
@@ -98,15 +112,35 @@ export const ReleasePlanMilestone = ({
                             show={<TripOriginIcon />}
                             elseShow={<PlayCircleIcon />}
                         />
-                        <span>{statusText}</span>
+                        <ConditionallyRender
+                            condition={status === 'active'}
+                            show={<span>{statusText}</span>}
+                            elseShow={
+                                <Link
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onStartMilestone(milestone);
+                                    }}
+                                >
+                                    {statusText}
+                                </Link>
+                            }
+                        />
                     </StyledStatus>
                 </StyledTitleContainer>
                 <StyledSecondaryLabel>View strategies</StyledSecondaryLabel>
             </StyledAccordionSummary>
-            <AccordionDetails>
-                You'll be able to see the milestone strategies (
-                {milestone.strategies.length}) here sometime soon
-            </AccordionDetails>
+            <StyledAccordionDetails>
+                {milestone.strategies.map((strategy, index) => (
+                    <div key={strategy.id}>
+                        <ConditionallyRender
+                            condition={index > 0}
+                            show={<StrategySeparator text='OR' />}
+                        />
+                        <ReleasePlanMilestoneStrategy strategy={strategy} />
+                    </div>
+                ))}
+            </StyledAccordionDetails>
         </StyledAccordion>
     );
 };

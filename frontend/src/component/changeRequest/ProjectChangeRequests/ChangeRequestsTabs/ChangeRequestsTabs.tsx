@@ -38,6 +38,7 @@ export interface IChangeRequestTableProps {
 
 const defaultSort: SortingRule<string> & {
     columns?: string[];
+    type?: 'open' | 'closed';
 } = { id: 'createdAt', desc: true };
 
 const StyledTabContainer = styled('div')({
@@ -76,6 +77,12 @@ export const ChangeRequestsTabs = ({
     const { value: storedParams, setValue: setStoredParams } =
         createLocalStorage(`${projectId}:ProjectChangeRequest`, defaultSort);
 
+    const initialChangeRequestType =
+        searchParams.get('type') || storedParams.type;
+    const [changeRequestType, setChangeRequestType] = useState<
+        'open' | 'closed'
+    >(initialChangeRequestType === 'closed' ? 'closed' : 'open');
+
     const [openChangeRequests, closedChangeRequests] = useMemo(() => {
         const open = changeRequests.filter(
             (changeRequest) =>
@@ -97,14 +104,16 @@ export const ChangeRequestsTabs = ({
         {
             title: 'Change requests',
             data: openChangeRequests,
+            type: 'open' as const,
         },
         {
             title: 'Closed',
             data: closedChangeRequests,
+            type: 'closed' as const,
         },
     ];
-
-    const [activeTab, setActiveTab] = useState(0);
+    const activeTab =
+        tabs.find((tab) => tab.type === changeRequestType) || tabs[0];
 
     const columns = useMemo(
         () => [
@@ -193,7 +202,7 @@ export const ChangeRequestsTabs = ({
         data: searchedData,
         getSearchText,
         getSearchContext,
-    } = useSearch(columns, searchValue, tabs[activeTab]?.data);
+    } = useSearch(columns, searchValue, activeTab?.data);
 
     const data = useMemo(
         () => (loading ? featuresPlaceholder : searchedData),
@@ -259,6 +268,7 @@ export const ChangeRequestsTabs = ({
         if (searchValue) {
             tableState.search = searchValue;
         }
+        tableState.type = changeRequestType;
 
         setSearchParams(tableState, {
             replace: true,
@@ -267,9 +277,10 @@ export const ChangeRequestsTabs = ({
             ...params,
             id: sortBy[0].id,
             desc: sortBy[0].desc || false,
+            type: changeRequestType,
         }));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [loading, sortBy, searchValue, setSearchParams]);
+    }, [loading, sortBy, searchValue, setSearchParams, changeRequestType]);
 
     return (
         <PageContent
@@ -281,18 +292,20 @@ export const ChangeRequestsTabs = ({
                     titleElement={
                         <StyledTabContainer>
                             <Tabs
-                                value={tabs[activeTab]?.title}
+                                value={activeTab?.title}
                                 indicatorColor='primary'
                                 textColor='primary'
                                 variant='scrollable'
                                 allowScrollButtonsMobile
                             >
-                                {tabs.map((tab, index) => (
+                                {tabs.map((tab) => (
                                     <StyledTabButton
                                         key={tab.title}
                                         label={`${tab.title} (${tab.data.length})`}
                                         value={tab.title}
-                                        onClick={() => setActiveTab(index)}
+                                        onClick={() =>
+                                            setChangeRequestType(tab.type)
+                                        }
                                     />
                                 ))}
                             </Tabs>

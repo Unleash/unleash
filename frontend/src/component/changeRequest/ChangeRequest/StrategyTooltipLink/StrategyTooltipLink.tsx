@@ -69,6 +69,11 @@ const StyledContainer: FC<{ children?: React.ReactNode }> = styled('div')(
     }),
 );
 
+const StyledViewDiff = styled('span')(({ theme }) => ({
+    color: theme.palette.primary.main,
+    marginLeft: theme.spacing(1),
+}));
+
 const Truncated = styled('div')(() => ({
     ...textTruncated,
     maxWidth: 500,
@@ -82,6 +87,9 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
     <StyledContainer>
         <GetFeatureStrategyIcon strategyName={change.payload.name} />
         <Truncated>
+            <Typography component='span'>
+                {formatStrategyName(change.payload.name)}
+            </Typography>
             <TooltipLink
                 tooltip={children}
                 tooltipProps={{
@@ -89,9 +97,7 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     maxHeight: 600,
                 }}
             >
-                <Typography component='span'>
-                    {formatStrategyName(change.payload.name)}
-                </Typography>
+                <StyledViewDiff>View Diff</StyledViewDiff>
             </TooltipLink>
             <NameWithChangeInfo
                 newName={change.payload.title}

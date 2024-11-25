@@ -585,9 +585,9 @@ const testCases: [string, IEvent][] = [
             tags: [],
             featureName: undefined,
             project: 'my-other-project',
-            environment: 'production'            
+            environment: 'production',
         },
-    ],    
+    ],
 ];
 
 testCases.forEach(([description, event]) =>

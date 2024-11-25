@@ -167,7 +167,7 @@ export const ReleasePlan = ({ plan }: IReleasePlanProps) => {
                         <ReleasePlanMilestone
                             milestone={milestone}
                             status={
-                                index === activeIndex
+                                milestone.id === activeMilestoneId
                                     ? 'active'
                                     : index < activeIndex
                                       ? 'completed'

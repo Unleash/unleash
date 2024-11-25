@@ -91,6 +91,10 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 if (!draft) {
                     return;
                 }
+                if (name === 'title') {
+                    draft.title = value;
+                    return;
+                }
                 draft.parameters = draft.parameters ?? {};
                 draft.parameters[name] = value;
             }),

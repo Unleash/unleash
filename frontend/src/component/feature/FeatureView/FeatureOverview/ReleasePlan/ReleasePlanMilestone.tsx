@@ -86,7 +86,7 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 interface IReleasePlanMilestoneProps {
     milestone: IReleasePlanMilestone;
     status: MilestoneStatus;
-    onStartMilestone: (milestone: TReleasePlanMilestone) => void;
+    onStartMilestone: (milestone: IReleasePlanMilestone) => void;
 }
 
 export const ReleasePlanMilestone = ({

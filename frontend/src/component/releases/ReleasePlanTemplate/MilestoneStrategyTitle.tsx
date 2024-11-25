@@ -1,5 +1,13 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, styled } from '@mui/material';
 import Input from 'component/common/Input/Input';
+
+const StyledBox = styled(Box)(({ theme }) => ({
+    paddingBottom: theme.spacing(2),
+}));
+
+const StyledTypography = styled(Typography)(({ theme }) => ({
+    paddingBottom: theme.spacing(2),
+}));
 
 interface IMilestoneStrategyTitleProps {
     title: string;
@@ -11,14 +19,10 @@ export const MilestoneStrategyTitle = ({
     setTitle,
 }: IMilestoneStrategyTitleProps) => {
     return (
-        <Box sx={{ paddingBottom: (theme) => theme.spacing(2) }}>
-            <Typography
-                sx={{
-                    paddingBottom: (theme) => theme.spacing(2),
-                }}
-            >
+        <StyledBox>
+            <StyledTypography>
                 What would you like to call this strategy? (optional)
-            </Typography>
+            </StyledTypography>
             <Input
                 label='Strategy title'
                 id='title-input'
@@ -26,6 +30,6 @@ export const MilestoneStrategyTitle = ({
                 onChange={(e) => setTitle(e.target.value)}
                 sx={{ width: '100%' }}
             />
-        </Box>
+        </StyledBox>
     );
 };

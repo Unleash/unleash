@@ -32,39 +32,19 @@ export const LicensedUsersChart: FC<ILicensedUsersChartProps> = ({
                     yAxisKey: 'count',
                     xAxisKey: 'date',
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        type: 'linear',
-                        grid: {
-                            color: theme.palette.divider,
-                            borderColor: theme.palette.divider,
-                        },
-                        ticks: {
-                            color: theme.palette.text.secondary,
-                            display: true,
-                            precision: 0,
-                        },
+                plugins: {
+                    legend: {
+                        display: false,
                     },
+                },
+                scales: {
                     x: {
-                        type: 'time',
                         time: {
                             unit: 'month',
                             tooltipFormat: 'MMM yyyy',
                             displayFormats: {
                                 month: 'MMM',
                             },
-                        },
-                        grid: {
-                            color: 'transparent',
-                            borderColor: 'transparent',
-                        },
-                        ticks: {
-                            color: theme.palette.text.secondary,
-                            display: true,
-                            source: 'data',
-                            maxRotation: 90,
-                            minRotation: 23.5,
                         },
                     },
                 },

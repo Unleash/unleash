@@ -69,7 +69,7 @@ const StyledContainer: FC<{ children?: React.ReactNode }> = styled('div')(
     }),
 );
 
-const StyledViewDiff = styled('span')(({ theme }) => ({
+const ViewDiff = styled('span')(({ theme }) => ({
     color: theme.palette.primary.main,
     marginLeft: theme.spacing(1),
 }));
@@ -97,7 +97,7 @@ export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     maxHeight: 600,
                 }}
             >
-                <StyledViewDiff>View Diff</StyledViewDiff>
+                <ViewDiff>View Diff</ViewDiff>
             </TooltipLink>
             <NameWithChangeInfo
                 newName={change.payload.title}

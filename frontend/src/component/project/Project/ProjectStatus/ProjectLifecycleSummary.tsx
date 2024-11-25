@@ -240,10 +240,10 @@ export const ProjectLifecycleSummary = () => {
                     <span>{flagWord('archived')} in archived</span>
                 </p>
                 <Stats>
-                    <dt>This month</dt>
+                    <dt>Last 30 days</dt>
                     <dd data-loading-project-lifecycle-summary>
-                        {data?.lifecycleSummary.archived.currentFlags ?? 0}{' '}
-                        flags archived
+                        {data?.lifecycleSummary.archived.last30Days ?? 0} flags
+                        archived
                     </dd>
                 </Stats>
             </LifecycleBox>

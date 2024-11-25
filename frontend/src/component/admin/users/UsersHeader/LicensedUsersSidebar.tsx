@@ -2,7 +2,7 @@ import { Alert, Button, styled, Typography } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import type React from 'react';
 import { LicensedUsersChart } from './LicensedUsersChart';
-import { useLicensedUsers } from '../../../../hooks/useLicensedUsers';
+import { useLicensedUsers } from 'hooks/useLicensedUsers';
 const ModalContentContainer = styled('section')(({ theme }) => ({
     minHeight: '100vh',
     maxWidth: 700,

@@ -29,8 +29,7 @@ const StyledElement = styled(Box)(({ theme }) => ({
 export const UsersHeader = () => {
     const licensedUsers = useUiFlag('licensedUsers');
     const { isOss } = useUiConfig();
-    const licensedUsersEnabled = true;
-    // const licensedUsersEnabled = licensedUsers && !isOss();
+    const licensedUsersEnabled = licensedUsers && !isOss();
 
     return (
         <StyledContainer licensedUsersEnabled={licensedUsersEnabled}>

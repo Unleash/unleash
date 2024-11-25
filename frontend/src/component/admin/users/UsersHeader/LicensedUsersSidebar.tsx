@@ -1,6 +1,8 @@
 import { Alert, Button, styled, Typography } from '@mui/material';
 import { DynamicSidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import type React from 'react';
+import { LicensedUsersChart } from './LicensedUsersChart';
+import { useLicensedUsers } from '../../../../hooks/useLicensedUsers';
 const ModalContentContainer = styled('section')(({ theme }) => ({
     minHeight: '100vh',
     maxWidth: 700,
@@ -74,6 +76,7 @@ export const LicensedUsersSidebar = ({
     open,
     close,
 }: LicensedUsersSidebarProps) => {
+    const { data } = useLicensedUsers();
     return (
         <DynamicSidebarModal
             open={open}
@@ -94,7 +97,10 @@ export const LicensedUsersSidebar = ({
                         <RowHeader>Last 30 days</RowHeader>
                         <InfoRow>
                             <LicenceBox>
-                                <Typography fontWeight='bold'>11/25</Typography>
+                                <Typography fontWeight='bold'>
+                                    {data.licensedUsers.current}/
+                                    {data.seatCount}
+                                </Typography>
                                 <Typography variant='body2'>
                                     Used seats last 30 days
                                 </Typography>
@@ -108,7 +114,9 @@ export const LicensedUsersSidebar = ({
                     </Row>
                     <Row>
                         <RowHeader>Last year</RowHeader>
-                        <div>this will be great grid</div>
+                        <LicensedUsersChart
+                            licensedUsers={data.licensedUsers.history}
+                        />
                     </Row>
                 </WidgetContainer>
                 <CloseRow>

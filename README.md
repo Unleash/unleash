@@ -33,7 +33,7 @@ Unleash provides an Enterprise offering that offers the following capabilities:
 * Role based access control
 * Service accounts
 
-[Start with a 14 day free trial](https://www.getunleash.io/plans/enterprise-payg)
+[Start with a 14 day free trial](https://www.getunleash.io/plans/enterprise-payg?utm_source=oss&utm_medium=readme&utm_content=unleash-enterprise-start)
 
 ## Getting Started with Unleash
 

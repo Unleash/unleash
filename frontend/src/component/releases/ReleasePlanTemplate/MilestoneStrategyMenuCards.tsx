@@ -26,7 +26,7 @@ export const MilestoneStrategyMenuCards = ({
         (strategy) => !strategy.deprecated && !strategy.editable,
     );
 
-    const strategyClicked = (strategy: IReleasePlanMilestoneStrategy) => {
+    const onClick = (strategy: IReleasePlanMilestoneStrategy) => {
         openAddStrategy(milestoneId, strategy);
     };
 
@@ -40,7 +40,7 @@ export const MilestoneStrategyMenuCards = ({
                     <ListItem key={strategy.name}>
                         <MilestoneStrategyMenuCard
                             strategy={strategy}
-                            strategyClicked={strategyClicked}
+                            onClick={onClick}
                         />
                     </ListItem>
                 ))}

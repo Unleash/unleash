@@ -51,12 +51,12 @@ const StyledCard = styled('div')(({ theme }) => ({
 
 interface IMilestoneStrategyMenuCardProps {
     strategy: IStrategy;
-    strategyClicked: (strategy: IReleasePlanMilestoneStrategy) => void;
+    onClick: (strategy: IReleasePlanMilestoneStrategy) => void;
 }
 
 export const MilestoneStrategyMenuCard = ({
     strategy,
-    strategyClicked,
+    onClick,
 }: IMilestoneStrategyMenuCardProps) => {
     const StrategyIcon = getFeatureStrategyIcon(strategy.name);
     const strategyName = formatStrategyName(strategy.name);
@@ -64,7 +64,7 @@ export const MilestoneStrategyMenuCard = ({
         <StyledCard
             onClick={() => {
                 const strat = createFeatureStrategy('', strategy);
-                strategyClicked({
+                onClick({
                     id: uuidv4(),
                     name: strat.name,
                     title: '',

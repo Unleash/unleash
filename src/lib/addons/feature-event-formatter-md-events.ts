@@ -57,6 +57,7 @@ import {
     CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
     CHANGE_REQUEST_SCHEDULE_SUSPENDED,
     FEATURE_COMPLETED,
+    PROJECT_ARCHIVED,
 } from '../types';
 
 interface IEventData {
@@ -305,6 +306,11 @@ export const EVENT_MAP: Record<string, IEventData> = {
         label: 'Project created',
         action: '{{b}}{{user}}{{b}} created project {{b}}{{project}}{{b}}',
         path: '/projects',
+    },
+    [PROJECT_ARCHIVED]: {
+        label: 'Project archived',
+        action: '{{b}}{{user}}{{b}} archived project {{b}}{{event.project}}{{b}}',
+        path: '/projects-archive',
     },
     [PROJECT_DELETED]: {
         label: 'Project deleted',

@@ -1,8 +1,12 @@
 import Input from 'component/common/Input/Input';
-import { Box, Button, Card, Grid, styled } from '@mui/material';
+import { Box, Button, Card, Grid, Popover, styled } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
-import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
+import type {
+    IReleasePlanMilestonePayload,
+    IReleasePlanMilestoneStrategy,
+} from 'interfaces/releasePlans';
 import { useState } from 'react';
+import { MilestoneStrategyMenuCards } from './MilestoneStrategyMenuCards';
 
 const StyledEditIcon = styled(Edit)(({ theme }) => ({
     cursor: 'pointer',
@@ -53,7 +57,10 @@ interface IMilestoneCardProps {
     index: number;
     milestone: IReleasePlanMilestonePayload;
     milestoneNameChanged: (index: number, name: string) => void;
-    showAddStrategyDialog: (index: number) => void;
+    showAddStrategyDialog: (
+        index: number,
+        strategy: IReleasePlanMilestoneStrategy,
+    ) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
 }
@@ -67,6 +74,22 @@ export const MilestoneCard = ({
     clearErrors,
 }: IMilestoneCardProps) => {
     const [editMode, setEditMode] = useState(false);
+    const [anchor, setAnchor] = useState<Element>();
+    const isPopoverOpen = Boolean(anchor);
+    const popoverId = isPopoverOpen
+        ? 'MilestoneStrategyMenuPopover'
+        : undefined;
+
+    const onClose = () => {
+        setAnchor(undefined);
+    };
+
+    const onSelectStrategy = (
+        milestoneId: string,
+        strategy: IReleasePlanMilestoneStrategy,
+    ) => {
+        showAddStrategyDialog(index, strategy);
+    };
 
     return (
         <StyledMilestoneCard>
@@ -111,10 +134,27 @@ export const MilestoneCard = ({
                         <Button
                             variant='outlined'
                             color='primary'
-                            onClick={() => showAddStrategyDialog(index)}
+                            onClick={(ev) => setAnchor(ev.currentTarget)}
                         >
                             Add strategy
                         </Button>
+                        <Popover
+                            id={popoverId}
+                            open={isPopoverOpen}
+                            anchorEl={anchor}
+                            onClose={onClose}
+                            onClick={onClose}
+                            PaperProps={{
+                                sx: (theme) => ({
+                                    paddingBottom: theme.spacing(1),
+                                }),
+                            }}
+                        >
+                            <MilestoneStrategyMenuCards
+                                milestoneId={milestone.id ?? index.toString()}
+                                openAddStrategy={onSelectStrategy}
+                            />
+                        </Popover>
                     </Grid>
                 </Grid>
             </StyledMilestoneCardBody>

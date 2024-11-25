@@ -1,7 +1,10 @@
 import Input from 'component/common/Input/Input';
 import { styled } from '@mui/material';
 import { MilestoneList } from './MilestoneList';
-import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
+import type {
+    IReleasePlanMilestonePayload,
+    IReleasePlanMilestoneStrategy,
+} from 'interfaces/releasePlans';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ReleaseTemplateIcon from '@mui/icons-material/DashboardOutlined';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
@@ -56,6 +59,24 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     children,
 }) => {
     const [addStrategyOpen, setAddStrategyOpen] = useState(false);
+    const [activeMilestoneIndex, setActiveMilestoneIndex] = useState<
+        number | undefined
+    >();
+    const [strategy, setStrategy] = useState<IReleasePlanMilestoneStrategy>({
+        name: 'flexibleRollout',
+        parameters: { rollout: '50' },
+        constraints: [],
+        title: '',
+        id: '',
+    });
+    const openAddStrategyForm = (
+        index: number,
+        strategy: IReleasePlanMilestoneStrategy,
+    ) => {
+        setActiveMilestoneIndex(index);
+        setStrategy(strategy);
+        setAddStrategyOpen(true);
+    };
 
     return (
         <FormTemplate
@@ -90,7 +111,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                 <MilestoneList
                     milestones={milestones}
                     setMilestones={setMilestones}
-                    setAddStrategyOpen={setAddStrategyOpen}
+                    openAddStrategyForm={openAddStrategyForm}
                     errors={errors}
                     clearErrors={clearErrors}
                 />

@@ -1,4 +1,7 @@
-import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
+import type {
+    IReleasePlanMilestonePayload,
+    IReleasePlanMilestoneStrategy,
+} from 'interfaces/releasePlans';
 import { MilestoneCard } from './MilestoneCard';
 import { styled } from '@mui/material';
 import { Button } from '@mui/material';
@@ -9,7 +12,10 @@ interface IMilestoneListProps {
     setMilestones: React.Dispatch<
         React.SetStateAction<IReleasePlanMilestonePayload[]>
     >;
-    setAddStrategyOpen: (open: boolean) => void;
+    openAddStrategyForm: (
+        index: number,
+        strategy: IReleasePlanMilestoneStrategy,
+    ) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
 }
@@ -22,14 +28,10 @@ const StyledAddMilestoneButton = styled(Button)(({ theme }) => ({
 export const MilestoneList = ({
     milestones,
     setMilestones,
-    setAddStrategyOpen,
+    openAddStrategyForm,
     errors,
     clearErrors,
 }: IMilestoneListProps) => {
-    const showAddStrategyDialog = (index: number) => {
-        setAddStrategyOpen(true);
-    };
-
     const milestoneNameChanged = (index: number, name: string) => {
         setMilestones((prev) =>
             prev.map((milestone, i) =>
@@ -46,7 +48,7 @@ export const MilestoneList = ({
                     index={index}
                     milestone={milestone}
                     milestoneNameChanged={milestoneNameChanged}
-                    showAddStrategyDialog={showAddStrategyDialog}
+                    showAddStrategyDialog={openAddStrategyForm}
                     errors={errors}
                     clearErrors={clearErrors}
                 />

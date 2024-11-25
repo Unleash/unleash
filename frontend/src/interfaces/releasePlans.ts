@@ -1,3 +1,6 @@
+import type { IFeatureVariant } from './featureToggle';
+import type { IConstraint, IFeatureStrategyParameters } from './strategy';
+
 export interface IReleasePlanTemplate {
     id: string;
     name: string;
@@ -13,6 +16,16 @@ export interface IReleasePlanTemplate {
     createdAt: string;
     createdByUserId: number;
     milestones: IReleasePlanMilestonePayload[];
+}
+
+export interface IReleasePlanMilestoneStrategy {
+    id: string;
+    name: string;
+    title: string;
+    disabled?: boolean;
+    constraints: IConstraint[];
+    parameters: IFeatureStrategyParameters;
+    variants?: IFeatureVariant[];
 }
 
 export interface IReleasePlanMilestone {

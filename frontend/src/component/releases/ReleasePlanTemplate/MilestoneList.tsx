@@ -6,6 +6,7 @@ import { MilestoneCard } from './MilestoneCard';
 import { styled } from '@mui/material';
 import { Button } from '@mui/material';
 import Add from '@mui/icons-material/Add';
+import { v4 as uuidv4 } from 'uuid';
 
 interface IMilestoneListProps {
     milestones: IReleasePlanMilestonePayload[];
@@ -13,7 +14,7 @@ interface IMilestoneListProps {
         React.SetStateAction<IReleasePlanMilestonePayload[]>
     >;
     openAddStrategyForm: (
-        index: number,
+        milestoneId: string,
         strategy: IReleasePlanMilestoneStrategy,
     ) => void;
     errors: { [key: string]: string };
@@ -32,20 +33,21 @@ export const MilestoneList = ({
     errors,
     clearErrors,
 }: IMilestoneListProps) => {
-    const milestoneNameChanged = (index: number, name: string) => {
+    const milestoneNameChanged = (milestoneId: string, name: string) => {
         setMilestones((prev) =>
-            prev.map((milestone, i) =>
-                i === index ? { ...milestone, name } : milestone,
+            prev.map((milestone) =>
+                milestone.id === milestoneId
+                    ? { ...milestone, name }
+                    : milestone,
             ),
         );
     };
 
     return (
         <>
-            {milestones.map((milestone, index) => (
+            {milestones.map((milestone) => (
                 <MilestoneCard
-                    key={`milestone_${index.toString()}`}
-                    index={index}
+                    key={milestone.id}
                     milestone={milestone}
                     milestoneNameChanged={milestoneNameChanged}
                     showAddStrategyDialog={openAddStrategyForm}
@@ -61,6 +63,7 @@ export const MilestoneList = ({
                     setMilestones((prev) => [
                         ...prev,
                         {
+                            id: uuidv4(),
                             name: `Milestone ${prev.length + 1}`,
                             sortOrder: prev.length,
                         },

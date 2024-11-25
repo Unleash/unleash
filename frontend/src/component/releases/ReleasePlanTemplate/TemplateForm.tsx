@@ -143,7 +143,9 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                     open={addStrategyOpen}
                 >
                     <ReleasePlanTemplateAddStrategyForm
+                        milestoneId={activeMilestoneId}
                         strategy={strategy}
+                        onAddStrategy={addStrategy}
                         onCancel={() => {
                             setAddStrategyOpen(false);
                         }}

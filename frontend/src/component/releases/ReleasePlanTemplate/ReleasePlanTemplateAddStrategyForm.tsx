@@ -64,13 +64,20 @@ const StyledTargetingHeader = styled('div')(({ theme }) => ({
 }));
 
 interface IReleasePlanTemplateAddStrategyFormProps {
+    milestoneId: string | undefined;
     onCancel: () => void;
     strategy: IReleasePlanMilestoneStrategy;
+    onAddStrategy: (
+        milestoneId: string,
+        strategy: IReleasePlanMilestoneStrategy,
+    ) => void;
 }
 
 export const ReleasePlanTemplateAddStrategyForm = ({
+    milestoneId,
     onCancel,
     strategy,
+    onAddStrategy,
 }: IReleasePlanTemplateAddStrategyFormProps) => {
     const [addStrategy, setAddStrategy] = useState(strategy);
     const [activeTab, setActiveTab] = useState(0);
@@ -88,6 +95,13 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 draft.parameters[name] = value;
             }),
         );
+    };
+
+    const addStrategyToMilestone = () => {
+        if (!milestoneId) {
+            return;
+        }
+        onAddStrategy(milestoneId, addStrategy);
     };
 
     if (!strategy) {
@@ -136,7 +150,12 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 )}
             </StyledContentDiv>
             <StyledButtonContainer>
-                <Button variant='contained' color='primary' type='submit'>
+                <Button
+                    variant='contained'
+                    color='primary'
+                    type='submit'
+                    onClick={addStrategyToMilestone}
+                >
                     Save strategy
                 </Button>
                 <StyledCancelButton onClick={onCancel}>

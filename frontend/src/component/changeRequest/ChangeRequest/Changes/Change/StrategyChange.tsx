@@ -236,6 +236,21 @@ export const StrategyChange: VFC<{
                             </Typography>
                         }
                     />
+                    <ConditionallyRender
+                        condition={Boolean(currentStrategy?.variants?.length)}
+                        show={
+                            currentStrategy?.variants && (
+                                <StyledBox>
+                                    <StyledTypography>
+                                        Deleting strategy variants:
+                                    </StyledTypography>
+                                    <EnvironmentVariantsTable
+                                        variants={currentStrategy.variants}
+                                    />
+                                </StyledBox>
+                            )
+                        }
+                    />
                 </>
             )}
             {change.action === 'updateStrategy' && (

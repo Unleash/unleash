@@ -54,11 +54,10 @@ const StyledMilestoneCardTitle = styled('span')(({ theme }) => ({
 }));
 
 interface IMilestoneCardProps {
-    index: number;
     milestone: IReleasePlanMilestonePayload;
-    milestoneNameChanged: (index: number, name: string) => void;
+    milestoneNameChanged: (milestoneId: string, name: string) => void;
     showAddStrategyDialog: (
-        index: number,
+        milestoneId: string,
         strategy: IReleasePlanMilestoneStrategy,
     ) => void;
     errors: { [key: string]: string };
@@ -66,7 +65,6 @@ interface IMilestoneCardProps {
 }
 
 export const MilestoneCard = ({
-    index,
     milestone,
     milestoneNameChanged,
     showAddStrategyDialog,
@@ -88,7 +86,7 @@ export const MilestoneCard = ({
         milestoneId: string,
         strategy: IReleasePlanMilestoneStrategy,
     ) => {
-        showAddStrategyDialog(index, strategy);
+        showAddStrategyDialog(milestone.id, strategy);
     };
 
     return (
@@ -101,7 +99,10 @@ export const MilestoneCard = ({
                                 label=''
                                 value={milestone.name}
                                 onChange={(e) =>
-                                    milestoneNameChanged(index, e.target.value)
+                                    milestoneNameChanged(
+                                        milestone.id,
+                                        e.target.value,
+                                    )
                                 }
                                 error={Boolean(errors?.name)}
                                 errorText={errors?.name}
@@ -151,7 +152,7 @@ export const MilestoneCard = ({
                             }}
                         >
                             <MilestoneStrategyMenuCards
-                                milestoneId={milestone.id ?? index.toString()}
+                                milestoneId={milestone.id}
                                 openAddStrategy={onSelectStrategy}
                             />
                         </Popover>

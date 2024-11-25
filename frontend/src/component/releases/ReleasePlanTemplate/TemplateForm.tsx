@@ -59,8 +59,8 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     children,
 }) => {
     const [addStrategyOpen, setAddStrategyOpen] = useState(false);
-    const [activeMilestoneIndex, setActiveMilestoneIndex] = useState<
-        number | undefined
+    const [activeMilestoneId, setActiveMilestoneId] = useState<
+        string | undefined
     >();
     const [strategy, setStrategy] = useState<IReleasePlanMilestoneStrategy>({
         name: 'flexibleRollout',
@@ -70,12 +70,31 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
         id: '',
     });
     const openAddStrategyForm = (
-        index: number,
+        milestoneId: string,
         strategy: IReleasePlanMilestoneStrategy,
     ) => {
-        setActiveMilestoneIndex(index);
+        setActiveMilestoneId(milestoneId);
         setStrategy(strategy);
         setAddStrategyOpen(true);
+    };
+
+    const addStrategy = (
+        milestoneId: string,
+        strategy: IReleasePlanMilestoneStrategy,
+    ) => {
+        setMilestones((prev) =>
+            prev.map((milestone, i) =>
+                milestone.id === milestoneId
+                    ? {
+                          ...milestone,
+                          strategies: [
+                              ...(milestone.strategies || []),
+                              strategy,
+                          ],
+                      }
+                    : milestone,
+            ),
+        );
     };
 
     return (

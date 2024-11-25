@@ -1,11 +1,12 @@
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import { useEffect, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 
 export const useTemplateForm = (
     initialName = '',
     initialDescription = '',
     initialMilestones: IReleasePlanMilestonePayload[] = [
-        { name: 'Milestone 1', sortOrder: 0 },
+        { id: uuidv4(), name: 'Milestone 1', sortOrder: 0 },
     ],
 ) => {
     const [name, setName] = useState(initialName);

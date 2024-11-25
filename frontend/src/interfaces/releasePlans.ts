@@ -41,7 +41,7 @@ export interface IReleasePlanTemplatePayload {
 }
 
 export interface IReleasePlanMilestonePayload {
-    id?: string;
+    id: string;
     name: string;
     sortOrder: number;
     strategies?: IReleasePlanStrategyPayload[];

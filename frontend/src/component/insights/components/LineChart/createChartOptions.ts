@@ -3,13 +3,14 @@ import type { ILocationSettings } from 'hooks/useLocationSettings';
 import type { TooltipState } from './ChartTooltip/ChartTooltip';
 import { createTooltip } from './createTooltip';
 import { legendOptions } from './legendOptions';
+import type { ChartOptions } from 'chart.js';
 
 export const createOptions = (
     theme: Theme,
     locationSettings: ILocationSettings,
     setTooltip: React.Dispatch<React.SetStateAction<TooltipState | null>>,
     isPlaceholder?: boolean,
-) =>
+): ChartOptions<'line'> =>
     ({
         responsive: true,
         ...(isPlaceholder
@@ -27,10 +28,6 @@ export const createOptions = (
             tooltip: {
                 enabled: false,
                 position: 'nearest',
-                interaction: {
-                    axis: 'xy',
-                    mode: 'nearest',
-                },
                 external: createTooltip(setTooltip),
             },
         },
@@ -46,8 +43,6 @@ export const createOptions = (
                 hitRadius: 15,
             },
         },
-        // cubicInterpolationMode: 'monotone',
-        tension: 0.1,
         color: theme.palette.text.secondary,
         scales: {
             y: {

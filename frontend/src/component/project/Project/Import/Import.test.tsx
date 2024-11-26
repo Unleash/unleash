@@ -59,7 +59,7 @@ test('Import happy path', async () => {
 
     const codeEditorLabel = screen.getByText('Code editor');
     codeEditorLabel.click();
-    const editor = screen.getByLabelText('Exported toggles');
+    const editor = screen.getByLabelText('Exported features');
     expect(editor.textContent).toBe('{}');
 
     screen.getByText('Validate').click();
@@ -92,7 +92,7 @@ test('Block when importing non json content', async () => {
 
     const codeEditorLabel = screen.getByText('Code editor');
     codeEditorLabel.click();
-    const editor = await screen.findByLabelText('Exported toggles');
+    const editor = await screen.findByLabelText('Exported features');
     await userEvent.type(editor, 'invalid non json');
 
     const validateButton = screen.getByText('Validate');

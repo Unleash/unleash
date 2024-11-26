@@ -1,14 +1,18 @@
 import type EventEmitter from 'events';
-import type {Db} from '../../db/db';
-import type {Logger} from '../../logger';
+import type { Db } from '../../db/db';
+import type { Logger } from '../../logger';
 import metricsHelper from '../../util/metrics-helper';
-import {DB_TIME} from '../../metric-events';
-import type {IEnvironment, IEnvironmentCreate, IProjectEnvironment,} from '../../types/model';
+import { DB_TIME } from '../../metric-events';
+import type {
+    IEnvironment,
+    IEnvironmentCreate,
+    IProjectEnvironment,
+} from '../../types/model';
 import NotFoundError from '../../error/notfound-error';
-import type {IEnvironmentStore} from './environment-store-type';
-import {snakeCaseKeys} from '../../util/snakeCase';
-import type {CreateFeatureStrategySchema} from '../../openapi';
-import {IUnleashConfig} from "../../types";
+import type { IEnvironmentStore } from './environment-store-type';
+import { snakeCaseKeys } from '../../util/snakeCase';
+import type { CreateFeatureStrategySchema } from '../../openapi';
+import type { IUnleashConfig } from '../../types';
 
 interface IEnvironmentsTable {
     name: string;
@@ -105,7 +109,15 @@ export default class EnvironmentStore implements IEnvironmentStore {
 
     private timer: (string) => any;
 
-    constructor(db: Db, eventBus: EventEmitter, { getLogger, isEnterprise, ui }: Pick<IUnleashConfig, 'getLogger' | 'isEnterprise' | 'ui'>) {
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        {
+            getLogger,
+            isEnterprise,
+            ui,
+        }: Pick<IUnleashConfig, 'getLogger' | 'isEnterprise' | 'ui'>,
+    ) {
         this.db = db;
         this.logger = getLogger('db/environment-store.ts');
         const isTest = process.env.NODE_ENV === 'test';
@@ -149,8 +161,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
 
     async get(key: string): Promise<IEnvironment> {
         const stopTimer = this.timer('get');
-        let keyQuery =  this.db<IEnvironmentsTable>(TABLE)
-            .where({ name: key });
+        let keyQuery = this.db<IEnvironmentsTable>(TABLE).where({ name: key });
         if (this.isOss) {
             keyQuery = keyQuery.where('enabled_in_oss', true);
         }
@@ -174,7 +185,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
             qB = qB.where(query);
         }
         if (this.isOss) {
-            qB = qB.where('enabled_in_oss', true)
+            qB = qB.where('enabled_in_oss', true);
         }
         const rows = await qB;
         stopTimer();

@@ -42,9 +42,8 @@ export const SsoGroupSettings = ({
                 <Grid item md={5}>
                     <strong>Enable Group Syncing</strong>
                     <p>
-                        Enables automatically syncing of users from the {' '}
-                        {ssoType}
-                        provider when a user logs in.
+                        Enables automatically syncing of users from the{' '}
+                        {ssoType} provider when a user logs in.
                     </p>
                 </Grid>
                 <Grid item md={6} style={{ padding: '20px' }}>

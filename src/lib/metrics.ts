@@ -155,7 +155,7 @@ export function registerPrometheusMetrics(
     });
     const featureFlagUpdateTotal = createCounter({
         name: 'feature_toggle_update_total',
-        help: 'Number of times a toggle has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature flag is created.',
+        help: 'Number of times a flag has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature flag is created.',
         labelNames: [
             'toggle',
             'project',

@@ -4,28 +4,29 @@ import { sdkContextSchema } from './sdk-context-schema';
 
 export const playgroundRequestSchema = {
     $id: '#/components/schemas/playgroundRequestSchema',
-    description: 'Data for the playground API to evaluate toggles',
+    description: 'Data for the playground API to evaluate feature flags',
     type: 'object',
     required: ['environment', 'context'],
     properties: {
         environment: {
             type: 'string',
             example: 'development',
-            description: 'The environment to evaluate toggles in.',
+            description: 'The environment to evaluate feature flags in.',
         },
         projects: {
-            description: 'A list of projects to check for toggles in.',
+            description: 'A list of projects to check for feature flags in.',
             oneOf: [
                 {
                     type: 'array',
                     items: { type: 'string' },
                     example: ['my-project'],
-                    description: 'A list of projects to check for toggles in.',
+                    description:
+                        'A list of projects to check for feature flags in.',
                 },
                 {
                     type: 'string',
                     enum: [ALL],
-                    description: 'Check toggles in all projects.',
+                    description: 'Check feature flags in all projects.',
                 },
             ],
         },

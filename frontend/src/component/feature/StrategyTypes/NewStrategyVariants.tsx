@@ -134,7 +134,7 @@ export const NewStrategyVariants: FC<{
                     tooltip={
                         <Box>
                             <Typography variant='body2'>
-                                Variants in feature toggling allow you to serve
+                                Variants in feature flagging allow you to serve
                                 different versions of a feature to different
                                 users. This can be used for A/B testing, gradual
                                 rollouts, and canary releases. Variants provide

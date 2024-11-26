@@ -58,7 +58,7 @@ interface IMilestoneCardProps {
     milestoneNameChanged: (milestoneId: string, name: string) => void;
     showAddStrategyDialog: (
         milestoneId: string,
-        strategy: IReleasePlanMilestoneStrategy,
+        strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
@@ -84,7 +84,7 @@ export const MilestoneCard = ({
 
     const onSelectStrategy = (
         milestoneId: string,
-        strategy: IReleasePlanMilestoneStrategy,
+        strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => {
         showAddStrategyDialog(milestone.id, strategy);
     };

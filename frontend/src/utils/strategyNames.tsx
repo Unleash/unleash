@@ -20,7 +20,7 @@ const RolloutSvgIcon: FC = (props) => (
     />
 );
 
-export const getFeatureStrategyIcon = (strategyName: string) => {
+export const getFeatureStrategyIcon = (strategyName?: string) => {
     switch (strategyName) {
         case 'default':
             return PowerSettingsNewIcon;

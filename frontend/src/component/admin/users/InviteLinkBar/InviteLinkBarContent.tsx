@@ -7,7 +7,6 @@ import { LinkField } from '../LinkField/LinkField';
 import { add, formatDistanceToNowStrict, isAfter, parseISO } from 'date-fns';
 import { formatDateYMD } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IInviteLinkBarContentProps {
     onActionClick?: (inviteLink?: string) => void;
@@ -35,7 +34,6 @@ export const InviteLinkBarContent = ({
     const navigate = useNavigate();
     const { data, loading } = useInviteTokens();
     const ref = useLoading(loading);
-    const { trackEvent } = usePlausibleTracker();
     const inviteToken =
         data?.tokens?.find((token) => token.name === 'default') ?? null;
     const inviteLink = inviteToken?.url;

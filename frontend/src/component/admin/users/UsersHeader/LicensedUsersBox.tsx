@@ -11,6 +11,7 @@ const StyledButton = styled('button')(({ theme }) => ({
     color: theme.palette.primary.main,
     cursor: 'pointer',
     padding: 0,
+    textAlign: 'left',
 }));
 
 const TopRow = styled('div')(({ theme }) => ({
@@ -26,19 +27,25 @@ const StyledCaption = styled('figcaption')(({ theme }) => ({
     justifyContent: 'space-between',
 }));
 
-const Grid = styled('figure')(({ theme }) => ({
+const Figure = styled('figure')(({ theme }) => ({
     margin: 0,
     display: 'flex',
     flexFlow: 'column',
-    gap: theme.spacing(2),
+    justifyContent: 'center',
+    // gap: theme.spacing(2),
+}));
+
+const MainMetric = styled('span')(({ theme }) => ({
+    fontSize: theme.typography.h2.fontSize,
+    fontWeight: 'bold',
 }));
 
 export const LicensedUsersBox = () => {
     const [licensedUsersChartOpen, setLicensedUsersChartOpen] = useState(false);
     return (
-        <Grid>
+        <Figure>
             <TopRow>
-                <span>11/25</span>
+                <MainMetric>11/25</MainMetric>
                 <HelpIcon
                     htmlTooltip
                     tooltip={
@@ -65,6 +72,6 @@ export const LicensedUsersBox = () => {
                 open={licensedUsersChartOpen}
                 close={() => setLicensedUsersChartOpen(false)}
             />
-        </Grid>
+        </Figure>
     );
 };

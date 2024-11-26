@@ -18,6 +18,9 @@ const StyledElement = styled(Box)(({ theme }) => ({
     border: '2px solid',
     borderColor: theme.palette.divider,
     flex: 'auto',
+    display: 'flex',
+    flexFlow: 'column',
+    justifyContent: 'center',
 }));
 
 export const UsersHeader = () => {

@@ -47,7 +47,7 @@ testServerRoute(
     },
 );
 
-test('Editing strategy before change request is applied', async () => {
+test('Editing strategy before change request is applied diffs against current strategy', async () => {
     render(
         <StrategyChange
             featureName={feature}
@@ -88,7 +88,7 @@ test('Editing strategy before change request is applied', async () => {
     await screen.findByText(`+ parameters.rollout: "${changeRequestRollout}"`);
 });
 
-test('Editing strategy after change request is applied', async () => {
+test('Editing strategy after change request is applied diffs against the snapshot', async () => {
     render(
         <StrategyChange
             featureName='my_feature'

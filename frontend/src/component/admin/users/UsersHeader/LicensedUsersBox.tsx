@@ -24,7 +24,7 @@ const StyledCaption = styled('figcaption')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     display: 'flex',
     flexFlow: 'row wrap',
-    gap: theme.spacing(2),
+    gap: theme.spacing(1),
     justifyContent: 'space-between',
 }));
 

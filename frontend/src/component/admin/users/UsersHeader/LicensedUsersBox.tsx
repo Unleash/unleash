@@ -1,4 +1,4 @@
-import { Box, styled, Typography } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useState } from 'react';
 import { LicensedUsersSidebar } from './LicensedUsersSidebar';
@@ -30,47 +30,67 @@ const StyledButton = styled('button')(({ theme }) => ({
     padding: 0,
 }));
 
-const InvisibleParagraph = styled('p')({
+const InvisibleParagraph = styled('dl')(({ theme }) => ({
     display: 'contents',
-});
+    '& dt': {
+        gridArea: 'c',
+        display: 'flex',
+        flexFlow: 'row wrap',
+        gap: theme.spacing(2),
+        justifyContent: 'space-between',
+    },
+    '& dd': {
+        gridArea: 'a',
+        display: 'flex',
+        flexFlow: 'row wrap',
+        gap: theme.spacing(2),
+        justifyContent: 'space-between',
+    },
+}));
+
+const Grid = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateAreas: `
+        'a'
+        'c'
+    `,
+    gap: theme.spacing(2),
+}));
 
 export const LicensedUsersBox = () => {
     const [licensedUsersChartOpen, setLicensedUsersChartOpen] = useState(false);
     return (
         <StyledContainer>
-            <StyledColumn>
+            <Grid>
                 <InvisibleParagraph>
-                    <Typography
-                        variant='body1'
-                        fontWeight='bold'
-                        component='span'
-                    >
-                        11/25
-                    </Typography>
-                    <Typography variant='body2' component='span'>
-                        Seats used last 30 days
-                    </Typography>
+                    <dt>
+                        <span>Seats used last 30 days</span>
+                        <StyledButton
+                            onClick={() => {
+                                setLicensedUsersChartOpen(true);
+                            }}
+                        >
+                            View graph over time
+                        </StyledButton>
+                    </dt>
+                    <dd>
+                        <span>11/25</span>
+                        <HelpIcon
+                            // sx={{ gridArea: 'b' }}
+                            htmlTooltip
+                            tooltip={
+                                <Box>
+                                    A licensed seat is a unique user that had
+                                    access to your instance within the last 30
+                                    days, and thereby occupied a seat.
+                                </Box>
+                            }
+                        />
+                    </dd>
                 </InvisibleParagraph>
-            </StyledColumn>
-            <RightColumn>
-                <HelpIcon
-                    htmlTooltip
-                    tooltip={
-                        <Box>
-                            A licensed seat is a unique user that had access to
-                            your instance within the last 30 days, and thereby
-                            occupied a seat.
-                        </Box>
-                    }
-                />
+            </Grid>
 
-                <StyledButton
-                    onClick={() => {
-                        setLicensedUsersChartOpen(true);
-                    }}
-                >
-                    View graph over time
-                </StyledButton>
+            <RightColumn>
                 <LicensedUsersSidebar
                     open={licensedUsersChartOpen}
                     close={() => setLicensedUsersChartOpen(false)}

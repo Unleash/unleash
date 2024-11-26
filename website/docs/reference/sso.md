@@ -2,21 +2,20 @@
 title: Single Sign-On
 ---
 
+
 :::note Availability
 
 **Plan**: [Enterprise](https://www.getunleash.io/pricing)
 
 :::
 
-Unleash Enterprise supports SAML 2.0, OpenID Connect, and username/password authentication.
+## Overview
 
-### Before you start
+Unleash provides Single Sign-On (SSO) support through SAML 2.0, OpenID Connect, and username/password authentication.
 
-In order to configure single sign-on you need Admin access to your Unleash instance. If you are self-hosting Unleash then a default user will be automatically created the first time you start Unleash:
-- username: `admin`
-- password: `unleash4all` (or `admin` on Unleash v3 or less)
+To configure SSO, navigate to **Admin > Single sign-on** in the Unleash Admin UI. Admin access is required.
 
-For detailed setup instructions for the different authentication providers, follow along with the respective guide:
+For step-by-step configuration instructions, refer to the following guides:
 - [OpenID Connect with Okta](../how-to/how-to-add-sso-open-id-connect)
 - [SAML 2.0 with Okta](../how-to/how-to-add-sso-saml)
 - [SAML 2.0 with Keycloak](../how-to/how-to-add-sso-saml-keycloak)

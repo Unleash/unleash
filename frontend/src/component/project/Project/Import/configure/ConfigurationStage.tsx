@@ -121,7 +121,7 @@ export const ImportArea: FC<{
             }
             elseShow={
                 <StyledTextField
-                    label='Exported features'
+                    label='Exported feature flags'
                     variant='outlined'
                     onChange={(event) => setImportPayload(event.target.value)}
                     value={importPayload}

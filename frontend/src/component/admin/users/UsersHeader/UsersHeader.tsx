@@ -23,7 +23,7 @@ const StyledElement = styled(Box)(({ theme }) => ({
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
     display: 'flex',
     border: '2px solid',
-    borderColor: theme.palette.background.alternative,
+    borderColor: theme.palette.divider,
 }));
 
 export const UsersHeader = () => {

@@ -21,6 +21,7 @@ const TopRow = styled('div')(({ theme }) => ({
 }));
 
 const StyledCaption = styled('figcaption')(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
     display: 'flex',
     flexFlow: 'row wrap',
     gap: theme.spacing(2),
@@ -32,11 +33,10 @@ const Figure = styled('figure')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'column',
     justifyContent: 'center',
-    // gap: theme.spacing(2),
 }));
 
 const MainMetric = styled('span')(({ theme }) => ({
-    fontSize: theme.typography.h2.fontSize,
+    fontSize: theme.typography.body1.fontSize,
     fontWeight: 'bold',
 }));
 

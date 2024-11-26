@@ -51,7 +51,9 @@ const StyledCard = styled('div')(({ theme }) => ({
 
 interface IMilestoneStrategyMenuCardProps {
     strategy: IStrategy;
-    onClick: (strategy: IReleasePlanMilestoneStrategy) => void;
+    onClick: (
+        strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
+    ) => void;
 }
 
 export const MilestoneStrategyMenuCard = ({

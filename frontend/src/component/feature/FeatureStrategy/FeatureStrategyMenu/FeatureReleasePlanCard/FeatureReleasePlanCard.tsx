@@ -6,6 +6,7 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 
 const StyledIcon = styled('div')(({ theme }) => ({
     width: theme.spacing(4),
@@ -60,6 +61,7 @@ export const FeatureReleasePlanCard = ({
 }: IFeatureReleasePlanCardProps) => {
     const Icon = getFeatureStrategyIcon('releasePlanTemplate');
     const { trackEvent } = usePlausibleTracker();
+    const { refetch } = useReleasePlans(projectId, featureId, environmentId);
     const { addReleasePlanToFeature } = useReleasePlansApi();
     const { setToastApiError, setToastData } = useToast();
 
@@ -75,6 +77,7 @@ export const FeatureReleasePlanCard = ({
                 type: 'success',
                 title: 'Release plan added',
             });
+            refetch();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

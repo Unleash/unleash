@@ -66,10 +66,10 @@ const StyledTargetingHeader = styled('div')(({ theme }) => ({
 interface IReleasePlanTemplateAddStrategyFormProps {
     milestoneId: string | undefined;
     onCancel: () => void;
-    strategy: IReleasePlanMilestoneStrategy;
+    strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>;
     onAddStrategy: (
         milestoneId: string,
-        strategy: IReleasePlanMilestoneStrategy,
+        strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => void;
 }
 
@@ -135,7 +135,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 {activeTab === 0 && (
                     <>
                         <MilestoneStrategyTitle
-                            title={addStrategy.title}
+                            title={addStrategy.title || ''}
                             setTitle={(title) =>
                                 updateParameter('title', title)
                             }

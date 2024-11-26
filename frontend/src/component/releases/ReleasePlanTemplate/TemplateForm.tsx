@@ -82,7 +82,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
 
     const addStrategy = (
         milestoneId: string,
-        strategy: IReleasePlanMilestoneStrategy,
+        strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => {
         setMilestones((prev) =>
             prev.map((milestone, i) =>

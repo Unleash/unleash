@@ -24,7 +24,7 @@ export const useFavoriteFeaturesApi = () => {
                 await makeLightRequest(req.caller, req.id);
 
                 setToastData({
-                    title: 'Toggle added to favorites',
+                    title: 'Feature flag added to favorites',
                     type: 'success',
                 });
                 trackEvent('favorite', {
@@ -52,7 +52,7 @@ export const useFavoriteFeaturesApi = () => {
                 await makeLightRequest(req.caller, req.id);
 
                 setToastData({
-                    title: 'Toggle removed from favorites',
+                    title: 'Feature flag removed from favorites',
                     type: 'success',
                 });
                 trackEvent('favorite', {

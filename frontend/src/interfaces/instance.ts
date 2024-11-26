@@ -7,6 +7,7 @@ export interface IInstanceStatus {
     state?: InstanceState;
     seats?: number;
     minSeats?: number;
+    isCustomBilling?: boolean;
 }
 
 export enum InstanceState {

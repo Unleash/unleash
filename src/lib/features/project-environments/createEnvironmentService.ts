@@ -21,14 +21,9 @@ export const createEnvironmentService =
         const featureEnvironmentStore = new FeatureEnvironmentStore(
             db,
             eventBus,
-            getLogger,
+            config,
         );
-        const projectStore = new ProjectStore(
-            db,
-            eventBus,
-            getLogger,
-            flagResolver,
-        );
+        const projectStore = new ProjectStore(db, eventBus, config);
         const featureStrategiesStore = new FeatureStrategiesStore(
             db,
             eventBus,

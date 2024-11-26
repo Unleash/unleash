@@ -1,7 +1,7 @@
 import { Knex } from 'knex';
 import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
-import type { Logger, LogProvider } from '../../logger';
+import type { Logger } from '../../logger';
 import type {
     IFeatureToggleClient,
     IFeatureToggleClientStore,
@@ -9,6 +9,7 @@ import type {
     IFlagResolver,
     IStrategyConfig,
     ITag,
+    IUnleashConfig,
     PartialDeep,
 } from '../../types';
 import {
@@ -46,11 +47,20 @@ export default class FeatureToggleClientStore
 
     private flagResolver: IFlagResolver;
 
+    private readonly isOss: boolean;
+
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        getLogger: LogProvider,
-        flagResolver: IFlagResolver,
+        {
+            getLogger,
+            flagResolver,
+            ui,
+            isEnterprise,
+        }: Pick<
+            IUnleashConfig,
+            'getLogger' | 'flagResolver' | 'ui' | 'isEnterprise'
+        >,
     ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-client-store.ts');
@@ -60,6 +70,8 @@ export default class FeatureToggleClientStore
                 action,
             });
         this.flagResolver = flagResolver;
+        const isTest = process.env.NODE_ENV === 'test';
+        this.isOss = !isEnterprise && ui.environment !== 'pro' && !isTest;
     }
 
     private async getAll({
@@ -72,7 +84,7 @@ export default class FeatureToggleClientStore
         const isPlayground = requestType === 'playground';
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer(`getAllBy${requestType}`);
-
+        this.logger.info(`Getting all features and we're OSS: ${this.isOss}`);
         let selectColumns = [
             'features.name as name',
             'features.description as description',
@@ -103,6 +115,10 @@ export default class FeatureToggleClientStore
 
         let query = this.db('features')
             .modify(FeatureToggleStore.filterByArchived, archived)
+            .modify(
+                FeatureToggleStore.filterByProjectsAccessibleByOss,
+                this.isOss,
+            )
             .leftJoin(
                 this.db('feature_strategies')
                     .select('*')

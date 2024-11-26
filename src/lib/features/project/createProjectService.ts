@@ -63,12 +63,7 @@ export const createProjectService = (
 ): ProjectService => {
     const { eventBus, getLogger, flagResolver } = config;
     const eventStore = new EventStore(db, getLogger);
-    const projectStore = new ProjectStore(
-        db,
-        eventBus,
-        getLogger,
-        flagResolver,
-    );
+    const projectStore = new ProjectStore(db, eventBus, config);
     const projectOwnersReadModel = new ProjectOwnersReadModel(db);
     const projectFlagCreatorsReadModel = new ProjectFlagCreatorsReadModel(db);
     const groupStore = new GroupStore(db);
@@ -83,7 +78,7 @@ export const createProjectService = (
     const featureEnvironmentStore = new FeatureEnvironmentStore(
         db,
         eventBus,
-        getLogger,
+        config,
     );
     const projectStatsStore = new ProjectStatsStore(db, eventBus, getLogger);
     const accessService: AccessService = createAccessService(db, config);

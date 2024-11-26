@@ -23,7 +23,7 @@ export const createFeatureLifecycleService =
         const featureEnvironmentStore = new FeatureEnvironmentStore(
             db,
             eventBus,
-            getLogger,
+            config,
         );
         const eventService = createEventsService(db, config);
         const featureLifecycleService = new FeatureLifecycleService(

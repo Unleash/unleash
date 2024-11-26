@@ -27,6 +27,7 @@ export class ClientFeatureToggleService {
         this.logger = getLogger('services/client-feature-toggle-service.ts');
         this.segmentReadModel = segmentReadModel;
         this.clientFeatureToggleStore = clientFeatureToggleStore;
+        const isTest = process.env.NODE_ENV === 'test';
     }
 
     async getActiveSegmentsForClient() {

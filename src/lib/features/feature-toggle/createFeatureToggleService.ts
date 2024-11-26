@@ -80,19 +80,13 @@ export const createFeatureToggleService = (
     const featureToggleClientStore = new FeatureToggleClientStore(
         db,
         eventBus,
-        getLogger,
-        flagResolver,
+        config,
     );
-    const projectStore = new ProjectStore(
-        db,
-        eventBus,
-        getLogger,
-        flagResolver,
-    );
+    const projectStore = new ProjectStore(db, eventBus, config);
     const featureEnvironmentStore = new FeatureEnvironmentStore(
         db,
         eventBus,
-        getLogger,
+        config,
     );
     const contextFieldStore = new ContextFieldStore(
         db,

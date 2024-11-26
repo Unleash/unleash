@@ -150,12 +150,7 @@ export const deferredExportImportTogglesService = (
         );
         const tagStore = new TagStore(db, eventBus, getLogger);
         const tagTypeStore = new TagTypeStore(db, eventBus, getLogger);
-        const projectStore = new ProjectStore(
-            db,
-            eventBus,
-            getLogger,
-            flagResolver,
-        );
+        const projectStore = new ProjectStore(db, eventBus, config);
         const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
         const strategyStore = new StrategyStore(db, getLogger);
         const contextFieldStore = new ContextFieldStore(
@@ -172,7 +167,7 @@ export const deferredExportImportTogglesService = (
         const featureEnvironmentStore = new FeatureEnvironmentStore(
             db,
             eventBus,
-            getLogger,
+            config,
         );
         const eventStore = new EventStore(db, getLogger);
         const accessService = createAccessService(db, config);

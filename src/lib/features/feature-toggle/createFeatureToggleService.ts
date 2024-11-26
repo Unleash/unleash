@@ -105,7 +105,7 @@ export const createFeatureToggleService = (
     const accessStore = new AccessStore(db, eventBus, getLogger);
     const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
     const roleStore = new RoleStore(db, eventBus, getLogger);
-    const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+    const environmentStore = new EnvironmentStore(db, eventBus, config);
     const eventService = createEventsService(db, config);
     const groupService = new GroupService(
         { groupStore, accountStore },

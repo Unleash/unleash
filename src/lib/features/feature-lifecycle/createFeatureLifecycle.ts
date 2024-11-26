@@ -19,7 +19,7 @@ export const createFeatureLifecycleService =
         const { eventBus, getLogger } = config;
         const eventStore = new EventStore(db, getLogger);
         const featureLifecycleStore = new FeatureLifecycleStore(db);
-        const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+        const environmentStore = new EnvironmentStore(db, eventBus, config);
         const featureEnvironmentStore = new FeatureEnvironmentStore(
             db,
             eventBus,

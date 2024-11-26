@@ -64,7 +64,7 @@ export const createInstanceStatsService = (db: Db, config: IUnleashConfig) => {
         getLogger,
         flagResolver,
     );
-    const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+    const environmentStore = new EnvironmentStore(db, eventBus, config);
     const strategyStore = new StrategyStore(db, getLogger);
     const contextFieldStore = new ContextFieldStore(
         db,

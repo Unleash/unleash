@@ -35,7 +35,7 @@ export const createEnvironmentService =
             getLogger,
             flagResolver,
         );
-        const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+        const environmentStore = new EnvironmentStore(db, eventBus, config);
         const eventService = createEventsService(db, config);
         return new EnvironmentService(
             {

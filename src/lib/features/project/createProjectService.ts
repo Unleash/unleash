@@ -79,7 +79,7 @@ export const createProjectService = (
         flagResolver,
     );
     const accountStore = new AccountStore(db, getLogger);
-    const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+    const environmentStore = new EnvironmentStore(db, eventBus, config);
     const featureEnvironmentStore = new FeatureEnvironmentStore(
         db,
         eventBus,

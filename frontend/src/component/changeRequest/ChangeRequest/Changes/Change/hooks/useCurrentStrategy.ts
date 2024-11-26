@@ -15,8 +15,9 @@ export const useCurrentStrategy = (
     environmentName: string,
 ) => {
     const { feature: currentFeature } = useFeature(project, feature);
+
     const currentStrategy = currentFeature?.environments
-        .find((environment) => environment.name === environmentName)
+        ?.find((environment) => environment.name === environmentName)
         ?.strategies.find(
             (strategy) =>
                 'id' in change.payload && strategy.id === change.payload.id,

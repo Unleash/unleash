@@ -67,7 +67,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
         parameters: { rollout: '50' },
         constraints: [],
         title: '',
-        id: '',
+        id: 'temp',
     });
     const openAddStrategyForm = (
         milestoneId: string,
@@ -89,12 +89,25 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                           ...milestone,
                           strategies: [
                               ...(milestone.strategies || []),
-                              strategy,
+                              {
+                                  ...strategy,
+                                  strategyName: strategy.name,
+                                  sortOrder: milestone.strategies?.length || 0,
+                              },
                           ],
                       }
                     : milestone,
             ),
         );
+        setAddStrategyOpen(false);
+        setActiveMilestoneId(undefined);
+        setStrategy({
+            name: 'flexibleRollout',
+            parameters: { rollout: '50' },
+            constraints: [],
+            title: '',
+            id: 'temp',
+        });
     };
 
     return (
@@ -143,6 +156,9 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                     open={addStrategyOpen}
                 >
                     <ReleasePlanTemplateAddStrategyForm
+                        milestoneId={activeMilestoneId}
+                        strategy={strategy}
+                        onAddStrategy={addStrategy}
                         onCancel={() => {
                             setAddStrategyOpen(false);
                         }}

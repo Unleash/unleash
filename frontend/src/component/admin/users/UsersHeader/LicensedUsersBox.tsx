@@ -1,4 +1,4 @@
-import { Box, Button, styled, Typography } from '@mui/material';
+import { Box, styled, Typography } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useState } from 'react';
 import { LicensedUsersSidebar } from './LicensedUsersSidebar';
@@ -20,14 +20,14 @@ const RightColumn = styled(StyledColumn)({
     alignItems: 'flex-end',
 });
 
-const StyledButton = styled(Button)(({ theme }) => ({
-    fontSize: theme.spacing(1.75),
+const StyledButton = styled('button')(({ theme }) => ({
+    background: 'none',
+    border: 'none',
+    fontSize: theme.typography.body2.fontSize,
     textDecoration: 'underline',
-    textAlign: 'right',
-    '&:hover': {
-        backgroundColor: theme.palette.background.paper,
-    },
-    fontWeight: theme.typography.h4.fontWeight,
+    color: theme.palette.primary.main,
+    cursor: 'pointer',
+    padding: 0,
 }));
 
 const InvisibleParagraph = styled('p')({

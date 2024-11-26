@@ -53,7 +53,7 @@ describe('feature', () => {
 
     it('can create a feature flag', () => {
         cy.createFeature_UI(featureToggleName, true, projectName);
-        cy.url().should('include', featureToggleName);
+        cy.contains('td', featureToggleName).should('exist');
     });
 
     it('gives an error if a toggle exists with the same name', () => {

@@ -22,12 +22,6 @@ export const StyledBox = styled(Box)(() => ({
     flexDirection: 'column',
 }));
 
-export const StyledButtonBox = styled(Box)(() => ({
-    display: 'flex',
-    alignItems: 'center',
-    flexGrow: 1,
-}));
-
 export const InviteLinkBarContent = ({
     onActionClick,
 }: IInviteLinkBarContentProps) => {
@@ -108,22 +102,13 @@ export const InviteLinkBarContent = ({
                     }
                 />
             </StyledBox>
-            <StyledButtonBox
-                sx={{
-                    justifyContent: {
-                        xs: 'center',
-                        md: 'flex-end',
-                    },
-                }}
+            <Button
+                variant='outlined'
+                onClick={onInviteLinkActionClick}
+                data-loading
             >
-                <Button
-                    variant='outlined'
-                    onClick={onInviteLinkActionClick}
-                    data-loading
-                >
-                    {inviteLink ? 'Update' : 'Create'} invite link
-                </Button>
-            </StyledButtonBox>
+                {inviteLink ? 'Update' : 'Create'} invite link
+            </Button>
         </>
     );
 };

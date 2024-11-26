@@ -21,7 +21,6 @@ const StyledElement = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     padding: theme.spacing(2, 3, 2, 2),
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
-    display: 'flex',
     border: '2px solid',
     borderColor: theme.palette.divider,
 }));
@@ -29,7 +28,7 @@ const StyledElement = styled(Box)(({ theme }) => ({
 export const UsersHeader = () => {
     const licensedUsers = useUiFlag('licensedUsers');
     const { isOss } = useUiConfig();
-    const licensedUsersEnabled = licensedUsers && !isOss();
+    const licensedUsersEnabled = true; //licensedUsers && !isOss();
 
     return (
         <StyledContainer licensedUsersEnabled={licensedUsersEnabled}>

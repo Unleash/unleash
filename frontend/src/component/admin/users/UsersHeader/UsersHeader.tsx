@@ -4,18 +4,12 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { LicensedUsersBox } from './LicensedUsersBox';
 
-interface StyledContainerProps {
-    licensedUsersEnabled: boolean;
-}
-
-const StyledContainer = styled(Box)<StyledContainerProps>(
-    ({ theme, licensedUsersEnabled }) => ({
-        display: 'grid',
-        gridTemplateColumns: licensedUsersEnabled ? '60% 40%' : '100%',
-        gap: theme.spacing(2),
-        paddingBottom: theme.spacing(3),
-    }),
-);
+const StyledContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row',
+    gap: theme.spacing(2),
+    paddingBottom: theme.spacing(3),
+}));
 
 const StyledElement = styled(Box)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -23,15 +17,16 @@ const StyledElement = styled(Box)(({ theme }) => ({
     borderRadius: `${theme.shape.borderRadiusLarge}px`,
     border: '2px solid',
     borderColor: theme.palette.divider,
+    flex: 'auto',
 }));
 
 export const UsersHeader = () => {
     const licensedUsers = useUiFlag('licensedUsers');
     const { isOss } = useUiConfig();
-    const licensedUsersEnabled = true; //licensedUsers && !isOss();
+    const licensedUsersEnabled = licensedUsers && !isOss();
 
     return (
-        <StyledContainer licensedUsersEnabled={licensedUsersEnabled}>
+        <StyledContainer>
             <StyledElement>
                 <InviteLinkBar />
             </StyledElement>

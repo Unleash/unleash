@@ -5,7 +5,7 @@ import { LicensedUsersSidebar } from './LicensedUsersSidebar';
 
 const StyledContainer = styled(Box)(({ theme }) => ({
     display: 'flex',
-    flexDirection: 'row',
+    flexFlow: 'row wrap',
     width: '100%',
     justifyContent: 'space-between',
     alignItems: 'center',

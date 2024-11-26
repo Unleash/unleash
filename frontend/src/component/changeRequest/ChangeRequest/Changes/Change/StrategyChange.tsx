@@ -271,11 +271,19 @@ export const StrategyChange: VFC<{
                             />
                             <StrategyTooltipLink
                                 change={change}
-                                previousTitle={currentStrategy?.title}
+                                previousTitle={
+                                    changeRequestState === 'Applied'
+                                        ? change.payload.snapshot?.title
+                                        : currentStrategy?.title
+                                }
                             >
                                 <StrategyDiff
                                     change={change}
-                                    currentStrategy={currentStrategy}
+                                    currentStrategy={
+                                        changeRequestState === 'Applied'
+                                            ? change.payload.snapshot
+                                            : currentStrategy
+                                    }
                                 />
                             </StrategyTooltipLink>
                         </ChangeItemInfo>

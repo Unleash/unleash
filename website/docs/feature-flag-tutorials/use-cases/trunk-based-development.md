@@ -34,7 +34,7 @@ The most frequent approach to trunk-based development is merging every commit di
 Some challenges with merging every commit are:
 
 -   Potential for more frequent build breaks and test failures
--   Increased need for effective branching and merging strategies
+-   Increased need for effective merging strategies
 -   Requirement for robust automated testing and CI/CD pipelines
 
 ### Merge at Set Intervals
@@ -55,7 +55,7 @@ Another common strategy is to merge changes into the trunk at regular, predefine
 
 ### Benefits of Short-Lived Feature Branches
 
-Short-lived feature branches enable teams to implement code review processes without the burden of maintaining long-running branches, which can become increasingly difficult to manage over time. The frequent integration back to trunk significantly reduces the likelihood and complexity of merge conflicts, as changes are merged before they can diverge too far from the main codebase. This approach maintains the core benefits of trunk-based development - such as rapid iteration and continuous integration - while still allowing developers to work in isolation when needed. This isolation can be particularly valuable for making experimental changes or implementing complex features that require validation before being merged into the trunk.
+In trunk-based development, it is possible to use short-lived feature branches, which enable teams to implement code review processes without the burden of maintaining long-running branches, which can become increasingly difficult to manage over time. The frequent integration back to trunk significantly reduces the likelihood and complexity of merge conflicts, as changes are merged before they can diverge too far from the main codebase. This approach maintains the core benefits of trunk-based development - such as rapid iteration and continuous integration - while still allowing developers to work in isolation when needed. This isolation can be particularly valuable for making experimental changes or implementing complex features that require validation before being merged into the trunk.
 
 **Challenges to Address**
 
@@ -155,3 +155,15 @@ For trunk-based development, you can create a gradual rollout strategy to:
 -   General release
 
 To target users accordingly, let's create an [activation strategy](/reference/activation-strategies). This Unleash concept defines who will be exposed to a particular flag. Unleash comes pre-configured with multiple activation strategies that let you enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
+
+![Add a strategy to configure a release process for your flag.](/img/use-case-tbd-add-strategy.png)
+
+The gradual rollout strategy form has multiple fields that control the rollout of your feature. You can name the strategy something relevant to the feature you’re building, but this is an optional field.
+
+## Archive and Remove Feature Flags
+
+Once a feature is fully rolled out and stable, the feature flag should be archived or removed. This reduces clutter in the codebase and prevents unnecessary complexity.
+
+As your codebase and feature set grow over time, it's important to maintain visibility into your feature flag usage and lifecycle. Regularly review which flags are active, which environments they are enabled in, and when they were last modified.
+
+Unleash provides reporting and analytics capabilities to help you monitor your feature flag landscape. This allows you to identify obsolete or unused flags, and plan for their eventual archival or removal, keeping your codebase clean and manageable.

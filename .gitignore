@@ -49,6 +49,9 @@ shell.nix
 # Pijul + ignore
 .ignore
 .pijul
+# Custom hooks in husky directory
+.husky/pre-push
+.husky/prepare-commit-msg
 
 
 # We use yarn.lock

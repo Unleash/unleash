@@ -41,7 +41,7 @@ export const FlagExposure: FC<{
                 onUncomplete={refetchFeature}
             />
 
-            {feature.children.length > 0 ? (
+            {feature?.children?.length > 0 ? (
                 <FeatureArchiveNotAllowedDialog
                     features={feature.children}
                     project={project}

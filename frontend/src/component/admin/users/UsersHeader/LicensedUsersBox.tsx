@@ -3,6 +3,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useState } from 'react';
 import { LicensedUsersSidebar } from './LicensedUsersSidebar';
 import { useLicensedUsers } from 'hooks/useLicensedUsers';
+import useLoading from 'hooks/useLoading';
 
 const StyledButton = styled('button')(({ theme }) => ({
     background: 'none',
@@ -62,11 +63,12 @@ const OpenSidebarButton = () => {
 };
 
 export const LicensedUsersBox = () => {
-    const { data } = useLicensedUsers();
+    const { data, loading } = useLicensedUsers();
+    const ref = useLoading(loading, '[data-loading-licensed-users=true]');
     return (
-        <Figure>
+        <Figure ref={ref}>
             <TopRow>
-                <MainMetric>
+                <MainMetric data-loading-licensed-users>
                     {data.licensedUsers.current}/{data.seatCount}
                 </MainMetric>
                 <HelpIcon

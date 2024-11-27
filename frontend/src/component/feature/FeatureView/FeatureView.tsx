@@ -130,7 +130,7 @@ export const StyledLink = styled(Link)(() => ({
 
 const useLegacyVariants = (environments: IFeatureToggle['environments']) => {
     const enableLegacyVariants = useUiFlag('enableLegacyVariants');
-    const existingLegacyVariantsExist = environments.some(
+    const existingLegacyVariantsExist = environments?.some(
         (environment) => environment.variants?.length,
     );
     return enableLegacyVariants || existingLegacyVariantsExist;

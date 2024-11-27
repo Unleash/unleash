@@ -135,7 +135,7 @@ In addition to meaningful names, apply relevant tags and metadata to your featur
 -   The release timeline or planned retirement date
 -   Associated Jira tickets or GitHub issues
 -   Relevant documentation or context
--   Tagging and metadata make it easier to search, filter, and manage your feature flags, especially as the number of flags grows.
+-   [Tagging](/reference/tags) and metadata make it easier to search, filter, and manage your feature flags, especially as the number of flags grows.
 
 #### Automate Flag Lifecycle Management
 
@@ -164,9 +164,41 @@ To target users accordingly, let's create an [activation strategy](/reference/ac
 
 The gradual rollout strategy form has multiple fields that control the rollout of your feature. You can name the strategy something relevant to the feature you’re building, but this is an optional field.
 
-### Simplify Rollbacks
+## Simplify Rollbacks
 
-When issues are detected, Unleash makes it easy to quickly roll back a problematic feature by simply turning off the corresponding feature flag. This allows development teams to address problems swiftly without the need for complex rollback procedures or full code deployments.
+In trunk-based development, the ability to quickly roll back a feature can mean the difference between a minor hiccup and a major service disruption.
+
+When issues are detected, Unleash makes it easy to quickly roll back a problematic feature by simply turning off the corresponding feature flag in your production environment, allowing teams to disable problematic features with just a single click. This allows development teams to address problems swiftly without the need for complex rollback procedures or full code deployments.
+
+### The One-Click Rollback Process
+
+Imagine you've just rolled out a new checkout process. Shortly after launch, you detect performance issues or unexpected user behavior. To mitigate this issue, the process to roll back is straightforward:
+
+1. Navigate to the Unleash Admin UI
+2. Locate the feature flag for the specific feature
+3. Toggle the flag to the "Off" position in the production environment
+
+Instantly, the feature is disabled for all users without requiring a new code deployment, complex rollback procedures, or downtime for your application.
+
+### Why Simple Rollbacks Matter for Development Teams
+
+This simple rollback mechanism provides many critical benefits:
+
+-   Immediate risk mitigation
+-   Minimal disruption to ongoing development
+-   Reduced operational overhead
+-   Enhanced ability to experiment and innovate
+
+You can simply turn off the feature flag in Unleash, immediately reverting to the previous stable version of the feature.
+
+### Best Practices for Rollback Readiness
+
+To maximize the effectiveness of feature flag rollbacks:
+
+-   Always have a feature flag prepared before launching new functionality
+-   Ensure your feature flags wrap complete, identifiable units of functionality
+-   Train your team on the rollback process
+-   Set up monitoring to quickly detect potential issues
 
 ## Archive and Remove Feature Flags
 

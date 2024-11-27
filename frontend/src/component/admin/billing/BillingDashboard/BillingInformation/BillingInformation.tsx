@@ -46,26 +46,40 @@ export const BillingInformation = () => {
 
     const plan = `${instanceStatus.plan}${isPAYG ? ' Pay-as-You-Go' : ''}`;
     const inactive = instanceStatus.state !== InstanceState.ACTIVE;
+    const { isCustomBilling } = instanceStatus;
 
     return (
         <Grid item xs={12} md={5}>
             <StyledInfoBox>
                 <StyledTitle variant='body1'>Billing information</StyledTitle>
                 <ConditionallyRender
-                    condition={inactive}
+                    condition={Boolean(isCustomBilling)}
                     show={
-                        <StyledAlert severity='warning'>
-                            In order to <strong>Upgrade trial</strong> you need
-                            to provide us your billing information.
-                        </StyledAlert>
+                        <StyledInfoLabel>
+                            Your billing is managed by Unleash
+                        </StyledInfoLabel>
+                    }
+                    elseShow={
+                        <>
+                            <ConditionallyRender
+                                condition={inactive}
+                                show={
+                                    <StyledAlert severity='warning'>
+                                        In order to{' '}
+                                        <strong>Upgrade trial</strong> you need
+                                        to provide us your billing information.
+                                    </StyledAlert>
+                                }
+                            />
+                            <BillingInformationButton update={!inactive} />
+                            <StyledInfoLabel>
+                                {inactive
+                                    ? 'Once we have received your billing information we will upgrade your trial within 1 business day'
+                                    : 'Update your credit card and business information and change which email address we send invoices to'}
+                            </StyledInfoLabel>
+                        </>
                     }
                 />
-                <BillingInformationButton update={!inactive} />
-                <StyledInfoLabel>
-                    {inactive
-                        ? 'Once we have received your billing information we will upgrade your trial within 1 business day'
-                        : 'Update your credit card and business information and change which email address we send invoices to'}
-                </StyledInfoLabel>
                 <StyledDivider />
                 <StyledInfoLabel>
                     <a

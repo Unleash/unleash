@@ -41,6 +41,9 @@ export const CREATE_TAG_TYPE = 'CREATE_TAG_TYPE';
 export const UPDATE_TAG_TYPE = 'UPDATE_TAG_TYPE';
 export const DELETE_TAG_TYPE = 'DELETE_TAG_TYPE';
 
+export const UPDATE_MAINTENANCE_MODE = 'UPDATE_MAINTENANCE_MODE';
+export const UPDATE_INSTANCE_BANNERS = 'UPDATE_INSTANCE_BANNERS';
+
 // Project
 export const CREATE_FEATURE = 'CREATE_FEATURE';
 export const UPDATE_FEATURE = 'UPDATE_FEATURE';
@@ -140,5 +143,9 @@ export const ROOT_PERMISSION_CATEGORIES = [
             RELEASE_PLAN_TEMPLATE_DELETE,
             RELEASE_PLAN_TEMPLATE_UPDATE,
         ],
+    },
+    {
+        label: 'Instance maintenance',
+        permissions: [UPDATE_MAINTENANCE_MODE, UPDATE_INSTANCE_BANNERS],
     },
 ];

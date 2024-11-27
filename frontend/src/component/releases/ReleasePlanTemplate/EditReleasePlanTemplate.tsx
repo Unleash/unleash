@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useReleasePlanTemplatesApi from 'hooks/api/actions/useReleasePlanTemplatesApi/useReleasePlanTemplatesApi';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
@@ -23,6 +24,7 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 }));
 
 export const EditReleasePlanTemplate = () => {
+    const { uiConfig } = useUiConfig();
     const releasePlansEnabled = useUiFlag('releasePlans');
     const templateId = useRequiredPathParam('templateId');
     const { template, loading, error, refetch } =
@@ -56,13 +58,11 @@ export const EditReleasePlanTemplate = () => {
         clearErrors();
         const isValid = validate();
         if (isValid) {
-            const payload = getTemplatePayload();
             try {
-                await updateReleasePlanTemplate({
-                    ...payload,
-                    id: templateId,
-                    milestones,
-                });
+                await updateReleasePlanTemplate(
+                    templateId,
+                    getTemplatePayload(),
+                );
                 await refetch();
                 setToastData({
                     type: 'success',
@@ -73,6 +73,13 @@ export const EditReleasePlanTemplate = () => {
             }
         }
     };
+
+    const formatApiCode = () => `curl --location --request PUT '${
+        uiConfig.unleashUrl
+    }/api/admin/release-plan-templates/${templateId}' \\
+    --header 'Authorization: INSERT_API_KEY' \\
+    --header 'Content-Type: application/json' \\
+    --data-raw '${JSON.stringify(getTemplatePayload(), undefined, 2)}'`;
 
     if (!releasePlansEnabled) {
         return null;
@@ -89,7 +96,7 @@ export const EditReleasePlanTemplate = () => {
             errors={errors}
             clearErrors={clearErrors}
             formTitle={`Edit template ${template.name}`}
-            formDescription='Edit a release plan template that makes it easier for you and your team to release features.'
+            formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}
             loading={loading}
         >

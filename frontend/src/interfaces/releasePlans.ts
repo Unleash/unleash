@@ -41,10 +41,9 @@ export interface IReleasePlanMilestoneStrategy extends IFeatureStrategy {
 }
 
 export interface IReleasePlanTemplatePayload {
-    id?: string;
     name: string;
     description: string;
-    milestones?: IReleasePlanMilestonePayload[];
+    milestones: IReleasePlanMilestonePayload[];
 }
 
 export interface IReleasePlanMilestonePayload {

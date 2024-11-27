@@ -55,12 +55,8 @@ export default class FeatureToggleClientStore
         {
             getLogger,
             flagResolver,
-            ui,
-            isEnterprise,
-        }: Pick<
-            IUnleashConfig,
-            'getLogger' | 'flagResolver' | 'ui' | 'isEnterprise'
-        >,
+            isOss,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'isOss'>,
     ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-client-store.ts');
@@ -70,8 +66,7 @@ export default class FeatureToggleClientStore
                 action,
             });
         this.flagResolver = flagResolver;
-        const isTest = process.env.NODE_ENV === 'test';
-        this.isOss = !isEnterprise && ui.environment !== 'pro' && !isTest;
+        this.isOss = isOss;
     }
 
     private async getAll({
@@ -84,7 +79,6 @@ export default class FeatureToggleClientStore
         const isPlayground = requestType === 'playground';
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer(`getAllBy${requestType}`);
-        this.logger.info(`Getting all features and we're OSS: ${this.isOss}`);
         let selectColumns = [
             'features.name as name',
             'features.description as description',

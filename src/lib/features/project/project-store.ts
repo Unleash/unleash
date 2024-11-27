@@ -81,12 +81,8 @@ class ProjectStore implements IProjectStore {
         {
             getLogger,
             flagResolver,
-            ui,
-            isEnterprise,
-        }: Pick<
-            IUnleashConfig,
-            'getLogger' | 'flagResolver' | 'ui' | 'isEnterprise'
-        >,
+            isOss,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'isOss'>,
     ) {
         this.db = db;
         this.logger = getLogger('project-store.ts');
@@ -96,8 +92,7 @@ class ProjectStore implements IProjectStore {
                 action,
             });
         this.flagResolver = flagResolver;
-        const isTest = process.env.NODE_ENV === 'test';
-        this.isOss = !isEnterprise && ui.environment !== 'pro' && !isTest;
+        this.isOss = isOss;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types

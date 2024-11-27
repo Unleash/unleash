@@ -112,16 +112,11 @@ export default class EnvironmentStore implements IEnvironmentStore {
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        {
-            getLogger,
-            isEnterprise,
-            ui,
-        }: Pick<IUnleashConfig, 'getLogger' | 'isEnterprise' | 'ui'>,
+        { getLogger, isOss }: Pick<IUnleashConfig, 'getLogger' | 'isOss'>,
     ) {
         this.db = db;
         this.logger = getLogger('db/environment-store.ts');
-        const isTest = process.env.NODE_ENV === 'test';
-        this.isOss = !isEnterprise && ui.environment !== 'pro' && !isTest;
+        this.isOss = isOss;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'environment',

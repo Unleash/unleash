@@ -620,6 +620,8 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         Boolean(options.enterpriseVersion) &&
         ui.environment?.toLowerCase() !== 'pro';
 
+    const isTest = process.env.NODE_ENV === 'test';
+    const isOss = !isEnterprise && ui.environment !== 'pro' && !isTest;
     const metricsRateLimiting = loadMetricsRateLimitingConfig(options);
 
     const rateLimiting = loadRateLimitingConfig(options);
@@ -760,6 +762,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,
         isEnterprise: isEnterprise,
+        isOss: isOss,
         metricsRateLimiting,
         rateLimiting,
         feedbackUriPath,

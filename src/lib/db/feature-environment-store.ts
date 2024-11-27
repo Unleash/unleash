@@ -41,11 +41,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        {
-            getLogger,
-            ui,
-            isEnterprise,
-        }: Pick<IUnleashConfig, 'getLogger' | 'ui' | 'isEnterprise'>,
+        { getLogger, isOss }: Pick<IUnleashConfig, 'getLogger' | 'isOss'>,
     ) {
         this.db = db;
         this.logger = getLogger('feature-environment-store.ts');
@@ -54,8 +50,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                 store: 'feature-environments',
                 action,
             });
-        const isTest = process.env.NODE_ENV === 'test';
-        this.isOss = !isEnterprise && ui.environment !== 'pro' && !isTest;
+        this.isOss = isOss;
     }
 
     async delete({

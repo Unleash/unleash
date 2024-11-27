@@ -3,6 +3,7 @@ import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectS
 import ActivityCalendar, { type ThemeInput } from 'react-activity-calendar';
 import type { ProjectActivitySchema } from '../../../../openapi';
 import { styled, Tooltip } from '@mui/material';
+import { useThemeMode } from 'hooks/useThemeMode';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -73,6 +74,7 @@ const transformData = (inputData: ProjectActivitySchema): Output[] => {
 export const ProjectActivity = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data } = useProjectStatus(projectId);
+    const { themeMode } = useThemeMode();
 
     const explicitTheme: ThemeInput = {
         light: ['#f1f0fc', '#ceccfd', '#8982ff', '#6c65e5', '#615bc2'],
@@ -87,6 +89,7 @@ export const ProjectActivity = () => {
             {data.activityCountByDate.length > 0 ? (
                 <StyledContainer>
                     <ActivityCalendar
+                        colorScheme={themeMode}
                         theme={explicitTheme}
                         data={fullData}
                         maxLevel={4}

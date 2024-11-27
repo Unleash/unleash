@@ -13,7 +13,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import type { ISegment } from 'interfaces/segment';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
 import { MilestoneStrategyTitle } from './MilestoneStrategyTitle';
 import { MilestoneStrategyType } from './MilestoneStrategyType';
@@ -22,6 +22,7 @@ import { useFormErrors } from 'hooks/useFormErrors';
 import produce from 'immer';
 import { MilestoneStrategySegment } from './MilestoneStrategySegment';
 import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints';
+import { MilestoneStrategyVariants } from './MilestoneStrategyVariants';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
@@ -138,6 +139,28 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     const { strategyDefinition } = useStrategy(strategy?.name);
     const hasValidConstraints = useConstraintsValidation(strategy?.constraints);
     const errors = useFormErrors();
+    const showVariants = Boolean(
+        addStrategy?.parameters && 'stickiness' in addStrategy?.parameters,
+    );
+
+    const stickiness =
+        addStrategy?.parameters && 'stickiness' in addStrategy?.parameters
+            ? String(addStrategy.parameters.stickiness)
+            : 'default';
+
+    useEffect(() => {
+        setAddStrategy((prev) => ({
+            ...prev,
+            variants: (addStrategy.variants || []).map((variant) => ({
+                stickiness,
+                name: variant.name,
+                weight: variant.weight,
+                payload: variant.payload,
+                weightType: variant.weightType,
+            })),
+        }));
+    }, [stickiness, JSON.stringify(addStrategy.variants)]);
+
     if (!strategy || !addStrategy || !strategyDefinition) {
         return null;
     }
@@ -153,6 +176,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         return constraintCount + segmentCount;
     };
 
+    const validateParameter = (key: string, value: string) => true;
     const updateParameter = (name: string, value: string) => {
         setAddStrategy(
             produce((draft) => {
@@ -165,6 +189,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 }
                 draft.parameters = draft.parameters ?? {};
                 draft.parameters[name] = value;
+                validateParameter(name, value);
             }),
         );
     };
@@ -220,6 +245,18 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                         </Typography>
                     }
                 />
+                {showVariants && (
+                    <Tab
+                        label={
+                            <Typography>
+                                Variants
+                                <StyledBadge>
+                                    {addStrategy?.variants?.length || 0}
+                                </StyledBadge>
+                            </Typography>
+                        }
+                    />
+                )}
             </StyledTabs>
             <StyledContentDiv>
                 {activeTab === 0 && (
@@ -261,6 +298,12 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                             the specified preconditions.
                         </StyledTargetingHeader>
                     </>
+                )}
+                {activeTab === 2 && showVariants && (
+                    <MilestoneStrategyVariants
+                        strategy={addStrategy}
+                        setStrategy={setAddStrategy}
+                    />
                 )}
             </StyledContentDiv>
             <StyledButtonContainer>

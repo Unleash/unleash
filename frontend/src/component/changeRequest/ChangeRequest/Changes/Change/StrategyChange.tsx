@@ -187,10 +187,6 @@ const UpdateStrategy: FC<{
     currentStrategy: IFeatureStrategy | undefined;
     actions?: ReactNode;
 }> = ({ change, changeRequestState, currentStrategy, actions }) => {
-    const hasVariantDiff = hasDiff(
-        currentStrategy?.variants || [],
-        change.payload.variants || [],
-    );
     const previousTitle =
         changeRequestState === 'Applied'
             ? change.payload.snapshot?.title
@@ -199,6 +195,10 @@ const UpdateStrategy: FC<{
         changeRequestState === 'Applied'
             ? change.payload.snapshot
             : currentStrategy;
+    const hasVariantDiff = hasDiff(
+        referenceStrategy?.variants || [],
+        change.payload.variants || [],
+    );
 
     return (
         <>

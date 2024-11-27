@@ -223,7 +223,7 @@ const DependencyPreview: FC<{ feature: string; project: string }> = ({
     const children = fetchedFeature.children;
     const parents = fetchedFeature.dependencies;
 
-    if (children.length > 0) {
+    if (children?.length > 0) {
         return (
             <>
                 <Box>Children</Box>

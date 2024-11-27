@@ -31,6 +31,7 @@ const StyledAccordionSummary = styled(AccordionSummary)({
     '& .MuiAccordionSummary-content': {
         justifyContent: 'space-between',
         alignItems: 'center',
+        minHeight: '30px',
     },
 });
 
@@ -101,6 +102,19 @@ export const ReleasePlanMilestone = ({
               ? 'Restart'
               : 'Start';
 
+    if (!milestone.strategies.length) {
+        return (
+            <StyledAccordion status={status} sx={{ pointerEvents: 'none' }}>
+                <StyledAccordionSummary>
+                    <StyledTitleContainer>
+                        <StyledTitle>{milestone.name}</StyledTitle>
+                    </StyledTitleContainer>
+                    <StyledSecondaryLabel>No strategies</StyledSecondaryLabel>
+                </StyledAccordionSummary>
+            </StyledAccordion>
+        );
+    }
+
     return (
         <StyledAccordion status={status}>
             <StyledAccordionSummary expandIcon={<ExpandMore />}>
@@ -128,7 +142,11 @@ export const ReleasePlanMilestone = ({
                         />
                     </StyledStatus>
                 </StyledTitleContainer>
-                <StyledSecondaryLabel>View strategies</StyledSecondaryLabel>
+                <StyledSecondaryLabel>
+                    {milestone.strategies.length === 1
+                        ? 'View strategy'
+                        : `View ${milestone.strategies.length} strategies`}
+                </StyledSecondaryLabel>
             </StyledAccordionSummary>
             <StyledAccordionDetails>
                 {milestone.strategies.map((strategy, index) => (

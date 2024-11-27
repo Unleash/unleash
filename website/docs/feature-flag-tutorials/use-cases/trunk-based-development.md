@@ -17,8 +17,9 @@ In this tutorial, you will:
 
 1. [Explore many trunk-based development strategies](#choose-the-right-trunk-based-development-strategy-for-your-team)
 2. [Create feature flags for incomplete features](#create-feature-flags-for-incomplete-features)
-3. [Control feature rollouts and simplify rollbacks](#control-feature-rollouts-and-simplify-rollbacks)
-4. [Archive and remove feature flags](#archive-and-remove-feature-flags)
+3. [Control feature rollouts](#control-feature-rollouts)
+4. [Simplify rollbacks with Unleash](#simplify-rollbacks)
+5. [Archive and remove feature flags](#archive-and-remove-feature-flags)
 
 ## Choose the Right Trunk-Based Development Strategy for Your Team
 
@@ -146,7 +147,7 @@ As your codebase and development processes mature, consider automating key aspec
 
 Automation helps maintain a clean, well-organized feature flag landscape, even as your organization scales its trunk-based development efforts.
 
-## Control Feature Rollouts and Simplify Rollbacks
+## Control Feature Rollouts
 
 Once a feature is complete, feature flags enable controlled rollouts. You can gradually expose the feature to users, starting with specific groups or environments, without needing to redeploy the code.
 
@@ -162,6 +163,10 @@ To target users accordingly, let's create an [activation strategy](/reference/ac
 ![Add a strategy to configure a release process for your flag.](/img/use-case-tbd-add-strategy.png)
 
 The gradual rollout strategy form has multiple fields that control the rollout of your feature. You can name the strategy something relevant to the feature you’re building, but this is an optional field.
+
+### Simplify Rollbacks
+
+When issues are detected, Unleash makes it easy to quickly roll back a problematic feature by simply turning off the corresponding feature flag. This allows development teams to address problems swiftly without the need for complex rollback procedures or full code deployments.
 
 ## Archive and Remove Feature Flags
 

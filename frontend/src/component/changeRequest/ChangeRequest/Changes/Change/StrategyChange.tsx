@@ -255,7 +255,7 @@ const UpdateStrategy: FC<{
                 show={
                     <StyledBox>
                         <StyledTypography>
-                            Updating feature variants to:
+                            Updating strategy variants to:
                         </StyledTypography>
                         <EnvironmentVariantsTable
                             variants={change.payload.variants || []}
@@ -330,7 +330,7 @@ export const StrategyChange: FC<{
                         change.payload.variants.length > 0 && (
                             <StyledBox>
                                 <StyledTypography>
-                                    Updating feature variants to:
+                                    Setting strategy variants to:
                                 </StyledTypography>
                                 <EnvironmentVariantsTable
                                     variants={change.payload.variants}

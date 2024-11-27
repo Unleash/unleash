@@ -11,7 +11,7 @@ title: Single Sign-On
 
 ## Overview
 
-Unleash provides Single Sign-On (SSO) support through SAML 2.0, OpenID Connect, and username/password authentication.
+Unleash provides single sign-on (SSO) support through SAML 2.0, OpenID Connect, and username/password authentication.
 
 To configure SSO, navigate to **Admin > Single sign-on** in the Unleash Admin UI. Admin access is required.
 

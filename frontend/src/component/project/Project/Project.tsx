@@ -302,10 +302,7 @@ export const Project = () => {
                         </StyledDiv>
                         <StyledDiv>
                             <ConditionallyRender
-                                condition={Boolean(
-                                    !simplifyProjectOverview &&
-                                        uiConfig?.flags?.featuresExportImport,
-                                )}
+                                condition={Boolean(!simplifyProjectOverview)}
                                 show={
                                     <PermissionIconButton
                                         permission={UPDATE_FEATURE}

@@ -196,6 +196,7 @@ export interface IChangeRequestDeleteSegment {
     payload: {
         id: number;
         name: string;
+        snapshot?: ISegment;
     };
 }
 

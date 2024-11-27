@@ -102,7 +102,7 @@ export const LicensedUsersSidebar = ({
                                     {data.seatCount}
                                 </Typography>
                                 <Typography variant='body2'>
-                                    Used seats last 30 days
+                                    Seats used over the last 30 days
                                 </Typography>
                             </LicenceBox>
                             <Alert severity='info'>

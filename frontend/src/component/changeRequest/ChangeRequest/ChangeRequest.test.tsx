@@ -270,7 +270,7 @@ test('Displays feature strategy variants table when addStrategy action with vari
     );
 
     expect(
-        screen.getByText('Updating feature variants to:'),
+        screen.getByText('Updating strategy variants to:'),
     ).toBeInTheDocument();
 });
 
@@ -299,7 +299,7 @@ test('Displays feature strategy variants table when there is a change in the var
             route: '/projects/default/change-requests/27',
         },
     );
-    await screen.findByText('Updating feature variants to:');
+    await screen.findByText('Updating strategy variants to:');
 });
 
 test('Displays feature strategy variants table when existing strategy does not have variants and change does', async () => {
@@ -327,5 +327,5 @@ test('Displays feature strategy variants table when existing strategy does not h
             route: '/projects/default/change-requests/27',
         },
     );
-    await screen.findByText('Updating feature variants to:');
+    await screen.findByText('Updating strategy variants to:');
 });

@@ -39,6 +39,21 @@ jsconfig.json
 typings
 .nyc_output
 
+# Emacs, nix, devenv, pijul
+# Only Thomas uses this and he doesn't want to add it to the repo
+.devenv
+.devenv.flake.nix
+.dir-locals.el
+.envrc
+shell.nix
+# Pijul + ignore
+.ignore
+.pijul
+# Custom hooks in husky directory
+.husky/pre-push
+.husky/prepare-commit-msg
+
+
 # We use yarn.lock
 package-lock.json
 

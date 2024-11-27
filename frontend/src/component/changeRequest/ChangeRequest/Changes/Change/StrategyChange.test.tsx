@@ -25,27 +25,31 @@ const strategy = {
     disabled: false,
 };
 
-testServerRoute(
-    server,
-    `/api/admin/projects/${projectId}/features/${feature}`,
-    {
-        environments: [
-            {
-                name: environmentName,
-                strategies: [
-                    {
-                        ...strategy,
-                        title: 'current_title',
-                        parameters: {
-                            ...strategy.parameters,
-                            rollout: currentRollout,
+const setupApi = () => {
+    testServerRoute(
+        server,
+        `/api/admin/projects/${projectId}/features/${feature}`,
+        {
+            environments: [
+                {
+                    name: environmentName,
+                    strategies: [
+                        {
+                            ...strategy,
+                            title: 'current_title',
+                            parameters: {
+                                ...strategy.parameters,
+                                rollout: currentRollout,
+                            },
                         },
-                    },
-                ],
-            },
-        ],
-    },
-);
+                    ],
+                },
+            ],
+        },
+    );
+};
+
+beforeEach(setupApi);
 
 test('Editing strategy before change request is applied diffs against current strategy', async () => {
     render(
@@ -83,7 +87,7 @@ test('Editing strategy before change request is applied diffs against current st
     expect(screen.queryByText('snapshot_title')).not.toBeInTheDocument();
 
     const viewDiff = await screen.findByText('View Diff');
-    userEvent.hover(viewDiff);
+    await userEvent.hover(viewDiff);
     await screen.findByText(`- parameters.rollout: "${currentRollout}"`);
     await screen.findByText(`+ parameters.rollout: "${changeRequestRollout}"`);
 });
@@ -124,7 +128,70 @@ test('Editing strategy after change request is applied diffs against the snapsho
     expect(screen.queryByText('current_title')).not.toBeInTheDocument();
 
     const viewDiff = await screen.findByText('View Diff');
-    userEvent.hover(viewDiff);
+    await userEvent.hover(viewDiff);
     await screen.findByText(`- parameters.rollout: "${snapshotRollout}"`);
     await screen.findByText(`+ parameters.rollout: "${changeRequestRollout}"`);
+});
+
+test('Deleting strategy before change request is applied diffs against current strategy', async () => {
+    render(
+        <StrategyChange
+            featureName={feature}
+            environmentName={environmentName}
+            projectId={projectId}
+            changeRequestState='Approved'
+            change={{
+                action: 'deleteStrategy',
+                id: 1,
+                payload: {
+                    id: strategy.id,
+                    name: strategy.name,
+                },
+            }}
+        />,
+    );
+
+    await screen.findByText('- Deleting strategy:');
+    await screen.findByText('Gradual rollout');
+    await screen.findByText('current_title');
+
+    const viewDiff = await screen.findByText('View Diff');
+    await userEvent.hover(viewDiff);
+    await screen.findByText('- constraints (deleted)');
+});
+
+test('Deleting strategy before change request is applied diffs against the snapshot', async () => {
+    render(
+        <StrategyChange
+            featureName={feature}
+            environmentName={environmentName}
+            projectId={projectId}
+            changeRequestState='Applied'
+            change={{
+                action: 'deleteStrategy',
+                id: 1,
+                payload: {
+                    id: strategy.id,
+                    // name is gone
+                    snapshot: {
+                        ...strategy,
+                        title: 'snapshot_title',
+                        parameters: {
+                            ...strategy.parameters,
+                            rollout: snapshotRollout,
+                        },
+                    },
+                },
+            }}
+        />,
+    );
+
+    await screen.findByText('- Deleting strategy:');
+    await screen.findByText('Gradual rollout');
+    await screen.findByText('snapshot_title');
+    expect(screen.queryByText('current_title')).not.toBeInTheDocument();
+
+    const viewDiff = await screen.findByText('View Diff');
+    await userEvent.hover(viewDiff);
+    await screen.findByText('- constraints (deleted)');
 });

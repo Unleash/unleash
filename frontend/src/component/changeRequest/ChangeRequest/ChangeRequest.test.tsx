@@ -269,9 +269,7 @@ test('Displays feature strategy variants table when addStrategy action with vari
         },
     );
 
-    expect(
-        screen.getByText('Updating strategy variants to:'),
-    ).toBeInTheDocument();
+    await screen.findByText('Setting strategy variants to:');
 });
 
 test('Displays feature strategy variants table when there is a change in the variants array', async () => {

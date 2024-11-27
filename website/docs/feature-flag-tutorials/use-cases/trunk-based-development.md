@@ -15,9 +15,12 @@ With Unleash set up, you can use your application to talk to Unleash through one
 
 In this tutorial, you will:
 
-[MAKE LIST HERE ONCE COMPLETE WITH CHANGES TO SECTION TITLES]
+1. [Explore many trunk-based development strategies](#choose-the-right-trunk-based-development-strategy-for-your-team)
+2. [Create feature flags for incomplete features](#create-feature-flags-for-incomplete-features)
+3. [Control feature rollouts and simplify rollbacks](#control-feature-rollouts-and-simplify-rollbacks)
+4. [Archive and remove feature flags](#archive-and-remove-feature-flags)
 
-## Choosing the Right Trunk-Based Development Strategy for Your Team
+## Choose the Right Trunk-Based Development Strategy for Your Team
 
 There is no one-size-fits-all approach to implementing trunk-based development. Different teams may benefit from varying strategies based on their needs, project complexity, and development culture.
 

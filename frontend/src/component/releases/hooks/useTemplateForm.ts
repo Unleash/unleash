@@ -42,6 +42,7 @@ export const useTemplateForm = (
         return {
             name,
             description,
+            milestones,
         };
     };
 

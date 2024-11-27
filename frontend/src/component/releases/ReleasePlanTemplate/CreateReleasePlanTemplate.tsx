@@ -11,6 +11,7 @@ import { scrollToTop } from 'component/common/util';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
@@ -23,6 +24,7 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 }));
 
 export const CreateReleasePlanTemplate = () => {
+    const { uiConfig } = useUiConfig();
     const releasePlansEnabled = useUiFlag('releasePlans');
     const { setToastApiError, setToastData } = useToast();
     const navigate = useNavigate();
@@ -50,12 +52,10 @@ export const CreateReleasePlanTemplate = () => {
         clearErrors();
         const isValid = validate();
         if (isValid) {
-            const payload = getTemplatePayload();
             try {
-                const template = await createReleasePlanTemplate({
-                    ...payload,
-                    milestones,
-                });
+                const template = await createReleasePlanTemplate(
+                    getTemplatePayload(),
+                );
                 scrollToTop();
                 setToastData({
                     type: 'success',
@@ -67,6 +67,13 @@ export const CreateReleasePlanTemplate = () => {
             }
         }
     };
+
+    const formatApiCode = () => `curl --location --request POST '${
+        uiConfig.unleashUrl
+    }/api/admin/release-plan-templates' \\
+    --header 'Authorization: INSERT_API_KEY' \\
+    --header 'Content-Type: application/json' \\
+    --data-raw '${JSON.stringify(getTemplatePayload(), undefined, 2)}'`;
 
     if (!releasePlansEnabled) {
         return null;
@@ -83,7 +90,7 @@ export const CreateReleasePlanTemplate = () => {
             errors={errors}
             clearErrors={clearErrors}
             formTitle='Create release plan template'
-            formDescription='Create a release plan template to make it easier for you and your team to release features.'
+            formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}
         >
             <StyledButtonContainer>

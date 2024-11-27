@@ -6,10 +6,10 @@ import type {
     IReleasePlanMilestoneStrategy,
 } from 'interfaces/releasePlans';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import ReleaseTemplateIcon from '@mui/icons-material/DashboardOutlined';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useState } from 'react';
 import { ReleasePlanTemplateAddStrategyForm } from './ReleasePlanTemplateAddStrategyForm';
+import { TemplateFormDescription } from './TemplateFormDescription';
 
 const StyledInputDescription = styled('p')(({ theme }) => ({
     marginBottom: theme.spacing(1),
@@ -38,7 +38,7 @@ interface ITemplateFormProps {
     errors: { [key: string]: string };
     clearErrors: () => void;
     formTitle: string;
-    formDescription: string;
+    formatApiCode: () => string;
     handleSubmit: (e: React.FormEvent) => void;
     loading?: boolean;
     children?: React.ReactNode;
@@ -54,7 +54,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     errors,
     clearErrors,
     formTitle,
-    formDescription,
+    formatApiCode,
     handleSubmit,
     children,
 }) => {
@@ -115,8 +115,8 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     return (
         <FormTemplate
             title={formTitle}
-            description={formDescription}
-            documentationIcon={<ReleaseTemplateIcon />}
+            description={<TemplateFormDescription />}
+            formatApiCode={formatApiCode}
         >
             <StyledForm onSubmit={handleSubmit}>
                 <StyledInputDescription>

@@ -2,6 +2,7 @@ import { Box, styled } from '@mui/material';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { useState } from 'react';
 import { LicensedUsersSidebar } from './LicensedUsersSidebar';
+import { useLicensedUsers } from 'hooks/useLicensedUsers';
 
 const StyledButton = styled('button')(({ theme }) => ({
     background: 'none',
@@ -40,12 +41,34 @@ const MainMetric = styled('span')(({ theme }) => ({
     fontWeight: 'bold',
 }));
 
-export const LicensedUsersBox = () => {
+const OpenSidebarButton = () => {
     const [licensedUsersChartOpen, setLicensedUsersChartOpen] = useState(false);
+
+    return (
+        <>
+            <StyledButton
+                onClick={() => {
+                    setLicensedUsersChartOpen(true);
+                }}
+            >
+                View graph over time
+            </StyledButton>
+            <LicensedUsersSidebar
+                open={licensedUsersChartOpen}
+                close={() => setLicensedUsersChartOpen(false)}
+            />
+        </>
+    );
+};
+
+export const LicensedUsersBox = () => {
+    const { data } = useLicensedUsers();
     return (
         <Figure>
             <TopRow>
-                <MainMetric>11/25</MainMetric>
+                <MainMetric>
+                    {data.licensedUsers.current}/{data.seatCount}
+                </MainMetric>
                 <HelpIcon
                     htmlTooltip
                     tooltip={
@@ -60,18 +83,8 @@ export const LicensedUsersBox = () => {
 
             <StyledCaption>
                 <span>Seats used in the last 30 days</span>
-                <StyledButton
-                    onClick={() => {
-                        setLicensedUsersChartOpen(true);
-                    }}
-                >
-                    View graph over time
-                </StyledButton>
+                <OpenSidebarButton />
             </StyledCaption>
-            <LicensedUsersSidebar
-                open={licensedUsersChartOpen}
-                close={() => setLicensedUsersChartOpen(false)}
-            />
         </Figure>
     );
 };

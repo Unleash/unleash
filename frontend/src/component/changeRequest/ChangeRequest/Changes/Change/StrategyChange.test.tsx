@@ -160,7 +160,7 @@ test('Deleting strategy before change request is applied diffs against current s
     await screen.findByText('- constraints (deleted)');
 });
 
-test('Deleting strategy before change request is applied diffs against the snapshot', async () => {
+test('Deleting strategy after change request is applied diffs against the snapshot', async () => {
     render(
         <StrategyChange
             featureName={feature}

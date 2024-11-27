@@ -1,4 +1,4 @@
-import { Fragment, useMemo, type VFC } from 'react';
+import { type FC, Fragment, useMemo } from 'react';
 import { Alert, Box, Chip, Link, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
@@ -56,7 +56,7 @@ const CustomStrategyDeprecationWarning = () => (
     </Alert>
 );
 
-const NoItems: VFC = () => (
+const NoItems: FC = () => (
     <Box sx={{ px: 3, color: 'text.disabled' }}>
         This strategy does not have constraints or parameters.
     </Box>
@@ -73,7 +73,7 @@ const StyledValueSeparator = styled('span')(({ theme }) => ({
     color: theme.palette.neutral.main,
 }));
 
-export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
+export const StrategyExecution: FC<IStrategyExecutionProps> = ({
     strategy,
 }) => {
     const { parameters, constraints = [] } = strategy;

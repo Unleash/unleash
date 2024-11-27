@@ -51,10 +51,8 @@ export const StrategyDiff: FC<{
 };
 
 interface IStrategyTooltipLinkProps {
-    change:
-        | IChangeRequestAddStrategy
-        | IChangeRequestUpdateStrategy
-        | IChangeRequestDeleteStrategy;
+    name: string;
+    title?: string;
     previousTitle?: string;
     children?: React.ReactNode;
 }
@@ -80,29 +78,32 @@ const Truncated = styled('div')(() => ({
 }));
 
 export const StrategyTooltipLink: FC<IStrategyTooltipLinkProps> = ({
-    change,
+    name,
+    title,
     previousTitle,
     children,
-}) => (
-    <StyledContainer>
-        <GetFeatureStrategyIcon strategyName={change.payload.name} />
-        <Truncated>
-            <Typography component='span'>
-                {formatStrategyName(change.payload.name)}
-            </Typography>
-            <TooltipLink
-                tooltip={children}
-                tooltipProps={{
-                    maxWidth: 500,
-                    maxHeight: 600,
-                }}
-            >
-                <ViewDiff>View Diff</ViewDiff>
-            </TooltipLink>
-            <NameWithChangeInfo
-                newName={change.payload.title}
-                previousName={previousTitle}
-            />
-        </Truncated>
-    </StyledContainer>
-);
+}) => {
+    return (
+        <StyledContainer>
+            <GetFeatureStrategyIcon strategyName={name} />
+            <Truncated>
+                <Typography component='span'>
+                    {formatStrategyName(name)}
+                </Typography>
+                <TooltipLink
+                    tooltip={children}
+                    tooltipProps={{
+                        maxWidth: 500,
+                        maxHeight: 600,
+                    }}
+                >
+                    <ViewDiff>View Diff</ViewDiff>
+                </TooltipLink>
+                <NameWithChangeInfo
+                    newName={title}
+                    previousName={previousTitle}
+                />
+            </Truncated>
+        </StyledContainer>
+    );
+};

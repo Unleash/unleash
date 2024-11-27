@@ -83,7 +83,7 @@ export const FeatureStrategyCreate = () => {
     const navigate = useNavigate();
 
     const { feature, refetchFeature } = useFeature(projectId, featureId);
-    const featureEnvironment = feature?.environments.find(
+    const featureEnvironment = feature?.environments?.find(
         (featureEnvironment) => featureEnvironment.name === environmentId,
     );
     const strategyCount = featureEnvironment?.strategies.length || 0;

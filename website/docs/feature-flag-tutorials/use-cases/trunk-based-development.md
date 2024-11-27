@@ -137,6 +137,10 @@ In addition to meaningful names, apply relevant tags and metadata to your featur
 -   Relevant documentation or context
 -   [Tagging](/reference/tags) and metadata make it easier to search, filter, and manage your feature flags, especially as the number of flags grows.
 
+Click **Create new tag** in the Unleash Admin UI to add these details to your feature flag.
+
+![Create a tag with relevant data to better organize your feature flags. A modal will pop up to name and save as many tags as you need.](/img/use-case-tbd-tagging.png)
+
 #### Automate Flag Lifecycle Management
 
 As your codebase and development processes mature, consider automating key aspects of feature flag management. This can include:
@@ -163,6 +167,15 @@ To target users accordingly, let's create an [activation strategy](/reference/ac
 ![Add a strategy to configure a release process for your flag.](/img/use-case-tbd-add-strategy.png)
 
 The gradual rollout strategy form has multiple fields that control the rollout of your feature. You can name the strategy something relevant to the feature you’re building, but this is an optional field.
+
+Next, configure the rollout percentage so only a certain portion of your users are targeted. For example, you can adjust the dial so that 35% of all users are targeted. The remaining percentage of users will not experience any variation of the new feature. Adjust the rollout dial to set the percentage of users the feature targets, or keep it at 100% to target all users.
+
+There are two more advanced extensions of a default strategy that you will see available to customize in the form:
+
+-   [Strategy variants](/reference/strategy-variants)
+-   [Strategy constraints](/reference/strategy-constraints)
+
+With strategy variants and constraints, you can extend your overall strategy. They help you define more granular conditions for your feature beyond the rollout percentage.
 
 ## Simplify Rollbacks
 

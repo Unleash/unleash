@@ -10,6 +10,9 @@ const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    'svg rect': {
+        stroke: '#0000 !important',
+    },
 }));
 
 type Output = { date: string; count: number; level: number };

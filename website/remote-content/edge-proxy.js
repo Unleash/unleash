@@ -28,10 +28,7 @@ const DOCS = mapObject(enrich)({
 });
 
 const getAdmonitions = (data) => {
-    const admonitions = {
-        'unleash-proxy': ``,
-        'unleash-edge': ``,
-    };
+    const admonitions = {};
 
     return [admonitions[data.slugName]];
 };

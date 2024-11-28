@@ -104,20 +104,18 @@ const BasePermissionButton = React.forwardRef<
                 title={formatAccessText(access, tooltipProps?.title)}
                 arrow
             >
-                <span id={id}>
-                    <Button
-                        ref={ref}
-                        onClick={onClick}
-                        disabled={disabled || !access}
-                        aria-labelledby={id}
-                        variant={variant}
-                        color={color}
-                        {...rest}
-                        endIcon={endIcon}
-                    >
-                        {children}
-                    </Button>
-                </span>
+                <Button
+                    ref={ref}
+                    onClick={onClick}
+                    disabled={disabled || !access}
+                    aria-labelledby={id}
+                    variant={variant}
+                    color={color}
+                    {...rest}
+                    endIcon={endIcon}
+                >
+                    {children}
+                </Button>
             </TooltipResolver>
         );
     },

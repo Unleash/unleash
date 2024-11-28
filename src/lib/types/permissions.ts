@@ -86,7 +86,7 @@ export const RELEASE_PLAN_TEMPLATE_DELETE = 'RELEASE_PLAN_TEMPLATE_DELETE';
 
 export const ROOT_PERMISSION_CATEGORIES = [
     {
-        label: 'Addon',
+        label: 'Integration',
         permissions: [CREATE_ADDON, UPDATE_ADDON, DELETE_ADDON],
     },
     {
@@ -148,4 +148,13 @@ export const ROOT_PERMISSION_CATEGORIES = [
         label: 'Instance maintenance',
         permissions: [UPDATE_MAINTENANCE_MODE, UPDATE_INSTANCE_BANNERS],
     },
+];
+
+// Used on Frontend, to allow admin panel use for users with custom root roles
+export const MAINTENANCE_MODE_PERMISSIONS = [
+    ADMIN,
+    READ_ROLE,
+    READ_CLIENT_API_TOKEN,
+    READ_FRONTEND_API_TOKEN,
+    UPDATE_MAINTENANCE_MODE,
 ];

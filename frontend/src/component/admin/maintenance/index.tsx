@@ -6,10 +6,11 @@ import { Box, styled } from '@mui/material';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { MaintenanceTooltip } from './MaintenanceTooltip';
 import { MaintenanceToggle } from './MaintenanceToggle';
+import { UPDATE_MAINTENANCE_MODE } from '@server/types/permissions';
 
 export const MaintenanceAdmin = () => (
     <div>
-        <PermissionGuard permissions={ADMIN}>
+        <PermissionGuard permissions={[ADMIN, UPDATE_MAINTENANCE_MODE]}>
             <MaintenancePage />
         </PermissionGuard>
     </div>

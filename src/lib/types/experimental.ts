@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'memorizeStats'
     | 'licensedUsers'
     | 'streaming'
-    | 'etagVariant';
+    | 'etagVariant'
+    | 'granularAdminPermissions';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -290,6 +291,10 @@ const flags: IFlags = {
         feature_enabled: false,
         enabled: false,
     },
+    granularAdminPermissions: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_GRANULAR_ADMIN_PERMISSIONS,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

@@ -13,7 +13,7 @@ import type {
 import { useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ReleasePlanRemoveDialog } from './ReleasePlanRemoveDialog';
-import { ReleasePlanMilestone } from './ReleasePlanMilestone';
+import { ReleasePlanMilestone } from './ReleasePlanMilestone/ReleasePlanMilestone';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -67,9 +67,13 @@ const StyledConnection = styled('div')(({ theme }) => ({
 
 interface IReleasePlanProps {
     plan: IReleasePlan;
+    environmentIsDisabled: boolean;
 }
 
-export const ReleasePlan = ({ plan }: IReleasePlanProps) => {
+export const ReleasePlan = ({
+    plan,
+    environmentIsDisabled,
+}: IReleasePlanProps) => {
     const {
         id,
         name,
@@ -161,7 +165,9 @@ export const ReleasePlan = ({ plan }: IReleasePlanProps) => {
                             milestone={milestone}
                             status={
                                 milestone.id === activeMilestoneId
-                                    ? 'active'
+                                    ? environmentIsDisabled
+                                        ? 'paused'
+                                        : 'active'
                                     : index < activeIndex
                                       ? 'completed'
                                       : 'not-started'

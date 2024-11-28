@@ -284,3 +284,52 @@ test('Deleting strategy after change request is applied diffs against the snapsh
     await screen.findByText('Deleting strategy variants:');
     await screen.findByText('snapshot_variant');
 });
+
+test('Adding strategy always diffs against undefined strategy', async () => {
+    render(
+        <Routes>
+            <Route
+                path='/projects/:projectId'
+                element={
+                    <StrategyChange
+                        featureName={feature}
+                        environmentName={environmentName}
+                        projectId={projectId}
+                        changeRequestState='Approved'
+                        change={{
+                            action: 'addStrategy',
+                            id: 1,
+                            payload: {
+                                ...strategy,
+                                variants: [
+                                    {
+                                        name: 'change_variant',
+                                        weight: 1000,
+                                        stickiness: 'default',
+                                        weightType: 'variable' as const,
+                                    },
+                                ],
+                                title: 'change_request_title',
+                                parameters: {
+                                    ...strategy.parameters,
+                                    rollout: changeRequestRollout,
+                                },
+                            },
+                        }}
+                    />
+                }
+            />
+        </Routes>,
+        { route: `/projects/${projectId}` },
+    );
+
+    await screen.findByText('+ Adding strategy:');
+    await screen.findByText('change_request_title');
+
+    const viewDiff = await screen.findByText('View Diff');
+    await userEvent.hover(viewDiff);
+    await screen.findByText(`+ name: "flexibleRollout"`);
+
+    await screen.findByText('Setting strategy variants to:');
+    await screen.findByText('change_variant');
+});

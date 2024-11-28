@@ -112,7 +112,11 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                     '=',
                     `${T.featureEnvs}.environment`,
                 )
-                .where('environments.enabled_in_oss', true);
+                .whereIn('environments.name', [
+                    'default',
+                    'development',
+                    'production',
+                ]);
         }
         return queryBuilder;
     }

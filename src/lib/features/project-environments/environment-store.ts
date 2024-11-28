@@ -158,7 +158,11 @@ export default class EnvironmentStore implements IEnvironmentStore {
         const stopTimer = this.timer('get');
         let keyQuery = this.db<IEnvironmentsTable>(TABLE).where({ name: key });
         if (this.isOss) {
-            keyQuery = keyQuery.where('enabled_in_oss', true);
+            keyQuery = keyQuery.whereIn('name', [
+                'default',
+                'development',
+                'production',
+            ]);
         }
         const row = await keyQuery.first();
         stopTimer();
@@ -180,7 +184,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
             qB = qB.where(query);
         }
         if (this.isOss) {
-            qB = qB.where('enabled_in_oss', true);
+            qB = qB.whereIn('name', ['default', 'development', 'production']);
         }
         const rows = await qB;
         stopTimer();
@@ -210,7 +214,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
             qB = qB.where(query);
         }
         if (this.isOss) {
-            qB = qB.where('enabled_in_oss', true);
+            qB = qB.whereIn('name', ['default', 'development', 'production']);
         }
         const rows = await qB;
         stopTimer();
@@ -247,7 +251,11 @@ export default class EnvironmentStore implements IEnvironmentStore {
             qB = qB.where(query);
         }
         if (this.isOss) {
-            qB = qB.where('environments.enabled_in_oss', true);
+            qB = qB.whereIn('environments.name', [
+                'default',
+                'production',
+                'development',
+            ]);
         }
 
         const rows = await qB;

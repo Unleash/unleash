@@ -333,3 +333,38 @@ test('Adding strategy always diffs against undefined strategy', async () => {
     await screen.findByText('Setting strategy variants to:');
     await screen.findByText('change_variant');
 });
+
+test('Segments order does not matter for diff calculation', async () => {
+    render(
+        <Routes>
+            <Route
+                path='/projects/:projectId'
+                element={
+                    <StrategyChange
+                        featureName={feature}
+                        environmentName={environmentName}
+                        projectId={projectId}
+                        changeRequestState='Applied'
+                        change={{
+                            action: 'updateStrategy',
+                            id: 1,
+                            payload: {
+                                ...strategy,
+                                segments: [3, 2, 1],
+                                snapshot: {
+                                    ...strategy,
+                                    segments: [1, 2, 3],
+                                },
+                            },
+                        }}
+                    />
+                }
+            />
+        </Routes>,
+        { route: `/projects/${projectId}` },
+    );
+
+    const viewDiff = await screen.findByText('View Diff');
+    await userEvent.hover(viewDiff);
+    await screen.findByText('(no changes)');
+});

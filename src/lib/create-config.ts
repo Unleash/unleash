@@ -621,7 +621,9 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ui.environment?.toLowerCase() !== 'pro';
 
     const isTest = process.env.NODE_ENV === 'test';
-    const isOss = !isEnterprise && ui.environment !== 'pro' && !isTest;
+    const isOss = isTest
+        ? options.isOss || false
+        : !isEnterprise && ui.environment !== 'pro';
     const metricsRateLimiting = loadMetricsRateLimitingConfig(options);
 
     const rateLimiting = loadRateLimitingConfig(options);

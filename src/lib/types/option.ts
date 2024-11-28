@@ -143,6 +143,7 @@ export interface IUnleashOptions {
     metricsRateLimiting?: Partial<IMetricsRateLimiting>;
     dailyMetricsStorageDays?: number;
     rateLimiting?: Partial<IRateLimiting>;
+    isOss?: boolean;
     resourceLimits?: Partial<
         Pick<
             ResourceLimitsSchema,

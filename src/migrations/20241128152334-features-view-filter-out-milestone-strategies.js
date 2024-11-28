@@ -39,13 +39,15 @@ exports.up = function (db, callback) {
           FROM
               features
                   LEFT JOIN feature_environments ON feature_environments.feature_name = features.name
-                  LEFT JOIN feature_strategies ON feature_strategies.feature_name = feature_environments.feature_name
+                  LEFT JOIN (
+                      SELECT *
+                      FROM feature_strategies
+                      WHERE milestone_id IS NULL
+                  ) AS feature_strategies ON feature_strategies.feature_name = feature_environments.feature_name
                   and feature_strategies.environment = feature_environments.environment
                   LEFT JOIN environments ON feature_environments.environment = environments.name
                   LEFT JOIN feature_strategy_segment as fss ON fss.feature_strategy_id = feature_strategies.id
-                  LEFT JOIN users ON users.id = features.created_by_user_id
-          WHERE
-              feature_strategies.milestone_id IS NULL;
+                  LEFT JOIN users ON users.id = features.created_by_user_id;
         `,
         callback,
     );

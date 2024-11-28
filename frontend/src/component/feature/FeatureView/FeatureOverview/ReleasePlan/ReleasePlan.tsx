@@ -13,29 +13,23 @@ import type {
 import { useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ReleasePlanRemoveDialog } from './ReleasePlanRemoveDialog';
-import { ReleasePlanMilestone } from './ReleasePlanMilestone';
+import { ReleasePlanMilestone } from './ReleasePlanMilestone/ReleasePlanMilestone';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
-const StyledContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'disabled',
-})<{ disabled?: boolean }>(({ theme, disabled }) => ({
+const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusMedium,
     border: `1px solid ${theme.palette.divider}`,
     '& + &': {
         marginTop: theme.spacing(2),
     },
-    background: disabled
-        ? theme.palette.envAccordion.disabled
-        : theme.palette.background.paper,
+    background: theme.palette.background.paper,
 }));
 
-const StyledHeader = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'disabled',
-})<{ disabled?: boolean }>(({ theme, disabled }) => ({
+const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
-    color: disabled ? theme.palette.text.secondary : theme.palette.text.primary,
+    color: theme.palette.text.primary,
 }));
 
 const StyledHeaderTitleContainer = styled('div')(({ theme }) => ({
@@ -73,9 +67,13 @@ const StyledConnection = styled('div')(({ theme }) => ({
 
 interface IReleasePlanProps {
     plan: IReleasePlan;
+    environmentIsDisabled: boolean;
 }
 
-export const ReleasePlan = ({ plan }: IReleasePlanProps) => {
+export const ReleasePlan = ({
+    plan,
+    environmentIsDisabled,
+}: IReleasePlanProps) => {
     const {
         id,
         name,
@@ -132,14 +130,13 @@ export const ReleasePlan = ({ plan }: IReleasePlanProps) => {
         }
     };
 
-    const disabled = !activeMilestoneId;
     const activeIndex = milestones.findIndex(
         (milestone) => milestone.id === activeMilestoneId,
     );
 
     return (
-        <StyledContainer disabled={disabled}>
-            <StyledHeader disabled={disabled}>
+        <StyledContainer>
+            <StyledHeader>
                 <StyledHeaderTitleContainer>
                     <StyledHeaderTitleLabel>
                         Release plan
@@ -168,7 +165,9 @@ export const ReleasePlan = ({ plan }: IReleasePlanProps) => {
                             milestone={milestone}
                             status={
                                 milestone.id === activeMilestoneId
-                                    ? 'active'
+                                    ? environmentIsDisabled
+                                        ? 'paused'
+                                        : 'active'
                                     : index < activeIndex
                                       ? 'completed'
                                       : 'not-started'

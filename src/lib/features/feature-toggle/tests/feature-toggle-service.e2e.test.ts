@@ -444,6 +444,33 @@ test('Cloning a feature flag also clones segments correctly', async () => {
     ).toHaveLength(1);
 });
 
+test('Should not convert null title to empty string', async () => {
+    const featureName = 'FeatureNoTitle';
+    await service.createFeatureToggle(
+        'default',
+        {
+            name: featureName,
+        },
+        TEST_AUDIT_USER,
+    );
+    const config: Omit<FeatureStrategySchema, 'id'> = {
+        name: 'default',
+        constraints: [],
+        parameters: {},
+    };
+    await service.createStrategy(
+        config,
+        { projectId: 'default', featureName, environment: DEFAULT_ENV },
+        TEST_AUDIT_USER,
+    );
+
+    const feature = await service.getFeature({
+        featureName: featureName,
+    });
+
+    expect(feature.environments[0].strategies[0].title).toBe(null);
+});
+
 test('If change requests are enabled, cannot change variants without going via CR', async () => {
     const featureName = 'feature-with-variants-per-env-and-cr';
     await service.createFeatureToggle(

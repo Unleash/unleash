@@ -62,7 +62,8 @@ To add a custom context field in the Admin UI, do the following:
 3. In **Legal value**, enter a value you want the field to support and click **Add**. You can add additional values if needed.
 4. Optionally, enable [custom stickiness](/reference/stickiness#custom-stickiness) if you'd like to use this field to group users for a gradual rollout strategy.
 5. Click **Create context**.
-6. 
+
+
 ### Legal values
 
 By using the **legal values** option when creating a context field, you can create a set of valid options for a context field's values.

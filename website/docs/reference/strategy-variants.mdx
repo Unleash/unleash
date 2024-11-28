@@ -29,7 +29,7 @@ A variant consists of three components:
 
 The weight of a variant specifies how often it will be assigned to users. Weights are numbers between 0 and 100, with up to one decimal place of precision.
 
-For multiple variants, the total weight must equal 100. Based on the  [weight type](#weight-type), Unleash balancea weights automatically.
+For multiple variants, the total weight must equal 100. Based on the  [weight type](#weight-type), Unleash balanced weights automatically.
 
 ### Weight type
 
@@ -81,9 +81,9 @@ If no variant matches or the flag is disabled in the given context, Unleash prov
 }
 ```
 
-## Implications of activation strategy order
+## Activation strategy order
 
-Unleash evaluates activation strategies in order. Therefor, when using multiple activation strategies with variants, define your most restrictive activation strategy first, followed by gradually broader activation strategies.
+Unleash evaluates activation strategies in order. Therefore, when using multiple activation strategies with variants, define your most restrictive activation strategy first, followed by gradually broader activation strategies.
 
 In the following example, we defined a new checkout flow with two activation strategies: one for internal users matching the company email address, and one for all users. We start by defining the internal activation strategy first, as it is more restrictive.
 For this strategy, we defined a variant called `internal-sign-up-flow` that returns the string 'Sign up internally' in the payload. For the second strategy, we defined two variants: `new-sign-up-flow` and `old-sign-up-flow`, that return 'Sign up now' and 'Sign up today' strings respectively.

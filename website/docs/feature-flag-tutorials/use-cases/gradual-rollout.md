@@ -96,7 +96,7 @@ Add [constraints](/reference/activation-strategies#constraints) to refine the ro
 
 ### Define Custom Context Fields for Strategy Constraints
 
-If you want to create new types of constraints that are not built into Unleash, you can create [custom context fields](/reference/unleash-context) to use in your gradual rollout for more advanced use cases.
+If you want to create new types of constraints that are not built into Unleash, you can create [custom context fields](/reference/unleash-context#custom-context-fields) to use in your gradual rollout for more advanced use cases.
 
 ## Leveraging Segments
 

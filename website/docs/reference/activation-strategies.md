@@ -134,7 +134,7 @@ We recommend avoiding large constraint value lists. For example, instead of addi
 To add an activation strategy with a constraint to a feature flag, do the following:
 
 1. Open the Admin UI and go to the feature flag you'd like to add a strategy to.
-2. Select the environment you want to configrue and click **Add strategy**.
+2. Select the environment you want to configure and click **Add strategy**.
 3. In the **Targeting** tab, go to the **Constraints** section, and click **Add constraint**.
 4. Select a context field to constrain on, for example, `email`
 5. Set your desired operator, for example, `STR_ENDS_WITH`.
@@ -159,7 +159,7 @@ Unleash SDKs expect all context values to be strings. If you use an operator tha
 [Predefined strategy types](/reference/predefined-strategy-types), such as UserIDs, IPs, and Hosts are a legacy implementation. Please use the default strategy with constraints to achieve your desired targeting.
 :::
 
-# Custom activation strategies
+## Custom activation strategies
 
 :::caution
 [Custom activation strategies](/reference/custom-activation-strategies) are deprecated. Please use the default strategy with constraints.

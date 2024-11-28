@@ -1,14 +1,14 @@
 {
   "name": "unleash-server",
-  "description": "Unleash is an enterprise ready feature toggles service. It provides different strategies for handling feature toggles.",
+  "description": "Unleash is an enterprise ready feature flag service. It provides different strategies for handling feature flags.",
   "version": "6.4.1",
   "keywords": [
     "unleash",
+    "feature flag",
+    "flag",
     "feature toggle",
     "feature",
-    "toggle",
-    "feature flag",
-    "flag"
+    "toggle"
   ],
   "files": [
     "dist",

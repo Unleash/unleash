@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { VFC, FC, ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import type {
     ChangeRequestState,
@@ -52,12 +52,15 @@ const SegmentContainer = styled(Box, {
     borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
 }));
 
-export const SegmentChangeDetails: VFC<{
+export const SegmentChangeDetails: FC<{
     actions?: ReactNode;
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
     changeRequestState: ChangeRequestState;
 }> = ({ actions, change, changeRequestState }) => {
     const { segment: currentSegment } = useSegment(change.payload.id);
+    const snapshotSegment = change.payload.snapshot;
+    const referenceSegment =
+        changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
 
     return (
         <SegmentContainer conflict={change.conflict}>
@@ -97,7 +100,7 @@ export const SegmentChangeDetails: VFC<{
                             <SegmentTooltipLink change={change}>
                                 <SegmentDiff
                                     change={change}
-                                    currentSegment={currentSegment}
+                                    currentSegment={referenceSegment}
                                 />
                             </SegmentTooltipLink>
                         </ChangeItemInfo>

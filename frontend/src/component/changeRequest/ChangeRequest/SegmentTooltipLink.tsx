@@ -35,7 +35,7 @@ export const SegmentDiff: FC<{
             <EventDiff
                 entry={{
                     preData: omit(currentSegment, ['createdAt', 'createdBy']),
-                    data: changeRequestSegment,
+                    data: omit(changeRequestSegment, ['snapshot']),
                 }}
             />
         </StyledCodeSection>
@@ -56,9 +56,15 @@ const StyledContainer: FC<{ children?: React.ReactNode }> = styled('div')(
     }),
 );
 
+const ViewDiff = styled('span')(({ theme }) => ({
+    color: theme.palette.primary.main,
+    marginLeft: theme.spacing(1),
+}));
+
 const Truncated = styled('div')(() => ({
     ...textTruncated,
     maxWidth: 500,
+    display: 'flex',
 }));
 
 export const SegmentTooltipLink: FC<IStrategyTooltipLinkProps> = ({
@@ -67,6 +73,10 @@ export const SegmentTooltipLink: FC<IStrategyTooltipLinkProps> = ({
 }) => (
     <StyledContainer>
         <Truncated>
+            <NameWithChangeInfo
+                previousName={change.name}
+                newName={change.payload.name}
+            />
             <TooltipLink
                 tooltip={children}
                 tooltipProps={{
@@ -74,10 +84,7 @@ export const SegmentTooltipLink: FC<IStrategyTooltipLinkProps> = ({
                     maxHeight: 600,
                 }}
             >
-                <NameWithChangeInfo
-                    previousName={change.name}
-                    newName={change.payload.name}
-                />
+                <ViewDiff>View Diff</ViewDiff>
             </TooltipLink>
         </Truncated>
     </StyledContainer>

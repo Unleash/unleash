@@ -28,6 +28,18 @@ const StyledCodeSection = styled('div')(({ theme }) => ({
     },
 }));
 
+const sortSegments = <T extends { segments?: number[] }>(
+    item?: T,
+): T | undefined => {
+    if (!item || !item.segments) {
+        return item;
+    }
+    return {
+        ...item,
+        segments: [...item.segments].sort((a, b) => a - b),
+    };
+};
+
 export const StrategyDiff: FC<{
     change:
         | IChangeRequestAddStrategy
@@ -38,12 +50,15 @@ export const StrategyDiff: FC<{
     const changeRequestStrategy =
         change.action === 'deleteStrategy' ? undefined : change.payload;
 
+    const sortedCurrentStrategy = sortSegments(currentStrategy);
+    const sortedChangeRequestStrategy = sortSegments(changeRequestStrategy);
+
     return (
         <StyledCodeSection>
             <EventDiff
                 entry={{
-                    preData: omit(currentStrategy, 'sortOrder'),
-                    data: omit(changeRequestStrategy, 'snapshot'),
+                    preData: omit(sortedCurrentStrategy, 'sortOrder'),
+                    data: omit(sortedChangeRequestStrategy, 'snapshot'),
                 }}
             />
         </StyledCodeSection>

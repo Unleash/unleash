@@ -60,7 +60,8 @@ export type IFlagKey =
     | 'showUserDeviceCount'
     | 'deleteStaleUserSessions'
     | 'memorizeStats'
-    | 'licensedUsers';
+    | 'licensedUsers'
+    | 'granularAdminPermissions';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -282,6 +283,10 @@ const flags: IFlags = {
     ),
     licensedUsers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_LICENSED_USERS,
+        false,
+    ),
+    granularAdminPermissions: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_GRANULAR_ADMIN_PERMISSIONS,
         false,
     ),
 };

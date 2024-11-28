@@ -732,6 +732,11 @@
       "permanent": true
     },
     {
+      "source": "/how-to/how-to-use-custom-strategies",
+      "destination": "/reference/activation-strategies",
+      "permanent": true
+    },
+    {
       "source": "/reference/strategy-constraints",
       "destination": "/reference/activation-strategies#constraints",
       "permanent": true

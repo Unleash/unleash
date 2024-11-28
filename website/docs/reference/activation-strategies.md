@@ -156,7 +156,7 @@ Unleash SDKs expect all context values to be strings. If you use an operator tha
 ## Predefined strategy types
 
 :::caution
-[Predefined strategy types](/reference/predefined-strategy-types), such as UserIDs, IPs, and Hosts are deprecated. Please use the default strategy with constraints to achieve your desired targeting.
+[Predefined strategy types](/reference/predefined-strategy-types), such as UserIDs, IPs, and Hosts are a legacy implementation. Please use the default strategy with constraints to achieve your desired targeting.
 :::
 
 # Custom activation strategies

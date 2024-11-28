@@ -329,27 +329,26 @@ const sidebars: SidebarsConfig = {
                                 'reference/environments',
                             ],
                         },
-                        'reference/feature-toggles',
                         {
-                            label: 'Activation Strategies',
+                            label: 'Feature Flags and Activation Strategies',
                             collapsed: false,
                             type: 'category',
                             link: {
                                 type: 'doc',
-                                id: 'reference/activation-strategies',
+                                id: 'reference/feature-toggles',
                             },
                             items: [
+                                'reference/feature-toggles',
                                 'reference/activation-strategies',
                                 'reference/strategy-variants',
                                 'reference/segments',
+                                'reference/unleash-context',
+                                'reference/stickiness',
                             ],
                         },
-                        'reference/unleash-context',
-                        'reference/stickiness',
-                        'reference/change-requests',
                         {
-                            label: 'Access',
-                            collapsed: false,
+                            label: 'Access Controls',
+                            collapsed: true,
                             type: 'category',
                             link: {
                                 type: 'doc',
@@ -360,14 +359,14 @@ const sidebars: SidebarsConfig = {
                                 'reference/front-end-api',
                                 'reference/public-signup',
                                 'reference/rbac',
-                                'reference/service-accounts',
                                 'reference/scim',
                                 'reference/sso',
+                                'reference/change-requests',
                             ],
                         },
                         {
                             label: 'Testing and Monitoring',
-                            collapsed: false,
+                            collapsed: true,
                             type: 'category',
                             link: {
                                 type: 'doc',
@@ -381,7 +380,7 @@ const sidebars: SidebarsConfig = {
                         },
                         {
                             label: 'Admin UI',
-                            collapsed: false,
+                            collapsed: true,
                             type: 'category',
                             link: {
                                 type: 'doc',
@@ -399,7 +398,7 @@ const sidebars: SidebarsConfig = {
                         },
                         {
                             label: 'Instance Health and Configuration',
-                            collapsed: false,
+                            collapsed: true,
                             type: 'category',
                             link: {
                                 type: 'doc',
@@ -412,9 +411,21 @@ const sidebars: SidebarsConfig = {
                                 'reference/insights',
                             ],
                         },
-                        'reference/applications',
-                        'reference/signals',
-                        'reference/actions',
+                        {
+                            label: 'Automation and Integrations',
+                            collapsed: true,
+                            type: 'category',
+                            link: {
+                                type: 'doc',
+                                id: 'reference/applications',
+                            },
+                            items: [
+                                'reference/applications',
+                                'reference/signals',
+                                'reference/actions',
+                                'reference/service-accounts',
+                            ],
+                        },
                     ],
                 },
             ],

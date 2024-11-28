@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature flag service. It provides different strategies for handling feature flags.",
-  "version": "6.5.0",
+  "version": "6.5.1",
   "keywords": [
     "unleash",
     "feature flag",

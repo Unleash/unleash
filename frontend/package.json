@@ -29,7 +29,7 @@
     "fmt:check": "biome check src",
     "ts:check": "tsc",
     "e2e": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" yarn run cypress open --config baseUrl='http://localhost:3000' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
-    "e2e:oss": "yarn cypress run --spec \"cypress/oss/**/*.spec.ts\" --config baseUrl=\"http://localhost:${EXPOSED_PORT:-4242}\" --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
+    "e2e:oss": "yarn --cwd frontend run cypress run --spec \"cypress/oss/**/*.spec.ts\" --config baseUrl=\"http://localhost:${EXPOSED_PORT:-4242}\" --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "e2e:heroku": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" yarn run cypress open --config baseUrl='https://unleash.herokuapp.com' --env AUTH_USER=admin,AUTH_PASSWORD=unleash4all",
     "gen:api": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" orval --config orval.config.js",
     "gen:api:demo": "NODE_OPTIONS=\"${NODE_OPTIONS:-} --no-experimental-fetch\" UNLEASH_OPENAPI_URL=https://app.unleash-hosted.com/demo/docs/openapi.json yarn run gen:api",

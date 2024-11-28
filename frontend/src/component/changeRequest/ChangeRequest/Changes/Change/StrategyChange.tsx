@@ -267,6 +267,56 @@ const UpdateStrategy: FC<{
     );
 };
 
+const AddStrategy: FC<{
+    change: IChangeRequestAddStrategy;
+    actions?: ReactNode;
+}> = ({ change, actions }) => {
+    return (
+        <>
+            <ChangeItemCreateEditDeleteWrapper>
+                <ChangeItemInfo>
+                    <Typography
+                        color={
+                            change.payload?.disabled
+                                ? 'action.disabled'
+                                : 'success.dark'
+                        }
+                    >
+                        + Adding strategy:
+                    </Typography>
+                    <StrategyTooltipLink
+                        name={change.payload.name}
+                        title={change.payload.title}
+                    >
+                        <StrategyDiff
+                            change={change}
+                            currentStrategy={undefined}
+                        />
+                    </StrategyTooltipLink>
+                    <div>
+                        <DisabledEnabledState
+                            disabled
+                            show={change.payload?.disabled === true}
+                        />
+                    </div>
+                </ChangeItemInfo>
+                <div>{actions}</div>
+            </ChangeItemCreateEditDeleteWrapper>
+            <StrategyExecution strategy={change.payload} />
+            {change.payload.variants && change.payload.variants.length > 0 && (
+                <StyledBox>
+                    <StyledTypography>
+                        Setting strategy variants to:
+                    </StyledTypography>
+                    <EnvironmentVariantsTable
+                        variants={change.payload.variants}
+                    />
+                </StyledBox>
+            )}
+        </>
+    );
+};
+
 export const StrategyChange: FC<{
     actions?: ReactNode;
     change:
@@ -295,49 +345,7 @@ export const StrategyChange: FC<{
     return (
         <>
             {change.action === 'addStrategy' && (
-                <>
-                    <ChangeItemCreateEditDeleteWrapper>
-                        <ChangeItemInfo>
-                            <Typography
-                                color={
-                                    change.payload?.disabled
-                                        ? 'action.disabled'
-                                        : 'success.dark'
-                                }
-                            >
-                                + Adding strategy:
-                            </Typography>
-                            <StrategyTooltipLink
-                                name={change.payload.name}
-                                title={change.payload.title}
-                            >
-                                <StrategyDiff
-                                    change={change}
-                                    currentStrategy={currentStrategy}
-                                />
-                            </StrategyTooltipLink>
-                            <div>
-                                <DisabledEnabledState
-                                    disabled
-                                    show={change.payload?.disabled === true}
-                                />
-                            </div>
-                        </ChangeItemInfo>
-                        <div>{actions}</div>
-                    </ChangeItemCreateEditDeleteWrapper>
-                    <StrategyExecution strategy={change.payload} />
-                    {change.payload.variants &&
-                        change.payload.variants.length > 0 && (
-                            <StyledBox>
-                                <StyledTypography>
-                                    Setting strategy variants to:
-                                </StyledTypography>
-                                <EnvironmentVariantsTable
-                                    variants={change.payload.variants}
-                                />
-                            </StyledBox>
-                        )}
-                </>
+                <AddStrategy change={change} actions={actions} />
             )}
             {change.action === 'deleteStrategy' && (
                 <DeleteStrategy

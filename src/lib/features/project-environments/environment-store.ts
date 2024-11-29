@@ -1,6 +1,6 @@
 import type EventEmitter from 'events';
 import type { Db } from '../../db/db';
-import type { Logger, LogProvider } from '../../logger';
+import type { Logger } from '../../logger';
 import metricsHelper from '../../util/metrics-helper';
 import { DB_TIME } from '../../metric-events';
 import type {
@@ -12,6 +12,7 @@ import NotFoundError from '../../error/notfound-error';
 import type { IEnvironmentStore } from './environment-store-type';
 import { snakeCaseKeys } from '../../util/snakeCase';
 import type { CreateFeatureStrategySchema } from '../../openapi';
+import type { IUnleashConfig } from '../../types';
 
 interface IEnvironmentsTable {
     name: string;
@@ -104,11 +105,18 @@ export default class EnvironmentStore implements IEnvironmentStore {
 
     private db: Db;
 
+    private isOss: boolean;
+
     private timer: (string) => any;
 
-    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
+    constructor(
+        db: Db,
+        eventBus: EventEmitter,
+        { getLogger, isOss }: Pick<IUnleashConfig, 'getLogger' | 'isOss'>,
+    ) {
         this.db = db;
         this.logger = getLogger('db/environment-store.ts');
+        this.isOss = isOss;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'environment',
@@ -148,9 +156,15 @@ export default class EnvironmentStore implements IEnvironmentStore {
 
     async get(key: string): Promise<IEnvironment> {
         const stopTimer = this.timer('get');
-        const row = await this.db<IEnvironmentsTable>(TABLE)
-            .where({ name: key })
-            .first();
+        let keyQuery = this.db<IEnvironmentsTable>(TABLE).where({ name: key });
+        if (this.isOss) {
+            keyQuery = keyQuery.whereIn('name', [
+                'default',
+                'development',
+                'production',
+            ]);
+        }
+        const row = await keyQuery.first();
         stopTimer();
         if (row) {
             return mapRow(row);
@@ -168,6 +182,9 @@ export default class EnvironmentStore implements IEnvironmentStore {
             ]);
         if (query) {
             qB = qB.where(query);
+        }
+        if (this.isOss) {
+            qB = qB.whereIn('name', ['default', 'development', 'production']);
         }
         const rows = await qB;
         stopTimer();
@@ -195,6 +212,9 @@ export default class EnvironmentStore implements IEnvironmentStore {
             ]);
         if (query) {
             qB = qB.where(query);
+        }
+        if (this.isOss) {
+            qB = qB.whereIn('name', ['default', 'development', 'production']);
         }
         const rows = await qB;
         stopTimer();
@@ -229,6 +249,13 @@ export default class EnvironmentStore implements IEnvironmentStore {
 
         if (query) {
             qB = qB.where(query);
+        }
+        if (this.isOss) {
+            qB = qB.whereIn('environments.name', [
+                'default',
+                'production',
+                'development',
+            ]);
         }
 
         const rows = await qB;

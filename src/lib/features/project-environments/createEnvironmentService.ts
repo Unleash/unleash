@@ -21,21 +21,16 @@ export const createEnvironmentService =
         const featureEnvironmentStore = new FeatureEnvironmentStore(
             db,
             eventBus,
-            getLogger,
+            config,
         );
-        const projectStore = new ProjectStore(
-            db,
-            eventBus,
-            getLogger,
-            flagResolver,
-        );
+        const projectStore = new ProjectStore(db, eventBus, config);
         const featureStrategiesStore = new FeatureStrategiesStore(
             db,
             eventBus,
             getLogger,
             flagResolver,
         );
-        const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+        const environmentStore = new EnvironmentStore(db, eventBus, config);
         const eventService = createEventsService(db, config);
         return new EnvironmentService(
             {

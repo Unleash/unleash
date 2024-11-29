@@ -84,7 +84,7 @@ export const LicensedUsersBox = () => {
             </TopRow>
 
             <StyledCaption>
-                <span>Seats used in the last 30 days</span>
+                <span>Seats used over the last 30 days</span>
                 <OpenSidebarButton />
             </StyledCaption>
         </Figure>

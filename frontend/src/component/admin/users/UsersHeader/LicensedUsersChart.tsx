@@ -16,7 +16,7 @@ export const LicensedUsersChart: FC<ILicensedUsersChartProps> = ({
     const data = {
         datasets: [
             {
-                label: 'Licensed users',
+                label: 'Seats used',
                 data: licensedUsers,
                 borderColor: theme.palette.primary.main,
                 backgroundColor: theme.palette.primary.main,

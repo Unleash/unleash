@@ -1,4 +1,4 @@
-import ReleaseTemplateIcon from '@mui/icons-material/DashboardOutlined';
+import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
 import { ReactComponent as MilestoneIcon } from 'assets/icons/milestone.svg';
 import { styled } from '@mui/material';
 
@@ -43,7 +43,7 @@ export const TemplateFormDescription = () => {
     return (
         <StyledDescription>
             <StyledDescriptionHeader>
-                <ReleaseTemplateIcon />
+                <FactCheckOutlinedIcon />
                 Release templates
             </StyledDescriptionHeader>
             <p>

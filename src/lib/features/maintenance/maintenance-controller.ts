@@ -1,5 +1,5 @@
 import {
-    NONE,
+    ADMIN,
     UPDATE_MAINTENANCE_MODE,
     type IUnleashConfig,
     type IUnleashServices,
@@ -43,7 +43,7 @@ export default class MaintenanceController extends Controller {
         this.route({
             method: 'post',
             path: '',
-            permission: UPDATE_MAINTENANCE_MODE,
+            permission: [ADMIN, UPDATE_MAINTENANCE_MODE],
             handler: this.toggleMaintenance,
             middleware: [
                 this.openApiService.validPath({
@@ -63,7 +63,7 @@ export default class MaintenanceController extends Controller {
         this.route({
             method: 'get',
             path: '',
-            permission: NONE,
+            permission: [ADMIN, UPDATE_MAINTENANCE_MODE],
             handler: this.getMaintenance,
             middleware: [
                 this.openApiService.validPath({

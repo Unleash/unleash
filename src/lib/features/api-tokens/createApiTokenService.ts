@@ -21,7 +21,7 @@ export const createApiTokenService = (
         getLogger,
         config.flagResolver,
     );
-    const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+    const environmentStore = new EnvironmentStore(db, eventBus, config);
     const eventService = createEventsService(db, config);
 
     return new ApiTokenService(

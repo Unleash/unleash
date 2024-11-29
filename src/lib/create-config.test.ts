@@ -503,6 +503,10 @@ describe('isOSS', () => {
     test('Config with pro environment should set isOss to false regardless of pro casing', async () => {
         const isOss = resolveIsOss(false, false, 'Pro');
         expect(isOss).toBe(false);
+        const lowerCase = resolveIsOss(false, false, 'pro');
+        expect(lowerCase).toBe(false);
+        const strangeCase = resolveIsOss(false, false, 'PrO');
+        expect(strangeCase).toBe(false);
     });
     test('Config with enterpriseVersion set should set isOss to false', async () => {
         const isOss = resolveIsOss(true, false, 'Enterprise');
@@ -515,5 +519,15 @@ describe('isOSS', () => {
     test('Config with enterprise false and isOss option set to false should return false in test mode', async () => {
         const isOss = resolveIsOss(false, false, 'my environment', true);
         expect(isOss).toBe(false);
+    });
+    test('Config with isOss option set to true should return true when test environment is active', async () => {
+        let isOss = resolveIsOss(false, true, 'Pro', true);
+        expect(isOss).toBe(true);
+
+        isOss = resolveIsOss(true, true, 'Pro', true);
+        expect(isOss).toBe(true);
+
+        isOss = resolveIsOss(false, true, 'some environment', true);
+        expect(isOss).toBe(true);
     });
 });

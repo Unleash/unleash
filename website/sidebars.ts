@@ -365,6 +365,21 @@ const sidebars: SidebarsConfig = {
                             ],
                         },
                         {
+                            label: 'Instance Health and Configuration',
+                            collapsed: true,
+                            type: 'category',
+                            link: {
+                                type: 'doc',
+                                id: 'reference/technical-debt',
+                            },
+                            items: [
+                                'reference/technical-debt',
+                                'reference/insights',
+                                'reference/resource-limits',
+                                'reference/tags',
+                            ],
+                        },
+                        {
                             label: 'Testing and Monitoring',
                             collapsed: true,
                             type: 'category',
@@ -376,6 +391,22 @@ const sidebars: SidebarsConfig = {
                                 'reference/impression-data',
                                 'reference/events',
                                 'reference/playground',
+                                'reference/network-view',
+                            ],
+                        },
+                        {
+                            label: 'Automation and Integrations',
+                            collapsed: true,
+                            type: 'category',
+                            link: {
+                                type: 'doc',
+                                id: 'reference/applications',
+                            },
+                            items: [
+                                'reference/applications',
+                                'reference/service-accounts',
+                                'reference/signals',
+                                'reference/actions',
                             ],
                         },
                         {
@@ -393,37 +424,6 @@ const sidebars: SidebarsConfig = {
                                 'reference/command-menu',
                                 'reference/search-operators',
                                 'reference/maintenance-mode',
-                                'reference/network-view',
-                            ],
-                        },
-                        {
-                            label: 'Instance Health and Configuration',
-                            collapsed: true,
-                            type: 'category',
-                            link: {
-                                type: 'doc',
-                                id: 'reference/technical-debt',
-                            },
-                            items: [
-                                'reference/technical-debt',
-                                'reference/insights',
-                                'reference/resource-limits',
-                                'reference/tags',
-                            ],
-                        },
-                        {
-                            label: 'Automation and Integrations',
-                            collapsed: true,
-                            type: 'category',
-                            link: {
-                                type: 'doc',
-                                id: 'reference/applications',
-                            },
-                            items: [
-                                'reference/applications',
-                                'reference/service-accounts',
-                                'reference/signals',
-                                'reference/actions',
                             ],
                         },
                     ],

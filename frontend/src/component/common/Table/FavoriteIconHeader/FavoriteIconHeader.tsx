@@ -30,7 +30,7 @@ export const FavoriteIconHeader: VFC<IFavoriteIconHeaderProps> = ({
         >
             <IconButton
                 sx={{
-                    mx: -0.75,
+                    mx: -2.75,
                     my: -1,
                     display: 'flex',
                     alignItems: 'center',

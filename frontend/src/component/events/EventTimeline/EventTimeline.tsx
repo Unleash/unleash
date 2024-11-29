@@ -99,6 +99,9 @@ const RELEVANT_EVENT_TYPES: EventSchemaType[] = [
     'feature-strategy-remove',
     'feature-environment-enabled',
     'feature-environment-disabled',
+    'release-plan-added',
+    'release-plan-removed',
+    'release-plan-milestone-started',
 ];
 
 const toISODateString = (date: Date) => date.toISOString().split('T')[0];

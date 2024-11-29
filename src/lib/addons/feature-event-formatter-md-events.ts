@@ -58,6 +58,9 @@ import {
     CHANGE_REQUEST_SCHEDULE_SUSPENDED,
     FEATURE_COMPLETED,
     PROJECT_ARCHIVED,
+    RELEASE_PLAN_ADDED,
+    RELEASE_PLAN_REMOVED,
+    RELEASE_PLAN_MILESTONE_STARTED,
 } from '../types';
 
 interface IEventData {
@@ -361,5 +364,20 @@ export const EVENT_MAP: Record<string, IEventData> = {
         label: 'User updated',
         action: '{{b}}{{user}}{{b}} updated user {{b}}{{event.preData.name}}{{b}}',
         path: '/admin/users',
+    },
+    [RELEASE_PLAN_ADDED]: {
+        label: 'Release plan added',
+        action: '{{b}}{{user}}{{b}} added release plan {{b}}{{event.data.name}}{{b}} to {{b}}{{feature}}{{b}} for the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
+        path: '/projects/{{event.project}}/features/{{event.featureName}}',
+    },
+    [RELEASE_PLAN_REMOVED]: {
+        label: 'Release plan removed',
+        action: '{{b}}{{user}}{{b}} removed release plan {{b}}{{event.preData.name}}{{b}} from {{b}}{{feature}}{{b}} for the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
+        path: '/projects/{{event.project}}/features/{{event.featureName}}',
+    },
+    [RELEASE_PLAN_MILESTONE_STARTED]: {
+        label: 'Release plan milestone started',
+        action: '{{b}}{{user}}{{b}} started milestone {{b}}{{event.data.milestoneName}}{{b}} in release plan {{b}}{{event.data.name}}{{b}} for {{b}}{{feature}}{{b}} for the {{b}}{{event.environment}}{{b}} environment in project {{b}}{{project}}{{b}}',
+        path: '/projects/{{event.project}}/features/{{event.featureName}}',
     },
 };

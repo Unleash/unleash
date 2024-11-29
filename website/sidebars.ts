@@ -357,11 +357,11 @@ const sidebars: SidebarsConfig = {
                             items: [
                                 'reference/api-tokens-and-client-keys',
                                 'reference/front-end-api',
-                                'reference/public-signup',
                                 'reference/rbac',
                                 'reference/scim',
                                 'reference/sso',
                                 'reference/change-requests',
+                                'reference/public-signup',
                             ],
                         },
                         {
@@ -370,12 +370,12 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             link: {
                                 type: 'doc',
-                                id: 'reference/api-tokens-and-client-keys',
+                                id: 'reference/impression-data',
                             },
                             items: [
-                                'reference/playground',
                                 'reference/impression-data',
                                 'reference/events',
+                                'reference/playground',
                             ],
                         },
                         {
@@ -384,16 +384,16 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             link: {
                                 type: 'doc',
-                                id: 'reference/activation-strategies',
+                                id: 'reference/notifications',
                             },
                             items: [
+                                'reference/notifications',
+                                'reference/login-history',
                                 'reference/banners',
                                 'reference/command-menu',
-                                'reference/login-history',
+                                'reference/search-operators',
                                 'reference/maintenance-mode',
                                 'reference/network-view',
-                                'reference/notifications',
-                                'reference/search-operators',
                             ],
                         },
                         {
@@ -402,13 +402,13 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             link: {
                                 type: 'doc',
-                                id: 'reference/activation-strategies',
+                                id: 'reference/technical-debt',
                             },
                             items: [
-                                'reference/resource-limits',
-                                'reference/tags',
                                 'reference/technical-debt',
                                 'reference/insights',
+                                'reference/resource-limits',
+                                'reference/tags',
                             ],
                         },
                         {
@@ -421,9 +421,9 @@ const sidebars: SidebarsConfig = {
                             },
                             items: [
                                 'reference/applications',
+                                'reference/service-accounts',
                                 'reference/signals',
                                 'reference/actions',
-                                'reference/service-accounts',
                             ],
                         },
                     ],

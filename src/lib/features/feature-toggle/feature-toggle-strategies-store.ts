@@ -535,13 +535,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 return a.sortOrder - b.sortOrder;
             });
             featureToggle.environments = featureToggle.environments.map((e) => {
-                if (e.strategies && e.strategies.length === 0) {
-                    e.enabled = false;
-                }
-                e.strategies = e.strategies
-                    .filter(({ milestoneId }) => !milestoneId)
-                    .map(({ milestoneId, ...strategy }) => strategy)
-                    .sort((a, b) => a.sortOrder - b.sortOrder);
+                e.strategies = e.strategies.sort(
+                    (a, b) => a.sortOrder - b.sortOrder,
+                );
                 return e;
             });
 
@@ -861,7 +857,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             id: r.strategy_id,
             title: r.strategy_title,
             disabled: r.strategy_disabled || false,
-            milestoneId: r.strategy_milestone_id,
         };
         if (!includeId) {
             delete strategy.id;

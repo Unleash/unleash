@@ -32,7 +32,6 @@ exports.up = function (db, callback) {
               feature_strategies.title as strategy_title,
               feature_strategies.disabled as strategy_disabled,
               feature_strategies.variants as strategy_variants,
-              feature_strategies.milestone_id as strategy_milestone_id,
               users.id as user_id,
               users.name as user_name,
               users.username as user_username,
@@ -40,7 +39,11 @@ exports.up = function (db, callback) {
           FROM
               features
                   LEFT JOIN feature_environments ON feature_environments.feature_name = features.name
-                  LEFT JOIN feature_strategies ON feature_strategies.feature_name = feature_environments.feature_name
+                  LEFT JOIN (
+                      SELECT *
+                      FROM feature_strategies
+                      WHERE milestone_id IS NULL
+                  ) AS feature_strategies ON feature_strategies.feature_name = feature_environments.feature_name
                   and feature_strategies.environment = feature_environments.environment
                   LEFT JOIN environments ON feature_environments.environment = environments.name
                   LEFT JOIN feature_strategy_segment as fss ON fss.feature_strategy_id = feature_strategies.id

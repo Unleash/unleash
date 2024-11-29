@@ -214,7 +214,6 @@ export const ProjectFeatureToggles = ({
                 enableSorting: false,
                 enableHiding: false,
                 meta: {
-                    align: 'center',
                     width: '1%',
                 },
             }),

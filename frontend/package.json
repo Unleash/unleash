@@ -70,7 +70,7 @@
     "@uiw/react-codemirror": "4.23.6",
     "@vitejs/plugin-react": "4.3.3",
     "cartesian": "^1.0.1",
-    "chart.js": "3.9.1",
+    "chart.js": "4.4.7",
     "chartjs-adapter-date-fns": "3.0.0",
     "chartjs-plugin-annotation": "2.2.1",
     "classnames": "2.5.1",

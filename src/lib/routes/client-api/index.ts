@@ -10,7 +10,10 @@ export default class ClientApi extends Controller {
         super(config);
 
         this.use('/features', new FeatureController(services, config).router);
-        this.use('/streaming', new FeatureStreamingController(config).router);
+        this.use(
+            '/streaming',
+            new FeatureStreamingController(services, config).router,
+        );
         this.use('/metrics', new MetricsController(services, config).router);
         this.use('/register', new RegisterController(services, config).router);
     }

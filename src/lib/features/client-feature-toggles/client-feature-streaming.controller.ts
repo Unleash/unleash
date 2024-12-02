@@ -1,18 +1,33 @@
 import type { Response } from 'express';
 import Controller from '../../routes/controller';
-import type { IFlagResolver, IUnleashConfig } from '../../types';
+import type {
+    IFlagResolver,
+    IUnleashConfig,
+    IUnleashServices,
+} from '../../types';
 import type { Logger } from '../../logger';
 import type { IAuthRequest } from '../../routes/unleash-types';
 import { NONE } from '../../types/permissions';
-import type { ClientFeatureSchema } from '../../openapi/spec/client-feature-schema';
+import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
+import { UPDATE_REVISION } from '../feature-toggle/configuration-revision-service';
+
+type ResponseWithFlush = Response & { flush: Function };
 
 export class FeatureStreamingController extends Controller {
     private readonly logger: Logger;
 
+    private configurationRevisionService: ConfigurationRevisionService;
+
     private flagResolver: IFlagResolver;
 
-    constructor(config: IUnleashConfig) {
+    constructor(
+        {
+            configurationRevisionService,
+        }: Pick<IUnleashServices, 'configurationRevisionService'>,
+        config: IUnleashConfig,
+    ) {
         super(config);
+        this.configurationRevisionService = configurationRevisionService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('client-api/streaming.js');
 
@@ -27,7 +42,7 @@ export class FeatureStreamingController extends Controller {
 
     async getFeatureStream(
         req: IAuthRequest,
-        res: Response<ClientFeatureSchema>,
+        res: ResponseWithFlush,
     ): Promise<void> {
         if (!this.flagResolver.isEnabled('streaming')) {
             res.status(403).end();
@@ -41,24 +56,23 @@ export class FeatureStreamingController extends Controller {
             'Access-Control-Allow-Origin': '*',
         });
 
-        const data = new Date().getTime();
-        res.write(`data: ${data} \n\n`);
-        // @ts-expect-error
+        res.write(`data: CONNECTED\n\n`);
         res.flush();
 
-        const handle = setInterval(() => {
-            const data = new Date().getTime();
-
-            console.log(`data: ${data} \n\n`);
-            res.write(`id: 0\n`);
-            res.write(`data: ${data} \n\n`);
-            // @ts-expect-error
-            res.flush();
-        }, 3000);
+        this.configurationRevisionService.on(UPDATE_REVISION, (e) =>
+            this.onUpdateRevisionEvent(res, e),
+        );
 
         res.on('close', () => {
-            console.log('closing connection');
-            clearInterval(handle);
+            this.configurationRevisionService.removeListener(
+                UPDATE_REVISION,
+                (e) => this.onUpdateRevisionEvent(res, e),
+            );
         });
+    }
+
+    private onUpdateRevisionEvent(res: ResponseWithFlush, event: any): void {
+        res.write(`data: UPDATE\n\n`);
+        res.flush();
     }
 }

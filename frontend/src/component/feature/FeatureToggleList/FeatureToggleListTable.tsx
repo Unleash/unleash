@@ -339,16 +339,11 @@ export const FeatureToggleListTable: VFC = () => {
                     </Box>
                 }
             />
-            <ConditionallyRender
-                condition={Boolean(uiConfig?.flags?.featuresExportImport)}
-                show={
-                    <ExportDialog
-                        showExportDialog={showExportDialog}
-                        data={data}
-                        onClose={() => setShowExportDialog(false)}
-                        environments={enabledEnvironments}
-                    />
-                }
+            <ExportDialog
+                showExportDialog={showExportDialog}
+                data={data}
+                onClose={() => setShowExportDialog(false)}
+                environments={enabledEnvironments}
             />
         </PageContent>
     );

@@ -3,14 +3,13 @@ import type {
     FeatureEnvironmentKey,
     IFeatureEnvironmentStore,
 } from '../types/stores/feature-environment-store';
-import type { Logger } from '../logger';
+import type { Logger, LogProvider } from '../logger';
 import metricsHelper from '../util/metrics-helper';
 import { DB_TIME } from '../metric-events';
 import type { IFeatureEnvironment, IVariant } from '../types/model';
 import NotFoundError from '../error/notfound-error';
 import { v4 as uuidv4 } from 'uuid';
 import type { Db } from './db';
-import type { IUnleashConfig } from '../types';
 
 const T = {
     featureEnvs: 'feature_environments',
@@ -37,12 +36,7 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
 
     private readonly timer: Function;
 
-    private readonly isOss: boolean;
-    constructor(
-        db: Db,
-        eventBus: EventEmitter,
-        { getLogger, isOss }: Pick<IUnleashConfig, 'getLogger' | 'isOss'>,
-    ) {
+    constructor(db: Db, eventBus: EventEmitter, getLogger: LogProvider) {
         this.db = db;
         this.logger = getLogger('feature-environment-store.ts');
         this.timer = (action) =>
@@ -50,7 +44,6 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
                 store: 'feature-environments',
                 action,
             });
-        this.isOss = isOss;
     }
 
     async delete({
@@ -103,30 +96,11 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         );
     }
 
-    addOssFilterIfNeeded(queryBuilder) {
-        if (this.isOss) {
-            return queryBuilder
-                .join(
-                    'environments',
-                    'environments.name',
-                    '=',
-                    `${T.featureEnvs}.environment`,
-                )
-                .whereIn('environments.name', [
-                    'default',
-                    'development',
-                    'production',
-                ]);
-        }
-        return queryBuilder;
-    }
-
     async getAll(query?: Object): Promise<IFeatureEnvironment[]> {
         let rows = this.db(T.featureEnvs);
         if (query) {
             rows = rows.where(query);
         }
-        this.addOssFilterIfNeeded(rows);
         return (await rows).map((r) => ({
             enabled: r.enabled,
             featureName: r.feature_name,
@@ -145,7 +119,6 @@ export class FeatureEnvironmentStore implements IFeatureEnvironmentStore {
         if (environment) {
             rows = rows.where({ environment });
         }
-        this.addOssFilterIfNeeded(rows);
         return (await rows).map((r) => ({
             enabled: r.enabled,
             featureName: r.feature_name,

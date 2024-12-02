@@ -85,7 +85,6 @@ exports[`should create default config 1`] = `
   },
   "inlineSegmentConstraints": true,
   "isEnterprise": false,
-  "isOss": false,
   "listen": {
     "host": undefined,
     "port": 4242,

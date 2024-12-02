@@ -1586,9 +1586,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mswjs/interceptors@npm:^0.36.5":
-  version: 0.36.6
-  resolution: "@mswjs/interceptors@npm:0.36.6"
+"@mswjs/interceptors@npm:^0.37.0":
+  version: 0.37.1
+  resolution: "@mswjs/interceptors@npm:0.37.1"
   dependencies:
     "@open-draft/deferred-promise": "npm:^2.2.0"
     "@open-draft/logger": "npm:^0.3.0"
@@ -1596,7 +1596,7 @@ __metadata:
     is-node-process: "npm:^1.2.0"
     outvariant: "npm:^1.4.3"
     strict-event-emitter: "npm:^0.5.1"
-  checksum: 10c0/2c3fe5f0c35d5f3fb94bebdedb85c9fb1aa4ba69c7582e4c05a7d1574d5a0c39f4a28eaeafdb75d438b162f54d68894c6f08d508945bd54564728e25d34e5bdc
+  checksum: 10c0/3fc42e92d92a1a40bc7f7d844d4b4469281cf15f8f1eadb8249cab01baa4129f9e788d7b2d7d1e4ca984680b01e3f96284bd9541299bfb407629ba6143413ed0
   languageName: node
   linkType: hard
 
@@ -3067,20 +3067,20 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 22.9.0
-  resolution: "@types/node@npm:22.9.0"
+  version: 22.10.1
+  resolution: "@types/node@npm:22.10.1"
   dependencies:
-    undici-types: "npm:~6.19.8"
-  checksum: 10c0/3f46cbe0a49bab4ba30494025e4c8a6e699b98ac922857aa1f0209ce11a1313ee46e6808b8f13fe5b8b960a9d7796b77c8d542ad4e9810e85ef897d5593b5d51
+    undici-types: "npm:~6.20.0"
+  checksum: 10c0/0fbb6d29fa35d807f0223a4db709c598ac08d66820240a2cd6a8a69b8f0bc921d65b339d850a666b43b4e779f967e6ed6cf6f0fca3575e08241e6b900364c234
   languageName: node
   linkType: hard
 
 "@types/node@npm:^20.12.12":
-  version: 20.17.6
-  resolution: "@types/node@npm:20.17.6"
+  version: 20.17.9
+  resolution: "@types/node@npm:20.17.9"
   dependencies:
     undici-types: "npm:~6.19.2"
-  checksum: 10c0/5918c7ff8368bbe6d06d5e739c8ae41a9db41628f28760c60cda797be7d233406f07c4d0e6fdd960a0a342ec4173c2217eb6624e06bece21c1f1dd1b92805c15
+  checksum: 10c0/1c37c3618407d56b76301578edabcb4c6a7ef093d0811c50fc4df8df68fc546797a294cafac0e50789f4e0e485cd1d6871964d8e6222fd420658bdae89c1fb4a
   languageName: node
   linkType: hard
 
@@ -7597,15 +7597,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"msw@npm:2.6.4":
-  version: 2.6.4
-  resolution: "msw@npm:2.6.4"
+"msw@npm:2.6.6":
+  version: 2.6.6
+  resolution: "msw@npm:2.6.6"
   dependencies:
     "@bundled-es-modules/cookie": "npm:^2.0.1"
     "@bundled-es-modules/statuses": "npm:^1.0.1"
     "@bundled-es-modules/tough-cookie": "npm:^0.1.6"
     "@inquirer/confirm": "npm:^5.0.0"
-    "@mswjs/interceptors": "npm:^0.36.5"
+    "@mswjs/interceptors": "npm:^0.37.0"
     "@open-draft/deferred-promise": "npm:^2.2.0"
     "@open-draft/until": "npm:^2.1.0"
     "@types/cookie": "npm:^0.6.0"
@@ -7626,7 +7626,7 @@ __metadata:
       optional: true
   bin:
     msw: cli/index.js
-  checksum: 10c0/1a1faa940cbac754cdf4686876c172339f6af8736ec758ac6ed3897bfa3e2408685903f9fbfa61431ac8a81ec5d9377a280934fafc5403a0b0129a17d9e24cc0
+  checksum: 10c0/d7f0e0ea6512cfddda5b7695a0c6c6a0ed43b36b62f25925beee8e12daec12a5ef369d00e0976f9dd76d3af779741fda11a3eae812da11a044b03992e697010c
   languageName: node
   linkType: hard
 
@@ -10027,10 +10027,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~6.19.8":
-  version: 6.19.8
-  resolution: "undici-types@npm:6.19.8"
-  checksum: 10c0/078afa5990fba110f6824823ace86073b4638f1d5112ee26e790155f481f2a868cc3e0615505b6f4282bdf74a3d8caad715fd809e870c2bb0704e3ea6082f344
+"undici-types@npm:~6.20.0":
+  version: 6.20.0
+  resolution: "undici-types@npm:6.20.0"
+  checksum: 10c0/68e659a98898d6a836a9a59e6adf14a5d799707f5ea629433e025ac90d239f75e408e2e5ff086afc3cace26f8b26ee52155293564593fbb4a2f666af57fc59bf
   languageName: node
   linkType: hard
 
@@ -10197,7 +10197,7 @@ __metadata:
     lodash.mapvalues: "npm:^4.6.0"
     lodash.omit: "npm:4.5.0"
     millify: "npm:^6.0.0"
-    msw: "npm:2.6.4"
+    msw: "npm:2.6.6"
     orval: "npm:^6.31.0"
     pkginfo: "npm:0.4.1"
     plausible-tracker: "npm:0.3.9"

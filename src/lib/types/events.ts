@@ -2067,36 +2067,63 @@ export class ReleasePlanTemplateDeletedEvent extends BaseEvent {
 }
 
 export class ReleasePlanAddedEvent extends BaseEvent {
+    readonly project: string;
+    readonly featureName: string;
+    readonly environment: string;
     readonly data: any;
     constructor(eventData: {
+        project: string;
+        featureName: string;
+        environment: string;
         data: any;
         auditUser: IAuditUser;
     }) {
         super(RELEASE_PLAN_ADDED, eventData.auditUser);
+        this.project = eventData.project;
+        this.featureName = eventData.featureName;
+        this.environment = eventData.environment;
         this.data = eventData.data;
     }
 }
 
 export class ReleasePlanRemovedEvent extends BaseEvent {
+    readonly project: string;
+    readonly featureName: string;
+    readonly environment: string;
     readonly preData: any;
     constructor(eventData: {
+        project: string;
+        featureName: string;
+        environment: string;
         preData: any;
         auditUser: IAuditUser;
     }) {
         super(RELEASE_PLAN_REMOVED, eventData.auditUser);
+        this.project = eventData.project;
+        this.featureName = eventData.featureName;
+        this.environment = eventData.environment;
         this.preData = eventData.preData;
     }
 }
 
 export class ReleasePlanMilestoneStartedEvent extends BaseEvent {
+    readonly project: string;
+    readonly featureName: string;
+    readonly environment: string;
     readonly preData: any;
     readonly data: any;
     constructor(eventData: {
+        project: string;
+        featureName: string;
+        environment: string;
         preData: any;
         data: any;
         auditUser: IAuditUser;
     }) {
         super(RELEASE_PLAN_MILESTONE_STARTED, eventData.auditUser);
+        this.project = eventData.project;
+        this.featureName = eventData.featureName;
+        this.environment = eventData.environment;
         this.preData = eventData.preData;
         this.data = eventData.data;
     }

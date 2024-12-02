@@ -109,21 +109,26 @@ export class ClientFeatureToggleCache extends EventEmitter {
         return features;
     }
 
-    // TODO: fetch only relevant projects/environments based on tokens
     public async refreshData() {
-        try {
-            this.featuresByEnvironment = await this.getAllFeatures();
-            this.segments = await this.getAllSegments();
-            if (this.status === 'starting') {
-                this.status = 'ready';
-                this.emit('ready');
-            } else if (this.status === 'ready' || this.status === 'updated') {
-                this.status = 'updated';
-                this.emit('updated');
-            }
-        } catch (e) {
-            this.logger.error('Cannot load data for token', e);
-        }
+        // parameter is revision id
+        // pull only new events sorted by revision
+        // iterate the events
+        // find the relevant feature
+        // ex1 : feature-dependency-added - update dependency array for that feature
+        // ex2
+        // try {
+        //     this.featuresByEnvironment = await this.getAllFeatures();
+        //     this.segments = await this.getAllSegments();
+        //     if (this.status === 'starting') {
+        //         this.status = 'ready';
+        //         this.emit('ready');
+        //     } else if (this.status === 'ready' || this.status === 'updated') {
+        //         this.status = 'updated';
+        //         this.emit('updated');
+        //     }
+        // } catch (e) {
+        //     this.logger.error('Cannot load data for token', e);
+        // }
     }
 
     private async getAllFeatures(): Promise<FrontendApiFeatureCache> {
@@ -134,6 +139,11 @@ export class ClientFeatureToggleCache extends EventEmitter {
     private async getAllSegments(): Promise<Segment[]> {
         return mapSegmentsForClient(await this.segmentReadModel.getAll());
     }
+
+    // event id 50, every second, we read, and if we see 51 ( 1 db call)
+    // emit revision event
+    // our cache listens to event
+    // now i need to get my data ( 1 db call)
 
     private async onUpdateRevisionEvent() {
         await this.refreshData();

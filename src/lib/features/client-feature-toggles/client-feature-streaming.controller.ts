@@ -38,11 +38,27 @@ export class FeatureStreamingController extends Controller {
             'Content-Type': 'text/event-stream',
             'Cache-Control': 'no-cache',
             Connection: 'keep-alive',
+            'Access-Control-Allow-Origin': '*',
         });
 
-        const data = `${new Date()}`;
-        setInterval(() => {
+        const data = new Date().getTime();
+        res.write(`data: ${data} \n\n`);
+        // @ts-expect-error
+        res.flush();
+
+        const handle = setInterval(() => {
+            const data = new Date().getTime();
+
+            console.log(`data: ${data} \n\n`);
+            res.write(`id: 0\n`);
             res.write(`data: ${data} \n\n`);
+            // @ts-expect-error
+            res.flush();
+        }, 3000);
+
+        res.on('close', () => {
+            console.log('closing connection');
+            clearInterval(handle);
         });
     }
 }

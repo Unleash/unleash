@@ -33,7 +33,7 @@ export const ProductivityEmailSubscription: FC<{
                                     });
                                     trackEvent('productivity-report', {
                                         props: {
-                                            eventType: 'subscribe',
+                                            eventType: 'unsubscribe',
                                         },
                                     });
                                 } else {
@@ -44,7 +44,7 @@ export const ProductivityEmailSubscription: FC<{
                                     });
                                     trackEvent('productivity-report', {
                                         props: {
-                                            eventType: 'unsubscribe',
+                                            eventType: 'subscribe',
                                         },
                                     });
                                 }

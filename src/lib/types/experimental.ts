@@ -59,7 +59,8 @@ export type IFlagKey =
     | 'showUserDeviceCount'
     | 'deleteStaleUserSessions'
     | 'memorizeStats'
-    | 'licensedUsers';
+    | 'licensedUsers'
+    | 'streaming';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -277,6 +278,10 @@ const flags: IFlags = {
     ),
     licensedUsers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_LICENSED_USERS,
+        false,
+    ),
+    streaming: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_STREAMING,
         false,
     ),
 };

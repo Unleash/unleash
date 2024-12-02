@@ -128,8 +128,8 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 ### Flexibility and adaptability
 
 - Get an overview of all feature flags across all your environments, applications and services
-- Use activation strategies](https://docs.getunleash.io/reference/activation-strategies) to enable and disable features for certain users or segments without having to redeploy your application.
-- Organise feature flags using [feature flag tags](https://docs.getunleash.io/reference/tags)
+- Use [activation strategies](https://docs.getunleash.io/reference/activation-strategies) to enable and disable features for certain users or segments without having to redeploy your application.
+- Organise feature flags using [feature flag tags](https://docs.getunleash.io/reference/feature-toggles#tags)
 - [Canary releases / gradual rollouts](https://docs.getunleash.io/reference/activation-strategies#gradual-rollout)
 - Targeted releases: release features to specific [users](https://docs.getunleash.io/reference/activation-strategies#userids), [IPs](https://docs.getunleash.io/reference/activation-strategies#ips), or [hostnames](https://docs.getunleash.io/reference/activation-strategies#hostnames)
 - [Kill switches](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types)

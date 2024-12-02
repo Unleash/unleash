@@ -358,8 +358,8 @@ const sidebars: SidebarsConfig = {
                                 'reference/api-tokens-and-client-keys',
                                 'reference/front-end-api',
                                 'reference/rbac',
-                                'reference/scim',
                                 'reference/sso',
+                                'reference/scim',
                                 'reference/change-requests',
                                 'reference/public-signup',
                             ],
@@ -376,7 +376,6 @@ const sidebars: SidebarsConfig = {
                                 'reference/technical-debt',
                                 'reference/insights',
                                 'reference/resource-limits',
-                                'reference/tags',
                             ],
                         },
                         {

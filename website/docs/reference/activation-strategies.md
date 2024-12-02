@@ -36,7 +36,7 @@ Segmentation and constraints allow you to define conditions for your activation 
 
 :::
 
-Constraints are conditional rules that determine whether a strategy applies, based on fields from the [Unleash context](/reference/unleash-context). Constraints can reference both [standard context fields](../reference/unleash-context#structure) and [custom context fields](../reference/unleash-context#custom-context-fields).
+Constraints are conditional rules that determine whether a strategy applies, based on fields from the [Unleash context](/reference/unleash-context). Constraints can reference both [standard context fields](../reference/unleash-context#overview) and [custom context fields](../reference/unleash-context#custom-context-fields).
 
 An activation strategy can have as many constraints as needed. When an activation strategy has multiple constraints, then every constraint must be evaluated to true for the strategy to be evaluated. This behavior is equivalent to the AND logical operator. For example, if you have two constraints: one where the user email must have the domain "@mycompany.com" and one where the user must have signed up for a beta program, then the strategy would only be evaluated for users with "@mycompany.com" emails that have signed up for the beta program.
 

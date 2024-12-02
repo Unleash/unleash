@@ -2,29 +2,29 @@
 title: Unleash Context
 ---
 
-The **Unleash Context** contains information relating to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies) and [strategy constraints](../reference/activation-strategies#constraints) and to calculate [flag stickiness](../reference/stickiness). The Unleash Context is an important feature of all the [Unleash client SDKs](../reference/sdks).
+The **Unleash Context** contains information related to the current feature flag request. Unleash uses this context to evaluate [activation strategies](activation-strategies) and [strategy constraints](../reference/activation-strategies#constraints) and to calculate [flag stickiness](../reference/stickiness). The Unleash Context is an important feature of all the [Unleash client SDKs](../reference/sdks).
 
-## Structure
+## Overview
 
 You can group the Unleash Context fields into two separate groups based on how they work in the client SDKs: **static**  and **dynamic** context fields.
 
-**Static** fields' values remain constant throughout an application's lifetime. You'll typically set these when you initialize the client SDK.
+**Static** remain constant throughout an application's lifetime and are typically set during client SDK initialization.
 
-**Dynamic** fields, however, can change with every request. You'll typically provide these when checking whether a flag is enabled in your client.
+**Dynamic** fields can change with each request and are usually provided when checking if a flag is enabled in your client.
 
-_All fields are optional_, but some strategies depend on certain fields being present. For instance, [the UserIDs strategy](activation-strategies#userids) requires that the `userId` field is present on the Context.
+All fields are optional, but some strategies depend on certain fields being present. For instance, [the UserIDs strategy](activation-strategies#userids) requires that the `userId` field is present on the Context.
 
-The below table gives a brief overview over what the fields' intended usage is, their lifetime, and their type. Note that the exact type can vary between programming languages and implementations. Be sure to consult your specific client SDK for more information on its implementation of the Unleash Context.
+The following table gives an overview of the fields' intended usage, their lifetime, and their type. The exact type can vary between programming languages and implementations. Check the documentation of your specific client SDK for more information on its implementation of the Unleash Context.
 
 | field name        | type                  | lifetime | description                                                                                                                                         |
 |-------------------|-----------------------|----------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
-| `appName`         | `string`              | static   | the name of the application                                                                                                                         |
-| `environment`[^1] | `string`              | static   | the environment the app is running in                                                                                                               |
-| `userId`          | `string`              | dynamic  | an identifier for the current user                                                                                                                  |
-| `sessionId`       | `string`              | dynamic  | an identifier for the current session                                                                                                               |
-| `remoteAddress`   | `string`              | dynamic  | the app's IP address                                                                                                                                |
-| `properties`      | `Map<string, string>` | dynamic  | a key-value store of any data you want                                                                                                              |
-| `currentTime`[^2] | `DateTime`/`string`   | dynamic  | A `DateTime` (or similar) data class instance or a string in an RFC3339-compatible format. **Defaults to the current time** if not set by the user. |
+| `appName`         | `string`              | static   | The name of the application.                                                                                                                         |
+| `environment` | `string`              | static   | The environment the application is running in; in versions 4.3+, use [environments](/reference/environments).                                                                                                               |
+| `userId`          | `string`              | dynamic  | The identifier of the current user.                                                                                                                  |
+| `sessionId`       | `string`              | dynamic  | The identifier of the current session.                                                                                                               |
+| `remoteAddress`   | `string`              | dynamic  | The applications's IP address.                                                                                                                                |
+| `properties`      | `Map<string, string>` | dynamic  | A key-value store for additional data.                                                                                                              |
+| `currentTime` | `DateTime`/`string`   | dynamic  | A `DateTime` (or similar) data class instance or a string in an RFC3339-compatible format. **Defaults to the current time** if not set by the user; requires [SDK compatibility](../reference/sdks#strategy-constraints-advanced-support). |
 
 
 ### The `properties` field
@@ -49,10 +49,6 @@ Custom context fields allow you to extend the Unleash Context with more data tha
 
 When interacting with custom context fields in code, they must be accessed via the Unleash Context's `properties` map, using the context field's name as the key.
 
-### Creating and updating custom context fields
-
-You can create as many custom context fields as you need. You can update custom context fields after they have been created. You can change everything about the definition except for the name.
-
 ## Add a custom context field
 
 To add a custom context field in the Admin UI, do the following:
@@ -63,6 +59,7 @@ To add a custom context field in the Admin UI, do the following:
 4. Optionally, enable [custom stickiness](/reference/stickiness#custom-stickiness) if you'd like to use this field to group users for a gradual rollout strategy.
 5. Click **Create context**.
 
+Once created, you can modify any aspect of a field’s definition—except its name. You can create as many custom context fields as you need.
 
 ### Legal values
 
@@ -77,14 +74,8 @@ Using a custom context field called _region_ as an example: if you define the fi
 
 :::note SDK compatibility
 
-Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks#server-side-sdk-compatibility-table) for the full overview.
+Custom stickiness is supported by all SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks#server-side-sdk-compatibility-table) for the full overview.
 
 :::
 
 Any context field _can_ be used to [calculate custom stickiness](../reference/stickiness#custom-stickiness). However, you need to explicitly tell Unleash that you want a field to be used for custom stickiness for it to be possible. You can enable this functionality either when you create the context field or at any later point. 
-
-
-
-[^1]: If you're on Unleash 4.3 or higher, you'll probably want to use [the environments feature](../reference/environments) instead of relying on the `environment` context field when working with environments.
-
-[^2]: Check the [*strategy constraints: advanced support* row of the compatibility table](../reference/sdks#strategy-constraints-advanced-support) for an overview of which SDKs provide the `currentTime` property.

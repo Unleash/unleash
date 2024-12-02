@@ -183,7 +183,12 @@
     },
     {
       "source": "/advanced/tags",
-      "destination": "/reference/tags",
+      "destination": "/reference/feature-toggles#tags",
+      "permanent": true
+    },
+    {
+      "source": "/reference/tags",
+      "destination": "/reference/feature-toggles#tags",
       "permanent": true
     },
     {

@@ -31,7 +31,6 @@ import NotFoundError from './error/notfound-error';
 import { bearerTokenMiddleware } from './middleware/bearer-token-middleware';
 import { auditAccessMiddleware } from './middleware';
 import { originMiddleware } from './middleware/origin-middleware';
-import { FeatureStreamingController } from './features/client-feature-toggles/client-feature-streaming.controller';
 
 export default async function getApp(
     config: IUnleashConfig,
@@ -114,10 +113,9 @@ export default async function getApp(
         corsOriginMiddleware(services, config),
     );
     app.options(
-        `${baseUriPath}/streaming*`,
+        `${baseUriPath}/api/client/streaming*`,
         corsOriginMiddleware(services, config),
     );
-    app.use('/streaming', new FeatureStreamingController(config).router);
 
     app.use(baseUriPath, patMiddleware(config, services));
 

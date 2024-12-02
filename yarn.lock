@@ -9117,9 +9117,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsc-watch@npm:6.2.0":
-  version: 6.2.0
-  resolution: "tsc-watch@npm:6.2.0"
+"tsc-watch@npm:6.2.1":
+  version: 6.2.1
+  resolution: "tsc-watch@npm:6.2.1"
   dependencies:
     cross-spawn: "npm:^7.0.3"
     node-cleanup: "npm:^2.1.2"
@@ -9129,7 +9129,7 @@ __metadata:
     typescript: "*"
   bin:
     tsc-watch: dist/lib/tsc-watch.js
-  checksum: 10c0/689a868198c207619bb197d54e3123567c011dca06596c0c9ed4e6dc0d0820ae45d8c7d15c9cef45521673016cf340dceb5ac318436db44018fb87880d8e1ffe
+  checksum: 10c0/f5fe19e5ac9f4c42a5600c20aee9ff49e282f11813aead65ed58fa11d98a20f5a82bf4f931897270f49f6475dd54e9aab9c46a07c3801b8d237dfbe77bcf1bfc
   languageName: node
   linkType: hard
 
@@ -9409,7 +9409,7 @@ __metadata:
     supertest: "npm:7.0.0"
     ts-node: "npm:10.9.2"
     ts-toolbelt: "npm:^9.6.0"
-    tsc-watch: "npm:6.2.0"
+    tsc-watch: "npm:6.2.1"
     type-is: "npm:^1.6.18"
     typescript: "npm:5.4.5"
     unleash-client: "npm:6.1.3"

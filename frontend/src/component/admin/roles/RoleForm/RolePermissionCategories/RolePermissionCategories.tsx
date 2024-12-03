@@ -42,6 +42,9 @@ export const RolePermissionCategories = ({
     });
 
     const releasePlansEnabled = useUiFlag('releasePlans');
+    const granularAdminPermissionsEnabled = useUiFlag(
+        'granularAdminPermissions',
+    );
 
     const isProjectRole = PROJECT_ROLE_TYPES.includes(type);
 
@@ -85,10 +88,15 @@ export const RolePermissionCategories = ({
                             releasePlansEnabled ||
                             label !== 'Release plan templates',
                     )
+                    .filter(
+                        ({ label }) =>
+                            granularAdminPermissionsEnabled ||
+                            label !== 'Instance maintenance',
+                    )
                     .map(({ label, type, permissions }) => (
                         <RolePermissionCategory
                             key={label}
-                            title={`${label} permissions`}
+                            title={label}
                             context={label.toLowerCase()}
                             Icon={
                                 type === PROJECT_PERMISSION_TYPE ? (

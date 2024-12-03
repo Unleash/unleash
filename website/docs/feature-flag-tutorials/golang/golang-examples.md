@@ -129,7 +129,7 @@ defer resp.Body.Close()
 
 ## Server-side A/B Testing in Go
 
-A/B testing allows teams to test multiple versions of a feature with different user groups. In Go, we can implement this using strategy variants. Here's how to update a strategy to enable A/B testing for 50% of users:
+A/B testing allows you to test multiple versions of a feature with different user groups. In Go, we can implement this using strategy variants. Here's how to update a strategy to enable A/B testing for 50% of users:
 
 ```go
 payload := map[string]interface{}{
@@ -164,10 +164,8 @@ defer resp.Body.Close()
 
 ## Feature Flag Analytics and Reporting in Go
 
-Shipping code is one thing, but monitoring your applications is another aspect of managing code to account for. Some things to monitor could be:
+Shipping code is one thing, but monitoring your applications is another aspect of managing code. For example, you could use feature flag analytics to monitor performance metrics or track user behavior.
 
--   Performance metrics
--   Tracking user behavior
 
 ### Enable impression data events in Go
 
@@ -280,7 +278,7 @@ func getAuditLogs(unleashURL, featureName, apiKey string) error {
 
 ## Flag Automation and Workflow Integration for Go Apps
 
-An advanced use case for leveraging feature flags at scale is automating them as part of your development workflow.
+An advanced use case for using feature flags at scale is automating them as part of your development workflow.
 
 It's common for teams to have a development phase, then QA/testing, and then a production release. Our [Unleash Jira plugin](https://docs.getunleash.io/reference/integrations/jira-cloud-plugin-installation) can connect to your Jira server or cloud to create feature flags automatically during the project phases.
 

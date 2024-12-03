@@ -6,9 +6,9 @@ slug: /feature-flag-tutorials/go
 
 import VideoContent from '@site/src/components/VideoContent.jsx';
 
-Hello! In this tutorial we'll show you how to add feature flags to your Go app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Go SDK](https://docs.getunleash.io/reference/sdks/go). We're Unleash, an open-source feature flag service, and you can use our tooling to add feature flags to your application to release new features faster.
+Hello! In this tutorial we'll show you how to add feature flags to your Go app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Go SDK](https://docs.getunleash.io/reference/sdks/go). With Unleash, an open-source feature flag service, you can add feature flags to your application to release new features faster.
 
-In this tutorial, we'll get information about a country from the [Countries API](https://restcountries.com/), using just Go. We'll use feature flags to decide whether to call the REST or the GraphQL version of the API.
+In this tutorial, we'll get information about a country from the [REST Countries API](https://restcountries.com/), using Go. We'll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
 - [Prerequisites](#prerequisites)
 - [1. Best practices for back-end apps with Unleash](#1-best-practices-for-back-end-apps-with-unleash)
@@ -26,11 +26,11 @@ For this tutorial, you'll need the following:
 -   Go v1.16+
 -   Git
 -   Docker and Docker Compose
--   (Optional) `go mod`, to manage your dependencies
+-   Go Modules, to manage your dependencies
 
 ![architecture diagram for our implementation](./diagram.png)
 
-The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. There are also [API commands available](https://docs.getunleash.io/reference/api/unleash) to perform the same actions straight from your CLI or server-side app.
+The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. You can perform the same actions straight from your CLI or server-side app using the [Unleash API](https://docs.getunleash.io/reference/api/unleash).
 
 ## 1. Best practices for back-end apps with Unleash
 
@@ -38,14 +38,14 @@ Go is a back-end language, so there are special considerations to plan around wh
 
 Most importantly, you must:
 
--   Limit feature flag payloads for scalability, security, and efficiency
+-   Limit feature flag payloads for scalability, security, and efficiency.
 -   Use graceful degradation where possible to improve the resiliency of your architecture.
 
 For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
 
 ## 2. Install a local feature flag provider
 
-In this section, we'll install Unleash, run the instance locally, log in, and create a feature flag. If you prefer, you can use other tools instead of Unleash, but you'll need to update the code accordingly. The basic steps will probably be the same.
+In this section, we'll install Unleash, run the instance locally, log in, and create a feature flag. If you prefer, you can use other tools instead of Unleash, but you'll need to update the code accordingly. 
 
 Use Git to clone the Unleash repository and Docker to build and run it. Open a terminal window and run the following commands:
 
@@ -72,7 +72,7 @@ Call it `graphql-api` and enable it in the `development` environment.
 
 ![A feature flag called `graphql-api` is now enabled in development.](/img/go-enable-development.png)
 
-Everything's now setup on the Unleash side. Let's go to the code now.
+Everything's now set up on the Unleash side. Let's go to the code now.
 
 ## 3. Grab country information from the REST Countries API
 
@@ -92,7 +92,7 @@ Install dependencies:
 go get github.com/Unleash/unleash-client-go/v4
 ```
 
-Then, let's make sure our setup is working. Let's make a call to the REST API to retrieve information about a country using its country code. Create a file named `main.go`:
+Next, let's make sure our setup is working. Make a call to the REST API to retrieve information about a country using its country code. Create a file named `main.go`:
 
 ```go
 package main
@@ -135,9 +135,9 @@ You should see `Country: Norway, Capital: Oslo` in your terminal.
 
 ## 4. Add the GraphQL endpoint
 
-The point of this tutorial is to mimic a real-world scenario where, based on a boolean feature flag, you would migrate from a REST API to a GraphQL one. So far, we've just used REST. Now, let's add the GraphQL version. The GraphQL endpoint is `https://countries.trevorblades.com/` (Thanks Trevor!).
+The point of this tutorial is to mimic a real-world scenario where, based on a boolean feature flag, you would migrate from a REST API to a GraphQL one. So far, we've just used REST. Now, let's add the GraphQL version. The GraphQL endpoint is `https://countries.trevorblades.com/`.
 
-Let's create a static feature flag, for now, just to test that we can call both versions successfully. Update your `main.go`:
+Let's create a static feature flag, for now, just to test that we can call both versions successfully. Update `main.go`:
 
 ```go
 package main
@@ -215,11 +215,11 @@ You should see `Hello GraphQL`, followed by `Country: Norway, Capital: Oslo` in 
 
 ## 5. Add Unleash to your Go app
 
-Now, let's connect our project to Unleash so that you can toggle that feature flag at runtime. If you wanted to, you could also do a gradual rollout, use it for a/b testing, etc.
+Now, let's connect our project to Unleash so that you can toggle that feature flag at runtime. If you wanted to, you could also do a gradual rollout or use the flag for A/B testing.
 
 You'll need 2 things:
 
--   The URL of your Unleash instance's API. It's `http://localhost:4242/api/` for your local version. You'll want to replace it with your remote instance.
+-   The URL of your Unleash instance's API. It's `http://localhost:4242/api/` for your local version. 
 -   The API token we created on our Unleash instance, feel free to create another one if you can't find it.
 
 With these 2, you can initialize your Unleash client as follows:
@@ -232,7 +232,6 @@ unleash.Initialize(
 )
 ```
 
-You can check our [API token and client keys documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more specifics.
 
 Now, let's add our client to our project, grab the feature flag from Unleash, and update our conditional statement. Don't forget to also update the config with your API key:
 

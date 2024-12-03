@@ -18,7 +18,7 @@ export class ClientFeatureToggleService {
 
     private segmentReadModel: ISegmentReadModel;
 
-    private clientFeatureToggleCache: ClientFeatureToggleCache;
+    private clientFeatureToggleCache: ClientFeatureToggleCache | null = null;
 
     constructor(
         {
@@ -30,7 +30,7 @@ export class ClientFeatureToggleService {
     ) {
         this.logger = getLogger('services/client-feature-toggle-service.ts');
         this.segmentReadModel = segmentReadModel;
-        this.clientFeatureToggleCache = this.clientFeatureToggleCache;
+        this.clientFeatureToggleCache = clientFeatureToggleCache;
         this.clientFeatureToggleStore = clientFeatureToggleStore;
     }
 

@@ -307,7 +307,7 @@ export default class FeatureController extends Controller {
         const meta = await this.calculateMeta(query);
 
         const currentSdkRevisionId = etag ? Number.parseInt(etag) : undefined;
-        const projects = query.project;
+        const projects = query.project ? query.project : ['*'];
         const environment = query.environment ? query.environment : 'default';
 
         const changedFeatures =
@@ -317,14 +317,14 @@ export default class FeatureController extends Controller {
                 environment,
             );
 
-        if (changedFeatures.maxRevision === currentSdkRevisionId) {
+        if (changedFeatures.revisionId === currentSdkRevisionId) {
             res.status(304);
             res.getHeaderNames().forEach((header) => res.removeHeader(header));
             res.end();
             return;
         }
 
-        res.setHeader('ETag', changedFeatures.maxRevision);
+        res.setHeader('ETag', changedFeatures.revisionId.toString());
         res.send(changedFeatures);
     }
 

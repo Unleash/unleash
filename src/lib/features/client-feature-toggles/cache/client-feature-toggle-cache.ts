@@ -16,7 +16,7 @@ type DeletedFeature = {
 export type ClientFeatureChange = {
     updated: CachedClientFeature[];
     removed: DeletedFeature[];
-    maxRevision: number;
+    revisionId: number;
 };
 
 interface CachedClientFeature extends ClientFeatureSchema {
@@ -27,10 +27,67 @@ type Revision = {
     revisionId: number;
     updated: any[];
     removed: DeletedFeature[];
-    type: string;
 };
 
 type RevisionCache = Record<string, Revision[]>;
+
+export const compressRevisionList = (
+    revisions: Revision[],
+): ClientFeatureChange => {
+    const compressedRevisions = revisions.reduce(compressRevisions);
+    return {
+        updated: compressedRevisions.updated,
+        removed: compressedRevisions.removed,
+        revisionId: compressedRevisions.revisionId,
+    };
+};
+
+export const compressRevisions = (
+    first: Revision,
+    last: Revision,
+): Revision => {
+    const updatedMap = new Map(
+        [...first.updated, ...last.updated].map((feature) => [
+            feature.name,
+            feature,
+        ]),
+    );
+    const removedMap = new Map(
+        [...first.removed, ...last.removed].map((feature) => [
+            feature.name,
+            feature,
+        ]),
+    );
+
+    for (const name of last.removed.map((f) => f.name)) {
+        updatedMap.delete(name);
+    }
+
+    for (const name of last.updated.map((f) => f.name)) {
+        removedMap.delete(name);
+    }
+
+    return {
+        revisionId: last.revisionId,
+        updated: Array.from(updatedMap.values()),
+        removed: Array.from(removedMap.values()),
+    };
+};
+
+export const filterRevisionByProject = (
+    revision: Revision,
+    projects: string[],
+): Revision => {
+    const updated = revision.updated.filter(
+        (feature) =>
+            projects.includes('*') || projects.includes(feature.project),
+    );
+    const removed = revision.removed.filter(
+        (feature) =>
+            projects.includes('*') || projects.includes(feature.project),
+    );
+    return { ...revision, updated, removed };
+};
 
 export class ClientFeatureToggleCache {
     private readonly configurationRevisionService: EventEmitter;
@@ -71,47 +128,18 @@ export class ClientFeatureToggleCache {
     }
 
     async getDelta(
-        revisionId: number | undefined,
+        sdkRevisionId: number | undefined,
         environment: string,
-        projects: string[] | undefined,
+        projects: string[],
     ): Promise<ClientFeatureChange> {
-        const change: ClientFeatureChange = {
-            updated: [],
-            removed: [],
-            maxRevision: this.currentRevisionId,
-        };
+        const requiredRevisionId = sdkRevisionId || 0;
+        const revisions = this.cache[environment];
+        const revisionList = revisions
+            .filter((revision) => revision.revisionId > requiredRevisionId)
+            .map((revision) => filterRevisionByProject(revision, projects));
+        const compressedRevision = compressRevisionList(revisionList);
 
-        if (revisionId === undefined) {
-            throw new Error(
-                'This should return all client features but this makes it compile right now',
-            );
-        }
-
-        const environmentRevisions = this.cache[environment];
-        for (let i = this.currentRevisionId; i > revisionId; i--) {
-            // TODO: doesn't correctly handle cases where a revision undoes a previous revision's work
-            // Also includes the project which should be stripped before sending
-            const revision = environmentRevisions[i];
-            const relevantAdditions = revision.updated.filter((feature) => {
-                if (projects) {
-                    return projects.includes(feature.project);
-                } else {
-                    return feature.project === 'default';
-                }
-            });
-
-            const relevantRemovals = revision.removed.filter((feature) => {
-                if (projects) {
-                    return projects.includes(feature.project);
-                } else {
-                    return feature.project === 'default';
-                }
-            });
-
-            change.removed.push(...relevantRemovals);
-            change.updated.push(...relevantAdditions);
-        }
-        return Promise.resolve(change);
+        return Promise.resolve(compressedRevision);
     }
 
     private async onUpdateRevisionEvent() {
@@ -155,7 +183,6 @@ export class ClientFeatureToggleCache {
         const cache = {
             default: [
                 {
-                    type: 'update',
                     revisionId: this.currentRevisionId,
                     updated: [defaultCache],
                     removed: [],
@@ -163,7 +190,6 @@ export class ClientFeatureToggleCache {
             ],
             development: [
                 {
-                    type: 'update',
                     revisionId: this.currentRevisionId,
                     updated: [developmentCache],
                     removed: [],
@@ -171,7 +197,6 @@ export class ClientFeatureToggleCache {
             ],
             production: [
                 {
-                    type: 'update',
                     revisionId: this.currentRevisionId,
                     updated: [productionCache],
                     removed: [],

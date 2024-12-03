@@ -43,7 +43,7 @@ export class ClientFeatureToggleService {
 
     async getClientDelta(
         revisionId: number | undefined,
-        projects: string[] | undefined,
+        projects: string[],
         environment: string,
     ): Promise<ClientFeatureChange> {
         if (this.clientFeatureToggleCache !== null) {

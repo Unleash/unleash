@@ -33,6 +33,7 @@ import {
 } from '../../openapi/spec/client-features-schema';
 import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
 import type { ClientFeatureToggleService } from './client-feature-toggle-service';
+import type { ClientFeatureChange } from './cache/client-feature-toggle-cache';
 
 const version = 2;
 
@@ -299,7 +300,7 @@ export default class FeatureController extends Controller {
 
     async getDelta(
         req: IAuthRequest,
-        res: Response<ClientFeaturesSchema>,
+        res: Response<ClientFeatureChange>,
     ): Promise<void> {
         const query = await this.resolveQuery(req);
         const etag = req.headers['if-none-match'];
@@ -324,12 +325,7 @@ export default class FeatureController extends Controller {
         }
 
         res.setHeader('ETag', changedFeatures.maxRevision);
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            clientFeaturesSchema.$id,
-            { version, changedFeatures, query, meta },
-        );
+        res.send(changedFeatures);
     }
 
     async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {

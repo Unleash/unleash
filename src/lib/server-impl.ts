@@ -47,6 +47,7 @@ async function createApp(
     const stores = createStores(config, db);
     await compareAndLogPostgresVersion(config, stores.settingStore);
     const services = createServices(stores, config, db);
+
     if (!config.disableScheduler) {
         await scheduleServices(services, config);
     }

@@ -132,6 +132,25 @@ export default class FeatureController extends Controller {
             ],
         });
 
+        this.route({
+            method: 'get',
+            path: 'delta',
+            handler: this.getDelta,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    summary: 'Get partial updates (SDK)',
+                    description:
+                        'Initially returns the full set of feature flags available to the provided API key. When called again with the returned etag, only returns the flags that have changed',
+                    operationId: 'getAllClientFeatures',
+                    tags: ['Client'],
+                    responses: {
+                        200: createResponseSchema('clientFeaturesSchema'),
+                    },
+                }),
+            ],
+        });
+
         if (clientFeatureCaching.enabled) {
             this.featuresAndSegments = memoizee(
                 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -276,6 +295,41 @@ export default class FeatureController extends Controller {
                 { version, features, query, meta },
             );
         }
+    }
+
+    async getDelta(
+        req: IAuthRequest,
+        res: Response<ClientFeaturesSchema>,
+    ): Promise<void> {
+        const query = await this.resolveQuery(req);
+        const etag = req.headers['if-none-match'];
+        const meta = await this.calculateMeta(query);
+
+        const currentSdkRevisionId = etag ? Number.parseInt(etag) : undefined;
+        const projects = query.project;
+        const environment = query.environment ? query.environment : 'default';
+
+        const changedFeatures =
+            await this.clientFeatureToggleService.getClientDelta(
+                currentSdkRevisionId,
+                projects,
+                environment,
+            );
+
+        if (changedFeatures.maxRevision === currentSdkRevisionId) {
+            res.status(304);
+            res.getHeaderNames().forEach((header) => res.removeHeader(header));
+            res.end();
+            return;
+        }
+
+        res.setHeader('ETag', changedFeatures.maxRevision);
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            clientFeaturesSchema.$id,
+            { version, changedFeatures, query, meta },
+        );
     }
 
     async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {

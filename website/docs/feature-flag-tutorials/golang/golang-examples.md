@@ -3,7 +3,7 @@ title: Go Feature Flag Examples
 slug: /feature-flag-tutorials/golang/examples
 ---
 
-In our [Go feature flag tutorial](/feature-flag-tutorials/golang), we implemented a simple feature flag that could be turned on and off. This document will walk you through some common examples of using feature flags in Go.
+In our [Go feature flag tutorial](/feature-flag-tutorials/go), we implemented a simple feature flag that could be turned on and off. This document will walk you through other examples of what can be achieved using feature flags in Go.
 
 We built many features into Unleash, our open-source feature flag platform, to address the complexities of releasing code. This tutorial will explore the following:
 

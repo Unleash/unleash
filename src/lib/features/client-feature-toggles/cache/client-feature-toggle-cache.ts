@@ -7,14 +7,16 @@ import type {
     FeatureDependencyAddedEvent,
     IEventStore,
     IFeatureToggleClient,
+    IFeatureToggleClientStore,
+    IFeatureToggleQuery,
     IUnleashConfig,
 } from '../../../types';
 import { mapFeatureForClient } from '../../playground/offline-unleash-client';
 import { ALL_ENVS } from '../../../util/constants';
 import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
 import * as jsonpatch from 'fast-json-patch';
-import type { ClientFeatureToggleService } from '../client-feature-toggle-service';
 import type { ClientFeaturesSchema } from '../../../openapi';
+import type { FeatureConfigurationClient } from '../../feature-toggle/types/feature-toggle-strategies-store-type';
 
 type Config = Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>;
 
@@ -60,7 +62,7 @@ export const applyPatch = (original: any, patch: jsonpatch.Operation[]) => {
 export class ClientFeatureToggleCache {
     private readonly configurationRevisionService: EventEmitter;
 
-    private clientFeatureToggleService: ClientFeatureToggleService;
+    private clientFeatureToggleStore: IFeatureToggleClientStore;
 
     private featuresByEnvironment: RevisionCache = {};
 
@@ -69,13 +71,13 @@ export class ClientFeatureToggleCache {
     private eventStore: IEventStore;
 
     constructor(
-        clientFeatureToggleService: ClientFeatureToggleService,
+        clientFeatureToggleStore: IFeatureToggleClientStore,
         eventStore: IEventStore,
         configurationRevisionService: EventEmitter,
     ) {
         this.eventStore = eventStore;
         this.configurationRevisionService = configurationRevisionService;
-        this.clientFeatureToggleService = clientFeatureToggleService;
+        this.clientFeatureToggleStore = clientFeatureToggleStore;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
 
         this.populateBaseCaches();
@@ -133,8 +135,7 @@ export class ClientFeatureToggleCache {
 
     public async populateBaseCaches() {
         //TODO: This only returns stuff for the default environment!!! Need to pass a query to get the relevant environment
-        const baseCache =
-            await this.clientFeatureToggleService.getClientFeatures();
+        const baseCache = await this.getClientFeatures();
         this.featuresByEnvironment.Default = {
             revisions: [],
             baseCase: {
@@ -166,5 +167,39 @@ export class ClientFeatureToggleCache {
         ]);
 
         return Object.fromEntries(entries);
+    }
+
+    async getClientFeatures(
+        query?: IFeatureToggleQuery,
+    ): Promise<FeatureConfigurationClient[]> {
+        const result = await this.clientFeatureToggleStore.getClient(
+            query || {},
+        );
+
+        return result.map(
+            ({
+                name,
+                type,
+                enabled,
+                project,
+                stale,
+                strategies,
+                variants,
+                description,
+                impressionData,
+                dependencies,
+            }) => ({
+                name,
+                type,
+                enabled,
+                project,
+                stale,
+                strategies,
+                variants,
+                description,
+                impressionData,
+                dependencies,
+            }),
+        );
     }
 }

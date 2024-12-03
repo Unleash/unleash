@@ -9,6 +9,7 @@ import type {
 import type { Logger } from '../../logger';
 
 import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
+import type { ClientFeatureToggleCache } from './cache/client-feature-toggle-cache';
 
 export class ClientFeatureToggleService {
     private logger: Logger;
@@ -17,18 +18,20 @@ export class ClientFeatureToggleService {
 
     private segmentReadModel: ISegmentReadModel;
 
+    private clientFeatureToggleCache: ClientFeatureToggleCache;
+
     constructor(
         {
             clientFeatureToggleStore,
         }: Pick<IUnleashStores, 'clientFeatureToggleStore'>,
         segmentReadModel: ISegmentReadModel,
+        clientFeatureToggleCache: ClientFeatureToggleCache | null,
         { getLogger }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     ) {
         this.logger = getLogger('services/client-feature-toggle-service.ts');
         this.segmentReadModel = segmentReadModel;
+        this.clientFeatureToggleCache = this.clientFeatureToggleCache;
         this.clientFeatureToggleStore = clientFeatureToggleStore;
-
-        // new ClientFeatureToggleCache()
     }
 
     async getActiveSegmentsForClient() {
@@ -38,6 +41,10 @@ export class ClientFeatureToggleService {
     async getClientFeatures(
         query?: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
+        if (this.clientFeatureToggleCache) {
+            // return flags
+            // await this.clientFeatureToggleCache.getToggles()
+        }
         const result = await this.clientFeatureToggleStore.getClient(
             query || {},
         );

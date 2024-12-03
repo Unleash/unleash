@@ -5,6 +5,7 @@ import FakeClientFeatureToggleStore from './fakes/fake-client-feature-toggle-sto
 import { ClientFeatureToggleService } from './client-feature-toggle-service';
 import { SegmentReadModel } from '../segment/segment-read-model';
 import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
+import { createClientFeatureToggleCache } from './cache/createClientFeatureToggleCache';
 
 export const createClientFeatureToggleService = (
     db: Db,
@@ -21,11 +22,14 @@ export const createClientFeatureToggleService = (
 
     const segmentReadModel = new SegmentReadModel(db);
 
+    const clientFeatureToggleCache = createClientFeatureToggleCache(db, config);
+
     const clientFeatureToggleService = new ClientFeatureToggleService(
         {
             clientFeatureToggleStore: featureToggleClientStore,
         },
         segmentReadModel,
+        clientFeatureToggleCache,
         { getLogger, flagResolver },
     );
 
@@ -46,6 +50,7 @@ export const createFakeClientFeatureToggleService = (
             clientFeatureToggleStore: fakeClientFeatureToggleStore,
         },
         fakeSegmentReadModel,
+        null,
         { getLogger, flagResolver },
     );
 

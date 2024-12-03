@@ -1,11 +1,10 @@
-import FeatureToggleClientStore from '../client-feature-toggles/client-feature-toggle-store';
-import type { Db } from '../../db/db';
-import type { IUnleashConfig } from '../../types';
-import { SegmentReadModel } from '../segment/segment-read-model';
 import { ClientFeatureToggleCache } from './client-feature-toggle-cache';
-import { createFeatureToggleService } from '../../feature-toggle/createFeatureToggleService';
 import EventStore from '../../events/event-store';
 import ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
+import type { IUnleashConfig } from '../../../types';
+import type { Db } from '../../../db/db';
+
+import FeatureToggleClientStore from '../client-feature-toggle-store';
 
 export const createClientFeatureToggleCache = (
     db: Db,
@@ -13,6 +12,7 @@ export const createClientFeatureToggleCache = (
 ): ClientFeatureToggleCache => {
     const { getLogger, eventBus, flagResolver } = config;
 
+    const eventStore = new EventStore(db, getLogger);
     const featureToggleClientStore = new FeatureToggleClientStore(
         db,
         eventBus,
@@ -20,17 +20,13 @@ export const createClientFeatureToggleCache = (
         flagResolver,
     );
 
-    const segmentReadModel = new SegmentReadModel(db);
-
-    const eventStore = new EventStore(db, getLogger);
-    const featureToggleServiceV2 = createFeatureToggleService(db, config);
-
     const configurationRevisionService =
-        ConfigurationRevisionService.getInstance(stores, config);
+        ConfigurationRevisionService.getInstance({ eventStore }, config);
 
     const clientFeatureToggleCache = new ClientFeatureToggleCache(
-        featureToggleServiceV2,
+        featureToggleClientStore,
         eventStore,
+        configurationRevisionService,
     );
 
     return clientFeatureToggleCache;

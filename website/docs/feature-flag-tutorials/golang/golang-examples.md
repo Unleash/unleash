@@ -24,13 +24,13 @@ We built many features into Unleash, our open-source feature flag platform, to a
 
 It is common to use feature flags to roll out changes to a percentage of users, and we can use Unleash to do that too.
 
-Navigate to the gradual rollout page where you can edit your strategy.
+Open a feature flag and select an environment where the flag is enabled. Click **Edit strategy**.
 
-![The "edit strategy" button uses a pencil icon and is located on every strategy.](/img/react-ex-grad-rollout-edit.png)
+![The "edit strategy" button uses a pencil icon and is located on every strategy.](/img/go-example-strategy.png)
 
 Adjust the percentage of users to 50% or whichever value you choose, and refresh your app in the browser to see if your user has the new feature experience. This might take 30 seconds for a server-side app to propagate.
 
-![A gradual rollout form can allow you to customize your flag strategy.](/img/ex-grad-rollout-form.png)
+![A gradual rollout form can allow you to customize your flag strategy.](/img/go-example-rollout.png)
 
 You can achieve the same result using our API with the following code:
 

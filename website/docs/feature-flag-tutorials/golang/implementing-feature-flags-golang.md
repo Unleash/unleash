@@ -64,13 +64,13 @@ Username: admin
 Password: unleash4all
 ```
 
-Click the 'New feature flag' button to create a new feature flag.
+Click **New feature flag** to create a new feature flag.
 
-![Create a new feature flag](../ruby/new-ff.png)
+![Create a new feature flag](/img/go-new-feature-flag.png)
 
 Call it `graphql-api` and enable it in the `development` environment.
 
-![A feature flag called `graphql-api` is now visible.](../ruby/enable-ff.png)
+![A feature flag called `graphql-api` is now enabled in development.](/img/go-enable-development.png)
 
 Everything's now setup on the Unleash side. Let's go to the code now.
 
@@ -276,8 +276,6 @@ See additional use cases in our [Server-Side SDK with Go](https://docs.getunleas
 Now that we've connected our project to Unleash and grabbed our feature flag, we can verify that if you disable that flag in your development environment, you stop seeing the `Hello GraphQL` message and only get the country information from the REST API.
 
 > **Note:** An update to a feature flag may take 30 seconds to propagate.
-
-![A feature flag called `graphql-api` is now disabled](../ruby/graphql-ff.png)
 
 ## Conclusion
 

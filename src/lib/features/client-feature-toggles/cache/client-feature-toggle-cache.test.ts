@@ -1,4 +1,4 @@
-import { compressRevisionList } from './client-feature-toggle-cache';
+import { calculateRequiredClientRevision } from './client-feature-toggle-cache';
 
 const mockAdd = (params): any => {
     const base = {
@@ -30,7 +30,11 @@ test('compresses multiple revisions to a single update', () => {
         },
     ];
 
-    expect(compressRevisionList(revisionList)).toEqual({
+    const revisions = calculateRequiredClientRevision(revisionList, 0, [
+        'default',
+    ]);
+
+    expect(revisions).toEqual({
         revisionId: 2,
         updated: [mockAdd({ type: 'test' })],
         removed: [],
@@ -61,7 +65,11 @@ test('revision that adds, removes then adds again does not end up with the remov
         },
     ];
 
-    expect(compressRevisionList(revisionList)).toEqual({
+    const revisions = calculateRequiredClientRevision(revisionList, 0, [
+        'default',
+    ]);
+
+    expect(revisions).toEqual({
         revisionId: 3,
         updated: [mockAdd({ name: 'some-toggle' })],
         removed: [],
@@ -97,7 +105,11 @@ test('revision that removes, adds then removes again does not end up with the re
         },
     ];
 
-    expect(compressRevisionList(revisionList)).toEqual({
+    const revisions = calculateRequiredClientRevision(revisionList, 0, [
+        'default',
+    ]);
+
+    expect(revisions).toEqual({
         revisionId: 3,
         updated: [],
         removed: [

@@ -31,21 +31,7 @@ type Revision = {
 
 type RevisionCache = Record<string, Revision[]>;
 
-export const compressRevisionList = (
-    revisions: Revision[],
-): ClientFeatureChange => {
-    const compressedRevisions = revisions.reduce(compressRevisions);
-    return {
-        updated: compressedRevisions.updated,
-        removed: compressedRevisions.removed,
-        revisionId: compressedRevisions.revisionId,
-    };
-};
-
-export const compressRevisions = (
-    first: Revision,
-    last: Revision,
-): Revision => {
+const applyRevision = (first: Revision, last: Revision): Revision => {
     const updatedMap = new Map(
         [...first.updated, ...last.updated].map((feature) => [
             feature.name,
@@ -59,12 +45,12 @@ export const compressRevisions = (
         ]),
     );
 
-    for (const name of last.removed.map((f) => f.name)) {
-        updatedMap.delete(name);
+    for (const feature of last.removed) {
+        updatedMap.delete(feature.name);
     }
 
-    for (const name of last.updated.map((f) => f.name)) {
-        removedMap.delete(name);
+    for (const feature of last.updated) {
+        removedMap.delete(feature.name);
     }
 
     return {
@@ -74,7 +60,7 @@ export const compressRevisions = (
     };
 };
 
-export const filterRevisionByProject = (
+const filterRevisionByProject = (
     revision: Revision,
     projects: string[],
 ): Revision => {
@@ -87,6 +73,21 @@ export const filterRevisionByProject = (
             projects.includes('*') || projects.includes(feature.project),
     );
     return { ...revision, updated, removed };
+};
+
+export const calculateRequiredClientRevision = (
+    revisions: Revision[],
+    requiredRevisionId: number,
+    projects: string[],
+) => {
+    const targetedRevisions = revisions.filter(
+        (revision) => revision.revisionId > requiredRevisionId,
+    );
+    const projectFeatureRevisions = targetedRevisions.map((revision) =>
+        filterRevisionByProject(revision, projects),
+    );
+
+    return projectFeatureRevisions.reduce(applyRevision);
 };
 
 export class ClientFeatureToggleCache {
@@ -133,16 +134,13 @@ export class ClientFeatureToggleCache {
         projects: string[],
     ): Promise<ClientFeatureChange> {
         const requiredRevisionId = sdkRevisionId || 0;
-        const revisions = this.cache[environment];
+        const environmentRevisions = this.cache[environment];
 
-        const revisionList = revisions.filter(
-            (revision) => revision.revisionId > requiredRevisionId,
+        const compressedRevision = calculateRequiredClientRevision(
+            environmentRevisions,
+            requiredRevisionId,
+            projects,
         );
-        const filteredRevisionList = revisionList.map((revision) =>
-            filterRevisionByProject(revision, projects),
-        );
-
-        const compressedRevision = compressRevisionList(filteredRevisionList);
 
         return Promise.resolve(compressedRevision);
     }

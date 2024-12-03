@@ -57,7 +57,6 @@ process.nextTick(async () => {
                         showUserDeviceCount: true,
                         flagOverviewRedesign: false,
                         licensedUsers: true,
-                        streaming: true,
                     },
                 },
                 authentication: {

@@ -113,7 +113,7 @@ export default async function getApp(
         corsOriginMiddleware(services, config),
     );
     app.options(
-        `${baseUriPath}/api/client/streaming*`,
+        `${baseUriPath}/api/streaming/*`,
         corsOriginMiddleware(services, config),
     );
 

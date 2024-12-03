@@ -37,6 +37,7 @@ The most frequent approach to trunk-based development is merging every commit di
 
 Some challenges with merging every commit are:
 
+-   Reviewing the code can become more challenging
 -   Potential for more frequent build breaks and test failures
 -   Increased need for effective merging strategies
 -   Requirement for robust automated testing and CI/CD pipelines
@@ -57,9 +58,9 @@ Another common strategy is to merge changes into the trunk at regular, predefine
 -   Potential for larger, more complex merges
 -   Requires discipline to adhere to the defined merge cadence
 
-### Benefits of Short-Lived Feature Branches
+### Tradeoffs of Short-Lived Feature Branches
 
-In trunk-based development, it is possible to use short-lived feature branches, which enable teams to implement code review processes without the burden of maintaining long-running branches, which can become increasingly difficult to manage over time. The frequent integration back to trunk significantly reduces the likelihood and complexity of merge conflicts, as changes are merged before they can diverge too far from the main codebase. This approach maintains the core benefits of trunk-based development - such as rapid iteration and continuous integration - while still allowing developers to work in isolation when needed. This isolation can be particularly valuable for making experimental changes or implementing complex features that require validation before being merged into the trunk.
+In trunk-based development, it is possible to use short-lived feature branches, which enable teams to implement code review processes without the burden of maintaining long-running branches, which can become increasingly difficult to manage over time. The frequent integration back to trunk significantly reduces the likelihood and complexity of merge conflicts, as changes are merged before they can diverge too far from the main codebase. This approach maintains the core benefits of trunk-based development - such as rapid iteration and continuous integration - while still allowing developers to work in isolation when needed. However, a feature is often cleaved up into pieces that span many short-lived branches. A feature flag prevents an incomplete feature being exposed before it's done.
 
 **Challenges to Address**
 
@@ -87,7 +88,7 @@ The underlying application architecture can also influence the optimal trunk-bas
 
 Some of the most appropriate feature candidates for trunk-based development are features with significant potential impact on users that may require thorough testing.
 
-In TBD, developers merge incomplete code into the main branch. Unleash feature flags allow this to happen safely by keeping the feature hidden or disabled, ensuring the trunk remains in a releasable state. The flag starts as “off” in production while the feature is incomplete. The flag can be on in development and/or a testing environment until the feature is complete and ready to go live in production for all users.
+In trunk-based development, developers merge incomplete code into the main branch. Unleash feature flags allow this to happen safely by keeping the feature hidden or disabled, ensuring the trunk remains in a releasable state. The flag starts as “off” in production while the feature is incomplete. The flag can be on in development and/or a testing environment until the feature is complete and ready to go live in production for all users.
 
 We’ll create a flag that will wrap around an incomplete feature in your application code. After that, we’ll explore rollout strategies and how they are configured in Unleash to enable trunk-based development.
 
@@ -107,13 +108,94 @@ Once your flag is created, you can build a feature in your application code whil
 
 When implementing trunk-based development with Unleash, it's crucial to have a well-structured process for managing your feature flags and the associated code. This ensures the trunk remains in a deployable state while allowing teams to work independently on different features.
 
+Here is an example of wrapping code in a feature flag using JavaScript and our SDK:
+
+```javascript
+// Import the Unleash client
+import { initialize, isEnabled } from 'unleash-client';
+
+// Initialize the Unleash client with your configuration
+initialize({
+  appName: 'my-web-application',
+  url: 'https://your-unleash-instance.com/client/features',
+  instanceId: 'unique-client-identifier'
+});
+
+// Example of a feature flag-wrapped checkout process
+function processCheckout(cart) {
+  // Check if the new checkout flow is enabled
+  if (isEnabled('new-checkout-flow')) {
+    // New checkout implementation
+    return advancedCheckoutProcess(cart);
+  } else {
+    // Original checkout implementation
+    return standardCheckoutProcess(cart);
+  }
+}
+
+// Advanced checkout process (new feature)
+function advancedCheckoutProcess(cart) {
+  // Implement the new, more sophisticated checkout flow
+  console.log('Using advanced checkout process');
+
+  // Add new features like:
+  // - Enhanced payment options
+  // - Detailed order preview
+  // - Advanced shipping calculations
+  return {
+    status: 'success',
+    orderDetails: /* new implementation */
+  };
+}
+
+// Standard checkout process (existing implementation)
+function standardCheckoutProcess(cart) {
+  // Existing checkout logic
+  console.log('Using standard checkout process');
+  return {
+    status: 'success',
+    orderDetails: /* existing implementation */
+  };
+}
+
+// Example usage
+function handleCheckout(cart) {
+  try {
+    const checkoutResult = processCheckout(cart);
+    return checkoutResult;
+  } catch (error) {
+    // Fallback mechanism
+    console.error('Checkout failed', error);
+    return standardCheckoutProcess(cart);
+  }
+}
+```
+
+### Key Aspects of this Feature Flag Implementation
+
+1. Conditional Feature Activation: The isEnabled('new-checkout-flow') check allows the team to control feature visibility without changing the code deployment.
+2. Easy Rollback: If issues are detected, simply turning off the flag in Unleash immediately reverts to the standard checkout process.
+3. Trunk-Based Development Support:
+    - Developers can merge the new checkout code into the main branch
+    - The feature remains hidden behind the flag
+    - Team can test the new implementation in different environments
+    - Gradual rollout is possible by adjusting flag configurations
+4. Fallback Mechanism: The code includes a fallback to the standard process, ensuring system reliability even if the new feature encounters issues.
+
+This approach embodies the core principles of trunk-based development and feature flag usage:
+
+-   Keeping the trunk always deployable
+-   Controlled feature rollout
+-   Minimal risk during new feature introduction
+-   Test new features in production
+-   Quickly disable problematic features
+
 #### Establish Consistent Naming Conventions
 
-Develop a clear and consistent naming convention for your feature flags. This will help maintain clarity and make it easier to understand the purpose and context of each flag. Some recommended elements to include in your flag names:
+Develop clear and [consistent naming patterns](/reference/feature-toggles#set-a-naming-pattern) for your feature flags. This will help maintain clarity and make it easier to understand the purpose and context of each flag. Some recommended elements to include in your flag names:
 
 -   The feature or functionality the flag is associated with
 -   The environment or user segment the flag is intended for (e.g., "prod", "beta", "mobile\*users")
--   A version or iteration number, if applicable
 -   A short, descriptive prefix (e.g., "ff\*", "feat\_"). For example: `ff_checkout_flow_v2_prod` or `feat_new_dashboard_beta`.
 
 #### Keep the Trunk Deployable
@@ -129,13 +211,14 @@ Depending on the size and scope of a feature you’re developing, you may need m
 
 #### Leverage Tagging and Metadata
 
-In addition to meaningful names, apply relevant tags and metadata to your feature flags in Unleash. This metadata can include information such as:
+In addition to meaningful names, apply relevant [tags](/reference/tags) and metadata to your feature flags in Unleash. This metadata can include information such as:
 
 -   The team or product area responsible for the flag
 -   The release timeline or planned retirement date
 -   Associated Jira tickets or GitHub issues
 -   Relevant documentation or context
--   [Tagging](/reference/tags) and metadata make it easier to search, filter, and manage your feature flags, especially as the number of flags grows.
+
+Tagging and metadata make it easier to search, filter, and manage your feature flags, especially as the number of flags grows.
 
 Click **Create new tag** in the Unleash Admin UI to add these details to your feature flag.
 

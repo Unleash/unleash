@@ -1,5 +1,5 @@
 ---
-title: Go Feature Flag Examples
+title: Go feature flag examples
 slug: /feature-flag-tutorials/golang/examples
 ---
 
@@ -7,32 +7,11 @@ In our [Go feature flag tutorial](/feature-flag-tutorials/go), we implemented a 
 
 We built many features into Unleash, our open-source feature flag platform, to address the complexities of releasing code. This tutorial will explore the following:
 
-- [Gradual Rollouts for Go Apps](#gradual-rollouts-for-go-apps)
-- [Canary Deployments in Go](#canary-deployments-in-go)
-  - [What is a canary deployment?](#what-is-a-canary-deployment)
-  - [Why use canary deployments?](#why-use-canary-deployments)
-  - [How to do canary deployments with a feature flag in Go?](#how-to-do-canary-deployments-with-a-feature-flag-in-go)
-  - [Configure strategy constraints for canary deployments](#configure-strategy-constraints-for-canary-deployments)
-- [Server-side A/B Testing in Go](#server-side-ab-testing-in-go)
-- [Feature Flag Analytics and Reporting in Go](#feature-flag-analytics-and-reporting-in-go)
-  - [Enable impression data events in Go](#enable-impression-data-events-in-go)
-- [Application Metrics and Monitoring for Go apps](#application-metrics-and-monitoring-for-go-apps)
-- [Feature Flag Audit Logs in Go](#feature-flag-audit-logs-in-go)
-- [Flag Automation and Workflow Integration for Go Apps](#flag-automation-and-workflow-integration-for-go-apps)
-
 ## Gradual Rollouts for Go Apps
 
 It is common to use feature flags to roll out changes to a percentage of users, and we can use Unleash to do that too.
 
-Open a feature flag and select an environment where the flag is enabled. Click **Edit strategy**.
-
-![The "edit strategy" button uses a pencil icon and is located on every strategy.](/img/go-example-strategy.png)
-
-Adjust the percentage of users to 50% or whichever value you choose, and refresh your app in the browser to see if your user has the new feature experience. This might take 30 seconds for a server-side app to propagate.
-
-![A gradual rollout form can allow you to customize your flag strategy.](/img/go-example-rollout.png)
-
-You can achieve the same result using our API with the following code:
+Here's how you do it using our API:
 
 ```go
 payload := map[string]interface{}{
@@ -88,7 +67,7 @@ Often, canary deployments are managed at the load balancer level while feature f
 
 ### Configure strategy constraints for canary deployments
 
-Let's update our existing gradual rollout strategy using Go to add environment-based constraints:
+Let's update our existing gradual rollout strategy using Go to add [environment-based constraints](/reference/strategy-constraints):
 
 ```go
 payload := map[string]interface{}{

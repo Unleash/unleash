@@ -10,15 +10,6 @@ Hello! In this tutorial we'll show you how to add feature flags to your Go app, 
 
 In this tutorial, we'll get information about a country from the [REST Countries API](https://restcountries.com/), using Go. We'll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
-- [Prerequisites](#prerequisites)
-- [1. Best practices for back-end apps with Unleash](#1-best-practices-for-back-end-apps-with-unleash)
-- [2. Install a local feature flag provider](#2-install-a-local-feature-flag-provider)
-- [3. Grab country information from the REST Countries API](#3-grab-country-information-from-the-rest-countries-api)
-- [4. Add the GraphQL endpoint](#4-add-the-graphql-endpoint)
-- [5. Add Unleash to your Go app](#5-add-unleash-to-your-go-app)
-- [6. Verify the toggle experience](#6-verify-the-toggle-experience)
-- [Conclusion](#conclusion)
-
 ## Prerequisites
 
 For this tutorial, you'll need the following:
@@ -32,7 +23,7 @@ For this tutorial, you'll need the following:
 
 The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. You can perform the same actions straight from your CLI or server-side app using the [Unleash API](https://docs.getunleash.io/reference/api/unleash).
 
-## 1. Best practices for back-end apps with Unleash
+## Best practices for back-end apps with Unleash
 
 Go is a back-end language, so there are special considerations to plan around when implementing feature flags.
 
@@ -43,7 +34,7 @@ Most importantly, you must:
 
 For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
 
-## 2. Install a local feature flag provider
+## Install a local feature flag provider
 
 In this section, we'll install Unleash, run the instance locally, log in, and create a feature flag. If you prefer, you can use other tools instead of Unleash, but you'll need to update the code accordingly. 
 
@@ -74,11 +65,11 @@ Call it `graphql-api` and enable it in the `development` environment.
 
 Everything's now set up on the Unleash side. Let's go to the code now.
 
-## 3. Grab country information from the REST Countries API
+## Grab country information from the REST Countries API
 
 We'll use the standard `net/http` package to make our HTTP requests and the Unleash SDK to connect to your local Unleash instance and retrieve your feature flag.
 
-Open a new tab in your terminal, and create a new folder (NOT in the unleash folder).
+Open a new tab in your terminal, and create a new folder (outside of the unleash folder).
 
 ```sh
 mkdir unleash-go
@@ -133,7 +124,7 @@ go run main.go
 
 You should see `Country: Norway, Capital: Oslo` in your terminal.
 
-## 4. Add the GraphQL endpoint
+## Add the GraphQL endpoint
 
 The point of this tutorial is to mimic a real-world scenario where, based on a boolean feature flag, you would migrate from a REST API to a GraphQL one. So far, we've just used REST. Now, let's add the GraphQL version. The GraphQL endpoint is `https://countries.trevorblades.com/`.
 
@@ -283,5 +274,7 @@ All done! Now you know how to add feature flags with Unleash in Go. You've learn
 -   Toggle between a REST and a GraphQL endpoint based on a feature flag
 -   Install Unleash and create/enable a feature flag
 -   Grab the value of a feature flag with the Go SDK
+
+Feel free to have a look at our [Go Examples page](/feature-flag-tutorials/golang/examples) for more.
 
 Thank you

@@ -32,6 +32,9 @@ Most importantly, you must:
 -   Limit feature flag payloads for scalability, security, and efficiency.
 -   Use graceful degradation where possible to improve the resiliency of your architecture.
 
+![A gradual rollout form can allow you to customize your flag strategy.](/img/go-example-rollout.png)
+
+
 For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
 
 ## Install a local feature flag provider

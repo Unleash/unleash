@@ -124,7 +124,7 @@ export class ClientFeatureToggleCache {
         this.currentRevisionId = await this.eventStore.getMaxRevisionId();
         this.initCache();
 
-        // this.interval = setInterval(() => this.pollEvents(), 1000);
+        this.interval = setInterval(() => this.pollEvents(), 1000);
     }
 
     async getDelta(
@@ -134,15 +134,13 @@ export class ClientFeatureToggleCache {
     ): Promise<ClientFeatureChange> {
         const requiredRevisionId = sdkRevisionId || 0;
         const revisions = this.cache[environment];
-        console.log('Got the following revisions: ', revisions);
+
         const revisionList = revisions.filter(
             (revision) => revision.revisionId > requiredRevisionId,
         );
-        console.log('Filtered revisions by id: ', revisionList);
         const filteredRevisionList = revisionList.map((revision) =>
             filterRevisionByProject(revision, projects),
         );
-        console.log('Filtered revisions by project: ', filteredRevisionList);
 
         const compressedRevision = compressRevisionList(filteredRevisionList);
 

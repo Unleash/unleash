@@ -121,6 +121,11 @@ const sidebars: SidebarsConfig = {
                                     label: 'Feature Flags for AI',
                                     id: 'feature-flag-tutorials/use-cases/ai',
                                 },
+                                {
+                                    type: 'doc',
+                                    label: 'Trunk-Based Development',
+                                    id: 'feature-flag-tutorials/use-cases/trunk-based-development',
+                                },
                             ],
                         },
                         {

@@ -98,7 +98,7 @@ In the Unleash Admin UI, open a project and click **New feature flag**.
 
 ![Create a new feature flag in the Unleash Admin UI.](/img/use-case-new-flag.png)
 
-Next, name the new feature flag. The purpose of this flag is to manage the deployment of a new or incomplete feature. Therefore, the flag we are creating is considered a Release flag type. While release flags are invaluable, they should be short-lived to prevent codebase complexity and technical debt accumulation.
+Next, name the new feature flag. The purpose of this flag is to manage the deployment of a new or incomplete feature. Therefore, the flag we are creating is considered a Release flag type. While release flags are invaluable, they should be short-lived to prevent codebase complexity and technical debt accumulation. Later in the tutorial, we will cover when to remove and archive these flags.
 
 ![Create a feature flag by filling out the form fields.](/img/use-case-create-tbd-flag.png)
 
@@ -200,20 +200,24 @@ Develop clear and [consistent naming patterns](/reference/feature-toggles#set-a-
 -   The environment or user segment the flag is intended for (e.g., "mobile_users")
 -   A short, descriptive prefix (for example, "ff\*", "feat\_"). For example: `feat_new_dashboard_beta`.
 
-### Leverage tagging and metadata
+### Leverage tagging and flag descriptions
 
-In addition to meaningful names, apply relevant [tags](/reference/tags) and metadata to your feature flags in Unleash. This metadata can include information such as:
+In addition to meaningful names, apply relevant [tags](/reference/tags) and descriptions to your feature flags in Unleash. This metadata can include information such as:
 
 -   The team or product area responsible for the flag
 -   The release timeline or planned retirement date
 -   Associated Jira tickets or GitHub issues
 -   Relevant documentation or context
 
-Tagging and metadata make it easier to search, filter, and manage your feature flags, especially as the number of flags grows.
+Tagging and descriptive flags make it easier to search, filter, and manage your feature flags, especially as the number of flags grows.
 
 Click **Create new tag** in the Unleash Admin UI to add these details to your feature flag.
 
 ![Create a tag with relevant data to better organize your feature flags. A modal will pop up to name and save as many tags as you need.](/img/use-case-tbd-tagging.png)
+
+To add descriptions to your flag, go to your flag settings and edit the description field with relevant, useful information.
+
+![In your flag settings form, there is an optional description field for adding more details about the flag you're creating.](/img/use-case-tbd-edit-flag.png)
 
 ### Keep the trunk deployable
 
@@ -254,7 +258,7 @@ To target users accordingly, let's create an [activation strategy](/reference/ac
 
 Next, let's create a new activation strategy and configure the rollout percentage so only a certain portion of your users are targeted. For example, you can adjust the dial so that 35% of all users are targeted. The remaining percentage of users will not experience any variation of the new feature. Adjust the rollout dial to set the percentage of users the feature targets, or keep it at 100% to target all users.
 
-To define more granular conditions for your feature beyond the rollout percentage, you can use [strategy variants](/reference/strategy-variants) and [constraints](/reference/constraints).
+To define more granular conditions for your feature beyond the rollout percentage, you can use [strategy variants](/reference/strategy-variants) and [constraints](/reference/strategy-constraints).
 
 ## Simplify rollbacks
 

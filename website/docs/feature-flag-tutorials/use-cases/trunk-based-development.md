@@ -5,7 +5,7 @@ slug: /feature-flag-tutorials/use-cases/trunk-based-development
 
 Developers are increasingly adopting trunk-based development to accelerate software delivery and improve efficiency and reliability. A key principle of trunk-based development is merging code into the main branch (aka "trunk") as quickly as possible. This practice reduces the complexity of long-lived feature branches, minimizes merge conflicts, and ensures that teams can continuously integrate and test their code. However, it also means unfinished or experimental features may exist in production. This is where feature flags become essential.
 
-Unleash provides a powerful mechanism for safely managing and controlling these features in production, enabling enterprises to deliver software faster and with greater reliability. Effective feature flag management ensures that trunk-based development supports continuous delivery without compromising stability. In this tutorial, we’ll leverage Unleash to manage trunk-based development in your codebase.
+Unleash provides a powerful mechanism for safely managing and controlling these features in production, enabling enterprises to deliver software faster and with greater reliability. Effective feature flag management ensures that trunk-based development supports continuous delivery without compromising stability. In this tutorial, we’ll use Unleash to manage trunk-based development in your codebase.
 
 ## How to Implement Trunk-Based Development with Feature Flags
 
@@ -15,7 +15,7 @@ With Unleash set up, you can use your application to talk to Unleash through one
 
 In this tutorial, you will:
 
-1. [Explore many trunk-based development strategies](#choose-the-right-trunk-based-development-strategy-for-your-team)
+1. [Explore different trunk-based development strategies](#choose-the-right-trunk-based-development-strategy-for-your-team)
 2. [Create feature flags for incomplete features](#create-feature-flags-for-incomplete-features)
 3. [Control feature rollouts](#control-feature-rollouts)
 4. [Simplify rollbacks with Unleash](#simplify-rollbacks)
@@ -33,7 +33,7 @@ The most frequent approach to trunk-based development is merging every commit di
 
 -   Rapid feedback loops and quicker issue resolution
 -   Reduced risk of large, complex merges
--   Encourages small, frequent commits
+-  Small, frequent commits
 
 Some challenges with merging every commit are:
 
@@ -49,7 +49,7 @@ Another common strategy is to merge changes into the trunk at regular, predefine
 **Advantages**:
 
 -   Improved control over the integration process
--   Reduced risk of breaking the build with frequent merges
+-   Reduced risk of breaking the build
 -   Easier to manage and identify integration issues
 
 **Challenges**:
@@ -75,7 +75,7 @@ The underlying application architecture can also influence the optimal trunk-bas
 **Monolithic Applications**:
 
 -   Larger, more tightly coupled codebase
--   Merging at set intervals (e.g., daily) may be more suitable to manage integration complexity
+-   Merging at set intervals (for example, daily) may be more suitable to manage integration complexity
 -   Increased emphasis on rigorous testing and staged deployments
 
 **Microservices**:
@@ -86,11 +86,11 @@ The underlying application architecture can also influence the optimal trunk-bas
 
 ## Create Feature Flags for Incomplete Features
 
-Some of the most appropriate feature candidates for trunk-based development are features with significant potential impact on users that may require thorough testing.
+Some of the most appropriate feature candidates for trunk-based development are features with significant user impact that require thorough testing.
 
 In trunk-based development, developers merge incomplete code into the main branch. Unleash feature flags allow this to happen safely by keeping the feature hidden or disabled, ensuring the trunk remains in a releasable state. The flag starts as “off” in production while the feature is incomplete. The flag can be on in development and/or a testing environment until the feature is complete and ready to go live in production for all users.
 
-We’ll create a flag that will wrap around an incomplete feature in your application code. After that, we’ll explore rollout strategies and how they are configured in Unleash to enable trunk-based development.
+To demonstrate this, let's create a flag that wraps around an incomplete feature in our application code. After that, we’ll explore rollout strategies and how they are configured in Unleash to enable trunk-based development.
 
 In the Unleash Admin UI, open a project and click **New feature flag**.
 
@@ -196,14 +196,14 @@ Develop clear and [consistent naming patterns](/reference/feature-toggles#set-a-
 
 -   The feature or functionality the flag is associated with
 -   The environment or user segment the flag is intended for (e.g., "prod", "beta", "mobile\*users")
--   A short, descriptive prefix (e.g., "ff\*", "feat\_"). For example: `ff_checkout_flow_v2_prod` or `feat_new_dashboard_beta`.
+-   A short, descriptive prefix (for example, "ff\*", "feat\_"). For example: `ff_checkout_flow_v2_prod` or `feat_new_dashboard_beta`.
 
 #### Keep the Trunk Deployable
 
 The trunk should always be deployable, enabling teams to accelerate release cycles and respond quickly to market demands.
-To keep the trunk in a deployable state, keep the flag off in your production environment. The code for your feature should be wrapped in your flag and, therefore, not executable in production, even though the code will be deployed frequently. This ensures users will not have access to the feature before its official release. Additionally, this promotes collaboration by allowing teams to work independently on different features without interference.
+To keep the trunk in a deployable state, keep the flag off in your production environment. The code for your feature should be wrapped in your flag and, therefore, not executable in production, even though the code will be deployed frequently. This ensures users do not have access to the feature before its official release. Additionally, this promotes collaboration by allowing teams to work independently on different features without interference.
 
-To verify the functionality of your feature while it is incomplete, enable the flag in the development environment in the Unleash Admin UI. In some cases, you may also find it valuable to enable the flag in a testing/QA environment. Unleash environment-specific flag configurations make it easy to manage these different states across your [environments](/reference/environments#how-to-start-using-environments). You can quickly toggle flags on or off for specific environments, ensuring the trunk remains deployable in production while enabling active development and testing in other contexts. Use the default production environment toggle in Unleash to enable your flag when you’re ready to make your feature available.
+To test your incomplete feature, enable the flag in the development environment in the Unleash Admin UI. In some cases, you may also find it valuable to enable the flag in a testing/QA environment. Unleash environment-specific flag configurations make it easy to manage these different states across your [environments](/reference/environments#how-to-start-using-environments). You can quickly toggle flags on or off for specific environments, ensuring the trunk remains deployable in production while enabling active development and testing in other contexts. Use the default production environment toggle in Unleash to enable your flag when you’re ready to make your feature available.
 
 :::note
 Depending on the size and scope of a feature you’re developing, you may need more than one flag. Generally, we recommend creating as few flags as possible per feature, as making too many flags associated with one feature can become more complex to manage over time with trunk-based development. Our documentation on [best practices for feature flags at scale](/topics/feature-flags/best-practices-using-feature-flags-at-scale) provides more concrete details on large-scale feature flag management.
@@ -232,7 +232,7 @@ As your codebase and development processes mature, consider automating key aspec
 -   Integration with your CI/CD pipelines: Automatically create, update, or toggle flags as part of your deployment workflows, ensuring flags stay in sync with the codebase.
 -   Reporting and analytics: Generate regular reports on flag usage, performance, and health to proactively identify opportunities for optimization.
 
-Automation helps maintain a clean, well-organized feature flag landscape, even as your organization scales its trunk-based development efforts.
+Automation helps maintain a clean, well-organized feature flag landscape, even as your organization scales its trunk-based development practices.
 
 ## Control Feature Rollouts
 
@@ -245,34 +245,30 @@ For trunk-based development, you can create a gradual rollout strategy to:
 -   Per-customer release
 -   General release
 
-To target users accordingly, let's create an [activation strategy](/reference/activation-strategies). This Unleash concept defines who will be exposed to a particular flag. Unleash comes pre-configured with multiple activation strategies that let you enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
+To target users accordingly, let's create an [activation strategy](/reference/activation-strategies). This Unleash concept defines who will be exposed to a particular flag. With Unleash, you can define a gradual rollout strategy to enable a feature only for a specified audience, depending on the parameters under which you would like to release a feature.
 
 ![Add a strategy to configure a release process for your flag.](/img/use-case-tbd-add-strategy.png)
 
-The gradual rollout strategy form has multiple fields that control the rollout of your feature. You can name the strategy something relevant to the feature you’re building, but this is an optional field.
 
-Next, configure the rollout percentage so only a certain portion of your users are targeted. For example, you can adjust the dial so that 35% of all users are targeted. The remaining percentage of users will not experience any variation of the new feature. Adjust the rollout dial to set the percentage of users the feature targets, or keep it at 100% to target all users.
+Next, let's create a new activation strategy and configure the rollout percentage so only a certain portion of your users are targeted. For example, you can adjust the dial so that 35% of all users are targeted. The remaining percentage of users will not experience any variation of the new feature. Adjust the rollout dial to set the percentage of users the feature targets, or keep it at 100% to target all users.
 
-There are two more advanced extensions of a default strategy that you will see available to customize in the form:
 
--   [Strategy variants](/reference/strategy-variants)
--   [Strategy constraints](/reference/strategy-constraints)
 
-With strategy variants and constraints, you can extend your overall strategy. They help you define more granular conditions for your feature beyond the rollout percentage.
+To define more granular conditions for your feature beyond the rollout percentage, you can use [strategy variants](/reference/strategy-variants) and [constraints](/reference/constraints).
 
 ## Simplify Rollbacks
 
 In trunk-based development, the ability to quickly roll back a feature can mean the difference between a minor hiccup and a major service disruption.
 
-When issues are detected, Unleash makes it easy to quickly roll back a problematic feature by simply turning off the corresponding feature flag in your production environment, allowing teams to disable problematic features with just a single click. This allows development teams to address problems swiftly without the need for complex rollback procedures or full code deployments.
+When issues are detected, Unleash makes it easy to quickly roll back a problematic feature by simply turning off the corresponding feature flag in your production environment. This allows development teams to address problems swiftly without the need for complex rollback procedures or full code deployments.
 
 ### The One-Click Rollback Process
 
 Imagine you've just rolled out a new checkout process. Shortly after launch, you detect performance issues or unexpected user behavior. To mitigate this issue, the process to roll back is straightforward:
 
-1. Navigate to the Unleash Admin UI
-2. Locate the feature flag for the specific feature
-3. Toggle the flag to the "Off" position in the production environment
+1. Go to the Unleash Admin UI
+2. Find the feature flag for the feature you want to roll back
+3. Toggle the flag to the "off" position in the production environment
 
 Instantly, the feature is disabled for all users without requiring a new code deployment, complex rollback procedures, or downtime for your application.
 
@@ -298,7 +294,7 @@ To maximize the effectiveness of feature flag rollbacks:
 
 ## Archive and Remove Feature Flags
 
-Once a feature is fully rolled out and stable, the feature flag should be archived or removed. This reduces clutter in the codebase and prevents unnecessary complexity.
+Once a feature is fully rolled out and stable, the feature flag should be archived or removed. This reduces technical debt in the codebase and prevents unnecessary complexity.
 
 As your codebase and feature set grow over time, it's important to maintain visibility into your feature flag usage and lifecycle. Regularly review which flags are active, which environments they are enabled in, and when they were last modified.
 

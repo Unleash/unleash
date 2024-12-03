@@ -97,6 +97,25 @@ export default class FeatureController extends Controller {
 
         this.route({
             method: 'get',
+            path: '/delta',
+            handler: this.getDelta,
+            permission: NONE,
+            middleware: [
+                openApiService.validPath({
+                    summary: 'Get partial updates (SDK)',
+                    description:
+                        'Initially returns the full set of feature flags available to the provided API key. When called again with the returned etag, only returns the flags that have changed',
+                    operationId: 'getAllClientFeatures',
+                    tags: ['Client'],
+                    responses: {
+                        200: createResponseSchema('clientFeaturesSchema'),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'get',
             path: '/:featureName',
             handler: this.getFeatureToggle,
             permission: NONE,
@@ -124,25 +143,6 @@ export default class FeatureController extends Controller {
                     summary: 'Get all flags (SDK)',
                     description:
                         'Returns the SDK configuration for all feature flags that are available to the provided API key. Used by SDKs to configure local evaluation',
-                    operationId: 'getAllClientFeatures',
-                    tags: ['Client'],
-                    responses: {
-                        200: createResponseSchema('clientFeaturesSchema'),
-                    },
-                }),
-            ],
-        });
-
-        this.route({
-            method: 'get',
-            path: 'delta',
-            handler: this.getDelta,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    summary: 'Get partial updates (SDK)',
-                    description:
-                        'Initially returns the full set of feature flags available to the provided API key. When called again with the returned etag, only returns the flags that have changed',
                     operationId: 'getAllClientFeatures',
                     tags: ['Client'],
                     responses: {

@@ -62,11 +62,26 @@ Another common strategy is to merge changes into the trunk at regular, predefine
 
 ### Tradeoffs of short-lived feature branches
 
-In trunk-based development, it is possible to use short-lived feature branches, which enable teams to implement code review processes without the burden of maintaining long-running branches, which can become increasingly difficult to manage over time. The frequent integration back to trunk significantly reduces the likelihood and complexity of merge conflicts, as changes are merged before they can diverge too far from the main codebase. This approach maintains the core benefits of trunk-based development - such as rapid iteration and continuous integration - while still allowing developers to work in isolation when needed. However, a feature is often cleaved up into pieces that span many short-lived branches. A feature flag prevents an incomplete feature being exposed before it's done.
+In trunk-based development, it is possible to use short-lived feature branches, which enable teams to implement code review processes without the burden of maintaining long-running branches, which can become increasingly difficult to manage over time.
+
+**Advantages**:
+
+-   Frequent integration back to trunk significantly reduces the likelihood and complexity of merge conflicts, as changes are merged before they can diverge too far from the main codebase
+-   Maintains the core benefits of trunk-based development - such as rapid iteration and continuous integration - while still allowing developers to work in isolation when needed.
 
 **Challenges**:
 
-The most significant challenge is maintaining the discipline required to keep branches truly short-lived. Teams must develop the skill of breaking down work into small, mergeable units. Additionally, this approach demands a robust testing and CI/CD pipeline to ensure that frequent merges don't compromise code quality or stability. Teams must invest in automated testing and deployment infrastructure to support rapid integration cycles.
+-   Maintaining the discipline required to keep branches truly short-lived. Teams must develop the skill of breaking down work into small, mergeable units.
+-   Demands a robust testing and CI/CD pipeline to ensure that frequent merges don't compromise code quality or stability. Teams must invest in automated testing and deployment infrastructure to support rapid integration cycles.
+
+Keep in mind that a feature is often cleaved up into pieces that span many short-lived branches. A feature flag prevents an incomplete feature being exposed before it's done.
+
+> We definitely branch off to work on features, but we’ll rarely finish a whole feature in a single branch.
+> I try to aim for not having branches live more than a day with active development.
+> At that point, you're more likely for to break something and it’s harder for developers to review them properly.
+> Ideally, it’s a couple hours worth of work at most.
+> Of course there’s exceptions, but we like doing things in small chunks.
+> — _Thomas Heartman, Engineer, Unleash_
 
 Regardless of the specific strategy, Unleash feature flag management capabilities are designed to support a wide range of trunk-based development styles, empowering you to implement the best strategy for your teams.
 
@@ -85,6 +100,11 @@ The underlying application architecture can also influence the optimal trunk-bas
 -   Smaller, more loosely coupled services
 -   Merging every commit is often more feasible due to reduced integration challenges
 -   Enables more independent development and deployment of individual services
+
+> Having a monolith can be better because it reduces latency between network calls in comparison to microservices.
+> But if there isn’t a centralized team that truly manages the monolithic code, it can be difficult."
+>
+> — _Jeanette Pranin, Sr. Software Engineer, Fabric_
 
 ## Create feature flags for incomplete features
 

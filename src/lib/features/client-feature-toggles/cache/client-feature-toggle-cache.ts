@@ -134,10 +134,17 @@ export class ClientFeatureToggleCache {
     ): Promise<ClientFeatureChange> {
         const requiredRevisionId = sdkRevisionId || 0;
         const revisions = this.cache[environment];
-        const revisionList = revisions
-            .filter((revision) => revision.revisionId > requiredRevisionId)
-            .map((revision) => filterRevisionByProject(revision, projects));
-        const compressedRevision = compressRevisionList(revisionList);
+        console.log('Got the following revisions: ', revisions);
+        const revisionList = revisions.filter(
+            (revision) => revision.revisionId > requiredRevisionId,
+        );
+        console.log('Filtered revisions by id: ', revisionList);
+        const filteredRevisionList = revisionList.map((revision) =>
+            filterRevisionByProject(revision, projects),
+        );
+        console.log('Filtered revisions by project: ', filteredRevisionList);
+
+        const compressedRevision = compressRevisionList(filteredRevisionList);
 
         return Promise.resolve(compressedRevision);
     }
@@ -173,10 +180,10 @@ export class ClientFeatureToggleCache {
         const defaultCache = await this.getClientFeatures({
             environment: 'default ',
         });
-        const developmentCache = this.getClientFeatures({
+        const developmentCache = await this.getClientFeatures({
             environment: 'development ',
         });
-        const productionCache = this.getClientFeatures({
+        const productionCache = await this.getClientFeatures({
             environment: 'production ',
         });
         // Always assume that the first item of the array is the base

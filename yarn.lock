@@ -1865,12 +1865,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/express-session@npm:1.18.0":
-  version: 1.18.0
-  resolution: "@types/express-session@npm:1.18.0"
+"@types/express-session@npm:1.18.1":
+  version: 1.18.1
+  resolution: "@types/express-session@npm:1.18.1"
   dependencies:
     "@types/express": "npm:*"
-  checksum: 10c0/a41a1fcc4a433c71e2a7ffbac82bc7fb5ad436757a9d27fd30ae4656dee137d244f04de9ad756b566be136cf82f6a75e9ca55ac6c260396e74d1931021b09621
+  checksum: 10c0/df2d439239f5cc9947772452d1d86d47a8d3e33f90776ebcf602f0fb7801bc85f6410d17557f40cdde881816bc5a2804a7373addfd3a5dbd8c54e7af8aa27000
   languageName: node
   linkType: hard
 
@@ -9315,7 +9315,7 @@ __metadata:
     "@types/bcryptjs": "npm:2.4.6"
     "@types/cors": "npm:2.8.17"
     "@types/express": "npm:4.17.21"
-    "@types/express-session": "npm:1.18.0"
+    "@types/express-session": "npm:1.18.1"
     "@types/faker": "npm:5.5.9"
     "@types/hash-sum": "npm:^1.0.0"
     "@types/jest": "npm:29.5.14"

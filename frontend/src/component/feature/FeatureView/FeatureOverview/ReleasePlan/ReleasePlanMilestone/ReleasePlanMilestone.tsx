@@ -3,17 +3,16 @@ import {
     Accordion,
     AccordionDetails,
     AccordionSummary,
-    Link,
     styled,
 } from '@mui/material';
-import PlayCircleIcon from '@mui/icons-material/PlayCircle';
-import TripOriginIcon from '@mui/icons-material/TripOrigin';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ReleasePlanMilestoneStrategy } from './ReleasePlanMilestoneStrategy';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-
-type MilestoneStatus = 'not-started' | 'active' | 'completed';
+import {
+    ReleasePlanMilestoneStatus,
+    type MilestoneStatus,
+} from './ReleasePlanMilestoneStatus';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status',
@@ -31,6 +30,7 @@ const StyledAccordionSummary = styled(AccordionSummary)({
     '& .MuiAccordionSummary-content': {
         justifyContent: 'space-between',
         alignItems: 'center',
+        minHeight: '30px',
     },
 });
 
@@ -43,33 +43,6 @@ const StyledTitleContainer = styled('div')(({ theme }) => ({
 
 const StyledTitle = styled('span')(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
-}));
-
-const StyledStatus = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'status',
-})<{ status: MilestoneStatus }>(({ theme, status }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    paddingRight: theme.spacing(1),
-    fontSize: theme.fontSizes.smallerBody,
-    borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor:
-        status === 'active' ? theme.palette.success.light : 'transparent',
-    color:
-        status === 'active'
-            ? theme.palette.success.contrastText
-            : status === 'completed'
-              ? theme.palette.text.secondary
-              : theme.palette.text.primary,
-    '& svg': {
-        color:
-            status === 'active'
-                ? theme.palette.success.main
-                : status === 'completed'
-                  ? theme.palette.neutral.border
-                  : theme.palette.primary.main,
-    },
 }));
 
 const StyledSecondaryLabel = styled('span')(({ theme }) => ({
@@ -94,41 +67,38 @@ export const ReleasePlanMilestone = ({
     status,
     onStartMilestone,
 }: IReleasePlanMilestoneProps) => {
-    const statusText =
-        status === 'active'
-            ? 'Running'
-            : status === 'completed'
-              ? 'Restart'
-              : 'Start';
+    if (!milestone.strategies.length) {
+        return (
+            <StyledAccordion status={status}>
+                <StyledAccordionSummary>
+                    <StyledTitleContainer>
+                        <StyledTitle>{milestone.name}</StyledTitle>
+                        <ReleasePlanMilestoneStatus
+                            status={status}
+                            onStartMilestone={() => onStartMilestone(milestone)}
+                        />
+                    </StyledTitleContainer>
+                    <StyledSecondaryLabel>No strategies</StyledSecondaryLabel>
+                </StyledAccordionSummary>
+            </StyledAccordion>
+        );
+    }
 
     return (
         <StyledAccordion status={status}>
             <StyledAccordionSummary expandIcon={<ExpandMore />}>
                 <StyledTitleContainer>
                     <StyledTitle>{milestone.name}</StyledTitle>
-                    <StyledStatus status={status}>
-                        <ConditionallyRender
-                            condition={status === 'active'}
-                            show={<TripOriginIcon />}
-                            elseShow={<PlayCircleIcon />}
-                        />
-                        <ConditionallyRender
-                            condition={status === 'active'}
-                            show={<span>{statusText}</span>}
-                            elseShow={
-                                <Link
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onStartMilestone(milestone);
-                                    }}
-                                >
-                                    {statusText}
-                                </Link>
-                            }
-                        />
-                    </StyledStatus>
+                    <ReleasePlanMilestoneStatus
+                        status={status}
+                        onStartMilestone={() => onStartMilestone(milestone)}
+                    />
                 </StyledTitleContainer>
-                <StyledSecondaryLabel>View strategies</StyledSecondaryLabel>
+                <StyledSecondaryLabel>
+                    {milestone.strategies.length === 1
+                        ? 'View strategy'
+                        : `View ${milestone.strategies.length} strategies`}
+                </StyledSecondaryLabel>
             </StyledAccordionSummary>
             <StyledAccordionDetails>
                 {milestone.strategies.map((strategy, index) => (

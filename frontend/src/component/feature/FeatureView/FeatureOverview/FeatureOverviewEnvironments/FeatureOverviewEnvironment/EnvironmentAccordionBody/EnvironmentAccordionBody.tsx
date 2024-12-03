@@ -234,7 +234,11 @@ const EnvironmentAccordionBody = ({
                     show={
                         <>
                             {releasePlans.map((plan) => (
-                                <ReleasePlan key={plan.id} plan={plan} />
+                                <ReleasePlan
+                                    key={plan.id}
+                                    plan={plan}
+                                    environmentIsDisabled={isDisabled}
+                                />
                             ))}
                             <ConditionallyRender
                                 condition={

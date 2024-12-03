@@ -28,14 +28,7 @@ const DOCS = mapObject(enrich)({
 });
 
 const getAdmonitions = (data) => {
-    const admonitions = {
-        'unleash-proxy': `:::tip
-
-Looking for how to run the Unleash proxy? Check out the [_how to run the Unleash proxy_ guide](../how-to/how-to-run-the-unleash-proxy.mdx)!
-
-:::`,
-        'unleash-edge': ``,
-    };
+    const admonitions = {};
 
     return [admonitions[data.slugName]];
 };

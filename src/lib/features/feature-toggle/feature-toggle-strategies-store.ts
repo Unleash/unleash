@@ -538,9 +538,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 e.strategies = e.strategies.sort(
                     (a, b) => a.sortOrder - b.sortOrder,
                 );
-                if (e.strategies && e.strategies.length === 0) {
-                    e.enabled = false;
-                }
                 return e;
             });
 

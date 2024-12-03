@@ -768,13 +768,13 @@ __metadata:
   linkType: hard
 
 "cross-spawn@npm:^7.0.0":
-  version: 7.0.3
-  resolution: "cross-spawn@npm:7.0.3"
+  version: 7.0.6
+  resolution: "cross-spawn@npm:7.0.6"
   dependencies:
     path-key: "npm:^3.1.0"
     shebang-command: "npm:^2.0.0"
     which: "npm:^2.0.1"
-  checksum: 10c0/5738c312387081c98d69c98e105b6327b069197f864a60593245d64c8089c8a0a744e16349281210d56835bb9274130d825a78b2ad6853ca13cfbeffc0c31750
+  checksum: 10c0/053ea8b2135caff68a9e81470e845613e374e7309a47731e81639de3eaeb90c3d01af0e0b44d2ab9d50b43467223b88567dfeb3262db942dc063b9976718ffc1
   languageName: node
   linkType: hard
 
@@ -3626,7 +3626,7 @@ __metadata:
 
 "unleash-server@file:../build::locator=unleash-docker%40workspace%3A.":
   version: 6.2.2
-  resolution: "unleash-server@file:../build#../build::hash=c676ea&locator=unleash-docker%40workspace%3A."
+  resolution: "unleash-server@file:../build#../build::hash=6d0c93&locator=unleash-docker%40workspace%3A."
   dependencies:
     "@slack/web-api": "npm:^6.10.0"
     "@wesleytodd/openapi": "npm:^1.1.0"
@@ -3688,7 +3688,7 @@ __metadata:
     type-is: "npm:^1.6.18"
     unleash-client: "npm:6.1.1"
     uuid: "npm:^9.0.0"
-  checksum: 10c0/7f6e6a442a6ecaabd9d85b85a2a8200ed12c8c1a140ed96fd77f2391cbbd7b3eb38f1d46c5c6d131519e5c21e645928441357c525f1b30924b3aa5efbe4de7cf
+  checksum: 10c0/e2a78ddcf63f7265a148e46decb2c2d85aa38031a75ae61df76f15a40021e7243ebaa1d5dd013a4efd2134a5cb08935acc8194c41810fa576714a87c2f32bf1d
   languageName: node
   linkType: hard
 

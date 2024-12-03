@@ -61,7 +61,7 @@ export const CreateReleasePlanTemplate = () => {
                     type: 'success',
                     title: 'Release plan template created',
                 });
-                navigate(`/release-management/edit/${template.id}`);
+                navigate('/release-management');
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }

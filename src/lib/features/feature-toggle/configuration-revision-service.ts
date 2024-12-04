@@ -73,8 +73,8 @@ export default class ConfigurationRevisionService extends EventEmitter {
                 'Updating feature configuration with new revision Id',
                 revisionId,
             );
-            this.emit(UPDATE_REVISION, revisionId);
             this.revisionId = revisionId;
+            this.emit(UPDATE_REVISION, revisionId);
         }
 
         return this.revisionId;

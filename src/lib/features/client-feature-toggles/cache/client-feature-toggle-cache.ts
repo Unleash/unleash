@@ -209,12 +209,13 @@ export class ClientFeatureToggleCache {
             }));
 
         return {
-            updated: foundToggles as any, //impressionData is not on the type but should be
+            updated: foundToggles as any, // impressionData is not on the type but should be
             removed,
             revisionId,
         };
     }
-
+    // TODO: I think we should remove it as is, because we do not need initialized cache, I think we should populate cache on demand for each env
+    // also we already have populateBaseCache method
     public async initCache() {
         //TODO: This only returns stuff for the default environment!!! Need to pass a query to get the relevant environment
         // featuresByEnvironment cache
@@ -262,38 +263,12 @@ export class ClientFeatureToggleCache {
             ],
         };
 
+        const latestRevision =
+            await this.configurationRevisionService.getMaxRevisionId();
+
+        this.currentRevisionId = latestRevision;
+        console.log('setting rev', this.currentRevisionId);
         this.cache = cache;
-
-        // This is what the cache looks like
-        // const cache = {
-        // 	Default: [
-        // 		{
-        // 			type: "update",
-        // 			revisionId: 4,
-        // 			updated: [
-        // 				{
-        // 					name: "counter",
-        // 					type: "release",
-        //                     ...
-        // 				},
-        // 			],
-        //          removed: []
-        // 		},
-        //         {
-        //             type: "update",
-        //             revisionId: 5,
-        //             updated: [
-        //                 {
-        //                     name: "counter",
-        //                     type: "release"
-        //                     ...
-        //                 }
-        //             ]
-        //         }
-        // 	],
-        // };
-
-        // const baseCache = await this.getClientFeatures();
     }
 
     async getClientFeatures(

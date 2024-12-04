@@ -139,53 +139,52 @@ export class ClientFeatureToggleCache {
     }
 
     public async pollEvents() {
-        console.log("I'm polling!");
-        // use scheduler service
-
-        // Pull all events from the current revisionId
-        // Find a list of every flag that changed in each environment and associate that with
-        // the revisionId
-
         const latestRevision =
             await this.configurationRevisionService.getMaxRevisionId();
 
-        const changeEvents = await this.eventStore.getRevisionRange(
-            this.currentRevisionId,
-            latestRevision,
-        );
+        if (this.currentRevisionId === 0) {
+            await this.populateBaseCache(latestRevision);
+        } else {
+            const changeEvents = await this.eventStore.getRevisionRange(
+                this.currentRevisionId,
+                latestRevision,
+            );
 
-        for (const event of changeEvents) {
-            console.log('Got a change event');
-            console.log(event);
-            event.featureName;
+            for (const event of changeEvents) {
+                event.featureName;
+            }
+            const changedToggles = [
+                ...new Set(
+                    changeEvents
+                        .filter((event) => event.featureName)
+                        .map((event) => event.featureName!),
+                ),
+            ];
+            const newToggles = await this.getChangedToggles(
+                changedToggles,
+                latestRevision, // TODO: this should come back from the same query to not be out of sync
+            );
+
+            if (this.cache.development) {
+                this.cache.development.push(newToggles);
+            }
         }
-        const changedToggles = [
-            ...new Set(
-                changeEvents
-                    .filter((event) => event.featureName)
-                    .map((event) => event.featureName!),
-            ),
-        ];
-        const newToggles = await this.getChangedToggles(
-            changedToggles,
-            latestRevision, // TODO: this should come back from the same query to not be out of sync
-        );
+        this.currentRevisionId = latestRevision;
+    }
 
-        console.log('I got the following toggles');
-        console.log(JSON.stringify(newToggles));
-
-        // if (!this.cache.development) {
-        //     this.cache.development = [];
-        // }
-        // this.cache.development.push(newToggles);
+    private async populateBaseCache(latestRevisionId: number) {
+        const features = await this.getClientFeatures({
+            environment: 'development ',
+        });
 
         if (this.cache.development) {
-            this.cache.development.push(newToggles);
-
-            this.currentRevisionId = latestRevision;
-        } else {
-            console.log('WHY I AM HERE');
+            this.cache.development.push({
+                updated: features as any, //impressionData is not on the type but should be
+                removed: [],
+                revisionId: latestRevisionId,
+            });
         }
+        console.log(`Populated base cache with ${features.length} features`);
     }
 
     async getChangedToggles(
@@ -197,14 +196,13 @@ export class ClientFeatureToggleCache {
             environment: 'development ',
         });
 
-        const toggleMap = new Map(
-            foundToggles.map((toggle) => [toggle.name, toggle]),
-        );
-
-        //if the toggle is not in found toggles, then it must have been deleted
+        const foundToggleNames = foundToggles.map((toggle) => toggle.name);
         const removed = toggles
-            .filter((name) => toggleMap.has(name))
-            .map((name) => ({ name, project: toggleMap.get(name)!.project }));
+            .filter((toggle) => !foundToggleNames.includes(toggle))
+            .map((name) => ({
+                name,
+                project: 'default', // TODO: this needs to be smart and figure out the project . IMPORTANT
+            }));
 
         return {
             updated: foundToggles as any, //impressionData is not on the type but should be

@@ -557,7 +557,7 @@ const sidebars: SidebarsConfig = {
                         },
                         {
                             type: 'doc',
-                            label: 'SOC 2 Type II',
+                            label: 'SOC2',
                             id: 'using-unleash/compliance/soc2',
                         },
                     ],

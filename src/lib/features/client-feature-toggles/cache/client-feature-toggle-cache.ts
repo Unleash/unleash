@@ -148,12 +148,48 @@ export class ClientFeatureToggleCache {
     public async pollEvents() {
         console.log("I'm polling!");
         // use scheduler service
+
         // Pull all events from the current revisionId
         // Find a list of every flag that changed in each environment and associate that with
         // the revisionId
+
+        const changedToggles = ['test'];
+        const newToggles = await this.getChangedToggles(
+            changedToggles,
+            this.currentRevisionId,
+        );
+
+        console.log('I got the following toggles');
+        console.log(JSON.stringify(newToggles));
+
         // Get those flags from the database
         // Build the data structure for the cache
         // Update the relevant environment cache with the new update
+    }
+
+    async getChangedToggles(
+        toggles: string[],
+        revisionId: number,
+    ): Promise<ClientFeatureChange> {
+        const foundToggles = await this.getClientFeatures({
+            toggleNames: toggles,
+            environment: 'development ',
+        });
+
+        const toggleMap = new Map(
+            foundToggles.map((toggle) => [toggle.name, toggle]),
+        );
+
+        //if the toggle is not in found toggles, then it must have been deleted
+        const removed = toggles
+            .filter((name) => !toggleMap.has(name))
+            .map((name) => ({ name, project: toggleMap.get(name)!.project }));
+
+        return {
+            updated: foundToggles as any, //impressionData is not on the type but should be
+            removed,
+            revisionId,
+        };
     }
 
     public async initCache() {

@@ -178,7 +178,7 @@ export class ClientFeatureToggleCache {
 
     private async populateBaseCache(latestRevisionId: number) {
         const features = await this.getClientFeatures({
-            environment: 'development ',
+            environment: 'development',
         });
 
         if (this.cache.development) {
@@ -230,13 +230,13 @@ export class ClientFeatureToggleCache {
         // hardcoded for now
         // const environments = ["default", "development", "production"];
         const defaultCache = await this.getClientFeatures({
-            environment: 'default ',
+            environment: 'default',
         });
         const developmentCache = await this.getClientFeatures({
-            environment: 'development ',
+            environment: 'development',
         });
         const productionCache = await this.getClientFeatures({
-            environment: 'production ',
+            environment: 'production',
         });
         // Always assume that the first item of the array is the base
         const cache = {

@@ -154,9 +154,6 @@ export class ClientFeatureToggleCache {
                 latestRevision,
             );
 
-            for (const event of changeEvents) {
-                event.featureName;
-            }
             const changedToggles = [
                 ...new Set(
                     changeEvents
@@ -197,7 +194,7 @@ export class ClientFeatureToggleCache {
     ): Promise<ClientFeatureChange> {
         const foundToggles = await this.getClientFeatures({
             toggleNames: toggles,
-            environment: 'development ',
+            environment: 'development',
         });
 
         const foundToggleNames = foundToggles.map((toggle) => toggle.name);
@@ -230,7 +227,7 @@ export class ClientFeatureToggleCache {
         // hardcoded for now
         // const environments = ["default", "development", "production"];
         const defaultCache = await this.getClientFeatures({
-            environment: 'default ',
+            environment: 'default',
         });
         const developmentCache = await this.getClientFeatures({
             environment: 'development ',
@@ -267,7 +264,6 @@ export class ClientFeatureToggleCache {
             await this.configurationRevisionService.getMaxRevisionId();
 
         this.currentRevisionId = latestRevision;
-        console.log('setting rev', this.currentRevisionId);
         this.cache = cache;
     }
 

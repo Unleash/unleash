@@ -555,6 +555,11 @@ const sidebars: SidebarsConfig = {
                             label: 'FedRAMP',
                             id: 'using-unleash/compliance/fedramp',
                         },
+                        {
+                            type: 'doc',
+                            label: 'SOC 2 Type II',
+                            id: 'using-unleash/compliance/soc2',
+                        },
                     ],
                 },
                 {

@@ -222,7 +222,7 @@ Develop clear and [consistent naming patterns](/reference/feature-toggles#set-a-
 
 ### Leverage tagging and flag descriptions
 
-In addition to meaningful names, apply relevant [tags](/reference/tags) and descriptions to your feature flags in Unleash. This metadata can include information such as:
+In addition to meaningful names, apply relevant [tags](/reference/feature-toggles#tags) and descriptions to your feature flags in Unleash. This metadata can include information such as:
 
 -   The team or product area responsible for the flag
 -   The release timeline or planned retirement date
@@ -278,7 +278,7 @@ To target users accordingly, let's create an [activation strategy](/reference/ac
 
 Next, let's create a new activation strategy and configure the rollout percentage so only a certain portion of your users are targeted. For example, you can adjust the dial so that 35% of all users are targeted. The remaining percentage of users will not experience any variation of the new feature. Adjust the rollout dial to set the percentage of users the feature targets, or keep it at 100% to target all users.
 
-To define more granular conditions for your feature beyond the rollout percentage, you can use [strategy variants](/reference/strategy-variants) and [constraints](/reference/strategy-constraints).
+To define more granular conditions for your feature beyond the rollout percentage, you can use [strategy variants](/reference/strategy-variants) and [constraints](/reference/activation-strategies#constraints).
 
 ## Simplify rollbacks
 

@@ -155,7 +155,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - [Audit logs](https://docs.getunleash.io/advanced/audit_log)
 - Enforce [OWASP's secure headers](https://owasp.org/www-project-secure-headers/) via the strict HTTPS-only mode
 - Flexible hosting options: host it on premise or in the cloud (_any_ cloud)
-- Scale [the Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) independently of the Unleash server to support any number of front-end clients without overloading your Unleash instance
+- Scale with [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) independently of the Unleash server to support any number of front-end clients without overloading your Unleash instance
 
 ### Looking for more features?
 
@@ -197,7 +197,7 @@ To connect your application to Unleash you'll need to use a client SDK for your 
 
 **Official front-end SDKs:**
 
-The front-end SDKs connect via the [Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) in order to ensure privacy, scalability and security.
+The front-end SDKs connect via [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) in order to ensure privacy, scalability and security.
 
 - [Android Proxy SDK](https://docs.getunleash.io/reference/sdks/android-proxy)
 - [Flutter Proxy SDK](https://docs.getunleash.io/reference/sdks/flutter)

@@ -1,5 +1,6 @@
 ---
 title: Impression Data
+pagination_next: reference/events
 ---
 
 :::note Availability

@@ -19,6 +19,8 @@ import {
     useTheme,
     Autocomplete,
     type SelectChangeEvent,
+    Checkbox,
+    styled
 } from '@mui/material';
 
 import debounce from 'debounce';
@@ -31,6 +33,10 @@ import {
     isStringOrStringArray,
     normalizeCustomContextProperties,
 } from '../../playground.utils';
+import CheckBox from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlank from '@mui/icons-material/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@mui/icons-material/CheckBox'
+
 interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
     setContext: Dispatch<SetStateAction<string | undefined>>;
@@ -155,7 +161,6 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
             const value = validDate
                 ? parseDateValue(validDate.toISOString())
                 : parseDateValue(now.toISOString());
-
             return (
                 <TextField
                     id='date'
@@ -181,24 +186,38 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         );
         if (foundField?.legalValues && foundField.legalValues.length > 0) {
             const options = foundField.legalValues.map(({ value }) => value);
+
             return (
                 <Autocomplete
-                    disablePortal
-                    limitTags={3}
-                    id='context-legal-values'
-                    freeSolo
-                    filterSelectedOptions
-                    size='small'
-                    value={resolveAutocompleteValue()}
-                    onChange={changeContextValue}
-                    options={options}
-                    multiple={true}
-                    sx={{ width: 370, maxWidth: '100%' }}
-                    renderInput={(params: any) => (
-                        <TextField {...params} label='Value' />
-                    )}
-                    disableCloseOnSelect={false}
-                />
+                disablePortal
+                limitTags={3}
+                id='context-legal-values'
+                multiple={true}
+                options={options}
+                disableCloseOnSelect
+                size='small'
+                value={resolveAutocompleteValue()}
+                onChange={changeContextValue}
+                getOptionLabel={(option) => option}
+                renderOption={(props, option, { selected }) => {
+                    const { key, ...optionProps } = props;
+                    return (
+                        <li key={key} {...optionProps}>
+                            <Checkbox
+                                icon={<CheckBoxOutlineBlank fontSize='small' />}
+                                checkedIcon={<CheckBoxIcon fontSize='small' />}
+                                style={{ marginRight: 0.4 }}
+                                checked={selected}
+                            />
+                            {option}
+                        </li>
+                    );
+                }}
+                sx={{ width: 370, maxWidth: '100%' }}
+                renderInput={(params) => (
+                    <TextField {...params} label='Value' />
+                )}
+            />
             );
         }
 

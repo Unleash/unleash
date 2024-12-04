@@ -1,11 +1,11 @@
 import type EventEmitter from 'events';
 import type {
     IEventStore,
+    IFeatureToggleClient,
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
 } from '../../../types';
 import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
-import type { ClientFeatureSchema } from '../../../openapi';
 import type { FeatureConfigurationClient } from '../../feature-toggle/types/feature-toggle-strategies-store-type';
 
 type DeletedFeature = {
@@ -14,14 +14,10 @@ type DeletedFeature = {
 };
 
 export type ClientFeatureChange = {
-    updated: CachedClientFeature[];
+    updated: IFeatureToggleClient[];
     removed: DeletedFeature[];
     revisionId: number;
 };
-
-interface CachedClientFeature extends ClientFeatureSchema {
-    project: string;
-}
 
 type Revision = {
     revisionId: number;

@@ -33,7 +33,7 @@ import {
     normalizeCustomContextProperties,
 } from '../../playground.utils';
 import CheckBoxOutlineBlank from '@mui/icons-material/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 
 interface IPlaygroundCodeFieldsetProps {
     context: string | undefined;
@@ -187,35 +187,41 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
 
             return (
                 <Autocomplete
-                disablePortal
-                limitTags={3}
-                id='context-legal-values'
-                multiple={true}
-                options={options}
-                disableCloseOnSelect
-                size='small'
-                value={resolveAutocompleteValue()}
-                onChange={changeContextValue}
-                getOptionLabel={(option) => option}
-                renderOption={(props, option, { selected }) => {
-                    const { key, ...optionProps } = props;
-                    return (
-                        <li key={key} {...optionProps}>
-                            <Checkbox
-                                icon={<CheckBoxOutlineBlank fontSize='small' />}
-                                checkedIcon={<CheckBoxIcon fontSize='small' />}
-                                sx={theme => ({ marginRight: theme.spacing(0.5) })}
-                                checked={selected}
-                            />
-                            {option}
-                        </li>
-                    );
-                }}
-                sx={{ width: 370, maxWidth: '100%' }}
-                renderInput={(params) => (
-                    <TextField {...params} label='Value' />
-                )}
-            />
+                    disablePortal
+                    limitTags={3}
+                    id='context-legal-values'
+                    multiple={true}
+                    options={options}
+                    disableCloseOnSelect
+                    size='small'
+                    value={resolveAutocompleteValue()}
+                    onChange={changeContextValue}
+                    getOptionLabel={(option) => option}
+                    renderOption={(props, option, { selected }) => {
+                        const { key, ...optionProps } = props;
+                        return (
+                            <li key={key} {...optionProps}>
+                                <Checkbox
+                                    icon={
+                                        <CheckBoxOutlineBlank fontSize='small' />
+                                    }
+                                    checkedIcon={
+                                        <CheckBoxIcon fontSize='small' />
+                                    }
+                                    sx={(theme) => ({
+                                        marginRight: theme.spacing(0.5),
+                                    })}
+                                    checked={selected}
+                                />
+                                {option}
+                            </li>
+                        );
+                    }}
+                    sx={{ width: 370, maxWidth: '100%' }}
+                    renderInput={(params) => (
+                        <TextField {...params} label='Value' />
+                    )}
+                />
             );
         }
 

@@ -45,7 +45,7 @@ export class ClientFeatureToggleService {
         revisionId: number | undefined,
         projects: string[],
         environment: string,
-    ): Promise<ClientFeatureChange> {
+    ): Promise<ClientFeatureChange | undefined> {
         if (this.clientFeatureToggleCache !== null) {
             return this.clientFeatureToggleCache.getDelta(
                 revisionId,

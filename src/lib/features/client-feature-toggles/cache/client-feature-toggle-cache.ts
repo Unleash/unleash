@@ -121,8 +121,12 @@ export class ClientFeatureToggleCache {
         sdkRevisionId: number | undefined,
         environment: string,
         projects: string[],
-    ): Promise<ClientFeatureChange> {
+    ): Promise<ClientFeatureChange | undefined> {
         const requiredRevisionId = sdkRevisionId || 0;
+        if (requiredRevisionId >= this.currentRevisionId) {
+            return undefined;
+        }
+
         const environmentRevisions = this.cache[environment];
 
         const compressedRevision = calculateRequiredClientRevision(

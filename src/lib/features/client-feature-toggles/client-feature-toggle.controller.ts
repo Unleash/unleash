@@ -317,6 +317,13 @@ export default class FeatureController extends Controller {
                 environment,
             );
 
+        if (!changedFeatures) {
+            res.status(304);
+            res.getHeaderNames().forEach((header) => res.removeHeader(header));
+            res.end();
+            return;
+        }
+
         if (changedFeatures.revisionId === currentSdkRevisionId) {
             res.status(304);
             res.getHeaderNames().forEach((header) => res.removeHeader(header));

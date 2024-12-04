@@ -20,7 +20,6 @@ import {
     Autocomplete,
     type SelectChangeEvent,
     Checkbox,
-    styled
 } from '@mui/material';
 
 import debounce from 'debounce';
@@ -33,7 +32,6 @@ import {
     isStringOrStringArray,
     normalizeCustomContextProperties,
 } from '../../playground.utils';
-import CheckBox from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlank from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
 
@@ -206,7 +204,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                             <Checkbox
                                 icon={<CheckBoxOutlineBlank fontSize='small' />}
                                 checkedIcon={<CheckBoxIcon fontSize='small' />}
-                                style={{ marginRight: 0.4 }}
+                                sx={theme => ({ marginRight: theme.spacing(0.5) })}
                                 checked={selected}
                             />
                             {option}

@@ -6630,12 +6630,12 @@ __metadata:
   linkType: hard
 
 "json-2-csv@npm:^5.5.5":
-  version: 5.5.6
-  resolution: "json-2-csv@npm:5.5.6"
+  version: 5.5.7
+  resolution: "json-2-csv@npm:5.5.7"
   dependencies:
     deeks: "npm:3.1.0"
     doc-path: "npm:4.1.1"
-  checksum: 10c0/df2ca8731690ee1928d1b57b4497e4a51d6fe85369e9e3c503b8bd18affc9dd1f36c138d92acc512fb24e45d3ab0cead248c3491424f875a83ffe466aa7ca8a6
+  checksum: 10c0/b549753fd3155f2077e3f326a968f07afb5e2096d6fa3543de1dc6b836e3fe710ec3f63775e5f1b6a75d72d2c623db723d930b35a6d6d5bd26bb95cd557ec3ee
   languageName: node
   linkType: hard
 

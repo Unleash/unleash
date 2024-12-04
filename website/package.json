@@ -58,5 +58,5 @@
   "resolutions": {
     "http-proxy-middleware": "3.0.3"
   },
-  "packageManager": "yarn@4.5.1"
+  "packageManager": "yarn@4.5.3"
 }

@@ -249,5 +249,5 @@
       "yarn biome format --write --no-errors-on-unmatched"
     ]
   },
-  "packageManager": "yarn@4.5.1"
+  "packageManager": "yarn@4.5.3"
 }

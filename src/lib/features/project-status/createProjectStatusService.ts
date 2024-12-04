@@ -8,12 +8,16 @@ import FakeApiTokenStore from '../../../test/fixtures/fake-api-token-store';
 import { ApiTokenStore } from '../../db/api-token-store';
 import SegmentStore from '../segment/segment-store';
 import FakeSegmentStore from '../../../test/fixtures/fake-segment-store';
-import { PersonalDashboardReadModel } from '../personal-dashboard/personal-dashboard-read-model';
-import { FakePersonalDashboardReadModel } from '../personal-dashboard/fake-personal-dashboard-read-model';
 import {
     createFakeProjectLifecycleSummaryReadModel,
     createProjectLifecycleSummaryReadModel,
 } from './project-lifecycle-read-model/createProjectLifecycleSummaryReadModel';
+import { ProjectStaleFlagsReadModel } from './project-stale-flags-read-model/project-stale-flags-read-model';
+import { FakeProjectStaleFlagsReadModel } from './project-stale-flags-read-model/fake-project-stale-flags-read-model';
+import FeatureTypeStore from '../../db/feature-type-store';
+import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
+import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store';
+import FakeFeatureTypeStore from '../../../test/fixtures/fake-feature-type-store';
 
 export const createProjectStatusService = (
     db: Db,
@@ -40,6 +44,15 @@ export const createProjectStatusService = (
     );
     const projectLifecycleSummaryReadModel =
         createProjectLifecycleSummaryReadModel(db, config);
+    const projectStaleFlagsReadModel = new ProjectStaleFlagsReadModel(db);
+
+    const featureTypeStore = new FeatureTypeStore(db, config.getLogger);
+    const featureToggleStore = new FeatureToggleStore(
+        db,
+        config.eventBus,
+        config.getLogger,
+        config.flagResolver,
+    );
 
     return new ProjectStatusService(
         {
@@ -47,9 +60,11 @@ export const createProjectStatusService = (
             projectStore,
             apiTokenStore,
             segmentStore,
+            featureTypeStore,
+            featureToggleStore,
         },
-        new PersonalDashboardReadModel(db),
         projectLifecycleSummaryReadModel,
+        projectStaleFlagsReadModel,
     );
 };
 
@@ -58,15 +73,19 @@ export const createFakeProjectStatusService = () => {
     const projectStore = new FakeProjectStore();
     const apiTokenStore = new FakeApiTokenStore();
     const segmentStore = new FakeSegmentStore();
+    const featureTypeStore = new FakeFeatureTypeStore();
+    const featureToggleStore = new FakeFeatureToggleStore();
     const projectStatusService = new ProjectStatusService(
         {
             eventStore,
             projectStore,
             apiTokenStore,
             segmentStore,
+            featureTypeStore,
+            featureToggleStore,
         },
-        new FakePersonalDashboardReadModel(),
         createFakeProjectLifecycleSummaryReadModel(),
+        new FakeProjectStaleFlagsReadModel(),
     );
 
     return {

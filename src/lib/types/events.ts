@@ -210,6 +210,12 @@ export const RELEASE_PLAN_TEMPLATE_UPDATED =
     'release-plan-template-updated' as const;
 export const RELEASE_PLAN_TEMPLATE_DELETED =
     'release-plan-template-deleted' as const;
+
+export const RELEASE_PLAN_ADDED = 'release-plan-added' as const;
+export const RELEASE_PLAN_REMOVED = 'release-plan-removed' as const;
+export const RELEASE_PLAN_MILESTONE_STARTED =
+    'release-plan-milestone-started' as const;
+
 export const USER_PREFERENCE_UPDATED = 'user-preference-updated' as const;
 
 export const IEventTypes = [
@@ -362,6 +368,9 @@ export const IEventTypes = [
     RELEASE_PLAN_TEMPLATE_CREATED,
     RELEASE_PLAN_TEMPLATE_UPDATED,
     RELEASE_PLAN_TEMPLATE_DELETED,
+    RELEASE_PLAN_ADDED,
+    RELEASE_PLAN_REMOVED,
+    RELEASE_PLAN_MILESTONE_STARTED,
     USER_PREFERENCE_UPDATED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
@@ -2054,6 +2063,69 @@ export class ReleasePlanTemplateDeletedEvent extends BaseEvent {
     }) {
         super(RELEASE_PLAN_TEMPLATE_DELETED, eventData.auditUser);
         this.preData = eventData.preData;
+    }
+}
+
+export class ReleasePlanAddedEvent extends BaseEvent {
+    readonly project: string;
+    readonly featureName: string;
+    readonly environment: string;
+    readonly data: any;
+    constructor(eventData: {
+        project: string;
+        featureName: string;
+        environment: string;
+        data: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_ADDED, eventData.auditUser);
+        this.project = eventData.project;
+        this.featureName = eventData.featureName;
+        this.environment = eventData.environment;
+        this.data = eventData.data;
+    }
+}
+
+export class ReleasePlanRemovedEvent extends BaseEvent {
+    readonly project: string;
+    readonly featureName: string;
+    readonly environment: string;
+    readonly preData: any;
+    constructor(eventData: {
+        project: string;
+        featureName: string;
+        environment: string;
+        preData: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_REMOVED, eventData.auditUser);
+        this.project = eventData.project;
+        this.featureName = eventData.featureName;
+        this.environment = eventData.environment;
+        this.preData = eventData.preData;
+    }
+}
+
+export class ReleasePlanMilestoneStartedEvent extends BaseEvent {
+    readonly project: string;
+    readonly featureName: string;
+    readonly environment: string;
+    readonly preData: any;
+    readonly data: any;
+    constructor(eventData: {
+        project: string;
+        featureName: string;
+        environment: string;
+        preData: any;
+        data: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_MILESTONE_STARTED, eventData.auditUser);
+        this.project = eventData.project;
+        this.featureName = eventData.featureName;
+        this.environment = eventData.environment;
+        this.preData = eventData.preData;
+        this.data = eventData.data;
     }
 }
 

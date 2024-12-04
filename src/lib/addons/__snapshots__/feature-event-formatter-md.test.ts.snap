@@ -184,6 +184,14 @@ exports[`Should format specialised text for events when no specific text for str
 }
 `;
 
+exports[`Should format specialised text for events when project archived 1`] = `
+{
+  "label": "Project archived",
+  "text": "*user@company.com* archived project *my-other-project*",
+  "url": "unleashUrl/projects-archive",
+}
+`;
+
 exports[`Should format specialised text for events when rollout percentage changed 1`] = `
 {
   "label": "Flag strategy updated",

@@ -191,6 +191,11 @@ export const uiConfigSchema = {
             description: 'Whether Unleash AI is available.',
             example: false,
         },
+        maxSessionsCount: {
+            type: 'number',
+            description: 'The maximum number of sessions that a user has.',
+            example: 10,
+        },
     },
     components: {
         schemas: {

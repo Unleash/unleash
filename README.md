@@ -15,19 +15,27 @@
 
 ## What is Unleash?
 
-Unleash is a powerful open source solution for feature management. It streamlines your development workflow, accelerates software delivery, and empowers teams to control how and when they roll out new features to end users. With Unleash, you can deploy code to production in smaller, more manageable releases at your own pace.
+Unleash is a powerful open-source solution for feature management. It streamlines your development workflow, accelerates software delivery, and empowers teams to control how and when they roll out new features to end users. With Unleash, you can deploy code to production in smaller, more manageable releases at your own pace.
 
 Feature flags in Unleash let you test your code with real production data, reducing the risk of negatively impacting your users' experience. It also enables your team to work on multiple features simultaneously without the need for separate feature branches.
 
-Unleash is the most popular open source solution for feature flagging on GitHub. It supports 15 official client and server SDKs and over 15 community SDKs. You can even create your own SDK if you wish. Unleash is compatible with any language and framework.
+Unleash is the most popular open-source solution for feature flagging on GitHub. It supports 15 official client and server SDKs and over 15 community SDKs. You can even create your own SDK if you wish. Unleash is compatible with any language and framework.
 
 <br/>
 
-## Getting Started with Unleash
+## Get started with Unleash
 
-### 1. Setting Up Unleash
+### Set up Unleash
 
-To get started with Unleash, you need [`git`](https://git-scm.com/) and [`docker`](https://www.docker.com/) installed on your machine.
+To get started with Unleash, you can either explore [Unleash Enterprise](#set-up-unleash-enterprise) with a free trial or [get started locally](#set-up-unleash-locally) with our open-source solution.
+
+#### Unleash Enterprise
+
+To start with Unleash Enterprise, [request a free trial](https://www.getunleash.io/plans/enterprise-payg?utm_source=oss&utm_medium=readme&utm_content=unleash-enterprise-start). This gives you access to a hosted instance with unlimited projects and environments and features such as [role-based access control](https://docs.getunleash.io/reference/rbac), [change requests](https://docs.getunleash.io/reference/change-requests), [single sign-on](https://docs.getunleash.io/reference/sso), and [SCIM](https://docs.getunleash.io/reference/scim) for automatic user provisioning.
+
+#### Unleash Open Source
+
+To set up Unleash locally, you'll need [`git`](https://git-scm.com/) and [`docker`](https://www.docker.com/) installed on your machine.
 
 Execute the following commands:
 
@@ -44,7 +52,7 @@ Then point your browser to `localhost:4242` and log in using:
 
 If you'd rather run the source code in this repo directly via Node.js, see the [step-by-step instructions to get up and running in the contributing guide](./CONTRIBUTING.md#how-to-run-the-project).
 
-### 2. Connect your SDK
+### Connect your SDK
 
 Find your preferred SDK in [our list of official SDKs](#unleash-sdks) and import it into your project. Follow the setup guides for your specific SDK.
 
@@ -109,7 +117,7 @@ We know that learning a new tool can be hard and time-consuming. We have a growi
 
 ## Contribute to Unleash
 
-Unleash is the largest [open source feature flag solution](https://www.getunleash.io/) on GitHub. Building Unleash is a collaborative effort, and we owe a lot of gratitude to many smart and talented individuals. Building it together with the community ensures that we build a product that solves real problems for real people. We'd love to have your help too: Please feel free to open issues or provide pull requests.
+Unleash is the largest [open-source feature flag solution](https://www.getunleash.io/) on GitHub. Building Unleash is a collaborative effort, and we owe a lot of gratitude to many smart and talented individuals. Building it together with the community ensures that we build a product that solves real problems for real people. We'd love to have your help too: Please feel free to open issues or provide pull requests.
 
 Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guidelines and the [Unleash developer guide](./website/docs/contributing/developer-guide.md) for tips on environment setup, running the tests, and running Unleash from source.
 
@@ -138,7 +146,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
 - [Dashboard for managing technical debt](https://docs.getunleash.io/reference/technical-debt) and [stale flags](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles)
 - API-first: _everything_ can be automated. No exceptions.
-- [12 official client SDKs](https://docs.getunleash.io/reference/sdks#official-sdks), and ten [community-contributed client SDKs](https://docs.getunleash.io/reference/sdks#community-sdks)
+- [12 official client SDKs](https://docs.getunleash.io/reference/sdks#official-sdks), and 10 [community-contributed client SDKs](https://docs.getunleash.io/reference/sdks#community-sdks)
 - Run it via Docker with the [official Docker image](https://hub.docker.com/r/unleashorg/unleash-server) or as a pure Node.js application
 
 ### Security and performance
@@ -147,7 +155,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - [Audit logs](https://docs.getunleash.io/advanced/audit_log)
 - Enforce [OWASP's secure headers](https://owasp.org/www-project-secure-headers/) via the strict HTTPS-only mode
 - Flexible hosting options: host it on premise or in the cloud (_any_ cloud)
-- Scale [the Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) independently of the Unleash server to support any number of front-end clients without overloading your Unleash instance
+- Scale with [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) independently of the Unleash server to support any number of front-end clients without overloading your Unleash instance
 
 ### Looking for more features?
 
@@ -166,7 +174,7 @@ If you're looking for one of the following features, please take a look at our [
 
 ## Architecture
 
-<img src="./website/static/img/unleash-architecture.svg" title="Unleash System Overview" />
+<img src="./website/static/img/unleash-architecture-edge.png" title="Unleash System Overview" />
 
 Read more in the [_system overview_ section of the Unleash documentation](https://docs.getunleash.io/understanding-unleash/unleash-overview#system-overview).
 
@@ -189,7 +197,7 @@ To connect your application to Unleash you'll need to use a client SDK for your 
 
 **Official front-end SDKs:**
 
-The front-end SDKs connects via the [Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) in order to ensure privacy, scalability and security.
+The front-end SDKs connect via [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) in order to ensure privacy, scalability and security.
 
 - [Android Proxy SDK](https://docs.getunleash.io/reference/sdks/android-proxy)
 - [Flutter Proxy SDK](https://docs.getunleash.io/reference/sdks/flutter)

@@ -118,6 +118,29 @@ const ProjectStatusButton = styled(Button)(({ theme }) => ({
     },
 }));
 
+const ProjectStatusSvgWithMargin = styled(ProjectStatusSvg)(({ theme }) => ({
+    marginLeft: theme.spacing(0.5),
+}));
+
+const ProjectStatus = () => {
+    const [projectStatusOpen, setProjectStatusOpen] = useState(false);
+    return (
+        <>
+            <ProjectStatusButton
+                onClick={() => setProjectStatusOpen(true)}
+                startIcon={<ProjectStatusSvgWithMargin />}
+                data-loading-project
+            >
+                Project status
+            </ProjectStatusButton>
+            <ProjectStatusModal
+                open={projectStatusOpen}
+                close={() => setProjectStatusOpen(false)}
+            />
+        </>
+    );
+};
+
 export const Project = () => {
     const projectId = useRequiredPathParam('projectId');
     const { trackEvent } = usePlausibleTracker();
@@ -133,7 +156,6 @@ export const Project = () => {
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
     const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
-    const [projectStatusOpen, setProjectStatusOpen] = useState(false);
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -144,23 +166,23 @@ export const Project = () => {
 
     const tabs: ITab[] = [
         {
-            title: 'Flags',
+            title: simplifyProjectOverview ? 'Overview' : 'Flags',
             path: basePath,
             name: 'flags',
-        },
-        {
-            title: 'Insights',
-            path: `${basePath}/insights`,
-            name: 'insights',
-        },
-        {
-            title: 'Health',
-            path: `${basePath}/health`,
-            name: 'health',
         },
         ...(simplifyProjectOverview
             ? []
             : [
+                  {
+                      title: 'Insights',
+                      path: `${basePath}/insights`,
+                      name: 'insights',
+                  },
+                  {
+                      title: 'Health',
+                      path: `${basePath}/health`,
+                      name: 'health',
+                  },
                   {
                       title: 'Archived flags',
                       path: `${basePath}/archive`,
@@ -185,7 +207,7 @@ export const Project = () => {
             name: 'logs',
         },
         {
-            title: 'Project settings',
+            title: simplifyProjectOverview ? 'Settings' : 'Project settings',
             path: `${basePath}/settings`,
             ossPath: `${basePath}/settings/api-access`,
             name: 'settings',
@@ -280,10 +302,7 @@ export const Project = () => {
                         </StyledDiv>
                         <StyledDiv>
                             <ConditionallyRender
-                                condition={Boolean(
-                                    !simplifyProjectOverview &&
-                                        uiConfig?.flags?.featuresExportImport,
-                                )}
+                                condition={Boolean(!simplifyProjectOverview)}
                                 show={
                                     <PermissionIconButton
                                         permission={UPDATE_FEATURE}
@@ -297,15 +316,7 @@ export const Project = () => {
                                     </PermissionIconButton>
                                 }
                             />
-                            {simplifyProjectOverview && (
-                                <ProjectStatusButton
-                                    onClick={() => setProjectStatusOpen(true)}
-                                    startIcon={<ProjectStatusSvg />}
-                                    data-loading-project
-                                >
-                                    Project status
-                                </ProjectStatusButton>
-                            )}
+                            {simplifyProjectOverview && <ProjectStatus />}
                         </StyledDiv>
                     </StyledTopRow>
                 </StyledInnerContainer>
@@ -427,10 +438,6 @@ export const Project = () => {
                 open={modalOpen}
                 setOpen={setModalOpen}
                 project={projectId}
-            />
-            <ProjectStatusModal
-                open={projectStatusOpen}
-                close={() => setProjectStatusOpen(false)}
             />
         </div>
     );

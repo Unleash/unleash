@@ -4,7 +4,7 @@ import dbInit, {
 } from '../../../../test/e2e/helpers/database-init';
 import getLogger from '../../../../test/fixtures/no-logger';
 import { ProjectLifecycleSummaryReadModel } from './project-lifecycle-summary-read-model';
-import type { IFeatureToggleStore, StageName } from '../../../types';
+import type { StageName } from '../../../types';
 import { randomId } from '../../../util';
 
 let db: ITestDb;
@@ -14,7 +14,7 @@ beforeAll(async () => {
     db = await dbInit('project_lifecycle_summary_read_model_serial', getLogger);
     readModel = new ProjectLifecycleSummaryReadModel(
         db.rawDatabase,
-        {} as unknown as IFeatureToggleStore,
+        db.stores.featureToggleStore,
     );
 });
 
@@ -211,15 +211,15 @@ describe('count current flags in each stage', () => {
         const flags = [
             {
                 name: randomId(),
-                stages: ['initial', 'pre-live', 'live', 'archived'],
+                stages: ['initial', 'live'],
             },
             {
                 name: randomId(),
-                stages: ['initial', 'archived'],
+                stages: ['initial'],
             },
             {
                 name: randomId(),
-                stages: ['initial', 'pre-live', 'live', 'archived'],
+                stages: ['initial', 'pre-live', 'live', 'completed'],
             },
             { name: randomId(), stages: ['initial', 'pre-live', 'live'] },
         ];
@@ -230,13 +230,24 @@ describe('count current flags in each stage', () => {
                 createdByUserId: 1,
             });
 
-            for (const stage of stages) {
+            const time = Date.now();
+            for (const [index, stage] of stages.entries()) {
                 await db.stores.featureLifecycleStore.insert([
                     {
                         feature: flag.name,
                         stage: stage as StageName,
                     },
                 ]);
+
+                await db
+                    .rawDatabase('feature_lifecycles')
+                    .where({
+                        feature: flag.name,
+                        stage: stage,
+                    })
+                    .update({
+                        created_at: addMinutes(time, index),
+                    });
             }
         }
 
@@ -266,11 +277,60 @@ describe('count current flags in each stage', () => {
         const result = await readModel.getCurrentFlagsInEachStage(project.id);
 
         expect(result).toMatchObject({
-            initial: 4,
-            'pre-live': 3,
-            live: 3,
-            completed: 0,
-            archived: 3,
+            initial: 1,
+            'pre-live': 0,
+            live: 2,
+            completed: 1,
+            archived: 0,
+        });
+    });
+
+    test('if a flag is archived, but does not have the corresponding lifecycle stage, we still count it as archived and exclude it from other stages', async () => {
+        const project = await db.stores.projectStore.create({
+            name: 'project',
+            id: randomId(),
+        });
+
+        const flag = await db.stores.featureToggleStore.create(project.id, {
+            name: randomId(),
+            createdByUserId: 1,
+        });
+
+        await db.stores.featureLifecycleStore.insert([
+            {
+                feature: flag.name,
+                stage: 'initial',
+            },
+        ]);
+
+        await db.stores.featureToggleStore.archive(flag.name);
+
+        const result = await readModel.getCurrentFlagsInEachStage(project.id);
+
+        expect(result).toMatchObject({
+            initial: 0,
+            archived: 1,
+        });
+    });
+
+    test('the archived count is based on the features table (source of truth), not the lifecycle table', async () => {
+        const project = await db.stores.projectStore.create({
+            name: 'project',
+            id: randomId(),
+        });
+
+        const flag = await db.stores.featureToggleStore.create(project.id, {
+            name: randomId(),
+            createdByUserId: 1,
+        });
+
+        await db.stores.featureToggleStore.archive(flag.name);
+
+        const result = await readModel.getCurrentFlagsInEachStage(project.id);
+
+        expect(result).toMatchObject({
+            initial: 0,
+            archived: 1,
         });
     });
 });

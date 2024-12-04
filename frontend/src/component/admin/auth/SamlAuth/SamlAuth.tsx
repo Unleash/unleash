@@ -128,7 +128,8 @@ export const SamlAuth = () => {
                             documentation
                         </a>{' '}
                         to learn how to integrate with specific SAML 2.0
-                        providers (Okta, Keycloak, etc). <br />
+                        providers (such as Okta, Keycloak, and Microsoft Entra
+                        ID). <br />
                         Callback URL:{' '}
                         <code>{uiConfig.unleashUrl}/auth/saml/callback</code>
                     </Alert>

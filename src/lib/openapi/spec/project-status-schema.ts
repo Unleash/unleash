@@ -28,7 +28,13 @@ export const projectStatusSchema = {
     $id: '#/components/schemas/projectStatusSchema',
     type: 'object',
     additionalProperties: false,
-    required: ['activityCountByDate', 'resources', 'averageHealth'],
+    required: [
+        'activityCountByDate',
+        'resources',
+        'health',
+        'lifecycleSummary',
+        'staleFlags',
+    ],
     description:
         'Schema representing the overall status of a project, including an array of activity records. Each record in the activity array contains a date and a count, providing a snapshot of the project’s activity level over time.',
     properties: {
@@ -37,29 +43,26 @@ export const projectStatusSchema = {
             description:
                 'Array of activity records with date and count, representing the project’s daily activity statistics.',
         },
-        averageHealth: {
-            type: 'integer',
-            minimum: 0,
-            description:
-                'The average health score over the last 4 weeks, indicating whether features are stale or active.',
+        health: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['current'],
+            description: "Information about the project's health rating",
+            properties: {
+                current: {
+                    type: 'integer',
+                    minimum: 0,
+                    description: `The project's current health score, based on the ratio of healthy flags to stale and potentially stale flags.`,
+                    example: 100,
+                },
+            },
         },
         resources: {
             type: 'object',
             additionalProperties: false,
-            required: [
-                'connectedEnvironments',
-                'apiTokens',
-                'members',
-                'segments',
-            ],
+            required: ['apiTokens', 'members', 'segments'],
             description: 'Key resources within the project',
             properties: {
-                connectedEnvironments: {
-                    type: 'integer',
-                    minimum: 0,
-                    description:
-                        'The number of environments that have received SDK traffic in this project.',
-                },
                 apiTokens: {
                     type: 'integer',
                     minimum: 0,
@@ -77,6 +80,21 @@ export const projectStatusSchema = {
                     minimum: 0,
                     description:
                         'The number of segments that are scoped to this project.',
+                },
+            },
+        },
+        staleFlags: {
+            type: 'object',
+            additionalProperties: false,
+            description:
+                'Information on stale and potentially stale flags in this project.',
+            required: ['total'],
+            properties: {
+                total: {
+                    type: 'integer',
+                    minimum: 0,
+                    description:
+                        'The total number of flags in this project that are stale or potentially stale.',
                 },
             },
         },

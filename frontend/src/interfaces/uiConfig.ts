@@ -34,6 +34,7 @@ export interface IUiConfig {
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
     unleashAIAvailable?: boolean;
+    maxSessionsCount?: number;
 }
 
 export interface IProclamationToast {
@@ -55,7 +56,6 @@ export type UiFlags = {
     maintenanceMode?: boolean;
     messageBanner?: Variant;
     banner?: Variant;
-    featuresExportImport?: boolean;
     caseInsensitiveInOperators?: boolean;
     notifications?: boolean;
     personalAccessTokensKillSwitch?: boolean;
@@ -75,6 +75,7 @@ export type UiFlags = {
     adminTokenKillSwitch?: boolean;
     feedbackComments?: Variant;
     showInactiveUsers?: boolean;
+    feedbackPosting?: boolean;
     userAccessUIEnabled?: boolean;
     outdatedSdksBanner?: boolean;
     estimateTrafficDataCost?: boolean;
@@ -84,15 +85,15 @@ export type UiFlags = {
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
     flagCreator?: boolean;
-    onboardingUI?: boolean;
-    personalDashboardUI?: boolean;
     purchaseAdditionalEnvironments?: boolean;
     unleashAI?: boolean;
     releasePlans?: boolean;
     'enterprise-payg'?: boolean;
     simplifyProjectOverview?: boolean;
     productivityReportEmail?: boolean;
+    showUserDeviceCount?: boolean;
     flagOverviewRedesign?: boolean;
+    licensedUsers?: boolean;
 };
 
 export interface IVersionInfo {

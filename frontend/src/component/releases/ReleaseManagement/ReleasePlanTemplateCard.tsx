@@ -2,9 +2,13 @@ import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { ReactComponent as ReleaseTemplateIcon } from 'assets/img/releaseTemplates.svg';
 import { styled, Typography } from '@mui/material';
 import { ReleasePlanTemplateCardMenu } from './ReleasePlanTemplateCardMenu';
+import { useNavigate } from 'react-router-dom';
+import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
+import useUserInfo from 'hooks/api/getters/useUserInfo/useUserInfo';
 
 const StyledTemplateCard = styled('aside')(({ theme }) => ({
     height: '100%',
+    cursor: 'pointer',
     '&:hover': {
         transition: 'background-color 0.2s ease-in-out',
         backgroundColor: theme.palette.neutral.light,
@@ -44,6 +48,12 @@ const StyledCreatedBy = styled(Typography)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     marginRight: 'auto',
+    gap: theme.spacing(1),
+}));
+
+const StyledCreatedByAvatar = styled(UserAvatar)(({ theme }) => ({
+    width: theme.spacing(3),
+    height: theme.spacing(3),
 }));
 
 const StyledMenu = styled('div')(({ theme }) => ({
@@ -58,8 +68,14 @@ const StyledMenu = styled('div')(({ theme }) => ({
 export const ReleasePlanTemplateCard = ({
     template,
 }: { template: IReleasePlanTemplate }) => {
+    const navigate = useNavigate();
+    const onClick = () => {
+        navigate(`/release-management/edit/${template.id}`);
+    };
+    const { user: createdBy } = useUserInfo(`${template.createdByUserId}`);
+
     return (
-        <StyledTemplateCard>
+        <StyledTemplateCard onClick={onClick}>
             <TemplateCardHeader>
                 <StyledCenter>
                     <ReleaseTemplateIcon />
@@ -69,10 +85,18 @@ export const ReleasePlanTemplateCard = ({
                 <div>{template.name}</div>
                 <StyledDiv>
                     <StyledCreatedBy>
-                        Created by {template.createdByUserId}
+                        Created by <StyledCreatedByAvatar user={createdBy} />
                     </StyledCreatedBy>
-                    <StyledMenu onClick={(e) => e.preventDefault()}>
-                        <ReleasePlanTemplateCardMenu template={template} />
+                    <StyledMenu
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                        }}
+                    >
+                        <ReleasePlanTemplateCardMenu
+                            template={template}
+                            onClick={onClick}
+                        />
                     </StyledMenu>
                 </StyledDiv>
             </TemplateCardBody>

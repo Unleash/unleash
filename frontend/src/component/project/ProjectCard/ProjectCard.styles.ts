@@ -32,6 +32,7 @@ export const StyledProjectCardBody = styled(Box)(({ theme }) => ({
     flexFlow: 'column',
     justifyContent: 'space-between',
     height: '100%',
+    position: 'relative',
 }));
 
 export const StyledDivHeader = styled('div')(({ theme }) => ({

@@ -59,7 +59,11 @@ const getEventIcon = ({ icon, type }: Pick<TimelineEvent, 'icon' | 'type'>) => {
     if (type === 'feature-environment-disabled') {
         return <ToggleOffIcon />;
     }
-    if (type.startsWith('strategy-') || type.startsWith('feature-strategy-')) {
+    if (
+        type.startsWith('strategy-') ||
+        type.startsWith('feature-strategy-') ||
+        type.startsWith('release-plan-')
+    ) {
         return (
             <ExtensionOutlinedIcon
                 sx={{ marginTop: '-2px', marginRight: '-2px' }}

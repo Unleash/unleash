@@ -121,6 +121,11 @@ const sidebars: SidebarsConfig = {
                                     label: 'Feature Flags for AI',
                                     id: 'feature-flag-tutorials/use-cases/ai',
                                 },
+                                {
+                                    type: 'doc',
+                                    label: 'Trunk-Based Development',
+                                    id: 'feature-flag-tutorials/use-cases/trunk-based-development',
+                                },
                             ],
                         },
                         {
@@ -608,6 +613,21 @@ const sidebars: SidebarsConfig = {
                     ],
                 },
                 'generated/unleash-proxy',
+                {
+                    type: 'category',
+                    label: 'Compliance',
+                    link: {
+                        type: 'doc',
+                        id: 'using-unleash/compliance/compliance-overview',
+                    },
+                    items: [
+                        {
+                            type: 'doc',
+                            label: 'FedRAMP',
+                            id: 'using-unleash/compliance/fedramp',
+                        },
+                    ],
+                },
                 {
                     label: 'Troubleshooting',
                     type: 'category',

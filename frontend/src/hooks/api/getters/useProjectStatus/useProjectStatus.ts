@@ -7,12 +7,38 @@ const path = (projectId: string) => `api/admin/projects/${projectId}/status`;
 const placeholderData: ProjectStatusSchema = {
     activityCountByDate: [],
     resources: {
-        connectedEnvironments: 0,
         members: 0,
         apiTokens: 0,
         segments: 0,
     },
-    averageHealth: 0,
+    health: {
+        current: 0,
+    },
+    lifecycleSummary: {
+        initial: {
+            currentFlags: 0,
+            averageDays: null,
+        },
+        preLive: {
+            currentFlags: 0,
+            averageDays: null,
+        },
+        live: {
+            currentFlags: 0,
+            averageDays: null,
+        },
+        completed: {
+            currentFlags: 0,
+            averageDays: null,
+        },
+        archived: {
+            currentFlags: 0,
+            last30Days: 0,
+        },
+    },
+    staleFlags: {
+        total: 0,
+    },
 };
 
 export const useProjectStatus = (projectId: string) => {

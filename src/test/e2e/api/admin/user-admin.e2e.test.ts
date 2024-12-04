@@ -18,6 +18,7 @@ import { randomId } from '../../../../lib/util/random-id';
 import { omitKeys } from '../../../../lib/util/omit-keys';
 import type { ISessionStore } from '../../../../lib/types/stores/session-store';
 import type { IUnleashStores } from '../../../../lib/types';
+import { createHash } from 'crypto';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -37,6 +38,7 @@ beforeAll(async () => {
         experimental: {
             flags: {
                 strictSchemaValidation: true,
+                showUserDeviceCount: true,
             },
         },
     });
@@ -404,4 +406,59 @@ test('Anonymises name, username and email fields if anonymiseEventLog flag is se
     expect(body.users[0].email).toEqual('aeb83743e@unleash.run');
     expect(body.users[0].name).toEqual('3a8b17647@unleash.run');
     expect(body.users[0].username).toEqual(''); // Not set, so anonymise should return the empty string.
+});
+
+test('creates user with email md5 hash', async () => {
+    await app.request
+        .post('/api/admin/user-admin')
+        .send({
+            email: `hasher@getunleash.ai`,
+            name: `Some Name Hash`,
+            rootRole: editorRole.id,
+        })
+        .set('Content-Type', 'application/json');
+
+    const user = await db
+        .rawDatabase('users')
+        .where({ email: 'hasher@getunleash.ai' })
+        .first(['email_hash']);
+
+    const expectedHash = createHash('md5')
+        .update('hasher@getunleash.ai')
+        .digest('hex');
+
+    expect(user.email_hash).toBe(expectedHash);
+});
+
+test('should return number of sessions per user', async () => {
+    const user = await userStore.insert({ email: 'tester@example.com' });
+    await sessionStore.insertSession({
+        sid: '1',
+        sess: { user: { id: user.id } },
+    });
+    await sessionStore.insertSession({
+        sid: '2',
+        sess: { user: { id: user.id } },
+    });
+
+    const user2 = await userStore.insert({ email: 'tester2@example.com' });
+    await sessionStore.insertSession({
+        sid: '3',
+        sess: { user: { id: user2.id } },
+    });
+
+    const response = await app.request.get(`/api/admin/user-admin`).expect(200);
+
+    expect(response.body).toMatchObject({
+        users: expect.arrayContaining([
+            expect.objectContaining({
+                email: 'tester@example.com',
+                activeSessions: 2,
+            }),
+            expect.objectContaining({
+                email: 'tester2@example.com',
+                activeSessions: 1,
+            }),
+        ]),
+    });
 });

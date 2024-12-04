@@ -17,6 +17,7 @@ import {
     NotFoundError,
 } from 'utils/apiUtils';
 import { contentSpacingY } from 'themes/themeStyles';
+import useToast from 'hooks/useToast';
 
 interface IPasswordAuthProps {
     authDetails: IAuthEndpointDetailsResponse;
@@ -46,6 +47,7 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
         passwordError?: string;
         apiError?: string;
     }>({});
+    const { setToastData } = useToast();
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (evt) => {
         evt.preventDefault();
@@ -68,7 +70,19 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
         }
 
         try {
-            await passwordAuth(authDetails.path, username, password);
+            const data = await passwordAuth(
+                authDetails.path,
+                username,
+                password,
+            );
+            if (data.deletedSessions && data.activeSessions) {
+                setToastData({
+                    type: 'success',
+                    title: 'Maximum Session Limit Reached',
+                    text: `You can have up to ${data.activeSessions} active sessions at a time. To enhance your account security, we’ve ended ${data.deletedSessions} session(s) on other browsers.`,
+                });
+            }
+
             refetchUser();
             navigate(redirect, { replace: true });
         } catch (error: any) {

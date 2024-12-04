@@ -5,16 +5,9 @@ import UsersIcon from '@mui/icons-material/Group';
 import { Link } from 'react-router-dom';
 import ApiKeyIcon from '@mui/icons-material/Key';
 import SegmentsIcon from '@mui/icons-material/DonutLarge';
-import ConnectedIcon from '@mui/icons-material/Cable';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
-
-const Wrapper = styled('article')(({ theme }) => ({
-    backgroundColor: theme.palette.envAccordion.expanded,
-    padding: theme.spacing(3),
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    minWidth: '300px',
-}));
+import { HealthGridTile } from './ProjectHealthGrid.styles';
 
 const ProjectResourcesInner = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -33,9 +26,9 @@ const ItemContent = styled('span')(({ theme }) => ({
 }));
 
 const onNarrowWidget = (css: object) => ({
-    '@container (max-width: 400px)': css,
+    '@container (max-width: 385px)': css,
     '@supports not (container-type: inline-size)': {
-        '@media (max-width: 400px)': css,
+        '@media (max-width: 385px)': css,
     },
 });
 
@@ -96,7 +89,6 @@ const useProjectResources = (projectId: string) => {
         resources: {
             members: 0,
             apiTokens: 0,
-            connectedEnvironments: 0,
             segments: 0,
         },
     };
@@ -114,10 +106,10 @@ export const ProjectResources = () => {
     const loadingRef = useLoading(loading, '[data-loading-resources=true]');
 
     return (
-        <Wrapper ref={loadingRef}>
+        <HealthGridTile ref={loadingRef}>
             <ProjectResourcesInner>
-                <Typography variant='h3' sx={{ margin: 0 }}>
-                    Project Resources
+                <Typography variant='h4' sx={{ margin: 0 }}>
+                    Project resources
                 </Typography>
                 <ResourceList>
                     <ListItem
@@ -137,15 +129,6 @@ export const ProjectResources = () => {
                     </ListItem>
 
                     <ListItem
-                        linkUrl={`/projects/${projectId}/settings/placeholder`}
-                        linkText='View connections'
-                        icon={<ConnectedIcon />}
-                    >
-                        {resources.connectedEnvironments} connected
-                        environment(s)
-                    </ListItem>
-
-                    <ListItem
                         linkUrl={`/projects/${projectId}/settings/segments`}
                         linkText='Add segments'
                         icon={<SegmentsIcon />}
@@ -154,6 +137,6 @@ export const ProjectResources = () => {
                     </ListItem>
                 </ResourceList>
             </ProjectResourcesInner>
-        </Wrapper>
+        </HealthGridTile>
     );
 };

@@ -10,13 +10,8 @@ import { BillingHistory } from './BillingHistory/BillingHistory';
 import useInvoices from 'hooks/api/getters/useInvoices/useInvoices';
 
 export const Billing = () => {
-    const {
-        instanceStatus,
-        isBilling,
-        refetchInstanceStatus,
-        refresh,
-        loading,
-    } = useInstanceStatus();
+    const { isBilling, refetchInstanceStatus, refresh, loading } =
+        useInstanceStatus();
     const { invoices } = useInvoices();
 
     useEffect(() => {
@@ -35,9 +30,7 @@ export const Billing = () => {
                     show={
                         <PermissionGuard permissions={ADMIN}>
                             <>
-                                <BillingDashboard
-                                    instanceStatus={instanceStatus!}
-                                />
+                                <BillingDashboard />
                                 <BillingHistory data={invoices} />
                             </>
                         </PermissionGuard>

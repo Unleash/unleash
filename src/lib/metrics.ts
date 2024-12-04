@@ -155,7 +155,7 @@ export function registerPrometheusMetrics(
     });
     const featureFlagUpdateTotal = createCounter({
         name: 'feature_toggle_update_total',
-        help: 'Number of times a toggle has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature flag is created.',
+        help: 'Number of times a flag has been updated. Environment label would be "n/a" when it is not available, e.g. when a feature flag is created.',
         labelNames: [
             'toggle',
             'project',
@@ -407,6 +407,20 @@ export function registerPrometheusMetrics(
         map: (result) => ({ value: result ? 1 : 0 }),
     });
 
+    dbMetrics.registerGaugeDbMetric({
+        name: 'password_auth_enabled',
+        help: 'Whether password auth is enabled',
+        query: () => instanceStatsService.hasPasswordAuth(),
+        map: (result) => ({ value: result ? 1 : 0 }),
+    });
+
+    dbMetrics.registerGaugeDbMetric({
+        name: 'scim_enabled',
+        help: 'Whether SCIM is enabled',
+        query: () => instanceStatsService.hasSCIM(),
+        map: (result) => ({ value: result ? 1 : 0 }),
+    });
+
     const clientSdkVersionUsage = createCounter({
         name: 'client_sdk_versions',
         help: 'Which sdk versions are being used',
@@ -636,6 +650,11 @@ export function registerPrometheusMetrics(
         resourceLimit.labels({ resource }).set(limit);
     }
 
+    const licensedUsers = createGauge({
+        name: 'licensed_users',
+        help: 'The number of licensed users.',
+    });
+
     const addonEventsHandledCounter = createCounter({
         name: 'addon_events_handled',
         help: 'Events handled by addons and the result.',
@@ -653,11 +672,6 @@ export function registerPrometheusMetrics(
     eventBus.on(
         events.STAGE_ENTERED,
         (entered: { stage: string; feature: string }) => {
-            if (flagResolver.isEnabled('trackLifecycleMetrics')) {
-                logger.info(
-                    `STAGE_ENTERED listened ${JSON.stringify(entered)}`,
-                );
-            }
             featureLifecycleStageEnteredCounter.increment({
                 stage: entered.stage,
             });
@@ -1003,6 +1017,11 @@ export function registerPrometheusMetrics(
                 usersActive60days.set(activeUsers.last60);
                 usersActive90days.reset();
                 usersActive90days.set(activeUsers.last90);
+
+                const licensedUsersStat =
+                    await instanceStatsService.getLicencedUsers();
+                licensedUsers.reset();
+                licensedUsers.set(licensedUsersStat);
 
                 const productionChanges =
                     await instanceStatsService.getProductionChanges();

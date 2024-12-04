@@ -38,6 +38,7 @@ import getLogger from '../test/fixtures/no-logger';
 import dbInit, { type ITestDb } from '../test/e2e/helpers/database-init';
 import { FeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store';
 import { FeatureLifecycleReadModel } from './features/feature-lifecycle/feature-lifecycle-read-model';
+import { createFakeGetLicensedUsers } from './features/instance-stats/getLicensedUsers';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
@@ -62,12 +63,7 @@ beforeAll(async () => {
     eventStore = stores.eventStore;
     environmentStore = new FakeEnvironmentStore();
     stores.environmentStore = environmentStore;
-    const versionService = new VersionService(
-        stores,
-        config,
-        createFakeGetActiveUsers(),
-        createFakeGetProductionChanges(),
-    );
+    const versionService = new VersionService(stores, config);
     db = await dbInit('metrics_test', getLogger);
 
     featureLifeCycleReadModel = new FeatureLifecycleReadModel(
@@ -84,6 +80,7 @@ beforeAll(async () => {
         versionService,
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
+        createFakeGetLicensedUsers(),
     );
 
     schedulerService = new SchedulerService(
@@ -356,4 +353,10 @@ test('should collect traffic_total metrics', async () => {
     const recordedMetric =
         await prometheusRegister.getSingleMetricAsString('traffic_total');
     expect(recordedMetric).toMatch(/traffic_total 0/);
+});
+
+test('should collect licensed_users metrics', async () => {
+    const recordedMetric =
+        await prometheusRegister.getSingleMetricAsString('licensed_users');
+    expect(recordedMetric).toMatch(/licensed_users 0/);
 });

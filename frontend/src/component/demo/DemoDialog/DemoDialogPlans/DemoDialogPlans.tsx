@@ -4,6 +4,13 @@ import GitHub from '@mui/icons-material/GitHub';
 import Launch from '@mui/icons-material/Launch';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
+import {
+    BILLING_PAYG_DEFAULT_MINIMUM_SEATS,
+    BILLING_PAYG_USER_PRICE,
+    BILLING_PLAN_PRICES,
+    BILLING_PRO_DEFAULT_INCLUDED_SEATS,
+} from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
+import { InstancePlan } from 'interfaces/instance';
 
 const StyledDemoDialog = styled(DemoDialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -132,10 +139,11 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                         </Typography>
                         <div>
                             <Typography variant='h6' fontWeight='normal'>
-                                $75 per user/month
+                                ${BILLING_PAYG_USER_PRICE} per user/month
                             </Typography>
                             <Typography variant='body2'>
-                                5 users minimum
+                                {BILLING_PAYG_DEFAULT_MINIMUM_SEATS} users
+                                minimum
                             </Typography>
                         </div>
                         <Button
@@ -166,10 +174,11 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                         </Typography>
                         <div>
                             <Typography variant='h6' fontWeight='normal'>
-                                $80/month
+                                ${BILLING_PLAN_PRICES[InstancePlan.PRO]}/month
                             </Typography>
                             <Typography variant='body2'>
-                                includes 5 seats
+                                includes {BILLING_PRO_DEFAULT_INCLUDED_SEATS}{' '}
+                                seats
                             </Typography>
                         </div>
                         <Button

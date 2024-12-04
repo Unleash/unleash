@@ -42,6 +42,9 @@ export default class ProjectHealthReport extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Projects'],
+                    deprecated: config.flagResolver.isEnabled(
+                        'simplifyProjectOverview',
+                    ),
                     operationId: 'getProjectHealthReport',
                     summary: 'Get a health report for a project.',
                     description:

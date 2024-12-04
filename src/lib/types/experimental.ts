@@ -13,7 +13,6 @@ export type IFlagKey =
     | 'responseTimeWithAppNameKillSwitch'
     | 'maintenanceMode'
     | 'messageBanner'
-    | 'featuresExportImport'
     | 'caseInsensitiveInOperators'
     | 'strictSchemaValidation'
     | 'personalAccessTokensKillSwitch'
@@ -28,6 +27,7 @@ export type IFlagKey =
     | 'signals'
     | 'automatedActions'
     | 'celebrateUnleash'
+    | 'feedbackPosting'
     | 'extendedUsageMetrics'
     | 'adminTokenKillSwitch'
     | 'feedbackComments'
@@ -46,10 +46,7 @@ export type IFlagKey =
     | 'enableLegacyVariants'
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
-    | 'onboardingUI'
     | 'projectRoleAssignment'
-    | 'personalDashboardUI'
-    | 'trackLifecycleMetrics'
     | 'purchaseAdditionalEnvironments'
     | 'originMiddlewareRequestLogging'
     | 'unleashAI'
@@ -58,7 +55,12 @@ export type IFlagKey =
     | 'productivityReportEmail'
     | 'enterprise-payg'
     | 'simplifyProjectOverview'
-    | 'flagOverviewRedesign';
+    | 'flagOverviewRedesign'
+    | 'showUserDeviceCount'
+    | 'deleteStaleUserSessions'
+    | 'memorizeStats'
+    | 'licensedUsers'
+    | 'streaming';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -94,10 +96,6 @@ const flags: IFlags = {
                 process.env.UNLEASH_EXPERIMENTAL_MESSAGE_BANNER_PAYLOAD ?? '',
         },
     },
-    featuresExportImport: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FEATURES_EXPORT_IMPORT,
-        true,
-    ),
     caseInsensitiveInOperators: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CASE_INSENSITIVE_IN_OPERATORS,
         false,
@@ -142,6 +140,10 @@ const flags: IFlags = {
     ),
     celebrateUnleash: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_CELEBRATE_UNLEASH,
+        false,
+    ),
+    feedbackPosting: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FEEDBACK_POSTING,
         false,
     ),
     encryptEmails: parseEnvVarBoolean(
@@ -230,20 +232,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_REMOVE_UNSAFE_INLINE_STYLE_SRC,
         false,
     ),
-    onboardingUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ONBOARDING_UI,
-        false,
-    ),
     projectRoleAssignment: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_ROLE_ASSIGNMENT,
-        false,
-    ),
-    personalDashboardUI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PERSONAL_DASHBOARD_UI,
-        false,
-    ),
-    trackLifecycleMetrics: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_TRACK_LIFECYCLE_METRICS,
         false,
     ),
     purchaseAdditionalEnvironments: parseEnvVarBoolean(
@@ -274,12 +264,24 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_ENTERPRISE_PAYG,
         false,
     ),
+    showUserDeviceCount: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
+        false,
+    ),
     simplifyProjectOverview: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SIMPLIFY_PROJECT_OVERVIEW,
         false,
     ),
     flagOverviewRedesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
+        false,
+    ),
+    licensedUsers: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FLAG_LICENSED_USERS,
+        false,
+    ),
+    streaming: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_STREAMING,
         false,
     ),
 };

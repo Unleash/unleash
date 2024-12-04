@@ -101,4 +101,39 @@ describe('traffic overage calculation', () => {
         // 22_500_000 * 3 * 30 = 2_025_000_000
         expect(result).toBe(2_025_000_000);
     });
+
+    it('supports custom price and unit size', () => {
+        const dataUsage = 54_000_000;
+        const includedTraffic = 53_000_000;
+        const result = calculateOverageCost(
+            dataUsage,
+            includedTraffic,
+            10,
+            500_000,
+        );
+        expect(result).toBe(20);
+    });
+
+    it('estimates based on custom price and unit size', () => {
+        const testData = testData4Days;
+        testData[0].data.push(22_500_000);
+        testData[1].data.push(22_500_000);
+        testData[2].data.push(22_500_000);
+        const now = new Date();
+        const period = toSelectablePeriod(now);
+        const testNow = new Date(now.getFullYear(), now.getMonth(), 5);
+        const result = calculateEstimatedMonthlyCost(
+            period.key,
+            testData,
+            53_000_000,
+            testNow,
+            10,
+            500_000,
+        );
+        // 22_500_000 * 3 * 30 = 2_025_000_000 total usage
+        // 2_025_000_000 - 53_000_000 = 1_972_000_000 overage
+        // 1_972_000_000 / 500_000 = 3_944 overage units
+        // 3_944 * 10 = 39_440
+        expect(result).toBeGreaterThanOrEqual(39_440);
+    });
 });

@@ -22,6 +22,7 @@ import { ExternalBanners } from './banners/externalBanners/ExternalBanners';
 import { LicenseBanner } from './banners/internalBanners/LicenseBanner';
 import { Demo } from './demo/Demo';
 import { LoginRedirect } from './common/LoginRedirect/LoginRedirect';
+import { SecurityBanner } from './banners/internalBanners/SecurityBanner';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -66,6 +67,7 @@ export const App = () => {
                                     show={<MaintenanceBanner />}
                                 />
                                 <LicenseBanner />
+                                <SecurityBanner />
                                 <ExternalBanners />
                                 <InternalBanners />
                                 <StyledContainer>

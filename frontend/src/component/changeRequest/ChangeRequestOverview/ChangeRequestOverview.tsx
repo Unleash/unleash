@@ -33,6 +33,7 @@ import {
 import { ScheduleChangeRequestDialog } from './ChangeRequestScheduledDialogs/ScheduleChangeRequestDialog';
 import type { PlausibleChangeRequestState } from '../changeRequest.types';
 import { useNavigate } from 'react-router-dom';
+import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 
 const StyledAsideBox = styled(Box)(({ theme }) => ({
     width: '30%',
@@ -89,6 +90,8 @@ export const ChangeRequestOverview: FC = () => {
     const { user } = useAuthUser();
     const { isAdmin } = useContext(AccessContext);
     const [commentText, setCommentText] = useState('');
+    const { refetch: refetchActionableChangeRequests } =
+        useActionableChangeRequests(projectId);
 
     const id = useRequiredPathParam('id');
     const { data: changeRequest, refetchChangeRequest } = useChangeRequest(
@@ -130,6 +133,7 @@ export const ChangeRequestOverview: FC = () => {
             setShowApplyScheduledDialog(false);
             await refetchChangeRequest();
             refetchChangeRequestOpen();
+            refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
                 title: 'Success',
@@ -152,6 +156,7 @@ export const ChangeRequestOverview: FC = () => {
             setShowScheduleChangeDialog(false);
             refetchChangeRequest();
             refetchChangeRequestOpen();
+            refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
                 title: 'Success',
@@ -191,6 +196,7 @@ export const ChangeRequestOverview: FC = () => {
             setShowCancelDialog(false);
             await refetchChangeRequest();
             refetchChangeRequestOpen();
+            refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
                 title: 'Success',
@@ -219,6 +225,7 @@ export const ChangeRequestOverview: FC = () => {
                 text: 'Changes rejected',
             });
             refetchChangeRequestOpen();
+            refetchActionableChangeRequests();
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         } finally {
@@ -233,6 +240,7 @@ export const ChangeRequestOverview: FC = () => {
                 state: 'Approved',
             });
             await refetchChangeRequest();
+            refetchActionableChangeRequests();
             refetchChangeRequestOpen();
             setToastData({
                 type: 'success',

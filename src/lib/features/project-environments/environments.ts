@@ -113,7 +113,7 @@ export default class EnvironmentsController extends Controller {
                     operationId: 'addDefaultStrategyToProjectEnvironment',
                     summary: 'Set environment-default strategy',
                     description:
-                        'Sets a default strategy for this environment. Unleash will use this strategy by default when enabling a toggle. Use the wild card "*" for `:environment` to add to all environments. ',
+                        'Sets a default strategy for this environment. Unleash will use this strategy by default when enabling a feature flag. Use the wild card "*" for `:environment` to add to all environments. ',
                     requestBody: createRequestSchema(
                         'createFeatureStrategySchema',
                     ),

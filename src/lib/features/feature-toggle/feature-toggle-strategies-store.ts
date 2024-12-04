@@ -538,9 +538,6 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 e.strategies = e.strategies.sort(
                     (a, b) => a.sortOrder - b.sortOrder,
                 );
-                if (e.strategies && e.strategies.length === 0) {
-                    e.enabled = false;
-                }
                 return e;
             });
 
@@ -858,7 +855,7 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
             segments: [],
             sortOrder: r.sort_order,
             id: r.strategy_id,
-            title: r.strategy_title || '',
+            title: r.strategy_title,
             disabled: r.strategy_disabled || false,
         };
         if (!includeId) {

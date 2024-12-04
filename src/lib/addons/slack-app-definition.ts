@@ -56,6 +56,7 @@ import {
     CHANGE_REQUEST_SCHEDULED,
     CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
     CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
+    PROJECT_ARCHIVED,
 } from '../types/events';
 import type { IAddonDefinition } from '../types/model';
 
@@ -139,6 +140,7 @@ const slackAppDefinition: IAddonDefinition = {
         BANNER_UPDATED,
         BANNER_DELETED,
         PROJECT_CREATED,
+        PROJECT_ARCHIVED,
         PROJECT_DELETED,
         SEGMENT_CREATED,
         SEGMENT_DELETED,

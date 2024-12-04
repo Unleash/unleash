@@ -93,8 +93,6 @@ export interface IProjectStore extends Store<IProject, string> {
 
     getEnvironmentsForProject(id: string): Promise<ProjectEnvironment[]>;
 
-    getConnectedEnvironmentCountForProject(id: string): Promise<number>;
-
     getMembersCountByProject(projectId: string): Promise<number>;
 
     getMembersCountByProjectAfterDate(

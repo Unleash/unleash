@@ -6,6 +6,8 @@ export interface IInstanceStatus {
     billingCenter?: string;
     state?: InstanceState;
     seats?: number;
+    minSeats?: number;
+    isCustomBilling?: boolean;
 }
 
 export enum InstanceState {

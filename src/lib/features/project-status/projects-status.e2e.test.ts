@@ -6,6 +6,7 @@ import {
 import getLogger from '../../../test/fixtures/no-logger';
 import {
     FEATURE_CREATED,
+    type IUser,
     RoleName,
     type IAuditUser,
     type IUnleashConfig,
@@ -69,6 +70,7 @@ afterAll(async () => {
 
 beforeEach(async () => {
     await db.stores.clientMetricsStoreV2.deleteAll();
+    await db.rawDatabase('flag_trends').delete();
 });
 
 test('project insights should return correct count for each day', async () => {
@@ -125,51 +127,6 @@ test('project insights should return correct count for each day', async () => {
     });
 });
 
-test('project status should return environments with connected SDKs', async () => {
-    const flagName = randomId();
-    await app.createFeature(flagName);
-
-    const envs =
-        await app.services.environmentService.getProjectEnvironments('default');
-    expect(envs.some((env) => env.name === 'default')).toBeTruthy();
-
-    const appName = 'blah';
-    const environment = 'default';
-    await db.stores.clientMetricsStoreV2.batchInsertMetrics([
-        {
-            featureName: `flag-doesnt-exist`,
-            appName,
-            environment,
-            timestamp: new Date(),
-            yes: 5,
-            no: 2,
-        },
-        {
-            featureName: flagName,
-            appName: `web2`,
-            environment,
-            timestamp: new Date(),
-            yes: 5,
-            no: 2,
-        },
-        {
-            featureName: flagName,
-            appName,
-            environment: 'not-a-real-env',
-            timestamp: new Date(),
-            yes: 2,
-            no: 2,
-        },
-    ]);
-
-    const { body } = await app.request
-        .get('/api/admin/projects/default/status')
-        .expect('Content-Type', /json/)
-        .expect(200);
-
-    expect(body.resources.connectedEnvironments).toBe(1);
-});
-
 test('project resources should contain the right data', async () => {
     const { body: noResourcesBody } = await app.request
         .get('/api/admin/projects/default/status')
@@ -180,7 +137,6 @@ test('project resources should contain the right data', async () => {
         members: 0,
         apiTokens: 0,
         segments: 0,
-        connectedEnvironments: 0,
     });
 
     const flagName = randomId();
@@ -237,24 +193,16 @@ test('project resources should contain the right data', async () => {
         members: 1,
         apiTokens: 1,
         segments: 1,
-        connectedEnvironments: 1,
     });
 });
 
-test('project health should be correct average', async () => {
-    await insertHealthScore('2024-04', 100);
-
-    await insertHealthScore('2024-05', 0);
-    await insertHealthScore('2024-06', 0);
-    await insertHealthScore('2024-07', 90);
-    await insertHealthScore('2024-08', 70);
-
+test('project health contains the current health score', async () => {
     const { body } = await app.request
         .get('/api/admin/projects/default/status')
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body.averageHealth).toBe(40);
+    expect(body.health.current).toBe(100);
 });
 
 test('project status contains lifecycle data', async () => {
@@ -284,5 +232,64 @@ test('project status contains lifecycle data', async () => {
             currentFlags: 0,
             last30Days: 0,
         },
+    });
+});
+
+test('project status includes stale flags', async () => {
+    const otherProject = await app.services.projectService.createProject(
+        {
+            name: 'otherProject',
+            id: randomId(),
+        },
+        {} as IUser,
+        {} as IAuditUser,
+    );
+
+    function cartesianProduct(...arrays: any[][]): any[][] {
+        return arrays.reduce(
+            (acc, array) => {
+                return acc.flatMap((accItem) =>
+                    array.map((item) => [...accItem, item]),
+                );
+            },
+            [[]] as any[][],
+        );
+    }
+
+    // of all 16 (2^4) permutations, only 3 are unhealthy flags in a given project.
+    const combinations = cartesianProduct(
+        [false, true], // stale
+        [false, true], // potentially stale
+        [false, true], // archived
+        ['default', otherProject.id], // project
+    );
+
+    for (const [stale, potentiallyStale, archived, project] of combinations) {
+        const name = `flag-${project}-stale-${stale}-potentially-stale-${potentiallyStale}-archived-${archived}`;
+        await app.createFeature(
+            {
+                name,
+                stale,
+            },
+            project,
+        );
+        if (potentiallyStale) {
+            await db
+                .rawDatabase('features')
+                .update('potentially_stale', true)
+                .where({ name });
+        }
+        if (archived) {
+            await app.archiveFeature(name, project);
+        }
+    }
+
+    const { body } = await app.request
+        .get('/api/admin/projects/default/status')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.staleFlags).toMatchObject({
+        total: 3,
     });
 });

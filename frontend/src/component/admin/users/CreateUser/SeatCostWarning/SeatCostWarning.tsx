@@ -2,6 +2,7 @@ import type { VFC } from 'react';
 import { Alert } from '@mui/material';
 import { useUsersPlan } from 'hooks/useUsersPlan';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
+import { BILLING_PRO_USER_PRICE } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
 
 export const SeatCostWarning: VFC = () => {
     const { users } = useUsers();
@@ -19,7 +20,8 @@ export const SeatCostWarning: VFC = () => {
             <p>
                 <strong>Heads up!</strong> You are exceeding your allocated free
                 members included in your plan ({planUsers.length} of {seats}).
-                Creating this user will add <strong>$15/month</strong> to your
+                Creating this user will add{' '}
+                <strong>${BILLING_PRO_USER_PRICE}/month</strong> to your
                 invoice, starting with your next payment.
             </p>
         </Alert>

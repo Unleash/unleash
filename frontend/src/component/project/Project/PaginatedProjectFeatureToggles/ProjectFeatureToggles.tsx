@@ -89,7 +89,6 @@ export const ProjectFeatureToggles = ({
     environments,
 }: IPaginatedProjectFeatureTogglesProps) => {
     const { trackEvent } = usePlausibleTracker();
-    const onboardingUIEnabled = useUiFlag('onboardingUI');
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
@@ -152,12 +151,9 @@ export const ProjectFeatureToggles = ({
     >(`onboarding-state:v1-${projectId}`, 'hide-setup');
 
     const notOnboarding =
-        !onboardingUIEnabled ||
-        (onboardingUIEnabled &&
-            project.onboardingStatus.status === 'onboarded') ||
+        project.onboardingStatus.status === 'onboarded' ||
         onboardingFlow === 'closed';
     const isOnboarding =
-        onboardingUIEnabled &&
         project.onboardingStatus.status !== 'onboarded' &&
         onboardingFlow === 'visible';
     const noFeaturesExistInProject = project.featureTypeCounts?.length === 0;
@@ -218,7 +214,6 @@ export const ProjectFeatureToggles = ({
                 enableSorting: false,
                 enableHiding: false,
                 meta: {
-                    align: 'center',
                     width: '1%',
                 },
             }),

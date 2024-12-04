@@ -5,7 +5,8 @@ export type IFeedbackCategory =
     | 'insights'
     | 'applicationOverview'
     | 'newProjectOverview'
-    | 'signals';
+    | 'signals'
+    | 'projectStatus';
 
 export const useUserSubmittedFeedback = (category: IFeedbackCategory) => {
     const key = `unleash-userSubmittedFeedback:${category}`;

@@ -7,6 +7,7 @@ import {
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
     type IEvent,
+    PROJECT_ARCHIVED,
     SYSTEM_USER_ID,
 } from '../types';
 
@@ -567,6 +568,22 @@ const testCases: [string, IEvent][] = [
             },
             preData: {},
             tags: [],
+            project: 'my-other-project',
+            environment: 'production',
+        },
+    ],
+    [
+        'when project archived',
+        {
+            id: 922,
+            type: PROJECT_ARCHIVED,
+            createdBy: 'user@company.com',
+            createdByUserId: SYSTEM_USER_ID,
+            createdAt: new Date('2024-11-25T10:33:59.459Z'),
+            data: null,
+            preData: null,
+            tags: [],
+            featureName: undefined,
             project: 'my-other-project',
             environment: 'production',
         },

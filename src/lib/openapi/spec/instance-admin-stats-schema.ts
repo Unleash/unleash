@@ -95,6 +95,13 @@ export const instanceAdminStatsSchema = {
                 },
             },
         },
+        licensedUsers: {
+            type: 'integer',
+            description:
+                'The number of users who had access to Unleash within the last 30 days, including those who may have been deleted during this period.',
+            example: 10,
+            minimum: 0,
+        },
         productionChanges: {
             type: 'object',
             description:

@@ -6,11 +6,7 @@ import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();
 test('all options are drawn', async () => {
-    testServerRoute(server, '/api/admin/ui-config', {
-        flags: {
-            featuresExportImport: true,
-        },
-    });
+    testServerRoute(server, '/api/admin/ui-config', {});
 
     render(<FeatureToggleListActions onExportClick={() => {}} />);
 

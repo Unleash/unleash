@@ -39,10 +39,13 @@ import { StyledUsersLinkDiv } from '../Users.styles';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from '../../../../hooks/api/getters/useUiConfig/useUiConfig';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
+import { UserSessionsCell } from './UserSessionsCell/UserSessionsCell';
+import { UsersHeader } from '../UsersHeader/UsersHeader';
+import { UpgradeSSO } from './UpgradeSSO';
 
 const UsersList = () => {
     const navigate = useNavigate();
-    const { isEnterprise } = useUiConfig();
+    const { isEnterprise, isOss } = useUiConfig();
     const { users, roles, refetch, loading } = useUsers();
     const { setToastData, setToastApiError } = useToast();
     const { removeUser, userLoading, userApiErrors } = useAdminUsersApi();
@@ -57,6 +60,9 @@ const UsersList = () => {
         open: false,
     });
     const userAccessUIEnabled = useUiFlag('userAccessUIEnabled');
+    const showUserDeviceCount = useUiFlag('showUserDeviceCount');
+    const showSSOUpgrade = isOss() && users.length > 3;
+
     const {
         settings: { enabled: scimEnabled },
     } = useScimSettings();
@@ -139,7 +145,7 @@ const UsersList = () => {
                 id: 'name',
                 Header: 'Name',
                 accessor: (row: any) => row.name || '',
-                minWidth: 200,
+                minWidth: 180,
                 Cell: ({ row: { original: user } }: any) => (
                     <HighlightCell
                         value={user.name}
@@ -148,6 +154,21 @@ const UsersList = () => {
                 ),
                 searchable: true,
             },
+            ...(showUserDeviceCount
+                ? [
+                      {
+                          id: 'warning',
+                          Header: ' ',
+                          accessor: (row: any) => row.name || '',
+                          maxWidth: 40,
+                          Cell: ({ row: { original: user } }: any) => (
+                              <UserSessionsCell count={user.activeSessions} />
+                          ),
+                          searchable: false,
+                          disableSortBy: true,
+                      },
+                  ]
+                : []),
             {
                 id: 'role',
                 Header: 'Role',
@@ -283,7 +304,7 @@ const UsersList = () => {
             },
             {
                 condition: isSmallScreen,
-                columns: ['createdAt', 'last-login'],
+                columns: ['createdAt', 'last-login', 'warning'],
             },
         ],
         setHiddenColumns,
@@ -335,6 +356,7 @@ const UsersList = () => {
                     </StyledUsersLinkDiv>
                 }
             />
+            <UsersHeader />
             <SearchHighlightProvider value={getSearchText(searchValue)}>
                 <VirtualizedTable
                     rows={rows}
@@ -342,6 +364,7 @@ const UsersList = () => {
                     prepareRow={prepareRow}
                 />
             </SearchHighlightProvider>
+
             <ConditionallyRender
                 condition={rows.length === 0}
                 show={
@@ -356,7 +379,10 @@ const UsersList = () => {
                         }
                         elseShow={
                             <TablePlaceholder>
-                                No users available. Get started by adding one.
+                                <span data-loading>
+                                    No users available. Get started by adding
+                                    one.
+                                </span>
                             </TablePlaceholder>
                         }
                     />
@@ -405,6 +431,8 @@ const UsersList = () => {
                     />
                 }
             />
+
+            {showSSOUpgrade ? <UpgradeSSO /> : null}
         </PageContent>
     );
 };

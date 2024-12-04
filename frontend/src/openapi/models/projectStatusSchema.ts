@@ -4,7 +4,10 @@
  * See `gen:api` script in package.json
  */
 import type { ProjectActivitySchema } from './projectActivitySchema';
+import type { ProjectStatusSchemaHealth } from './projectStatusSchemaHealth';
+import type { ProjectStatusSchemaLifecycleSummary } from './projectStatusSchemaLifecycleSummary';
 import type { ProjectStatusSchemaResources } from './projectStatusSchemaResources';
+import type { ProjectStatusSchemaStaleFlags } from './projectStatusSchemaStaleFlags';
 
 /**
  * Schema representing the overall status of a project, including an array of activity records. Each record in the activity array contains a date and a count, providing a snapshot of the project’s activity level over time.
@@ -12,11 +15,12 @@ import type { ProjectStatusSchemaResources } from './projectStatusSchemaResource
 export interface ProjectStatusSchema {
     /** Array of activity records with date and count, representing the project’s daily activity statistics. */
     activityCountByDate: ProjectActivitySchema;
-    /**
-     * The average health score over the last 4 weeks, indicating whether features are stale or active.
-     * @minimum 0
-     */
-    averageHealth: number;
+    /** Information about the project's health rating */
+    health: ProjectStatusSchemaHealth;
+    /** Feature flag lifecycle statistics for this project. */
+    lifecycleSummary: ProjectStatusSchemaLifecycleSummary;
     /** Key resources within the project */
     resources: ProjectStatusSchemaResources;
+    /** Information on stale and potentially stale flags in this project. */
+    staleFlags: ProjectStatusSchemaStaleFlags;
 }

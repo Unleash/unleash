@@ -196,6 +196,7 @@ export interface IChangeRequestDeleteSegment {
     payload: {
         id: number;
         name: string;
+        snapshot?: ISegment;
     };
 }
 
@@ -241,14 +242,15 @@ export type ChangeRequestAddStrategy = Pick<
 
 export type ChangeRequestEditStrategy = ChangeRequestAddStrategy & {
     id: string;
-    snapshot?: Omit<IFeatureStrategy, 'title'> & { title?: string | null };
+    snapshot?: IFeatureStrategy;
 };
 
 type ChangeRequestDeleteStrategy = {
     id: string;
-    name: string;
+    name?: string;
     title?: string;
     disabled?: boolean;
+    snapshot?: IFeatureStrategy;
 };
 
 export type ChangeRequestAction =

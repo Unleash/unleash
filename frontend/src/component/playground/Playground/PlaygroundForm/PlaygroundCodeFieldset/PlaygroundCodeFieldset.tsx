@@ -198,9 +198,8 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
                     onChange={changeContextValue}
                     getOptionLabel={(option) => option}
                     renderOption={(props, option, { selected }) => {
-                        const { key, ...optionProps } = props;
                         return (
-                            <li key={key} {...optionProps}>
+                            <li {...props}>
                                 <Checkbox
                                     icon={
                                         <CheckBoxOutlineBlank fontSize='small' />

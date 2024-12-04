@@ -28,7 +28,6 @@ export const createClientFeatureToggleCache = (
         eventStore,
         configurationRevisionService,
     );
-    clientFeatureToggleCache.initialize();
 
     return clientFeatureToggleCache;
 };

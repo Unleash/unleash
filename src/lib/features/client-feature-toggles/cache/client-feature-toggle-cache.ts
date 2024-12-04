@@ -1,12 +1,12 @@
-import type EventEmitter from 'events';
 import type {
     IEventStore,
     IFeatureToggleClient,
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
 } from '../../../types';
-import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
 import type { FeatureConfigurationClient } from '../../feature-toggle/types/feature-toggle-strategies-store-type';
+import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
+import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
 
 type DeletedFeature = {
     name: string;
@@ -79,6 +79,7 @@ export const calculateRequiredClientRevision = (
     const targetedRevisions = revisions.filter(
         (revision) => revision.revisionId > requiredRevisionId,
     );
+    console.log('targeted revisions', targetedRevisions);
     const projectFeatureRevisions = targetedRevisions.map((revision) =>
         filterRevisionByProject(revision, projects),
     );
@@ -87,8 +88,6 @@ export const calculateRequiredClientRevision = (
 };
 
 export class ClientFeatureToggleCache {
-    private readonly configurationRevisionService: EventEmitter;
-
     private clientFeatureToggleStore: IFeatureToggleClientStore;
 
     private cache: RevisionCache = {};
@@ -99,29 +98,23 @@ export class ClientFeatureToggleCache {
 
     private interval: NodeJS.Timer;
 
+    private configurationRevisionService: ConfigurationRevisionService;
+
     constructor(
         clientFeatureToggleStore: IFeatureToggleClientStore,
         eventStore: IEventStore,
-        configurationRevisionService: EventEmitter,
+        configurationRevisionService: ConfigurationRevisionService,
     ) {
         this.eventStore = eventStore;
         this.configurationRevisionService = configurationRevisionService;
         this.clientFeatureToggleStore = clientFeatureToggleStore;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
 
+        this.initCache();
         this.configurationRevisionService.on(
             UPDATE_REVISION,
             this.onUpdateRevisionEvent,
         );
-    }
-
-    async initialize() {
-        // This needs to be one call so that we can associate the base caches with
-        // a revision id
-        this.currentRevisionId = await this.eventStore.getMaxRevisionId();
-        this.initCache();
-
-        this.interval = setInterval(() => this.pollEvents(), 1000);
     }
 
     async getDelta(
@@ -153,18 +146,46 @@ export class ClientFeatureToggleCache {
         // Find a list of every flag that changed in each environment and associate that with
         // the revisionId
 
-        const changedToggles = ['test'];
+        const latestRevision =
+            await this.configurationRevisionService.getMaxRevisionId();
+
+        const changeEvents = await this.eventStore.getRevisionRange(
+            this.currentRevisionId,
+            latestRevision,
+        );
+
+        for (const event of changeEvents) {
+            console.log('Got a change event');
+            console.log(event);
+            event.featureName;
+        }
+        const changedToggles = [
+            ...new Set(
+                changeEvents
+                    .filter((event) => event.featureName)
+                    .map((event) => event.featureName!),
+            ),
+        ];
         const newToggles = await this.getChangedToggles(
             changedToggles,
-            this.currentRevisionId,
+            latestRevision, // TODO: this should come back from the same query to not be out of sync
         );
 
         console.log('I got the following toggles');
         console.log(JSON.stringify(newToggles));
 
-        // Get those flags from the database
-        // Build the data structure for the cache
-        // Update the relevant environment cache with the new update
+        // if (!this.cache.development) {
+        //     this.cache.development = [];
+        // }
+        // this.cache.development.push(newToggles);
+
+        if (this.cache.development) {
+            this.cache.development.push(newToggles);
+
+            this.currentRevisionId = latestRevision;
+        } else {
+            console.log('WHY I AM HERE');
+        }
     }
 
     async getChangedToggles(
@@ -182,7 +203,7 @@ export class ClientFeatureToggleCache {
 
         //if the toggle is not in found toggles, then it must have been deleted
         const removed = toggles
-            .filter((name) => !toggleMap.has(name))
+            .filter((name) => toggleMap.has(name))
             .map((name) => ({ name, project: toggleMap.get(name)!.project }));
 
         return {
@@ -254,6 +275,7 @@ export class ClientFeatureToggleCache {
         //                     ...
         // 				},
         // 			],
+        //          removed: []
         // 		},
         //         {
         //             type: "update",

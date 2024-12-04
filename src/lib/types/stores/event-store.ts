@@ -43,6 +43,7 @@ export interface IEventStore
         queryParams: IQueryParam[],
     ): Promise<IEvent[]>;
     getMaxRevisionId(currentMax?: number): Promise<number>;
+    getRevisionRange(start: number, end: number): Promise<IEvent[]>;
     query(operations: IQueryOperations[]): Promise<IEvent[]>;
     queryCount(operations: IQueryOperations[]): Promise<number>;
     setCreatedByUserId(batchSize: number): Promise<number | undefined>;

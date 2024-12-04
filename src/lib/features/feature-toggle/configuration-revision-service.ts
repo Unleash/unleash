@@ -1,5 +1,6 @@
 import type { Logger } from '../../logger';
 import type {
+    IEvent,
     IEventStore,
     IFlagResolver,
     IUnleashConfig,
@@ -77,6 +78,10 @@ export default class ConfigurationRevisionService extends EventEmitter {
         }
 
         return this.revisionId;
+    }
+
+    async getRevisionRange(start: number, end: number): Promise<IEvent[]> {
+        return this.eventStore.getRevisionRange(start, end);
     }
 
     destroy(): void {

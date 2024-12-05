@@ -38,16 +38,18 @@ Segmentation and constraints allow you to define conditions for your activation 
 
 Constraints are conditional rules that determine whether a strategy applies, based on fields from the [Unleash context](/reference/unleash-context). Constraints can reference both [standard context fields](../reference/unleash-context#overview) and [custom context fields](../reference/unleash-context#custom-context-fields).
 
-An activation strategy can have as many constraints as needed. When an activation strategy has multiple constraints, then every constraint must be evaluated to true for the strategy to be evaluated. This behavior is equivalent to the AND logical operator. For example, if you have two constraints: one where the user email must have the domain "@mycompany.com" and one where the user must have signed up for a beta program, then the strategy would only be evaluated for users with "@mycompany.com" emails that have signed up for the beta program.
+An activation strategy can have as many constraints as needed. When an activation strategy has multiple constraints, then every constraint must be evaluated to true for the strategy to be evaluated. This behavior is equivalent to the AND logical operator. 
+
+For example, if you have two constraints: one where the user email must have the domain "@mycompany.com" and one where the user must have signed up for a beta program, then the strategy would only be evaluated for users with "@mycompany.com" emails that have signed up for the beta program.
 
 <VideoContent videoUrls={["https://www.youtube.com/embed/kqtqMFhLRBE"]}/>
 
 #### Constraint structure
 
 A constraint has three parts:
-- a **context field**: The [context field](/reference/unleash-context) to use for evaluation.
-- an **operator**: One of the [constraint operators](#strategy-constraint-operators).
-- **values**: A value or list of values to use in the evaluation of the constraint.
+- A **context field**: The [context field](/reference/unleash-context) to use for evaluation.
+- An **operator**: One of the [constraint operators](#strategy-constraint-operators).
+- **Values**: A value or list of values to use in the evaluation of the constraint.
 
 These parts turn the constraint into an expression that evaluates to true or false. Here are a few example constraints:
 
@@ -77,7 +79,7 @@ All constraints can be negated. For example:
 
 #### Numeric operators
 
-Numeric operators compare the numeric value of context fields with your provided value. Numeric operators only accept single values.
+Numeric operators compare the numeric value of context fields with the provided value. Numeric operators only accept single values.
 
 | Operator      | The context field is                                           |
 |-----------|--------------------------------------------------------------------------------|
@@ -136,7 +138,7 @@ To add an activation strategy with a constraint to a feature flag, do the follow
 1. Open the Admin UI and go to the feature flag you'd like to add a strategy to.
 2. Select the environment you want to configure and click **Add strategy**.
 3. In the **Targeting** tab, go to the **Constraints** section, and click **Add constraint**.
-4. Select a context field to constrain on, for example, `email`
+4. Select a context field to constrain on, for example, `email`.
 5. Set your desired operator, for example, `STR_ENDS_WITH`.
 6. Enter a value that the operator should evaluate, such as `@user.com`, and click **Add values**. Then click **Done**.
 7. Click **Save strategy**.

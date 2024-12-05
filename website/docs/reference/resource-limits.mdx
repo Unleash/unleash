@@ -16,8 +16,8 @@ To ensure that Unleash operates smoothly, it includes resource limits for some o
 The resources and their respective limits and environment variables are:
 
 | Resource                                                                             | [Open Source](https://www.getunleash.io/pricing) limit | [Pro](/availability#plans) limit | [Enterprise](https://www.getunleash.io/pricing) limit | Environment variable                           |
-|--------------------------------------------------------------------------------------|--:-----------------------------------------------------|--:-------------------------------|--:----------------------------------------------------|------------------------------------------------|
-| [Feature flags](./feature-toggles)[^1]                                               | 5,000                                                  | 5,000                            | 50,000                                                | `UNLEASH_FEATURE_FLAGS_LIMIT`                  |
+|--------------------------------------------------------------------------------------|--------------------------------------------------------|----------------------------------|-------------------------------------------------------|------------------------------------------------|
+| Active [feature flags](./feature-toggles)                                            | 5,000                                                  | 5,000                            | 50,000                                                | `UNLEASH_FEATURE_FLAGS_LIMIT`                  |
 | [Strategies](./activation-strategies) per flag per environment                       | 30                                                     | 30                               | 30                                                    | `UNLEASH_FEATURE_ENVIRONMENT_STRATEGIES_LIMIT` |
 | [Constraints](./activation-strategies#-constraints) per strategy                     | 30                                                     | 30                               | 30                                                    | `UNLEASH_CONSTRAINTS_LIMIT`                    |
 | Values per [constraint](./activation-strategies#-constraints)                        | 250                                                    | 250                              | 1,000                                                 | `UNLEASH_CONSTRAINT_VALUES_LIMIT`              |
@@ -56,5 +56,3 @@ If you try to set their limits lower than that, Unleash will automatically adjus
 If you operate a self-hosted Unleash instance, you can adjust the limit yourself. For hosted users of Unleash, you'll need to reach out and talk to your Unleash contact.
 
 The only limits that can't be changed, are projects and environments for [Open Source](https://www.getunleash.io/pricing) and [Pro](/availability#plans) instances.
-
-[^1]: Archived feature flags do not count towards your feature flag total. The limit only applies to active (i.e. not archived) feature flags.

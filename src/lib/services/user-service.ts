@@ -45,6 +45,7 @@ import { PasswordPreviouslyUsedError } from '../error/password-previously-used';
 import { RateLimitError } from '../error/rate-limit-error';
 import type EventEmitter from 'events';
 import { USER_LOGIN } from '../metric-events';
+import { UNIQUE_CONSTRAINT_VIOLATION } from '../error';
 
 export interface ICreateUser {
     name?: string;
@@ -239,50 +240,58 @@ class UserService {
         { username, email, name, password, rootRole }: ICreateUser,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
     ): Promise<IUserWithRootRole> {
-        if (!username && !email) {
-            throw new BadDataError('You must specify username or email');
-        }
+        try {
+            if (!username && !email) {
+                throw new BadDataError('You must specify username or email');
+            }
 
-        if (email) {
-            Joi.assert(
+            if (email) {
+                Joi.assert(
+                    email,
+                    Joi.string().email({ ignoreLength: true }),
+                    'Email',
+                );
+            }
+
+            const exists = await this.store.hasUser({ username, email });
+            if (exists) {
+                throw new BadDataError('User already exists');
+            }
+
+            const user = await this.store.insert({
+                username,
                 email,
-                Joi.string().email({ ignoreLength: true }),
-                'Email',
+                name,
+            });
+
+            await this.accessService.setUserRootRole(user.id, rootRole);
+
+            if (password) {
+                const passwordHash = await bcrypt.hash(password, saltRounds);
+                await this.store.setPasswordHash(
+                    user.id,
+                    passwordHash,
+                    disallowNPreviousPasswords,
+                );
+            }
+
+            const userCreated = await this.getUser(user.id);
+
+            await this.eventService.storeEvent(
+                new UserCreatedEvent({
+                    auditUser,
+                    userCreated,
+                }),
             );
+
+            return userCreated;
+        } catch (error) {
+            if (error.code === UNIQUE_CONSTRAINT_VIOLATION) {
+                throw new BadDataError('User already exists');
+            }
+
+            throw error;
         }
-
-        const exists = await this.store.hasUser({ username, email });
-        if (exists) {
-            throw new BadDataError('User already exists');
-        }
-
-        const user = await this.store.insert({
-            username,
-            email,
-            name,
-        });
-
-        await this.accessService.setUserRootRole(user.id, rootRole);
-
-        if (password) {
-            const passwordHash = await bcrypt.hash(password, saltRounds);
-            await this.store.setPasswordHash(
-                user.id,
-                passwordHash,
-                disallowNPreviousPasswords,
-            );
-        }
-
-        const userCreated = await this.getUser(user.id);
-
-        await this.eventService.storeEvent(
-            new UserCreatedEvent({
-                auditUser,
-                userCreated,
-            }),
-        );
-
-        return userCreated;
     }
 
     async newUserInviteLink(

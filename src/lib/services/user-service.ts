@@ -253,11 +253,6 @@ class UserService {
                 );
             }
 
-            const exists = await this.store.hasUser({ username, email });
-            if (exists) {
-                throw new BadDataError('User already exists');
-            }
-
             const user = await this.store.insert({
                 username,
                 email,

@@ -159,7 +159,7 @@ test('should not be allowed to create existing user', async () => {
             { username: 'test', rootRole: adminRole.id },
             TEST_AUDIT_USER,
         ),
-    ).rejects.toThrow(Error);
+    ).rejects.toThrow('User already exists');
 });
 
 test('should not be allowed to create existing user in a concurrency situation', async () => {

@@ -6188,6 +6188,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"launchdarkly-eventsource@npm:2.0.3":
+  version: 2.0.3
+  resolution: "launchdarkly-eventsource@npm:2.0.3"
+  checksum: 10c0/8a7274e26231e43970a4d8ed52d572d1278bb0f1e90ada0dc86117cf0925e5a579c6b7e8b958eb4bada2aa471c6880ac12ef1c5d00cb513de5852cb04b104794
+  languageName: node
+  linkType: hard
+
 "lazy-cache@npm:^0.2.3":
   version: 0.2.7
   resolution: "lazy-cache@npm:0.2.7"
@@ -9287,17 +9294,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unleash-client@npm:6.1.3":
-  version: 6.1.3
-  resolution: "unleash-client@npm:6.1.3"
+"unleash-client@npm:6.2.0-alpha.0":
+  version: 6.2.0-alpha.0
+  resolution: "unleash-client@npm:6.2.0-alpha.0"
   dependencies:
     http-proxy-agent: "npm:^7.0.2"
     https-proxy-agent: "npm:^7.0.5"
     ip-address: "npm:^9.0.5"
+    launchdarkly-eventsource: "npm:2.0.3"
     make-fetch-happen: "npm:^13.0.1"
     murmurhash3js: "npm:^3.0.1"
     semver: "npm:^7.6.2"
-  checksum: 10c0/a86d4c5446d6ba867c00d8ac8c0539acb9b6d969eba2b3cd1eea0fe32b436fb2a1c88a5b4910a0793dc65773894e6e8f6a980ebfd0f13cc354f1424b9f2fd464
+  checksum: 10c0/ed5cd23191edcd43b49b0d6b716c9da315737e144f3e7ad062f4876549472af568c43f5d96c4cd8f3a9b408de42e04d8332db67b1a94f9d8bffd452677294794
   languageName: node
   linkType: hard
 
@@ -9412,7 +9420,7 @@ __metadata:
     tsc-watch: "npm:6.2.1"
     type-is: "npm:^1.6.18"
     typescript: "npm:5.4.5"
-    unleash-client: "npm:6.1.3"
+    unleash-client: "npm:6.2.0-alpha.0"
     uuid: "npm:^9.0.0"
     wait-on: "npm:^7.2.0"
   languageName: unknown

@@ -186,15 +186,17 @@ Once archived, the flag is no longer available to client SDKs.
 
 ### View archived flags
 
-To view an archived feature flag, open the project that contains the flag and select the **Archived flags** tab.
+To view archived feature flags in a project, use the **Show only archived** filter in the **Feature flags** list.
 
 ### Revive a feature flag
 
-You can revive archived flags by navigating to the [feature flag archive](#view-archived-flags) and clicking **Revive feature flag**. Revived flags are in an inactive state by default.
+To revive an archived flag, use [filters](#view-archived-flags) to find the flag and click **Revive feature flag**. Revived flags are in an inactive state by default.
+
+![Archive a feature flag](/img/revive-archived-flag.png)
 
 ### Delete a feature flag
 
-You can delete archived flags by navigating to the [feature flag archive](#view-archived-flags) and clicking **Delete feature flag**. 
+To delete an archived flag, use [filters](#view-archived-flags) to find the flag and click **Delete feature flag**. 
 
 However, we recommend not deleting feature flags unless they are completely removed from your codebase. If you delete a flag and later create a new one with the same name, it might unintentionally reactivate old code that still references the original flag.
 

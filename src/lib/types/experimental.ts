@@ -60,7 +60,8 @@ export type IFlagKey =
     | 'deleteStaleUserSessions'
     | 'memorizeStats'
     | 'licensedUsers'
-    | 'streaming';
+    | 'streaming'
+    | 'etagVariant';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -284,6 +285,11 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_STREAMING,
         false,
     ),
+    etagVariant: {
+        name: 'disabled',
+        feature_enabled: false,
+        enabled: false,
+    },
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

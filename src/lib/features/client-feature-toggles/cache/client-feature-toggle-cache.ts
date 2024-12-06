@@ -123,7 +123,7 @@ export class ClientFeatureToggleCache {
 	): Promise<ClientFeatureChange | undefined> {
 		const requiredRevisionId = sdkRevisionId || 0;
 
-		// Should get the latest state if revision does not exist
+		// Should get the latest state if revision does not exist or if sdkRevision is not present
 		// We should be able to do this without going to the database by merging revisions from the cache with
 		// the base case
 		if (

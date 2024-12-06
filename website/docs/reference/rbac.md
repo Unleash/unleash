@@ -1,6 +1,6 @@
 ---
 id: rbac
-title: Role-based Access control
+title: Role-based Access Control
 ---
 
 :::note Availability

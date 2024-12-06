@@ -405,14 +405,6 @@ const config: Config = {
                         to: '/how-to/how-to-add-sso-saml',
                     },
                     {
-                        from: '/advanced/strategy_constraints',
-                        to: '/reference/strategy-constraints',
-                    },
-                    {
-                        from: '/advanced/tags',
-                        to: '/reference/tags',
-                    },
-                    {
                         from: '/advanced/enterprise-authentication',
                         to: '/reference/sso',
                     },

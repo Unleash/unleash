@@ -23,7 +23,7 @@ const CreateStrategyDeprecationWarning = () => (
         Custom strategies are deprecated and may be removed in a future major
         release. We recommend using the predefined strategies like Gradual
         rollout with{' '}
-        <Link to='https://docs.getunleash.io/reference/strategy-constraints'>
+        <Link to='https://docs.getunleash.io/reference/activation-strategies#constraints'>
             {' '}
             constraints
         </Link>{' '}

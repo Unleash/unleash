@@ -28,18 +28,18 @@ When you export features, the export will contain both feature-specific configur
 On the project-level these items are exported:
 
 * [the feature itself](/reference/feature-toggles)
-* [feature tags](/reference/tags)
+* [feature tags](/reference/feature-toggles#tags)
 * [feature dependencies](/reference/feature-toggles#feature-flag-dependencies)
 
 On the environment-level, these items are exported for the chosen environment:
 
-* [activation strategies](/reference/activation-strategies) including [constraints](/reference/strategy-constraints) and references to [segments](/reference/segments)
+* [activation strategies](/reference/activation-strategies) including [constraints](/reference/activation-strategies#constraints) and references to [segments](/reference/segments)
 * [variants](/reference/feature-toggle-variants)
 * enabled/disabled
 
 Additionally, these global configuration items are exported:
 * [custom context fields](/reference/unleash-context#custom-context-fields)
-* [feature tag types](/reference/tags#tag-types)
+* [feature tag types](/reference/feature-toggles#tags)
 
 Importantly, while references to [segments](/reference/segments) are exported, the segments themselves are **not** exported. Consult the [import requirements](#import-requirements) section for more information.
 
@@ -110,6 +110,10 @@ The import tool will not import any features that have already been archived on 
 If you permanently delete the archived `feature-a` from the target instance, then the new `feature-a` (in the import data) **will** be imported.
 
 #### Custom strategies
+
+:::caution
+[Custom activation strategies](/reference/custom-activation-strategies) are deprecated. Please use the [default activation strategy](/reference/activation-strategies) with constraints.
+:::
 
 Unleash will verify that any custom strategies you are trying to import have already been defined on the target instance. However, it only does this verification by name. It does **not** validate that the definitions are otherwise the same or that they have the same [configuration parameters](/reference/custom-activation-strategies.md#parameters).
 

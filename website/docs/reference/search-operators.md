@@ -1,5 +1,5 @@
 ---
-title: Search with filters/operators
+title: Search
 ---
 
 :::note Availability

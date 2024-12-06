@@ -178,12 +178,17 @@
     },
     {
       "source": "/advanced/strategy_constraints",
-      "destination": "/reference/strategy-constraints",
+      "destination": "/reference/activation-strategies#constraints",
       "permanent": true
     },
     {
       "source": "/advanced/tags",
-      "destination": "/reference/tags",
+      "destination": "/reference/feature-toggles#tags",
+      "permanent": true
+    },
+    {
+      "source": "/reference/tags",
+      "destination": "/reference/feature-toggles#tags",
       "permanent": true
     },
     {
@@ -724,6 +729,26 @@
     {
       "source": "/how-to/how-to-create-feature-toggles",
       "destination": "/how-to-create-feature-flag",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-strategy-constraints",
+      "destination": "/reference/activation-strategies#add-strategy-constraint",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-use-custom-strategies",
+      "destination": "/reference/activation-strategies",
+      "permanent": true
+    },
+    {
+      "source": "/reference/strategy-constraints",
+      "destination": "/reference/activation-strategies#constraints",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-define-custom-context-fields",
+      "destination": "/reference/activation-strategies#create-a-custom-context-field",
       "permanent": true
     },
     {

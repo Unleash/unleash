@@ -38,7 +38,7 @@ Then you need to select a source. If you haven't created a signal endpoint yet, 
 
 If the source you selected already received at least one signal, you'll be able to see a preview of the latest signal received. This can help you define the different filters that need to match for the action to be executed.
 
-Filters work similarly to [feature flag strategy constraints](./strategy-constraints), where the signal payload acts as the context for the constraint evaluation.
+Filters work similarly to [feature flag strategy constraints](./activation-strategies#constraints), where the signal payload acts as the context for the constraint evaluation.
 
 Filters are completely optional, so if you don't configure any filter your action will always be executed whenever you receive a new signal on the selected source.
 

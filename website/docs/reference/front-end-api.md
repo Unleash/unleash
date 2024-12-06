@@ -1,5 +1,5 @@
 ---
-title: Front-end API access
+title: Front-end API Access
 ---
 
 :::note Availability

@@ -1,5 +1,6 @@
 ---
 title: Technical Debt
+pagination_next: reference/insights
 ---
 
 At Unleash we care deeply about code quality. Technical debt creeps up over time and slowly builds to the point where it really starts to hurt. At that point it's too late. Feature flags that have outlived their feature and are not cleaned up represent technical debt that you should remove from your code.

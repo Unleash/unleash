@@ -5,7 +5,7 @@
  */
 
 /**
- * The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/activation-strategies#constraint-operators).
+ * The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators).
  */
 export type ConstraintSchemaOperator =
     (typeof ConstraintSchemaOperator)[keyof typeof ConstraintSchemaOperator];

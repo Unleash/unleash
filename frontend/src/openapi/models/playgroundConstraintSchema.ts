@@ -15,7 +15,7 @@ export interface PlaygroundConstraintSchema {
     contextName: string;
     /** Whether the result should be negated or not. If `true`, will turn a `true` result into a `false` result and vice versa. */
     inverted?: boolean;
-    /** The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/strategy-constraints). */
+    /** The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators). */
     operator: PlaygroundConstraintSchemaOperator;
     /** Whether this was evaluated as true or false. */
     result: boolean;

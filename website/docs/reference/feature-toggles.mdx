@@ -42,10 +42,10 @@ Variants can also include payloads such as JSON, CSV, or strings to provide user
 :::
 
 
-Feature flags have a type to indicate their use case and help you manage and sort your flags. A feature flag's type determines its [expected lifetime](#expected-lifetime) and its visual appearance in the Admin UI.
+Feature flags have a type to indicate their use case and help you manage and sort your flags. A feature flag's type determines its expected lifetime and its visual appearance in the Admin UI.
 
 
-The following is a list of feature flag types:
+The following is a list of feature flag types, their purpose, and expected lifetime:
 
 | Feature flag type | Used to                                                                                                                                                       | Expected lifetime |
 |---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
@@ -59,7 +59,7 @@ To learn more, visit [Types of feature flags](../what-is-a-feature-flag#types-of
 
 ## Feature flag state
 
-A feature flag can have one of the following states: _active_, _potentially stale_, or _stale_. Unleash marks all flags as _potentially stale_ automatically once they pass their [expected lifetime](#expected-lifetime).
+A feature flag can have one of the following states: _active_, _potentially stale_, or _stale_. Unleash marks all flags as _potentially stale_ automatically once they pass their expected lifetime.
 
 State gives you an indication of when to [clean up a feature flag in code](./technical-debt).
 
@@ -69,7 +69,7 @@ You can also manually change the state on a feature flag's page by going to **Ov
 
 Marking a flag as stale helps you deprecate a feature flag without removing the active configuration for connected applications.
 
-You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [technical debt dashboard](./technical-debt).
+You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [project status dashboard](./technical-debt#project-health).
 
 Marking a flag as stale generates the `feature-stale-on` [event](/reference/events#feature-stale-on). You can use [an integration](/reference/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
 

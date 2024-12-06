@@ -11,7 +11,7 @@ Feature flag technical debt accumulates when you don’t manage or retire featur
 
 ## Stale and potentially stale flags
 
-A feature flag can have one of the following states: _active_, _potentially stale_, or _stale_. Unleash marks all flags as potentially stale automatically once they pass their [expected lifetime](/reference/feature-toggles#expected-lifetime). This gives you an indication of when to review and clean up a feature flag in code.
+A feature flag can have one of the following states: _active_, _potentially stale_, or _stale_. Unleash marks all flags as potentially stale automatically once they pass their [expected lifetime](/reference/feature-toggles#feature-flag-types). This gives you an indication of when to review and clean up a feature flag in code.
 
 You can also manually mark a feature flag as stale if you know it has served its intended purpose. To do so, click **Toggle stale state** on the flag's details page.
 
@@ -21,9 +21,9 @@ Alternatively, you can mark one or more flags as stale from the project overview
 
 ![Mark a flag as stale in a project](/img/stale-flag-project.png)
 
-Marking a flag as stale allows you to deprecate a feature flag without removing the active configuration for connected applications. You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [technical debt dashboard](./technical-debt).
+Marking a flag as stale allows you to deprecate a feature flag without removing the active configuration for connected applications. You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [project status dashboard](#project-status).
 
-Marking a flag as stale generates the `feature-stale-on` [event](/reference/events#feature-stale-on). You can use [an integration](/reference/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
+Marking a flag as stale generates a `feature-stale-on` [event](/reference/events#feature-stale-on). You can use [an integration](/reference/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
 
 To find stale and potentially stale flags in a project, apply the **State** filter in the **Feature flags** list.
 
@@ -31,9 +31,9 @@ While a flag's state does not affect its behavior in applications, using states 
 
 ## Project status
 
-Each project has a **Project status** dashboard, where you can view its health status and the total number of unhealthy flags. All active flags are considered healthy, while stale and potentially stale flags are considered unhealthy. To keep your project in a healthy state, archive stale feature flags and remove code from your codebase.
+Each project has a **Project status** dashboard, where you can view its health status and the total number of unhealthy flags. All active flags are considered healthy, while stale and potentially stale flags are considered unhealthy. To keep your project in a healthy state, [archive stale feature flags](/reference/feature-toggles#archive-a-feature-flag) and remove code from your codebase.
 
-![Project health dashboard](/img/project-status-dashboard.png)
+![Project status dashboard](/img/project-status-dashboard.png)
 
 Your overall project health rating is the percentage of healthy flags in your project. To view your project health over time, go to [Insights](/reference/insights).
 

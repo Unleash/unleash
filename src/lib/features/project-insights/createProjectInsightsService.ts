@@ -16,12 +16,7 @@ export const createProjectInsightsService = (
     config: IUnleashConfig,
 ): ProjectInsightsService => {
     const { eventBus, getLogger, flagResolver } = config;
-    const projectStore = new ProjectStore(
-        db,
-        eventBus,
-        getLogger,
-        flagResolver,
-    );
+    const projectStore = new ProjectStore(db, eventBus, config);
     const featureToggleStore = new FeatureToggleStore(
         db,
         eventBus,

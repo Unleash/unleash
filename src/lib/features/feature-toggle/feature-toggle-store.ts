@@ -439,6 +439,16 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             : queryBuilder.whereNull('archived_at');
     };
 
+    static filterByProjectsAccessibleByOss: Knex.QueryCallbackWithArgs = (
+        queryBuilder: Knex.QueryBuilder,
+        isOss: boolean,
+    ) => {
+        if (isOss) {
+            return queryBuilder.andWhere('project', '=', 'default');
+        }
+        return queryBuilder;
+    };
+
     rowToFeature(row: FeaturesTable): FeatureToggle {
         if (!row) {
             throw new NotFoundError('No feature flag found');

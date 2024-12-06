@@ -11,7 +11,7 @@ import type { CreateStrategyVariantSchema } from './createStrategyVariantSchema'
  * Schema representing the creation of a release plan milestone strategy.
  */
 export interface ReleasePlanMilestoneStrategySchema {
-    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints */
+    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators */
     constraints?: ConstraintSchema[];
     /**
      * The milestone strategy's ID. Milestone strategy IDs are ulids.

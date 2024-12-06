@@ -122,6 +122,23 @@ export class ClientFeatureToggleCache {
 		projects: string[],
 	): Promise<ClientFeatureChange | undefined> {
 		const requiredRevisionId = sdkRevisionId || 0;
+
+		// Should get the latest state if revision does not exist
+		// We should be able to do this without going to the database by merging revisions from the cache with
+		// the base case
+		if (
+			sdkRevisionId &&
+			sdkRevisionId != this.currentRevisionId &&
+			!this.cache[environment].hasRevision(sdkRevisionId)
+		) {
+			return {
+				revisionId: this.currentRevisionId,
+				// @ts-ignore
+				updated: await this.getClientFeatures({ environment }),
+				removed: [],
+			};
+		}
+
 		if (requiredRevisionId >= this.currentRevisionId) {
 			return undefined;
 		}

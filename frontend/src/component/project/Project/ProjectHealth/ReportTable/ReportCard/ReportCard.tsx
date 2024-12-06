@@ -88,7 +88,7 @@ export const ReportCard = ({ healthReport }: IReportCardProps) => {
                     it will be marked as potentially stale.
                     <Box sx={{ mt: 2 }}>
                         <a
-                            href='https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles'
+                            href='https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-flags'
                             target='_blank'
                             rel='noreferrer'
                         >

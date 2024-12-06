@@ -151,7 +151,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                                 </p>
                                 <br />
                                 <a
-                                    href='https://docs.getunleash.io/reference/feature-toggles#expected-lifetime'
+                                    href='https://docs.getunleash.io/reference/feature-toggles#feature-flag-types'
                                     target='_blank'
                                     rel='noreferrer'
                                 >

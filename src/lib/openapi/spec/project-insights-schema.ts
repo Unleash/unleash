@@ -28,7 +28,7 @@ export const projectInsightsSchema = {
                 rating: {
                     type: 'integer',
                     description:
-                        "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100",
+                        "An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100",
                     example: 95,
                 },
                 activeCount: {

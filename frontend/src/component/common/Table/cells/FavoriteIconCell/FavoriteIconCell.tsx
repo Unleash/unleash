@@ -5,8 +5,8 @@ import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledCell = styled(Box)(({ theme }) => ({
-    paddingLeft: theme.spacing(0),
-    paddingRight: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(0.5),
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({

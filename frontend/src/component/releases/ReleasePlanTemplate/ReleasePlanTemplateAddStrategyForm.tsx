@@ -24,6 +24,7 @@ import { MilestoneStrategySegment } from './MilestoneStrategySegment';
 import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints';
 import { MilestoneStrategyVariants } from './MilestoneStrategyVariants';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
+import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
@@ -135,8 +136,9 @@ export const ReleasePlanTemplateAddStrategyForm = ({
 }: IReleasePlanTemplateAddStrategyFormProps) => {
     const [addStrategy, setAddStrategy] = useState(strategy);
     const [activeTab, setActiveTab] = useState(0);
+    const { segments: allSegments, refetchSegments } = useSegments();
     const [segments, setSegments] = useState<ISegment[]>([]);
-    const { strategyDefinition } = useStrategy(strategy?.name);
+    const { strategyDefinition } = useStrategy(strategy?.strategyName);
     const hasValidConstraints = useConstraintsValidation(strategy?.constraints);
     const errors = useFormErrors();
     const showVariants = Boolean(
@@ -147,6 +149,10 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         addStrategy?.parameters && 'stickiness' in addStrategy?.parameters
             ? String(addStrategy.parameters.stickiness)
             : 'default';
+
+    useEffect(() => {
+        setSegments(addStrategy?.segments || []);
+    }, []);
 
     useEffect(() => {
         setAddStrategy((prev) => ({
@@ -198,6 +204,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         if (!milestoneId) {
             return;
         }
+
         onAddStrategy(milestoneId, addStrategy);
     };
 
@@ -208,15 +215,17 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         >
             <StyledHeaderBox>
                 <StyledTitle>
-                    {formatStrategyName(addStrategy.name || '')}
-                    {addStrategy.name === 'flexibleRollout' && (
+                    {formatStrategyName(addStrategy.strategyName || '')}
+                    {addStrategy.strategyName === 'flexibleRollout' && (
                         <Badge color='success' sx={{ marginLeft: '1rem' }}>
                             {addStrategy.parameters?.rollout}%
                         </Badge>
                     )}
                 </StyledTitle>
             </StyledHeaderBox>
-            {!BuiltInStrategies.includes(strategy.name || 'default') && (
+            {!BuiltInStrategies.includes(
+                strategy.strategyName || 'default',
+            ) && (
                 <StyledAlertBox>
                     <Alert severity='warning'>
                         Custom strategies are deprecated. We recommend not

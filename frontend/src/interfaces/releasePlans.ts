@@ -50,10 +50,5 @@ export interface IReleasePlanMilestonePayload {
     id: string;
     name: string;
     sortOrder: number;
-    strategies?: IReleasePlanStrategyPayload[];
-}
-
-export interface IReleasePlanStrategyPayload {
-    id?: string;
-    name: string;
+    strategies?: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>[];
 }

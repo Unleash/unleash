@@ -69,6 +69,7 @@ export const MilestoneStrategyMenuCard = ({
                 onClick({
                     id: uuidv4(),
                     name: strat.name,
+                    strategyName: strat.name,
                     title: '',
                     constraints: strat.constraints,
                     parameters: strat.parameters,

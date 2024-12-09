@@ -24,5 +24,17 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               issue_number: context.payload.pull_request.number,
-              body: `@FredrikOseberg, @${prCreator}, core features have been modified in this pull request. Please review!`
+              body: `@${prCreator}, core features have been modified in this pull request. Please review!`
             })
+            steps:
+      - name: Add reviewers to the PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const reviewers = ['FredrikOseberg'];
+            github.rest.pulls.requestReviewers({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.payload.pull_request.number,
+              reviewers: reviewers,
+            });

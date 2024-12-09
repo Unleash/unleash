@@ -72,6 +72,7 @@ export default class FeatureToggleClientStore
         const isPlayground = requestType === 'playground';
         const environment = featureQuery?.environment || DEFAULT_ENV;
         const stopTimer = this.timer(`getAllBy${requestType}`);
+        console.log('GETTING EVERYTHING');
 
         let selectColumns = [
             'features.name as name',

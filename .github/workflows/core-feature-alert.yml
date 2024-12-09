@@ -30,7 +30,6 @@ jobs:
           script: |
             const prNumber = context.payload.pull_request.number;
 
-            // Check if a comment already exists
             const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -61,14 +60,14 @@ jobs:
             const prCreator = context.payload.pull_request.user.login;
 
             // Add a comment if not already present
-            if (!inputs.hasComment) {
-              await github.rest.issues.createComment({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                issue_number: prNumber,
-                body: `@${prCreator}, core features have been modified in this pull request. Reviewers have been added.`,
-              });
-            }
+           
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: `@${prCreator}, core features have been modified in this pull request. Reviewers have been added.`,
+            });
+            
 
             // Add reviewers if not already present
             if (!inputs.hasReviewers) {
@@ -76,6 +75,6 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 pull_number: prNumber,
-                reviewers: ['FredrikOseberg'], // Add your reviewers here
+                reviewers: ['@FredrikOseberg'], // Add your reviewers here
               });
             }

@@ -3,8 +3,8 @@ name: Core Feature Alert
 on:
   pull_request:
     paths:
-      - src/features/client-feature-toggles
-      - src/features/frontend-api
+      - src/lib/features/client-feature-toggles
+      - src/lib/features/frontend-api
 
 jobs:
   notify-core-changes:

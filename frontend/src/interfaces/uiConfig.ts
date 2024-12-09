@@ -94,6 +94,7 @@ export type UiFlags = {
     showUserDeviceCount?: boolean;
     flagOverviewRedesign?: boolean;
     licensedUsers?: boolean;
+    oidcRedirect?: boolean;
 };
 
 export interface IVersionInfo {

@@ -179,6 +179,7 @@ const config: Config = {
                 'php',
                 'ruby',
                 'bash',
+                'diff',
             ],
         },
         languageTabs: [

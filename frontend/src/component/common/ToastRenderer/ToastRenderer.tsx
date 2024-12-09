@@ -36,7 +36,7 @@ const ToastRenderer = () => {
                 right: 0,
                 left: 0,
                 margin: '0 auto',
-                maxWidth: '450px',
+                width: 'min-content',
             },
             enter: fadeInBottomEnter,
             leave: fadeInBottomLeave,

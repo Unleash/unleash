@@ -4,12 +4,10 @@ import { useContext } from 'react';
 import { IconButton, Tooltip } from '@mui/material';
 import CheckMarkBadge from 'component/common/CheckmarkBadge/CheckMarkBadge';
 import UIContext from 'contexts/UIContext';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import Close from '@mui/icons-material/Close';
 import type { IToast } from 'interfaces/toast';
-import { TOAST_TEXT } from 'utils/testIds';
 
-const Toast = ({ title, text, type, confetti }: IToast) => {
+const Toast = ({ title, type, confetti }: IToast) => {
     const { setToast } = useContext(UIContext);
 
     const { classes: styles } = useStyles();
@@ -61,29 +59,18 @@ const Toast = ({ title, text, type, confetti }: IToast) => {
                 <div className={styles.confettiContainer}>
                     {confetti && renderConfetti()}
                     <div className={styles.createdContainer}>
-                        <div className={styles.headerContainer}>
-                            <div>
-                                <CheckMarkBadge
-                                    type={type}
-                                    className={styles.checkMark}
-                                />
-                            </div>
-                            <div className={styles.textContainer}>
-                                <h3 className={styles.headerStyles}>{title}</h3>
+                        <CheckMarkBadge
+                            type={type}
+                            className={styles.checkMark}
+                        />
 
-                                <ConditionallyRender
-                                    condition={Boolean(text)}
-                                    show={
-                                        <p data-testid={TOAST_TEXT}>{text}</p>
-                                    }
-                                />
-                            </div>
-                        </div>
+                        <h3 className={styles.headerStyles}>{title}</h3>
+
                         <Tooltip title='Close' arrow>
                             <IconButton
                                 onClick={hide}
                                 className={styles.buttonStyle}
-                                size='large'
+                                size='small'
                             >
                                 <Close />
                             </IconButton>

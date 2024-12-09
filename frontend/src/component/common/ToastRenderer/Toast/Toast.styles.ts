@@ -3,12 +3,13 @@ import { makeStyles } from 'tss-react/mui';
 export const useStyles = makeStyles()((theme) => ({
     container: {
         maxWidth: '450px',
-        background: theme.palette.background.paper,
+        background: theme.palette.background.paper, // todo: add new background colors here
         boxShadow: theme.boxShadows.popup,
         zIndex: 500,
         margin: '0 0.8rem',
-        borderRadius: '12.5px',
-        padding: '2rem',
+        borderRadius: theme.shape.borderRadiusMedium,
+        padding: theme.spacing(0.5),
+        paddingInlineStart: theme.spacing(2),
     },
     innerContainer: {
         position: 'relative',
@@ -31,27 +32,30 @@ export const useStyles = makeStyles()((theme) => ({
         wordBreak: 'break-word',
     },
     headerStyles: {
+        fontSize: theme.typography.body1.fontSize,
         fontWeight: 'normal',
         margin: 0,
-        marginBottom: '0.5rem',
     },
     createdContainer: {
         display: 'flex',
         alignItems: 'center',
-        flexDirection: 'column',
+        flexDirection: 'row',
+        whiteSpace: 'nowrap',
+        gap: theme.spacing(1),
     },
     anim: {
         animation: `$drop 10s 3s`,
     },
     checkMark: {
-        width: '65px',
-        height: '65px',
+        marginInlineStart: theme.spacing(1),
     },
     buttonStyle: {
-        position: 'absolute',
-        top: '-33px',
-        right: '-33px',
+        color: theme.palette.text.primary, // set icon color here
+        svg: {
+            fontSize: '1em',
+        },
     },
+
     '@keyframes drop': {
         '0%': {
             opacity: '0%',

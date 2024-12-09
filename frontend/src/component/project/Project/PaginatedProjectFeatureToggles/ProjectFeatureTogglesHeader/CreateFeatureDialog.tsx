@@ -165,8 +165,6 @@ const CreateFeatureDialogContent = ({
                 }
                 setToastData({
                     title: 'Flag created successfully',
-                    text: 'Now you can start using your flag.',
-                    confetti: true,
                     type: 'success',
                 });
                 onClose();

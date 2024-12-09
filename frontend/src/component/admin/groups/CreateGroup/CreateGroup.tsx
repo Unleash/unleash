@@ -49,8 +49,6 @@ export const CreateGroup = () => {
             navigate(`/admin/groups/${group.id}`);
             setToastData({
                 title: 'Group created successfully',
-                text: 'Now you can start using your group.',
-                confetti: true,
                 type: 'success',
             });
         } catch (error: unknown) {

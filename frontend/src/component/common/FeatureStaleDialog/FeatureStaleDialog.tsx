@@ -50,14 +50,12 @@ export const FeatureStaleDialog = ({
         if (isStale) {
             setToastData({
                 type: 'success',
-                title: "And we're back!",
-                text: 'The flag is no longer marked as stale.',
+                title: 'The flag is no longer marked as stale',
             });
         } else {
             setToastData({
                 type: 'success',
-                title: 'A job well done.',
-                text: 'The flag has been marked as stale.',
+                title: 'The flag has been marked as stale',
             });
         }
     };

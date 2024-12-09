@@ -182,8 +182,7 @@ export const StrategiesList = () => {
                             refetchStrategies();
                             setToastData({
                                 type: 'success',
-                                title: 'Success',
-                                text: 'Strategy reactivated successfully',
+                                title: 'Strategy reactivated',
                             });
                         } catch (error: unknown) {
                             setToastApiError(formatUnknownError(error));
@@ -200,8 +199,7 @@ export const StrategiesList = () => {
                             refetchStrategies();
                             setToastData({
                                 type: 'success',
-                                title: 'Success',
-                                text: 'Strategy deprecated successfully',
+                                title: 'Strategy deprecated',
                             });
                         } catch (error: unknown) {
                             setToastApiError(formatUnknownError(error));
@@ -230,8 +228,7 @@ export const StrategiesList = () => {
                         refetchStrategies();
                         setToastData({
                             type: 'success',
-                            title: 'Success',
-                            text: 'Strategy deleted successfully',
+                            title: 'Strategy deleted',
                         });
                     } catch (error: unknown) {
                         setToastApiError(formatUnknownError(error));

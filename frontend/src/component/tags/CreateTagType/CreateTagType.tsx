@@ -37,7 +37,6 @@ const CreateTagType = () => {
                 navigate('/tag-types');
                 setToastData({
                     title: 'Tag type created',
-                    confetti: true,
                     type: 'success',
                 });
             } catch (error: unknown) {

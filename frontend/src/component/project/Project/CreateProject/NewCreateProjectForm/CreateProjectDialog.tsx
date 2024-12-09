@@ -179,8 +179,6 @@ export const CreateProjectDialog = ({
                 navigate(`/projects/${createdProject.id}`);
                 setToastData({
                     title: 'Project created',
-                    text: 'Now you can add flags to this project',
-                    confetti: true,
                     type: 'success',
                 });
 

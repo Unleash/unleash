@@ -109,7 +109,6 @@ const EditDefaultStrategy = () => {
         setToastData({
             title: 'Default Strategy updated',
             type: 'success',
-            confetti: true,
         });
     };
 

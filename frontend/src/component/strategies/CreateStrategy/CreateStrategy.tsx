@@ -65,8 +65,6 @@ export const CreateStrategy = () => {
                 navigate(`/strategies/${strategyName}`);
                 setToastData({
                     title: 'Strategy created',
-                    text: 'Successfully created strategy',
-                    confetti: true,
                     type: 'success',
                 });
             } catch (e: unknown) {

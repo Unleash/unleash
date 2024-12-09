@@ -63,12 +63,8 @@ export const useManageDependency = (
         }
         void refetchChangeRequests();
         setToastData({
-            text:
-                actionType === 'addDependency'
-                    ? `${featureId} will depend on ${parent}`
-                    : `${featureId} dependency will be removed`,
             type: 'success',
-            title: 'Change added to a draft',
+            title: 'Change added to draft',
         });
     };
 

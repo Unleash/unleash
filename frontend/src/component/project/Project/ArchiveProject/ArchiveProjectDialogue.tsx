@@ -31,7 +31,6 @@ export const ArchiveProjectDialogue = ({
             setToastData({
                 title: 'Archived project',
                 type: 'success',
-                text: 'Successfully archived project',
             });
             onSuccess?.();
         } catch (ex: unknown) {

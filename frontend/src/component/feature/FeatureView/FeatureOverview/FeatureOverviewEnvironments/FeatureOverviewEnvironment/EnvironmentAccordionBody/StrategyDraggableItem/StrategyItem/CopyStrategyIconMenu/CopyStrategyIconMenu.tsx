@@ -86,8 +86,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
             refetchFeature();
             refetchFeatureImmutable();
             setToastData({
-                title: `Strategy created`,
-                text: `Successfully copied a strategy to ${targetEnvironment}`,
+                title: `Strategy copied to ${targetEnvironment}`,
                 type: 'success',
             });
         } catch (error) {

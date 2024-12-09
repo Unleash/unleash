@@ -171,7 +171,6 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     setToastData({
                         type: 'success',
                         title: `Enabled in ${config.environmentName}`,
-                        text: `${config.featureId} is now available in ${config.environmentName} based on its defined strategies.`,
                     });
                     config.onSuccess?.();
                 } catch (error: unknown) {
@@ -194,7 +193,6 @@ export const useFeatureToggleSwitch: UseFeatureToggleSwitchType = (
                     setToastData({
                         type: 'success',
                         title: `Disabled in ${config.environmentName}`,
-                        text: `${config.featureId} is unavailable in ${config.environmentName} and its strategies will no longer have any effect.`,
                     });
                     config.onSuccess?.();
                 } catch (error: unknown) {

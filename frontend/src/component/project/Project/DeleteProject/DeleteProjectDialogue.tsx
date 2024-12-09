@@ -45,7 +45,6 @@ export const DeleteProjectDialogue = ({
             setToastData({
                 title: 'Deleted project',
                 type: 'success',
-                text: 'Successfully deleted project',
             });
             onSuccess?.();
         } catch (ex: unknown) {

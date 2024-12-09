@@ -63,20 +63,8 @@ export const ManageTags: VFC<IManageTagsProps> = ({
         const payload = { features, tags: { addedTags, removedTags } };
         try {
             await bulkUpdateTags(payload, projectId);
-            const added = addedTags.length
-                ? `Added tags: ${addedTags
-                      .map(({ type, value }) => `${type}:${value}`)
-                      .join(', ')}.`
-                : '';
-            const removed = removedTags.length
-                ? `Removed tags: ${removedTags
-                      .map(({ type, value }) => `${type}:${value}`)
-                      .join(', ')}.`
-                : '';
-
             setToastData({
                 title: 'Tags updated',
-                text: `${features.length} feature flags updated. ${added} ${removed}`,
                 type: 'success',
                 autoHideDuration: 12000,
             });

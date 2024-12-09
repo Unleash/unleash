@@ -177,3 +177,45 @@ test('Can send productivity report email', async () => {
     expect(content.text.includes(`localhost/insights`)).toBe(true);
     expect(content.text.includes(`localhost/profile`)).toBe(true);
 });
+
+test('Should add optional headers to productivity email', async () => {
+    const emailService = new EmailService({
+        server: {
+            unleashUrl: 'http://localhost',
+        },
+        email: {
+            host: 'test',
+            port: 587,
+            secure: false,
+            smtpuser: '',
+            smtppass: '',
+            sender: 'noreply@getunleash.ai',
+            optionalHeaders: {
+                'x-header-name': 'value',
+            },
+        },
+        getLogger: noLoggerProvider,
+    } as unknown as IUnleashConfig);
+
+    const passwordResetMail = await emailService.sendResetMail(
+        'name',
+        'user@example.com',
+        'http://exempla.com',
+    );
+
+    const productivityMail = await emailService.sendProductivityReportEmail(
+        'user@user.com',
+        'customerId',
+        {
+            flagsCreated: 1,
+            productionUpdates: 2,
+            health: 99,
+        },
+    );
+
+    expect(passwordResetMail.headers).toBeFalsy();
+
+    expect(productivityMail.headers).toStrictEqual({
+        'x-header-name': 'value',
+    });
+});

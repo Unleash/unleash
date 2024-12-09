@@ -32,7 +32,6 @@ export const useStyles = makeStyles()((theme) => ({
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'row',
-        whiteSpace: 'nowrap',
         gap: theme.spacing(1),
     },
     anim: {

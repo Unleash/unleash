@@ -2,18 +2,18 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()((theme) => ({
     container: {
-        maxWidth: '450px',
-        background: theme.palette.background.paper, // todo: add new background colors here
-        boxShadow: theme.boxShadows.popup,
-        zIndex: 500,
-        margin: '0 0.8rem',
-        borderRadius: theme.shape.borderRadiusMedium,
-        padding: theme.spacing(1),
-        paddingInlineStart: theme.spacing(2),
-        display: 'flex',
         alignItems: 'center',
+        background: theme.palette.background.paper, // todo: add new background colors here
+        borderRadius: theme.shape.borderRadiusMedium,
+        boxShadow: theme.boxShadows.popup,
+        display: 'flex',
         flexDirection: 'row',
         gap: theme.spacing(1),
+        margin: '0 0.8rem',
+        maxWidth: '450px',
+        padding: theme.spacing(1),
+        paddingInlineStart: theme.spacing(2),
+        zIndex: 500,
     },
     starting: {
         opacity: 0,

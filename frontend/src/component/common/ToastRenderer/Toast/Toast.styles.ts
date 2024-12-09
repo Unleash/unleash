@@ -10,29 +10,18 @@ export const useStyles = makeStyles()((theme) => ({
         borderRadius: theme.shape.borderRadiusMedium,
         padding: theme.spacing(1),
         paddingInlineStart: theme.spacing(2),
-    },
-    innerContainer: {
-        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        flexDirection: 'row',
+        gap: theme.spacing(1),
     },
     starting: {
         opacity: 0,
-    },
-    confettiContainer: {
-        position: 'relative',
-        maxWidth: '600px',
-        margin: '0 auto',
-        display: 'flex',
     },
     headerStyles: {
         fontSize: theme.typography.body1.fontSize,
         fontWeight: 'normal',
         margin: 0,
-    },
-    createdContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'row',
-        gap: theme.spacing(1),
     },
     anim: {
         animation: `$drop 10s 3s`,

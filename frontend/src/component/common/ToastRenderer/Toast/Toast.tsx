@@ -18,28 +18,19 @@ const Toast = ({ title, type }: IToast) => {
 
     return (
         <div className={classnames(styles.container, 'dropdown-outline')}>
-            <div className={styles.innerContainer}>
-                <div className={styles.confettiContainer}>
-                    <div className={styles.createdContainer}>
-                        <CheckMarkBadge
-                            type={type}
-                            className={styles.checkMark}
-                        />
+            <CheckMarkBadge type={type} className={styles.checkMark} />
 
-                        <h3 className={styles.headerStyles}>{title}</h3>
+            <h3 className={styles.headerStyles}>{title}</h3>
 
-                        <Tooltip title='Close' arrow>
-                            <IconButton
-                                onClick={hide}
-                                className={styles.buttonStyle}
-                                size='small'
-                            >
-                                <Close />
-                            </IconButton>
-                        </Tooltip>
-                    </div>
-                </div>
-            </div>
+            <Tooltip title='Close' arrow>
+                <IconButton
+                    onClick={hide}
+                    className={styles.buttonStyle}
+                    size='small'
+                >
+                    <Close />
+                </IconButton>
+            </Tooltip>
         </div>
     );
 };

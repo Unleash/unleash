@@ -3,17 +3,19 @@ import { makeStyles } from 'tss-react/mui';
 export const useStyles = makeStyles()((theme) => ({
     container: {
         alignItems: 'center',
-        background: theme.palette.background.paper, // todo: add new background colors here
+        background:
+            theme.mode === 'light' ? '#201E42' : theme.palette.background.paper,
         borderRadius: theme.shape.borderRadiusMedium,
         boxShadow: theme.boxShadows.popup,
         display: 'flex',
         flexDirection: 'row',
-        gap: theme.spacing(1),
+        gap: theme.spacing(2),
         margin: '0 0.8rem',
         maxWidth: '450px',
         padding: theme.spacing(1),
         paddingInlineStart: theme.spacing(2),
         zIndex: 500,
+        color: theme.palette.common.white,
     },
     starting: {
         opacity: 0,
@@ -30,7 +32,7 @@ export const useStyles = makeStyles()((theme) => ({
         marginInlineStart: theme.spacing(1),
     },
     buttonStyle: {
-        color: theme.palette.text.primary, // set icon color here
+        color: theme.palette.common.white,
         svg: {
             fontSize: '1em',
         },

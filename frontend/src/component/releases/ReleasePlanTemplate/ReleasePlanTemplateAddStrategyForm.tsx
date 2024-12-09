@@ -151,7 +151,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
             : 'default';
 
     useEffect(() => {
-        setSegments(addStrategy?.segments || []);
+        setSegments([]);
     }, []);
 
     useEffect(() => {

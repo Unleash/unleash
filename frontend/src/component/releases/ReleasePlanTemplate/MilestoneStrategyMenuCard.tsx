@@ -66,6 +66,12 @@ export const MilestoneStrategyMenuCard = ({
         <StyledCard
             onClick={() => {
                 const strat = createFeatureStrategy('', strategy);
+                if (strat.name === 'flexibleRollout') {
+                    strat.parameters = {
+                        ...strat.parameters,
+                        groupId: '{{featureName}}',
+                    };
+                }
                 onClick({
                     id: uuidv4(),
                     name: strat.name,

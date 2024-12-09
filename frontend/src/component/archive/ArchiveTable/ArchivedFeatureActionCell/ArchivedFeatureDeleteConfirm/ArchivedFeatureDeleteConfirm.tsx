@@ -50,9 +50,6 @@ export const ArchivedFeatureDeleteConfirm = ({
             setToastData({
                 type: 'success',
                 title: `Feature ${singularOrPluralFlags} deleted`,
-                text: `You have successfully deleted the following feature ${singularOrPluralFlags}: ${deletedFeatures.join(
-                    ', ',
-                )}.`,
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

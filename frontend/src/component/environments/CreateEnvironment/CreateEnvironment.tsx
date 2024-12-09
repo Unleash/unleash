@@ -45,7 +45,6 @@ const CreateEnvironment = () => {
                 setToastData({
                     title: 'Environment created',
                     type: 'success',
-                    confetti: true,
                 });
                 navigate('/environments');
             } catch (error: unknown) {

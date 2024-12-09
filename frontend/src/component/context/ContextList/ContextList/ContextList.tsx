@@ -142,8 +142,7 @@ const ContextList: VFC = () => {
             refetchUnleashContext();
             setToastData({
                 type: 'success',
-                title: 'Successfully deleted context',
-                text: 'Your context is now deleted',
+                title: 'Successfully deleted context field',
             });
         } catch (error) {
             setToastApiError(formatUnknownError(error));

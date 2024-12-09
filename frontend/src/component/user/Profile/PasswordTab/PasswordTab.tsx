@@ -63,7 +63,6 @@ export const PasswordTab = () => {
                 });
                 setToastData({
                     title: 'Password changed successfully',
-                    text: 'Now you can sign in using your new password.',
                     type: 'success',
                 });
             } catch (error: unknown) {

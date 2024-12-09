@@ -111,8 +111,7 @@ const ProjectEnvironmentList = () => {
                 return;
             }
             setToastData({
-                title: 'One environment must be visible',
-                text: 'You must always have at least one visible environment per project',
+                title: 'At least one environment must be visible',
                 type: 'error',
             });
         } else {
@@ -121,7 +120,6 @@ const ProjectEnvironmentList = () => {
                 refetch();
                 setToastData({
                     title: 'Environment set as visible',
-                    text: 'Environment successfully set as visible.',
                     type: 'success',
                 });
             } catch (error) {
@@ -139,8 +137,7 @@ const ProjectEnvironmentList = () => {
                 );
                 refetch();
                 setToastData({
-                    title: 'Environment set as hidden',
-                    text: 'Environment successfully set as hidden.',
+                    title: 'Environment hidden',
                     type: 'success',
                 });
             } catch (e) {

@@ -58,8 +58,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({
             await staleFeatures(projectId, selectedIds);
             onChange?.();
             setToastData({
-                title: 'State updated',
-                text: 'Feature flags marked as stale',
+                title: 'Feature flags marked as stale',
                 type: 'success',
             });
             trackEvent('batch_operations', {
@@ -78,8 +77,7 @@ export const MoreActions: VFC<IMoreActionsProps> = ({
             await staleFeatures(projectId, selectedIds, false);
             onChange?.();
             setToastData({
-                title: 'State updated',
-                text: 'Feature flags unmarked as stale',
+                title: 'Feature flags unmarked as stale',
                 type: 'success',
             });
             trackEvent('batch_operations', {

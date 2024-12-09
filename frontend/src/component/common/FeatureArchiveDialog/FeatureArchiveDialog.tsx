@@ -238,9 +238,6 @@ const useArchiveAction = ({
         );
         refetchChangeRequests();
         setToastData({
-            text: isBulkArchive
-                ? 'Your archive feature flags changes have been added to change request'
-                : 'Your archive feature flag change has been added to change request',
             type: 'success',
             title: isBulkArchive
                 ? 'Changes added to a draft'
@@ -251,18 +248,16 @@ const useArchiveAction = ({
     const archiveToggle = async () => {
         await archiveFeatureToggle(projectId, featureIds[0]);
         setToastData({
-            text: 'Your feature flag has been archived',
             type: 'success',
-            title: 'Feature archived',
+            title: 'Feature flag archived',
         });
     };
 
     const archiveToggles = async () => {
         await archiveFeatures(projectId, featureIds);
         setToastData({
-            text: 'Selected feature flags have been archived',
             type: 'success',
-            title: 'Features archived',
+            title: 'Feature flags archived',
         });
     };
 

@@ -97,7 +97,6 @@ export const ChangeRequestTable: VFC = () => {
             setToastData({
                 type: 'success',
                 title: 'Updated change request status',
-                text: 'Successfully updated change request status.',
             });
             await refetchChangeRequestConfig();
         } catch (error) {

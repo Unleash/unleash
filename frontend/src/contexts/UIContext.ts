@@ -16,7 +16,6 @@ export const createEmptyToast = (): IToast => {
     return {
         type: 'success',
         title: '',
-        text: '',
         components: [],
         show: false,
         persist: false,

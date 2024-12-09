@@ -43,8 +43,7 @@ export const EnvironmentActionCell = ({
             refetchPermissions();
             setToastData({
                 type: 'success',
-                title: 'Environment deleted',
-                text: `You have successfully deleted the ${environment.name} environment.`,
+                title: `Deleted environment '${environment.name}'`,
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -89,8 +88,7 @@ export const EnvironmentActionCell = ({
                     } else {
                         setToastData({
                             type: 'error',
-                            title: 'Environment limit reached',
-                            text: `You have reached the maximum number of environments (${environmentLimit}). Please reach out if you need more.`,
+                            title: `Environment limit (${environmentLimit}) reached`,
                         });
                     }
                 }}

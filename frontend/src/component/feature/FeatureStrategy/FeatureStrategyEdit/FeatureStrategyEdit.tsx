@@ -211,7 +211,6 @@ export const FeatureStrategyEdit = () => {
         setToastData({
             title: 'Strategy updated',
             type: 'success',
-            confetti: true,
         });
     };
 
@@ -225,7 +224,6 @@ export const FeatureStrategyEdit = () => {
         setToastData({
             title: 'Change added to draft',
             type: 'success',
-            confetti: true,
         });
         refetchChangeRequests();
     };

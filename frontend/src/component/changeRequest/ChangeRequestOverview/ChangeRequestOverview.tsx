@@ -136,8 +136,7 @@ export const ChangeRequestOverview: FC = () => {
             refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
-                title: 'Success',
-                text: 'Changes applied',
+                title: 'Changes applied',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -159,8 +158,7 @@ export const ChangeRequestOverview: FC = () => {
             refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
-                title: 'Success',
-                text: 'Changes scheduled',
+                title: 'Changes scheduled',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -177,8 +175,7 @@ export const ChangeRequestOverview: FC = () => {
             await refetchChangeRequest();
             setToastData({
                 type: 'success',
-                title: 'Success',
-                text: 'Comment added',
+                title: 'Comment added',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -199,8 +196,7 @@ export const ChangeRequestOverview: FC = () => {
             refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
-                title: 'Success',
-                text: 'Changes cancelled',
+                title: 'Changes cancelled',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -221,8 +217,7 @@ export const ChangeRequestOverview: FC = () => {
 
             setToastData({
                 type: 'success',
-                title: 'Success',
-                text: 'Changes rejected',
+                title: 'Changes rejected',
             });
             refetchChangeRequestOpen();
             refetchActionableChangeRequests();
@@ -244,8 +239,7 @@ export const ChangeRequestOverview: FC = () => {
             refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
-                title: 'Success',
-                text: 'Changes approved',
+                title: 'Changes approved',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

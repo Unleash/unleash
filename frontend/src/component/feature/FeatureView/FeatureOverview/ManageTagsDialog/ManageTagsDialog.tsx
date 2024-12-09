@@ -10,7 +10,6 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { ITag, ITagType } from 'interfaces/tags';
 import { type TagOption, TagsInput } from './TagsInput';
@@ -134,12 +133,9 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
             });
             await refetch();
         } catch (error: unknown) {
-            const message = formatUnknownError(error);
             setToastData({
                 type: 'error',
                 title: `Failed to add tag`,
-                text: message,
-                confetti: false,
             });
         }
     };
@@ -180,8 +176,6 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
                 setToastData({
                     type: 'success',
                     title: `Updated tag${added.length > 1 ? 's' : ''} to flag`,
-                    text: getToastText(added.length, removed.length),
-                    confetti: true,
                 });
         }
         setDifferenceCount(0);

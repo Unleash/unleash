@@ -131,7 +131,6 @@ const EnvironmentAccordionBody = ({
         setToastData({
             title: 'Strategy execution order added to draft',
             type: 'success',
-            confetti: true,
         });
         refetchChangeRequests();
     };

@@ -152,7 +152,6 @@ export const FeatureStrategyCreate = () => {
         setToastData({
             title: 'Strategy created',
             type: 'success',
-            confetti: true,
         });
     };
 
@@ -166,7 +165,6 @@ export const FeatureStrategyCreate = () => {
         setToastData({
             title: 'Strategy added to draft',
             type: 'success',
-            confetti: true,
         });
         refetchChangeRequests();
     };

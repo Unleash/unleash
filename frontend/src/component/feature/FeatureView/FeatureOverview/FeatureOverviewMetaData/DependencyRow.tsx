@@ -69,9 +69,8 @@ const useDeleteDependency = (project: string, featureId: string) => {
                     },
                 });
                 setToastData({
-                    text: `${featureId} dependency will be removed`,
                     type: 'success',
-                    title: 'Change added to a draft',
+                    title: 'Change added to draft',
                 });
                 await refetchChangeRequests();
             } else {

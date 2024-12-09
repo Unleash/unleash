@@ -260,7 +260,6 @@ const FormTemplate: React.FC<ICreateProps> = ({
             if (copy(formatApiCode())) {
                 setToastData({
                     title: 'Successfully copied the command',
-                    text: 'The command should now be automatically copied to your clipboard',
                     autoHideDuration: 6000,
                     type: 'success',
                     show: true,
@@ -268,7 +267,6 @@ const FormTemplate: React.FC<ICreateProps> = ({
             } else {
                 setToastData({
                     title: 'Could not copy the command',
-                    text: 'Sorry, but we could not copy the command.',
                     autoHideDuration: 6000,
                     type: 'error',
                     show: true,

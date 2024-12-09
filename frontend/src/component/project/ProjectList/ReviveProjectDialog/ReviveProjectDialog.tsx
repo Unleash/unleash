@@ -39,9 +39,8 @@ export const ReviveProjectDialog = ({
             refetchProjectArchive();
             navigate(`/projects/${id}`);
             setToastData({
-                title: 'Revive project',
+                title: 'Revived project',
                 type: 'success',
-                text: 'Successfully revived project',
             });
         } catch (ex: unknown) {
             setToastApiError(formatUnknownError(ex));

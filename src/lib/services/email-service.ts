@@ -542,6 +542,16 @@ export class EmailService {
                 userEmail,
                 ...metrics,
                 unleashUrl: this.config.server.unleashUrl,
+                healthColor() {
+                    const healthRating = this.health;
+                    const healthColor =
+                        healthRating >= 0 && healthRating <= 24
+                            ? '#d93644'
+                            : healthRating >= 25 && healthRating <= 74
+                              ? '#ffc46f'
+                              : '#b0d182';
+                    return healthColor;
+                },
             };
 
             const template = 'productivity-report';

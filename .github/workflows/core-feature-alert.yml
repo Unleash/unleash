@@ -30,6 +30,7 @@ jobs:
           script: |
             const prNumber = context.payload.pull_request.number;
 
+            // Check if a comment already exists
             const comments = await github.rest.issues.listComments({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -49,31 +50,35 @@ jobs:
 
             const hasReviewers = reviewers.data.users.length > 0;
 
-            return { hasComment, hasReviewers };
+            core.setOutput('hasComment', hasComment);
+            core.setOutput('hasReviewers', hasReviewers);
+        outputs:
+          hasComment: ${{ steps.check-comment.outputs.hasComment }}
+          hasReviewers: ${{ steps.check-comment.outputs.hasReviewers }}
 
       - name: Add reviewers and comment if necessary
+        if: steps.check-comment.outputs.hasComment == 'false' || steps.check-comment.outputs.hasReviewers == 'false'
         uses: actions/github-script@v6
         with:
           script: |
             const prNumber = context.payload.pull_request.number;
             const prCreator = context.payload.pull_request.user.login;
 
-            // Add a comment if not already present
-           
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: prNumber,
-              body: `@${prCreator}, core features have been modified in this pull request. Reviewers have been added.`,
-            });
-            
+          
+            if (!${{ steps.check-comment.outputs.hasComment }}) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body: `@${prCreator}, core features have been modified in this pull request. Reviewers have been added.`,
+              });
+            }
 
-            // Add reviewers if not already present
-            if (!inputs.hasReviewers) {
+            if (!${{ steps.check-comment.outputs.hasReviewers }}) {
               await github.rest.pulls.requestReviewers({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 pull_number: prNumber,
-                reviewers: ['@FredrikOseberg'], // Add your reviewers here
+                reviewers: ['FredrikOseberg'], // Do not include @ in reviewer names
               });
             }

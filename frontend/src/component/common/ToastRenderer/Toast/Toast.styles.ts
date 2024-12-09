@@ -8,7 +8,7 @@ export const useStyles = makeStyles()((theme) => ({
         zIndex: 500,
         margin: '0 0.8rem',
         borderRadius: theme.shape.borderRadiusMedium,
-        padding: theme.spacing(0.5),
+        padding: theme.spacing(1),
         paddingInlineStart: theme.spacing(2),
     },
     innerContainer: {
@@ -17,19 +17,11 @@ export const useStyles = makeStyles()((theme) => ({
     starting: {
         opacity: 0,
     },
-    headerContainer: {
-        display: 'flex',
-        alignItems: 'center',
-    },
     confettiContainer: {
         position: 'relative',
         maxWidth: '600px',
         margin: '0 auto',
         display: 'flex',
-    },
-    textContainer: {
-        marginLeft: '1rem',
-        wordBreak: 'break-word',
     },
     headerStyles: {
         fontSize: theme.typography.body1.fontSize,

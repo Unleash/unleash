@@ -7,47 +7,10 @@ import UIContext from 'contexts/UIContext';
 import Close from '@mui/icons-material/Close';
 import type { IToast } from 'interfaces/toast';
 
-const Toast = ({ title, type, confetti }: IToast) => {
+const Toast = ({ title, type }: IToast) => {
     const { setToast } = useContext(UIContext);
 
     const { classes: styles } = useStyles();
-    const confettiColors = ['#d13447', '#ffbf00', '#263672'];
-    const confettiAmount = 200;
-
-    const getRandomNumber = (input: number) => {
-        return Math.floor(Math.random() * input) + 1;
-    };
-
-    const renderConfetti = () => {
-        const elements = new Array(confettiAmount).fill(1);
-
-        const styledElements = elements.map((el, index) => {
-            const width = getRandomNumber(8);
-            const length = getRandomNumber(100);
-
-            const style = {
-                position: 'absolute' as const,
-                width: `${width}px`,
-                height: `${width * 0.4}px`,
-                backgroundColor: confettiColors[getRandomNumber(2)],
-                left: `${length}%`,
-                transform: `rotate(${getRandomNumber(101)}deg)`,
-                animationDelay: `${getRandomNumber(5)}s`,
-                animationDuration: `${getRandomNumber(3)}s`,
-                animationEase: `${getRandomNumber(2)}s`,
-            };
-
-            return (
-                <div
-                    key={index}
-                    style={style}
-                    className={classnames(styles.starting, styles.anim)}
-                />
-            );
-        });
-
-        return styledElements;
-    };
 
     const hide = () => {
         setToast((prev: IToast) => ({ ...prev, show: false }));
@@ -57,7 +20,6 @@ const Toast = ({ title, type, confetti }: IToast) => {
         <div className={classnames(styles.container, 'dropdown-outline')}>
             <div className={styles.innerContainer}>
                 <div className={styles.confettiContainer}>
-                    {confetti && renderConfetti()}
                     <div className={styles.createdContainer}>
                         <CheckMarkBadge
                             type={type}

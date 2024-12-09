@@ -52,7 +52,6 @@ jobs:
             return { hasComment, hasReviewers };
 
       - name: Add reviewers and comment if necessary
-        if: steps.check-comment.outputs.hasComment == 'false' || steps.check-comment.outputs.hasReviewers == 'false'
         uses: actions/github-script@v6
         with:
           script: |

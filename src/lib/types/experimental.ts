@@ -60,6 +60,7 @@ export type IFlagKey =
     | 'deleteStaleUserSessions'
     | 'memorizeStats'
     | 'licensedUsers'
+    | 'granularAdminPermissions'
     | 'streaming'
     | 'etagVariant';
 
@@ -279,6 +280,10 @@ const flags: IFlags = {
     ),
     licensedUsers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_LICENSED_USERS,
+        false,
+    ),
+    granularAdminPermissions: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_GRANULAR_ADMIN_PERMISSIONS,
         false,
     ),
     streaming: parseEnvVarBoolean(

@@ -57,6 +57,7 @@ process.nextTick(async () => {
                         showUserDeviceCount: true,
                         flagOverviewRedesign: false,
                         licensedUsers: true,
+                        granularAdminPermissions: true,
                     },
                 },
                 authentication: {

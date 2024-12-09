@@ -58,7 +58,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     handleSubmit,
     children,
 }) => {
-    const [addStrategyOpen, setAddStrategyOpen] = useState(false);
+    const [addUpdateStrategyOpen, setAddUpdateStrategyOpen] = useState(false);
     const [activeMilestoneId, setActiveMilestoneId] = useState<
         string | undefined
     >();
@@ -71,16 +71,16 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
         title: '',
         id: 'temp',
     });
-    const openAddStrategyForm = (
+    const openAddUpdateStrategyForm = (
         milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => {
         setActiveMilestoneId(milestoneId);
         setStrategy(strategy);
-        setAddStrategyOpen(true);
+        setAddUpdateStrategyOpen(true);
     };
 
-    const addStrategy = (
+    const addUpdateStrategy = (
         milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => {
@@ -113,7 +113,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                 ),
             );
         }
-        setAddStrategyOpen(false);
+        setAddUpdateStrategyOpen(false);
         setActiveMilestoneId(undefined);
         setStrategy({
             name: 'flexibleRollout',
@@ -180,7 +180,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                 <MilestoneList
                     milestones={milestones}
                     setMilestones={setMilestones}
-                    openAddStrategyForm={openAddStrategyForm}
+                    openAddStrategyForm={openAddUpdateStrategyForm}
                     errors={errors}
                     clearErrors={clearErrors}
                     milestoneChanged={milestoneChanged}
@@ -191,14 +191,14 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                 <SidebarModal
                     label='Add strategy to template milestone'
                     onClose={() => {}}
-                    open={addStrategyOpen}
+                    open={addUpdateStrategyOpen}
                 >
                     <ReleasePlanTemplateAddStrategyForm
                         milestoneId={activeMilestoneId}
                         strategy={strategy}
-                        onAddStrategy={addStrategy}
+                        onAddUpdateStrategy={addUpdateStrategy}
                         onCancel={() => {
-                            setAddStrategyOpen(false);
+                            setAddUpdateStrategyOpen(false);
                         }}
                     />
                 </SidebarModal>

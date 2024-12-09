@@ -3,8 +3,7 @@ import type {
     IReleasePlanMilestoneStrategy,
 } from 'interfaces/releasePlans';
 import { MilestoneCard } from './MilestoneCard';
-import { styled } from '@mui/material';
-import { Button } from '@mui/material';
+import { styled, Button } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -19,6 +18,7 @@ interface IMilestoneListProps {
     ) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
+    milestoneChanged: (milestone: IReleasePlanMilestonePayload) => void;
 }
 
 const StyledAddMilestoneButton = styled(Button)(({ theme }) => ({
@@ -32,24 +32,15 @@ export const MilestoneList = ({
     openAddStrategyForm,
     errors,
     clearErrors,
+    milestoneChanged,
 }: IMilestoneListProps) => {
-    const milestoneNameChanged = (milestoneId: string, name: string) => {
-        setMilestones((prev) =>
-            prev.map((milestone) =>
-                milestone.id === milestoneId
-                    ? { ...milestone, name }
-                    : milestone,
-            ),
-        );
-    };
-
     return (
         <>
             {milestones.map((milestone) => (
                 <MilestoneCard
                     key={milestone.id}
                     milestone={milestone}
-                    milestoneNameChanged={milestoneNameChanged}
+                    milestoneChanged={milestoneChanged}
                     showAddStrategyDialog={openAddStrategyForm}
                     errors={errors}
                     clearErrors={clearErrors}

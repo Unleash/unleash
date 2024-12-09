@@ -1,0 +1,28 @@
+name: Core Feature Alert
+
+on:
+  pull_request:
+    paths:
+      - src/features/client-feature-toggles
+      - src/features/frontend-api
+
+jobs:
+  notify-core-changes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch PR Creator's Username
+        id: pr-creator
+        run: echo "PR_CREATOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
+
+      - name: Post a notification about core feature changes
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const prCreator = process.env.PR_CREATOR;
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body: `@FredrikOseberg, @${prCreator}, core features have been modified in this pull request. Please review!`
+            })

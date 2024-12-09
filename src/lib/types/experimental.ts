@@ -60,9 +60,9 @@ export type IFlagKey =
     | 'deleteStaleUserSessions'
     | 'memorizeStats'
     | 'licensedUsers'
+    | 'granularAdminPermissions'
     | 'streaming'
-    | 'etagVariant'
-    | 'granularAdminPermissions';
+    | 'etagVariant';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -282,6 +282,10 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_FLAG_LICENSED_USERS,
         false,
     ),
+    granularAdminPermissions: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_GRANULAR_ADMIN_PERMISSIONS,
+        false,
+    ),
     streaming: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_STREAMING,
         false,
@@ -291,10 +295,6 @@ const flags: IFlags = {
         feature_enabled: false,
         enabled: false,
     },
-    granularAdminPermissions: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_GRANULAR_ADMIN_PERMISSIONS,
-        false,
-    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

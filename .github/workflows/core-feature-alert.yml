@@ -8,7 +8,7 @@ on:
     paths:
       - src/lib/features/client-feature-toggles/*
       - src/lib/features/frontend-api/*
-
+      
 jobs:
   check-core-feature:
     runs-on: ubuntu-latest
@@ -52,9 +52,8 @@ jobs:
 
             core.setOutput('hasComment', hasComment);
             core.setOutput('hasReviewers', hasReviewers);
-        outputs:
-          hasComment: ${{ steps.check-comment.outputs.hasComment }}
-          hasReviewers: ${{ steps.check-comment.outputs.hasReviewers }}
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add reviewers and comment if necessary
         if: steps.check-comment.outputs.hasComment == 'false' || steps.check-comment.outputs.hasReviewers == 'false'
@@ -64,7 +63,7 @@ jobs:
             const prNumber = context.payload.pull_request.number;
             const prCreator = context.payload.pull_request.user.login;
 
-          
+            // Add a comment if not already present
             if (!${{ steps.check-comment.outputs.hasComment }}) {
               await github.rest.issues.createComment({
                 owner: context.repo.owner,
@@ -74,6 +73,7 @@ jobs:
               });
             }
 
+            // Add reviewers if not already present
             if (!${{ steps.check-comment.outputs.hasReviewers }}) {
               await github.rest.pulls.requestReviewers({
                 owner: context.repo.owner,
@@ -82,3 +82,5 @@ jobs:
                 reviewers: ['FredrikOseberg'], // Do not include @ in reviewer names
               });
             }
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

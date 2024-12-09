@@ -9294,9 +9294,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"unleash-client@npm:6.2.0-alpha.0":
-  version: 6.2.0-alpha.0
-  resolution: "unleash-client@npm:6.2.0-alpha.0"
+"unleash-client@npm:6.3.0-alpha.0":
+  version: 6.3.0-alpha.0
+  resolution: "unleash-client@npm:6.3.0-alpha.0"
   dependencies:
     http-proxy-agent: "npm:^7.0.2"
     https-proxy-agent: "npm:^7.0.5"
@@ -9304,8 +9304,9 @@ __metadata:
     launchdarkly-eventsource: "npm:2.0.3"
     make-fetch-happen: "npm:^13.0.1"
     murmurhash3js: "npm:^3.0.1"
+    proxy-from-env: "npm:^1.1.0"
     semver: "npm:^7.6.2"
-  checksum: 10c0/ed5cd23191edcd43b49b0d6b716c9da315737e144f3e7ad062f4876549472af568c43f5d96c4cd8f3a9b408de42e04d8332db67b1a94f9d8bffd452677294794
+  checksum: 10c0/2646cdc0cc2e2e257342aeeeaab3ad973acc8b48fece25c8a36207c4cadfb1bc08e88789839ebdff4191f0b56806207e66e0863e7144bbd9370fb8256626edab
   languageName: node
   linkType: hard
 
@@ -9420,7 +9421,7 @@ __metadata:
     tsc-watch: "npm:6.2.1"
     type-is: "npm:^1.6.18"
     typescript: "npm:5.4.5"
-    unleash-client: "npm:6.2.0-alpha.0"
+    unleash-client: "npm:6.3.0-alpha.0"
     uuid: "npm:^9.0.0"
     wait-on: "npm:^7.2.0"
   languageName: unknown

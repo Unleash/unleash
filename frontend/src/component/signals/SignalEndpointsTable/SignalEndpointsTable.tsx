@@ -68,7 +68,7 @@ export const SignalEndpointsTable = () => {
         try {
             await toggleSignalEndpoint(id, enabled);
             setToastData({
-                text: `"${name}" has been ${enabled ? 'enabled' : 'disabled'}`,
+                text: `"${name}" ${enabled ? 'enabled' : 'disabled'}`,
                 type: 'success',
             });
             refetch();
@@ -81,7 +81,7 @@ export const SignalEndpointsTable = () => {
         try {
             await removeSignalEndpoint(id);
             setToastData({
-                text: `"${name}" has been deleted`,
+                text: `"${name}" deleted`,
                 type: 'success',
             });
             refetch();

@@ -54,7 +54,7 @@ const EditFeature = () => {
             await patchFeatureFlag(project, featureId, patch);
             navigate(`/projects/${project}/features/${name}`);
             setToastData({
-                text: 'Flag updated successfully',
+                text: 'Flag updated',
                 type: 'success',
             });
         } catch (error: unknown) {

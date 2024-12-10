@@ -184,7 +184,7 @@ export const EnvironmentCloneModal = ({
                 newToken(token);
             }
             setToastData({
-                text: 'Environment successfully cloned!',
+                text: 'Environment cloned',
                 type: 'success',
             });
             refetchEnvironments();

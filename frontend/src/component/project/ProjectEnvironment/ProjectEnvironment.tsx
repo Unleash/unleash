@@ -111,7 +111,7 @@ const ProjectEnvironmentList = () => {
                 return;
             }
             setToastData({
-                text: 'At least one environment must be visible',
+                text: 'At least one environment must be visible in the project',
                 type: 'error',
             });
         } else {

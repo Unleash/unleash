@@ -62,7 +62,7 @@ export const useChangeRequestToggle = (project: string) => {
             }));
             setToastData({
                 type: 'success',
-                text: 'Changes added to the draft!',
+                text: 'Changes added to draft',
             });
         } catch (error) {
             setToastApiError(formatUnknownError(error));

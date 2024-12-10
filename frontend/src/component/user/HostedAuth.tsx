@@ -79,7 +79,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
             if (data.deletedSessions && data.activeSessions) {
                 setToastData({
                     type: 'success',
-                    text: 'Maximum Session Limit Reached',
+                    text: `Maximum session limit of ${data.activeSessions} reached`,
                 });
             }
             refetchUser();

@@ -178,7 +178,7 @@ export const TagTypeList = () => {
                 setToastData({
                     type: 'success',
                     show: true,
-                    text: 'Successfully deleted tag type.',
+                    text: 'Tag type deleted',
                 });
             }
         } catch (error) {

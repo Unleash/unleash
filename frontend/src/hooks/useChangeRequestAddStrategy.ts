@@ -78,7 +78,7 @@ export const useChangeRequestAddStrategy = (
             setChangeRequestDialogDetails({ isOpen: false });
             setToastData({
                 type: 'success',
-                text: 'Changes added to the draft!',
+                text: 'Changes added to draft',
             });
         } catch (error) {
             setToastApiError(formatUnknownError(error));
@@ -105,7 +105,7 @@ export const useChangeRequestAddStrategy = (
             setChangeRequestDialogDetails({ isOpen: false });
             setToastData({
                 type: 'success',
-                text: 'Changes added to the draft!',
+                text: 'Changes added to draft',
             });
         } catch (error) {
             setToastApiError(formatUnknownError(error));

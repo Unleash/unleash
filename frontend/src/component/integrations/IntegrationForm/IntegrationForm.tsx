@@ -251,14 +251,14 @@ export const IntegrationForm: FC<IntegrationFormProps> = ({
                 navigate('/integrations');
                 setToastData({
                     type: 'success',
-                    text: 'Integration updated successfully',
+                    text: 'Integration updated',
                 });
             } else {
                 await createAddon(formValues as Omit<AddonSchema, 'id'>);
                 navigate('/integrations');
                 setToastData({
                     type: 'success',
-                    text: 'Integration created successfully',
+                    text: 'Integration created',
                 });
             }
         } catch (error) {

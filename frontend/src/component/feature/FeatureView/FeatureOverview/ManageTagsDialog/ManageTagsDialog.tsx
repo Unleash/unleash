@@ -135,7 +135,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
         } catch (error: unknown) {
             setToastData({
                 type: 'error',
-                text: `Failed to add tag`,
+                text: 'Failed to add tag',
             });
         }
     };

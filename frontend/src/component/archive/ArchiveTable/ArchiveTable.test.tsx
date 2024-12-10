@@ -103,7 +103,7 @@ test('should show confirm dialog when reviving flag', async () => {
     });
     fireEvent.click(reviveFlagsButton);
 
-    await screen.findByText("And we're back!");
+    await screen.findByText('Feature flags revived');
 });
 
 test('should show confirm dialog when batch reviving flag', async () => {
@@ -134,7 +134,7 @@ test('should show confirm dialog when batch reviving flag', async () => {
     });
     fireEvent.click(reviveTogglesButton);
 
-    await screen.findByText("And we're back!");
+    await screen.findByText('Feature flags revived');
 });
 
 test('should show info box when disableAllEnvsOnRevive flag is on', async () => {

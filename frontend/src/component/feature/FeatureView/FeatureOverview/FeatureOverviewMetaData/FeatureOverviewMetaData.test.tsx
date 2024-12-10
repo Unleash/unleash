@@ -255,7 +255,7 @@ test('delete dependency with change request', async () => {
     const deleteButton = await screen.findByText('Delete');
     fireEvent.click(deleteButton);
 
-    await screen.findByText('Change added to a draft');
+    await screen.findByText('Change added to draft');
 });
 
 test('edit dependency', async () => {

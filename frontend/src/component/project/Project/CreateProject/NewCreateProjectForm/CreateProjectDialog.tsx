@@ -6,7 +6,7 @@ import ProjectModeIcon from '@mui/icons-material/Adjust';
 import useProjectApi from 'hooks/api/actions/useProjectApi/useProjectApi';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import { CREATE_PROJECT } from '@server/types/permissions';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../hooks/useProjectForm';

@@ -17,7 +17,7 @@ import { styled } from '@mui/material';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import { useSearchParams } from 'react-router-dom';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { CREATE_FEATURE } from '@server/types/permissions';
 import { ExportDialog } from 'component/feature/FeatureToggleList/ExportDialog';
 import type { FeatureSchema } from 'openapi';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

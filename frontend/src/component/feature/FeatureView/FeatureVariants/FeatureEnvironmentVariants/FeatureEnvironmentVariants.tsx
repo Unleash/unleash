@@ -7,7 +7,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { Search } from 'component/common/Search/Search';
 import { updateWeight } from 'component/common/util';
-import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '@server/types/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type {

@@ -31,10 +31,7 @@ import { IntegrationMultiSelector } from './IntegrationMultiSelector/Integration
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import {
-    CREATE_ADDON,
-    UPDATE_ADDON,
-} from '../../providers/AccessProvider/permissions';
+import { CREATE_ADDON, UPDATE_ADDON } from '@server/types/permissions';
 import {
     StyledForm,
     StyledAlerts,

@@ -13,11 +13,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import Delete from '@mui/icons-material/Delete';
 import PowerSettingsNew from '@mui/icons-material/PowerSettingsNew';
-import {
-    ADMIN,
-    DELETE_ADDON,
-    UPDATE_ADDON,
-} from 'component/providers/AccessProvider/permissions';
+import { ADMIN, DELETE_ADDON, UPDATE_ADDON } from '@server/types/permissions';
 import { useHasRootAccess } from 'hooks/useHasAccess';
 import useAddonsApi from 'hooks/api/actions/useAddonsApi/useAddonsApi';
 import type { AddonSchema } from 'openapi';

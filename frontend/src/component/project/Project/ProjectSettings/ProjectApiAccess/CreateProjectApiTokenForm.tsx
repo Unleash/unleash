@@ -6,7 +6,7 @@ import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useApiTokenForm } from 'component/admin/apiToken/ApiTokenForm/useApiTokenForm';
-import { CREATE_PROJECT_API_TOKEN } from 'component/providers/AccessProvider/permissions';
+import { CREATE_PROJECT_API_TOKEN } from '@server/types/permissions';
 import { scrollToTop } from 'component/common/util';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { usePageTitle } from 'hooks/usePageTitle';

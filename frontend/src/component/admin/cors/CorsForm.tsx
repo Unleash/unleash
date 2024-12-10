@@ -1,4 +1,4 @@
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import type React from 'react';
 import { useState } from 'react';
 import { TextField, Box } from '@mui/material';

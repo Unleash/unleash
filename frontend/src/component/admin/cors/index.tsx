@@ -1,5 +1,5 @@
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { Box } from '@mui/material';

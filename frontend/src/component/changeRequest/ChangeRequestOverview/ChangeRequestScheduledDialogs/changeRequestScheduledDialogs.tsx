@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { APPLY_CHANGE_REQUEST } from '../../../providers/AccessProvider/permissions';
+import { APPLY_CHANGE_REQUEST } from '@server/types/permissions';
 import PermissionButton from '../../../common/PermissionButton/PermissionButton';
 import {
     ChangeRequestScheduledDialog,

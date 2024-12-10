@@ -1,7 +1,7 @@
 import {
     CREATE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { NAVIGATE_TO_CREATE_SEGMENT } from 'utils/testIds';
 import { useNavigate } from 'react-router-dom';

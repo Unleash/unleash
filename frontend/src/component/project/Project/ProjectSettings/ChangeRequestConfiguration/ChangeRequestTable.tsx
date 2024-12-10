@@ -30,7 +30,7 @@ import KeyboardArrowDownOutlined from '@mui/icons-material/KeyboardArrowDownOutl
 import { useTheme } from '@mui/material/styles';
 import AccessContext from 'contexts/AccessContext';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { PROJECT_CHANGE_REQUEST_WRITE } from '../../../../providers/AccessProvider/permissions';
+import { PROJECT_CHANGE_REQUEST_WRITE } from '@server/types/permissions';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1),

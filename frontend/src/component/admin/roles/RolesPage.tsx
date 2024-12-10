@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import { RolesTable } from './RolesTable/RolesTable';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { Tab, Tabs, styled, useMediaQuery } from '@mui/material';

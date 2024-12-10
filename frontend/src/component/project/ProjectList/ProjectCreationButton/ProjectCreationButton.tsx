@@ -2,7 +2,7 @@ import { useContext, type FC, type ReactNode } from 'react';
 import type { ITooltipResolverProps } from 'component/common/TooltipResolver/TooltipResolver';
 import AccessContext from 'contexts/AccessContext';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { CREATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import { CREATE_PROJECT } from '@server/types/permissions';
 import Add from '@mui/icons-material/Add';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { ReactComponent as ProPlanIcon } from 'assets/icons/pro-enterprise-feature-badge.svg';

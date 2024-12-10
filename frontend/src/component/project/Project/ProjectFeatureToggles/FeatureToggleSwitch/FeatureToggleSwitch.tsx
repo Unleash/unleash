@@ -1,7 +1,7 @@
 import type { VFC } from 'react';
 import { Box, styled } from '@mui/material';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
-import { UPDATE_FEATURE_ENVIRONMENT } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_ENVIRONMENT } from '@server/types/permissions';
 import { useOptimisticUpdate } from './hooks/useOptimisticUpdate';
 import { flexRow } from 'themes/themeStyles';
 

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import PermissionButton, {
     type IPermissionButtonProps,
 } from 'component/common/PermissionButton/PermissionButton';
-import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { CREATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { Popover, styled } from '@mui/material';
 import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards';
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';

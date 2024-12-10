@@ -1,6 +1,6 @@
 import { useMemo, type VFC } from 'react';
 import PermissionSwitch from 'component/common/PermissionSwitch/PermissionSwitch';
-import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_STRATEGY } from '@server/types/permissions';
 import { Tooltip } from '@mui/material';
 import { useId } from 'hooks/useId';
 import { useHasRootAccess } from 'hooks/useHasAccess';

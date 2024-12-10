@@ -6,7 +6,7 @@ import LockReset from '@mui/icons-material/LockReset';
 import { Box, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import type { VFC } from 'react';
 
 const StyledBox = styled(Box)(() => ({

@@ -15,10 +15,7 @@ import Label from '@mui/icons-material/Label';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    DELETE_TAG_TYPE,
-    UPDATE_TAG_TYPE,
-} from 'component/providers/AccessProvider/permissions';
+import { DELETE_TAG_TYPE, UPDATE_TAG_TYPE } from '@server/types/permissions';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import useTagTypes from 'hooks/api/getters/useTagTypes/useTagTypes';

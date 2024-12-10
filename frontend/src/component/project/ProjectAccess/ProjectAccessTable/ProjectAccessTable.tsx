@@ -19,7 +19,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import {
     PROJECT_USER_ACCESS_WRITE,
     UPDATE_PROJECT,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';

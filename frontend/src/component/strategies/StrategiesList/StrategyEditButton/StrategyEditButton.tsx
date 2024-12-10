@@ -3,7 +3,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import Edit from '@mui/icons-material/Edit';
 import { IconButton, Tooltip } from '@mui/material';
-import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_STRATEGY } from '@server/types/permissions';
 import type { IStrategy } from 'interfaces/strategy';
 import { useId } from 'hooks/useId';
 

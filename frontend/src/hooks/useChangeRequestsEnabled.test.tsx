@@ -3,10 +3,7 @@ import { AccessProviderMock } from '../component/providers/AccessProvider/Access
 import { useChangeRequestsEnabled } from './useChangeRequestsEnabled';
 import type { FC } from 'react';
 import { testServerRoute, testServerSetup } from '../utils/testServer';
-import {
-    SKIP_CHANGE_REQUEST,
-    ADMIN,
-} from '../component/providers/AccessProvider/permissions';
+import { SKIP_CHANGE_REQUEST, ADMIN } from '@server/types/permissions';
 
 const project = 'project';
 const environment = 'production';

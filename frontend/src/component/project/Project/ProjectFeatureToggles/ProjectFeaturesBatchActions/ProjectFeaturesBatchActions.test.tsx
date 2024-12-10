@@ -1,7 +1,7 @@
 import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
 import { ProjectFeaturesBatchActions } from './ProjectFeaturesBatchActions';
-import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { DELETE_FEATURE } from '@server/types/permissions';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();

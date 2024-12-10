@@ -11,7 +11,7 @@ import Lock from '@mui/icons-material/Lock';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import AccessContext from 'contexts/AccessContext';
-import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { CREATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ICopyButtonProps {

@@ -2,7 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { CreateApiTokenButton } from './CreateApiTokenButton';
-import { CREATE_PROJECT_API_TOKEN } from 'component/providers/AccessProvider/permissions';
+import { CREATE_PROJECT_API_TOKEN } from '@server/types/permissions';
 
 const server = testServerSetup();
 

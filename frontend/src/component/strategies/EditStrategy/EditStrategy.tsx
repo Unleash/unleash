@@ -5,7 +5,7 @@ import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useStrategyForm } from '../hooks/useStrategyForm';
 import { StrategyForm } from '../StrategyForm/StrategyForm';
-import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_STRATEGY } from '@server/types/permissions';
 import useStrategiesApi from 'hooks/api/actions/useStrategiesApi/useStrategiesApi';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { formatUnknownError } from 'utils/formatUnknownError';

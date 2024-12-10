@@ -11,7 +11,7 @@ import {
     CREATE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import type { IConstraint } from 'interfaces/strategy';
 import { useNavigate } from 'react-router-dom';

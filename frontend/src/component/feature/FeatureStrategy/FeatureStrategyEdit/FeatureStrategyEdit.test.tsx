@@ -8,7 +8,7 @@ import {
     CREATE_FEATURE_STRATEGY,
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_FEATURE_STRATEGY,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import { FeatureStrategyEdit } from './FeatureStrategyEdit';
 import {
     setupContextEndpoint,

@@ -13,7 +13,7 @@ import { TablePlaceholder } from 'component/common/Table';
 import { GroupCard } from './GroupCard/GroupCard';
 import { GroupEmpty } from './GroupEmpty/GroupEmpty';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import Add from '@mui/icons-material/Add';
 import { NAVIGATE_TO_CREATE_GROUP } from 'utils/testIds';
 import { EditGroupUsers } from '../Group/EditGroupUsers/EditGroupUsers';

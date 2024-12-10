@@ -3,7 +3,7 @@ import type { FC } from 'react';
 
 import CheckBox from '@mui/icons-material/Check';
 import Today from '@mui/icons-material/Today';
-import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
+import { APPLY_CHANGE_REQUEST } from '@server/types/permissions';
 import { MultiActionButton } from 'component/common/MultiActionButton/MultiActionButton';
 import { useChangeRequest } from 'hooks/api/getters/useChangeRequest/useChangeRequest';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';

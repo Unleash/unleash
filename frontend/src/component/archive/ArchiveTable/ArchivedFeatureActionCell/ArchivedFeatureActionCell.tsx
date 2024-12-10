@@ -3,10 +3,7 @@ import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import Delete from '@mui/icons-material/Delete';
 import Undo from '@mui/icons-material/Undo';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import {
-    DELETE_FEATURE,
-    UPDATE_FEATURE,
-} from 'component/providers/AccessProvider/permissions';
+import { DELETE_FEATURE, UPDATE_FEATURE } from '@server/types/permissions';
 
 interface IReviveArchivedFeatureCell {
     onRevive: () => void;

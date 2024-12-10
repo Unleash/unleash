@@ -3,7 +3,7 @@ import Add from '@mui/icons-material/Add';
 import {
     UPDATE_PROJECT,
     CREATE_PROJECT_API_TOKEN,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import { FlagCreationButton } from '../../project/Project/PaginatedProjectFeatureToggles/ProjectFeatureTogglesHeader/ProjectFeatureTogglesHeader';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';

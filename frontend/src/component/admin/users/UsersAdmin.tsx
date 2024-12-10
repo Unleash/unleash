@@ -1,5 +1,5 @@
 import UsersList from './UsersList/UsersList';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { Route, Routes } from 'react-router-dom';
 import EditUser from './EditUser/EditUser';

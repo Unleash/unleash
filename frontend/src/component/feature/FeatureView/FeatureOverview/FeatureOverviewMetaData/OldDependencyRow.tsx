@@ -13,7 +13,7 @@ import { useDependentFeaturesApi } from 'hooks/api/actions/useDependentFeaturesA
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { ChildrenTooltip } from './ChildrenTooltip';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_FEATURE_DEPENDENCY } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_DEPENDENCY } from '@server/types/permissions';
 import { useCheckProjectAccess } from 'hooks/useHasAccess';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';

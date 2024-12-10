@@ -12,7 +12,7 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { type IInstanceStatus, InstancePlan } from 'interfaces/instance';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import AccessContext from 'contexts/AccessContext';
 import useInstanceStatusApi from 'hooks/api/actions/useInstanceStatusApi/useInstanceStatusApi';
 import { trialHasExpired, canExtendTrial } from 'utils/instanceTrial';

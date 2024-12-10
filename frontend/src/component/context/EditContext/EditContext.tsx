@@ -1,6 +1,6 @@
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
-import { UPDATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_CONTEXT_FIELD } from '@server/types/permissions';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useContext from 'hooks/api/getters/useContext/useContext';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

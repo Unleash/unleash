@@ -4,7 +4,7 @@ import { useSWRConfig } from 'swr';
 import { Box, Button, Typography } from '@mui/material';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import { url as inviteTokensUrlKey } from 'hooks/api/getters/useInviteTokens/useInviteTokens';
 import { add } from 'date-fns';
 import GeneralSelect from 'component/common/GeneralSelect/GeneralSelect';

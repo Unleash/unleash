@@ -5,7 +5,7 @@ import { scrollToTop } from 'component/common/util';
 import { useEffect } from 'react';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import { EDIT } from 'constants/misc';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

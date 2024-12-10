@@ -4,7 +4,7 @@ import AccessContext from 'contexts/AccessContext';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useToast from 'hooks/useToast';
-import { MOVE_FEATURE_TOGGLE } from 'component/providers/AccessProvider/permissions';
+import { MOVE_FEATURE_TOGGLE } from '@server/types/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import FeatureProjectSelect from './FeatureProjectSelect/FeatureProjectSelect';
 import FeatureSettingsProjectConfirm from './FeatureSettingsProjectConfirm/FeatureSettingsProjectConfirm';

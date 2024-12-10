@@ -1,7 +1,7 @@
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { CREATE_FEATURE } from '@server/types/permissions';
 import { type ReactNode, useState, type FormEvent, useMemo } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';

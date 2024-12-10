@@ -13,8 +13,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState } from 'react';
 import type { IEnvironment } from 'interfaces/environments';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
+import { ADMIN } from '@server/types/permissions';
 import {
-    ADMIN,
     DELETE_ENVIRONMENT,
     UPDATE_ENVIRONMENT,
 } from 'component/providers/AccessProvider/permissions';

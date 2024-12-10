@@ -13,7 +13,7 @@ import {
 import Add from '@mui/icons-material/Add';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { Link } from 'react-router-dom';
-import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { CREATE_FEATURE } from '@server/types/permissions';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { useCreateFeaturePath } from 'component/feature/CreateFeatureButton/useCreateFeaturePath';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

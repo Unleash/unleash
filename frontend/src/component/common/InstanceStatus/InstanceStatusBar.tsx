@@ -6,7 +6,7 @@ import WarningAmber from '@mui/icons-material/WarningAmber';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import {
     trialHasExpired,
     trialExpiresSoon,

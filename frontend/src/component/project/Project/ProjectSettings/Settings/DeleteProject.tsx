@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { DELETE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import { DELETE_PROJECT } from '@server/types/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DeleteProjectDialogue } from '../../DeleteProject/DeleteProjectDialogue';
 import { useState } from 'react';

@@ -12,7 +12,7 @@ import Lock from '@mui/icons-material/Lock';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
-import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { CREATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';

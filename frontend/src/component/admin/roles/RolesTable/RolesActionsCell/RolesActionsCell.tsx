@@ -3,7 +3,7 @@ import Edit from '@mui/icons-material/Edit';
 import { Box, styled } from '@mui/material';
 import { PREDEFINED_ROLE_TYPES } from '@server/util/constants';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import type { IRole } from 'interfaces/role';
 import type { VFC } from 'react';
 

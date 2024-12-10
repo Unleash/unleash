@@ -18,7 +18,7 @@ import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import Edit from '@mui/icons-material/Edit';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { FeatureTypeEdit } from './FeatureTypeEdit/FeatureTypeEdit';

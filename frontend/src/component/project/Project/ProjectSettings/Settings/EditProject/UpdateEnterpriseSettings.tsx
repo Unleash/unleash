@@ -8,7 +8,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import ProjectEnterpriseSettingsForm from 'component/project/Project/ProjectEnterpriseSettingsForm/ProjectEnterpriseSettingsForm';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_PROJECT } from '@server/types/permissions';
 import type { IProjectOverview } from 'component/../interfaces/project';
 import { styled } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';

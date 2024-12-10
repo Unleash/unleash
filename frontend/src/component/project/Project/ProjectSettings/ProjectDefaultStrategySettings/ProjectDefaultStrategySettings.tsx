@@ -8,7 +8,7 @@ import {
     PROJECT_DEFAULT_STRATEGY_READ,
     PROJECT_DEFAULT_STRATEGY_WRITE,
     UPDATE_PROJECT,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import { Alert, styled } from '@mui/material';
 import ProjectEnvironment from './ProjectEnvironment/ProjectEnvironment';
 import { Route, Routes, useNavigate } from 'react-router-dom';

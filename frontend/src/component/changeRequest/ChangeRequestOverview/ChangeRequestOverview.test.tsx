@@ -6,10 +6,7 @@ import type {
 } from '../changeRequest.types';
 import { render } from 'utils/testRenderer';
 import { ChangeRequestOverview } from './ChangeRequestOverview';
-import {
-    ADMIN,
-    APPLY_CHANGE_REQUEST,
-} from 'component/providers/AccessProvider/permissions';
+import { ADMIN, APPLY_CHANGE_REQUEST } from '@server/types/permissions';
 import { Route, Routes } from 'react-router-dom';
 
 const server = testServerSetup();

@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import { UPDATE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_STRATEGY } from '@server/types/permissions';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import useApplications from 'hooks/api/getters/useApplications/useApplications';

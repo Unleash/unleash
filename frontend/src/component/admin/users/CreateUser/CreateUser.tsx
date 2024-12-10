@@ -9,7 +9,7 @@ import ConfirmUserAdded from '../ConfirmUserAdded/ConfirmUserAdded';
 import { useState } from 'react';
 import { scrollToTop } from 'component/common/util';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { SeatCostWarning } from './SeatCostWarning/SeatCostWarning';

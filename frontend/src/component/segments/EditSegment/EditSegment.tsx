@@ -2,7 +2,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import {
     UPDATE_PROJECT_SEGMENT,
     UPDATE_SEGMENT,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { useSegment } from 'hooks/api/getters/useSegment/useSegment';

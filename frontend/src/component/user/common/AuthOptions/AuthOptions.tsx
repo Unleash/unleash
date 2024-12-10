@@ -7,7 +7,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import type { IAuthOptions } from 'hooks/api/getters/useAuth/useAuthEndpoint';
 import { SSO_LOGIN_BUTTON } from 'utils/testIds';
 import useQueryParams from 'hooks/useQueryParams';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IAuthOptionProps {
     options?: IAuthOptions[];
@@ -22,9 +21,8 @@ function addOrOverwriteRedirect(path: string, redirectValue: string): string {
 
 const AuthOptions = ({ options }: IAuthOptionProps) => {
     const { classes: themeStyles } = useThemeStyles();
-    const oidcRedirectEnabled = useUiFlag('oidcRedirect');
     const query = useQueryParams();
-    const redirectPath = (oidcRedirectEnabled && query.get('redirect')) || '';
+    const redirectPath = query.get('redirect') || '';
 
     return (
         <>

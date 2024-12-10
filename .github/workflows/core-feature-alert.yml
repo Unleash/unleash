@@ -23,7 +23,7 @@ jobs:
         with:
           script: |
             const prCreator = process.env.PR_CREATOR;
-            const commentBody = `@${prCreator}, core features have been modified in this pull request. Please review!`;
+            const commentBody = `@${prCreator}, core features have been modified in this pull request. Please review carefully!`;
 
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
@@ -49,7 +49,7 @@ jobs:
         with:
           script: |
             const prCreator = process.env.PR_CREATOR;
-            const allReviewers = ['FredrikOseberg', 'gastonfournier'];
+            const allReviewers = ['FredrikOseberg', 'gastonfournier', 'chriswk', 'ivarconr'];
             const reviewersToAdd = allReviewers.filter(reviewer => reviewer !== prCreator);
 
             if (reviewersToAdd.length > 0) {

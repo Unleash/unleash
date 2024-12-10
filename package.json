@@ -227,7 +227,7 @@
     "es5-ext": "0.10.64",
     "node-forge": "^1.0.0",
     "set-value": "^4.0.1",
-    "ansi-regex": "^5.0.1",
+    "ansi-regex": "^6.0.0",
     "ssh2": "^1.4.0",
     "json-schema": "^0.4.0",
     "ip": "^2.0.1",

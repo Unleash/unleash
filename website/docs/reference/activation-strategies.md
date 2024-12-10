@@ -10,13 +10,13 @@ An activation strategy determines who should get a feature. They allow you to en
 
 An activation strategy is assigned to one [feature flag](/reference/feature-toggles) in one [environment](/reference/environments). A feature flag is enabled in a given context (for example, user or application) if at least one of its activation strategies resolves to true.
 
-You can copy activation strategies from one environment to the other, but the different strategy configurations do not stay in sync. The default activation strategy is a 100% gradual rollout, enabling the flag for all users. You can refine this using [rollout percentage](#rollout-percentage), [targeting](#targeting), and [variants](/reference/strategy-variants).
+The default activation strategy is a 100% gradual rollout, enabling the flag for all users. You can refine this using [rollout percentage](#rollout-percentage), [targeting](#targeting), and [variants](/reference/strategy-variants).
 
 Feature flags can have multiple activation strategies. Unleash evaluates each strategy independently, enabling the flag if any resolves to true. This behavior is equivalent to the OR logical operator.
 
 For example, to roll out a feature to 75% of users while granting access to internal users, you can add two activation strategies as follows: 
-1. Gradual rollout to 75%.
-2. Gradual rollout to 100% with a constraint on the email address.
+1. Gradual rollout to 100% with a constraint on the email address.
+2. Gradual rollout to 75% (of all users).
    
 ![A feature flag with two strategies](/img/activation-strategies-example.png)
 
@@ -38,7 +38,9 @@ Segmentation and constraints allow you to define conditions for your activation 
 
 Constraints are conditional rules that determine whether a strategy applies, based on fields from the [Unleash context](/reference/unleash-context). Constraints can reference both [standard context fields](../reference/unleash-context#overview) and [custom context fields](../reference/unleash-context#custom-context-fields).
 
-An activation strategy can have as many constraints as needed. When an activation strategy has multiple constraints, then every constraint must be evaluated to true for the strategy to be evaluated. This behavior is equivalent to the AND logical operator. 
+An activation strategy can have as many constraints as needed. When an activation strategy has multiple constraints, then every constraint must be evaluated to true for the strategy to be evaluated. This behavior is equivalent to the AND logical operator.
+
+You can use [Playground](/reference/playground) to experiment with different strategy and constraint configurations and how they would evaluate in a given context.
 
 For example, if you have two constraints: one where the user email must have the domain "@mycompany.com" and one where the user must have signed up for a beta program, then the strategy would only be evaluated for users with "@mycompany.com" emails that have signed up for the beta program.
 
@@ -126,9 +128,9 @@ The value must start with and contain at least major, minor, and patch versions.
 
 #### Best practices
 
-Server-side SDKs fetch the full feature flag configuration from Unleash, so every value that you add to that constraint value list increases the payload size.
+Server-side SDKs fetch the full feature flag configuration associated with your API key from Unleash. You can use API keys scoped to specific projects or environments to optimize payload size.
 
-We recommend avoiding large constraint value lists. For example, instead of adding many user IDs or emails to the constraint value list, consider what properties those users share. This typically helps define and use a [custom context field](/reference/unleash-context#custom-context-field) instead.
+However, every value that you add to your feature flag constraints, increases the payload size. We recommend avoiding large constraint value lists. For example, instead of adding many user IDs or emails to the constraint value list, consider what properties those users share. This typically helps define and use a [custom context field](/reference/unleash-context#custom-context-field) instead.
 
 
 ## Add an activation strategy with a constraint

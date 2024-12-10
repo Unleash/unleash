@@ -13,6 +13,10 @@ import { type IUserWithRootRole, TEST_AUDIT_USER } from '../../../types';
 let app: IUnleashTest;
 let db: ITestDb;
 let dummyAdmin: IUserWithRootRole;
+let proApp: IUnleashTest;
+let proDb: ITestDb;
+let enterpriseApp: IUnleashTest;
+let enterpriseDb: ITestDb;
 
 const apiClientResponse = [
     {
@@ -124,6 +128,38 @@ beforeAll(async () => {
         db.rawDatabase,
     );
 
+    enterpriseDb = await dbInit('client_feature_toggles_enterprise', getLogger);
+    enterpriseApp = await setupAppWithCustomConfig(
+        enterpriseDb.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
+            },
+            ui: {
+                environment: 'Enterprise',
+            },
+        },
+        enterpriseDb.rawDatabase,
+    );
+
+    proDb = await dbInit('client_feature_toggles_pro', getLogger);
+    proApp = await setupAppWithCustomConfig(
+        proDb.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
+            },
+            ui: {
+                environment: 'Pro',
+            },
+        },
+        proDb.rawDatabase,
+    );
+
     dummyAdmin = await app.services.userService.createUser(
         {
             name: 'Some Name',
@@ -136,11 +172,17 @@ beforeAll(async () => {
 
 afterEach(async () => {
     await cleanup(db, app);
+    await cleanup(proDb, proApp);
+    await cleanup(enterpriseDb, enterpriseApp);
 });
 
 afterAll(async () => {
     await app.destroy();
     await db.destroy();
+    await proApp.destroy();
+    await proDb.destroy();
+    await enterpriseApp.destroy();
+    await enterpriseDb.destroy();
 });
 
 test('should fetch single feature', async () => {
@@ -211,68 +253,25 @@ test('should return correct data structure from /api/client/features', async () 
 });
 
 test('should return correct data structure from /api/client/features for pro', async () => {
-    const localDb = await dbInit('client_feature_toggles_pro', getLogger);
-    const unleashWithProPlan = await setupAppWithCustomConfig(
-        localDb.stores,
-        {
-            experimental: {
-                flags: {
-                    strictSchemaValidation: true,
-                },
-            },
-            ui: {
-                environment: 'Pro',
-            },
-        },
-        localDb.rawDatabase,
-    );
+    await setupFeatures(proDb, proApp);
 
-    await setupFeatures(localDb, unleashWithProPlan);
-
-    const result = await unleashWithProPlan.request
+    const result = await proApp.request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect(200);
 
     expect(result.body.features).toEqual(apiClientResponse);
-
-    await cleanup(localDb, unleashWithProPlan);
-    await unleashWithProPlan.destroy();
-    await localDb.destroy();
 });
 
 test('should return correct data structure from /api/client/features for Enterprise', async () => {
-    const localDb = await dbInit(
-        'client_feature_toggles_enterprise',
-        getLogger,
-    );
-    const unleashWithEnterprisePlan = await setupAppWithCustomConfig(
-        localDb.stores,
-        {
-            experimental: {
-                flags: {
-                    strictSchemaValidation: true,
-                },
-            },
-            ui: {
-                environment: 'Enterprise',
-            },
-        },
-        localDb.rawDatabase,
-    );
+    await setupFeatures(enterpriseDb, enterpriseApp);
 
-    await setupFeatures(localDb, unleashWithEnterprisePlan);
-
-    const result = await unleashWithEnterprisePlan.request
+    const result = await enterpriseApp.request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect(200);
 
     expect(result.body.features).toEqual(apiClientResponse);
-
-    await cleanup(localDb, unleashWithEnterprisePlan);
-    await unleashWithEnterprisePlan.destroy();
-    await localDb.destroy();
 });
 
 test('should match snapshot from /api/client/features', async () => {

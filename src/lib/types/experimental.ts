@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'memorizeStats'
     | 'licensedUsers'
     | 'streaming'
-    | 'etagVariant';
+    | 'etagVariant'
+    | 'oidcRedirect';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -290,6 +291,10 @@ const flags: IFlags = {
         feature_enabled: false,
         enabled: false,
     },
+    oidcRedirect: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_OIDC_REDIRECT,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

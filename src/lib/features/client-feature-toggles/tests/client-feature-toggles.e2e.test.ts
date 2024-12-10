@@ -63,6 +63,53 @@ const apiClientResponse = [
     },
 ];
 
+const cleanup = async (db: ITestDb, app: IUnleashTest) => {
+    const all =
+        await db.stores.projectStore.getEnvironmentsForProject('default');
+    await Promise.all(
+        all
+            .filter((env) => env.environment !== DEFAULT_ENV)
+            .map(async (env) =>
+                db.stores.projectStore.deleteEnvironmentForProject(
+                    'default',
+                    env.environment,
+                ),
+            ),
+    );
+};
+
+const setupFeatures = async (db: ITestDb, app: IUnleashTest) => {
+    await db.rawDatabase.raw('DELETE FROM features');
+
+    await app.createFeature('test1', 'default');
+    await app.createFeature('test2', 'default');
+
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'flexibleRollout',
+            constraints: [],
+            parameters: {
+                rollout: '100',
+                stickiness: 'default',
+                groupId: 'test1',
+            },
+        },
+        DEFAULT_ENV,
+        'test1',
+    );
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                { contextName: 'userId', operator: 'IN', values: ['123'] },
+            ],
+            parameters: {},
+        },
+        DEFAULT_ENV,
+        'test2',
+    );
+};
+
 beforeAll(async () => {
     db = await dbInit('client_feature_toggles', getLogger);
     app = await setupAppWithCustomConfig(
@@ -88,18 +135,7 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-    const all =
-        await db.stores.projectStore.getEnvironmentsForProject('default');
-    await Promise.all(
-        all
-            .filter((env) => env.environment !== DEFAULT_ENV)
-            .map(async (env) =>
-                db.stores.projectStore.deleteEnvironmentForProject(
-                    'default',
-                    env.environment,
-                ),
-            ),
-    );
+    await cleanup(db, app);
 });
 
 afterAll(async () => {
@@ -164,35 +200,7 @@ test('should support filtering on project', async () => {
 });
 
 test('should return correct data structure from /api/client/features', async () => {
-    await db.rawDatabase.raw('DELETE FROM features');
-
-    await app.createFeature('test1', 'default');
-    await app.createFeature('test2', 'default');
-
-    await app.addStrategyToFeatureEnv(
-        {
-            name: 'flexibleRollout',
-            constraints: [],
-            parameters: {
-                rollout: '100',
-                stickiness: 'default',
-                groupId: 'test1',
-            },
-        },
-        DEFAULT_ENV,
-        'test1',
-    );
-    await app.addStrategyToFeatureEnv(
-        {
-            name: 'default',
-            constraints: [
-                { contextName: 'userId', operator: 'IN', values: ['123'] },
-            ],
-            parameters: {},
-        },
-        DEFAULT_ENV,
-        'test2',
-    );
+    await setupFeatures(db, app);
 
     const result = await app.request
         .get('/api/client/features')
@@ -200,4 +208,80 @@ test('should return correct data structure from /api/client/features', async () 
         .expect(200);
 
     expect(result.body.features).toEqual(apiClientResponse);
+});
+
+test('should return correct data structure from /api/client/features for pro', async () => {
+    const localDb = await dbInit('client_feature_toggles_pro', getLogger);
+    const unleashWithProPlan = await setupAppWithCustomConfig(
+        localDb.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
+            },
+            ui: {
+                environment: 'Pro',
+            },
+        },
+        localDb.rawDatabase,
+    );
+
+    await setupFeatures(localDb, unleashWithProPlan);
+
+    const result = await unleashWithProPlan.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(result.body.features).toEqual(apiClientResponse);
+
+    await cleanup(localDb, unleashWithProPlan);
+    await unleashWithProPlan.destroy();
+    await localDb.destroy();
+});
+
+test('should return correct data structure from /api/client/features for Enterprise', async () => {
+    const localDb = await dbInit(
+        'client_feature_toggles_enterprise',
+        getLogger,
+    );
+    const unleashWithEnterprisePlan = await setupAppWithCustomConfig(
+        localDb.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
+            },
+            ui: {
+                environment: 'Enterprise',
+            },
+        },
+        localDb.rawDatabase,
+    );
+
+    await setupFeatures(localDb, unleashWithEnterprisePlan);
+
+    const result = await unleashWithEnterprisePlan.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(result.body.features).toEqual(apiClientResponse);
+
+    await cleanup(localDb, unleashWithEnterprisePlan);
+    await unleashWithEnterprisePlan.destroy();
+    await localDb.destroy();
+});
+
+test('should match snapshot from /api/client/features', async () => {
+    await setupFeatures(db, app);
+
+    const result = await app.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(result.body).toMatchSnapshot();
 });

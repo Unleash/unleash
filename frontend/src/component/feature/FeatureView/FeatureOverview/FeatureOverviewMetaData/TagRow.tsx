@@ -92,8 +92,7 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
             refetch();
             setToastData({
                 type: 'success',
-                title: 'Tag removed',
-                text: 'Successfully removed tag',
+                text: 'Tag removed',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

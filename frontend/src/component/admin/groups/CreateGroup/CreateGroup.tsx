@@ -48,9 +48,7 @@ export const CreateGroup = () => {
             const group = await createGroup(payload);
             navigate(`/admin/groups/${group.id}`);
             setToastData({
-                title: 'Group created successfully',
-                text: 'Now you can start using your group.',
-                confetti: true,
+                text: 'Group created successfully',
                 type: 'success',
             });
         } catch (error: unknown) {

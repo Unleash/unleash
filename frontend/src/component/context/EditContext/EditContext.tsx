@@ -63,7 +63,7 @@ export const EditContext = () => {
             refetch();
             navigate('/context');
             setToastData({
-                title: 'Context information updated',
+                text: 'Context information updated',
                 type: 'success',
             });
         } catch (e: unknown) {

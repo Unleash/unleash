@@ -117,7 +117,7 @@ export const FeatureEnvironmentVariants = () => {
             if (error) {
                 setToastData({
                     type: 'error',
-                    title: error,
+                    text: error,
                 });
                 return;
             }
@@ -183,7 +183,7 @@ export const FeatureEnvironmentVariants = () => {
                 pushTitle && draftTitle ? '. ' : ''
             }${draftTitle}`;
             setToastData({
-                title,
+                text: title,
                 type: 'success',
             });
         } catch (error: unknown) {
@@ -202,7 +202,7 @@ export const FeatureEnvironmentVariants = () => {
                 await updateVariants(selectedEnvironment, updatedVariants);
                 setModalOpen(false);
                 setToastData({
-                    title: selectedEnvironment.crEnabled
+                    text: selectedEnvironment.crEnabled
                         ? `Variant changes added to draft`
                         : 'Variants updated successfully',
                     type: 'success',
@@ -221,7 +221,7 @@ export const FeatureEnvironmentVariants = () => {
             const variants = fromEnvironment.variants ?? [];
             await updateVariants(toEnvironment, variants);
             setToastData({
-                title: toEnvironment.crEnabled
+                text: toEnvironment.crEnabled
                     ? 'Variants copy added to draft'
                     : 'Variants copied successfully',
                 type: 'success',

@@ -43,8 +43,7 @@ export const EnvironmentActionCell = ({
             refetchPermissions();
             setToastData({
                 type: 'success',
-                title: 'Environment deleted',
-                text: `You have successfully deleted the ${environment.name} environment.`,
+                text: `Environment deleted`,
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -60,13 +59,13 @@ export const EnvironmentActionCell = ({
                 await toggleEnvironmentOff(environment.name);
                 setToastData({
                     type: 'success',
-                    title: 'Environment deprecated successfully',
+                    text: 'Environment deprecated',
                 });
             } else {
                 await toggleEnvironmentOn(environment.name);
                 setToastData({
                     type: 'success',
-                    title: 'Environment undeprecated successfully',
+                    text: 'Environment undeprecated',
                 });
             }
         } catch (error: unknown) {
@@ -89,8 +88,7 @@ export const EnvironmentActionCell = ({
                     } else {
                         setToastData({
                             type: 'error',
-                            title: 'Environment limit reached',
-                            text: `You have reached the maximum number of environments (${environmentLimit}). Please reach out if you need more.`,
+                            text: `Environment limit (${environmentLimit}) reached`,
                         });
                     }
                 }}

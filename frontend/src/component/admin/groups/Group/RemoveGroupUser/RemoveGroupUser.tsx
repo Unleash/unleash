@@ -38,7 +38,7 @@ export const RemoveGroupUser: FC<IRemoveGroupUserProps> = ({
             refetchGroup();
             setOpen(false);
             setToastData({
-                title: 'User removed from group successfully',
+                text: 'User removed from group successfully',
                 type: 'success',
             });
         } catch (error: unknown) {

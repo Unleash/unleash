@@ -96,7 +96,7 @@ export const RoleModal = ({
                 await addRole(payload);
             }
             setToastData({
-                title: `Role ${editing ? 'updated' : 'added'} successfully`,
+                text: `Role ${editing ? 'updated' : 'added'} successfully`,
                 type: 'success',
             });
             refetch();

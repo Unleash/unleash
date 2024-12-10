@@ -46,7 +46,7 @@ test('should show deleted stale sessions info for Password Auth', async () => {
 
     button.click();
 
-    await screen.findByText('Maximum Session Limit Reached');
+    await screen.findByText('Maximum session limit of 3 reached');
 });
 
 test('should show deleted stale sessions info for Hosted Auth', async () => {
@@ -72,5 +72,5 @@ test('should show deleted stale sessions info for Hosted Auth', async () => {
 
     button.click();
 
-    await screen.findByText('Maximum Session Limit Reached');
+    await screen.findByText('Maximum session limit of 3 reached');
 });

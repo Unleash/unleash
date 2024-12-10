@@ -7,7 +7,7 @@ import UIContext from 'contexts/UIContext';
 import Close from '@mui/icons-material/Close';
 import type { IToast } from 'interfaces/toast';
 
-const Toast = ({ title, type }: IToast) => {
+const Toast = ({ text, type }: IToast) => {
     const { setToast } = useContext(UIContext);
 
     const { classes: styles } = useStyles();
@@ -20,7 +20,7 @@ const Toast = ({ title, type }: IToast) => {
         <div className={classnames(styles.container, 'dropdown-outline')}>
             <CheckMarkBadge type={type} className={styles.checkMark} />
 
-            <h3 className={styles.headerStyles}>{title}</h3>
+            <h3 className={styles.headerStyles}>{text}</h3>
 
             <Tooltip title='Close' arrow>
                 <IconButton

@@ -58,7 +58,7 @@ export const ScimSettings = () => {
             }
 
             setToastData({
-                title: 'Settings stored',
+                text: 'Settings stored',
                 type: 'success',
             });
             await refetch();

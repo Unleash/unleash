@@ -45,7 +45,7 @@ export const MaintenanceToggle = () => {
     const updateEnabled = async () => {
         setToastData({
             type: 'success',
-            title: `Maintenance mode has been successfully ${
+            text: `Maintenance mode has been successfully ${
                 enabled ? 'disabled' : 'enabled'
             }`,
         });

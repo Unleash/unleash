@@ -36,8 +36,7 @@ const CreateTagType = () => {
                 await createTag(payload);
                 navigate('/tag-types');
                 setToastData({
-                    title: 'Tag type created',
-                    confetti: true,
+                    text: 'Tag type created',
                     type: 'success',
                 });
             } catch (error: unknown) {

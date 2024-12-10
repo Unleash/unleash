@@ -34,7 +34,7 @@ export const RemoveApiTokenButton = ({
 
             setToastData({
                 type: 'success',
-                title: 'API token removed',
+                text: 'API token removed',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

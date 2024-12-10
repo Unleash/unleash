@@ -26,6 +26,8 @@ export const useStyles = makeStyles()((theme) => ({
         fontSize: theme.typography.body1.fontSize,
         fontWeight: 'normal',
         margin: 0,
+        maxHeight: '75vh',
+        overflowY: 'auto',
     },
     anim: {
         animation: `$drop 10s 3s`,

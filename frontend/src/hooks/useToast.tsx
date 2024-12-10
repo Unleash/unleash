@@ -14,7 +14,7 @@ const useToast = () => {
     const setToastApiError = useCallback(
         (text: string, overrides?: IToast) => {
             setToast({
-                title: text,
+                title: text || 'Something went wrong.',
                 type: 'error',
                 show: true,
                 autoHideDuration: 12000,

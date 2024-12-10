@@ -50,7 +50,7 @@ export const EditStrategy = () => {
                 navigate(`/strategies/${strategyName}`);
                 setToastData({
                     type: 'success',
-                    title: 'Strategy updated',
+                    text: 'Strategy updated',
                 });
                 refetchStrategies();
             } catch (error: unknown) {

@@ -194,7 +194,7 @@ const useOnRemove = ({
                 strategyId,
             );
             setToastData({
-                title: 'Strategy deleted',
+                text: 'Strategy deleted',
                 type: 'success',
             });
             refetchFeature();
@@ -227,7 +227,7 @@ const useOnSuggestRemove = ({
                 },
             });
             setToastData({
-                title: 'Changes added to the draft!',
+                text: 'Changes added to the draft!',
                 type: 'success',
             });
             await refetchChangeRequests();

@@ -30,7 +30,7 @@ export const ReleasePlanTemplateCardMenu = ({
             refetch();
             setToastData({
                 type: 'success',
-                title: 'Release plan template deleted',
+                text: 'Release plan template deleted',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

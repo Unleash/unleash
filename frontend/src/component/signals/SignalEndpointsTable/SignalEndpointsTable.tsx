@@ -68,7 +68,7 @@ export const SignalEndpointsTable = () => {
         try {
             await toggleSignalEndpoint(id, enabled);
             setToastData({
-                title: `"${name}" has been ${enabled ? 'enabled' : 'disabled'}`,
+                text: `"${name}" has been ${enabled ? 'enabled' : 'disabled'}`,
                 type: 'success',
             });
             refetch();
@@ -81,7 +81,7 @@ export const SignalEndpointsTable = () => {
         try {
             await removeSignalEndpoint(id);
             setToastData({
-                title: `"${name}" has been deleted`,
+                text: `"${name}" has been deleted`,
                 type: 'success',
             });
             refetch();
@@ -181,7 +181,7 @@ export const SignalEndpointsTable = () => {
                             );
                             setToastData({
                                 type: 'success',
-                                title: 'Copied to clipboard',
+                                text: 'Copied to clipboard',
                             });
                         }}
                         onOpenSignals={() => {

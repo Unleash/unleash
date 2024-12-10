@@ -43,7 +43,7 @@ export const EnvironmentActionCell = ({
             refetchPermissions();
             setToastData({
                 type: 'success',
-                title: `Environment deleted`,
+                text: `Environment deleted`,
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -59,13 +59,13 @@ export const EnvironmentActionCell = ({
                 await toggleEnvironmentOff(environment.name);
                 setToastData({
                     type: 'success',
-                    title: 'Environment deprecated',
+                    text: 'Environment deprecated',
                 });
             } else {
                 await toggleEnvironmentOn(environment.name);
                 setToastData({
                     type: 'success',
-                    title: 'Environment undeprecated',
+                    text: 'Environment undeprecated',
                 });
             }
         } catch (error: unknown) {
@@ -88,7 +88,7 @@ export const EnvironmentActionCell = ({
                     } else {
                         setToastData({
                             type: 'error',
-                            title: `Environment limit (${environmentLimit}) reached`,
+                            text: `Environment limit (${environmentLimit}) reached`,
                         });
                     }
                 }}

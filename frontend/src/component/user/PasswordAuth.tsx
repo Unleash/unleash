@@ -78,7 +78,7 @@ const PasswordAuth: VFC<IPasswordAuthProps> = ({ authDetails, redirect }) => {
             if (data.deletedSessions && data.activeSessions) {
                 setToastData({
                     type: 'success',
-                    title: 'Maximum Session Limit Reached',
+                    text: 'Maximum Session Limit Reached',
                 });
             }
 

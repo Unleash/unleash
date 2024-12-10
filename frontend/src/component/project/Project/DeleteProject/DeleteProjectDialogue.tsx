@@ -43,7 +43,7 @@ export const DeleteProjectDialogue = ({
             refetchProjects();
             refetchProjectArchive();
             setToastData({
-                title: 'Project deleted',
+                text: 'Project deleted',
                 type: 'success',
             });
             onSuccess?.();

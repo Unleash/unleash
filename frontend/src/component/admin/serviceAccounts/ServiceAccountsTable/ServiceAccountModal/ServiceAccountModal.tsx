@@ -196,7 +196,7 @@ export const ServiceAccountModal = ({
                 }
             }
             setToastData({
-                title: `Service account ${
+                text: `Service account ${
                     editing ? 'updated' : 'added'
                 } successfully`,
                 type: 'success',

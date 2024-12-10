@@ -39,7 +39,7 @@ export const ArchivedFeatureReviveConfirm = ({
             await refetch();
             setToastData({
                 type: 'success',
-                title: 'The feature flags have been revived',
+                text: 'The feature flags have been revived',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

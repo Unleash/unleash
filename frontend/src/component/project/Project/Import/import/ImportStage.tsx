@@ -80,7 +80,7 @@ export const ImportStage: FC<{
             .catch((error) => {
                 setToastData({
                     type: 'error',
-                    title: formatUnknownError(error),
+                    text: formatUnknownError(error),
                 });
             });
     }, []);

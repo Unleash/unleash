@@ -50,8 +50,7 @@ export const PasswordAuth = () => {
             await updateSettings(settings);
             refetch();
             setToastData({
-                title: 'Successfully saved',
-                text: 'Password authentication settings stored.',
+                text: 'Successfully saved',
                 autoHideDuration: 4000,
                 type: 'success',
                 show: true,

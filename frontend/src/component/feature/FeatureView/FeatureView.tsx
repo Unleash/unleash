@@ -224,7 +224,7 @@ export const FeatureView = () => {
         } catch (error: unknown) {
             setToastData({
                 type: 'error',
-                title: 'Could not copy feature name',
+                text: 'Could not copy feature name',
             });
         }
     };

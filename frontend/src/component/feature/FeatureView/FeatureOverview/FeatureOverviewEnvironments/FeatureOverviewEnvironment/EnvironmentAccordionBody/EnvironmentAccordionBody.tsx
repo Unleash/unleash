@@ -111,7 +111,7 @@ const EnvironmentAccordionBody = ({
             );
             refetchFeature();
             setToastData({
-                title: 'Order of strategies updated',
+                text: 'Order of strategies updated',
                 type: 'success',
             });
         } catch (error: unknown) {
@@ -129,7 +129,7 @@ const EnvironmentAccordionBody = ({
         });
 
         setToastData({
-            title: 'Strategy execution order added to draft',
+            text: 'Strategy execution order added to draft',
             type: 'success',
         });
         refetchChangeRequests();

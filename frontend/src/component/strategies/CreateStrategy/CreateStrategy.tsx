@@ -64,7 +64,7 @@ export const CreateStrategy = () => {
                 refetchStrategies();
                 navigate(`/strategies/${strategyName}`);
                 setToastData({
-                    title: 'Strategy created',
+                    text: 'Strategy created',
                     type: 'success',
                 });
             } catch (e: unknown) {

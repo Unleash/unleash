@@ -150,7 +150,7 @@ export const FeatureStrategyCreate = () => {
         );
 
         setToastData({
-            title: 'Strategy created',
+            text: 'Strategy created',
             type: 'success',
         });
     };
@@ -163,7 +163,7 @@ export const FeatureStrategyCreate = () => {
         });
         // FIXME: segments in change requests
         setToastData({
-            title: 'Strategy added to draft',
+            text: 'Strategy added to draft',
             type: 'success',
         });
         refetchChangeRequests();

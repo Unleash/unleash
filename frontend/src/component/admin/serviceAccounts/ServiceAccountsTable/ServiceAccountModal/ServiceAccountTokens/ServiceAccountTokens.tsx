@@ -127,7 +127,7 @@ export const ServiceAccountTokens = ({
             setNewToken(token);
             setTokenOpen(true);
             setToastData({
-                title: 'Token created successfully',
+                text: 'Token created successfully',
                 type: 'success',
             });
         } catch (error: unknown) {
@@ -146,7 +146,7 @@ export const ServiceAccountTokens = ({
                 refetchTokens();
                 setDeleteOpen(false);
                 setToastData({
-                    title: 'Token deleted successfully',
+                    text: 'Token deleted successfully',
                     type: 'success',
                 });
             } catch (error: unknown) {

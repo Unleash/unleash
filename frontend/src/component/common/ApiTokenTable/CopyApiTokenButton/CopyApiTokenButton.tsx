@@ -23,7 +23,7 @@ export const CopyApiTokenButton = ({
         if (copy(value)) {
             setToastData({
                 type: 'success',
-                title: `Token copied to clipboard`,
+                text: `Token copied to clipboard`,
             });
 
             if (track && typeof track === 'function') {

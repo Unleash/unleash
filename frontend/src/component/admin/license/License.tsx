@@ -58,7 +58,7 @@ export const License = () => {
         try {
             await updateLicenseKey(token);
             setToastData({
-                title: 'License key updated',
+                text: 'License key updated',
                 type: 'success',
             });
             refetchLicense();

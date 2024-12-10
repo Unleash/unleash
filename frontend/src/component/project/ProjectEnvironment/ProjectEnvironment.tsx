@@ -111,7 +111,7 @@ const ProjectEnvironmentList = () => {
                 return;
             }
             setToastData({
-                title: 'At least one environment must be visible',
+                text: 'At least one environment must be visible',
                 type: 'error',
             });
         } else {
@@ -119,7 +119,7 @@ const ProjectEnvironmentList = () => {
                 await addEnvironmentToProject(projectId, env.name);
                 refetch();
                 setToastData({
-                    title: 'Environment set as visible',
+                    text: 'Environment set as visible',
                     type: 'success',
                 });
             } catch (error) {
@@ -137,7 +137,7 @@ const ProjectEnvironmentList = () => {
                 );
                 refetch();
                 setToastData({
-                    title: 'Environment hidden',
+                    text: 'Environment hidden',
                     type: 'success',
                 });
             } catch (e) {

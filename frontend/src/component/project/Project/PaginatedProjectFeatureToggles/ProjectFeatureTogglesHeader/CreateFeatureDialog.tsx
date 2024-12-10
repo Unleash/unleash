@@ -164,7 +164,7 @@ const CreateFeatureDialogContent = ({
                     navigate(`/projects/${project}/features/${name}`);
                 }
                 setToastData({
-                    title: 'Flag created successfully',
+                    text: 'Flag created successfully',
                     type: 'success',
                 });
                 onClose();

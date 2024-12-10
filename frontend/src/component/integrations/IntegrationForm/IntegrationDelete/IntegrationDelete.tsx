@@ -33,7 +33,7 @@ export const IntegrationDelete: VFC<IIntegrationDeleteProps> = ({ id }) => {
             refetchAddons();
             setToastData({
                 type: 'success',
-                title: 'Integration deleted',
+                text: 'Integration deleted',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

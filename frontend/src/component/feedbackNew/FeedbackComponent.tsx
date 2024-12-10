@@ -260,7 +260,7 @@ export const FeedbackComponent = ({
         }
 
         setToastData({
-            title: toastTitle,
+            text: toastTitle,
             type: toastType,
         });
         closeFeedback();

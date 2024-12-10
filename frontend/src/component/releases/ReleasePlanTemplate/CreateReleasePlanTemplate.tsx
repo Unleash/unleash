@@ -59,7 +59,7 @@ export const CreateReleasePlanTemplate = () => {
                 scrollToTop();
                 setToastData({
                     type: 'success',
-                    title: 'Release plan template created',
+                    text: 'Release plan template created',
                 });
                 navigate('/release-management');
             } catch (error: unknown) {

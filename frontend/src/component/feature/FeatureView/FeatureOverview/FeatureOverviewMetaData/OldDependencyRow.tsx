@@ -60,9 +60,8 @@ const useDeleteDependency = (project: string, featureId: string) => {
                     },
                 });
                 setToastData({
-                    text: `${featureId} dependency will be removed`,
                     type: 'success',
-                    title: 'Change added to a draft',
+                    text: 'Change added to draft',
                 });
                 await refetchChangeRequests();
             } else {
@@ -72,7 +71,7 @@ const useDeleteDependency = (project: string, featureId: string) => {
                         eventType: 'dependency removed',
                     },
                 });
-                setToastData({ title: 'Dependency removed', type: 'success' });
+                setToastData({ text: 'Dependency removed', type: 'success' });
                 await refetchFeature();
             }
         } catch (error) {

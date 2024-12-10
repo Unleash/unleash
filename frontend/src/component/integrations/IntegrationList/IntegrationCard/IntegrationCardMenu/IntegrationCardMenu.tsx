@@ -76,7 +76,7 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
             refetchAddons();
             setToastData({
                 type: 'success',
-                title: !addon.enabled
+                text: !addon.enabled
                     ? 'Integration enabled'
                     : 'Integration disabled',
             });
@@ -91,7 +91,7 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
             refetchAddons();
             setToastData({
                 type: 'success',
-                title: 'Integration deleted',
+                text: 'Integration deleted',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

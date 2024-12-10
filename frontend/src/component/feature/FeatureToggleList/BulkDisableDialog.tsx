@@ -74,7 +74,7 @@ export const BulkDisableDialog = ({
                 refetchChangeRequests();
                 setToastData({
                     type: 'success',
-                    title: 'Changes added to draft',
+                    text: 'Changes added to draft',
                 });
             } else {
                 await bulkToggleFeaturesEnvironmentOff(
@@ -84,7 +84,7 @@ export const BulkDisableDialog = ({
                 );
                 setToastData({
                     type: 'success',
-                    title: 'Feature flags disabled',
+                    text: 'Feature flags disabled',
                 });
             }
             onClose();

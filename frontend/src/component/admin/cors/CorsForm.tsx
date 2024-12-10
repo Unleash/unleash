@@ -25,7 +25,7 @@ export const CorsForm = ({ frontendApiOrigins }: ICorsFormProps) => {
             event.preventDefault();
             await setFrontendSettings(split);
             setValue(formatInputValue(split));
-            setToastData({ title: 'Settings saved', type: 'success' });
+            setToastData({ text: 'Settings saved', type: 'success' });
         } catch (error) {
             setToastApiError(formatUnknownError(error));
         }

@@ -9,7 +9,7 @@ import Close from '@mui/icons-material/Close';
 import type { IToast } from 'interfaces/toast';
 import { TOAST_TEXT } from 'utils/testIds';
 
-const Toast = ({ title, text, type, confetti }: IToast) => {
+const Toast = ({ text: title, text, type, confetti }: IToast) => {
     const { setToast } = useContext(UIContext);
 
     const { classes: styles } = useStyles();

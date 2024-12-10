@@ -124,7 +124,7 @@ export const ValidationStage: FC<{
                 setValidJSON(false);
                 setToastData({
                     type: 'error',
-                    title: formatUnknownError(error),
+                    text: formatUnknownError(error),
                 });
             });
     }, []);

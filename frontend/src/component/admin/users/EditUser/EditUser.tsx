@@ -60,7 +60,7 @@ const EditUser = () => {
                 refetch();
                 navigate('/admin/users');
                 setToastData({
-                    title: 'User information updated',
+                    text: 'User information updated',
                     type: 'success',
                 });
             } catch (error: unknown) {

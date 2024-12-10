@@ -233,7 +233,7 @@ export const ProjectAccessAssign = ({
             refetchProjectAccess();
             navigate(GO_BACK);
             setToastData({
-                title: `${selectedOptions.length} ${
+                text: `${selectedOptions.length} ${
                     selectedOptions.length === 1 ? 'access' : 'accesses'
                 } ${!edit ? 'assigned' : 'edited'} successfully`,
                 type: 'success',

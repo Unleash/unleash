@@ -135,7 +135,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
         } catch (error: unknown) {
             setToastData({
                 type: 'error',
-                title: `Failed to add tag`,
+                text: `Failed to add tag`,
             });
         }
     };
@@ -175,7 +175,7 @@ export const ManageTagsDialog = ({ open, setOpen }: IManageTagsProps) => {
             differenceCount > 0 &&
                 setToastData({
                     type: 'success',
-                    title: `Updated tag${added.length > 1 ? 's' : ''} to flag`,
+                    text: `Updated tag${added.length > 1 ? 's' : ''} to flag`,
                 });
         }
         setDifferenceCount(0);

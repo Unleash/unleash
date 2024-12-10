@@ -209,7 +209,7 @@ export const FeatureStrategyEdit = () => {
 
         await refetchSavedStrategySegments();
         setToastData({
-            title: 'Strategy updated',
+            text: 'Strategy updated',
             type: 'success',
         });
     };
@@ -222,7 +222,7 @@ export const FeatureStrategyEdit = () => {
         });
         // FIXME: segments in change requests
         setToastData({
-            title: 'Change added to draft',
+            text: 'Change added to draft',
             type: 'success',
         });
         refetchChangeRequests();

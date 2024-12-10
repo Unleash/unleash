@@ -132,7 +132,7 @@ export const SignalEndpointsModal = ({
                 }
             }
             setToastData({
-                title: `Signal endpoint ${
+                text: `Signal endpoint ${
                     editing ? 'updated' : 'added'
                 } successfully`,
                 type: 'success',

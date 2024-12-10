@@ -136,7 +136,7 @@ export const ChangeRequestOverview: FC = () => {
             refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
-                title: 'Changes applied',
+                text: 'Changes applied',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -158,7 +158,7 @@ export const ChangeRequestOverview: FC = () => {
             refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
-                title: 'Changes scheduled',
+                text: 'Changes scheduled',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -175,7 +175,7 @@ export const ChangeRequestOverview: FC = () => {
             await refetchChangeRequest();
             setToastData({
                 type: 'success',
-                title: 'Comment added',
+                text: 'Comment added',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -196,7 +196,7 @@ export const ChangeRequestOverview: FC = () => {
             refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
-                title: 'Changes cancelled',
+                text: 'Changes cancelled',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -217,7 +217,7 @@ export const ChangeRequestOverview: FC = () => {
 
             setToastData({
                 type: 'success',
-                title: 'Changes rejected',
+                text: 'Changes rejected',
             });
             refetchChangeRequestOpen();
             refetchActionableChangeRequests();
@@ -239,7 +239,7 @@ export const ChangeRequestOverview: FC = () => {
             refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
-                title: 'Changes approved',
+                text: 'Changes approved',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

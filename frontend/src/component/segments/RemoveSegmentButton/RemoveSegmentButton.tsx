@@ -32,7 +32,7 @@ export const RemoveSegmentButton = ({ segment }: IRemoveSegmentButtonProps) => {
             await refetchSegments();
             setToastData({
                 type: 'success',
-                title: 'Successfully deleted segment',
+                text: 'Successfully deleted segment',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

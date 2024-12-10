@@ -178,7 +178,7 @@ export const CreateProjectDialog = ({
                 refetchUser();
                 navigate(`/projects/${createdProject.id}`);
                 setToastData({
-                    title: 'Project created',
+                    text: 'Project created',
                     type: 'success',
                 });
 

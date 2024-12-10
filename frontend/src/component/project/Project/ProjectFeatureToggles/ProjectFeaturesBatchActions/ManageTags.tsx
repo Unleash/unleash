@@ -64,7 +64,7 @@ export const ManageTags: VFC<IManageTagsProps> = ({
         try {
             await bulkUpdateTags(payload, projectId);
             setToastData({
-                title: 'Tags updated',
+                text: 'Tags updated',
                 type: 'success',
                 autoHideDuration: 12000,
             });

@@ -49,7 +49,7 @@ export const ArchivedFeatureDeleteConfirm = ({
             await refetch();
             setToastData({
                 type: 'success',
-                title: `Feature ${singularOrPluralFlags} deleted`,
+                text: `Feature ${singularOrPluralFlags} deleted`,
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

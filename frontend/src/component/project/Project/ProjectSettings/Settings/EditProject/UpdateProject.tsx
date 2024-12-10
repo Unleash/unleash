@@ -94,7 +94,7 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                 await editProject(id, payload);
                 refetch();
                 setToastData({
-                    title: 'Project information updated',
+                    text: 'Project information updated',
                     type: 'success',
                 });
                 if (projectStickiness !== DEFAULT_PROJECT_STICKINESS) {

@@ -40,7 +40,6 @@ export class ClientFeatureToggleService {
             query || {},
         );
 
-        console.log('ALTERING CLIENT FEATURES');
         return result.map(
             ({
                 name,

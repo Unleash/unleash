@@ -50,6 +50,21 @@ export DATABASE_URL=postgres://unleash_user:password@localhost:5432/unleash
 export TEST_DATABASE_URL=postgres://unleash_user:password@localhost:5432/unleash_test
 ```
 
+However, you cal also use your pre-defined database with env vars:
+
+```
+export DATABASE_USERNAME=YOUR-DATBASE-USERNAME
+export DATABASE_PASSWORD=YOUR-DATABASE-PASSWORD
+export DATABASE_HOST=YOUR-DATABASE-HOST
+export DATABASE_PORT=YOUR-DATABASE-PORT
+export DATABASE_NAME=YOUR-DATABASE-NAME
+export DATABASE_SCHEMA=YOUR-DATABASE-SCHEMA
+export DATABASE_APPLICATION_NAME=YOUR-DATABASE-APPLICATION_NAME
+export DATABASE_DISABLE_MIGRATION=YOUR-DATABASE-DISABLE_MIGRATION
+```
+
+You can check what each option means on [Database configuration](../../using-unleash/deploy/configuring-unleash.mdx#database-configuration)
+
 ## PostgreSQL with docker {#postgresql-with-docker}
 
 If you don't want to install PostgreSQL locally, you can spin up an Docker instance. We have created a script to ease this process: `scripts/docker-postgres.sh`

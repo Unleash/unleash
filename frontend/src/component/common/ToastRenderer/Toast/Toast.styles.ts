@@ -4,7 +4,9 @@ export const useStyles = makeStyles()((theme) => ({
     container: {
         alignItems: 'center',
         background:
+            // the background color for this doesn't exist in the theme yet and it's not synchronized across dark/light modes yet.
             theme.mode === 'light' ? '#201E42' : theme.palette.background.paper,
+
         borderRadius: theme.shape.borderRadiusMedium,
         boxShadow: theme.boxShadows.popup,
         display: 'flex',
@@ -13,8 +15,8 @@ export const useStyles = makeStyles()((theme) => ({
         margin: '0 0.8rem',
         maxWidth: '450px',
         padding: theme.spacing(1),
-        paddingInlineStart: theme.spacing(2),
-        zIndex: 500,
+        paddingLeft: theme.spacing(2),
+        zIndex: theme.zIndex.snackbar,
         color: theme.palette.common.white,
     },
     starting: {
@@ -29,7 +31,7 @@ export const useStyles = makeStyles()((theme) => ({
         animation: `$drop 10s 3s`,
     },
     checkMark: {
-        marginInlineStart: theme.spacing(1),
+        marginLeft: theme.spacing(1),
     },
     buttonStyle: {
         color: theme.palette.common.white,

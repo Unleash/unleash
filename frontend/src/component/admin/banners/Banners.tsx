@@ -3,6 +3,7 @@ import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuar
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { BannersTable } from './BannersTable/BannersTable';
+import { UPDATE_INSTANCE_BANNERS } from '@server/types/permissions';
 
 export const Banners = () => {
     const { isEnterprise } = useUiConfig();
@@ -13,7 +14,7 @@ export const Banners = () => {
 
     return (
         <div>
-            <PermissionGuard permissions={ADMIN}>
+            <PermissionGuard permissions={[ADMIN, UPDATE_INSTANCE_BANNERS]}>
                 <BannersTable />
             </PermissionGuard>
         </div>

@@ -5,6 +5,7 @@ import {
 } from './useAuthEndpoint';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { IUiConfig } from 'interfaces/uiConfig';
+import { MAINTENANCE_MODE_PERMISSIONS } from '@server/types/permissions';
 
 interface IUseAuthPermissionsOutput {
     permissions?: IPermission[];
@@ -22,8 +23,8 @@ const getPermissions = (
             ? auth.data.permissions
             : undefined;
     if (permissions && uiConfig?.maintenanceMode) {
-        permissions = permissions.filter(
-            (permission) => permission.permission === 'ADMIN',
+        permissions = permissions.filter((permission) =>
+            MAINTENANCE_MODE_PERMISSIONS.includes(permission.permission),
         );
     }
     return permissions;

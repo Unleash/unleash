@@ -28,6 +28,9 @@ export const useStyles = makeStyles()((theme) => ({
         margin: 0,
         maxHeight: '75vh',
         overflowY: 'auto',
+        '&::first-letter': {
+            textTransform: 'uppercase',
+        },
     },
     anim: {
         animation: `$drop 10s 3s`,

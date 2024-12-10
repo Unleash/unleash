@@ -1,0 +1,65 @@
+name: Core Feature Alert
+
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+    paths:
+      - src/lib/features/client-feature-toggles/*
+      - src/lib/features/frontend-api/*
+
+jobs:
+  notify-core-changes:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch PR Creator's Username
+        id: pr-creator
+        run: echo "PR_CREATOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
+
+      - name: Post a notification about core feature changes if not already commented
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const prCreator = process.env.PR_CREATOR;
+            const commentBody = `@${prCreator}, core features have been modified in this pull request. Please review!`;
+
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+            });
+
+            const alreadyCommented = comments.some(comment => comment.body === commentBody);
+
+            if (!alreadyCommented) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body: commentBody,
+              });
+              console.log('Posted a new comment.');
+            } else {
+              console.log('Comment already exists, skipping.');
+            }
+      - name: Add reviewers to the PR if they are not the creator
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const prCreator = process.env.PR_CREATOR;
+            const allReviewers = ['FredrikOseberg', 'gastonfournier'];
+            const reviewersToAdd = allReviewers.filter(reviewer => reviewer !== prCreator);
+
+            if (reviewersToAdd.length > 0) {
+              github.rest.pulls.requestReviewers({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                pull_number: context.payload.pull_request.number,
+                reviewers: reviewersToAdd,
+              });
+              console.log(`Added reviewers: ${reviewersToAdd.join(', ')}`);
+            } else {
+              console.log(`No reviewers to add as all match the PR creator.`);
+            }

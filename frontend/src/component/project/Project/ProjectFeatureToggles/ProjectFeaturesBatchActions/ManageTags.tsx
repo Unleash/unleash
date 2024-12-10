@@ -62,7 +62,6 @@ export const ManageTags: VFC<IManageTagsProps> = ({
         const features = data.map(({ name }) => name);
         const payload = { features, tags: { addedTags, removedTags } };
         try {
-            console.log(addedTags, removedTags, features);
             const toastText = [
                 addedTags.length > 0 &&
                     `added ${addedTags.length} tag${addedTags.length > 1 ? 's' : ''}`,

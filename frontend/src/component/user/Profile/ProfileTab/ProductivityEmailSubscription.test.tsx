@@ -100,6 +100,6 @@ test('handle error', async () => {
 
     checkbox.click();
 
-    await screen.findByText('Something went wrong');
+    await screen.findByText('user error');
     expect(changed).toBe(true);
 });

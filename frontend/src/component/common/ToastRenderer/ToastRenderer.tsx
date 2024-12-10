@@ -22,7 +22,6 @@ const ToastRenderer = () => {
         const timeout = setTimeout(() => {
             hide();
         }, toastData.autoHideDuration);
-
         return () => {
             clearTimeout(timeout);
         };
@@ -36,7 +35,7 @@ const ToastRenderer = () => {
                 right: 0,
                 left: 0,
                 margin: '0 auto',
-                maxWidth: '450px',
+                width: 'fit-content',
             },
             enter: fadeInBottomEnter,
             leave: fadeInBottomLeave,

@@ -43,7 +43,7 @@ export const EnvironmentActionCell = ({
             refetchPermissions();
             setToastData({
                 type: 'success',
-                title: `Deleted environment '${environment.name}'`,
+                title: `Environment deleted`,
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -59,13 +59,13 @@ export const EnvironmentActionCell = ({
                 await toggleEnvironmentOff(environment.name);
                 setToastData({
                     type: 'success',
-                    title: 'Environment deprecated successfully',
+                    title: 'Environment deprecated',
                 });
             } else {
                 await toggleEnvironmentOn(environment.name);
                 setToastData({
                     type: 'success',
-                    title: 'Environment undeprecated successfully',
+                    title: 'Environment undeprecated',
                 });
             }
         } catch (error: unknown) {

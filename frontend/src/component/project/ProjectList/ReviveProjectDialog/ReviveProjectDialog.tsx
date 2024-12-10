@@ -39,7 +39,7 @@ export const ReviveProjectDialog = ({
             refetchProjectArchive();
             navigate(`/projects/${id}`);
             setToastData({
-                title: 'Revived project',
+                title: 'Project revived',
                 type: 'success',
             });
         } catch (ex: unknown) {

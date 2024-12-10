@@ -29,7 +29,7 @@ export const ArchiveProjectDialogue = ({
             await archiveProject(project);
             refetchProjectOverview();
             setToastData({
-                title: 'Archived project',
+                title: 'Project archived',
                 type: 'success',
             });
             onSuccess?.();

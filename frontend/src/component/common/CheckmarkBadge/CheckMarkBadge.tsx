@@ -1,5 +1,5 @@
 import Check from '@mui/icons-material/CheckCircle';
-import Cancel from '@mui/icons-material/Cancel';
+import Warning from '@mui/icons-material/Warning';
 import { styled } from '@mui/material';
 
 interface ICheckMarkBadgeProps {
@@ -7,22 +7,25 @@ interface ICheckMarkBadgeProps {
     type?: string;
 }
 
-const StyledIcon = (icon: typeof Check) =>
-    styled(icon)(({ theme }) => ({
-        color:
-            theme.mode === 'light'
-                ? theme.palette.secondary.border
-                : theme.palette.primary.main,
-    }));
+const StyledCheck = styled(Check)(({ theme }) => ({
+    color:
+        theme.mode === 'light'
+            ? theme.palette.secondary.border
+            : theme.palette.primary.main,
+}));
 
-const StyledCancel = StyledIcon(Cancel);
-const StyledCheck = StyledIcon(Check);
+const StyledCancel = styled(Warning)(({ theme }) => ({
+    color:
+        theme.mode === 'light'
+            ? theme.palette.warning.border
+            : theme.palette.warning.main,
+}));
 
 const CheckMarkBadge = ({ type }: ICheckMarkBadgeProps) => {
     return type === 'error' ? (
-        <StyledCancel color='primary' titleAccess='Error' />
+        <StyledCancel titleAccess='Error' />
     ) : (
-        <StyledCheck color='primary' />
+        <StyledCheck />
     );
 };
 

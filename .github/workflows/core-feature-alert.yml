@@ -6,8 +6,8 @@ on:
       - opened
       - synchronize
     paths:
-      - src/lib/features/client-feature-toggles/*
-      - src/lib/features/frontend-api/*
+      - src/lib/features/client-feature-toggles/**
+      - src/lib/features/frontend-api/**
 
 jobs:
   notify-core-changes:

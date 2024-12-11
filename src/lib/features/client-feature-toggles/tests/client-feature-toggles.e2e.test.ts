@@ -13,13 +13,19 @@ import { type IUserWithRootRole, TEST_AUDIT_USER } from '../../../types';
 let app: IUnleashTest;
 let db: ITestDb;
 let dummyAdmin: IUserWithRootRole;
+let proApp: IUnleashTest;
+let proDb: ITestDb;
+let enterpriseApp: IUnleashTest;
+let enterpriseDb: ITestDb;
+let enterpriseDummyAdmin: IUserWithRootRole;
+let proDummyAdmin: IUserWithRootRole;
 
-const apiClientResponse = [
+const getApiClientResponse = (project = 'default') => [
     {
         name: 'test1',
         type: 'release',
         enabled: false,
-        project: 'default',
+        project: project,
         stale: false,
         strategies: [
             {
@@ -41,7 +47,7 @@ const apiClientResponse = [
         name: 'test2',
         type: 'release',
         enabled: false,
-        project: 'default',
+        project: project,
         stale: false,
         strategies: [
             {
@@ -63,6 +69,59 @@ const apiClientResponse = [
     },
 ];
 
+const cleanup = async (db: ITestDb, app: IUnleashTest) => {
+    const all =
+        await db.stores.projectStore.getEnvironmentsForProject('default');
+    await Promise.all(
+        all
+            .filter((env) => env.environment !== DEFAULT_ENV)
+            .map(async (env) =>
+                db.stores.projectStore.deleteEnvironmentForProject(
+                    'default',
+                    env.environment,
+                ),
+            ),
+    );
+};
+
+const setupFeatures = async (
+    db: ITestDb,
+    app: IUnleashTest,
+    project = 'default',
+) => {
+    await db.rawDatabase.raw('DELETE FROM features');
+
+    await app.createFeature('test1', project);
+    await app.createFeature('test2', project);
+
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'flexibleRollout',
+            constraints: [],
+            parameters: {
+                rollout: '100',
+                stickiness: 'default',
+                groupId: 'test1',
+            },
+        },
+        DEFAULT_ENV,
+        'test1',
+        project,
+    );
+    await app.addStrategyToFeatureEnv(
+        {
+            name: 'default',
+            constraints: [
+                { contextName: 'userId', operator: 'IN', values: ['123'] },
+            ],
+            parameters: {},
+        },
+        DEFAULT_ENV,
+        'test2',
+        project,
+    );
+};
+
 beforeAll(async () => {
     db = await dbInit('client_feature_toggles', getLogger);
     app = await setupAppWithCustomConfig(
@@ -77,7 +136,57 @@ beforeAll(async () => {
         db.rawDatabase,
     );
 
+    enterpriseDb = await dbInit('client_feature_toggles_enterprise', getLogger);
+    enterpriseApp = await setupAppWithCustomConfig(
+        enterpriseDb.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
+            },
+            ui: {
+                environment: 'Enterprise',
+            },
+        },
+        enterpriseDb.rawDatabase,
+    );
+
+    proDb = await dbInit('client_feature_toggles_pro', getLogger);
+    proApp = await setupAppWithCustomConfig(
+        proDb.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
+            },
+            ui: {
+                environment: 'Pro',
+            },
+        },
+        proDb.rawDatabase,
+    );
+
     dummyAdmin = await app.services.userService.createUser(
+        {
+            name: 'Some Name',
+            email: 'test@getunleash.io',
+            rootRole: RoleName.ADMIN,
+        },
+        TEST_AUDIT_USER,
+    );
+
+    enterpriseDummyAdmin = await enterpriseApp.services.userService.createUser(
+        {
+            name: 'Some Name',
+            email: 'test@getunleash.io',
+            rootRole: RoleName.ADMIN,
+        },
+        TEST_AUDIT_USER,
+    );
+
+    proDummyAdmin = await proApp.services.userService.createUser(
         {
             name: 'Some Name',
             email: 'test@getunleash.io',
@@ -88,23 +197,18 @@ beforeAll(async () => {
 });
 
 afterEach(async () => {
-    const all =
-        await db.stores.projectStore.getEnvironmentsForProject('default');
-    await Promise.all(
-        all
-            .filter((env) => env.environment !== DEFAULT_ENV)
-            .map(async (env) =>
-                db.stores.projectStore.deleteEnvironmentForProject(
-                    'default',
-                    env.environment,
-                ),
-            ),
-    );
+    await cleanup(db, app);
+    await cleanup(proDb, proApp);
+    await cleanup(enterpriseDb, enterpriseApp);
 });
 
 afterAll(async () => {
     await app.destroy();
     await db.destroy();
+    await proApp.destroy();
+    await proDb.destroy();
+    await enterpriseApp.destroy();
+    await enterpriseDb.destroy();
 });
 
 test('should fetch single feature', async () => {
@@ -164,40 +268,57 @@ test('should support filtering on project', async () => {
 });
 
 test('should return correct data structure from /api/client/features', async () => {
-    await db.rawDatabase.raw('DELETE FROM features');
-
-    await app.createFeature('test1', 'default');
-    await app.createFeature('test2', 'default');
-
-    await app.addStrategyToFeatureEnv(
-        {
-            name: 'flexibleRollout',
-            constraints: [],
-            parameters: {
-                rollout: '100',
-                stickiness: 'default',
-                groupId: 'test1',
-            },
-        },
-        DEFAULT_ENV,
-        'test1',
-    );
-    await app.addStrategyToFeatureEnv(
-        {
-            name: 'default',
-            constraints: [
-                { contextName: 'userId', operator: 'IN', values: ['123'] },
-            ],
-            parameters: {},
-        },
-        DEFAULT_ENV,
-        'test2',
-    );
+    await setupFeatures(db, app);
 
     const result = await app.request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(result.body.features).toEqual(apiClientResponse);
+    expect(result.body.features).toEqual(getApiClientResponse());
+});
+
+test('should return correct data structure from /api/client/features for pro', async () => {
+    await proApp.services.projectService.createProject(
+        { name: 'Pro', id: 'pro' },
+        proDummyAdmin,
+        TEST_AUDIT_USER,
+    );
+
+    await setupFeatures(proDb, proApp, 'pro');
+
+    const result = await proApp.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(result.body.features).toEqual(getApiClientResponse('pro'));
+});
+
+test('should return correct data structure from /api/client/features for Enterprise', async () => {
+    await enterpriseApp.services.projectService.createProject(
+        { name: 'Enterprise', id: 'enterprise' },
+        enterpriseDummyAdmin,
+        TEST_AUDIT_USER,
+    );
+
+    await setupFeatures(enterpriseDb, enterpriseApp, 'enterprise');
+
+    const result = await enterpriseApp.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(result.body.features).toEqual(getApiClientResponse('enterprise'));
+});
+
+test('should match snapshot from /api/client/features', async () => {
+    await setupFeatures(db, app);
+
+    const result = await app.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(result.body).toMatchSnapshot();
 });

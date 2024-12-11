@@ -47,7 +47,6 @@ export type IFlagKey =
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
     | 'projectRoleAssignment'
-    | 'purchaseAdditionalEnvironments'
     | 'originMiddlewareRequestLogging'
     | 'unleashAI'
     | 'webhookDomainLogging'
@@ -237,10 +236,6 @@ const flags: IFlags = {
     ),
     projectRoleAssignment: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_ROLE_ASSIGNMENT,
-        false,
-    ),
-    purchaseAdditionalEnvironments: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PURCHASE_ADDITIONAL_ENVIRONMENTS,
         false,
     ),
     originMiddlewareRequestLogging: parseEnvVarBoolean(

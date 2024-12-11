@@ -17,13 +17,15 @@ let proApp: IUnleashTest;
 let proDb: ITestDb;
 let enterpriseApp: IUnleashTest;
 let enterpriseDb: ITestDb;
+let enterpriseDummyAdmin: IUserWithRootRole;
+let proDummyAdmin: IUserWithRootRole;
 
-const apiClientResponse = [
+const getApiClientResponse = (project = 'default') => [
     {
         name: 'test1',
         type: 'release',
         enabled: false,
-        project: 'default',
+        project: project,
         stale: false,
         strategies: [
             {
@@ -45,7 +47,7 @@ const apiClientResponse = [
         name: 'test2',
         type: 'release',
         enabled: false,
-        project: 'default',
+        project: project,
         stale: false,
         strategies: [
             {
@@ -82,11 +84,15 @@ const cleanup = async (db: ITestDb, app: IUnleashTest) => {
     );
 };
 
-const setupFeatures = async (db: ITestDb, app: IUnleashTest) => {
+const setupFeatures = async (
+    db: ITestDb,
+    app: IUnleashTest,
+    project = 'default',
+) => {
     await db.rawDatabase.raw('DELETE FROM features');
 
-    await app.createFeature('test1', 'default');
-    await app.createFeature('test2', 'default');
+    await app.createFeature('test1', project);
+    await app.createFeature('test2', project);
 
     await app.addStrategyToFeatureEnv(
         {
@@ -100,6 +106,7 @@ const setupFeatures = async (db: ITestDb, app: IUnleashTest) => {
         },
         DEFAULT_ENV,
         'test1',
+        project,
     );
     await app.addStrategyToFeatureEnv(
         {
@@ -111,6 +118,7 @@ const setupFeatures = async (db: ITestDb, app: IUnleashTest) => {
         },
         DEFAULT_ENV,
         'test2',
+        project,
     );
 };
 
@@ -161,6 +169,24 @@ beforeAll(async () => {
     );
 
     dummyAdmin = await app.services.userService.createUser(
+        {
+            name: 'Some Name',
+            email: 'test@getunleash.io',
+            rootRole: RoleName.ADMIN,
+        },
+        TEST_AUDIT_USER,
+    );
+
+    enterpriseDummyAdmin = await enterpriseApp.services.userService.createUser(
+        {
+            name: 'Some Name',
+            email: 'test@getunleash.io',
+            rootRole: RoleName.ADMIN,
+        },
+        TEST_AUDIT_USER,
+    );
+
+    proDummyAdmin = await proApp.services.userService.createUser(
         {
             name: 'Some Name',
             email: 'test@getunleash.io',
@@ -249,29 +275,41 @@ test('should return correct data structure from /api/client/features', async () 
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(result.body.features).toEqual(apiClientResponse);
+    expect(result.body.features).toEqual(getApiClientResponse());
 });
 
 test('should return correct data structure from /api/client/features for pro', async () => {
-    await setupFeatures(proDb, proApp);
+    await proApp.services.projectService.createProject(
+        { name: 'Pro', id: 'pro' },
+        proDummyAdmin,
+        TEST_AUDIT_USER,
+    );
+
+    await setupFeatures(proDb, proApp, 'pro');
 
     const result = await proApp.request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(result.body.features).toEqual(apiClientResponse);
+    expect(result.body.features).toEqual(getApiClientResponse('pro'));
 });
 
 test('should return correct data structure from /api/client/features for Enterprise', async () => {
-    await setupFeatures(enterpriseDb, enterpriseApp);
+    await enterpriseApp.services.projectService.createProject(
+        { name: 'Enterprise', id: 'enterprise' },
+        enterpriseDummyAdmin,
+        TEST_AUDIT_USER,
+    );
+
+    await setupFeatures(enterpriseDb, enterpriseApp, 'enterprise');
 
     const result = await enterpriseApp.request
         .get('/api/client/features')
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(result.body.features).toEqual(apiClientResponse);
+    expect(result.body.features).toEqual(getApiClientResponse('enterprise'));
 });
 
 test('should match snapshot from /api/client/features', async () => {

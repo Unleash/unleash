@@ -159,7 +159,23 @@ test('should not be allowed to create existing user', async () => {
             { username: 'test', rootRole: adminRole.id },
             TEST_AUDIT_USER,
         ),
-    ).rejects.toThrow(Error);
+    ).rejects.toThrow('User already exists');
+});
+
+test('should not be allowed to create existing user in a concurrency situation', async () => {
+    const username = 'test';
+    const calls = [
+        userService.createUser(
+            { username, rootRole: adminRole.id },
+            TEST_AUDIT_USER,
+        ),
+        userService.createUser(
+            { username, rootRole: adminRole.id },
+            TEST_AUDIT_USER,
+        ),
+    ];
+
+    await expect(Promise.all(calls)).rejects.toThrow('User already exists');
 });
 
 test('should create user with password', async () => {

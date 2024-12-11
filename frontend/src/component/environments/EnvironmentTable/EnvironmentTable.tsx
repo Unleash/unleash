@@ -28,7 +28,6 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IEnvironment } from 'interfaces/environments';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
-import { OrderEnvironments } from './OrderEnvironments/OrderEnvironments';
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
@@ -123,7 +122,6 @@ export const EnvironmentTable = () => {
 
     return (
         <PageContent header={header}>
-            <OrderEnvironments />
             <StyledAlert severity='info'>
                 This is the order of environments that you have today in each
                 feature flag. Rearranging them here will change also the order

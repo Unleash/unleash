@@ -218,6 +218,7 @@ test('Should add optional headers to productivity email', async () => {
             flagsCreated: 1,
             productionUpdates: 2,
             health: 99,
+            previousMonth: null,
         },
     );
 

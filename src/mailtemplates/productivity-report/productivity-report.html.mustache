@@ -28,7 +28,8 @@
                     style="margin: 0;padding: 36px 8px;background: #f0f0f5;border-width: 3px;border-color: #ffffff;border-style: solid;">
                     <div style="padding-top: 12px;">
                         <span style="color: {{healthColor}};">{{health}}%</span><br>
-                        <span style="font-size: 16px; color: #888;">your instance health</span>
+                        <span style="font-size: 16px; color: #1A4049; font-weight: 700">your instance health</span><br>
+                        <span style="font-size: 12px; color: #6E6E70; font-weight: 400; line-height: 14px">{{{healthTrendMessage}}}</span>
                     </div>
                 </div>
             </div>
@@ -40,18 +41,20 @@
                 <tr>
                     <td style="text-align: center;">
                         <div class="shaded"
-                            style="margin: 0;padding: 42px 8px;background: #f0f0f5;border-width: 3px;border-color: #ffffff;border-style: solid;">
-                            <span
-                                style="font-size: 24px; font-weight: bold; color: #1a4049;">{{flagsCreated}}</span><br>
-                            <span style="color: #888;display: block;height: 20px;">flags created last month</span>
+                             style="margin: 0;padding: 42px 8px;background: #f0f0f5;border-width: 3px;border-color: #ffffff;border-style: solid;">
+                                <span
+                                    style="font-size: 24px; font-weight: bold; color: #1a4049;">{{flagsCreated}}</span><br>
+                            <span style="color: #1A4049;display: block;height: 16px;">flags created</span><br>
+                            <span style="font-size: 12px; color: #6E6E70; font-weight: 400;">{{{flagsCreatedTrendMessage}}}</span>
                         </div>
                     </td>
                     <td style="text-align: center;">
                         <div class="shaded"
-                            style="margin: 0;padding: 42px 8px;background: #f0f0f5;border-width: 3px;border-color: #ffffff;border-style: solid;">
-                            <span
-                                style="font-size: 24px; font-weight: bold; color: #1a4049;">{{productionUpdates}}</span><br>
-                            <span style="color: #888;display: block;height: 20px;">production updates last month</span>
+                             style="margin: 0;padding: 42px 8px;background: #f0f0f5;border-width: 3px;border-color: #ffffff;border-style: solid;">
+                                <span
+                                    style="font-size: 24px; font-weight: bold; color: #1a4049;">{{productionUpdates}}</span><br>
+                            <span style="color: #1A4049;display: block;height: 16px;">production updates</span><br>
+                            <span style="font-size: 12px; color: #6E6E70; font-weight: 400;">{{{productionUpdatedTrendMessage}}}</span>
                         </div>
                     </td>
                 </tr>

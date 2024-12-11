@@ -126,6 +126,11 @@ test('Can send productivity report email', async () => {
             flagsCreated: 1,
             productionUpdates: 2,
             health: 99,
+            previousMonth: {
+                health: 89,
+                flagsCreated: 1,
+                productionUpdates: 3,
+            },
         },
     );
     expect(content.from).toBe('noreply@getunleash.ai');
@@ -133,8 +138,10 @@ test('Can send productivity report email', async () => {
     expect(content.html.includes(`Productivity Report`)).toBe(true);
     expect(content.html.includes(`localhost/insights`)).toBe(true);
     expect(content.html.includes(`localhost/profile`)).toBe(true);
-    expect(content.html.includes(`#b0d182`)).toBe(true);
+    expect(content.html.includes('#68a611')).toBe(true);
+    expect(content.html.includes(`10% more than previous month`)).toBe(true);
     expect(content.text.includes(`localhost/insights`)).toBe(true);
+    expect(content.text.includes(`localhost/profile`)).toBe(true);
     expect(content.text.includes(`localhost/profile`)).toBe(true);
 });
 
@@ -170,6 +177,7 @@ test('Should add optional headers to productivity email', async () => {
             flagsCreated: 1,
             productionUpdates: 2,
             health: 99,
+            previousMonth: null,
         },
     );
 

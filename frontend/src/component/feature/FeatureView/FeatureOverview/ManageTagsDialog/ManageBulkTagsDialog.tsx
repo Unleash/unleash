@@ -112,7 +112,7 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
         removedTags: [],
     });
 
-    const submitAndClear = (payload: Payload) => {
+    const submitAndClear = () => {
         onSubmit(payload);
         dispatch({ type: 'reset' });
     };
@@ -241,7 +241,7 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
             secondaryButtonText='Cancel'
             primaryButtonText='Save tags'
             title='Update feature flag tags'
-            onClick={() => submitAndClear(payload)}
+            onClick={submitAndClear}
             disabledPrimaryButton={
                 payload.addedTags.length === 0 &&
                 payload.removedTags.length === 0
@@ -255,7 +255,7 @@ export const ManageBulkTagsDialog: FC<IManageBulkTagsDialogProps> = ({
             >
                 Tags allow you to group features together
             </Typography>
-            <form id={formId} onSubmit={() => submitAndClear(payload)}>
+            <form id={formId} onSubmit={submitAndClear}>
                 <StyledDialogFormContent>
                     <TagTypeSelect
                         key={tagTypesLoading ? 'loading' : tagTypes.length}

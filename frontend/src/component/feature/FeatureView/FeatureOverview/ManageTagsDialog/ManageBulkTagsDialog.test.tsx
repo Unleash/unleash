@@ -87,28 +87,3 @@ describe('payloadReducer', () => {
         });
     });
 });
-
-// describe('ManageBulkTagsDialog', () => {
-//     it('should clear payload when form is submitted', () => {
-//         const onSubmit = vi.fn();
-//         const onCancel = vi.fn();
-
-//         render(
-//             <ManageBulkTagsDialog
-//                 open={true}
-//                 initialValues={[]}
-//                 initialIndeterminateValues={[]}
-//                 onSubmit={onSubmit}
-//                 onCancel={onCancel}
-//             />,
-//         );
-
-//         const form = screen.getByRole('form');
-//         fireEvent.submit(form);
-
-//         expect(onSubmit).toHaveBeenCalledWith({
-//             addedTags: [],
-//             removedTags: [],
-//         });
-//     });
-// });

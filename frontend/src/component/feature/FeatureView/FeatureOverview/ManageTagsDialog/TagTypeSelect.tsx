@@ -37,8 +37,12 @@ export const TagTypeSelect = ({
             disableClearable
             value={value}
             getOptionLabel={(option) => option.name}
-            renderOption={(props, option) => (
+            // @ts-expect-error: `key` isn't included in the HTMLAttributes type,
+            // but it *is* present. And spreading the key property causes
+            // console errors for rendering.
+            renderOption={({ key, ...props }, option) => (
                 <ListItem
+                    key={key}
                     {...props}
                     style={{
                         alignItems: 'flex-start',

@@ -8,7 +8,7 @@ import type { IUnleashConfig } from '../types/option';
 import {
     type ProductivityReportMetrics,
     productivityReportViewModel,
-} from '../../mailtemplates/productivity-report/productivity-report-view-model';
+} from '../features/productivity-report/productivity-report-view-model';
 
 export interface IAuthOptions {
     user: string;

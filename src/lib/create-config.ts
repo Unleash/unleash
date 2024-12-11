@@ -496,6 +496,17 @@ const parseFrontendApiOrigins = (options: IUnleashOptions): string[] => {
     return frontendApiOrigins;
 };
 
+export function resolveIsOss(
+    isEnterprise: boolean,
+    isOssOption?: boolean,
+    uiEnvironment?: string,
+    testEnvironmentActive: boolean = false,
+): boolean {
+    return testEnvironmentActive
+        ? (isOssOption ?? false)
+        : !isEnterprise && uiEnvironment?.toLowerCase() !== 'pro';
+}
+
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
 
@@ -620,6 +631,13 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         Boolean(options.enterpriseVersion) &&
         ui.environment?.toLowerCase() !== 'pro';
 
+    const isTest = process.env.NODE_ENV === 'test';
+    const isOss = resolveIsOss(
+        isEnterprise,
+        options.isOss,
+        ui.environment,
+        isTest,
+    );
     const metricsRateLimiting = loadMetricsRateLimitingConfig(options);
 
     const rateLimiting = loadRateLimitingConfig(options);
@@ -760,6 +778,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,
         isEnterprise: isEnterprise,
+        isOss: isOss,
         metricsRateLimiting,
         rateLimiting,
         feedbackUriPath,
@@ -771,5 +790,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
 
 module.exports = {
     createConfig,
+    resolveIsOss,
     authTypeFromString,
 };

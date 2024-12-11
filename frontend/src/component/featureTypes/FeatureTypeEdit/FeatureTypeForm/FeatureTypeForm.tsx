@@ -6,7 +6,7 @@ import { useFeatureTypeApi } from 'hooks/api/actions/useFeatureTypeApi/useFeatur
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import NotFound from 'component/common/NotFound/NotFound';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import { GO_BACK } from 'constants/navigate';
 import Input from 'component/common/Input/Input';
 import type { FeatureTypeSchema } from 'openapi';

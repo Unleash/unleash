@@ -10,7 +10,7 @@ import {
     Typography,
 } from '@mui/material';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from '@server/types/permissions';
 import MoreVert from '@mui/icons-material/MoreVert';
 import WatchLater from '@mui/icons-material/WatchLater';
 import type { FeatureSchema } from 'openapi';

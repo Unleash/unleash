@@ -4,7 +4,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import {
     UPDATE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import { useNavigate } from 'react-router-dom';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 

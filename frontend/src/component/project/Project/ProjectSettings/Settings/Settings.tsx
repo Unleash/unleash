@@ -6,7 +6,7 @@ import AccessContext from 'contexts/AccessContext';
 import {
     PROJECT_SETTINGS_READ,
     UPDATE_PROJECT,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import EditProject from './EditProject/EditProject';

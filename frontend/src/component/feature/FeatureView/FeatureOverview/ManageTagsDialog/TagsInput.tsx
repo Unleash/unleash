@@ -52,7 +52,10 @@ export const TagsInput = ({
     };
 
     const renderOption = (
-        props: JSX.IntrinsicAttributes &
+        {
+            key,
+            ...props
+        }: JSX.IntrinsicAttributes &
             React.ClassAttributes<HTMLLIElement> &
             React.LiHTMLAttributes<HTMLLIElement>,
         option: TagOption,
@@ -64,7 +67,7 @@ export const TagsInput = ({
                     indeterminateOption.title === option.title,
             ) ?? false;
         return (
-            <li {...props}>
+            <li key={key} {...props}>
                 <ConditionallyRender
                     condition={Boolean(option.inputValue)}
                     show={<Add sx={{ mr: (theme) => theme.spacing(0.5) }} />}

@@ -7,6 +7,7 @@ import {
     useTheme,
 } from '@mui/material';
 import type { ITagType } from 'interfaces/tags';
+import type { HTMLAttributes } from 'react';
 
 interface ITagSelect {
     options: ITagType[];
@@ -37,8 +38,15 @@ export const TagTypeSelect = ({
             disableClearable
             value={value}
             getOptionLabel={(option) => option.name}
-            renderOption={(props, option) => (
+            renderOption={(
+                {
+                    key,
+                    ...props
+                }: JSX.IntrinsicAttributes & HTMLAttributes<HTMLLIElement>,
+                option,
+            ) => (
                 <ListItem
+                    key={key}
                     {...props}
                     style={{
                         alignItems: 'flex-start',

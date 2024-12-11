@@ -8,9 +8,7 @@ const server = testServerSetup();
 const setupServerRoutes = (changeRequestsEnabled = true) => {
     testServerRoute(server, '/api/admin/ui-config', {
         environment: 'Pro',
-        flags: {
-            purchaseAdditionalEnvironments: true,
-        },
+        flags: {},
     });
 };
 

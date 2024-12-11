@@ -38,9 +38,6 @@ export const EnvironmentTable = () => {
     const { setToastApiError } = useToast();
     const { environments, mutateEnvironments } = useEnvironments();
     const isFeatureEnabled = useUiFlag('EEA');
-    const isPurchaseAdditionalEnvironmentsEnabled = useUiFlag(
-        'purchaseAdditionalEnvironments',
-    );
 
     const moveListItem: MoveListItem = useCallback(
         async (dragIndex: number, dropIndex: number, save = false) => {
@@ -116,7 +113,7 @@ export const EnvironmentTable = () => {
         <PageHeader title={`Environments (${count})`} actions={headerActions} />
     );
 
-    if (!isFeatureEnabled && !isPurchaseAdditionalEnvironmentsEnabled) {
+    if (!isFeatureEnabled) {
         return (
             <PageContent header={header}>
                 <PremiumFeature feature='environments' />

@@ -83,7 +83,14 @@ export class ProjectReadModel implements IProjectReadModel {
         userId?: number,
     ): Promise<ProjectForUi[]> {
         const projectTimer = this.timer('getProjectsForAdminUi');
-        let projects = this.db(TABLE)
+        let projects = this.db
+            .with('latest_events', (qb) => {
+                qb.select('project', 'feature_name')
+                    .max('created_at as last_updated')
+                    .whereNotNull('feature_name')
+                    .from('events')
+                    .groupBy('project', 'feature_name');
+            })
             .leftJoin('features', 'features.project', 'projects.id')
             .leftJoin(
                 'last_seen_at_metrics',
@@ -95,13 +102,14 @@ export class ProjectReadModel implements IProjectReadModel {
                 'project_settings.project',
                 'projects.id',
             )
-            .leftJoin('events', (join) => {
-                join.on('events.feature_name', '=', 'features.name').andOn(
-                    'events.project',
+            .leftJoin('latest_events', (join) => {
+                join.on(
+                    'latest_events.feature_name',
                     '=',
-                    'projects.id',
-                );
+                    'features.name',
+                ).andOn('latest_events.project', '=', 'projects.id');
             })
+            .from(TABLE)
             .orderBy('projects.name', 'asc');
 
         if (query?.archived === true) {
@@ -122,7 +130,7 @@ export class ProjectReadModel implements IProjectReadModel {
                 'projects.id, projects.name, projects.description, projects.health, projects.created_at, ' +
                     'count(DISTINCT features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
                     'MAX(last_seen_at_metrics.last_seen_at) AS last_usage, ' +
-                    'MAX(events.created_at) AS last_updated',
+                    'MAX(latest_events.last_updated) AS last_updated',
             ),
             'project_settings.project_mode',
             'projects.archived_at',

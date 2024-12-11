@@ -46,6 +46,7 @@ afterAll(async () => {
 beforeEach(async () => {
     await projectStore.deleteAll();
     await flagStore.deleteAll();
+    await eventStore.deleteAll();
 });
 
 test("it doesn't count flags multiple times when they have multiple events associated with them", async () => {

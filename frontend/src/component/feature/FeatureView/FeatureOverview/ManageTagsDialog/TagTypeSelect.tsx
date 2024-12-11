@@ -7,6 +7,7 @@ import {
     useTheme,
 } from '@mui/material';
 import type { ITagType } from 'interfaces/tags';
+import type { HTMLAttributes } from 'react';
 
 interface ITagSelect {
     options: ITagType[];
@@ -37,10 +38,13 @@ export const TagTypeSelect = ({
             disableClearable
             value={value}
             getOptionLabel={(option) => option.name}
-            // @ts-expect-error: `key` isn't included in the HTMLAttributes type,
-            // but it *is* present. And spreading the key property causes
-            // console errors for rendering.
-            renderOption={({ key, ...props }, option) => (
+            renderOption={(
+                {
+                    key,
+                    ...props
+                }: JSX.IntrinsicAttributes & HTMLAttributes<HTMLLIElement>,
+                option,
+            ) => (
                 <ListItem
                     key={key}
                     {...props}

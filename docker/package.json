@@ -25,7 +25,8 @@
     "ip": "^2.0.1",
     "minimatch": "^5.0.0",
     "path-scurry": "1.11.1",
-    "semver": "^7.5.3"
+    "semver": "^7.5.3",
+    "prompt": "link:./node_modules/.cache/null"
   },
   "overrides": {
     "set-value": "^4.0.1",

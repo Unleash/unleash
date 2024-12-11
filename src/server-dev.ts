@@ -48,7 +48,6 @@ process.nextTick(async () => {
                         manyStrategiesPagination: true,
                         enableLegacyVariants: false,
                         extendedMetrics: true,
-                        purchaseAdditionalEnvironments: true,
                         originMiddlewareRequestLogging: true,
                         unleashAI: true,
                         webhookDomainLogging: true,

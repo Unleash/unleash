@@ -1,5 +1,6 @@
 ---
 title: Feature Flags
+pagination_next: reference/activation-strategies
 ---
 
 ## Overview
@@ -198,3 +199,21 @@ You can delete archived flags by navigating to the [feature flag archive](#view-
 
 However, we recommend not deleting feature flags unless they are completely removed from your codebase. If you delete a flag and later create a new one with the same name, it might unintentionally reactivate old code that still references the original flag.
 
+## Tags
+
+:::note Availability
+
+**Version**: `3.11+`
+
+:::
+
+
+Tags can be used to group feature flags by any criteria, such as functionality, teams, or products, to make them easier to filter and manage. Tags are organized by type, which you can define in the Admin UI under **Configure > Tag types**.
+
+To assign tags to a feature flag, do the following:
+1. Open the feature flag and go to the **Tags for this feature flag** section.
+2. Click **Add new tag**.
+3. Select a tag type, and enter a new value for the tag or select an existing one. You can add multiple tags at once.
+4. Click **Save tags**.
+
+For example, you can create a `slack` tag type and assign Slack channel names as tag values. This lets you configure a Slack integration to send updates about specific feature flags to the correct channels.

@@ -69,7 +69,7 @@ Next, configure the rollout percentage so only a certain portion of your users a
 There are two more advanced extensions of a default strategy that you will see available to customize in the form:
 
 -   [Strategy variants](/reference/strategy-variants)
--   [Strategy constraints](/reference/strategy-constraints)
+-   [Strategy constraints](/reference/activation-strategies#constraints)
 
 With strategy variants and constraints, you can extend your overall strategy. They help you define more granular conditions for your feature beyond the rollout percentage. We recommend using strategy variants to configure an A/B test.
 

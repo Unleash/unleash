@@ -1,5 +1,6 @@
 ---
 title: Notifications
+pagination_next: reference/login-history
 ---
 
 :::note Availability

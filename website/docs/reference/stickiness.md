@@ -16,7 +16,7 @@ Because the number assigned to a user won't change, Unleash also guarantees that
 
 For instance: When using the [gradual rollout activation strategy](../reference/activation-strategies#gradual-rollout), any user whose number is less than or equal to the rollout percentage will see the feature. This means that the same users will keep seeing the feature even as you increase the percentage of your user base that sees the feature.
 
-## Custom stickiness {#custom-stickiness}
+## Custom stickiness
 
 :::note Availability
 

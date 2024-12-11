@@ -14,12 +14,12 @@ export const UserToken = ({ token }: IUserTokenProps) => {
         if (copy(token)) {
             setToastData({
                 type: 'success',
-                title: 'Token copied to clipboard',
+                text: 'Token copied to clipboard',
             });
         } else
             setToastData({
                 type: 'error',
-                title: 'Could not copy token',
+                text: 'Could not copy token',
             });
     };
 

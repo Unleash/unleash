@@ -77,8 +77,7 @@ export const FeedbackCESForm = ({ state, onClose }: IFeedbackCESFormProps) => {
             await sendFeedbackInput(form);
             setToastData({
                 type: 'success',
-                title: 'Feedback sent. Thank you!',
-                confetti: true,
+                text: 'Feedback sent. Thank you!',
             });
             onClose();
         } finally {

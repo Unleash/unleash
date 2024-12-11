@@ -90,7 +90,7 @@ export const EditGroup = ({
             refetchGroups();
             navigate(GO_BACK);
             setToastData({
-                title: 'Group updated successfully',
+                text: 'Group updated successfully',
                 type: 'success',
             });
         } catch (error: unknown) {

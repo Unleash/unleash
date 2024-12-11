@@ -66,7 +66,7 @@ export const EditReleasePlanTemplate = () => {
                 await refetch();
                 setToastData({
                     type: 'success',
-                    title: 'Release plan template updated',
+                    text: 'Release plan template updated',
                 });
                 navigate('/release-management');
             } catch (error: unknown) {

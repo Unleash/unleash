@@ -62,7 +62,7 @@ const CopyBlock: FC<{ title: string; code: string }> = ({ title, code }) => {
         copy(data);
         setToastData({
             type: 'success',
-            title: 'Copied to clipboard',
+            text: 'Copied to clipboard',
         });
     };
     const { setToastData } = useToast();

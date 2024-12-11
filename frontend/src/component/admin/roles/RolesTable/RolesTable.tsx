@@ -52,7 +52,7 @@ export const RolesTable = ({
         try {
             await removeRole(role.id);
             setToastData({
-                title: `${role.name} has been deleted`,
+                text: `${role.name} has been deleted`,
                 type: 'success',
             });
             refetch();

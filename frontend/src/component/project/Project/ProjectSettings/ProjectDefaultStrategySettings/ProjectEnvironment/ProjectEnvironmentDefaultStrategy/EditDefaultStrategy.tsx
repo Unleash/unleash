@@ -107,9 +107,8 @@ const EditDefaultStrategy = () => {
         refetchSavedStrategySegments();
         refetchProjectOverview();
         setToastData({
-            title: 'Default Strategy updated',
+            text: 'Default Strategy updated',
             type: 'success',
-            confetti: true,
         });
     };
 

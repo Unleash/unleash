@@ -1,5 +1,6 @@
 ---
 title: Technical Debt
+pagination_next: reference/insights
 ---
 
 ## Overview

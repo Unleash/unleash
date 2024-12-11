@@ -159,7 +159,7 @@ export const ProjectActionsModal = ({
                 await addActionSet(payload);
             }
             setToastData({
-                title: `action ${editing ? 'updated' : 'added'} successfully`,
+                text: `action ${editing ? 'updated' : 'added'} successfully`,
                 type: 'success',
             });
             refetch();

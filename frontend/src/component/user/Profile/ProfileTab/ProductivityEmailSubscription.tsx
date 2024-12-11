@@ -28,7 +28,7 @@ export const ProductivityEmailSubscription: FC<{
                                 if (status === 'subscribed') {
                                     await unsubscribe('productivity-report');
                                     setToastData({
-                                        title: 'Unsubscribed from productivity report',
+                                        text: 'Unsubscribed from productivity report',
                                         type: 'success',
                                     });
                                     trackEvent('productivity-report', {
@@ -39,7 +39,7 @@ export const ProductivityEmailSubscription: FC<{
                                 } else {
                                     await subscribe('productivity-report');
                                     setToastData({
-                                        title: 'Subscribed to productivity report',
+                                        text: 'Subscribed to productivity report',
                                         type: 'success',
                                     });
                                     trackEvent('productivity-report', {

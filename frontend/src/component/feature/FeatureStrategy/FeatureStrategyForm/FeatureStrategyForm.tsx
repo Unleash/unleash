@@ -414,7 +414,7 @@ export const FeatureStrategyForm = ({
                             predefined strategies like Gradual rollout with{' '}
                             <Link
                                 href={
-                                    'https://docs.getunleash.io/reference/strategy-constraints'
+                                    'https://docs.getunleash.io/reference/activation-strategies#constraints'
                                 }
                                 target='_blank'
                                 variant='body2'

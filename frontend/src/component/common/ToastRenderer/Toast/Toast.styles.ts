@@ -2,56 +2,49 @@ import { makeStyles } from 'tss-react/mui';
 
 export const useStyles = makeStyles()((theme) => ({
     container: {
-        maxWidth: '450px',
-        background: theme.palette.background.paper,
+        alignItems: 'center',
+        background:
+            // the background color for this doesn't exist in the theme yet and it's not synchronized across dark/light modes yet.
+            theme.mode === 'light' ? '#201E42' : theme.palette.background.paper,
+
+        borderRadius: theme.shape.borderRadiusMedium,
         boxShadow: theme.boxShadows.popup,
-        zIndex: 500,
+        display: 'flex',
+        flexDirection: 'row',
+        gap: theme.spacing(2),
         margin: '0 0.8rem',
-        borderRadius: '12.5px',
-        padding: '2rem',
-    },
-    innerContainer: {
-        position: 'relative',
+        maxWidth: '450px',
+        padding: theme.spacing(1),
+        paddingLeft: theme.spacing(2),
+        zIndex: theme.zIndex.snackbar,
+        color: theme.palette.common.white,
     },
     starting: {
         opacity: 0,
     },
-    headerContainer: {
-        display: 'flex',
-        alignItems: 'center',
-    },
-    confettiContainer: {
-        position: 'relative',
-        maxWidth: '600px',
-        margin: '0 auto',
-        display: 'flex',
-    },
-    textContainer: {
-        marginLeft: '1rem',
-        wordBreak: 'break-word',
-    },
     headerStyles: {
+        fontSize: theme.typography.body1.fontSize,
         fontWeight: 'normal',
         margin: 0,
-        marginBottom: '0.5rem',
-    },
-    createdContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'column',
+        maxHeight: '75vh',
+        overflowY: 'auto',
+        '&::first-letter': {
+            textTransform: 'uppercase',
+        },
     },
     anim: {
         animation: `$drop 10s 3s`,
     },
     checkMark: {
-        width: '65px',
-        height: '65px',
+        marginLeft: theme.spacing(1),
     },
     buttonStyle: {
-        position: 'absolute',
-        top: '-33px',
-        right: '-33px',
+        color: theme.palette.common.white,
+        svg: {
+            fontSize: '1em',
+        },
     },
+
     '@keyframes drop': {
         '0%': {
             opacity: '0%',

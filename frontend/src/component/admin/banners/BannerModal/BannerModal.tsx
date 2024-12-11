@@ -101,7 +101,7 @@ export const BannerModal = ({ banner, open, setOpen }: IBannerModalProps) => {
                 await addBanner(payload);
             }
             setToastData({
-                title: `Banner ${editing ? 'updated' : 'added'} successfully`,
+                text: `Banner ${editing ? 'updated' : 'added'} successfully`,
                 type: 'success',
             });
             refetch();

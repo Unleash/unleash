@@ -31,7 +31,7 @@ export const RemoveGroup: FC<IRemoveGroupProps> = ({
             setOpen(false);
             navigate('/admin/groups');
             setToastData({
-                title: 'Group removed successfully',
+                text: 'Group removed successfully',
                 type: 'success',
             });
         } catch (error: unknown) {

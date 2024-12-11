@@ -112,7 +112,7 @@ export const PlaygroundCodeFieldset: VFC<IPlaygroundCodeFieldsetProps> = ({
         } catch (error) {
             setToastData({
                 type: 'error',
-                title: `Error parsing context: ${formatUnknownError(error)}`,
+                text: `Error parsing context: ${formatUnknownError(error)}`,
             });
         }
     };

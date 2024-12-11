@@ -28,7 +28,6 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IEnvironment } from 'interfaces/environments';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
-import { OrderEnvironments } from './OrderEnvironments/OrderEnvironments';
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
@@ -38,9 +37,6 @@ export const EnvironmentTable = () => {
     const { setToastApiError } = useToast();
     const { environments, mutateEnvironments } = useEnvironments();
     const isFeatureEnabled = useUiFlag('EEA');
-    const isPurchaseAdditionalEnvironmentsEnabled = useUiFlag(
-        'purchaseAdditionalEnvironments',
-    );
 
     const moveListItem: MoveListItem = useCallback(
         async (dragIndex: number, dropIndex: number, save = false) => {
@@ -116,7 +112,7 @@ export const EnvironmentTable = () => {
         <PageHeader title={`Environments (${count})`} actions={headerActions} />
     );
 
-    if (!isFeatureEnabled && !isPurchaseAdditionalEnvironmentsEnabled) {
+    if (!isFeatureEnabled) {
         return (
             <PageContent header={header}>
                 <PremiumFeature feature='environments' />
@@ -126,7 +122,6 @@ export const EnvironmentTable = () => {
 
     return (
         <PageContent header={header}>
-            <OrderEnvironments />
             <StyledAlert severity='info'>
                 This is the order of environments that you have today in each
                 feature flag. Rearranging them here will change also the order

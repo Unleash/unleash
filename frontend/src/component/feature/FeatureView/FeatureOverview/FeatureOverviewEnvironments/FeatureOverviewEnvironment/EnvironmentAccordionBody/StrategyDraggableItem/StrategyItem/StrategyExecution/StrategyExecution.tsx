@@ -47,7 +47,9 @@ const CustomStrategyDeprecationWarning = () => (
         Custom strategies are deprecated and may be removed in a future major
         version. Consider rewriting this strategy as a predefined strategy with{' '}
         <Link
-            href={'https://docs.getunleash.io/reference/strategy-constraints'}
+            href={
+                'https://docs.getunleash.io/reference/activation-strategies#constraints'
+            }
             target='_blank'
             variant='body2'
         >

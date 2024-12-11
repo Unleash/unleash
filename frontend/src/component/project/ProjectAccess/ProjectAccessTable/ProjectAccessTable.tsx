@@ -382,14 +382,14 @@ export const ProjectAccessTable: VFC = () => {
             refetchProjectAccess();
             setToastData({
                 type: 'success',
-                title: `${
+                text: `${
                     name || `The ${entityType}`
                 } has been removed from project`,
             });
         } catch (err: any) {
             setToastData({
                 type: 'error',
-                title:
+                text:
                     err.message ||
                     `Server problems when removing ${entityType}.`,
             });

@@ -51,8 +51,7 @@ export const CreateUnleashContext = ({
                 await createContext(payload);
                 refetchUnleashContext();
                 setToastData({
-                    title: 'Context created',
-                    confetti: true,
+                    text: 'Context field created',
                     type: 'success',
                 });
                 onSubmit();

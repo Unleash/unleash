@@ -115,7 +115,7 @@ export const SignalEndpointsTokens = ({
             setNewToken(token);
             setTokenOpen(true);
             setToastData({
-                title: 'Token created successfully',
+                text: 'Token created',
                 type: 'success',
             });
         } catch (error: unknown) {
@@ -134,7 +134,7 @@ export const SignalEndpointsTokens = ({
                 refetchTokens();
                 setDeleteOpen(false);
                 setToastData({
-                    title: 'Token deleted successfully',
+                    text: 'Token deleted',
                     type: 'success',
                 });
             } catch (error: unknown) {

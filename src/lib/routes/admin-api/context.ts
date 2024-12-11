@@ -73,7 +73,7 @@ export class ContextController extends Controller {
                     tags: ['Context'],
                     summary: 'Gets configured context fields',
                     description:
-                        'Returns all configured [Context fields](https://docs.getunleash.io/how-to/how-to-define-custom-context-fields) that have been created.',
+                        'Returns all configured [Context fields](https://docs.getunleash.io/reference/unleash-context) that have been created.',
                     operationId: 'getContextFields',
                     responses: {
                         200: createResponseSchema('contextFieldsSchema'),

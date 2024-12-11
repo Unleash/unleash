@@ -27,7 +27,7 @@ exports[`should create default config 1`] = `
     "enabled": true,
     "maxAge": 3600000,
   },
-  "dailyMetricsStorageDays": 31,
+  "dailyMetricsStorageDays": 91,
   "db": {
     "acquireConnectionTimeout": 30000,
     "applicationName": "unleash",

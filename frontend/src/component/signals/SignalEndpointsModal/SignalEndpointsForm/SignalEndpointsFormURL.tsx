@@ -47,7 +47,7 @@ export const SignalEndpointsFormURL = ({
         copy(url);
         setToastData({
             type: 'success',
-            title: 'Copied to clipboard',
+            text: 'Copied to clipboard',
         });
     };
 

@@ -40,8 +40,7 @@ export const ApplicationUpdate = ({ application }: IApplicationUpdateProps) => {
             refetchApplication();
             setToastData({
                 type: 'success',
-                title: 'Updated Successfully',
-                text: `${field} successfully updated`,
+                text: 'Updated Successfully',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

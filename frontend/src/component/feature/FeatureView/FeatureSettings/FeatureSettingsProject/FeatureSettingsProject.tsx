@@ -34,7 +34,7 @@ const FeatureSettingsProject = () => {
             if (project) {
                 await changeFeatureProject(projectId, featureId, project);
                 refetchFeature();
-                setToastData({ title: 'Project changed', type: 'success' });
+                setToastData({ text: 'Project changed', type: 'success' });
                 setShowConfirmDialog(false);
                 navigate(
                     `/projects/${project}/features/${featureId}/settings`,

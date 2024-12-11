@@ -150,7 +150,7 @@ export const AdvancedPlayground: FC<{
         } catch (error) {
             setToastData({
                 type: 'error',
-                title: `Failed to parse URL parameters: ${formatUnknownError(
+                text: `Failed to parse URL parameters: ${formatUnknownError(
                     error,
                 )}`,
             });
@@ -233,14 +233,12 @@ export const AdvancedPlayground: FC<{
             } else if (error instanceof SyntaxError) {
                 setToastData({
                     type: 'error',
-                    title: `Error parsing context: ${formatUnknownError(
-                        error,
-                    )}`,
+                    text: `Error parsing context: ${formatUnknownError(error)}`,
                 });
             } else {
                 setToastData({
                     type: 'error',
-                    title: formatUnknownError(error),
+                    text: formatUnknownError(error),
                 });
             }
         }

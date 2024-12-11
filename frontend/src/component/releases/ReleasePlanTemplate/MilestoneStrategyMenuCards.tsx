@@ -9,16 +9,13 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
 }));
 
 interface IMilestoneStrategyMenuCardsProps {
-    milestoneId: string;
-    openAddStrategy: (
-        milestoneId: string,
+    openEditAddStrategy: (
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => void;
 }
 
 export const MilestoneStrategyMenuCards = ({
-    milestoneId,
-    openAddStrategy,
+    openEditAddStrategy,
 }: IMilestoneStrategyMenuCardsProps) => {
     const { strategies } = useStrategies();
 
@@ -29,7 +26,7 @@ export const MilestoneStrategyMenuCards = ({
     const onClick = (
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => {
-        openAddStrategy(milestoneId, strategy);
+        openEditAddStrategy(strategy);
     };
 
     return (

@@ -51,7 +51,7 @@ export const LinkField: FC<ILinkFieldProps> = ({
     const setError = () =>
         setToastData({
             type: 'error',
-            title: errorTitle,
+            text: errorTitle,
         });
 
     const handleCopy = () => {
@@ -61,7 +61,7 @@ export const LinkField: FC<ILinkFieldProps> = ({
                 .then(() => {
                     setToastData({
                         type: 'success',
-                        title: successTitle,
+                        text: successTitle,
                     });
                     onCopy?.();
                 })

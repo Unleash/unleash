@@ -63,12 +63,8 @@ export const useManageDependency = (
         }
         void refetchChangeRequests();
         setToastData({
-            text:
-                actionType === 'addDependency'
-                    ? `${featureId} will depend on ${parent}`
-                    : `${featureId} dependency will be removed`,
             type: 'success',
-            title: 'Change added to a draft',
+            text: 'Change added to draft',
         });
     };
 
@@ -95,7 +91,7 @@ export const useManageDependency = (
                         eventType: 'dependency removed',
                     },
                 });
-                setToastData({ title: 'Dependency removed', type: 'success' });
+                setToastData({ text: 'Dependency removed', type: 'success' });
             } else {
                 await addDependency(featureId, {
                     feature: parent,
@@ -110,7 +106,7 @@ export const useManageDependency = (
                         eventType: 'dependency added',
                     },
                 });
-                setToastData({ title: 'Dependency added', type: 'success' });
+                setToastData({ text: 'Dependency added', type: 'success' });
             }
         } catch (error) {
             setToastApiError(formatUnknownError(error));

@@ -71,7 +71,7 @@ export const InactiveUsersList = () => {
         try {
             await deleteInactiveUsers(inactiveUsers.map((i) => i.id));
             setToastData({
-                title: `Inactive users has been deleted`,
+                text: `Inactive users has been deleted`,
                 type: 'success',
             });
             setShowDelInactiveDialog(false);
@@ -84,7 +84,7 @@ export const InactiveUsersList = () => {
         try {
             await removeUser(userId);
             setToastData({
-                title: `User has been deleted`,
+                text: `User has been deleted`,
                 type: 'success',
             });
             refetchInactiveUsers();

@@ -71,8 +71,7 @@ export const FeatureOverviewSidePanelTags = ({
             refetch();
             setToastData({
                 type: 'success',
-                title: 'Tag deleted',
-                text: 'Successfully deleted tag',
+                text: 'Tag deleted',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

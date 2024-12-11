@@ -48,7 +48,6 @@ process.nextTick(async () => {
                         manyStrategiesPagination: true,
                         enableLegacyVariants: false,
                         extendedMetrics: true,
-                        purchaseAdditionalEnvironments: true,
                         originMiddlewareRequestLogging: true,
                         unleashAI: true,
                         webhookDomainLogging: true,
@@ -57,6 +56,7 @@ process.nextTick(async () => {
                         showUserDeviceCount: true,
                         flagOverviewRedesign: false,
                         licensedUsers: true,
+                        granularAdminPermissions: true,
                     },
                 },
                 authentication: {

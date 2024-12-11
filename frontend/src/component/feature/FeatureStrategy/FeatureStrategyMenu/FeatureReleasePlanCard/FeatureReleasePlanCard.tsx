@@ -75,7 +75,7 @@ export const FeatureReleasePlanCard = ({
             );
             setToastData({
                 type: 'success',
-                title: 'Release plan added',
+                text: 'Release plan added',
             });
             refetch();
         } catch (error: unknown) {

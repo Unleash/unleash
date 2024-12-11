@@ -29,7 +29,7 @@ export const DeletePersonalAPIToken: FC<IDeletePersonalAPITokenProps> = ({
                 refetchTokens();
                 setOpen(false);
                 setToastData({
-                    title: 'Token deleted successfully',
+                    text: 'Token deleted',
                     type: 'success',
                 });
             } catch (error: unknown) {

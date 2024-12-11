@@ -5,6 +5,10 @@ import { existsSync, readFileSync } from 'fs';
 import type { Logger } from '../logger';
 import NotFoundError from '../error/notfound-error';
 import type { IUnleashConfig } from '../types/option';
+import {
+    type ProductivityReportMetrics,
+    productivityReportViewModel,
+} from '../../mailtemplates/productivity-report/productivity-report-view-model';
 
 export interface IAuthOptions {
     user: string;
@@ -530,29 +534,15 @@ export class EmailService {
     async sendProductivityReportEmail(
         userEmail: string,
         userName: string,
-        metrics: {
-            health: number;
-            flagsCreated: number;
-            productionUpdates: number;
-        },
+        metrics: ProductivityReportMetrics,
     ): Promise<IEmailEnvelope> {
         if (this.configured()) {
-            const context = {
-                userName,
+            const context = productivityReportViewModel({
+                metrics,
                 userEmail,
-                ...metrics,
+                userName,
                 unleashUrl: this.config.server.unleashUrl,
-                healthColor() {
-                    const healthRating = this.health;
-                    const healthColor =
-                        healthRating >= 0 && healthRating <= 24
-                            ? '#d93644'
-                            : healthRating >= 25 && healthRating <= 74
-                              ? '#ffc46f'
-                              : '#b0d182';
-                    return healthColor;
-                },
-            };
+            });
 
             const template = 'productivity-report';
 

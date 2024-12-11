@@ -49,6 +49,7 @@ export const RoleCell: VFC<TRoleCellProps> = ({ role, roles, value }) => {
                             ))}
                         </StyledRoleDescriptions>
                     }
+                    clampText
                 >
                     {value}
                 </TooltipLink>

@@ -5015,7 +5015,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ip-address@npm:^10.0.0":
+"ip-address@npm:^10.0.1":
   version: 10.0.1
   resolution: "ip-address@npm:10.0.1"
   checksum: 10c0/1634d79dae18394004775cb6d699dc46b7c23df6d2083164025a2b15240c1164fccde53d0e08bd5ee4fc53913d033ab6b5e395a809ad4b956a940c446e948843
@@ -9311,7 +9311,7 @@ __metadata:
     helmet: "npm:^6.0.0"
     http-errors: "npm:^2.0.0"
     husky: "npm:^9.0.11"
-    ip-address: "npm:^10.0.0"
+    ip-address: "npm:^10.0.1"
     jest: "npm:29.7.0"
     jest-junit: "npm:^16.0.0"
     joi: "npm:^17.13.3"
@@ -9326,7 +9326,7 @@ __metadata:
     lodash.groupby: "npm:^4.6.0"
     lodash.sortby: "npm:^4.7.0"
     log4js: "npm:^6.0.0"
-    make-fetch-happen: "npm:^13.0.0"
+    make-fetch-happen: "npm:^13.0.1"
     memoizee: "npm:^0.4.17"
     mime: "npm:^4.0.4"
     murmurhash3js: "npm:^3.0.1"

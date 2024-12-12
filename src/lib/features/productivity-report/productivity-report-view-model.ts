@@ -33,7 +33,7 @@ export const productivityReportViewModel = ({
         const healthColor =
             healthRating >= 0 && healthRating <= 24
                 ? RED
-                : healthRating >= 25 && healthRating < 74
+                : healthRating >= 25 && healthRating <= 74
                   ? ORANGE
                   : GREEN;
         return healthColor;

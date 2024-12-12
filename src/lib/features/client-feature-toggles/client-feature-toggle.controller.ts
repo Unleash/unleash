@@ -105,8 +105,8 @@ export default class FeatureController extends Controller {
                     summary: 'Get partial updates (SDK)',
                     description:
                         'Initially returns the full set of feature flags available to the provided API key. When called again with the returned etag, only returns the flags that have changed',
-                    operationId: 'getAllClientFeatures',
-                    tags: ['Client'],
+                    operationId: 'getDelta',
+                    tags: ['Unstable'],
                     responses: {
                         200: createResponseSchema('clientFeaturesSchema'),
                     },

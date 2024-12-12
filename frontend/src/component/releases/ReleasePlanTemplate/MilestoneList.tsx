@@ -15,6 +15,7 @@ interface IMilestoneListProps {
     openAddStrategyForm: (
         milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
+        editing: boolean,
     ) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;

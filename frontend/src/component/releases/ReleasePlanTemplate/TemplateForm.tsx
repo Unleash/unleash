@@ -62,6 +62,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     const [activeMilestoneId, setActiveMilestoneId] = useState<
         string | undefined
     >();
+    const [strategyModeEdit, setStrategyModeEdit] = useState(false);
     const [strategy, setStrategy] = useState<
         Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>
     >({
@@ -74,7 +75,9 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     const openAddUpdateStrategyForm = (
         milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
+        editing: boolean,
     ) => {
+        setStrategyModeEdit(editing);
         setActiveMilestoneId(milestoneId);
         setStrategy(strategy);
         setAddUpdateStrategyOpen(true);
@@ -114,6 +117,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
             );
         }
         setAddUpdateStrategyOpen(false);
+        setStrategyModeEdit(false);
         setActiveMilestoneId(undefined);
         setStrategy({
             name: 'flexibleRollout',
@@ -190,7 +194,9 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
 
                 <SidebarModal
                     label='Add strategy to template milestone'
-                    onClose={() => {}}
+                    onClose={() => {
+                        setStrategyModeEdit(false);
+                    }}
                     open={addUpdateStrategyOpen}
                 >
                     <ReleasePlanTemplateAddStrategyForm
@@ -200,6 +206,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                         onCancel={() => {
                             setAddUpdateStrategyOpen(false);
                         }}
+                        editMode={strategyModeEdit}
                     />
                 </SidebarModal>
             </StyledForm>

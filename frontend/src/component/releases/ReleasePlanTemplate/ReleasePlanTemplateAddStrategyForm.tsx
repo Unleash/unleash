@@ -126,6 +126,7 @@ interface IReleasePlanTemplateAddStrategyFormProps {
         milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => void;
+    editMode: boolean;
 }
 
 export const ReleasePlanTemplateAddStrategyForm = ({
@@ -133,6 +134,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     onCancel,
     strategy,
     onAddUpdateStrategy,
+    editMode,
 }: IReleasePlanTemplateAddStrategyFormProps) => {
     const [currentStrategy, setCurrentStrategy] = useState(strategy);
     const [activeTab, setActiveTab] = useState(0);
@@ -346,7 +348,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                     disabled={!hasValidConstraints || errors.hasFormErrors()}
                     onClick={AddUpdateMilestoneStrategy}
                 >
-                    Save strategy
+                    {editMode ? 'Add changes' : 'Add strategy'}
                 </Button>
                 <StyledCancelButton onClick={onCancel}>
                     Cancel

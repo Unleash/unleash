@@ -118,6 +118,7 @@ interface IMilestoneCardProps {
     showAddStrategyDialog: (
         milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
+        editing: boolean,
     ) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
@@ -146,10 +147,16 @@ export const MilestoneCard = ({
         setAnchor(undefined);
     };
 
+    const onSelectEditStrategy = (
+        strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
+    ) => {
+        showAddStrategyDialog(milestone.id, strategy, true);
+    };
+
     const onSelectStrategy = (
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => {
-        showAddStrategyDialog(milestone.id, strategy);
+        showAddStrategyDialog(milestone.id, strategy, false);
     };
 
     const onDragOver =
@@ -358,7 +365,7 @@ export const MilestoneCard = ({
                                 milestoneStrategyDeleted(strg.id)
                             }
                             onEditClick={() => {
-                                onSelectStrategy(strg);
+                                onSelectEditStrategy(strg);
                             }}
                             isDragging={false}
                             strategy={strg}

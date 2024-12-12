@@ -58,6 +58,8 @@ export const createFeature_UI = (
     const uiOpts = forceInteractions ? { force: true } : undefined;
     cy.visit(`/projects/${projectName}`);
 
+    cy.wait(5_000);
+
     cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click(uiOpts);
 
     cy.intercept('POST', `/api/admin/projects/${projectName}/features`).as(

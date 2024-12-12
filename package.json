@@ -127,7 +127,7 @@
     "deep-object-diff": "^1.1.9",
     "deepmerge": "^4.3.1",
     "errorhandler": "^1.5.1",
-    "express": "^4.21.0",
+    "express": "^4.21.2",
     "express-rate-limit": "^7.3.1",
     "express-session": "^1.17.3",
     "fast-json-patch": "^3.1.0",

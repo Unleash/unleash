@@ -48,7 +48,7 @@ export const productivityReportViewModel = ({
         if (this.health < previousHealth) {
             return improveMessage;
         }
-        return 'You are doing a good job at keeping your project healthy by archiving stale flags';
+        return null;
     },
     healthTrendMessage() {
         return this.previousMonthText(

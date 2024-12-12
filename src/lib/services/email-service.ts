@@ -5,6 +5,10 @@ import { existsSync, readFileSync } from 'fs';
 import type { Logger } from '../logger';
 import NotFoundError from '../error/notfound-error';
 import type { IUnleashConfig } from '../types/option';
+import {
+    type ProductivityReportMetrics,
+    productivityReportViewModel,
+} from '../features/productivity-report/productivity-report-view-model';
 
 export interface IAuthOptions {
     user: string;
@@ -69,11 +73,6 @@ export type ChangeRequestScheduleConflictData =
           flagName: string;
           environment: string;
       };
-
-export type OrderEnvironmentData = {
-    name: string;
-    type: string;
-};
 
 export class EmailService {
     private logger: Logger;
@@ -462,87 +461,18 @@ export class EmailService {
         });
     }
 
-    async sendOrderEnvironmentEmail(
-        userEmail: string,
-        customerId: string,
-        environments: OrderEnvironmentData[],
-    ): Promise<IEmailEnvelope> {
-        if (this.configured()) {
-            const context = {
-                userEmail,
-                customerId,
-                environments: environments.map((data) => ({
-                    name: this.stripSpecialCharacters(data.name),
-                    type: this.stripSpecialCharacters(data.type),
-                })),
-            };
-
-            const bodyHtml = await this.compileTemplate(
-                'order-environments',
-                TemplateFormat.HTML,
-                context,
-            );
-            const bodyText = await this.compileTemplate(
-                'order-environments',
-                TemplateFormat.PLAIN,
-                context,
-            );
-            const email = {
-                from: this.sender,
-                to: userEmail,
-                bcc:
-                    process.env.ORDER_ENVIRONMENTS_BCC ||
-                    'pro-sales@getunleash.io',
-                subject: ORDER_ENVIRONMENTS_SUBJECT,
-                html: bodyHtml,
-                text: bodyText,
-            };
-            process.nextTick(() => {
-                this.mailer!.sendMail(email).then(
-                    () =>
-                        this.logger.info(
-                            'Successfully sent order environments email',
-                        ),
-                    (e) =>
-                        this.logger.warn(
-                            'Failed to send order environments email',
-                            e,
-                        ),
-                );
-            });
-            return Promise.resolve(email);
-        }
-        return new Promise((res) => {
-            this.logger.warn(
-                'No mailer is configured. Please read the docs on how to configure an email service',
-            );
-            res({
-                from: this.sender,
-                to: userEmail,
-                bcc: '',
-                subject: ORDER_ENVIRONMENTS_SUBJECT,
-                html: '',
-                text: '',
-            });
-        });
-    }
-
     async sendProductivityReportEmail(
         userEmail: string,
         userName: string,
-        metrics: {
-            health: number;
-            flagsCreated: number;
-            productionUpdates: number;
-        },
+        metrics: ProductivityReportMetrics,
     ): Promise<IEmailEnvelope> {
         if (this.configured()) {
-            const context = {
-                userName,
+            const context = productivityReportViewModel({
+                metrics,
                 userEmail,
-                ...metrics,
+                userName,
                 unleashUrl: this.config.server.unleashUrl,
-            };
+            });
 
             const template = 'productivity-report';
 

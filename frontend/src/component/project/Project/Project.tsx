@@ -235,7 +235,7 @@ export const Project = () => {
             const text = created ? 'Project created' : 'Project updated';
             setToastData({
                 type: 'success',
-                title: text,
+                text,
             });
         }
         /* eslint-disable-next-line */

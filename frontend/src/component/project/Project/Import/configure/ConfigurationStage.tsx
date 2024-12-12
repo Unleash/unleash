@@ -89,14 +89,14 @@ export const ImportArea: FC<{
                         setActiveTab('code');
                         setToastData({
                             type: 'success',
-                            title: 'File uploaded',
+                            text: 'File uploaded',
                         });
                     }}
                     onError={(error) => {
                         setImportPayload('');
                         setToastData({
                             type: 'error',
-                            title: error,
+                            text: error,
                         });
                     }}
                     onDragStatusChange={setDragActive}

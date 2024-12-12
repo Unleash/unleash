@@ -37,7 +37,7 @@ const EditTagType = () => {
             await updateTagType(tagName, payload);
             navigate('/tag-types');
             setToastData({
-                title: 'Tag type updated',
+                text: 'Tag type updated',
                 type: 'success',
             });
         } catch (error: unknown) {

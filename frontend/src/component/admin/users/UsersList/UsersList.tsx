@@ -112,7 +112,7 @@ const UsersList = () => {
         try {
             await removeUser(user.id);
             setToastData({
-                title: `${user.name} has been deleted`,
+                text: `${user.name} has been deleted`,
                 type: 'success',
             });
             refetch();

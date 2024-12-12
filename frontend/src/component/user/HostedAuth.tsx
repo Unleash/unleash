@@ -79,8 +79,7 @@ const HostedAuth: VFC<IHostedAuthProps> = ({ authDetails, redirect }) => {
             if (data.deletedSessions && data.activeSessions) {
                 setToastData({
                     type: 'success',
-                    title: 'Maximum Session Limit Reached',
-                    text: `You can have up to ${data.activeSessions} active sessions at a time. To enhance your account security, we’ve ended ${data.deletedSessions} session(s) on other browsers.`,
+                    text: `Maximum session limit of ${data.activeSessions} reached`,
                 });
             }
             refetchUser();

@@ -101,7 +101,7 @@ export const ReleasePlan = ({
                 id,
             );
             setToastData({
-                title: `Release plan "${name}" has been removed from ${featureName} in ${environment}`,
+                text: `Release plan "${name}" has been removed from ${featureName} in ${environment}`,
                 type: 'success',
             });
             refetch();
@@ -121,7 +121,7 @@ export const ReleasePlan = ({
                 milestone.id,
             );
             setToastData({
-                title: `Milestone "${milestone.name}" has started`,
+                text: `Milestone "${milestone.name}" has started`,
                 type: 'success',
             });
             refetch();

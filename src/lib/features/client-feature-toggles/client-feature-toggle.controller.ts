@@ -342,8 +342,14 @@ export default class FeatureController extends Controller {
 
         // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
         const queryHash = hashSum(query);
-        const etag = `"${queryHash}:${revisionId}"`;
-        return { revisionId, etag, queryHash };
+        const etagVariant = this.flagResolver.getVariant('etagVariant');
+        if (etagVariant.feature_enabled && etagVariant.enabled) {
+            const etag = `"${queryHash}:${revisionId}:${etagVariant.name}"`;
+            return { revisionId, etag, queryHash };
+        } else {
+            const etag = `"${queryHash}:${revisionId}"`;
+            return { revisionId, etag, queryHash };
+        }
     }
 
     async getFeatureToggle(

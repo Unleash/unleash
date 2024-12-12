@@ -24,7 +24,7 @@ export const useEnableDisable = ({
                 !enabled,
             );
             setToastData({
-                title: `Strategy ${enabled ? 'enabled' : 'disabled'}`,
+                text: `Strategy ${enabled ? 'enabled' : 'disabled'}`,
                 type: 'success',
             });
 

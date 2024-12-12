@@ -49,7 +49,7 @@ const EditEnvironment = () => {
             navigate('/environments');
             setToastData({
                 type: 'success',
-                title: 'Successfully updated environment.',
+                text: 'Successfully updated environment.',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

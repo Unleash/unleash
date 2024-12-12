@@ -125,7 +125,7 @@ export const EditChange = ({
             });
             onSubmit();
             setToastData({
-                title: 'Change updated',
+                text: 'Change updated',
                 type: 'success',
             });
         } catch (error: unknown) {

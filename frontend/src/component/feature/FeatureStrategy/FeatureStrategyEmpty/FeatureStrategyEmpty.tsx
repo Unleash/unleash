@@ -78,10 +78,7 @@ export const FeatureStrategyEmpty = ({
         refetchFeatureImmutable();
 
         setToastData({
-            title: multiple ? 'Strategies created' : 'Strategy created',
-            text: multiple
-                ? 'Successfully copied from another environment'
-                : 'Successfully created strategy',
+            text: multiple ? 'Strategies created' : 'Strategy created',
             type: 'success',
         });
     };

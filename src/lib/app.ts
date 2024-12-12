@@ -112,6 +112,10 @@ export default async function getApp(
         `${baseUriPath}/api/frontend*`,
         corsOriginMiddleware(services, config),
     );
+    app.options(
+        `${baseUriPath}/api/streaming*`,
+        corsOriginMiddleware(services, config),
+    );
 
     app.use(baseUriPath, patMiddleware(config, services));
 

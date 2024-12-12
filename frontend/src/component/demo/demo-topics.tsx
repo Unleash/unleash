@@ -165,7 +165,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/strategy-constraints'
+                                href='https://docs.getunleash.io/reference/activation-strategies#constraints'
                                 target='_blank'
                                 rel='noreferrer'
                             >
@@ -503,7 +503,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/strategy-constraints'
+                                href='https://docs.getunleash.io/reference/activation-strategies#constraints'
                                 target='_blank'
                                 rel='noreferrer'
                             >

@@ -58,7 +58,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
     handleSubmit,
     children,
 }) => {
-    const [addStrategyOpen, setAddStrategyOpen] = useState(false);
+    const [addUpdateStrategyOpen, setAddUpdateStrategyOpen] = useState(false);
     const [activeMilestoneId, setActiveMilestoneId] = useState<
         string | undefined
     >();
@@ -71,37 +71,49 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
         title: '',
         id: 'temp',
     });
-    const openAddStrategyForm = (
+    const openAddUpdateStrategyForm = (
         milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => {
         setActiveMilestoneId(milestoneId);
         setStrategy(strategy);
-        setAddStrategyOpen(true);
+        setAddUpdateStrategyOpen(true);
     };
 
-    const addStrategy = (
+    const addUpdateStrategy = (
         milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => {
-        setMilestones((prev) =>
-            prev.map((milestone, i) =>
-                milestone.id === milestoneId
-                    ? {
-                          ...milestone,
-                          strategies: [
-                              ...(milestone.strategies || []),
-                              {
-                                  ...strategy,
-                                  strategyName: strategy.name,
-                                  sortOrder: milestone.strategies?.length || 0,
-                              },
-                          ],
-                      }
-                    : milestone,
-            ),
+        const milestone = milestones.find((m) => m.id === milestoneId);
+        const existingStrategy = milestone?.strategies?.find(
+            (strat) => strat.id === strategy.id,
         );
-        setAddStrategyOpen(false);
+        if (!milestone) {
+            return;
+        }
+        if (existingStrategy) {
+            milestoneStrategyChanged(milestone, strategy);
+        } else {
+            setMilestones((prev) =>
+                prev.map((milestone, i) =>
+                    milestone.id === milestoneId
+                        ? {
+                              ...milestone,
+                              strategies: [
+                                  ...(milestone.strategies || []),
+                                  {
+                                      ...strategy,
+                                      strategyName: strategy.strategyName,
+                                      sortOrder:
+                                          milestone.strategies?.length || 0,
+                                  },
+                              ],
+                          }
+                        : milestone,
+                ),
+            );
+        }
+        setAddUpdateStrategyOpen(false);
         setActiveMilestoneId(undefined);
         setStrategy({
             name: 'flexibleRollout',
@@ -109,6 +121,29 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
             constraints: [],
             title: '',
             id: 'temp',
+        });
+    };
+
+    const milestoneChanged = (milestone: IReleasePlanMilestonePayload) => {
+        setMilestones((prev) =>
+            prev.map((mstone) =>
+                mstone.id === milestone.id ? { ...milestone } : mstone,
+            ),
+        );
+    };
+
+    const milestoneStrategyChanged = (
+        milestone: IReleasePlanMilestonePayload,
+        strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
+    ) => {
+        const strategies = milestone.strategies || [];
+        milestoneChanged({
+            ...milestone,
+            strategies: [
+                ...strategies.map((strat) =>
+                    strat.id === strategy.id ? strategy : strat,
+                ),
+            ],
         });
     };
 
@@ -145,9 +180,10 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                 <MilestoneList
                     milestones={milestones}
                     setMilestones={setMilestones}
-                    openAddStrategyForm={openAddStrategyForm}
+                    openAddStrategyForm={openAddUpdateStrategyForm}
                     errors={errors}
                     clearErrors={clearErrors}
+                    milestoneChanged={milestoneChanged}
                 />
 
                 {children}
@@ -155,14 +191,14 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                 <SidebarModal
                     label='Add strategy to template milestone'
                     onClose={() => {}}
-                    open={addStrategyOpen}
+                    open={addUpdateStrategyOpen}
                 >
                     <ReleasePlanTemplateAddStrategyForm
                         milestoneId={activeMilestoneId}
                         strategy={strategy}
-                        onAddStrategy={addStrategy}
+                        onAddUpdateStrategy={addUpdateStrategy}
                         onCancel={() => {
-                            setAddStrategyOpen(false);
+                            setAddUpdateStrategyOpen(false);
                         }}
                     />
                 </SidebarModal>

@@ -1,7 +1,6 @@
 *
 !src
 !package.json
-!docker
 !yarn.lock
 !scripts
 !tsconfig.json
@@ -15,3 +14,4 @@ frontend/node_modules
 !.yarnrc.yml
 !frontend/.yarn/**
 node_modules
+!docker/index.js

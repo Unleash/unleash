@@ -62,8 +62,7 @@ const ChangePassword = ({
             setData({});
             closeDialog();
             setToastData({
-                title: 'Password changed successfully',
-                text: 'The user can now sign in using the new password.',
+                text: 'Password changed successfully',
                 type: 'success',
             });
         } catch (error: unknown) {

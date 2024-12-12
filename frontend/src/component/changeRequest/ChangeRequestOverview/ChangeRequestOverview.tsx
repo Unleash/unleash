@@ -136,7 +136,6 @@ export const ChangeRequestOverview: FC = () => {
             refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
-                title: 'Success',
                 text: 'Changes applied',
             });
         } catch (error: unknown) {
@@ -159,7 +158,6 @@ export const ChangeRequestOverview: FC = () => {
             refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
-                title: 'Success',
                 text: 'Changes scheduled',
             });
         } catch (error: unknown) {
@@ -177,7 +175,6 @@ export const ChangeRequestOverview: FC = () => {
             await refetchChangeRequest();
             setToastData({
                 type: 'success',
-                title: 'Success',
                 text: 'Comment added',
             });
         } catch (error: unknown) {
@@ -199,7 +196,6 @@ export const ChangeRequestOverview: FC = () => {
             refetchActionableChangeRequests();
             setToastData({
                 type: 'success',
-                title: 'Success',
                 text: 'Changes cancelled',
             });
         } catch (error: unknown) {
@@ -221,7 +217,6 @@ export const ChangeRequestOverview: FC = () => {
 
             setToastData({
                 type: 'success',
-                title: 'Success',
                 text: 'Changes rejected',
             });
             refetchChangeRequestOpen();
@@ -244,7 +239,6 @@ export const ChangeRequestOverview: FC = () => {
             refetchChangeRequestOpen();
             setToastData({
                 type: 'success',
-                title: 'Success',
                 text: 'Changes approved',
             });
         } catch (error: unknown) {

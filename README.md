@@ -135,14 +135,13 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 
 ### Flexibility and adaptability
 
-- Get an easy overview of all feature flags across all your environments, applications and services
-- Use included [activation strategies](https://docs.getunleash.io/reference/activation-strategies) for most common use cases, or use a [custom activation strategy](https://docs.getunleash.io/reference/custom-activation-strategies) to support any need you might have
-- Organise feature flags by [feature flag tags](https://docs.getunleash.io/reference/tags)
+- Get an overview of all feature flags across all your environments, applications and services
+- Targeted releases using [activation strategies](https://docs.getunleash.io/reference/activation-strategies) to enable and disable features for certain users or segments without having to redeploy your application.
 - [Canary releases / gradual rollouts](https://docs.getunleash.io/reference/activation-strategies#gradual-rollout)
-- Targeted releases: release features to specific [users](https://docs.getunleash.io/reference/activation-strategies#userids), [IPs](https://docs.getunleash.io/reference/activation-strategies#ips), or [hostnames](https://docs.getunleash.io/reference/activation-strategies#hostnames)
 - [Kill switches](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types)
 - [A/B testing](https://docs.getunleash.io/feature-flag-tutorials/use-cases/a-b-testing)
 - 2 [environments](https://docs.getunleash.io/reference/environments)
+- Organize feature flags using [tags](https://docs.getunleash.io/reference/feature-toggles#tags)
 - Out-of-the-box integrations with popular tools ([Slack](https://docs.getunleash.io/addons/slack), [Microsoft Teams](https://docs.getunleash.io/addons/teams), [Datadog](https://docs.getunleash.io/addons/datadog)) + integrate with anything with [webhooks](https://docs.getunleash.io/addons/webhook)
 - [Dashboard for managing technical debt](https://docs.getunleash.io/reference/technical-debt) and [stale flags](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles)
 - API-first: _everything_ can be automated. No exceptions.
@@ -155,7 +154,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 - [Audit logs](https://docs.getunleash.io/advanced/audit_log)
 - Enforce [OWASP's secure headers](https://owasp.org/www-project-secure-headers/) via the strict HTTPS-only mode
 - Flexible hosting options: host it on premise or in the cloud (_any_ cloud)
-- Scale [the Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) independently of the Unleash server to support any number of front-end clients without overloading your Unleash instance
+- Scale with [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) independently of the Unleash server to support any number of front-end clients without overloading your Unleash instance
 
 ### Looking for more features?
 
@@ -166,7 +165,7 @@ If you're looking for one of the following features, please take a look at our [
 - more environments
 - [feature flags project support](https://docs.getunleash.io/reference/projects)
 - [advanced segmentation](https://docs.getunleash.io/reference/segments)
-- [additional strategy constraints](https://docs.getunleash.io/reference/strategy-constraints)
+- [additional strategy constraints](https://docs.getunleash.io/reference/activation-strategies#constraints)
 - tighter security
 - more hosting options (we can even host it for you!)
 
@@ -197,7 +196,7 @@ To connect your application to Unleash you'll need to use a client SDK for your 
 
 **Official front-end SDKs:**
 
-The front-end SDKs connect via the [Unleash Proxy](https://docs.getunleash.io/reference/unleash-proxy) in order to ensure privacy, scalability and security.
+The front-end SDKs connect via [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) in order to ensure privacy, scalability and security.
 
 - [Android Proxy SDK](https://docs.getunleash.io/reference/sdks/android-proxy)
 - [Flutter Proxy SDK](https://docs.getunleash.io/reference/sdks/flutter)

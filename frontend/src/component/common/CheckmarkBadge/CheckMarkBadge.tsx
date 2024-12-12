@@ -1,5 +1,5 @@
-import Check from '@mui/icons-material/Check';
-import Close from '@mui/icons-material/Close';
+import Check from '@mui/icons-material/CheckCircle';
+import Warning from '@mui/icons-material/Warning';
 import { styled } from '@mui/material';
 
 interface ICheckMarkBadgeProps {
@@ -7,40 +7,25 @@ interface ICheckMarkBadgeProps {
     type?: string;
 }
 
-const StyledBatch = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.background.alternative,
-    width: '75px',
-    height: '75px',
-    borderRadius: '50px',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-        width: '50px',
-        height: '50px',
-    },
-}));
-
-const StyledClose = styled(Close)(({ theme }) => ({
-    color: theme.palette.common.white,
-    width: '35px',
-    height: '35px',
-}));
 const StyledCheck = styled(Check)(({ theme }) => ({
-    color: theme.palette.common.white,
-    width: '35px',
-    height: '35px',
+    color:
+        theme.mode === 'light'
+            ? theme.palette.secondary.border
+            : theme.palette.primary.main,
 }));
 
-const CheckMarkBadge = ({ type, className }: ICheckMarkBadgeProps) => {
-    return (
-        <StyledBatch className={className}>
-            {type === 'error' ? (
-                <StyledClose titleAccess='Error' />
-            ) : (
-                <StyledCheck />
-            )}
-        </StyledBatch>
+const StyledCancel = styled(Warning)(({ theme }) => ({
+    color:
+        theme.mode === 'light'
+            ? theme.palette.warning.border
+            : theme.palette.warning.main,
+}));
+
+const CheckMarkBadge = ({ type }: ICheckMarkBadgeProps) => {
+    return type === 'error' ? (
+        <StyledCancel titleAccess='Error' />
+    ) : (
+        <StyledCheck />
     );
 };
 

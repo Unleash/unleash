@@ -91,7 +91,7 @@ Unleash has a few ways to help manage canary deployments for .NET apps at scale:
 
 -   Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented in a previous section](#gradual-rollouts-for-net-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
--   Using either [constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
+-   Using either [constraints](/reference/activation-strategies#constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
 
 -   [Strategy variants](/reference/strategy-variants) are used to do the same canary deployment, but can be scaled to more _advanced_ cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use variants to split your population of users and conduct an A/B test with them.
 
@@ -172,7 +172,7 @@ Console.WriteLine(responseBody);
 
 Check out our [API docs on updating flag strategies](/reference/api/unleash/update-feature-strategy) to learn more.
 
-Read our documentation for more context on [strategy constraint configurations](/reference/strategy-constraints) and use cases.
+Read our documentation for more context on [strategy constraint configurations](/reference/activation-strategies#constraints) and use cases.
 
 ## Server-side A/B Testing in .NET
 

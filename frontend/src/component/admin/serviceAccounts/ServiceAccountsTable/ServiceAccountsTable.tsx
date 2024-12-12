@@ -48,7 +48,7 @@ export const ServiceAccountsTable = () => {
         try {
             await removeServiceAccount(serviceAccount.id);
             setToastData({
-                title: `${serviceAccount.name} has been deleted`,
+                text: `${serviceAccount.name} has been deleted`,
                 type: 'success',
             });
             refetch();

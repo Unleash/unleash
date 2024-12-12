@@ -47,7 +47,6 @@ export type IFlagKey =
     | 'extendedMetrics'
     | 'removeUnsafeInlineStyleSrc'
     | 'projectRoleAssignment'
-    | 'purchaseAdditionalEnvironments'
     | 'originMiddlewareRequestLogging'
     | 'unleashAI'
     | 'webhookDomainLogging'
@@ -59,7 +58,11 @@ export type IFlagKey =
     | 'showUserDeviceCount'
     | 'deleteStaleUserSessions'
     | 'memorizeStats'
-    | 'licensedUsers';
+    | 'licensedUsers'
+    | 'granularAdminPermissions'
+    | 'streaming'
+    | 'etagVariant'
+    | 'oidcRedirect';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -235,10 +238,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_PROJECT_ROLE_ASSIGNMENT,
         false,
     ),
-    purchaseAdditionalEnvironments: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_PURCHASE_ADDITIONAL_ENVIRONMENTS,
-        false,
-    ),
     originMiddlewareRequestLogging: parseEnvVarBoolean(
         process.env.UNLEASH_ORIGIN_MIDDLEWARE_REQUEST_LOGGING,
         false,
@@ -277,6 +276,23 @@ const flags: IFlags = {
     ),
     licensedUsers: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_LICENSED_USERS,
+        false,
+    ),
+    granularAdminPermissions: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_GRANULAR_ADMIN_PERMISSIONS,
+        false,
+    ),
+    streaming: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_STREAMING,
+        false,
+    ),
+    etagVariant: {
+        name: 'disabled',
+        feature_enabled: false,
+        enabled: false,
+    },
+    oidcRedirect: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_OIDC_REDIRECT,
         false,
     ),
 };

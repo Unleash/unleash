@@ -24,6 +24,7 @@ import { MilestoneStrategySegment } from './MilestoneStrategySegment';
 import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints';
 import { MilestoneStrategyVariants } from './MilestoneStrategyVariants';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
+import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
@@ -121,7 +122,7 @@ interface IReleasePlanTemplateAddStrategyFormProps {
     milestoneId: string | undefined;
     onCancel: () => void;
     strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>;
-    onAddStrategy: (
+    onAddUpdateStrategy: (
         milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => void;
@@ -131,27 +132,55 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     milestoneId,
     onCancel,
     strategy,
-    onAddStrategy,
+    onAddUpdateStrategy,
 }: IReleasePlanTemplateAddStrategyFormProps) => {
-    const [addStrategy, setAddStrategy] = useState(strategy);
+    const [currentStrategy, setCurrentStrategy] = useState(strategy);
     const [activeTab, setActiveTab] = useState(0);
+    const { segments: allSegments, refetchSegments } = useSegments();
     const [segments, setSegments] = useState<ISegment[]>([]);
-    const { strategyDefinition } = useStrategy(strategy?.name);
+    const { strategyDefinition } = useStrategy(strategy?.strategyName);
     const hasValidConstraints = useConstraintsValidation(strategy?.constraints);
     const errors = useFormErrors();
     const showVariants = Boolean(
-        addStrategy?.parameters && 'stickiness' in addStrategy?.parameters,
+        currentStrategy?.parameters &&
+            'stickiness' in currentStrategy?.parameters,
     );
 
     const stickiness =
-        addStrategy?.parameters && 'stickiness' in addStrategy?.parameters
-            ? String(addStrategy.parameters.stickiness)
+        currentStrategy?.parameters &&
+        'stickiness' in currentStrategy?.parameters
+            ? String(currentStrategy.parameters.stickiness)
             : 'default';
 
+    const segmentsMap = allSegments?.reduce(
+        (acc, segment) => {
+            acc[segment.id] = segment;
+            return acc;
+        },
+        {} as Record<string, ISegment>,
+    );
+
     useEffect(() => {
-        setAddStrategy((prev) => ({
+        if (segmentsMap) {
+            setSegments(
+                (currentStrategy?.segments || []).map((segment) => {
+                    return segmentsMap[segment];
+                }),
+            );
+        }
+    }, []);
+
+    useEffect(() => {
+        setCurrentStrategy((prev) => ({
             ...prev,
-            variants: (addStrategy.variants || []).map((variant) => ({
+            segments: segments.map((segment) => segment.id),
+        }));
+    }, [segments]);
+
+    useEffect(() => {
+        setCurrentStrategy((prev) => ({
+            ...prev,
+            variants: (currentStrategy.variants || []).map((variant) => ({
                 stickiness,
                 name: variant.name,
                 weight: variant.weight,
@@ -159,9 +188,9 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 weightType: variant.weightType,
             })),
         }));
-    }, [stickiness, JSON.stringify(addStrategy.variants)]);
+    }, [stickiness, JSON.stringify(currentStrategy.variants)]);
 
-    if (!strategy || !addStrategy || !strategyDefinition) {
+    if (!strategy || !currentStrategy || !strategyDefinition) {
         return null;
     }
 
@@ -170,7 +199,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     };
 
     const getTargetingCount = () => {
-        const constraintCount = addStrategy?.constraints?.length || 0;
+        const constraintCount = currentStrategy?.constraints?.length || 0;
         const segmentCount = segments?.length || 0;
 
         return constraintCount + segmentCount;
@@ -178,7 +207,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
 
     const validateParameter = (key: string, value: string) => true;
     const updateParameter = (name: string, value: string) => {
-        setAddStrategy(
+        setCurrentStrategy(
             produce((draft) => {
                 if (!draft) {
                     return;
@@ -194,11 +223,12 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         );
     };
 
-    const addStrategyToMilestone = () => {
+    const AddUpdateMilestoneStrategy = () => {
         if (!milestoneId) {
             return;
         }
-        onAddStrategy(milestoneId, addStrategy);
+
+        onAddUpdateStrategy(milestoneId, currentStrategy);
     };
 
     return (
@@ -208,15 +238,17 @@ export const ReleasePlanTemplateAddStrategyForm = ({
         >
             <StyledHeaderBox>
                 <StyledTitle>
-                    {formatStrategyName(addStrategy.name || '')}
-                    {addStrategy.name === 'flexibleRollout' && (
+                    {formatStrategyName(currentStrategy.strategyName || '')}
+                    {currentStrategy.strategyName === 'flexibleRollout' && (
                         <Badge color='success' sx={{ marginLeft: '1rem' }}>
-                            {addStrategy.parameters?.rollout}%
+                            {currentStrategy.parameters?.rollout}%
                         </Badge>
                     )}
                 </StyledTitle>
             </StyledHeaderBox>
-            {!BuiltInStrategies.includes(strategy.name || 'default') && (
+            {!BuiltInStrategies.includes(
+                strategy.strategyName || 'default',
+            ) && (
                 <StyledAlertBox>
                     <Alert severity='warning'>
                         Custom strategies are deprecated. We recommend not
@@ -251,7 +283,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                             <Typography>
                                 Variants
                                 <StyledBadge>
-                                    {addStrategy?.variants?.length || 0}
+                                    {currentStrategy?.variants?.length || 0}
                                 </StyledBadge>
                             </Typography>
                         }
@@ -262,16 +294,16 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 {activeTab === 0 && (
                     <>
                         <MilestoneStrategyTitle
-                            title={addStrategy.title || ''}
+                            title={currentStrategy.title || ''}
                             setTitle={(title) =>
                                 updateParameter('title', title)
                             }
                         />
 
                         <MilestoneStrategyType
-                            strategy={addStrategy}
+                            strategy={currentStrategy}
                             strategyDefinition={strategyDefinition}
-                            parameters={addStrategy.parameters}
+                            parameters={currentStrategy.parameters}
                             updateParameter={updateParameter}
                             errors={errors}
                         />
@@ -291,8 +323,8 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                                 <StyledDividerContent>AND</StyledDividerContent>
                             </StyledBox>
                             <MilestoneStrategyConstraints
-                                strategy={addStrategy}
-                                setStrategy={setAddStrategy}
+                                strategy={currentStrategy}
+                                setStrategy={setCurrentStrategy}
                             />
                             be evaluated for users and applications that match
                             the specified preconditions.
@@ -301,8 +333,8 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                 )}
                 {activeTab === 2 && showVariants && (
                     <MilestoneStrategyVariants
-                        strategy={addStrategy}
-                        setStrategy={setAddStrategy}
+                        strategy={currentStrategy}
+                        setStrategy={setCurrentStrategy}
                     />
                 )}
             </StyledContentDiv>
@@ -312,7 +344,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                     color='primary'
                     type='submit'
                     disabled={!hasValidConstraints || errors.hasFormErrors()}
-                    onClick={addStrategyToMilestone}
+                    onClick={AddUpdateMilestoneStrategy}
                 >
                     Save strategy
                 </Button>

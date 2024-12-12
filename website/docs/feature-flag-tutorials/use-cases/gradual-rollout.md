@@ -66,7 +66,7 @@ You can configure your gradual rollout strategy using the following parameters i
 
 There are two more advanced extensions of the gradual rollout strategy that you can customize in the gradual rollout form:
 
--   [Strategy Constraints](/reference/strategy-constraints)
+-   [Strategy Constraints](/reference/activation-strategies#constraints)
 -   [Strategy Variants](/reference/strategy-variants)
 
 Constraints and variants are not required for a gradual rollout. These additional customizations can be built on top of the overall rollout strategy should you need more granular conditions for your feature beyond the rollout percentage.
@@ -77,7 +77,7 @@ For gradual rollouts, _strategy constraints_ are most applicable for more granul
 
 ## Applying Strategy Constraints
 
-When utilizing an activation strategy such as a gradual rollout, it may be necessary to further define which subset of users get access to a feature and when the rollout takes place, depending on the complexity of your use case. Unleash provides [strategy constraints](/reference/strategy-constraints) as a way to fine-tune conditions under which a feature flag is evaluated.
+When utilizing an activation strategy such as a gradual rollout, it may be necessary to further define which subset of users get access to a feature and when the rollout takes place, depending on the complexity of your use case. Unleash provides [strategy constraints](/reference/activation-strategies#constraints) as a way to fine-tune conditions under which a feature flag is evaluated.
 
 ![This diagram breaks down how strategy constraints sit on top activation strategies for flags in Unleash.](/img/tutorial-building-blocks-strategy-constraints.png)
 
@@ -91,20 +91,16 @@ Within a gradual rollout activation strategy, you can use strategy constraints t
 
 ![You can configure your strategy constraints in the gradual rollout form.](/img/tutorial-constraints-form.png)
 
-Add constraints to refine the rollout based on user attributes, segments, or conditions.
+Add [constraints](/reference/activation-strategies#constraints) to refine the rollout based on user attributes, segments, or conditions.
 
-To learn more, read our docs on:
-
-1.  [Strategy constraints](/reference/strategy-constraints)
-2.  [How to add strategy constraints](/how-to/how-to-add-strategy-constraints)
 
 ### Define Custom Context Fields for Strategy Constraints
 
-If you want to create new types of constraints that are not built into Unleash, you can create custom context fields and apply them to your constraints. Follow our [how-to guide on creating custom context fields](/how-to/how-to-define-custom-context-fields) to use in your gradual rollout for more advanced use cases.
+If you want to create new types of constraints that are not built into Unleash, you can create [custom context fields](/reference/unleash-context#custom-context-fields) to use in your gradual rollout for more advanced use cases.
 
 ## Leveraging Segments
 
-A [segment](/reference/segments) is a reusable collection of [strategy constraints](/reference/strategy-constraints). Like with strategy constraints, you apply segments to feature flag activation strategies.
+A [segment](/reference/segments) is a reusable collection of [strategy constraints](/reference/activation-strategies#constraints). Like with strategy constraints, you apply segments to feature flag activation strategies.
 
 You can apply the same segment to multiple activation strategies. If you update the segment, the changes will affect every strategy that uses that segment.
 

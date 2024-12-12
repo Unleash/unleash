@@ -54,6 +54,13 @@ beforeEach(async () => {
         isEnabled: () => {
             return false;
         },
+        getVariant: () => {
+            return {
+                name: 'disabled',
+                feature_enabled: false,
+                enabled: false,
+            };
+        },
     };
 });
 

@@ -73,9 +73,8 @@ export const BulkEnableDialog = ({
                 );
                 refetchChangeRequests();
                 setToastData({
-                    text: 'Your enable feature flags changes have been added to change request',
                     type: 'success',
-                    title: 'Changes added to a draft',
+                    text: 'Changes added to draft',
                 });
             } else {
                 await bulkToggleFeaturesEnvironmentOn(
@@ -84,9 +83,8 @@ export const BulkEnableDialog = ({
                     selected,
                 );
                 setToastData({
-                    text: 'Your feature flags have been enabled',
                     type: 'success',
-                    title: 'Features enabled',
+                    text: 'Feature flags enabled',
                 });
             }
 

@@ -1,5 +1,6 @@
 import type { Logger } from '../../logger';
 import type {
+    IEvent,
     IEventStore,
     IFlagResolver,
     IUnleashConfig,
@@ -72,11 +73,15 @@ export default class ConfigurationRevisionService extends EventEmitter {
                 'Updating feature configuration with new revision Id',
                 revisionId,
             );
-            this.emit(UPDATE_REVISION, revisionId);
             this.revisionId = revisionId;
+            this.emit(UPDATE_REVISION, revisionId);
         }
 
         return this.revisionId;
+    }
+
+    async getRevisionRange(start: number, end: number): Promise<IEvent[]> {
+        return this.eventStore.getRevisionRange(start, end);
     }
 
     destroy(): void {

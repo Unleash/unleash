@@ -17,6 +17,9 @@ class FakeEventStore implements IEventStore {
         this.eventEmitter.setMaxListeners(0);
         this.events = [];
     }
+    getRevisionRange(start: number, end: number): Promise<IEvent[]> {
+        throw new Error('Method not implemented.');
+    }
 
     getProjectRecentEventActivity(
         project: string,

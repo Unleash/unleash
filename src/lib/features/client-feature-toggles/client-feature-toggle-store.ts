@@ -185,7 +185,6 @@ export default class FeatureToggleClientStore
                 );
             }
         }
-
         const rows = await query;
         stopTimer();
 

@@ -201,6 +201,27 @@ class EventStore implements IEventStore {
         return row?.max ?? 0;
     }
 
+    async getRevisionRange(start: number, end: number): Promise<IEvent[]> {
+        const query = this.db
+            .select(EVENT_COLUMNS)
+            .from(TABLE)
+            .where('id', '>', start)
+            .andWhere('id', '<=', end)
+            .andWhere((builder) =>
+                builder
+                    .whereNotNull('feature_name')
+                    .orWhereIn('type', [
+                        SEGMENT_UPDATED,
+                        FEATURE_IMPORT,
+                        FEATURES_IMPORTED,
+                    ]),
+            )
+            .orderBy('id', 'asc');
+
+        const rows = await query;
+        return rows.map(this.rowToEvent);
+    }
+
     async delete(key: number): Promise<void> {
         await this.db(TABLE).where({ id: key }).del();
     }

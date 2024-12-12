@@ -139,13 +139,12 @@ export class ClientFeatureToggleCache {
         const hasCache = this.cache[environment] !== undefined;
 
         if (!hasCache) {
-            this.initEnvironmentCache(environment);
+            await this.initEnvironmentCache(environment);
         }
 
         // Should get the latest state if revision does not exist or if sdkRevision is not present
         // We should be able to do this without going to the database by merging revisions from the cache with
         // the base case
-
         const firstTimeCalling = !sdkRevisionId;
         if (
             firstTimeCalling ||
@@ -217,7 +216,6 @@ export class ClientFeatureToggleCache {
         const features = await this.getClientFeatures({
             environment: 'development',
         });
-
         if (this.cache.development) {
             this.cache.development.addRevision({
                 updated: features as any, //impressionData is not on the type but should be

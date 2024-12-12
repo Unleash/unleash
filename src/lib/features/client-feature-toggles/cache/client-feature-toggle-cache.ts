@@ -259,7 +259,7 @@ export class ClientFeatureToggleCache {
             environment,
         });
 
-        this.latestRevision =
+        this.currentRevisionId =
             await this.configurationRevisionService.getMaxRevisionId();
 
         const cache = new RevisionCache([

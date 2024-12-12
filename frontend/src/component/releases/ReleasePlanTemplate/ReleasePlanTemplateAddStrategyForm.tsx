@@ -152,9 +152,30 @@ export const ReleasePlanTemplateAddStrategyForm = ({
             ? String(currentStrategy.parameters.stickiness)
             : 'default';
 
+    const segmentsMap = allSegments?.reduce(
+        (acc, segment) => {
+            acc[segment.id] = segment;
+            return acc;
+        },
+        {} as Record<string, ISegment>,
+    );
+
     useEffect(() => {
-        setSegments([]);
+        if (segmentsMap) {
+            setSegments(
+                (currentStrategy?.segments || []).map((segment) => {
+                    return segmentsMap[segment];
+                }),
+            );
+        }
     }, []);
+
+    useEffect(() => {
+        setCurrentStrategy((prev) => ({
+            ...prev,
+            segments: segments.map((segment) => segment.id),
+        }));
+    }, [segments]);
 
     useEffect(() => {
         setCurrentStrategy((prev) => ({

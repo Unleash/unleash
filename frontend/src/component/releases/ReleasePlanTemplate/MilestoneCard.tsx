@@ -81,9 +81,6 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     },
     transition: 'background-color 0.2s ease-in-out',
     backgroundColor: theme.palette.background.default,
-    '&:hover': {
-        backgroundColor: theme.palette.neutral.light,
-    },
     '&.Mui-expanded': {
         marginTop: theme.spacing(3),
     },

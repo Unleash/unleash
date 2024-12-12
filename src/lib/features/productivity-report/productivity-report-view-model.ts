@@ -38,6 +38,18 @@ export const productivityReportViewModel = ({
                   : GREEN;
         return healthColor;
     },
+    actionText(): string | null {
+        const improveMessage =
+            'Remember to archive stale flags to reduce technical debt and keep your project healthy';
+        const previousHealth = this.previousMonth?.health || 0;
+        if (this.health <= 74) {
+            return improveMessage;
+        }
+        if (this.health < previousHealth) {
+            return improveMessage;
+        }
+        return null;
+    },
     healthTrendMessage() {
         return this.previousMonthText(
             '%',

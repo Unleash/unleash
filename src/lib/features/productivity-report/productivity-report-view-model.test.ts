@@ -178,4 +178,79 @@ describe('productivityReportViewModel', () => {
             expect(viewModel.productionUpdatedTrendMessage()).toBe(null);
         });
     });
+
+    describe('Action text', () => {
+        it('healthy instance', () => {
+            const metrics: ProductivityReportMetrics = {
+                ...mockMetrics,
+                health: 75,
+                previousMonth: {
+                    ...mockMetrics.previousMonth,
+                    health: 75,
+                },
+            };
+
+            const viewModel = productivityReportViewModel({
+                ...mockData,
+                metrics,
+            });
+
+            expect(viewModel.actionText()).toBe(null);
+        });
+
+        it('health declined', () => {
+            const metrics: ProductivityReportMetrics = {
+                ...mockMetrics,
+                health: 75,
+                previousMonth: {
+                    ...mockMetrics.previousMonth,
+                    health: 76,
+                },
+            };
+
+            const viewModel = productivityReportViewModel({
+                ...mockData,
+                metrics,
+            });
+
+            expect(viewModel.actionText()).toBe(
+                'Remember to archive stale flags to reduce technical debt and keep your project healthy',
+            );
+        });
+
+        it('health improved but below healthy threshold', () => {
+            const metrics: ProductivityReportMetrics = {
+                ...mockMetrics,
+                health: 74,
+                previousMonth: {
+                    ...mockMetrics.previousMonth,
+                    health: 73,
+                },
+            };
+
+            const viewModel = productivityReportViewModel({
+                ...mockData,
+                metrics,
+            });
+
+            expect(viewModel.actionText()).toBe(
+                'Remember to archive stale flags to reduce technical debt and keep your project healthy',
+            );
+        });
+
+        it('healthy with no previous month data', () => {
+            const metrics: ProductivityReportMetrics = {
+                ...mockMetrics,
+                health: 75,
+                previousMonth: null,
+            };
+
+            const viewModel = productivityReportViewModel({
+                ...mockData,
+                metrics,
+            });
+
+            expect(viewModel.actionText()).toBe(null);
+        });
+    });
 });

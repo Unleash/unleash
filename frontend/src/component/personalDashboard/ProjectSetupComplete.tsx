@@ -100,7 +100,7 @@ const ProjectHealthMessage: FC<{
                     during the last 4 weeks.
                 </Typography>
                 <Typography>
-                    {avgHealthCurrentWindow && avgHealthCurrentWindow >= 70
+                    {avgHealthCurrentWindow && avgHealthCurrentWindow >= 75
                         ? keepDoingMessage
                         : improveMessage}
                 </Typography>
@@ -116,7 +116,7 @@ const ProjectHealthMessage: FC<{
                     <PercentageScore>{health}%</PercentageScore>.
                 </Typography>
                 <Typography>
-                    {health >= 70 ? keepDoingMessage : improveMessage}
+                    {health >= 75 ? keepDoingMessage : improveMessage}
                 </Typography>
             </>
         );

@@ -115,12 +115,18 @@ export class ClientFeatureToggleCache {
         this.clientFeatureToggleStore = clientFeatureToggleStore;
         this.flagResolver = flagResolver;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
+        this.cache = {};
 
-        // this.initCache(); TODO: we dont want to initialize cache on startup, but ondemand in future?
+        this.initRevisionId();
         this.configurationRevisionService.on(
             UPDATE_REVISION,
             this.onUpdateRevisionEvent,
         );
+    }
+
+    private async initRevisionId() {
+        this.currentRevisionId =
+            await this.configurationRevisionService.getMaxRevisionId();
     }
 
     async getDelta(
@@ -130,11 +136,19 @@ export class ClientFeatureToggleCache {
     ): Promise<ClientFeatureChange | undefined> {
         const requiredRevisionId = sdkRevisionId || 0;
 
+        const hasCache = this.cache[environment] !== undefined;
+
+        if (!hasCache) {
+            this.initEnvironmentCache(environment);
+        }
+
         // Should get the latest state if revision does not exist or if sdkRevision is not present
         // We should be able to do this without going to the database by merging revisions from the cache with
         // the base case
+
+        const firstTimeCalling = !sdkRevisionId;
         if (
-            !sdkRevisionId ||
+            firstTimeCalling ||
             (sdkRevisionId &&
                 sdkRevisionId !== this.currentRevisionId &&
                 !this.cache[environment].hasRevision(sdkRevisionId))
@@ -238,67 +252,25 @@ export class ClientFeatureToggleCache {
             revisionId,
         };
     }
-    // TODO: I think we should remove it as is, because we do not need initialized cache, I think we should populate cache on demand for each env
-    // also we already have populateBaseCache method
-    public async initCache() {
-        //TODO: This only returns stuff for the default environment!!! Need to pass a query to get the relevant environment
-        // featuresByEnvironment cache
 
-        // The base cache is a record of <environment, array>
-        // Each array holds a collection of objects that contains the revisionId and which
-        // flags changed in each revision. It also holds a type that informs us whether or not
-        // the revision is the base case or if is an update or remove operation
-
-        // To get the base for each cache we need to get all features for all environments and the max revision id
-
-        // hardcoded for now
-        // const environments = ["default", "development", "production"];
-        const defaultBaseFeatures = await this.getClientFeatures({
-            environment: 'default',
-        });
-        const developmentBaseFeatures = await this.getClientFeatures({
-            environment: 'development',
-        });
-        const productionBaseFeatures = await this.getClientFeatures({
-            environment: 'production',
+    public async initEnvironmentCache(environment: string) {
+        // Todo: replace with method that gets all features for an environment
+        const baseFeatures = await this.getClientFeatures({
+            environment,
         });
 
-        const defaultCache = new RevisionCache([
-            {
-                revisionId: this.currentRevisionId,
-                updated: [defaultBaseFeatures],
-                removed: [],
-            },
-        ]);
-
-        const developmentCache = new RevisionCache([
-            {
-                revisionId: this.currentRevisionId,
-                updated: [developmentBaseFeatures],
-                removed: [],
-            },
-        ]);
-
-        const productionCache = new RevisionCache([
-            {
-                revisionId: this.currentRevisionId,
-                updated: [productionBaseFeatures],
-                removed: [],
-            },
-        ]);
-
-        // Always assume that the first item of the array is the base
-        const cache = {
-            default: defaultCache,
-            development: developmentCache,
-            production: productionCache,
-        };
-
-        const latestRevision =
+        this.latestRevision =
             await this.configurationRevisionService.getMaxRevisionId();
 
-        this.currentRevisionId = latestRevision;
-        this.cache = cache;
+        const cache = new RevisionCache([
+            {
+                revisionId: this.currentRevisionId,
+                updated: baseFeatures,
+                removed: [],
+            },
+        ]);
+
+        this.cache[environment] = cache;
     }
 
     async getClientFeatures(

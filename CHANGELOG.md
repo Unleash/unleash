@@ -2,6 +2,140 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.5.1] - 2024-12-12
+
+### 1-3060
+
+- Remove features export import flag  ([#8890](https://github.com/Unleash/unleash/issues/8890))
+
+
+### 1-3163
+
+- Align copy to seats used and change in -> over ([#8889](https://github.com/Unleash/unleash/issues/8889))
+
+
+### Bug Fixes
+
+- Ignore segment order in diff calculation ([#8880](https://github.com/Unleash/unleash/issues/8880))
+
+- Permission button tooltip behavior ([#8882](https://github.com/Unleash/unleash/issues/8882))
+
+- Swap subscribe and unsubscribe events ([#8900](https://github.com/Unleash/unleash/issues/8900))
+
+- Update dependency json-2-csv to v5.5.7 ([#8917](https://github.com/Unleash/unleash/issues/8917))
+
+- Permission button unintended full width behavior ([#8920](https://github.com/Unleash/unleash/issues/8920))
+
+- Adjust favorite icon placement ([#8930](https://github.com/Unleash/unleash/issues/8930))
+
+- Move productivity report to features dir ([#8960](https://github.com/Unleash/unleash/issues/8960))
+
+- Make project ui query optimized ([#8961](https://github.com/Unleash/unleash/issues/8961))
+
+- Productivity report small screens ([#8963](https://github.com/Unleash/unleash/issues/8963))
+
+- Clear "removed tags" when you bulk update tags ([#8952](https://github.com/Unleash/unleash/issues/8952))
+
+- Migrations e2e test ([#8965](https://github.com/Unleash/unleash/issues/8965))
+
+- Remove unused vulnerable transitive dependency 'prompt' ([#8953](https://github.com/Unleash/unleash/issues/8953))
+
+- E2e cypress create flag delay ([#8968](https://github.com/Unleash/unleash/issues/8968))
+
+- Do not initialize cache when flag is off ([#8969](https://github.com/Unleash/unleash/issues/8969))
+
+- Upgrade make-fetch-happen ([#8970](https://github.com/Unleash/unleash/issues/8970))
+
+
+### Documentation
+
+- Readme architecture diagram ([#8881](https://github.com/Unleash/unleash/issues/8881))
+
+- Enviroment->environment ([#8893](https://github.com/Unleash/unleash/issues/8893))
+
+- Update React Native / Expo community SDK entry ([#8902](https://github.com/Unleash/unleash/issues/8902))
+
+- Trunk-based development use case tutorial ([#8867](https://github.com/Unleash/unleash/issues/8867))
+
+- Switch recommendation from proxy to edge ([#8908](https://github.com/Unleash/unleash/issues/8908))
+
+- Fixed diff syntax ([#8937](https://github.com/Unleash/unleash/issues/8937))
+
+
+### Features
+
+- Favorites take less space ([#8888](https://github.com/Unleash/unleash/issues/8888))
+
+- Add variant etag ([#8922](https://github.com/Unleash/unleash/issues/8922))
+
+- Productivity report cta ([#8936](https://github.com/Unleash/unleash/issues/8936))
+
+- Additional email headers test ([#8540](https://github.com/Unleash/unleash/issues/8540))
+
+- Release plan template milestone UI listing strategies ([#8933](https://github.com/Unleash/unleash/issues/8933))
+
+- Health rating color in email ([#8943](https://github.com/Unleash/unleash/issues/8943))
+
+- OIDC redirect flag ([#8944](https://github.com/Unleash/unleash/issues/8944))
+
+- Add core feature alert gh action ([#8948](https://github.com/Unleash/unleash/issues/8948))
+
+- Maintenance root roles ([#8875](https://github.com/Unleash/unleash/issues/8875))
+
+- Productivity report trends visualization ([#8956](https://github.com/Unleash/unleash/issues/8956))
+
+- Make segments editing work with template milestone strategies ([#8964](https://github.com/Unleash/unleash/issues/8964))
+
+- Productivity email action text ([#8966](https://github.com/Unleash/unleash/issues/8966))
+
+- First revision of delta api ([#8967](https://github.com/Unleash/unleash/issues/8967))
+
+
+### Miscellaneous Tasks
+
+- Release plans small misc improvements ([#8879](https://github.com/Unleash/unleash/issues/8879))
+
+- Remove release-checks ([#8884](https://github.com/Unleash/unleash/issues/8884))
+
+- Enabled in OSS. ([#8856](https://github.com/Unleash/unleash/issues/8856))
+
+- Filter out milestone strategies in features_view ([#8883](https://github.com/Unleash/unleash/issues/8883))
+
+- Update release plans icon ([#8894](https://github.com/Unleash/unleash/issues/8894))
+
+- Improve release plan events and add them to event timeline ([#8895](https://github.com/Unleash/unleash/issues/8895))
+
+- Streaming spike ([#8907](https://github.com/Unleash/unleash/issues/8907))
+
+- Streaming node sdk ([#8921](https://github.com/Unleash/unleash/issues/8921))
+
+- Default metrics storage days updated ([#8931](https://github.com/Unleash/unleash/issues/8931))
+
+- View more insights color update ([#8938](https://github.com/Unleash/unleash/issues/8938))
+
+- Update node sdk ([#8940](https://github.com/Unleash/unleash/issues/8940))
+
+- Remove oidc UI flag ([#8949](https://github.com/Unleash/unleash/issues/8949))
+
+- Make toasts smaller ([#8935](https://github.com/Unleash/unleash/issues/8935))
+
+- Remove uses of toast text and confetti ([#8941](https://github.com/Unleash/unleash/issues/8941))
+
+- Remove console.log
+
+- Remove docker package setup. ([#8959](https://github.com/Unleash/unleash/issues/8959))
+
+
+### Refactor
+
+- Autocomplete component in PlaygroundCodeFieldset ([#8912](https://github.com/Unleash/unleash/issues/8912))
+
+
+### Testing
+
+- Loosen up useTrafficData test ([#8901](https://github.com/Unleash/unleash/issues/8901))
+
+
 ## [6.5.0] - 2024-11-28
 
 ### 1-3059

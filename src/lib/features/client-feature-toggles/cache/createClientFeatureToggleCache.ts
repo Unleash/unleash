@@ -27,6 +27,7 @@ export const createClientFeatureToggleCache = (
         featureToggleClientStore,
         eventStore,
         configurationRevisionService,
+        flagResolver,
     );
 
     return clientFeatureToggleCache;

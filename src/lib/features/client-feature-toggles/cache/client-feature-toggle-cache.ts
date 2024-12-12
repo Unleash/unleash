@@ -3,6 +3,7 @@ import type {
     IFeatureToggleClient,
     IFeatureToggleClientStore,
     IFeatureToggleQuery,
+    IFlagResolver,
 } from '../../../types';
 import type { FeatureConfigurationClient } from '../../feature-toggle/types/feature-toggle-strategies-store-type';
 import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
@@ -99,19 +100,23 @@ export class ClientFeatureToggleCache {
 
     private interval: NodeJS.Timer;
 
+    private flagResolver: IFlagResolver;
+
     private configurationRevisionService: ConfigurationRevisionService;
 
     constructor(
         clientFeatureToggleStore: IFeatureToggleClientStore,
         eventStore: IEventStore,
         configurationRevisionService: ConfigurationRevisionService,
+        flagResolver: IFlagResolver,
     ) {
         this.eventStore = eventStore;
         this.configurationRevisionService = configurationRevisionService;
         this.clientFeatureToggleStore = clientFeatureToggleStore;
+        this.flagResolver = flagResolver;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
 
-        this.initCache();
+        // this.initCache(); TODO: we dont want to initialize cache on startup, but ondemand in future?
         this.configurationRevisionService.on(
             UPDATE_REVISION,
             this.onUpdateRevisionEvent,
@@ -158,7 +163,9 @@ export class ClientFeatureToggleCache {
     }
 
     private async onUpdateRevisionEvent() {
-        await this.pollEvents();
+        if (this.flagResolver.isEnabled('deltaApi')) {
+            await this.pollEvents();
+        }
     }
 
     public async pollEvents() {

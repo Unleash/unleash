@@ -195,9 +195,7 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.actionText()).toBe(
-                'You are doing a good job at keeping your project healthy by archiving stale flags',
-            );
+            expect(viewModel.actionText()).toBe(null);
         });
 
         it('health declined', () => {
@@ -252,9 +250,7 @@ describe('productivityReportViewModel', () => {
                 metrics,
             });
 
-            expect(viewModel.actionText()).toBe(
-                'You are doing a good job at keeping your project healthy by archiving stale flags',
-            );
+            expect(viewModel.actionText()).toBe(null);
         });
     });
 });

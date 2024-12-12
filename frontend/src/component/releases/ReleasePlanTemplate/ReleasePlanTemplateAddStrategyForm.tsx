@@ -175,7 +175,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
             ...prev,
             segments: segments.map((segment) => segment.id),
         }));
-    }, [JSON.stringify(segments)]);
+    }, [segments]);
 
     useEffect(() => {
         setCurrentStrategy((prev) => ({

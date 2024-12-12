@@ -81,9 +81,10 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     },
     transition: 'background-color 0.2s ease-in-out',
     backgroundColor: theme.palette.background.default,
-    '&.Mui-expanded': {
-        marginTop: theme.spacing(3),
+    '&:before': {
+        opacity: '0 !important',
     },
+    '&.Mui-expanded': { marginTop: `${theme.spacing(2)} !important` },
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({

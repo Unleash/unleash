@@ -33,10 +33,22 @@ export const productivityReportViewModel = ({
         const healthColor =
             healthRating >= 0 && healthRating <= 24
                 ? RED
-                : healthRating >= 25 && healthRating <= 74
+                : healthRating >= 25 && healthRating < 74
                   ? ORANGE
                   : GREEN;
         return healthColor;
+    },
+    actionText(): string | null {
+        const improveMessage =
+            'Remember to archive stale flags to reduce technical debt and keep your project healthy';
+        const previousHealth = this.previousMonth?.health || 0;
+        if (this.health <= 74) {
+            return improveMessage;
+        }
+        if (this.health < previousHealth) {
+            return improveMessage;
+        }
+        return 'You are doing a good job at keeping your project healthy by archiving stale flags';
     },
     healthTrendMessage() {
         return this.previousMonthText(

@@ -28,6 +28,7 @@ import { CreateFeatureDialog } from './CreateFeatureDialog';
 import IosShare from '@mui/icons-material/IosShare';
 import type { OverridableStringUnion } from '@mui/types';
 import type { ButtonPropsVariantOverrides } from '@mui/material/Button/Button';
+import { NAVIGATE_TO_CREATE_FEATURE } from 'utils/testIds';
 
 interface IProjectFeatureTogglesHeaderProps {
     isLoading?: boolean;
@@ -46,6 +47,7 @@ interface IFlagCreationButtonProps {
         ButtonPropsVariantOverrides
     >;
     skipNavigationOnComplete?: boolean;
+    isLoading?: boolean;
     onSuccess?: () => void;
 }
 
@@ -57,6 +59,7 @@ export const FlagCreationButton = ({
     variant,
     text = 'New feature flag',
     skipNavigationOnComplete,
+    isLoading,
     onSuccess,
 }: IFlagCreationButtonProps) => {
     const { loading } = useUiConfig();
@@ -72,10 +75,12 @@ export const FlagCreationButton = ({
                 maxWidth='960px'
                 Icon={Add}
                 projectId={projectId}
-                disabled={loading}
+                disabled={loading || isLoading}
                 variant={variant}
                 permission={CREATE_FEATURE}
-                data-testid='NAVIGATE_TO_CREATE_FEATURE'
+                data-testid={
+                    loading || isLoading ? '' : NAVIGATE_TO_CREATE_FEATURE
+                }
             >
                 {text}
             </StyledResponsiveButton>
@@ -207,7 +212,7 @@ export const ProjectFeatureTogglesHeader: FC<
                                 </Button>
                             }
                         />
-                        <FlagCreationButton />
+                        <FlagCreationButton isLoading={isLoading} />
                     </>
                 }
             >

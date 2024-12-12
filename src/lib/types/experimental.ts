@@ -62,7 +62,8 @@ export type IFlagKey =
     | 'granularAdminPermissions'
     | 'streaming'
     | 'etagVariant'
-    | 'oidcRedirect';
+    | 'oidcRedirect'
+    | 'deltaApi';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -293,6 +294,10 @@ const flags: IFlags = {
     },
     oidcRedirect: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_OIDC_REDIRECT,
+        false,
+    ),
+    deltaApi: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
         false,
     ),
 };

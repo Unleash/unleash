@@ -302,6 +302,9 @@ export default class FeatureController extends Controller {
         req: IAuthRequest,
         res: Response<ClientFeatureChange>,
     ): Promise<void> {
+        if (!this.flagResolver.isEnabled('deltaApi')) {
+            throw new NotFoundError();
+        }
         const query = await this.resolveQuery(req);
         const etag = req.headers['if-none-match'];
         const meta = await this.calculateMeta(query);

@@ -343,7 +343,6 @@ export interface IFeatureToggleQuery {
     namePrefix?: string;
     environment?: string;
     inlineSegmentConstraints?: boolean;
-    toggleNames?: string[];
 }
 
 export interface ITag {

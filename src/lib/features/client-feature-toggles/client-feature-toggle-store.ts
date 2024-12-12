@@ -132,9 +132,6 @@ export default class FeatureToggleClientStore
             )
             .leftJoin('segments', `segments.id`, `fss.segment_id`)
             .leftJoin('dependent_features as df', 'df.child', 'features.name');
-        if (featureQuery?.toggleNames && featureQuery?.toggleNames.length > 0) {
-            query = query.whereIn('features.name', featureQuery.toggleNames);
-        }
 
         if (isAdmin) {
             query = query.leftJoin(

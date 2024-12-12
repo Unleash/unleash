@@ -116,7 +116,7 @@ export class ClientFeatureToggleCache {
         this.flagResolver = flagResolver;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
 
-        // this.initCache(); TODO: we dont want to initialize cache on startup, but ondemand?
+        // this.initCache(); TODO: we dont want to initialize cache on startup, but ondemand in future?
         this.configurationRevisionService.on(
             UPDATE_REVISION,
             this.onUpdateRevisionEvent,

@@ -73,11 +73,8 @@ export const calculateRequiredClientRevision = (
         (revision) => revision.revisionId > requiredRevisionId,
     );
     console.log('targeted revisions', targetedRevisions);
-    const projectFeatureRevisions = targetedRevisions.map((revision) =>
-        filterRevisionByProject(revision, projects),
-    );
 
-    return projectFeatureRevisions.reduce(applyRevision);
+    return targetedRevisions.reduce(applyRevision);
 };
 
 export class ClientFeatureToggleCache {

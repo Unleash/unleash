@@ -51,12 +51,7 @@ test('revision that adds, removes then adds again does not end up with the remov
         {
             revisionId: 2,
             updated: [],
-            removed: [
-                {
-                    name: 'some-toggle',
-                    project: 'default',
-                },
-            ],
+            removed: ['some-toggle'],
         },
         {
             revisionId: 3,
@@ -81,12 +76,7 @@ test('revision that removes, adds then removes again does not end up with the re
         {
             revisionId: 1,
             updated: [],
-            removed: [
-                {
-                    name: 'some-toggle',
-                    project: 'default',
-                },
-            ],
+            removed: ['some-toggle'],
         },
         {
             revisionId: 2,
@@ -96,12 +86,7 @@ test('revision that removes, adds then removes again does not end up with the re
         {
             revisionId: 3,
             updated: [],
-            removed: [
-                {
-                    name: 'some-toggle',
-                    project: 'default',
-                },
-            ],
+            removed: ['some-toggle'],
         },
     ];
 
@@ -112,12 +97,7 @@ test('revision that removes, adds then removes again does not end up with the re
     expect(revisions).toEqual({
         revisionId: 3,
         updated: [],
-        removed: [
-            {
-                name: 'some-toggle',
-                project: 'default',
-            },
-        ],
+        removed: ['some-toggle'],
     });
 });
 
@@ -151,31 +131,6 @@ test('revision equal to the base case returns only later revisions ', () => {
     expect(revisions).toEqual({
         revisionId: 3,
         updated: [mockAdd({ name: 'feature4' }), mockAdd({ name: 'feature5' })],
-        removed: [],
-    });
-});
-
-test('project filter removes features not in project', () => {
-    const revisionList = [
-        {
-            revisionId: 1,
-            updated: [mockAdd({ name: 'feature1', project: 'project1' })],
-            removed: [],
-        },
-        {
-            revisionId: 2,
-            updated: [mockAdd({ name: 'feature2', project: 'project2' })],
-            removed: [],
-        },
-    ];
-
-    const revisions = calculateRequiredClientRevision(revisionList, 0, [
-        'project1',
-    ]);
-
-    expect(revisions).toEqual({
-        revisionId: 2,
-        updated: [mockAdd({ name: 'feature1', project: 'project1' })],
         removed: [],
     });
 });

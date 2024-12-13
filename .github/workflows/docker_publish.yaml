@@ -18,6 +18,16 @@ on:
         type: boolean
         default: true
   workflow_dispatch:
+    inputs:
+      version:
+        description: "Which version to release"
+        type: 'string'
+        required: true
+      is-latest-version:
+        description: Is this the latest version? If latest we'll update the version docker
+        required: true
+        type: boolean
+        default: true
 
 jobs:
   build:

@@ -55,7 +55,7 @@ export default class ClientFeatureToggleDeltaController extends Controller {
 
         this.route({
             method: 'get',
-            path: '/',
+            path: '',
             handler: this.getDelta,
             permission: NONE,
             middleware: [

@@ -48,7 +48,6 @@ export default class ClientFeatureToggleCacheReadModel
             'features.project as project',
             'features.stale as stale',
             'features.impression_data as impression_data',
-            'features.last_seen_at as last_seen_at',
             'features.created_at as created_at',
             'fe.variants as variants',
             'fe.enabled as enabled',
@@ -85,7 +84,6 @@ export default class ClientFeatureToggleCacheReadModel
                         'enabled',
                         'environment',
                         'variants',
-                        'last_seen_at',
                     )
                     .where({ environment })
                     .as('fe'),

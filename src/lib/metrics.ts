@@ -504,6 +504,16 @@ export function registerPrometheusMetrics(
         })
         .set(config.rateLimiting.callSignalEndpointMaxPerSecond * 60);
 
+    const namePrefixUsed = createCounter({
+        name: 'nameprefix_count',
+        help: 'Count of nameprefix usage in client api',
+    });
+
+    const tagsUsed = createCounter({
+        name: 'tags_count',
+        help: 'Count of tags usage in client api',
+    });
+
     const featureCreatedByMigration = createCounter({
         name: 'feature_created_by_migration_count',
         help: 'Feature createdBy migration count',
@@ -732,6 +742,14 @@ export function registerPrometheusMetrics(
 
     eventBus.on(events.PROXY_FEATURES_FOR_TOKEN_TIME, ({ duration }) => {
         mapFeaturesForClientDuration.observe(duration);
+    });
+
+    eventBus.on(events.CLIENT_METRICS_NAMEPREFIX, () => {
+        namePrefixUsed.inc();
+    });
+
+    eventBus.on(events.CLIENT_METRICS_TAGS, () => {
+        tagsUsed.inc();
     });
 
     events.onMetricEvent(

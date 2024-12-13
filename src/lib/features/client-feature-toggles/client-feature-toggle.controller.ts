@@ -23,6 +23,7 @@ import type { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import type { ClientFeaturesQuerySchema } from '../../openapi/spec/client-features-query-schema';
+import type EventEmitter from 'events';
 import {
     clientFeatureSchema,
     type ClientFeatureSchema,
@@ -33,6 +34,10 @@ import {
 } from '../../openapi/spec/client-features-schema';
 import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
 import type { ClientFeatureToggleService } from './client-feature-toggle-service';
+import {
+    CLIENT_METRICS_NAMEPREFIX,
+    CLIENT_METRICS_TAGS,
+} from '../../internals';
 
 const version = 2;
 
@@ -61,6 +66,8 @@ export default class FeatureController extends Controller {
     private featureToggleService: FeatureToggleService;
 
     private flagResolver: IFlagResolver;
+
+    private eventBus: EventEmitter;
 
     private featuresAndSegments: (
         query: IFeatureToggleQuery,
@@ -92,6 +99,7 @@ export default class FeatureController extends Controller {
         this.configurationRevisionService = configurationRevisionService;
         this.featureToggleService = featureToggleService;
         this.flagResolver = config.flagResolver;
+        this.eventBus = config.eventBus;
         this.logger = config.getLogger('client-api/feature.js');
 
         this.route({
@@ -208,6 +216,14 @@ export default class FeatureController extends Controller {
             !inlineSegmentConstraints
         ) {
             return {};
+        }
+
+        if (namePrefix) {
+            this.eventBus.emit(CLIENT_METRICS_NAMEPREFIX, { namePrefix });
+        }
+
+        if (tag) {
+            this.eventBus.emit(CLIENT_METRICS_TAGS, { tag });
         }
 
         const tagQuery = this.paramToArray(tag);

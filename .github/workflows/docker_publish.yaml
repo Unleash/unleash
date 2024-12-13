@@ -47,9 +47,9 @@ jobs:
           flavor: latest=${{ github.event.inputs.is-latest-version || 'auto' }}
           tags: |
             # only enabled for workflow dispatch except main (assume its a release):
-            type=semver,pattern={{ version }},enable=${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' }},value=${{ inputs.version }}
-            type=semver,pattern={{ major }}.{{ minor }},enable=${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' }},value=${{ inputs.version }}
-            type=semver,pattern={{ major }},enable=${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main' }},value=${{ inputs.version }}
+            type=semver,pattern={{ version }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.version != '' }},value=${{ inputs.version }}
+            type=semver,pattern={{ major }}.{{ minor }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.version != '' }},value=${{ inputs.version }}
+            type=semver,pattern={{ major }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.version != '' }},value=${{ inputs.version }}
             # only enabled in main:
             type=edge,prefix=main-,suffix=-${{ matrix.version }},enable=${{ github.ref == 'refs/heads/main' }}
             # only enabled on workflow_dispatch:

@@ -10,7 +10,7 @@ import type { Logger } from '../../logger';
 
 import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import type {
-    ClientFeatureChange,
+    RevisionCacheEntry,
     ClientFeatureToggleCache,
 } from './cache/client-feature-toggle-cache';
 
@@ -43,15 +43,10 @@ export class ClientFeatureToggleService {
 
     async getClientDelta(
         revisionId: number | undefined,
-        projects: string[],
-        environment: string,
-    ): Promise<ClientFeatureChange | undefined> {
+        query: IFeatureToggleQuery,
+    ): Promise<RevisionCacheEntry | undefined> {
         if (this.clientFeatureToggleCache !== null) {
-            return this.clientFeatureToggleCache.getDelta(
-                revisionId,
-                environment,
-                projects,
-            );
+            return this.clientFeatureToggleCache.getDelta(revisionId, query);
         } else {
             throw new Error(
                 'Calling the partial updates but the cache is not initialized',

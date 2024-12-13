@@ -1,30 +1,27 @@
 import type {
     IEventStore,
-    IFeatureToggleClient,
+    IFeatureToggleCacheQuery,
     IFeatureToggleQuery,
     IFlagResolver,
 } from '../../../types';
-import type { FeatureConfigurationClient } from '../../feature-toggle/types/feature-toggle-strategies-store-type';
 import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
 import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
 import { RevisionCache } from './revision-cache';
-import type { IClientFeatureToggleCacheReadModel } from './client-feature-toggle-cache-read-model-type';
+import type {
+    FeatureConfigurationCacheClient,
+    IClientFeatureToggleCacheReadModel,
+} from './client-feature-toggle-cache-read-model-type';
 
-type DeletedFeature = {
-    name: string;
-    project: string;
-};
-
-export type ClientFeatureChange = {
-    updated: IFeatureToggleClient[];
-    removed: DeletedFeature[];
+export type RevisionCacheEntry = {
+    updated: FeatureConfigurationCacheClient[];
     revisionId: number;
+    removed: string[];
 };
 
 export type Revision = {
     revisionId: number;
     updated: any[];
-    removed: DeletedFeature[];
+    removed: string[];
 };
 
 type Revisions = Record<string, RevisionCache>;
@@ -36,15 +33,10 @@ const applyRevision = (first: Revision, last: Revision): Revision => {
             feature,
         ]),
     );
-    const removedMap = new Map(
-        [...first.removed, ...last.removed].map((feature) => [
-            feature.name,
-            feature,
-        ]),
-    );
+    const removedMap = new Set([...first.removed, ...last.removed]);
 
     for (const feature of last.removed) {
-        updatedMap.delete(feature.name);
+        updatedMap.delete(feature);
     }
 
     for (const feature of last.updated) {
@@ -67,8 +59,7 @@ const filterRevisionByProject = (
             projects.includes('*') || projects.includes(feature.project),
     );
     const removed = revision.removed.filter(
-        (feature) =>
-            projects.includes('*') || projects.includes(feature.project),
+        (feature) => projects.includes('*') || projects.includes(feature),
     );
     return { ...revision, updated, removed };
 };
@@ -132,9 +123,11 @@ export class ClientFeatureToggleCache {
 
     async getDelta(
         sdkRevisionId: number | undefined,
-        environment: string,
-        projects: string[],
-    ): Promise<ClientFeatureChange | undefined> {
+        query: IFeatureToggleQuery,
+    ): Promise<RevisionCacheEntry | undefined> {
+        const projects = query.project ? query.project : ['*'];
+        const environment = query.environment ? query.environment : 'default';
+        // TODO: filter by tags, what is namePrefix? anything else?
         const requiredRevisionId = sdkRevisionId || 0;
 
         const hasCache = this.cache[environment] !== undefined;
@@ -153,6 +146,7 @@ export class ClientFeatureToggleCache {
                 sdkRevisionId !== this.currentRevisionId &&
                 !this.cache[environment].hasRevision(sdkRevisionId))
         ) {
+            //TODO: populate cache based on this?
             return {
                 revisionId: this.currentRevisionId,
                 // @ts-ignore
@@ -201,44 +195,36 @@ export class ClientFeatureToggleCache {
                     .map((event) => event.featureName!),
             ),
         ];
-        const newToggles = await this.getChangedToggles(
-            changedToggles,
-            latestRevision, // TODO: this should come back from the same query to not be out of sync
-        );
 
-        // TODO: Discussion point. Should we filter events by environment and only add revisions in the cache
-        // for the environment that changed? If we do that we can also save CPU and memory, because we don't need
-        // to talk to the database if the cache is not initialized for that environment
-        for (const key of keys) {
-            this.cache[key].addRevision(newToggles);
+        const removed = changeEvents
+            .filter((event) => event.type === 'feature-deleted')
+            .map((event) => event.featureName!);
+
+        // TODO: we might want to only update the environments that had events changed for performance
+        for (const environment of keys) {
+            const newToggles = await this.getChangedToggles(
+                environment,
+                changedToggles,
+            );
+            this.cache[environment].addRevision({
+                updated: newToggles,
+                revisionId: latestRevision,
+                removed,
+            });
         }
 
         this.currentRevisionId = latestRevision;
     }
 
     async getChangedToggles(
+        environment: string,
         toggles: string[],
-        revisionId: number,
-    ): Promise<ClientFeatureChange> {
+    ): Promise<FeatureConfigurationCacheClient[]> {
         const foundToggles = await this.getClientFeatures({
-            // @ts-ignore removed toggleNames from the type, we should not use this method at all,
             toggleNames: toggles,
-            environment: 'development',
+            environment,
         });
-
-        const foundToggleNames = foundToggles.map((toggle) => toggle.name);
-        const removed = toggles
-            .filter((toggle) => !foundToggleNames.includes(toggle))
-            .map((name) => ({
-                name,
-                project: 'default', // TODO: this needs to be smart and figure out the project . IMPORTANT
-            }));
-
-        return {
-            updated: foundToggles as any, // impressionData is not on the type but should be
-            removed,
-            revisionId,
-        };
+        return foundToggles;
     }
 
     public async initEnvironmentCache(environment: string) {
@@ -262,8 +248,8 @@ export class ClientFeatureToggleCache {
     }
 
     async getClientFeatures(
-        query: IFeatureToggleQuery,
-    ): Promise<FeatureConfigurationClient[]> {
+        query: IFeatureToggleCacheQuery,
+    ): Promise<FeatureConfigurationCacheClient[]> {
         const result =
             await this.clientFeatureToggleCacheReadModel.getAll(query);
         return result;

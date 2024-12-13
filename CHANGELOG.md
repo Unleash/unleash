@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.5.2] - 2024-12-13
+
+### Bug Fixes
+
+- Initialize cache when we get the first request ([#8971](https://github.com/Unleash/unleash/issues/8971))
+
+- Only call project overview from connect dialog when open ([#8977](https://github.com/Unleash/unleash/issues/8977))
+
+- Template edit UI issues ([#8974](https://github.com/Unleash/unleash/issues/8974))
+
+
+### Features
+
+- Streaming headers with app name ([#8972](https://github.com/Unleash/unleash/issues/8972))
+
+- New read model for client feature toggle cache ([#8975](https://github.com/Unleash/unleash/issues/8975))
+
+- Deleted feature names should come from event ([#8978](https://github.com/Unleash/unleash/issues/8978))
+
+- Enable docker version tag on main ([#8979](https://github.com/Unleash/unleash/issues/8979))
+
+
+### Migration
+
+- Add permissions for instance maintenance ([#8885](https://github.com/Unleash/unleash/issues/8885))
+
+
 ## [6.5.1] - 2024-12-12
 
 ### 1-3060

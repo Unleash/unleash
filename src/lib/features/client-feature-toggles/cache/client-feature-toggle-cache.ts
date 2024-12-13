@@ -178,53 +178,42 @@ export class ClientFeatureToggleCache {
 
     private async onUpdateRevisionEvent() {
         if (this.flagResolver.isEnabled('deltaApi')) {
-            await this.pollEvents();
+            await this.listenToRevisionChange();
         }
     }
 
-    public async pollEvents() {
+    public async listenToRevisionChange() {
+        const keys = Object.keys(this.cache);
+
+        if (keys.length === 0) return;
         const latestRevision =
             await this.configurationRevisionService.getMaxRevisionId();
 
-        if (this.currentRevisionId === 0) {
-            await this.populateBaseCache(latestRevision);
-        } else {
-            const changeEvents = await this.eventStore.getRevisionRange(
-                this.currentRevisionId,
-                latestRevision,
-            );
+        const changeEvents = await this.eventStore.getRevisionRange(
+            this.currentRevisionId,
+            latestRevision,
+        );
 
-            const changedToggles = [
-                ...new Set(
-                    changeEvents
-                        .filter((event) => event.featureName)
-                        .map((event) => event.featureName!),
-                ),
-            ];
-            const newToggles = await this.getChangedToggles(
-                changedToggles,
-                latestRevision, // TODO: this should come back from the same query to not be out of sync
-            );
+        const changedToggles = [
+            ...new Set(
+                changeEvents
+                    .filter((event) => event.featureName)
+                    .map((event) => event.featureName!),
+            ),
+        ];
+        const newToggles = await this.getChangedToggles(
+            changedToggles,
+            latestRevision, // TODO: this should come back from the same query to not be out of sync
+        );
 
-            if (this.cache.development) {
-                this.cache.development.addRevision(newToggles);
-            }
+        // TODO: Discussion point. Should we filter events by environment and only add revisions in the cache
+        // for the environment that changed? If we do that we can also save CPU and memory, because we don't need
+        // to talk to the database if the cache is not initialized for that environment
+        for (const key of keys) {
+            this.cache[key].addRevision(newToggles);
         }
+
         this.currentRevisionId = latestRevision;
-    }
-
-    private async populateBaseCache(latestRevisionId: number) {
-        const features = await this.getClientFeatures({
-            environment: 'development',
-        });
-        if (this.cache.development) {
-            this.cache.development.addRevision({
-                updated: features as any, //impressionData is not on the type but should be
-                removed: [],
-                revisionId: latestRevisionId,
-            });
-        }
-        console.log(`Populated base cache with ${features.length} features`);
     }
 
     async getChangedToggles(

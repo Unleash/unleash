@@ -1,7 +1,6 @@
 import type { Response } from 'express';
 import Controller from '../../../routes/controller';
 import type {
-    IClientSegment,
     IFlagResolver,
     IUnleashConfig,
     IUnleashServices,
@@ -13,28 +12,14 @@ import NotFoundError from '../../../error/notfound-error';
 import type { IAuthRequest } from '../../../routes/unleash-types';
 import ApiUser from '../../../types/api-user';
 import { ALL, isAllProjects } from '../../../types/models/api-token';
-import type { FeatureConfigurationClient } from '../../feature-toggle/types/feature-toggle-strategies-store-type';
 import type { ClientSpecService } from '../../../services/client-spec-service';
 import type { OpenApiService } from '../../../services/openapi-service';
 import { NONE } from '../../../types/permissions';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
-import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
 import type { ClientFeatureToggleService } from '../client-feature-toggle-service';
 import type { RevisionCacheEntry } from './client-feature-toggle-cache';
 import { clientFeaturesDeltaSchema } from '../../../openapi';
-
-const version = 2;
-
-interface QueryOverride {
-    project?: string[];
-    environment?: string;
-}
-
-interface IMeta {
-    revisionId: number;
-    etag: string;
-    queryHash: string;
-}
+import type { QueryOverride } from '../client-feature-toggle.controller';
 
 export default class ClientFeatureToggleDeltaController extends Controller {
     private readonly logger: Logger;
@@ -45,8 +30,6 @@ export default class ClientFeatureToggleDeltaController extends Controller {
 
     private openApiService: OpenApiService;
 
-    private configurationRevisionService: ConfigurationRevisionService;
-
     private flagResolver: IFlagResolver;
 
     constructor(
@@ -54,14 +37,11 @@ export default class ClientFeatureToggleDeltaController extends Controller {
             clientFeatureToggleService,
             clientSpecService,
             openApiService,
-            configurationRevisionService,
-            featureToggleService,
         }: Pick<
             IUnleashServices,
             | 'clientFeatureToggleService'
             | 'clientSpecService'
             | 'openApiService'
-            | 'configurationRevisionService'
             | 'featureToggleService'
         >,
         config: IUnleashConfig,
@@ -70,7 +50,6 @@ export default class ClientFeatureToggleDeltaController extends Controller {
         this.clientFeatureToggleService = clientFeatureToggleService;
         this.clientSpecService = clientSpecService;
         this.openApiService = openApiService;
-        this.configurationRevisionService = configurationRevisionService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('client-api/delta.js');
 
@@ -92,15 +71,6 @@ export default class ClientFeatureToggleDeltaController extends Controller {
                 }),
             ],
         });
-    }
-
-    private async resolveFeaturesAndSegments(
-        query?: IFeatureToggleQuery,
-    ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
-        return Promise.all([
-            this.clientFeatureToggleService.getClientFeatures(query),
-            this.clientFeatureToggleService.getActiveSegmentsForClient(),
-        ]);
     }
 
     private async resolveQuery(

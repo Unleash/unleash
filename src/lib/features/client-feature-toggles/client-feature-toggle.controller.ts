@@ -36,7 +36,7 @@ import type { ClientFeatureToggleService } from './client-feature-toggle-service
 
 const version = 2;
 
-interface QueryOverride {
+export interface QueryOverride {
     project?: string[];
     environment?: string;
 }

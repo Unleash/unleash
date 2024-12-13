@@ -208,8 +208,12 @@ export class ClientFeatureToggleCache {
         ];
 
         const removed = changeEvents
+            .filter((event) => event.featureName && event.project)
             .filter((event) => event.type === 'feature-deleted')
-            .map((event) => event.featureName!);
+            .map((event) => ({
+                name: event.featureName!,
+                project: event.project!,
+            }));
 
         // TODO: we might want to only update the environments that had events changed for performance
         for (const environment of keys) {

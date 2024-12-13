@@ -33,7 +33,6 @@ import {
 } from '../../openapi/spec/client-features-schema';
 import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
 import type { ClientFeatureToggleService } from './client-feature-toggle-service';
-import type { RevisionCacheEntry } from './cache/client-feature-toggle-cache';
 
 const version = 2;
 
@@ -94,25 +93,6 @@ export default class FeatureController extends Controller {
         this.featureToggleService = featureToggleService;
         this.flagResolver = config.flagResolver;
         this.logger = config.getLogger('client-api/feature.js');
-
-        this.route({
-            method: 'get',
-            path: '/delta',
-            handler: this.getDelta,
-            permission: NONE,
-            middleware: [
-                openApiService.validPath({
-                    summary: 'Get partial updates (SDK)',
-                    description:
-                        'Initially returns the full set of feature flags available to the provided API key. When called again with the returned etag, only returns the flags that have changed',
-                    operationId: 'getDelta',
-                    tags: ['Unstable'],
-                    responses: {
-                        200: createResponseSchema('clientFeaturesSchema'),
-                    },
-                }),
-            ],
-        });
 
         this.route({
             method: 'get',
@@ -296,42 +276,6 @@ export default class FeatureController extends Controller {
                 { version, features, query, meta },
             );
         }
-    }
-
-    async getDelta(
-        req: IAuthRequest,
-        res: Response<RevisionCacheEntry>,
-    ): Promise<void> {
-        if (!this.flagResolver.isEnabled('deltaApi')) {
-            throw new NotFoundError();
-        }
-        const query = await this.resolveQuery(req);
-        const etag = req.headers['if-none-match'];
-
-        const currentSdkRevisionId = etag ? Number.parseInt(etag) : undefined;
-
-        const changedFeatures =
-            await this.clientFeatureToggleService.getClientDelta(
-                currentSdkRevisionId,
-                query,
-            );
-
-        if (!changedFeatures) {
-            res.status(304);
-            res.getHeaderNames().forEach((header) => res.removeHeader(header));
-            res.end();
-            return;
-        }
-
-        if (changedFeatures.revisionId === currentSdkRevisionId) {
-            res.status(304);
-            res.getHeaderNames().forEach((header) => res.removeHeader(header));
-            res.end();
-            return;
-        }
-
-        res.setHeader('ETag', changedFeatures.revisionId.toString());
-        res.send(changedFeatures);
     }
 
     async calculateMeta(query: IFeatureToggleQuery): Promise<IMeta> {

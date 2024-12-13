@@ -37,6 +37,7 @@ export * from './bulk-toggle-features-schema';
 export * from './change-password-schema';
 export * from './client-application-schema';
 export * from './client-feature-schema';
+export * from './client-features-delta-schema';
 export * from './client-features-query-schema';
 export * from './client-features-schema';
 export * from './client-metrics-env-schema';

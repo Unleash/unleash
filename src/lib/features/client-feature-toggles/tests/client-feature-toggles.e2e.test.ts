@@ -324,7 +324,7 @@ test('should match snapshot from /api/client/features', async () => {
     expect(result.body).toMatchSnapshot();
 });
 
-test('should match with /api/client/features/delta', async () => {
+test('should match with /api/client/delta', async () => {
     await setupFeatures(db, app);
 
     const { body } = await app.request
@@ -333,7 +333,7 @@ test('should match with /api/client/features/delta', async () => {
         .expect(200);
 
     const { body: deltaBody } = await app.request
-        .get('/api/client/features/delta')
+        .get('/api/client/delta')
         .expect('Content-Type', /json/)
         .expect(200);
 

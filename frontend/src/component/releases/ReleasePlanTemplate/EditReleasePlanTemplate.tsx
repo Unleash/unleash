@@ -105,7 +105,9 @@ export const EditReleasePlanTemplate = () => {
                 <UpdateButton
                     name='template'
                     permission={RELEASE_PLAN_TEMPLATE_UPDATE}
-                />
+                >
+                    Save changes
+                </UpdateButton>
                 <StyledCancelButton onClick={handleCancel}>
                     Cancel
                 </StyledCancelButton>

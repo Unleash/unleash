@@ -1,7 +1,6 @@
 import type {
     IEventStore,
     IFeatureToggleClient,
-    IFeatureToggleClientStore,
     IFeatureToggleQuery,
     IFlagResolver,
 } from '../../../types';
@@ -9,6 +8,7 @@ import type { FeatureConfigurationClient } from '../../feature-toggle/types/feat
 import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
 import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
 import { RevisionCache } from './revision-cache';
+import type { IClientFeatureToggleCacheReadModel } from './client-feature-toggle-cache-read-model-type';
 
 type DeletedFeature = {
     name: string;
@@ -90,7 +90,7 @@ export const calculateRequiredClientRevision = (
 };
 
 export class ClientFeatureToggleCache {
-    private clientFeatureToggleStore: IFeatureToggleClientStore;
+    private clientFeatureToggleCacheReadModel: IClientFeatureToggleCacheReadModel;
 
     private cache: Revisions = {};
 
@@ -105,14 +105,15 @@ export class ClientFeatureToggleCache {
     private configurationRevisionService: ConfigurationRevisionService;
 
     constructor(
-        clientFeatureToggleStore: IFeatureToggleClientStore,
+        clientFeatureToggleCacheReadModel: IClientFeatureToggleCacheReadModel,
         eventStore: IEventStore,
         configurationRevisionService: ConfigurationRevisionService,
         flagResolver: IFlagResolver,
     ) {
         this.eventStore = eventStore;
         this.configurationRevisionService = configurationRevisionService;
-        this.clientFeatureToggleStore = clientFeatureToggleStore;
+        this.clientFeatureToggleCacheReadModel =
+            clientFeatureToggleCacheReadModel;
         this.flagResolver = flagResolver;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.cache = {};
@@ -272,36 +273,10 @@ export class ClientFeatureToggleCache {
     }
 
     async getClientFeatures(
-        query?: IFeatureToggleQuery,
+        query: IFeatureToggleQuery,
     ): Promise<FeatureConfigurationClient[]> {
-        const result = await this.clientFeatureToggleStore.getClient(
-            query || {},
-        );
-
-        return result.map(
-            ({
-                name,
-                type,
-                enabled,
-                project,
-                stale,
-                strategies,
-                variants,
-                description,
-                impressionData,
-                dependencies,
-            }) => ({
-                name,
-                type,
-                enabled,
-                project,
-                stale,
-                strategies,
-                variants,
-                description,
-                impressionData,
-                dependencies,
-            }),
-        );
+        const result =
+            await this.clientFeatureToggleCacheReadModel.getAll(query);
+        return result;
     }
 }

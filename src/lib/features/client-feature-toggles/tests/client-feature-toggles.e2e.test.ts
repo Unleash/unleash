@@ -130,6 +130,7 @@ beforeAll(async () => {
             experimental: {
                 flags: {
                     strictSchemaValidation: true,
+                    deltaApi: true,
                 },
             },
         },
@@ -321,4 +322,20 @@ test('should match snapshot from /api/client/features', async () => {
         .expect(200);
 
     expect(result.body).toMatchSnapshot();
+});
+
+test('should match with /api/client/features/delta', async () => {
+    await setupFeatures(db, app);
+
+    const { body } = await app.request
+        .get('/api/client/features')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    const { body: deltaBody } = await app.request
+        .get('/api/client/features/delta')
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.features).toMatchObject(deltaBody.updated);
 });

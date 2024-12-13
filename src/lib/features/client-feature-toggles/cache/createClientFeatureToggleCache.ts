@@ -3,8 +3,7 @@ import EventStore from '../../events/event-store';
 import ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
 import type { IUnleashConfig } from '../../../types';
 import type { Db } from '../../../db/db';
-
-import FeatureToggleClientStore from '../client-feature-toggle-store';
+import ClientFeatureToggleCacheReadModel from './client-feature-toggle-cache-read-model';
 
 export const createClientFeatureToggleCache = (
     db: Db,
@@ -13,18 +12,15 @@ export const createClientFeatureToggleCache = (
     const { getLogger, eventBus, flagResolver } = config;
 
     const eventStore = new EventStore(db, getLogger);
-    const featureToggleClientStore = new FeatureToggleClientStore(
-        db,
-        eventBus,
-        getLogger,
-        flagResolver,
-    );
+
+    const clientFeatureToggleCacheReadModel =
+        new ClientFeatureToggleCacheReadModel(db, eventBus);
 
     const configurationRevisionService =
         ConfigurationRevisionService.getInstance({ eventStore }, config);
 
     const clientFeatureToggleCache = new ClientFeatureToggleCache(
-        featureToggleClientStore,
+        clientFeatureToggleCacheReadModel,
         eventStore,
         configurationRevisionService,
         flagResolver,

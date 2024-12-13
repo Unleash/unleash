@@ -30,7 +30,7 @@ Often, canary deployments are managed at the load balancer level while feature f
 
 ### Configure strategy constraints for canary deployments
 
-Let's update our existing gradual rollout strategy using Go to add [environment-based constraints](/reference/strategy-constraints):
+Let's update our existing gradual rollout strategy using Go to add [environment-based constraints](/reference/activation-strategies#constraints):
 
 ```go
 payload := map[string]interface{}{

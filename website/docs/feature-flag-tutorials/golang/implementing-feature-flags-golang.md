@@ -6,7 +6,7 @@ slug: /feature-flag-tutorials/go
 
 import VideoContent from '@site/src/components/VideoContent.jsx';
 
-Hello! In this tutorial we'll show you how to add feature flags to your Go app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Go SDK](https://docs.getunleash.io/reference/sdks/go). With Unleash, an open-source feature flag service, you can add feature flags to your application to release new features faster.
+Hello! In this tutorial we'll show you how to add feature flags to your Go app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Go SDK](/reference/sdks/go). With Unleash, an open-source feature flag service, you can add feature flags to your application to release new features faster.
 
 In this tutorial, we'll get information about a country from the [REST Countries API](https://restcountries.com/), and its [GraphQL counterpart](https://countries.trevorblades.com/) using Go. We'll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
@@ -21,7 +21,7 @@ For this tutorial, you'll need the following:
 
 ![architecture diagram for our implementation](./diagram.png)
 
-The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. You can perform the same actions straight from your CLI or server-side app using the [Unleash API](https://docs.getunleash.io/reference/api/unleash).
+The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. You can perform the same actions straight from your CLI or server-side app using the [Unleash API](/reference/api/unleash).
 
 ## Best practices for back-end apps with Unleash
 
@@ -34,7 +34,7 @@ Most importantly, you must:
 
 ![A gradual rollout form can allow you to customize your flag strategy.](/img/go-example-rollout.png)
 
-For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
+For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](/topics/feature-flags/feature-flag-best-practices).
 
 ## Install a local feature flag provider
 
@@ -208,7 +208,7 @@ You should see `Hello GraphQL`, followed by `Country: Norway, Capital: Oslo` in 
 
 ## 5. Add Unleash to your Go app
 
-Now, let's connect our project to Unleash so that you can toggle that feature flag at runtime. If you wanted to, you could also do a [gradual rollout](https://docs.getunleash.io/feature-flag-tutorials/use-cases/gradual-rollout) or use the flag for [A/B testing](https://docs.getunleash.io/feature-flag-tutorials/use-cases/a-b-testing).
+Now, let's connect our project to Unleash so that you can toggle that feature flag at runtime. If you wanted to, you could also do a [gradual rollout](/feature-flag-tutorials/use-cases/gradual-rollout) or use the flag for [A/B testing](/feature-flag-tutorials/use-cases/a-b-testing).
 
 You'll need 2 things:
 

@@ -225,6 +225,21 @@ const sidebars: SidebarsConfig = {
                                 },
                                 {
                                     type: 'category',
+                                    label: 'Go',
+                                    link: {
+                                        type: 'doc',
+                                        id: 'feature-flag-tutorials/golang/implementing-feature-flags-golang',
+                                    },
+                                    items: [
+                                        {
+                                            type: 'doc',
+                                            label: 'Go Examples',
+                                            id: 'feature-flag-tutorials/golang/golang-examples',
+                                        },
+                                    ],
+                                },
+                                {
+                                    type: 'category',
                                     label: '.NET',
                                     link: {
                                         type: 'doc',

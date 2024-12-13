@@ -13,7 +13,6 @@ import {
     DB_TIME,
     type IFeatureToggleCacheQuery,
     type IStrategyConfig,
-    type ITag,
     type PartialDeep,
 } from '../../../internals';
 import metricsHelper from '../../../util/metrics-helper';
@@ -239,12 +238,5 @@ export default class ClientFeatureToggleCacheReadModel
         feature.strategies
             ?.find((s) => s?.id === row.strategy_id)
             ?.constraints?.push(...row.segment_constraints);
-    }
-
-    private rowToTag(row: Record<string, any>): ITag {
-        return {
-            value: row.tag_value,
-            type: row.tag_type,
-        };
     }
 }

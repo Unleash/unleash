@@ -219,11 +219,11 @@ export default class FeatureController extends Controller {
         }
 
         if (namePrefix) {
-            this.eventBus.emit(CLIENT_METRICS_NAMEPREFIX, { namePrefix });
+            this.eventBus.emit(CLIENT_METRICS_NAMEPREFIX);
         }
 
         if (tag) {
-            this.eventBus.emit(CLIENT_METRICS_TAGS, { tag });
+            this.eventBus.emit(CLIENT_METRICS_TAGS);
         }
 
         const tagQuery = this.paramToArray(tag);

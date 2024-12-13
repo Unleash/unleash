@@ -9,8 +9,11 @@ import {
     Accordion,
     AccordionSummary,
     AccordionDetails,
+    IconButton,
+    useTheme,
 } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
+import Delete from '@mui/icons-material/DeleteOutlined';
 import type {
     IReleasePlanMilestonePayload,
     IReleasePlanMilestoneStrategy,
@@ -81,9 +84,10 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     },
     transition: 'background-color 0.2s ease-in-out',
     backgroundColor: theme.palette.background.default,
-    '&.Mui-expanded': {
-        marginTop: theme.spacing(3),
+    '&:before': {
+        opacity: '0 !important',
     },
+    '&.Mui-expanded': { marginTop: `${theme.spacing(2)} !important` },
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -111,15 +115,27 @@ const StyledAccordionFooter = styled(Grid)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
 }));
 
+const StyledMilestoneActionGrid = styled(Grid)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'flex-end',
+}));
+
+const StyledIconButton = styled(IconButton)(({ theme }) => ({
+    marginLeft: theme.spacing(1),
+    color: theme.palette.primary.main,
+}));
+
 interface IMilestoneCardProps {
     milestone: IReleasePlanMilestonePayload;
     milestoneChanged: (milestone: IReleasePlanMilestonePayload) => void;
     showAddStrategyDialog: (
         milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
+        editing: boolean,
     ) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
+    onDeleteMilestone: () => void;
 }
 
 export const MilestoneCard = ({
@@ -128,6 +144,7 @@ export const MilestoneCard = ({
     showAddStrategyDialog,
     errors,
     clearErrors,
+    onDeleteMilestone,
 }: IMilestoneCardProps) => {
     const [editMode, setEditMode] = useState(false);
     const [anchor, setAnchor] = useState<Element>();
@@ -136,6 +153,7 @@ export const MilestoneCard = ({
         index: number;
         height: number;
     } | null>(null);
+    const theme = useTheme();
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen
         ? 'MilestoneStrategyMenuPopover'
@@ -145,10 +163,16 @@ export const MilestoneCard = ({
         setAnchor(undefined);
     };
 
+    const onSelectEditStrategy = (
+        strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
+    ) => {
+        showAddStrategyDialog(milestone.id, strategy, true);
+    };
+
     const onSelectStrategy = (
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => {
-        showAddStrategyDialog(milestone.id, strategy);
+        showAddStrategyDialog(milestone.id, strategy, false);
     };
 
     const onDragOver =
@@ -244,7 +268,7 @@ export const MilestoneCard = ({
             <StyledMilestoneCard>
                 <StyledMilestoneCardBody>
                     <Grid container>
-                        <StyledGridItem item xs={10} md={10}>
+                        <StyledGridItem item xs={8} md={9}>
                             {editMode && (
                                 <StyledInput
                                     label=''
@@ -279,7 +303,7 @@ export const MilestoneCard = ({
                                 </>
                             )}
                         </StyledGridItem>
-                        <Grid item xs={2} md={2}>
+                        <StyledMilestoneActionGrid item xs={4} md={3}>
                             <Button
                                 variant='outlined'
                                 color='primary'
@@ -287,6 +311,13 @@ export const MilestoneCard = ({
                             >
                                 Add strategy
                             </Button>
+                            <StyledIconButton
+                                title='Remove milestone'
+                                onClick={onDeleteMilestone}
+                            >
+                                <Delete />
+                            </StyledIconButton>
+
                             <Popover
                                 id={popoverId}
                                 open={isPopoverOpen}
@@ -303,7 +334,7 @@ export const MilestoneCard = ({
                                     openEditAddStrategy={onSelectStrategy}
                                 />
                             </Popover>
-                        </Grid>
+                        </StyledMilestoneActionGrid>
                     </Grid>
                 </StyledMilestoneCardBody>
             </StyledMilestoneCard>
@@ -357,7 +388,7 @@ export const MilestoneCard = ({
                                 milestoneStrategyDeleted(strg.id)
                             }
                             onEditClick={() => {
-                                onSelectStrategy(strg);
+                                onSelectEditStrategy(strg);
                             }}
                             isDragging={false}
                             strategy={strg}
@@ -372,6 +403,13 @@ export const MilestoneCard = ({
                     >
                         Add strategy
                     </StyledAddStrategyButton>
+                    <Button
+                        variant='text'
+                        color='primary'
+                        onClick={onDeleteMilestone}
+                    >
+                        <Delete /> Remove milestone
+                    </Button>
                     <Popover
                         id={popoverId}
                         open={isPopoverOpen}

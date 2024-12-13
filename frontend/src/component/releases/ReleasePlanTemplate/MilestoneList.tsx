@@ -15,6 +15,7 @@ interface IMilestoneListProps {
     openAddStrategyForm: (
         milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
+        editing: boolean,
     ) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
@@ -34,6 +35,14 @@ export const MilestoneList = ({
     clearErrors,
     milestoneChanged,
 }: IMilestoneListProps) => {
+    const onDeleteMilestone = (milestoneId: string) => () => {
+        setMilestones((prev) =>
+            prev
+                .filter((m) => m.id !== milestoneId)
+                .map((m, i) => ({ ...m, sortOrder: i })),
+        );
+    };
+
     return (
         <>
             {milestones.map((milestone) => (
@@ -44,6 +53,7 @@ export const MilestoneList = ({
                     showAddStrategyDialog={openAddStrategyForm}
                     errors={errors}
                     clearErrors={clearErrors}
+                    onDeleteMilestone={onDeleteMilestone(milestone.id)}
                 />
             ))}
             <StyledAddMilestoneButton

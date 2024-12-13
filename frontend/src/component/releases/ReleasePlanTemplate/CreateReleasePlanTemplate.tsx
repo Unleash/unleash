@@ -97,7 +97,9 @@ export const CreateReleasePlanTemplate = () => {
                 <CreateButton
                     name='template'
                     permission={RELEASE_PLAN_TEMPLATE_CREATE}
-                />
+                >
+                    Save template
+                </CreateButton>
                 <StyledCancelButton onClick={handleCancel}>
                     Cancel
                 </StyledCancelButton>

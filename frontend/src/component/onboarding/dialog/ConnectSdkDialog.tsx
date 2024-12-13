@@ -64,14 +64,13 @@ const NextStepSectionSpacedContainer = styled('div')(({ theme }) => ({
 
 type OnboardingStage = 'select-sdk' | 'generate-api-key' | 'test-connection';
 
-export const ConnectSdkDialog = ({
-    open,
+const InnerDialog = ({
     onClose,
     onFinish,
     environments,
     project: projectId,
     feature,
-}: IConnectSDKDialogProps) => {
+}: Omit<IConnectSDKDialogProps, 'open'>) => {
     const theme = useTheme();
     const isLargeScreen = useMediaQuery(theme.breakpoints.up('lg'));
     const [sdk, setSdk] = useState<Sdk | null>(null);
@@ -98,7 +97,7 @@ export const ConnectSdkDialog = ({
     }, [JSON.stringify(environments)]);
 
     return (
-        <StyledDialog open={open} onClose={onClose}>
+        <StyledDialog open={true} onClose={onClose}>
             <Box sx={{ display: 'flex' }}>
                 <ConnectSdk>
                     {isSelectSdkStage ? (
@@ -198,4 +197,11 @@ export const ConnectSdkDialog = ({
             </Box>
         </StyledDialog>
     );
+};
+
+export const ConnectSdkDialog = ({
+    open,
+    ...props
+}: IConnectSDKDialogProps) => {
+    return open ? <InnerDialog {...props} /> : null;
 };

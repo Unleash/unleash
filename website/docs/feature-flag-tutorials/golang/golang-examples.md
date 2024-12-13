@@ -5,44 +5,7 @@ slug: /feature-flag-tutorials/golang/examples
 
 In our [Go feature flag tutorial](/feature-flag-tutorials/go), we implemented a simple feature flag that could be turned on and off. This document will walk you through other examples of what can be achieved using feature flags in Go.
 
-We built many features into Unleash, our open-source feature flag platform, to address the complexities of releasing code. This tutorial will explore the following:
-
-## Gradual Rollouts for Go Apps
-
-It is common to use feature flags to roll out changes to a percentage of users, and we can use Unleash to do that too.
-
-Here's how you do it using our API:
-
-```go
-payload := map[string]interface{}{
-    "name":     "flexibleRollout",
-    "disabled": false,
-    "constraints": []interface{}{},
-    "variants":    []interface{}{},
-    "parameters": map[string]interface{}{
-        "groupId":    "delete_survey_flag",
-        "rollout":    "50",
-        "stickiness": "sessionId",
-    },
-    "segments": []interface{}{},
-}
-
-jsonData, err := json.Marshal(payload)
-
-url := fmt.Sprintf("%s/api/admin/projects/%s/features/%s/environments/%s/strategies",
-    unleashURL, projectID, featureName, environment)
-
-req, err := http.NewRequest("POST", url, bytes.NewBuffer(jsonData))
-
-req.Header.Set("Content-Type", "application/json")
-req.Header.Set("Authorization", apiKey)
-
-client := &http.Client{}
-resp, err := client.Do(req)
-defer resp.Body.Close()
-```
-
-Learn more about [gradual rollouts in our docs](/reference/activation-strategies). Also, learn more about our [API for creating a new strategy](/reference/api/unleash/update-feature-strategy) for your flags.
+We built many features into Unleash, our open-source feature flag platform, to address the complexities of releasing code.
 
 ## Canary Deployments in Go
 
@@ -145,7 +108,6 @@ defer resp.Body.Close()
 
 Shipping code is one thing, but monitoring your applications is another aspect of managing code. For example, you could use feature flag analytics to monitor performance metrics or track user behavior.
 
-
 ### Enable impression data events in Go
 
 Let's walk through how to enable impression data using Go's HTTP client:
@@ -162,7 +124,7 @@ payload := []map[string]interface{}{
 jsonData, err := json.Marshal(payload)
 
 
-url := fmt.Sprintf("%s/api/admin/projects/%s/features/%s", 
+url := fmt.Sprintf("%s/api/admin/projects/%s/features/%s",
     unleashURL, projectID, featureName)
 
 req, err := http.NewRequest("PATCH", url, bytes.NewBuffer(jsonData))
@@ -204,7 +166,7 @@ func fetchMetrics(unleashURL, featureName, apiKey string) error {
     client := &http.Client{
         Timeout: 10 * time.Second,
     }
-    
+
     resp, err := client.Do(req)
     if err != nil {
         return fmt.Errorf("error making request: %v", err)
@@ -268,7 +230,7 @@ Here's how this can be done via our API:
 1. Enable a flag.
 
 ```go
-url := fmt.Sprintf("%s/api/admin/projects/%s/features/%s/environments/%s/on", 
+url := fmt.Sprintf("%s/api/admin/projects/%s/features/%s/environments/%s/on",
     unleashURL, projectID, featureName, environment)
 
 req, err := http.NewRequest("POST", url, nil)
@@ -292,7 +254,7 @@ Review our [API docs on flag enablement](/reference/api/unleash/toggle-feature-e
 2. Update a flag.
 
 ```go
-url := fmt.Sprintf("%s/api/admin/projects/%s/features/%s", 
+url := fmt.Sprintf("%s/api/admin/projects/%s/features/%s",
     unleashURL, projectID, featureName)
 
 payload := FeatureUpdate{
@@ -319,7 +281,7 @@ Review our [API docs on updating feature flags](/reference/api/unleash/update-fe
 3. Archive a flag.
 
 ```go
-url := fmt.Sprintf("%s/api/admin/projects/%s/features/%s", 
+url := fmt.Sprintf("%s/api/admin/projects/%s/features/%s",
     unleashURL, projectID, featureName)
 
 req, err := http.NewRequest("DELETE", url, nil)

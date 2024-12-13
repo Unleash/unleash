@@ -33,7 +33,7 @@ import {
 } from '../../openapi/spec/client-features-schema';
 import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
 import type { ClientFeatureToggleService } from './client-feature-toggle-service';
-import type { ClientFeatureChange } from './cache/client-feature-toggle-cache';
+import type { RevisionCacheEntry } from './cache/client-feature-toggle-cache';
 
 const version = 2;
 
@@ -300,24 +300,20 @@ export default class FeatureController extends Controller {
 
     async getDelta(
         req: IAuthRequest,
-        res: Response<ClientFeatureChange>,
+        res: Response<RevisionCacheEntry>,
     ): Promise<void> {
         if (!this.flagResolver.isEnabled('deltaApi')) {
             throw new NotFoundError();
         }
         const query = await this.resolveQuery(req);
         const etag = req.headers['if-none-match'];
-        const meta = await this.calculateMeta(query);
 
         const currentSdkRevisionId = etag ? Number.parseInt(etag) : undefined;
-        const projects = query.project ? query.project : ['*'];
-        const environment = query.environment ? query.environment : 'default';
 
         const changedFeatures =
             await this.clientFeatureToggleService.getClientDelta(
                 currentSdkRevisionId,
-                projects,
-                environment,
+                query,
             );
 
         if (!changedFeatures) {

@@ -177,11 +177,11 @@ export class ClientFeatureToggleCache {
 
     private async onUpdateRevisionEvent() {
         if (this.flagResolver.isEnabled('deltaApi')) {
-            await this.pollEvents();
+            await this.listenToRevisionChange();
         }
     }
 
-    public async pollEvents() {
+    public async listenToRevisionChange() {
         const keys = Object.keys(this.cache);
 
         if (keys.length === 0) return;

@@ -12,16 +12,21 @@ import type {
     IClientFeatureToggleCacheReadModel,
 } from './client-feature-toggle-cache-read-model-type';
 
+type DeletedFeature = {
+    name: string;
+    project: string;
+};
+
 export type RevisionCacheEntry = {
     updated: FeatureConfigurationCacheClient[];
     revisionId: number;
-    removed: string[];
+    removed: DeletedFeature[];
 };
 
 export type Revision = {
     revisionId: number;
     updated: any[];
-    removed: string[];
+    removed: DeletedFeature[];
 };
 
 type Revisions = Record<string, RevisionCache>;
@@ -33,10 +38,15 @@ const applyRevision = (first: Revision, last: Revision): Revision => {
             feature,
         ]),
     );
-    const removedMap = new Set([...first.removed, ...last.removed]);
+    const removedMap = new Map(
+        [...first.removed, ...last.removed].map((feature) => [
+            feature.name,
+            feature,
+        ]),
+    );
 
     for (const feature of last.removed) {
-        updatedMap.delete(feature);
+        updatedMap.delete(feature.name);
     }
 
     for (const feature of last.updated) {
@@ -59,7 +69,8 @@ const filterRevisionByProject = (
             projects.includes('*') || projects.includes(feature.project),
     );
     const removed = revision.removed.filter(
-        (feature) => projects.includes('*') || projects.includes(feature),
+        (feature) =>
+            projects.includes('*') || projects.includes(feature.project),
     );
     return { ...revision, updated, removed };
 };
@@ -73,8 +84,11 @@ export const calculateRequiredClientRevision = (
         (revision) => revision.revisionId > requiredRevisionId,
     );
     console.log('targeted revisions', targetedRevisions);
+    const projectFeatureRevisions = targetedRevisions.map((revision) =>
+        filterRevisionByProject(revision, projects),
+    );
 
-    return targetedRevisions.reduce(applyRevision);
+    return projectFeatureRevisions.reduce(applyRevision);
 };
 
 export class ClientFeatureToggleCache {

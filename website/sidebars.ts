@@ -631,6 +631,11 @@ const sidebars: SidebarsConfig = {
                             label: 'SOC2 Type II',
                             id: 'using-unleash/compliance/soc2',
                         },
+                        {
+                            type: 'doc',
+                            label: 'ISO27001',
+                            id: 'using-unleash/compliance/iso27001',
+                        },
                     ],
                 },
                 {

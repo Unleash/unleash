@@ -1,0 +1,260 @@
+---
+title: How to Implement Feature Flags in JavaScript
+description: "How to use Unleash feature flags with plain JavaScript."
+slug: /feature-flag-tutorials/javascript
+---
+
+import VideoContent from '@site/src/components/VideoContent.jsx';
+
+Hello! In this tutorial we'll show you how to add feature flags to a plain JavaScript app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Browser SDK](/reference/sdks/javascript-browser). With Unleash, an open-source feature flag service, you can add feature flags to your application and release new features faster.
+
+In this tutorial, we'll make a basic website all about... Corgis! We'll use the [dog.ceo API 🐶](https://dog.ceo/) with HTML, CSS, JS to retrive some images of Queen Elisabeth's favourite dogs. We'll use feature flags to decide whether to show some corgi fun facts alongside the images.
+
+## Prerequisites
+
+For this tutorial, you'll need the following:
+
+-   Git
+-   Docker and Docker Compose
+-   A modern browser
+
+![architecture diagram for our implementation](./diagram.png)
+
+The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. You can perform the same actions straight from your CLI or server-side app using the [Unleash API](/reference/api/unleash).
+
+## Install a local feature flag provider
+
+In this section, we'll install Unleash, run the instance locally, log in, and create a feature flag. If you prefer, you can use other tools instead of Unleash, but you'll need to update the code accordingly.
+
+Use Git to clone the Unleash repository and Docker to build and run it. Open a terminal window and run the following commands:
+
+```
+git clone https://github.com/unleash/unleash.git
+cd unleash
+docker compose up -d
+```
+
+You will now have Unleash installed onto your machine and running in the background. You can access this instance in your web browser at [http://localhost:4242](http://localhost:4242).
+
+Log in to the platform using these credentials:
+
+```
+Username: admin
+Password: unleash4all
+```
+
+Click **New feature flag** to create a new feature flag.
+
+![Create a new feature flag](/img/go-new-feature-flag.png)
+
+Call it `show-info` and enable it in the `development` environment.
+
+Everything's now set up on the Unleash side. Let's go to the code now.
+
+## Make a basic HTML website
+
+Open a new tab in your terminal, and create a new folder (outside of the unleash folder).
+
+```sh
+mkdir unleash-js
+cd unleash-js
+touch index.html
+```
+
+Add our HTML:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Corgi Cuteness</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.simplecss.org/simple.min.css"
+        />
+        <style>
+            :root {
+                --accent: #f4a261;
+                --border: #d9c3b8;
+            }
+
+            h1 {
+                color: var(--accent);
+            }
+
+            main {
+                padding: 1rem;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1>🐾 Corgi Cuteness 🐾</h1>
+            <img id="corgi-img" src="" alt="Adorable Corgi" />
+            <p id="fun-fact" class="notice"></p>
+            <button id="new-corgi-btn">Show Me Another Corgi!</button>
+        </main>
+
+        <script src="./index.js"></script>
+    </body>
+</html>
+```
+
+Open the file in your browser
+
+## Add the GraphQL endpoint
+
+The point of this tutorial is to mimic a real-world scenario where, based on a boolean feature flag, you would migrate from a REST API to a GraphQL one. So far, we've just used REST.
+
+Let's create a static feature flag, for now, just to test that we can call both versions successfully. Update `main.go`:
+
+```go
+package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "fmt"
+    "io"
+    "log"
+    "net/http"
+)
+
+type Country struct {
+    Name string `json:"name"`
+    Capital string `json:"capital"`
+}
+
+func main() {
+    // Define a static feature flag
+    isGraphQL := true
+
+    var country Country
+    if isGraphQL {
+        // Call the GraphQL API
+        query := `{"query": "query { country(code: \"NO\") { name capital } }"}`
+        req, err := http.NewRequest("POST", "https://countries.trevorblades.com/", bytes.NewBuffer([]byte(query)))
+        if err != nil {
+            log.Fatal(err)
+        }
+        req.Header.Set("Content-Type", "application/json")
+
+        client := &http.Client{}
+        resp, err := client.Do(req)
+        if err != nil {
+            log.Fatal(err)
+        }
+        defer resp.Body.Close()
+
+        body, _ := io.ReadAll(resp.Body)
+        var response struct {
+            Data struct {
+                Country Country `json:"country"`
+            } `json:"data"`
+        }
+        json.Unmarshal(body, &response)
+
+        country = response.Data.Country
+        fmt.Println("Hello GraphQL")
+    } else {
+        // Call the REST API
+        resp, err := http.Get("https://restcountries.com/v2/alpha/no")
+        if err != nil {
+            log.Fatal(err)
+        }
+        defer resp.Body.Close()
+
+        body, _ := io.ReadAll(resp.Body)
+        var countries []Country
+        json.Unmarshal(body, &countries)
+        country = countries[0]
+    }
+
+    fmt.Printf("Country: %s, Capital: %s\n", country.Name, country.Capital)
+}
+```
+
+Run the code again:
+
+```sh
+go run main.go
+```
+
+You should see `Hello GraphQL`, followed by `Country: Norway, Capital: Oslo` in your terminal.
+
+## 5. Add Unleash to your Go app
+
+Now, let's connect our project to Unleash so that you can toggle that feature flag at runtime. If you wanted to, you could also do a [gradual rollout](/feature-flag-tutorials/use-cases/gradual-rollout) or use the flag for [A/B testing](/feature-flag-tutorials/use-cases/a-b-testing).
+
+You'll need 2 things:
+
+-   The URL of your Unleash instance's API. It's `http://localhost:4242/api/` for your local version.
+-   The API token we created on our Unleash instance, feel free to create another one if you can't find it.
+
+With these 2, you can initialize your Unleash client as follows:
+
+```go
+unleash.Initialize(
+    unleash.WithUrl("http://localhost:4242/api/"),
+    unleash.WithAppName("country_go"),
+    unleash.WithCustomHeaders(http.Header{"Authorization": {"YOUR_API_KEY"}}),
+)
+```
+
+Now, let's add our client to our project, grab the feature flag from Unleash, and update our conditional statement. Don't forget to also update the config with your API key:
+
+```diff
+package main
+
+import (
+    "encoding/json"
+    "fmt"
+    "io"
+    "log"
+    "net/http"
+
++	"github.com/Unleash/unleash-client-go/v4"
+)
+
+// ... rest of the types ...
+
+func main() {
++	// Initialize Unleash client
++	unleash.Initialize(
++		unleash.WithUrl("http://localhost:4242/api/"),
++		unleash.WithAppName("country_go"),
++		unleash.WithCustomHeaders(http.Header{"Authorization": {"YOUR_API_KEY"}}),
++	)
++
++	unleash.WaitForReady()
+
++	isGraphQL := unleash.IsEnabled("graphql-api")
+-	// Define a static feature flag
+-	isGraphQL := true
+
+    // ... rest of the code ...
+}
+```
+
+See additional use cases in our [Server-Side SDK with Go](https://docs.getunleash.io/reference/sdks/go) documentation.
+
+## 6. Verify the toggle experience
+
+Now that we've connected our project to Unleash and grabbed our feature flag, we can verify that if you disable that flag in your development environment, you stop seeing the `Hello GraphQL` message and only get the country information from the REST API.
+
+> **Note:** An update to a feature flag may take 30 seconds to propagate.
+
+## Conclusion
+
+All done! Now you know how to add feature flags with Unleash in Go. You've learned how to:
+
+-   Toggle between a REST and a GraphQL endpoint based on a feature flag
+-   Install Unleash and create/enable a feature flag
+-   Grab the value of a feature flag with the Go SDK
+
+Feel free to have a look at our [Go Examples page](/feature-flag-tutorials/golang/examples) for more.
+
+Thank you

@@ -24,7 +24,7 @@ export const MilestoneStrategyType = ({
         return null;
     }
 
-    switch (strategy.name) {
+    switch (strategy.strategyName) {
         case 'default':
             return <DefaultStrategy strategyDefinition={strategyDefinition} />;
         case 'flexibleRollout':

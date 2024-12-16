@@ -3,6 +3,7 @@ import type {
     IFeatureToggleDeltaQuery,
     IFeatureToggleQuery,
     IFlagResolver,
+    ISegmentReadModel,
 } from '../../../types';
 import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
 import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
@@ -11,6 +12,8 @@ import type {
     FeatureConfigurationDeltaClient,
     IClientFeatureToggleDeltaReadModel,
 } from './client-feature-toggle-delta-read-model-type';
+import type { Segment } from 'unleash-client/lib/strategy/strategy';
+import { mapSegmentsForClient } from '../../playground/offline-unleash-client';
 
 type DeletedFeature = {
     name: string;
@@ -21,6 +24,7 @@ export type RevisionDeltaEntry = {
     updated: FeatureConfigurationDeltaClient[];
     revisionId: number;
     removed: DeletedFeature[];
+    segments: Segment[];
 };
 
 export type Revision = {
@@ -96,6 +100,8 @@ export class ClientFeatureToggleDelta {
 
     private delta: Revisions = {};
 
+    private segments: Segment[] = [];
+
     private eventStore: IEventStore;
 
     private currentRevisionId: number = 0;
@@ -106,8 +112,11 @@ export class ClientFeatureToggleDelta {
 
     private configurationRevisionService: ConfigurationRevisionService;
 
+    private readonly segmentReadModel: ISegmentReadModel;
+
     constructor(
         clientFeatureToggleDeltaReadModel: IClientFeatureToggleDeltaReadModel,
+        segmentReadModel: ISegmentReadModel,
         eventStore: IEventStore,
         configurationRevisionService: ConfigurationRevisionService,
         flagResolver: IFlagResolver,
@@ -117,10 +126,12 @@ export class ClientFeatureToggleDelta {
         this.clientFeatureToggleDeltaReadModel =
             clientFeatureToggleDeltaReadModel;
         this.flagResolver = flagResolver;
+        this.segmentReadModel = segmentReadModel;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.delta = {};
 
         this.initRevisionId();
+        this.updateSegments();
         this.configurationRevisionService.on(
             UPDATE_REVISION,
             this.onUpdateRevisionEvent,
@@ -162,6 +173,7 @@ export class ClientFeatureToggleDelta {
                 revisionId: this.currentRevisionId,
                 // @ts-ignore
                 updated: await this.getClientFeatures({ environment }),
+                segments: this.segments,
                 removed: [],
             };
         }
@@ -178,12 +190,18 @@ export class ClientFeatureToggleDelta {
             projects,
         );
 
-        return Promise.resolve(compressedRevision);
+        const revisionResponse = {
+            ...compressedRevision,
+            segments: this.segments,
+        };
+
+        return Promise.resolve(revisionResponse);
     }
 
     private async onUpdateRevisionEvent() {
         if (this.flagResolver.isEnabled('deltaApi')) {
             await this.listenToRevisionChange();
+            await this.updateSegments();
         }
     }
 
@@ -268,5 +286,11 @@ export class ClientFeatureToggleDelta {
         const result =
             await this.clientFeatureToggleDeltaReadModel.getAll(query);
         return result;
+    }
+
+    private async updateSegments(): Promise<void> {
+        this.segments = mapSegmentsForClient(
+            await this.segmentReadModel.getAll(),
+        );
     }
 }

@@ -30,7 +30,15 @@ const getApiClientResponse = (project = 'default') => [
         strategies: [
             {
                 name: 'flexibleRollout',
-                constraints: [],
+                constraints: [
+                    {
+                        contextName: 'appName',
+                        operator: 'IN',
+                        values: ['test'],
+                        caseInsensitive: false,
+                        inverted: false,
+                    },
+                ],
                 parameters: {
                     rollout: '100',
                     stickiness: 'default',
@@ -82,6 +90,7 @@ const cleanup = async (db: ITestDb, app: IUnleashTest) => {
                 ),
             ),
     );
+    await db.stores.segmentStore.deleteAll();
 };
 
 const setupFeatures = async (
@@ -94,10 +103,24 @@ const setupFeatures = async (
     await app.createFeature('test1', project);
     await app.createFeature('test2', project);
 
+    const { body: segmentBody } = await app.createSegment({
+        name: 'a',
+        constraints: [
+            {
+                contextName: 'appName',
+                operator: 'IN',
+                values: ['test'],
+                caseInsensitive: false,
+                inverted: false,
+            },
+        ],
+    });
+
     await app.addStrategyToFeatureEnv(
         {
             name: 'flexibleRollout',
             constraints: [],
+            segments: [segmentBody.id],
             parameters: {
                 rollout: '100',
                 stickiness: 'default',
@@ -329,6 +352,7 @@ test('should match with /api/client/delta', async () => {
 
     const { body } = await app.request
         .get('/api/client/features')
+        .set('Unleash-Client-Spec', '4.2.0')
         .expect('Content-Type', /json/)
         .expect(200);
 
@@ -338,4 +362,5 @@ test('should match with /api/client/delta', async () => {
         .expect(200);
 
     expect(body.features).toMatchObject(deltaBody.updated);
+    expect(body.segments).toMatchObject(deltaBody.segments);
 });

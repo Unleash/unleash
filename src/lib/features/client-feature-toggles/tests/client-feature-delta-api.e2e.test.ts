@@ -169,19 +169,11 @@ test('should match with /api/client/delta', async () => {
 
 test('should get 304 if asked for latest revision', async () => {
     await setupFeatures(db, app);
-
-    // const waitForEvent : Promise<void> = new Promise((resolve) => {
-    //     app.services.configurationRevisionService.once(UPDATE_REVISION, () => {
-    //         resolve();
-    //     });
-    // });
-
-    await app.services.configurationRevisionService.updateMaxRevisionId();
-    // app.services.configurationRevisionService.emit(UPDATE_REVISION);
-
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
-    // await waitForEvent;
+    // @ts-ignore
+    console.log(app.services.clientFeatureToggleService.clientFeatureToggleDelta);
+    
+    // @ts-ignore
+    app.services.clientFeatureToggleService.clientFeatureToggleDelta.currentRevisionId = 14;
 
     const events = await db.rawDatabase('events').select('*');
     console.log(events);

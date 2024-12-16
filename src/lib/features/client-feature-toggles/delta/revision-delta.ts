@@ -1,4 +1,4 @@
-import type { Revision } from './client-feature-toggle-cache';
+import type { Revision } from './client-feature-toggle-delta';
 
 const mergeWithoutDuplicates = (arr1: any[], arr2: any[]) => {
     const map = new Map();
@@ -8,41 +8,41 @@ const mergeWithoutDuplicates = (arr1: any[], arr2: any[]) => {
     return Array.from(map.values());
 };
 
-export class RevisionCache {
-    private cache: Revision[];
+export class RevisionDelta {
+    private delta: Revision[];
     private maxLength: number;
 
     constructor(data: Revision[] = [], maxLength: number = 100) {
-        this.cache = data;
+        this.delta = data;
         this.maxLength = maxLength;
     }
 
     public addRevision(revision: Revision): void {
-        if (this.cache.length >= this.maxLength) {
+        if (this.delta.length >= this.maxLength) {
             this.changeBase();
         }
 
-        this.cache = [...this.cache, revision];
+        this.delta = [...this.delta, revision];
     }
 
     public getRevisions(): Revision[] {
-        return this.cache;
+        return this.delta;
     }
 
     public hasRevision(revisionId: number): boolean {
-        return this.cache.some(
+        return this.delta.some(
             (revision) => revision.revisionId === revisionId,
         );
     }
 
     private changeBase(): void {
-        if (!(this.cache.length >= 2)) return;
-        const base = this.cache[0];
-        const newBase = this.cache[1];
+        if (!(this.delta.length >= 2)) return;
+        const base = this.delta[0];
+        const newBase = this.delta[1];
 
         newBase.removed = mergeWithoutDuplicates(base.removed, newBase.removed);
         newBase.updated = mergeWithoutDuplicates(base.updated, newBase.updated);
 
-        this.cache = [newBase, ...this.cache.slice(2)];
+        this.delta = [newBase, ...this.delta.slice(2)];
     }
 }

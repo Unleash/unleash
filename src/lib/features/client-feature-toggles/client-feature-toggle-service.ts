@@ -11,8 +11,8 @@ import type { Logger } from '../../logger';
 import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import type {
     RevisionCacheEntry,
-    ClientFeatureToggleCache,
-} from './cache/client-feature-toggle-cache';
+    ClientFeatureToggleDelta,
+} from './delta/client-feature-toggle-delta';
 
 export class ClientFeatureToggleService {
     private logger: Logger;
@@ -21,14 +21,14 @@ export class ClientFeatureToggleService {
 
     private segmentReadModel: ISegmentReadModel;
 
-    private clientFeatureToggleCache: ClientFeatureToggleCache | null = null;
+    private clientFeatureToggleCache: ClientFeatureToggleDelta | null = null;
 
     constructor(
         {
             clientFeatureToggleStore,
         }: Pick<IUnleashStores, 'clientFeatureToggleStore'>,
         segmentReadModel: ISegmentReadModel,
-        clientFeatureToggleCache: ClientFeatureToggleCache | null,
+        clientFeatureToggleCache: ClientFeatureToggleDelta | null,
         { getLogger }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     ) {
         this.logger = getLogger('services/client-feature-toggle-service.ts');

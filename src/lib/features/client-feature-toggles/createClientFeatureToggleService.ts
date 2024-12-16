@@ -5,7 +5,7 @@ import FakeClientFeatureToggleStore from './fakes/fake-client-feature-toggle-sto
 import { ClientFeatureToggleService } from './client-feature-toggle-service';
 import { SegmentReadModel } from '../segment/segment-read-model';
 import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
-import { createClientFeatureToggleCache } from './cache/createClientFeatureToggleCache';
+import { createClientFeatureToggleDelta } from './delta/createClientFeatureToggleDelta';
 
 export const createClientFeatureToggleService = (
     db: Db,
@@ -22,7 +22,7 @@ export const createClientFeatureToggleService = (
 
     const segmentReadModel = new SegmentReadModel(db);
 
-    const clientFeatureToggleCache = createClientFeatureToggleCache(db, config);
+    const clientFeatureToggleCache = createClientFeatureToggleDelta(db, config);
 
     const clientFeatureToggleService = new ClientFeatureToggleService(
         {

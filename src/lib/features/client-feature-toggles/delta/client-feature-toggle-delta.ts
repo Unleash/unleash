@@ -1,24 +1,24 @@
 import type {
     IEventStore,
-    IFeatureToggleCacheQuery,
+    IFeatureToggleDeltaQuery,
     IFeatureToggleQuery,
     IFlagResolver,
 } from '../../../types';
 import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
 import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
-import { RevisionCache } from './revision-cache';
+import { RevisionDelta } from './revision-delta';
 import type {
-    FeatureConfigurationCacheClient,
-    IClientFeatureToggleCacheReadModel,
-} from './client-feature-toggle-cache-read-model-type';
+    FeatureConfigurationDeltaClient,
+    IClientFeatureToggleDeltaReadModel,
+} from './client-feature-toggle-delta-read-model-type';
 
 type DeletedFeature = {
     name: string;
     project: string;
 };
 
-export type RevisionCacheEntry = {
-    updated: FeatureConfigurationCacheClient[];
+export type RevisionDeltaEntry = {
+    updated: FeatureConfigurationDeltaClient[];
     revisionId: number;
     removed: DeletedFeature[];
 };
@@ -29,7 +29,7 @@ export type Revision = {
     removed: DeletedFeature[];
 };
 
-type Revisions = Record<string, RevisionCache>;
+type Revisions = Record<string, RevisionDelta>;
 
 const applyRevision = (first: Revision, last: Revision): Revision => {
     const updatedMap = new Map(
@@ -91,10 +91,10 @@ export const calculateRequiredClientRevision = (
     return projectFeatureRevisions.reduce(applyRevision);
 };
 
-export class ClientFeatureToggleCache {
-    private clientFeatureToggleCacheReadModel: IClientFeatureToggleCacheReadModel;
+export class ClientFeatureToggleDelta {
+    private clientFeatureToggleDeltaReadModel: IClientFeatureToggleDeltaReadModel;
 
-    private cache: Revisions = {};
+    private delta: Revisions = {};
 
     private eventStore: IEventStore;
 
@@ -107,18 +107,18 @@ export class ClientFeatureToggleCache {
     private configurationRevisionService: ConfigurationRevisionService;
 
     constructor(
-        clientFeatureToggleCacheReadModel: IClientFeatureToggleCacheReadModel,
+        clientFeatureToggleDeltaReadModel: IClientFeatureToggleDeltaReadModel,
         eventStore: IEventStore,
         configurationRevisionService: ConfigurationRevisionService,
         flagResolver: IFlagResolver,
     ) {
         this.eventStore = eventStore;
         this.configurationRevisionService = configurationRevisionService;
-        this.clientFeatureToggleCacheReadModel =
-            clientFeatureToggleCacheReadModel;
+        this.clientFeatureToggleDeltaReadModel =
+            clientFeatureToggleDeltaReadModel;
         this.flagResolver = flagResolver;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
-        this.cache = {};
+        this.delta = {};
 
         this.initRevisionId();
         this.configurationRevisionService.on(
@@ -135,29 +135,29 @@ export class ClientFeatureToggleCache {
     async getDelta(
         sdkRevisionId: number | undefined,
         query: IFeatureToggleQuery,
-    ): Promise<RevisionCacheEntry | undefined> {
+    ): Promise<RevisionDeltaEntry | undefined> {
         const projects = query.project ? query.project : ['*'];
         const environment = query.environment ? query.environment : 'default';
         // TODO: filter by tags, what is namePrefix? anything else?
         const requiredRevisionId = sdkRevisionId || 0;
 
-        const hasCache = this.cache[environment] !== undefined;
+        const hasDelta = this.delta[environment] !== undefined;
 
-        if (!hasCache) {
-            await this.initEnvironmentCache(environment);
+        if (!hasDelta) {
+            await this.initEnvironmentDelta(environment);
         }
 
         // Should get the latest state if revision does not exist or if sdkRevision is not present
-        // We should be able to do this without going to the database by merging revisions from the cache with
+        // We should be able to do this without going to the database by merging revisions from the delta with
         // the base case
         const firstTimeCalling = !sdkRevisionId;
         if (
             firstTimeCalling ||
             (sdkRevisionId &&
                 sdkRevisionId !== this.currentRevisionId &&
-                !this.cache[environment].hasRevision(sdkRevisionId))
+                !this.delta[environment].hasRevision(sdkRevisionId))
         ) {
-            //TODO: populate cache based on this?
+            //TODO: populate delta based on this?
             return {
                 revisionId: this.currentRevisionId,
                 // @ts-ignore
@@ -170,7 +170,7 @@ export class ClientFeatureToggleCache {
             return undefined;
         }
 
-        const environmentRevisions = this.cache[environment].getRevisions();
+        const environmentRevisions = this.delta[environment].getRevisions();
 
         const compressedRevision = calculateRequiredClientRevision(
             environmentRevisions,
@@ -188,7 +188,7 @@ export class ClientFeatureToggleCache {
     }
 
     public async listenToRevisionChange() {
-        const keys = Object.keys(this.cache);
+        const keys = Object.keys(this.delta);
 
         if (keys.length === 0) return;
         const latestRevision =
@@ -221,7 +221,7 @@ export class ClientFeatureToggleCache {
                 environment,
                 changedToggles,
             );
-            this.cache[environment].addRevision({
+            this.delta[environment].addRevision({
                 updated: newToggles,
                 revisionId: latestRevision,
                 removed,
@@ -234,7 +234,7 @@ export class ClientFeatureToggleCache {
     async getChangedToggles(
         environment: string,
         toggles: string[],
-    ): Promise<FeatureConfigurationCacheClient[]> {
+    ): Promise<FeatureConfigurationDeltaClient[]> {
         const foundToggles = await this.getClientFeatures({
             toggleNames: toggles,
             environment,
@@ -242,7 +242,7 @@ export class ClientFeatureToggleCache {
         return foundToggles;
     }
 
-    public async initEnvironmentCache(environment: string) {
+    public async initEnvironmentDelta(environment: string) {
         // Todo: replace with method that gets all features for an environment
         const baseFeatures = await this.getClientFeatures({
             environment,
@@ -251,7 +251,7 @@ export class ClientFeatureToggleCache {
         this.currentRevisionId =
             await this.configurationRevisionService.getMaxRevisionId();
 
-        const cache = new RevisionCache([
+        const delta = new RevisionDelta([
             {
                 revisionId: this.currentRevisionId,
                 updated: baseFeatures,
@@ -259,14 +259,14 @@ export class ClientFeatureToggleCache {
             },
         ]);
 
-        this.cache[environment] = cache;
+        this.delta[environment] = delta;
     }
 
     async getClientFeatures(
-        query: IFeatureToggleCacheQuery,
-    ): Promise<FeatureConfigurationCacheClient[]> {
+        query: IFeatureToggleDeltaQuery,
+    ): Promise<FeatureConfigurationDeltaClient[]> {
         const result =
-            await this.clientFeatureToggleCacheReadModel.getAll(query);
+            await this.clientFeatureToggleDeltaReadModel.getAll(query);
         return result;
     }
 }

@@ -1,30 +1,30 @@
-import { ClientFeatureToggleCache } from './client-feature-toggle-cache';
+import { ClientFeatureToggleDelta } from './client-feature-toggle-delta';
 import EventStore from '../../events/event-store';
 import ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
 import type { IUnleashConfig } from '../../../types';
 import type { Db } from '../../../db/db';
-import ClientFeatureToggleCacheReadModel from './client-feature-toggle-cache-read-model';
+import ClientFeatureToggleDeltaReadModel from './client-feature-toggle-delta-read-model';
 
-export const createClientFeatureToggleCache = (
+export const createClientFeatureToggleDelta = (
     db: Db,
     config: IUnleashConfig,
-): ClientFeatureToggleCache => {
+): ClientFeatureToggleDelta => {
     const { getLogger, eventBus, flagResolver } = config;
 
     const eventStore = new EventStore(db, getLogger);
 
-    const clientFeatureToggleCacheReadModel =
-        new ClientFeatureToggleCacheReadModel(db, eventBus);
+    const clientFeatureToggleDeltaReadModel =
+        new ClientFeatureToggleDeltaReadModel(db, eventBus);
 
     const configurationRevisionService =
         ConfigurationRevisionService.getInstance({ eventStore }, config);
 
-    const clientFeatureToggleCache = new ClientFeatureToggleCache(
-        clientFeatureToggleCacheReadModel,
+    const clientFeatureToggleDelta = new ClientFeatureToggleDelta(
+        clientFeatureToggleDeltaReadModel,
         eventStore,
         configurationRevisionService,
         flagResolver,
     );
 
-    return clientFeatureToggleCache;
+    return clientFeatureToggleDelta;
 };

@@ -1,5 +1,5 @@
-import { RevisionCache } from './revision-cache';
-import type { Revision } from './client-feature-toggle-cache';
+import { RevisionDelta } from './revision-delta';
+import type { Revision } from './client-feature-toggle-delta';
 
 describe('RevisionCache', () => {
     it('should create a new base when trying to add a new revision at the max limit', () => {
@@ -63,7 +63,7 @@ describe('RevisionCache', () => {
         ];
 
         const maxLength = 2;
-        const deltaCache = new RevisionCache(initialRevisions, maxLength);
+        const deltaCache = new RevisionDelta(initialRevisions, maxLength);
 
         // Add a new revision to trigger changeBase
         deltaCache.addRevision({

@@ -24,7 +24,7 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
 }));
 
 export const EditReleasePlanTemplate = () => {
-    const { uiConfig } = useUiConfig();
+    const { uiConfig, isEnterprise } = useUiConfig();
     const releasePlansEnabled = useUiFlag('releasePlans');
     const templateId = useRequiredPathParam('templateId');
     const { template, loading, error, refetch } =
@@ -82,7 +82,7 @@ export const EditReleasePlanTemplate = () => {
     --header 'Content-Type: application/json' \\
     --data-raw '${JSON.stringify(getTemplatePayload(), undefined, 2)}'`;
 
-    if (!releasePlansEnabled) {
+    if (!releasePlansEnabled || !isEnterprise()) {
         return null;
     }
 

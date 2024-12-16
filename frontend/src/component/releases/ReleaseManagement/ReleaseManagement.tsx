@@ -20,7 +20,7 @@ export const ReleaseManagement = () => {
 
     const { isEnterprise } = useUiConfig();
     const releasePlansEnabled = useUiFlag('releasePlans');
-    if (!releasePlansEnabled || !isEnterprise()) {
+    if (!releasePlansEnabled) {
         return null;
     }
 
@@ -40,7 +40,7 @@ export const ReleaseManagement = () => {
                                 }}
                                 maxWidth='700px'
                                 permission={CREATE_RELEASE_TEMPLATE}
-                                disabled={false}
+                                disabled={!isEnterprise()}
                             >
                                 New template
                             </ResponsiveButton>

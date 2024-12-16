@@ -5,21 +5,21 @@ import Raw = Knex.Raw;
 import type EventEmitter from 'events';
 import { ALL_PROJECTS, ensureStringValue, mapValues } from '../../../util';
 import type {
-    FeatureConfigurationCacheClient,
-    IClientFeatureToggleCacheReadModel,
-} from './client-feature-toggle-cache-read-model-type';
+    FeatureConfigurationDeltaClient,
+    IClientFeatureToggleDeltaReadModel,
+} from './client-feature-toggle-delta-read-model-type';
 import type { Db } from '../../../db/db';
 import {
     DB_TIME,
-    type IFeatureToggleCacheQuery,
+    type IFeatureToggleDeltaQuery,
     type IStrategyConfig,
     type PartialDeep,
 } from '../../../internals';
 import metricsHelper from '../../../util/metrics-helper';
 import FeatureToggleStore from '../../feature-toggle/feature-toggle-store';
 
-export default class ClientFeatureToggleCacheReadModel
-    implements IClientFeatureToggleCacheReadModel
+export default class ClientFeatureToggleDeltaReadModel
+    implements IClientFeatureToggleDeltaReadModel
 {
     private db: Db;
 
@@ -29,14 +29,14 @@ export default class ClientFeatureToggleCacheReadModel
         this.db = db;
         this.timer = (action: string) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
-                store: 'client-feature-toggle-cache-read-model',
+                store: 'client-feature-toggle-delta-read-model',
                 action,
             });
     }
 
     public async getAll(
-        featureQuery: IFeatureToggleCacheQuery,
-    ): Promise<FeatureConfigurationCacheClient[]> {
+        featureQuery: IFeatureToggleDeltaQuery,
+    ): Promise<FeatureConfigurationDeltaClient[]> {
         const environment = featureQuery.environment;
         const stopTimer = this.timer(`getAll`);
 
@@ -128,7 +128,7 @@ export default class ClientFeatureToggleCacheReadModel
         stopTimer();
 
         const featureToggles = rows.reduce((acc, r) => {
-            const feature: PartialDeep<FeatureConfigurationCacheClient> = acc[
+            const feature: PartialDeep<FeatureConfigurationDeltaClient> = acc[
                 r.name
             ] ?? {
                 strategies: [],
@@ -168,7 +168,7 @@ export default class ClientFeatureToggleCacheReadModel
             return acc;
         }, {});
 
-        const features: FeatureConfigurationCacheClient[] =
+        const features: FeatureConfigurationDeltaClient[] =
             Object.values(featureToggles);
 
         // strip away unwanted properties
@@ -193,7 +193,7 @@ export default class ClientFeatureToggleCacheReadModel
     }
 
     private addSegmentIdsToStrategy(
-        feature: PartialDeep<FeatureConfigurationCacheClient>,
+        feature: PartialDeep<FeatureConfigurationDeltaClient>,
         row: Record<string, any>,
     ) {
         const strategy = feature.strategies?.find(
@@ -222,7 +222,7 @@ export default class ClientFeatureToggleCacheReadModel
     }
 
     private isUnseenStrategyRow(
-        feature: PartialDeep<FeatureConfigurationCacheClient>,
+        feature: PartialDeep<FeatureConfigurationDeltaClient>,
         row: Record<string, any>,
     ): boolean {
         return (
@@ -232,7 +232,7 @@ export default class ClientFeatureToggleCacheReadModel
     }
 
     private addSegmentToStrategy(
-        feature: PartialDeep<FeatureConfigurationCacheClient>,
+        feature: PartialDeep<FeatureConfigurationDeltaClient>,
         row: Record<string, any>,
     ) {
         feature.strategies

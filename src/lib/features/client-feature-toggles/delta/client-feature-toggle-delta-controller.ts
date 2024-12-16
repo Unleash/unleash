@@ -17,7 +17,7 @@ import type { OpenApiService } from '../../../services/openapi-service';
 import { NONE } from '../../../types/permissions';
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import type { ClientFeatureToggleService } from '../client-feature-toggle-service';
-import type { RevisionCacheEntry } from './client-feature-toggle-cache';
+import type { RevisionDeltaEntry } from './client-feature-toggle-delta';
 import { clientFeaturesDeltaSchema } from '../../../openapi';
 import type { QueryOverride } from '../client-feature-toggle.controller';
 
@@ -142,7 +142,7 @@ export default class ClientFeatureToggleDeltaController extends Controller {
 
     async getDelta(
         req: IAuthRequest,
-        res: Response<RevisionCacheEntry>,
+        res: Response<RevisionDeltaEntry>,
     ): Promise<void> {
         if (!this.flagResolver.isEnabled('deltaApi')) {
             throw new NotFoundError();

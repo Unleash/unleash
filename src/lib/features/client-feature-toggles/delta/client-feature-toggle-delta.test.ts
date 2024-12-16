@@ -1,4 +1,4 @@
-import { calculateRequiredClientRevision } from './client-feature-toggle-cache';
+import { calculateRequiredClientRevision } from './client-feature-toggle-delta';
 
 const mockAdd = (params): any => {
     const base = {

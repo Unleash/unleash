@@ -345,7 +345,7 @@ export interface IFeatureToggleQuery {
     inlineSegmentConstraints?: boolean;
 }
 
-export interface IFeatureToggleCacheQuery extends IFeatureToggleQuery {
+export interface IFeatureToggleDeltaQuery extends IFeatureToggleQuery {
     toggleNames?: string[];
     environment: string;
 }

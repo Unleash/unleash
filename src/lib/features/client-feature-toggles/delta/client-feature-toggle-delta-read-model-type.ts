@@ -1,14 +1,14 @@
 import type { IFeatureToggleQuery } from '../../../types';
 import type { FeatureConfigurationClient } from '../../feature-toggle/types/feature-toggle-strategies-store-type';
 
-export interface FeatureConfigurationCacheClient
+export interface FeatureConfigurationDeltaClient
     extends FeatureConfigurationClient {
     description: string;
     impressionData: false;
 }
 
-export interface IClientFeatureToggleCacheReadModel {
+export interface IClientFeatureToggleDeltaReadModel {
     getAll(
         featureQuery: IFeatureToggleQuery,
-    ): Promise<FeatureConfigurationCacheClient[]>;
+    ): Promise<FeatureConfigurationDeltaClient[]>;
 }

@@ -412,7 +412,7 @@ export default class ClientApplicationsStore
             return acc;
         }, []);
         environments.forEach((env) => {
-            env.sdks.sort();
+            env.sdks?.sort();
         });
 
         return {

@@ -43,6 +43,7 @@ export const DELETE_TAG_TYPE = 'DELETE_TAG_TYPE';
 
 export const UPDATE_MAINTENANCE_MODE = 'UPDATE_MAINTENANCE_MODE';
 export const UPDATE_INSTANCE_BANNERS = 'UPDATE_INSTANCE_BANNERS';
+export const UPDATE_AUTH_CONFIGURATION = 'UPDATE_AUTH_CONFIGURATION';
 
 // Project
 export const CREATE_FEATURE = 'CREATE_FEATURE';
@@ -147,6 +148,10 @@ export const ROOT_PERMISSION_CATEGORIES = [
     {
         label: 'Instance maintenance',
         permissions: [UPDATE_MAINTENANCE_MODE, UPDATE_INSTANCE_BANNERS],
+    },
+    {
+        label: 'Authentication',
+        permissions: [UPDATE_AUTH_CONFIGURATION],
     },
 ];
 

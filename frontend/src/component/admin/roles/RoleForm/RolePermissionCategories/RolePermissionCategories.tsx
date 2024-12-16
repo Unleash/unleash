@@ -91,7 +91,8 @@ export const RolePermissionCategories = ({
                     .filter(
                         ({ label }) =>
                             granularAdminPermissionsEnabled ||
-                            label !== 'Instance maintenance',
+                            (label !== 'Instance maintenance' &&
+                                label !== 'Authentication'),
                     )
                     .map(({ label, type, permissions }) => (
                         <RolePermissionCategory

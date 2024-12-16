@@ -325,7 +325,7 @@ export default class ClientApplicationsStore
                         'COUNT(DISTINCT ci.instance_id) as unique_instance_count',
                     ),
                     this.db.raw(
-                        'ARRAY_AGG(DISTINCT ci.sdk_version) as sdk_versions',
+                        'ARRAY_AGG(DISTINCT ci.sdk_version) FILTER (WHERE ci.sdk_version IS NOT NULL) as sdk_versions',
                     ),
                     this.db.raw('MAX(ci.last_seen) as latest_last_seen'),
                 ])
@@ -394,7 +394,7 @@ export default class ClientApplicationsStore
                 env = {
                     name: environment,
                     instanceCount: Number(unique_instance_count),
-                    sdks: sdk_versions,
+                    sdks: sdk_versions || [],
                     lastSeen: latest_last_seen,
                     issues: {
                         missingFeatures: featuresNotMappedToProject
@@ -412,7 +412,7 @@ export default class ClientApplicationsStore
             return acc;
         }, []);
         environments.forEach((env) => {
-            env.sdks?.sort();
+            env.sdks.sort();
         });
 
         return {

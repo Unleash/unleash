@@ -103,91 +103,61 @@ Add our HTML:
 </html>
 ```
 
-Open the file in your browser
+Open the file in your browser, you'll see something like this:
 
-## Add the GraphQL endpoint
+![A non-fonctional website with only a button and a notice box](./template.png)
 
-The point of this tutorial is to mimic a real-world scenario where, based on a boolean feature flag, you would migrate from a REST API to a GraphQL one. So far, we've just used REST.
+## Fetch from the API
 
-Let's create a static feature flag, for now, just to test that we can call both versions successfully. Update `main.go`:
+Our website is looking a little empty and useless. Let's add a bit of JavaScript to fetch a photo of a corgi from the [dog.ceo API 🐶](https://dog.ceo/) and insert a random piece of information (or, fun fact) in the notice box. We'll add an event listener to the button so we can do the same when we click it.
 
-```go
-package main
+```js
+import { UnleashClient } from "https://esm.sh/unleash-proxy-client";
 
-import (
-    "bytes"
-    "encoding/json"
-    "fmt"
-    "io"
-    "log"
-    "net/http"
-)
+const corgiImg = document.getElementById("corgi-img");
+const funFact = document.getElementById("fun-fact");
+const newCorgiBtn = document.getElementById("new-corgi-btn");
+let unleash = null;
 
-type Country struct {
-    Name string `json:"name"`
-    Capital string `json:"capital"`
+const funFacts = [
+    "Corgis were originally bred for herding cattle and sheep.",
+    "The name 'Corgi' means 'Dwarf Dog' in Welsh.",
+    "Corgis are the favorite dog breed of Queen Elizabeth II.",
+    "Corgis have a 'fairy saddle' marking on their back.",
+    "There are two types of Corgis: Pembroke and Cardigan.",
+    "Corgis are excellent swimmers despite their short legs.",
+    "A group of Corgis is called a 'corggle'.",
+];
+
+async function start() {
+    await fetchCorgi();
 }
 
-func main() {
-    // Define a static feature flag
-    isGraphQL := true
+async function fetchCorgi() {
+    corgiImg.alt = "Loading...";
+    funFact.textContent = "Fetching a cute Corgi...";
 
-    var country Country
-    if isGraphQL {
-        // Call the GraphQL API
-        query := `{"query": "query { country(code: \"NO\") { name capital } }"}`
-        req, err := http.NewRequest("POST", "https://countries.trevorblades.com/", bytes.NewBuffer([]byte(query)))
-        if err != nil {
-            log.Fatal(err)
-        }
-        req.Header.Set("Content-Type", "application/json")
+    const response = await fetch(
+        "https://dog.ceo/api/breed/corgi/images/random"
+    );
+    const data = await response.json();
+    corgiImg.src = data.message;
 
-        client := &http.Client{}
-        resp, err := client.Do(req)
-        if err != nil {
-            log.Fatal(err)
-        }
-        defer resp.Body.Close()
-
-        body, _ := io.ReadAll(resp.Body)
-        var response struct {
-            Data struct {
-                Country Country `json:"country"`
-            } `json:"data"`
-        }
-        json.Unmarshal(body, &response)
-
-        country = response.Data.Country
-        fmt.Println("Hello GraphQL")
-    } else {
-        // Call the REST API
-        resp, err := http.Get("https://restcountries.com/v2/alpha/no")
-        if err != nil {
-            log.Fatal(err)
-        }
-        defer resp.Body.Close()
-
-        body, _ := io.ReadAll(resp.Body)
-        var countries []Country
-        json.Unmarshal(body, &countries)
-        country = countries[0]
-    }
-
-    fmt.Printf("Country: %s, Capital: %s\n", country.Name, country.Capital)
+    funFact.textContent = funFacts[Math.floor(Math.random() * funFacts.length)];
 }
+
+newCorgiBtn.addEventListener("click", fetchCorgi);
+
+start();
 ```
 
-Run the code again:
+Refresh your browser again. Our mini website is now functional.
 
-```sh
-go run main.go
-```
+![Our mini corgi website](./corgi-site.png)
 
-You should see `Hello GraphQL`, followed by `Country: Norway, Capital: Oslo` in your terminal.
+## 5. Add Unleash to your website
 
-## 5. Add Unleash to your Go app
-
-Now, let's connect our project to Unleash so that you can toggle that feature flag at runtime. If you wanted to, you could also do a [gradual rollout](/feature-flag-tutorials/use-cases/gradual-rollout) or use the flag for [A/B testing](/feature-flag-tutorials/use-cases/a-b-testing).
+Now, let's connect our project to Unleash so that you can toggle a feature flag at runtime. If you wanted to, you could also do a [gradual rollout](/feature-flag-tutorials/use-cases/gradual-rollout) or use the flag for [A/B testing](/feature-flag-tutorials/use-cases/a-b-testing).
 
 You'll need 2 things:
 
@@ -196,65 +166,57 @@ You'll need 2 things:
 
 With these 2, you can initialize your Unleash client as follows:
 
-```go
-unleash.Initialize(
-    unleash.WithUrl("http://localhost:4242/api/"),
-    unleash.WithAppName("country_go"),
-    unleash.WithCustomHeaders(http.Header{"Authorization": {"YOUR_API_KEY"}}),
-)
+```js
+let unleash = new UnleashClient({
+    url: "http://localhost:4242/api/",
+    clientKey: "YOUR_API_KEY",
+    appName: "corgi-site",
+});
 ```
 
-Now, let's add our client to our project, grab the feature flag from Unleash, and update our conditional statement. Don't forget to also update the config with your API key:
+Now, let's add our client to the project, after the selectors. Don't forget to also update the config with your API key:
+
+```js
+const corgiImg = document.getElementById("corgi-img");
+const funFact = document.getElementById("fun-fact");
+const newCorgiBtn = document.getElementById("new-corgi-btn");
+let unleash = new UnleashClient({
+    url: "http://localhost:4242/api/",
+    clientKey: "YOUR_API_KEY",
+    appName: "corgi-site",
+});
+```
+
+Then, we can decide to show the info box only if the `show-info` flag is enabled. Let's update our `fetchCorgi` function so it looks like the following:
 
 ```diff
-package main
+async function fetchCorgi() {
+  corgiImg.alt = "Loading...";
+  funFact.textContent = "Fetching a cute Corgi...";
 
-import (
-    "encoding/json"
-    "fmt"
-    "io"
-    "log"
-    "net/http"
++ const showInfo = unleash.isEnabled("show-info");
++ funFact.style.display = showInfo ? "block" : "none";
 
-+	"github.com/Unleash/unleash-client-go/v4"
-)
+  const response = await fetch("https://dog.ceo/api/breed/corgi/images/random");
+  const data = await response.json();
+  corgiImg.src = data.message;
 
-// ... rest of the types ...
-
-func main() {
-+	// Initialize Unleash client
-+	unleash.Initialize(
-+		unleash.WithUrl("http://localhost:4242/api/"),
-+		unleash.WithAppName("country_go"),
-+		unleash.WithCustomHeaders(http.Header{"Authorization": {"YOUR_API_KEY"}}),
-+	)
-+
-+	unleash.WaitForReady()
-
-+	isGraphQL := unleash.IsEnabled("graphql-api")
--	// Define a static feature flag
--	isGraphQL := true
-
-    // ... rest of the code ...
+  funFact.textContent = funFacts[Math.floor(Math.random() * funFacts.length)];
 }
 ```
 
-See additional use cases in our [Server-Side SDK with Go](https://docs.getunleash.io/reference/sdks/go) documentation.
-
 ## 6. Verify the toggle experience
 
-Now that we've connected our project to Unleash and grabbed our feature flag, we can verify that if you disable that flag in your development environment, you stop seeing the `Hello GraphQL` message and only get the country information from the REST API.
+Now that we've connected our project to Unleash and grabbed our feature flag, we can verify that if you disable that flag in your development environment, you stop seeing the fun facts.
 
 > **Note:** An update to a feature flag may take 30 seconds to propagate.
 
 ## Conclusion
 
-All done! Now you know how to add feature flags with Unleash in Go. You've learned how to:
+All done! Now you know how to add feature flags with Unleash in plain JavaScript, without any frameworks or libraries. You've learned how to:
 
--   Toggle between a REST and a GraphQL endpoint based on a feature flag
+-   Toggle between a DOM element based on a feature flag
 -   Install Unleash and create/enable a feature flag
--   Grab the value of a feature flag with the Go SDK
-
-Feel free to have a look at our [Go Examples page](/feature-flag-tutorials/golang/examples) for more.
+-   Grab the value of a feature flag with just JavaScript.
 
 Thank you

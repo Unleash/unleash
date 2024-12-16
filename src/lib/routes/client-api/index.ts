@@ -3,7 +3,7 @@ import FeatureController from '../../features/client-feature-toggles/client-feat
 import MetricsController from '../../features/metrics/instance/metrics';
 import RegisterController from '../../features/metrics/instance/register';
 import type { IUnleashConfig, IUnleashServices } from '../../types';
-import ClientFeatureToggleDeltaController from '../../features/client-feature-toggles/delta/client-feature-toggle-cache-controller';
+import ClientFeatureToggleDeltaController from '../../features/client-feature-toggles/delta/client-feature-toggle-delta-controller';
 
 export default class ClientApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices) {

@@ -10,7 +10,7 @@ import type { Logger } from '../../logger';
 
 import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import type {
-    RevisionCacheEntry,
+    RevisionDeltaEntry,
     ClientFeatureToggleDelta,
 } from './delta/client-feature-toggle-delta';
 
@@ -21,7 +21,7 @@ export class ClientFeatureToggleService {
 
     private segmentReadModel: ISegmentReadModel;
 
-    private clientFeatureToggleCache: ClientFeatureToggleDelta | null = null;
+    private clientFeatureToggleDelta: ClientFeatureToggleDelta | null = null;
 
     constructor(
         {
@@ -33,7 +33,7 @@ export class ClientFeatureToggleService {
     ) {
         this.logger = getLogger('services/client-feature-toggle-service.ts');
         this.segmentReadModel = segmentReadModel;
-        this.clientFeatureToggleCache = clientFeatureToggleCache;
+        this.clientFeatureToggleDelta = clientFeatureToggleCache;
         this.clientFeatureToggleStore = clientFeatureToggleStore;
     }
 
@@ -44,9 +44,9 @@ export class ClientFeatureToggleService {
     async getClientDelta(
         revisionId: number | undefined,
         query: IFeatureToggleQuery,
-    ): Promise<RevisionCacheEntry | undefined> {
-        if (this.clientFeatureToggleCache !== null) {
-            return this.clientFeatureToggleCache.getDelta(revisionId, query);
+    ): Promise<RevisionDeltaEntry | undefined> {
+        if (this.clientFeatureToggleDelta !== null) {
+            return this.clientFeatureToggleDelta.getDelta(revisionId, query);
         } else {
             throw new Error(
                 'Calling the partial updates but the cache is not initialized',

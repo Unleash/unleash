@@ -169,14 +169,11 @@ test('should match with /api/client/delta', async () => {
 
 test('should get 304 if asked for latest revision', async () => {
     await setupFeatures(db, app);
-    // @ts-ignore
-    console.log(app.services.clientFeatureToggleService.clientFeatureToggleDelta);
-    
+
+    // Set current revision id to 14 to test etag. TS ignore to access otherwise inaccessible property.
     // @ts-ignore
     app.services.clientFeatureToggleService.clientFeatureToggleDelta.currentRevisionId = 14;
 
-    const events = await db.rawDatabase('events').select('*');
-    console.log(events);
 
     await app.request
         .set('If-None-Match', '14')

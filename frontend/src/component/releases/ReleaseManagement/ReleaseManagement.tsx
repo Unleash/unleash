@@ -10,11 +10,19 @@ import { useNavigate } from 'react-router-dom';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { EmptyTemplatesListMessage } from './EmptyTemplatesListMessage';
 import { ReleasePlanTemplateList } from './ReleasePlanTemplateList';
+import { useUiFlag } from 'hooks/useUiFlag';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const ReleaseManagement = () => {
     usePageTitle('Release management');
     const navigate = useNavigate();
     const data = useReleasePlanTemplates();
+
+    const { isEnterprise } = useUiConfig();
+    const releasePlansEnabled = useUiFlag('releasePlans');
+    if (!releasePlansEnabled || !isEnterprise()) {
+        return null;
+    }
 
     return (
         <>

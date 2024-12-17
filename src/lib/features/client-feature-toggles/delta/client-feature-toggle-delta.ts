@@ -99,7 +99,7 @@ export class ClientFeatureToggleDelta {
 
     private delta: Revisions = {};
 
-    private segments: IClientSegment[] = [];
+    private segments: IClientSegment[];
 
     private eventStore: IEventStore;
 
@@ -155,6 +155,10 @@ export class ClientFeatureToggleDelta {
 
         if (!hasDelta) {
             await this.initEnvironmentDelta(environment);
+        }
+        const hasSegments = this.segments;
+        if (!hasSegments) {
+            await this.updateSegments();
         }
 
         // Should get the latest state if revision does not exist or if sdkRevision is not present

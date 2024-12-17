@@ -43,6 +43,7 @@ type IDateFilterItem = IBaseFilterItem & {
     dateOperators: [string, ...string[]];
     fromFilterKey?: string;
     toFilterKey?: string;
+    persistent?: boolean;
 };
 
 export type IFilterItem = ITextFilterItem | IDateFilterItem;
@@ -166,7 +167,11 @@ export const Filters: FC<IFilterProps> = ({
                             }}
                             onRangeChange={rangeChangeHandler(filter)}
                             operators={filter.dateOperators}
-                            onChipClose={() => deselectFilter(filter.label)}
+                            onChipClose={
+                                filter.persistent
+                                    ? undefined
+                                    : () => deselectFilter(filter.label)
+                            }
                         />
                     );
                 }

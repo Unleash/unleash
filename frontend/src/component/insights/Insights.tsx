@@ -9,6 +9,8 @@ import { InsightsCharts } from './InsightsCharts';
 import { Sticky } from 'component/common/Sticky/Sticky';
 import { InsightsFilters } from './InsightsFilters';
 import { FilterItemParam } from '../../utils/serializeQueryParams';
+import { format, subMonths } from 'date-fns';
+import { withDefault } from 'use-query-params';
 
 const StyledWrapper = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2),
@@ -32,10 +34,20 @@ export const Insights: FC<InsightsProps> = ({ withCharts = true }) => {
 
     const stateConfig = {
         project: FilterItemParam,
-        from: FilterItemParam,
-        to: FilterItemParam,
+        from: withDefault(FilterItemParam, {
+            values: [format(subMonths(new Date(), 1), 'yyyy-MM-dd')],
+            operator: 'IS',
+        }),
+        to: withDefault(FilterItemParam, {
+            values: [format(new Date(), 'yyyy-MM-dd')],
+            operator: 'IS',
+        }),
     };
-    const [state, setState] = usePersistentTableState('insights', stateConfig);
+    const [state, setState] = usePersistentTableState('insights', stateConfig, [
+        'from',
+        'to',
+    ]);
+
     const { insights, loading } = useInsights(
         state.from?.values[0],
         state.to?.values[0],

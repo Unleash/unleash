@@ -59,6 +59,7 @@ export const useEventLogFilters = (
                 dateOperators: ['IS'],
                 fromFilterKey: 'from',
                 toFilterKey: 'to',
+                persistent: true,
             },
             {
                 label: 'Date To',
@@ -68,6 +69,7 @@ export const useEventLogFilters = (
                 dateOperators: ['IS'],
                 fromFilterKey: 'from',
                 toFilterKey: 'to',
+                persistent: true,
             },
             {
                 label: 'Created by',

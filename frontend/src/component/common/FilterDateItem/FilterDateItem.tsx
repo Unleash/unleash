@@ -18,7 +18,7 @@ export interface IFilterDateItemProps {
         from: FilterItemParams;
         to: FilterItemParams;
     }) => void;
-    onChipClose: () => void;
+    onChipClose?: () => void;
     state: FilterItemParams | null | undefined;
     operators: [string, ...string[]];
 }
@@ -60,11 +60,13 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
         : [];
     const selectedDate = state ? new Date(state.values[0]) : null;
     const currentOperator = state ? state.operator : operators[0];
-    const onDelete = () => {
-        onChange({ operator: operators[0], values: [] });
-        onClose();
-        onChipClose();
-    };
+    const onDelete = onChipClose
+        ? () => {
+              onChange({ operator: operators[0], values: [] });
+              onClose();
+              onChipClose();
+          }
+        : undefined;
 
     useEffect(() => {
         if (state && !operators.includes(state.operator)) {

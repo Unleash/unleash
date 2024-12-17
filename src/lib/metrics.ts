@@ -662,7 +662,7 @@ export function registerPrometheusMetrics(
 
     const licensedUsers = createGauge({
         name: 'licensed_users',
-        help: 'The number of licensed users.',
+        help: 'The number of seats used.',
     });
 
     const addonEventsHandledCounter = createCounter({

@@ -1,0 +1,148 @@
+---
+title: How to Implement User Management, Access Controls, and Auditing with Feature Flags
+slug: /feature-flag-tutorials/use-cases/user-management-access-controls-auditing
+---
+
+Feature flags are a game-changer for how software teams build, test, and release products. They enable you to roll out new features with confidence, manage risk, and keep your software development agile and secure.
+
+By setting up smart user management, your team can turn feature flags into a powerful platform for innovation. You'll be able to experiment faster and release with confidence while maintaining security and compliance.
+
+Imagine a large banking platform company with hundreds of engineering teams across multiple continents. Their software development lifecycle is complex and dynamic. This is where feature flag management transforms from a simple tool to a critical infrastructure component.
+
+In this tutorial, you will:
+
+-   Integrate with identity providers for single sign-on (SSO)
+-   Disable password-based login
+-   Automate user management with the SCIM protocol
+-   Configure role-based access control (RBAC)
+-   Audit your systems
+
+## Implement single sign-on for enterprise identity integration
+
+When an enterprise like a global banking platform considers implementing feature flags, the first hurdle is always authentication. Traditional username and password approaches quickly become a security nightmare. Unleash provides [single sign-on (SSO)](/how-to/sso) as a centralized, secure method for managing user access.
+
+![In Unleash's Single Sign-On page, there are four tabs to set up Open ID Connect, SAML 2.0, traditional passwords, and SCIM.](/img/use-case-user-mgmt-saml.png)
+
+Unleash supports any SSO option through OpenID Connect or SAML 2.0, including identity providers like Okta, Microsoft Entra ID, and Google Keycloak to create a unified authentication ecosystem.
+
+By integrating Unleash with these systems, organizations can ensure that every engineer accessing feature flags undergoes a rigorous, centralized authentication process. These integrations ensure a transparent, auditable system where every access can be traced, logged, and validated.
+
+### Implement security beyond passwords
+
+Migrate completely from password-based authentication to single sign-on to dramatically improve your organization's security posture and audit capabilities.
+
+With single sign-on, security teams can track exactly who accessed feature flags, when, and from where, giving visibility into system interactions. Implement SSO as your primary (and preferably only) authentication method.
+
+By migrating from password-based login, you can:
+
+-   Immediately eliminate password-related security risks.
+-   Centralize user authentication through your identity management system.
+-   Get detailed logging of every access attempt, including user identity, timestamp, and source.
+-   Simplify user lifecycle management through automated provisioning and de-provisioning.
+-   Comply with enterprise security standards and regulatory requirements.
+
+## Automated user management
+
+User management at scale is difficult without robust automation. SCIM (System for Cross-domain Identity Management) protocols help you automatically provision and de-provision user accounts. When an employee joins or leaves your organization, their feature flag access can be automatically adjusted without manual changes.
+
+When you connect Unleash to your identity provider, user groups are no longer managed manually. Instead, the synchronization process becomes an automated, dynamic workflow that instantly reflects organizational changes. Follow our step-by-step guide to set up [user group syncing](/how-to/how-to-set-up-group-sso-sync).
+With SSO integration, groups defined in your identity provider are directly mapped to Unleash access groups. This means:
+
+-   New team members are automatically assigned correct permissions.
+-   Organizational restructures are reflected immediately.
+-   Consistent access controls across all enterprise systems.
+
+SCIM takes group synchronization to the next level by providing a standardized protocol for user and group management.
+Through SCIM, you can:
+
+-   Automatically create and delete user groups.
+-   Sync group membership in real-time.
+-   Ensure consistent access across multiple platforms.
+
+This automation creates an access control system that adapts in real-time to organizational changes. Within minutes of joining, a new team member can be granted precisely the right level of access, while departing employees are immediately locked out of sensitive systems.
+
+## Configure role-based access controls
+
+[Role-based access control](/reference/rbac) makes feature flag management a strategic governance tool. Consider a scenario in which a junior developer should never be able to modify critical feature flags in the authentication system within a banking platform. RBAC makes this granular control seamless. We recommend carefully delegating administrative privileges to users based on the needs of their roles within projects and the organization.
+
+In the Unleash Admin UI, go to **Admin > Roles** to view, create, and manage user roles.
+
+There are two categories for users within the RBAC framework at Unleash: _root roles_ and _project roles_.
+
+Assign users with root administrator privileges to configure entire systems. These users can perform any operation within the Unleash platform and change permissions for other users when they belong to a specific group.
+
+Assign other users to project role owners to have domain-specific control within a specific project maintained in Unleash.
+
+Project permissions are separated from root permissions to make it even more targeted regarding what permissions someone can and cannot have for each piece of Unleash. Assign developers with creation and modification rights and viewers who can observe but not change.
+
+For more fine-tuned access controls, create [custom root roles](/how-to/how-to-create-and-assign-custom-root-roles) and [custom project roles](/how-to/how-to-create-and-assign-custom-project-roles), where you can define the privileges and limitations beyond the predefined roles we have built into Unleash.
+
+### Extend RBAC with a change management workflow
+
+While RBAC allows you to administer Unleash safely, you might need approval processes when changing feature flags or their configuration. When multiple teams are working on complex systems, [change requests](/reference/change-requests) provide a systematic approach to:
+
+-   Comprehensive review: Every proposed feature flag modification goes through a review, reducing the likelihood of unintended consequences.
+-   Audit trail: Every change is documented, timestamped, and attributed to specific team members, creating a permanent record of system modifications.
+-   Approval workflows: Multi-stage approval processes ensure that critical changes are thoroughly reviewed before implementation.
+-   Compliance requirements: For regulated industries like finance and healthcare, Change Requests provide the detailed documentation necessary to meet strict compliance standards.
+
+Imagine a large banking application where a development team wants to modify a feature flag controlling a new authentication method. Instead of a developer making an immediate change, the change request workflow might require:
+
+1. Initial proposal submission
+2. Security team review
+3. Compliance officer approval
+4. Final sign-off from technical leadership
+
+This process ensures that even minor feature flag changes go through rigorous evaluation.
+
+## Implement effective auditing in Unleash
+
+For enterprise organizations, robust auditing provides a comprehensive view of every action taken within the feature flag management system. [Unleash's auditing capabilities](/reference/events) track critical information for every significant system interaction:
+
+### Auditing user actions
+
+-   Detailed logs of user authentication attempts
+-   Feature flag creation, modification, and deletion
+-   Changes to project configurations
+-   Role and permission modifications
+-   Environment-specific flag updates
+
+### Metadata tracking
+
+-   Precise timestamps for each action
+-   User identity (including email and user ID)
+-   Source IP address
+-   Specific system components affected
+-   Detailed context of each change
+
+The process begins with configuring robust log retention. Financial and healthcare organizations typically require extensive log preservation, maintaining detailed records for up to seven years. For most enterprise environments, a three-year retention period provides a robust balance between compliance and operational efficiency.
+
+In your **Projects** view, click on your project and select the **Event log** tab to get a comprehensive list of events.
+
+![This event log captures a change request cancellation, the user who performed the cancellation, and other metadata.](/img/use-case-user-mgmt-event-log.png)
+
+Unleash supports multiple log export formats, including JSON and CSV, for integration with enterprise reporting and analytics tools. This flexibility allows security teams to transform raw audit logs into meaningful insights about system usage, user behaviors, and potential security risks.
+
+Here’s an example of an audit log entry in JSON format:
+
+```json
+{
+    "timestamp": "2024-03-15T14:22:11Z",
+    "user": {
+        "id": "user-123",
+        "email": "jane.developer@company.com"
+    },
+    "action": "feature_flag_updated",
+    "details": {
+        "flag_name": "payment-gateway-experiment",
+        "previous_state": "enabled",
+        "new_state": "disabled",
+        "environment": "production"
+    },
+    "source_ip": "192.168.1.100"
+}
+```
+
+The most advanced implementations integrate Unleash audit logs directly into broader Security Information and Event Management (SIEM) systems. This enables real-time monitoring and creates a holistic view of system interactions across multiple platforms. By correlating Unleash audit data with other enterprise security logs, organizations can detect subtle patterns and potential security anomalies that might go unnoticed in isolated systems.
+
+By implementing intelligent, automated, and granular access controls, organizations can create a secure foundation for continuous delivery at scale.

@@ -126,6 +126,11 @@ const sidebars: SidebarsConfig = {
                                     label: 'Trunk-Based Development',
                                     id: 'feature-flag-tutorials/use-cases/trunk-based-development',
                                 },
+                                {
+                                    type: 'doc',
+                                    label: 'User Management, Access Controls, and Auditing',
+                                    id: 'feature-flag-tutorials/use-cases/user-management-access-controls',
+                                },
                             ],
                         },
                         {

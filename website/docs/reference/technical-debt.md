@@ -3,48 +3,37 @@ title: Technical Debt
 pagination_next: reference/insights
 ---
 
-At Unleash we care deeply about code quality. Technical debt creeps up over time and slowly builds to the point where it really starts to hurt. At that point it's too late. Feature flags that have outlived their feature and are not cleaned up represent technical debt that you should remove from your code.
+## Overview
 
-## Stale and potentially stale toggles
+Feature flag technical debt accumulates when you don’t manage or retire feature flags after their intended use. Over time, the codebase becomes cluttered with outdated flags, making the code more complex and harder to maintain. This can slow productivity as developers spend more time understanding and navigating the code.
 
-When a flag is no longer useful, we say that it has become _stale_. A stale flag is a flag that has served its purpose and that you should remove from the code base. For a flag to become stale, you have to explicitly mark it as such. You can mark a flag as stale in the [technical debt dashboard](#the-technical-debt-dashboard).
+[Stale feature flags](#stale-and-potentially-stale-flags) can also introduce risks, such as security vulnerabilities, by unintentionally exposing sensitive features or data. Additionally, the presence of stale or conflicting feature flags can lead to unexpected application behavior, increasing the risk of downtime and affecting overall stability. Managing feature flags effectively minimizes these risks and ensures a healthier development process.
 
-Unleash also has a concept of _potentially_ stale flags. These are flags that have lived longer than what Unleash expects them to based on their [feature flag type](../reference/feature-toggles#feature-flag-types). However, Unleash can't know for sure whether a flag is actually stale or not, so it's up to you to make the decision on whether to mark it as stale or to keep it as an active flag.
 
-A flag being (potentially) stale, does not affect how it performs in your application; it's only there to make it easier for you to manage your flags.
+## Stale and potentially stale flags
 
-## The technical debt dashboard
+A feature flag can have one of the following states: _active_, _potentially stale_, or _stale_. Unleash marks all flags as potentially stale automatically once they pass their [expected lifetime](/reference/feature-toggles#feature-flag-types). This gives you an indication of when to review and clean up a feature flag in code.
 
-In order to assist with removing unused feature flags, Unleash provides project health dashboards for each project. The health dashboard is listed as one of a project's tabs.
+You can also manually mark a feature flag as stale if you know it has served its intended purpose. To do so, click **Toggle stale state** on the flag's details page.
 
-![Three UI elements describing the health rating of the project. The first card has info on the project, including its name. The second is the "report card", containing the project's overall health rating, a flag report, and potential actions. The last card is a list of all the project's flags with data on when it was last seen, when it was created, when it expired, its status and a report.](/img/reporting.png)
+![Marking a feature flag as stale](/img/mark-flag-stale.png)
 
-The dashboard includes a health report card, and a list of flags that can be filtered on different parameters.
+Alternatively, you can mark one or more flags as stale from the project overview page. In the **Feature flags** list, select the affected flags and click **Mark as stale**.
 
-### Report card {#report-card}
+![Mark a flag as stale in a project](/img/stale-flag-project.png)
 
-![The project's health report card. It lists the project's health rating and when it was last updated; a flag report containing the number of active flags in the project; and potential actions, in this case asking the user to review potentially stale flags.](/img/reportcard.png)
+Marking a flag as stale allows you to deprecate a feature flag without removing the active configuration for connected applications. You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [project status dashboard](#project-status).
 
-The report card includes some statistics of your application. It lists the overall amount of your active flags, the overall amount of stale flags, and lastly, the flags that Unleash believes should be stale. This calculation is performed on the basis of flag types:
+Marking a flag as stale generates a `feature-stale-on` [event](/reference/events#feature-stale-on). You can use [an integration](/reference/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
 
-- **Release** - Used to enable trunk-based development for teams practicing Continuous Delivery. _Expected lifetime 40 days_
-- **Experiment** - Used to perform multivariate or A/B testing. _Expected lifetime 40 days_
-- **Operational** - Used to control operational aspects of the system's behavior. _Expected lifetime 7 days_
-- **Kill switch** - Used to to gracefully degrade system functionality. _(permanent)_
-- **Permission** - Used to change the features or product experience that certain users receive. _(permanent)_
+To find stale and potentially stale flags in a project, apply the **State** filter in the **Feature flags** list.
 
-If your flag exceeds the expected lifetime of its flag type it will be marked as _potentially stale_.
+While a flag's state does not affect its behavior in applications, using states to manage flags helps reduce technical debt and maintain a cleaner codebase.
 
-One thing to note is that the report card and corresponding list are showing stats related to the currently selected project. If you have more than one project, you will be provided with a project selector in order to swap between the projects.
+## Project status
 
-### Health rating
+Each project has a **Project status** dashboard, where you can view its health status and the total number of unhealthy flags. All active flags are considered healthy, while stale and potentially stale flags are considered unhealthy. To keep your project in a healthy state, [archive stale feature flags](/reference/feature-toggles#archive-a-feature-flag) and remove code from your codebase.
 
-Unleash calculates a project's health rating based on the project's total number of active flags and how many of those active flags are stale or potentially stale. When you archive a flag, it no longer counts towards your project's health rating.
+![Project status dashboard](/img/project-status-dashboard.png)
 
-The health rating updates once every hour, so there may be some lag if you have recently added, removed, or changed the status of a flag.
-
-### Flag list {#toggle-list}
-
-![A table of the flags in the current project with their health reports. The table has the following columns: name, last seen, created, expired, status, and report.](/img/togglelist.png)
-
-The flag list gives an overview over all of your flags and their status. In this list you can sort the flags by their name, last seen, created, expired, status and report. This will allow you to quickly get an overview over which flags may be worth deprecating and removing from the code.
+Your overall project health rating is the percentage of healthy flags in your project. To view your project health over time, go to [Insights](/reference/insights).

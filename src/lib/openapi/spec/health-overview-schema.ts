@@ -75,7 +75,7 @@ export const healthOverviewSchema = {
         health: {
             type: 'integer',
             description:
-                'The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project.',
+                'The overall [health rating](https://docs.getunleash.io/reference/technical-debt#project-status) of the project.',
             example: 95,
         },
         environments: {

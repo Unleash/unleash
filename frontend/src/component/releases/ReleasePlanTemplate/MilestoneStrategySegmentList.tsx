@@ -41,7 +41,6 @@ export const MilestoneStrategySegmentList = ({
     const lastSegmentIndex = segments.length - 1;
 
     if (segments.length === 0) {
-        console.log('segments.length === 0');
         return null;
     }
 

@@ -8,11 +8,16 @@ import { format } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../util';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
+import { DateRangePresets } from './DateRangePresets';
 
 export interface IFilterDateItemProps {
     name: string;
     label: ReactNode;
     onChange: (value: FilterItemParams) => void;
+    onRangeChange?: (value: {
+        from: FilterItemParams;
+        to: FilterItemParams;
+    }) => void;
     onChipClose: () => void;
     state: FilterItemParams | null | undefined;
     operators: [string, ...string[]];
@@ -22,6 +27,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     name,
     label,
     onChange,
+    onRangeChange,
     onChipClose,
     state,
     operators,
@@ -115,6 +121,9 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                             });
                         }}
                     />
+                    {onRangeChange && (
+                        <DateRangePresets onRangeChange={onRangeChange} />
+                    )}
                 </LocalizationProvider>
             </StyledPopover>
         </>

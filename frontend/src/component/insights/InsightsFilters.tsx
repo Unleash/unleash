@@ -34,6 +34,8 @@ export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
                 options: [],
                 filterKey: 'from',
                 dateOperators: ['IS'],
+                fromFilterKey: 'from',
+                toFilterKey: 'to',
             },
             {
                 label: 'Date To',
@@ -41,6 +43,8 @@ export const InsightsFilters: FC<IFeatureToggleFiltersProps> = ({
                 options: [],
                 filterKey: 'to',
                 dateOperators: ['IS'],
+                fromFilterKey: 'from',
+                toFilterKey: 'to',
             },
             ...(hasMultipleProjects
                 ? ([

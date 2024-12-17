@@ -195,6 +195,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                 <SidebarModal
                     label='Add strategy to template milestone'
                     onClose={() => {
+                        setAddUpdateStrategyOpen(false);
                         setStrategyModeEdit(false);
                     }}
                     open={addUpdateStrategyOpen}
@@ -205,6 +206,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                         onAddUpdateStrategy={addUpdateStrategy}
                         onCancel={() => {
                             setAddUpdateStrategyOpen(false);
+                            setStrategyModeEdit(false);
                         }}
                         editMode={strategyModeEdit}
                     />

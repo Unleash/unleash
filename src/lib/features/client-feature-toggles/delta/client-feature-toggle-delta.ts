@@ -1,4 +1,5 @@
 import type {
+    IClientSegment,
     IEventStore,
     IFeatureToggleDeltaQuery,
     IFeatureToggleQuery,
@@ -12,8 +13,6 @@ import type {
     FeatureConfigurationDeltaClient,
     IClientFeatureToggleDeltaReadModel,
 } from './client-feature-toggle-delta-read-model-type';
-import type { Segment } from 'unleash-client/lib/strategy/strategy';
-import { mapSegmentsForClient } from '../../playground/offline-unleash-client';
 
 type DeletedFeature = {
     name: string;
@@ -24,7 +23,7 @@ export type RevisionDeltaEntry = {
     updated: FeatureConfigurationDeltaClient[];
     revisionId: number;
     removed: DeletedFeature[];
-    segments: Segment[];
+    segments: IClientSegment[];
 };
 
 export type Revision = {
@@ -100,7 +99,7 @@ export class ClientFeatureToggleDelta {
 
     private delta: Revisions = {};
 
-    private segments: Segment[] = [];
+    private segments: IClientSegment[] = [];
 
     private eventStore: IEventStore;
 
@@ -289,8 +288,6 @@ export class ClientFeatureToggleDelta {
     }
 
     private async updateSegments(): Promise<void> {
-        this.segments = mapSegmentsForClient(
-            await this.segmentReadModel.getAll(),
-        );
+        this.segments = await this.segmentReadModel.getActiveForClient();
     }
 }

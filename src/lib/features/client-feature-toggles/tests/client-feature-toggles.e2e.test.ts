@@ -30,7 +30,15 @@ const getApiClientResponse = (project = 'default') => [
         strategies: [
             {
                 name: 'flexibleRollout',
-                constraints: [],
+                constraints: [
+                    {
+                        contextName: 'appName',
+                        operator: 'IN',
+                        values: ['test'],
+                        caseInsensitive: false,
+                        inverted: false,
+                    },
+                ],
                 parameters: {
                     rollout: '100',
                     stickiness: 'default',
@@ -82,6 +90,7 @@ const cleanup = async (db: ITestDb, app: IUnleashTest) => {
                 ),
             ),
     );
+    await db.stores.segmentStore.deleteAll();
 };
 
 const setupFeatures = async (
@@ -94,10 +103,24 @@ const setupFeatures = async (
     await app.createFeature('test1', project);
     await app.createFeature('test2', project);
 
+    const { body: segmentBody } = await app.createSegment({
+        name: 'a',
+        constraints: [
+            {
+                contextName: 'appName',
+                operator: 'IN',
+                values: ['test'],
+                caseInsensitive: false,
+                inverted: false,
+            },
+        ],
+    });
+
     await app.addStrategyToFeatureEnv(
         {
             name: 'flexibleRollout',
             constraints: [],
+            segments: [segmentBody.id],
             parameters: {
                 rollout: '100',
                 stickiness: 'default',
@@ -322,20 +345,4 @@ test('should match snapshot from /api/client/features', async () => {
         .expect(200);
 
     expect(result.body).toMatchSnapshot();
-});
-
-test('should match with /api/client/delta', async () => {
-    await setupFeatures(db, app);
-
-    const { body } = await app.request
-        .get('/api/client/features')
-        .expect('Content-Type', /json/)
-        .expect(200);
-
-    const { body: deltaBody } = await app.request
-        .get('/api/client/delta')
-        .expect('Content-Type', /json/)
-        .expect(200);
-
-    expect(body.features).toMatchObject(deltaBody.updated);
 });

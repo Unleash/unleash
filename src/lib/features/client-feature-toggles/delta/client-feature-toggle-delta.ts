@@ -1,8 +1,10 @@
 import type {
+    IClientSegment,
     IEventStore,
     IFeatureToggleDeltaQuery,
     IFeatureToggleQuery,
     IFlagResolver,
+    ISegmentReadModel,
 } from '../../../types';
 import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
 import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
@@ -21,6 +23,7 @@ export type RevisionDeltaEntry = {
     updated: FeatureConfigurationDeltaClient[];
     revisionId: number;
     removed: DeletedFeature[];
+    segments: IClientSegment[];
 };
 
 export type Revision = {
@@ -96,6 +99,8 @@ export class ClientFeatureToggleDelta {
 
     private delta: Revisions = {};
 
+    private segments: IClientSegment[];
+
     private eventStore: IEventStore;
 
     private currentRevisionId: number = 0;
@@ -106,8 +111,11 @@ export class ClientFeatureToggleDelta {
 
     private configurationRevisionService: ConfigurationRevisionService;
 
+    private readonly segmentReadModel: ISegmentReadModel;
+
     constructor(
         clientFeatureToggleDeltaReadModel: IClientFeatureToggleDeltaReadModel,
+        segmentReadModel: ISegmentReadModel,
         eventStore: IEventStore,
         configurationRevisionService: ConfigurationRevisionService,
         flagResolver: IFlagResolver,
@@ -117,10 +125,12 @@ export class ClientFeatureToggleDelta {
         this.clientFeatureToggleDeltaReadModel =
             clientFeatureToggleDeltaReadModel;
         this.flagResolver = flagResolver;
+        this.segmentReadModel = segmentReadModel;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.delta = {};
 
         this.initRevisionId();
+        this.updateSegments();
         this.configurationRevisionService.on(
             UPDATE_REVISION,
             this.onUpdateRevisionEvent,
@@ -146,6 +156,10 @@ export class ClientFeatureToggleDelta {
         if (!hasDelta) {
             await this.initEnvironmentDelta(environment);
         }
+        const hasSegments = this.segments;
+        if (!hasSegments) {
+            await this.updateSegments();
+        }
 
         // Should get the latest state if revision does not exist or if sdkRevision is not present
         // We should be able to do this without going to the database by merging revisions from the delta with
@@ -162,6 +176,7 @@ export class ClientFeatureToggleDelta {
                 revisionId: this.currentRevisionId,
                 // @ts-ignore
                 updated: await this.getClientFeatures({ environment }),
+                segments: this.segments,
                 removed: [],
             };
         }
@@ -178,12 +193,18 @@ export class ClientFeatureToggleDelta {
             projects,
         );
 
-        return Promise.resolve(compressedRevision);
+        const revisionResponse = {
+            ...compressedRevision,
+            segments: this.segments,
+        };
+
+        return Promise.resolve(revisionResponse);
     }
 
     private async onUpdateRevisionEvent() {
         if (this.flagResolver.isEnabled('deltaApi')) {
             await this.listenToRevisionChange();
+            await this.updateSegments();
         }
     }
 
@@ -268,5 +289,9 @@ export class ClientFeatureToggleDelta {
         const result =
             await this.clientFeatureToggleDeltaReadModel.getAll(query);
         return result;
+    }
+
+    private async updateSegments(): Promise<void> {
+        this.segments = await this.segmentReadModel.getActiveForClient();
     }
 }

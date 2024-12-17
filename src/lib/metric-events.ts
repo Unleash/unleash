@@ -1,5 +1,4 @@
 import type EventEmitter from 'events';
-import { CLIENT_METRICS } from './internals';
 
 const REQUEST_TIME = 'request_time';
 const DB_TIME = 'db_time';

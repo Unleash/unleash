@@ -4,6 +4,7 @@ import ConfigurationRevisionService from '../../feature-toggle/configuration-rev
 import type { IUnleashConfig } from '../../../types';
 import type { Db } from '../../../db/db';
 import ClientFeatureToggleDeltaReadModel from './client-feature-toggle-delta-read-model';
+import { SegmentReadModel } from '../../segment/segment-read-model';
 
 export const createClientFeatureToggleDelta = (
     db: Db,
@@ -19,8 +20,11 @@ export const createClientFeatureToggleDelta = (
     const configurationRevisionService =
         ConfigurationRevisionService.getInstance({ eventStore }, config);
 
+    const segmentReadModel = new SegmentReadModel(db);
+
     const clientFeatureToggleDelta = new ClientFeatureToggleDelta(
         clientFeatureToggleDeltaReadModel,
+        segmentReadModel,
         eventStore,
         configurationRevisionService,
         flagResolver,

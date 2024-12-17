@@ -37,10 +37,3 @@ Each project has a **Project status** dashboard, where you can view its health s
 ![Project status dashboard](/img/project-status-dashboard.png)
 
 Your overall project health rating is the percentage of healthy flags in your project. To view your project health over time, go to [Insights](/reference/insights).
-
-:::info
-
-Project status updates every hour. Changes to flags, such as adding, removing, or changing their state, may take some time to reflect.
-
-:::
-

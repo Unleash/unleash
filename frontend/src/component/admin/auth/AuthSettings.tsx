@@ -8,7 +8,7 @@ import { ScimSettings } from './ScimSettings/ScimSettings';
 import { PasswordAuth } from './PasswordAuth/PasswordAuth';
 import { GoogleAuth } from './GoogleAuth/GoogleAuth';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
-import { ADMIN } from '@server/types/permissions';
+import { ADMIN, UPDATE_AUTH_CONFIGURATION } from '@server/types/permissions';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { useState } from 'react';
 import { TabPanel } from 'component/common/TabNav/TabPanel/TabPanel';
@@ -51,7 +51,7 @@ export const AuthSettings = () => {
 
     return (
         <div>
-            <PermissionGuard permissions={ADMIN}>
+            <PermissionGuard permissions={[ADMIN, UPDATE_AUTH_CONFIGURATION]}>
                 <PageContent
                     withTabs
                     header={

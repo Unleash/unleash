@@ -34,6 +34,7 @@ const StyledName = styled(StringTruncator)(({ theme }) => ({
 
 const StyledCard = styled('div')(({ theme }) => ({
     display: 'grid',
+    cursor: 'pointer',
     gridTemplateColumns: '3rem 1fr',
     width: '20rem',
     padding: theme.spacing(2),

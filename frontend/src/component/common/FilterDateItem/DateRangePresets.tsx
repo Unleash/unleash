@@ -1,7 +1,19 @@
-import { Box, List, ListItem, ListItemButton, Typography } from '@mui/material';
+import {
+    Box,
+    List,
+    ListItem,
+    ListItemButton,
+    styled,
+    Typography,
+} from '@mui/material';
 import type { FilterItemParams } from '../../filter/FilterItem/FilterItem';
 import type { FC } from 'react';
 import { calculateDateRange, type RangeType } from './calculateDateRange';
+
+export const PresetsHeader = styled(Typography)(({ theme }) => ({
+    paddingLeft: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
+}));
 
 export const DateRangePresets: FC<{
     onRangeChange: (value: {
@@ -25,9 +37,7 @@ export const DateRangePresets: FC<{
 
     return (
         <Box>
-            <Typography variant='h3' sx={{ pb: 1, pl: 2 }}>
-                Presets
-            </Typography>
+            <PresetsHeader variant='h3'>Presets</PresetsHeader>
             <List disablePadding sx={{ pb: 2 }}>
                 <ListItem disablePadding>
                     <ListItemButton onClick={rangeChangeHandler('thisMonth')}>

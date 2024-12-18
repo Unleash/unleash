@@ -10,7 +10,7 @@ import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import type { SearchEventsParams } from 'openapi';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
-import { format, subMonths } from 'date-fns';
+import { format, subYears } from 'date-fns';
 
 type Log =
     | { type: 'global' }
@@ -62,7 +62,7 @@ export const useEventLogSearch = (
         limit: withDefault(NumberParam, DEFAULT_PAGE_SIZE),
         query: StringParam,
         from: withDefault(FilterItemParam, {
-            values: [format(subMonths(new Date(), 1), 'yyyy-MM-dd')],
+            values: [format(subYears(new Date(), 1), 'yyyy-MM-dd')],
             operator: 'IS',
         }),
         to: withDefault(FilterItemParam, {

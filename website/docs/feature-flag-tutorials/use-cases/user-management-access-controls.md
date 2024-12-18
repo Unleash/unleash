@@ -60,7 +60,11 @@ Through SCIM, you can:
 -   Sync group membership in real-time.
 -   Ensure consistent access across multiple platforms.
 
-Set up [Okta provisioning](/how-to/how-to-setup-provisioning-with-okta) and [Microsoft Entra ID provisioning](/how-to/how-to-setup-provisioning-with-entra) using our how-to guides.
+Enable SCIM protocol in the **Single sign-on > SCIM** tab to generate a new token for your SCIM client.
+
+![Turn the **SCIM provisioning** toggle on to enable SCIM.](/img/use-case-user-mgmt-scim-protocol.png)
+
+Next, set up [Okta provisioning](/how-to/how-to-setup-provisioning-with-okta) or [Microsoft Entra ID provisioning](/how-to/how-to-setup-provisioning-with-entra) using our how-to guides.
 
 This automation creates an access control system that adapts in real-time to organizational changes. Within minutes of joining, a new team member can be granted precisely the right level of access, while departing employees are immediately locked out of sensitive systems.
 

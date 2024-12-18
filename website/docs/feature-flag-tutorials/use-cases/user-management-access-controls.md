@@ -5,9 +5,7 @@ slug: /feature-flag-tutorials/use-cases/user-management-access-controls-auditing
 
 Feature flags are a game-changer for how software teams build, test, and release products. They enable you to roll out new features with confidence, manage risk, and keep your software development agile and secure.
 
-By setting up smart user management, your team can turn feature flags into a powerful platform for innovation. You'll be able to experiment faster and release with confidence while maintaining security and compliance.
-
-Imagine a large banking platform company with hundreds of engineering teams across multiple continents. Their software development lifecycle is complex and dynamic. This is where feature flag management transforms from a simple tool to a critical infrastructure component.
+Imagine a large banking platform company with hundreds of engineering teams across multiple continents. Their software development lifecycle is complex and dynamic. Feature flags simplify their processes, but managing all those users are an additional layer of complexity. Unleash solves this with user management capabilities, role-based access control, and auditing features to help organizations release code with confidence while maintaining security and compliance.
 
 In this tutorial, you will:
 
@@ -15,15 +13,19 @@ In this tutorial, you will:
 -   Disable password-based login
 -   Automate user management with the SCIM protocol
 -   Configure role-based access control (RBAC)
--   Audit your systems
+-   Audit access and system changes related to feature flags and projects
 
 ## Implement single sign-on for enterprise identity integration
 
-When an enterprise like a global banking platform considers implementing feature flags, the first hurdle is always authentication. Traditional username and password approaches quickly become a security nightmare. Unleash provides [single sign-on (SSO)](/how-to/sso) as a centralized, secure method for managing user access.
+When an enterprise like a global banking platform considers implementing feature flags, keeping track of who can access your feature flag platform and handling authentication is critical. Traditional username and password approaches are insecure and [shared accounts pose a security risk](/blog/stop-sharing-accounts).
+
+To ensure proper user authentication and reduce risk exposure, Unleash provides [single sign-on](/how-to/sso) as the recommended centralized method for managing user access.
+
+Unleash supports any SSO option through OpenID Connect or SAML 2.0, including identity providers like Okta, Microsoft Entra ID, and Google Keycloak to create a unified authentication process.
+
+To configure SSO, navigate to **Admin > Single sign-on** in the Unleash Admin UI.
 
 ![In Unleash's Single Sign-On page, there are four tabs to set up Open ID Connect, SAML 2.0, traditional passwords, and SCIM.](/img/use-case-user-mgmt-saml.png)
-
-Unleash supports any SSO option through OpenID Connect or SAML 2.0, including identity providers like Okta, Microsoft Entra ID, and Google Keycloak to create a unified authentication ecosystem.
 
 By integrating Unleash with these systems, organizations can ensure that every engineer accessing feature flags undergoes a rigorous, centralized authentication process. These integrations ensure a transparent, auditable system where every access can be traced, logged, and validated.
 

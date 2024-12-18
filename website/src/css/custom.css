@@ -180,7 +180,7 @@ main .container {
     }
 }
 
-main:before {
+main:after {
     /* background-color: red; */
     background-image: url("/img/mountain-texture.png");
     position: fixed;
@@ -188,8 +188,9 @@ main:before {
     z-index: 0;
     bottom: 0px;
     right: 0px;
-    width: 400px;
-    height: 100%;
+    width: 350px;
+    aspect-ratio: 652 / 905;
+    background-size: cover;
     pointer-events: none;
     user-select: none;
     background-repeat: no-repeat;
@@ -255,7 +256,6 @@ main
 }
 
 .footer {
-    border-top: 1px solid var(--ifm-font-color-base);
     z-index: 1;
 }
 

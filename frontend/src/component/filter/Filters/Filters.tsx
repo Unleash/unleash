@@ -41,6 +41,9 @@ type ITextFilterItem = IBaseFilterItem & {
 
 type IDateFilterItem = IBaseFilterItem & {
     dateOperators: [string, ...string[]];
+    fromFilterKey?: string;
+    toFilterKey?: string;
+    persistent?: boolean;
 };
 
 export type IFilterItem = ITextFilterItem | IDateFilterItem;
@@ -116,6 +119,22 @@ export const Filters: FC<IFilterProps> = ({
     }, [JSON.stringify(state), JSON.stringify(availableFilters)]);
 
     const hasAvailableFilters = unselectedFilters.length > 0;
+
+    const rangeChangeHandler = (filter: IDateFilterItem) => {
+        const fromKey = filter.fromFilterKey;
+        const toKey = filter.toFilterKey;
+        if (fromKey && toKey) {
+            return (value: {
+                from: FilterItemParams;
+                to: FilterItemParams;
+            }) => {
+                onChange({ [fromKey]: value.from });
+                onChange({ [toKey]: value.to });
+            };
+        }
+        return undefined;
+    };
+
     return (
         <StyledBox className={className}>
             {selectedFilters.map((selectedFilter) => {
@@ -143,11 +162,16 @@ export const Filters: FC<IFilterProps> = ({
                             label={label}
                             name={filter.label}
                             state={state[filter.filterKey]}
-                            onChange={(value) =>
-                                onChange({ [filter.filterKey]: value })
-                            }
+                            onChange={(value) => {
+                                onChange({ [filter.filterKey]: value });
+                            }}
+                            onRangeChange={rangeChangeHandler(filter)}
                             operators={filter.dateOperators}
-                            onChipClose={() => deselectFilter(filter.label)}
+                            onChipClose={
+                                filter.persistent
+                                    ? undefined
+                                    : () => deselectFilter(filter.label)
+                            }
                         />
                     );
                 }

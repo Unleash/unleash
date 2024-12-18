@@ -48,9 +48,9 @@ In your **Single sign-on** view, click on the **Password** tab, turn the **passw
 
 We recommend you migrate completely from password-based authentication to single sign-on to improve your organization's security posture.
 
-## Automated user management
+## Automate user management at scale
 
-User management at scale is difficult without robust automation. SCIM (System for Cross-domain Identity Management) protocols help you automatically provision and de-provision user accounts. When an employee joins or leaves your organization, their feature flag access can be automatically adjusted without manual changes.
+User management at scale is difficult without robust automation. When you’re managing multiple user accounts spread across various teams, projects, and feature flags, it’s difficult and costly to manually track and change user permissions. To solve this, Unleash uses [SCIM (System for Cross-domain Identity Management) protocols](https://scim.cloud/) to help you automatically provision and de-provision user accounts. When an employee joins or leaves your organization, their feature flag access can be automatically adjusted without manual changes.
 
 SCIM takes group synchronization to the next level by providing a standardized protocol for user and group management.
 Through SCIM, you can:
@@ -74,11 +74,24 @@ This automation creates an access control system that adapts in real-time to org
 
 In the Unleash Admin UI, go to **Admin > Roles** to view, create, and manage user roles.
 
-There are two categories for users within the RBAC framework at Unleash: _root roles_ and _project roles_.
+![Manage all user roles in the Unleash Admin UI.](/img/use-case-user-mgmt-root-roles.png)
 
-Assign users with root administrator privileges to configure entire systems. These users can perform any operation within the Unleash platform and change permissions for other users when they belong to a specific group.
+We have 5 [predefined roles](/reference/rbac#predefined-roles) within our RBAC framework at Unleash.
 
-Assign other users to project role owners to have domain-specific control within a specific project maintained in Unleash.
+_Root roles_:
+
+1. Admin
+2. Editor
+3. Viewer
+
+_Project roles_:
+
+1. Owner
+2. Member
+
+Assign users with root roles to configure entire systems. These users can perform any operation within the Unleash platform and change permissions for other users when they belong to a specific user group.
+
+Assign other users to project roles to have domain-specific control within a specific project maintained in Unleash.
 
 Project permissions are separated from root permissions to make it even more targeted regarding what permissions someone can and cannot have for each piece of Unleash. Assign developers with creation and modification rights and viewers who can observe but not change.
 
@@ -88,10 +101,12 @@ For more fine-tuned access controls, create [custom root roles](/how-to/how-to-c
 
 While RBAC allows you to administer Unleash safely, you might need approval processes when changing feature flags or their configuration. When multiple teams are working on complex systems, [change requests](/reference/change-requests) provide a systematic approach to:
 
--   Comprehensive review: Every proposed feature flag modification goes through a review, reducing the likelihood of unintended consequences.
--   Audit trail: Every change is documented, timestamped, and attributed to specific team members, creating a permanent record of system modifications.
--   Approval workflows: Multi-stage approval processes ensure that critical changes are thoroughly reviewed before implementation.
--   Compliance requirements: For regulated industries like finance and healthcare, Change Requests provide the detailed documentation necessary to meet strict compliance standards.
+-   **Comprehensive review**: Every proposed feature flag modification goes through a review, reducing the likelihood of unintended consequences.
+-   **Audit trail**: Every change is documented, timestamped, and attributed to specific team members, creating a permanent record of system modifications.
+-   **Four-eyes approval workflows**: Multi-stage approval processes ensure critical changes are thoroughly reviewed and approved by at least 2 other people before implementation.
+-   **Compliance requirements**: For regulated industries like finance and healthcare, Change Requests provide the detailed documentation necessary to meet strict compliance standards.
+
+![Change requests are divided between two tabs: open and closed change request lists with relevant metadata listed per request.](/img/use-case-user-mgmt-change-requests.png)
 
 Imagine a large banking application where a development team wants to modify a feature flag controlling a new authentication method. Instead of a developer making an immediate change, the change request workflow might require:
 
@@ -100,11 +115,13 @@ Imagine a large banking application where a development team wants to modify a f
 3. Compliance officer approval
 4. Final sign-off from technical leadership
 
+![This GIF shows how to quickly make changes to your flag, request the change, approve it, and apply the changes.](/img/use-case-user-mgmt-cr.gif)
+
 This process ensures that even minor feature flag changes go through rigorous evaluation.
 
 ## Implement effective auditing in Unleash
 
-For enterprise organizations, robust auditing provides a comprehensive view of every action taken within the feature flag management system. [Unleash's auditing capabilities](/reference/events) track critical information for every significant system interaction:
+For enterprise organizations, auditing is a critical component to various aspects of the software development lifecycle. Audit logs for feature flag management can be part of your overall security and compliance process, which provides a comprehensive view of every action taken within the feature flag management system. Use [Unleash's auditing capabilities](/reference/events) to track critical information for every significant system interaction:
 
 ### Auditing user actions
 
@@ -122,7 +139,7 @@ For enterprise organizations, robust auditing provides a comprehensive view of e
 -   Specific system components affected
 -   Detailed context of each change
 
-The process begins with configuring robust log retention. Financial and healthcare organizations typically require extensive log preservation, maintaining detailed records for up to seven years. For most enterprise environments, a three-year retention period provides a robust balance between compliance and operational efficiency.
+The process begins with configuring robust log retention. Financial and healthcare organizations typically require extensive log preservation, maintaining detailed records for up to seven years. For most enterprise environments, a three-year retention period provides a balance between compliance and operational efficiency.
 
 In your **Projects** view, click on your project and select the **Event log** tab to get a comprehensive list of events.
 

@@ -161,10 +161,6 @@ div[class^="announcementBar_"] svg {
 
 /* Main area */
 
-/* .docs-wrapper {
-    background-color: red;
-} */
-
 main {
     position: relative;
     background-color: var(--unleash-color-sub-background);
@@ -173,6 +169,7 @@ main {
         background-color: var(--ifm-background-color);
         margin: 0;
         border-radius: 8px;
+        padding: 3rem;
         z-index: 1;
 
         @media (min-width: 997px) {

@@ -296,7 +296,6 @@ main .theme-doc-breadcrumbs {
 }
 
 .footer {
-    border-top: 1px solid var(--ifm-font-color-base);
     z-index: 1;
 }
 

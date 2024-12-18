@@ -387,7 +387,6 @@ class="header-github-link"
                         ],
                     },
                 ],
-                copyright: `Copyright © ${new Date().getFullYear()} Unleash. Built with Docusaurus.`,
             },
             image: 'img/logo.png',
             imageZoom: {
@@ -1041,6 +1040,7 @@ class="header-github-link"
                 'data-project-color': '#1A4049',
                 'data-project-logo':
                     'https://cdn.getunleash.io/uploads/2022/05/logo.png',
+                'data-button-position-bottom': '80px',
                 defer: true,
             },
         ],

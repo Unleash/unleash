@@ -285,6 +285,11 @@ const sidebars: SidebarsConfig = {
                                 },
                                 {
                                     type: 'doc',
+                                    label: 'JavaScript',
+                                    id: 'feature-flag-tutorials/javascript/implementing-feature-flags-js',
+                                },
+                                {
+                                    type: 'doc',
                                     label: 'Serverless',
                                     id: 'feature-flag-tutorials/serverless/implementing-feature-flags-in-aws-lambda',
                                 },

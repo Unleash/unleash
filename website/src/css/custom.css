@@ -164,17 +164,19 @@ div[class^="announcementBar_"] svg {
 main {
     position: relative;
     background-color: var(--unleash-color-sub-background);
+}
 
-    .container {
-        background-color: var(--ifm-background-color);
-        margin: 0;
-        border-radius: 8px;
-        padding: 3rem;
-        z-index: 1;
+main .container {
+    background-color: var(--ifm-background-color);
+    margin: 0;
+    border-radius: 8px;
+    padding: 3rem;
+    z-index: 1;
+}
 
-        @media (min-width: 997px) {
-            margin: 4rem;
-        }
+@media (min-width: 997px) {
+    main .container{
+        margin: 4rem;
     }
 }
 
@@ -253,6 +255,7 @@ main
 }
 
 .footer {
+    border-top: 1px solid var(--ifm-font-color-base);
     z-index: 1;
 }
 

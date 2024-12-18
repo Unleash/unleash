@@ -13,7 +13,7 @@ In this tutorial, you will:
 -   Disable password-based login
 -   Automate user management with the SCIM protocol
 -   Configure role-based access control (RBAC)
--   Audit access and system changes related to feature flags and projects
+-   Audit access and system changes related to feature flags
 
 ## Implement single sign-on for enterprise identity integration
 
@@ -27,26 +27,6 @@ To configure SSO, navigate to **Admin > Single sign-on** in the Unleash Admin UI
 
 ![In Unleash's Single Sign-On page, there are four tabs to set up Open ID Connect, SAML 2.0, traditional passwords, and SCIM.](/img/use-case-user-mgmt-saml.png)
 
-By integrating Unleash with these systems, organizations can ensure that every engineer accessing feature flags undergoes a rigorous, centralized authentication process. These integrations ensure a transparent, auditable system where every access can be traced, logged, and validated.
-
-### Implement security beyond passwords
-
-Migrate completely from password-based authentication to single sign-on to dramatically improve your organization's security posture and audit capabilities.
-
-With single sign-on, security teams can track exactly who accessed feature flags, when, and from where, giving visibility into system interactions. Implement SSO as your primary (and preferably only) authentication method.
-
-By migrating from password-based login, you can:
-
--   Immediately eliminate password-related security risks.
--   Centralize user authentication through your identity management system.
--   Get detailed logging of every access attempt, including user identity, timestamp, and source.
--   Simplify user lifecycle management through automated provisioning and de-provisioning.
--   Comply with enterprise security standards and regulatory requirements.
-
-## Automated user management
-
-User management at scale is difficult without robust automation. SCIM (System for Cross-domain Identity Management) protocols help you automatically provision and de-provision user accounts. When an employee joins or leaves your organization, their feature flag access can be automatically adjusted without manual changes.
-
 When you connect Unleash to your identity provider, user groups are no longer managed manually. Instead, the synchronization process becomes an automated, dynamic workflow that instantly reflects organizational changes. Follow our step-by-step guide to set up [user group syncing](/how-to/how-to-set-up-group-sso-sync).
 With SSO integration, groups defined in your identity provider are directly mapped to Unleash access groups. This means:
 
@@ -54,12 +34,33 @@ With SSO integration, groups defined in your identity provider are directly mapp
 -   Organizational restructures are reflected immediately.
 -   Consistent access controls across all enterprise systems.
 
+By integrating Unleash with these systems, organizations can ensure that every engineer accessing feature flags undergoes a rigorous, centralized authentication process. These integrations ensure a transparent, auditable system where every access can be traced, logged, and validated.
+
+### Disable password-based authentication
+
+Password-based logins and sharing user accounts among team members at your organization increase the risk of unauthorized access, violate compliance requirements for auditability, can lead to overexposure of sensitive data, and complicate incident responses with inaccurate event log data ([Kwaśniewski, _Stop Sharing Accounts_](https://www.getunleash.io/blog/stop-sharing-accounts)).
+
+To mitigate these issues, we recommend you disable password-based authentication for your team members administering Unleash.
+
+In your **Single sign-on** view, click on the **Password** tab, turn the **password based login** toggle off and click **Save**.
+
+![The password tab has a toggle that you can turn off.](/img/use-case-user-mgmt-disable-password-login.png)
+
+We recommend you migrate completely from password-based authentication to single sign-on to improve your organization's security posture.
+
+## Automated user management
+
+User management at scale is difficult without robust automation. SCIM (System for Cross-domain Identity Management) protocols help you automatically provision and de-provision user accounts. When an employee joins or leaves your organization, their feature flag access can be automatically adjusted without manual changes.
+
 SCIM takes group synchronization to the next level by providing a standardized protocol for user and group management.
 Through SCIM, you can:
 
+-   [Provision and de-provision users](/reference/scim) (team members) as they are joining or leaving your organization.
 -   Automatically create and delete user groups.
 -   Sync group membership in real-time.
 -   Ensure consistent access across multiple platforms.
+
+Set up [Okta provisioning](/how-to/how-to-setup-provisioning-with-okta) and [Microsoft Entra ID provisioning](/how-to/how-to-setup-provisioning-with-entra) using our how-to guides.
 
 This automation creates an access control system that adapts in real-time to organizational changes. Within minutes of joining, a new team member can be granted precisely the right level of access, while departing employees are immediately locked out of sensitive systems.
 

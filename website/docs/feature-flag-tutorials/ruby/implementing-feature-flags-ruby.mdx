@@ -8,7 +8,7 @@ import VideoContent from '@site/src/components/VideoContent.jsx';
 
 Hello! In this tutorial we’ll show you how to add feature flags to your Ruby app , using [Unleash](https://www.getunleash.io/) and the official [Unleash Ruby SDK](https://docs.getunleash.io/reference/sdks/ruby). With Unleash, an open-source feature flag service, you can use our tooling to add feature flags to your application and release new features faster.
 
-In a classic tutorial fashion, we’ll get a list of planets from the [Star Wars API](https://swapi.dev/), with just Ruby (i.e., not Ruby on Rails). We’ll use feature flags to decide whether to call the REST or the GraphQL version of the API.
+In a classic tutorial fashion, we’ll get a list of planets from the [Star Wars API](https://swapi.py4e.com), with just Ruby (i.e., not Ruby on Rails). We’ll use feature flags to decide whether to call the REST or the GraphQL version of the API.
 
 -   [Prerequisites](#prerequisites)
 -   [1. Best practices for back-end apps with Unleash](#1-best-practices-for-back-end-apps-with-unleash)
@@ -107,7 +107,7 @@ require 'json'
 require 'unleash'
 
 # Call the REST API
-response = HTTPX.get('https://swapi.dev/api/planets/')
+response = HTTPX.get('https://swapi.py4e.com/api/planets/')
 planets = JSON.parse(response.body)['results'].map do |planet|
   { name: planet['name'], population: planet['population'] }
 end
@@ -157,7 +157,7 @@ if is_graphql
   puts "Hello GraphQL"
 else
   # Call the REST API
-  response = HTTPX.get('https://swapi.dev/api/planets/')
+  response = HTTPX.get('https://swapi.py4e.com/api/planets/')
   planets = JSON.parse(response.body)['results'].map do |planet|
     { name: planet['name'], population: planet['population'] }
   end

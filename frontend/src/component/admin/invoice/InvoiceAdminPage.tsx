@@ -1,5 +1,5 @@
 import InvoiceList from './InvoiceList';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 
 export const InvoiceAdminPage = () => (

@@ -16,7 +16,7 @@ import { useChangeRequestInReviewWarning } from 'hooks/useChangeRequestInReviewW
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { VariantForm } from './VariantForm/VariantForm';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '@server/types/permissions';
 import { WeightType } from 'constants/variantTypes';
 import { v4 as uuidv4 } from 'uuid';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';

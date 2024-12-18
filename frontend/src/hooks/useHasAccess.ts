@@ -7,7 +7,7 @@ import {
     UPDATE_FEATURE_ENVIRONMENT,
     UPDATE_FEATURE_ENVIRONMENT_VARIANTS,
     UPDATE_FEATURE_STRATEGY,
-} from '../component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import { useAuthPermissions } from './api/getters/useAuth/useAuthPermissions';
 import useProjectOverview from './api/getters/useProjectOverview/useProjectOverview';
 

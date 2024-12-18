@@ -5,7 +5,7 @@ import Edit from '@mui/icons-material/Edit';
 import {
     DELETE_CONTEXT_FIELD,
     UPDATE_CONTEXT_FIELD,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { ActionCell } from 'component/common/Table/cells/ActionCell/ActionCell';
 

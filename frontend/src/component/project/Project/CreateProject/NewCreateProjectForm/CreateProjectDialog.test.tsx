@@ -2,7 +2,7 @@ import { render } from 'utils/testRenderer';
 import { screen, waitFor } from '@testing-library/react';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { CreateProjectDialog } from './CreateProjectDialog';
-import { CREATE_PROJECT } from '../../../../providers/AccessProvider/permissions';
+import { CREATE_PROJECT } from '@server/types/permissions';
 
 const server = testServerSetup();
 

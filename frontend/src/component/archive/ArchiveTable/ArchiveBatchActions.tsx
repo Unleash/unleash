@@ -2,10 +2,7 @@ import { type FC, useState } from 'react';
 import { Button } from '@mui/material';
 import Delete from '@mui/icons-material/Delete';
 import Undo from '@mui/icons-material/Undo';
-import {
-    DELETE_FEATURE,
-    UPDATE_FEATURE,
-} from 'component/providers/AccessProvider/permissions';
+import { DELETE_FEATURE, UPDATE_FEATURE } from '@server/types/permissions';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
 import { useFeaturesArchive } from 'hooks/api/getters/useFeaturesArchive/useFeaturesArchive';
 import { ArchivedFeatureDeleteConfirm } from './ArchivedFeatureActionCell/ArchivedFeatureDeleteConfirm/ArchivedFeatureDeleteConfirm';

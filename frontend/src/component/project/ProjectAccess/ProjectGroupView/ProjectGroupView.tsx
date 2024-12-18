@@ -14,7 +14,7 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import { TimeAgoCell } from 'component/common/Table/cells/TimeAgoCell/TimeAgoCell';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import { UPDATE_PROJECT } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_PROJECT } from '@server/types/permissions';
 import { useSearch } from 'hooks/useSearch';
 import type { IGroup, IGroupUser } from 'interfaces/group';
 import { type VFC, useState } from 'react';

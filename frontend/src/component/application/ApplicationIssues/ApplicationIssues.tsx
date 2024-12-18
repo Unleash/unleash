@@ -3,10 +3,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import type { ApplicationOverviewSchema } from 'openapi';
 import { Link } from 'react-router-dom';
-import {
-    CREATE_FEATURE,
-    CREATE_STRATEGY,
-} from 'component/providers/AccessProvider/permissions';
+import { CREATE_FEATURE, CREATE_STRATEGY } from '@server/types/permissions';
 import { useContext } from 'react';
 import AccessContext from 'contexts/AccessContext';
 

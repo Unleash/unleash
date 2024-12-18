@@ -7,7 +7,7 @@ import useTagApi from 'hooks/api/actions/useTagApi/useTagApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from '@server/types/permissions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IManageTagsProps {

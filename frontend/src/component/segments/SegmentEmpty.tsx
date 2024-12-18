@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
     CREATE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import AccessContext from 'contexts/AccessContext';
 import { useContext } from 'react';

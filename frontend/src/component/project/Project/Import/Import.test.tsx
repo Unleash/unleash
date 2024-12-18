@@ -3,7 +3,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { ImportModal } from './ImportModal';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import userEvent from '@testing-library/user-event';
-import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { CREATE_FEATURE } from '@server/types/permissions';
 
 const server = testServerSetup();
 

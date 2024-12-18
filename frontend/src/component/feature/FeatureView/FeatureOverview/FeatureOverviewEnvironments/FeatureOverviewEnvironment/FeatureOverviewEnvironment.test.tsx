@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import FeatureOverviewEnvironment from './FeatureOverviewEnvironment';
 import { Route, Routes } from 'react-router-dom';
-import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { CREATE_FEATURE_STRATEGY } from '@server/types/permissions';
 
 const environmentWithoutStrategies = {
     name: 'production',

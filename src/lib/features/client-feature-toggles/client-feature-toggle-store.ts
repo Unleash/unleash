@@ -47,16 +47,13 @@ export default class FeatureToggleClientStore
 
     private flagResolver: IFlagResolver;
 
-    private readonly isOss: boolean;
-
     constructor(
         db: Db,
         eventBus: EventEmitter,
         {
             getLogger,
             flagResolver,
-            isOss,
-        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'isOss'>,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver'>,
     ) {
         this.db = db;
         this.logger = getLogger('feature-toggle-client-store.ts');
@@ -66,7 +63,6 @@ export default class FeatureToggleClientStore
                 action,
             });
         this.flagResolver = flagResolver;
-        this.isOss = isOss;
     }
 
     private async getAll({

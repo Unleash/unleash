@@ -90,7 +90,6 @@ export const calculateRequiredClientRevision = (
     const targetedRevisions = revisions.filter(
         (revision) => revision.revisionId > requiredRevisionId,
     );
-    console.log('targeted revisions', targetedRevisions);
     const projectFeatureRevisions = targetedRevisions.map((revision) =>
         filterRevisionByProject(revision, projects),
     );

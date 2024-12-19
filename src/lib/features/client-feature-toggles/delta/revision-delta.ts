@@ -12,7 +12,7 @@ export class RevisionDelta {
     private delta: Revision[];
     private maxLength: number;
 
-    constructor(data: Revision[] = [], maxLength: number = 100) {
+    constructor(data: Revision[] = [], maxLength: number = 20) {
         this.delta = data;
         this.maxLength = maxLength;
     }

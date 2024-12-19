@@ -13,6 +13,8 @@ import type {
     FeatureConfigurationDeltaClient,
     IClientFeatureToggleDeltaReadModel,
 } from './client-feature-toggle-delta-read-model-type';
+import { CLIENT_DELTA_MEMORY } from '../../../metric-events';
+import type EventEmitter from 'events';
 
 type DeletedFeature = {
     name: string;
@@ -105,13 +107,13 @@ export class ClientFeatureToggleDelta {
 
     private currentRevisionId: number = 0;
 
-    private interval: NodeJS.Timer;
-
     private flagResolver: IFlagResolver;
 
     private configurationRevisionService: ConfigurationRevisionService;
 
     private readonly segmentReadModel: ISegmentReadModel;
+
+    private eventBus: EventEmitter;
 
     constructor(
         clientFeatureToggleDeltaReadModel: IClientFeatureToggleDeltaReadModel,
@@ -119,6 +121,7 @@ export class ClientFeatureToggleDelta {
         eventStore: IEventStore,
         configurationRevisionService: ConfigurationRevisionService,
         flagResolver: IFlagResolver,
+        eventBus: EventEmitter,
     ) {
         this.eventStore = eventStore;
         this.configurationRevisionService = configurationRevisionService;
@@ -126,6 +129,7 @@ export class ClientFeatureToggleDelta {
             clientFeatureToggleDeltaReadModel;
         this.flagResolver = flagResolver;
         this.segmentReadModel = segmentReadModel;
+        this.eventBus = eventBus;
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.delta = {};
 
@@ -160,6 +164,8 @@ export class ClientFeatureToggleDelta {
         if (!hasSegments) {
             await this.updateSegments();
         }
+
+        // TODO: 19.12 this logic seems to be not logical, when no revisionId is coming, it should not go to db, but take latest from cache
 
         // Should get the latest state if revision does not exist or if sdkRevision is not present
         // We should be able to do this without going to the database by merging revisions from the delta with
@@ -203,12 +209,13 @@ export class ClientFeatureToggleDelta {
 
     private async onUpdateRevisionEvent() {
         if (this.flagResolver.isEnabled('deltaApi')) {
-            await this.listenToRevisionChange();
+            await this.updateFeaturesDelta();
             await this.updateSegments();
+            this.storeFootprint();
         }
     }
 
-    public async listenToRevisionChange() {
+    public async updateFeaturesDelta() {
         const keys = Object.keys(this.delta);
 
         if (keys.length === 0) return;
@@ -248,7 +255,6 @@ export class ClientFeatureToggleDelta {
                 removed,
             });
         }
-
         this.currentRevisionId = latestRevision;
     }
 
@@ -279,8 +285,9 @@ export class ClientFeatureToggleDelta {
                 removed: [],
             },
         ]);
-
         this.delta[environment] = delta;
+
+        this.storeFootprint();
     }
 
     async getClientFeatures(
@@ -293,5 +300,17 @@ export class ClientFeatureToggleDelta {
 
     private async updateSegments(): Promise<void> {
         this.segments = await this.segmentReadModel.getActiveForClient();
+    }
+
+    storeFootprint() {
+        const featuresMemory = this.getCacheSizeInBytes(this.delta);
+        const segmentsMemory = this.getCacheSizeInBytes(this.segments);
+        const memory = featuresMemory + segmentsMemory;
+        this.eventBus.emit(CLIENT_DELTA_MEMORY, { memory });
+    }
+
+    getCacheSizeInBytes(value: any): number {
+        const jsonString = JSON.stringify(value);
+        return Buffer.byteLength(jsonString, 'utf8');
     }
 }

@@ -35,6 +35,7 @@ import {
 import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
 import type { ClientFeatureToggleService } from './client-feature-toggle-service';
 import {
+    CLIENT_FEATURES_MEMORY,
     CLIENT_METRICS_NAMEPREFIX,
     CLIENT_METRICS_TAGS,
 } from '../../internals';
@@ -68,6 +69,8 @@ export default class FeatureController extends Controller {
     private flagResolver: IFlagResolver;
 
     private eventBus: EventEmitter;
+
+    private clientFeaturesCacheMap = new Map<string, number>();
 
     private featuresAndSegments: (
         query: IFeatureToggleQuery,
@@ -162,6 +165,36 @@ export default class FeatureController extends Controller {
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
+        if (this.flagResolver.isEnabled('deltaApi')) {
+            const features =
+                await this.clientFeatureToggleService.getClientFeatures(query);
+
+            const segments =
+                await this.clientFeatureToggleService.getActiveSegmentsForClient();
+
+            try {
+                console.log(`storing features ${features.length}`);
+                const featuresSize = this.getCacheSizeInBytes(features);
+                const segmentsSize = this.getCacheSizeInBytes(segments);
+                console.log(
+                    `features storing ${featuresSize}, ${segmentsSize}`,
+                );
+                this.clientFeaturesCacheMap.set(
+                    JSON.stringify(query),
+                    featuresSize + segmentsSize,
+                );
+
+                await this.clientFeatureToggleService.getClientDelta(
+                    undefined,
+                    query!,
+                );
+                this.storeFootprint();
+            } catch (e) {
+                this.logger.error('Delta diff failed', e);
+            }
+
+            return [features, segments];
+        }
         return Promise.all([
             this.clientFeatureToggleService.getClientFeatures(query),
             this.clientFeatureToggleService.getActiveSegmentsForClient(),
@@ -270,7 +303,6 @@ export default class FeatureController extends Controller {
             query,
             etag,
         );
-
         if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
             this.openApiService.respondWithValidation(
                 200,
@@ -334,5 +366,18 @@ export default class FeatureController extends Controller {
                 ...toggle,
             },
         );
+    }
+
+    storeFootprint() {
+        let memory = 0;
+        for (const value of this.clientFeaturesCacheMap.values()) {
+            memory += value;
+        }
+        this.eventBus.emit(CLIENT_FEATURES_MEMORY, { memory });
+    }
+
+    getCacheSizeInBytes(value: any): number {
+        const jsonString = JSON.stringify(value);
+        return Buffer.byteLength(jsonString, 'utf8');
     }
 }

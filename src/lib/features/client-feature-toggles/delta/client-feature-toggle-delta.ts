@@ -5,6 +5,7 @@ import type {
     IFeatureToggleQuery,
     IFlagResolver,
     ISegmentReadModel,
+    IUnleashConfig,
 } from '../../../types';
 import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
 import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
@@ -15,6 +16,7 @@ import type {
 } from './client-feature-toggle-delta-read-model-type';
 import { CLIENT_DELTA_MEMORY } from '../../../metric-events';
 import type EventEmitter from 'events';
+import type { Logger } from '../../../logger';
 
 type DeletedFeature = {
     name: string;
@@ -115,13 +117,15 @@ export class ClientFeatureToggleDelta {
 
     private eventBus: EventEmitter;
 
+    private readonly logger: Logger;
+
     constructor(
         clientFeatureToggleDeltaReadModel: IClientFeatureToggleDeltaReadModel,
         segmentReadModel: ISegmentReadModel,
         eventStore: IEventStore,
         configurationRevisionService: ConfigurationRevisionService,
         flagResolver: IFlagResolver,
-        eventBus: EventEmitter,
+        config: IUnleashConfig,
     ) {
         this.eventStore = eventStore;
         this.configurationRevisionService = configurationRevisionService;
@@ -129,7 +133,8 @@ export class ClientFeatureToggleDelta {
             clientFeatureToggleDeltaReadModel;
         this.flagResolver = flagResolver;
         this.segmentReadModel = segmentReadModel;
-        this.eventBus = eventBus;
+        this.eventBus = config.eventBus;
+        this.logger = config.getLogger('delta/client-feature-toggle-delta.js');
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.delta = {};
 
@@ -303,10 +308,14 @@ export class ClientFeatureToggleDelta {
     }
 
     storeFootprint() {
-        const featuresMemory = this.getCacheSizeInBytes(this.delta);
-        const segmentsMemory = this.getCacheSizeInBytes(this.segments);
-        const memory = featuresMemory + segmentsMemory;
-        this.eventBus.emit(CLIENT_DELTA_MEMORY, { memory });
+        try {
+            const featuresMemory = this.getCacheSizeInBytes(this.delta);
+            const segmentsMemory = this.getCacheSizeInBytes(this.segments);
+            const memory = featuresMemory + segmentsMemory;
+            this.eventBus.emit(CLIENT_DELTA_MEMORY, { memory });
+        } catch (e) {
+            this.logger.error('Client delta footprint error', e);
+        }
     }
 
     getCacheSizeInBytes(value: any): number {

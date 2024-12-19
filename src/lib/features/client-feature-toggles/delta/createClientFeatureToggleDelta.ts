@@ -28,7 +28,7 @@ export const createClientFeatureToggleDelta = (
         eventStore,
         configurationRevisionService,
         flagResolver,
-        eventBus,
+        config,
     );
 
     return clientFeatureToggleDelta;

@@ -1,4 +1,3 @@
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import type React from 'react';
 import { useState } from 'react';
 import { TextField, Box } from '@mui/material';
@@ -7,6 +6,7 @@ import { useUiConfigApi } from 'hooks/api/actions/useUiConfigApi/useUiConfigApi'
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useId } from 'hooks/useId';
+import { ADMIN, UPDATE_CORS } from '@server/types/permissions';
 
 interface ICorsFormProps {
     frontendApiOrigins: string[] | undefined;
@@ -67,7 +67,7 @@ export const CorsForm = ({ frontendApiOrigins }: ICorsFormProps) => {
                         style: { fontFamily: 'monospace', fontSize: '0.8em' },
                     }}
                 />
-                <UpdateButton permission={ADMIN} />
+                <UpdateButton permission={[ADMIN, UPDATE_CORS]} />
             </Box>
         </form>
     );

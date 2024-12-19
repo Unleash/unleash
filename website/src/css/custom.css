@@ -172,13 +172,13 @@ main .container {
     background-color: var(--ifm-background-color);
     margin: 0;
     border-radius: 8px;
+    padding: 3rem;
     z-index: 1;
 }
 
 @media (min-width: 997px) {
     main .container{
-        margin-top: 3rem;
-        margin-inline: 3rem;
+        margin: 3rem;
     }
 }
 

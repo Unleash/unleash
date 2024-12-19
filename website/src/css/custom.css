@@ -177,6 +177,7 @@ main .container {
     background-color: var(--ifm-background-color);
     margin: 0;
     border-radius: 8px;
+    padding: 3rem;
     z-index: 1;
 }
 

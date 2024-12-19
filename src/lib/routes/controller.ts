@@ -10,6 +10,7 @@ import { type IUnleashConfig, NONE } from '../types';
 import { handleErrors } from './util';
 import requireContentType from '../middleware/content_type_checker';
 import { PermissionError } from '../error';
+import { fromOpenApiValidationErrors } from '../error/bad-data-error';
 import { storeRequestedRoute } from '../middleware/response-time-metrics';
 
 type IRequestHandler<P = any, ResBody = any, ReqBody = any, ReqQuery = any> = (
@@ -64,6 +65,16 @@ const checkPrivateProjectPermissions = () => async (req, res, next) => {
     return res.status(404).end();
 };
 
+const checkOpenAPIValidationError = () => async (err, req, res, next) => {
+    if (err?.status && err.validationErrors) {
+        const apiError = fromOpenApiValidationErrors(req, err.validationErrors);
+
+        res.status(apiError.statusCode).json(apiError);
+    } else {
+        next(err);
+    }
+};
+
 /**
  * Base class for Controllers to standardize binding to express Router.
  *
@@ -114,6 +125,8 @@ export default class Controller {
             this.useContentTypeMiddleware(options),
             this.useRouteErrorHandler(options.handler.bind(this)),
         );
+
+        this.app.use(options.path, checkOpenAPIValidationError());
     }
 
     get(

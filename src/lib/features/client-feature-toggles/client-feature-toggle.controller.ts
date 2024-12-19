@@ -173,12 +173,8 @@ export default class FeatureController extends Controller {
                 await this.clientFeatureToggleService.getActiveSegmentsForClient();
 
             try {
-                console.log(`storing features ${features.length}`);
                 const featuresSize = this.getCacheSizeInBytes(features);
                 const segmentsSize = this.getCacheSizeInBytes(segments);
-                console.log(
-                    `features storing ${featuresSize}, ${segmentsSize}`,
-                );
                 this.clientFeaturesCacheMap.set(
                     JSON.stringify(query),
                     featuresSize + segmentsSize,

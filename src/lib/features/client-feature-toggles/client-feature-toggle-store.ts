@@ -109,10 +109,6 @@ export default class FeatureToggleClientStore
 
         let query = this.db('features')
             .modify(FeatureToggleStore.filterByArchived, archived)
-            .modify(
-                FeatureToggleStore.filterByProjectsAccessibleByOss,
-                this.isOss,
-            )
             .leftJoin(
                 this.db('feature_strategies')
                     .select('*')

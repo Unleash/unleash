@@ -67,16 +67,3 @@ afterAll(async () => {
     await app.destroy();
     await db.destroy();
 });
-
-describe('OSS downgrade', () => {
-    test('features created in projects other than default is not visible in client endpoint', async () => {
-        return app.request
-            .get('/api/client/features')
-            .expect('Content-Type', /json/)
-            .expect(200)
-            .expect((res) => {
-                expect(res.body.features).toHaveLength(1);
-                expect(res.body.features[0].name).toBe('my.default.toggle');
-            });
-    });
-});

@@ -2,6 +2,57 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.5.3] - 2024-12-19
+
+### Bug Fixes
+
+- Use strategyName instead of name property for component to load ([#8983](https://github.com/Unleash/unleash/issues/8983))
+
+- Can't sort on undefined sdks ([#8982](https://github.com/Unleash/unleash/issues/8982))
+
+- Now null sdks will also be handled nicely ([#8984](https://github.com/Unleash/unleash/issues/8984))
+
+- Check for enterprise in the create/edit templates UI ([#8985](https://github.com/Unleash/unleash/issues/8985))
+
+- Streaming error handling ([#8999](https://github.com/Unleash/unleash/issues/8999))
+
+
+### Documentation
+
+- Swapi.dev no longer exists ([#8997](https://github.com/Unleash/unleash/issues/8997))
+
+
+### Features
+
+- Move delta controller to new path ([#8981](https://github.com/Unleash/unleash/issues/8981))
+
+- Add prom metrics ([#8980](https://github.com/Unleash/unleash/issues/8980))
+
+- Segment delta ([#8990](https://github.com/Unleash/unleash/issues/8990))
+
+- Authentication configuration permission ([#8987](https://github.com/Unleash/unleash/issues/8987))
+
+- Release templates strategy interaction improvements ([#8992](https://github.com/Unleash/unleash/issues/8992))
+
+- Date range selector ([#8991](https://github.com/Unleash/unleash/issues/8991))
+
+- Store memory footprints to grafana ([#9001](https://github.com/Unleash/unleash/issues/9001))
+
+
+### Miscellaneous Tasks
+
+- Rebrand cache to delta ([#8986](https://github.com/Unleash/unleash/issues/8986))
+
+- Rename to seats used ([#8993](https://github.com/Unleash/unleash/issues/8993))
+
+- Default event log span 1 year ([#8995](https://github.com/Unleash/unleash/issues/8995))
+
+
+### Migration
+
+- Add auth config permission ([#8988](https://github.com/Unleash/unleash/issues/8988))
+
+
 ## [6.5.2] - 2024-12-13
 
 ### Bug Fixes

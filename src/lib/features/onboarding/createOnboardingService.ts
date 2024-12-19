@@ -13,7 +13,11 @@ export const createOnboardingService =
     (db: Db): OnboardingService => {
         const { eventBus, flagResolver, getLogger } = config;
         const onboardingStore = new OnboardingStore(db);
-        const projectReadModel = new ProjectReadModel(db, config);
+        const projectReadModel = new ProjectReadModel(
+            db,
+            eventBus,
+            flagResolver,
+        );
         const userStore = new UserStore(db, getLogger, flagResolver);
         const onboardingService = new OnboardingService(
             {

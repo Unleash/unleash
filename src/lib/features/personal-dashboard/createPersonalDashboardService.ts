@@ -27,7 +27,7 @@ export const createPersonalDashboardService = (
     return new PersonalDashboardService(
         new PersonalDashboardReadModel(db),
         new ProjectOwnersReadModel(db),
-        new ProjectReadModel(db, config),
+        new ProjectReadModel(db, config.eventBus, config.flagResolver),
         new OnboardingReadModel(db),
         new EventStore(db, config.getLogger),
         new FeatureEventFormatterMd({

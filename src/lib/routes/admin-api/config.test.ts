@@ -19,6 +19,11 @@ const uiConfig = {
 async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const config = createTestConfig({
+        experimental: {
+            flags: {
+                granularAdminPermissions: true,
+            },
+        },
         server: { baseUriPath: base },
         ui: uiConfig,
     });
@@ -55,4 +60,27 @@ test('should get ui config', async () => {
     expect(body.headerBackground).toEqual('red');
     expect(body.segmentValuesLimit).toEqual(DEFAULT_SEGMENT_VALUES_LIMIT);
     expect(body.strategySegmentsLimit).toEqual(DEFAULT_STRATEGY_SEGMENTS_LIMIT);
+});
+
+test('should update CORS settings', async () => {
+    const { body } = await request
+        .get(`${base}/api/admin/ui-config`)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body.frontendApiOrigins).toEqual(['*']);
+
+    await request
+        .post(`${base}/api/admin/ui-config/cors`)
+        .send({
+            frontendApiOrigins: ['https://example.com'],
+        })
+        .expect(204);
+
+    const { body: updatedBody } = await request
+        .get(`${base}/api/admin/ui-config`)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(updatedBody.frontendApiOrigins).toEqual(['https://example.com']);
 });

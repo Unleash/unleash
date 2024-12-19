@@ -123,11 +123,7 @@ export const createProjectService = (
         eventService,
     );
 
-    const projectReadModel = createProjectReadModel(
-        db,
-        eventBus,
-        config.flagResolver,
-    );
+    const projectReadModel = createProjectReadModel(db, config);
 
     const onboardingReadModel = createOnboardingReadModel(db);
 

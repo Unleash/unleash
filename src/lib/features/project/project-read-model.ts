@@ -1,4 +1,4 @@
-import type { IFlagResolver } from '../../types';
+import type { IFlagResolver, IUnleashConfig } from '../../types';
 import { Knex } from 'knex';
 import type { Db } from '../../db/db';
 import type {
@@ -8,7 +8,6 @@ import type {
 } from './project-read-model-type';
 import type { IProjectQuery, IProjectsQuery } from './project-store-type';
 import metricsHelper from '../../util/metrics-helper';
-import type EventEmitter from 'events';
 import type { IProjectMembersCount } from './project-store';
 import Raw = Knex.Raw;
 
@@ -52,7 +51,16 @@ export class ProjectReadModel implements IProjectReadModel {
 
     private flagResolver: IFlagResolver;
 
-    constructor(db: Db, eventBus: EventEmitter, flagResolver: IFlagResolver) {
+    private readonly isOss: boolean = false;
+
+    constructor(
+        db: Db,
+        {
+            eventBus,
+            flagResolver,
+            isOss,
+        }: Pick<IUnleashConfig, 'eventBus' | 'flagResolver' | 'isOss'>,
+    ) {
         this.db = db;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
@@ -60,6 +68,7 @@ export class ProjectReadModel implements IProjectReadModel {
                 action,
             });
         this.flagResolver = flagResolver;
+        this.isOss = isOss;
     }
 
     async getFeatureProject(
@@ -118,11 +127,15 @@ export class ProjectReadModel implements IProjectReadModel {
             projects = projects.where(`${TABLE}.archived_at`, null);
         }
 
-        if (query?.id) {
-            projects = projects.where(`${TABLE}.id`, query.id);
-        }
-        if (query?.ids) {
-            projects = projects.whereIn(`${TABLE}.id`, query.ids);
+        if (this.isOss) {
+            projects = projects.where(`${TABLE}.id`, 'default');
+        } else {
+            if (query?.id) {
+                projects = projects.where(`${TABLE}.id`, query.id);
+            }
+            if (query?.ids) {
+                projects = projects.whereIn(`${TABLE}.id`, query.ids);
+            }
         }
 
         let selectColumns = [
@@ -191,7 +204,9 @@ export class ProjectReadModel implements IProjectReadModel {
             projects = projects.where(`${TABLE}.archived_at`, null);
         }
 
-        if (query?.id) {
+        if (this.isOss) {
+            projects = projects.where(`${TABLE}.id`, 'default');
+        } else if (query?.id) {
             projects = projects.where(`${TABLE}.id`, query.id);
         }
 
@@ -294,14 +309,16 @@ export class ProjectReadModel implements IProjectReadModel {
     }
 
     async getProjectsFavoritedByUser(userId: number): Promise<string[]> {
-        const favoritedProjects = await this.db
+        const favoritedProjects = this.db
             .select('favorite_projects.project')
             .from('favorite_projects')
             .leftJoin('projects', 'favorite_projects.project', 'projects.id')
             .where('favorite_projects.user_id', userId)
             .andWhere('projects.archived_at', null)
             .pluck('project');
-
+        if (this.isOss) {
+            favoritedProjects.where('projects.id', 'default');
+        }
         return favoritedProjects;
     }
 }

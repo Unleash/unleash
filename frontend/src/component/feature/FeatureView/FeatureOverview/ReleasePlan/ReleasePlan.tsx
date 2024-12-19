@@ -19,7 +19,6 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.divider}`,
     '& + &': {
         marginTop: theme.spacing(2),
     },

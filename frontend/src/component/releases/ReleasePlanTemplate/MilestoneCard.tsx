@@ -45,9 +45,6 @@ const StyledMilestoneCard = styled(Card)(({ theme }) => ({
     },
     transition: 'background-color 0.2s ease-in-out',
     backgroundColor: theme.palette.background.default,
-    '&:hover': {
-        backgroundColor: theme.palette.neutral.light,
-    },
 }));
 
 const StyledMilestoneCardBody = styled(Box)(({ theme }) => ({
@@ -82,7 +79,6 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         justifyContent: 'center',
     },
-    transition: 'background-color 0.2s ease-in-out',
     backgroundColor: theme.palette.background.default,
     '&:before': {
         opacity: '0 !important',
@@ -390,7 +386,7 @@ export const MilestoneCard = ({
                             onEditClick={() => {
                                 onSelectEditStrategy(strg);
                             }}
-                            isDragging={false}
+                            isDragging={dragItem?.id === strg.id}
                             strategy={strg}
                         />
                     </div>

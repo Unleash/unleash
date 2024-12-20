@@ -7,23 +7,29 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useId } from 'hooks/useId';
 import { ADMIN, UPDATE_CORS } from '@server/types/permissions';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface ICorsFormProps {
     frontendApiOrigins: string[] | undefined;
 }
 
 export const CorsForm = ({ frontendApiOrigins }: ICorsFormProps) => {
-    const { setFrontendSettings } = useUiConfigApi();
+    const { setFrontendSettings, setCors } = useUiConfigApi();
     const { setToastData, setToastApiError } = useToast();
     const [value, setValue] = useState(formatInputValue(frontendApiOrigins));
     const inputFieldId = useId();
     const helpTextId = useId();
+    const isGranularPermissionsEnabled = useUiFlag('granularAdminPermissions');
 
     const onSubmit = async (event: React.FormEvent) => {
         try {
             const split = parseInputValue(value);
             event.preventDefault();
-            await setFrontendSettings(split);
+            if (isGranularPermissionsEnabled) {
+                await setCors(split);
+            } else {
+                await setFrontendSettings(split);
+            }
             setValue(formatInputValue(split));
             setToastData({ text: 'Settings saved', type: 'success' });
         } catch (error) {

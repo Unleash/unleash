@@ -69,7 +69,7 @@ const config: Config = {
         navbar: {
             logo: {
                 alt: 'Unleash logo',
-                src: 'https://getunleash.io/logos/unleash_pos.svg',
+                src: 'img/unleash_logo_dark.svg',
                 srcDark: 'img/unleash_logo_white.svg',
                 href: 'https://www.getunleash.io',
             },

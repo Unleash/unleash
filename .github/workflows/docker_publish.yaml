@@ -52,8 +52,6 @@ jobs:
             type=semver,pattern={{ major }},enable=${{ github.event_name == 'workflow_dispatch' && inputs.version != '' }},value=${{ inputs.version }}
             # only enabled in main:
             type=edge,prefix=main-,enable=${{ github.ref == 'refs/heads/main' }}
-            # only enabled on workflow_dispatch:
-            type=sha,suffix=-${{ matrix.version }},enable=${{ github.event_name == 'workflow_dispatch' }}
       - name: Login to docker hub
         uses: docker/login-action@v3
         with:

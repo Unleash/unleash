@@ -39,7 +39,7 @@ import type { IServiceAccount } from 'interfaces/service-account';
 import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/MultipleRoleSelect';
 import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles';
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',

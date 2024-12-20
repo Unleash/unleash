@@ -1,7 +1,7 @@
 import { TagTypeList } from 'component/tags/TagTypeList/TagTypeList';
 import renderer from 'react-test-renderer';
 import { MemoryRouter } from 'react-router-dom';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import UIProvider from 'component/providers/UIProvider/UIProvider';
 import { ThemeProvider } from 'themes/ThemeProvider';
 import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';

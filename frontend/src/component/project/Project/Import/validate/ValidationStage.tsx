@@ -11,7 +11,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ActionsContainer } from '../ActionsContainer';
 import { IMPORT_CONFIGURATION_BUTTON } from 'utils/testIds';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { CREATE_FEATURE } from '@server/types/permissions';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const ImportInfoContainer = styled(Box)(({ theme }) => ({

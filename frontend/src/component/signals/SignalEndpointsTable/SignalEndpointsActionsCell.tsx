@@ -17,7 +17,7 @@ import Delete from '@mui/icons-material/Delete';
 import Edit from '@mui/icons-material/Edit';
 import Visibility from '@mui/icons-material/Visibility';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import { defaultBorderRadius } from 'themes/themeStyles';
 
 const StyledBoxCell = styled(Box)({

@@ -3,10 +3,7 @@ import { render } from 'utils/testRenderer';
 import { useState } from 'react';
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {
-    DELETE_FEATURE,
-    UPDATE_FEATURE,
-} from 'component/providers/AccessProvider/permissions';
+import { DELETE_FEATURE, UPDATE_FEATURE } from '@server/types/permissions';
 import ToastRenderer from 'component/common/ToastRenderer/ToastRenderer';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 

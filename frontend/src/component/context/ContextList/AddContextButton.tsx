@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMediaQuery } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
+import { CREATE_CONTEXT_FIELD } from '@server/types/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 

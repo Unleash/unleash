@@ -6,7 +6,7 @@ import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useNavigate } from 'react-router-dom';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import EnvironmentForm from '../EnvironmentForm/EnvironmentForm';
 import useEnvironmentForm from '../hooks/useEnvironmentForm';
 import { formatUnknownError } from 'utils/formatUnknownError';

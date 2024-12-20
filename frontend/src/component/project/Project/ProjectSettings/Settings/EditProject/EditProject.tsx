@@ -1,7 +1,7 @@
 import {
     PROJECT_SETTINGS_WRITE,
     UPDATE_PROJECT,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useContext } from 'react';

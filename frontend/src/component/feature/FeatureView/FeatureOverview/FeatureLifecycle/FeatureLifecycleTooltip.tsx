@@ -16,10 +16,7 @@ import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironme
 import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors';
 import type { LifecycleStage } from './LifecycleStage';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import {
-    DELETE_FEATURE,
-    UPDATE_FEATURE,
-} from 'component/providers/AccessProvider/permissions';
+import { DELETE_FEATURE, UPDATE_FEATURE } from '@server/types/permissions';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { isSafeToArchive } from './isSafeToArchive';
 import { useLocationSettings } from 'hooks/useLocationSettings';

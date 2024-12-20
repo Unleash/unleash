@@ -1,4 +1,4 @@
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import type { IPermission } from 'interfaces/user';
 
 type objectIdx = {

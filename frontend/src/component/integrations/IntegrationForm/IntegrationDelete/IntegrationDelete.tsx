@@ -8,7 +8,7 @@ import useAddons from 'hooks/api/getters/useAddons/useAddons';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { DELETE_ADDON } from 'component/providers/AccessProvider/permissions';
+import { DELETE_ADDON } from '@server/types/permissions';
 import { StyledHelpText, StyledTitle } from '../IntegrationForm.styles';
 
 interface IIntegrationDeleteProps {

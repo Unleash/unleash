@@ -89,6 +89,9 @@ html[data-theme="dark"] {
 .navbar {
     color: var(--unleash-navbar-font-color);
     font-family: Styrene B Web, sans-serif;
+    height: 3.75rem;
+    background-color: #1a4049;
+    color: var(--ifm-navbar-link-color);
 }
 
 .header-github-link {
@@ -98,7 +101,6 @@ html[data-theme="dark"] {
     justify-content: space-between;
     gap: 10px;
     height: 100%;
-    padding: 0.25rem 0.5rem;
 }
 
 .header-demo-button {
@@ -247,7 +249,7 @@ main
 .navbar__item:has(.navbar-separator) {
     width: 1px;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.3);
     padding: 0;
     margin-inline: var(--ifm-spacing-horizontal);
 }

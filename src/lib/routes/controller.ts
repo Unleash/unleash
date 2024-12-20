@@ -65,7 +65,7 @@ const checkPrivateProjectPermissions = () => async (req, res, next) => {
     return res.status(404).end();
 };
 
-const checkOpenAPIValidationError = async (err, req, res, next) => {
+const openAPIValidationMiddleware = async (err, req, res, next) => {
     if (err?.status && err.validationErrors) {
         const apiError = fromOpenApiValidationErrors(req, err.validationErrors);
 
@@ -126,7 +126,7 @@ export default class Controller {
             this.useRouteErrorHandler(options.handler.bind(this)),
         );
 
-        this.app.use(options.path, checkOpenAPIValidationError);
+        this.app.use(options.path, openAPIValidationMiddleware);
     }
 
     get(

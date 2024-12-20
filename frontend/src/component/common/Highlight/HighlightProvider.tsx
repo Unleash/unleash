@@ -3,7 +3,6 @@ import { HighlightContext } from './HighlightContext';
 
 const defaultState = {
     eventTimeline: false,
-    unleashAI: false,
 };
 
 export type HighlightKey = keyof typeof defaultState;

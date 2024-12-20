@@ -98,7 +98,6 @@ html[data-theme="dark"] {
     justify-content: space-between;
     gap: 10px;
     height: 100%;
-    border: 2px solid var(--ifm-navbar-link-color);
     padding: 0.25rem 0.5rem;
 }
 
@@ -113,10 +112,6 @@ html[data-theme="dark"] {
     text-align: center;
     display: inline-block;
     margin: 0.5rem;
-}
-
-.navbar a[href*="http"] svg {
-    display: none;
 }
 
 .navbar .navbar__link--active:has(.hide-when-active) {
@@ -252,7 +247,7 @@ main
 .navbar__item:has(.navbar-separator) {
     width: 1px;
     height: 100%;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.3);
     padding: 0;
     margin-inline: var(--ifm-spacing-horizontal);
 }

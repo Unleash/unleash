@@ -33,7 +33,6 @@ export interface IUiConfig {
     resourceLimits: ResourceLimitsSchema;
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
-    unleashAIAvailable?: boolean;
     maxSessionsCount?: number;
 }
 
@@ -85,7 +84,6 @@ export type UiFlags = {
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
     flagCreator?: boolean;
-    unleashAI?: boolean;
     releasePlans?: boolean;
     'enterprise-payg'?: boolean;
     simplifyProjectOverview?: boolean;

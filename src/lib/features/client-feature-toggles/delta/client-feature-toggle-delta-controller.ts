@@ -73,6 +73,47 @@ export default class ClientFeatureToggleDeltaController extends Controller {
         });
     }
 
+    async getDelta(
+        req: IAuthRequest,
+        res: Response<RevisionDeltaEntry>,
+    ): Promise<void> {
+        if (!this.flagResolver.isEnabled('deltaApi')) {
+            throw new NotFoundError();
+        }
+        const query = await this.resolveQuery(req);
+        const etag = req.headers['if-none-match'];
+
+        const currentSdkRevisionId = etag ? Number.parseInt(etag) : undefined;
+
+        const changedFeatures =
+            await this.clientFeatureToggleService.getClientDelta(
+                currentSdkRevisionId,
+                query,
+            );
+
+        if (!changedFeatures) {
+            res.status(304);
+            res.getHeaderNames().forEach((header) => res.removeHeader(header));
+            res.end();
+            return;
+        }
+
+        if (changedFeatures.revisionId === currentSdkRevisionId) {
+            res.status(304);
+            res.getHeaderNames().forEach((header) => res.removeHeader(header));
+            res.end();
+            return;
+        }
+
+        res.setHeader('ETag', changedFeatures.revisionId.toString());
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            clientFeaturesDeltaSchema.$id,
+            changedFeatures,
+        );
+    }
+
     private async resolveQuery(
         req: IAuthRequest,
     ): Promise<IFeatureToggleQuery> {
@@ -138,46 +179,5 @@ export default class ClientFeatureToggleDeltaController extends Controller {
         }
 
         return query;
-    }
-
-    async getDelta(
-        req: IAuthRequest,
-        res: Response<RevisionDeltaEntry>,
-    ): Promise<void> {
-        if (!this.flagResolver.isEnabled('deltaApi')) {
-            throw new NotFoundError();
-        }
-        const query = await this.resolveQuery(req);
-        const etag = req.headers['if-none-match'];
-
-        const currentSdkRevisionId = etag ? Number.parseInt(etag) : undefined;
-
-        const changedFeatures =
-            await this.clientFeatureToggleService.getClientDelta(
-                currentSdkRevisionId,
-                query,
-            );
-
-        if (!changedFeatures) {
-            res.status(304);
-            res.getHeaderNames().forEach((header) => res.removeHeader(header));
-            res.end();
-            return;
-        }
-
-        if (changedFeatures.revisionId === currentSdkRevisionId) {
-            res.status(304);
-            res.getHeaderNames().forEach((header) => res.removeHeader(header));
-            res.end();
-            return;
-        }
-
-        res.setHeader('ETag', changedFeatures.revisionId.toString());
-        this.openApiService.respondWithValidation(
-            200,
-            res,
-            clientFeaturesDeltaSchema.$id,
-            changedFeatures,
-        );
     }
 }

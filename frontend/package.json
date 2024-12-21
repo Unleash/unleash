@@ -63,7 +63,7 @@
     "@types/react-dom": "18.3.1",
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "7.7.20",
-    "@types/react-test-renderer": "18.3.1",
+    "@types/react-test-renderer": "19.0.0",
     "@types/semver": "7.5.8",
     "@types/uuid": "^9.0.0",
     "@uiw/codemirror-theme-duotone": "4.23.6",

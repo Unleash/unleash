@@ -127,7 +127,7 @@
     "whatwg-fetch": "3.6.20"
   },
   "resolutions": {
-    "@codemirror/state": "6.4.1",
+    "@codemirror/state": "6.5.0",
     "@xmldom/xmldom": "^0.9.0",
     "jsonpath-plus": "10.2.0",
     "json5": "^2.2.2",

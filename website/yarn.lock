@@ -1931,7 +1931,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/plugin-content-docs@npm:3.6.0, @docusaurus/plugin-content-docs@npm:^3.5.0":
+"@docusaurus/plugin-content-docs@npm:3.6.0":
   version: 3.6.0
   resolution: "@docusaurus/plugin-content-docs@npm:3.6.0"
   dependencies:
@@ -2230,7 +2230,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/utils-validation@npm:3.6.0, @docusaurus/utils-validation@npm:^3.5.0":
+"@docusaurus/utils-validation@npm:3.6.0":
   version: 3.6.0
   resolution: "@docusaurus/utils-validation@npm:3.6.0"
   dependencies:
@@ -2246,7 +2246,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/utils@npm:3.6.0, @docusaurus/utils@npm:^3.5.0":
+"@docusaurus/utils@npm:3.6.0":
   version: 3.6.0
   resolution: "@docusaurus/utils@npm:3.6.0"
   dependencies:
@@ -5710,13 +5710,10 @@ __metadata:
   linkType: hard
 
 "docusaurus-plugin-openapi-docs@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "docusaurus-plugin-openapi-docs@npm:4.2.0"
+  version: 4.3.1
+  resolution: "docusaurus-plugin-openapi-docs@npm:4.3.1"
   dependencies:
     "@apidevtools/json-schema-ref-parser": "npm:^11.5.4"
-    "@docusaurus/plugin-content-docs": "npm:^3.5.0"
-    "@docusaurus/utils": "npm:^3.5.0"
-    "@docusaurus/utils-validation": "npm:^3.5.0"
     "@redocly/openapi-core": "npm:^1.10.5"
     allof-merge: "npm:^0.6.6"
     chalk: "npm:^4.1.2"
@@ -5732,8 +5729,11 @@ __metadata:
     swagger2openapi: "npm:^7.0.8"
     xml-formatter: "npm:^2.6.1"
   peerDependencies:
+    "@docusaurus/plugin-content-docs": ^3.5.0
+    "@docusaurus/utils": ^3.5.0
+    "@docusaurus/utils-validation": ^3.5.0
     react: ^16.8.4 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/729f0ce1ac57e1d161ab3bb0d73f0b6c5402b6c694ed36d462cce7d6ba842180520202f12bda950d4d2aa78fe97d17f843a6a5286fd43a1057ac84fd3a66a4c8
+  checksum: 10c0/f5c1bd8804f40daba84a3e31b7c051dc6c2017f05f6b2dedcbbe0b99b07fe50f183353e024c0f19043867202d03762b37028af4e29600404f54776bfe81b7423
   languageName: node
   linkType: hard
 

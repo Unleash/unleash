@@ -2135,7 +2135,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/theme-common@npm:3.6.0, @docusaurus/theme-common@npm:^3.5.0":
+"@docusaurus/theme-common@npm:3.6.0":
   version: 3.6.0
   resolution: "@docusaurus/theme-common@npm:3.6.0"
   dependencies:
@@ -4019,7 +4019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"assert@npm:^2.0.0":
+"assert@npm:^2.1.0":
   version: 2.1.0
   resolution: "assert@npm:2.1.0"
   dependencies:
@@ -5751,34 +5751,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"docusaurus-plugin-sass@npm:^0.2.3":
-  version: 0.2.5
-  resolution: "docusaurus-plugin-sass@npm:0.2.5"
-  dependencies:
-    sass-loader: "npm:^10.1.1"
-  peerDependencies:
-    "@docusaurus/core": ^2.0.0-beta || ^3.0.0-alpha
-    sass: ^1.30.0
-  checksum: 10c0/1ed75a0e9ca52405ba474ad55add5318d786a18a551974520f1a9b6a4e5707cd4b20cd4fd4c60770e7cd683d7483372dd5f175ba13608048a1082847d3750bb7
-  languageName: node
-  linkType: hard
-
 "docusaurus-theme-openapi-docs@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "docusaurus-theme-openapi-docs@npm:4.2.0"
+  version: 4.3.1
+  resolution: "docusaurus-theme-openapi-docs@npm:4.3.1"
   dependencies:
-    "@docusaurus/theme-common": "npm:^3.5.0"
     "@hookform/error-message": "npm:^2.0.1"
     "@reduxjs/toolkit": "npm:^1.7.1"
     allof-merge: "npm:^0.6.6"
     clsx: "npm:^1.1.1"
     copy-text-to-clipboard: "npm:^3.1.0"
     crypto-js: "npm:^4.1.1"
-    docusaurus-plugin-openapi-docs: "npm:^4.2.0"
-    docusaurus-plugin-sass: "npm:^0.2.3"
     file-saver: "npm:^2.0.5"
     lodash: "npm:^4.17.20"
-    node-polyfill-webpack-plugin: "npm:^2.0.1"
+    node-polyfill-webpack-plugin: "npm:^3.0.0"
     postman-code-generators: "npm:^1.10.1"
     postman-collection: "npm:^4.4.0"
     prism-react-renderer: "npm:^2.3.0"
@@ -5792,12 +5777,16 @@ __metadata:
     remark-gfm: "npm:3.0.1"
     sass: "npm:^1.80.4"
     sass-loader: "npm:^16.0.2"
+    unist-util-visit: "npm:^5.0.0"
     webpack: "npm:^5.61.0"
     xml-formatter: "npm:^2.6.1"
   peerDependencies:
+    "@docusaurus/theme-common": ^3.5.0
+    docusaurus-plugin-openapi-docs: ^4.0.0
+    docusaurus-plugin-sass: ^0.2.3
     react: ^16.8.4 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.4 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/15f4be83c6096f7a967092b707e8668616bd8131688003fc150ff022511996263cd5b95e3d840ff6a71b65b01628a51c54e8cea75859b954e02e66c5376368e5
+  checksum: 10c0/f91d7303779c3787529f6fd6610daab7e30de76abe5ec5fedbd1f27dc9009be6f7ebc01e0a9439bd83482abedb45134b8242650dd0b6b583dbc518539d41da81
   languageName: node
   linkType: hard
 
@@ -6543,13 +6532,6 @@ __metadata:
   dependencies:
     to-regex-range: "npm:^5.0.1"
   checksum: 10c0/b75b691bbe065472f38824f694c2f7449d7f5004aa950426a2c28f0306c60db9b880c0b0e4ed819997ffb882d1da02cfcfc819bddc94d71627f5269682edf018
-  languageName: node
-  linkType: hard
-
-"filter-obj@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "filter-obj@npm:2.0.2"
-  checksum: 10c0/65899fb1151e16d3289c23e7d6c2a9276592de1e16ab8e14c29d225768273ac48a92d3be4182496a16d89a046cf24ebcbecef7fdac8c27c3c29feafc4fb9fdb3
   languageName: node
   linkType: hard
 
@@ -8427,13 +8409,6 @@ __metadata:
   version: 4.1.5
   resolution: "kleur@npm:4.1.5"
   checksum: 10c0/e9de6cb49657b6fa70ba2d1448fd3d691a5c4370d8f7bbf1c2f64c24d461270f2117e1b0afe8cb3114f13bbd8e51de158c2a224953960331904e636a5e4c0f2a
-  languageName: node
-  linkType: hard
-
-"klona@npm:^2.0.4":
-  version: 2.0.6
-  resolution: "klona@npm:2.0.6"
-  checksum: 10c0/94eed2c6c2ce99f409df9186a96340558897b3e62a85afdc1ee39103954d2ebe1c1c4e9fe2b0952771771fa96d70055ede8b27962a7021406374fdb695fd4d01
   languageName: node
   linkType: hard
 
@@ -10384,11 +10359,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-polyfill-webpack-plugin@npm:^2.0.1":
-  version: 2.0.1
-  resolution: "node-polyfill-webpack-plugin@npm:2.0.1"
+"node-polyfill-webpack-plugin@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "node-polyfill-webpack-plugin@npm:3.0.0"
   dependencies:
-    assert: "npm:^2.0.0"
+    assert: "npm:^2.1.0"
     browserify-zlib: "npm:^0.2.0"
     buffer: "npm:^6.0.3"
     console-browserify: "npm:^1.2.0"
@@ -10396,26 +10371,25 @@ __metadata:
     crypto-browserify: "npm:^3.12.0"
     domain-browser: "npm:^4.22.0"
     events: "npm:^3.3.0"
-    filter-obj: "npm:^2.0.2"
     https-browserify: "npm:^1.0.0"
     os-browserify: "npm:^0.3.0"
     path-browserify: "npm:^1.0.1"
     process: "npm:^0.11.10"
-    punycode: "npm:^2.1.1"
+    punycode: "npm:^2.3.0"
     querystring-es3: "npm:^0.2.1"
-    readable-stream: "npm:^4.0.0"
+    readable-stream: "npm:^4.4.2"
     stream-browserify: "npm:^3.0.0"
     stream-http: "npm:^3.2.0"
     string_decoder: "npm:^1.3.0"
     timers-browserify: "npm:^2.0.12"
     tty-browserify: "npm:^0.0.1"
-    type-fest: "npm:^2.14.0"
-    url: "npm:^0.11.0"
-    util: "npm:^0.12.4"
+    type-fest: "npm:^4.4.0"
+    url: "npm:^0.11.3"
+    util: "npm:^0.12.5"
     vm-browserify: "npm:^1.1.2"
   peerDependencies:
     webpack: ">=5"
-  checksum: 10c0/fc3dcef5888c10d0ff9924a389e5bd9d9c95109e31cb7c8a27775b17ef14a63b587365b43bfedd81eb5f93cb16a04c0e8234a2c623bfaa2f2a528a9e45811f91
+  checksum: 10c0/9e47ee6c4aab6f876fa9439debd098124608ed0d58606fa166f97b8a9cd894cc96559f05368cdd85c6f1c2e796fe4c0e74af6d7be9286346d9f78a1844eb1b5c
   languageName: node
   linkType: hard
 
@@ -11809,7 +11783,7 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   languageName: node
   linkType: hard
 
-"punycode@npm:^2.1.0, punycode@npm:^2.1.1":
+"punycode@npm:^2.1.0, punycode@npm:^2.1.1, punycode@npm:^2.3.0":
   version: 2.3.1
   resolution: "punycode@npm:2.3.1"
   checksum: 10c0/14f76a8206bc3464f794fb2e3d3cc665ae416c01893ad7a02b23766eb07159144ee612ad67af5e84fa4479ccfe67678c4feb126b0485651b302babf66f04f9e9
@@ -12245,16 +12219,16 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   languageName: node
   linkType: hard
 
-"readable-stream@npm:^4.0.0":
-  version: 4.5.2
-  resolution: "readable-stream@npm:4.5.2"
+"readable-stream@npm:^4.4.2":
+  version: 4.6.0
+  resolution: "readable-stream@npm:4.6.0"
   dependencies:
     abort-controller: "npm:^3.0.0"
     buffer: "npm:^6.0.3"
     events: "npm:^3.3.0"
     process: "npm:^0.11.10"
     string_decoder: "npm:^1.3.0"
-  checksum: 10c0/a2c80e0e53aabd91d7df0330929e32d0a73219f9477dbbb18472f6fdd6a11a699fc5d172a1beff98d50eae4f1496c950ffa85b7cc2c4c196963f289a5f39275d
+  checksum: 10c0/0dcc6fdb433c0e6c4b03950f72e43b94c2aead42367ae5453997ffffcdcee2277003da545175ee11db08917e97ec709c9d19c6576e0888d0315b239da0f9913a
   languageName: node
   linkType: hard
 
@@ -12847,31 +12821,6 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   version: 2.1.2
   resolution: "safer-buffer@npm:2.1.2"
   checksum: 10c0/7e3c8b2e88a1841c9671094bbaeebd94448111dd90a81a1f606f3f67708a6ec57763b3b47f06da09fc6054193e0e6709e77325415dc8422b04497a8070fa02d4
-  languageName: node
-  linkType: hard
-
-"sass-loader@npm:^10.1.1":
-  version: 10.5.2
-  resolution: "sass-loader@npm:10.5.2"
-  dependencies:
-    klona: "npm:^2.0.4"
-    loader-utils: "npm:^2.0.0"
-    neo-async: "npm:^2.6.2"
-    schema-utils: "npm:^3.0.0"
-    semver: "npm:^7.3.2"
-  peerDependencies:
-    fibers: ">= 3.1.0"
-    node-sass: ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0 || ^9.0.0
-    sass: ^1.3.0
-    webpack: ^4.36.0 || ^5.0.0
-  peerDependenciesMeta:
-    fibers:
-      optional: true
-    node-sass:
-      optional: true
-    sass:
-      optional: true
-  checksum: 10c0/5ba4a83459fbb50e21d4f4b1b59baf1ddf8dd404099b6d1f2ec887c6903659e505879915030dd9efb1c6dd5fde2d515a19f418487b73d1cc59f6aad60c79bcf5
   languageName: node
   linkType: hard
 
@@ -13956,10 +13905,17 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   languageName: node
   linkType: hard
 
-"type-fest@npm:^2.13.0, type-fest@npm:^2.14.0, type-fest@npm:^2.5.0":
+"type-fest@npm:^2.13.0, type-fest@npm:^2.5.0":
   version: 2.19.0
   resolution: "type-fest@npm:2.19.0"
   checksum: 10c0/a5a7ecf2e654251613218c215c7493574594951c08e52ab9881c9df6a6da0aeca7528c213c622bc374b4e0cb5c443aa3ab758da4e3c959783ce884c3194e12cb
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^4.4.0":
+  version: 4.31.0
+  resolution: "type-fest@npm:4.31.0"
+  checksum: 10c0/a5bb69e3b0f82e068af8c645ac3d50b1fa5c588ebc83735a6add4ef6dacf277bb3605801f66c72c069af20120ee7387a3ae6dd84e12c152f5982784c710b4051
   languageName: node
   linkType: hard
 
@@ -14299,7 +14255,7 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   languageName: node
   linkType: hard
 
-"url@npm:^0.11.0":
+"url@npm:^0.11.3":
   version: 0.11.4
   resolution: "url@npm:0.11.4"
   dependencies:
@@ -14334,7 +14290,7 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   languageName: node
   linkType: hard
 
-"util@npm:^0.12.4, util@npm:^0.12.5":
+"util@npm:^0.12.5":
   version: 0.12.5
   resolution: "util@npm:0.12.5"
   dependencies:

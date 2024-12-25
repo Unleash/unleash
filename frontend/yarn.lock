@@ -4040,12 +4040,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chartjs-plugin-annotation@npm:2.2.1":
-  version: 2.2.1
-  resolution: "chartjs-plugin-annotation@npm:2.2.1"
+"chartjs-plugin-annotation@npm:3.1.0":
+  version: 3.1.0
+  resolution: "chartjs-plugin-annotation@npm:3.1.0"
   peerDependencies:
-    chart.js: ">=3.7.0"
-  checksum: 10c0/244c842c5448faceaa990171d167f982de7b2bb95c69441956b50e39bc19db162337af19871bb36f222e0ffdec922b0a1ae73901e100dec79a8566f075d8e505
+    chart.js: ">=4.0.0"
+  checksum: 10c0/5494a008a013888b122ac6754c1314e100b6368f55110f08401e3cbdb5969b372ece9569ed3b166b8fbad8c2dc84f15795602079613e2f5f65f787a0931bd676
   languageName: node
   linkType: hard
 
@@ -10193,7 +10193,7 @@ __metadata:
     cartesian: "npm:^1.0.1"
     chart.js: "npm:3.9.1"
     chartjs-adapter-date-fns: "npm:3.0.0"
-    chartjs-plugin-annotation: "npm:2.2.1"
+    chartjs-plugin-annotation: "npm:3.1.0"
     classnames: "npm:2.5.1"
     copy-to-clipboard: "npm:3.3.3"
     countries-and-timezones: "npm:^3.4.0"

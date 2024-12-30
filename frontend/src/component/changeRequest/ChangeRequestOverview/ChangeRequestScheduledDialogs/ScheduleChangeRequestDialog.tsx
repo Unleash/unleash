@@ -1,7 +1,7 @@
 import { type FC, useState } from 'react';
 import { Alert, Box, styled, Typography } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { APPLY_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
+import { APPLY_CHANGE_REQUEST } from '@server/types/permissions';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 import { DateTimePicker } from 'component/common/DateTimePicker/DateTimePicker';
 import { getBrowserTimezone } from '../ChangeRequestReviewStatus/utils';

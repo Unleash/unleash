@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import {
     UPDATE_FEATURE_STRATEGY,
     CREATE_FEATURE_STRATEGY,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import { useHasProjectEnvironmentAccess } from 'hooks/useHasAccess';
 import { FeatureStrategyConstraintAccordionList } from './FeatureStrategyConstraintAccordionList/FeatureStrategyConstraintAccordionList';
 

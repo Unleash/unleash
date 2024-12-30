@@ -4,7 +4,7 @@ import PermissionButton from 'component/common/PermissionButton/PermissionButton
 import {
     PROJECT_SETTINGS_WRITE,
     UPDATE_PROJECT,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../../hooks/useProjectForm';

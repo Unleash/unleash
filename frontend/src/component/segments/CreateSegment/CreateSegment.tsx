@@ -5,7 +5,7 @@ import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import {
     CREATE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';

@@ -14,7 +14,7 @@ import {
 import Delete from '@mui/icons-material/Delete';
 import LinkIcon from '@mui/icons-material/Link';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { UPDATE_APPLICATION } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_APPLICATION } from '@server/types/permissions';
 import { ConnectedInstances } from './ConnectedInstances/ConnectedInstances';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { PageContent } from 'component/common/PageContent/PageContent';

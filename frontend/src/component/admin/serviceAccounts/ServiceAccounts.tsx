@@ -1,4 +1,4 @@
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import { PermissionGuard } from 'component/common/PermissionGuard/PermissionGuard';
 import { ServiceAccountsTable } from './ServiceAccountsTable/ServiceAccountsTable';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

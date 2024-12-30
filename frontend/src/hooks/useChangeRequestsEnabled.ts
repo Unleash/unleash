@@ -1,4 +1,4 @@
-import { SKIP_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
+import { SKIP_CHANGE_REQUEST } from '@server/types/permissions';
 import React from 'react';
 import { useChangeRequestConfig } from './api/getters/useChangeRequestConfig/useChangeRequestConfig';
 import { useCheckProjectPermissions } from './useHasAccess';

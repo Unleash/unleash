@@ -2,7 +2,7 @@ import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { useContextForm } from '../hooks/useContextForm';
 import { ContextForm } from '../ContextForm/ContextForm';
-import { CREATE_CONTEXT_FIELD } from 'component/providers/AccessProvider/permissions';
+import { CREATE_CONTEXT_FIELD } from '@server/types/permissions';
 import useContextsApi from 'hooks/api/actions/useContextsApi/useContextsApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';

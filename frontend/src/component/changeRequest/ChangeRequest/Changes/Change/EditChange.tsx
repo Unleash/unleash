@@ -5,7 +5,7 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import type { ISegment } from 'interfaces/segment';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { useCollaborateData } from 'hooks/useCollaborateData';

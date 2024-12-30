@@ -4,7 +4,7 @@ import EditFeatureForm from '../FeatureForm/EditFeatureForm';
 import useFeatureForm from '../hooks/useFeatureForm';
 import * as jsonpatch from 'fast-json-patch';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from '@server/types/permissions';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';

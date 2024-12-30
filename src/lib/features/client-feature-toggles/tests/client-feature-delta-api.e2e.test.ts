@@ -174,7 +174,6 @@ test('should get 304 if asked for latest revision', async () => {
     // @ts-ignore
     app.services.clientFeatureToggleService.clientFeatureToggleDelta.currentRevisionId = 14;
 
-
     await app.request
         .set('If-None-Match', '14')
         .get('/api/client/delta')

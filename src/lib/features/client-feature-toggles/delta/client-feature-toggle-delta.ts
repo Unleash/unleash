@@ -161,7 +161,6 @@ export class ClientFeatureToggleDelta {
 
         const hasDelta = this.delta[environment] !== undefined;
 
-
         if (!hasDelta) {
             await this.initEnvironmentDelta(environment);
         }
@@ -171,11 +170,6 @@ export class ClientFeatureToggleDelta {
         }
 
         // TODO: 19.12 this logic seems to be not logical, when no revisionId is coming, it should not go to db, but take latest from cache
-
-        console.log("ENVIRONMENT", environment);
-        console.log("DELTA CACHE", this.delta[environment]);
-
-
         // Should get the latest state if revision does not exist or if sdkRevision is not present
         // We should be able to do this without going to the database by merging revisions from the delta with
         // the base case

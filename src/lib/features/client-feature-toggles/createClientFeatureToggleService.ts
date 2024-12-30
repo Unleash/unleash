@@ -11,13 +11,10 @@ export const createClientFeatureToggleService = (
     db: Db,
     config: IUnleashConfig,
 ): ClientFeatureToggleService => {
-    const { getLogger, eventBus, flagResolver } = config;
-
     const featureToggleClientStore = new FeatureToggleClientStore(
         db,
-        eventBus,
-        getLogger,
-        flagResolver,
+        config.eventBus,
+        config,
     );
 
     const segmentReadModel = new SegmentReadModel(db);
@@ -30,7 +27,7 @@ export const createClientFeatureToggleService = (
         },
         segmentReadModel,
         clientFeatureToggleCache,
-        { getLogger, flagResolver },
+        config,
     );
 
     return clientFeatureToggleService;
@@ -39,8 +36,6 @@ export const createClientFeatureToggleService = (
 export const createFakeClientFeatureToggleService = (
     config: IUnleashConfig,
 ): ClientFeatureToggleService => {
-    const { getLogger, flagResolver } = config;
-
     const fakeClientFeatureToggleStore = new FakeClientFeatureToggleStore();
 
     const fakeSegmentReadModel = new FakeSegmentReadModel();
@@ -51,7 +46,7 @@ export const createFakeClientFeatureToggleService = (
         },
         fakeSegmentReadModel,
         null,
-        { getLogger, flagResolver },
+        config,
     );
 
     return clientFeatureToggleService;

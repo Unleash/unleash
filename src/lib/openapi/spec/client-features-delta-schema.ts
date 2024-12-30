@@ -34,6 +34,14 @@ export const clientFeaturesDeltaSchema = {
                 type: 'string',
             },
         },
+        segments: {
+            description:
+                'A list of [Segments](https://docs.getunleash.io/reference/segments) configured for this Unleash instance',
+            type: 'array',
+            items: {
+                $ref: '#/components/schemas/clientSegmentSchema',
+            },
+        },
     },
     components: {
         schemas: {

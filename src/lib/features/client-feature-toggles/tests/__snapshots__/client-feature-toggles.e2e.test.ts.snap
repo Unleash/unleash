@@ -12,7 +12,17 @@ exports[`should match snapshot from /api/client/features 1`] = `
       "stale": false,
       "strategies": [
         {
-          "constraints": [],
+          "constraints": [
+            {
+              "caseInsensitive": false,
+              "contextName": "appName",
+              "inverted": false,
+              "operator": "IN",
+              "values": [
+                "test",
+              ],
+            },
+          ],
           "name": "flexibleRollout",
           "parameters": {
             "groupId": "test1",

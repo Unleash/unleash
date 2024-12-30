@@ -1,5 +1,4 @@
 import type EventEmitter from 'events';
-import { CLIENT_METRICS } from './internals';
 
 const REQUEST_TIME = 'request_time';
 const DB_TIME = 'db_time';
@@ -17,6 +16,8 @@ const REQUEST_ORIGIN = 'request_origin' as const;
 const ADDON_EVENTS_HANDLED = 'addon-event-handled' as const;
 const CLIENT_METRICS_NAMEPREFIX = 'client-api-nameprefix';
 const CLIENT_METRICS_TAGS = 'client-api-tags';
+const CLIENT_FEATURES_MEMORY = 'client_features_memory';
+const CLIENT_DELTA_MEMORY = 'client_delta_memory';
 
 type MetricEvent =
     | typeof REQUEST_TIME
@@ -33,7 +34,9 @@ type MetricEvent =
     | typeof EXCEEDS_LIMIT
     | typeof REQUEST_ORIGIN
     | typeof CLIENT_METRICS_NAMEPREFIX
-    | typeof CLIENT_METRICS_TAGS;
+    | typeof CLIENT_METRICS_TAGS
+    | typeof CLIENT_FEATURES_MEMORY
+    | typeof CLIENT_DELTA_MEMORY;
 
 type RequestOriginEventPayload = {
     type: 'UI' | 'API';
@@ -83,6 +86,8 @@ export {
     ADDON_EVENTS_HANDLED,
     CLIENT_METRICS_NAMEPREFIX,
     CLIENT_METRICS_TAGS,
+    CLIENT_FEATURES_MEMORY,
+    CLIENT_DELTA_MEMORY,
     type MetricEvent,
     type MetricEventPayload,
     emitMetricEvent,

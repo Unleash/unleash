@@ -8,12 +8,17 @@ import { format } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../util';
 import type { FilterItemParams } from 'component/filter/FilterItem/FilterItem';
+import { DateRangePresets } from './DateRangePresets';
 
 export interface IFilterDateItemProps {
     name: string;
     label: ReactNode;
     onChange: (value: FilterItemParams) => void;
-    onChipClose: () => void;
+    onRangeChange?: (value: {
+        from: FilterItemParams;
+        to: FilterItemParams;
+    }) => void;
+    onChipClose?: () => void;
     state: FilterItemParams | null | undefined;
     operators: [string, ...string[]];
 }
@@ -22,6 +27,7 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
     name,
     label,
     onChange,
+    onRangeChange,
     onChipClose,
     state,
     operators,
@@ -54,11 +60,13 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
         : [];
     const selectedDate = state ? new Date(state.values[0]) : null;
     const currentOperator = state ? state.operator : operators[0];
-    const onDelete = () => {
-        onChange({ operator: operators[0], values: [] });
-        onClose();
-        onChipClose();
-    };
+    const onDelete = onChipClose
+        ? () => {
+              onChange({ operator: operators[0], values: [] });
+              onClose();
+              onChipClose();
+          }
+        : undefined;
 
     useEffect(() => {
         if (state && !operators.includes(state.operator)) {
@@ -115,6 +123,9 @@ export const FilterDateItem: FC<IFilterDateItemProps> = ({
                             });
                         }}
                     />
+                    {onRangeChange && (
+                        <DateRangePresets onRangeChange={onRangeChange} />
+                    )}
                 </LocalizationProvider>
             </StyledPopover>
         </>

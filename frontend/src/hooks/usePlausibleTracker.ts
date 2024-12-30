@@ -71,7 +71,6 @@ export type CustomEvents =
     | 'onboarding'
     | 'personal-dashboard'
     | 'order-environments'
-    | 'unleash-ai-chat'
     | 'project-navigation'
     | 'productivity-report'
     | 'release-plans';

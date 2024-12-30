@@ -10,6 +10,7 @@ import mapValues from 'lodash.mapvalues';
 import { useEventSearch } from 'hooks/api/getters/useEventSearch/useEventSearch';
 import type { SearchEventsParams } from 'openapi';
 import type { FilterItemParamHolder } from 'component/filter/Filters/Filters';
+import { format, subYears } from 'date-fns';
 
 type Log =
     | { type: 'global' }
@@ -60,8 +61,14 @@ export const useEventLogSearch = (
         offset: withDefault(NumberParam, 0),
         limit: withDefault(NumberParam, DEFAULT_PAGE_SIZE),
         query: StringParam,
-        from: FilterItemParam,
-        to: FilterItemParam,
+        from: withDefault(FilterItemParam, {
+            values: [format(subYears(new Date(), 1), 'yyyy-MM-dd')],
+            operator: 'IS',
+        }),
+        to: withDefault(FilterItemParam, {
+            values: [format(new Date(), 'yyyy-MM-dd')],
+            operator: 'IS',
+        }),
         createdBy: FilterItemParam,
         type: FilterItemParam,
         ...extraParameters(logType),
@@ -81,6 +88,7 @@ export const useEventLogSearch = (
     const [tableState, setTableState] = usePersistentTableState(
         fullStorageKey,
         stateConfig,
+        ['from', 'to', 'offset'],
     );
 
     const filterState = (() => {

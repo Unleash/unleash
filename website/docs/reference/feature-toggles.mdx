@@ -43,10 +43,10 @@ Variants can also include payloads such as JSON, CSV, or strings to provide user
 :::
 
 
-Feature flags have a type to indicate their use case and help you manage and sort your flags. A feature flag's type determines its [expected lifetime](#expected-lifetime) and its visual appearance in the Admin UI.
+Feature flags have a type to indicate their use case and help you manage and sort your flags. A feature flag's type determines its expected lifetime and its visual appearance in the Admin UI.
 
 
-The following is a list of feature flag types:
+The following is a list of feature flag types, their purpose, and expected lifetime:
 
 | Feature flag type | Used to                                                                                                                                                       | Expected lifetime |
 |---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|-------------------|
@@ -60,7 +60,7 @@ To learn more, visit [Types of feature flags](../what-is-a-feature-flag#types-of
 
 ## Feature flag state
 
-A feature flag can have one of the following states: _active_, _potentially stale_, or _stale_. Unleash marks all flags as _potentially stale_ automatically once they pass their [expected lifetime](#expected-lifetime).
+A feature flag can have one of the following states: _active_, _potentially stale_, or _stale_. Unleash marks all flags as _potentially stale_ automatically once they pass their expected lifetime.
 
 State gives you an indication of when to [clean up a feature flag in code](./technical-debt).
 
@@ -70,7 +70,7 @@ You can also manually change the state on a feature flag's page by going to **Ov
 
 Marking a flag as stale helps you deprecate a feature flag without removing the active configuration for connected applications.
 
-You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [technical debt dashboard](./technical-debt).
+You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [project status dashboard](./technical-debt#project-health).
 
 Marking a flag as stale generates the `feature-stale-on` [event](/reference/events#feature-stale-on). You can use [an integration](/reference/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
 
@@ -187,15 +187,17 @@ Once archived, the flag is no longer available to client SDKs.
 
 ### View archived flags
 
-To view an archived feature flag, open the project that contains the flag and select the **Archived flags** tab.
+To view archived feature flags in a project, use the **Show only archived** filter in the **Feature flags** list.
 
 ### Revive a feature flag
 
-You can revive archived flags by navigating to the [feature flag archive](#view-archived-flags) and clicking **Revive feature flag**. Revived flags are in an inactive state by default.
+To revive an archived flag, use [filters](#view-archived-flags) to find the flag and click **Revive feature flag**. Revived flags are in an inactive state by default.
+
+![Archive a feature flag](/img/revive-archived-flag.png)
 
 ### Delete a feature flag
 
-You can delete archived flags by navigating to the [feature flag archive](#view-archived-flags) and clicking **Delete feature flag**. 
+To delete an archived flag, use [filters](#view-archived-flags) to find the flag and click **Delete feature flag**. 
 
 However, we recommend not deleting feature flags unless they are completely removed from your codebase. If you delete a flag and later create a new one with the same name, it might unintentionally reactivate old code that still references the original flag.
 

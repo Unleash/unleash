@@ -13,6 +13,7 @@ import {
     ReleasePlanMilestoneStatus,
     type MilestoneStatus,
 } from './ReleasePlanMilestoneStatus';
+import { useState } from 'react';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status',
@@ -51,7 +52,6 @@ const StyledSecondaryLabel = styled('span')(({ theme }) => ({
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    backgroundColor: theme.palette.envAccordion.expanded,
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
 }));
@@ -67,6 +67,8 @@ export const ReleasePlanMilestone = ({
     status,
     onStartMilestone,
 }: IReleasePlanMilestoneProps) => {
+    const [expanded, setExpanded] = useState(false);
+
     if (!milestone.strategies.length) {
         return (
             <StyledAccordion status={status}>
@@ -85,7 +87,10 @@ export const ReleasePlanMilestone = ({
     }
 
     return (
-        <StyledAccordion status={status}>
+        <StyledAccordion
+            status={status}
+            onChange={(evt, expanded) => setExpanded(expanded)}
+        >
             <StyledAccordionSummary expandIcon={<ExpandMore />}>
                 <StyledTitleContainer>
                     <StyledTitle>{milestone.name}</StyledTitle>
@@ -96,8 +101,8 @@ export const ReleasePlanMilestone = ({
                 </StyledTitleContainer>
                 <StyledSecondaryLabel>
                     {milestone.strategies.length === 1
-                        ? 'View strategy'
-                        : `View ${milestone.strategies.length} strategies`}
+                        ? `${expanded ? 'Hide' : 'View'} strategy`
+                        : `${expanded ? 'Hide' : 'View'} ${milestone.strategies.length} strategies`}
                 </StyledSecondaryLabel>
             </StyledAccordionSummary>
             <StyledAccordionDetails>

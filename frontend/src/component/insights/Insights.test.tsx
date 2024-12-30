@@ -33,9 +33,6 @@ test('Filter insights by project and date', async () => {
     render(<Insights withCharts={false} />);
     const addFilter = await screen.findByText('Add Filter');
     fireEvent.click(addFilter);
-
-    const dateFromFilter = await screen.findByText('Date From');
-    await screen.findByText('Date To');
     const projectFilter = await screen.findByText('Project');
 
     // filter by project
@@ -45,11 +42,17 @@ test('Filter insights by project and date', async () => {
     await fireEvent.click(projectName);
     expect(window.location.href).toContain('project=IS%3AprojectB');
 
-    // filter by from date
-    fireEvent.click(dateFromFilter);
-    const day = await screen.findByText('25');
-    fireEvent.click(day);
+    // last month moving window by default
+    const fromDate = await screen.findByText('03/25/2024');
+    await screen.findByText('04/25/2024');
+
+    // change dates by preset range
+    fireEvent.click(fromDate);
+    const previousMonth = await screen.findByText('Previous month');
+    fireEvent.click(previousMonth);
+    await screen.findByText('03/01/2024');
+    await screen.findByText('03/31/2024');
     expect(window.location.href).toContain(
-        'project=IS%3AprojectB&from=IS%3A2024-04-25',
+        '?project=IS%3AprojectB&from=IS%3A2024-03-01&to=IS%3A2024-03-31',
     );
 });

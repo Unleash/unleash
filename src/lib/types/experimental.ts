@@ -48,7 +48,6 @@ export type IFlagKey =
     | 'removeUnsafeInlineStyleSrc'
     | 'projectRoleAssignment'
     | 'originMiddlewareRequestLogging'
-    | 'unleashAI'
     | 'webhookDomainLogging'
     | 'releasePlans'
     | 'productivityReportEmail'
@@ -241,10 +240,6 @@ const flags: IFlags = {
     ),
     originMiddlewareRequestLogging: parseEnvVarBoolean(
         process.env.UNLEASH_ORIGIN_MIDDLEWARE_REQUEST_LOGGING,
-        false,
-    ),
-    unleashAI: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_UNLEASH_AI,
         false,
     ),
     webhookDomainLogging: parseEnvVarBoolean(

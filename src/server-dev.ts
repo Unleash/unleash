@@ -49,7 +49,6 @@ process.nextTick(async () => {
                         enableLegacyVariants: false,
                         extendedMetrics: true,
                         originMiddlewareRequestLogging: true,
-                        unleashAI: true,
                         webhookDomainLogging: true,
                         releasePlans: false,
                         simplifyProjectOverview: true,

@@ -15,7 +15,7 @@ const placeholderData: LicensedUsersSchema = {
 export const useLicensedUsers = () => {
     const { data, refetch, loading, error } = useApiGetter<LicensedUsersSchema>(
         formatApiPath(path),
-        () => fetcher(formatApiPath(path), 'Licensed users'),
+        () => fetcher(formatApiPath(path), 'Seats used'),
     );
 
     return { data: data || placeholderData, refetch, loading, error };

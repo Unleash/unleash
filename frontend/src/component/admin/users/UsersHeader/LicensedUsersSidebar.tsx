@@ -90,7 +90,7 @@ export const LicensedUsersSidebar = ({
         >
             <ModalContentContainer>
                 <HeaderRow>
-                    <ModalHeader>Licensed seats</ModalHeader>
+                    <ModalHeader>Seats used</ModalHeader>
                 </HeaderRow>
                 <WidgetContainer>
                     <Row>

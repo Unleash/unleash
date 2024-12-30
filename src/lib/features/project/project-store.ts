@@ -1,4 +1,4 @@
-import type { Logger, LogProvider } from '../../logger';
+import type { Logger } from '../../logger';
 
 import NotFoundError from '../../error/notfound-error';
 import type {
@@ -8,6 +8,7 @@ import type {
     IProjectApplication,
     IProjectApplications,
     IProjectUpdate,
+    IUnleashConfig,
     ProjectMode,
 } from '../../types';
 import type {
@@ -72,11 +73,16 @@ class ProjectStore implements IProjectStore {
 
     private timer: Function;
 
+    private isOss: boolean;
+
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        getLogger: LogProvider,
-        flagResolver: IFlagResolver,
+        {
+            getLogger,
+            flagResolver,
+            isOss,
+        }: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'isOss'>,
     ) {
         this.db = db;
         this.logger = getLogger('project-store.ts');
@@ -86,6 +92,7 @@ class ProjectStore implements IProjectStore {
                 action,
             });
         this.flagResolver = flagResolver;
+        this.isOss = isOss;
     }
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -122,6 +129,9 @@ class ProjectStore implements IProjectStore {
             .orderBy('name', 'asc');
 
         projects = projects.where(`${TABLE}.archived_at`, null);
+        if (this.isOss) {
+            projects = projects.where('id', 'default');
+        }
 
         const rows = await projects;
 

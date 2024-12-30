@@ -624,6 +624,16 @@ export function registerPrometheusMetrics(
         help: 'Number of API tokens without a project',
     });
 
+    const clientFeaturesMemory = createGauge({
+        name: 'client_features_memory',
+        help: 'The amount of memory client features endpoint is using for caching',
+    });
+
+    const clientDeltaMemory = createGauge({
+        name: 'client_delta_memory',
+        help: 'The amount of memory client features delta endpoint is using for caching',
+    });
+
     const orphanedTokensActive = createGauge({
         name: 'orphaned_api_tokens_active',
         help: 'Number of API tokens without a project, last seen within 3 months',
@@ -662,7 +672,7 @@ export function registerPrometheusMetrics(
 
     const licensedUsers = createGauge({
         name: 'licensed_users',
-        help: 'The number of licensed users.',
+        help: 'The number of seats used.',
     });
 
     const addonEventsHandledCounter = createCounter({
@@ -750,6 +760,16 @@ export function registerPrometheusMetrics(
 
     eventBus.on(events.CLIENT_METRICS_TAGS, () => {
         tagsUsed.inc();
+    });
+
+    eventBus.on(events.CLIENT_FEATURES_MEMORY, (event: { memory: number }) => {
+        clientFeaturesMemory.reset();
+        clientFeaturesMemory.set(event.memory);
+    });
+
+    eventBus.on(events.CLIENT_DELTA_MEMORY, (event: { memory: number }) => {
+        clientDeltaMemory.reset();
+        clientDeltaMemory.set(event.memory);
     });
 
     events.onMetricEvent(

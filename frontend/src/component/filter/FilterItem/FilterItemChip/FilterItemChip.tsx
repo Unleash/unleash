@@ -31,6 +31,7 @@ const StyledLabel = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     fontWeight: theme.typography.fontWeightBold,
+    minHeight: theme.spacing(3.5),
 }));
 
 const StyledOptions = styled('button')(({ theme }) => ({

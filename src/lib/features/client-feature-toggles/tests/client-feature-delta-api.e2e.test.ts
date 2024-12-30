@@ -1,4 +1,3 @@
-import { RoleName } from '../../../types/model';
 import dbInit, {
     type ITestDb,
 } from '../../../../test/e2e/helpers/database-init';
@@ -8,83 +7,15 @@ import {
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../util/constants';
-import { type IUserWithRootRole, TEST_AUDIT_USER } from '../../../types';
 
 let app: IUnleashTest;
 let db: ITestDb;
-let dummyAdmin: IUserWithRootRole;
-
-const getApiClientResponse = (project = 'default') => [
-    {
-        name: 'test1',
-        type: 'release',
-        enabled: false,
-        project: project,
-        stale: false,
-        strategies: [
-            {
-                name: 'flexibleRollout',
-                constraints: [],
-                parameters: {
-                    rollout: '100',
-                    stickiness: 'default',
-                    groupId: 'test1',
-                },
-                variants: [],
-            },
-        ],
-        variants: [],
-        description: null,
-        impressionData: false,
-    },
-    {
-        name: 'test2',
-        type: 'release',
-        enabled: false,
-        project: project,
-        stale: false,
-        strategies: [
-            {
-                name: 'default',
-                constraints: [
-                    {
-                        contextName: 'userId',
-                        operator: 'IN',
-                        values: ['123'],
-                    },
-                ],
-                parameters: {},
-                variants: [],
-            },
-        ],
-        variants: [],
-        description: null,
-        impressionData: false,
-    },
-];
-
-const cleanup = async (db: ITestDb, app: IUnleashTest) => {
-    const all =
-        await db.stores.projectStore.getEnvironmentsForProject('default');
-    await Promise.all(
-        all
-            .filter((env) => env.environment !== DEFAULT_ENV)
-            .map(async (env) =>
-                db.stores.projectStore.deleteEnvironmentForProject(
-                    'default',
-                    env.environment,
-                ),
-            ),
-    );
-};
 
 const setupFeatures = async (
     db: ITestDb,
     app: IUnleashTest,
     project = 'default',
 ) => {
-    await db.rawDatabase.raw('DELETE FROM features');
-
     await app.createFeature('test1', project);
     await app.createFeature('test2', project);
 
@@ -130,20 +61,13 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
-
-    dummyAdmin = await app.services.userService.createUser(
-        {
-            name: 'Some Name',
-            email: 'test@getunleash.io',
-            rootRole: RoleName.ADMIN,
-        },
-        TEST_AUDIT_USER,
-    );
 });
 
-afterEach(async () => {
-    await cleanup(db, app);
-    await db.rawDatabase.raw('DELETE FROM events');
+beforeEach(async () => {
+    await db.stores.eventStore.deleteAll();
+    await db.stores.featureToggleStore.deleteAll();
+    // @ts-ignore
+    app.services.clientFeatureToggleService.clientFeatureToggleDelta.resetDelta();
 });
 
 afterAll(async () => {
@@ -170,12 +94,49 @@ test('should match with /api/client/delta', async () => {
 test('should get 304 if asked for latest revision', async () => {
     await setupFeatures(db, app);
 
-    // Set current revision id to 14 to test etag. TS ignore to access otherwise inaccessible property.
-    // @ts-ignore
-    app.services.clientFeatureToggleService.clientFeatureToggleDelta.currentRevisionId = 14;
+    const { body } = await app.request.get('/api/client/delta').expect(200);
+    const currentRevisionId = body.revisionId;
 
     await app.request
-        .set('If-None-Match', '14')
+        .set('If-None-Match', currentRevisionId)
         .get('/api/client/delta')
         .expect(304);
 });
+
+test('should return correct delta after feature created', async () => {
+    await app.createFeature('base_feature');
+    await syncRevisions();
+    const { body } = await app.request.get('/api/client/delta').expect(200);
+    const currentRevisionId = body.revisionId;
+
+    expect(body).toMatchObject({
+        updated: [
+            {
+                name: 'base_feature',
+            },
+        ],
+    });
+
+    await app.createFeature('new_feature');
+
+    await syncRevisions();
+
+    const { body: deltaBody } = await app.request
+        .get('/api/client/delta')
+        .set('If-None-Match', currentRevisionId)
+        .expect(200);
+
+    expect(deltaBody).toMatchObject({
+        updated: [
+            {
+                name: 'new_feature',
+            },
+        ],
+    });
+});
+
+const syncRevisions = async () => {
+    await app.services.configurationRevisionService.updateMaxRevisionId();
+    // @ts-ignore
+    await app.services.clientFeatureToggleService.clientFeatureToggleDelta.onUpdateRevisionEvent();
+};

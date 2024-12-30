@@ -169,27 +169,6 @@ export class ClientFeatureToggleDelta {
             await this.updateSegments();
         }
 
-        // TODO: 19.12 this logic seems to be not logical, when no revisionId is coming, it should not go to db, but take latest from cache
-        // Should get the latest state if revision does not exist or if sdkRevision is not present
-        // We should be able to do this without going to the database by merging revisions from the delta with
-        // the base case
-        const firstTimeCalling = !sdkRevisionId;
-        if (
-            firstTimeCalling ||
-            (sdkRevisionId &&
-                sdkRevisionId !== this.currentRevisionId &&
-                !this.delta[environment].hasRevision(sdkRevisionId))
-        ) {
-            //TODO: populate delta based on this?
-            return {
-                revisionId: this.currentRevisionId,
-                // @ts-ignore
-                updated: await this.getClientFeatures({ environment }),
-                segments: this.segments,
-                removed: [],
-            };
-        }
-
         if (requiredRevisionId >= this.currentRevisionId) {
             return undefined;
         }
@@ -210,7 +189,7 @@ export class ClientFeatureToggleDelta {
         return Promise.resolve(revisionResponse);
     }
 
-    private async onUpdateRevisionEvent() {
+    public async onUpdateRevisionEvent() {
         if (this.flagResolver.isEnabled('deltaApi')) {
             await this.updateFeaturesDelta();
             await this.updateSegments();
@@ -218,7 +197,11 @@ export class ClientFeatureToggleDelta {
         }
     }
 
-    public async updateFeaturesDelta() {
+    public resetDelta() {
+        this.delta = {};
+    }
+
+    private async updateFeaturesDelta() {
         const keys = Object.keys(this.delta);
 
         if (keys.length === 0) return;

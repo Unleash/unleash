@@ -805,6 +805,11 @@ describe('Managing Project access', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
+        await db.stores.environmentStore.create({
+            name: 'production',
+            type: 'production',
+            enabled: true,
+        });
 
         const auditUser = extractAuditInfoFromUser(user);
         await projectService.createProject(project, user, auditUser);

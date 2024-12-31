@@ -15,9 +15,16 @@ test('Display grouped project roles with names and descriptions', async () => {
                 },
                 {
                     id: 1,
-                    name: 'My Custom Role',
+                    name: 'B Custom Role',
                     project: null,
-                    description: 'Custom role description',
+                    description: 'Custom role description A',
+                    type: 'custom',
+                },
+                {
+                    id: 2,
+                    name: 'A Custom Role',
+                    project: null,
+                    description: 'Custom role description B',
                     type: 'custom',
                 },
             ]}
@@ -34,6 +41,13 @@ test('Display grouped project roles with names and descriptions', async () => {
     expect(screen.getByText('Owner')).toBeInTheDocument();
     expect(screen.getByText('Owner description')).toBeInTheDocument();
     expect(screen.getByText('Custom project roles')).toBeInTheDocument();
-    expect(screen.getByText('My Custom Role')).toBeInTheDocument();
-    expect(screen.getByText('Custom role description')).toBeInTheDocument();
+    const customRoleA = screen.getByText('A Custom Role');
+    const customRoleB = screen.getByText('B Custom Role');
+    expect(customRoleA).toBeInTheDocument();
+    expect(customRoleB).toBeInTheDocument();
+    expect(customRoleA.compareDocumentPosition(customRoleB)).toBe(
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    );
+    expect(screen.getByText('Custom role description A')).toBeInTheDocument();
+    expect(screen.getByText('Custom role description B')).toBeInTheDocument();
 });

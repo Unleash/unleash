@@ -1,15 +1,17 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base"],
   "timezone": "Europe/Madrid",
   "schedule": ["after 7pm every weekday", "before 5am every weekday"],
   "packageRules": [
     {
       "matchUpdateTypes": ["minor", "patch"],
-      "matchPackagePatterns": ["*"],
+      "matchPackageNames": ["*"],
       "automerge": true,
-      "stabilityDays": 7,
+      "minimumReleaseAge": "7 days",
       "internalChecksFilter": "strict"
     }
   ],
-  "ignoreDeps": ["react-router-dom"]
+  "ignoreDeps": ["react-router-dom"],
+  "labels": ["dependencies"]
 }

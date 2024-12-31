@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { Alert, Checkbox } from '@mui/material';
+import { Alert, Checkbox, styled } from '@mui/material';
 import { useThemeStyles } from 'themes/themeStyles';
 import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
@@ -48,6 +48,17 @@ export const getIllegalValues = (
 
     return constraintValues.filter((value) => deletedValuesSet.has(value));
 };
+
+const StyledValuesContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: theme.spacing(1),
+    padding: theme.spacing(2),
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadiusMedium,
+    maxHeight: '378px',
+    overflow: 'auto',
+}));
 
 export const RestrictiveLegalValues = ({
     data,
@@ -134,23 +145,25 @@ export const RestrictiveLegalValues = ({
                     />
                 }
             />
-            {filteredValues.map((match) => (
-                <LegalValueLabel
-                    key={match.value}
-                    legal={match}
-                    control={
-                        <Checkbox
-                            checked={Boolean(valuesMap[match.value])}
-                            onChange={() => onChange(match.value)}
-                            name={match.value}
-                            color='primary'
-                            disabled={deletedLegalValues
-                                .map(({ value }) => value)
-                                .includes(match.value)}
-                        />
-                    }
-                />
-            ))}
+            <StyledValuesContainer>
+                {filteredValues.map((match) => (
+                    <LegalValueLabel
+                        key={match.value}
+                        legal={match}
+                        control={
+                            <Checkbox
+                                checked={Boolean(valuesMap[match.value])}
+                                onChange={() => onChange(match.value)}
+                                name={match.value}
+                                color='primary'
+                                disabled={deletedLegalValues
+                                    .map(({ value }) => value)
+                                    .includes(match.value)}
+                            />
+                        }
+                    />
+                ))}
+            </StyledValuesContainer>
 
             <ConditionallyRender
                 condition={Boolean(error)}

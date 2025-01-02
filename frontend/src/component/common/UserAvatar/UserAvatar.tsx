@@ -1,6 +1,7 @@
 import {
     Avatar,
     type AvatarProps,
+    Box,
     styled,
     type SxProps,
     type Theme,
@@ -9,6 +10,7 @@ import type { IUser } from 'interfaces/user';
 import { forwardRef } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { HtmlTooltip } from '../HtmlTooltip/HtmlTooltip';
+
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
     width: theme.spacing(3.5),
     height: theme.spacing(3.5),
@@ -18,6 +20,27 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     fontWeight: theme.fontWeight.bold,
 }));
+
+const StyledTooltip = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(2),
+}));
+
+const StyledTooltipAvatar = styled(Avatar)(({ theme }) => ({
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+    margin: 'auto',
+    backgroundColor: theme.palette.secondary.light,
+    color: theme.palette.text.primary,
+    fontSize: theme.fontSizes.smallerBody,
+    fontWeight: theme.fontWeight.bold,
+}));
+
+const StyledTooltipContent = styled(Box)({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+});
 
 export interface IUserAvatarProps extends AvatarProps {
     user?: Partial<
@@ -37,8 +60,8 @@ const tooltipContent = (
     }
 
     const [mainIdentifier, secondaryInfo] = [
-        user.email || user.username,
         user.name,
+        user.email || user.username,
     ];
 
     if (mainIdentifier) {
@@ -56,8 +79,10 @@ const TooltipSecondaryContent = styled('div')(({ theme }) => ({
     color: theme.palette.text.secondary,
     fontSize: theme.typography.body2.fontSize,
 }));
+
 const TooltipMainContent = styled('div')(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
+    wordBreak: 'break-word',
 }));
 
 export const UserAvatar = forwardRef<HTMLDivElement, IUserAvatarProps>(
@@ -94,19 +119,60 @@ export const UserAvatar = forwardRef<HTMLDivElement, IUserAvatarProps>(
 
         const tooltip = disableTooltip ? undefined : tooltipContent(user);
         if (tooltip) {
+            const { main, secondary } = tooltip;
+
+            if (!src && !user?.imageUrl) {
+                return (
+                    <HtmlTooltip
+                        arrow
+                        describeChild
+                        title={<TooltipMainContent>{main}</TooltipMainContent>}
+                    >
+                        {Avatar}
+                    </HtmlTooltip>
+                );
+            }
+
             return (
                 <HtmlTooltip
                     arrow
                     describeChild
+                    maxWidth={400}
                     title={
-                        <>
-                            <TooltipSecondaryContent>
-                                {tooltip.secondary}
-                            </TooltipSecondaryContent>
-                            <TooltipMainContent>
-                                {tooltip.main}
-                            </TooltipMainContent>
-                        </>
+                        <StyledTooltip>
+                            <ConditionallyRender
+                                condition={Boolean(src || user?.imageUrl)}
+                                show={
+                                    <StyledTooltipAvatar
+                                        src={src || user?.imageUrl}
+                                        alt={
+                                            user?.name ||
+                                            user?.email ||
+                                            user?.username ||
+                                            'Gravatar'
+                                        }
+                                    />
+                                }
+                            />
+                            <StyledTooltipContent>
+                                <ConditionallyRender
+                                    condition={Boolean(main)}
+                                    show={
+                                        <TooltipMainContent>
+                                            {main}
+                                        </TooltipMainContent>
+                                    }
+                                />
+                                <ConditionallyRender
+                                    condition={Boolean(secondary)}
+                                    show={
+                                        <TooltipSecondaryContent>
+                                            {secondary}
+                                        </TooltipSecondaryContent>
+                                    }
+                                />
+                            </StyledTooltipContent>
+                        </StyledTooltip>
                     }
                 >
                     {Avatar}

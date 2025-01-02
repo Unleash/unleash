@@ -117,7 +117,7 @@ import { UnleashClient } from "https://esm.sh/unleash-proxy-client";
 const corgiImg = document.getElementById("corgi-img");
 const funFact = document.getElementById("fun-fact");
 const newCorgiBtn = document.getElementById("new-corgi-btn");
-let unleash = null;
+const unleash = null;
 
 const funFacts = [
     "Corgis were originally bred for herding cattle and sheep.",
@@ -167,7 +167,7 @@ You'll need 2 things:
 With these 2, you can initialize your Unleash client as follows:
 
 ```js
-let unleash = new UnleashClient({
+const unleash = new UnleashClient({
     url: "http://localhost:4242/api/",
     clientKey: "YOUR_API_KEY",
     appName: "corgi-site",
@@ -180,7 +180,7 @@ Now, let's add our client to the project, after the selectors. Don't forget to a
 const corgiImg = document.getElementById("corgi-img");
 const funFact = document.getElementById("fun-fact");
 const newCorgiBtn = document.getElementById("new-corgi-btn");
-let unleash = new UnleashClient({
+const unleash = new UnleashClient({
     url: "http://localhost:4242/api/",
     clientKey: "YOUR_API_KEY",
     appName: "corgi-site",

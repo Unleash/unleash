@@ -8,6 +8,9 @@ interface IStringTruncatorProps {
     maxLength: number;
 }
 
+/**
+ * @Deprecated in favor of Truncator
+ */
 const StringTruncator = ({
     text,
     maxWidth,

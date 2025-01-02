@@ -6,7 +6,12 @@ import {
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 import type { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
-import { DEFAULT_PROJECT, type IUnleashStores } from '../../types';
+import {
+    CREATE_FEATURE_STRATEGY,
+    DEFAULT_PROJECT,
+    type IUnleashStores,
+    UPDATE_FEATURE_ENVIRONMENT,
+} from '../../types';
 import { DEFAULT_ENV } from '../../util';
 
 let app: IUnleashTest;
@@ -29,7 +34,7 @@ beforeAll(async () => {
     );
     stores = db.stores;
 
-    await app.request
+    const { body } = await app.request
         .post(`/auth/demo/login`)
         .send({
             email: 'user@getunleash.io',
@@ -43,12 +48,30 @@ beforeAll(async () => {
 
     await app.linkProjectToEnvironment('default', 'development');
 
+    await stores.accessStore.addPermissionsToRole(
+        body.rootRole,
+        [
+            { name: UPDATE_FEATURE_ENVIRONMENT },
+            { name: CREATE_FEATURE_STRATEGY },
+        ],
+        'development',
+    );
+
     await stores.environmentStore.create({
         name: 'production',
         type: 'production',
     });
 
     await app.linkProjectToEnvironment('default', 'production');
+
+    await stores.accessStore.addPermissionsToRole(
+        body.rootRole,
+        [
+            { name: UPDATE_FEATURE_ENVIRONMENT },
+            { name: CREATE_FEATURE_STRATEGY },
+        ],
+        'production',
+    );
 });
 
 afterAll(async () => {

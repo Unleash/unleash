@@ -94,8 +94,6 @@ const createRole = async (rolePermissions: PermissionRef[]) => {
 
 const hasCommonProjectAccess = async (user, projectName, condition) => {
     const defaultEnv = 'default';
-    const developmentEnv = 'development';
-    const productionEnv = 'production';
 
     const {
         CREATE_FEATURE,
@@ -153,70 +151,6 @@ const hasCommonProjectAccess = async (user, projectName, condition) => {
             UPDATE_FEATURE_ENVIRONMENT,
             projectName,
             defaultEnv,
-        ),
-    ).toBe(condition);
-    expect(
-        await accessService.hasPermission(
-            user,
-            CREATE_FEATURE_STRATEGY,
-            projectName,
-            developmentEnv,
-        ),
-    ).toBe(condition);
-    expect(
-        await accessService.hasPermission(
-            user,
-            UPDATE_FEATURE_STRATEGY,
-            projectName,
-            developmentEnv,
-        ),
-    ).toBe(condition);
-    expect(
-        await accessService.hasPermission(
-            user,
-            DELETE_FEATURE_STRATEGY,
-            projectName,
-            developmentEnv,
-        ),
-    ).toBe(condition);
-    expect(
-        await accessService.hasPermission(
-            user,
-            UPDATE_FEATURE_ENVIRONMENT,
-            projectName,
-            developmentEnv,
-        ),
-    ).toBe(condition);
-    expect(
-        await accessService.hasPermission(
-            user,
-            CREATE_FEATURE_STRATEGY,
-            projectName,
-            productionEnv,
-        ),
-    ).toBe(condition);
-    expect(
-        await accessService.hasPermission(
-            user,
-            UPDATE_FEATURE_STRATEGY,
-            projectName,
-            productionEnv,
-        ),
-    ).toBe(condition);
-    expect(
-        await accessService.hasPermission(
-            user,
-            DELETE_FEATURE_STRATEGY,
-            projectName,
-            productionEnv,
-        ),
-    ).toBe(condition);
-    expect(
-        await accessService.hasPermission(
-            user,
-            UPDATE_FEATURE_ENVIRONMENT,
-            projectName,
-            productionEnv,
         ),
     ).toBe(condition);
 };
@@ -378,7 +312,7 @@ test('should remove CREATE_FEATURE on default environment', async () => {
     await accessService.addPermissionToRole(
         editRole.id,
         permissions.CREATE_FEATURE,
-        '*',
+        'default',
     );
 
     // TODO: to validate the remove works, we should make sure that we had permission before removing it
@@ -637,7 +571,7 @@ test('should support permission with "ALL" environment requirement', async () =>
     await accessStore.addPermissionsToRole(
         customRole.id,
         [{ name: CREATE_FEATURE_STRATEGY }],
-        'production',
+        'default',
     );
     await accessStore.addUserToRole(user.id, customRole.id, ALL_PROJECTS);
 
@@ -645,7 +579,7 @@ test('should support permission with "ALL" environment requirement', async () =>
         user,
         CREATE_FEATURE_STRATEGY,
         'default',
-        'production',
+        'default',
     );
 
     expect(hasAccess).toBe(true);
@@ -667,7 +601,7 @@ test('Should have access to create a strategy in an environment', async () => {
             user,
             CREATE_FEATURE_STRATEGY,
             'default',
-            'development',
+            'default',
         ),
     ).toBe(true);
 });
@@ -693,7 +627,7 @@ test('Should have access to edit a strategy in an environment', async () => {
             user,
             UPDATE_FEATURE_STRATEGY,
             'default',
-            'development',
+            'default',
         ),
     ).toBe(true);
 });
@@ -706,7 +640,7 @@ test('Should have access to delete a strategy in an environment', async () => {
             user,
             DELETE_FEATURE_STRATEGY,
             'default',
-            'development',
+            'default',
         ),
     ).toBe(true);
 });

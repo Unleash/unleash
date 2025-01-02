@@ -12,17 +12,30 @@
 }
 
 .unleash {
-    max-width: 340px;
+    gap: 20px;
     padding-top: var(--ifm-footer-padding-vertical);
     padding-left: var(--ifm-spacing-horizontal);
 }
 
-@media screen and (min-width: 768px) {
+.social {
+    display: flex;
+    gap: 20px;
+    padding-top: var(--ifm-footer-padding-vertical);
+    padding-right: var(--ifm-spacing-horizontal);
+}
 
+.social svg {
+    color: #93a1a5;
+}
+
+@media screen and (min-width: 768px) {
     .footer {
         flex-wrap: nowrap;
     }
-    
+
+    .unleash {
+        display: flex;
+    }
 }
 
 .copyright {
@@ -34,6 +47,6 @@
     border-top: 1px solid var(--ifm-font-color-base);
 }
 
-.copyright p{
+.copyright p {
     margin-bottom: 0;
 }

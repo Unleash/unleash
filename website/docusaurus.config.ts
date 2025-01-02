@@ -230,7 +230,7 @@ class="header-github-link"
             },
         ],
         footer: {
-            style: 'dark',
+            // style: 'dark',
             links: [
                 {
                     title: 'Product',
@@ -275,11 +275,11 @@ class="header-github-link"
                     ],
                 },
             ],
-            copyright: `Copyright © ${new Date().getFullYear()} Unleash. Built with Docusaurus.`,
-            logo: {
-                src: 'img/logo.svg',
-                alt: 'Unleash logo',
-            },
+            // copyright: `Copyright © ${new Date().getFullYear()} Unleash. Built with Docusaurus.`,
+            // logo: {
+            //     src: 'img/logo.svg',
+            //     alt: 'Unleash logo',
+            // },
         },
         image: 'img/logo.png',
         imageZoom: {

@@ -195,17 +195,9 @@ export default class FeatureController extends Controller {
                     a.name.localeCompare(b.name),
                 );
 
-                const deepEqualIgnoreOrder = (obj1, obj2) => {
-                    const sortedObj1 = JSON.parse(
-                        JSON.stringify(obj1, Object.keys(obj1).sort()),
-                    );
-                    const sortedObj2 = JSON.parse(
-                        JSON.stringify(obj2, Object.keys(obj2).sort()),
-                    );
-                    return isEqual(sortedObj1, sortedObj2);
-                };
-
-                if (!deepEqualIgnoreOrder(sortedToggles, sortedNewToggles)) {
+                if (
+                    !this.deepEqualIgnoreOrder(sortedToggles, sortedNewToggles)
+                ) {
                     this.logger.warn(
                         `old features and new features are different. Old count ${
                             features.length
@@ -407,4 +399,14 @@ export default class FeatureController extends Controller {
         const jsonString = JSON.stringify(value);
         return Buffer.byteLength(jsonString, 'utf8');
     }
+
+    deepEqualIgnoreOrder = (obj1, obj2) => {
+        const sortedObj1 = JSON.parse(
+            JSON.stringify(obj1, Object.keys(obj1).sort()),
+        );
+        const sortedObj2 = JSON.parse(
+            JSON.stringify(obj2, Object.keys(obj2).sort()),
+        );
+        return isEqual(sortedObj1, sortedObj2);
+    };
 }

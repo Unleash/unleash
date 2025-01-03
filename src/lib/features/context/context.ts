@@ -202,7 +202,7 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['Context'],
                     summary: 'Delete legal value for the context field',
-                    description: `Endpoint that allows deleting a single custom context field legal value. Does not validate that legal value is not in use, but since context field configuration is stored in a json blob for the strategy, existing strategies are safe.`,
+                    description: `Removes the specified custom context field legal value. Does not validate that the legal value is not in use and does not remove usage from constraints that use it.`,
                     operationId: 'deleteContextFieldLegalValue',
                     responses: {
                         200: emptyResponse,

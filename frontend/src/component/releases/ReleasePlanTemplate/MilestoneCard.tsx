@@ -1,4 +1,3 @@
-import Input from 'component/common/Input/Input';
 import {
     Box,
     Button,
@@ -10,9 +9,7 @@ import {
     AccordionSummary,
     AccordionDetails,
     IconButton,
-    useTheme,
 } from '@mui/material';
-import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/DeleteOutlined';
 import type {
     IReleasePlanMilestonePayload,
@@ -22,23 +19,17 @@ import { type DragEventHandler, type RefObject, useState } from 'react';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { MilestoneStrategyMenuCards } from './MilestoneStrategyMenuCards';
 import { MilestoneStrategyDraggableItem } from './MilestoneStrategyDraggableItem';
+import { MilestoneCardName } from './MilestoneCardName';
 
-const StyledEditIcon = styled(Edit)(({ theme }) => ({
-    cursor: 'pointer',
-    marginTop: theme.spacing(-0.25),
-    marginLeft: theme.spacing(0.5),
-    height: theme.spacing(2.5),
-    width: theme.spacing(2.5),
-    color: theme.palette.text.secondary,
-}));
-
-const StyledMilestoneCard = styled(Card)(({ theme }) => ({
+const StyledMilestoneCard = styled(Card, {
+    shouldForwardProp: (prop) => prop !== 'hasError',
+})<{ hasError: boolean }>(({ theme, hasError }) => ({
     marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'space-between',
     boxShadow: 'none',
-    border: `1px solid ${theme.palette.divider}`,
+    border: `1px solid ${hasError ? theme.palette.error.border : theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     [theme.breakpoints.down('sm')]: {
         justifyContent: 'center',
@@ -54,15 +45,6 @@ const StyledMilestoneCardBody = styled(Box)(({ theme }) => ({
 const StyledGridItem = styled(Grid)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-}));
-
-const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
-}));
-
-const StyledMilestoneCardTitle = styled('span')(({ theme }) => ({
-    fontWeight: theme.fontWeight.bold,
-    fontSize: theme.fontSizes.bodySize,
 }));
 
 const StyledAddStrategyButton = styled(Button)(({ theme }) => ({}));
@@ -131,6 +113,7 @@ interface IMilestoneCardProps {
     ) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
+    removable: boolean;
     onDeleteMilestone: () => void;
 }
 
@@ -140,16 +123,15 @@ export const MilestoneCard = ({
     showAddStrategyDialog,
     errors,
     clearErrors,
+    removable,
     onDeleteMilestone,
 }: IMilestoneCardProps) => {
-    const [editMode, setEditMode] = useState(false);
     const [anchor, setAnchor] = useState<Element>();
     const [dragItem, setDragItem] = useState<{
         id: string;
         index: number;
         height: number;
     } | null>(null);
-    const theme = useTheme();
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen
         ? 'MilestoneStrategyMenuPopover'
@@ -261,43 +243,21 @@ export const MilestoneCard = ({
 
     if (!milestone.strategies || milestone.strategies.length === 0) {
         return (
-            <StyledMilestoneCard>
+            <StyledMilestoneCard
+                hasError={
+                    Boolean(errors?.[milestone.id]) ||
+                    Boolean(errors?.[`${milestone.id}_name`])
+                }
+            >
                 <StyledMilestoneCardBody>
                     <Grid container>
                         <StyledGridItem item xs={8} md={9}>
-                            {editMode && (
-                                <StyledInput
-                                    label=''
-                                    value={milestone.name}
-                                    onChange={(e) =>
-                                        milestoneNameChanged(e.target.value)
-                                    }
-                                    error={Boolean(errors?.name)}
-                                    errorText={errors?.name}
-                                    onFocus={() => clearErrors()}
-                                    onBlur={() => setEditMode(false)}
-                                    autoFocus
-                                    onKeyDownCapture={(e) => {
-                                        if (e.code === 'Enter') {
-                                            e.preventDefault();
-                                            e.stopPropagation();
-                                            setEditMode(false);
-                                        }
-                                    }}
-                                />
-                            )}
-                            {!editMode && (
-                                <>
-                                    <StyledMilestoneCardTitle
-                                        onClick={() => setEditMode(true)}
-                                    >
-                                        {milestone.name}
-                                    </StyledMilestoneCardTitle>
-                                    <StyledEditIcon
-                                        onClick={() => setEditMode(true)}
-                                    />
-                                </>
-                            )}
+                            <MilestoneCardName
+                                milestone={milestone}
+                                errors={errors}
+                                clearErrors={clearErrors}
+                                milestoneNameChanged={milestoneNameChanged}
+                            />
                         </StyledGridItem>
                         <StyledMilestoneActionGrid item xs={4} md={3}>
                             <Button
@@ -310,6 +270,7 @@ export const MilestoneCard = ({
                             <StyledIconButton
                                 title='Remove milestone'
                                 onClick={onDeleteMilestone}
+                                disabled={!removable}
                             >
                                 <Delete />
                             </StyledIconButton>
@@ -342,35 +303,12 @@ export const MilestoneCard = ({
             <StyledAccordionSummary
                 expandIcon={<ExpandMore titleAccess='Toggle' />}
             >
-                {editMode && (
-                    <StyledInput
-                        label=''
-                        value={milestone.name}
-                        onChange={(e) => milestoneNameChanged(e.target.value)}
-                        error={Boolean(errors?.name)}
-                        errorText={errors?.name}
-                        onFocus={() => clearErrors()}
-                        onBlur={() => setEditMode(false)}
-                        autoFocus
-                        onKeyDownCapture={(e) => {
-                            if (e.code === 'Enter') {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setEditMode(false);
-                            }
-                        }}
-                    />
-                )}
-                {!editMode && (
-                    <>
-                        <StyledMilestoneCardTitle
-                            onClick={() => setEditMode(true)}
-                        >
-                            {milestone.name}
-                        </StyledMilestoneCardTitle>
-                        <StyledEditIcon onClick={() => setEditMode(true)} />
-                    </>
-                )}
+                <MilestoneCardName
+                    milestone={milestone}
+                    errors={errors}
+                    clearErrors={clearErrors}
+                    milestoneNameChanged={milestoneNameChanged}
+                />
             </StyledAccordionSummary>
             <StyledAccordionDetails>
                 {milestone.strategies.map((strg, index) => (
@@ -403,6 +341,7 @@ export const MilestoneCard = ({
                         variant='text'
                         color='primary'
                         onClick={onDeleteMilestone}
+                        disabled={!removable}
                     >
                         <Delete /> Remove milestone
                     </Button>

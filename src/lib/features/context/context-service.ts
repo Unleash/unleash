@@ -140,7 +140,7 @@ class ContextService {
         });
     }
 
-    async updateContextFieldLegalValue(
+    async updateLegalValue(
         contextFieldLegalValue: { name: string; legalValue: LegalValueSchema },
         auditUser: IAuditUser,
     ): Promise<void> {
@@ -166,6 +166,34 @@ class ContextService {
         }
 
         const newContextField = { ...contextField, legalValues };
+
+        await this.contextFieldStore.update(newContextField);
+
+        await this.eventService.storeEvent({
+            type: CONTEXT_FIELD_UPDATED,
+            createdBy: auditUser.username,
+            createdByUserId: auditUser.id,
+            ip: auditUser.ip,
+            preData: contextField,
+            data: newContextField,
+        });
+    }
+
+    async deleteLegalValue(
+        contextFieldLegalValue: { name: string; legalValue: string },
+        auditUser: IAuditUser,
+    ): Promise<void> {
+        const contextField = await this.contextFieldStore.get(
+            contextFieldLegalValue.name,
+        );
+
+        const newContextField = {
+            ...contextField,
+            legalValues: contextField.legalValues?.filter(
+                (legalValue) =>
+                    legalValue.value !== contextFieldLegalValue.legalValue,
+            ),
+        };
 
         await this.contextFieldStore.update(newContextField);
 

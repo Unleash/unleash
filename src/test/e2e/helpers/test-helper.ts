@@ -12,7 +12,7 @@ import {
 } from '../../../lib/types';
 import type { IUnleashServices } from '../../../lib/types/services';
 import type { Db } from '../../../lib/db/db';
-import type { IContextFieldDto } from '../../../lib/types/stores/context-field-store';
+import type { IContextFieldDto } from '../../../lib/features/context/context-field-store-type';
 import { DEFAULT_ENV } from '../../../lib/util';
 import type {
     CreateDependentFeatureSchema,

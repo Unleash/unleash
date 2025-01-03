@@ -177,10 +177,9 @@ export class ContextController extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
-                    summary:
-                        'Add or update a single legal value to the context field',
-                    description: `Endpoint that allows adding or updating a custom context field legal value. If the legal value already exists, it will be updated with the new description`,
-                    operationId: 'addContextFieldLegalValue',
+                    summary: 'Add or update legal value for the context field',
+                    description: `Endpoint that allows adding or updating a single custom context field legal value. If the legal value already exists, it will be updated with the new description`,
+                    operationId: 'updateContextFieldLegalValue',
                     requestBody: createRequestSchema('legalValueSchema'),
                     responses: {
                         200: emptyResponse,

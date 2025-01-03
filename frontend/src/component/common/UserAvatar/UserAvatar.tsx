@@ -82,7 +82,7 @@ const TooltipSecondaryContent = styled('div')(({ theme }) => ({
 
 const TooltipMainContent = styled('div')(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
-    wordBreak: 'break-word',
+    overflowWrap: 'anywhere',
 }));
 
 export const UserAvatar = forwardRef<HTMLDivElement, IUserAvatarProps>(

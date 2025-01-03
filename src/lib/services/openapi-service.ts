@@ -11,7 +11,6 @@ import type { ApiOperation } from '../openapi/util/api-operation';
 import type { Logger } from '../logger';
 import { validateSchema } from '../openapi/validate';
 import type { IFlagResolver } from '../types';
-import { fromOpenApiValidationErrors } from '../error/bad-data-error';
 
 export class OpenApiService {
     private readonly config: IUnleashConfig;
@@ -57,21 +56,6 @@ export class OpenApiService {
     ): void {
         Object.entries(schemas).forEach(([name, schema]) => {
             this.api.schema(name, removeJsonSchemaProps(schema));
-        });
-    }
-
-    useErrorHandler(app: Express): void {
-        app.use((err, req, res, next) => {
-            if (err?.status && err.validationErrors) {
-                const apiError = fromOpenApiValidationErrors(
-                    req,
-                    err.validationErrors,
-                );
-
-                res.status(apiError.statusCode).json(apiError);
-            } else {
-                next(err);
-            }
         });
     }
 

@@ -6,7 +6,7 @@ import FeatureTypeStore from './feature-type-store';
 import StrategyStore from './strategy-store';
 import ClientInstanceStore from './client-instance-store';
 import ClientApplicationsStore from './client-applications-store';
-import ContextFieldStore from './context-field-store';
+import ContextFieldStore from '../features/context/context-field-store';
 import SettingStore from './setting-store';
 import UserStore from './user-store';
 import ProjectStore from '../features/project/project-store';

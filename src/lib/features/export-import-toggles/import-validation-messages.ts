@@ -2,7 +2,7 @@ import type {
     FeatureStrategySchema,
     ImportTogglesValidateItemSchema,
 } from '../../openapi';
-import type { IContextFieldDto } from '../../types/stores/context-field-store';
+import type { IContextFieldDto } from '../context/context-field-store-type';
 import type { FeatureNameCheckResultWithFeaturePattern } from '../feature-toggle/feature-toggle-service';
 import type { ProjectFeaturesLimit } from './import-toggles-store-type';
 

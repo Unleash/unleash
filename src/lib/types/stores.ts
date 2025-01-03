@@ -5,7 +5,7 @@ import { IStrategyStore } from './stores/strategy-store';
 import { IClientApplicationsStore } from './stores/client-applications-store';
 import { IClientInstanceStore } from './stores/client-instance-store';
 import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
-import { IContextFieldStore } from './stores/context-field-store';
+import { IContextFieldStore } from '../features/context/context-field-store-type';
 import { ISettingStore } from './stores/settings-store';
 import { ISessionStore } from './stores/session-store';
 import { ITagStore } from './stores/tag-store';

@@ -1,4 +1,4 @@
-import { styled, Tooltip } from '@mui/material';
+import { Box, Card, styled } from '@mui/material';
 import type { IGroup } from 'interfaces/group';
 import { Link, useNavigate } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -7,88 +7,119 @@ import { GroupCardActions } from './GroupCardActions/GroupCardActions';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
-import { AvatarGroup } from 'component/common/AvatarGroup/AvatarGroup';
+import {
+    AvatarComponent,
+    AvatarGroup,
+} from 'component/common/AvatarGroup/AvatarGroup';
+import GroupsIcon from '@mui/icons-material/GroupsOutlined';
+import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
+import { Highlighter } from 'component/common/Highlighter/Highlighter';
+import { Truncator } from 'component/common/Truncator/Truncator';
+import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 
-const StyledLink = styled(Link)(({ theme }) => ({
+const StyledCardLink = styled(Link)(({ theme }) => ({
+    color: 'inherit',
     textDecoration: 'none',
-    color: theme.palette.text.primary,
+    border: 'none',
+    padding: '0',
+    background: 'transparent',
+    fontFamily: theme.typography.fontFamily,
+    pointer: 'cursor',
 }));
 
-const StyledGroupCard = styled('aside')(({ theme }) => ({
-    padding: theme.spacing(2.5),
-    height: '100%',
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusLarge,
-    boxShadow: theme.boxShadows.card,
+const StyledCard = styled(Card)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    [theme.breakpoints.up('md')]: {
-        padding: theme.spacing(4),
+    justifyContent: 'space-between',
+    height: '100%',
+    boxShadow: 'none',
+    border: `1px solid ${theme.palette.divider}`,
+    [theme.breakpoints.down('sm')]: {
+        justifyContent: 'center',
     },
+    transition: 'background-color 0.2s ease-in-out',
+    backgroundColor: theme.palette.background.default,
     '&:hover': {
-        transition: 'background-color 0.2s ease-in-out',
         backgroundColor: theme.palette.neutral.light,
     },
+    borderRadius: theme.shape.borderRadiusMedium,
 }));
 
-const StyledRow = styled('div')(() => ({
+const StyledCardBody = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(2),
     display: 'flex',
+    flexFlow: 'column',
+    height: '100%',
+    position: 'relative',
+}));
+
+const StyledCardBodyHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'space-between',
 }));
 
-const StyledTitleRow = styled(StyledRow)(() => ({
-    alignItems: 'flex-start',
+const StyledCardIconContainer = styled(Box)(({ theme }) => ({
+    display: 'grid',
+    placeItems: 'center',
+    padding: theme.spacing(0.5),
+    alignSelf: 'baseline',
+    backgroundColor: theme.palette.secondary.light,
+    color: theme.palette.primary.main,
+    borderRadius: theme.shape.borderRadiusMedium,
+    '& > svg': {
+        height: theme.spacing(2),
+        width: theme.spacing(2),
+    },
 }));
 
-const StyledBottomRow = styled(StyledRow)(({ theme }) => ({
-    marginTop: 'auto',
-    alignItems: 'flex-end',
+const StyledCardTitle = styled('h3')(({ theme }) => ({
+    margin: 0,
+    marginRight: 'auto',
+    fontWeight: theme.typography.fontWeightRegular,
+    fontSize: theme.typography.body1.fontSize,
+    lineHeight: '1.2',
+}));
+
+const StyledCardDescription = styled('p')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    fontSize: theme.fontSizes.smallBody,
+    marginTop: theme.spacing(2),
+}));
+
+const StyledCardFooter = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(0, 2),
+    display: 'flex',
+    background: theme.palette.envAccordion.expanded,
+    boxShadow: theme.boxShadows.accordionFooter,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderTop: `1px solid ${theme.palette.divider}`,
+    minHeight: theme.spacing(6.25),
+}));
+
+const StyledCardFooterSpan = styled('span')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.text.secondary,
+    textWrap: 'nowrap',
+}));
+
+const StyledAvatarComponent = styled(AvatarComponent)(({ theme }) => ({
+    height: theme.spacing(2.5),
+    width: theme.spacing(2.5),
+    marginLeft: theme.spacing(-0.75),
+}));
+
+const StyledProjectsTooltip = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
     gap: theme.spacing(1),
 }));
 
-const StyledHeaderTitle = styled('h2')(({ theme }) => ({
-    fontSize: theme.fontSizes.mainHeader,
-    fontWeight: theme.fontWeight.medium,
-}));
-
-const StyledHeaderActions = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallBody,
-}));
-
-const StyledDescription = styled('p')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    fontSize: theme.fontSizes.smallBody,
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(4),
-}));
-
-const StyledCounterDescription = styled('span')(({ theme }) => ({
-    color: theme.palette.text.secondary,
-    marginLeft: theme.spacing(1),
-}));
-
-const ProjectBadgeContainer = styled('div')(({ theme }) => ({
-    maxWidth: '50%',
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: theme.spacing(0.5),
-    flexWrap: 'wrap',
-}));
-
-const InfoBadgeDescription = styled('span')(({ theme }) => ({
-    display: 'flex',
-    color: theme.palette.text.secondary,
-    alignItems: 'center',
-    gap: theme.spacing(1),
-    fontSize: theme.fontSizes.smallBody,
-}));
-
-const ProjectNameBadge = styled(Badge)({
-    wordBreak: 'break-word',
+const StyledProjectBadge = styled(Badge)({
+    cursor: 'pointer',
 });
 
 interface IGroupCardProps {
@@ -104,6 +135,8 @@ export const GroupCard = ({
 }: IGroupCardProps) => {
     const navigate = useNavigate();
 
+    const { searchQuery } = useSearchHighlightContext();
+
     const {
         settings: { enabled: scimEnabled },
     } = useScimSettings();
@@ -111,84 +144,104 @@ export const GroupCard = ({
 
     return (
         <>
-            <StyledLink key={group.id} to={`/admin/groups/${group.id}`}>
-                <StyledGroupCard>
-                    <StyledTitleRow>
-                        <StyledHeaderTitle>{group.name}</StyledHeaderTitle>
-                        <StyledHeaderActions>
+            <StyledCardLink to={`/admin/groups/${group.id}`}>
+                <StyledCard>
+                    <StyledCardBody>
+                        <StyledCardBodyHeader>
+                            <StyledCardIconContainer>
+                                <GroupsIcon />
+                            </StyledCardIconContainer>
+                            <Truncator
+                                title={group.name}
+                                arrow
+                                component={StyledCardTitle}
+                            >
+                                <Highlighter search={searchQuery}>
+                                    {group.name}
+                                </Highlighter>
+                            </Truncator>
+                            <ConditionallyRender
+                                condition={Boolean(group.rootRole)}
+                                show={
+                                    <RoleBadge
+                                        roleId={group.rootRole!}
+                                        hideIcon
+                                    />
+                                }
+                            />
                             <GroupCardActions
                                 groupId={group.id}
                                 onEditUsers={() => onEditUsers(group)}
                                 onRemove={() => onRemoveGroup(group)}
                                 isScimGroup={isScimGroup}
                             />
-                        </StyledHeaderActions>
-                    </StyledTitleRow>
-                    <ConditionallyRender
-                        condition={Boolean(group.rootRole)}
-                        show={
-                            <InfoBadgeDescription>
-                                <p>Root role:</p>
-                                <RoleBadge roleId={group.rootRole!} />
-                            </InfoBadgeDescription>
-                        }
-                    />
-
-                    <StyledDescription>{group.description}</StyledDescription>
-                    <StyledBottomRow>
+                        </StyledCardBodyHeader>
                         <ConditionallyRender
-                            condition={group.users?.length > 0}
-                            show={<AvatarGroup users={group.users} />}
-                            elseShow={
-                                <StyledCounterDescription>
-                                    This group has no users.
-                                </StyledCounterDescription>
+                            condition={Boolean(group.description)}
+                            show={
+                                <Truncator
+                                    lines={2}
+                                    title={group.description}
+                                    arrow
+                                    component={StyledCardDescription}
+                                >
+                                    <Highlighter search={searchQuery}>
+                                        {group.description}
+                                    </Highlighter>
+                                </Truncator>
                             }
                         />
-                        <ProjectBadgeContainer>
-                            <ConditionallyRender
-                                condition={group.projects.length > 0}
-                                show={group.projects.map((project) => (
-                                    <Tooltip
-                                        key={project}
-                                        title='View project'
-                                        arrow
-                                        placement='bottom-end'
-                                        describeChild
-                                    >
-                                        <ProjectNameBadge
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                navigate(
-                                                    `/projects/${project}/settings/access`,
-                                                );
-                                            }}
-                                            color='secondary'
-                                            icon={<TopicOutlinedIcon />}
-                                        >
-                                            {project}
-                                        </ProjectNameBadge>
-                                    </Tooltip>
-                                ))}
-                                elseShow={
-                                    <ConditionallyRender
-                                        condition={!group.rootRole}
-                                        show={
-                                            <Tooltip
-                                                title='This group is not used in any project'
-                                                arrow
-                                                describeChild
-                                            >
-                                                <Badge>Not used</Badge>
-                                            </Tooltip>
-                                        }
-                                    />
-                                }
-                            />
-                        </ProjectBadgeContainer>
-                    </StyledBottomRow>
-                </StyledGroupCard>
-            </StyledLink>
+                    </StyledCardBody>
+                    <StyledCardFooter>
+                        <ConditionallyRender
+                            condition={group.users.length > 0}
+                            show={
+                                <AvatarGroup
+                                    users={group.users}
+                                    AvatarComponent={StyledAvatarComponent}
+                                />
+                            }
+                            elseShow={
+                                <StyledCardFooterSpan>
+                                    This group has no users
+                                </StyledCardFooterSpan>
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={group.projects.length > 0}
+                            show={
+                                <TooltipLink
+                                    component='span'
+                                    tooltip={
+                                        <StyledProjectsTooltip>
+                                            {group.projects.map((project) => (
+                                                <StyledProjectBadge
+                                                    key={project}
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        navigate(
+                                                            `/projects/${project}/settings/access`,
+                                                        );
+                                                    }}
+                                                    color='secondary'
+                                                    icon={<TopicOutlinedIcon />}
+                                                >
+                                                    {project}
+                                                </StyledProjectBadge>
+                                            ))}
+                                        </StyledProjectsTooltip>
+                                    }
+                                >
+                                    <StyledCardFooterSpan>
+                                        {group.projects.length} project
+                                        {group.projects.length !== 1 && 's'}
+                                    </StyledCardFooterSpan>
+                                </TooltipLink>
+                            }
+                        />
+                    </StyledCardFooter>
+                </StyledCard>
+            </StyledCardLink>
         </>
     );
 };

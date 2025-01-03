@@ -25,7 +25,7 @@ import type {
     UpsertSegmentSchema,
     VariantsSchema,
 } from '../../openapi';
-import type { IContextFieldDto } from '../../types/stores/context-field-store';
+import type { IContextFieldDto } from '../context/context-field-store-type';
 
 let app: IUnleashTest;
 let db: ITestDb;

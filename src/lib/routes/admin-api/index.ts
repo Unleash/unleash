@@ -9,7 +9,7 @@ import PlaygroundController from '../../features/playground/playground';
 import MetricsController from './metrics';
 import UserController from './user/user';
 import ConfigController from './config';
-import { ContextController } from './context';
+import { ContextController } from '../../features/context/context';
 import ClientMetricsController from '../../features/metrics/client-metrics/client-metrics';
 import TagController from './tag';
 import TagTypeController from '../../features/tag-type/tag-type';

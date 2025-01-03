@@ -18,9 +18,11 @@ import { Link } from 'react-router-dom';
 import { scimGroupTooltip } from 'component/admin/groups/group-constants';
 
 const StyledActions = styled('div')(({ theme }) => ({
+    margin: theme.spacing(-1),
+    marginLeft: theme.spacing(-0.5),
     display: 'flex',
     justifyContent: 'center',
-    transform: 'translate3d(8px, -6px, 0)',
+    alignItems: 'center',
 }));
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
@@ -51,7 +53,7 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
         setAnchorEl(null);
     };
 
-    const id = `feature-${groupId}-actions`;
+    const id = `group-${groupId}-actions`;
     const menuId = `${id}-menu`;
 
     return (
@@ -74,6 +76,7 @@ export const GroupCardActions: FC<IGroupCardActions> = ({
                         aria-expanded={open ? 'true' : undefined}
                         onClick={handleClick}
                         type='button'
+                        size='small'
                     >
                         <MoreVert />
                     </IconButton>

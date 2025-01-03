@@ -1,13 +1,15 @@
-import type { Logger } from '../logger';
+import type { Logger } from '../../logger';
 import type {
     IContextField,
     IContextFieldDto,
     IContextFieldStore,
-} from '../types/stores/context-field-store';
-import type { IProjectStore } from '../features/project/project-store-type';
-import type { IFeatureStrategiesStore, IUnleashStores } from '../types/stores';
-import type { IUnleashConfig } from '../types/option';
-import type { ContextFieldStrategiesSchema } from '../openapi/spec/context-field-strategies-schema';
+} from './context-field-store-type';
+import type {
+    IFeatureStrategiesStore,
+    IUnleashStores,
+} from '../../types/stores';
+import type { IUnleashConfig } from '../../types/option';
+import type { ContextFieldStrategiesSchema } from '../../openapi/spec/context-field-strategies-schema';
 import {
     CONTEXT_FIELD_CREATED,
     CONTEXT_FIELD_DELETED,
@@ -15,16 +17,14 @@ import {
     type IAuditUser,
     type IFeatureStrategy,
     type IFlagResolver,
-} from '../types';
-import type { IPrivateProjectChecker } from '../features/private-project/privateProjectCheckerType';
-import type EventService from '../features/events/event-service';
-import { contextSchema } from './context-schema';
-import { NameExistsError } from '../error';
-import { nameSchema } from '../schema/feature-schema';
+} from '../../types';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
+import type EventService from '../events/event-service';
+import { contextSchema } from '../../services/context-schema';
+import { NameExistsError } from '../../error';
+import { nameSchema } from '../../schema/feature-schema';
 
 class ContextService {
-    private projectStore: IProjectStore;
-
     private eventService: EventService;
 
     private contextFieldStore: IContextFieldStore;
@@ -39,13 +39,9 @@ class ContextService {
 
     constructor(
         {
-            projectStore,
             contextFieldStore,
             featureStrategiesStore,
-        }: Pick<
-            IUnleashStores,
-            'projectStore' | 'contextFieldStore' | 'featureStrategiesStore'
-        >,
+        }: Pick<IUnleashStores, 'contextFieldStore' | 'featureStrategiesStore'>,
         {
             getLogger,
             flagResolver,
@@ -54,7 +50,6 @@ class ContextService {
         privateProjectChecker: IPrivateProjectChecker,
     ) {
         this.privateProjectChecker = privateProjectChecker;
-        this.projectStore = projectStore;
         this.eventService = eventService;
         this.flagResolver = flagResolver;
         this.contextFieldStore = contextFieldStore;

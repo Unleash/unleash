@@ -6,16 +6,19 @@ import { RoleDescription } from 'component/common/RoleDescription/RoleDescriptio
 
 interface IRoleBadgeProps {
     roleId: number;
+    hideIcon?: boolean;
     children?: string;
 }
 
-export const RoleBadge = ({ roleId, children }: IRoleBadgeProps) => {
+export const RoleBadge = ({ roleId, hideIcon, children }: IRoleBadgeProps) => {
     const { role } = useRole(roleId.toString());
+
+    const icon = hideIcon ? undefined : <UserIcon />;
 
     if (!role) {
         if (children)
             return (
-                <Badge color='success' icon={<UserIcon />}>
+                <Badge color='success' icon={icon}>
                     {children}
                 </Badge>
             );
@@ -24,11 +27,7 @@ export const RoleBadge = ({ roleId, children }: IRoleBadgeProps) => {
 
     return (
         <HtmlTooltip title={<RoleDescription roleId={roleId} tooltip />} arrow>
-            <Badge
-                color='success'
-                icon={<UserIcon />}
-                sx={{ cursor: 'pointer' }}
-            >
+            <Badge color='success' icon={icon} sx={{ cursor: 'pointer' }}>
                 {role.name}
             </Badge>
         </HtmlTooltip>

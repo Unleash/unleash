@@ -85,7 +85,7 @@ const AvatarGroupInner = ({
                     return 0;
                 })
                 .slice(0, avatarLimit),
-        [users],
+        [users, avatarLimit],
     );
 
     const overflow = users.length - avatarLimit;

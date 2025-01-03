@@ -17,9 +17,9 @@ import type {
 } from 'interfaces/releasePlans';
 import { type DragEventHandler, type RefObject, useState } from 'react';
 import ExpandMore from '@mui/icons-material/ExpandMore';
-import { MilestoneStrategyMenuCards } from './MilestoneStrategyMenuCards';
-import { MilestoneStrategyDraggableItem } from './MilestoneStrategyDraggableItem';
 import { MilestoneCardName } from './MilestoneCardName';
+import { MilestoneStrategyMenuCards } from './MilestoneStrategyMenu/MilestoneStrategyMenuCards';
+import { MilestoneStrategyDraggableItem } from './MilestoneStrategyDraggableItem';
 
 const StyledMilestoneCard = styled(Card, {
     shouldForwardProp: (prop) => prop !== 'hasError',

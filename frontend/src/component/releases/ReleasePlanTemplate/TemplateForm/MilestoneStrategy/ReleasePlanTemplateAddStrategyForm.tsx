@@ -15,16 +15,16 @@ import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import type { ISegment } from 'interfaces/segment';
 import { useEffect, useState } from 'react';
 import { BuiltInStrategies, formatStrategyName } from 'utils/strategyNames';
-import { MilestoneStrategyTitle } from './MilestoneStrategyTitle';
-import { MilestoneStrategyType } from './MilestoneStrategyType';
 import { useStrategy } from 'hooks/api/getters/useStrategy/useStrategy';
 import { useFormErrors } from 'hooks/useFormErrors';
 import produce from 'immer';
 import { MilestoneStrategySegment } from './MilestoneStrategySegment';
-import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints';
-import { MilestoneStrategyVariants } from './MilestoneStrategyVariants';
 import { useConstraintsValidation } from 'hooks/api/getters/useConstraintsValidation/useConstraintsValidation';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+import { MilestoneStrategyTitle } from './MilestoneStrategyTitle';
+import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints';
+import { MilestoneStrategyVariants } from './MilestoneStrategyVariants';
+import { MilestoneStrategyType } from './MilestoneStrategyType';
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),

@@ -1,7 +1,7 @@
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import { useEffect, useState } from 'react';
 import { Box, styled, Typography, Button } from '@mui/material';
-import { HelpIcon } from '../../common/HelpIcon/HelpIcon';
+import { HelpIcon } from '../../../../common/HelpIcon/HelpIcon';
 import { StrategyVariantsUpgradeAlert } from 'component/common/StrategyVariantsUpgradeAlert/StrategyVariantsUpgradeAlert';
 import { VariantForm } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsModal/VariantForm/VariantForm';
 import { v4 as uuidv4 } from 'uuid';

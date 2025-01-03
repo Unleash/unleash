@@ -27,11 +27,62 @@ export const useTemplateForm = (
     }, [initialMilestones.length]);
 
     const validate = () => {
+        let valid = true;
+
         if (name.length === 0) {
             setErrors((prev) => ({ ...prev, name: 'Name can not be empty.' }));
-            return false;
+            valid = false;
         }
-        return true;
+
+        if (milestones.length === 0) {
+            setErrors((prev) => ({
+                ...prev,
+                milestones: 'At least one milestone is required.',
+            }));
+            valid = false;
+        }
+
+        const milestoneNames = milestones.filter(
+            (m) => !m.name || m.name.length === 0,
+        );
+        if (milestoneNames && milestoneNames.length > 0) {
+            setErrors((prev) => ({
+                ...prev,
+                ...Object.assign(
+                    {},
+                    ...milestoneNames.map((mst) => ({
+                        [mst.id]: 'Milestone must have a valid name.',
+                    })),
+                ),
+                ...Object.assign(
+                    {},
+                    ...milestoneNames.map((mst) => ({
+                        [`${mst.id}_name`]: 'Milestone must have a valid name.',
+                    })),
+                ),
+            }));
+            valid = false;
+        }
+
+        const emptyMilestones = milestones.filter(
+            (m) => !m.strategies || m.strategies.length === 0,
+        );
+        if (emptyMilestones && emptyMilestones.length > 0) {
+            setErrors((prev) => ({
+                ...prev,
+                milestones:
+                    'All milestones must have at least one strategy each.',
+                ...Object.assign(
+                    {},
+                    ...emptyMilestones.map((mst) => ({
+                        [mst.id]: 'Milestone must have at least one strategy.',
+                    })),
+                ),
+            }));
+            valid = false;
+        }
+
+        return valid;
     };
 
     const clearErrors = () => {

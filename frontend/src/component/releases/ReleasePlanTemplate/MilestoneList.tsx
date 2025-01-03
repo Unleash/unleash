@@ -3,7 +3,7 @@ import type {
     IReleasePlanMilestoneStrategy,
 } from 'interfaces/releasePlans';
 import { MilestoneCard } from './MilestoneCard';
-import { styled, Button } from '@mui/material';
+import { styled, Button, FormHelperText } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -46,15 +46,22 @@ export const MilestoneList = ({
     return (
         <>
             {milestones.map((milestone) => (
-                <MilestoneCard
-                    key={milestone.id}
-                    milestone={milestone}
-                    milestoneChanged={milestoneChanged}
-                    showAddStrategyDialog={openAddStrategyForm}
-                    errors={errors}
-                    clearErrors={clearErrors}
-                    onDeleteMilestone={onDeleteMilestone(milestone.id)}
-                />
+                <>
+                    <MilestoneCard
+                        key={milestone.id}
+                        milestone={milestone}
+                        milestoneChanged={milestoneChanged}
+                        showAddStrategyDialog={openAddStrategyForm}
+                        errors={errors}
+                        clearErrors={clearErrors}
+                        removable={milestones.length > 1}
+                        onDeleteMilestone={onDeleteMilestone(milestone.id)}
+                    />
+
+                    <FormHelperText error={Boolean(errors?.[milestone.id])}>
+                        {errors?.[milestone.id]}
+                    </FormHelperText>
+                </>
             ))}
             <StyledAddMilestoneButton
                 variant='text'

@@ -170,7 +170,7 @@ export class ContextController extends Controller {
         });
 
         this.route({
-            method: 'put',
+            method: 'post',
             path: '/:contextField/legalValues',
             handler: this.updateContextFieldLegalValue,
             permission: UPDATE_CONTEXT_FIELD,

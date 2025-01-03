@@ -156,7 +156,7 @@ test('should add and update a single context field with new legal values', async
 
     // non existent context
     await request
-        .put(`${base}/api/admin/context/doesntexist/legalValues`)
+        .post(`${base}/api/admin/context/doesntexist/legalValues`)
         .send({
             value: 'local',
             description: 'Local environment',
@@ -166,7 +166,7 @@ test('should add and update a single context field with new legal values', async
 
     // invalid schema
     await request
-        .put(`${base}/api/admin/context/environment/legalValues`)
+        .post(`${base}/api/admin/context/environment/legalValues`)
         .send({
             valueInvalid: 'invalid schema',
             description: 'Local environment',
@@ -176,7 +176,7 @@ test('should add and update a single context field with new legal values', async
 
     // add a new context field legal value
     await request
-        .put(`${base}/api/admin/context/environment/legalValues`)
+        .post(`${base}/api/admin/context/environment/legalValues`)
         .send({
             value: 'newvalue',
             description: 'new description',
@@ -186,7 +186,7 @@ test('should add and update a single context field with new legal values', async
 
     // update existing context field legal value description
     await request
-        .put(`${base}/api/admin/context/environment/legalValues`)
+        .post(`${base}/api/admin/context/environment/legalValues`)
         .send({
             value: 'newvalue',
             description: 'updated description',

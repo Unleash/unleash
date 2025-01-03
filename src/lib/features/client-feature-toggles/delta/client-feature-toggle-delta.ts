@@ -223,7 +223,7 @@ export class ClientFeatureToggleDelta {
 
         const removed = changeEvents
             .filter((event) => event.featureName && event.project)
-            .filter((event) => event.type === 'feature-deleted')
+            .filter((event) => event.type === 'feature-archived')
             .map((event) => ({
                 name: event.featureName!,
                 project: event.project!,

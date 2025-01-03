@@ -39,6 +39,8 @@ import {
     CLIENT_METRICS_NAMEPREFIX,
     CLIENT_METRICS_TAGS,
 } from '../../internals';
+import isEqual from 'lodash.isequal';
+import { diff } from 'json-diff';
 
 const version = 2;
 
@@ -180,10 +182,31 @@ export default class FeatureController extends Controller {
                     featuresSize + segmentsSize,
                 );
 
-                await this.clientFeatureToggleService.getClientDelta(
-                    undefined,
-                    query!,
+                const delta =
+                    await this.clientFeatureToggleService.getClientDelta(
+                        undefined,
+                        query!,
+                    );
+
+                const sortedToggles = features.sort((a, b) =>
+                    a.name.localeCompare(b.name),
                 );
+                const sortedNewToggles = delta?.updated.sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                );
+
+                if (
+                    !this.deepEqualIgnoreOrder(sortedToggles, sortedNewToggles)
+                ) {
+                    this.logger.warn(
+                        `old features and new features are different. Old count ${
+                            features.length
+                        }, new count ${delta?.updated.length}, query ${JSON.stringify(query)},
+                        diff ${JSON.stringify(
+                            diff(sortedToggles, sortedNewToggles),
+                        )}`,
+                    );
+                }
                 this.storeFootprint();
             } catch (e) {
                 this.logger.error('Delta diff failed', e);
@@ -376,4 +399,14 @@ export default class FeatureController extends Controller {
         const jsonString = JSON.stringify(value);
         return Buffer.byteLength(jsonString, 'utf8');
     }
+
+    deepEqualIgnoreOrder = (obj1, obj2) => {
+        const sortedObj1 = JSON.parse(
+            JSON.stringify(obj1, Object.keys(obj1).sort()),
+        );
+        const sortedObj2 = JSON.parse(
+            JSON.stringify(obj2, Object.keys(obj2).sort()),
+        );
+        return isEqual(sortedObj1, sortedObj2);
+    };
 }

@@ -54,7 +54,13 @@ export interface IVersionOption {
 export enum IAuthType {
     OPEN_SOURCE = 'open-source',
     DEMO = 'demo',
+    /**
+     * Self-hosted by the customer. Should eventually be renamed to better reflect this.
+     */
     ENTERPRISE = 'enterprise',
+    /**
+     * Hosted by Unleash.
+     */
     HOSTED = 'hosted',
     CUSTOM = 'custom',
     NONE = 'none',

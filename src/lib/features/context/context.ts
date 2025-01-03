@@ -45,6 +45,10 @@ interface ContextParam {
     contextField: string;
 }
 
+interface DeleteLegalValueParam extends ContextParam {
+    legalValue: string;
+}
+
 export class ContextController extends Controller {
     private contextService: ContextService;
 
@@ -172,7 +176,7 @@ export class ContextController extends Controller {
         this.route({
             method: 'post',
             path: '/:contextField/legal-values',
-            handler: this.updateContextFieldLegalValue,
+            handler: this.updateLegalValue,
             permission: UPDATE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
@@ -181,6 +185,25 @@ export class ContextController extends Controller {
                     description: `Endpoint that allows adding or updating a single custom context field legal value. If the legal value already exists, it will be updated with the new description`,
                     operationId: 'updateContextFieldLegalValue',
                     requestBody: createRequestSchema('legalValueSchema'),
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
+            path: '/:contextField/legal-values/:legalValue',
+            handler: this.deleteLegalValue,
+            acceptAnyContentType: true,
+            permission: UPDATE_CONTEXT_FIELD,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Context'],
+                    summary: 'Delete legal value for the context field',
+                    description: `Removes the specified custom context field legal value. Does not validate that the legal value is not in use and does not remove usage from constraints that use it.`,
+                    operationId: 'deleteContextFieldLegalValue',
                     responses: {
                         200: emptyResponse,
                     },
@@ -291,14 +314,28 @@ export class ContextController extends Controller {
         res.status(200).end();
     }
 
-    async updateContextFieldLegalValue(
+    async updateLegalValue(
         req: IAuthRequest<ContextParam, void, LegalValueSchema>,
         res: Response,
     ): Promise<void> {
         const name = req.params.contextField;
         const legalValue = req.body;
 
-        await this.contextService.updateContextFieldLegalValue(
+        await this.contextService.updateLegalValue(
+            { name, legalValue },
+            req.audit,
+        );
+        res.status(200).end();
+    }
+
+    async deleteLegalValue(
+        req: IAuthRequest<DeleteLegalValueParam, void>,
+        res: Response,
+    ): Promise<void> {
+        const name = req.params.contextField;
+        const legalValue = req.params.legalValue;
+
+        await this.contextService.deleteLegalValue(
             { name, legalValue },
             req.audit,
         );

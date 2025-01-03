@@ -204,6 +204,43 @@ test('should add and update a single context field with new legal values', async
     });
 });
 
+test('should delete a single context field legal value', async () => {
+    expect.assertions(1);
+
+    // add a new context field legal value
+    await request
+        .post(`${base}/api/admin/context/environment/legal-values`)
+        .send({
+            value: 'valueA',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    await request
+        .post(`${base}/api/admin/context/environment/legal-values`)
+        .send({
+            value: 'valueB',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    await request
+        .delete(`${base}/api/admin/context/environment/legal-values/valueB`)
+        .expect(200);
+
+    const { body } = await request.get(`${base}/api/admin/context/environment`);
+
+    expect(body).toMatchObject({
+        name: 'environment',
+        legalValues: [{ value: 'valueA' }],
+    });
+
+    // verify delete is idempotent
+    await request
+        .delete(`${base}/api/admin/context/environment/legal-values/valueB`)
+        .expect(200);
+});
+
 test('should not delete a unknown context field', () => {
     expect.assertions(0);
 

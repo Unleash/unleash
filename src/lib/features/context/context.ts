@@ -337,7 +337,6 @@ export class ContextController extends Controller {
 
         await this.contextService.deleteLegalValue(
             { name, legalValue },
-            legalValue,
             req.audit,
         );
         res.status(200).end();

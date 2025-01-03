@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
 
-import Controller from '../controller';
+import Controller from '../../routes/controller';
 
 import {
     CREATE_CONTEXT_FIELD,
@@ -10,9 +10,9 @@ import {
 } from '../../types/permissions';
 import type { IUnleashConfig } from '../../types/option';
 import type { IUnleashServices } from '../../types/services';
-import type ContextService from '../../services/context-service';
+import type ContextService from './context-service';
 import type { Logger } from '../../logger';
-import type { IAuthRequest } from '../unleash-types';
+import type { IAuthRequest } from '../../routes/unleash-types';
 
 import type { OpenApiService } from '../../services/openapi-service';
 import {

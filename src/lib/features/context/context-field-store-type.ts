@@ -1,4 +1,4 @@
-import type { Store } from './store';
+import type { Store } from '../../types/stores/store';
 
 export interface IContextFieldDto {
     name: string;

@@ -1,13 +1,13 @@
-import type { Db } from './db';
-import type { Logger, LogProvider } from '../logger';
+import type { Db } from '../../db/db';
+import type { Logger, LogProvider } from '../../logger';
 import type {
     IContextField,
     IContextFieldDto,
     IContextFieldStore,
     ILegalValue,
-} from '../types/stores/context-field-store';
-import NotFoundError from '../error/notfound-error';
-import type { IFlagResolver } from '../types';
+} from './context-field-store-type';
+import NotFoundError from '../../error/notfound-error';
+import type { IFlagResolver } from '../../types';
 
 const COLUMNS = [
     'name',

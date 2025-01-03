@@ -5,7 +5,7 @@ import type StrategyService from '../services/strategy-service';
 import type TagTypeService from '../features/tag-type/tag-type-service';
 import type TagService from '../services/tag-service';
 import type ClientInstanceService from '../features/metrics/instance/instance-service';
-import type ContextService from '../services/context-service';
+import type ContextService from '../features/context/context-service';
 import type VersionService from '../services/version-service';
 import type { ApiTokenService } from '../services/api-token-service';
 import type { EmailService } from '../services/email-service';

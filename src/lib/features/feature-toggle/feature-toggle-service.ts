@@ -86,7 +86,7 @@ import {
     validateSemver,
     validateString,
 } from '../../util/validators/constraint-types';
-import type { IContextFieldStore } from '../../types/stores/context-field-store';
+import type { IContextFieldStore } from '../context/context-field-store-type';
 import type { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema';
 import {
     getDefaultStrategy,

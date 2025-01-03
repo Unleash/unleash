@@ -14,7 +14,7 @@ import UserStore from '../../db/user-store';
 import ProjectStore from '../project/project-store';
 import EnvironmentStore from '../project-environments/environment-store';
 import StrategyStore from '../../db/strategy-store';
-import ContextFieldStore from '../../db/context-field-store';
+import ContextFieldStore from '../context/context-field-store';
 import GroupStore from '../../db/group-store';
 import SegmentStore from '../segment/segment-store';
 import RoleStore from '../../db/role-store';
@@ -30,7 +30,7 @@ import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeEnvironmentStore from '../project-environments/fake-environment-store';
 import FakeGroupStore from '../../../test/fixtures/fake-group-store';
-import FakeContextFieldStore from '../../../test/fixtures/fake-context-field-store';
+import FakeContextFieldStore from '../context/fake-context-field-store';
 import FakeRoleStore from '../../../test/fixtures/fake-role-store';
 import FakeClientInstanceStore from '../../../test/fixtures/fake-client-instance-store';
 import FakeClientMetricsStoreV2 from '../metrics/client-metrics/fake-client-metrics-store-v2';

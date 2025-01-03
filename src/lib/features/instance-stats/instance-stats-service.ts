@@ -10,7 +10,7 @@ import type {
     ITrafficDataUsageStore,
     IUnleashStores,
 } from '../../types/stores';
-import type { IContextFieldStore } from '../../types/stores/context-field-store';
+import type { IContextFieldStore } from '../context/context-field-store-type';
 import type { IEnvironmentStore } from '../project-environments/environment-store-type';
 import type { IFeatureToggleStore } from '../feature-toggle/types/feature-toggle-store-type';
 import type { IGroupStore } from '../../types/stores/group-store';

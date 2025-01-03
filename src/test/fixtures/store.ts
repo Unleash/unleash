@@ -5,7 +5,7 @@ import FakeFeatureToggleStore from '../../lib/features/feature-toggle/fakes/fake
 import FakeTagStore from './fake-tag-store';
 import FakeTagTypeStore from '../../lib/features/tag-type/fake-tag-type-store';
 import FakeEventStore from './fake-event-store';
-import FakeContextFieldStore from './fake-context-field-store';
+import FakeContextFieldStore from '../../lib/features/context/fake-context-field-store';
 import FakeSettingStore from './fake-setting-store';
 import FakeAddonStore from './fake-addon-store';
 import FakeProjectStore from './fake-project-store';

@@ -14,7 +14,7 @@ import TagTypeService from '../features/tag-type/tag-type-service';
 import TagService from './tag-service';
 import StrategyService from './strategy-service';
 import AddonService from './addon-service';
-import ContextService from './context-service';
+import ContextService from '../features/context/context-service';
 import VersionService from './version-service';
 import { EmailService } from './email-service';
 import { AccessService } from './access-service';
@@ -153,6 +153,10 @@ import {
     createProjectStatusService,
 } from '../features/project-status/createProjectStatusService';
 import { ProjectStatusService } from '../features/project-status/project-status-service';
+import {
+    createContextService,
+    createFakeContextService,
+} from '../features/context/createContextService';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -196,12 +200,9 @@ export const createServices = (
         ? new FeatureLifecycleReadModel(db, config.flagResolver)
         : new FakeFeatureLifecycleReadModel();
 
-    const contextService = new ContextService(
-        stores,
-        config,
-        eventService,
-        privateProjectChecker,
-    );
+    const contextService = db
+        ? withTransactional(createContextService(config), db)
+        : withFakeTransactional(createFakeContextService(config));
     const emailService = new EmailService(config);
     const featureTypeService = new FeatureTypeService(
         stores,

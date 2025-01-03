@@ -1,6 +1,6 @@
 import { usePageTitle } from 'hooks/usePageTitle';
 import { Button, styled } from '@mui/material';
-import { TemplateForm } from './TemplateForm';
+import { TemplateForm } from './TemplateForm/TemplateForm';
 import { useTemplateForm } from '../hooks/useTemplateForm';
 import { CreateButton } from 'component/common/CreateButton/CreateButton';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';

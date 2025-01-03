@@ -2,7 +2,7 @@ import type {
     IReleasePlanMilestonePayload,
     IReleasePlanMilestoneStrategy,
 } from 'interfaces/releasePlans';
-import { MilestoneCard } from './MilestoneCard';
+import { MilestoneCard } from './MilestoneCard/MilestoneCard';
 import { styled, Button, FormHelperText } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { v4 as uuidv4 } from 'uuid';

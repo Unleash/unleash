@@ -1,6 +1,6 @@
 import Input from 'component/common/Input/Input';
 import { styled } from '@mui/material';
-import { MilestoneList } from './MilestoneList';
+import { MilestoneList } from './Milestone/MilestoneList/MilestoneList';
 import type {
     IReleasePlanMilestonePayload,
     IReleasePlanMilestoneStrategy,
@@ -8,7 +8,7 @@ import type {
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useState } from 'react';
-import { ReleasePlanTemplateAddStrategyForm } from './ReleasePlanTemplateAddStrategyForm';
+import { ReleasePlanTemplateAddStrategyForm } from './Milestone/MilestoneStrategy/ReleasePlanTemplateAddStrategyForm';
 import { TemplateFormDescription } from './TemplateFormDescription';
 
 const StyledInputDescription = styled('p')(({ theme }) => ({

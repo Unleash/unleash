@@ -3,7 +3,7 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useReleasePlanTemplate } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplate';
 import { useTemplateForm } from '../hooks/useTemplateForm';
-import { TemplateForm } from './TemplateForm';
+import { TemplateForm } from './TemplateForm/TemplateForm';
 import { Button, styled } from '@mui/material';
 import { UpdateButton } from 'component/common/UpdateButton/UpdateButton';
 import { RELEASE_PLAN_TEMPLATE_UPDATE } from '@server/types/permissions';

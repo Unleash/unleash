@@ -116,10 +116,12 @@ const StyledProjectsTooltip = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),
+    maxWidth: theme.spacing(25),
 }));
 
 const StyledProjectBadge = styled(Badge)({
     cursor: 'pointer',
+    overflowWrap: 'anywhere',
 });
 
 interface IGroupCardProps {

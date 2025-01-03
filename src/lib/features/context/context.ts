@@ -39,6 +39,7 @@ import {
 import type { UpdateContextFieldSchema } from '../../openapi/spec/update-context-field-schema';
 import type { CreateContextFieldSchema } from '../../openapi/spec/create-context-field-schema';
 import { extractUserIdFromUser } from '../../util';
+import type { LegalValueSchema } from '../../openapi';
 
 interface ContextParam {
     contextField: string;
@@ -169,6 +170,25 @@ export class ContextController extends Controller {
         });
 
         this.route({
+            method: 'post',
+            path: '/:contextField/legal-values',
+            handler: this.updateContextFieldLegalValue,
+            permission: UPDATE_CONTEXT_FIELD,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Context'],
+                    summary: 'Add or update legal value for the context field',
+                    description: `Endpoint that allows adding or updating a single custom context field legal value. If the legal value already exists, it will be updated with the new description`,
+                    operationId: 'updateContextFieldLegalValue',
+                    requestBody: createRequestSchema('legalValueSchema'),
+                    responses: {
+                        200: emptyResponse,
+                    },
+                }),
+            ],
+        });
+
+        this.route({
             method: 'delete',
             path: '/:contextField',
             handler: this.deleteContextField,
@@ -266,6 +286,20 @@ export class ContextController extends Controller {
 
         await this.contextService.updateContextField(
             { ...contextField, name },
+            req.audit,
+        );
+        res.status(200).end();
+    }
+
+    async updateContextFieldLegalValue(
+        req: IAuthRequest<ContextParam, void, LegalValueSchema>,
+        res: Response,
+    ): Promise<void> {
+        const name = req.params.contextField;
+        const legalValue = req.body;
+
+        await this.contextService.updateContextFieldLegalValue(
+            { name, legalValue },
             req.audit,
         );
         res.status(200).end();

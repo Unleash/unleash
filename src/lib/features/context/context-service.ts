@@ -20,9 +20,10 @@ import {
 } from '../../types';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type EventService from '../events/event-service';
-import { contextSchema } from '../../services/context-schema';
+import { contextSchema, legalValueSchema } from '../../services/context-schema';
 import { NameExistsError } from '../../error';
 import { nameSchema } from '../../schema/feature-schema';
+import type { LegalValueSchema } from '../../openapi';
 
 class ContextService {
     private eventService: EventService;
@@ -126,7 +127,6 @@ class ContextService {
         );
         const value = await contextSchema.validateAsync(updatedContextField);
 
-        // update
         await this.contextFieldStore.update(value);
 
         const { createdAt, sortOrder, ...previousContextField } = contextField;
@@ -137,6 +137,45 @@ class ContextService {
             ip: auditUser.ip,
             preData: previousContextField,
             data: value,
+        });
+    }
+
+    async updateContextFieldLegalValue(
+        contextFieldLegalValue: { name: string; legalValue: LegalValueSchema },
+        auditUser: IAuditUser,
+    ): Promise<void> {
+        const contextField = await this.contextFieldStore.get(
+            contextFieldLegalValue.name,
+        );
+        const validatedLegalValue = await legalValueSchema.validateAsync(
+            contextFieldLegalValue.legalValue,
+        );
+
+        const legalValues = contextField.legalValues
+            ? [...contextField.legalValues]
+            : [];
+
+        const existingIndex = legalValues.findIndex(
+            (legalvalue) => legalvalue.value === validatedLegalValue.value,
+        );
+
+        if (existingIndex !== -1) {
+            legalValues[existingIndex] = validatedLegalValue;
+        } else {
+            legalValues.push(validatedLegalValue);
+        }
+
+        const newContextField = { ...contextField, legalValues };
+
+        await this.contextFieldStore.update(newContextField);
+
+        await this.eventService.storeEvent({
+            type: CONTEXT_FIELD_UPDATED,
+            createdBy: auditUser.username,
+            createdByUserId: auditUser.id,
+            ip: auditUser.ip,
+            preData: contextField,
+            data: newContextField,
         });
     }
 

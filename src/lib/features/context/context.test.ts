@@ -151,6 +151,59 @@ test('should update a context field with new legal values', () => {
         .expect(200);
 });
 
+test('should add and update a single context field with new legal values', async () => {
+    expect.assertions(1);
+
+    // non existent context
+    await request
+        .put(`${base}/api/admin/context/doesntexist/legalValues`)
+        .send({
+            value: 'local',
+            description: 'Local environment',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(404);
+
+    // invalid schema
+    await request
+        .put(`${base}/api/admin/context/environment/legalValues`)
+        .send({
+            valueInvalid: 'invalid schema',
+            description: 'Local environment',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(400);
+
+    // add a new context field legal value
+    await request
+        .put(`${base}/api/admin/context/environment/legalValues`)
+        .send({
+            value: 'newvalue',
+            description: 'new description',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    // update existing context field legal value description
+    await request
+        .put(`${base}/api/admin/context/environment/legalValues`)
+        .send({
+            value: 'newvalue',
+            description: 'updated description',
+        })
+        .set('Content-Type', 'application/json')
+        .expect(200);
+
+    const { body } = await request.get(`${base}/api/admin/context/environment`);
+
+    expect(body).toMatchObject({
+        name: 'environment',
+        legalValues: [
+            { value: 'newvalue', description: 'updated description' },
+        ],
+    });
+});
+
 test('should not delete a unknown context field', () => {
     expect.assertions(0);
 

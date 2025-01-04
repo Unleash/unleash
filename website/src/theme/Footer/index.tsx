@@ -4,8 +4,8 @@ import type { WrapperProps } from '@docusaurus/types';
 import styles from './footer.module.css';
 import Heart from './Heart';
 import LinkedinIcon from './icons/linkedin.svg';
-import TwitterIcon from './icons/Twitter.svg';
-import SlackIcon from './icons/Slack.svg';
+import TwitterIcon from './icons/twitter.svg';
+import SlackIcon from './icons/slack.svg';
 import YoutubeIcon from './icons/youtube.svg';
 
 type Props = WrapperProps<typeof FooterType>;

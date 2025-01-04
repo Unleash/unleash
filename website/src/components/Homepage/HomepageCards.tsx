@@ -43,13 +43,15 @@ const cardsData = [
     },
 ];
 
-const HomepageCard = () => {
+const HomepageCards = () => {
     return (
         <div className={styles.container}>
             {cardsData.map((card, index) => (
                 <div key={index} className={styles.card}>
-                    <div className={styles.icon}>{card.icon}</div>
-                    <h3>{card.title}</h3>
+                    <h3 className={styles.title}>
+                        <span>{card.icon}</span> {card.title}
+                    </h3>
+
                     <p>{card.description}</p>
                 </div>
             ))}
@@ -57,4 +59,4 @@ const HomepageCard = () => {
     );
 };
 
-export default HomepageCard;
+export default HomepageCards;

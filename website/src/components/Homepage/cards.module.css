@@ -1,0 +1,28 @@
+.container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.card {
+    max-width: 450px;
+    height: 250px;
+    border-radius: 12px;
+    border: 1px solid #e1e1e3;
+    border-bottom: 12px solid var(--unleash-logo-purple);
+    cursor: pointer;
+    padding-inline: 1rem;
+    padding-top: 3rem;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.title svg {
+    width: 30px;
+    height: 30px;
+}

@@ -51,7 +51,6 @@ process.nextTick(async () => {
                         originMiddlewareRequestLogging: true,
                         webhookDomainLogging: true,
                         releasePlans: false,
-                        simplifyProjectOverview: true,
                         showUserDeviceCount: true,
                         flagOverviewRedesign: false,
                         licensedUsers: true,

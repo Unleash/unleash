@@ -57,7 +57,6 @@ export type IFlagKey =
     | 'showUserDeviceCount'
     | 'deleteStaleUserSessions'
     | 'memorizeStats'
-    | 'licensedUsers'
     | 'granularAdminPermissions'
     | 'streaming'
     | 'etagVariant'
@@ -268,10 +267,6 @@ const flags: IFlags = {
     ),
     flagOverviewRedesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
-        false,
-    ),
-    licensedUsers: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FLAG_LICENSED_USERS,
         false,
     ),
     granularAdminPermissions: parseEnvVarBoolean(

@@ -1,24 +1,27 @@
 import { validateSchema } from '../validate';
-import type { ClientFeaturesQuerySchema } from './client-features-query-schema';
+import type { ClientFeaturesDeltaSchema } from './client-features-delta-schema';
 
-test('clientFeatureQuerySchema empty', () => {
-    const data: ClientFeaturesQuerySchema = {};
-
-    expect(
-        validateSchema('#/components/schemas/clientFeaturesQuerySchema', data),
-    ).toBeUndefined();
-});
-
-test('clientFeatureQuerySchema all fields', () => {
-    const data: ClientFeaturesQuerySchema = {
-        tag: [['some-tag', 'some-other-tag']],
-        project: ['default'],
-        namePrefix: 'some-prefix',
-        environment: 'some-env',
-        inlineSegmentConstraints: true,
+test('clientFeaturesDeltaSchema all fields', () => {
+    const data: ClientFeaturesDeltaSchema = {
+        revisionId: 6,
+        updated: [
+            {
+                impressionData: false,
+                enabled: false,
+                name: 'base_feature',
+                description: null,
+                project: 'default',
+                stale: false,
+                type: 'release',
+                variants: [],
+                strategies: [],
+            },
+        ],
+        removed: [],
+        segments: [],
     };
 
     expect(
-        validateSchema('#/components/schemas/clientFeaturesQuerySchema', data),
+        validateSchema('#/components/schemas/clientFeaturesDeltaSchema', data),
     ).toBeUndefined();
 });

@@ -75,10 +75,13 @@ const filterRevisionByProject = (
         (feature) =>
             projects.includes('*') || projects.includes(feature.project),
     );
-    const removed = revision.removed.filter(
-        (feature) =>
-            projects.includes('*') || projects.includes(feature.project),
-    );
+    const removed = revision.removed
+        .filter(
+            (feature) =>
+                projects.includes('*') || projects.includes(feature.project),
+        )
+        .map((feature) => feature.name);
+
     return { ...revision, updated, removed };
 };
 
@@ -197,6 +200,9 @@ export class ClientFeatureToggleDelta {
         }
     }
 
+    /**
+     * This is used in client-feature-delta-api.e2e.test.ts, do not remove
+     */
     public resetDelta() {
         this.delta = {};
     }
@@ -217,7 +223,7 @@ export class ClientFeatureToggleDelta {
             ...new Set(
                 changeEvents
                     .filter((event) => event.featureName)
-                    .filter((event) => event.type !== 'feature-archived')
+                    // .filter((event) => event.type !== 'feature-archived')
                     .map((event) => event.featureName!),
             ),
         ];

@@ -41,7 +41,6 @@ import {
     useProjectFeatureSearchActions,
 } from './useProjectFeatureSearch';
 import { AvatarCell } from './AvatarCell';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { styled } from '@mui/material';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ConnectSdkDialog } from '../../../onboarding/dialog/ConnectSdkDialog';
@@ -92,7 +91,6 @@ export const ProjectFeatureToggles = ({
     const projectId = useRequiredPathParam('projectId');
     const { project } = useProjectOverview(projectId);
     const [connectSdkOpen, setConnectSdkOpen] = useState(false);
-    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
     const [modalOpen, setModalOpen] = useState(false);
 
     const {
@@ -587,20 +585,18 @@ export const ProjectFeatureToggles = ({
                                     onChange={setTableState}
                                     state={filterState}
                                 />
-                                {simplifyProjectOverview && (
-                                    <ButtonGroup>
-                                        <PermissionIconButton
-                                            permission={UPDATE_FEATURE}
-                                            projectId={projectId}
-                                            onClick={() => setModalOpen(true)}
-                                            tooltipProps={{ title: 'Import' }}
-                                            data-testid={IMPORT_BUTTON}
-                                            data-loading-project
-                                        >
-                                            <ImportSvg />
-                                        </PermissionIconButton>
-                                    </ButtonGroup>
-                                )}
+                                <ButtonGroup>
+                                    <PermissionIconButton
+                                        permission={UPDATE_FEATURE}
+                                        projectId={projectId}
+                                        onClick={() => setModalOpen(true)}
+                                        tooltipProps={{ title: 'Import' }}
+                                        data-testid={IMPORT_BUTTON}
+                                        data-loading-project
+                                    >
+                                        <ImportSvg />
+                                    </PermissionIconButton>
+                                </ButtonGroup>
                             </FilterRow>
                             <SearchHighlightProvider
                                 value={tableState.query || ''}

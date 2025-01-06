@@ -8,12 +8,9 @@ import Add from '@mui/icons-material/Add';
 import { Box } from '@mui/system';
 import type { IFilterItem } from './Filters/Filters';
 import { FILTERS_MENU } from 'utils/testIds';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
-import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
-import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 
 const StyledButton = styled(Button)(({ theme }) => ({
     padding: theme.spacing(0, 1.25, 0, 1.25),
@@ -52,9 +49,6 @@ export const AddFilterButton = ({
     setHiddenOptions,
     availableFilters,
 }: IAddFilterButtonProps) => {
-    const projectId = useOptionalPathParam('projectId');
-    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
-    const { user } = useAuthUser();
     const { setSplashSeen } = useSplashApi();
     const { splash } = useAuthSplash();
 
@@ -78,15 +72,6 @@ export const AddFilterButton = ({
         setVisibleOptions(newVisibleOptions);
         handleClose();
     };
-
-    const isOldCustomer = (createdAt: string | undefined) => {
-        if (!createdAt) return false;
-        const cutoffDate = new Date('2024-11-08T00:00:00.000Z');
-        return new Date(createdAt) < cutoffDate;
-    };
-
-    const showArchiveTooltip =
-        simplifyProjectOverview && projectId && isOldCustomer(user?.createdAt);
 
     const ArchiveTooltip = () => {
         return (
@@ -112,23 +97,17 @@ export const AddFilterButton = ({
     };
     return (
         <div>
-            {showArchiveTooltip ? (
-                <StyledHtmlTooltip
-                    placement='right'
-                    arrow
-                    title={<ArchiveTooltip />}
-                    describeChild
-                    open={archiveTooltipOpen}
-                >
-                    <StyledButton onClick={handleClick} startIcon={<Add />}>
-                        Add Filter
-                    </StyledButton>
-                </StyledHtmlTooltip>
-            ) : (
+            <StyledHtmlTooltip
+                placement='right'
+                arrow
+                title={<ArchiveTooltip />}
+                describeChild
+                open={archiveTooltipOpen}
+            >
                 <StyledButton onClick={handleClick} startIcon={<Add />}>
                     Add Filter
                 </StyledButton>
-            )}
+            </StyledHtmlTooltip>
 
             <Menu
                 id='simple-menu'

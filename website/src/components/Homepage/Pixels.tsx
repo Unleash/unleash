@@ -131,9 +131,6 @@ const PixelCanvas = ({
     const containerRef = useRef(null);
 
     const [ctx, setCtx] = useState(null);
-    const [reducedMotion] = useState(
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-    );
     const createPixels = (canvas, context) => {
         const pixels = [];
         const gap = maxSize + 2;
@@ -143,7 +140,7 @@ const PixelCanvas = ({
             for (let y = 0; y < canvas.height; y += gap) {
                 const color = colors[Math.floor(Math.random() * colors.length)];
                 const dist = getDistanceFromTopRight(x, y, canvas.width);
-                const delay = reducedMotion ? 0 : dist;
+                const delay = dist;
                 const lastX = canvas.width - gap;
                 console.log(x, lastX);
                 const isTopMostRight = x > lastX && y === 0;

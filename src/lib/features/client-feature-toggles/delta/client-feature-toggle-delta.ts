@@ -17,6 +17,7 @@ import type {
 import { CLIENT_DELTA_MEMORY } from '../../../metric-events';
 import type EventEmitter from 'events';
 import type { Logger } from '../../../logger';
+import type { ClientFeaturesDeltaSchema } from '../../../openapi';
 
 type DeletedFeature = {
     name: string;
@@ -79,6 +80,7 @@ const filterRevisionByProject = (
         (feature) =>
             projects.includes('*') || projects.includes(feature.project),
     );
+
     return { ...revision, updated, removed };
 };
 
@@ -153,7 +155,7 @@ export class ClientFeatureToggleDelta {
     async getDelta(
         sdkRevisionId: number | undefined,
         query: IFeatureToggleQuery,
-    ): Promise<RevisionDeltaEntry | undefined> {
+    ): Promise<ClientFeaturesDeltaSchema | undefined> {
         const projects = query.project ? query.project : ['*'];
         const environment = query.environment ? query.environment : 'default';
         // TODO: filter by tags, what is namePrefix? anything else?
@@ -181,9 +183,10 @@ export class ClientFeatureToggleDelta {
             projects,
         );
 
-        const revisionResponse = {
+        const revisionResponse: ClientFeaturesDeltaSchema = {
             ...compressedRevision,
             segments: this.segments,
+            removed: compressedRevision.removed.map((feature) => feature.name),
         };
 
         return Promise.resolve(revisionResponse);
@@ -197,6 +200,9 @@ export class ClientFeatureToggleDelta {
         }
     }
 
+    /**
+     * This is used in client-feature-delta-api.e2e.test.ts, do not remove
+     */
     public resetDelta() {
         this.delta = {};
     }
@@ -217,6 +223,7 @@ export class ClientFeatureToggleDelta {
             ...new Set(
                 changeEvents
                     .filter((event) => event.featureName)
+                    .filter((event) => event.type !== 'feature-archived')
                     .map((event) => event.featureName!),
             ),
         ];

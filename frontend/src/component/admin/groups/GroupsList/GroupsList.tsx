@@ -23,6 +23,7 @@ const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
     gap: theme.spacing(2),
+    gridAutoRows: '1fr',
 }));
 
 type PageQueryType = Partial<Record<'search', string>>;

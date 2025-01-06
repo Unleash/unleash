@@ -9,10 +9,8 @@ import type {
 import type { Logger } from '../../logger';
 
 import type { FeatureConfigurationClient } from '../feature-toggle/types/feature-toggle-strategies-store-type';
-import type {
-    RevisionDeltaEntry,
-    ClientFeatureToggleDelta,
-} from './delta/client-feature-toggle-delta';
+import type { ClientFeatureToggleDelta } from './delta/client-feature-toggle-delta';
+import type { ClientFeaturesDeltaSchema } from '../../openapi';
 
 export class ClientFeatureToggleService {
     private logger: Logger;
@@ -44,7 +42,7 @@ export class ClientFeatureToggleService {
     async getClientDelta(
         revisionId: number | undefined,
         query: IFeatureToggleQuery,
-    ): Promise<RevisionDeltaEntry | undefined> {
+    ): Promise<ClientFeaturesDeltaSchema | undefined> {
         if (this.clientFeatureToggleDelta !== null) {
             return this.clientFeatureToggleDelta.getDelta(revisionId, query);
         } else {

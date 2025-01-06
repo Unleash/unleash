@@ -5,6 +5,7 @@ import DotCircleIcon from './icons/dot-circle.svg';
 import IntegrationsIcon from './icons/integrations.svg';
 import MortarAcademyIcon from './icons/mortar-academy.svg';
 import SdkIcon from './icons/sdk.svg';
+import PixelCanvas from './Pixels';
 
 const cardsData = [
     {
@@ -45,17 +46,25 @@ const cardsData = [
 
 const HomepageCards = () => {
     return (
-        <div className={styles.container}>
-            {cardsData.map((card, index) => (
-                <div key={index} className={styles.card}>
-                    <h3 className={styles.title}>
-                        <span>{card.icon}</span> {card.title}
-                    </h3>
+        <>
+            <div className={styles.container}>
+                {cardsData.map((card, index) => (
+                    <div key={index} className={styles.card}>
+                        <PixelCanvas
+                            speed={60}
+                            maxSize={5}
+                            colors={['#c7c3f0', '#9188e0', '#635dc5']}
+                            className={styles.pixels}
+                        />
+                        <h3 className={styles.title}>
+                            <span>{card.icon}</span> {card.title}
+                        </h3>
 
-                    <p>{card.description}</p>
-                </div>
-            ))}
-        </div>
+                        <p>{card.description}</p>
+                    </div>
+                ))}
+            </div>
+        </>
     );
 };
 

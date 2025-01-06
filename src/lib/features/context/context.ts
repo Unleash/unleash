@@ -40,6 +40,7 @@ import type { UpdateContextFieldSchema } from '../../openapi/spec/update-context
 import type { CreateContextFieldSchema } from '../../openapi/spec/create-context-field-schema';
 import { extractUserIdFromUser } from '../../util';
 import type { LegalValueSchema } from '../../openapi';
+import type { WithTransactional } from '../../db/transaction';
 
 interface ContextParam {
     contextField: string;
@@ -50,7 +51,7 @@ interface DeleteLegalValueParam extends ContextParam {
 }
 
 export class ContextController extends Controller {
-    private contextService: ContextService;
+    private transactionalContextService: WithTransactional<ContextService>;
 
     private openApiService: OpenApiService;
 
@@ -59,14 +60,17 @@ export class ContextController extends Controller {
     constructor(
         config: IUnleashConfig,
         {
-            contextService,
+            transactionalContextService,
             openApiService,
-        }: Pick<IUnleashServices, 'contextService' | 'openApiService'>,
+        }: Pick<
+            IUnleashServices,
+            'transactionalContextService' | 'openApiService'
+        >,
     ) {
         super(config);
         this.openApiService = openApiService;
         this.logger = config.getLogger('/admin-api/context.ts');
-        this.contextService = contextService;
+        this.transactionalContextService = transactionalContextService;
 
         this.route({
             method: 'get',
@@ -257,7 +261,9 @@ export class ContextController extends Controller {
         res: Response<ContextFieldsSchema>,
     ): Promise<void> {
         res.status(200)
-            .json(serializeDates(await this.contextService.getAll()))
+            .json(
+                serializeDates(await this.transactionalContextService.getAll()),
+            )
             .end();
     }
 
@@ -268,7 +274,7 @@ export class ContextController extends Controller {
         try {
             const name = req.params.contextField;
             const contextField =
-                await this.contextService.getContextField(name);
+                await this.transactionalContextService.getContextField(name);
             this.openApiService.respondWithValidation(
                 200,
                 res,
@@ -286,9 +292,8 @@ export class ContextController extends Controller {
     ): Promise<void> {
         const value = req.body;
 
-        const result = await this.contextService.createContextField(
-            value,
-            req.audit,
+        const result = await this.transactionalContextService.transactional(
+            (service) => service.createContextField(value, req.audit),
         );
 
         this.openApiService.respondWithValidation(
@@ -307,9 +312,8 @@ export class ContextController extends Controller {
         const name = req.params.contextField;
         const contextField = req.body;
 
-        await this.contextService.updateContextField(
-            { ...contextField, name },
-            req.audit,
+        await this.transactionalContextService.transactional((service) =>
+            service.updateContextField({ ...contextField, name }, req.audit),
         );
         res.status(200).end();
     }
@@ -321,9 +325,8 @@ export class ContextController extends Controller {
         const name = req.params.contextField;
         const legalValue = req.body;
 
-        await this.contextService.updateLegalValue(
-            { name, legalValue },
-            req.audit,
+        await this.transactionalContextService.transactional((service) =>
+            service.updateLegalValue({ name, legalValue }, req.audit),
         );
         res.status(200).end();
     }
@@ -335,9 +338,8 @@ export class ContextController extends Controller {
         const name = req.params.contextField;
         const legalValue = req.params.legalValue;
 
-        await this.contextService.deleteLegalValue(
-            { name, legalValue },
-            req.audit,
+        await this.transactionalContextService.transactional((service) =>
+            service.deleteLegalValue({ name, legalValue }, req.audit),
         );
         res.status(200).end();
     }
@@ -348,7 +350,9 @@ export class ContextController extends Controller {
     ): Promise<void> {
         const name = req.params.contextField;
 
-        await this.contextService.deleteContextField(name, req.audit);
+        await this.transactionalContextService.transactional((service) =>
+            service.deleteContextField(name, req.audit),
+        );
         res.status(200).end();
     }
 
@@ -358,7 +362,7 @@ export class ContextController extends Controller {
     ): Promise<void> {
         const { name } = req.body;
 
-        await this.contextService.validateName(name);
+        await this.transactionalContextService.validateName(name);
         res.status(200).end();
     }
 
@@ -369,7 +373,7 @@ export class ContextController extends Controller {
         const { contextField } = req.params;
         const { user } = req;
         const contextFields =
-            await this.contextService.getStrategiesByContextField(
+            await this.transactionalContextService.getStrategiesByContextField(
                 contextField,
                 extractUserIdFromUser(user),
             );

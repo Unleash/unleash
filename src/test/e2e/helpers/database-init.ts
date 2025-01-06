@@ -21,9 +21,19 @@ delete process.env.DATABASE_URL;
 // because of db-migrate bug (https://github.com/Unleash/unleash/issues/171)
 process.setMaxListeners(0);
 
+async function getDefaultEnvRolePermissions(knex) {
+    return knex.table('role_permission').whereIn('environment', ['default']);
+}
+
+async function restoreRolePermissions(knex, rolePermissions) {
+    await knex.table('role_permission').insert(rolePermissions);
+}
+
 async function resetDatabase(knex) {
     return Promise.all([
-        knex.table('environments').del(),
+        knex
+            .table('environments')
+            .del(), // deletes role permissions transitively
         knex.table('strategies').del(),
         knex.table('features').del(),
         knex.table('client_applications').del(),
@@ -110,15 +120,20 @@ export default async function init(
     const testDb = createDb(config);
     const stores = await createStores(config, testDb);
     stores.eventStore.setMaxListeners(0);
+    const defaultRolePermissions = await getDefaultEnvRolePermissions(testDb);
     await resetDatabase(testDb);
     await setupDatabase(stores);
+    await restoreRolePermissions(testDb, defaultRolePermissions);
 
     return {
         rawDatabase: testDb,
         stores,
         reset: async () => {
+            const defaultRolePermissions =
+                await getDefaultEnvRolePermissions(testDb);
             await resetDatabase(testDb);
             await setupDatabase(stores);
+            await restoreRolePermissions(testDb, defaultRolePermissions);
         },
         destroy: async () => {
             return new Promise<void>((resolve, reject) => {

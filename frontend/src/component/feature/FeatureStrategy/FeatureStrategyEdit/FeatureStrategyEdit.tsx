@@ -12,7 +12,7 @@ import type {
     IFeatureStrategyPayload,
     IStrategy,
 } from 'interfaces/strategy';
-import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import type { ISegment } from 'interfaces/segment';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { useFormErrors } from 'hooks/useFormErrors';

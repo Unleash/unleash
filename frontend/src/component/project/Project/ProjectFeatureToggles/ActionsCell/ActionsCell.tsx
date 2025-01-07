@@ -23,7 +23,7 @@ import {
     CREATE_FEATURE,
     DELETE_FEATURE,
     UPDATE_FEATURE,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import { defaultBorderRadius } from 'themes/themeStyles';
 import copy from 'copy-to-clipboard';
 import useToast from 'hooks/useToast';

@@ -1,7 +1,7 @@
 import { useMemo, useState, type VFC } from 'react';
 import { Button } from '@mui/material';
 import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
-import { DELETE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { DELETE_FEATURE } from '@server/types/permissions';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import type { FeatureSchema } from 'openapi';

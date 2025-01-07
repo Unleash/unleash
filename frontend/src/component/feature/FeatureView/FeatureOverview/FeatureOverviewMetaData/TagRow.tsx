@@ -5,7 +5,7 @@ import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import Add from '@mui/icons-material/Add';
 import ClearIcon from '@mui/icons-material/Clear';
 import { ManageTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageTagsDialog';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from '@server/types/permissions';
 import AccessContext from 'contexts/AccessContext';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import type { ITag } from 'interfaces/tags';

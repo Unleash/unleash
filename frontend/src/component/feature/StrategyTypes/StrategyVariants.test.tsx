@@ -2,7 +2,7 @@ import { screen, waitFor } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import { StrategyVariants } from './StrategyVariants';
 import { Route, Routes } from 'react-router-dom';
-import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '../../providers/AccessProvider/permissions';
+import { UPDATE_FEATURE_ENVIRONMENT_VARIANTS } from '@server/types/permissions';
 import type { IFeatureStrategy } from '../../../interfaces/strategy';
 import { useState } from 'react';
 

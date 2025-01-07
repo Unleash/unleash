@@ -8,7 +8,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import useToast from 'hooks/useToast';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import usePermissions from 'hooks/api/getters/usePermissions/usePermissions';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { GO_BACK } from 'constants/navigate';
 import { Limit } from 'component/common/Limit/Limit';

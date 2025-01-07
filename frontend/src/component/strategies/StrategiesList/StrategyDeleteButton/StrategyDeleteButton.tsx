@@ -4,7 +4,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import Delete from '@mui/icons-material/Delete';
 import { IconButton, Tooltip } from '@mui/material';
 import type { IStrategy } from 'interfaces/strategy';
-import { DELETE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { DELETE_STRATEGY } from '@server/types/permissions';
 import { useId } from 'hooks/useId';
 
 interface IStrategyDeleteButtonProps {

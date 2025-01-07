@@ -2,7 +2,7 @@ import { render } from 'utils/testRenderer';
 import { screen } from '@testing-library/react';
 import InviteLinkButton from './InviteLinkButton';
 import { AccessProviderMock } from 'component/providers/AccessProvider/AccessProviderMock';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import { ADMIN } from '@server/types/permissions';
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 
 const server = testServerSetup();

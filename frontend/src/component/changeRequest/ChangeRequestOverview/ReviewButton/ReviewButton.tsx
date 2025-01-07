@@ -4,7 +4,7 @@ import { type FC, useContext } from 'react';
 import CheckBox from '@mui/icons-material/Check';
 import Clear from '@mui/icons-material/Clear';
 import { MultiActionButton } from 'component/common/MultiActionButton/MultiActionButton';
-import { APPROVE_CHANGE_REQUEST } from 'component/providers/AccessProvider/permissions';
+import { APPROVE_CHANGE_REQUEST } from '@server/types/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import AccessContext from 'contexts/AccessContext';

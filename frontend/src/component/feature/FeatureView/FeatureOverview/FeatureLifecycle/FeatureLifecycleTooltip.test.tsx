@@ -4,10 +4,7 @@ import { render } from 'utils/testRenderer';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import type { LifecycleStage } from './LifecycleStage';
-import {
-    DELETE_FEATURE,
-    UPDATE_FEATURE,
-} from 'component/providers/AccessProvider/permissions';
+import { DELETE_FEATURE, UPDATE_FEATURE } from '@server/types/permissions';
 
 const currentTime = '2024-04-25T08:05:00.000Z';
 const twoMinutesAgo = '2024-04-25T08:03:00.000Z';

@@ -3,7 +3,7 @@ import { Typography, styled } from '@mui/material';
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
+import { UPDATE_FEATURE } from '@server/types/permissions';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 
 const StyledList = styled('ul')(({ theme }) => ({

@@ -3,7 +3,7 @@ import PermissionIconButton from 'component/common/PermissionIconButton/Permissi
 import {
     DELETE_SEGMENT,
     UPDATE_PROJECT_SEGMENT,
-} from 'component/providers/AccessProvider/permissions';
+} from '@server/types/permissions';
 import Delete from '@mui/icons-material/Delete';
 import { SEGMENT_DELETE_BTN_ID } from 'utils/testIds';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';

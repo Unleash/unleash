@@ -18,7 +18,7 @@ import {
     featureStrategyHelp,
     formatFeaturePath,
 } from '../FeatureStrategyEdit/FeatureStrategyEdit';
-import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
+import { CREATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import type { ISegment } from 'interfaces/segment';
 import { useFormErrors } from 'hooks/useFormErrors';
 import { createFeatureStrategy } from 'utils/createFeatureStrategy';

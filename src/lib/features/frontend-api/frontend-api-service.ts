@@ -216,7 +216,7 @@ export class FrontendApiService {
         if (error) {
             throw new BadDataError(error);
         }
-        const settings = (await this.getFrontendSettings()) || {};
+        const settings = (await this.getFrontendSettings(false)) || {};
         await this.services.settingService.insert(
             frontendSettingsKey,
             { ...settings, frontendApiOrigins: value },

@@ -4,7 +4,7 @@ export const setCorsSchema = {
     $id: '#/components/schemas/setCorsSchema',
     type: 'object',
     additionalProperties: false,
-    description: 'Unleash configuration settings affect the admin UI.',
+    description: 'Unleash CORS configuration.',
     properties: {
         frontendApiOrigins: {
             description:

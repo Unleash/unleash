@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'etagVariant'
     | 'oidcRedirect'
     | 'deltaApi'
-    | 'newHostedAuthHandler';
+    | 'newHostedAuthHandler'
+    | 'uniqueSdkTracking';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -288,6 +289,10 @@ const flags: IFlags = {
     ),
     newHostedAuthHandler: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_NEW_HOSTED_AUTH_HANDLER,
+        false,
+    ),
+    uniqueSdkTracking: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_UNIQUE_SDK_TRACKING,
         false,
     ),
 };

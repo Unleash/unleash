@@ -59,7 +59,6 @@ export type IFlagKey =
     | 'granularAdminPermissions'
     | 'streaming'
     | 'etagVariant'
-    | 'oidcRedirect'
     | 'deltaApi'
     | 'newHostedAuthHandler'
     | 'uniqueSdkTracking';
@@ -279,10 +278,6 @@ const flags: IFlags = {
         feature_enabled: false,
         enabled: false,
     },
-    oidcRedirect: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OIDC_REDIRECT,
-        false,
-    ),
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
         false,

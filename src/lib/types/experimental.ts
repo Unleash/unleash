@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'streaming'
     | 'etagVariant'
     | 'oidcRedirect'
-    | 'deltaApi';
+    | 'deltaApi'
+    | 'uniqueSdkTracking';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -288,6 +289,10 @@ const flags: IFlags = {
     ),
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
+        false,
+    ),
+    uniqueSdkTracking: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_UNIQUE_SDK_TRACKING,
         false,
     ),
 };

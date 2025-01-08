@@ -8,7 +8,6 @@ import Add from '@mui/icons-material/Add';
 import { Box } from '@mui/system';
 import type { IFilterItem } from './Filters/Filters';
 import { FILTERS_MENU } from 'utils/testIds';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
@@ -53,7 +52,6 @@ export const AddFilterButton = ({
     availableFilters,
 }: IAddFilterButtonProps) => {
     const projectId = useOptionalPathParam('projectId');
-    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
     const { user } = useAuthUser();
     const { setSplashSeen } = useSplashApi();
     const { splash } = useAuthSplash();
@@ -85,8 +83,7 @@ export const AddFilterButton = ({
         return new Date(createdAt) < cutoffDate;
     };
 
-    const showArchiveTooltip =
-        simplifyProjectOverview && projectId && isOldCustomer(user?.createdAt);
+    const showArchiveTooltip = projectId && isOldCustomer(user?.createdAt);
 
     const ArchiveTooltip = () => {
         return (

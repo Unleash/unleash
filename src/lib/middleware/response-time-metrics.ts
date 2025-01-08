@@ -61,7 +61,6 @@ export function responseTimeMetrics(
             (instanceStatsService.getAppCountSnapshot('7d') ??
                 appNameReportingThreshold) < appNameReportingThreshold
         ) {
-            // TODO: upgrade to x-unleash-appname
             appName =
                 req.headers['x-unleash-appname'] ??
                 req.headers['unleash-appname'] ??

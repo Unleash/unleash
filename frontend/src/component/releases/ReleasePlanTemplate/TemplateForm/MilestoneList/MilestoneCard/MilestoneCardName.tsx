@@ -57,6 +57,10 @@ export const MilestoneCardName = ({
                             setEditMode(false);
                         }
                     }}
+                    onClick={(ev) => {
+                        ev.preventDefault();
+                        ev.stopPropagation();
+                    }}
                 />
             )}
             {!editMode && (

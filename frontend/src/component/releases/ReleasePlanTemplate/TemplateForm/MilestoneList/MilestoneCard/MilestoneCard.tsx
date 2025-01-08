@@ -71,8 +71,13 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     boxShadow: 'none',
     padding: theme.spacing(1.5, 2),
+    borderRadius: theme.shape.borderRadiusMedium,
     [theme.breakpoints.down(400)]: {
         padding: theme.spacing(1, 2),
+    },
+    '&.Mui-focusVisible': {
+        backgroundColor: theme.palette.background.paper,
+        padding: theme.spacing(0.5, 2, 0.3, 2),
     },
 }));
 

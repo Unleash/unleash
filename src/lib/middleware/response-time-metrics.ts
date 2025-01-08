@@ -62,7 +62,10 @@ export function responseTimeMetrics(
                 appNameReportingThreshold) < appNameReportingThreshold
         ) {
             // TODO: upgrade to x-unleash-appname
-            appName = req.headers['unleash-appname'] ?? req.query.appName;
+            appName =
+                req.headers['x-unleash-appname'] ??
+                req.headers['unleash-appname'] ??
+                req.query.appName;
             if (flagResolver.isEnabled('uniqueSdkTracking')) {
                 connectionId = req.headers['x-unleash-connection-id'];
             }

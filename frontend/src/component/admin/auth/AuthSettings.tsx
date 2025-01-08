@@ -1,6 +1,5 @@
 import { Tab, Tabs } from '@mui/material';
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { OidcAuth } from './OidcAuth/OidcAuth';
 import { SamlAuth } from './SamlAuth/SamlAuth';
@@ -45,58 +44,51 @@ export const AuthSettings = () => {
     const [activeTab, setActiveTab] = useState(0);
     usePageTitle(`Single sign-on: ${tabs[activeTab].label}`);
 
+    if (!isEnterprise()) {
+        return <PremiumFeature feature='sso' page />;
+    }
+
     return (
         <div>
             <PermissionGuard permissions={[ADMIN, UPDATE_AUTH_CONFIGURATION]}>
                 <PageContent
                     withTabs
                     header={
-                        <ConditionallyRender
-                            condition={isEnterprise()}
-                            show={
-                                <Tabs
-                                    value={activeTab}
-                                    onChange={(_, tabId) => {
-                                        setActiveTab(tabId);
+                        <Tabs
+                            value={activeTab}
+                            onChange={(_, tabId) => {
+                                setActiveTab(tabId);
+                            }}
+                            indicatorColor='primary'
+                            textColor='primary'
+                        >
+                            {tabs.map((tab, index) => (
+                                <Tab
+                                    key={`${tab.label}_${index}`}
+                                    label={tab.label}
+                                    id={`tab-${index}`}
+                                    aria-controls={`tabpanel-${index}`}
+                                    sx={{
+                                        minWidth: {
+                                            lg: 160,
+                                        },
                                     }}
-                                    indicatorColor='primary'
-                                    textColor='primary'
-                                >
-                                    {tabs.map((tab, index) => (
-                                        <Tab
-                                            key={`${tab.label}_${index}`}
-                                            label={tab.label}
-                                            id={`tab-${index}`}
-                                            aria-controls={`tabpanel-${index}`}
-                                            sx={{
-                                                minWidth: {
-                                                    lg: 160,
-                                                },
-                                            }}
-                                        />
-                                    ))}
-                                </Tabs>
-                            }
-                        />
+                                />
+                            ))}
+                        </Tabs>
                     }
                 >
-                    <ConditionallyRender
-                        condition={isEnterprise()}
-                        show={
-                            <div>
-                                {tabs.map((tab, index) => (
-                                    <TabPanel
-                                        key={index}
-                                        value={activeTab}
-                                        index={index}
-                                    >
-                                        {tab.component}
-                                    </TabPanel>
-                                ))}
-                            </div>
-                        }
-                        elseShow={<PremiumFeature feature='sso' />}
-                    />
+                    <div>
+                        {tabs.map((tab, index) => (
+                            <TabPanel
+                                key={index}
+                                value={activeTab}
+                                index={index}
+                            >
+                                {tab.component}
+                            </TabPanel>
+                        ))}
+                    </div>
                 </PageContent>
             </PermissionGuard>
         </div>

@@ -160,21 +160,6 @@ export const Project = () => {
             name: 'flags',
         },
         {
-            title: 'Insights',
-            path: `${basePath}/insights`,
-            name: 'insights',
-        },
-        {
-            title: 'Health',
-            path: `${basePath}/health`,
-            name: 'health',
-        },
-        {
-            title: 'Archived flags',
-            path: `${basePath}/archive`,
-            name: 'archive',
-        },
-        {
             title: 'Change requests',
             path: `${basePath}/change-requests`,
             name: 'change-request',

@@ -69,6 +69,7 @@ export interface IUnleashServices {
     clientInstanceService: ClientInstanceService;
     clientMetricsServiceV2: ClientMetricsServiceV2;
     contextService: ContextService;
+    transactionalContextService: WithTransactional<ContextService>;
     emailService: EmailService;
     environmentService: EnvironmentService;
     transactionalEnvironmentService: WithTransactional<EnvironmentService>;

@@ -89,7 +89,6 @@ export type UiFlags = {
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
     flagOverviewRedesign?: boolean;
-    licensedUsers?: boolean;
     granularAdminPermissions?: boolean;
 };
 

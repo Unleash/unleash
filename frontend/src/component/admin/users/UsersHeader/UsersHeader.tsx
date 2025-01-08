@@ -1,6 +1,5 @@
 import { Box, styled } from '@mui/material';
 import { InviteLinkBar } from '../InviteLinkBar/InviteLinkBar';
-import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { LicensedUsersBox } from './LicensedUsersBox';
 
@@ -24,9 +23,8 @@ const StyledElement = styled(Box)(({ theme }) => ({
 }));
 
 export const UsersHeader = () => {
-    const licensedUsers = useUiFlag('licensedUsers');
     const { isOss } = useUiConfig();
-    const licensedUsersEnabled = licensedUsers && !isOss();
+    const licensedUsersEnabled = !isOss();
 
     return (
         <StyledContainer>

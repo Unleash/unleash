@@ -56,12 +56,12 @@ export type IFlagKey =
     | 'showUserDeviceCount'
     | 'deleteStaleUserSessions'
     | 'memorizeStats'
-    | 'licensedUsers'
     | 'granularAdminPermissions'
     | 'streaming'
     | 'etagVariant'
     | 'oidcRedirect'
-    | 'deltaApi';
+    | 'deltaApi'
+    | 'newHostedAuthHandler';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -265,10 +265,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
         false,
     ),
-    licensedUsers: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FLAG_LICENSED_USERS,
-        false,
-    ),
     granularAdminPermissions: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_GRANULAR_ADMIN_PERMISSIONS,
         false,
@@ -288,6 +284,10 @@ const flags: IFlags = {
     ),
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
+        false,
+    ),
+    newHostedAuthHandler: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_NEW_HOSTED_AUTH_HANDLER,
         false,
     ),
 };

@@ -200,9 +200,10 @@ export const createServices = (
         ? new FeatureLifecycleReadModel(db, config.flagResolver)
         : new FakeFeatureLifecycleReadModel();
 
-    const contextService = db
+    const transactionalContextService = db
         ? withTransactional(createContextService(config), db)
         : withFakeTransactional(createFakeContextService(config));
+    const contextService = transactionalContextService;
     const emailService = new EmailService(config);
     const featureTypeService = new FeatureTypeService(
         stores,
@@ -434,6 +435,7 @@ export const createServices = (
         clientInstanceService,
         clientMetricsServiceV2,
         contextService,
+        transactionalContextService,
         versionService,
         apiTokenService,
         emailService,

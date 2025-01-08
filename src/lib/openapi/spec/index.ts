@@ -177,6 +177,7 @@ export * from './search-features-schema';
 export * from './segment-schema';
 export * from './segment-strategies-schema';
 export * from './segments-schema';
+export * from './set-cors-schema';
 export * from './set-strategy-sort-order-schema';
 export * from './set-ui-config-schema';
 export * from './sort-order-schema';

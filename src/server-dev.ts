@@ -53,7 +53,6 @@ process.nextTick(async () => {
                         releasePlans: false,
                         showUserDeviceCount: true,
                         flagOverviewRedesign: false,
-                        licensedUsers: true,
                         granularAdminPermissions: true,
                         deltaApi: true,
                     },

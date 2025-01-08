@@ -10,7 +10,7 @@ import {
     type SimpleAuthSettings,
     simpleAuthSettingsKey,
 } from '../../types/settings/simple-auth-settings';
-import { ADMIN, NONE } from '../../types/permissions';
+import { ADMIN, NONE, UPDATE_CORS } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import {
     uiConfigSchema,
@@ -22,6 +22,7 @@ import { emptyResponse } from '../../openapi/util/standard-responses';
 import type { IAuthRequest } from '../unleash-types';
 import NotFoundError from '../../error/notfound-error';
 import type { SetUiConfigSchema } from '../../openapi/spec/set-ui-config-schema';
+import type { SetCorsSchema } from '../../openapi/spec/set-cors-schema';
 import { createRequestSchema } from '../../openapi/util/create-request-schema';
 import type { FrontendApiService, SessionService } from '../../services';
 import type MaintenanceService from '../../features/maintenance/maintenance-service';
@@ -99,6 +100,7 @@ class ConfigController extends Controller {
             ],
         });
 
+        // TODO: deprecate when removing `granularAdminPermissions` flag
         this.route({
             method: 'post',
             path: '',
@@ -113,6 +115,24 @@ class ConfigController extends Controller {
                     operationId: 'setUiConfig',
                     requestBody: createRequestSchema('setUiConfigSchema'),
                     responses: { 200: emptyResponse },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'post',
+            path: '/cors',
+            handler: this.setCors,
+            permission: [ADMIN, UPDATE_CORS],
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Admin UI'],
+                    summary: 'Sets allowed CORS origins',
+                    description:
+                        'Sets Cross-Origin Resource Sharing headers for Frontend SDK API.',
+                    operationId: 'setCors',
+                    requestBody: createRequestSchema('setCorsSchema'),
+                    responses: { 204: emptyResponse },
                 }),
             ],
         });
@@ -189,6 +209,30 @@ class ConfigController extends Controller {
         if (req.body.frontendSettings) {
             await this.frontendApiService.setFrontendSettings(
                 req.body.frontendSettings,
+                req.audit,
+            );
+            res.sendStatus(204);
+            return;
+        }
+
+        throw new NotFoundError();
+    }
+
+    async setCors(
+        req: IAuthRequest<void, void, SetCorsSchema>,
+        res: Response<string>,
+    ): Promise<void> {
+        const granularAdminPermissions = this.flagResolver.isEnabled(
+            'granularAdminPermissions',
+        );
+
+        if (!granularAdminPermissions) {
+            throw new NotFoundError();
+        }
+
+        if (req.body.frontendApiOrigins) {
+            await this.frontendApiService.setFrontendCorsSettings(
+                req.body.frontendApiOrigins,
                 req.audit,
             );
             res.sendStatus(204);

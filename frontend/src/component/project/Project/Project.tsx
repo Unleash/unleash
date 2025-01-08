@@ -1,7 +1,6 @@
 import { useNavigate } from 'react-router';
 import useLoading from 'hooks/useLoading';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ReactComponent as ImportSvg } from 'assets/icons/import.svg';
 import { ReactComponent as ProjectStatusSvg } from 'assets/icons/projectStatus.svg';
 import {
     StyledDiv,
@@ -31,8 +30,6 @@ import ProjectEnvironment from '../ProjectEnvironment/ProjectEnvironment';
 import { ProjectFeaturesArchive } from './ProjectFeaturesArchive/ProjectFeaturesArchive';
 import ProjectFlags from './ProjectFlags';
 import ProjectHealth from './ProjectHealth/ProjectHealth';
-import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
@@ -43,7 +40,6 @@ import { ProjectChangeRequests } from '../../changeRequest/ProjectChangeRequests
 import { ProjectSettings } from './ProjectSettings/ProjectSettings';
 import { useFavoriteProjectsApi } from 'hooks/api/actions/useFavoriteProjectsApi/useFavoriteProjectsApi';
 import { ImportModal } from './Import/ImportModal';
-import { IMPORT_BUTTON } from 'utils/testIds';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import { Badge } from 'component/common/Badge/Badge';
 import type { UiFlags } from 'interfaces/uiConfig';
@@ -54,7 +50,6 @@ import { ProjectInsights } from './ProjectInsights/ProjectInsights';
 import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectArchived } from './ArchiveProject/ProjectArchived';
 import { usePlausibleTracker } from '../../../hooks/usePlausibleTracker';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { useActionableChangeRequests } from 'hooks/api/getters/useActionableChangeRequests/useActionableChangeRequests';
 import { ProjectStatusModal } from './ProjectStatus/ProjectStatusModal';
 
@@ -94,13 +89,8 @@ const TabText = styled('span')(({ theme }) => ({
 }));
 
 const ChangeRequestsLabel = () => {
-    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
     const projectId = useRequiredPathParam('projectId');
     const { total } = useActionableChangeRequests(projectId);
-
-    if (!simplifyProjectOverview) {
-        return 'Change requests';
-    }
 
     return (
         <StyledCounterBadge badgeContent={total ?? 0} color='primary'>
@@ -155,7 +145,6 @@ export const Project = () => {
     const basePath = `/projects/${projectId}`;
     const projectName = project?.name || projectId;
     const { favorite, unfavorite } = useFavoriteProjectsApi();
-    const simplifyProjectOverview = useUiFlag('simplifyProjectOverview');
 
     const [showDelDialog, setShowDelDialog] = useState(false);
 
@@ -166,29 +155,10 @@ export const Project = () => {
 
     const tabs: ITab[] = [
         {
-            title: simplifyProjectOverview ? 'Overview' : 'Flags',
+            title: 'Overview',
             path: basePath,
             name: 'flags',
         },
-        ...(simplifyProjectOverview
-            ? []
-            : [
-                  {
-                      title: 'Insights',
-                      path: `${basePath}/insights`,
-                      name: 'insights',
-                  },
-                  {
-                      title: 'Health',
-                      path: `${basePath}/health`,
-                      name: 'health',
-                  },
-                  {
-                      title: 'Archived flags',
-                      path: `${basePath}/archive`,
-                      name: 'archive',
-                  } as ITab,
-              ]),
         {
             title: 'Change requests',
             path: `${basePath}/change-requests`,
@@ -207,7 +177,7 @@ export const Project = () => {
             name: 'logs',
         },
         {
-            title: simplifyProjectOverview ? 'Settings' : 'Project settings',
+            title: 'Settings',
             path: `${basePath}/settings`,
             ossPath: `${basePath}/settings/api-access`,
             name: 'settings',
@@ -301,22 +271,7 @@ export const Project = () => {
                             </StyledProjectTitle>
                         </StyledDiv>
                         <StyledDiv>
-                            <ConditionallyRender
-                                condition={Boolean(!simplifyProjectOverview)}
-                                show={
-                                    <PermissionIconButton
-                                        permission={UPDATE_FEATURE}
-                                        projectId={projectId}
-                                        onClick={() => setModalOpen(true)}
-                                        tooltipProps={{ title: 'Import' }}
-                                        data-testid={IMPORT_BUTTON}
-                                        data-loading-project
-                                    >
-                                        <ImportSvg />
-                                    </PermissionIconButton>
-                                }
-                            />
-                            {simplifyProjectOverview && <ProjectStatus />}
+                            <ProjectStatus />
                         </StyledDiv>
                     </StyledTopRow>
                 </StyledInnerContainer>

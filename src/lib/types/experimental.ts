@@ -52,7 +52,6 @@ export type IFlagKey =
     | 'releasePlans'
     | 'productivityReportEmail'
     | 'enterprise-payg'
-    | 'simplifyProjectOverview'
     | 'flagOverviewRedesign'
     | 'showUserDeviceCount'
     | 'deleteStaleUserSessions'
@@ -260,10 +259,6 @@ const flags: IFlags = {
     ),
     showUserDeviceCount: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
-        false,
-    ),
-    simplifyProjectOverview: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIMPLIFY_PROJECT_OVERVIEW,
         false,
     ),
     flagOverviewRedesign: parseEnvVarBoolean(

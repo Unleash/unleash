@@ -41,8 +41,10 @@ export const CREATE_TAG_TYPE = 'CREATE_TAG_TYPE';
 export const UPDATE_TAG_TYPE = 'UPDATE_TAG_TYPE';
 export const DELETE_TAG_TYPE = 'DELETE_TAG_TYPE';
 
+export const READ_LOGS = 'READ_LOGS';
 export const UPDATE_MAINTENANCE_MODE = 'UPDATE_MAINTENANCE_MODE';
 export const UPDATE_INSTANCE_BANNERS = 'UPDATE_INSTANCE_BANNERS';
+export const UPDATE_CORS = 'UPDATE_CORS';
 export const UPDATE_AUTH_CONFIGURATION = 'UPDATE_AUTH_CONFIGURATION';
 
 // Project
@@ -147,7 +149,12 @@ export const ROOT_PERMISSION_CATEGORIES = [
     },
     {
         label: 'Instance maintenance',
-        permissions: [UPDATE_MAINTENANCE_MODE, UPDATE_INSTANCE_BANNERS],
+        permissions: [
+            READ_LOGS,
+            UPDATE_MAINTENANCE_MODE,
+            UPDATE_INSTANCE_BANNERS,
+            UPDATE_CORS,
+        ],
     },
     {
         label: 'Authentication',
@@ -162,4 +169,5 @@ export const MAINTENANCE_MODE_PERMISSIONS = [
     READ_CLIENT_API_TOKEN,
     READ_FRONTEND_API_TOKEN,
     UPDATE_MAINTENANCE_MODE,
+    READ_LOGS,
 ];

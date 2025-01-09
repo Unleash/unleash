@@ -983,27 +983,13 @@ class FeatureToggleService {
 
         await this.featureStrategiesStore.delete(id);
 
-        const featureStrategies =
-            await this.featureStrategiesStore.getStrategiesForFeatureEnv(
-                projectId,
-                featureName,
-                environment,
-            );
-
-        const hasOnlyDisabledStrategies = featureStrategies.every(
-            (strategy) => strategy.disabled,
+        // Disable the feature in the environment if it only has disabled strategies
+        await this.optionallyDisableFeature(
+            featureName,
+            environment,
+            projectId,
+            auditUser,
         );
-
-        if (hasOnlyDisabledStrategies) {
-            // Disable the feature in the environment if it only has disabled strategies
-            await this.unprotectedUpdateEnabled(
-                projectId,
-                featureName,
-                environment,
-                false,
-                auditUser,
-            );
-        }
 
         const preData = this.featureStrategyToPublic(existingStrategy);
 

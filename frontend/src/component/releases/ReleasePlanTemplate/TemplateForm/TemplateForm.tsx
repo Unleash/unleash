@@ -13,12 +13,12 @@ import { ReleasePlanTemplateAddStrategyForm } from './MilestoneStrategy/ReleaseP
 
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
-    maxWidth: theme.spacing(40),
+    maxWidth: theme.spacing(50),
     fieldset: { border: 'none' },
     'label::first-letter': {
         textTransform: 'uppercase',
     },
-    marginBottom: theme.spacing(3),
+    marginBottom: theme.spacing(2),
     padding: theme.spacing(0),
 }));
 

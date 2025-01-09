@@ -1,29 +1,32 @@
 import Input from 'component/common/Input/Input';
-import { styled } from '@mui/material';
-import { MilestoneList } from './MilestoneList/MilestoneList';
+import { styled, useTheme } from '@mui/material';
 import type {
     IReleasePlanMilestonePayload,
     IReleasePlanMilestoneStrategy,
 } from 'interfaces/releasePlans';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
-import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { useState } from 'react';
-import { ReleasePlanTemplateAddStrategyForm } from './MilestoneStrategy/ReleasePlanTemplateAddStrategyForm';
 import { TemplateFormDescription } from './TemplateFormDescription';
-
-const StyledInputDescription = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-}));
+import { MilestoneList } from './MilestoneList/MilestoneList';
+import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
+import { ReleasePlanTemplateAddStrategyForm } from './MilestoneStrategy/ReleasePlanTemplateAddStrategyForm';
 
 const StyledInput = styled(Input)(({ theme }) => ({
     width: '100%',
-    marginBottom: theme.spacing(2),
+    maxWidth: theme.spacing(40),
+    fieldset: { border: 'none' },
+    'label::first-letter': {
+        textTransform: 'uppercase',
+    },
+    marginBottom: theme.spacing(3),
+    padding: theme.spacing(0),
 }));
 
-const StyledForm = styled('form')(() => ({
+const StyledForm = styled('form')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
+    paddingTop: theme.spacing(5),
 }));
 
 interface ITemplateFormProps {
@@ -72,6 +75,8 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
         title: '',
         id: 'temp',
     });
+
+    const theme = useTheme();
     const openAddUpdateStrategyForm = (
         milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
@@ -158,28 +163,42 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
             formatApiCode={formatApiCode}
         >
             <StyledForm onSubmit={handleSubmit}>
-                <StyledInputDescription>
-                    What would you like to call your template?
-                </StyledInputDescription>
                 <StyledInput
-                    label='Template name'
+                    label={`Template name`}
+                    aria-required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     error={Boolean(errors.name)}
                     errorText={errors.name}
-                    onFocus={() => clearErrors()}
+                    onFocus={() => {
+                        delete errors.name;
+                    }}
                     autoFocus
+                    InputProps={{
+                        style: { fontSize: theme.typography.h1.fontSize },
+                    }}
+                    InputLabelProps={{
+                        style: { fontSize: theme.typography.h1.fontSize },
+                    }}
+                    size='medium'
                 />
-                <StyledInputDescription>
-                    What's the purpose of this template?
-                </StyledInputDescription>
                 <StyledInput
                     label='Template description (optional)'
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    error={Boolean(errors.description)}
-                    errorText={errors.description}
-                    onFocus={() => clearErrors()}
+                    InputProps={{
+                        style: {
+                            fontSize: theme.typography.h2.fontSize,
+                            padding: 0,
+                        },
+                    }}
+                    InputLabelProps={{
+                        style: {
+                            fontSize: theme.typography.h2.fontSize,
+                            padding: 0,
+                        },
+                    }}
+                    size='medium'
                 />
                 <MilestoneList
                     milestones={milestones}

@@ -55,7 +55,6 @@ export function responseTimeMetrics(
         // when pathname is undefined use a fallback
         pathname = pathname ?? collapse(req.path);
         let appName: string | undefined;
-        let connectionId: string | undefined;
         if (
             !flagResolver.isEnabled('responseTimeWithAppNameKillSwitch') &&
             (instanceStatsService.getAppCountSnapshot('7d') ??
@@ -65,9 +64,6 @@ export function responseTimeMetrics(
                 req.headers['x-unleash-appname'] ??
                 req.headers['unleash-appname'] ??
                 req.query.appName;
-            if (flagResolver.isEnabled('uniqueSdkTracking')) {
-                connectionId = req.headers['x-unleash-connection-id'];
-            }
         }
 
         const timingInfo = {
@@ -76,7 +72,6 @@ export function responseTimeMetrics(
             statusCode,
             time,
             appName,
-            connectionId,
         };
         if (!res.locals.responseTimeEmitted) {
             res.locals.responseTimeEmitted = true;

@@ -130,7 +130,7 @@ test('should collect metrics for requests', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /http_request_duration_milliseconds\{quantile="0\.99",path="somePath",method="GET",status="200",appName="undefined",connectionId="undefined"\}.*1337/,
+        /http_request_duration_milliseconds\{quantile="0\.99",path="somePath",method="GET",status="200",appName="undefined"\}.*1337/,
     );
 });
 

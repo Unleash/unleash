@@ -60,7 +60,6 @@ export type IFlagKey =
     | 'streaming'
     | 'etagVariant'
     | 'deltaApi'
-    | 'newHostedAuthHandler'
     | 'uniqueSdkTracking';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
@@ -280,10 +279,6 @@ const flags: IFlags = {
     },
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
-        false,
-    ),
-    newHostedAuthHandler: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_NEW_HOSTED_AUTH_HANDLER,
         false,
     ),
     uniqueSdkTracking: parseEnvVarBoolean(

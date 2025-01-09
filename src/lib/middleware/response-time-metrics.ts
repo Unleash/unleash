@@ -60,7 +60,10 @@ export function responseTimeMetrics(
             (instanceStatsService.getAppCountSnapshot('7d') ??
                 appNameReportingThreshold) < appNameReportingThreshold
         ) {
-            appName = req.headers['unleash-appname'] ?? req.query.appName;
+            appName =
+                req.headers['x-unleash-appname'] ??
+                req.headers['unleash-appname'] ??
+                req.query.appName;
         }
 
         const timingInfo = {

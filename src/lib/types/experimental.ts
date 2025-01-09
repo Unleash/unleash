@@ -52,7 +52,6 @@ export type IFlagKey =
     | 'releasePlans'
     | 'productivityReportEmail'
     | 'enterprise-payg'
-    | 'simplifyProjectOverview'
     | 'flagOverviewRedesign'
     | 'showUserDeviceCount'
     | 'deleteStaleUserSessions'
@@ -60,8 +59,8 @@ export type IFlagKey =
     | 'granularAdminPermissions'
     | 'streaming'
     | 'etagVariant'
-    | 'oidcRedirect'
-    | 'deltaApi';
+    | 'deltaApi'
+    | 'uniqueSdkTracking';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -261,10 +260,6 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_SHOW_USER_DEVICE_COUNT,
         false,
     ),
-    simplifyProjectOverview: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SIMPLIFY_PROJECT_OVERVIEW,
-        false,
-    ),
     flagOverviewRedesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
         false,
@@ -282,12 +277,12 @@ const flags: IFlags = {
         feature_enabled: false,
         enabled: false,
     },
-    oidcRedirect: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_OIDC_REDIRECT,
-        false,
-    ),
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
+        false,
+    ),
+    uniqueSdkTracking: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_UNIQUE_SDK_TRACKING,
         false,
     ),
 };

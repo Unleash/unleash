@@ -86,7 +86,6 @@ export type UiFlags = {
     flagCreator?: boolean;
     releasePlans?: boolean;
     'enterprise-payg'?: boolean;
-    simplifyProjectOverview?: boolean;
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
     flagOverviewRedesign?: boolean;

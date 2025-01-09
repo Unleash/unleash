@@ -4,6 +4,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import { RoleDescription } from 'component/common/RoleDescription/RoleDescription';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { styled } from '@mui/material';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledRoleDescriptions = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -13,6 +14,10 @@ const StyledRoleDescriptions = styled('div')(({ theme }) => ({
         borderBottom: `1px solid ${theme.palette.divider}`,
         paddingBottom: theme.spacing(1),
     },
+}));
+
+const StyledTruncator = styled(Truncator)(() => ({
+    display: 'block', // Fix for ellipsis not showing up
 }));
 
 type TSingleRoleProps = {
@@ -50,7 +55,7 @@ export const RoleCell: VFC<TRoleCellProps> = ({ role, roles, value }) => {
                         </StyledRoleDescriptions>
                     }
                 >
-                    {value}
+                    <StyledTruncator>{value}</StyledTruncator>
                 </TooltipLink>
             </TextCell>
         );

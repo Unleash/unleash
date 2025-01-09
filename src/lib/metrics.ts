@@ -124,7 +124,7 @@ export function registerPrometheusMetrics(
     const requestDuration = createSummary({
         name: 'http_request_duration_milliseconds',
         help: 'App response time',
-        labelNames: ['path', 'method', 'status', 'appName', 'connectionId'],
+        labelNames: ['path', 'method', 'status', 'appName'],
         percentiles: [0.1, 0.5, 0.9, 0.95, 0.99],
         maxAgeSeconds: 600,
         ageBuckets: 5,
@@ -700,14 +700,13 @@ export function registerPrometheusMetrics(
 
     eventBus.on(
         events.REQUEST_TIME,
-        ({ path, method, time, statusCode, appName, connectionId }) => {
+        ({ path, method, time, statusCode, appName }) => {
             requestDuration
                 .labels({
                     path,
                     method,
                     status: statusCode,
                     appName,
-                    connectionId,
                 })
                 .observe(time);
         },

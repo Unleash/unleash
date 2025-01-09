@@ -89,7 +89,7 @@ const PremiumFeatures = {
         label: 'User groups',
     },
     sso: {
-        plan: FeaturePlan.PRO,
+        plan: FeaturePlan.ENTERPRISE,
         url: 'https://docs.getunleash.io/reference/rbac#user-group-sso-integration',
         label: 'Single Sign-On',
     },

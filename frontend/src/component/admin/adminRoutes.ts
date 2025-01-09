@@ -58,7 +58,7 @@ export const adminRoutes: INavigationMenuItem[] = [
     {
         path: '/admin/auth',
         title: 'Single sign-on',
-        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
+        menu: { adminSettings: true, mode: ['enterprise'] },
         group: 'access',
     },
     {

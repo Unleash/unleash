@@ -32,6 +32,7 @@ export const scheduleServices = async (
         frontendApiService,
         clientMetricsServiceV2,
         integrationEventsService,
+        uniqueConnectionService,
     } = services;
 
     schedulerService.schedule(
@@ -178,5 +179,11 @@ export const scheduleServices = async (
         integrationEventsService.cleanUpEvents.bind(integrationEventsService),
         minutesToMilliseconds(15),
         'cleanUpIntegrationEvents',
+    );
+
+    schedulerService.schedule(
+        uniqueConnectionService.sync.bind(uniqueConnectionService),
+        minutesToMilliseconds(10),
+        'uniqueConnectionService',
     );
 };

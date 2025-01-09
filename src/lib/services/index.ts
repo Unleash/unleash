@@ -157,6 +157,7 @@ import {
     createContextService,
     createFakeContextService,
 } from '../features/context/createContextService';
+import { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -403,6 +404,9 @@ export const createServices = (
     const featureLifecycleService = transactionalFeatureLifecycleService;
     featureLifecycleService.listen();
 
+    const uniqueConnectionService = new UniqueConnectionService(stores, config);
+    uniqueConnectionService.listen();
+
     const onboardingService = db
         ? createOnboardingService(config)(db)
         : createFakeOnboardingService(config).onboardingService;
@@ -484,6 +488,7 @@ export const createServices = (
         personalDashboardService,
         projectStatusService,
         transactionalUserSubscriptionsService,
+        uniqueConnectionService,
     };
 };
 
@@ -537,4 +542,5 @@ export {
     PersonalDashboardService,
     ProjectStatusService,
     UserSubscriptionsService,
+    UniqueConnectionService,
 };

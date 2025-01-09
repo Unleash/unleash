@@ -53,6 +53,7 @@ import { IOnboardingReadModel } from '../features/onboarding/onboarding-read-mod
 import { IOnboardingStore } from '../features/onboarding/onboarding-store-type';
 import type { IUserUnsubscribeStore } from '../features/user-subscriptions/user-unsubscribe-store-type';
 import type { IUserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model-type';
+import { IUniqueConnectionStore } from '../features/unique-connection/unique-connection-store-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -110,6 +111,7 @@ export interface IUnleashStores {
     onboardingStore: IOnboardingStore;
     userUnsubscribeStore: IUserUnsubscribeStore;
     userSubscriptionsReadModel: IUserSubscriptionsReadModel;
+    uniqueConnectionStore: IUniqueConnectionStore;
 }
 
 export {
@@ -165,4 +167,5 @@ export {
     type IProjectReadModel,
     IOnboardingStore,
     type IUserSubscriptionsReadModel,
+    IUniqueConnectionStore,
 };

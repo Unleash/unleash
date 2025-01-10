@@ -173,7 +173,7 @@ export const ProjectAccessTable: VFC = () => {
                     row: { original: IProjectAccess };
                     value: string;
                 }) => <RoleCell value={value} roles={row.entity.roles} />,
-                maxWidth: 125,
+                maxWidth: 175,
                 filterName: 'role',
             },
             {

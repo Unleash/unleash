@@ -85,7 +85,11 @@ export default class ClientFeatureToggleDeltaController extends Controller {
         const query = await this.resolveQuery(req);
         const etag = req.headers['if-none-match'];
 
-        const currentSdkRevisionId = etag ? Number.parseInt(etag) : undefined;
+        const sanitizedEtag = etag ? etag.replace(/^"(.*)"$/, '$1') : undefined;
+
+        const currentSdkRevisionId = sanitizedEtag
+            ? Number.parseInt(sanitizedEtag)
+            : undefined;
 
         const changedFeatures =
             await this.clientFeatureToggleService.getClientDelta(
@@ -107,7 +111,7 @@ export default class ClientFeatureToggleDeltaController extends Controller {
             return;
         }
 
-        res.setHeader('ETag', changedFeatures.revisionId.toString());
+        res.setHeader('ETag', `"${changedFeatures.revisionId}"`);
         this.openApiService.respondWithValidation(
             200,
             res,

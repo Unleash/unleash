@@ -6,6 +6,8 @@ import HyperLogLog from 'hyperloglog-lite';
 import type EventEmitter from 'events';
 import { SDK_CONNECTION_ID_RECEIVED } from '../../metric-events';
 
+const n = 12;
+
 export class UniqueConnectionService {
     private logger: Logger;
 
@@ -17,13 +19,13 @@ export class UniqueConnectionService {
 
     private activeHour: number;
 
-    private hll = HyperLogLog(12);
+    private hll = HyperLogLog(n);
 
     constructor(
         {
             uniqueConnectionStore,
         }: Pick<IUnleashStores, 'uniqueConnectionStore'>,
-        config: IUnleashConfig,
+        config: Pick<IUnleashConfig, 'getLogger' | 'flagResolver' | 'eventBus'>,
     ) {
         this.uniqueConnectionStore = uniqueConnectionStore;
         this.logger = config.getLogger('services/unique-connection-service.ts');
@@ -36,18 +38,34 @@ export class UniqueConnectionService {
         this.eventBus.on(SDK_CONNECTION_ID_RECEIVED, this.count.bind(this));
     }
 
-    async count(connectionId: string) {
+    count(connectionId: string) {
         if (!this.flagResolver.isEnabled('uniqueSdkTracking')) return;
         this.hll.add(HyperLogLog.hash(connectionId));
     }
 
-    async sync(): Promise<void> {
+    async getStats() {
+        const [previous, current] = await Promise.all([
+            this.uniqueConnectionStore.get('previous'),
+            this.uniqueConnectionStore.get('current'),
+        ]);
+        const previousHll = HyperLogLog(n);
+        if (previous) {
+            previousHll.merge({ n, buckets: previous.hll });
+        }
+        const currentHll = HyperLogLog(n);
+        if (current) {
+            currentHll.merge({ n, buckets: current.hll });
+        }
+        return { previous: previousHll.count(), current: currentHll.count() };
+    }
+
+    async sync(clock = () => new Date()): Promise<void> {
         if (!this.flagResolver.isEnabled('uniqueSdkTracking')) return;
-        const currentHour = new Date().getHours();
+        const currentHour = clock().getHours();
         const currentBucket = await this.uniqueConnectionStore.get('current');
         if (this.activeHour !== currentHour && currentBucket) {
             if (currentBucket.updatedAt.getHours() < currentHour) {
-                this.hll.merge({ n: 12, buckets: currentBucket.hll });
+                this.hll.merge({ n, buckets: currentBucket.hll });
                 await this.uniqueConnectionStore.insert({
                     hll: this.hll.output().buckets,
                     id: 'previous',
@@ -55,7 +73,9 @@ export class UniqueConnectionService {
             } else {
                 const previousBucket =
                     await this.uniqueConnectionStore.get('previous');
-                this.hll.merge({ n: 12, buckets: previousBucket });
+                if (previousBucket) {
+                    this.hll.merge({ n, buckets: previousBucket.hll });
+                }
                 await this.uniqueConnectionStore.insert({
                     hll: this.hll.output().buckets,
                     id: 'previous',
@@ -63,10 +83,14 @@ export class UniqueConnectionService {
             }
             this.activeHour = currentHour;
 
-            this.hll = HyperLogLog(12);
+            this.hll = HyperLogLog(n);
+            await this.uniqueConnectionStore.insert({
+                hll: this.hll.output().buckets,
+                id: 'current',
+            });
         } else {
             if (currentBucket) {
-                this.hll.merge({ n: 12, buckets: currentBucket });
+                this.hll.merge({ n, buckets: currentBucket.hll });
             }
             await this.uniqueConnectionStore.insert({
                 hll: this.hll.output().buckets,

@@ -27,4 +27,8 @@ export class UniqueConnectionStore implements IUniqueConnectionStore {
             ? { id: row.id, hll: row.hll, updatedAt: row.updated_at }
             : null;
     }
+
+    async deleteAll(): Promise<void> {
+        await this.db('unique_connections').delete();
+    }
 }

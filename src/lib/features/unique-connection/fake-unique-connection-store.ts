@@ -20,4 +20,8 @@ export class FakeUniqueConnectionStore implements IUniqueConnectionStore {
     ): Promise<(UniqueConnections & { updatedAt: Date }) | null> {
         return this.uniqueConnectionsRecord[id] || null;
     }
+
+    async deleteAll(): Promise<void> {
+        this.uniqueConnectionsRecord = {};
+    }
 }

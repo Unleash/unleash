@@ -11,4 +11,5 @@ export type TimedUniqueConnections = UniqueConnections & {
 export interface IUniqueConnectionStore {
     insert(uniqueConnections: UniqueConnections): Promise<void>;
     get(id: 'current' | 'previous'): Promise<TimedUniqueConnections | null>;
+    deleteAll(): Promise<void>;
 }

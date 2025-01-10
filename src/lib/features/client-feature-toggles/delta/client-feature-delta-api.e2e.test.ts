@@ -98,7 +98,7 @@ test('should get 304 if asked for latest revision', async () => {
     const currentRevisionId = body.revisionId;
 
     await app.request
-        .set('If-None-Match', currentRevisionId)
+        .set('If-None-Match', `"${currentRevisionId}"`)
         .get('/api/client/delta')
         .expect(304);
 });
@@ -123,7 +123,7 @@ test('should return correct delta after feature created', async () => {
 
     const { body: deltaBody } = await app.request
         .get('/api/client/delta')
-        .set('If-None-Match', currentRevisionId)
+        .set('If-None-Match', `"${currentRevisionId}"`)
         .expect(200);
 
     expect(deltaBody).toMatchObject({
@@ -162,7 +162,7 @@ test('archived features should not be returned as updated', async () => {
 
     const { body: deltaBody } = await app.request
         .get('/api/client/delta')
-        .set('If-None-Match', currentRevisionId)
+        .set('If-None-Match', `"${currentRevisionId}"`)
         .expect(200);
 
     expect(deltaBody).toMatchObject({

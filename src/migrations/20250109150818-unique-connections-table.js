@@ -4,7 +4,7 @@ exports.up = function(db, cb) {
     (
         id VARCHAR(255) PRIMARY KEY NOT NULL,
         updated_at TIMESTAMP DEFAULT now(),
-        hll BYTEA NOT NULL,
+        hll BYTEA NOT NULL
     );
 `, cb)
 };

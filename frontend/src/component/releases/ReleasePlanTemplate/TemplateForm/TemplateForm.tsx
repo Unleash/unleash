@@ -164,7 +164,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
         >
             <StyledForm onSubmit={handleSubmit}>
                 <StyledInput
-                    label={`Template name`}
+                    label='Template name'
                     aria-required
                     value={name}
                     onChange={(e) => setName(e.target.value)}

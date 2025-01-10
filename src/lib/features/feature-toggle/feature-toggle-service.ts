@@ -597,6 +597,13 @@ class FeatureToggleService {
             )
         )
             .sort((strategy1, strategy2) => {
+                if (strategy1.milestoneId && !strategy2.milestoneId) {
+                    return -1;
+                }
+                if (!strategy1.milestoneId && strategy2.milestoneId) {
+                    return 1;
+                }
+
                 if (
                     typeof strategy1.sortOrder === 'number' &&
                     typeof strategy2.sortOrder === 'number'
@@ -625,6 +632,13 @@ class FeatureToggleService {
             )
         )
             .sort((strategy1, strategy2) => {
+                if (strategy1.milestoneId && !strategy2.milestoneId) {
+                    return -1;
+                }
+                if (!strategy1.milestoneId && strategy2.milestoneId) {
+                    return 1;
+                }
+
                 if (
                     typeof strategy1.sortOrder === 'number' &&
                     typeof strategy2.sortOrder === 'number'
@@ -1042,6 +1056,7 @@ class FeatureToggleService {
                     title: strat.title,
                     disabled: strat.disabled,
                     sortOrder: strat.sortOrder,
+                    milestoneId: strat.milestoneId,
                     segments,
                 });
             }

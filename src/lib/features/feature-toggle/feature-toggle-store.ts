@@ -152,6 +152,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             'fs.parameters as parameters',
             'fs.constraints as constraints',
             'fs.sort_order as sort_order',
+            'fs.milestone_id as milestone_id',
             'fs.variants as strategy_variants',
             'segments.id as segment_id',
             'segments.constraints as segment_constraints',

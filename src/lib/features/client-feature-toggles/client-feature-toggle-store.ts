@@ -95,6 +95,7 @@ export default class FeatureToggleClientStore
             'fs.parameters as parameters',
             'fs.constraints as constraints',
             'fs.sort_order as sort_order',
+            'fs.milestone_id as milestone_id',
             'fs.variants as strategy_variants',
             'segments.id as segment_id',
             'segments.constraints as segment_constraints',
@@ -245,6 +246,13 @@ export default class FeatureToggleClientStore
             ...rest,
             strategies: strategies
                 ?.sort((strategy1, strategy2) => {
+                    if (strategy1.milestoneId && !strategy2.milestoneId) {
+                        return -1;
+                    }
+                    if (!strategy1.milestoneId && strategy2.milestoneId) {
+                        return 1;
+                    }
+
                     if (
                         typeof strategy1.sortOrder === 'number' &&
                         typeof strategy2.sortOrder === 'number'
@@ -253,7 +261,7 @@ export default class FeatureToggleClientStore
                     }
                     return 0;
                 })
-                .map(({ id, title, sortOrder, ...strategy }) => ({
+                .map(({ id, title, sortOrder, milestoneId, ...strategy }) => ({
                     ...strategy,
 
                     ...(isPlayground && title ? { title } : {}),
@@ -275,6 +283,7 @@ export default class FeatureToggleClientStore
             constraints: row.constraints || [],
             parameters: mapValues(row.parameters || {}, ensureStringValue),
             sortOrder: row.sort_order,
+            milestoneId: row.milestone_id,
         };
         strategy.variants = row.strategy_variants || [];
         return strategy;

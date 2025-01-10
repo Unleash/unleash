@@ -106,6 +106,7 @@ export class FeatureToggleRowConverter {
             constraints: row.constraints || [],
             parameters: mapValues(row.parameters || {}, ensureStringValue),
             sortOrder: row.sort_order,
+            milestoneId: row.milestone_id,
             disabled: row.strategy_disabled,
             variants: row.strategy_variants || [],
         };
@@ -129,6 +130,13 @@ export class FeatureToggleRowConverter {
             ...rest,
             strategies: strategies
                 ?.sort((strategy1, strategy2) => {
+                    if (strategy1.milestoneId && !strategy2.milestoneId) {
+                        return -1;
+                    }
+                    if (!strategy1.milestoneId && strategy2.milestoneId) {
+                        return 1;
+                    }
+
                     if (
                         typeof strategy1.sortOrder === 'number' &&
                         typeof strategy2.sortOrder === 'number'
@@ -137,7 +145,7 @@ export class FeatureToggleRowConverter {
                     }
                     return 0;
                 })
-                .map(({ title, sortOrder, ...strategy }) => ({
+                .map(({ title, sortOrder, milestoneId, ...strategy }) => ({
                     ...strategy,
                     ...(title ? { title } : {}),
                 })),

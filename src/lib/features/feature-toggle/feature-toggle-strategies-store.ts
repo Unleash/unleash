@@ -62,6 +62,7 @@ interface IFeatureStrategiesTable {
     constraints: string;
     variants: string;
     sort_order: number;
+    milestone_id?: string;
     created_at?: Date;
     disabled?: boolean | null;
 }
@@ -86,6 +87,7 @@ function mapRow(row: IFeatureStrategiesTable): IFeatureStrategy {
         variants: (row.variants as unknown as IStrategyVariant[]) || [],
         createdAt: row.created_at,
         sortOrder: row.sort_order,
+        milestoneId: row.milestone_id,
         disabled: row.disabled,
     };
 }
@@ -326,6 +328,9 @@ class FeatureStrategiesStore implements IFeatureStrategiesStore {
                 feature_name: featureName,
                 environment,
             })
+            .orderByRaw(
+                'CASE WHEN milestone_id IS NOT NULL THEN 0 ELSE 1 END ASC',
+            )
             .orderBy([
                 {
                     column: 'sort_order',

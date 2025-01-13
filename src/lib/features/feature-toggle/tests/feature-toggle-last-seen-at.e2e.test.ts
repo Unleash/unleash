@@ -167,21 +167,21 @@ test('response should include last seen at per environment correctly for a singl
         featureName,
         db.rawDatabase,
         'default',
-        '2023-08-01 12:30:56',
+        '2023-08-01T12:30:56.000Z',
     );
 
     await insertLastSeenAt(
         featureName,
         db.rawDatabase,
         'development',
-        '2023-08-01 12:30:56',
+        '2023-08-01T12:30:56.000Z',
     );
 
     await insertLastSeenAt(
         featureName,
         db.rawDatabase,
         'production',
-        '2023-08-01 12:30:56',
+        '2023-08-01T12:30:56.000Z',
     );
 
     const { body } = await app.request

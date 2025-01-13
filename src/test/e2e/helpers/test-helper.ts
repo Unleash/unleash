@@ -450,7 +450,7 @@ export const insertLastSeenAt = async (
     featureName: string,
     db: Knex,
     environment: string = 'default',
-    date: string = '2023-10-01 12:34:56',
+    date: string = '2023-10-01T12:34:56.000Z',
 ): Promise<string> => {
     try {
         await db.raw(`INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
@@ -467,7 +467,7 @@ export const insertFeatureEnvironmentsLastSeen = async (
     featureName: string,
     db: Knex,
     environment: string = 'default',
-    date: string = '2022-05-01 12:34:56',
+    date: string = '2022-05-01T12:34:56.000Z',
 ): Promise<string> => {
     await db.raw(`
         INSERT INTO feature_environments (feature_name, environment, last_seen_at, enabled)

@@ -17,6 +17,7 @@ import {
 } from '../../../internals';
 import metricsHelper from '../../../util/metrics-helper';
 import FeatureToggleStore from '../../feature-toggle/feature-toggle-store';
+import { sortStrategies } from '../../../util/sortStrategies';
 
 export default class ClientFeatureToggleDeltaReadModel
     implements IClientFeatureToggleDeltaReadModel
@@ -176,22 +177,7 @@ export default class ClientFeatureToggleDeltaReadModel
         const cleanedFeatures = features.map(({ strategies, ...rest }) => ({
             ...rest,
             strategies: strategies
-                ?.sort((strategy1, strategy2) => {
-                    if (strategy1.milestoneId && !strategy2.milestoneId) {
-                        return -1;
-                    }
-                    if (!strategy1.milestoneId && strategy2.milestoneId) {
-                        return 1;
-                    }
-
-                    if (
-                        typeof strategy1.sortOrder === 'number' &&
-                        typeof strategy2.sortOrder === 'number'
-                    ) {
-                        return strategy1.sortOrder - strategy2.sortOrder;
-                    }
-                    return 0;
-                })
+                ?.sort(sortStrategies)
                 .map(({ id, title, sortOrder, milestoneId, ...strategy }) => ({
                     ...strategy,
                 })),

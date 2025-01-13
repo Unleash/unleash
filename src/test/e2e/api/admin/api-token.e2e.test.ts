@@ -65,62 +65,6 @@ test('creates new client token', async () => {
         });
 });
 
-test('creates new admin token', async () => {
-    return app.request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'admin',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201)
-        .expect((res) => {
-            expect(res.body.username).toBe('default-admin');
-            expect(res.body.tokenName).toBe(res.body.username);
-            expect(res.body.type).toBe('admin');
-            expect(res.body.environment).toBe(ALL);
-            expect(res.body.createdAt).toBeTruthy();
-            expect(res.body.expiresAt).toBeFalsy();
-            expect(res.body.secret.length > 16).toBe(true);
-        });
-});
-
-test('creates new ADMIN token should fix casing', async () => {
-    return app.request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'ADMIN',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201)
-        .expect((res) => {
-            expect(res.body.username).toBe('default-admin');
-            expect(res.body.tokenName).toBe(res.body.username);
-            expect(res.body.type).toBe('admin');
-            expect(res.body.createdAt).toBeTruthy();
-            expect(res.body.expiresAt).toBeFalsy();
-            expect(res.body.secret.length > 16).toBe(true);
-        });
-});
-
-test('creates new admin token with expiry', async () => {
-    const expiresAt = new Date();
-    const expiresAtAsISOStr = JSON.parse(JSON.stringify(expiresAt));
-    return app.request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'admin',
-            expiresAt,
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201)
-        .expect((res) => {
-            expect(res.body.expiresAt).toBe(expiresAtAsISOStr);
-        });
-});
-
 test('update client token with expiry', async () => {
     const tokenSecret = '*:environment.random-secret-update';
 
@@ -312,32 +256,6 @@ test('should not create token for invalid environment', async () => {
         });
 });
 
-test('should not create token for invalid project & environment', async () => {
-    return app.request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'admin',
-            project: 'bogus-project-something',
-            environment: 'bogus-environment-something',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(400);
-});
-
-test('admin token only supports ALL projects', async () => {
-    return app.request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'admin',
-            project: 'default',
-            environment: '*',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(400);
-});
-
 test('needs one of the username and tokenName properties set', async () => {
     return app.request
         .post('/api/admin/api-tokens')
@@ -349,24 +267,6 @@ test('needs one of the username and tokenName properties set', async () => {
         .expect(400);
 });
 
-test('can create with tokenName only', async () => {
-    return app.request
-        .post('/api/admin/api-tokens')
-        .send({
-            tokenName: 'default-admin',
-            type: 'admin',
-            environment: '*',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(201)
-        .expect((res) => {
-            expect(res.body.type).toBe('admin');
-            expect(res.body.secret.length > 16).toBe(true);
-            expect(res.body.username).toBe('default-admin');
-            expect(res.body.tokenName).toBe('default-admin');
-        });
-});
-
 test('only one of tokenName and username can be set', async () => {
     return app.request
         .post('/api/admin/api-tokens')
@@ -375,19 +275,6 @@ test('only one of tokenName and username can be set', async () => {
             tokenName: 'default-token-name',
             type: 'admin',
             environment: '*',
-        })
-        .set('Content-Type', 'application/json')
-        .expect(400);
-});
-
-test('admin token only supports ALL environments', async () => {
-    return app.request
-        .post('/api/admin/api-tokens')
-        .send({
-            username: 'default-admin',
-            type: 'admin',
-            project: '*',
-            environment: DEFAULT_ENV,
         })
         .set('Content-Type', 'application/json')
         .expect(400);

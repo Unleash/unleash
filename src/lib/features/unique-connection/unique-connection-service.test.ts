@@ -138,7 +138,7 @@ test('sync to existing previous bucket from another service', async () => {
     const stats1 = await uniqueConnectionService1.getStats();
     expect(stats1).toEqual({ previous: 3, current: 0 });
     const stats2 = await uniqueConnectionService2.getStats();
-    expect(stats1).toEqual({ previous: 3, current: 0 });
+    expect(stats2).toEqual({ previous: 3, current: 0 });
 });
 
 test('populate previous and current', async () => {

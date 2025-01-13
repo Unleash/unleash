@@ -89,13 +89,27 @@ _Project roles_:
 1. Owner
 2. Member
 
-Assign users with root roles to configure entire systems. These users can perform any operation within the Unleash platform and change permissions for other users when they belong to a specific user group.
+Assign users with admin roles to configure entire systems. These users can perform any operation within the Unleash platform and change permissions for other users when they belong to a specific user group.
 
-Assign other users to project roles to have domain-specific control within a specific project maintained in Unleash.
+Editors can perform the same operations as admins, _except_ managing users and roles. Editors can operate as project owners.
 
-Project permissions are separated from root permissions to make it even more targeted regarding what permissions someone can and cannot have within Unleash. Assign developers with creation and modification rights and viewers who can observe but not change.
+Viewers can observe projects and flags, but cannot make changes. When added to a project, they can operate as project members. This allows them to create, view, and update feature flags within a specific project.
+
+Project permissions are separated from root permissions to make it even more targeted regarding what permissions someone can and cannot have in Unleash.
 
 For more fine-tuned access controls, create [custom root roles](/how-to/how-to-create-and-assign-custom-root-roles) and [custom project roles](/how-to/how-to-create-and-assign-custom-project-roles), where you can define the privileges and limitations beyond the predefined roles we have built into Unleash.
+
+For example, customize root permissions to perform CRUD operations for:
+
+-   Integrations
+-   API tokens
+-   Strageties
+-   Segments
+-   Context fields
+
+In the Unleash Admin UI, go to **Admin > Roles** and click **New root role**. In the form, select each permission you want the custom root role to have in the dropdowns and click **Add role**.
+
+![In the "New root role" form, name your role, add a description, and select permissions in each dropdown section in the form.](/img/use-case-user-mgmt-custom-role.png)
 
 ### Extend RBAC with a change management workflow
 
@@ -103,8 +117,8 @@ While RBAC allows you to administer Unleash safely, you might need approval proc
 
 -   **Comprehensive review**: Every proposed feature flag modification goes through a review, reducing the likelihood of unintended consequences.
 -   **Audit trail**: Every change is documented, timestamped, and attributed to specific team members, creating a permanent record of system modifications.
--   **Four-eyes approval workflows**: Multi-stage approval processes ensure critical changes are thoroughly reviewed and approved by at least 2 other people before implementation.
--   **Compliance requirements**: For regulated industries like finance and healthcare, Change Requests provide the detailed documentation necessary to meet strict compliance standards.
+-   **Four-eyes approval workflows**: Multi-stage approval processes ensure critical changes are thoroughly reviewed and approved by at least 1 other individual before implementation.
+-   **Compliance requirements**: For regulated industries like finance and healthcare, Change Requests provide the detailed documentation necessary to meet strict compliance standards. For more details on our compliance standards, read our [compliance overview](/using-unleash/compliance/compliance-overview) documentation.
 
 ![You can view the list of change requests with their relevant metadata.](/img/use-case-user-mgmt-change-requests.png)
 

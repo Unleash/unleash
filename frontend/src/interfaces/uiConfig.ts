@@ -90,6 +90,7 @@ export type UiFlags = {
     showUserDeviceCount?: boolean;
     flagOverviewRedesign?: boolean;
     granularAdminPermissions?: boolean;
+    sortProjectRoles?: boolean;
 };
 
 export interface IVersionInfo {

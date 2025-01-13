@@ -60,7 +60,8 @@ export type IFlagKey =
     | 'streaming'
     | 'etagVariant'
     | 'deltaApi'
-    | 'uniqueSdkTracking';
+    | 'uniqueSdkTracking'
+    | 'sortProjectRoles';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -283,6 +284,10 @@ const flags: IFlags = {
     ),
     uniqueSdkTracking: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_UNIQUE_SDK_TRACKING,
+        false,
+    ),
+    sortProjectRoles: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_SORT_PROJECT_ROLES,
         false,
     ),
 };

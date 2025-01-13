@@ -19,6 +19,7 @@ import {
 import { RolePermissionCategory } from './RolePermissionCategory';
 import { useMemo } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ProjectRolePermissionCategory } from './ProjectRolePermissionCategory';
 
 interface IPermissionCategoriesProps {
     type: PredefinedRoleType;
@@ -45,6 +46,7 @@ export const RolePermissionCategories = ({
     const granularAdminPermissionsEnabled = useUiFlag(
         'granularAdminPermissions',
     );
+    const sortProjectRoles = useUiFlag('sortProjectRoles');
 
     const isProjectRole = PROJECT_ROLE_TYPES.includes(type);
 
@@ -94,34 +96,57 @@ export const RolePermissionCategories = ({
                             (label !== 'Instance maintenance' &&
                                 label !== 'Authentication'),
                     )
-                    .map(({ label, type, permissions }) => (
-                        <RolePermissionCategory
-                            key={label}
-                            title={label}
-                            context={label.toLowerCase()}
-                            Icon={
-                                type === PROJECT_PERMISSION_TYPE ? (
+                    .map(({ label, type, permissions }) =>
+                        type === 'project' && sortProjectRoles ? (
+                            <ProjectRolePermissionCategory
+                                key={label}
+                                title={label}
+                                context={label.toLowerCase()}
+                                Icon={
                                     <TopicIcon
                                         color='disabled'
                                         sx={{ mr: 1 }}
                                     />
-                                ) : type === ENVIRONMENT_PERMISSION_TYPE ? (
-                                    <CloudCircleIcon
-                                        color='disabled'
-                                        sx={{ mr: 1 }}
-                                    />
-                                ) : (
-                                    <UserIcon color='disabled' sx={{ mr: 1 }} />
-                                )
-                            }
-                            permissions={permissions}
-                            checkedPermissions={checkedPermissions}
-                            onPermissionChange={(permission: IPermission) =>
-                                onPermissionChange(permission)
-                            }
-                            onCheckAll={() => onCheckAll(permissions)}
-                        />
-                    ))}
+                                }
+                                permissions={permissions}
+                                checkedPermissions={checkedPermissions}
+                                onPermissionChange={(permission: IPermission) =>
+                                    onPermissionChange(permission)
+                                }
+                                onCheckAll={() => onCheckAll(permissions)}
+                            />
+                        ) : (
+                            <RolePermissionCategory
+                                key={label}
+                                title={label}
+                                context={label.toLowerCase()}
+                                Icon={
+                                    type === PROJECT_PERMISSION_TYPE ? (
+                                        <TopicIcon
+                                            color='disabled'
+                                            sx={{ mr: 1 }}
+                                        />
+                                    ) : type === ENVIRONMENT_PERMISSION_TYPE ? (
+                                        <CloudCircleIcon
+                                            color='disabled'
+                                            sx={{ mr: 1 }}
+                                        />
+                                    ) : (
+                                        <UserIcon
+                                            color='disabled'
+                                            sx={{ mr: 1 }}
+                                        />
+                                    )
+                                }
+                                permissions={permissions}
+                                checkedPermissions={checkedPermissions}
+                                onPermissionChange={(permission: IPermission) =>
+                                    onPermissionChange(permission)
+                                }
+                                onCheckAll={() => onCheckAll(permissions)}
+                            />
+                        ),
+                    )}
             </>
         ),
         [categories, checkedPermissions],

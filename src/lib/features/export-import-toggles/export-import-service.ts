@@ -949,6 +949,7 @@ export default class ExportImportService
                     projectId,
                     environment,
                     strategyName,
+                    milestoneId,
                     ...rest
                 } = item;
                 return {

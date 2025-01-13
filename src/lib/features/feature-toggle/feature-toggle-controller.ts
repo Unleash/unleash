@@ -856,6 +856,7 @@ export default class ProjectFeaturesController extends Controller {
                     projectId: project,
                     environment: environmentId,
                     createdAt,
+                    milestoneId,
                     ...rest
                 } = strategy;
                 return { ...rest, name: strategyName };

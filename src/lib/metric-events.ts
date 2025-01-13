@@ -1,6 +1,7 @@
 import type EventEmitter from 'events';
 
 const REQUEST_TIME = 'request_time';
+const SDK_CONNECTION_ID_RECEIVED = 'sdk_connection_id_received';
 const DB_TIME = 'db_time';
 const FUNCTION_TIME = 'function_time';
 const SCHEDULER_JOB_TIME = 'scheduler_job_time';
@@ -21,6 +22,7 @@ const CLIENT_DELTA_MEMORY = 'client_delta_memory';
 
 type MetricEvent =
     | typeof REQUEST_TIME
+    | typeof SDK_CONNECTION_ID_RECEIVED
     | typeof DB_TIME
     | typeof FUNCTION_TIME
     | typeof SCHEDULER_JOB_TIME
@@ -71,6 +73,7 @@ const onMetricEvent = <T extends MetricEvent>(
 
 export {
     REQUEST_TIME,
+    SDK_CONNECTION_ID_RECEIVED,
     DB_TIME,
     SCHEDULER_JOB_TIME,
     FUNCTION_TIME,

@@ -59,6 +59,7 @@ import type { OnboardingService } from '../features/onboarding/onboarding-servic
 import type { PersonalDashboardService } from '../features/personal-dashboard/personal-dashboard-service';
 import type { ProjectStatusService } from '../features/project-status/project-status-service';
 import type { UserSubscriptionsService } from '../features/user-subscriptions/user-subscriptions-service';
+import type { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
 
 export interface IUnleashServices {
     transactionalAccessService: WithTransactional<AccessService>;
@@ -131,4 +132,5 @@ export interface IUnleashServices {
     personalDashboardService: PersonalDashboardService;
     projectStatusService: ProjectStatusService;
     transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
+    uniqueConnectionService: UniqueConnectionService;
 }

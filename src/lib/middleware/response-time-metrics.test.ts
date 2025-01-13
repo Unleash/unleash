@@ -66,6 +66,7 @@ describe('responseTimeMetrics new behavior', () => {
             },
             method: 'GET',
             path: 'should-not-be-used',
+            headers: {},
         };
 
         // @ts-expect-error req and res doesn't have all properties
@@ -98,6 +99,7 @@ describe('responseTimeMetrics new behavior', () => {
         };
         const reqWithoutRoute = {
             method: 'GET',
+            headers: {},
         };
 
         // @ts-expect-error req and res doesn't have all properties
@@ -132,6 +134,7 @@ describe('responseTimeMetrics new behavior', () => {
         };
         const reqWithoutRoute = {
             method: 'GET',
+            headers: {},
         };
 
         // @ts-expect-error req and res doesn't have all properties
@@ -166,6 +169,7 @@ describe('responseTimeMetrics new behavior', () => {
             const reqWithoutRoute = {
                 method: 'GET',
                 path,
+                headers: {},
             };
 
             // @ts-expect-error req and res doesn't have all properties
@@ -210,6 +214,7 @@ describe('responseTimeMetrics new behavior', () => {
             const reqWithoutRoute = {
                 method: 'GET',
                 path,
+                headers: {},
             };
 
             // @ts-expect-error req and res doesn't have all properties

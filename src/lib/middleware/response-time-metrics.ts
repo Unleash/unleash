@@ -1,6 +1,6 @@
 import * as responseTime from 'response-time';
 import type EventEmitter from 'events';
-import { REQUEST_TIME } from '../metric-events';
+import { REQUEST_TIME, SDK_CONNECTION_ID_RECEIVED } from '../metric-events';
 import type { IFlagResolver } from '../types/experimental';
 import type { InstanceStatsService } from '../services';
 import type { RequestHandler } from 'express';
@@ -64,6 +64,11 @@ export function responseTimeMetrics(
                 req.headers['x-unleash-appname'] ??
                 req.headers['unleash-appname'] ??
                 req.query.appName;
+        }
+
+        const connectionId = req.headers['x-unleash-connection-id'];
+        if (connectionId && flagResolver.isEnabled('uniqueSdkTracking')) {
+            eventBus.emit(SDK_CONNECTION_ID_RECEIVED, connectionId);
         }
 
         const timingInfo = {

@@ -55,6 +55,7 @@ process.nextTick(async () => {
                         flagOverviewRedesign: false,
                         granularAdminPermissions: true,
                         deltaApi: true,
+                        uniqueSdkTracking: true,
                     },
                 },
                 authentication: {

@@ -44,22 +44,6 @@ export class UniqueConnectionService {
         this.hll.add(HyperLogLog.hash(connectionId));
     }
 
-    async getStats() {
-        const [previous, current] = await Promise.all([
-            this.uniqueConnectionStore.get('previous'),
-            this.uniqueConnectionStore.get('current'),
-        ]);
-        const previousHll = HyperLogLog(n);
-        if (previous) {
-            previousHll.merge({ n, buckets: previous.hll });
-        }
-        const currentHll = HyperLogLog(n);
-        if (current) {
-            currentHll.merge({ n, buckets: current.hll });
-        }
-        return { previous: previousHll.count(), current: currentHll.count() };
-    }
-
     async sync(currentTime = new Date()): Promise<void> {
         if (!this.flagResolver.isEnabled('uniqueSdkTracking')) return;
 

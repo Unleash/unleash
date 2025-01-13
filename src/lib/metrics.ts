@@ -269,6 +269,18 @@ export function registerPrometheusMetrics(
         },
     });
 
+    dbMetrics.registerGaugeDbMetric({
+        name: 'unique_sdk_connections_total',
+        help: 'The number of unique SDK connections for the full previous hour across all instances. Available only for SDKs reporting `unleash-x-connection-id`',
+        query: () => {
+            if (flagResolver.isEnabled('uniqueSdkTracking')) {
+                return stores.uniqueConnectionReadModel.getStats();
+            }
+            return Promise.resolve({ current: 0, previous: 0 });
+        },
+        map: (result) => ({ value: result.previous }),
+    });
+
     const featureTogglesArchivedTotal = createGauge({
         name: 'feature_toggles_archived_total',
         help: 'Number of archived feature flags',

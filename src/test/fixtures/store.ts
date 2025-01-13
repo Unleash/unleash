@@ -57,6 +57,7 @@ import { createFakeOnboardingReadModel } from '../../lib/features/onboarding/cre
 import { FakeUserUnsubscribeStore } from '../../lib/features/user-subscriptions/fake-user-unsubscribe-store';
 import { FakeUserSubscriptionsReadModel } from '../../lib/features/user-subscriptions/fake-user-subscriptions-read-model';
 import { FakeUniqueConnectionStore } from '../../lib/features/unique-connection/fake-unique-connection-store';
+import { UniqueConnectionReadModel } from '../../lib/features/unique-connection/unique-connection-read-model';
 
 const db = {
     select: () => ({
@@ -65,6 +66,8 @@ const db = {
 };
 
 const createStores: () => IUnleashStores = () => {
+    const uniqueConnectionStore = new FakeUniqueConnectionStore();
+
     return {
         db,
         clientApplicationsStore: new FakeClientApplicationsStore(),
@@ -122,7 +125,10 @@ const createStores: () => IUnleashStores = () => {
         onboardingStore: new FakeOnboardingStore(),
         userUnsubscribeStore: new FakeUserUnsubscribeStore(),
         userSubscriptionsReadModel: new FakeUserSubscriptionsReadModel(),
-        uniqueConnectionStore: new FakeUniqueConnectionStore(),
+        uniqueConnectionStore,
+        uniqueConnectionReadModel: new UniqueConnectionReadModel(
+            uniqueConnectionStore,
+        ),
     };
 };
 

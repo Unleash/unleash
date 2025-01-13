@@ -196,15 +196,20 @@ export const PROJECT_PERMISSIONS_STRUCTURE: PermissionCategory[] = [
         ],
     },
     {
-        label: 'Project settings and access',
+        label: 'Project settings',
         permissions: [
             [UPDATE_PROJECT],
             [PROJECT_USER_ACCESS_READ, UPDATE_PROJECT],
             [PROJECT_USER_ACCESS_WRITE, UPDATE_PROJECT],
-            [PROJECT_DEFAULT_STRATEGY_READ, UPDATE_PROJECT], // TODO: check - frontend-only
+            [PROJECT_DEFAULT_STRATEGY_READ, UPDATE_PROJECT],
             [PROJECT_DEFAULT_STRATEGY_WRITE, UPDATE_PROJECT],
-            [PROJECT_SETTINGS_READ, UPDATE_PROJECT], // TODO: check - frontend-only
+            [PROJECT_SETTINGS_READ, UPDATE_PROJECT],
             [PROJECT_SETTINGS_WRITE, UPDATE_PROJECT],
+        ],
+    },
+    {
+        label: 'API tokens',
+        permissions: [
             [READ_PROJECT_API_TOKEN],
             [CREATE_PROJECT_API_TOKEN],
             [DELETE_PROJECT_API_TOKEN],
@@ -214,11 +219,8 @@ export const PROJECT_PERMISSIONS_STRUCTURE: PermissionCategory[] = [
     {
         label: 'Change requests',
         permissions: [
-            [PROJECT_CHANGE_REQUEST_READ],
             [PROJECT_CHANGE_REQUEST_WRITE],
-            [APPROVE_CHANGE_REQUEST],
-            [APPLY_CHANGE_REQUEST],
-            [SKIP_CHANGE_REQUEST],
+            [PROJECT_CHANGE_REQUEST_READ],
         ],
     },
 ];

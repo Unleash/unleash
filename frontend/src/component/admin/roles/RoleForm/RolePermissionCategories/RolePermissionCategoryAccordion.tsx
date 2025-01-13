@@ -5,9 +5,7 @@ import {
     AccordionSummary,
     Box,
     Button,
-    Checkbox,
     Divider,
-    FormControlLabel,
     IconButton,
     styled,
     Typography,
@@ -24,8 +22,8 @@ interface IEnvironmentPermissionAccordionProps {
     Icon: ReactNode;
     isInitiallyExpanded?: boolean;
     context: string;
-    onPermissionChange: (permission: IPermission) => void;
     onCheckAll: () => void;
+    children: ReactNode;
 }
 
 const AccordionHeader = styled(Box)(({ theme }) => ({
@@ -42,14 +40,14 @@ const StyledTitle = styled(StringTruncator)(({ theme }) => ({
     marginRight: theme.spacing(1),
 }));
 
-export const RolePermissionCategory = ({
+export const RolePermissionCategoryAccordion = ({
     title,
     permissions,
     checkedPermissions,
     Icon,
     isInitiallyExpanded = false,
     context,
-    onPermissionChange,
+    children,
     onCheckAll,
 }: IEnvironmentPermissionAccordionProps) => {
     const [expanded, setExpanded] = useState(isInitiallyExpanded);
@@ -139,34 +137,8 @@ export const RolePermissionCategory = ({
                         {isAllChecked ? 'Unselect ' : 'Select '}
                         all {context} permissions
                     </Button>
-                    <Box
-                        display='grid'
-                        gridTemplateColumns={{
-                            sm: '1fr 1fr',
-                            xs: '1fr',
-                        }}
-                    >
-                        {permissions?.map((permission: IPermission) => (
-                            <FormControlLabel
-                                data-testid={getRoleKey(permission)}
-                                key={getRoleKey(permission)}
-                                control={
-                                    <Checkbox
-                                        checked={Boolean(
-                                            checkedPermissions[
-                                                getRoleKey(permission)
-                                            ],
-                                        )}
-                                        onChange={() =>
-                                            onPermissionChange(permission)
-                                        }
-                                        color='primary'
-                                    />
-                                }
-                                label={permission.displayName}
-                            />
-                        ))}
-                    </Box>
+
+                    {children}
                 </AccordionDetails>
             </Accordion>
         </Box>

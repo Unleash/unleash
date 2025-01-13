@@ -16,6 +16,10 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import type { ICheckedPermissions, IPermission } from 'interfaces/permissions';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { getRoleKey } from 'utils/permissions';
+import {
+    type PermissionCategory,
+    PROJECT_PERMISSIONS_STRUCTURE,
+} from '@server/types/permissions';
 
 interface IEnvironmentPermissionAccordionProps {
     permissions: IPermission[];
@@ -76,14 +80,58 @@ export const ProjectRolePermissionCategory = ({
         [permissionCount, permissions],
     );
 
+    const allPermissions = useMemo(
+        () =>
+            permissions?.map((permission) => getRoleKey(permission)).sort() ||
+            [],
+        [permissions],
+    );
+
+    const otherPermissions = useMemo(() => {
+        const allStructuredPermissions = PROJECT_PERMISSIONS_STRUCTURE.flatMap(
+            (category) =>
+                category.permissions.map(([permission]) => permission),
+        ).sort() as string[];
+
+        return allPermissions.filter(
+            (permission) => !allStructuredPermissions.includes(permission),
+        );
+    }, [permissions]);
+
+    const permissionsStructure = useMemo(
+        () =>
+            [
+                ...PROJECT_PERMISSIONS_STRUCTURE,
+                {
+                    label: 'Other',
+                    permissions: otherPermissions.map((p) => [p]),
+                } as PermissionCategory,
+            ]
+                .map((category) => ({
+                    label: category.label,
+                    permissions: category.permissions
+                        .filter(([permission]) =>
+                            allPermissions.includes(permission),
+                        )
+                        .map(([permission, parentPermission]) => [
+                            permissions.find(
+                                (p) => getRoleKey(p) === permission,
+                            ),
+                            parentPermission,
+                        ]) as [IPermission, string?][],
+                }))
+                .filter((category) => category.permissions.length > 0),
+        [allPermissions],
+    );
+
     return (
         <Box
+            // FIXME: style
             sx={{
                 my: 2,
                 pb: 1,
             }}
         >
-            <pre>{JSON.stringify(permissions, null, 2)}</pre>
             <Accordion
                 expanded={expanded}
                 onChange={() => setExpanded(!expanded)}
@@ -140,34 +188,54 @@ export const ProjectRolePermissionCategory = ({
                         {isAllChecked ? 'Unselect ' : 'Select '}
                         all {context} permissions
                     </Button>
-                    <Box
-                        display='grid'
-                        gridTemplateColumns={{
-                            sm: '1fr 1fr',
-                            xs: '1fr',
-                        }}
-                    >
-                        {permissions?.map((permission: IPermission) => (
-                            <FormControlLabel
-                                data-testid={getRoleKey(permission)}
-                                key={getRoleKey(permission)}
-                                control={
-                                    <Checkbox
-                                        checked={Boolean(
-                                            checkedPermissions[
-                                                getRoleKey(permission)
-                                            ],
-                                        )}
-                                        onChange={() =>
-                                            onPermissionChange(permission)
-                                        }
-                                        color='primary'
-                                    />
-                                }
-                                label={permission.displayName}
-                            />
+                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                        {permissionsStructure.map((category) => (
+                            <div style={{ width: '50%' }}>
+                                <Typography fontWeight='bold' mt={2} mb={1}>
+                                    {/* FIXME: style */}
+                                    {category.label}
+                                </Typography>
+                                <div>
+                                    {category.permissions.map(
+                                        ([permission, parentPermission]) => (
+                                            <div
+                                                style={{
+                                                    // FIXME: style
+                                                    marginLeft: parentPermission
+                                                        ? '2rem'
+                                                        : 0,
+                                                }}
+                                            >
+                                                <FormControlLabel
+                                                    data-testid={permission}
+                                                    key={permission.name}
+                                                    control={
+                                                        <Checkbox
+                                                            checked={Boolean(
+                                                                checkedPermissions[
+                                                                    permission
+                                                                        .name
+                                                                ],
+                                                            )}
+                                                            onChange={() =>
+                                                                onPermissionChange(
+                                                                    permission,
+                                                                )
+                                                            }
+                                                            color='primary'
+                                                        />
+                                                    }
+                                                    label={
+                                                        permission.displayName
+                                                    }
+                                                />
+                                            </div>
+                                        ),
+                                    )}
+                                </div>
+                            </div>
                         ))}
-                    </Box>
+                    </div>
                 </AccordionDetails>
             </Accordion>
         </Box>

@@ -171,3 +171,54 @@ export const MAINTENANCE_MODE_PERMISSIONS = [
     UPDATE_MAINTENANCE_MODE,
     READ_LOGS,
 ];
+
+export type PermissionCategory = {
+    label: string;
+    permissions: Array<[string, string?]>; // [permission, is subset of]
+};
+
+export const PROJECT_PERMISSIONS_STRUCTURE: PermissionCategory[] = [
+    {
+        label: 'Features and strategies',
+        permissions: [
+            [CREATE_FEATURE],
+            [UPDATE_FEATURE],
+            [UPDATE_FEATURE_DEPENDENCY],
+            [DELETE_FEATURE],
+            [UPDATE_FEATURE_VARIANTS],
+            [MOVE_FEATURE_TOGGLE],
+            [CREATE_FEATURE_STRATEGY],
+            [UPDATE_FEATURE_STRATEGY],
+            [DELETE_FEATURE_STRATEGY],
+            [UPDATE_FEATURE_ENVIRONMENT],
+            [UPDATE_FEATURE_ENVIRONMENT_VARIANTS],
+            [UPDATE_PROJECT_SEGMENT],
+        ],
+    },
+    {
+        label: 'Project settings and access',
+        permissions: [
+            [UPDATE_PROJECT],
+            [PROJECT_USER_ACCESS_READ, UPDATE_PROJECT],
+            [PROJECT_USER_ACCESS_WRITE, UPDATE_PROJECT],
+            [PROJECT_DEFAULT_STRATEGY_READ, UPDATE_PROJECT], // TODO: check - frontend-only
+            [PROJECT_DEFAULT_STRATEGY_WRITE, UPDATE_PROJECT],
+            [PROJECT_SETTINGS_READ, UPDATE_PROJECT], // TODO: check - frontend-only
+            [PROJECT_SETTINGS_WRITE, UPDATE_PROJECT],
+            [READ_PROJECT_API_TOKEN],
+            [CREATE_PROJECT_API_TOKEN],
+            [DELETE_PROJECT_API_TOKEN],
+            [DELETE_PROJECT],
+        ],
+    },
+    {
+        label: 'Change requests',
+        permissions: [
+            [PROJECT_CHANGE_REQUEST_READ],
+            [PROJECT_CHANGE_REQUEST_WRITE],
+            [APPROVE_CHANGE_REQUEST],
+            [APPLY_CHANGE_REQUEST],
+            [SKIP_CHANGE_REQUEST],
+        ],
+    },
+];

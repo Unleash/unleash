@@ -10,7 +10,7 @@ export class UniqueConnectionStore implements IUniqueConnectionStore {
     }
 
     async insert(uniqueConnections: UniqueConnections): Promise<void> {
-        await this.db<UniqueConnections & { updated_at: null }>(
+        await this.db<UniqueConnections & { updated_at: 'DEFAULT' }>(
             'unique_connections',
         )
             .insert({

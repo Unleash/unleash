@@ -5,7 +5,7 @@ slug: /feature-flag-tutorials/use-cases/user-management-access-controls-auditing
 
 Feature flags are a game-changer for how software teams build, test, and release products. They enable you to roll out new features with confidence, manage risk, and keep your software development agile and secure.
 
-Imagine a large banking platform company with hundreds of engineering teams across multiple continents. Their software development lifecycle is complex and dynamic. Feature flags simplify their processes, but managing all those users are an additional layer of complexity. Unleash solves this with user management capabilities, role-based access control, and auditing features to help organizations release code with confidence while maintaining security and compliance.
+Imagine a large banking platform company with hundreds of engineering teams across multiple continents. Their software development lifecycle is complex and dynamic. Feature flags simplify their processes, but managing all those users is an additional layer of complexity. Unleash solves this with user management capabilities, role-based access controls, and auditing features to help organizations release code with confidence while maintaining security and compliance.
 
 In this tutorial, you will:
 
@@ -23,7 +23,7 @@ To ensure proper user authentication and reduce risk exposure, Unleash provides 
 
 Unleash supports any SSO option through OpenID Connect or SAML 2.0, including identity providers like Okta, Microsoft Entra ID, and Google Keycloak to create a unified authentication process.
 
-To configure SSO, navigate to **Admin > Single sign-on** in the Unleash Admin UI.
+To configure SSO for feature flags, navigate to **Admin > Single sign-on** in the Unleash Admin UI.
 
 ![In Unleash's Single Sign-On page, there are four tabs to set up Open ID Connect, SAML 2.0, traditional passwords, and SCIM.](/img/use-case-user-mgmt-saml.png)
 
@@ -68,9 +68,9 @@ Next, set up [Okta provisioning](/how-to/how-to-setup-provisioning-with-okta) or
 
 This automation creates an access control system that adapts in real-time to organizational changes. Within minutes of joining, a new team member can be granted precisely the right level of access, while departing employees are immediately locked out of sensitive systems.
 
-## Configure role-based access controls
+## Configure role-based access controls for feature flags
 
-[Role-based access control](/reference/rbac) makes feature flag management a strategic governance tool. Consider a scenario in which a junior developer should never be able to modify critical feature flags in the authentication system within a banking platform. RBAC makes this granular control seamless. We recommend carefully delegating administrative privileges to users based on the needs of their roles within projects and the organization.
+[Role-based access control](/reference/rbac) makes feature flag management a strategic governance tool. Consider a scenario in which a junior developer should never be able to modify critical feature flags in the authentication system within a banking platform. RBAC makes this granular control seamless. We recommend carefully delegating administrative privileges to users based on the needs of their roles within projects and the organization, a concept known as the principle of least privilege.
 
 In the Unleash Admin UI, go to **Admin > Roles** to view, create, and manage user roles.
 
@@ -108,14 +108,14 @@ While RBAC allows you to administer Unleash safely, you might need approval proc
 
 ![Change requests are divided between two tabs: open and closed change request lists with relevant metadata listed per request.](/img/use-case-user-mgmt-change-requests.png)
 
-Imagine a large banking application where a development team wants to modify a feature flag controlling a new authentication method. Instead of a developer making an immediate change, the change request workflow might require:
+Imagine a developer working at our large banking platform wants to modify a feature flag controlling a new authentication method. Instead of a developer making an immediate change, the change request workflow might require:
 
 1. Initial proposal submission
 2. Security team review
 3. Compliance officer approval
 4. Final sign-off from technical leadership
 
-![This GIF shows how to quickly make changes to your flag, request the change, approve it, and apply the changes.](/img/use-case-user-mgmt-cr.gif)
+![This GIF shows how to quickly make changes to your feature flag, request the change, approve it, and apply the changes.](/img/use-case-user-mgmt-cr.gif)
 
 This process ensures that even minor feature flag changes go through rigorous evaluation.
 

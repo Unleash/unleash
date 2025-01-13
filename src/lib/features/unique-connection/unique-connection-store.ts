@@ -1,6 +1,7 @@
 import type { Db } from '../../db/db';
 import type { IUniqueConnectionStore } from '../../types';
 import type { UniqueConnections } from './unique-connection-store-type';
+import type { Knex } from 'knex';
 
 export class UniqueConnectionStore implements IUniqueConnectionStore {
     private db: Db;
@@ -10,8 +11,14 @@ export class UniqueConnectionStore implements IUniqueConnectionStore {
     }
 
     async insert(uniqueConnections: UniqueConnections): Promise<void> {
-        await this.db<UniqueConnections>('unique_connections')
-            .insert({ id: uniqueConnections.id, hll: uniqueConnections.hll })
+        await this.db<UniqueConnections & { updated_at: Knex.Raw<any> }>(
+            'unique_connections',
+        )
+            .insert({
+                id: uniqueConnections.id,
+                hll: uniqueConnections.hll,
+                updated_at: this.db.raw('DEFAULT'),
+            })
             .onConflict('id')
             .merge();
     }

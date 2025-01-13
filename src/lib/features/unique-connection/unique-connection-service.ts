@@ -5,9 +5,7 @@ import type { IUniqueConnectionStore } from './unique-connection-store-type';
 import HyperLogLog from 'hyperloglog-lite';
 import type EventEmitter from 'events';
 import { SDK_CONNECTION_ID_RECEIVED } from '../../metric-events';
-
-// HyperLogLog will create 2^n registers
-const n = 12;
+import { REGISTERS_EXPONENT } from './hyperloglog-config';
 
 export class UniqueConnectionService {
     private logger: Logger;
@@ -20,7 +18,7 @@ export class UniqueConnectionService {
 
     private activeHour: number;
 
-    private hll = HyperLogLog(n);
+    private hll = HyperLogLog(REGISTERS_EXPONENT);
 
     constructor(
         {
@@ -52,7 +50,10 @@ export class UniqueConnectionService {
 
         if (this.activeHour !== currentHour && currentBucket) {
             if (currentBucket.updatedAt.getHours() < currentHour) {
-                this.hll.merge({ n, buckets: currentBucket.hll });
+                this.hll.merge({
+                    n: REGISTERS_EXPONENT,
+                    buckets: currentBucket.hll,
+                });
                 await this.uniqueConnectionStore.insert({
                     hll: this.hll.output().buckets,
                     id: 'previous',
@@ -61,7 +62,10 @@ export class UniqueConnectionService {
                 const previousBucket =
                     await this.uniqueConnectionStore.get('previous');
                 if (previousBucket) {
-                    this.hll.merge({ n, buckets: previousBucket.hll });
+                    this.hll.merge({
+                        n: REGISTERS_EXPONENT,
+                        buckets: previousBucket.hll,
+                    });
                 }
                 await this.uniqueConnectionStore.insert({
                     hll: this.hll.output().buckets,
@@ -70,9 +74,12 @@ export class UniqueConnectionService {
             }
 
             this.activeHour = currentHour;
-            this.hll = HyperLogLog(n);
+            this.hll = HyperLogLog(REGISTERS_EXPONENT);
         } else if (currentBucket) {
-            this.hll.merge({ n, buckets: currentBucket.hll });
+            this.hll.merge({
+                n: REGISTERS_EXPONENT,
+                buckets: currentBucket.hll,
+            });
         }
 
         await this.uniqueConnectionStore.insert({

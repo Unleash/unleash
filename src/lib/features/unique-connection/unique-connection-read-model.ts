@@ -4,9 +4,7 @@ import type {
 } from '../../types';
 
 import HyperLogLog from 'hyperloglog-lite';
-
-// HyperLogLog will create 2^n registers
-const n = 12;
+import { REGISTERS_EXPONENT } from './hyperloglog-config';
 
 export class UniqueConnectionReadModel implements IUniqueConnectionReadModel {
     private uniqueConnectionStore: IUniqueConnectionStore;
@@ -20,13 +18,13 @@ export class UniqueConnectionReadModel implements IUniqueConnectionReadModel {
             this.uniqueConnectionStore.get('previous'),
             this.uniqueConnectionStore.get('current'),
         ]);
-        const previousHll = HyperLogLog(n);
+        const previousHll = HyperLogLog(REGISTERS_EXPONENT);
         if (previous) {
-            previousHll.merge({ n, buckets: previous.hll });
+            previousHll.merge({ n: REGISTERS_EXPONENT, buckets: previous.hll });
         }
-        const currentHll = HyperLogLog(n);
+        const currentHll = HyperLogLog(REGISTERS_EXPONENT);
         if (current) {
-            currentHll.merge({ n, buckets: current.hll });
+            currentHll.merge({ n: REGISTERS_EXPONENT, buckets: current.hll });
         }
         return { previous: previousHll.count(), current: currentHll.count() };
     }

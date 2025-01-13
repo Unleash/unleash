@@ -57,6 +57,7 @@ import { createOnboardingReadModel } from '../features/onboarding/createOnboardi
 import { UserUnsubscribeStore } from '../features/user-subscriptions/user-unsubscribe-store';
 import { UserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model';
 import { UniqueConnectionStore } from '../features/unique-connection/unique-connection-store';
+import { UniqueConnectionReadModel } from '../features/unique-connection/unique-connection-read-model';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -187,6 +188,9 @@ export const createStores = (
         userUnsubscribeStore: new UserUnsubscribeStore(db),
         userSubscriptionsReadModel: new UserSubscriptionsReadModel(db),
         uniqueConnectionStore: new UniqueConnectionStore(db),
+        uniqueConnectionReadModel: new UniqueConnectionReadModel(
+            new UniqueConnectionStore(db),
+        ),
     };
 };
 

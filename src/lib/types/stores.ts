@@ -54,6 +54,7 @@ import { IOnboardingStore } from '../features/onboarding/onboarding-store-type';
 import type { IUserUnsubscribeStore } from '../features/user-subscriptions/user-unsubscribe-store-type';
 import type { IUserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model-type';
 import { IUniqueConnectionStore } from '../features/unique-connection/unique-connection-store-type';
+import { IUniqueConnectionReadModel } from '../features/unique-connection/unique-connection-read-model-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -112,6 +113,7 @@ export interface IUnleashStores {
     userUnsubscribeStore: IUserUnsubscribeStore;
     userSubscriptionsReadModel: IUserSubscriptionsReadModel;
     uniqueConnectionStore: IUniqueConnectionStore;
+    uniqueConnectionReadModel: IUniqueConnectionReadModel;
 }
 
 export {
@@ -168,4 +170,5 @@ export {
     IOnboardingStore,
     type IUserSubscriptionsReadModel,
     IUniqueConnectionStore,
+    IUniqueConnectionReadModel,
 };

@@ -10,8 +10,14 @@ export class UniqueConnectionStore implements IUniqueConnectionStore {
     }
 
     async insert(uniqueConnections: UniqueConnections): Promise<void> {
-        await this.db<UniqueConnections>('unique_connections')
-            .insert({ id: uniqueConnections.id, hll: uniqueConnections.hll })
+        await this.db<UniqueConnections & { updated_at: null }>(
+            'unique_connections',
+        )
+            .insert({
+                id: uniqueConnections.id,
+                hll: uniqueConnections.hll,
+                updated_at: this.db.raw('DEFAULT'),
+            })
             .onConflict('id')
             .merge();
     }

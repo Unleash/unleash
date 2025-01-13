@@ -5,6 +5,7 @@ import type {
     IUnleashStores,
 } from '../../../lib/types';
 import HyperLogLog from 'hyperloglog-lite';
+import { isAfter } from 'date-fns';
 
 let stores: IUnleashStores;
 let db: ITestDb;
@@ -55,4 +56,24 @@ test('should indicate when no entry', async () => {
     const fetchedHll = await uniqueConnectionStore.get('current');
 
     expect(fetchedHll).toBeNull();
+});
+
+test('should update updated_at date', async () => {
+    const hll = HyperLogLog(12);
+    hll.add(HyperLogLog.hash('connection-1'));
+    hll.add(HyperLogLog.hash('connection-2'));
+
+    await uniqueConnectionStore.insert({
+        id: 'current',
+        hll: hll.output().buckets,
+    });
+    const firstFetch = await uniqueConnectionStore.get('current');
+
+    await uniqueConnectionStore.insert({
+        id: 'current',
+        hll: hll.output().buckets,
+    });
+    const secondFetch = await uniqueConnectionStore.get('current');
+
+    expect(isAfter(secondFetch?.updatedAt!, firstFetch?.updatedAt!)).toBe(true);
 });

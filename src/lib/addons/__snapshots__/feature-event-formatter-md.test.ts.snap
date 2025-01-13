@@ -19,7 +19,7 @@ exports[`Should format specialised text for events when a scheduled change reque
 exports[`Should format specialised text for events when change request is scheduled 1`] = `
 {
   "label": "Change request scheduled",
-  "text": "*user@company.com* scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature flag *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* to be applied at  in project *my-other-project*",
+  "text": "*user@company.com* scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature flag *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* to be applied at ",
   "url": "unleashUrl/projects/my-other-project/change-requests/1",
 }
 `;
@@ -203,7 +203,7 @@ exports[`Should format specialised text for events when rollout percentage chang
 exports[`Should format specialised text for events when scheduled change request fails  1`] = `
 {
   "label": "Scheduled change request failed",
-  "text": "*Failed* to apply the scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature flag *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* by *user@company.com* in project *my-other-project*.",
+  "text": "*Failed* to apply the scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature flag *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* by *user@company.com*",
   "url": "unleashUrl/projects/my-other-project/change-requests/1",
 }
 `;
@@ -211,7 +211,7 @@ exports[`Should format specialised text for events when scheduled change request
 exports[`Should format specialised text for events when scheduled change request succeeds  1`] = `
 {
   "label": "Scheduled change request applied successfully",
-  "text": "*Successfully* applied the scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature flag *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* by *user@company.com* in project *my-other-project*.",
+  "text": "*Successfully* applied the scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature flag *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* by *user@company.com*",
   "url": "unleashUrl/projects/my-other-project/change-requests/1",
 }
 `;

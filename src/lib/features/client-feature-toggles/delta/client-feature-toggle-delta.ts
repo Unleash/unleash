@@ -53,12 +53,12 @@ const applyRevision = (first: Revision, last: Revision): Revision => {
         ]),
     );
 
-    for (const feature of last.removed) {
-        updatedMap.delete(feature.name);
-    }
-
     for (const feature of last.updated) {
         removedMap.delete(feature.name);
+    }
+
+    for (const feature of last.removed) {
+        updatedMap.delete(feature.name);
     }
 
     return {

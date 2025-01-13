@@ -61,8 +61,10 @@ export class UniqueConnectionService {
 
     async sync(clock = () => new Date()): Promise<void> {
         if (!this.flagResolver.isEnabled('uniqueSdkTracking')) return;
+
         const currentHour = clock().getHours();
         const currentBucket = await this.uniqueConnectionStore.get('current');
+
         if (this.activeHour !== currentHour && currentBucket) {
             if (currentBucket.updatedAt.getHours() < currentHour) {
                 this.hll.merge({ n, buckets: currentBucket.hll });
@@ -81,21 +83,16 @@ export class UniqueConnectionService {
                     id: 'previous',
                 });
             }
-            this.activeHour = currentHour;
 
+            this.activeHour = currentHour;
             this.hll = HyperLogLog(n);
-            await this.uniqueConnectionStore.insert({
-                hll: this.hll.output().buckets,
-                id: 'current',
-            });
-        } else {
-            if (currentBucket) {
-                this.hll.merge({ n, buckets: currentBucket.hll });
-            }
-            await this.uniqueConnectionStore.insert({
-                hll: this.hll.output().buckets,
-                id: 'current',
-            });
+        } else if (currentBucket) {
+            this.hll.merge({ n, buckets: currentBucket.hll });
         }
+
+        await this.uniqueConnectionStore.insert({
+            hll: this.hll.output().buckets,
+            id: 'current',
+        });
     }
 }

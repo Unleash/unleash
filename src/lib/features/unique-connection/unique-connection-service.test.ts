@@ -51,7 +51,7 @@ test('sync first previous bucket', async () => {
 
     eventBus.emit(SDK_CONNECTION_ID_RECEIVED, 'connection3');
 
-    await uniqueConnectionService.sync(() => addHours(new Date(), 1));
+    await uniqueConnectionService.sync(addHours(new Date(), 1));
 
     const stats = await uniqueConnectionService.getStats();
     expect(stats).toEqual({ previous: 3, current: 0 });
@@ -129,11 +129,11 @@ test('sync to existing previous bucket from another service', async () => {
 
     uniqueConnectionService1.count('connection1');
     uniqueConnectionService1.count('connection2');
-    await uniqueConnectionService1.sync(() => addHours(new Date(), 1));
+    await uniqueConnectionService1.sync(addHours(new Date(), 1));
 
     uniqueConnectionService2.count('connection1');
     uniqueConnectionService2.count('connection3');
-    await uniqueConnectionService2.sync(() => addHours(new Date(), 1));
+    await uniqueConnectionService2.sync(addHours(new Date(), 1));
 
     const stats1 = await uniqueConnectionService1.getStats();
     expect(stats1).toEqual({ previous: 3, current: 0 });
@@ -156,13 +156,13 @@ test('populate previous and current', async () => {
     await uniqueConnectionService.sync();
 
     uniqueConnectionService.count('connection3');
-    await uniqueConnectionService.sync(() => addHours(new Date(), 1));
-    await uniqueConnectionService.sync(() => addHours(new Date(), 1));
+    await uniqueConnectionService.sync(addHours(new Date(), 1));
+    await uniqueConnectionService.sync(addHours(new Date(), 1)); // deliberate duplicate call
 
     uniqueConnectionService.count('connection3');
     uniqueConnectionService.count('connection4');
-    await uniqueConnectionService.sync(() => addHours(new Date(), 1));
-    await uniqueConnectionService.sync(() => addHours(new Date(), 1));
+    await uniqueConnectionService.sync(addHours(new Date(), 1));
+    await uniqueConnectionService.sync(addHours(new Date(), 1)); // deliberate duplicate call
 
     const stats = await uniqueConnectionService.getStats();
     expect(stats).toEqual({ previous: 3, current: 2 });

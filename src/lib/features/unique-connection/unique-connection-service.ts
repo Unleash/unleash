@@ -60,10 +60,10 @@ export class UniqueConnectionService {
         return { previous: previousHll.count(), current: currentHll.count() };
     }
 
-    async sync(clock = new Date()): Promise<void> {
+    async sync(currentTime = new Date()): Promise<void> {
         if (!this.flagResolver.isEnabled('uniqueSdkTracking')) return;
 
-        const currentHour = clock.getHours();
+        const currentHour = currentTime.getHours();
         const currentBucket = await this.uniqueConnectionStore.get('current');
 
         if (this.activeHour !== currentHour && currentBucket) {

@@ -156,7 +156,7 @@ const flags: IFlags = {
     ),
     adminTokenKillSwitch: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
-        false,
+        true,
     ),
     outdatedSdksBanner: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_OUTDATED_SDKS_BANNER,

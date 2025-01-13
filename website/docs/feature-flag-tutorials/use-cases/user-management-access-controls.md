@@ -93,7 +93,7 @@ Assign users with root roles to configure entire systems. These users can perfor
 
 Assign other users to project roles to have domain-specific control within a specific project maintained in Unleash.
 
-Project permissions are separated from root permissions to make it even more targeted regarding what permissions someone can and cannot have for each piece of Unleash. Assign developers with creation and modification rights and viewers who can observe but not change.
+Project permissions are separated from root permissions to make it even more targeted regarding what permissions someone can and cannot have within Unleash. Assign developers with creation and modification rights and viewers who can observe but not change.
 
 For more fine-tuned access controls, create [custom root roles](/how-to/how-to-create-and-assign-custom-root-roles) and [custom project roles](/how-to/how-to-create-and-assign-custom-project-roles), where you can define the privileges and limitations beyond the predefined roles we have built into Unleash.
 
@@ -106,7 +106,7 @@ While RBAC allows you to administer Unleash safely, you might need approval proc
 -   **Four-eyes approval workflows**: Multi-stage approval processes ensure critical changes are thoroughly reviewed and approved by at least 2 other people before implementation.
 -   **Compliance requirements**: For regulated industries like finance and healthcare, Change Requests provide the detailed documentation necessary to meet strict compliance standards.
 
-![Change requests are divided between two tabs: open and closed change request lists with relevant metadata listed per request.](/img/use-case-user-mgmt-change-requests.png)
+![You can view the list of change requests with their relevant metadata.](/img/use-case-user-mgmt-change-requests.png)
 
 Imagine a developer working at our large banking platform wants to modify a feature flag controlling a new authentication method. Instead of a developer making an immediate change, the change request workflow might require:
 
@@ -117,7 +117,7 @@ Imagine a developer working at our large banking platform wants to modify a feat
 
 ![This GIF shows how to quickly make changes to your feature flag, request the change, approve it, and apply the changes.](/img/use-case-user-mgmt-cr.gif)
 
-This process ensures that even minor feature flag changes go through rigorous evaluation.
+This process ensures that even minor feature flag changes go through rigorous evaluation. For more details on what enterprise-level change requests should include, [read our blog](https://www.getunleash.io/blog/feature-flag-change-requests-how-to).
 
 ## Implement effective auditing in Unleash
 
@@ -169,4 +169,4 @@ Here’s an example of an audit log entry in JSON format:
 
 The most advanced implementations integrate Unleash audit logs directly into broader Security Information and Event Management (SIEM) systems. This enables real-time monitoring and creates a holistic view of system interactions across multiple platforms. By correlating Unleash audit data with other enterprise security logs, organizations can detect subtle patterns and potential security anomalies that might go unnoticed in isolated systems.
 
-By implementing intelligent, automated, and granular access controls, organizations can create a secure foundation for continuous delivery at scale.
+Organizations can create a secure foundation for implementing feature flags usage at scale by using Unleash for automated user management, granular access controls, and auditing.

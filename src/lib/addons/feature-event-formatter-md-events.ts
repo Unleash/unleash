@@ -152,17 +152,17 @@ export const EVENT_MAP: Record<string, IEventData> = {
     },
     [CHANGE_REQUEST_SCHEDULED]: {
         label: 'Change request scheduled',
-        action: '{{b}}{{user}}{{b}} scheduled change request {{changeRequest}} to be applied at {{event.data.scheduledDate}} in project {{b}}{{event.project}}{{b}}',
+        action: '{{b}}{{user}}{{b}} scheduled change request {{changeRequest}} to be applied at {{event.data.scheduledDate}}',
         path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
     },
     [CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS]: {
         label: 'Scheduled change request applied successfully',
-        action: '{{b}}Successfully{{b}} applied the scheduled change request {{changeRequest}} by {{b}}{{user}}{{b}} in project {{b}}{{event.project}}{{b}}.',
+        action: '{{b}}Successfully{{b}} applied the scheduled change request {{changeRequest}} by {{b}}{{user}}{{b}}',
         path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
     },
     [CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE]: {
         label: 'Scheduled change request failed',
-        action: '{{b}}Failed{{b}} to apply the scheduled change request {{changeRequest}} by {{b}}{{user}}{{b}} in project {{b}}{{event.project}}{{b}}.',
+        action: '{{b}}Failed{{b}} to apply the scheduled change request {{changeRequest}} by {{b}}{{user}}{{b}}',
         path: '/projects/{{event.project}}/change-requests/{{event.data.changeRequestId}}',
     },
     [CHANGE_REQUEST_SCHEDULE_SUSPENDED]: {

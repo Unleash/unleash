@@ -6,6 +6,7 @@ import HyperLogLog from 'hyperloglog-lite';
 import type EventEmitter from 'events';
 import { SDK_CONNECTION_ID_RECEIVED } from '../../metric-events';
 
+// HyperLogLog will create 2^n registers
 const n = 12;
 
 export class UniqueConnectionService {

@@ -510,6 +510,7 @@ const testCases: [string, IEvent][] = [
             createdByUserId: SYSTEM_USER_ID,
             data: {
                 changeRequestId: 1,
+                scheduledDate: '2024-06-01T10:03:11.549Z',
             },
             preData: {},
             tags: [],

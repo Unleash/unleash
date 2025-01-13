@@ -29,7 +29,7 @@ export const EditReleasePlanTemplate = () => {
     const templateId = useRequiredPathParam('templateId');
     const { template, loading, error, refetch } =
         useReleasePlanTemplate(templateId);
-    usePageTitle(`Edit template: ${template.name}`);
+    usePageTitle(`Edit release template`);
     const navigate = useNavigate();
     const { setToastApiError, setToastData } = useToast();
     const { updateReleasePlanTemplate } = useReleasePlanTemplatesApi();
@@ -96,7 +96,7 @@ export const EditReleasePlanTemplate = () => {
             setMilestones={setMilestones}
             errors={errors}
             clearErrors={clearErrors}
-            formTitle={`Edit template ${template.name}`}
+            formTitle={`Edit release template`}
             formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}
             loading={loading}

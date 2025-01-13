@@ -256,7 +256,7 @@ export const MilestoneCard = ({
             >
                 <StyledMilestoneCardBody>
                     <Grid container>
-                        <StyledGridItem item xs={8} md={9}>
+                        <StyledGridItem item xs={6} md={6}>
                             <MilestoneCardName
                                 milestone={milestone}
                                 errors={errors}
@@ -264,7 +264,7 @@ export const MilestoneCard = ({
                                 milestoneNameChanged={milestoneNameChanged}
                             />
                         </StyledGridItem>
-                        <StyledMilestoneActionGrid item xs={4} md={3}>
+                        <StyledMilestoneActionGrid item xs={6} md={6}>
                             <Button
                                 variant='outlined'
                                 color='primary'

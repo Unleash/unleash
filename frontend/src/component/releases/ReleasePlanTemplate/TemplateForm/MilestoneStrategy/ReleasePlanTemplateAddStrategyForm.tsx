@@ -25,6 +25,11 @@ import { MilestoneStrategyTitle } from './MilestoneStrategyTitle';
 import { MilestoneStrategyConstraints } from './MilestoneStrategyConstraints';
 import { MilestoneStrategyVariants } from './MilestoneStrategyVariants';
 import { MilestoneStrategyType } from './MilestoneStrategyType';
+import {
+    featureStrategyDocsLink,
+    featureStrategyDocsLinkLabel,
+    featureStrategyHelp,
+} from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
@@ -236,7 +241,9 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     return (
         <FormTemplate
             modal
-            description='Add a strategy to your release plan template.'
+            description={featureStrategyHelp}
+            documentationLink={featureStrategyDocsLink}
+            documentationLinkLabel={featureStrategyDocsLinkLabel}
         >
             <StyledHeaderBox>
                 <StyledTitle>
@@ -316,6 +323,8 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                         <StyledTargetingHeader>
                             Segmentation and constraints allow you to set
                             filters on your strategies, so that they will only
+                            be evaluated for users and applications that match
+                            the specified preconditions.
                             <MilestoneStrategySegment
                                 segments={segments}
                                 setSegments={setSegments}
@@ -328,8 +337,6 @@ export const ReleasePlanTemplateAddStrategyForm = ({
                                 strategy={currentStrategy}
                                 setStrategy={setCurrentStrategy}
                             />
-                            be evaluated for users and applications that match
-                            the specified preconditions.
                         </StyledTargetingHeader>
                     </>
                 )}

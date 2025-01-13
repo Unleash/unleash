@@ -218,7 +218,6 @@ beforeAll(async () => {
         },
         TEST_AUDIT_USER,
     );
-    console.log('dummyAdmin', dummyAdmin);
 });
 
 afterEach(async () => {

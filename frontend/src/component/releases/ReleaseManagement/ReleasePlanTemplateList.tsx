@@ -1,5 +1,5 @@
 import { Grid } from '@mui/material';
-import { ReleasePlanTemplateCard } from './ReleasePlanTemplateCard';
+import { ReleasePlanTemplateCard } from './ReleasePlanTemplateCard/ReleasePlanTemplateCard';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 
 interface ITemplateList {

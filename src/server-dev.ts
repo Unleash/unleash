@@ -57,6 +57,7 @@ process.nextTick(async () => {
                         sortProjectRoles: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
+                        lifecycleImprovements: true,
                     },
                 },
                 authentication: {

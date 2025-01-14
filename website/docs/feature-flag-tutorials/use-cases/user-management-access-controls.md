@@ -17,7 +17,7 @@ In this tutorial, you will:
 
 ## Implement single sign-on for enterprise identity integration
 
-When an enterprise like a global banking platform considers implementing feature flags, keeping track of who can access your feature flag platform and handling authentication is critical. Traditional username and password approaches are insecure and [shared accounts pose a security risk](/blog/stop-sharing-accounts).
+When an enterprise like a global banking platform considers implementing feature flags, keeping track of who can access your feature flag platform and handling authentication is critical. Traditional username and password approaches are insecure and [shared accounts pose a security risk](https://www.getunleash.io/blog/stop-sharing-accounts).
 
 To ensure proper user authentication and reduce risk exposure, Unleash provides [single sign-on](/how-to/sso) as the recommended centralized method for managing user access.
 

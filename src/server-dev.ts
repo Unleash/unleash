@@ -54,6 +54,7 @@ process.nextTick(async () => {
                         showUserDeviceCount: true,
                         flagOverviewRedesign: false,
                         granularAdminPermissions: true,
+                        sortProjectRoles: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
                     },

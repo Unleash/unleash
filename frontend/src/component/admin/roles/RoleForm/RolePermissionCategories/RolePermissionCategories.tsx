@@ -16,9 +16,11 @@ import {
     toggleAllPermissions,
     togglePermission,
 } from 'utils/permissions';
-import { RolePermissionCategory } from './RolePermissionCategory';
+import { RolePermissionEnvironment } from './RolePermissionEnvironment';
 import { useMemo } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { RolePermissionProject } from './RolePermissionProject';
+import { RolePermissionCategoryAccordion } from './RolePermissionCategoryAccordion';
 
 interface IPermissionCategoriesProps {
     type: PredefinedRoleType;
@@ -45,6 +47,7 @@ export const RolePermissionCategories = ({
     const granularAdminPermissionsEnabled = useUiFlag(
         'granularAdminPermissions',
     );
+    const sortProjectRoles = useUiFlag('sortProjectRoles');
 
     const isProjectRole = PROJECT_ROLE_TYPES.includes(type);
 
@@ -95,7 +98,7 @@ export const RolePermissionCategories = ({
                                 label !== 'Authentication'),
                     )
                     .map(({ label, type, permissions }) => (
-                        <RolePermissionCategory
+                        <RolePermissionCategoryAccordion
                             key={label}
                             title={label}
                             context={label.toLowerCase()}
@@ -116,11 +119,22 @@ export const RolePermissionCategories = ({
                             }
                             permissions={permissions}
                             checkedPermissions={checkedPermissions}
-                            onPermissionChange={(permission: IPermission) =>
-                                onPermissionChange(permission)
-                            }
                             onCheckAll={() => onCheckAll(permissions)}
-                        />
+                        >
+                            {type === 'project' && sortProjectRoles ? (
+                                <RolePermissionProject
+                                    permissions={permissions}
+                                    checkedPermissions={checkedPermissions}
+                                    onPermissionChange={onPermissionChange}
+                                />
+                            ) : (
+                                <RolePermissionEnvironment
+                                    permissions={permissions}
+                                    checkedPermissions={checkedPermissions}
+                                    onPermissionChange={onPermissionChange}
+                                />
+                            )}
+                        </RolePermissionCategoryAccordion>
                     ))}
             </>
         ),

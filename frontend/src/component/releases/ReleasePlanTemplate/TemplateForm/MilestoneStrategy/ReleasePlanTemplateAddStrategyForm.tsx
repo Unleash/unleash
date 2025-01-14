@@ -124,18 +124,15 @@ const StyledDividerContent = styled(Box)(({ theme }) => ({
 }));
 
 interface IReleasePlanTemplateAddStrategyFormProps {
-    milestoneId: string | undefined;
     onCancel: () => void;
     strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>;
     onAddUpdateStrategy: (
-        milestoneId: string,
         strategy: Omit<IReleasePlanMilestoneStrategy, 'milestoneId'>,
     ) => void;
     editMode: boolean;
 }
 
 export const ReleasePlanTemplateAddStrategyForm = ({
-    milestoneId,
     onCancel,
     strategy,
     onAddUpdateStrategy,
@@ -231,11 +228,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     };
 
     const AddUpdateMilestoneStrategy = () => {
-        if (!milestoneId) {
-            return;
-        }
-
-        onAddUpdateStrategy(milestoneId, currentStrategy);
+        onAddUpdateStrategy(currentStrategy);
     };
 
     return (

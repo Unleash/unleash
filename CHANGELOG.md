@@ -2,6 +2,150 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.6.0] - 2025-01-14
+
+### Bug Fixes
+
+- Change Open API validation middleware to specify and use path parameters ([#8913](https://github.com/Unleash/unleash/issues/8913))
+
+- Update dependency prism-react-renderer to v2.4.1 ([#9021](https://github.com/Unleash/unleash/issues/9021))
+
+- Update dependency mime to v4.0.6 ([#9034](https://github.com/Unleash/unleash/issues/9034))
+
+- Update dependency @slack/web-api to v7.8.0 ([#9036](https://github.com/Unleash/unleash/issues/9036))
+
+- Update dependency docusaurus-plugin-openapi-docs to v4.3.1 ([#9037](https://github.com/Unleash/unleash/issues/9037))
+
+- Update dependency docusaurus-theme-openapi-docs to v4.3.1 ([#9038](https://github.com/Unleash/unleash/issues/9038))
+
+- Update dependency express-rate-limit to v7.5.0 ([#9039](https://github.com/Unleash/unleash/issues/9039))
+
+- Update docusaurus monorepo to v3.6.3 ([#8800](https://github.com/Unleash/unleash/issues/8800))
+
+- Legal values styling in segments ([#9044](https://github.com/Unleash/unleash/issues/9044))
+
+- Remove archived from delta ([#9051](https://github.com/Unleash/unleash/issues/9051))
+
+- Save context button spacing ([#9059](https://github.com/Unleash/unleash/issues/9059))
+
+- Delta do not return archived as changed ([#9062](https://github.com/Unleash/unleash/issues/9062))
+
+- Text overflow on project users access page ([#8853](https://github.com/Unleash/unleash/issues/8853))
+
+- Etag support RFC 9110 standard ([#9077](https://github.com/Unleash/unleash/issues/9077))
+
+- Remove archived features from delta ([#9088](https://github.com/Unleash/unleash/issues/9088))
+
+- Force updated_at date to change ([#9092](https://github.com/Unleash/unleash/issues/9092))
+
+- Remove explicit "in project" text from change request event text ([#9091](https://github.com/Unleash/unleash/issues/9091))
+
+
+### Features
+
+- Only display oss included projects/environments when install is oss ([#8896](https://github.com/Unleash/unleash/issues/8896))
+
+- Remove borders, improve draggable visibility etc ([#9002](https://github.com/Unleash/unleash/issues/9002))
+
+- Delta api  e2e test ([#9003](https://github.com/Unleash/unleash/issues/9003))
+
+- Grouping of project level roles in autocomplete ([#9046](https://github.com/Unleash/unleash/issues/9046))
+
+- Log warning if there is diff between client/features and delta api ([#9047](https://github.com/Unleash/unleash/issues/9047))
+
+- Rework frontend validation for release plan templates ([#9055](https://github.com/Unleash/unleash/issues/9055))
+
+- Ability to upsert single legal values ([#9056](https://github.com/Unleash/unleash/issues/9056))
+
+- Ability to delete single legal values ([#9058](https://github.com/Unleash/unleash/issues/9058))
+
+- Making context service transactional ([#9063](https://github.com/Unleash/unleash/issues/9063))
+
+- Add migration ([#8891](https://github.com/Unleash/unleash/issues/8891))
+
+- Read logs and update cors maintenance root-role permissions ([#8996](https://github.com/Unleash/unleash/issues/8996))
+
+- Unique connection tracking ([#9067](https://github.com/Unleash/unleash/issues/9067))
+
+- Migration for unique connections ([#9076](https://github.com/Unleash/unleash/issues/9076))
+
+- Unique connection counting ([#9074](https://github.com/Unleash/unleash/issues/9074))
+
+- Unique connection gauge metric ([#9089](https://github.com/Unleash/unleash/issues/9089))
+
+- Remove create admin token from API ([#9090](https://github.com/Unleash/unleash/issues/9090))
+
+
+### Miscellaneous Tasks
+
+- Bump version to 6.5.3
+
+- Use 20.18.1 instead of 20.14 as our node base image ([#9004](https://github.com/Unleash/unleash/issues/9004))
+
+- Remove alpine reference as a suffix in image name ([#9009](https://github.com/Unleash/unleash/issues/9009))
+
+- Remove Unleash AI ([#9010](https://github.com/Unleash/unleash/issues/9010))
+
+- Streaming client no etag ([#9011](https://github.com/Unleash/unleash/issues/9011))
+
+- Group cards redesign ([#9048](https://github.com/Unleash/unleash/issues/9048))
+
+- Export context service factory ([#9053](https://github.com/Unleash/unleash/issues/9053))
+
+- New user avatar tooltip ([#9050](https://github.com/Unleash/unleash/issues/9050))
+
+- Improve group projects tooltip behavior ([#9054](https://github.com/Unleash/unleash/issues/9054))
+
+- Reorder release plan template UI files ([#9057](https://github.com/Unleash/unleash/issues/9057))
+
+- Make grid group cards have a consistent height ([#9064](https://github.com/Unleash/unleash/issues/9064))
+
+- Upgrade node sdk with x-headers ([#9066](https://github.com/Unleash/unleash/issues/9066))
+
+- Improve the release plan template accordion looks ([#9065](https://github.com/Unleash/unleash/issues/9065))
+
+- New hosted auth handler ([#9045](https://github.com/Unleash/unleash/issues/9045))
+
+- Remove simplifyProjectOverview flag ([#9068](https://github.com/Unleash/unleash/issues/9068))
+
+- Remove oidcRedirect flag ([#9069](https://github.com/Unleash/unleash/issues/9069))
+
+- Remove connection id from tracking ([#9072](https://github.com/Unleash/unleash/issues/9072))
+
+- Remove unused newHostedAuthHandler flag ([#9070](https://github.com/Unleash/unleash/issues/9070))
+
+- FeatureToggleService use optionallyDisableFeature instead of duplicating logic ([#9073](https://github.com/Unleash/unleash/issues/9073))
+
+- Mark SSO as an Enterprise only feature ([#9071](https://github.com/Unleash/unleash/issues/9071))
+
+- Fix migration file ([#9078](https://github.com/Unleash/unleash/issues/9078))
+
+- Fix migration file ([#9079](https://github.com/Unleash/unleash/issues/9079))
+
+- Improve create template fields for name+description ([#9075](https://github.com/Unleash/unleash/issues/9075))
+
+- Fix smaller broken UI things in release templates ([#9084](https://github.com/Unleash/unleash/issues/9084))
+
+- Update renovate configuration json file ([#9016](https://github.com/Unleash/unleash/issues/9016))
+
+
+### Refactor
+
+- Context service feature oriented ([#9052](https://github.com/Unleash/unleash/issues/9052))
+
+
+### Testing
+
+- Fix timezone-related inconsistencies in tests ([#9083](https://github.com/Unleash/unleash/issues/9083))
+
+
+### Migration
+
+- Read logs permission ([#9049](https://github.com/Unleash/unleash/issues/9049))
+
+- Cors root role permission ([#9080](https://github.com/Unleash/unleash/issues/9080))
+
+
 ## [6.5.3] - 2024-12-19
 
 ### Bug Fixes

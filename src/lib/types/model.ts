@@ -38,6 +38,7 @@ export interface IStrategyConfig {
     segments?: number[];
     parameters?: { [key: string]: string };
     sortOrder?: number;
+    milestoneId?: string;
     title?: string | null;
     disabled?: boolean | null;
 }
@@ -49,6 +50,7 @@ export interface IFeatureStrategy {
     strategyName: string;
     parameters: { [key: string]: string };
     sortOrder?: number;
+    milestoneId?: string;
     constraints: IConstraint[];
     variants?: IStrategyVariant[];
     createdAt?: Date;

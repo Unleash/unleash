@@ -9,6 +9,7 @@ import type {
 } from '../../../types';
 
 import { mapValues, ensureStringValue } from '../../../util';
+import { sortStrategies } from '../../../util/sortStrategies';
 import type { FeatureConfigurationClient } from '../types/feature-toggle-strategies-store-type';
 
 export class FeatureToggleRowConverter {
@@ -106,6 +107,7 @@ export class FeatureToggleRowConverter {
             constraints: row.constraints || [],
             parameters: mapValues(row.parameters || {}, ensureStringValue),
             sortOrder: row.sort_order,
+            milestoneId: row.milestone_id,
             disabled: row.strategy_disabled,
             variants: row.strategy_variants || [],
         };
@@ -128,16 +130,8 @@ export class FeatureToggleRowConverter {
         Object.values(result).map(({ strategies, ...rest }) => ({
             ...rest,
             strategies: strategies
-                ?.sort((strategy1, strategy2) => {
-                    if (
-                        typeof strategy1.sortOrder === 'number' &&
-                        typeof strategy2.sortOrder === 'number'
-                    ) {
-                        return strategy1.sortOrder - strategy2.sortOrder;
-                    }
-                    return 0;
-                })
-                .map(({ title, sortOrder, ...strategy }) => ({
+                ?.sort(sortStrategies)
+                .map(({ title, sortOrder, milestoneId, ...strategy }) => ({
                     ...strategy,
                     ...(title ? { title } : {}),
                 })),

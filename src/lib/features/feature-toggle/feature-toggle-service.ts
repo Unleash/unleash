@@ -112,6 +112,7 @@ import type { IFeatureLifecycleReadModel } from '../feature-lifecycle/feature-li
 import type { ResourceLimitsSchema } from '../../openapi';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 import type { Collaborator } from './types/feature-collaborators-read-model-type';
+import { sortStrategies } from '../../util/sortStrategies';
 
 interface IFeatureContext {
     featureName: string;
@@ -596,15 +597,7 @@ class FeatureToggleService {
                 environment,
             )
         )
-            .sort((strategy1, strategy2) => {
-                if (
-                    typeof strategy1.sortOrder === 'number' &&
-                    typeof strategy2.sortOrder === 'number'
-                ) {
-                    return strategy1.sortOrder - strategy2.sortOrder;
-                }
-                return 0;
-            })
+            .sort(sortStrategies)
             .map((strategy) => strategy.id);
 
         const eventPreData: StrategyIds = { strategyIds: existingOrder };
@@ -624,15 +617,7 @@ class FeatureToggleService {
                 environment,
             )
         )
-            .sort((strategy1, strategy2) => {
-                if (
-                    typeof strategy1.sortOrder === 'number' &&
-                    typeof strategy2.sortOrder === 'number'
-                ) {
-                    return strategy1.sortOrder - strategy2.sortOrder;
-                }
-                return 0;
-            })
+            .sort(sortStrategies)
             .map((strategy) => strategy.id);
 
         const eventData: StrategyIds = { strategyIds: newOrder };
@@ -1042,6 +1027,7 @@ class FeatureToggleService {
                     title: strat.title,
                     disabled: strat.disabled,
                     sortOrder: strat.sortOrder,
+                    milestoneId: strat.milestoneId,
                     segments,
                 });
             }

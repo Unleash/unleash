@@ -172,12 +172,12 @@ export const MAINTENANCE_MODE_PERMISSIONS = [
     READ_LOGS,
 ];
 
-export type PermissionCategory = {
+export type ProjectPermissionCategory = {
     label: string;
     permissions: Array<[string, string?]>; // [permission, is subset of]
 };
 
-export const PROJECT_PERMISSIONS_STRUCTURE: PermissionCategory[] = [
+export const PROJECT_PERMISSIONS_STRUCTURE: ProjectPermissionCategory[] = [
     {
         label: 'Features and strategies',
         permissions: [

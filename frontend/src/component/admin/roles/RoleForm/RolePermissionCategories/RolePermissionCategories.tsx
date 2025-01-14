@@ -19,7 +19,7 @@ import {
 import { RolePermissionEnvironment } from './RolePermissionEnvironment';
 import { useMemo } from 'react';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ProjectRolePermissionCategory } from './RolePermissionProject';
+import { RolePermissionProject } from './RolePermissionProject';
 import { RolePermissionCategoryAccordion } from './RolePermissionCategoryAccordion';
 
 interface IPermissionCategoriesProps {
@@ -122,7 +122,7 @@ export const RolePermissionCategories = ({
                             onCheckAll={() => onCheckAll(permissions)}
                         >
                             {type === 'project' && sortProjectRoles ? (
-                                <ProjectRolePermissionCategory
+                                <RolePermissionProject
                                     permissions={permissions}
                                     checkedPermissions={checkedPermissions}
                                     onPermissionChange={onPermissionChange}

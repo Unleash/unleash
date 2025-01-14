@@ -52,6 +52,13 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     color: theme.palette.common.white,
 }));
 
+const AdditionalStrategiesDiv = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: theme.spacing(2),
+}));
+
 const EnvironmentAccordionBody = ({
     featureEnvironment,
     isDisabled,
@@ -245,9 +252,14 @@ const EnvironmentAccordionBody = ({
                                     strategies.length > 0
                                 }
                                 show={
-                                    <SectionSeparator>
-                                        <StyledBadge>OR</StyledBadge>
-                                    </SectionSeparator>
+                                    <>
+                                        <SectionSeparator>
+                                            <StyledBadge>OR</StyledBadge>
+                                        </SectionSeparator>
+                                        <AdditionalStrategiesDiv>
+                                            Additional strategies
+                                        </AdditionalStrategiesDiv>
+                                    </>
                                 }
                             />
                             <ConditionallyRender

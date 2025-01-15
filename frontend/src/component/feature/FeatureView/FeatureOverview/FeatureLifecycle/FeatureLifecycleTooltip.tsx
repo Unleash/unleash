@@ -1,11 +1,10 @@
 import { Box, styled, Typography } from '@mui/material';
-import { Badge } from 'component/common/Badge/Badge';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import type * as React from 'react';
 import type { FC } from 'react';
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
-import { FeatureLifecycleStageIcon } from './FeatureLifecycleStageIcon';
+import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { StyledIconWrapper } from '../../FeatureEnvironmentSeen/FeatureEnvironmentSeen';
 import { useLastSeenColors } from '../../FeatureEnvironmentSeen/useLastSeenColors';
@@ -20,6 +19,7 @@ import { isSafeToArchive } from './isSafeToArchive';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
 import { formatDistanceToNow, parseISO } from 'date-fns';
+import { getFeatureLifecycleName } from 'component/common/FeatureLifecycle/getFeatureLifecycleName';
 
 const TimeLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -472,9 +472,9 @@ export const FeatureLifecycleTooltip: FC<{
                                 gap: 1,
                             }}
                         >
-                            <Badge sx={{ textTransform: 'capitalize' }}>
-                                {stage.name}
-                            </Badge>
+                            <Typography variant='body2'>
+                                {getFeatureLifecycleName(stage.name)}
+                            </Typography>
                             <FeatureLifecycleStageIcon stage={stage} />
                         </Box>
                     </MainLifecycleRow>
@@ -487,7 +487,6 @@ export const FeatureLifecycleTooltip: FC<{
                         <TimeLabel>Time spent in stage</TimeLabel>
                         <FormatElapsedTime time={stage.enteredStageAt} />
                     </TimeLifecycleRow>
-                    <StageTimeline stage={stage} />
                 </Box>
                 <ColorFill>
                     {stage.name === 'initial' && <InitialStageDescription />}

@@ -185,6 +185,7 @@ export const ReleasePlan = ({
                 open={removeOpen}
                 setOpen={setRemoveOpen}
                 onConfirm={onRemoveConfirm}
+                environmentActive={!environmentIsDisabled}
             />
         </StyledContainer>
     );

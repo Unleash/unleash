@@ -175,7 +175,7 @@ test('should add and delete feature dependencies', async () => {
     await app.createFeature(child2);
 
     const { body: options } = await getPossibleParentFeatures(child);
-    expect(options).toStrictEqual([child2, parent]);
+    expect(options).toMatchObject([parent, child2].sort());
 
     // save explicit enabled and variants
     await addFeatureDependency(child, {

@@ -105,60 +105,6 @@ export const StrategyExecution: FC<IStrategyExecutionProps> = ({
 
                     const badgeType = strategy.disabled ? 'neutral' : 'success';
 
-                    if (displayGroupId && parameters.groupId) {
-                        return (
-                            <StyledValueContainer
-                                sx={{
-                                    display: 'flex',
-                                    flexWrap: 'wrap',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <Box sx={{ mr: 2 }}>
-                                    <PercentageCircle
-                                        percentage={percentage}
-                                        size='2rem'
-                                        disabled={strategy.disabled}
-                                    />
-                                </Box>
-                                <div>
-                                    <Badge color={badgeType}>
-                                        {percentage}%
-                                    </Badge>{' '}
-                                    <span>of your base</span>{' '}
-                                    <span>
-                                        {explainStickiness ? (
-                                            <>
-                                                with{' '}
-                                                <strong>{stickiness}</strong>
-                                            </>
-                                        ) : (
-                                            ''
-                                        )}{' '}
-                                    </span>
-                                    <span>
-                                        {constraints.length > 0
-                                            ? 'who match constraints'
-                                            : ''}{' '}
-                                        is included.
-                                    </span>
-                                </div>
-                                <Box
-                                    sx={(theme) => ({
-                                        width: '100%',
-                                        mt: 1,
-                                        ml: 6,
-                                        color: theme.palette.info.contrastText,
-                                    })}
-                                >
-                                    <Badge color='info'>
-                                        GroupId: {parameters.groupId}
-                                    </Badge>
-                                </Box>
-                            </StyledValueContainer>
-                        );
-                    }
-
                     return (
                         <StyledValueContainer
                             sx={{ display: 'flex', alignItems: 'center' }}
@@ -189,6 +135,18 @@ export const StrategyExecution: FC<IStrategyExecutionProps> = ({
                                     is included.
                                 </span>
                             </div>
+                            {displayGroupId && parameters.groupId && (
+                                <Box
+                                    sx={(theme) => ({
+                                        ml: 1,
+                                        color: theme.palette.info.contrastText,
+                                    })}
+                                >
+                                    <Badge color='info'>
+                                        GroupId: {parameters.groupId}
+                                    </Badge>
+                                </Box>
+                            )}
                         </StyledValueContainer>
                     );
                 }

@@ -8,6 +8,7 @@ interface IReleasePlanRemoveDialogProps {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onConfirm: () => void;
+    environmentActive: boolean;
 }
 
 export const ReleasePlanRemoveDialog = ({
@@ -15,6 +16,7 @@ export const ReleasePlanRemoveDialog = ({
     open,
     setOpen,
     onConfirm,
+    environmentActive,
 }: IReleasePlanRemoveDialogProps) => (
     <Dialogue
         title='Remove release plan?'
@@ -25,7 +27,7 @@ export const ReleasePlanRemoveDialog = ({
         onClose={() => setOpen(false)}
     >
         <ConditionallyRender
-            condition={Boolean(plan.activeMilestoneId)}
+            condition={Boolean(plan.activeMilestoneId) && environmentActive}
             show={
                 <Alert severity='error' sx={{ mb: 2 }}>
                     This release plan currently has one active milestone.

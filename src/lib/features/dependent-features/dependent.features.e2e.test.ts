@@ -169,11 +169,13 @@ const checkDependenciesExist = async (expectedCode = 200) => {
 test('should add and delete feature dependencies', async () => {
     const parent = uuidv4();
     const child = uuidv4();
+    const child2 = uuidv4();
     await app.createFeature(parent);
     await app.createFeature(child);
+    await app.createFeature(child2);
 
     const { body: options } = await getPossibleParentFeatures(child);
-    expect(options).toStrictEqual([parent]);
+    expect(options).toStrictEqual([child2, parent]);
 
     // save explicit enabled and variants
     await addFeatureDependency(child, {
@@ -186,12 +188,19 @@ test('should add and delete feature dependencies', async () => {
         variants: ['variantB'],
     });
 
-    await deleteFeatureDependency(child, parent); // single
-    await deleteFeatureDependencies(child); // all
+    await addFeatureDependency(child2, {
+        feature: parent,
+        enabled: false,
+    });
 
-    expect(await getRecordedEventTypesForDependencies()).toStrictEqual([
+    await deleteFeatureDependency(child, parent); // single
+    await deleteFeatureDependencies(child2); // all
+
+    const eventTypes = await getRecordedEventTypesForDependencies();
+    expect(eventTypes).toStrictEqual([
         FEATURE_DEPENDENCIES_REMOVED,
         FEATURE_DEPENDENCY_REMOVED,
+        FEATURE_DEPENDENCY_ADDED,
         FEATURE_DEPENDENCY_ADDED,
         FEATURE_DEPENDENCY_ADDED,
     ]);

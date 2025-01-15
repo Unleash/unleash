@@ -58,6 +58,7 @@ beforeEach(async () => {
     await db.stores.dependentFeaturesStore.deleteAll();
     await db.stores.featureToggleStore.deleteAll();
     await db.stores.featureEnvironmentStore.deleteAll();
+    await db.stores.eventStore.deleteAll();
 });
 
 const addFeatureDependency = async (
@@ -336,5 +337,37 @@ test('should not allow to add dependency to feature from another project', async
             feature: parent,
         },
         403,
+    );
+});
+test('should create feature-dependency-removed when archiving and has dependency', async () => {
+    const child = uuidv4();
+    const parent = uuidv4();
+    await app.createFeature(parent);
+    await app.createFeature(child);
+
+    await addFeatureDependency(child, {
+        feature: parent,
+    });
+    await app.archiveFeature(child);
+    const events = await eventStore.getEvents();
+    expect(events).toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({ type: 'feature-dependencies-removed' }),
+        ]),
+    );
+});
+
+test('should not create feature-dependency-removed when archiving and no dependency', async () => {
+    const child = uuidv4();
+    const parent = uuidv4();
+    await app.createFeature(parent);
+    await app.createFeature(child);
+
+    await app.archiveFeature(child);
+    const events = await eventStore.getEvents();
+    expect(events).not.toEqual(
+        expect.arrayContaining([
+            expect.objectContaining({ type: 'feature-dependencies-removed' }),
+        ]),
     );
 });

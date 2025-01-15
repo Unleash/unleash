@@ -21,6 +21,7 @@ import { BuiltInStrategies } from 'utils/strategyNames';
 
 interface IStrategyExecutionProps {
     strategy: IFeatureStrategyPayload | CreateFeatureStrategySchema;
+    displayGroupId?: boolean;
 }
 
 const StyledContainer = styled(Box, {
@@ -77,6 +78,7 @@ const StyledValueSeparator = styled('span')(({ theme }) => ({
 
 export const StrategyExecution: FC<IStrategyExecutionProps> = ({
     strategy,
+    displayGroupId = false,
 }) => {
     const { parameters, constraints = [] } = strategy;
     const stickiness = parameters?.stickiness;
@@ -133,6 +135,18 @@ export const StrategyExecution: FC<IStrategyExecutionProps> = ({
                                     is included.
                                 </span>
                             </div>
+                            {displayGroupId && parameters.groupId && (
+                                <Box
+                                    sx={(theme) => ({
+                                        ml: 1,
+                                        color: theme.palette.info.contrastText,
+                                    })}
+                                >
+                                    <Badge color='info'>
+                                        GroupId: {parameters.groupId}
+                                    </Badge>
+                                </Box>
+                            )}
                         </StyledValueContainer>
                     );
                 }

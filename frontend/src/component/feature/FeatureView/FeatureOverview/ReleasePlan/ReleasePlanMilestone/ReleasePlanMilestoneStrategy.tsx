@@ -40,7 +40,7 @@ export const ReleasePlanMilestoneStrategy = ({
                 <Icon />
                 {`${formatStrategyName(String(strategy.strategyName))}${strategy.title ? `: ${strategy.title}` : ''}`}
             </StyledHeader>
-            <StrategyExecution strategy={strategy} />
+            <StrategyExecution strategy={strategy} displayGroupId />
             {strategy.variants &&
                 strategy.variants.length > 0 &&
                 (strategy.disabled ? (

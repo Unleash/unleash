@@ -21,6 +21,7 @@ import { BuiltInStrategies } from 'utils/strategyNames';
 
 interface IStrategyExecutionProps {
     strategy: IFeatureStrategyPayload | CreateFeatureStrategySchema;
+    displayGroupId?: boolean;
 }
 
 const StyledContainer = styled(Box, {
@@ -77,6 +78,7 @@ const StyledValueSeparator = styled('span')(({ theme }) => ({
 
 export const StrategyExecution: FC<IStrategyExecutionProps> = ({
     strategy,
+    displayGroupId = false,
 }) => {
     const { parameters, constraints = [] } = strategy;
     const stickiness = parameters?.stickiness;
@@ -102,6 +104,60 @@ export const StrategyExecution: FC<IStrategyExecutionProps> = ({
                     const percentage = parseParameterNumber(parameters[key]);
 
                     const badgeType = strategy.disabled ? 'neutral' : 'success';
+
+                    if (displayGroupId && parameters.groupId) {
+                        return (
+                            <StyledValueContainer
+                                sx={{
+                                    display: 'flex',
+                                    flexWrap: 'wrap',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Box sx={{ mr: 2 }}>
+                                    <PercentageCircle
+                                        percentage={percentage}
+                                        size='2rem'
+                                        disabled={strategy.disabled}
+                                    />
+                                </Box>
+                                <div>
+                                    <Badge color={badgeType}>
+                                        {percentage}%
+                                    </Badge>{' '}
+                                    <span>of your base</span>{' '}
+                                    <span>
+                                        {explainStickiness ? (
+                                            <>
+                                                with{' '}
+                                                <strong>{stickiness}</strong>
+                                            </>
+                                        ) : (
+                                            ''
+                                        )}{' '}
+                                    </span>
+                                    <span>
+                                        {constraints.length > 0
+                                            ? 'who match constraints'
+                                            : ''}{' '}
+                                        is included.
+                                    </span>
+                                </div>
+                                <Box
+                                    sx={(theme) => ({
+                                        width: '100%',
+                                        mt: 1,
+                                        ml: 6,
+                                        color: theme.palette.info.contrastText,
+                                    })}
+                                >
+                                    <Badge color='info'>
+                                        GroupId: {parameters.groupId}
+                                    </Badge>
+                                </Box>
+                            </StyledValueContainer>
+                        );
+                    }
 
                     return (
                         <StyledValueContainer

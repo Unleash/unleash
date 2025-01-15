@@ -3,11 +3,6 @@ import { Badge } from 'component/common/Badge/Badge';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import type * as React from 'react';
 import type { FC } from 'react';
-import { ReactComponent as InitialStageIcon } from 'assets/icons/stage-initial.svg';
-import { ReactComponent as PreLiveStageIcon } from 'assets/icons/stage-pre-live.svg';
-import { ReactComponent as LiveStageIcon } from 'assets/icons/stage-live.svg';
-import { ReactComponent as CompletedStageIcon } from 'assets/icons/stage-completed.svg';
-import { ReactComponent as ArchivedStageIcon } from 'assets/icons/stage-archived.svg';
 import CloudCircle from '@mui/icons-material/CloudCircle';
 import { ReactComponent as UsageRate } from 'assets/icons/usage-rate.svg';
 import { FeatureLifecycleStageIcon } from './FeatureLifecycleStageIcon';
@@ -150,7 +145,7 @@ const StageTimeline: FC<{
                 data-after-content='Initial'
                 active={stage.name === 'initial'}
             >
-                <InitialStageIcon />
+                <FeatureLifecycleStageIcon stage={{ name: 'initial' }} />
             </StageBox>
 
             <Line />
@@ -159,13 +154,13 @@ const StageTimeline: FC<{
                 data-after-content='Pre-live'
                 active={stage.name === 'pre-live'}
             >
-                <PreLiveStageIcon />
+                <FeatureLifecycleStageIcon stage={{ name: 'pre-live' }} />
             </StageBox>
 
             <Line />
 
             <StageBox data-after-content='Live' active={stage.name === 'live'}>
-                <LiveStageIcon />
+                <FeatureLifecycleStageIcon stage={{ name: 'live' }} />
             </StageBox>
 
             <Line />
@@ -174,7 +169,7 @@ const StageTimeline: FC<{
                 data-after-content='Completed'
                 active={stage.name === 'completed'}
             >
-                <CompletedStageIcon />
+                <FeatureLifecycleStageIcon stage={{ name: 'completed' }} />
             </StageBox>
 
             <Line />
@@ -183,7 +178,7 @@ const StageTimeline: FC<{
                 data-after-content='Archived'
                 active={stage.name === 'archived'}
             >
-                <ArchivedStageIcon />
+                <FeatureLifecycleStageIcon stage={{ name: 'archived' }} />
             </StageBox>
         </IconsRow>
     );

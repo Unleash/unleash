@@ -61,7 +61,8 @@ export type IFlagKey =
     | 'etagVariant'
     | 'deltaApi'
     | 'uniqueSdkTracking'
-    | 'sortProjectRoles';
+    | 'sortProjectRoles'
+    | 'lifecycleImprovements';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -288,6 +289,10 @@ const flags: IFlags = {
     ),
     sortProjectRoles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SORT_PROJECT_ROLES,
+        false,
+    ),
+    lifecycleImprovements: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_IMPROVEMENTS,
         false,
     ),
 };

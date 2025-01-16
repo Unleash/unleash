@@ -187,7 +187,6 @@ const SafeToArchive: FC<{
                 })}
             >
                 <PermissionButton
-                    color='inherit'
                     variant='outlined'
                     permission={UPDATE_FEATURE}
                     size='small'
@@ -227,7 +226,6 @@ const ActivelyUsed: FC<{
             the live stage.
         </InfoText>
         <PermissionButton
-            color='inherit'
             variant='outlined'
             permission={UPDATE_FEATURE}
             size='small'
@@ -300,16 +298,16 @@ const StageInfo: FC<{ stage: LifecycleStage['name'] }> = ({ stage }) => {
     if (stage === 'live') {
         return (
             <InfoText>
-                Feature is being rolled out in production according to the
-                strategy/release plan.
+                Feature is being rolled out in production according to an
+                activation strategy.
             </InfoText>
         );
     }
     if (stage === 'completed') {
         return (
             <InfoText>
-                Once longer needed, clean up the code to reduce technical debt
-                and archive the flag.
+                When a flag is no longer needed, clean up the code to minimize
+                technical debt and archive the flag for future reference.
             </InfoText>
         );
     }

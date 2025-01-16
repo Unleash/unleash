@@ -1,4 +1,4 @@
-import { FeatureLifecycleStageIcon } from '../../../../common/FeatureLifecycle/FeatureLifecycleStageIcon';
+import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon';
 import { FeatureLifecycleTooltip as LegacyFeatureLifecycleTooltip } from './LegacyFeatureLifecycleTooltip';
 import { FeatureLifecycleTooltip } from './FeatureLifecycleTooltip';
 import useFeatureLifecycleApi from 'hooks/api/actions/useFeatureLifecycleApi/useFeatureLifecycleApi';

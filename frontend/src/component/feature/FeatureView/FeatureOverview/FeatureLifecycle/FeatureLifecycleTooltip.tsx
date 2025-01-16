@@ -136,54 +136,6 @@ const InitialStageDescription: FC = () => {
     );
 };
 
-const StageTimeline: FC<{
-    stage: LifecycleStage;
-}> = ({ stage }) => {
-    return (
-        <IconsRow>
-            <StageBox
-                data-after-content='Initial'
-                active={stage.name === 'initial'}
-            >
-                <FeatureLifecycleStageIcon stage={{ name: 'initial' }} />
-            </StageBox>
-
-            <Line />
-
-            <StageBox
-                data-after-content='Pre-live'
-                active={stage.name === 'pre-live'}
-            >
-                <FeatureLifecycleStageIcon stage={{ name: 'pre-live' }} />
-            </StageBox>
-
-            <Line />
-
-            <StageBox data-after-content='Live' active={stage.name === 'live'}>
-                <FeatureLifecycleStageIcon stage={{ name: 'live' }} />
-            </StageBox>
-
-            <Line />
-
-            <StageBox
-                data-after-content='Completed'
-                active={stage.name === 'completed'}
-            >
-                <FeatureLifecycleStageIcon stage={{ name: 'completed' }} />
-            </StageBox>
-
-            <Line />
-
-            <StageBox
-                data-after-content='Archived'
-                active={stage.name === 'archived'}
-            >
-                <FeatureLifecycleStageIcon stage={{ name: 'archived' }} />
-            </StageBox>
-        </IconsRow>
-    );
-};
-
 const EnvironmentLine = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',

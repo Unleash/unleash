@@ -104,6 +104,7 @@ test('render completed stage with still active', async () => {
     });
 
     await screen.findByText('Cleanup');
+    await screen.findByText(/production/);
     await screen.findByText('2 hours ago');
     expect(screen.queryByText('Archive feature')).not.toBeInTheDocument();
 });

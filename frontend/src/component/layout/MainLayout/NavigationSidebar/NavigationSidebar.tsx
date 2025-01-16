@@ -76,9 +76,17 @@ const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
 
 const StyledCelebatoryLogo = styled(CelebatoryUnleashLogo)({ width: '150px' });
 
-const StyledUnleashLogoOnly = styled(LogoOnly)(({ theme }) => ({ width: '58px', marginTop: theme.spacing(0.5), margin: '0 auto' }));
+const StyledUnleashLogoOnly = styled(LogoOnly)(({ theme }) => ({
+    width: '58px',
+    marginTop: theme.spacing(0.5),
+    margin: '0 auto',
+}));
 
-const StyledUnleashLogoOnlyWhite = styled(LogoOnlyWhite)(({theme}) => ({ width: '37px', marginTop: theme.spacing(1), margin: '0 auto' }));
+const StyledUnleashLogoOnlyWhite = styled(LogoOnlyWhite)(({ theme }) => ({
+    width: '37px',
+    marginTop: theme.spacing(1),
+    margin: '0 auto',
+}));
 
 // This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.
 const StickyContainer = styled(Box)(({ theme }) => ({
@@ -115,43 +123,49 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
 
     return (
         <StretchContainer mode={mode}>
-            <ConditionallyRender condition={frontendHeaderRedesign} show={
-                <ConditionallyRender condition={mode === 'full'} show={ 
-                <StyledLink to='/' sx={flexRow} aria-label='Home'>
-                    <ThemeMode
-                        darkmode={
-                            <ConditionallyRender
-                                condition={celebatoryUnleash}
-                                show={<CelebatoryUnleashLogoWhite />}
-                                elseShow={
-                                    <StyledUnleashLogoWhite aria-label='Unleash logo' />
-                                }
-                            />
+            <ConditionallyRender
+                condition={frontendHeaderRedesign}
+                show={
+                    <ConditionallyRender
+                        condition={mode === 'full'}
+                        show={
+                            <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                                <ThemeMode
+                                    darkmode={
+                                        <ConditionallyRender
+                                            condition={celebatoryUnleash}
+                                            show={
+                                                <CelebatoryUnleashLogoWhite />
+                                            }
+                                            elseShow={
+                                                <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                                            }
+                                        />
+                                    }
+                                    lightmode={
+                                        <ConditionallyRender
+                                            condition={celebatoryUnleash}
+                                            show={<StyledCelebatoryLogo />}
+                                            elseShow={
+                                                <StyledUnleashLogo aria-label='Unleash logo' />
+                                            }
+                                        />
+                                    }
+                                />
+                            </StyledLink>
                         }
-                        lightmode={
-                            <ConditionallyRender
-                                condition={celebatoryUnleash}
-                                show={<StyledCelebatoryLogo />}
-                                elseShow={
-                                    <StyledUnleashLogo aria-label='Unleash logo' />
-                                }
-                            />
+                        elseShow={
+                            <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                                <ThemeMode
+                                    darkmode={<StyledUnleashLogoOnlyWhite />}
+                                    lightmode={<StyledUnleashLogoOnly />}
+                                />
+                            </StyledLink>
                         }
                     />
-                </StyledLink>} elseShow={  <StyledLink to='/' sx={flexRow} aria-label='Home'>
-                    <ThemeMode
-                        darkmode={
-                
-                            <StyledUnleashLogoOnlyWhite  /> 
-                        }
-                        lightmode={
-                            <StyledUnleashLogoOnly />
-                        }
-                    />
-                </StyledLink>}/>
-               
-            } />
-            
+                }
+            />
+
             <PrimaryNavigationList
                 mode={mode}
                 onClick={setActiveItem}

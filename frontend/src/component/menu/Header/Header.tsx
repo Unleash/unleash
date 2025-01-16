@@ -35,26 +35,30 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
 import { HeaderEventTimelineButton } from './HeaderEventTimelineButton';
 
-const HeaderComponent = styled(AppBar)<{ frontendHeaderRedesign?: boolean }>(({ theme, frontendHeaderRedesign }) => ({
-    backgroundColor: frontendHeaderRedesign ? theme.palette.background.application : theme.palette.background.paper,
-    padding: theme.spacing(1),
-    boxShadow: 'none',
-    position: 'relative',
-    zIndex: 300,
-    paddingRight: theme.spacing(9),
-    [theme.breakpoints.down('lg')]: {
-        paddingLeft: theme.spacing(1),
-        paddingRight: theme.spacing(1),
-    },
-    [theme.breakpoints.down(1024)]: {
-        marginLeft: 0,
-        marginRight: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-        minWidth: '100%',
-    },
-    margin: '0 auto',
-}));
+const HeaderComponent = styled(AppBar)<{ frontendHeaderRedesign?: boolean }>(
+    ({ theme, frontendHeaderRedesign }) => ({
+        backgroundColor: frontendHeaderRedesign
+            ? theme.palette.background.application
+            : theme.palette.background.paper,
+        padding: theme.spacing(1),
+        boxShadow: 'none',
+        position: 'relative',
+        zIndex: 300,
+        paddingRight: theme.spacing(9),
+        [theme.breakpoints.down('lg')]: {
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+        },
+        [theme.breakpoints.down(1024)]: {
+            marginLeft: 0,
+            marginRight: 0,
+        },
+        [theme.breakpoints.down('sm')]: {
+            minWidth: '100%',
+        },
+        margin: '0 auto',
+    }),
+);
 
 const ContainerComponent = styled(Box)(() => ({
     display: 'flex',
@@ -124,7 +128,10 @@ const Header = () => {
 
     if (smallScreen) {
         return (
-            <HeaderComponent position='static' frontendHeaderRedesign={frontendHeaderRedesign}>
+            <HeaderComponent
+                position='static'
+                frontendHeaderRedesign={frontendHeaderRedesign}
+            >
                 <ContainerComponent>
                     <Tooltip title='Menu' arrow>
                         <IconButton
@@ -154,31 +161,38 @@ const Header = () => {
     }
 
     return (
-        <HeaderComponent frontendHeaderRedesign={frontendHeaderRedesign} position='static'>
+        <HeaderComponent
+            frontendHeaderRedesign={frontendHeaderRedesign}
+            position='static'
+        >
             <ContainerComponent>
-                <ConditionallyRender condition={!frontendHeaderRedesign} show={<StyledLink to='/' sx={flexRow} aria-label='Home'>
-                    <ThemeMode
-                        darkmode={
-                            <ConditionallyRender
-                                condition={celebatoryUnleash}
-                                show={<CelebatoryUnleashLogoWhite />}
-                                elseShow={
-                                    <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                <ConditionallyRender
+                    condition={!frontendHeaderRedesign}
+                    show={
+                        <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                            <ThemeMode
+                                darkmode={
+                                    <ConditionallyRender
+                                        condition={celebatoryUnleash}
+                                        show={<CelebatoryUnleashLogoWhite />}
+                                        elseShow={
+                                            <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                                        }
+                                    />
+                                }
+                                lightmode={
+                                    <ConditionallyRender
+                                        condition={celebatoryUnleash}
+                                        show={<StyledCelebatoryLogo />}
+                                        elseShow={
+                                            <StyledUnleashLogo aria-label='Unleash logo' />
+                                        }
+                                    />
                                 }
                             />
-                        }
-                        lightmode={
-                            <ConditionallyRender
-                                condition={celebatoryUnleash}
-                                show={<StyledCelebatoryLogo />}
-                                elseShow={
-                                    <StyledUnleashLogo aria-label='Unleash logo' />
-                                }
-                            />
-                        }
-                    />
-                </StyledLink>} />
-        
+                        </StyledLink>
+                    }
+                />
 
                 <StyledNav>
                     <StyledUserContainer>

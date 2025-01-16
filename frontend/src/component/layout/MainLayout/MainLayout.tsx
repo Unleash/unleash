@@ -105,8 +105,10 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         return (
             <EventTimelineProvider>
                 <SkipNavLink />
-                <ConditionallyRender condition={!frontendHeaderRedesign} show={<Header />} />
-              
+                <ConditionallyRender
+                    condition={!frontendHeaderRedesign}
+                    show={<Header />}
+                />
 
                 <SkipNavTarget />
                 <MainLayoutContainer>
@@ -125,7 +127,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 mt: theme.spacing(0.25),
                             })}
                         >
-                  
                             <ConditionallyRender
                                 condition={!isSmallScreen}
                                 show={
@@ -143,7 +144,10 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     minWidth: 0,
                                 }}
                             >
-                                <ConditionallyRender condition={frontendHeaderRedesign} show={<Header />} />
+                                <ConditionallyRender
+                                    condition={frontendHeaderRedesign}
+                                    show={<Header />}
+                                />
 
                                 <MainLayoutEventTimeline />
 

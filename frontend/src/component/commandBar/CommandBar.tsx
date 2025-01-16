@@ -51,7 +51,8 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const StyledContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'active' && prop !== 'frontendHeaderRedesign',
+    shouldForwardProp: (prop) =>
+        prop !== 'active' && prop !== 'frontendHeaderRedesign',
 })<{
     active: boolean | undefined;
     frontendHeaderRedesign?: boolean;
@@ -61,7 +62,9 @@ const StyledContainer = styled('div', {
     flexGrow: 1,
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: frontendHeaderRedesign ? theme.palette.background.application : theme.palette.background.paper,
+    backgroundColor: frontendHeaderRedesign
+        ? theme.palette.background.application
+        : theme.palette.background.paper,
     maxWidth: active ? '100%' : '400px',
     [theme.breakpoints.down('md')]: {
         marginTop: theme.spacing(1),
@@ -296,7 +299,11 @@ export const CommandBar = () => {
     };
 
     return (
-        <StyledContainer ref={searchContainerRef} active={showSuggestions} frontendHeaderRedesign={frontendHeaderRedesign}>
+        <StyledContainer
+            ref={searchContainerRef}
+            active={showSuggestions}
+            frontendHeaderRedesign={frontendHeaderRedesign}
+        >
             <RecentlyVisitedRecorder />
             <StyledSearch
                 sx={{

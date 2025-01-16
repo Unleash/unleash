@@ -225,6 +225,7 @@ export class ClientFeatureToggleDelta {
                 changeEvents
                     .filter((event) => event.featureName)
                     .filter((event) => event.type !== 'feature-archived')
+                    .filter((event) => event.type !== 'feature-deleted')
                     .map((event) => event.featureName!),
             ),
         ];

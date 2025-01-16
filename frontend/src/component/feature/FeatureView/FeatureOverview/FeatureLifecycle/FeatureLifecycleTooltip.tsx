@@ -215,28 +215,16 @@ const SafeToArchive: FC<{
 const ActivelyUsed: FC<{
     onUncomplete: () => void;
     loading: boolean;
-    children?: React.ReactNode;
-}> = ({ children, onUncomplete, loading }) => (
+}> = ({ onUncomplete, loading }) => (
     <StyledStageAction>
-        <InfoText
-            sx={{
-                mt: 1,
-                mb: 1,
-            }}
-        >
+        <InfoText>
             This feature has been successfully completed, but we are still
             seeing usage. Clean up the feature flag from your code before
-            archiving it:
+            archiving it.
         </InfoText>
-        {children}
-        <InfoText
-            sx={{
-                mt: 1,
-                mb: 1,
-            }}
-        >
+        <InfoText>
             If you think this feature was completed too early you can revert to
-            the live stage:
+            the live stage.
         </InfoText>
         <PermissionButton
             color='inherit'
@@ -260,16 +248,8 @@ const CompletedStageDescription: FC<{
         name: string;
         lastSeenAt: string;
     }>;
-    children?: React.ReactNode;
     project: string;
-}> = ({
-    children,
-    environments,
-    onArchive,
-    onUncomplete,
-    loading,
-    project,
-}) => {
+}> = ({ environments, onArchive, onUncomplete, loading, project }) => {
     if (isSafeToArchive(environments)) {
         return (
             <SafeToArchive
@@ -281,11 +261,7 @@ const CompletedStageDescription: FC<{
         );
     }
 
-    return (
-        <ActivelyUsed onUncomplete={onUncomplete} loading={loading}>
-            {children}
-        </ActivelyUsed>
-    );
+    return <ActivelyUsed onUncomplete={onUncomplete} loading={loading} />;
 };
 
 const FormatTime: FC<{
@@ -429,11 +405,7 @@ export const FeatureLifecycleTooltip: FC<{
                                 onUncomplete={onUncomplete}
                                 loading={loading}
                                 project={project}
-                            >
-                                <Environments
-                                    environments={stage.environments!}
-                                />
-                            </CompletedStageDescription>
+                            />
                         )}
                     </StyledFooter>
                 ) : null}

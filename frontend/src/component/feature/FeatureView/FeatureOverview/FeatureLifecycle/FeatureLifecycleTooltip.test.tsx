@@ -54,7 +54,7 @@ test('render initial stage', async () => {
     await screen.findByText('Define');
     await screen.findByText('2 minutes');
     await screen.findByText(
-        'This feature flag is currently in the initial phase of its lifecycle.',
+        'Feature flag has been created, but we have not seen any metrics yet.',
     );
 });
 
@@ -104,7 +104,6 @@ test('render completed stage with still active', async () => {
     });
 
     await screen.findByText('Cleanup');
-    await screen.findByText('production');
     await screen.findByText('2 hours ago');
     expect(screen.queryByText('Archive feature')).not.toBeInTheDocument();
 });

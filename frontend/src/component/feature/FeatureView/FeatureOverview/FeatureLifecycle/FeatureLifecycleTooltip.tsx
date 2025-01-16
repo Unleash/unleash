@@ -324,6 +324,28 @@ const StageInfo: FC<{ stage: LifecycleStage['name'] }> = ({ stage }) => {
     return null;
 };
 
+const EnvironmentsInfo: FC<{
+    stage: {
+        name: LifecycleStage['name'];
+        environments?: Array<{
+            name: string;
+            lastSeenAt: string;
+        }>;
+    };
+}> = ({ stage }) => (
+    <>
+        <StyledEnvironmentsTitle>
+            <StyledEnvironmentIcon />{' '}
+            {stage.environments && stage.environments.length > 0
+                ? `Seen in environment${stage.environments.length > 1 ? 's' : ''}`
+                : 'Not seen in any environments'}
+        </StyledEnvironmentsTitle>
+        {stage.environments && stage.environments.length > 0 ? (
+            <Environments environments={stage.environments!} />
+        ) : null}
+    </>
+);
+
 export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
@@ -378,15 +400,7 @@ export const FeatureLifecycleTooltip: FC<{
                 </Box>
                 {stage.name !== 'archived' ? (
                     <StyledFooter>
-                        <StyledEnvironmentsTitle>
-                            <StyledEnvironmentIcon />{' '}
-                            {stage.environments && stage.environments.length > 0
-                                ? `Seen in environment${stage.environments.length > 1 ? 's' : ''}`
-                                : 'Not seen in any environments'}
-                        </StyledEnvironmentsTitle>
-                        {stage.environments && stage.environments.length > 0 ? (
-                            <Environments environments={stage.environments!} />
-                        ) : null}
+                        <EnvironmentsInfo stage={stage} />
                         {stage.name === 'live' && (
                             <LiveStageAction
                                 onComplete={onComplete}

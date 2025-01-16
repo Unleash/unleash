@@ -35,10 +35,17 @@ const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),
 }));
 
-const StyledButtonContainer = styled('div')(() => ({
+const StyledButtonContainer = styled('div')(({ theme }) => ({
     marginTop: 'auto',
     display: 'flex',
     justifyContent: 'flex-end',
+    gap: theme.spacing(1),
+    paddingTop: theme.spacing(3),
+    paddingRight: theme.spacing(6),
+    paddingLeft: theme.spacing(6),
+    paddingBottom: theme.spacing(6),
+    backgroundColor: theme.palette.background.paper,
+    borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledHeaderBox = styled(Box)(({ theme }) => ({
@@ -234,6 +241,7 @@ export const ReleasePlanTemplateAddStrategyForm = ({
     return (
         <FormTemplate
             modal
+            disablePadding
             description={featureStrategyHelp}
             documentationLink={featureStrategyDocsLink}
             documentationLinkLabel={featureStrategyDocsLinkLabel}

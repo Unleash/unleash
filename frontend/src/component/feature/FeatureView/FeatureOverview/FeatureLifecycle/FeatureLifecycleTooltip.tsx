@@ -26,7 +26,7 @@ const TimeLabel = styled('span')(({ theme }) => ({
 }));
 
 const InfoText = styled('p')(({ theme }) => ({
-    paddingBottom: theme.spacing(1),
+    paddingBottom: theme.spacing(2),
 }));
 
 const MainLifecycleRow = styled(Box)(({ theme }) => ({
@@ -39,6 +39,7 @@ const TimeLifecycleRow = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
     marginBottom: theme.spacing(1.5),
+    gap: theme.spacing(1),
 }));
 
 const IconsRow = styled(Box)(({ theme }) => ({
@@ -96,12 +97,12 @@ const StageBox = styled(Box, {
     },
 }));
 
-const ColorFill = styled(Box)(({ theme }) => ({
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.primary.contrastText,
+const StyledFooter = styled('footer')(({ theme }) => ({
+    background: theme.palette.neutral.light,
+    color: theme.palette.text.secondary,
     borderRadius: `0 0 ${theme.shape.borderRadiusMedium}px ${theme.shape.borderRadiusMedium}px`, // has to match the parent tooltip container
     margin: theme.spacing(-1, -1.5), // has to match the parent tooltip container
-    padding: theme.spacing(2, 3),
+    padding: theme.spacing(2, 3.5),
 }));
 
 const LastSeenIcon: FC<{
@@ -114,25 +115,6 @@ const LastSeenIcon: FC<{
         <StyledIconWrapper style={{ background }}>
             <UsageRate stroke={text} />
         </StyledIconWrapper>
-    );
-};
-
-const InitialStageDescription: FC = () => {
-    return (
-        <>
-            <InfoText>
-                This feature flag is currently in the initial phase of its
-                lifecycle.
-            </InfoText>
-            <InfoText>
-                This means that the flag has been created, but it has not yet
-                been seen in any environment.
-            </InfoText>
-            <InfoText>
-                Once we detect metrics for a non-production environment it will
-                move into pre-live.
-            </InfoText>
-        </>
     );
 };
 
@@ -176,72 +158,12 @@ const Environments: FC<{
     );
 };
 
-const PreLiveStageDescription: FC<{ children?: React.ReactNode }> = ({
-    children,
-}) => {
-    return (
-        <>
-            <InfoText>
-                We've seen the feature flag in the following environments:
-            </InfoText>
-
-            {children}
-        </>
-    );
-};
-
-const ArchivedStageDescription = () => {
-    return (
-        <InfoText>
-            Your feature has been archived, it is now safe to delete it.
-        </InfoText>
-    );
-};
-
 const BoldTitle = styled(Typography)(({ theme }) => ({
     marginTop: theme.spacing(1),
     marginBottom: theme.spacing(1),
     fontSize: theme.typography.body2.fontSize,
     fontWeight: theme.typography.fontWeightBold,
 }));
-
-const LiveStageDescription: FC<{
-    onComplete: () => void;
-    loading: boolean;
-    children?: React.ReactNode;
-    project: string;
-}> = ({ children, onComplete, loading, project }) => {
-    return (
-        <>
-            <BoldTitle>Is this feature complete?</BoldTitle>
-            <InfoText sx={{ mb: 1 }}>
-                Marking the feature flag as complete does not affect any
-                configuration; however, it moves the feature flag to its next
-                lifecycle stage and indicates that you have learned what you
-                needed in order to progress with the feature. It serves as a
-                reminder to start cleaning up the feature flag and removing it
-                from the code.
-            </InfoText>
-            <PermissionButton
-                color='inherit'
-                variant='outlined'
-                permission={UPDATE_FEATURE}
-                size='small'
-                onClick={onComplete}
-                disabled={loading}
-                projectId={project}
-            >
-                Mark completed
-            </PermissionButton>
-            <InfoText sx={{ mt: 3 }}>
-                Users have been exposed to this feature in the following
-                production environments:
-            </InfoText>
-
-            {children}
-        </>
-    );
-};
 
 const SafeToArchive: FC<{
     onArchive: () => void;
@@ -390,6 +312,50 @@ const FormatElapsedTime: FC<{
     return <span>{elapsedTime}</span>;
 };
 
+const StageInfo: FC<{ stage: LifecycleStage['name'] }> = ({ stage }) => {
+    if (stage === 'initial') {
+        return (
+            <InfoText>
+                Feature flag has been created, but we have not seen any metrics
+                yet.
+            </InfoText>
+        );
+    }
+    if (stage === 'pre-live') {
+        return (
+            <InfoText>
+                Feature is being developed and tested in controlled
+                environments.
+            </InfoText>
+        );
+    }
+    if (stage === 'live') {
+        return (
+            <InfoText>
+                Feature is being rolled out in production according to the
+                strategy/release plan.
+            </InfoText>
+        );
+    }
+    if (stage === 'completed') {
+        return (
+            <InfoText>
+                Once longer needed, clean up the code to reduce technical debt
+                and archive the flag.
+            </InfoText>
+        );
+    }
+    if (stage === 'archived') {
+        return (
+            <InfoText>
+                Flag is archived in Unleash for future reference.
+            </InfoText>
+        );
+    }
+
+    return null;
+};
+
 export const FeatureLifecycleTooltip: FC<{
     children: React.ReactElement<any, any>;
     stage: LifecycleStage;
@@ -430,9 +396,11 @@ export const FeatureLifecycleTooltip: FC<{
                             <FeatureLifecycleStageIcon stage={stage} />
                         </Box>
                     </MainLifecycleRow>
+
+                    <StageInfo stage={stage.name} />
+
                     <TimeLifecycleRow>
                         <TimeLabel>Stage entered at</TimeLabel>
-
                         <FormatTime time={stage.enteredStageAt} />
                     </TimeLifecycleRow>
                     <TimeLifecycleRow>
@@ -440,8 +408,11 @@ export const FeatureLifecycleTooltip: FC<{
                         <FormatElapsedTime time={stage.enteredStageAt} />
                     </TimeLifecycleRow>
                 </Box>
-                <ColorFill>
-                    {stage.name === 'initial' && <InitialStageDescription />}
+                <StyledFooter>
+                    {stage.environments && stage.environments.length > 0 ? (
+                        <Environments environments={stage.environments} />
+                    ) : null}
+                    {/* {stage.name === 'initial' && <InitialStageDescription />}
                     {stage.name === 'pre-live' && (
                         <PreLiveStageDescription>
                             <Environments environments={stage.environments} />
@@ -467,8 +438,8 @@ export const FeatureLifecycleTooltip: FC<{
                             <Environments environments={stage.environments} />
                         </CompletedStageDescription>
                     )}
-                    {stage.name === 'archived' && <ArchivedStageDescription />}
-                </ColorFill>
+                    {stage.name === 'archived' && <ArchivedStageDescription />} */}
+                </StyledFooter>
             </Box>
         }
     >

@@ -1,5 +1,9 @@
 name: Publish to dockerhub
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches:
@@ -42,7 +46,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::726824350591:role/unleash-github-ecr-public-publish-role
-          role-session-name: edge-actions-push-to-ecr-public
+          role-session-name: unleash-actions-push-to-ecr-public
           aws-region: us-east-1
       - name: Login to AWS ECR
         id: login-ecr-public

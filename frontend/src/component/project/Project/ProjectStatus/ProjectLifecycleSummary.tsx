@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { FeatureLifecycleStageIcon } from 'component/feature/FeatureView/FeatureOverview/FeatureLifecycle/FeatureLifecycleStageIcon';
+import { FeatureLifecycleStageIcon } from 'component/common/FeatureLifecycle/FeatureLifecycleStageIcon';
 import { useProjectStatus } from 'hooks/api/getters/useProjectStatus/useProjectStatus';
 import useLoading from 'hooks/useLoading';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -9,10 +9,13 @@ import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { lifecycleMessages } from './LifecycleMessages';
 import InfoIcon from '@mui/icons-material/Info';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { getFeatureLifecycleName } from 'component/common/FeatureLifecycle/getFeatureLifecycleName';
 
 const LifecycleBoxContent = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
-    gap: theme.spacing(4),
+    gap: theme.spacing(2),
+    minHeight: '100%',
     display: 'flex',
     flexFlow: 'column',
     justifyContent: 'space-between',
@@ -96,6 +99,10 @@ const Stats = styled('dl')(({ theme }) => ({
     },
 }));
 
+const StyledStageTitle = styled('span')(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+}));
+
 const NoData = styled('span')({
     fontWeight: 'normal',
 });
@@ -134,21 +141,41 @@ const BigNumber: FC<{ value?: number }> = ({ value }) => {
         </BigText>
     );
 };
+
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data, loading } = useProjectStatus(projectId);
+    const isLifecycleImprovementsEnabled = useUiFlag('lifecycleImprovements');
 
     const loadingRef = useLoading<HTMLUListElement>(
         loading,
         '[data-loading-project-lifecycle-summary=true]',
     );
+
     const flagWord = (stage: keyof ProjectStatusSchemaLifecycleSummary) => {
-        if (data?.lifecycleSummary[stage].currentFlags === 1) {
-            return 'flag';
-        } else {
-            return 'flags';
+        const hasOneFlag = data?.lifecycleSummary[stage].currentFlags === 1;
+
+        if (hasOneFlag) {
+            return isLifecycleImprovementsEnabled ? 'Flag' : 'flag';
         }
+
+        return isLifecycleImprovementsEnabled ? 'Flags' : 'flags';
     };
+
+    const stageName = (stage: keyof ProjectStatusSchemaLifecycleSummary) => {
+        if (!isLifecycleImprovementsEnabled) {
+            return `${flagWord('initial')} in ${stage}`;
+        }
+
+        const lifecycleStageName = stage === 'preLive' ? 'pre-live' : stage;
+        return (
+            <StyledStageTitle>
+                {flagWord(stage)} in{' '}
+                {getFeatureLifecycleName(lifecycleStageName)} stage
+            </StyledStageTitle>
+        );
+    };
+
     return (
         <LifecycleList ref={loadingRef}>
             <LifecycleBox tooltipText={lifecycleMessages.initial}>
@@ -163,7 +190,7 @@ export const ProjectLifecycleSummary = () => {
                             stage={{ name: 'initial' }}
                         />
                     </Counter>
-                    <span>{flagWord('initial')} in initial</span>
+                    <span>{stageName('initial')}</span>
                 </p>
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.initial.averageDays}
@@ -181,7 +208,7 @@ export const ProjectLifecycleSummary = () => {
                             stage={{ name: 'pre-live' }}
                         />
                     </Counter>
-                    <span>{flagWord('preLive')} in pre-live</span>
+                    <span>{stageName('preLive')}</span>
                 </p>
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.preLive.averageDays}
@@ -199,7 +226,7 @@ export const ProjectLifecycleSummary = () => {
                             stage={{ name: 'live' }}
                         />
                     </Counter>
-                    <span>{flagWord('live')} in live</span>
+                    <span>{stageName('live')}</span>
                 </p>
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.live.averageDays}
@@ -219,7 +246,7 @@ export const ProjectLifecycleSummary = () => {
                             stage={{ name: 'completed' }}
                         />
                     </Counter>
-                    <span>{flagWord('completed')} in completed</span>
+                    <span>{stageName('completed')}</span>
                 </p>
                 <AverageDaysStat
                     averageDays={data?.lifecycleSummary.completed.averageDays}
@@ -237,7 +264,7 @@ export const ProjectLifecycleSummary = () => {
                             stage={{ name: 'archived' }}
                         />
                     </Counter>
-                    <span>{flagWord('archived')} in archived</span>
+                    <span>{stageName('archived')}</span>
                 </p>
                 <Stats>
                     <dt>Last 30 days</dt>

@@ -1,19 +1,21 @@
+import type { Lifecycle } from 'interfaces/featureToggle';
+
 type TimedStage = { enteredStageAt: string };
 export type LifecycleStage = TimedStage &
     (
-        | { name: 'initial' }
+        | { name: 'initial' & Lifecycle['stage'] }
         | {
-              name: 'pre-live';
+              name: 'pre-live' & Lifecycle['stage'];
               environments: Array<{ name: string; lastSeenAt: string }>;
           }
         | {
-              name: 'live';
+              name: 'live' & Lifecycle['stage'];
               environments: Array<{ name: string; lastSeenAt: string }>;
           }
         | {
-              name: 'completed';
+              name: 'completed' & Lifecycle['stage'];
               environments: Array<{ name: string; lastSeenAt: string }>;
               status: 'kept' | 'discarded';
           }
-        | { name: 'archived' }
+        | { name: 'archived' & Lifecycle['stage'] }
     );

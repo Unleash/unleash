@@ -3,11 +3,11 @@ title: API Tokens and Client Keys
 pagination_next: reference/front-end-api
 ---
 
-For Unleash to be of any use, it requires at least a server and a [consuming client](../reference/sdks). More advanced use cases may call for multiple clients, automated feature flag updates, the [Unleash proxy](../reference/unleash-proxy) and [Unleash proxy clients](../reference/sdks#front-end-sdks), and more. To facilitate communication between all these moving parts, Unleash uses a system of API tokens and client keys, all with a specific purpose in mind.
+For Unleash to be of any use, it requires at least a server and a [consuming client](../reference/sdks). More advanced use cases may call for multiple clients, automated feature flag updates, the [Unleash proxy](../reference/unleash-proxy) and [Unleash proxy clients](../reference/sdks#front-end-sdks), and more. To facilitate communication between all these moving parts,
+
+Unleash uses a system of API tokens and client keys, to facilitate communication between consuming clients such as [SDKs](../reference/sdks) or Edge.
 
 This document details the three kinds of tokens and keys that you will need to fully connect any Unleash system:
-
--   [Admin tokens](#admin-tokens) for updating resources in Unleash (**Deprecated**) We recommend you use [Personal Access Tokens](#personal-access-tokens) instead.
 -   [Client tokens](#client-tokens) for connecting server-side client SDKs and the Unleash proxy to the Unleash server
 -   [Proxy client keys](#proxy-client-keys) for connecting proxy client SDKs to the Unleash proxy.
 
@@ -19,9 +19,8 @@ This section describes what API tokens are. For information on how to create the
 
 :::
 
-Use API tokens to connect to the Unleash server API. API tokens come in four distinct types:
+Use API tokens to connect to the Unleash server API. API tokens come in th distinct types:
 
--   [Admin tokens](#admin-tokens) (**Deprecated**)
 -   [Personal access tokens](#personal-access-tokens)
 -   [Client tokens](#client-tokens)
 -   [Front-end tokens](#front-end-tokens)

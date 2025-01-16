@@ -14,7 +14,6 @@ import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { isSafeToArchive } from './isSafeToArchive';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatDateYMDHMS } from 'utils/formatDate';
@@ -26,7 +25,8 @@ const TimeLabel = styled('span')(({ theme }) => ({
 }));
 
 const InfoText = styled('p')(({ theme }) => ({
-    paddingBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
+    color: theme.palette.text.primary,
 }));
 
 const MainLifecycleRow = styled(Box)(({ theme }) => ({
@@ -42,67 +42,18 @@ const TimeLifecycleRow = styled(Box)(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const IconsRow = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(6),
-}));
-
-const Line = styled(Box)(({ theme }) => ({
-    height: '1px',
-    background: theme.palette.divider,
-    flex: 1,
-}));
-
-const StageBox = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'active',
-})<{
-    active?: boolean;
-}>(({ theme, active }) => ({
-    position: 'relative',
-    // speech bubble triangle for active stage
-    ...(active && {
-        '&:before': {
-            content: '""',
-            position: 'absolute',
-            display: 'block',
-            borderStyle: 'solid',
-            borderColor: `${theme.palette.primary.light} transparent`,
-            borderWidth: '0 6px 6px',
-            top: theme.spacing(3.25),
-            left: theme.spacing(1.75),
-        },
-    }),
-    // stage name text
-    '&:after': {
-        content: 'attr(data-after-content)',
-        display: 'block',
-        position: 'absolute',
-        top: theme.spacing(4),
-        left: theme.spacing(-1.25),
-        right: theme.spacing(-1.25),
-        textAlign: 'center',
-        whiteSpace: 'nowrap',
-        fontSize: theme.spacing(1.25),
-        padding: theme.spacing(0.25, 0),
-        color: theme.palette.text.secondary,
-        // active wrapper for stage name text
-        ...(active && {
-            backgroundColor: theme.palette.primary.light,
-            color: theme.palette.primary.contrastText,
-            fontWeight: theme.typography.fontWeightBold,
-            borderRadius: theme.spacing(0.5),
-        }),
-    },
-}));
-
 const StyledFooter = styled('footer')(({ theme }) => ({
     background: theme.palette.neutral.light,
     color: theme.palette.text.secondary,
     borderRadius: `0 0 ${theme.shape.borderRadiusMedium}px ${theme.shape.borderRadiusMedium}px`, // has to match the parent tooltip container
     margin: theme.spacing(-1, -1.5), // has to match the parent tooltip container
     padding: theme.spacing(2, 3.5),
+}));
+
+const StyledEnvironmentUsageIcon = styled(StyledIconWrapper)(({ theme }) => ({
+    width: theme.spacing(2),
+    height: theme.spacing(2),
+    marginRight: theme.spacing(0.75),
 }));
 
 const LastSeenIcon: FC<{
@@ -112,9 +63,9 @@ const LastSeenIcon: FC<{
     const { text, background } = getColor(lastSeen);
 
     return (
-        <StyledIconWrapper style={{ background }}>
+        <StyledEnvironmentUsageIcon style={{ background }}>
             <UsageRate stroke={text} />
-        </StyledIconWrapper>
+        </StyledEnvironmentUsageIcon>
     );
 };
 
@@ -123,13 +74,30 @@ const EnvironmentLine = styled(Box)(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2),
+    marginBottom: theme.spacing(1),
+    marginLeft: theme.spacing(3.5),
+}));
+
+const StyledEnvironmentsTitle = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    color: theme.palette.text.primary,
+}));
+
+const StyledEnvironmentIcon = styled(CloudCircle)(({ theme }) => ({
+    color: theme.palette.primary.main,
+    width: theme.spacing(2.5),
+    display: 'block',
 }));
 
 const CenteredBox = styled(Box)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-    gap: theme.spacing(1),
+}));
+
+const StyledStageAction = styled(Box)(({ theme }) => ({
+    marginTop: theme.spacing(2),
 }));
 
 const Environments: FC<{
@@ -144,12 +112,11 @@ const Environments: FC<{
                 return (
                     <EnvironmentLine key={environment.name}>
                         <CenteredBox>
-                            <CloudCircle />
                             <Box>{environment.name}</Box>
                         </CenteredBox>
                         <CenteredBox>
-                            <TimeAgo date={environment.lastSeenAt} />
                             <LastSeenIcon lastSeen={environment.lastSeenAt} />
+                            <TimeAgo date={environment.lastSeenAt} />
                         </CenteredBox>
                     </EnvironmentLine>
                 );
@@ -158,12 +125,44 @@ const Environments: FC<{
     );
 };
 
-const BoldTitle = styled(Typography)(({ theme }) => ({
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    fontSize: theme.typography.body2.fontSize,
+const StyledStageActionTitle = styled(Typography)(({ theme }) => ({
+    paddingTop: theme.spacing(0.5),
+    marginBottom: theme.spacing(0.5),
+    color: theme.palette.text.primary,
+    fontSize: theme.fontSizes.smallerBody,
     fontWeight: theme.typography.fontWeightBold,
 }));
+
+const LiveStageAction: FC<{
+    onComplete: () => void;
+    loading: boolean;
+    children?: React.ReactNode;
+    project: string;
+}> = ({ onComplete, loading, project }) => {
+    return (
+        <StyledStageAction>
+            <StyledStageActionTitle>
+                Is this feature complete?
+            </StyledStageActionTitle>
+            <InfoText sx={{ mb: 1 }}>
+                Marking the feature flag as complete does not affect any
+                configuration; however, it moves the flag to its next lifecycle
+                stage and indicates that you have learned what you needed in
+                order to progress.
+            </InfoText>
+            <PermissionButton
+                variant='outlined'
+                permission={UPDATE_FEATURE}
+                size='small'
+                onClick={onComplete}
+                disabled={loading}
+                projectId={project}
+            >
+                Mark completed
+            </PermissionButton>
+        </StyledStageAction>
+    );
+};
 
 const SafeToArchive: FC<{
     onArchive: () => void;
@@ -172,24 +171,20 @@ const SafeToArchive: FC<{
     project: string;
 }> = ({ onArchive, onUncomplete, loading, project }) => {
     return (
-        <>
-            <BoldTitle>Safe to archive</BoldTitle>
-            <InfoText
-                sx={{
-                    mt: 2,
-                    mb: 1,
-                }}
-            >
+        <StyledStageAction>
+            <StyledStageActionTitle>Safe to archive</StyledStageActionTitle>
+            <InfoText>
                 We haven’t seen this feature flag in any environment for at
                 least two days. It’s likely that it’s safe to archive this flag.
             </InfoText>
             <Box
-                sx={{
+                sx={(theme) => ({
                     display: 'flex',
                     flexDirection: 'row',
                     flexWrap: 'wrap',
-                    gap: 2,
-                }}
+                    gap: theme.spacing(2),
+                    marginTop: theme.spacing(1),
+                })}
             >
                 <PermissionButton
                     color='inherit'
@@ -203,7 +198,6 @@ const SafeToArchive: FC<{
                     Revert to live
                 </PermissionButton>
                 <PermissionButton
-                    color='inherit'
                     variant='outlined'
                     permission={DELETE_FEATURE}
                     size='small'
@@ -214,7 +208,7 @@ const SafeToArchive: FC<{
                     Archive feature
                 </PermissionButton>
             </Box>
-        </>
+        </StyledStageAction>
     );
 };
 
@@ -223,7 +217,7 @@ const ActivelyUsed: FC<{
     loading: boolean;
     children?: React.ReactNode;
 }> = ({ children, onUncomplete, loading }) => (
-    <>
+    <StyledStageAction>
         <InfoText
             sx={{
                 mt: 1,
@@ -255,7 +249,7 @@ const ActivelyUsed: FC<{
         >
             Revert to live
         </PermissionButton>
-    </>
+    </StyledStageAction>
 );
 
 const CompletedStageDescription: FC<{
@@ -276,23 +270,21 @@ const CompletedStageDescription: FC<{
     loading,
     project,
 }) => {
+    if (isSafeToArchive(environments)) {
+        return (
+            <SafeToArchive
+                onArchive={onArchive}
+                onUncomplete={onUncomplete}
+                loading={loading}
+                project={project}
+            />
+        );
+    }
+
     return (
-        <ConditionallyRender
-            condition={isSafeToArchive(environments)}
-            show={
-                <SafeToArchive
-                    onArchive={onArchive}
-                    onUncomplete={onUncomplete}
-                    loading={loading}
-                    project={project}
-                />
-            }
-            elseShow={
-                <ActivelyUsed onUncomplete={onUncomplete} loading={loading}>
-                    {children}
-                </ActivelyUsed>
-            }
-        />
+        <ActivelyUsed onUncomplete={onUncomplete} loading={loading}>
+            {children}
+        </ActivelyUsed>
     );
 };
 
@@ -408,38 +400,43 @@ export const FeatureLifecycleTooltip: FC<{
                         <FormatElapsedTime time={stage.enteredStageAt} />
                     </TimeLifecycleRow>
                 </Box>
-                <StyledFooter>
-                    {stage.environments && stage.environments.length > 0 ? (
-                        <Environments environments={stage.environments} />
-                    ) : null}
-                    {/* {stage.name === 'initial' && <InitialStageDescription />}
-                    {stage.name === 'pre-live' && (
-                        <PreLiveStageDescription>
-                            <Environments environments={stage.environments} />
-                        </PreLiveStageDescription>
-                    )}
-                    {stage.name === 'live' && (
-                        <LiveStageDescription
-                            onComplete={onComplete}
-                            loading={loading}
-                            project={project}
-                        >
-                            <Environments environments={stage.environments} />
-                        </LiveStageDescription>
-                    )}
-                    {stage.name === 'completed' && (
-                        <CompletedStageDescription
-                            environments={stage.environments}
-                            onArchive={onArchive}
-                            onUncomplete={onUncomplete}
-                            loading={loading}
-                            project={project}
-                        >
-                            <Environments environments={stage.environments} />
-                        </CompletedStageDescription>
-                    )}
-                    {stage.name === 'archived' && <ArchivedStageDescription />} */}
-                </StyledFooter>
+                {stage.name !== 'archived' ? (
+                    <StyledFooter>
+                        <StyledEnvironmentsTitle>
+                            <StyledEnvironmentIcon />{' '}
+                            {stage.environments && stage.environments.length > 0
+                                ? `Seen in environment${stage.environments.length > 1 ? 's' : ''}`
+                                : 'Not seen in any environments'}
+                        </StyledEnvironmentsTitle>
+                        {stage.environments && stage.environments.length > 0 ? (
+                            <Environments environments={stage.environments!} />
+                        ) : null}
+                        {stage.name === 'live' && (
+                            <LiveStageAction
+                                onComplete={onComplete}
+                                loading={loading}
+                                project={project}
+                            >
+                                <Environments
+                                    environments={stage.environments!}
+                                />
+                            </LiveStageAction>
+                        )}
+                        {stage.name === 'completed' && (
+                            <CompletedStageDescription
+                                environments={stage.environments!}
+                                onArchive={onArchive}
+                                onUncomplete={onUncomplete}
+                                loading={loading}
+                                project={project}
+                            >
+                                <Environments
+                                    environments={stage.environments!}
+                                />
+                            </CompletedStageDescription>
+                        )}
+                    </StyledFooter>
+                ) : null}
             </Box>
         }
     >

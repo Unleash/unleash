@@ -91,7 +91,11 @@ export type UiFlags = {
     flagOverviewRedesign?: boolean;
     granularAdminPermissions?: boolean;
     sortProjectRoles?: boolean;
+<<<<<<< HEAD
     lifecycleImprovements?: boolean;
+=======
+    frontendHeaderRedesign?: boolean;
+>>>>>>> 03c02e86b (feat: transparent header)
 };
 
 export interface IVersionInfo {

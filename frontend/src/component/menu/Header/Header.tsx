@@ -35,8 +35,8 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
 import { HeaderEventTimelineButton } from './HeaderEventTimelineButton';
 
-const HeaderComponent = styled(AppBar)(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
+const HeaderComponent = styled(AppBar)<{ frontendHeaderRedesign?: boolean }>(({ theme, frontendHeaderRedesign }) => ({
+    backgroundColor: frontendHeaderRedesign ? theme.palette.background.application : theme.palette.background.paper,
     padding: theme.spacing(1),
     boxShadow: 'none',
     position: 'relative',
@@ -107,6 +107,7 @@ const Header = () => {
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
+    const frontendHeaderRedesign = useUiFlag('frontendHeaderRedesign');
 
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
@@ -123,7 +124,7 @@ const Header = () => {
 
     if (smallScreen) {
         return (
-            <HeaderComponent position='static'>
+            <HeaderComponent position='static' frontendHeaderRedesign={frontendHeaderRedesign}>
                 <ContainerComponent>
                     <Tooltip title='Menu' arrow>
                         <IconButton
@@ -153,9 +154,9 @@ const Header = () => {
     }
 
     return (
-        <HeaderComponent position='static'>
+        <HeaderComponent frontendHeaderRedesign={frontendHeaderRedesign} position='static'>
             <ContainerComponent>
-                <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                <ConditionallyRender condition={!frontendHeaderRedesign} show={<StyledLink to='/' sx={flexRow} aria-label='Home'>
                     <ThemeMode
                         darkmode={
                             <ConditionallyRender
@@ -176,7 +177,8 @@ const Header = () => {
                             />
                         }
                     />
-                </StyledLink>
+                </StyledLink>} />
+        
 
                 <StyledNav>
                     <StyledUserContainer>

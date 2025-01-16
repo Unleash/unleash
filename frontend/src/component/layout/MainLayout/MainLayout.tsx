@@ -18,6 +18,7 @@ import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
 import { MainLayoutEventTimeline } from './MainLayoutEventTimeline';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -93,6 +94,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
         const { uiConfig } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
+        const frontendHeaderRedesign = useUiFlag('frontendHeaderRedesign');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
@@ -103,7 +105,8 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         return (
             <EventTimelineProvider>
                 <SkipNavLink />
-                <Header />
+                <ConditionallyRender condition={!frontendHeaderRedesign} show={<Header />} />
+              
 
                 <SkipNavTarget />
                 <MainLayoutContainer>
@@ -122,6 +125,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 mt: theme.spacing(0.25),
                             })}
                         >
+                  
                             <ConditionallyRender
                                 condition={!isSmallScreen}
                                 show={
@@ -139,6 +143,8 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     minWidth: 0,
                                 }}
                             >
+                                <ConditionallyRender condition={frontendHeaderRedesign} show={<Header />} />
+
                                 <MainLayoutEventTimeline />
 
                                 <MainLayoutContent>

@@ -40,7 +40,6 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        celebrateUnleash: true,
                         userAccessUIEnabled: true,
                         outdatedSdksBanner: true,
                         disableShowContextFieldSelectionValues: false,
@@ -58,6 +57,7 @@ process.nextTick(async () => {
                         deltaApi: true,
                         uniqueSdkTracking: true,
                         lifecycleImprovements: true,
+                        frontendHeaderRedesign: true,
                     },
                 },
                 authentication: {

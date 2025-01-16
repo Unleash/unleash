@@ -294,7 +294,7 @@ const flags: IFlags = {
     ),
     lifecycleImprovements: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_IMPROVEMENTS,
-        false
+        false,
     ),
     frontendHeaderRedesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FRONTEND_HEADER_REDESIGN,

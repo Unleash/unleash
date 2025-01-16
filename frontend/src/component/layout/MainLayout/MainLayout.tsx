@@ -124,7 +124,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         <Box
                             sx={(theme) => ({
                                 display: 'flex',
-                                mt: theme.spacing(0.25),
+                                mt: frontendHeaderRedesign ? 0 : theme.spacing(0.25),
                             })}
                         >
                             <ConditionallyRender

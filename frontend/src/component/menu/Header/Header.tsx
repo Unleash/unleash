@@ -35,7 +35,9 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
 import { HeaderEventTimelineButton } from './HeaderEventTimelineButton';
 
-const HeaderComponent = styled(AppBar)<{ frontendHeaderRedesign?: boolean }>(
+const HeaderComponent = styled(AppBar, {
+    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
+})<{ frontendHeaderRedesign?: boolean }>(
     ({ theme, frontendHeaderRedesign }) => ({
         backgroundColor: frontendHeaderRedesign
             ? theme.palette.background.application

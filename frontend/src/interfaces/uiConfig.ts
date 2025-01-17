@@ -92,6 +92,7 @@ export type UiFlags = {
     granularAdminPermissions?: boolean;
     sortProjectRoles?: boolean;
     lifecycleImprovements?: boolean;
+    frontendHeaderRedesign?: boolean;
 };
 
 export interface IVersionInfo {

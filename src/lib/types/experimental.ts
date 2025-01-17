@@ -62,7 +62,8 @@ export type IFlagKey =
     | 'deltaApi'
     | 'uniqueSdkTracking'
     | 'sortProjectRoles'
-    | 'lifecycleImprovements';
+    | 'lifecycleImprovements'
+    | 'frontendHeaderRedesign';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -293,6 +294,10 @@ const flags: IFlags = {
     ),
     lifecycleImprovements: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_IMPROVEMENTS,
+        false,
+    ),
+    frontendHeaderRedesign: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_FRONTEND_HEADER_REDESIGN,
         false,
     ),
 };

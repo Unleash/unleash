@@ -30,6 +30,7 @@ import { CommandQuickSuggestions } from './CommandQuickSuggestions';
 import { CommandSearchPages } from './CommandSearchPages';
 import { CommandBarFeedback } from './CommandBarFeedback';
 import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -50,16 +51,20 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const StyledContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'active',
+    shouldForwardProp: (prop) =>
+        prop !== 'active' && prop !== 'frontendHeaderRedesign',
 })<{
     active: boolean | undefined;
-}>(({ theme, active }) => ({
+    frontendHeaderRedesign?: boolean;
+}>(({ theme, active, frontendHeaderRedesign }) => ({
     border: `1px solid transparent`,
     display: 'flex',
     flexGrow: 1,
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: frontendHeaderRedesign
+        ? theme.palette.background.application
+        : theme.palette.background.paper,
     maxWidth: active ? '100%' : '400px',
     [theme.breakpoints.down('md')]: {
         marginTop: theme.spacing(1),
@@ -97,6 +102,7 @@ interface IPageRouteInfo {
 
 export const CommandBar = () => {
     const { trackEvent } = usePlausibleTracker();
+    const frontendHeaderRedesign = useUiFlag('frontendHeaderRedesign');
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -293,7 +299,11 @@ export const CommandBar = () => {
     };
 
     return (
-        <StyledContainer ref={searchContainerRef} active={showSuggestions}>
+        <StyledContainer
+            ref={searchContainerRef}
+            active={showSuggestions}
+            frontendHeaderRedesign={frontendHeaderRedesign}
+        >
             <RecentlyVisitedRecorder />
             <StyledSearch
                 sx={{

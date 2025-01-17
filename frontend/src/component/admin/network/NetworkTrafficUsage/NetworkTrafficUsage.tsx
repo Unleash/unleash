@@ -169,11 +169,14 @@ export const NetworkTrafficUsage: VFC = () => {
                     periodItem.month,
                     Number.parseInt(tooltipItems[0].label),
                 );
-                return tooltipDate.toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                });
+                return tooltipDate.toLocaleDateString(
+                    locationSettings?.locale,
+                    {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                    },
+                );
             },
             includedTraffic,
         );

@@ -132,7 +132,7 @@ const toChartData = (
 
             for (const dayKey in item.days) {
                 const day = item.days[dayKey];
-                const dayNum = new Date(Date.parse(day.day)).getDate();
+                const dayNum = new Date(Date.parse(day.day)).getUTCDate();
                 daysRec[`d${dayNum}`] = day.trafficTypes[0].count;
             }
             const epInfo = endpointsInfo[item.apiPath];

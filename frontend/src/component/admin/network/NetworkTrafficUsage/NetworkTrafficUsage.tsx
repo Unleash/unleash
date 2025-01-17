@@ -33,6 +33,7 @@ import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlu
 import { formatTickValue } from 'component/common/Chart/formatTickValue';
 import { useTrafficLimit } from './hooks/useTrafficLimit';
 import { BILLING_TRAFFIC_BUNDLE_PRICE } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',

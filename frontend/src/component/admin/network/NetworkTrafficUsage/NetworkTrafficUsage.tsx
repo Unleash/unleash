@@ -144,6 +144,7 @@ export const NetworkTrafficUsage: VFC = () => {
 
     const { isOss } = useUiConfig();
 
+    const { locationSettings } = useLocationSettings();
     const {
         record,
         period,
@@ -170,7 +171,7 @@ export const NetworkTrafficUsage: VFC = () => {
                     Number.parseInt(tooltipItems[0].label),
                 );
                 return tooltipDate.toLocaleDateString(
-                    locationSettings?.locale,
+                    locationSettings?.locale ?? 'en-US',
                     {
                         month: 'long',
                         day: 'numeric',

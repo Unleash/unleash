@@ -201,6 +201,7 @@ unleash.start(unleashOptions);
       instructing the browser to clear all cookies on the same domain Unleash is running on. If disabled unleash will
       only destroy and clear the session cookie. Defaults to _true_. `SESSION_CLEAR_SITE_DATA_ON_LOGOUT`
     - _cookieName_ - Name of the cookies used to hold the session id. Defaults to 'unleash-session'.
+    - _maxParallelSessions_ - The maximum number of parallel user sessions with password based login. `MAX_PARALLEL_SESSIONS`
 - **ui** (object) - Set of UI specific overrides. You may set the following keys: `environment`, `slogan`.
 - **versionCheck** - the object deciding where to check for latest version
     - `url` - The url to check version (Defaults to `https://version.unleash.run`) - Overridable

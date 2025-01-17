@@ -33,6 +33,7 @@ import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlu
 import { formatTickValue } from 'component/common/Chart/formatTickValue';
 import { useTrafficLimit } from './hooks/useTrafficLimit';
 import { BILLING_TRAFFIC_BUNDLE_PRICE } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
+import { useLocationSettings } from 'hooks/useLocationSettings';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -144,6 +145,7 @@ export const NetworkTrafficUsage: VFC = () => {
 
     const { isOss } = useUiConfig();
 
+    const { locationSettings } = useLocationSettings();
     const {
         record,
         period,
@@ -169,11 +171,14 @@ export const NetworkTrafficUsage: VFC = () => {
                     periodItem.month,
                     Number.parseInt(tooltipItems[0].label),
                 );
-                return tooltipDate.toLocaleDateString('en-US', {
-                    month: 'long',
-                    day: 'numeric',
-                    year: 'numeric',
-                });
+                return tooltipDate.toLocaleDateString(
+                    locationSettings?.locale ?? 'en-US',
+                    {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric',
+                    },
+                );
             },
             includedTraffic,
         );

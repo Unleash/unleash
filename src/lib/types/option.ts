@@ -45,7 +45,7 @@ export interface ISessionOption {
     db: boolean;
     clearSiteDataOnLogout: boolean;
     cookieName: string;
-    maxParallelSessions: number;
+    maxParallelSessions?: number;
 }
 
 export interface IVersionOption {

@@ -18,7 +18,6 @@ import PasswordMismatch from '../../../lib/error/password-mismatch';
 import type { EventService } from '../../../lib/services';
 import {
     CREATE_ADDON,
-    type IFlagResolver,
     type IUnleashStores,
     type IUserStore,
     SYSTEM_USER_AUDIT,
@@ -51,7 +50,9 @@ const allowedSessions = 2;
 beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
-    const config = createTestConfig();
+    const config = createTestConfig({
+        session: { maxParallelSessions: allowedSessions },
+    });
     eventBus = config.eventBus;
     eventService = createEventsService(db.rawDatabase, config);
     const groupService = new GroupService(stores, config, eventService);
@@ -66,22 +67,9 @@ beforeAll(async () => {
     sessionService = new SessionService(stores, config);
     settingService = new SettingService(stores, config, eventService);
 
-    const flagResolver = {
-        isEnabled() {
-            return true;
-        },
-        getVariant() {
-            return {
-                feature_enabled: true,
-                payload: {
-                    value: String(allowedSessions),
-                },
-            };
-        },
-    } as unknown as IFlagResolver;
     userService = new UserService(
         stores,
-        { ...config, flagResolver },
+        { ...config },
         {
             accessService,
             resetTokenService,

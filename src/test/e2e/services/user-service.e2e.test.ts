@@ -67,18 +67,14 @@ beforeAll(async () => {
     sessionService = new SessionService(stores, config);
     settingService = new SettingService(stores, config, eventService);
 
-    userService = new UserService(
-        stores,
-        { ...config },
-        {
-            accessService,
-            resetTokenService,
-            emailService,
-            eventService,
-            sessionService,
-            settingService,
-        },
-    );
+    userService = new UserService(stores, config, {
+        accessService,
+        resetTokenService,
+        emailService,
+        eventService,
+        sessionService,
+        settingService,
+    });
     userStore = stores.userStore;
     const rootRoles = await accessService.getRootRoles();
     adminRole = rootRoles.find((r) => r.name === RoleName.ADMIN)!;

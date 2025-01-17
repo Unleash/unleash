@@ -18,7 +18,9 @@ import {
 } from './NewInUnleashItem';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ReactComponent as SignalsPreview } from 'assets/img/signals.svg';
+import LifecycleStagesImage from 'assets/img/lifecycle-stages.png';
 import LinearScaleIcon from '@mui/icons-material/LinearScale';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeartOutlined';
 import { useNavigate } from 'react-router-dom';
 import { ReactComponent as EventTimelinePreview } from 'assets/img/eventTimeline.svg';
 import { useHighlightContext } from 'component/common/Highlight/HighlightContext';
@@ -77,6 +79,10 @@ const StyledLinearScaleIcon = styled(LinearScaleIcon)(({ theme }) => ({
     color: theme.palette.primary.main,
 }));
 
+const StyledImg = styled('img')(() => ({
+    maxWidth: '100%',
+}));
+
 interface INewInUnleashProps {
     mode?: NavigationMode;
     onMiniModeClick?: () => void;
@@ -95,8 +101,31 @@ export const NewInUnleash = ({
     );
     const { isOss, isEnterprise } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
+    const improvedLifecycleEnabled = useUiFlag('lifecycleImprovements');
 
     const items: NewInUnleashItemDetails[] = [
+        {
+            label: 'Lifecycle 2.0',
+            summary: 'Track progress of your feature flags',
+            icon: <MonitorHeartIcon color='primary' />,
+            preview: (
+                <StyledImg
+                    src={LifecycleStagesImage}
+                    alt='Define → Develop → Production → Cleanup → Archived'
+                />
+            ),
+            docsLink:
+                'https://docs.getunleash.io/reference/feature-toggles#feature-flag-lifecycle',
+            show: improvedLifecycleEnabled,
+            longDescription: (
+                <p>
+                    We have updated the names, icons and colours for the
+                    different stages of the lifecycle for a feature flag. The
+                    stages indicate the same as before just with some clearer
+                    names of where in the lifecycle you are.
+                </p>
+            ),
+        },
         {
             label: 'Signals & Actions',
             summary: 'Listen to signals via Webhooks',

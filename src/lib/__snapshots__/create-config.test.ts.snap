@@ -149,6 +149,7 @@ exports[`should create default config 1`] = `
     "clearSiteDataOnLogout": true,
     "cookieName": "unleash-session",
     "db": true,
+    "maxParallelSessions": 5,
     "ttlHours": 48,
   },
   "strategySegmentsLimit": 5,

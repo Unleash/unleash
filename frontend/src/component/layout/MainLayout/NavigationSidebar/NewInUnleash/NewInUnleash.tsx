@@ -118,10 +118,10 @@ export const NewInUnleash = ({
             show: improvedLifecycleEnabled,
             longDescription: (
                 <p>
-                    We have updated the names, icons and colours for the
-                    different stages of the lifecycle for a feature flag. The
-                    stages indicate the same as before just with some clearer
-                    names of where in the lifecycle you are.
+                    We have updated the names, icons, and colors for the
+                    different stages of a feature flag's lifecycle. The stages
+                    convey the same meanings as before but now have clearer
+                    names that better indicate where you are in the lifecycle.
                 </p>
             ),
         },

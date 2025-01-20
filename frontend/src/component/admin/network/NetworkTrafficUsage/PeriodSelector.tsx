@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
+import { useState } from 'react';
 
 export type Period = {
     key: string;
@@ -62,35 +62,27 @@ const getSelectablePeriods = (): Period[] => {
 const Wrapper = styled('article')(({ theme }) => ({
     marginTop: '2rem', // temporary
     borderRadius: theme.shape.borderRadiusLarge,
-    border: `1px solid ${theme.palette.divider}`,
-    paddingInline: theme.spacing(1),
-    paddingBlock: theme.spacing(2.5),
+    border: `2px solid ${theme.palette.divider}`,
+    padding: theme.spacing(3),
 }));
 
-const Selector = styled('fieldset')(({ theme }) => ({
-    '&:focus-within': {
-        bakgroundColor: 'blue',
-    },
-    label: {
+const MonthSelector = styled('article')(({ theme }) => ({
+    button: {
         cursor: 'pointer',
+        border: 'none',
+        background: 'none',
+        fontSize: theme.typography.body1.fontSize,
+        paddingBlock: theme.spacing(0.5),
+
+        '&.selected': {
+            backgroundColor: theme.palette.secondary.light,
+        },
     },
-    'label:focus-within': {
-        backgroundColor: 'red',
-    },
-    'label:has(input:checked)': {
-        backgroundColor: theme.palette.secondary.light,
-    },
-    'label:has(input:disabled)': {
-        color: theme.palette.text.disabled,
+    'button:disabled': {
         cursor: 'default',
     },
-    input: {
-        display: 'none',
-    },
     border: 'none',
-    // borderRadius: theme.shape.borderRadiusLarge,
-    // borderColor: theme.palette.divider,
-    legend: {
+    hgroup: {
         h3: {
             margin: 0,
             fontSize: theme.typography.h3.fontSize,
@@ -99,21 +91,26 @@ const Selector = styled('fieldset')(({ theme }) => ({
             color: theme.palette.text.secondary,
             fontSize: theme.typography.body2.fontSize,
         },
-        // position: 'absolute',
-        // top: '-.6em',
+
+        marginBottom: theme.spacing(2),
     },
 }));
 
 const MonthGrid = styled('div')(({ theme }) => ({
+    // should be a list under the hood?
     display: 'grid',
     gridTemplateColumns: 'repeat(4, 1fr)',
-    rowGap: theme.spacing(1),
-    columnGap: theme.spacing(2),
-    label: {
+    rowGap: theme.spacing(2),
+    columnGap: theme.spacing(3),
+    button: {
         textAlign: 'center',
         padding: theme.spacing(0.2),
         borderRadius: theme.shape.borderRadius,
     },
+}));
+
+const RangeSelector = styled('article')(({ theme }) => ({
+    // border: 'none' // just something
 }));
 
 type Selection =
@@ -128,40 +125,69 @@ type Selection =
 
 export const PeriodSelector = () => {
     const selectablePeriods = getSelectablePeriods();
-    console.log(selectablePeriods);
+    const [selection, setSelection] = useState<
+        { type: 'month'; value: string } | { type: 'range'; value: number }
+    >({
+        type: 'month',
+        value: currentPeriod.key,
+    });
+
+    const rangeOptions = [3, 6, 12].map((monthsBack) => ({
+        value: monthsBack,
+        label: `Last ${monthsBack} months`,
+    }));
+
+    console.log(rangeOptions);
+
     return (
         <Wrapper>
-            <Selector>
-                <legend>
+            <MonthSelector>
+                <hgroup>
                     <h3>Select month</h3>
                     <p>Last 12 months</p>
-                </legend>
+                </hgroup>
                 <MonthGrid>
                     {selectablePeriods.map((period, index) => (
-                        <label
+                        <button
+                            className={
+                                period.key === selection.value ? 'selected' : ''
+                            }
+                            type='button'
                             key={period.label}
-                            className={period.selectable ? '' : 'disabled'}
+                            disabled={!period.selectable}
+                            onClick={() => {
+                                setSelection({
+                                    type: 'month',
+                                    value: period.key,
+                                });
+                            }}
                         >
                             {period.shortLabel}
-                            <ScreenReaderOnly>
-                                <input
-                                    type='radio'
-                                    name='period'
-                                    value={period.label}
-                                    disabled={!period.selectable}
-                                    onClick={(e) =>
-                                        console.log(
-                                            'clicked',
-                                            e,
-                                            e.target.value,
-                                        )
-                                    }
-                                />
-                            </ScreenReaderOnly>
-                        </label>
+                        </button>
                     ))}
                 </MonthGrid>
-            </Selector>
+            </MonthSelector>
+            <RangeSelector>
+                <h4>Range</h4>
+
+                <ul>
+                    {rangeOptions.map((option) => (
+                        <li key={option.label}>
+                            <button
+                                type='button'
+                                onClick={() => {
+                                    setSelection({
+                                        type: 'range',
+                                        value: option.value,
+                                    });
+                                }}
+                            >
+                                Last {option.value} months
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </RangeSelector>
         </Wrapper>
     );
 };

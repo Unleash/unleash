@@ -98,6 +98,8 @@ class UserService {
 
     readonly unleashUrl: string;
 
+    readonly maxParallelSessions: number;
+
     constructor(
         stores: Pick<IUnleashStores, 'userStore'>,
         {
@@ -106,6 +108,7 @@ class UserService {
             authentication,
             eventBus,
             flagResolver,
+            session,
         }: Pick<
             IUnleashConfig,
             | 'getLogger'
@@ -113,6 +116,7 @@ class UserService {
             | 'server'
             | 'eventBus'
             | 'flagResolver'
+            | 'session'
         >,
         services: {
             accessService: AccessService;
@@ -133,6 +137,7 @@ class UserService {
         this.sessionService = services.sessionService;
         this.settingService = services.settingService;
         this.flagResolver = flagResolver;
+        this.maxParallelSessions = session.maxParallelSessions;
 
         process.nextTick(() => this.initAdminUser(authentication));
 
@@ -431,22 +436,14 @@ class UserService {
                     );
                 }
 
-                const deleteStaleUserSessions = this.flagResolver.getVariant(
-                    'deleteStaleUserSessions',
-                );
-                if (deleteStaleUserSessions.feature_enabled) {
-                    const allowedSessions = Number(
-                        deleteStaleUserSessions.payload?.value || 5,
+                // subtract current user session that will be created
+                const deletedSessionsCount =
+                    await this.sessionService.deleteStaleSessionsForUser(
+                        user.id,
+                        Math.max(this.maxParallelSessions - 1, 0),
                     );
-                    // subtract current user session that will be created
-                    const deletedSessionsCount =
-                        await this.sessionService.deleteStaleSessionsForUser(
-                            user.id,
-                            Math.max(allowedSessions - 1, 0),
-                        );
-                    user.deletedSessions = deletedSessionsCount;
-                    user.activeSessions = allowedSessions;
-                }
+                user.deletedSessions = deletedSessionsCount;
+                user.activeSessions = this.maxParallelSessions;
 
                 this.eventBus.emit(USER_LOGIN, { loginOrder });
                 return user;

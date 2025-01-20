@@ -54,7 +54,6 @@ export type IFlagKey =
     | 'enterprise-payg'
     | 'flagOverviewRedesign'
     | 'showUserDeviceCount'
-    | 'deleteStaleUserSessions'
     | 'memorizeStats'
     | 'granularAdminPermissions'
     | 'streaming'

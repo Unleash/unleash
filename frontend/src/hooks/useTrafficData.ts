@@ -48,8 +48,7 @@ const calculateTrafficDataCost = (
     return unitCount * trafficUnitCost;
 };
 
-const padMonth = (month: number): string =>
-    month < 10 ? `0${month}` : `${month}`;
+const padMonth = (month: number): string => month.toString().padStart(2, '0');
 
 export const toSelectablePeriod = (
     date: Date,

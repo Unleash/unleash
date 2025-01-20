@@ -1,4 +1,4 @@
-import { useMemo, type VFC, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, type FC } from 'react';
 import useTheme from '@mui/material/styles/useTheme';
 import styled from '@mui/material/styles/styled';
 import { usePageTitle } from 'hooks/usePageTitle';
@@ -34,6 +34,7 @@ import { formatTickValue } from 'component/common/Chart/formatTickValue';
 import { useTrafficLimit } from './hooks/useTrafficLimit';
 import { BILLING_TRAFFIC_BUNDLE_PRICE } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
 import { useLocationSettings } from 'hooks/useLocationSettings';
+import { PeriodSelector } from './PeriodSelector';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -139,7 +140,7 @@ const createBarChartOptions = (
     },
 });
 
-export const NetworkTrafficUsage: VFC = () => {
+export const NetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
 
@@ -278,6 +279,7 @@ export const NetworkTrafficUsage: VFC = () => {
                                     estimatedMonthlyCost={estimatedMonthlyCost}
                                 />
                             </Grid>
+                            <PeriodSelector />
                             <Grid item xs={12} md={2}>
                                 <Select
                                     id='dataperiod-select'

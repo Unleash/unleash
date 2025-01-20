@@ -32,7 +32,7 @@ jobs:
               owner: 'bricks-software',
               repo: 'unleash-enterprise',
               workflow_id: 'cicd.yaml',
-              ref: 'master',
+              ref: 'main',
               inputs: {
                  commit: "${{ github.event.head_commit.id }}",
                  actor: ${{ toJSON(env.COMMIT_ACTOR) }},

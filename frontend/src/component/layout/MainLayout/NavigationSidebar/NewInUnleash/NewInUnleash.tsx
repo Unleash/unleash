@@ -23,6 +23,7 @@ import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeartOutlined';
 import { useNavigate } from 'react-router-dom';
 import { useHighlightContext } from 'component/common/Highlight/HighlightContext';
+import { formatAssetPath } from 'utils/formatPath';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0, 1, 0),
@@ -109,7 +110,7 @@ export const NewInUnleash = ({
             icon: <MonitorHeartIcon color='primary' />,
             preview: (
                 <StyledImg
-                    src={LifecycleStagesImage}
+                    src={formatAssetPath(LifecycleStagesImage)}
                     alt='Define → Develop → Production → Cleanup → Archived'
                 />
             ),

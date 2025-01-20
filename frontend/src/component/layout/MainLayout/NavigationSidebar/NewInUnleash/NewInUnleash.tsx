@@ -22,7 +22,6 @@ import LifecycleStagesImage from 'assets/img/lifecycle-stages.png';
 import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeartOutlined';
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as EventTimelinePreview } from 'assets/img/eventTimeline.svg';
 import { useHighlightContext } from 'component/common/Highlight/HighlightContext';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
@@ -99,7 +98,7 @@ export const NewInUnleash = ({
         'new-in-unleash-seen:v1',
         new Set(),
     );
-    const { isOss, isEnterprise } = useUiConfig();
+    const { isEnterprise } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
     const improvedLifecycleEnabled = useUiFlag('lifecycleImprovements');
 
@@ -158,36 +157,6 @@ export const NewInUnleash = ({
                                 conditions.
                             </li>
                         </ul>
-                    </p>
-                </>
-            ),
-        },
-        {
-            label: 'Event timeline',
-            summary: 'Keep track of recent events across all your projects',
-            icon: <StyledLinearScaleIcon />,
-            preview: <EventTimelinePreview />,
-            onCheckItOut: () => {
-                highlight('eventTimeline');
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth',
-                });
-            },
-            docsLink:
-                'https://docs.getunleash.io/reference/events#event-timeline',
-            show: !isOss(),
-            longDescription: (
-                <>
-                    <p>
-                        Monitor recent events across all your projects in one
-                        unified timeline.
-                    </p>
-
-                    <p>
-                        You can access the event timeline from the top menu to
-                        get an overview of changes and quickly identify and
-                        debug any issues.
                     </p>
                 </>
             ),

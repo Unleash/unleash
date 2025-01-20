@@ -18,9 +18,10 @@ import {
 } from './NewInUnleashItem';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ReactComponent as SignalsPreview } from 'assets/img/signals.svg';
+import LifecycleStagesImage from 'assets/img/lifecycle-stages.png';
 import LinearScaleIcon from '@mui/icons-material/LinearScale';
+import MonitorHeartIcon from '@mui/icons-material/MonitorHeartOutlined';
 import { useNavigate } from 'react-router-dom';
-import { ReactComponent as EventTimelinePreview } from 'assets/img/eventTimeline.svg';
 import { useHighlightContext } from 'component/common/Highlight/HighlightContext';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
@@ -77,6 +78,10 @@ const StyledLinearScaleIcon = styled(LinearScaleIcon)(({ theme }) => ({
     color: theme.palette.primary.main,
 }));
 
+const StyledImg = styled('img')(() => ({
+    maxWidth: '100%',
+}));
+
 interface INewInUnleashProps {
     mode?: NavigationMode;
     onMiniModeClick?: () => void;
@@ -93,10 +98,33 @@ export const NewInUnleash = ({
         'new-in-unleash-seen:v1',
         new Set(),
     );
-    const { isOss, isEnterprise } = useUiConfig();
+    const { isEnterprise } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
+    const improvedLifecycleEnabled = useUiFlag('lifecycleImprovements');
 
     const items: NewInUnleashItemDetails[] = [
+        {
+            label: 'Lifecycle 2.0',
+            summary: 'Track progress of your feature flags',
+            icon: <MonitorHeartIcon color='primary' />,
+            preview: (
+                <StyledImg
+                    src={LifecycleStagesImage}
+                    alt='Define → Develop → Production → Cleanup → Archived'
+                />
+            ),
+            docsLink:
+                'https://docs.getunleash.io/reference/feature-toggles#feature-flag-lifecycle',
+            show: improvedLifecycleEnabled,
+            longDescription: (
+                <p>
+                    We have updated the names, icons, and colors for the
+                    different stages of a feature flag's lifecycle. The stages
+                    convey the same meanings as before but now have clearer
+                    names that better indicate where you are in the lifecycle.
+                </p>
+            ),
+        },
         {
             label: 'Signals & Actions',
             summary: 'Listen to signals via Webhooks',
@@ -129,36 +157,6 @@ export const NewInUnleash = ({
                                 conditions.
                             </li>
                         </ul>
-                    </p>
-                </>
-            ),
-        },
-        {
-            label: 'Event timeline',
-            summary: 'Keep track of recent events across all your projects',
-            icon: <StyledLinearScaleIcon />,
-            preview: <EventTimelinePreview />,
-            onCheckItOut: () => {
-                highlight('eventTimeline');
-                window.scrollTo({
-                    top: 0,
-                    behavior: 'smooth',
-                });
-            },
-            docsLink:
-                'https://docs.getunleash.io/reference/events#event-timeline',
-            show: !isOss(),
-            longDescription: (
-                <>
-                    <p>
-                        Monitor recent events across all your projects in one
-                        unified timeline.
-                    </p>
-
-                    <p>
-                        You can access the event timeline from the top menu to
-                        get an overview of changes and quickly identify and
-                        debug any issues.
                     </p>
                 </>
             ),

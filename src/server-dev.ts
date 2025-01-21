@@ -58,6 +58,7 @@ process.nextTick(async () => {
                         uniqueSdkTracking: true,
                         lifecycleImprovements: true,
                         frontendHeaderRedesign: true,
+                        dataUsageMultiMonthView: true,
                     },
                 },
                 authentication: {

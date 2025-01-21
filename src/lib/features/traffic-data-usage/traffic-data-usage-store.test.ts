@@ -20,6 +20,10 @@ afterAll(async () => {
     await db.destroy();
 });
 
+beforeEach(async () => {
+    await trafficDataUsageStore.deleteAll();
+});
+
 test('upsert stores new entries', async () => {
     const data = {
         day: new Date(),
@@ -62,7 +66,6 @@ test('upsert upserts', async () => {
 });
 
 test('getAll returns all', async () => {
-    await trafficDataUsageStore.deleteAll();
     const data1 = {
         day: new Date(),
         trafficGroup: 'default3',
@@ -83,7 +86,6 @@ test('getAll returns all', async () => {
 });
 
 test('delete deletes the specified item', async () => {
-    await trafficDataUsageStore.deleteAll();
     const data1 = {
         day: new Date(),
         trafficGroup: 'default3',
@@ -110,7 +112,6 @@ test('delete deletes the specified item', async () => {
 });
 
 test('can query for specific items', async () => {
-    await trafficDataUsageStore.deleteAll();
     const data1 = {
         day: new Date(),
         trafficGroup: 'default3',
@@ -154,7 +155,6 @@ test('can query for specific items', async () => {
 });
 
 test('can query for data from specific periods', async () => {
-    await trafficDataUsageStore.deleteAll();
     const data1 = {
         day: new Date(2024, 2, 12),
         trafficGroup: 'default-period-query',

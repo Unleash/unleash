@@ -50,6 +50,7 @@ process.nextTick(async () => {
                         originMiddlewareRequestLogging: true,
                         webhookDomainLogging: true,
                         releasePlans: false,
+                        releasePlanChangeRequests: false,
                         showUserDeviceCount: true,
                         flagOverviewRedesign: false,
                         granularAdminPermissions: true,

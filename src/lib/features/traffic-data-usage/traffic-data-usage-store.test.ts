@@ -1,4 +1,4 @@
-import { subMonths } from 'date-fns';
+import { differenceInCalendarMonths, subMonths } from 'date-fns';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import type { ITrafficDataUsageStore, IUnleashStores } from '../../types';
@@ -200,24 +200,37 @@ test('can query for data from specific periods', async () => {
 test('can query for monthly aggregation of data for a specified range', async () => {
     const now = new Date();
 
-    const expectedValues: number[] = [];
+    const expectedValues: { groupA: number; groupB: number }[] = [];
 
     // fill in with data for the last 13 months
     for (let i = 0; i <= 12; i++) {
         const month = subMonths(now, i).getMonth();
-        let monthAggregate = 0;
+        let monthAggregateA = 0;
+        let monthAggregateB = 0;
         for (let day = 1; day <= 5; day++) {
             const dayValue = i + day;
-            monthAggregate += dayValue;
-            const data = {
+            const dayValueB = dayValue * 2;
+            monthAggregateA += dayValue;
+            monthAggregateB += dayValueB;
+            const dataA = {
                 day: new Date(2024, month, day),
-                trafficGroup: 'default-period-query',
+                trafficGroup: 'groupA',
                 statusCodeSeries: 200,
                 count: dayValue,
             };
-            await trafficDataUsageStore.upsert(data);
+            await trafficDataUsageStore.upsert(dataA);
+            const dataB = {
+                day: new Date(2024, month, day),
+                trafficGroup: 'groupB',
+                statusCodeSeries: 200,
+                count: dayValueB,
+            };
+            await trafficDataUsageStore.upsert(dataB);
         }
-        expectedValues.push(monthAggregate);
+        expectedValues.push({
+            groupA: monthAggregateA,
+            groupB: monthAggregateB,
+        });
     }
 
     console.log(expectedValues);
@@ -229,7 +242,15 @@ test('can query for monthly aggregation of data for a specified range', async ()
         // should have the current month and the preceding n months
         expect(result.length).toBe(monthsBack + 1);
 
-        // the data should be aggregated correctly
-        // expect(result.every(data, index) => { data.property === expectedValues[index] })
+        for (const entry of result) {
+            const index = differenceInCalendarMonths(
+                now,
+                new Date(entry.month),
+            );
+
+            const expected = expectedValues[index];
+
+            expect(entry.count).toBe(expected[entry.trafficGroup]);
+        }
     }
 });

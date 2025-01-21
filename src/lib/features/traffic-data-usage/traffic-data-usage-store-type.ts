@@ -8,7 +8,7 @@ export type IStatTrafficUsage = {
 };
 
 export type IStatMonthlyTrafficUsage = {
-    month: Date;
+    month: string;
     trafficGroup: string;
     statusCodeSeries: number;
     count: number;

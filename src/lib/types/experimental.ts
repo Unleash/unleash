@@ -62,7 +62,8 @@ export type IFlagKey =
     | 'uniqueSdkTracking'
     | 'sortProjectRoles'
     | 'lifecycleImprovements'
-    | 'frontendHeaderRedesign';
+    | 'frontendHeaderRedesign'
+    | 'dataUsageMultiMonthView';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -297,6 +298,10 @@ const flags: IFlags = {
     ),
     frontendHeaderRedesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FRONTEND_HEADER_REDESIGN,
+        false,
+    ),
+    dataUsageMultiMonthView: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DATA_USAGE_MULTI_MONTH_VIEW,
         false,
     ),
 };

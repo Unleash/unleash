@@ -93,6 +93,7 @@ export type UiFlags = {
     sortProjectRoles?: boolean;
     lifecycleImprovements?: boolean;
     frontendHeaderRedesign?: boolean;
+    dataUsageMultiMonthView?: boolean;
 };
 
 export interface IVersionInfo {

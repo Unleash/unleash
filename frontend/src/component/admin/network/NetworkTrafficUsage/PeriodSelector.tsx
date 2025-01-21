@@ -1,5 +1,5 @@
 import { styled } from '@mui/material';
-import { useState } from 'react';
+import { type FC, useState } from 'react';
 
 export type Period = {
     key: string;
@@ -16,7 +16,6 @@ export const toSelectablePeriod = (
     label?: string,
     selectable = true,
 ): Period => {
-    // const { locationSettings } = useLocationSettings();
     const year = date.getFullYear();
     const month = date.getMonth();
     const period = `${year}-${(month + 1).toString().padStart(2, '0')}`;
@@ -60,7 +59,6 @@ const getSelectablePeriods = (): Period[] => {
 };
 
 const Wrapper = styled('article')(({ theme }) => ({
-    marginTop: '2rem', // temporary
     borderRadius: theme.shape.borderRadiusLarge,
     border: `2px solid ${theme.palette.divider}`,
     padding: theme.spacing(3),
@@ -142,12 +140,25 @@ type Selection =
           monthsBack: number;
       };
 
-export const PeriodSelector = () => {
+type Props = {
+    selectedPeriod: string;
+    setPeriod: (period: string) => void;
+};
+
+export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
     const selectablePeriods = getSelectablePeriods();
-    const [selection, setSelection] = useState<Selection>({
-        type: 'month',
-        value: currentPeriod.key,
-    });
+
+    // this is for dev purposes; only to show how the design will work when you select a range.
+    const [tempOverride, setTempOverride] = useState<Selection | null>();
+
+    const select = (value: Selection) => {
+        if (value.type === 'month') {
+            setTempOverride(null);
+            setPeriod(value.value);
+        } else {
+            setTempOverride(value);
+        }
+    };
 
     const rangeOptions = [3, 6, 12].map((monthsBack) => ({
         value: monthsBack,
@@ -168,15 +179,15 @@ export const PeriodSelector = () => {
                         <li key={period.label}>
                             <button
                                 className={
-                                    selection.type === 'month' &&
-                                    period.key === selection.value
+                                    !tempOverride &&
+                                    period.key === selectedPeriod
                                         ? 'selected'
                                         : ''
                                 }
                                 type='button'
                                 disabled={!period.selectable}
                                 onClick={() => {
-                                    setSelection({
+                                    select({
                                         type: 'month',
                                         value: period.key,
                                     });
@@ -196,14 +207,15 @@ export const PeriodSelector = () => {
                         <li key={option.label}>
                             <button
                                 className={
-                                    selection.type === 'range' &&
-                                    option.value === selection.monthsBack
+                                    tempOverride &&
+                                    tempOverride.type === 'range' &&
+                                    option.value === tempOverride.monthsBack
                                         ? 'selected'
                                         : ''
                                 }
                                 type='button'
                                 onClick={() => {
-                                    setSelection({
+                                    select({
                                         type: 'range',
                                         monthsBack: option.value,
                                     });

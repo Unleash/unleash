@@ -35,6 +35,7 @@ import { useTrafficLimit } from './hooks/useTrafficLimit';
 import { BILLING_TRAFFIC_BUNDLE_PRICE } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { PeriodSelector } from './PeriodSelector';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -140,9 +141,17 @@ const createBarChartOptions = (
     },
 });
 
+// this is primarily for dev purposes. The existing grid is very inflexible, so we might want to change it, but for demoing the design, this is enough.
+const NewHeader = styled('div')(() => ({
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+}));
+
 export const NetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
+    const showMultiMonthSelector = useUiFlag('dataUsageMultiMonthView');
 
     const { isOss } = useUiConfig();
 
@@ -270,31 +279,49 @@ export const NetworkTrafficUsage: FC = () => {
                         }
                     />
                     <StyledBox>
-                        <Grid container component='header' spacing={2}>
-                            <Grid item xs={12} md={10}>
+                        {showMultiMonthSelector ? (
+                            <NewHeader>
                                 <NetworkTrafficUsagePlanSummary
                                     usageTotal={usageTotal}
                                     includedTraffic={includedTraffic}
                                     overageCost={overageCost}
                                     estimatedMonthlyCost={estimatedMonthlyCost}
                                 />
-                            </Grid>
-                            <PeriodSelector />
-                            <Grid item xs={12} md={2}>
-                                <Select
-                                    id='dataperiod-select'
-                                    name='dataperiod'
-                                    options={selectablePeriods}
-                                    value={period}
-                                    onChange={(e) => setPeriod(e.target.value)}
-                                    style={{
-                                        minWidth: '100%',
-                                        marginBottom: theme.spacing(2),
-                                    }}
-                                    formControlStyles={{ width: '100%' }}
+                                <PeriodSelector
+                                    selectedPeriod={period}
+                                    setPeriod={setPeriod}
                                 />
+                            </NewHeader>
+                        ) : (
+                            <Grid container component='header' spacing={2}>
+                                <Grid item xs={12} md={10}>
+                                    <NetworkTrafficUsagePlanSummary
+                                        usageTotal={usageTotal}
+                                        includedTraffic={includedTraffic}
+                                        overageCost={overageCost}
+                                        estimatedMonthlyCost={
+                                            estimatedMonthlyCost
+                                        }
+                                    />
+                                </Grid>
+                                <Grid item xs={12} md={2}>
+                                    <Select
+                                        id='dataperiod-select'
+                                        name='dataperiod'
+                                        options={selectablePeriods}
+                                        value={period}
+                                        onChange={(e) =>
+                                            setPeriod(e.target.value)
+                                        }
+                                        style={{
+                                            minWidth: '100%',
+                                            marginBottom: theme.spacing(2),
+                                        }}
+                                        formControlStyles={{ width: '100%' }}
+                                    />
+                                </Grid>
                             </Grid>
-                        </Grid>
+                        )}
                         <Grid item xs={12} md={2}>
                             <Bar
                                 data={data}

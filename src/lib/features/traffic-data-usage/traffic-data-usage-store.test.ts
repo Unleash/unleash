@@ -195,3 +195,45 @@ test('can query for data from specific periods', async () => {
     expect(traffic_period_usage_older.length).toBe(1);
     expect(traffic_period_usage_older[0].count).toBe(12);
 });
+
+test('can query for monthly aggregation of data for a specified range', async () => {
+    const data1 = {
+        day: new Date(2024, 2, 12),
+        trafficGroup: 'default-period-query',
+        statusCodeSeries: 200,
+        count: 1,
+    };
+    const data2 = {
+        day: new Date(2024, 2, 13),
+        trafficGroup: 'default-period-query',
+        statusCodeSeries: 200,
+        count: 3,
+    };
+    const data3 = {
+        day: new Date(2024, 1, 12),
+        trafficGroup: 'default-period-query',
+        statusCodeSeries: 200,
+        count: 2,
+    };
+    const data4 = {
+        day: new Date(2023, 9, 6),
+        trafficGroup: 'default-period-query',
+        statusCodeSeries: 200,
+        count: 12,
+    };
+    await trafficDataUsageStore.upsert(data1);
+    await trafficDataUsageStore.upsert(data2);
+    await trafficDataUsageStore.upsert(data3);
+    await trafficDataUsageStore.upsert(data4);
+
+    const traffic_period_usage =
+        await trafficDataUsageStore.getTrafficDataUsageForPeriod('2024-03');
+    expect(traffic_period_usage).toBeDefined();
+    expect(traffic_period_usage.length).toBe(2);
+
+    const traffic_period_usage_older =
+        await trafficDataUsageStore.getTrafficDataUsageForPeriod('2023-10');
+    expect(traffic_period_usage_older).toBeDefined();
+    expect(traffic_period_usage_older.length).toBe(1);
+    expect(traffic_period_usage_older[0].count).toBe(12);
+});

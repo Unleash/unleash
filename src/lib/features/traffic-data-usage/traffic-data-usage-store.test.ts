@@ -1,3 +1,4 @@
+import { subMonths } from 'date-fns';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import type { ITrafficDataUsageStore, IUnleashStores } from '../../types';
@@ -197,43 +198,38 @@ test('can query for data from specific periods', async () => {
 });
 
 test('can query for monthly aggregation of data for a specified range', async () => {
-    const data1 = {
-        day: new Date(2024, 2, 12),
-        trafficGroup: 'default-period-query',
-        statusCodeSeries: 200,
-        count: 1,
-    };
-    const data2 = {
-        day: new Date(2024, 2, 13),
-        trafficGroup: 'default-period-query',
-        statusCodeSeries: 200,
-        count: 3,
-    };
-    const data3 = {
-        day: new Date(2024, 1, 12),
-        trafficGroup: 'default-period-query',
-        statusCodeSeries: 200,
-        count: 2,
-    };
-    const data4 = {
-        day: new Date(2023, 9, 6),
-        trafficGroup: 'default-period-query',
-        statusCodeSeries: 200,
-        count: 12,
-    };
-    await trafficDataUsageStore.upsert(data1);
-    await trafficDataUsageStore.upsert(data2);
-    await trafficDataUsageStore.upsert(data3);
-    await trafficDataUsageStore.upsert(data4);
+    const now = new Date();
 
-    const traffic_period_usage =
-        await trafficDataUsageStore.getTrafficDataUsageForPeriod('2024-03');
-    expect(traffic_period_usage).toBeDefined();
-    expect(traffic_period_usage.length).toBe(2);
+    const expectedValues: number[] = [];
 
-    const traffic_period_usage_older =
-        await trafficDataUsageStore.getTrafficDataUsageForPeriod('2023-10');
-    expect(traffic_period_usage_older).toBeDefined();
-    expect(traffic_period_usage_older.length).toBe(1);
-    expect(traffic_period_usage_older[0].count).toBe(12);
+    // fill in with data for the last 13 months
+    for (let i = 0; i <= 12; i++) {
+        const month = subMonths(now, i).getMonth();
+        let monthAggregate = 0;
+        for (let day = 1; day <= 5; day++) {
+            const dayValue = i + day;
+            monthAggregate += dayValue;
+            const data = {
+                day: new Date(2024, month, day),
+                trafficGroup: 'default-period-query',
+                statusCodeSeries: 200,
+                count: dayValue,
+            };
+            await trafficDataUsageStore.upsert(data);
+        }
+        expectedValues.push(monthAggregate);
+    }
+
+    console.log(expectedValues);
+
+    for (const monthsBack of [3, 6, 12]) {
+        const result =
+            await trafficDataUsageStore.getTrafficDataForMonthRange(monthsBack);
+
+        // should have the current month and the preceding n months
+        expect(result.length).toBe(monthsBack + 1);
+
+        // the data should be aggregated correctly
+        // expect(result.every(data, index) => { data.property === expectedValues[index] })
+    }
 });

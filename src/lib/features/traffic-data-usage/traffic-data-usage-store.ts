@@ -1,6 +1,7 @@
 import type { Db } from '../../db/db';
 import type { Logger, LogProvider } from '../../logger';
 import type {
+    IStatMonthlyTrafficUsage,
     IStatTrafficUsage,
     IStatTrafficUsageKey,
     ITrafficDataUsageStore,
@@ -96,5 +97,11 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
             [period],
         );
         return rows.map(mapRow);
+    }
+
+    async getTrafficDataForMonthRange(
+        monthsBack: number,
+    ): Promise<IStatMonthlyTrafficUsage[]> {
+        return [];
     }
 }

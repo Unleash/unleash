@@ -50,6 +50,7 @@ export type IFlagKey =
     | 'originMiddlewareRequestLogging'
     | 'webhookDomainLogging'
     | 'releasePlans'
+    | 'releasePlanChangeRequests'
     | 'productivityReportEmail'
     | 'enterprise-payg'
     | 'flagOverviewRedesign'
@@ -249,6 +250,10 @@ const flags: IFlags = {
     ),
     releasePlans: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_RELEASE_PLANS,
+        false,
+    ),
+    releasePlanChangeRequests: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_RELEASE_PLAN_CHANGE_REQUESTS,
         false,
     ),
     productivityReportEmail: parseEnvVarBoolean(

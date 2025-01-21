@@ -299,10 +299,8 @@ main
 
 .theme-doc-sidebar-container .menu {
     padding: 8px;
-    font-size: 12px;
-    line-height: 14px;
+    font-size: 14px;
     font-weight: 400;
-    margin-top: 60px;
 }
 
 .theme-doc-sidebar-menu .menu__link {

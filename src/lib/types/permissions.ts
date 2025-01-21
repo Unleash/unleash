@@ -205,6 +205,7 @@ export const PROJECT_PERMISSIONS_STRUCTURE: ProjectPermissionCategory[] = [
             [PROJECT_DEFAULT_STRATEGY_WRITE, UPDATE_PROJECT],
             [PROJECT_SETTINGS_READ, UPDATE_PROJECT],
             [PROJECT_SETTINGS_WRITE, UPDATE_PROJECT],
+            [DELETE_PROJECT],
         ],
     },
     {
@@ -213,7 +214,6 @@ export const PROJECT_PERMISSIONS_STRUCTURE: ProjectPermissionCategory[] = [
             [READ_PROJECT_API_TOKEN],
             [CREATE_PROJECT_API_TOKEN],
             [DELETE_PROJECT_API_TOKEN],
-            [DELETE_PROJECT],
         ],
     },
     {

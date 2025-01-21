@@ -165,8 +165,6 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
         label: `Last ${monthsBack} months`,
     }));
 
-    console.log(rangeOptions);
-
     return (
         <Wrapper>
             <MonthSelector>

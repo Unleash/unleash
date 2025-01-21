@@ -8,16 +8,6 @@
 @import url("./academy.css");
 @import url("./api-docs.css");
 
-@font-face {
-    font-family: Styrene B Web;
-    src: url(/fonts/StyreneB-Regular-Web.woff2) format("woff2"),
-        url(/fonts/StyreneB-Regular-Web.woff) format("woff");
-    font-weight: 400;
-    font-style: normal;
-    font-stretch: normal;
-    font-display: swap;
-}
-
 /* You can override the default Infima variables here. */
 :root {
     --unleash-logo-purple: #635dc5;
@@ -33,7 +23,6 @@
 
     --unleash-font-size-smaller: 90%;
     --ifm-footer-logo-max-width: 250px;
-    --ifm-navbar-height: 5rem;
     --ifm-footer-background-color: var(--ifm-background-color);
 
     /* navbar is independent of the theme in general */
@@ -108,7 +97,6 @@ html[data-theme="dark"] {
 
 .navbar {
     color: var(--unleash-navbar-font-color);
-    font-family: Styrene B Web, sans-serif;
     height: 3.75rem;
     background-color: #1a4049;
     color: var(--ifm-navbar-link-color);
@@ -314,6 +302,7 @@ main
     font-size: 12px;
     line-height: 14px;
     font-weight: 400;
+    margin-top: 60px;
 }
 
 .theme-doc-sidebar-menu .menu__link {
@@ -326,7 +315,16 @@ main
     border-left: 4px solid #817afe;
 }
 
+.navbar--dark .theme-doc-sidebar-menu .menu__link--active,
+.navbar--dark .menu__list-item-collapsible--active {
+    background-color: #ffffff0d;
+}
+
 .menu__caret:before {
+    background: var(--ifm-menu-link-sublist-icon) 50% / 20px 20px;
+}
+
+.menu__link--sublist-caret:after {
     background: var(--ifm-menu-link-sublist-icon) 50% / 20px 20px;
 }
 

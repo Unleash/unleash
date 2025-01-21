@@ -87,40 +87,40 @@ With Admin access, you can configure these values. In the Admin UI, go to **Conf
 
 :::
 
-Based on usage metrics and interactions with Unleash, feature flags can go through five distinct lifecycle stages: initial, pre-live, live, completed, and archived. These stages mirror the typical software development process and allow you to identify bottlenecks at any stage of the lifecycle. 
+Based on usage metrics and interactions with Unleash, feature flags can go through five distinct lifecycle stages: _Define_, _Develop_, _Production_, _Cleanup_, and _Archived_. These stages mirror the typical software development process and allow you to identify bottlenecks at any stage of the lifecycle. 
 These insights can help you improve the efficiency of your software development process.
 
 ![Feature lifecycle](/img/feature-lifecycle.png)
 
 ### Lifecycle stages
 
-#### Initial
+#### Define
 
-The feature flag is created, but Unleash hasn't detected any metrics in any environments. Once Unleash receives metrics from a [non-production environment](/reference/environments#environment-types), the flag moves to the [pre-live](#pre-live) stage.
+The feature flag is created, but Unleash hasn't detected any metrics in any environments. Once Unleash receives metrics from a [non-production environment](/reference/environments#environment-types), the flag moves to the [Develop](#develop) stage.
 
-A feature stuck in an initial stage can indicate integration issues in pre-production setups. 
+A feature stuck in a _Define_ stage can indicate integration issues in pre-production setups. 
 
-#### Pre-live
+#### Develop
 
-The feature flag has received metrics in a non-production environment or a [production environment](/reference/environments#environment-types) that is disabled. Too much time in the pre-live stage can suggest challenges in achieving production readiness. 
+The feature flag has received metrics in a non-production environment or a [production environment](/reference/environments#environment-types) that is disabled. Too much time in the _Develop_ stage can suggest challenges in achieving production readiness. 
 
-#### Live
+#### Production
 
 The first users have been exposed to the feature in a [production environment](/reference/environments#environment-types). Once you have enough production usage data, you can mark the feature as completed. Marking the feature flag as complete does not affect any configuration; you decide whether to keep the feature, keep just one variant of it, or archive it entirely.
 
-This stage serves as a reminder to start cleaning up the feature toggle and removing it from the code. A feature flag stuck in the live stage can indicate difficulties in data gathering or decision-making.
+This stage serves as a reminder to start cleaning up the feature toggle and removing it from the code. A feature flag stuck in the _Production_ stage can indicate difficulties in data gathering or decision-making.
 
-#### Completed
+#### Cleanup
 
 The feature has been completed but Unleash still receives usage metrics in [production](/reference/environments#environment-types). This is an indication that you should clean up the feature flag from your code before archiving it.
-If you've accidentally marked the feature as completed, you can revert it to the [live](#live) stage.
+If you've accidentally marked the feature as completed, you can revert it to the [Production](#production) stage.
 
 Too much time in the completed stage can indicate delays in decommissioning the feature and cleaning up resources.
 
 #### Archived
 
 Unleash hasn't detected any production usage metrics for at least two days. It's likely that it is safe to archive this flag.
-If an archived feature is revived, it starts a new lifecycle with a new [initial](#initial) stage. 
+If an archived feature is revived, it starts a new lifecycle with a new [Define](#define) stage. 
 
 ## Feature flag dependencies
 
@@ -142,7 +142,7 @@ A child feature flag is evaluated only when both the child and its parent featur
 
 To add a dependency, you need the `update-feature-dependency` project permission. In the Admin UI, go to the feature flag you want to add a parent to and select **Add parent feature**.
 
-![Feature lifecycle](/img/add-parent-flag.png)
+![Feature parent flag](/img/add-parent-flag.png)
 
 Archiving a child feature flag also removes its dependencies on parent feature flags. A parent feature cannot be archived if it has any child dependencies; in such cases, remove the dependencies, or archive both parent and child together.
 

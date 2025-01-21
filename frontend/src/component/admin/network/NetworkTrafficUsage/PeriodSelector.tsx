@@ -72,6 +72,7 @@ const Wrapper = styled('article')(({ theme }) => ({
         fontSize: theme.typography.body1.fontSize,
         padding: theme.spacing(0.5),
         borderRadius: theme.shape.borderRadius,
+        color: theme.palette.text.primary,
 
         '&.selected': {
             backgroundColor: theme.palette.secondary.light,
@@ -79,6 +80,7 @@ const Wrapper = styled('article')(({ theme }) => ({
     },
     'button:disabled': {
         cursor: 'default',
+        color: theme.palette.text.disabled,
     },
 }));
 

@@ -172,7 +172,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@apidevtools/swagger-parser": "10.1.0",
+    "@apidevtools/swagger-parser": "10.1.1",
     "@babel/core": "7.26.0",
     "@biomejs/biome": "^1.9.4",
     "@cyclonedx/yarn-plugin-cyclonedx": "^1.0.0-rc.7",

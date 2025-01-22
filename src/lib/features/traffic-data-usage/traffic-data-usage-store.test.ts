@@ -204,7 +204,7 @@ test('can query for monthly aggregation of data for a specified range', async ()
 
     // fill in with data for the last 13 months
     for (let i = 0; i <= 12; i++) {
-        const month = subMonths(now, i).getMonth();
+        const then = subMonths(now, i);
         let monthAggregateA = 0;
         let monthAggregateB = 0;
         for (let day = 1; day <= 5; day++) {
@@ -213,14 +213,14 @@ test('can query for monthly aggregation of data for a specified range', async ()
             monthAggregateA += dayValue;
             monthAggregateB += dayValueB;
             const dataA = {
-                day: new Date(2024, month, day),
+                day: new Date(then.getFullYear(), then.getMonth(), day),
                 trafficGroup: 'groupA',
                 statusCodeSeries: 200,
                 count: dayValue,
             };
             await trafficDataUsageStore.upsert(dataA);
             const dataB = {
-                day: new Date(2024, month, day),
+                day: new Date(then.getFullYear(), then.getMonth(), day),
                 trafficGroup: 'groupB',
                 statusCodeSeries: 200,
                 count: dayValueB,
@@ -233,14 +233,12 @@ test('can query for monthly aggregation of data for a specified range', async ()
         });
     }
 
-    console.log(expectedValues);
-
     for (const monthsBack of [3, 6, 12]) {
         const result =
             await trafficDataUsageStore.getTrafficDataForMonthRange(monthsBack);
 
         // should have the current month and the preceding n months
-        expect(result.length).toBe(monthsBack + 1);
+        expect(result.length).toBe((monthsBack + 1) * 2);
 
         for (const entry of result) {
             const index = differenceInCalendarMonths(

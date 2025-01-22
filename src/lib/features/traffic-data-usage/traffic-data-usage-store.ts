@@ -56,7 +56,7 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
     }
     async exists(key: IStatTrafficUsageKey): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE 
+            `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE
                 day = ? AND
                 traffic_group = ? AND
                 status_code_series ?) AS present`,
@@ -102,6 +102,33 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
     async getTrafficDataForMonthRange(
         monthsBack: number,
     ): Promise<IStatMonthlyTrafficUsage[]> {
-        return [];
+        const rows = await this.db(TABLE)
+            .select(
+                'traffic_group',
+                'status_code_series',
+                this.db.raw(`to_char(day, 'YYYY-MM') AS month`),
+                this.db.raw(`SUM(count) AS count`),
+            )
+            .whereRaw(
+                `day >= date_trunc('month', CURRENT_DATE) - make_interval(months := ?)`,
+                [monthsBack],
+            )
+            .groupBy([
+                'traffic_group',
+                this.db.raw(`to_char(day, 'YYYY-MM')`),
+                'status_code_series',
+            ])
+            .orderBy([
+                { column: 'month', order: 'desc' },
+                { column: 'traffic_group', order: 'asc' },
+            ]);
+        return rows.map(
+            ({ traffic_group, status_code_series, month, count }) => ({
+                trafficGroup: traffic_group,
+                statusCodeSeries: status_code_series,
+                month,
+                count: Number.parseInt(count),
+            }),
+        );
     }
 }

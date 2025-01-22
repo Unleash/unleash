@@ -155,12 +155,28 @@ export class ClientFeatureToggleDelta {
         if (!hasSegments) {
             await this.updateSegments();
         }
-
         if (requiredRevisionId >= this.currentRevisionId) {
             return undefined;
         }
-
         if (requiredRevisionId === 0) {
+            const hydrationEvent = this.delta[environment].getHydrationEvent();
+            const filteredEvent = filterHydrationEventByQuery(
+                hydrationEvent,
+                projects,
+                namePrefix,
+            );
+
+            const response: ClientFeaturesDeltaSchema = {
+                events: [
+                    {
+                        ...filteredEvent,
+                        segments: this.segments,
+                    },
+                ],
+            };
+
+            return Promise.resolve(response);
+        } else {
             const environmentEvents = this.delta[environment].getEvents();
             const events = filterEventsByQuery(
                 environmentEvents,
@@ -177,24 +193,6 @@ export class ClientFeatureToggleDelta {
                     }
                     return event;
                 }),
-            };
-
-            return Promise.resolve(response);
-        } else {
-            const hydrationEvent = this.delta[environment].getHydrationEvent();
-            const filteredEvent = filterHydrationEventByQuery(
-                hydrationEvent,
-                projects,
-                namePrefix,
-            );
-
-            const response: ClientFeaturesDeltaSchema = {
-                events: [
-                    {
-                        ...filteredEvent,
-                        segments: this.segments,
-                    },
-                ],
             };
 
             return Promise.resolve(response);

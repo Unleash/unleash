@@ -214,6 +214,10 @@ export default class FeatureController extends Controller {
                         )}`,
                         );
                     }
+                } else {
+                    this.logger.warn(
+                        `Delta diff should have only hydration event, query ${JSON.stringify(query)}`,
+                    );
                 }
 
                 this.storeFootprint();

@@ -37,7 +37,11 @@ const setupFeatures = async (
         {
             name: 'default',
             constraints: [
-                { contextName: 'userId', operator: 'IN', values: ['123'] },
+                {
+                    contextName: 'userId',
+                    operator: 'IN',
+                    values: ['123'],
+                },
             ],
             parameters: {},
         },
@@ -88,17 +92,19 @@ test('should match with /api/client/delta', async () => {
         .expect('Content-Type', /json/)
         .expect(200);
 
-    expect(body.features).toMatchObject(deltaBody.updated);
+    expect(body.features).toMatchObject(deltaBody.events[0].features);
 });
 
 test('should get 304 if asked for latest revision', async () => {
     await setupFeatures(db, app);
 
-    const { body } = await app.request.get('/api/client/delta').expect(200);
-    const currentRevisionId = body.revisionId;
+    const { body, headers } = await app.request
+        .get('/api/client/delta')
+        .expect(200);
+    const etag = headers.etag;
 
     await app.request
-        .set('If-None-Match', `"${currentRevisionId}"`)
+        .set('If-None-Match', etag)
         .get('/api/client/delta')
         .expect(304);
 });
@@ -106,13 +112,21 @@ test('should get 304 if asked for latest revision', async () => {
 test('should return correct delta after feature created', async () => {
     await app.createFeature('base_feature');
     await syncRevisions();
-    const { body } = await app.request.get('/api/client/delta').expect(200);
-    const currentRevisionId = body.revisionId;
+    const { body, headers } = await app.request
+        .set('If-None-Match', null)
+        .get('/api/client/delta')
+        .expect(200);
+    const etag = headers.etag;
 
     expect(body).toMatchObject({
-        updated: [
+        events: [
             {
-                name: 'base_feature',
+                type: 'hydration',
+                features: [
+                    {
+                        name: 'base_feature',
+                    },
+                ],
             },
         ],
     });
@@ -120,16 +134,27 @@ test('should return correct delta after feature created', async () => {
     await app.createFeature('new_feature');
 
     await syncRevisions();
+    //@ts-ignore
+    await app.services.clientFeatureToggleService.clientFeatureToggleDelta.onUpdateRevisionEvent();
 
     const { body: deltaBody } = await app.request
         .get('/api/client/delta')
-        .set('If-None-Match', `"${currentRevisionId}"`)
+        .set('If-None-Match', etag)
         .expect(200);
 
     expect(deltaBody).toMatchObject({
-        updated: [
+        events: [
             {
-                name: 'new_feature',
+                type: 'feature-updated',
+                feature: {
+                    name: 'new_feature',
+                },
+            },
+            {
+                type: 'feature-updated',
+                feature: {
+                    name: 'new_feature',
+                },
             },
         ],
     });
@@ -137,40 +162,52 @@ test('should return correct delta after feature created', async () => {
 
 const syncRevisions = async () => {
     await app.services.configurationRevisionService.updateMaxRevisionId();
-    // @ts-ignore
-    await app.services.clientFeatureToggleService.clientFeatureToggleDelta.onUpdateRevisionEvent();
 };
 
 test('archived features should not be returned as updated', async () => {
     await app.createFeature('base_feature');
     await syncRevisions();
-    const { body } = await app.request.get('/api/client/delta').expect(200);
-    const currentRevisionId = body.revisionId;
+    const { body, headers } = await app.request
+        .get('/api/client/delta')
+        .expect(200);
+    const etag = headers.etag;
 
     expect(body).toMatchObject({
-        updated: [
+        events: [
             {
-                name: 'base_feature',
+                features: [
+                    {
+                        name: 'base_feature',
+                    },
+                ],
             },
         ],
     });
 
     await app.archiveFeature('base_feature');
+    await syncRevisions();
     await app.createFeature('new_feature');
 
     await syncRevisions();
+    await app.getProjectFeatures('new_feature'); // TODO: this is silly, but events syncing and tests do not work nicely. this is basically a setTimeout
 
     const { body: deltaBody } = await app.request
         .get('/api/client/delta')
-        .set('If-None-Match', `"${currentRevisionId}"`)
+        .set('If-None-Match', etag)
         .expect(200);
 
     expect(deltaBody).toMatchObject({
-        updated: [
+        events: [
             {
-                name: 'new_feature',
+                type: 'feature-removed',
+                featureName: 'base_feature',
+            },
+            {
+                type: 'feature-updated',
+                feature: {
+                    name: 'new_feature',
+                },
             },
         ],
-        removed: ['base_feature'],
     });
 });

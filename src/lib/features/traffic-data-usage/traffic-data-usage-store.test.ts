@@ -245,10 +245,14 @@ test('can query for monthly aggregation of data for a specified range', async ()
                 now,
                 new Date(entry.month),
             );
+            const expectedCount = expectedValues[index];
 
-            const expected = expectedValues[index];
-
-            expect(entry.count).toBe(expected[entry.trafficGroup]);
+            expect(entry).toMatchObject({
+                statusCodeSeries: 200,
+                trafficGroup: expect.stringMatching(/group(A|B)/),
+                month: expect.stringMatching(/\d{4}-\d{2}/),
+                count: expectedCount[entry.trafficGroup],
+            });
         }
     }
 });

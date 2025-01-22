@@ -64,7 +64,7 @@ export const clientFeaturesDeltaSchema = {
                     },
                     {
                         type: 'object',
-                        required: ['eventId', 'type', 'features', 'segments'],
+                        required: ['type', 'features', 'segments'],
                         properties: {
                             eventId: { type: 'number' },
                             type: { type: 'string', enum: ['hydration'] },

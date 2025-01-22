@@ -83,7 +83,6 @@ test('project filter removes features not in project and nameprefix', () => {
 
 test('project filter removes features not in project in hydration', () => {
     const revisionList: DeltaHydrationEvent = {
-        eventId: 1,
         type: 'hydration',
         features: [
             mockAdd({ name: 'feature1', project: 'project1' }),

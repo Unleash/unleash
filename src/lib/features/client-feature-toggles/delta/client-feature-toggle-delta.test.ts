@@ -98,7 +98,6 @@ test('project filter removes features not in project in hydration', () => {
     );
 
     expect(revisions).toEqual({
-        eventId: 1,
         type: 'hydration',
         features: [mockAdd({ name: 'myfeature2', project: 'project2' })],
     });

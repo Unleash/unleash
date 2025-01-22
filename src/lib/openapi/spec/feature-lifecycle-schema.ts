@@ -11,7 +11,13 @@ export const featureLifecycleSchema = {
         properties: {
             stage: {
                 type: 'string',
-                enum: ['define', 'develop', 'production', 'cleanup', 'archived'],
+                enum: [
+                    'define',
+                    'develop',
+                    'production',
+                    'cleanup',
+                    'archived',
+                ],
                 example: 'initial',
                 description:
                     'The name of the lifecycle stage that got recorded for a given feature',

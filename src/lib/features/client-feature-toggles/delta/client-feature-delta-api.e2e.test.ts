@@ -162,8 +162,6 @@ test('should return correct delta after feature created', async () => {
 
 const syncRevisions = async () => {
     await app.services.configurationRevisionService.updateMaxRevisionId();
-    // //@ts-ignore
-    // await app.services.clientFeatureToggleService.clientFeatureToggleDelta.onUpdateRevisionEvent();
 };
 
 test('archived features should not be returned as updated', async () => {

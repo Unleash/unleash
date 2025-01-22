@@ -89,7 +89,7 @@ test('should match with /api/client/delta', async () => {
 
     const { body: deltaBody } = await app.request
         .get('/api/client/delta')
-        // .expect('Content-Type', /json/)
+        .expect('Content-Type', /json/)
         .expect(200);
 
     expect(body.features).toMatchObject(deltaBody.events[0].features);

@@ -237,7 +237,7 @@ test('can query for monthly aggregation of data for a specified range', async ()
         const result =
             await trafficDataUsageStore.getTrafficDataForMonthRange(monthsBack);
 
-        // should have the current month and the preceding n months
+        // should have the current month and the preceding n months (one entry per group)
         expect(result.length).toBe((monthsBack + 1) * 2);
 
         for (const entry of result) {

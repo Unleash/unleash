@@ -1,7 +1,9 @@
 import {
     type DeltaEvent,
     filterEventsByQuery,
+    filterHydrationEventByQuery,
 } from './client-feature-toggle-delta';
+import type { DeltaHydrationEvent } from './client-feature-toggle-delta-types';
 
 const mockAdd = (params): any => {
     const base = {
@@ -21,15 +23,6 @@ const mockAdd = (params): any => {
 
 test('revision equal to the base case returns only later revisions ', () => {
     const revisionList: DeltaEvent[] = [
-        {
-            eventId: 1,
-            type: 'hydration',
-            features: [
-                mockAdd({ name: 'feature1' }),
-                mockAdd({ name: 'feature2' }),
-                mockAdd({ name: 'feature3' }),
-            ],
-        },
         {
             eventId: 2,
             type: 'feature-updated',
@@ -58,52 +51,56 @@ test('revision equal to the base case returns only later revisions ', () => {
     ]);
 });
 
-test('should serve hydration event when all events returned', () => {
+test('project filter removes features not in project and nameprefix', () => {
     const revisionList: DeltaEvent[] = [
         {
             eventId: 1,
-            type: 'hydration',
-            features: [mockAdd({ name: 'feature1', project: 'project1' })],
+            type: 'feature-updated',
+            feature: mockAdd({ name: 'feature1', project: 'project1' }),
         },
         {
             eventId: 2,
             type: 'feature-updated',
             feature: mockAdd({ name: 'feature2', project: 'project2' }),
         },
+        {
+            eventId: 3,
+            type: 'feature-updated',
+            feature: mockAdd({ name: 'ffeature1', project: 'project1' }),
+        },
     ];
 
-    const revisions = filterEventsByQuery(revisionList, 0, ['project1'], '');
+    const revisions = filterEventsByQuery(revisionList, 0, ['project1'], 'ff');
 
     expect(revisions).toEqual([
         {
-            eventId: 1,
-            type: 'hydration',
-            features: [mockAdd({ name: 'feature1', project: 'project1' })],
+            eventId: 3,
+            type: 'feature-updated',
+            feature: mockAdd({ name: 'ffeature1', project: 'project1' }),
         },
     ]);
 });
 
-test('project filter removes features not in project', () => {
-    const revisionList: DeltaEvent[] = [
-        {
-            eventId: 1,
-            type: 'hydration',
-            features: [mockAdd({ name: 'feature1', project: 'project1' })],
-        },
-        {
-            eventId: 2,
-            type: 'feature-updated',
-            feature: mockAdd({ name: 'feature2', project: 'project2' }),
-        },
-    ];
+test('project filter removes features not in project in hydration', () => {
+    const revisionList: DeltaHydrationEvent = {
+        eventId: 1,
+        type: 'hydration',
+        features: [
+            mockAdd({ name: 'feature1', project: 'project1' }),
+            mockAdd({ name: 'feature2', project: 'project2' }),
+            mockAdd({ name: 'myfeature2', project: 'project2' }),
+        ],
+    };
 
-    const revisions = filterEventsByQuery(revisionList, 0, ['project1'], '');
+    const revisions = filterHydrationEventByQuery(
+        revisionList,
+        ['project2'],
+        'my',
+    );
 
-    expect(revisions).toEqual([
-        {
-            eventId: 1,
-            type: 'hydration',
-            features: [mockAdd({ name: 'feature1', project: 'project1' })],
-        },
-    ]);
+    expect(revisions).toEqual({
+        eventId: 1,
+        type: 'hydration',
+        features: [mockAdd({ name: 'myfeature2', project: 'project2' })],
+    });
 });

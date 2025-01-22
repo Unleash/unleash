@@ -28,8 +28,7 @@ export type DeltaEvent =
           eventId: number;
           type: 'segment-removed';
           segmentId: number;
-      }
-    | DeltaHydrationEvent;
+      };
 
 export const DELTA_EVENT_TYPES = {
     FEATURE_UPDATED: 'feature-updated',
@@ -61,10 +60,4 @@ export const isDeltaSegmentRemovedEvent = (
     event: DeltaEvent,
 ): event is Extract<DeltaEvent, { type: 'segment-removed' }> => {
     return event.type === DELTA_EVENT_TYPES.SEGMENT_REMOVED;
-};
-
-export const isDeltaHydrationEvent = (
-    event: DeltaEvent,
-): event is Extract<DeltaEvent, { type: 'hydration' }> => {
-    return event.type === DELTA_EVENT_TYPES.HYDRATION;
 };

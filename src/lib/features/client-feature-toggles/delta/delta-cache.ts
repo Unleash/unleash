@@ -35,6 +35,10 @@ export class DeltaCache {
         return this.events;
     }
 
+    public getHydrationEvent(): DeltaHydrationEvent {
+        return this.hydrationEvent;
+    }
+
     private updateHydrationEvent(events: DeltaEvent[]): void {
         for (const appliedEvent of events) {
             switch (appliedEvent.type) {

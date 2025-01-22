@@ -1,4 +1,7 @@
-import { type DeltaEvent, findNewEvents } from './client-feature-toggle-delta';
+import {
+    type DeltaEvent,
+    filterEventsByQuery,
+} from './client-feature-toggle-delta';
 
 const mockAdd = (params): any => {
     const base = {
@@ -39,7 +42,7 @@ test('revision equal to the base case returns only later revisions ', () => {
         },
     ];
 
-    const revisions = findNewEvents(revisionList, 1, ['default'], '');
+    const revisions = filterEventsByQuery(revisionList, 1, ['default'], '');
 
     expect(revisions).toEqual([
         {
@@ -69,7 +72,7 @@ test('should serve hydration event when all events returned', () => {
         },
     ];
 
-    const revisions = findNewEvents(revisionList, 0, ['project1'], '');
+    const revisions = filterEventsByQuery(revisionList, 0, ['project1'], '');
 
     expect(revisions).toEqual([
         {
@@ -94,7 +97,7 @@ test('project filter removes features not in project', () => {
         },
     ];
 
-    const revisions = findNewEvents(revisionList, 0, ['project1'], '');
+    const revisions = filterEventsByQuery(revisionList, 0, ['project1'], '');
 
     expect(revisions).toEqual([
         {

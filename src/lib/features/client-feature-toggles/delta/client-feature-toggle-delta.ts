@@ -21,14 +21,14 @@ import type { ClientFeaturesDeltaSchema } from '../../../openapi';
 import {
     DELTA_EVENT_TYPES,
     type DeltaEvent,
+    type DeltaHydrationEvent,
     isDeltaFeatureRemovedEvent,
     isDeltaFeatureUpdatedEvent,
-    isDeltaHydrationEvent,
 } from './client-feature-toggle-delta-types';
 
 type EnvironmentRevisions = Record<string, DeltaCache>;
 
-export const findNewEvents = (
+export const filterEventsByQuery = (
     events: DeltaEvent[],
     requiredRevisionId: number,
     projects: string[],
@@ -38,25 +38,6 @@ export const findNewEvents = (
         (revision) => revision.eventId > requiredRevisionId,
     );
     const allProjects = projects.includes('*');
-    if (events.length === targetedEvents.length) {
-        const hydrationEvent = events[0];
-        if (isDeltaHydrationEvent(hydrationEvent)) {
-            const { type, eventId, features } = hydrationEvent;
-            return [
-                {
-                    type,
-                    eventId,
-                    features: features.filter((feature) => {
-                        return (
-                            feature.name.startsWith(namePrefix) &&
-                            (allProjects || projects.includes(feature.project!))
-                        );
-                    }),
-                },
-            ];
-        }
-    }
-
     const startsWithPrefix = (revision: DeltaEvent) => {
         return (
             (isDeltaFeatureUpdatedEvent(revision) &&
@@ -80,6 +61,26 @@ export const findNewEvents = (
             startsWithPrefix(revision) && (allProjects || isInProject(revision))
         );
     });
+};
+
+export const filterHydrationEventByQuery = (
+    event: DeltaHydrationEvent,
+    projects: string[],
+    namePrefix: string,
+): DeltaHydrationEvent => {
+    const allProjects = projects.includes('*');
+    const { type, eventId, features } = event;
+
+    return {
+        type,
+        eventId,
+        features: features.filter((feature) => {
+            return (
+                feature.name.startsWith(namePrefix) &&
+                (allProjects || projects.includes(feature.project!))
+            );
+        }),
+    };
 };
 
 export class ClientFeatureToggleDelta {
@@ -159,32 +160,45 @@ export class ClientFeatureToggleDelta {
             return undefined;
         }
 
-        const environmentRevisions = this.delta[environment].getEvents();
+        if (requiredRevisionId === 0) {
+            const environmentEvents = this.delta[environment].getEvents();
+            const events = filterEventsByQuery(
+                environmentEvents,
+                requiredRevisionId,
+                projects,
+                namePrefix,
+            );
 
-        const events = findNewEvents(
-            environmentRevisions,
-            requiredRevisionId,
-            projects,
-            namePrefix,
-        );
+            const response: ClientFeaturesDeltaSchema = {
+                events: events.map((event) => {
+                    if (event.type === 'feature-removed') {
+                        const { project, ...rest } = event;
+                        return rest;
+                    }
+                    return event;
+                }),
+            };
 
-        const response: ClientFeaturesDeltaSchema = {
-            events: events.map((event) => {
-                if (event.type === 'feature-removed') {
-                    const { project, ...rest } = event;
-                    return rest;
-                }
-                if (event.type === 'hydration') {
-                    return {
-                        ...event,
+            return Promise.resolve(response);
+        } else {
+            const hydrationEvent = this.delta[environment].getHydrationEvent();
+            const filteredEvent = filterHydrationEventByQuery(
+                hydrationEvent,
+                projects,
+                namePrefix,
+            );
+
+            const response: ClientFeaturesDeltaSchema = {
+                events: [
+                    {
+                        ...filteredEvent,
                         segments: this.segments,
-                    };
-                }
-                return event;
-            }),
-        };
+                    },
+                ],
+            };
 
-        return Promise.resolve(response);
+            return Promise.resolve(response);
+        }
     }
 
     public async onUpdateRevisionEvent() {
@@ -333,4 +347,5 @@ export class ClientFeatureToggleDelta {
         return Buffer.byteLength(jsonString, 'utf8');
     }
 }
+
 export type { DeltaEvent };

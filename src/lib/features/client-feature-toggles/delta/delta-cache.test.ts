@@ -1,13 +1,12 @@
 import { DeltaCache } from './delta-cache';
-import {
-    type DeltaEvent,
-    type DeltaHydrationEvent,
-    isDeltaHydrationEvent,
+import type {
+    DeltaEvent,
+    DeltaHydrationEvent,
 } from './client-feature-toggle-delta-types';
 
 describe('RevisionCache', () => {
     it('should always update the hydration event and remove event when over limit', () => {
-        const hydrationEvent: DeltaHydrationEvent = {
+        const baseEvent: DeltaHydrationEvent = {
             eventId: 1,
             features: [
                 {
@@ -87,7 +86,7 @@ describe('RevisionCache', () => {
         ];
 
         const maxLength = 2;
-        const deltaCache = new DeltaCache(hydrationEvent, maxLength);
+        const deltaCache = new DeltaCache(baseEvent, maxLength);
         deltaCache.addEvents(initialEvents);
 
         // Add a new revision to trigger changeBase
@@ -130,17 +129,13 @@ describe('RevisionCache', () => {
         // Check that the base has been changed and merged correctly
         expect(events.length).toBe(2);
 
-        const event = events[0];
-        if (isDeltaHydrationEvent(event)) {
-            expect(event.features).toHaveLength(2);
-            expect(event.features).toEqual(
-                expect.arrayContaining([
-                    expect.objectContaining({ name: 'my-feature-flag' }),
-                    expect.objectContaining({ name: 'another-feature-flag' }),
-                ]),
-            );
-        } else {
-            throw new Error('events[0] is not a hydration event');
-        }
+        const hydrationEvent = deltaCache.getHydrationEvent();
+        expect(hydrationEvent.features).toHaveLength(2);
+        expect(hydrationEvent.features).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ name: 'my-feature-flag' }),
+                expect.objectContaining({ name: 'another-feature-flag' }),
+            ]),
+        );
     });
 });

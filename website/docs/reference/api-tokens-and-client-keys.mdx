@@ -3,45 +3,26 @@ title: API Tokens and Client Keys
 pagination_next: reference/front-end-api
 ---
 
-For Unleash to be of any use, it requires at least a server and a [consuming client](../reference/sdks). More advanced use cases may call for multiple clients, automated feature flag updates, the [Unleash proxy](../reference/unleash-proxy) and [Unleash proxy clients](../reference/sdks#front-end-sdks), and more. To facilitate communication between all these moving parts,
+Unleash uses a system of API tokens and client keys, to facilitate communication between consuming clients such as [SDKs](../reference/sdks), [Edge](../reference/edge) or other tools and automation.
 
-Unleash uses a system of API tokens and client keys, to facilitate communication between consuming clients such as [SDKs](../reference/sdks) or Edge.
+Unleash supports the following types of API tokens and keys:
+- [Client tokens](#client-tokens) for connecting server-side client SDKs, Unleash Edge and Unleash Proxy to the Unleash server.
+- [Frontend tokens](#frontend-tokens) for connecting client-side SDKs to Unleash using the Frontend API.
+- [Personal access tokens](#personal-access-tokens) for testing and debugging or providing temporary access to an automation tool.
+- [Proxy client keys](#proxy-client-keys) for connecting client-side SDKs to Unleash using Unleash Proxy.
 
-This document details the three kinds of tokens and keys that you will need to fully connect any Unleash system:
--   [Client tokens](#client-tokens) for connecting server-side client SDKs and the Unleash proxy to the Unleash server
--   [Proxy client keys](#proxy-client-keys) for connecting proxy client SDKs to the Unleash proxy.
+Client tokens are secrets and must not be exposed to end users. Front-end tokens are not considered a secret.
 
-## API tokens
+## API token format
 
-:::tip
+```
+unleash-docs:development.de665dd6ea2a7d163d76a07b9c74ee880ebdc48e717d755d49759157
+```
 
-This section describes what API tokens are. For information on how to create them, refer to the [how-to guide for creating API tokens](../how-to/how-to-create-api-tokens).
-
-:::
-
-Use API tokens to connect to the Unleash server API. API tokens come in th distinct types:
-
--   [Personal access tokens](#personal-access-tokens)
--   [Client tokens](#client-tokens)
--   [Front-end tokens](#front-end-tokens)
-
-All types use [the same format](#format) but have different intended uses. Admin and client tokens are _secrets_ and should _not_ be exposed to end users. Front-end tokens, on the other hand, are not secret.
-
-### The parts of an API token {#token-data}
-
-Admin, client and front-end tokens contain the following pieces of information:
-
-| Name | Description |
-| --- | --- |
-| Token name (sometimes called "username") | The token's name. Names are **not** required to be unique. |
-| Type | What kind of token it is: admin, client, or front-end. |
-| Projects | What projects a token has access to. |
-| Environment | What environment the token has access to. |
-
-Personal access tokens follow their own special format, and only contain an optional description for the token and an expiry date.
+## Create an API token
 
 
-### API token visibility
+## API token permissions
 
 :::note Availability
 
@@ -49,12 +30,12 @@ Personal access tokens follow their own special format, and only contain an opti
 
 :::
 
-
-By default, only admin users can create API tokens, and only admins can see their values.
-
-However, any [client](#client-tokens client tokens) and [front-end tokens](#front-end-tokens) that are applicable to a project, will also be visible to any members of that project that have the `READ_PROJECT_API_TOKEN` permission (all project members by default).
-
-Similarly, any project members with the `CREATE_PROJECT_API_TOKEN` permission can also create client and front-end tokens for that specific project ([how to create project API tokens](../how-to/how-to-create-project-api-tokens)).
+- An Admin root role - allows the user to create, view, update, or delete client or frontend tokens in any project
+- A root role permission for create, view, update or delete exist for both client and frontend, such as `Create CLIENT API tokens` or `Delete FRONTEND API tokens` applies to any project
+- Member: create, view, update, or delete a client or frontend token in the project they're a member of
+- A custom project role with the `READ_PROJECT_API_TOKEN` permission in the project
+- The Viewer role alone does not grant permissions to view API keys
+- Anyone can create a personal access token for themselves
 
 ### Admin tokens
 
@@ -66,7 +47,7 @@ Admin tokens are deprecated. Use other tokens types:
 
 :::
 
-**Admin tokens** grant _full read and write access_ to all resources in the Unleash server API. Admin tokens have access to all projects, all environments, and all root resources (find out more about [resources in the RBAC document](../reference/rbac#core-principles)).
+Admin tokens grant full read and write access to all resources in the Unleash server API, this includes all projects, all environments, and all [root resources](../reference/rbac#core-principles).
 
 
 ### Personal access tokens

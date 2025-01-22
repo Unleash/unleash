@@ -69,9 +69,10 @@ export const filterHydrationEventByQuery = (
     namePrefix: string,
 ): DeltaHydrationEvent => {
     const allProjects = projects.includes('*');
-    const { type, features } = event;
+    const { type, features, eventId } = event;
 
     return {
+        eventId,
         type,
         features: features.filter((feature) => {
             return (
@@ -302,6 +303,7 @@ export class ClientFeatureToggleDelta {
             await this.configurationRevisionService.getMaxRevisionId();
 
         this.delta[environment] = new DeltaCache({
+            eventId: this.currentRevisionId,
             type: DELTA_EVENT_TYPES.HYDRATION,
             features: baseFeatures,
         });

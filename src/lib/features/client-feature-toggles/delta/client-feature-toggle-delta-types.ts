@@ -2,6 +2,7 @@ import type { ClientFeatureSchema } from '../../../openapi';
 import type { IClientSegment } from '../../../types';
 
 export type DeltaHydrationEvent = {
+    eventId: number;
     type: 'hydration';
     features: ClientFeatureSchema[];
 };

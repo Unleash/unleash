@@ -7,6 +7,7 @@ import type {
 describe('RevisionCache', () => {
     it('should always update the hydration event and remove event when over limit', () => {
         const baseEvent: DeltaHydrationEvent = {
+            eventId: 1,
             features: [
                 {
                     name: 'test-flag',

@@ -72,7 +72,6 @@ export class DeltaCache {
                 default:
                 // TODO: something is seriously wrong
             }
-            this.hydrationEvent.eventId = appliedEvent.eventId;
         }
     }
 }

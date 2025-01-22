@@ -69,11 +69,10 @@ export const filterHydrationEventByQuery = (
     namePrefix: string,
 ): DeltaHydrationEvent => {
     const allProjects = projects.includes('*');
-    const { type, eventId, features } = event;
+    const { type, features } = event;
 
     return {
         type,
-        eventId,
         features: features.filter((feature) => {
             return (
                 feature.name.startsWith(namePrefix) &&
@@ -204,12 +203,6 @@ export class ClientFeatureToggleDelta {
             await this.updateFeaturesDelta();
             await this.updateSegments();
             this.storeFootprint();
-
-            // update our hydrate cache
-            // update our events cache
-
-            // we have existing base cache
-            // update our events cache
         }
     }
 
@@ -309,7 +302,6 @@ export class ClientFeatureToggleDelta {
             await this.configurationRevisionService.getMaxRevisionId();
 
         this.delta[environment] = new DeltaCache({
-            eventId: this.currentRevisionId,
             type: DELTA_EVENT_TYPES.HYDRATION,
             features: baseFeatures,
         });

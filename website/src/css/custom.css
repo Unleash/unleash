@@ -270,6 +270,7 @@ main .theme-doc-breadcrumbs {
     content: "Table of Contents";
     display: inline-flex;
     align-items: center;
+    box-sizing: border-box;
     width: 100%;
     padding: 2px;
     padding-left: 6px;

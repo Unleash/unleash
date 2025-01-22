@@ -1,6 +1,5 @@
 import styles from './content.module.css';
-import video from './video-preview.png';
-import ExternalIcon from './icons/external.svg';
+import VideoContent from '@site/src/components/VideoContent.jsx';
 
 const HomepageContent = () => {
     return (
@@ -28,18 +27,11 @@ const HomepageContent = () => {
                     control over your data.
                 </p>
             </div>
-            <a href='https://www.youtube.com/watch?v=3h5NhorR4Ig'>
-                <img src={video} alt='video preview' />
-                <p
-                    style={{
-                        display: 'flex',
-                        gap: '2px',
-                        alignItems: 'center',
-                    }}
-                >
-                    Why Unleash, why now? <ExternalIcon />
-                </p>
-            </a>
+            <div className={styles.video}>
+                <VideoContent
+                    videoUrls={['https://www.youtube.com/embed/3h5NhorR4Ig']}
+                />
+            </div>
         </div>
     );
 };

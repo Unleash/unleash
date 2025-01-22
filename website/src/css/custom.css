@@ -349,3 +349,34 @@ main .theme-doc-breadcrumbs {
 }
 
 /* end video content container */
+
+/* welcome page */
+
+.docs-doc-id-welcome main .container {
+    background-color: transparent;
+}
+
+@media (min-width: 997px) {
+    .docs-doc-id-welcome main .container > .row > .col {
+        max-width: 100% !important;
+    }
+}
+
+.docs-doc-id-welcome main .theme-doc-breadcrumbs {
+    display: none;
+}
+
+.docs-doc-id-welcome .markdown h1:first-child {
+    color: #1e373f;
+    font-size: 40px;
+    line-height: 32px;
+    font-weight: 700;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.docs-doc-id-welcome .markdown strong {
+    color: #1a4049;
+}
+
+/* end welcome page */

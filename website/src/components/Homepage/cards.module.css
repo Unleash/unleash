@@ -5,32 +5,64 @@
     margin-top: 20px;
 }
 
+.container > a {
+    text-decoration: none;
+}
+
 .card {
-    max-width: 450px;
+    background-color: var(--ifm-background-color);
     height: 250px;
     border-radius: 12px;
     border: 1px solid #e1e1e3;
-    border-bottom: 12px solid var(--unleash-logo-purple);
-    cursor: pointer;
-    padding-inline: 1rem;
-    padding-top: 3rem;
+    border-bottom: 12px solid #6c65e5;
+    padding: 30px;
+    padding-top: 50px;
     position: relative;
 }
 
-.pixels {
+.card::before {
+    content: "";
+    background-image: url("/img/card-hover-bg.png");
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    z-index: 0;
+    top: 0;
+    right: 0;
+    width: 60%;
+    height: 85%;
+    background-size: cover;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
 }
 
-.title {
+.card:hover::before {
+    opacity: 1;
+}
+
+.cardbody {
+    z-index: 10;
+    position: relative;
+}
+
+.cardbody > p {
+    font-size: 14px;
+    color: var(--ifm-font-color-base);
+}
+
+.cardbody > .title {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
+    margin-bottom: 16px;
+    color: #1a4049;
 }
 
-.title svg {
+.cardbody > .title > svg {
     width: 30px;
     height: 30px;
+}
+
+.cardbody > .title > h3 {
+    margin-bottom: 0;
+    font-size: 18px;
+    line-height: 18px;
 }

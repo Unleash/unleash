@@ -9,7 +9,7 @@ import type {
 } from '../../../types';
 import type ConfigurationRevisionService from '../../feature-toggle/configuration-revision-service';
 import { UPDATE_REVISION } from '../../feature-toggle/configuration-revision-service';
-import { RevisionDelta } from './revision-delta';
+import { DeltaCache } from './delta-cache';
 import type {
     FeatureConfigurationDeltaClient,
     IClientFeatureToggleDeltaReadModel,
@@ -18,92 +18,74 @@ import { CLIENT_DELTA_MEMORY } from '../../../metric-events';
 import type EventEmitter from 'events';
 import type { Logger } from '../../../logger';
 import type { ClientFeaturesDeltaSchema } from '../../../openapi';
+import {
+    DELTA_EVENT_TYPES,
+    type DeltaEvent,
+    isDeltaFeatureRemovedEvent,
+    isDeltaFeatureUpdatedEvent,
+    isDeltaHydrationEvent,
+} from './client-feature-toggle-delta-types';
 
-type DeletedFeature = {
-    name: string;
-    project: string;
-};
+type EnvironmentRevisions = Record<string, DeltaCache>;
 
-export type RevisionDeltaEntry = {
-    updated: FeatureConfigurationDeltaClient[];
-    revisionId: number;
-    removed: DeletedFeature[];
-    segments: IClientSegment[];
-};
-
-export type Revision = {
-    revisionId: number;
-    updated: any[];
-    removed: DeletedFeature[];
-};
-
-type Revisions = Record<string, RevisionDelta>;
-
-const applyRevision = (first: Revision, last: Revision): Revision => {
-    const updatedMap = new Map(
-        [...first.updated, ...last.updated].map((feature) => [
-            feature.name,
-            feature,
-        ]),
-    );
-    const removedMap = new Map(
-        [...first.removed, ...last.removed].map((feature) => [
-            feature.name,
-            feature,
-        ]),
-    );
-
-    for (const feature of last.updated) {
-        removedMap.delete(feature.name);
-    }
-
-    for (const feature of last.removed) {
-        updatedMap.delete(feature.name);
-        removedMap.set(feature.name, feature);
-    }
-
-    return {
-        revisionId: last.revisionId,
-        updated: Array.from(updatedMap.values()),
-        removed: Array.from(removedMap.values()),
-    };
-};
-
-const filterRevisionByProject = (
-    revision: Revision,
-    projects: string[],
-): Revision => {
-    const updated = revision.updated.filter(
-        (feature) =>
-            projects.includes('*') || projects.includes(feature.project),
-    );
-    const removed = revision.removed.filter(
-        (feature) =>
-            projects.includes('*') || projects.includes(feature.project),
-    );
-
-    return { ...revision, updated, removed };
-};
-
-export const calculateRequiredClientRevision = (
-    revisions: Revision[],
+export const findNewEvents = (
+    events: DeltaEvent[],
     requiredRevisionId: number,
     projects: string[],
+    namePrefix: string,
 ) => {
-    const targetedRevisions = revisions.filter(
-        (revision) => revision.revisionId > requiredRevisionId,
+    const targetedEvents = events.filter(
+        (revision) => revision.eventId > requiredRevisionId,
     );
-    const projectFeatureRevisions = targetedRevisions.map((revision) =>
-        filterRevisionByProject(revision, projects),
-    );
+    const allProjects = projects.includes('*');
+    if (events.length === targetedEvents.length) {
+        const hydrationEvent = events[0];
+        if (isDeltaHydrationEvent(hydrationEvent)) {
+            const { type, eventId, features } = hydrationEvent;
+            return [
+                {
+                    type,
+                    eventId,
+                    features: features.filter((feature) => {
+                        return (
+                            feature.name.startsWith(namePrefix) &&
+                            (allProjects || projects.includes(feature.project!))
+                        );
+                    }),
+                },
+            ];
+        }
+    }
 
-    return projectFeatureRevisions.reduce(applyRevision);
+    const startsWithPrefix = (revision: DeltaEvent) => {
+        return (
+            (isDeltaFeatureUpdatedEvent(revision) &&
+                revision.feature.name.startsWith(namePrefix)) ||
+            (isDeltaFeatureRemovedEvent(revision) &&
+                revision.featureName.startsWith(namePrefix))
+        );
+    };
+
+    const isInProject = (revision: DeltaEvent) => {
+        return (
+            (isDeltaFeatureUpdatedEvent(revision) &&
+                projects.includes(revision.feature.project!)) ||
+            (isDeltaFeatureRemovedEvent(revision) &&
+                projects.includes(revision.project))
+        );
+    };
+
+    return targetedEvents.filter((revision) => {
+        return (
+            startsWithPrefix(revision) && (allProjects || isInProject(revision))
+        );
+    });
 };
 
 export class ClientFeatureToggleDelta {
     private clientFeatureToggleDeltaReadModel: IClientFeatureToggleDeltaReadModel;
 
-    private delta: Revisions = {};
+    private delta: EnvironmentRevisions = {};
 
     private segments: IClientSegment[];
 
@@ -159,7 +141,8 @@ export class ClientFeatureToggleDelta {
     ): Promise<ClientFeaturesDeltaSchema | undefined> {
         const projects = query.project ? query.project : ['*'];
         const environment = query.environment ? query.environment : 'default';
-        // TODO: filter by tags, what is namePrefix? anything else?
+        const namePrefix = query.namePrefix ? query.namePrefix : '';
+
         const requiredRevisionId = sdkRevisionId || 0;
 
         const hasDelta = this.delta[environment] !== undefined;
@@ -176,21 +159,32 @@ export class ClientFeatureToggleDelta {
             return undefined;
         }
 
-        const environmentRevisions = this.delta[environment].getRevisions();
+        const environmentRevisions = this.delta[environment].getEvents();
 
-        const compressedRevision = calculateRequiredClientRevision(
+        const events = findNewEvents(
             environmentRevisions,
             requiredRevisionId,
             projects,
+            namePrefix,
         );
 
-        const revisionResponse: ClientFeaturesDeltaSchema = {
-            ...compressedRevision,
-            segments: this.segments,
-            removed: compressedRevision.removed.map((feature) => feature.name),
+        const response: ClientFeaturesDeltaSchema = {
+            events: events.map((event) => {
+                if (event.type === 'feature-removed') {
+                    const { project, ...rest } = event;
+                    return rest;
+                }
+                if (event.type === 'hydration') {
+                    return {
+                        ...event,
+                        segments: this.segments,
+                    };
+                }
+                return event;
+            }),
         };
 
-        return Promise.resolve(revisionResponse);
+        return Promise.resolve(response);
     }
 
     public async onUpdateRevisionEvent() {
@@ -198,6 +192,12 @@ export class ClientFeatureToggleDelta {
             await this.updateFeaturesDelta();
             await this.updateSegments();
             this.storeFootprint();
+
+            // update our hydrate cache
+            // update our events cache
+
+            // we have existing base cache
+            // update our events cache
         }
     }
 
@@ -220,7 +220,7 @@ export class ClientFeatureToggleDelta {
             latestRevision,
         );
 
-        const changedToggles = [
+        const featuresUpdated = [
             ...new Set(
                 changeEvents
                     .filter((event) => event.featureName)
@@ -230,25 +230,49 @@ export class ClientFeatureToggleDelta {
             ),
         ];
 
-        const removed = changeEvents
+        const featuresRemovedEvents: DeltaEvent[] = changeEvents
             .filter((event) => event.featureName && event.project)
             .filter((event) => event.type === 'feature-archived')
             .map((event) => ({
-                name: event.featureName!,
+                eventId: latestRevision,
+                type: DELTA_EVENT_TYPES.FEATURE_REMOVED,
+                featureName: event.featureName!,
                 project: event.project!,
             }));
+
+        // TODO: implement single segment fetching
+        // const segmentsUpdated = changeEvents
+        //     .filter((event) => event.type === 'segment-updated')
+        //     .map((event) => ({
+        //         name: event.featureName!,
+        //         project: event.project!,
+        //     }));
+        //
+        // const segmentsRemoved = changeEvents
+        //     .filter((event) => event.type === 'segment-deleted')
+        //     .map((event) => ({
+        //         name: event.featureName!,
+        //         project: event.project!,
+        //     }));
+        //
 
         // TODO: we might want to only update the environments that had events changed for performance
         for (const environment of keys) {
             const newToggles = await this.getChangedToggles(
                 environment,
-                changedToggles,
+                featuresUpdated,
             );
-            this.delta[environment].addRevision({
-                updated: newToggles,
-                revisionId: latestRevision,
-                removed,
-            });
+            const featuresUpdatedEvents: DeltaEvent[] = newToggles.map(
+                (toggle) => ({
+                    eventId: latestRevision,
+                    type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+                    feature: toggle,
+                }),
+            );
+            this.delta[environment].addEvents([
+                ...featuresUpdatedEvents,
+                ...featuresRemovedEvents,
+            ]);
         }
         this.currentRevisionId = latestRevision;
     }
@@ -257,11 +281,10 @@ export class ClientFeatureToggleDelta {
         environment: string,
         toggles: string[],
     ): Promise<FeatureConfigurationDeltaClient[]> {
-        const foundToggles = await this.getClientFeatures({
+        return this.getClientFeatures({
             toggleNames: toggles,
             environment,
         });
-        return foundToggles;
     }
 
     public async initEnvironmentDelta(environment: string) {
@@ -273,14 +296,11 @@ export class ClientFeatureToggleDelta {
         this.currentRevisionId =
             await this.configurationRevisionService.getMaxRevisionId();
 
-        const delta = new RevisionDelta([
-            {
-                revisionId: this.currentRevisionId,
-                updated: baseFeatures,
-                removed: [],
-            },
-        ]);
-        this.delta[environment] = delta;
+        this.delta[environment] = new DeltaCache({
+            eventId: this.currentRevisionId,
+            type: DELTA_EVENT_TYPES.HYDRATION,
+            features: baseFeatures,
+        });
 
         this.storeFootprint();
     }
@@ -313,3 +333,4 @@ export class ClientFeatureToggleDelta {
         return Buffer.byteLength(jsonString, 'utf8');
     }
 }
+export type { DeltaEvent };

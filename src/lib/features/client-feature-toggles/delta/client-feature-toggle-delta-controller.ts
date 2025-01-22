@@ -103,15 +103,16 @@ export default class ClientFeatureToggleDeltaController extends Controller {
             res.end();
             return;
         }
-
-        if (changedFeatures.revisionId === currentSdkRevisionId) {
+        const lastEventId =
+            changedFeatures.events[changedFeatures.events.length - 1].eventId;
+        if (lastEventId === currentSdkRevisionId) {
             res.status(304);
             res.getHeaderNames().forEach((header) => res.removeHeader(header));
             res.end();
             return;
         }
 
-        res.setHeader('ETag', `"${changedFeatures.revisionId}"`);
+        res.setHeader('ETag', `"${lastEventId}"`);
         this.openApiService.respondWithValidation(
             200,
             res,

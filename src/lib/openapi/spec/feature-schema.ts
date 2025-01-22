@@ -170,7 +170,7 @@ export const featureSchema = {
                         'cleanup',
                         'archived',
                     ],
-                    example: 'initial',
+                    example: 'define',
                 },
                 enteredStageAt: {
                     description: 'When the feature entered this stage',

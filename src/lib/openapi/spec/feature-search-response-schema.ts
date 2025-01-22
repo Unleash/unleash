@@ -158,7 +158,7 @@ export const featureSearchResponseSchema = {
                         'cleanup',
                         'archived',
                     ],
-                    example: 'initial',
+                    example: 'define',
                 },
                 status: {
                     type: 'string',

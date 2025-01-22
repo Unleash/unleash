@@ -18,7 +18,7 @@ export const featureLifecycleSchema = {
                     'cleanup',
                     'archived',
                 ],
-                example: 'initial',
+                example: 'define',
                 description:
                     'The name of the lifecycle stage that got recorded for a given feature',
             },

@@ -47,7 +47,7 @@ html[data-theme="light"] {
 
     --ifm-background-color: #fff;
 
-    --ifm-font-color-base: #000;
+    --ifm-font-color-base: #202021;
     --ifm-blockquote-color: var(--ifm-font-color-base);
 
     --unleash-color-main-header: #194049;
@@ -238,6 +238,10 @@ main
     margin: auto;
 }
 
+main .theme-doc-breadcrumbs {
+    margin-bottom: 40px;
+}
+
 .markdown h1:first-child {
     color: var(--unleash-color-main-header);
     font-size: 32px;
@@ -251,6 +255,10 @@ main
     line-height: 28px;
     margin-top: 48px;
     margin-bottom: 16px;
+}
+
+.markdown > h2:first-child {
+    margin-top: 0;
 }
 
 .markdown > p {
@@ -301,6 +309,7 @@ main
     padding: 8px;
     font-size: 14px;
     font-weight: 400;
+    margin-top: 16px;
 }
 
 .theme-doc-sidebar-menu .menu__link {

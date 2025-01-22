@@ -41,6 +41,7 @@ import {
 } from '../../internals';
 import isEqual from 'lodash.isequal';
 import { diff } from 'json-diff';
+import type { DeltaHydrationEvent } from './delta/client-feature-toggle-delta-types';
 
 const version = 2;
 
@@ -191,22 +192,30 @@ export default class FeatureController extends Controller {
                 const sortedToggles = features.sort((a, b) =>
                     a.name.localeCompare(b.name),
                 );
-                const sortedNewToggles = delta?.updated.sort((a, b) =>
-                    a.name.localeCompare(b.name),
-                );
+                if (delta?.events[0].type === 'hydration') {
+                    const hydrationEvent: DeltaHydrationEvent =
+                        delta?.events[0];
+                    const sortedNewToggles = hydrationEvent.features.sort(
+                        (a, b) => a.name.localeCompare(b.name),
+                    );
 
-                if (
-                    !this.deepEqualIgnoreOrder(sortedToggles, sortedNewToggles)
-                ) {
-                    this.logger.warn(
-                        `old features and new features are different. Old count ${
-                            features.length
-                        }, new count ${delta?.updated.length}, query ${JSON.stringify(query)},
+                    if (
+                        !this.deepEqualIgnoreOrder(
+                            sortedToggles,
+                            sortedNewToggles,
+                        )
+                    ) {
+                        this.logger.warn(
+                            `old features and new features are different. Old count ${
+                                features.length
+                            }, new count ${hydrationEvent.features.length}, query ${JSON.stringify(query)},
                         diff ${JSON.stringify(
                             diff(sortedToggles, sortedNewToggles),
                         )}`,
-                    );
+                        );
+                    }
                 }
+
                 this.storeFootprint();
             } catch (e) {
                 this.logger.error('Delta diff failed', e);

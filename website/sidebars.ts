@@ -131,6 +131,11 @@ const sidebars: SidebarsConfig = {
                                     label: 'User Management, Access Controls, and Auditing',
                                     id: 'feature-flag-tutorials/use-cases/user-management-access-controls',
                                 },
+                                { 
+                                    type: 'doc',
+                                    label: 'Security and Compliance',
+                                    id: 'feature-flag-tutorials/use-cases/security-compliance',
+                                },
                             ],
                         },
                         {

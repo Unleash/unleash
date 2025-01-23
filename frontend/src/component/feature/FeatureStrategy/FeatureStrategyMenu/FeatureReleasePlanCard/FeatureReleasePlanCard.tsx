@@ -7,6 +7,10 @@ import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useRele
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useNavigate } from 'react-router-dom';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { formatReleasePlanChangeRequestPath } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanAddChangeRequestDialog';
 
 const StyledIcon = styled('div')(({ theme }) => ({
     width: theme.spacing(4),
@@ -60,24 +64,43 @@ export const FeatureReleasePlanCard = ({
     releasePlanTemplate,
 }: IFeatureReleasePlanCardProps) => {
     const Icon = getFeatureStrategyIcon('releasePlanTemplate');
+    const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const { refetch } = useReleasePlans(projectId, featureId, environmentId);
     const { addReleasePlanToFeature } = useReleasePlansApi();
     const { setToastApiError, setToastData } = useToast();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const releasePlanChangeRequestsEnabled = useUiFlag(
+        'releasePlanChangeRequests',
+    );
 
     const addReleasePlan = async () => {
         try {
-            await addReleasePlanToFeature(
-                featureId,
-                releasePlanTemplate.id,
-                projectId,
-                environmentId,
-            );
-            setToastData({
-                type: 'success',
-                text: 'Release plan added',
-            });
-            refetch();
+            if (
+                releasePlanChangeRequestsEnabled &&
+                isChangeRequestConfigured(environmentId)
+            ) {
+                navigate(
+                    formatReleasePlanChangeRequestPath(
+                        projectId,
+                        featureId,
+                        environmentId,
+                        releasePlanTemplate.id,
+                    ),
+                );
+            } else {
+                await addReleasePlanToFeature(
+                    featureId,
+                    releasePlanTemplate.id,
+                    projectId,
+                    environmentId,
+                );
+                setToastData({
+                    type: 'success',
+                    text: 'Release plan added',
+                });
+                refetch();
+            }
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }

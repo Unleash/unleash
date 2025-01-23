@@ -42,7 +42,7 @@ Password-based logins and sharing user accounts among team members at your organ
 
 To mitigate these issues, we recommend you disable password-based authentication for your team members administering Unleash.
 
-In your **Single sign-on** view, click on the **Password** tab, turn the **password based login** toggle off and click **Save**.
+Start by validating SSO sign in works properly and that at least some of your team has administrative permissions. Then, in your **Single sign-on** view, click on the **Password** tab, turn the **password based login** toggle off and click **Save**.
 
 ![The password tab has a toggle that you can turn off.](/img/use-case-user-mgmt-disable-password-login.png)
 

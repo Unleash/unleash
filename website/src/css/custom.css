@@ -275,6 +275,10 @@ main .theme-doc-breadcrumbs {
     line-height: 22px;
 }
 
+.table-of-contents {
+    margin-top: 70px;
+}
+
 .table-of-contents:before {
     content: "Table of Contents";
     display: inline-flex;

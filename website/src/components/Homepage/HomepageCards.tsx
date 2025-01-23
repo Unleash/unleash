@@ -18,7 +18,7 @@ const cardsData = [
         description:
             'Explore best practices and step-by-step tutorials to help you integrate Unleash into your stack.',
         icon: <TutorialsIcon />,
-        href: '/feature-flag-tutorials',
+        href: '/feature-flag-tutorials/use-cases/gradual-rollout',
     },
     {
         title: 'SDKs',

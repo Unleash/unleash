@@ -73,7 +73,7 @@ export const FeatureReleasePlanCard = ({
         'releasePlanChangeRequests',
     );
 
-    const addReleasePlan = async (e: React.MouseEvent) => {
+    const addReleasePlan = async () => {
         try {
             if (
                 releasePlanChangeRequestsEnabled &&

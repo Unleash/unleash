@@ -1,27 +1,25 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import { useReleasePlanTemplate } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplate';
 import useToast from 'hooks/useToast';
 import { styled, Button } from '@mui/material';
+import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 
 const StyledBoldSpan = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 }));
 
+interface IReleasePlanAddChangeRequestDialogProps {
+    featureId: string;
+    environmentId: string;
+    releaseTemplate: IReleasePlanTemplate | undefined;
+    onClosing: () => void;
+}
+
 export const ReleasePlanAddChangeRequestDialog = ({
     featureId,
     environmentId,
-    releaseTemplateId,
+    releaseTemplate,
     onClosing,
-}: {
-    featureId: string;
-    environmentId: string;
-    releaseTemplateId: string | undefined;
-    onClosing: () => void;
-}) => {
-    if (!releaseTemplateId) {
-        return null;
-    }
-    const template = useReleasePlanTemplate(releaseTemplateId);
+}: IReleasePlanAddChangeRequestDialogProps) => {
     const { setToastData } = useToast();
 
     const addReleasePlanToChangeRequest = async () => {
@@ -35,7 +33,7 @@ export const ReleasePlanAddChangeRequestDialog = ({
     return (
         <Dialogue
             title='Request changes'
-            open={true}
+            open={Boolean(releaseTemplate)}
             secondaryButtonText='Cancel'
             onClose={() => {
                 onClosing();
@@ -53,7 +51,7 @@ export const ReleasePlanAddChangeRequestDialog = ({
         >
             <p>
                 <StyledBoldSpan>Add</StyledBoldSpan> release template{' '}
-                <StyledBoldSpan>{template?.template.name}</StyledBoldSpan> to{' '}
+                <StyledBoldSpan>{releaseTemplate?.name}</StyledBoldSpan> to{' '}
                 <StyledBoldSpan>{featureId}</StyledBoldSpan> in{' '}
                 <StyledBoldSpan>{environmentId}</StyledBoldSpan>
             </p>

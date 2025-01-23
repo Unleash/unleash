@@ -12,6 +12,7 @@ import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ReleasePlanAddChangeRequestDialog } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanAddChangeRequestDialog';
+import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -51,9 +52,8 @@ export const FeatureStrategyMenu = ({
     const [anchor, setAnchor] = useState<Element>();
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
-    const [addingTemplateId, setAddingTemplateId] = useState<
-        string | undefined
-    >();
+    const [templateForChangeRequestDialog, setTemplateForChangeRequestDialog] =
+        useState<IReleasePlanTemplate | undefined>();
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen ? 'FeatureStrategyMenuPopover' : undefined;
     const flagOverviewRedesignEnabled = useUiFlag('flagOverviewRedesign');
@@ -119,7 +119,9 @@ export const FeatureStrategyMenu = ({
                         projectId={projectId}
                         featureId={featureId}
                         environmentId={environmentId}
-                        setAddingTemplateId={setAddingTemplateId}
+                        setTemplateForChangeRequestDialog={
+                            setTemplateForChangeRequestDialog
+                        }
                     />
                 </Popover>
             </StyledStrategyMenu>
@@ -180,14 +182,16 @@ export const FeatureStrategyMenu = ({
                     projectId={projectId}
                     featureId={featureId}
                     environmentId={environmentId}
-                    setAddingTemplateId={setAddingTemplateId}
+                    setTemplateForChangeRequestDialog={
+                        setTemplateForChangeRequestDialog
+                    }
                 />
             </Popover>
             <ReleasePlanAddChangeRequestDialog
-                onClosing={() => setAddingTemplateId(undefined)}
+                onClosing={() => setTemplateForChangeRequestDialog(undefined)}
                 featureId={featureId}
                 environmentId={environmentId}
-                releaseTemplateId={addingTemplateId}
+                releaseTemplate={templateForChangeRequestDialog}
             />
         </StyledStrategyMenu>
     );

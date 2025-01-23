@@ -53,7 +53,7 @@ interface IFeatureReleasePlanCardProps {
     featureId: string;
     environmentId: string;
     releasePlanTemplate: IReleasePlanTemplate;
-    setAddingTemplateId: (templateId: string) => void;
+    setTemplateForChangeRequestDialog: (template: IReleasePlanTemplate) => void;
 }
 
 export const FeatureReleasePlanCard = ({
@@ -61,7 +61,7 @@ export const FeatureReleasePlanCard = ({
     featureId,
     environmentId,
     releasePlanTemplate,
-    setAddingTemplateId,
+    setTemplateForChangeRequestDialog,
 }: IFeatureReleasePlanCardProps) => {
     const Icon = getFeatureStrategyIcon('releasePlanTemplate');
     const { trackEvent } = usePlausibleTracker();
@@ -79,7 +79,7 @@ export const FeatureReleasePlanCard = ({
                 releasePlanChangeRequestsEnabled &&
                 isChangeRequestConfigured(environmentId)
             ) {
-                setAddingTemplateId(releasePlanTemplate.id);
+                setTemplateForChangeRequestDialog(releasePlanTemplate);
             } else {
                 await addReleasePlanToFeature(
                     featureId,

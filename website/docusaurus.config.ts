@@ -914,12 +914,24 @@ class="header-github-link"
     ],
     scripts: [
         {
-            src: 'https://widget.kapa.ai/kapa-widget.bundle.js',
+            src: 'https://widget.kapa.ai/kapa-widget.bundle.js', // See configuration: https://docs.kapa.ai/integrations/website-widget/configuration
             'data-website-id': '1d187510-1726-4011-b0f7-62742ae064ee',
             'data-project-name': 'Unleash',
             'data-project-color': '#1A4049',
             'data-project-logo':
+                'https://cdn.getunleash.io/uploads/2024/05/logo-unleash-white.svg',
+            'data-modal-image':
                 'https://cdn.getunleash.io/uploads/2022/05/logo.png',
+            'data-button-position-right': '0',
+            'data-button-border-radius': '10px 0px 0px 10px',
+            'data-button-width': '80px',
+            'data-button-height': '100px',
+            'data-button-image-height': '55px',
+            'data-button-image-width': '55px',
+            'data-button-text-font-weight': '400',
+            'data-button-text-font-size': '16px',
+            'data-button-text-font-family': '"Sen", sans-serif',
+            'data-button-text': 'ASK AI',
             defer: true,
         },
     ],

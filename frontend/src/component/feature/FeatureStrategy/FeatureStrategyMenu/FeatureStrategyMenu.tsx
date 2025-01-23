@@ -11,6 +11,7 @@ import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrate
 import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ReleasePlanAddChangeRequestDialog } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanAddChangeRequestDialog';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -50,6 +51,9 @@ export const FeatureStrategyMenu = ({
     const [anchor, setAnchor] = useState<Element>();
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
+    const [addingTemplateId, setAddingTemplateId] = useState<
+        string | undefined
+    >();
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen ? 'FeatureStrategyMenuPopover' : undefined;
     const flagOverviewRedesignEnabled = useUiFlag('flagOverviewRedesign');
@@ -115,6 +119,7 @@ export const FeatureStrategyMenu = ({
                         projectId={projectId}
                         featureId={featureId}
                         environmentId={environmentId}
+                        setAddingTemplateId={setAddingTemplateId}
                     />
                 </Popover>
             </StyledStrategyMenu>
@@ -175,8 +180,15 @@ export const FeatureStrategyMenu = ({
                     projectId={projectId}
                     featureId={featureId}
                     environmentId={environmentId}
+                    setAddingTemplateId={setAddingTemplateId}
                 />
             </Popover>
+            <ReleasePlanAddChangeRequestDialog
+                onClosing={() => setAddingTemplateId(undefined)}
+                featureId={featureId}
+                environmentId={environmentId}
+                releaseTemplateId={addingTemplateId}
+            />
         </StyledStrategyMenu>
     );
 };

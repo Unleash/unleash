@@ -19,7 +19,6 @@ import OldFeatureOverviewMetaData from './FeatureOverviewMetaData/OldFeatureOver
 import { OldFeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/OldFeatureOverviewSidePanel';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { NewFeatureOverviewEnvironment } from './NewFeatureOverviewEnvironment/NewFeatureOverviewEnvironment';
-import { ReleasePlanAddChangeRequestDialog } from './ReleasePlan/ReleasePlanAddChangeRequestDialog';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -110,10 +109,6 @@ const FeatureOverview = () => {
                             <FeatureStrategyEdit />
                         </SidebarModal>
                     }
-                />
-                <Route
-                    path='release-plan/add'
-                    element={<ReleasePlanAddChangeRequestDialog />}
                 />
             </Routes>
         </StyledContainer>

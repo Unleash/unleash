@@ -8,9 +8,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useNavigate } from 'react-router-dom';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { formatReleasePlanChangeRequestPath } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanAddChangeRequestDialog';
 
 const StyledIcon = styled('div')(({ theme }) => ({
     width: theme.spacing(4),
@@ -55,6 +53,7 @@ interface IFeatureReleasePlanCardProps {
     featureId: string;
     environmentId: string;
     releasePlanTemplate: IReleasePlanTemplate;
+    setAddingTemplateId: (templateId: string) => void;
 }
 
 export const FeatureReleasePlanCard = ({
@@ -62,9 +61,9 @@ export const FeatureReleasePlanCard = ({
     featureId,
     environmentId,
     releasePlanTemplate,
+    setAddingTemplateId,
 }: IFeatureReleasePlanCardProps) => {
     const Icon = getFeatureStrategyIcon('releasePlanTemplate');
-    const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
     const { refetch } = useReleasePlans(projectId, featureId, environmentId);
     const { addReleasePlanToFeature } = useReleasePlansApi();
@@ -74,20 +73,13 @@ export const FeatureReleasePlanCard = ({
         'releasePlanChangeRequests',
     );
 
-    const addReleasePlan = async () => {
+    const addReleasePlan = async (e: React.MouseEvent) => {
         try {
             if (
                 releasePlanChangeRequestsEnabled &&
                 isChangeRequestConfigured(environmentId)
             ) {
-                navigate(
-                    formatReleasePlanChangeRequestPath(
-                        projectId,
-                        featureId,
-                        environmentId,
-                        releasePlanTemplate.id,
-                    ),
-                );
+                setAddingTemplateId(releasePlanTemplate.id);
             } else {
                 await addReleasePlanToFeature(
                     featureId,

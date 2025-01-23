@@ -9,6 +9,7 @@ interface IFeatureStrategyMenuCardsProps {
     projectId: string;
     featureId: string;
     environmentId: string;
+    setAddingTemplateId: (templateId: string) => void;
 }
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
@@ -20,6 +21,7 @@ export const FeatureStrategyMenuCards = ({
     projectId,
     featureId,
     environmentId,
+    setAddingTemplateId,
 }: IFeatureStrategyMenuCardsProps) => {
     const { strategies } = useStrategies();
     const { templates } = useReleasePlanTemplates();
@@ -68,6 +70,7 @@ export const FeatureStrategyMenuCards = ({
                                     featureId={featureId}
                                     environmentId={environmentId}
                                     releasePlanTemplate={template}
+                                    setAddingTemplateId={setAddingTemplateId}
                                 />
                             </ListItem>
                         ))}

@@ -1,37 +1,37 @@
 import styles from './cards.module.css';
-import BookIcon from './icons/book.svg';
-import ChatIcon from './icons/chat.svg';
-import DotCircleIcon from './icons/dot-circle.svg';
+import QuickstartIcon from './icons/quickstart.svg';
+import TutorialsIcon from './icons/tutorials.svg';
+import SdksIcon from './icons/sdks.svg';
+import AcademyIcon from './icons/academy.svg';
 import IntegrationsIcon from './icons/integrations.svg';
-import MortarAcademyIcon from './icons/mortar-academy.svg';
-import SdkIcon from './icons/sdk.svg';
+import GetInTouchIcon from './icons/get-in-touch.svg';
 
 const cardsData = [
     {
         title: 'Quickstart',
         description: 'Get up and running with Unleash in less than 5 minutes.',
-        icon: <DotCircleIcon />,
+        icon: <QuickstartIcon />,
         href: '/quickstart',
     },
     {
         title: 'Tutorials and Guides',
         description:
             'Explore best practices and step-by-step tutorials to help you integrate Unleash into your stack.',
-        icon: <BookIcon />,
+        icon: <TutorialsIcon />,
         href: '/feature-flag-tutorials',
     },
     {
         title: 'SDKs',
         description:
             'With over 30 SDKs, we enable fast and secure feature flagging across all major programming languages.',
-        icon: <SdkIcon />,
+        icon: <SdksIcon />,
         href: '/reference/sdks',
     },
     {
         title: 'Unleash Academy',
         description:
             'Enroll in Unleash Academy to learn core concepts and best practices and gain feature flag expertise.',
-        icon: <MortarAcademyIcon />,
+        icon: <AcademyIcon />,
         href: '/unleash-academy/introduction',
     },
     {
@@ -44,7 +44,7 @@ const cardsData = [
     {
         title: 'Get in touch',
         description: 'Reach out to us for any questions or support.',
-        icon: <ChatIcon />,
+        icon: <GetInTouchIcon />,
         href: 'https://www.getunleash.io/support',
     },
 ];

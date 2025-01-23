@@ -4,11 +4,13 @@ import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrat
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { FeatureReleasePlanCard } from '../FeatureReleasePlanCard/FeatureReleasePlanCard';
+import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
     featureId: string;
     environmentId: string;
+    setTemplateForChangeRequestDialog: (template: IReleasePlanTemplate) => void;
 }
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
@@ -20,6 +22,7 @@ export const FeatureStrategyMenuCards = ({
     projectId,
     featureId,
     environmentId,
+    setTemplateForChangeRequestDialog,
 }: IFeatureStrategyMenuCardsProps) => {
     const { strategies } = useStrategies();
     const { templates } = useReleasePlanTemplates();
@@ -68,6 +71,9 @@ export const FeatureStrategyMenuCards = ({
                                     featureId={featureId}
                                     environmentId={environmentId}
                                     releasePlanTemplate={template}
+                                    setTemplateForChangeRequestDialog={
+                                        setTemplateForChangeRequestDialog
+                                    }
                                 />
                             </ListItem>
                         ))}

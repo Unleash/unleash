@@ -20,7 +20,10 @@ import {
 } from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
-import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import {
+    useInstanceTrafficMetrics,
+    useInstanceTrafficMetrics2,
+} from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
@@ -148,12 +151,29 @@ const NewHeader = styled('div')(() => ({
     alignItems: 'flex-start',
 }));
 
+const NewNetworkTrafficUsage: FC = () => {
+    usePageTitle('Network - Data Usage');
+    const theme = useTheme();
+
+    const { isOss } = useUiConfig();
+
+    const selection = { format: 'daily' as const, month: '2025-01' };
+
+    const incoming = useInstanceTrafficMetrics2(selection);
+
+    // do the mapping here somehow
+
+    return <div>Network Traffic Usage</div>;
+};
+
 export const NetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
     const showMultiMonthSelector = useUiFlag('dataUsageMultiMonthView');
 
     const { isOss } = useUiConfig();
+
+    // what do we do here? if we're cutting the traffic usage box, might be best to split it into multiple components?
 
     const { locationSettings } = useLocationSettings();
     const {
@@ -215,6 +235,15 @@ export const NetworkTrafficUsage: FC = () => {
         setDatasets(toChartData(labels, traffic, endpointsInfo));
     }, [labels, traffic]);
 
+    // console.log(
+    //     'data',
+    //     data,
+    //     'traffic',
+    //     traffic,
+    //     'endpointsInfo',
+    //     endpointsInfo,
+    // );
+
     useEffect(() => {
         if (record && period) {
             const periodData = record[period];
@@ -224,6 +253,7 @@ export const NetworkTrafficUsage: FC = () => {
 
     useEffect(() => {
         if (data) {
+            // if daily, there is a sum. if monthly, use the count from the current month
             const usage = toTrafficUsageSum(data.datasets);
             setUsageTotal(usage);
             if (includedTraffic > 0) {
@@ -246,6 +276,18 @@ export const NetworkTrafficUsage: FC = () => {
             }
         }
     }, [data]);
+
+    // if single month:
+    // overage warning
+    // num requests to unleash this month
+    // selector
+    // chart
+    //
+    // if multi month:
+    // overage warning
+    // avg requests per month for preceding n months
+    // selector
+    // char
 
     return (
         <ConditionallyRender

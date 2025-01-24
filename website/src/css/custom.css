@@ -56,9 +56,14 @@ html[data-theme="light"] {
     --unleash-color-navigation-background-active: #f4f3fd;
 
     --unleash-color-welcome-title: #1e373f;
-    --unleash-color-welcome-strong: #1a4049;
+    --unleash-color-welcome-strong: var(--unleash-color-green);
 
     --unleash-color-welcome-card-hover: #f7f7fa;
+    --unleash-logo: url("/img/unleash_logo_dark.svg");
+
+    --docsearch-searchbox-background: var(--ifm-background-color);
+
+    --unleash-color-header-separator: var(--unleash-color-green);
 }
 
 html[data-theme="dark"] {
@@ -100,6 +105,9 @@ html[data-theme="dark"] {
     --unleash-color-welcome-title: var(--ifm-font-color-base);
     --unleash-color-welcome-strong: var(--ifm-font-color-base);
     --unleash-color-welcome-card-hover: #2b2a3c;
+    --unleash-logo: url("/img/unleash_logo_white.svg");
+
+    --unleash-color-header-separator: rgba(255, 255, 255, 0.3);
 }
 
 /* navbar */
@@ -107,30 +115,51 @@ html[data-theme="dark"] {
 .navbar {
     color: var(--unleash-navbar-font-color);
     height: 3.75rem;
-    background-color: #1a4049;
+    background-color: var(--unleash-color-green);
     color: var(--ifm-navbar-link-color);
+}
+
+.navbar__link {
+    transition: all 0.2s ease-in-out;
 }
 
 .header-github-link {
     color: var(--ifm-navbar-link-color);
-    align-items: center;
     display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    height: 100%;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
 }
 
-.header-demo-button {
-    background-color: var(--ifm-color-primary);
-    color: var(--ifm-color-primary-contrast-background);
+.header-github-link:hover {
+    text-decoration: none;
+}
+
+.navbar-link-outlined {
+    padding: 2px;
+    padding-right: 6px;
+    border: 1px solid var(--ifm-navbar-link-color);
     border-radius: 4px;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    text-align: center;
-    display: inline-block;
-    margin: 0.5rem;
+}
+
+.header-github-link.navbar-link-outlined:hover {
+    border: 1px solid var(--ifm-navbar-link-hover-color);
+}
+
+.navbar .theme-toggle:hover {
+    color: var(--ifm-navbar-link-hover-color);
+}
+
+.navbar-link-solid {
+    background: var(--ifm-navbar-link-color);
+    padding: 10px;
+    border-radius: 4px;
+    color: var(--ifm-background-color);
+}
+
+.navbar-link-solid:hover {
+    background: var(--ifm-navbar-link-hover-color);
+    color: var(--ifm-background-color);
 }
 
 .navbar .navbar__link--active:has(.hide-when-active) {
@@ -154,9 +183,17 @@ html[data-theme="dark"] {
     );
 }
 
+.navbar .show-at-small-sizes {
+    display: none;
+}
+
 @media (max-width: 1150px) {
     .navbar .hide-at-small-sizes {
         display: none;
+    }
+
+    .navbar .show-at-small-sizes {
+        display: inline-block;
     }
 }
 
@@ -303,10 +340,10 @@ main .theme-doc-breadcrumbs {
 
 .navbar__item:has(.navbar-separator) {
     width: 1px;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.3);
+    height: 80%;
+    background: var(--unleash-color-header-separator);
     padding: 0;
-    margin-inline: var(--ifm-spacing-horizontal);
+    margin-inline: 8px;
 }
 
 .footer {
@@ -316,6 +353,83 @@ main .theme-doc-breadcrumbs {
 @media (min-width: 997px) {
     aside.theme-doc-sidebar-container {
         border-right: none;
+        background: var(--ifm-background-color);
+        z-index: 200;
+        position: relative;
+    }
+
+    aside.theme-doc-sidebar-container > div > div {
+        padding-top: 0;
+    }
+
+    aside.theme-doc-sidebar-container .menu {
+        margin-top: 20px;
+    }
+
+    .sidebar-brand-logo {
+        content: "";
+        display: flex;
+        width: 300px;
+        height: 36px;
+        margin-top: 10px;
+        margin-left: 10px;
+        background-image: var(--unleash-logo);
+        background-size: contain;
+        background-repeat: no-repeat;
+    }
+
+    .navbar {
+        padding-left: 308px;
+        justify-content: center;
+        background-color: var(--unleash-color-sub-background);
+        box-shadow: none;
+        --ifm-navbar-link-color: var(
+            --unleash-color-table-of-contents-header-color
+        );
+        color: var(--unleash-color-table-of-contents-header-color);
+    }
+
+    .navbar .navbar__brand {
+        display: none;
+    }
+
+    .navbar .navbar__link {
+        font-weight: 700;
+    }
+
+    .navbar > .navbar__inner {
+        max-width: 1320px;
+    }
+
+    .docs-doc-id-welcome .navbar > .navbar__inner {
+        max-width: 1230px;
+    }
+}
+
+@media (min-width: 1150px) {
+    .navbar > .navbar__inner {
+        margin: 0 35px;
+    }
+
+    .navbar__items > .navbar__item:first-of-type,
+    .navbar__items > .navbar__item:first-of-type > .navbar__item {
+        padding-left: 0;
+    }
+}
+
+@media (min-width: 1366px) {
+    .DocSearch-Button {
+        width: 250px;
+    }
+}
+
+@media (min-width: 1150px) and (max-width: 1366px) {
+    .DocSearch-Button {
+        width: 36px;
+    }
+    .DocSearch-Button .DocSearch-Button-Keys,
+    .DocSearch-Button .DocSearch-Button-Placeholder {
+        display: none;
     }
 }
 

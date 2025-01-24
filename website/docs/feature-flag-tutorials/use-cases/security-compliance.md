@@ -19,7 +19,7 @@ Unleash is designed to support critical enterprise compliance standards:
 
 When you’re getting started with Unleash, the first step is setting up developers and other users with secure access to the platform. Unleash implements a multi-layered authentication architecture that begins with support for [single sign-on (SSO) and SCIM protocols](/how-to/sso), including SAML 2.0 and OpenID Connect, and integration with enterprise identity providers such as Okta, Microsoft Entra ID, and Keycloak.
 
-Beyond SSO, Unleash support identity providers that enforce [Multi-Factor Authentication (MFA)](/using-unleash/compliance/fedramp#identification-and-authentication) across all user access points. Every authentication event is logged with detailed metadata including timestamp, IP address, user agent, and authentication method used, providing comprehensive audit trails for security teams.
+Beyond SSO, Unleash supports identity providers that enforce [Multi-Factor Authentication (MFA)](/using-unleash/compliance/fedramp#identification-and-authentication) across all user access points. Every authentication event is logged with detailed metadata including timestamp, IP address, user agent, and authentication method used, providing comprehensive audit trails for security teams.
 
 Authentication mechanisms include:
 

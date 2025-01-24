@@ -1,4 +1,4 @@
-import { endOfMonth, startOfMonth } from 'date-fns';
+import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
 import type { Db } from '../../db/db';
 import type { Logger, LogProvider } from '../../logger';
 import type {
@@ -112,8 +112,9 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
         );
     }
 
-    async getTrafficDataForMonthRange(
-        monthsBack: number,
+    async getMonthlyTrafficDataUsageForPeriod(
+        from: Date,
+        to: Date,
     ): Promise<IStatMonthlyTrafficUsage[]> {
         const rows = await this.db(TABLE)
             .select(
@@ -122,10 +123,8 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
                 this.db.raw(`to_char(day, 'YYYY-MM') AS month`),
                 this.db.raw(`SUM(count) AS count`),
             )
-            .whereRaw(
-                `day >= date_trunc('month', CURRENT_DATE) - make_interval(months := ?)`,
-                [monthsBack],
-            )
+            .where('day', '>=', from)
+            .andWhere('day', '<=', to)
             .groupBy([
                 'traffic_group',
                 this.db.raw(`to_char(day, 'YYYY-MM')`),
@@ -143,5 +142,13 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
                 count: Number.parseInt(count),
             }),
         );
+    }
+
+    async getTrafficDataForMonthRange(
+        monthsBack: number,
+    ): Promise<IStatMonthlyTrafficUsage[]> {
+        const to = endOfMonth(new Date());
+        const from = startOfMonth(subMonths(to, monthsBack));
+        return this.getMonthlyTrafficDataUsageForPeriod(from, to);
     }
 }

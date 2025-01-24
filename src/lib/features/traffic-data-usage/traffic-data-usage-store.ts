@@ -1,3 +1,4 @@
+import { endOfMonth, startOfMonth } from 'date-fns';
 import type { Db } from '../../db/db';
 import type { Logger, LogProvider } from '../../logger';
 import type {
@@ -89,14 +90,26 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
             });
     }
 
+    async getDailyTrafficDataUsageForPeriod(
+        from: Date,
+        to: Date,
+    ): Promise<IStatTrafficUsage[]> {
+        const rows = await this.db<IStatTrafficUsage>(TABLE)
+            .where('day', '>=', from)
+            .andWhere('day', '<=', to);
+
+        return rows.map(mapRow);
+    }
+
+    // @deprecated: remove with flag `dataUsageMultiMonthView`
     async getTrafficDataUsageForPeriod(
         period: string,
     ): Promise<IStatTrafficUsage[]> {
-        const rows = await this.db<IStatTrafficUsage>(TABLE).whereRaw(
-            `to_char(day, 'YYYY-MM') = ?`,
-            [period],
+        const month = new Date(period);
+        return this.getDailyTrafficDataUsageForPeriod(
+            startOfMonth(month),
+            endOfMonth(month),
         );
-        return rows.map(mapRow);
     }
 
     async getTrafficDataForMonthRange(

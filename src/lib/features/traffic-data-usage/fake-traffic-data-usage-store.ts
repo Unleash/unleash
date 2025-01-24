@@ -89,4 +89,41 @@ export class FakeTrafficDataUsageStore implements ITrafficDataUsageStore {
 
         return Object.values(data);
     }
+
+    async getDailyTrafficDataForPeriod(
+        from: Date,
+        to: Date,
+    ): Promise<IStatTrafficUsage[]> {
+        return this.trafficData.filter(
+            (data) => data.day >= from && data.day <= to,
+        );
+    }
+
+    async getMonthlyTrafficDataForPeriod(
+        from: Date,
+        to: Date,
+    ): Promise<IStatMonthlyTrafficUsage[]> {
+        const data: { [key: string]: IStatMonthlyTrafficUsage } =
+            this.trafficData
+                .filter((entry) => entry.day >= from && entry.day <= to)
+                .reduce((acc, entry) => {
+                    const month = format(entry.day, 'yyyy-MM');
+                    const key = `${month}-${entry.trafficGroup}-${entry.statusCodeSeries}`;
+
+                    if (acc[key]) {
+                        acc[key].count += entry.count;
+                    } else {
+                        acc[key] = {
+                            month,
+                            trafficGroup: entry.trafficGroup,
+                            statusCodeSeries: entry.statusCodeSeries,
+                            count: entry.count,
+                        };
+                    }
+
+                    return acc;
+                }, {});
+
+        return Object.values(data);
+    }
 }

@@ -65,16 +65,14 @@ export type SegmentedSchema = {
     apiData: [
         {
             apiPath: string;
-            dataPoints: {
+            dataPoints: Array<{
                 // other options: period? time? interval? for?
                 when: string; // in API: string formatted as full date or YYYY-MM, depending on monthly/daily
-                trafficTypes: [
-                    {
-                        group: string; // we could do 'successful-requests', but that might constrain us in the future
-                        count: number; // natural number
-                    },
-                ];
-            }[];
+                trafficTypes: Array<{
+                    group: string; // we could do 'successful-requests', but that might constrain us in the future
+                    count: number; // natural number
+                }>;
+            }>;
         },
     ];
 };
@@ -94,8 +92,7 @@ export type InstanceTrafficMetricsResponse2 = {
 export const useInstanceTrafficMetrics2 = (
     selection: ChartDataSelection,
 ): InstanceTrafficMetricsResponse2 => {
-    // const { from, to } = fromSelection(selection);
-    // console.log('would use these from and to dates', from, to);
+    const { from, to } = fromSelection(selection);
 
     const apiPath =
         selection.format === 'daily'

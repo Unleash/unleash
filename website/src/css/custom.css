@@ -379,7 +379,7 @@ main .theme-doc-breadcrumbs {
     }
 
     .navbar {
-        padding-left: 308px;
+        padding-left: 314px;
         justify-content: center;
         background-color: var(--unleash-color-sub-background);
         box-shadow: none;
@@ -408,7 +408,7 @@ main .theme-doc-breadcrumbs {
 
 @media (min-width: 1150px) {
     .navbar > .navbar__inner {
-        margin: 0 35px;
+        margin: 0 30px;
     }
 
     .navbar__items > .navbar__item:first-of-type,

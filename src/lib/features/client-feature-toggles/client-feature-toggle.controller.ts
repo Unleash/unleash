@@ -41,7 +41,6 @@ import {
 } from '../../internals';
 import isEqual from 'lodash.isequal';
 import { diff } from 'json-diff';
-import type { DeltaHydrationEvent } from './delta/client-feature-toggle-delta-types';
 
 const version = 2;
 
@@ -192,9 +191,11 @@ export default class FeatureController extends Controller {
                 const sortedToggles = features.sort((a, b) =>
                     a.name.localeCompare(b.name),
                 );
+                const sortedSegments = segments.sort(
+                    (a, b) => Number(a.id) - Number(b.id),
+                );
                 if (delta?.events[0].type === 'hydration') {
-                    const hydrationEvent: DeltaHydrationEvent =
-                        delta?.events[0];
+                    const hydrationEvent = delta?.events[0];
                     const sortedNewToggles = hydrationEvent.features.sort(
                         (a, b) => a.name.localeCompare(b.name),
                     );
@@ -211,6 +212,24 @@ export default class FeatureController extends Controller {
                             }, new count ${hydrationEvent.features.length}, query ${JSON.stringify(query)},
                         diff ${JSON.stringify(
                             diff(sortedToggles, sortedNewToggles),
+                        )}`,
+                        );
+                    }
+                    const sortedNewSegments = hydrationEvent.segments.sort(
+                        (a, b) => Number(a.id) - Number(b.id),
+                    );
+                    if (
+                        !this.deepEqualIgnoreOrder(
+                            sortedToggles,
+                            sortedNewToggles,
+                        )
+                    ) {
+                        this.logger.warn(
+                            `old features and new features are different for segments. Old count ${
+                                segments.length
+                            }, new count ${hydrationEvent.segments.length}, query ${JSON.stringify(query)},
+                        diff ${JSON.stringify(
+                            diff(sortedSegments, sortedNewSegments),
                         )}`,
                         );
                     }

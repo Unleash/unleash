@@ -85,6 +85,7 @@ test('project filter removes features not in project in hydration', () => {
     const revisionList: DeltaHydrationEvent = {
         eventId: 1,
         type: 'hydration',
+        segments: [],
         features: [
             mockAdd({ name: 'feature1', project: 'project1' }),
             mockAdd({ name: 'feature2', project: 'project2' }),
@@ -101,6 +102,7 @@ test('project filter removes features not in project in hydration', () => {
     expect(revisions).toEqual({
         eventId: 1,
         type: 'hydration',
+        segments: [],
         features: [mockAdd({ name: 'myfeature2', project: 'project2' })],
     });
 });

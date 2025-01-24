@@ -1,5 +1,4 @@
 import type {
-    IClientSegment,
     IEventStore,
     IFeatureToggleDeltaQuery,
     IFeatureToggleQuery,
@@ -24,6 +23,7 @@ import {
     type DeltaHydrationEvent,
     isDeltaFeatureRemovedEvent,
     isDeltaFeatureUpdatedEvent,
+    isDeltaSegmentEvent,
 } from './client-feature-toggle-delta-types';
 
 type EnvironmentRevisions = Record<string, DeltaCache>;
@@ -58,7 +58,9 @@ export const filterEventsByQuery = (
 
     return targetedEvents.filter((revision) => {
         return (
-            startsWithPrefix(revision) && (allProjects || isInProject(revision))
+            isDeltaSegmentEvent(revision) ||
+            (startsWithPrefix(revision) &&
+                (allProjects || isInProject(revision)))
         );
     });
 };
@@ -69,11 +71,12 @@ export const filterHydrationEventByQuery = (
     namePrefix: string,
 ): DeltaHydrationEvent => {
     const allProjects = projects.includes('*');
-    const { type, features, eventId } = event;
+    const { type, features, eventId, segments } = event;
 
     return {
         eventId,
         type,
+        segments,
         features: features.filter((feature) => {
             return (
                 feature.name.startsWith(namePrefix) &&
@@ -87,8 +90,6 @@ export class ClientFeatureToggleDelta {
     private clientFeatureToggleDeltaReadModel: IClientFeatureToggleDeltaReadModel;
 
     private delta: EnvironmentRevisions = {};
-
-    private segments: IClientSegment[];
 
     private eventStore: IEventStore;
 
@@ -124,7 +125,6 @@ export class ClientFeatureToggleDelta {
         this.delta = {};
 
         this.initRevisionId();
-        this.updateSegments();
         this.configurationRevisionService.on(
             UPDATE_REVISION,
             this.onUpdateRevisionEvent,
@@ -151,10 +151,6 @@ export class ClientFeatureToggleDelta {
         if (!hasDelta) {
             await this.initEnvironmentDelta(environment);
         }
-        const hasSegments = this.segments;
-        if (!hasSegments) {
-            await this.updateSegments();
-        }
         if (requiredRevisionId >= this.currentRevisionId) {
             return undefined;
         }
@@ -167,12 +163,7 @@ export class ClientFeatureToggleDelta {
             );
 
             const response: ClientFeaturesDeltaSchema = {
-                events: [
-                    {
-                        ...filteredEvent,
-                        segments: this.segments,
-                    },
-                ],
+                events: [filteredEvent],
             };
 
             return Promise.resolve(response);
@@ -202,7 +193,6 @@ export class ClientFeatureToggleDelta {
     public async onUpdateRevisionEvent() {
         if (this.flagResolver.isEnabled('deltaApi')) {
             await this.updateFeaturesDelta();
-            await this.updateSegments();
             this.storeFootprint();
         }
     }
@@ -246,21 +236,32 @@ export class ClientFeatureToggleDelta {
                 project: event.project!,
             }));
 
-        // TODO: implement single segment fetching
-        // const segmentsUpdated = changeEvents
-        //     .filter((event) => event.type === 'segment-updated')
-        //     .map((event) => ({
-        //         name: event.featureName!,
-        //         project: event.project!,
-        //     }));
-        //
-        // const segmentsRemoved = changeEvents
-        //     .filter((event) => event.type === 'segment-deleted')
-        //     .map((event) => ({
-        //         name: event.featureName!,
-        //         project: event.project!,
-        //     }));
-        //
+        const segmentsUpdated = changeEvents
+            .filter((event) =>
+                ['segment-created', 'segment-updated'].includes(event.type),
+            )
+            .map((event) => event.data.id);
+
+        const segmentsRemoved = changeEvents
+            .filter((event) => event.type === 'segment-deleted')
+            .map((event) => event.preData.id);
+
+        const segments =
+            await this.segmentReadModel.getAllForClient(segmentsUpdated);
+
+        const segmentsUpdatedEvents: DeltaEvent[] = segments.map((segment) => ({
+            eventId: latestRevision,
+            type: DELTA_EVENT_TYPES.SEGMENT_UPDATED,
+            segment,
+        }));
+
+        const segmentsRemovedEvents: DeltaEvent[] = segmentsRemoved.map(
+            (segmentId) => ({
+                eventId: latestRevision,
+                type: DELTA_EVENT_TYPES.SEGMENT_REMOVED,
+                segmentId,
+            }),
+        );
 
         // TODO: we might want to only update the environments that had events changed for performance
         for (const environment of keys) {
@@ -278,6 +279,8 @@ export class ClientFeatureToggleDelta {
             this.delta[environment].addEvents([
                 ...featuresUpdatedEvents,
                 ...featuresRemovedEvents,
+                ...segmentsUpdatedEvents,
+                ...segmentsRemovedEvents,
             ]);
         }
         this.currentRevisionId = latestRevision;
@@ -287,6 +290,9 @@ export class ClientFeatureToggleDelta {
         environment: string,
         toggles: string[],
     ): Promise<FeatureConfigurationDeltaClient[]> {
+        if (toggles.length === 0) {
+            return [];
+        }
         return this.getClientFeatures({
             toggleNames: toggles,
             environment,
@@ -298,6 +304,7 @@ export class ClientFeatureToggleDelta {
         const baseFeatures = await this.getClientFeatures({
             environment,
         });
+        const baseSegments = await this.segmentReadModel.getActiveForClient();
 
         this.currentRevisionId =
             await this.configurationRevisionService.getMaxRevisionId();
@@ -306,6 +313,7 @@ export class ClientFeatureToggleDelta {
             eventId: this.currentRevisionId,
             type: DELTA_EVENT_TYPES.HYDRATION,
             features: baseFeatures,
+            segments: baseSegments,
         });
 
         this.storeFootprint();
@@ -319,15 +327,9 @@ export class ClientFeatureToggleDelta {
         return result;
     }
 
-    private async updateSegments(): Promise<void> {
-        this.segments = await this.segmentReadModel.getActiveForClient();
-    }
-
     storeFootprint() {
         try {
-            const featuresMemory = this.getCacheSizeInBytes(this.delta);
-            const segmentsMemory = this.getCacheSizeInBytes(this.segments);
-            const memory = featuresMemory + segmentsMemory;
+            const memory = this.getCacheSizeInBytes(this.delta);
             this.eventBus.emit(CLIENT_DELTA_MEMORY, { memory });
         } catch (e) {
             this.logger.error('Client delta footprint error', e);

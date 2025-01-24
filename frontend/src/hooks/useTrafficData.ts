@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type {
     IInstanceTrafficMetricsResponse,
-    InstanceTrafficMetricsResponse2,
+    SegmentedSchema,
     SegmentedSchemaApiData,
 } from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { ChartDataset } from 'chart.js';
@@ -115,29 +115,41 @@ const toPeriodsRecord = (
     );
 };
 
-const toMonthlyChartData = (
-    traffic: InstanceTrafficMetricsResponse2,
-    endpointsInfo: Record<string, EndpointInfo>,
-): { datasets: ChartDatasetType[]; labels: string[] } => {
-    if (!traffic || !traffic.usage || !traffic.usage.apiData) {
+export const newToChartData = (
+    traffic?: SegmentedSchema,
+): { datasets: ChartDatasetType[]; labels: (string | number)[] } => {
+    if (!traffic) {
         return { labels: [], datasets: [] };
     }
 
-    const from = new Date(traffic.usage.period.from);
-    const to = new Date(traffic.usage.period.to);
-    const numMonths = Math.abs(differenceInCalendarMonths(to, from));
-    const formatMonth = (date: Date) => format(date, 'yyyy-MM');
+    if (traffic.format === 'monthly') {
+        return toMonthlyChartData(traffic);
+    } else {
+        return toDailyChartData(traffic, endpointsInfo);
+    }
+};
 
-    const datasets = traffic.usage.apiData
-        .filter((item) => !!endpointsInfo[item.apiPath])
+const prepareApiData = (apiData: SegmentedSchema['apiData']) =>
+    apiData
+        .filter((item) => item.apiPath in endpointsInfo)
         .sort(
             (item1: SegmentedSchemaApiData, item2: SegmentedSchemaApiData) =>
                 endpointsInfo[item1.apiPath].order -
                 endpointsInfo[item2.apiPath].order,
-        )
-        .map((item: SegmentedSchemaApiData) => {
+        );
+
+const toMonthlyChartData = (
+    traffic: SegmentedSchema,
+): { datasets: ChartDatasetType[]; labels: string[] } => {
+    const from = new Date(traffic.period.from);
+    const to = new Date(traffic.period.to);
+    const numMonths = Math.abs(differenceInCalendarMonths(to, from)) + 1;
+    const formatMonth = (date: Date) => format(date, 'yyyy-MM');
+
+    const datasets = prepareApiData(traffic.apiData).map(
+        (item: SegmentedSchemaApiData) => {
             const monthsRec: { [month: string]: number } = {};
-            for (let i = 0; i <= numMonths; i++) {
+            for (let i = 0; i < numMonths; i++) {
                 monthsRec[formatMonth(addMonths(from, i))] = 0;
             }
 
@@ -153,7 +165,8 @@ const toMonthlyChartData = (
                 backgroundColor: epInfo.color,
                 hoverBackgroundColor: epInfo.color,
             };
-        });
+        },
+    );
 
     const labels = Array.from({ length: numMonths + 1 }).map((_, index) =>
         formatMonth(addMonths(from, index)),
@@ -219,20 +232,16 @@ const toMonthlyChartData = (
 //     };
 
 const toDailyChartData = (
-    traffic: InstanceTrafficMetricsResponse2,
+    traffic: SegmentedSchema,
     endpointsInfo: Record<string, EndpointInfo>,
 ): { datasets: ChartDatasetType[]; labels: number[] } => {
-    if (!traffic || !traffic.usage || !traffic.usage.apiData) {
-        return { datasets: [], labels: [] };
-    }
-
-    const from = new Date(traffic.usage.period.from);
-    const to = new Date(traffic.usage.period.to);
-    const numDays = Math.abs(differenceInCalendarDays(to, from));
+    const from = new Date(traffic.period.from);
+    const to = new Date(traffic.period.to);
+    const numDays = Math.abs(differenceInCalendarDays(to, from)) + 1;
     const formatDay = (date: Date) => format(date, 'yyyy-MM-dd');
 
     const daysRec: { [day: string]: number } = {};
-    for (let i = 0; i <= numDays; i++) {
+    for (let i = 0; i < numDays; i++) {
         daysRec[formatDay(addDays(from, i))] = 0;
     }
 
@@ -240,7 +249,7 @@ const toDailyChartData = (
         ...daysRec,
     });
 
-    const datasets = traffic.usage.apiData
+    const datasets = traffic.apiData
         .filter((item) => !!endpointsInfo[item.apiPath])
         .sort(
             (item1: SegmentedSchemaApiData, item2: SegmentedSchemaApiData) =>
@@ -264,9 +273,10 @@ const toDailyChartData = (
             };
         });
 
-    // simplification: assumings days run in a single month from the 1st onwards
+    // simplification: assuming days run in a single month from the 1st onwards
     const labels = Array.from({ length: numDays }).map((_, index) => index + 1);
 
+    console.log(labels, datasets);
     return { datasets, labels };
 };
 

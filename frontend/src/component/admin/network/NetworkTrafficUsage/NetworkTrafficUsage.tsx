@@ -20,18 +20,12 @@ import {
 } from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
-import {
-    useInstanceTrafficMetrics,
-    useInstanceTrafficMetrics2,
-} from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import { useInstanceTrafficMetrics2 } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import {
-    type ChartDatasetType,
-    useTrafficDataEstimation,
-} from 'hooks/useTrafficData';
+import { newToChartData, useTrafficDataEstimation } from 'hooks/useTrafficData';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { formatTickValue } from 'component/common/Chart/formatTickValue';
 import { useTrafficLimit } from './hooks/useTrafficLimit';
@@ -214,11 +208,16 @@ export const NetworkTrafficUsage: FC = () => {
         );
     }, [theme, period]);
 
-    const traffic = useInstanceTrafficMetrics(period);
+    const traffic = useInstanceTrafficMetrics2({
+        format: 'daily',
+        month: period,
+    });
 
-    const [labels, setLabels] = useState<number[]>([]);
+    const data = newToChartData(traffic.usage); // <- why don't we do this?
 
-    const [datasets, setDatasets] = useState<ChartDatasetType[]>([]);
+    // const [labels, setLabels] = useState<number[]>([]);
+
+    // const [datasets, setDatasets] = useState<ChartDatasetType[]>([]);
 
     const [usageTotal, setUsageTotal] = useState<number>(0);
 
@@ -226,30 +225,21 @@ export const NetworkTrafficUsage: FC = () => {
 
     const [estimatedMonthlyCost, setEstimatedMonthlyCost] = useState<number>(0);
 
-    const data = {
-        labels,
-        datasets,
-    };
+    // const data = {
+    //     labels,
+    //     datasets,
+    // };
 
-    useEffect(() => {
-        setDatasets(toChartData(labels, traffic, endpointsInfo));
-    }, [labels, traffic]);
+    // useEffect(() => {
+    //     setDatasets(toChartData(labels, traffic, endpointsInfo));
+    // }, [labels, traffic]);
 
-    // console.log(
-    //     'data',
-    //     data,
-    //     'traffic',
-    //     traffic,
-    //     'endpointsInfo',
-    //     endpointsInfo,
-    // );
-
-    useEffect(() => {
-        if (record && period) {
-            const periodData = record[period];
-            setLabels(getDayLabels(periodData.dayCount));
-        }
-    }, [period]);
+    // useEffect(() => {
+    //     if (record && period) {
+    //         const periodData = record[period];
+    //         setLabels(getDayLabels(periodData.dayCount));
+    //     }
+    // }, [period]);
 
     useEffect(() => {
         if (data) {

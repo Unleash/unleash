@@ -45,7 +45,7 @@ type Selection =
       };
 
 const fromSelection = (selection: Selection) => {
-    const fmt = (date: Date) => format(date, 'YYYY-MM-dd');
+    const fmt = (date: Date) => format(date, 'yyyy-MM-dd');
     if (selection.format === 'daily') {
         const month = new Date(selection.month);
         const from = fmt(month);

@@ -3,7 +3,7 @@ title: Security and Compliance for Enterprise Feature Flag Management
 slug: /feature-flag-tutorials/use-cases/security-compliance
 ---
 
-Enterprise organizations face the challenge of balancing innovative technology with strict security and compliance requirements. Feature flags are a powerful tool for controlled software rollouts, but it must be implemented with attention to regulatory standards and data protection. Unleash addresses these complex needs by providing a comprehensive feature flag platform that prioritizes enterprise-level security and compliance.
+Enterprise organizations face the challenge of balancing innovative technology with strict security and compliance requirements. Feature flags are a powerful tool for controlled software rollouts, but they must be implemented with attention to regulatory standards and data protection. Unleash addresses these complex needs by providing a comprehensive feature flag platform that prioritizes enterprise-level security and compliance.
 
 ## Regulatory compliance frameworks
 

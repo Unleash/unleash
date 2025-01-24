@@ -34,7 +34,7 @@ export const useInstanceTrafficMetrics = (
     );
 };
 
-type Selection =
+export type ChartDataSelection =
     | {
           format: 'daily';
           month: string;
@@ -44,7 +44,7 @@ type Selection =
           monthsBack: number;
       };
 
-const fromSelection = (selection: Selection) => {
+const fromSelection = (selection: ChartDataSelection) => {
     const fmt = (date: Date) => format(date, 'yyyy-MM-dd');
     if (selection.format === 'daily') {
         const month = new Date(selection.month);
@@ -92,10 +92,10 @@ export type InstanceTrafficMetricsResponse2 = {
 };
 
 export const useInstanceTrafficMetrics2 = (
-    selection: Selection,
+    selection: ChartDataSelection,
 ): InstanceTrafficMetricsResponse2 => {
-    const { from, to } = fromSelection(selection);
-    console.log('would use these from and to dates', from, to);
+    // const { from, to } = fromSelection(selection);
+    // console.log('would use these from and to dates', from, to);
 
     const apiPath =
         selection.format === 'daily'

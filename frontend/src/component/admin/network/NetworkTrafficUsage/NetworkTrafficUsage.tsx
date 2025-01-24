@@ -33,6 +33,7 @@ import { BILLING_TRAFFIC_BUNDLE_PRICE } from 'component/admin/billing/BillingDas
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { PeriodSelector } from './PeriodSelector';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { format } from 'date-fns';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -189,29 +190,36 @@ export const NetworkTrafficUsage: FC = () => {
         return createBarChartOptions(
             theme,
             (tooltipItems: any) => {
-                const periodItem = record[period];
-                const tooltipDate = new Date(
-                    periodItem.year,
-                    periodItem.month,
-                    Number.parseInt(tooltipItems[0].label),
-                );
-                return tooltipDate.toLocaleDateString(
-                    locationSettings?.locale ?? 'en-US',
-                    {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
-                    },
-                );
+                if (period.format === 'daily') {
+                    const periodItem = record[period.month];
+                    const tooltipDate = new Date(
+                        periodItem.year,
+                        periodItem.month,
+                        Number.parseInt(tooltipItems[0].label),
+                    );
+                    return tooltipDate.toLocaleDateString(
+                        locationSettings?.locale ?? 'en-US',
+                        {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric',
+                        },
+                    );
+                } else {
+                    return new Date(tooltipItems[0].label).toLocaleDateString(
+                        locationSettings?.locale ?? 'en-US',
+                        {
+                            month: 'long',
+                            year: 'numeric',
+                        },
+                    );
+                }
             },
             includedTraffic,
         );
     }, [theme, period]);
 
-    const traffic = useInstanceTrafficMetrics2({
-        format: 'daily',
-        month: period,
-    });
+    const traffic = useInstanceTrafficMetrics2(period);
 
     const data = newToChartData(traffic.usage); // <- why don't we do this?
 
@@ -244,7 +252,13 @@ export const NetworkTrafficUsage: FC = () => {
     useEffect(() => {
         if (data) {
             // if daily, there is a sum. if monthly, use the count from the current month
-            const usage = toTrafficUsageSum(data.datasets);
+            let usage: number;
+            if (period.format === 'monthly') {
+                usage = data.datasets.length; // this is wrong
+            } else {
+                usage = toTrafficUsageSum(data.datasets);
+            }
+
             setUsageTotal(usage);
             if (includedTraffic > 0) {
                 const calculatedOverageCost = calculateOverageCost(
@@ -256,7 +270,9 @@ export const NetworkTrafficUsage: FC = () => {
 
                 setEstimatedMonthlyCost(
                     calculateEstimatedMonthlyCost(
-                        period,
+                        period.format === 'daily'
+                            ? period.month
+                            : format(new Date(), 'yyyy-MM'),
                         data.datasets,
                         includedTraffic,
                         new Date(),

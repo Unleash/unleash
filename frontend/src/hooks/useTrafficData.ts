@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type {
+    ChartDataSelection,
     IInstanceTrafficMetricsResponse,
     SegmentedSchema,
     SegmentedSchemaApiData,
@@ -377,7 +378,10 @@ export const useTrafficDataEstimation = () => {
     //         "label": "December 2024"
     //     }
     // }
-    const [period, setPeriod] = useState<string>(selectablePeriods[0].key);
+    const [period, setPeriod] = useState<ChartDataSelection>({
+        format: 'daily',
+        month: selectablePeriods[0].key,
+    });
 
     return {
         calculateTrafficDataCost,

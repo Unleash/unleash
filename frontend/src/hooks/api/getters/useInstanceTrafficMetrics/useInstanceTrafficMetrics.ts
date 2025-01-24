@@ -65,18 +65,16 @@ export type SegmentedSchema = {
     apiData: [
         {
             apiPath: string;
-            dataPoints: [
-                {
-                    // other options: period? time? interval? for?
-                    when: string; // in API: string formatted as full date or YYYY-MM, depending on monthly/daily
-                    trafficTypes: [
-                        {
-                            group: string; // we could do 'successful-requests', but that might constrain us in the future
-                            count: number; // natural number
-                        },
-                    ];
-                },
-            ];
+            dataPoints: {
+                // other options: period? time? interval? for?
+                when: string; // in API: string formatted as full date or YYYY-MM, depending on monthly/daily
+                trafficTypes: [
+                    {
+                        group: string; // we could do 'successful-requests', but that might constrain us in the future
+                        count: number; // natural number
+                    },
+                ];
+            }[];
         },
     ];
 };

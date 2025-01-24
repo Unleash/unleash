@@ -119,7 +119,13 @@ export const newToChartData = (
     traffic?: SegmentedSchema,
 ): { datasets: ChartDatasetType[]; labels: (string | number)[] } => {
     if (!traffic) {
-        return { labels: [], datasets: [] };
+        const datasets = Object.values(endpointsInfo).map((info) => ({
+            label: info.label,
+            data: [],
+            backgroundColor: info.color,
+            hoverBackgroundColor: info.color,
+        }));
+        return { labels: [], datasets };
     }
 
     if (traffic.format === 'monthly') {
@@ -168,68 +174,12 @@ const toMonthlyChartData = (
         },
     );
 
-    const labels = Array.from({ length: numMonths + 1 }).map((_, index) =>
+    const labels = Array.from({ length: numMonths }).map((_, index) =>
         formatMonth(addMonths(from, index)),
     );
 
     return { datasets, labels };
 };
-
-// const getDailyChartDataRec = (period: { from: string; to: string }) => {
-//     const from = new Date(period.from);
-//     const to = new Date(period.to);
-//     const numDays = Math.abs(differenceInCalendarDays(to, from));
-//     const formatDay = (date: Date) => format(date, 'yyyy-MM-dd');
-
-//     const daysRec: { [day: string]: number } = {};
-//     for (let i = 0; i <= numDays; i++) {
-//         daysRec[formatDay(addDays(from, i))] = 0;
-//     }
-
-//     return () => ({
-//         ...daysRec,
-//     });
-// };
-
-// const toAnyChartData =
-//     (getDataRec: () => { [key: string]: number }) =>
-//     (
-//         traffic: InstanceTrafficMetricsResponse2,
-//         endpointsInfo: Record<string, EndpointInfo>,
-//     ): ChartDatasetType[] => {
-//         if (!traffic || !traffic.usage || !traffic.usage.apiData) {
-//             return [];
-//         }
-
-//         const data = traffic.usage.apiData
-//             .filter((item) => !!endpointsInfo[item.apiPath])
-//             .sort(
-//                 (
-//                     item1: SegmentedSchemaApiData,
-//                     item2: SegmentedSchemaApiData,
-//                 ) =>
-//                     endpointsInfo[item1.apiPath].order -
-//                     endpointsInfo[item2.apiPath].order,
-//             )
-//             .map((item: SegmentedSchemaApiData) => {
-//                 const entries = getDataRec();
-
-//                 for (const day of Object.values(item.dataPoints)) {
-//                     entries[day.when] = day.trafficTypes[0].count;
-//                 }
-
-//                 const epInfo = endpointsInfo[item.apiPath];
-
-//                 return {
-//                     label: epInfo.label,
-//                     data: Object.values(entries),
-//                     backgroundColor: epInfo.color,
-//                     hoverBackgroundColor: epInfo.color,
-//                 };
-//             });
-
-//         return data;
-//     };
 
 const toDailyChartData = (
     traffic: SegmentedSchema,
@@ -249,14 +199,8 @@ const toDailyChartData = (
         ...daysRec,
     });
 
-    const datasets = traffic.apiData
-        .filter((item) => !!endpointsInfo[item.apiPath])
-        .sort(
-            (item1: SegmentedSchemaApiData, item2: SegmentedSchemaApiData) =>
-                endpointsInfo[item1.apiPath].order -
-                endpointsInfo[item2.apiPath].order,
-        )
-        .map((item: SegmentedSchemaApiData) => {
+    const datasets = prepareApiData(traffic.apiData).map(
+        (item: SegmentedSchemaApiData) => {
             const daysRec = getDaysRec();
 
             for (const day of Object.values(item.dataPoints)) {
@@ -271,7 +215,8 @@ const toDailyChartData = (
                 backgroundColor: epInfo.color,
                 hoverBackgroundColor: epInfo.color,
             };
-        });
+        },
+    );
 
     // simplification: assuming days run in a single month from the 1st onwards
     const labels = Array.from({ length: numDays }).map((_, index) => index + 1);
@@ -330,15 +275,6 @@ const toChartData = (
                 hoverBackgroundColor: epInfo.color,
             };
         });
-
-    console.log(
-        'traffic data to chart data',
-        days,
-        traffic.usage,
-        endpointsInfo,
-        'result:',
-        data,
-    );
 
     return data;
 };

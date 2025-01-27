@@ -151,7 +151,7 @@ class="header-github-link"
                     {
                         type: 'html',
                         position: 'right',
-                        value: '<a href="https://app.unleash-hosted.com/sign-in" target="_blank" rel="noopener noreferrer" class="navbar__link navbar-link-solid">Get a demo</a>',
+                        value: '<a href="https://www.getunleash.io/plans/enterprise" target="_blank" rel="noopener noreferrer" class="navbar__link navbar-link-solid">Get a demo</a>',
                         className: 'hide-at-small-sizes',
                     },
                 ],

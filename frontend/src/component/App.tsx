@@ -70,7 +70,7 @@ export const App = () => {
             if (!style) return;
             document.head.removeChild(style);
         };
-    }, [uiGlobalFontSizeVariant]);
+    }, [JSON.stringify(uiGlobalFontSizeVariant)]);
 
     useEffect(() => {
         if (hasFetchedAuth && Boolean(user?.id)) {

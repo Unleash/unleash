@@ -1,6 +1,18 @@
 import { useState } from 'react';
-import type { IInstanceTrafficMetricsResponse } from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import type {
+    ChartDataSelection,
+    IInstanceTrafficMetricsResponse,
+    SegmentedSchema,
+    SegmentedSchemaApiData,
+} from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { ChartDataset } from 'chart.js';
+import {
+    addDays,
+    addMonths,
+    differenceInCalendarDays,
+    differenceInCalendarMonths,
+    format,
+} from 'date-fns';
 
 const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
@@ -104,6 +116,116 @@ const toPeriodsRecord = (
     );
 };
 
+export const newToChartData = (
+    traffic?: SegmentedSchema,
+): { datasets: ChartDatasetType[]; labels: (string | number)[] } => {
+    if (!traffic) {
+        const datasets = Object.values(endpointsInfo).map((info) => ({
+            label: info.label,
+            data: [],
+            backgroundColor: info.color,
+            hoverBackgroundColor: info.color,
+        }));
+        return { labels: [], datasets };
+    }
+
+    if (traffic.format === 'monthly') {
+        return toMonthlyChartData(traffic);
+    } else {
+        return toDailyChartData(traffic, endpointsInfo);
+    }
+};
+
+const prepareApiData = (apiData: SegmentedSchema['apiData']) =>
+    apiData
+        .filter((item) => item.apiPath in endpointsInfo)
+        .sort(
+            (item1: SegmentedSchemaApiData, item2: SegmentedSchemaApiData) =>
+                endpointsInfo[item1.apiPath].order -
+                endpointsInfo[item2.apiPath].order,
+        );
+
+const toMonthlyChartData = (
+    traffic: SegmentedSchema,
+): { datasets: ChartDatasetType[]; labels: string[] } => {
+    const from = new Date(traffic.period.from);
+    const to = new Date(traffic.period.to);
+    const numMonths = Math.abs(differenceInCalendarMonths(to, from)) + 1;
+    const formatMonth = (date: Date) => format(date, 'yyyy-MM');
+
+    const datasets = prepareApiData(traffic.apiData).map(
+        (item: SegmentedSchemaApiData) => {
+            const monthsRec: { [month: string]: number } = {};
+            for (let i = 0; i < numMonths; i++) {
+                monthsRec[formatMonth(addMonths(from, i))] = 0;
+            }
+
+            for (const month of Object.values(item.dataPoints)) {
+                monthsRec[month.when] = month.trafficTypes[0].count;
+            }
+
+            const epInfo = endpointsInfo[item.apiPath];
+
+            return {
+                label: epInfo.label,
+                data: Object.values(monthsRec),
+                backgroundColor: epInfo.color,
+                hoverBackgroundColor: epInfo.color,
+            };
+        },
+    );
+
+    const labels = Array.from({ length: numMonths }).map((_, index) =>
+        formatMonth(addMonths(from, index)),
+    );
+
+    return { datasets, labels };
+};
+
+const toDailyChartData = (
+    traffic: SegmentedSchema,
+    endpointsInfo: Record<string, EndpointInfo>,
+): { datasets: ChartDatasetType[]; labels: number[] } => {
+    const from = new Date(traffic.period.from);
+    const to = new Date(traffic.period.to);
+    const numDays = Math.abs(differenceInCalendarDays(to, from)) + 1;
+    const formatDay = (date: Date) => format(date, 'yyyy-MM-dd');
+
+    const daysRec: { [day: string]: number } = {};
+    for (let i = 0; i < numDays; i++) {
+        daysRec[formatDay(addDays(from, i))] = 0;
+    }
+
+    const getDaysRec = () => ({
+        ...daysRec,
+    });
+
+    const datasets = prepareApiData(traffic.apiData).map(
+        (item: SegmentedSchemaApiData) => {
+            const daysRec = getDaysRec();
+
+            for (const day of Object.values(item.dataPoints)) {
+                daysRec[day.when] = day.trafficTypes[0].count;
+            }
+
+            const epInfo = endpointsInfo[item.apiPath];
+
+            return {
+                label: epInfo.label,
+                data: Object.values(daysRec),
+                backgroundColor: epInfo.color,
+                hoverBackgroundColor: epInfo.color,
+            };
+        },
+    );
+
+    // simplification: assuming days run in a single month from the 1st onwards
+    const labels = Array.from({ length: numDays }).map((_, index) => index + 1);
+
+    console.log(labels, datasets);
+    return { datasets, labels };
+};
+
 const toChartData = (
     days: number[],
     traffic: IInstanceTrafficMetricsResponse,
@@ -113,14 +235,18 @@ const toChartData = (
         return [];
     }
 
+    // days contains all the days of the month because the usage data may not have entries for all days. so it
+
     const data = traffic.usage.apiData
-        .filter((item) => !!endpointsInfo[item.apiPath])
+        .filter((item) => !!endpointsInfo[item.apiPath]) // ignore /edge and unknown endpoints
         .sort(
+            // sort the data such that admin goes before frontend goes before client
             (item1: any, item2: any) =>
                 endpointsInfo[item1.apiPath].order -
                 endpointsInfo[item2.apiPath].order,
         )
         .map((item: any) => {
+            // generate a list of 0s for each day of the month
             const daysRec = days.reduce(
                 (acc, day: number) => {
                     acc[`d${day}`] = 0;
@@ -129,15 +255,22 @@ const toChartData = (
                 {} as Record<string, number>,
             );
 
+            console.log(item, daysRec);
+
+            // for each day in the usage data
             for (const dayKey in item.days) {
                 const day = item.days[dayKey];
+                // get the day of the month (probably don't need the Date parse)
                 const dayNum = new Date(Date.parse(day.day)).getUTCDate();
+                // add the count to the record for that day
                 daysRec[`d${dayNum}`] = day.trafficTypes[0].count;
             }
             const epInfo = endpointsInfo[item.apiPath];
 
+            console.log(daysRec, Object.values(daysRec));
             return {
                 label: epInfo.label,
+                // traversal order is well-defined
                 data: Object.values(daysRec),
                 backgroundColor: epInfo.color,
                 hoverBackgroundColor: epInfo.color,
@@ -234,7 +367,21 @@ export const calculateEstimatedMonthlyCost = (
 export const useTrafficDataEstimation = () => {
     const selectablePeriods = getSelectablePeriods();
     const record = toPeriodsRecord(selectablePeriods);
-    const [period, setPeriod] = useState<string>(selectablePeriods[0].key);
+    console.log('RECORD', record); // Contains each month of the past year:
+    //  {
+    //     // ... other props
+    //     "2024-12": {
+    //         "key": "2024-12",
+    //         "year": 2024,
+    //         "month": 11,
+    //         "dayCount": 31,
+    //         "label": "December 2024"
+    //     }
+    // }
+    const [period, setPeriod] = useState<ChartDataSelection>({
+        format: 'daily',
+        month: selectablePeriods[0].key,
+    });
 
     return {
         calculateTrafficDataCost,

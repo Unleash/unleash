@@ -20,15 +20,12 @@ import {
 } from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
-import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import { useInstanceTrafficMetrics2 } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import {
-    type ChartDatasetType,
-    useTrafficDataEstimation,
-} from 'hooks/useTrafficData';
+import { newToChartData, useTrafficDataEstimation } from 'hooks/useTrafficData';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { formatTickValue } from 'component/common/Chart/formatTickValue';
 import { useTrafficLimit } from './hooks/useTrafficLimit';
@@ -36,6 +33,7 @@ import { BILLING_TRAFFIC_BUNDLE_PRICE } from 'component/admin/billing/BillingDas
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { PeriodSelector } from './PeriodSelector';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { format } from 'date-fns';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -148,12 +146,29 @@ const NewHeader = styled('div')(() => ({
     alignItems: 'flex-start',
 }));
 
+const NewNetworkTrafficUsage: FC = () => {
+    usePageTitle('Network - Data Usage');
+    const theme = useTheme();
+
+    const { isOss } = useUiConfig();
+
+    const selection = { format: 'daily' as const, month: '2025-01' };
+
+    const incoming = useInstanceTrafficMetrics2(selection);
+
+    // do the mapping here somehow
+
+    return <div>Network Traffic Usage</div>;
+};
+
 export const NetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
     const showMultiMonthSelector = useUiFlag('dataUsageMultiMonthView');
 
     const { isOss } = useUiConfig();
+
+    // what do we do here? if we're cutting the traffic usage box, might be best to split it into multiple components?
 
     const { locationSettings } = useLocationSettings();
     const {
@@ -175,30 +190,42 @@ export const NetworkTrafficUsage: FC = () => {
         return createBarChartOptions(
             theme,
             (tooltipItems: any) => {
-                const periodItem = record[period];
-                const tooltipDate = new Date(
-                    periodItem.year,
-                    periodItem.month,
-                    Number.parseInt(tooltipItems[0].label),
-                );
-                return tooltipDate.toLocaleDateString(
-                    locationSettings?.locale ?? 'en-US',
-                    {
-                        month: 'long',
-                        day: 'numeric',
-                        year: 'numeric',
-                    },
-                );
+                if (period.format === 'daily') {
+                    const periodItem = record[period.month];
+                    const tooltipDate = new Date(
+                        periodItem.year,
+                        periodItem.month,
+                        Number.parseInt(tooltipItems[0].label),
+                    );
+                    return tooltipDate.toLocaleDateString(
+                        locationSettings?.locale ?? 'en-US',
+                        {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric',
+                        },
+                    );
+                } else {
+                    return new Date(tooltipItems[0].label).toLocaleDateString(
+                        locationSettings?.locale ?? 'en-US',
+                        {
+                            month: 'long',
+                            year: 'numeric',
+                        },
+                    );
+                }
             },
             includedTraffic,
         );
     }, [theme, period]);
 
-    const traffic = useInstanceTrafficMetrics(period);
+    const traffic = useInstanceTrafficMetrics2(period);
 
-    const [labels, setLabels] = useState<number[]>([]);
+    const data = newToChartData(traffic.usage); // <- why don't we do this?
 
-    const [datasets, setDatasets] = useState<ChartDatasetType[]>([]);
+    // const [labels, setLabels] = useState<number[]>([]);
+
+    // const [datasets, setDatasets] = useState<ChartDatasetType[]>([]);
 
     const [usageTotal, setUsageTotal] = useState<number>(0);
 
@@ -206,25 +233,32 @@ export const NetworkTrafficUsage: FC = () => {
 
     const [estimatedMonthlyCost, setEstimatedMonthlyCost] = useState<number>(0);
 
-    const data = {
-        labels,
-        datasets,
-    };
+    // const data = {
+    //     labels,
+    //     datasets,
+    // };
 
-    useEffect(() => {
-        setDatasets(toChartData(labels, traffic, endpointsInfo));
-    }, [labels, traffic]);
+    // useEffect(() => {
+    //     setDatasets(toChartData(labels, traffic, endpointsInfo));
+    // }, [labels, traffic]);
 
-    useEffect(() => {
-        if (record && period) {
-            const periodData = record[period];
-            setLabels(getDayLabels(periodData.dayCount));
-        }
-    }, [period]);
+    // useEffect(() => {
+    //     if (record && period) {
+    //         const periodData = record[period];
+    //         setLabels(getDayLabels(periodData.dayCount));
+    //     }
+    // }, [period]);
 
     useEffect(() => {
         if (data) {
-            const usage = toTrafficUsageSum(data.datasets);
+            // if daily, there is a sum. if monthly, use the count from the current month
+            let usage: number;
+            if (period.format === 'monthly') {
+                usage = data.datasets.length; // this is wrong
+            } else {
+                usage = toTrafficUsageSum(data.datasets);
+            }
+
             setUsageTotal(usage);
             if (includedTraffic > 0) {
                 const calculatedOverageCost = calculateOverageCost(
@@ -236,7 +270,9 @@ export const NetworkTrafficUsage: FC = () => {
 
                 setEstimatedMonthlyCost(
                     calculateEstimatedMonthlyCost(
-                        period,
+                        period.format === 'daily'
+                            ? period.month
+                            : format(new Date(), 'yyyy-MM'),
                         data.datasets,
                         includedTraffic,
                         new Date(),
@@ -246,6 +282,18 @@ export const NetworkTrafficUsage: FC = () => {
             }
         }
     }, [data]);
+
+    // if single month:
+    // overage warning
+    // num requests to unleash this month
+    // selector
+    // chart
+    //
+    // if multi month:
+    // overage warning
+    // avg requests per month for preceding n months
+    // selector
+    // char
 
     return (
         <ConditionallyRender

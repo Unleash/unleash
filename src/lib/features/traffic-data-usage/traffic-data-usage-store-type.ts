@@ -27,11 +27,11 @@ export interface ITrafficDataUsageStore
     getTrafficDataForMonthRange(
         monthsBack: number,
     ): Promise<IStatMonthlyTrafficUsage[]>;
-    getDailyTrafficDataForPeriod(
+    getDailyTrafficUsageDataForPeriod(
         from: Date,
         to: Date,
     ): Promise<IStatTrafficUsage[]>;
-    getMonthlyTrafficDataForPeriod(
+    getMonthlyTrafficUsageDataForPeriod(
         from: Date,
         to: Date,
     ): Promise<IStatMonthlyTrafficUsage[]>;

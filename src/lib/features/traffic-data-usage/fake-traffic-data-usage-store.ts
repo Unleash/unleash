@@ -6,9 +6,11 @@ import type {
 import type { ITrafficDataUsageStore } from '../../types';
 import {
     differenceInCalendarMonths,
+    endOfDay,
     format,
     isSameMonth,
     parse,
+    startOfDay,
 } from 'date-fns';
 
 export class FakeTrafficDataUsageStore implements ITrafficDataUsageStore {
@@ -90,22 +92,26 @@ export class FakeTrafficDataUsageStore implements ITrafficDataUsageStore {
         return Object.values(data);
     }
 
-    async getDailyTrafficDataForPeriod(
+    async getDailyTrafficUsageDataForPeriod(
         from: Date,
         to: Date,
     ): Promise<IStatTrafficUsage[]> {
         return this.trafficData.filter(
-            (data) => data.day >= from && data.day <= to,
+            (data) => data.day >= startOfDay(from) && data.day <= endOfDay(to),
         );
     }
 
-    async getMonthlyTrafficDataForPeriod(
+    async getMonthlyTrafficUsageDataForPeriod(
         from: Date,
         to: Date,
     ): Promise<IStatMonthlyTrafficUsage[]> {
         const data: { [key: string]: IStatMonthlyTrafficUsage } =
             this.trafficData
-                .filter((entry) => entry.day >= from && entry.day <= to)
+                .filter(
+                    (data) =>
+                        data.day >= startOfDay(from) &&
+                        data.day <= endOfDay(to),
+                )
                 .reduce((acc, entry) => {
                     const month = format(entry.day, 'yyyy-MM');
                     const key = `${month}-${entry.trafficGroup}-${entry.statusCodeSeries}`;

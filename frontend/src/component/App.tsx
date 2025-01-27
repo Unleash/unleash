@@ -36,8 +36,6 @@ export const App = () => {
     const { refetch: refetchUiConfig } = useUiConfig();
     const uiGlobalFontSizeVariant = useUiFlag('uiGlobalFontSize');
 
-    console.log("uiGlobalFontSizeVariant: ", uiGlobalFontSizeVariant);
-
     const { user } = useAuthUser();
     const hasFetchedAuth = Boolean(authDetails || user);
 

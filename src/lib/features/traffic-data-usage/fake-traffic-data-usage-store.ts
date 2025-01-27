@@ -92,7 +92,7 @@ export class FakeTrafficDataUsageStore implements ITrafficDataUsageStore {
         return Object.values(data);
     }
 
-    async getDailyTrafficUsageDataForPeriod(
+    async getDailyTrafficDataUsageForPeriod(
         from: Date,
         to: Date,
     ): Promise<IStatTrafficUsage[]> {
@@ -101,7 +101,7 @@ export class FakeTrafficDataUsageStore implements ITrafficDataUsageStore {
         );
     }
 
-    async getMonthlyTrafficUsageDataForPeriod(
+    async getMonthlyTrafficDataUsageForPeriod(
         from: Date,
         to: Date,
     ): Promise<IStatMonthlyTrafficUsage[]> {

@@ -249,6 +249,12 @@ main:after {
     content: "";
 }
 
+html[data-theme="dark"] {
+    main:after {
+        opacity: 0.06;
+    }
+}
+
 @media (min-width: 997px) {
     .show-when-collapsed {
         display: none;

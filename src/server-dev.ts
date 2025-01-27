@@ -2,7 +2,6 @@ import { start } from './lib/server-impl';
 import { createConfig } from './lib/create-config';
 import { LogLevel } from './lib/logger';
 import { ApiTokenType } from './lib/types/models/api-token';
-import { PayloadType } from 'unleash-client';
 
 process.nextTick(async () => {
     try {

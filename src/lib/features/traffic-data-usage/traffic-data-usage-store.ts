@@ -96,7 +96,7 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
             });
     }
 
-    async getDailyTrafficUsageDataForPeriod(
+    async getDailyTrafficDataUsageForPeriod(
         from: Date,
         to: Date,
     ): Promise<IStatTrafficUsage[]> {
@@ -107,7 +107,7 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
         return rows.map(mapRow);
     }
 
-    async getMonthlyTrafficUsageDataForPeriod(
+    async getMonthlyTrafficDataUsageForPeriod(
         from: Date,
         to: Date,
     ): Promise<IStatMonthlyTrafficUsage[]> {
@@ -143,7 +143,7 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
         period: string,
     ): Promise<IStatTrafficUsage[]> {
         const month = new Date(period);
-        return this.getDailyTrafficUsageDataForPeriod(
+        return this.getDailyTrafficDataUsageForPeriod(
             startOfMonth(month),
             endOfMonth(month),
         );
@@ -155,6 +155,6 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
     ): Promise<IStatMonthlyTrafficUsage[]> {
         const to = endOfMonth(new Date());
         const from = startOfMonth(subMonths(to, monthsBack));
-        return this.getMonthlyTrafficUsageDataForPeriod(from, to);
+        return this.getMonthlyTrafficDataUsageForPeriod(from, to);
     }
 }

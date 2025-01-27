@@ -19,7 +19,7 @@ jobs:
         run: echo "PR_CREATOR=${{ github.event.pull_request.user.login }}" >> $GITHUB_ENV
 
       - name: Post a notification about core feature changes if not already commented
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const prCreator = process.env.PR_CREATOR;
@@ -45,7 +45,7 @@ jobs:
               console.log('Comment already exists, skipping.');
             }
       - name: Add reviewers to the PR if they are not the creator
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           script: |
             const prCreator = process.env.PR_CREATOR;

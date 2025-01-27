@@ -29,7 +29,6 @@ export type IFlagKey =
     | 'celebrateUnleash'
     | 'feedbackPosting'
     | 'extendedUsageMetrics'
-    | 'adminTokenKillSwitch'
     | 'feedbackComments'
     | 'showInactiveUsers'
     | 'killScheduledChangeRequestCache'
@@ -157,10 +156,6 @@ const flags: IFlags = {
     extendedUsageMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_USAGE_METRICS,
         false,
-    ),
-    adminTokenKillSwitch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
-        true,
     ),
     outdatedSdksBanner: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_OUTDATED_SDKS_BANNER,

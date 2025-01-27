@@ -83,10 +83,10 @@ export default async function createConfigAsync(): Promise<Config> {
                 indexName: 'getunleash',
             },
             navbar: {
-                style: 'dark',
                 logo: {
                     alt: 'Unleash logo',
-                    src: 'img/unleash_logo_white.svg',
+                    src: 'img/unleash_logo_dark.svg',
+                    srcDark: 'img/unleash_logo_white.svg',
                     href: 'https://www.getunleash.io',
                 },
                 items: [

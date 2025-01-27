@@ -350,6 +350,16 @@ main .theme-doc-breadcrumbs {
     z-index: 1;
 }
 
+.navbar {
+    background-color: var(--unleash-color-sub-background);
+    box-shadow: none;
+}
+
+.navbar > .navbar__inner {
+    --ifm-navbar-link-color: var(--unleash-color-table-of-contents-header-color);
+    color: var(--unleash-color-table-of-contents-header-color);
+}
+
 @media (min-width: 997px) {
     aside.theme-doc-sidebar-container {
         border-right: none;
@@ -381,12 +391,6 @@ main .theme-doc-breadcrumbs {
     .navbar {
         padding-left: 314px;
         justify-content: center;
-        background-color: var(--unleash-color-sub-background);
-        box-shadow: none;
-        --ifm-navbar-link-color: var(
-            --unleash-color-table-of-contents-header-color
-        );
-        color: var(--unleash-color-table-of-contents-header-color);
     }
 
     .navbar .navbar__brand {

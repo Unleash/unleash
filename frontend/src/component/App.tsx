@@ -50,7 +50,6 @@ export const App = () => {
         if (!uiGlobalFontSizeVariant) return;
 
         try {
-            // Create a new style element
             style = document.createElement('style');
             style.type = 'text/css';
             style.innerHTML = `
@@ -61,13 +60,11 @@ export const App = () => {
                     overflow-y: scroll;
                 }
             `;
-            // Append the style element to the document head
             document.head.appendChild(style);
         } catch (err) {
             console.error('Error setting global font size', err);
         }
 
-        // Cleanup function to remove the style element when the component unmounts
         return () => {
             if (!style) return;
             document.head.removeChild(style);

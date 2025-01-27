@@ -63,7 +63,8 @@ export type IFlagKey =
     | 'sortProjectRoles'
     | 'lifecycleImprovements'
     | 'frontendHeaderRedesign'
-    | 'dataUsageMultiMonthView';
+    | 'dataUsageMultiMonthView'
+    | 'uiGlobalFontSize';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -304,6 +305,17 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DATA_USAGE_MULTI_MONTH_VIEW,
         false,
     ),
+    uiGlobalFontSize: {
+        name: 'uiGlobalFontSize',
+        enabled: parseEnvVarBoolean(
+            process.env.EXPERIMENTAL_UI_GLOBAL_FONT_SIZE_NAME,
+            false,
+        ),
+        payload: {
+            type: PayloadType.JSON,
+            value: '14',
+        },
+    },
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

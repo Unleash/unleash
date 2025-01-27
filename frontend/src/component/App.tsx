@@ -48,6 +48,7 @@ export const App = () => {
     useEffect(() => {
         let style: HTMLStyleElement | null = null;
         if (!uiGlobalFontSizeVariant) return;
+        if (!uiGlobalFontSizeVariant.enabled) return;
 
         try {
             style = document.createElement('style');

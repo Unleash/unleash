@@ -94,7 +94,7 @@ export const useInstanceTrafficMetrics2 = (
 ): InstanceTrafficMetricsResponse2 => {
     const { from, to } = fromSelection(selection);
 
-    const apiPath = `api/admin/metrics/traffic-data-usage?grouping=${selection.grouping}&from=${from}&to=${to}`;
+    const apiPath = `api/admin/metrics/traffic-search?grouping=${selection.grouping}&from=${from}&to=${to}`;
 
     const { data, error, mutate } = useSWR(formatApiPath(apiPath), fetcher);
 

@@ -222,7 +222,6 @@ const toDailyChartData = (
     // simplification: assuming days run in a single month from the 1st onwards
     const labels = Array.from({ length: numDays }).map((_, index) => index + 1);
 
-    console.log(labels, datasets);
     return { datasets, labels };
 };
 
@@ -367,18 +366,9 @@ export const calculateEstimatedMonthlyCost = (
 export const useTrafficDataEstimation = () => {
     const selectablePeriods = getSelectablePeriods();
     const record = toPeriodsRecord(selectablePeriods);
-    console.log('RECORD', record); // Contains each month of the past year:
-    //  {
-    //     // ... other props
-    //     "2024-12": {
-    //         "key": "2024-12",
-    //         "year": 2024,
-    //         "month": 11,
-    //         "dayCount": 31,
-    //         "label": "December 2024"
-    //     }
-    // }
-    const [period, setPeriod] = useState<ChartDataSelection>({
+    const [period, setPeriod] = useState(selectablePeriods[0].key);
+
+    const [newPeriod, setNewPeriod] = useState<ChartDataSelection>({
         grouping: 'daily',
         month: selectablePeriods[0].key,
     });
@@ -388,6 +378,8 @@ export const useTrafficDataEstimation = () => {
         record,
         period,
         setPeriod,
+        newPeriod,
+        setNewPeriod,
         selectablePeriods,
         getDayLabels,
         currentPeriod,

@@ -32,13 +32,6 @@ export default class SettingStore implements ISettingStore {
             });
     }
 
-    async insertNewRow(name: string, content: any) {
-        return this.db(TABLE)
-            .insert({ name, content })
-            .onConflict('name')
-            .merge();
-    }
-
     async exists(name: string): Promise<boolean> {
         const result = await this.db.raw(
             `SELECT EXISTS (SELECT 1 FROM ${TABLE} WHERE name = ?) AS present`,
@@ -61,13 +54,12 @@ export default class SettingStore implements ISettingStore {
         return undefined;
     }
 
+    // Is actually an upsert
     async insert(name: string, content: any): Promise<void> {
-        const exists = await this.exists(name);
-        if (exists) {
-            await this.updateRow(name, content);
-        } else {
-            await this.insertNewRow(name, content);
-        }
+        await this.db(TABLE)
+            .insert({ name, content })
+            .onConflict('name')
+            .merge();
     }
 
     async delete(name: string): Promise<void> {

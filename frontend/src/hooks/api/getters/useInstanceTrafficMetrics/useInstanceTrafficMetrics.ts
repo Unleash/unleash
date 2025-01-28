@@ -2,7 +2,11 @@ import useSWR from 'swr';
 import { useMemo } from 'react';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
-import type { TrafficUsageDataSegmentedSchema } from 'openapi';
+import type {
+    TrafficUsageDataSegmentedCombinedSchema,
+    TrafficUsageDataSegmentedCombinedSchemaApiDataItem,
+    TrafficUsageDataSegmentedSchema,
+} from 'openapi';
 import { endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 
 export interface IInstanceTrafficMetricsResponse {
@@ -59,28 +63,11 @@ const fromSelection = (selection: ChartDataSelection) => {
     }
 };
 
-export type SegmentedSchema = {
-    grouping: 'monthly' | 'daily';
-    dateRange: { from: string; to: string };
-    apiData: [
-        {
-            apiPath: string;
-            dataPoints: Array<{
-                // other options: period? time? interval? for?
-                period: string; // in API: string formatted as full date or YYYY-MM, depending on monthly/daily
-                trafficTypes: Array<{
-                    group: string; // we could do 'successful-requests', but that might constrain us in the future
-                    count: number; // natural number
-                }>;
-            }>;
-        },
-    ];
-};
-
-export type SegmentedSchemaApiData = SegmentedSchema['apiData'][number];
+export type SegmentedSchemaApiData =
+    TrafficUsageDataSegmentedCombinedSchemaApiDataItem;
 
 export type InstanceTrafficMetricsResponse2 = {
-    usage: SegmentedSchema;
+    usage: TrafficUsageDataSegmentedCombinedSchema;
 
     refetch: () => void;
 

@@ -74,13 +74,13 @@ export const StyledTabContainer = styled('div')(({ theme }) => ({
 export const StyledTab = styled(Tab)(({ theme }) => ({
     textTransform: 'none',
     fontSize: theme.fontSizes.bodySize,
-    flexGrow: 1,
     flexBasis: 0,
     [theme.breakpoints.down('md')]: {
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(1),
+        minWidth: 170
     },
     [theme.breakpoints.up('md')]: {
-        minWidth: 160,
+        minWidth: 170,
     },
 }));

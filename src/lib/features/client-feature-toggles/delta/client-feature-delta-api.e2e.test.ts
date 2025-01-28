@@ -217,6 +217,7 @@ test('should get segment updated and removed events', async () => {
     expect(body).toMatchObject({
         events: [
             {
+                type: DELTA_EVENT_TYPES.HYDRATION,
                 features: [
                     {
                         name: 'base_feature',

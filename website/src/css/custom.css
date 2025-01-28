@@ -507,6 +507,13 @@ html[data-theme="dark"] .footer-separator {
     }
 }
 
+@media (max-width: 500px) {
+    .footer-description {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
 .navbar {
     background-color: var(--unleash-color-sub-background);
     box-shadow: none;

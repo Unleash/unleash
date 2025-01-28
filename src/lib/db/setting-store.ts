@@ -33,7 +33,10 @@ export default class SettingStore implements ISettingStore {
     }
 
     async insertNewRow(name: string, content: any) {
-        return this.db(TABLE).insert({ name, content });
+        return this.db(TABLE)
+            .insert({ name, content })
+            .onConflict('name')
+            .merge();
     }
 
     async exists(name: string): Promise<boolean> {

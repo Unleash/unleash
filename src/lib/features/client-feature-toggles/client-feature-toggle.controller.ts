@@ -191,9 +191,6 @@ export default class FeatureController extends Controller {
                 const sortedToggles = features.sort((a, b) =>
                     a.name.localeCompare(b.name),
                 );
-                const sortedSegments = segments.sort(
-                    (a, b) => Number(a.id) - Number(b.id),
-                );
                 if (delta?.events[0].type === 'hydration') {
                     const hydrationEvent = delta?.events[0];
                     const sortedNewToggles = hydrationEvent.features.sort(

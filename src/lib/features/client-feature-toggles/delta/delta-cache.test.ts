@@ -1,7 +1,8 @@
 import { DeltaCache } from './delta-cache';
-import type {
-    DeltaEvent,
-    DeltaHydrationEvent,
+import {
+    DELTA_EVENT_TYPES,
+    type DeltaEvent,
+    type DeltaHydrationEvent,
 } from './client-feature-toggle-delta-types';
 
 describe('RevisionCache', () => {
@@ -93,7 +94,7 @@ describe('RevisionCache', () => {
                     description: null,
                     impressionData: false,
                 },
-                type: 'feature-updated',
+                type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
             },
         ];
 
@@ -105,7 +106,7 @@ describe('RevisionCache', () => {
         const addedEvents: DeltaEvent[] = [
             {
                 eventId: 3,
-                type: 'feature-updated',
+                type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
                 feature: {
                     name: 'another-feature-flag',
                     type: 'release',

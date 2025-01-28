@@ -4,6 +4,8 @@ import {
     type IBaseEvent,
     type IEvent,
     type IEventType,
+    SEGMENT_CREATED,
+    SEGMENT_DELETED,
     SEGMENT_UPDATED,
 } from '../../types/events';
 import type { Logger, LogProvider } from '../../logger';
@@ -214,6 +216,8 @@ class EventStore implements IEventStore {
                         SEGMENT_UPDATED,
                         FEATURE_IMPORT,
                         FEATURES_IMPORTED,
+                        SEGMENT_CREATED,
+                        SEGMENT_DELETED,
                     ]),
             )
             .orderBy('id', 'asc');

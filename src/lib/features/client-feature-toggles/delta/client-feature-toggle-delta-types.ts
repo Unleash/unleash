@@ -5,6 +5,7 @@ export type DeltaHydrationEvent = {
     eventId: number;
     type: 'hydration';
     features: ClientFeatureSchema[];
+    segments: IClientSegment[];
 };
 
 export type DeltaEvent =
@@ -50,14 +51,11 @@ export const isDeltaFeatureRemovedEvent = (
     return event.type === DELTA_EVENT_TYPES.FEATURE_REMOVED;
 };
 
-export const isDeltaSegmentUpdatedEvent = (
+export const isDeltaSegmentEvent = (
     event: DeltaEvent,
 ): event is Extract<DeltaEvent, { type: 'segment-updated' }> => {
-    return event.type === DELTA_EVENT_TYPES.SEGMENT_UPDATED;
-};
-
-export const isDeltaSegmentRemovedEvent = (
-    event: DeltaEvent,
-): event is Extract<DeltaEvent, { type: 'segment-removed' }> => {
-    return event.type === DELTA_EVENT_TYPES.SEGMENT_REMOVED;
+    return (
+        event.type === DELTA_EVENT_TYPES.SEGMENT_UPDATED ||
+        event.type === DELTA_EVENT_TYPES.SEGMENT_REMOVED
+    );
 };

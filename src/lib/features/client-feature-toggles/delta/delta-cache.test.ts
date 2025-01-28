@@ -1,7 +1,8 @@
 import { DeltaCache } from './delta-cache';
-import type {
-    DeltaEvent,
-    DeltaHydrationEvent,
+import {
+    DELTA_EVENT_TYPES,
+    type DeltaEvent,
+    type DeltaHydrationEvent,
 } from './client-feature-toggle-delta-types';
 
 describe('RevisionCache', () => {
@@ -55,6 +56,18 @@ describe('RevisionCache', () => {
                 },
             ],
             type: 'hydration',
+            segments: [
+                {
+                    id: 1,
+                    name: 'update-segment',
+                    constraints: [],
+                },
+                {
+                    id: 2,
+                    name: 'remove-segment',
+                    constraints: [],
+                },
+            ],
         };
         const initialEvents: DeltaEvent[] = [
             {
@@ -81,7 +94,7 @@ describe('RevisionCache', () => {
                     description: null,
                     impressionData: false,
                 },
-                type: 'feature-updated',
+                type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
             },
         ];
 
@@ -90,10 +103,10 @@ describe('RevisionCache', () => {
         deltaCache.addEvents(initialEvents);
 
         // Add a new revision to trigger changeBase
-        deltaCache.addEvents([
+        const addedEvents: DeltaEvent[] = [
             {
                 eventId: 3,
-                type: 'feature-updated',
+                type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
                 feature: {
                     name: 'another-feature-flag',
                     type: 'release',
@@ -122,12 +135,37 @@ describe('RevisionCache', () => {
                 featureName: 'test-flag',
                 project: 'default',
             },
-        ]);
+            {
+                eventId: 5,
+                type: 'segment-updated',
+                segment: {
+                    id: 1,
+                    name: 'update-segment-new',
+                    constraints: [],
+                },
+            },
+            {
+                eventId: 6,
+                type: 'segment-removed',
+                segmentId: 2,
+            },
+            {
+                eventId: 7,
+                type: 'segment-updated',
+                segment: {
+                    id: 3,
+                    name: 'new-segment',
+                    constraints: [],
+                },
+            },
+        ];
+        deltaCache.addEvents(addedEvents);
 
         const events = deltaCache.getEvents();
 
         // Check that the base has been changed and merged correctly
-        expect(events.length).toBe(2);
+        expect(events.length).toBe(maxLength);
+        expect(events).toEqual(addedEvents.slice(-2));
 
         const hydrationEvent = deltaCache.getHydrationEvent();
         expect(hydrationEvent.features).toHaveLength(2);
@@ -135,6 +173,12 @@ describe('RevisionCache', () => {
             expect.arrayContaining([
                 expect.objectContaining({ name: 'my-feature-flag' }),
                 expect.objectContaining({ name: 'another-feature-flag' }),
+            ]),
+        );
+        expect(hydrationEvent.segments).toEqual(
+            expect.arrayContaining([
+                expect.objectContaining({ name: 'update-segment-new', id: 1 }),
+                expect.objectContaining({ name: 'new-segment' }),
             ]),
         );
     });

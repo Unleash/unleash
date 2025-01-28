@@ -7,6 +7,7 @@ import {
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';
 import { DEFAULT_ENV } from '../../../util/constants';
+import { DELTA_EVENT_TYPES } from './client-feature-toggle-delta-types';
 
 let app: IUnleashTest;
 let db: ITestDb;
@@ -121,7 +122,7 @@ test('should return correct delta after feature created', async () => {
     expect(body).toMatchObject({
         events: [
             {
-                type: 'hydration',
+                type: DELTA_EVENT_TYPES.HYDRATION,
                 features: [
                     {
                         name: 'base_feature',
@@ -134,8 +135,6 @@ test('should return correct delta after feature created', async () => {
     await app.createFeature('new_feature');
 
     await syncRevisions();
-    //@ts-ignore
-    await app.services.clientFeatureToggleService.clientFeatureToggleDelta.onUpdateRevisionEvent();
 
     const { body: deltaBody } = await app.request
         .get('/api/client/delta')
@@ -145,13 +144,7 @@ test('should return correct delta after feature created', async () => {
     expect(deltaBody).toMatchObject({
         events: [
             {
-                type: 'feature-updated',
-                feature: {
-                    name: 'new_feature',
-                },
-            },
-            {
-                type: 'feature-updated',
+                type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
                 feature: {
                     name: 'new_feature',
                 },
@@ -161,7 +154,9 @@ test('should return correct delta after feature created', async () => {
 });
 
 const syncRevisions = async () => {
-    await app.services.configurationRevisionService.updateMaxRevisionId();
+    await app.services.configurationRevisionService.updateMaxRevisionId(false);
+    //@ts-ignore
+    await app.services.clientFeatureToggleService.clientFeatureToggleDelta.onUpdateRevisionEvent();
 };
 
 test('archived features should not be returned as updated', async () => {
@@ -187,7 +182,6 @@ test('archived features should not be returned as updated', async () => {
     await app.archiveFeature('base_feature');
     await syncRevisions();
     await app.createFeature('new_feature');
-
     await syncRevisions();
     await app.getProjectFeatures('new_feature'); // TODO: this is silly, but events syncing and tests do not work nicely. this is basically a setTimeout
 
@@ -199,14 +193,79 @@ test('archived features should not be returned as updated', async () => {
     expect(deltaBody).toMatchObject({
         events: [
             {
-                type: 'feature-removed',
+                type: DELTA_EVENT_TYPES.FEATURE_REMOVED,
                 featureName: 'base_feature',
             },
             {
-                type: 'feature-updated',
+                type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
                 feature: {
                     name: 'new_feature',
                 },
+            },
+        ],
+    });
+});
+
+test('should get segment updated and removed events', async () => {
+    await app.createFeature('base_feature');
+    await syncRevisions();
+    const { body, headers } = await app.request
+        .get('/api/client/delta')
+        .expect(200);
+    const etag = headers.etag;
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                type: DELTA_EVENT_TYPES.HYDRATION,
+                features: [
+                    {
+                        name: 'base_feature',
+                    },
+                ],
+            },
+        ],
+    });
+
+    const { body: segmentBody } = await app.createSegment({
+        name: 'my_segment_a',
+        constraints: [],
+    });
+    // we need this, because revision service does not fire event for segment creation
+    await app.createFeature('not_important1');
+    await syncRevisions();
+    await app.updateSegment(segmentBody.id, {
+        name: 'a',
+        constraints: [],
+    });
+    await syncRevisions();
+    await app.deleteSegment(segmentBody.id);
+    // we need this, because revision service does not fire event for segment deletion
+    await app.createFeature('not_important2');
+    await syncRevisions();
+
+    const { body: deltaBody } = await app.request
+        .get('/api/client/delta')
+        .set('If-None-Match', etag)
+        .expect(200);
+
+    expect(deltaBody).toMatchObject({
+        events: [
+            {
+                type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            },
+            {
+                type: DELTA_EVENT_TYPES.SEGMENT_UPDATED,
+            },
+
+            {
+                type: DELTA_EVENT_TYPES.SEGMENT_UPDATED,
+            },
+            {
+                type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            },
+            {
+                type: DELTA_EVENT_TYPES.SEGMENT_REMOVED,
             },
         ],
     });

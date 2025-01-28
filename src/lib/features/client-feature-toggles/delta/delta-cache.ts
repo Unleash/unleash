@@ -4,14 +4,6 @@ import {
     type DeltaHydrationEvent,
 } from './client-feature-toggle-delta-types';
 
-const mergeWithoutDuplicates = (arr1: any[], arr2: any[]) => {
-    const map = new Map();
-    arr1.concat(arr2).forEach((item) => {
-        map.set(item.name, item);
-    });
-    return Array.from(map.values());
-};
-
 export class DeltaCache {
     private events: DeltaEvent[] = [];
     private maxLength: number;
@@ -27,7 +19,7 @@ export class DeltaCache {
 
         this.updateHydrationEvent(events);
         while (this.events.length > this.maxLength) {
-            this.events.splice(1, 1);
+            this.events.shift();
         }
     }
 
@@ -62,15 +54,23 @@ export class DeltaCache {
                     break;
                 }
                 case DELTA_EVENT_TYPES.SEGMENT_UPDATED: {
-                    // TODO: segments do not exist in this scope, need to do it in different location
+                    const segmentToUpdate = this.hydrationEvent.segments.find(
+                        (segment) => segment.id === appliedEvent.segment.id,
+                    );
+                    if (segmentToUpdate) {
+                        Object.assign(segmentToUpdate, appliedEvent.segment);
+                    } else {
+                        this.hydrationEvent.segments.push(appliedEvent.segment);
+                    }
                     break;
                 }
                 case DELTA_EVENT_TYPES.SEGMENT_REMOVED: {
-                    // TODO: segments do not exist in this scope, need to do it in different location
+                    this.hydrationEvent.segments =
+                        this.hydrationEvent.segments.filter(
+                            (segment) => segment.id !== appliedEvent.segmentId,
+                        );
                     break;
                 }
-                default:
-                // TODO: something is seriously wrong
             }
         }
     }

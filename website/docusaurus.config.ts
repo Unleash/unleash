@@ -52,7 +52,7 @@ const getUnleashRepoStars = async () => {
     const formattedStars =
         unleashRepoStars >= 1000
             ? `${(unleashRepoStars / 1000).toFixed(1)}k`
-            : unleashRepoStars.toString();
+            : unleashRepoStars?.toString() || '';
     return formattedStars;
 };
 
@@ -209,54 +209,181 @@ class="header-github-link"
                 },
             ],
             footer: {
-                style: 'dark',
                 links: [
                     {
-                        title: 'Product',
+                        title: 'Server SDKs',
                         items: [
                             {
-                                label: 'Docs',
-                                to: '/',
+                                label: 'Node.js',
+                                to: '/reference/sdks/node',
                             },
                             {
-                                label: 'Unleash on GitHub',
-                                href: 'https://github.com/Unleash/unleash',
+                                label: 'Java',
+                                to: '/reference/sdks/java',
                             },
                             {
-                                label: 'Roadmap',
-                                href: 'https://github.com/orgs/Unleash/projects/10',
+                                label: 'Go',
+                                to: '/reference/sdks/go',
                             },
                             {
-                                label: 'Unleash help center',
-                                href: 'https://getunleash.zendesk.com/hc/en-gb',
+                                label: 'Rust',
+                                to: '/reference/sdks/rust',
+                            },
+                            {
+                                label: 'Ruby',
+                                to: '/reference/sdks/ruby',
+                            },
+                            {
+                                label: 'Python',
+                                to: '/reference/sdks/python',
+                            },
+                            {
+                                label: '.NET',
+                                to: '/reference/sdks/dotnet',
+                            },
+                            {
+                                label: 'PHP',
+                                to: '/reference/sdks/php',
+                            },
+                            {
+                                label: 'All SDKs',
+                                to: '/reference/sdks',
                             },
                         ],
                     },
                     {
-                        title: 'Community',
+                        title: 'Frontend SDKs',
                         items: [
                             {
-                                label: 'GitHub discussions',
-                                href: 'https://github.com/unleash/unleash/discussions/',
+                                label: 'JavaScript',
+                                to: '/reference/sdks/javascript-browser',
                             },
                             {
-                                label: 'Slack',
-                                href: 'https://slack.unleash.run/',
+                                label: 'React',
+                                to: '/reference/sdks/react',
                             },
                             {
-                                label: 'Stack Overflow',
-                                href: 'https://stackoverflow.com/questions/tagged/unleash',
+                                label: 'Next.js',
+                                to: '/reference/sdks/next-js',
                             },
                             {
-                                label: 'Twitter',
-                                href: 'https://twitter.com/getunleash',
+                                label: 'Vue',
+                                to: '/reference/sdks/vue',
+                            },
+                            {
+                                label: 'iOS',
+                                to: '/reference/sdks/ios-proxy',
+                            },
+                            {
+                                label: 'Android',
+                                to: '/reference/sdks/android-proxy',
+                            },
+                            {
+                                label: 'Flutter',
+                                to: '/reference/sdks/flutter',
+                            },
+                        ],
+                    },
+                    {
+                        title: 'Feature Flag use cases',
+                        items: [
+                            {
+                                label: 'Secure, scalable feature flags',
+                                to: '/topics/feature-flags/feature-flag-best-practices',
+                            },
+                            {
+                                label: 'Rollbacks',
+                                href: 'https://www.getunleash.io/feature-flag-use-cases-rollbacks',
+                            },
+                            {
+                                label: 'FedRAMP, SOC2, ISO2700 compliance',
+                                to: '/using-unleash/compliance/compliance-overview',
+                            },
+                            {
+                                label: 'Progressive or gradual rollouts',
+                                to: '/feature-flag-tutorials/use-cases/gradual-rollout',
+                            },
+                            {
+                                label: 'Trunk-based development',
+                                to: '/feature-flag-tutorials/use-cases/trunk-based-development',
+                            },
+                            {
+                                label: 'Software kill switches',
+                                href: 'https://www.getunleash.io/feature-flag-use-cases-software-kill-switches',
+                            },
+                            {
+                                label: 'A/B testing',
+                                to: '/feature-flag-tutorials/use-cases/a-b-testing',
+                            },
+                            {
+                                label: 'Feature management',
+                                href: 'https://www.getunleash.io/blog/feature-management',
+                            },
+                            {
+                                label: 'Canary releases',
+                                href: 'https://www.getunleash.io/blog/canary-deployment-what-is-it',
+                            },
+                        ],
+                    },
+                    {
+                        title: 'Product',
+                        items: [
+                            {
+                                label: 'Quickstart',
+                                to: '/quickstart',
+                            },
+                            {
+                                label: 'Unleash architecture',
+                                to: '/understanding-unleash/unleash-overview',
+                            },
+                            {
+                                label: 'Pricing',
+                                href: 'https://www.getunleash.io/pricing',
+                            },
+                            {
+                                label: 'Open live demo',
+                                href: 'https://app.unleash-hosted.com/demo/login',
+                            },
+                            {
+                                label: 'Open source',
+                                href: 'https://www.getunleash.io/open-source',
+                            },
+                            {
+                                label: 'Enterprise feature management platform',
+                                href: 'https://www.getunleash.io/enterprise-feature-management-platform',
+                            },
+                            {
+                                label: 'Unleash vs LaunchDarkly',
+                                href: 'https://www.getunleash.io/unleash-vs-launchdarkly',
+                            },
+                        ],
+                    },
+                    {
+                        title: 'Support',
+                        items: [
+                            {
+                                label: 'Help center',
+                                href: 'https://www.getunleash.io/support',
+                            },
+                            {
+                                label: 'Status',
+                                href: 'https://unleash.instatus.com',
+                            },
+                            {
+                                label: 'Roadmap',
+                                href: 'https://github.com/orgs/Unleash/projects/10/views/1',
+                            },
+                            {
+                                label: 'Changelog',
+                                href: 'https://github.com/Unleash/unleash/releases',
                             },
                         ],
                     },
                 ],
                 copyright: `Copyright © ${new Date().getFullYear()} Unleash. Built with Docusaurus.`,
                 logo: {
-                    src: 'img/logo.svg',
+                    src: 'img/unleash_logo_dark_no_label.svg',
+                    srcDark: 'img/unleash_logo_white_no_label.svg',
                     alt: 'Unleash logo',
                 },
             },

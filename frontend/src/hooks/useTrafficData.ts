@@ -250,8 +250,6 @@ const toChartData = (
                 {} as Record<string, number>,
             );
 
-            console.log(item, daysRec);
-
             for (const dayKey in item.days) {
                 const day = item.days[dayKey];
                 const dayNum = new Date(Date.parse(day.day)).getUTCDate();

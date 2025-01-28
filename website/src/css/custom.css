@@ -431,8 +431,8 @@ html[data-theme="dark"] .footer-separator {
     gap: 16px;
 }
 
-.footer-description .link-icons svg {
-    fill: var(--unleash-color-footer-icon);
+.footer-description .link-icons img {
+    max-width: unset;
 }
 
 .footer__col {

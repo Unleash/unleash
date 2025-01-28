@@ -1,44 +1,54 @@
 import clsx from 'clsx';
 import type { Props } from '@theme/Footer/Layout';
 
-import FooterGitHubIcon from '../icons/github.svg';
-import FooterLinkedInIcon from '../icons/linkedin.svg';
-import FooterTwitterIcon from '../icons/twitter.svg';
-import FooterSlackIcon from '../icons/slack.svg';
-import FooterStackOverflowIcon from '../icons/stackoverflow.svg';
-import FooterYouTubeIcon from '../icons/youtube.svg';
+import ThemedImage from '@theme/ThemedImage';
 
 import HeartIcon from '../icons/heart.svg';
+import { useBaseUrlUtils } from '@docusaurus/useBaseUrl';
 
 type IconLink = {
     href: string;
-    icon: JSX.Element;
+    src: string;
+    srcDark: string;
+    alt: string;
 };
 
 const linkIcons: IconLink[] = [
     {
         href: 'https://github.com/unleash/unleash',
-        icon: <FooterGitHubIcon />,
+        src: '/img/footer/githubLight.png',
+        srcDark: '/img/footer/githubDark.png',
+        alt: 'GitHub',
     },
     {
         href: 'https://www.linkedin.com/company/getunleash',
-        icon: <FooterLinkedInIcon />,
+        src: '/img/footer/linkedinLight.png',
+        srcDark: '/img/footer/linkedinDark.png',
+        alt: 'LinkedIn',
     },
     {
         href: 'https://twitter.com/getunleash',
-        icon: <FooterTwitterIcon />,
+        src: '/img/footer/twitterLight.png',
+        srcDark: '/img/footer/twitterDark.png',
+        alt: 'Twitter',
     },
     {
         href: 'https://slack.unleash.run',
-        icon: <FooterSlackIcon />,
+        src: '/img/footer/slackLight.png',
+        srcDark: '/img/footer/slackDark.png',
+        alt: 'Slack',
     },
     {
         href: 'https://stackoverflow.com/questions/tagged/unleash',
-        icon: <FooterStackOverflowIcon />,
+        src: '/img/footer/stackoverflowLight.png',
+        srcDark: '/img/footer/stackoverflowDark.png',
+        alt: 'Stack Overflow',
     },
     {
         href: 'https://www.youtube.com/channel/UCJjGVOc5QBbEje-r7nZEa4A',
-        icon: <FooterYouTubeIcon />,
+        src: '/img/footer/youtubeLight.png',
+        srcDark: '/img/footer/youtubeDark.png',
+        alt: 'YouTube',
     },
 ];
 
@@ -48,6 +58,8 @@ export default function FooterLayout({
     logo,
     copyright,
 }: Props): JSX.Element {
+    const { withBaseUrl } = useBaseUrlUtils();
+
     const description = (
         <div className='footer-description'>
             {logo}
@@ -61,14 +73,22 @@ export default function FooterLayout({
                     “Easiest Feature Management system to use” by G2.
                 </p>
                 <div className='link-icons'>
-                    {linkIcons.map(({ href, icon }) => (
+                    {linkIcons.map(({ href, src, srcDark, alt }) => (
                         <a
-                            key={href}
+                            key={alt}
                             href={href}
                             target='_blank'
                             rel='noopener noreferrer'
                         >
-                            {icon}
+                            <ThemedImage
+                                alt={alt}
+                                sources={{
+                                    light: withBaseUrl(src),
+                                    dark: withBaseUrl(srcDark),
+                                }}
+                                width={40}
+                                height={40}
+                            />
                         </a>
                     ))}
                 </div>

@@ -382,6 +382,12 @@ main .theme-doc-breadcrumbs {
     margin: 0;
 }
 
+.footer__links {
+    gap: 16px;
+    width: 100%;
+    max-width: 1000px;
+}
+
 .footer-separator {
     height: 1px;
     background: #d9d9d9;
@@ -407,7 +413,7 @@ html[data-theme="dark"] .footer-separator {
 }
 
 .footer-description p {
-    line-height: 14px;
+    line-height: 18px;
     font-weight: 400;
     margin-bottom: 0;
 }
@@ -429,9 +435,21 @@ html[data-theme="dark"] .footer-separator {
     fill: var(--unleash-color-footer-icon);
 }
 
+.footer__col {
+    padding: 0;
+}
+
 .footer__title {
     font-size: 12px;
     margin-bottom: 4px;
+}
+
+.footer__item {
+    margin-top: 10px;
+}
+
+.footer__link-item {
+    line-height: 18px;
 }
 
 .footer__link-item > svg {

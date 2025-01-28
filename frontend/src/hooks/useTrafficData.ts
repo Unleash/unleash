@@ -234,18 +234,14 @@ const toChartData = (
         return [];
     }
 
-    // days contains all the days of the month because the usage data may not have entries for all days. so it
-
     const data = traffic.usage.apiData
-        .filter((item) => !!endpointsInfo[item.apiPath]) // ignore /edge and unknown endpoints
+        .filter((item) => !!endpointsInfo[item.apiPath])
         .sort(
-            // sort the data such that admin goes before frontend goes before client
             (item1: any, item2: any) =>
                 endpointsInfo[item1.apiPath].order -
                 endpointsInfo[item2.apiPath].order,
         )
         .map((item: any) => {
-            // generate a list of 0s for each day of the month
             const daysRec = days.reduce(
                 (acc, day: number) => {
                     acc[`d${day}`] = 0;
@@ -256,20 +252,15 @@ const toChartData = (
 
             console.log(item, daysRec);
 
-            // for each day in the usage data
             for (const dayKey in item.days) {
                 const day = item.days[dayKey];
-                // get the day of the month (probably don't need the Date parse)
                 const dayNum = new Date(Date.parse(day.day)).getUTCDate();
-                // add the count to the record for that day
                 daysRec[`d${dayNum}`] = day.trafficTypes[0].count;
             }
             const epInfo = endpointsInfo[item.apiPath];
 
-            console.log(daysRec, Object.values(daysRec));
             return {
                 label: epInfo.label,
-                // traversal order is well-defined
                 data: Object.values(daysRec),
                 backgroundColor: epInfo.color,
                 hoverBackgroundColor: epInfo.color,
@@ -366,7 +357,7 @@ export const calculateEstimatedMonthlyCost = (
 export const useTrafficDataEstimation = () => {
     const selectablePeriods = getSelectablePeriods();
     const record = toPeriodsRecord(selectablePeriods);
-    const [period, setPeriod] = useState(selectablePeriods[0].key);
+    const [period, setPeriod] = useState<string>(selectablePeriods[0].key);
 
     const [newPeriod, setNewPeriod] = useState<ChartDataSelection>({
         grouping: 'daily',

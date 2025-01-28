@@ -73,14 +73,15 @@ const StyledContainer = styled('div', {
 }));
 
 const StyledSearch = styled('div', {
-    shouldForwardProp: (prop) =>
-        prop !== 'frontendHeaderRedesign',
+    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
 })<{
     frontendHeaderRedesign?: boolean;
 }>(({ theme, frontendHeaderRedesign }) => ({
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: frontendHeaderRedesign ? theme.palette.background.paper : theme.palette.background.elevation1,
+    backgroundColor: frontendHeaderRedesign
+        ? theme.palette.background.paper
+        : theme.palette.background.elevation1,
     border: `1px solid ${theme.palette.neutral.border}`,
     borderRadius: theme.shape.borderRadiusExtraLarge,
     padding: '3px 5px 3px 12px',
@@ -89,14 +90,15 @@ const StyledSearch = styled('div', {
 }));
 
 const StyledInputBase = styled(InputBase, {
-    shouldForwardProp: (prop) =>
-        prop !== 'frontendHeaderRedesign',
+    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
 })<{
     frontendHeaderRedesign?: boolean;
 }>(({ theme, frontendHeaderRedesign }) => ({
     width: '100%',
     minWidth: '300px',
-    backgroundColor: frontendHeaderRedesign ? theme.palette.background.paper : theme.palette.background.elevation1,
+    backgroundColor: frontendHeaderRedesign
+        ? theme.palette.background.paper
+        : theme.palette.background.elevation1,
 }));
 
 const StyledClose = styled(Close)(({ theme }) => ({

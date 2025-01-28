@@ -304,7 +304,7 @@ export class ClientFeatureToggleDelta {
         const baseFeatures = await this.getClientFeatures({
             environment,
         });
-        const baseSegments = await this.segmentReadModel.getActiveForClient();
+        const baseSegments = await this.segmentReadModel.getAllForClient();
 
         this.currentRevisionId =
             await this.configurationRevisionService.getMaxRevisionId();

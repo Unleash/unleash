@@ -76,7 +76,10 @@ interface ITab {
 const StyledCounterBadge = styled(CounterBadge)(({ theme }) => ({
     '.MuiBadge-badge': {
         backgroundColor: theme.palette.background.alternative,
-        right: '2px',
+        right: '-4px',
+    },
+    [theme.breakpoints.down('md')]: {
+        right: '6px',
     },
     flex: 'auto',
     justifyContent: 'center',

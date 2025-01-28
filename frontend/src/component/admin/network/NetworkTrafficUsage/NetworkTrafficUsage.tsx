@@ -190,7 +190,7 @@ export const NetworkTrafficUsage: FC = () => {
         return createBarChartOptions(
             theme,
             (tooltipItems: any) => {
-                if (period.format === 'daily') {
+                if (period.grouping === 'daily') {
                     const periodItem = record[period.month];
                     const tooltipDate = new Date(
                         periodItem.year,
@@ -253,7 +253,7 @@ export const NetworkTrafficUsage: FC = () => {
         if (data) {
             // if daily, there is a sum. if monthly, use the count from the current month
             let usage: number;
-            if (period.format === 'monthly') {
+            if (period.grouping === 'monthly') {
                 usage = data.datasets.length; // this is wrong
             } else {
                 usage = toTrafficUsageSum(data.datasets);
@@ -270,7 +270,7 @@ export const NetworkTrafficUsage: FC = () => {
 
                 setEstimatedMonthlyCost(
                     calculateEstimatedMonthlyCost(
-                        period.format === 'daily'
+                        period.grouping === 'daily'
                             ? period.month
                             : format(new Date(), 'yyyy-MM'),
                         data.datasets,

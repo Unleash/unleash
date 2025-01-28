@@ -36,17 +36,17 @@ export const useInstanceTrafficMetrics = (
 
 export type ChartDataSelection =
     | {
-          format: 'daily';
+          grouping: 'daily';
           month: string;
       }
     | {
-          format: 'monthly';
+          grouping: 'monthly';
           monthsBack: number;
       };
 
 const fromSelection = (selection: ChartDataSelection) => {
     const fmt = (date: Date) => format(date, 'yyyy-MM-dd');
-    if (selection.format === 'daily') {
+    if (selection.grouping === 'daily') {
         const month = new Date(selection.month);
         const from = fmt(month);
         const to = fmt(endOfMonth(month));
@@ -60,14 +60,14 @@ const fromSelection = (selection: ChartDataSelection) => {
 };
 
 export type SegmentedSchema = {
-    format: 'monthly' | 'daily';
-    period: { from: string; to: string };
+    grouping: 'monthly' | 'daily';
+    dateRange: { from: string; to: string };
     apiData: [
         {
             apiPath: string;
             dataPoints: Array<{
                 // other options: period? time? interval? for?
-                when: string; // in API: string formatted as full date or YYYY-MM, depending on monthly/daily
+                period: string; // in API: string formatted as full date or YYYY-MM, depending on monthly/daily
                 trafficTypes: Array<{
                     group: string; // we could do 'successful-requests', but that might constrain us in the future
                     count: number; // natural number
@@ -94,10 +94,7 @@ export const useInstanceTrafficMetrics2 = (
 ): InstanceTrafficMetricsResponse2 => {
     const { from, to } = fromSelection(selection);
 
-    const apiPath =
-        selection.format === 'daily'
-            ? `api/admin/metrics/traffic2?format=daily&month=${selection.month}`
-            : `api/admin/metrics/traffic2?format=monthly&monthsBack=${selection.monthsBack}`;
+    const apiPath = `api/admin/metrics/traffic-data-usage?grouping=${selection.grouping}&from=${from}&to=${to}`;
 
     const { data, error, mutate } = useSWR(formatApiPath(apiPath), fetcher);
 

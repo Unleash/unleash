@@ -184,7 +184,7 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                         <li key={period.label}>
                             <button
                                 className={
-                                    selectedPeriod.format === 'daily' &&
+                                    selectedPeriod.grouping === 'daily' &&
                                     period.key === selectedPeriod.month
                                         ? 'selected'
                                         : ''
@@ -193,7 +193,7 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                                 disabled={!period.selectable}
                                 onClick={() => {
                                     setPeriod({
-                                        format: 'daily',
+                                        grouping: 'daily',
                                         month: period.key,
                                     });
                                 }}
@@ -212,7 +212,7 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                         <li key={option.label}>
                             <button
                                 className={
-                                    selectedPeriod.format === 'monthly' &&
+                                    selectedPeriod.grouping === 'monthly' &&
                                     option.value === selectedPeriod.monthsBack
                                         ? 'selected'
                                         : ''
@@ -220,7 +220,7 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                                 type='button'
                                 onClick={() => {
                                     setPeriod({
-                                        format: 'monthly',
+                                        grouping: 'monthly',
                                         monthsBack: option.value,
                                     });
                                 }}

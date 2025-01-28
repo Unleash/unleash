@@ -129,7 +129,7 @@ export const newToChartData = (
         return { labels: [], datasets };
     }
 
-    if (traffic.format === 'monthly') {
+    if (traffic.grouping === 'monthly') {
         return toMonthlyChartData(traffic);
     } else {
         return toDailyChartData(traffic, endpointsInfo);
@@ -148,8 +148,8 @@ const prepareApiData = (apiData: SegmentedSchema['apiData']) =>
 const toMonthlyChartData = (
     traffic: SegmentedSchema,
 ): { datasets: ChartDatasetType[]; labels: string[] } => {
-    const from = new Date(traffic.period.from);
-    const to = new Date(traffic.period.to);
+    const from = new Date(traffic.dateRange.from);
+    const to = new Date(traffic.dateRange.to);
     const numMonths = Math.abs(differenceInCalendarMonths(to, from)) + 1;
     const formatMonth = (date: Date) => format(date, 'yyyy-MM');
 
@@ -161,7 +161,7 @@ const toMonthlyChartData = (
             }
 
             for (const month of Object.values(item.dataPoints)) {
-                monthsRec[month.when] = month.trafficTypes[0].count;
+                monthsRec[month.period] = month.trafficTypes[0].count;
             }
 
             const epInfo = endpointsInfo[item.apiPath];
@@ -186,8 +186,8 @@ const toDailyChartData = (
     traffic: SegmentedSchema,
     endpointsInfo: Record<string, EndpointInfo>,
 ): { datasets: ChartDatasetType[]; labels: number[] } => {
-    const from = new Date(traffic.period.from);
-    const to = new Date(traffic.period.to);
+    const from = new Date(traffic.dateRange.from);
+    const to = new Date(traffic.dateRange.to);
     const numDays = Math.abs(differenceInCalendarDays(to, from)) + 1;
     const formatDay = (date: Date) => format(date, 'yyyy-MM-dd');
 
@@ -205,7 +205,7 @@ const toDailyChartData = (
             const daysRec = getDaysRec();
 
             for (const day of Object.values(item.dataPoints)) {
-                daysRec[day.when] = day.trafficTypes[0].count;
+                daysRec[day.period] = day.trafficTypes[0].count;
             }
 
             const epInfo = endpointsInfo[item.apiPath];
@@ -379,7 +379,7 @@ export const useTrafficDataEstimation = () => {
     //     }
     // }
     const [period, setPeriod] = useState<ChartDataSelection>({
-        format: 'daily',
+        grouping: 'daily',
         month: selectablePeriods[0].key,
     });
 

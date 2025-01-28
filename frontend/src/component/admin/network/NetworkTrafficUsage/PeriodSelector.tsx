@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import type { ChartDataSelection } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
-import { type FC, useState } from 'react';
+import type { FC } from 'react';
 
 export type Period = {
     key: string;
@@ -154,18 +154,6 @@ type Props = {
 
 export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
     const selectablePeriods = getSelectablePeriods();
-
-    // this is for dev purposes; only to show how the design will work when you select a range.
-    const [tempOverride, setTempOverride] = useState<Selection | null>();
-
-    // const select = (value: Selection) => {
-    //     if (value.type === 'month') {
-    //         setTempOverride(null);
-    //         setPeriod(value.value);
-    //     } else {
-    //         setTempOverride(value);
-    //     }
-    // };
 
     const rangeOptions = [3, 6, 12].map((monthsBack) => ({
         value: monthsBack,

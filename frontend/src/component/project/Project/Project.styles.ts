@@ -78,7 +78,7 @@ export const StyledTab = styled(Tab)(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(1),
-        minWidth: 170
+        minWidth: 170,
     },
     [theme.breakpoints.up('md')]: {
         minWidth: 170,

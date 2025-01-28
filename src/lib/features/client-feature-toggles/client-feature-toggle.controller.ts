@@ -215,24 +215,6 @@ export default class FeatureController extends Controller {
                         )}`,
                         );
                     }
-                    const sortedNewSegments = hydrationEvent.segments.sort(
-                        (a, b) => Number(a.id) - Number(b.id),
-                    );
-                    if (
-                        !this.deepEqualIgnoreOrder(
-                            sortedToggles,
-                            sortedNewToggles,
-                        )
-                    ) {
-                        this.logger.warn(
-                            `old features and new features are different for segments. Old count ${
-                                segments.length
-                            }, new count ${hydrationEvent.segments.length}, query ${JSON.stringify(query)},
-                        diff ${JSON.stringify(
-                            diff(sortedSegments, sortedNewSegments),
-                        )}`,
-                        );
-                    }
                 } else {
                     this.logger.warn(
                         `Delta diff should have only hydration event, query ${JSON.stringify(query)}`,

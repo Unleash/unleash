@@ -63,9 +63,17 @@ export class UniqueConnectionService {
 
         const currentHour = currentTime.getHours();
 
-        await this.syncTotal(currentTime);
-        await this.syncBackend(currentTime);
-        await this.syncFrontend(currentTime);
+        await this.syncBuckets(currentTime, 'current', 'previous');
+        await this.syncBuckets(
+            currentTime,
+            'currentBackend',
+            'previousBackend',
+        );
+        await this.syncBuckets(
+            currentTime,
+            'currentFrontend',
+            'previousFrontend',
+        );
 
         if (this.activeHour !== currentHour) {
             this.activeHour = currentHour;
@@ -82,134 +90,60 @@ export class UniqueConnectionService {
         }
     }
 
-    private async syncTotal(currentTime = new Date()): Promise<void> {
-        const currentHour = currentTime.getHours();
-        const currentBucket = await this.uniqueConnectionStore.get('current');
-
-        if (this.activeHour !== currentHour && currentBucket) {
-            if (currentBucket.updatedAt.getHours() < currentHour) {
-                this.hll.merge({
-                    n: REGISTERS_EXPONENT,
-                    buckets: currentBucket.hll,
-                });
-                await this.uniqueConnectionStore.insert({
-                    hll: this.hll.output().buckets,
-                    id: 'previous',
-                });
-            } else {
-                const previousBucket =
-                    await this.uniqueConnectionStore.get('previous');
-                if (previousBucket) {
-                    this.hll.merge({
-                        n: REGISTERS_EXPONENT,
-                        buckets: previousBucket.hll,
-                    });
-                }
-                await this.uniqueConnectionStore.insert({
-                    hll: this.hll.output().buckets,
-                    id: 'previous',
-                });
-            }
-
-            this.resetHll('current');
-        } else if (currentBucket) {
-            this.hll.merge({
-                n: REGISTERS_EXPONENT,
-                buckets: currentBucket.hll,
-            });
+    private getHll(bucketId: BucketId) {
+        if (bucketId.toLowerCase().includes('frontend')) {
+            return this.frontendHll;
+        } else if (bucketId.toLowerCase().includes('backend')) {
+            return this.backendHll;
+        } else {
+            return this.hll;
         }
-
-        await this.uniqueConnectionStore.insert({
-            hll: this.hll.output().buckets,
-            id: 'current',
-        });
     }
 
-    private async syncBackend(currentTime = new Date()): Promise<void> {
+    private async syncBuckets(
+        currentTime: Date,
+        current: BucketId,
+        previous: BucketId,
+    ): Promise<void> {
         const currentHour = currentTime.getHours();
-        const currentBucket =
-            await this.uniqueConnectionStore.get('currentBackend');
+        const currentBucket = await this.uniqueConnectionStore.get(current);
 
         if (this.activeHour !== currentHour && currentBucket) {
             if (currentBucket.updatedAt.getHours() < currentHour) {
-                this.backendHll.merge({
+                this.getHll(current).merge({
                     n: REGISTERS_EXPONENT,
                     buckets: currentBucket.hll,
                 });
                 await this.uniqueConnectionStore.insert({
-                    hll: this.backendHll.output().buckets,
-                    id: 'previousBackend',
+                    hll: this.getHll(current).output().buckets,
+                    id: previous,
                 });
             } else {
                 const previousBucket =
-                    await this.uniqueConnectionStore.get('previousBackend');
+                    await this.uniqueConnectionStore.get(previous);
                 if (previousBucket) {
-                    this.backendHll.merge({
+                    this.getHll(current).merge({
                         n: REGISTERS_EXPONENT,
                         buckets: previousBucket.hll,
                     });
                 }
                 await this.uniqueConnectionStore.insert({
-                    hll: this.backendHll.output().buckets,
-                    id: 'previousBackend',
+                    hll: this.getHll(current).output().buckets,
+                    id: previous,
                 });
             }
 
-            this.resetHll('currentBackend');
+            this.resetHll(current);
         } else if (currentBucket) {
-            this.backendHll.merge({
+            this.getHll(current).merge({
                 n: REGISTERS_EXPONENT,
                 buckets: currentBucket.hll,
             });
         }
 
         await this.uniqueConnectionStore.insert({
-            hll: this.backendHll.output().buckets,
-            id: 'currentBackend',
-        });
-    }
-
-    private async syncFrontend(currentTime = new Date()): Promise<void> {
-        const currentHour = currentTime.getHours();
-        const currentBucket =
-            await this.uniqueConnectionStore.get('currentFrontend');
-
-        if (this.activeHour !== currentHour && currentBucket) {
-            if (currentBucket.updatedAt.getHours() < currentHour) {
-                this.frontendHll.merge({
-                    n: REGISTERS_EXPONENT,
-                    buckets: currentBucket.hll,
-                });
-                await this.uniqueConnectionStore.insert({
-                    hll: this.frontendHll.output().buckets,
-                    id: 'previousFrontend',
-                });
-            } else {
-                const previousBucket =
-                    await this.uniqueConnectionStore.get('previousFrontend');
-                if (previousBucket) {
-                    this.frontendHll.merge({
-                        n: REGISTERS_EXPONENT,
-                        buckets: previousBucket.hll,
-                    });
-                }
-                await this.uniqueConnectionStore.insert({
-                    hll: this.frontendHll.output().buckets,
-                    id: 'previousFrontend',
-                });
-            }
-
-            this.resetHll('currentFrontend');
-        } else if (currentBucket) {
-            this.frontendHll.merge({
-                n: REGISTERS_EXPONENT,
-                buckets: currentBucket.hll,
-            });
-        }
-
-        await this.uniqueConnectionStore.insert({
-            hll: this.frontendHll.output().buckets,
-            id: 'currentFrontend',
+            hll: this.getHll(current).output().buckets,
+            id: current,
         });
     }
 }

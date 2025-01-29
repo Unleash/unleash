@@ -1,12 +1,12 @@
-import { styled, Button, Popover, Box } from '@mui/material';
+import { styled, Button, Popover, Box, type Theme } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import type { ChartDataSelection } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import { useRef, useState, type FC } from 'react';
-import { useLocationSettings } from 'hooks/useLocationSettings';
 import { format } from 'date-fns';
 
 const dropdownWidth = '15rem';
+const dropdownInlinePadding = (theme: Theme) => theme.spacing(3);
 
 export type Period = {
     key: string;
@@ -69,7 +69,7 @@ const Wrapper = styled('article')(({ theme }) => ({
     // borderRadius: theme.shape.borderRadiusLarge,
     // border: `2px solid ${theme.palette.divider}`,
     width: dropdownWidth,
-    padding: theme.spacing(3),
+    paddingBlock: theme.spacing(2),
     display: 'flex',
     flexFlow: 'column',
     gap: theme.spacing(2),
@@ -91,7 +91,7 @@ const Wrapper = styled('article')(({ theme }) => ({
         cursor: 'default',
         color: theme.palette.text.disabled,
     },
-    'button:hover': {
+    'button:hover:not(:disabled)': {
         backgroundColor: theme.palette.action.hover,
     },
     'button:focus': {
@@ -101,6 +101,7 @@ const Wrapper = styled('article')(({ theme }) => ({
 
 const MonthSelector = styled('article')(({ theme }) => ({
     border: 'none',
+    paddingInline: dropdownInlinePadding(theme),
     hgroup: {
         h3: {
             margin: 0,
@@ -126,9 +127,11 @@ const MonthGrid = styled('ul')(({ theme }) => ({
 
 const RangeSelector = styled('article')(({ theme }) => ({
     display: 'flex',
+    width: '100%',
     flexFlow: 'column',
-    gap: theme.spacing(0.5),
+    gap: theme.spacing(0),
     h4: {
+        paddingInline: dropdownInlinePadding(theme),
         fontSize: theme.typography.body2.fontSize,
         margin: 0,
         color: theme.palette.text.secondary,
@@ -137,13 +140,19 @@ const RangeSelector = styled('article')(({ theme }) => ({
 
 const RangeList = styled('ul')(({ theme }) => ({
     listStyle: 'none',
+    margin: 0,
     padding: 0,
-    'li + li': {
-        marginTop: theme.spacing(1),
+    width: '100%',
+    li: {
+        width: '100%',
     },
 
     button: {
-        marginLeft: `-${theme.spacing(0.5)}`,
+        width: '100%',
+        paddingBlock: theme.spacing(1),
+        textAlign: 'left',
+        borderRadius: 0,
+        paddingInline: dropdownInlinePadding(theme),
     },
 }));
 
@@ -161,7 +170,6 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 
 export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
     const selectablePeriods = getSelectablePeriods();
-    const { locationSettings } = useLocationSettings();
 
     const rangeOptions = [3, 6, 12].map((monthsBack) => ({
         value: monthsBack,

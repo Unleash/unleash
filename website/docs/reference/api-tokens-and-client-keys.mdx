@@ -3,13 +3,12 @@ title: API Tokens and Client Keys
 pagination_next: reference/front-end-api
 ---
 
-Unleash uses a system of API tokens and client keys, to facilitate communication between consuming clients such as [SDKs](../reference/sdks), [Edge](../reference/edge) or other tools and automation.
+Unleash uses API keys to facilitate communication between consuming clients such as [SDKs](../reference/sdks), [Edge](../reference/edge) or other tools and automation.
 
-Unleash supports the following types of API tokens and keys:
+Unleash supports the following types of API tokens:
 - [Client tokens](#client-tokens) for connecting server-side client SDKs, Unleash Edge, and Unleash Proxy to the Unleash server.
 - [Frontend tokens](#frontend-tokens) for connecting client-side SDKs to Unleash using the Frontend API.
 - [Personal access tokens](#personal-access-tokens) for testing and debugging or providing temporary access to an automation tool.
-- [Proxy client keys](#proxy-client-keys) for connecting client-side SDKs to Unleash using Unleash Proxy.
 
 ## API token types
 
@@ -26,7 +25,7 @@ Client tokens cannot be used in Frontend SDKs, use [Frontend tokens](#frontend-t
 
 ### Frontend tokens
 
-Use Frontend tokens for connecting [frontend SDKs](../reference/sdks#front-end-sdks) using the [Unleash Frontend API](./front-end-api). They grant the user permission to:
+Use frontend tokens for connecting [frontend SDKs](../reference/sdks#front-end-sdks) using the [Unleash Frontend API](./front-end-api). They grant the user permission to:
 -   Reading enabled flags for a given context
 -   Registering applications with the Unleash server
 -   Sending usage metrics
@@ -67,9 +66,7 @@ Admin tokens grant full read and write access to all resources in the Unleash se
 
 :::
 
-### Client and Frontend tokens
-
-The following table provides a summary of what roles and permissions allow a user to view, create, update, or delete Client and Frontend tokens in Unleash:
+The following table provides a summary of what ...:
 
 | Role/Permission                                   | Details                                                                 |
 |---------------------------------------------------|-------------------------------------------------------------------------|
@@ -78,10 +75,7 @@ The following table provides a summary of what roles and permissions allow a use
 | **Member Project Role**                           | Can view, create, update, or delete tokens within the project.          |
 | **Custom Project Role with API Token Permission** | Can view, create, update, or delete tokens within the project with the corresponding permission. |
 | **Viewer Root Role**                              | Cannot view, create, update, or delete tokens.                          |
-
-### Personal access tokens
-
-Any user can create personal access tokens that mirror the permissions they have.
+| **Any Role**                                      | Can create pesonal access tokens.                          | 
 
 ## API token format
 
@@ -97,8 +91,6 @@ The parts are separated by two different separators: A colon (`:`) between the p
 {{projects}}:{{environment}}.{{hash}}
 ```
 
-The **project(s)** part is one of:
-
 The project value of the token can be one of:
 -   A single project ID, for example `default`: when the token can only access a single project.
 -   `[]`: when the token is valid for a specific set of projects*. The list of projects is not shown in the token.
@@ -108,7 +100,7 @@ The environment is the name of an environment on your Unleash instance, such as 
 
 Personal access tokens start with the string `user`, and do not contain additional project or environment information.
 
-Some example client tokens are:
+Some example API tokens are:
 
 -   A token with access to the `development` environment of a single project, `new-checkout-flow`:
     ```
@@ -136,9 +128,17 @@ be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178
 
 ## Create an API token
 
-.. some detailed steps here
+### Create an API token
+
+### Create a personal access token
 
 ## Proxy client keys
+
+:::warning
+
+Unleash Proxy is in maintanance mode. Use [Unleash Edge](../reference/edge) instead.
+
+:::
 
 Use proxy client keys to connect [Frontend SDKs](../reference/sdks#front-end-sdks) to [Unleash Proxy](../reference/unleash-proxy). Proxy client keys are not considered a secret and are safe to expose client-side.
 
@@ -149,6 +149,5 @@ Proxy client keys are arbitrary strings that you provide the Unleash proxy with 
 To designate a string as a proxy client key, add it to the `clientKeys` list when [starting the proxy](../reference/unleash-proxy#configuration). Connecting clients should then specify the same string as their client key.
 
 :::
-
 
 Proxy clients keys cannot be used to connect to the Unleash API, use [API tokens](#api-tokens) instead.

@@ -201,10 +201,13 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                     ':focus-within': {
                         borderColor: theme.palette.primary.main,
                     },
+                    ':hover': {
+                        borderWidth: '2px', // Prevent the border from changing width on hover
+                    },
                 })}
                 variant='outlined'
                 disableRipple
-                onClick={() => setOpen(!open)}
+                onClick={() => setOpen(true)}
             >
                 {buttonText}
             </Button>

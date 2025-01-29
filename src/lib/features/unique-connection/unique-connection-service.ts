@@ -1,7 +1,10 @@
 import type { IUnleashConfig } from '../../types/option';
 import type { IFlagResolver, IUnleashStores } from '../../types';
 import type { Logger } from '../../logger';
-import type { IUniqueConnectionStore } from './unique-connection-store-type';
+import type {
+    BucketId,
+    IUniqueConnectionStore,
+} from './unique-connection-store-type';
 import HyperLogLog from 'hyperloglog-lite';
 import type EventEmitter from 'events';
 import { SDK_CONNECTION_ID_RECEIVED } from '../../metric-events';
@@ -59,6 +62,28 @@ export class UniqueConnectionService {
         if (!this.flagResolver.isEnabled('uniqueSdkTracking')) return;
 
         const currentHour = currentTime.getHours();
+
+        await this.syncTotal(currentTime);
+        await this.syncBackend(currentTime);
+        await this.syncFrontend(currentTime);
+
+        if (this.activeHour !== currentHour) {
+            this.activeHour = currentHour;
+        }
+    }
+
+    private resetHll(bucketId: BucketId) {
+        if (bucketId.toLowerCase().includes('frontend')) {
+            this.frontendHll = HyperLogLog(REGISTERS_EXPONENT);
+        } else if (bucketId.toLowerCase().includes('backend')) {
+            this.backendHll = HyperLogLog(REGISTERS_EXPONENT);
+        } else {
+            this.hll = HyperLogLog(REGISTERS_EXPONENT);
+        }
+    }
+
+    private async syncTotal(currentTime = new Date()): Promise<void> {
+        const currentHour = currentTime.getHours();
         const currentBucket = await this.uniqueConnectionStore.get('current');
 
         if (this.activeHour !== currentHour && currentBucket) {
@@ -86,7 +111,7 @@ export class UniqueConnectionService {
                 });
             }
 
-            this.hll = HyperLogLog(REGISTERS_EXPONENT);
+            this.resetHll('current');
         } else if (currentBucket) {
             this.hll.merge({
                 n: REGISTERS_EXPONENT,
@@ -98,16 +123,9 @@ export class UniqueConnectionService {
             hll: this.hll.output().buckets,
             id: 'current',
         });
-
-        await this.syncBackend(currentTime);
-        await this.syncFrontend(currentTime);
-
-        if (this.activeHour !== currentHour) {
-            this.activeHour = currentHour;
-        }
     }
 
-    async syncBackend(currentTime = new Date()): Promise<void> {
+    private async syncBackend(currentTime = new Date()): Promise<void> {
         const currentHour = currentTime.getHours();
         const currentBucket =
             await this.uniqueConnectionStore.get('currentBackend');
@@ -137,7 +155,7 @@ export class UniqueConnectionService {
                 });
             }
 
-            this.backendHll = HyperLogLog(REGISTERS_EXPONENT);
+            this.resetHll('currentBackend');
         } else if (currentBucket) {
             this.backendHll.merge({
                 n: REGISTERS_EXPONENT,
@@ -151,7 +169,7 @@ export class UniqueConnectionService {
         });
     }
 
-    async syncFrontend(currentTime = new Date()): Promise<void> {
+    private async syncFrontend(currentTime = new Date()): Promise<void> {
         const currentHour = currentTime.getHours();
         const currentBucket =
             await this.uniqueConnectionStore.get('currentFrontend');
@@ -181,7 +199,7 @@ export class UniqueConnectionService {
                 });
             }
 
-            this.frontendHll = HyperLogLog(REGISTERS_EXPONENT);
+            this.resetHll('currentFrontend');
         } else if (currentBucket) {
             this.frontendHll.merge({
                 n: REGISTERS_EXPONENT,

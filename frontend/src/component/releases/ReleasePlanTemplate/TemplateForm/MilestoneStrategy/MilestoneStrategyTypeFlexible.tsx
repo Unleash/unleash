@@ -9,6 +9,7 @@ import {
     parseParameterString,
 } from 'utils/parseParameter';
 import Input from 'component/common/Input/Input';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 interface IMilestoneStrategyTypeFlexibleProps {
     parameters: IFeatureStrategyParameters;
@@ -38,8 +39,15 @@ const StyledInnerBox1 = styled(Box)(({ theme }) => ({
 }));
 
 const StyledInnerBox2 = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
     width: '50%',
     marginLeft: theme.spacing(0.5),
+    marginBottom: theme.spacing(2),
+    '& > div': {
+        flex: 1,
+    },
 }));
 
 const DEFAULT_STICKINESS = 'default';
@@ -103,6 +111,16 @@ export const MilestoneStrategyTypeFlexible = ({
                         }
                         error={Boolean(errors?.getFormError('groupId'))}
                         helperText={errors?.getFormError('groupId')}
+                    />
+                    <HelpIcon
+                        htmlTooltip
+                        tooltip={
+                            <>
+                                Supports <strong>{'{{featureName}}'}</strong> as
+                                a template variable. If not set, defaults to the
+                                feature flag name.
+                            </>
+                        }
                     />
                 </StyledInnerBox2>
             </StyledOuterBox>

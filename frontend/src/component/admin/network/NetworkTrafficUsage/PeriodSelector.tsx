@@ -94,6 +94,9 @@ const Wrapper = styled('article')(({ theme }) => ({
     'button:hover': {
         backgroundColor: theme.palette.action.hover,
     },
+    'button:focus': {
+        outline: `2px solid ${theme.palette.primary.main}`,
+    },
 }));
 
 const MonthSelector = styled('article')(({ theme }) => ({
@@ -144,16 +147,6 @@ const RangeList = styled('ul')(({ theme }) => ({
     },
 }));
 
-type Selection =
-    | {
-          type: 'month';
-          value: string;
-      }
-    | {
-          type: 'range';
-          monthsBack: number;
-      };
-
 type Props = {
     selectedPeriod: ChartDataSelection;
     setPeriod: (period: ChartDataSelection) => void;
@@ -161,9 +154,8 @@ type Props = {
 
 const StyledPopover = styled(Popover)(({ theme }) => ({
     '& .MuiPaper-root': {
-        // borderRadius: `${theme.shape.borderRadiusMedium}px`,
         borderRadius: theme.shape.borderRadiusLarge,
-        border: `2px solid ${theme.palette.divider}`,
+        border: `1px solid ${theme.palette.divider}`,
     },
 }));
 
@@ -205,6 +197,10 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                     fontWeight: 'normal',
                     color: theme.palette.text.primary,
                     borderColor: theme.palette.divider,
+                    borderWidth: '2px',
+                    ':focus-within': {
+                        borderColor: theme.palette.primary.main,
+                    },
                 })}
                 variant='outlined'
                 disableRipple

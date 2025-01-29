@@ -126,7 +126,7 @@ export const newToChartData = (
     if (traffic.grouping === 'monthly') {
         return toMonthlyChartData(traffic);
     } else {
-        return toDailyChartData(traffic, endpointsInfo);
+        return toDailyChartData(traffic);
     }
 };
 
@@ -180,7 +180,6 @@ const toMonthlyChartData = (
 
 const toDailyChartData = (
     traffic: TrafficUsageDataSegmentedCombinedSchema,
-    endpointsInfo: Record<string, EndpointInfo>,
 ): { datasets: ChartDatasetType[]; labels: number[] } => {
     const from = new Date(traffic.dateRange.from);
     const to = new Date(traffic.dateRange.to);

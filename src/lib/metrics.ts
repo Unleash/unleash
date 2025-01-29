@@ -1118,7 +1118,7 @@ export default class MetricsMonitor {
         await schedulerService.schedule(
             async () =>
                 Promise.all([collectStaticCounters(), collectAggDbMetrics()]),
-            hoursToMilliseconds(2),
+            hoursToMilliseconds(1),
             'collectStaticCounters',
         );
         await schedulerService.schedule(

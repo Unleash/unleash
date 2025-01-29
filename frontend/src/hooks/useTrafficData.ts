@@ -120,13 +120,7 @@ export const newToChartData = (
     traffic?: SegmentedSchema,
 ): { datasets: ChartDatasetType[]; labels: (string | number)[] } => {
     if (!traffic) {
-        const datasets = Object.values(endpointsInfo).map((info) => ({
-            label: info.label,
-            data: [],
-            backgroundColor: info.color,
-            hoverBackgroundColor: info.color,
-        }));
-        return { labels: [], datasets };
+        return { labels: [], datasets: [] };
     }
 
     if (traffic.grouping === 'monthly') {

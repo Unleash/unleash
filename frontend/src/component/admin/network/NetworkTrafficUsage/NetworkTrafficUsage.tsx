@@ -296,18 +296,6 @@ const NewNetworkTrafficUsage: FC = () => {
                                 estimatedMonthlyCost={estimatedMonthlyCost}
                             />
 
-                            <Select
-                                id='dataperiod-select'
-                                name='dataperiod'
-                                options={selectablePeriods}
-                                value={period}
-                                onChange={(e) => setPeriod(e.target.value)}
-                                style={{
-                                    minWidth: '100%',
-                                    marginBottom: theme.spacing(2),
-                                }}
-                                formControlStyles={{ width: '100%' }}
-                            />
                             <PeriodSelector
                                 selectedPeriod={newPeriod}
                                 setPeriod={setNewPeriod}

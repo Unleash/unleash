@@ -1,6 +1,18 @@
 import { useState } from 'react';
-import type { IInstanceTrafficMetricsResponse } from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import type {
+    ChartDataSelection,
+    IInstanceTrafficMetricsResponse,
+    SegmentedSchemaApiData,
+} from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { ChartDataset } from 'chart.js';
+import {
+    addDays,
+    addMonths,
+    differenceInCalendarDays,
+    differenceInCalendarMonths,
+    format,
+} from 'date-fns';
+import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
 
 const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
@@ -102,6 +114,110 @@ const toPeriodsRecord = (
         },
         {} as Record<string, SelectablePeriod>,
     );
+};
+
+export const newToChartData = (
+    traffic?: TrafficUsageDataSegmentedCombinedSchema,
+): { datasets: ChartDatasetType[]; labels: (string | number)[] } => {
+    if (!traffic) {
+        return { labels: [], datasets: [] };
+    }
+
+    if (traffic.grouping === 'monthly') {
+        return toMonthlyChartData(traffic);
+    } else {
+        return toDailyChartData(traffic);
+    }
+};
+
+const prepareApiData = (
+    apiData: TrafficUsageDataSegmentedCombinedSchema['apiData'],
+) =>
+    apiData
+        .filter((item) => item.apiPath in endpointsInfo)
+        .sort(
+            (item1: SegmentedSchemaApiData, item2: SegmentedSchemaApiData) =>
+                endpointsInfo[item1.apiPath].order -
+                endpointsInfo[item2.apiPath].order,
+        );
+
+const toMonthlyChartData = (
+    traffic: TrafficUsageDataSegmentedCombinedSchema,
+): { datasets: ChartDatasetType[]; labels: string[] } => {
+    const from = new Date(traffic.dateRange.from);
+    const to = new Date(traffic.dateRange.to);
+    const numMonths = Math.abs(differenceInCalendarMonths(to, from)) + 1;
+    const formatMonth = (date: Date) => format(date, 'yyyy-MM');
+
+    const datasets = prepareApiData(traffic.apiData).map(
+        (item: SegmentedSchemaApiData) => {
+            const monthsRec: { [month: string]: number } = {};
+            for (let i = 0; i < numMonths; i++) {
+                monthsRec[formatMonth(addMonths(from, i))] = 0;
+            }
+
+            for (const month of Object.values(item.dataPoints)) {
+                monthsRec[month.period] = month.trafficTypes[0].count;
+            }
+
+            const epInfo = endpointsInfo[item.apiPath];
+
+            return {
+                label: epInfo.label,
+                data: Object.values(monthsRec),
+                backgroundColor: epInfo.color,
+                hoverBackgroundColor: epInfo.color,
+            };
+        },
+    );
+
+    const labels = Array.from({ length: numMonths }).map((_, index) =>
+        formatMonth(addMonths(from, index)),
+    );
+
+    return { datasets, labels };
+};
+
+const toDailyChartData = (
+    traffic: TrafficUsageDataSegmentedCombinedSchema,
+): { datasets: ChartDatasetType[]; labels: number[] } => {
+    const from = new Date(traffic.dateRange.from);
+    const to = new Date(traffic.dateRange.to);
+    const numDays = Math.abs(differenceInCalendarDays(to, from)) + 1;
+    const formatDay = (date: Date) => format(date, 'yyyy-MM-dd');
+
+    const daysRec: { [day: string]: number } = {};
+    for (let i = 0; i < numDays; i++) {
+        daysRec[formatDay(addDays(from, i))] = 0;
+    }
+
+    const getDaysRec = () => ({
+        ...daysRec,
+    });
+
+    const datasets = prepareApiData(traffic.apiData).map(
+        (item: SegmentedSchemaApiData) => {
+            const daysRec = getDaysRec();
+
+            for (const day of Object.values(item.dataPoints)) {
+                daysRec[day.period] = day.trafficTypes[0].count;
+            }
+
+            const epInfo = endpointsInfo[item.apiPath];
+
+            return {
+                label: epInfo.label,
+                data: Object.values(daysRec),
+                backgroundColor: epInfo.color,
+                hoverBackgroundColor: epInfo.color,
+            };
+        },
+    );
+
+    // simplification: assuming days run in a single month from the 1st onwards
+    const labels = Array.from({ length: numDays }).map((_, index) => index + 1);
+
+    return { datasets, labels };
 };
 
 const toChartData = (
@@ -236,11 +352,18 @@ export const useTrafficDataEstimation = () => {
     const record = toPeriodsRecord(selectablePeriods);
     const [period, setPeriod] = useState<string>(selectablePeriods[0].key);
 
+    const [newPeriod, setNewPeriod] = useState<ChartDataSelection>({
+        grouping: 'daily',
+        month: selectablePeriods[0].key,
+    });
+
     return {
         calculateTrafficDataCost,
         record,
         period,
         setPeriod,
+        newPeriod,
+        setNewPeriod,
         selectablePeriods,
         getDayLabels,
         currentPeriod,

@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
-import { type FC, useState } from 'react';
+import type { ChartDataSelection } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import type { FC } from 'react';
 
 export type Period = {
     key: string;
@@ -147,24 +148,12 @@ type Selection =
       };
 
 type Props = {
-    selectedPeriod: string;
-    setPeriod: (period: string) => void;
+    selectedPeriod: ChartDataSelection;
+    setPeriod: (period: ChartDataSelection) => void;
 };
 
 export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
     const selectablePeriods = getSelectablePeriods();
-
-    // this is for dev purposes; only to show how the design will work when you select a range.
-    const [tempOverride, setTempOverride] = useState<Selection | null>();
-
-    const select = (value: Selection) => {
-        if (value.type === 'month') {
-            setTempOverride(null);
-            setPeriod(value.value);
-        } else {
-            setTempOverride(value);
-        }
-    };
 
     const rangeOptions = [3, 6, 12].map((monthsBack) => ({
         value: monthsBack,
@@ -183,17 +172,17 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                         <li key={period.label}>
                             <button
                                 className={
-                                    !tempOverride &&
-                                    period.key === selectedPeriod
+                                    selectedPeriod.grouping === 'daily' &&
+                                    period.key === selectedPeriod.month
                                         ? 'selected'
                                         : ''
                                 }
                                 type='button'
                                 disabled={!period.selectable}
                                 onClick={() => {
-                                    select({
-                                        type: 'month',
-                                        value: period.key,
+                                    setPeriod({
+                                        grouping: 'daily',
+                                        month: period.key,
                                     });
                                 }}
                             >
@@ -211,16 +200,15 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                         <li key={option.label}>
                             <button
                                 className={
-                                    tempOverride &&
-                                    tempOverride.type === 'range' &&
-                                    option.value === tempOverride.monthsBack
+                                    selectedPeriod.grouping === 'monthly' &&
+                                    option.value === selectedPeriod.monthsBack
                                         ? 'selected'
                                         : ''
                                 }
                                 type='button'
                                 onClick={() => {
-                                    select({
-                                        type: 'range',
+                                    setPeriod({
+                                        grouping: 'monthly',
                                         monthsBack: option.value,
                                     });
                                 }}

@@ -20,13 +20,17 @@ import {
 } from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
-import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import {
+    useInstanceTrafficMetrics,
+    useInstanceTrafficMetrics2,
+} from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import {
     type ChartDatasetType,
+    newToChartData,
     useTrafficDataEstimation,
 } from 'hooks/useTrafficData';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
@@ -36,6 +40,8 @@ import { BILLING_TRAFFIC_BUNDLE_PRICE } from 'component/admin/billing/BillingDas
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { PeriodSelector } from './PeriodSelector';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { format } from 'date-fns';
+import { monthlyTrafficDataToCurrentUsage } from './monthly-traffic-data-to-current-usage';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -148,10 +154,173 @@ const NewHeader = styled('div')(() => ({
     alignItems: 'flex-start',
 }));
 
-export const NetworkTrafficUsage: FC = () => {
+const NewNetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
-    const showMultiMonthSelector = useUiFlag('dataUsageMultiMonthView');
+
+    const { isOss } = useUiConfig();
+
+    const { locationSettings } = useLocationSettings();
+    const {
+        record,
+        newPeriod,
+        setNewPeriod,
+        toTrafficUsageSum,
+        calculateOverageCost,
+        calculateEstimatedMonthlyCost,
+    } = useTrafficDataEstimation();
+
+    const includedTraffic = useTrafficLimit();
+
+    const options = useMemo(() => {
+        return createBarChartOptions(
+            theme,
+            (tooltipItems: any) => {
+                if (newPeriod.grouping === 'daily') {
+                    const periodItem = record[newPeriod.month];
+                    const tooltipDate = new Date(
+                        periodItem.year,
+                        periodItem.month,
+                        Number.parseInt(tooltipItems[0].label),
+                    );
+                    return tooltipDate.toLocaleDateString(
+                        locationSettings?.locale ?? 'en-US',
+                        {
+                            month: 'long',
+                            day: 'numeric',
+                            year: 'numeric',
+                        },
+                    );
+                } else {
+                    return new Date(tooltipItems[0].label).toLocaleDateString(
+                        locationSettings?.locale ?? 'en-US',
+                        {
+                            month: 'long',
+                            year: 'numeric',
+                        },
+                    );
+                }
+            },
+            includedTraffic,
+        );
+    }, [theme, newPeriod]);
+
+    const traffic = useInstanceTrafficMetrics2(newPeriod);
+
+    const data = newToChartData(traffic.usage);
+
+    const [usageTotal, setUsageTotal] = useState<number>(0);
+
+    const [overageCost, setOverageCost] = useState<number>(0);
+
+    const [estimatedMonthlyCost, setEstimatedMonthlyCost] = useState<number>(0);
+
+    useEffect(() => {
+        if (data) {
+            let usage: number;
+            if (newPeriod.grouping === 'monthly') {
+                usage = monthlyTrafficDataToCurrentUsage(traffic.usage);
+            } else {
+                usage = toTrafficUsageSum(data.datasets);
+            }
+
+            setUsageTotal(usage);
+            if (includedTraffic > 0) {
+                const calculatedOverageCost = calculateOverageCost(
+                    usage,
+                    includedTraffic,
+                    BILLING_TRAFFIC_BUNDLE_PRICE,
+                );
+                setOverageCost(calculatedOverageCost);
+
+                setEstimatedMonthlyCost(
+                    calculateEstimatedMonthlyCost(
+                        newPeriod.grouping === 'daily'
+                            ? newPeriod.month
+                            : format(new Date(), 'yyyy-MM'),
+                        data.datasets,
+                        includedTraffic,
+                        new Date(),
+                        BILLING_TRAFFIC_BUNDLE_PRICE,
+                    ),
+                );
+            }
+        }
+    }, [data]);
+
+    return (
+        <ConditionallyRender
+            condition={isOss()}
+            show={<Alert severity='warning'>Not enabled.</Alert>}
+            elseShow={
+                <>
+                    <ConditionallyRender
+                        condition={includedTraffic > 0 && overageCost > 0}
+                        show={
+                            <Alert severity='warning' sx={{ mb: 4 }}>
+                                <b>Heads up!</b> You are currently consuming
+                                more requests than your plan includes and will
+                                be billed according to our terms. Please see{' '}
+                                <Link
+                                    component={RouterLink}
+                                    to='https://www.getunleash.io/pricing'
+                                >
+                                    this page
+                                </Link>{' '}
+                                for more information. In order to reduce your
+                                traffic consumption, you may configure an{' '}
+                                <Link
+                                    component={RouterLink}
+                                    to='https://docs.getunleash.io/reference/unleash-edge'
+                                >
+                                    Unleash Edge instance
+                                </Link>{' '}
+                                in your own datacenter.
+                            </Alert>
+                        }
+                    />
+                    <StyledBox>
+                        <NewHeader>
+                            {
+                                // todo: add new usage plan summary that works for monthly data as well as daily
+                            }
+
+                            <NetworkTrafficUsagePlanSummary
+                                usageTotal={usageTotal}
+                                includedTraffic={includedTraffic}
+                                overageCost={overageCost}
+                                estimatedMonthlyCost={estimatedMonthlyCost}
+                            />
+                            <PeriodSelector
+                                selectedPeriod={newPeriod}
+                                setPeriod={setNewPeriod}
+                            />
+                        </NewHeader>
+                        <Bar
+                            data={data}
+                            plugins={[customHighlightPlugin()]}
+                            options={options}
+                            aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API' // todo: this isn't correct at all!
+                        />
+                    </StyledBox>
+                </>
+            }
+        />
+    );
+};
+
+export const NetworkTrafficUsage: FC = () => {
+    const useNewNetworkTraffic = useUiFlag('dataUsageMultiMonthView');
+    return useNewNetworkTraffic ? (
+        <NewNetworkTrafficUsage />
+    ) : (
+        <OldNetworkTrafficUsage />
+    );
+};
+
+const OldNetworkTrafficUsage: FC = () => {
+    usePageTitle('Network - Data Usage');
+    const theme = useTheme();
 
     const { isOss } = useUiConfig();
 
@@ -279,49 +448,31 @@ export const NetworkTrafficUsage: FC = () => {
                         }
                     />
                     <StyledBox>
-                        {showMultiMonthSelector ? (
-                            <NewHeader>
+                        <Grid container component='header' spacing={2}>
+                            <Grid item xs={12} md={10}>
                                 <NetworkTrafficUsagePlanSummary
                                     usageTotal={usageTotal}
                                     includedTraffic={includedTraffic}
                                     overageCost={overageCost}
                                     estimatedMonthlyCost={estimatedMonthlyCost}
                                 />
-                                <PeriodSelector
-                                    selectedPeriod={period}
-                                    setPeriod={setPeriod}
-                                />
-                            </NewHeader>
-                        ) : (
-                            <Grid container component='header' spacing={2}>
-                                <Grid item xs={12} md={10}>
-                                    <NetworkTrafficUsagePlanSummary
-                                        usageTotal={usageTotal}
-                                        includedTraffic={includedTraffic}
-                                        overageCost={overageCost}
-                                        estimatedMonthlyCost={
-                                            estimatedMonthlyCost
-                                        }
-                                    />
-                                </Grid>
-                                <Grid item xs={12} md={2}>
-                                    <Select
-                                        id='dataperiod-select'
-                                        name='dataperiod'
-                                        options={selectablePeriods}
-                                        value={period}
-                                        onChange={(e) =>
-                                            setPeriod(e.target.value)
-                                        }
-                                        style={{
-                                            minWidth: '100%',
-                                            marginBottom: theme.spacing(2),
-                                        }}
-                                        formControlStyles={{ width: '100%' }}
-                                    />
-                                </Grid>
                             </Grid>
-                        )}
+                            <Grid item xs={12} md={2}>
+                                <Select
+                                    id='dataperiod-select'
+                                    name='dataperiod'
+                                    options={selectablePeriods}
+                                    value={period}
+                                    onChange={(e) => setPeriod(e.target.value)}
+                                    style={{
+                                        minWidth: '100%',
+                                        marginBottom: theme.spacing(2),
+                                    }}
+                                    formControlStyles={{ width: '100%' }}
+                                />
+                            </Grid>
+                        </Grid>
+
                         <Grid item xs={12} md={2}>
                             <Bar
                                 data={data}

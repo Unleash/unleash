@@ -1,6 +1,6 @@
 import type { Chart } from 'chart.js';
 
-export const customHighlightPlugin = (width = 46, bottomOverflow = 34) => ({
+export const customHighlightPlugin = (bottomOverflow = 34) => ({
     id: 'customLine',
     beforeDraw: (chart: Chart) => {
         if (chart.tooltip?.opacity && chart.tooltip.x) {
@@ -17,10 +17,14 @@ export const customHighlightPlugin = (width = 46, bottomOverflow = 34) => ({
             gradient.addColorStop(0, 'rgba(129, 122, 254, 0)');
             gradient.addColorStop(1, 'rgba(129, 122, 254, 0.12)');
             ctx.fillStyle = gradient;
+
+            const barWidth =
+                (chart.width / (chart.data.labels?.length ?? 1)) *
+                (chart.options.datasets?.bar?.categoryPercentage ?? 1);
             ctx.roundRect(
-                x - width / 2,
+                x - barWidth / 2,
                 yAxis.top,
-                width,
+                barWidth,
                 yAxis.bottom - yAxis.top + bottomOverflow,
                 5,
             );

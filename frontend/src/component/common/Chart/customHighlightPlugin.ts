@@ -19,7 +19,9 @@ export const customHighlightPlugin = (bottomOverflow = 34) => {
                 gradient.addColorStop(1, 'rgba(129, 122, 254, 0.12)');
                 ctx.fillStyle = gradient;
 
-                const barWidth = chart.width / (chart.data.labels?.length ?? 1);
+                const barWidth =
+                    (chart.width / (chart.data.labels?.length ?? 1)) *
+                    (chart.options.datasets?.bar?.categoryPercentage ?? 1);
                 ctx.roundRect(
                     x - barWidth / 2,
                     yAxis.top,

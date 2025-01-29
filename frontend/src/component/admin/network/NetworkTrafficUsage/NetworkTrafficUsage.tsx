@@ -291,7 +291,6 @@ const NewNetworkTrafficUsage: FC = () => {
                                 overageCost={overageCost}
                                 estimatedMonthlyCost={estimatedMonthlyCost}
                             />
-
                             <PeriodSelector
                                 selectedPeriod={newPeriod}
                                 setPeriod={setNewPeriod}

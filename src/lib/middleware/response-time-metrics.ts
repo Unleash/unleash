@@ -69,8 +69,19 @@ export function responseTimeMetrics(
         if (flagResolver.isEnabled('uniqueSdkTracking')) {
             const connectionId =
                 req.headers['x-unleash-connection-id'] ||
-                `${req.headers['unleash-instanceid']}${req.ip}`;
-            eventBus.emit(SDK_CONNECTION_ID_RECEIVED, connectionId);
+                req.headers['unleash-instanceid'];
+            if (req.url.includes('/api/client') && connectionId) {
+                eventBus.emit(SDK_CONNECTION_ID_RECEIVED, {
+                    connectionId,
+                    type: 'backend',
+                });
+            }
+            if (req.url.includes('/api/frontend') && connectionId) {
+                eventBus.emit(SDK_CONNECTION_ID_RECEIVED, {
+                    connectionId,
+                    type: 'frontend',
+                });
+            }
         }
 
         const timingInfo = {

@@ -1,5 +1,6 @@
 import type { IUniqueConnectionStore } from '../../types';
 import type {
+    BucketId,
     TimedUniqueConnections,
     UniqueConnections,
 } from './unique-connection-store-type';
@@ -16,7 +17,7 @@ export class FakeUniqueConnectionStore implements IUniqueConnectionStore {
     }
 
     async get(
-        id: 'current' | 'previous',
+        id: BucketId,
     ): Promise<(UniqueConnections & { updatedAt: Date }) | null> {
         return this.uniqueConnectionsRecord[id] || null;
     }

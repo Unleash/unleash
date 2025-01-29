@@ -1,7 +1,10 @@
 import type { IUnleashConfig } from '../../types/option';
 import type { IFlagResolver, IUnleashStores } from '../../types';
 import type { Logger } from '../../logger';
-import type { IUniqueConnectionStore } from './unique-connection-store-type';
+import type {
+    BucketId,
+    IUniqueConnectionStore,
+} from './unique-connection-store-type';
 import HyperLogLog from 'hyperloglog-lite';
 import type EventEmitter from 'events';
 import { SDK_CONNECTION_ID_RECEIVED } from '../../metric-events';
@@ -20,6 +23,10 @@ export class UniqueConnectionService {
 
     private hll = HyperLogLog(REGISTERS_EXPONENT);
 
+    private backendHll = HyperLogLog(REGISTERS_EXPONENT);
+
+    private frontendHll = HyperLogLog(REGISTERS_EXPONENT);
+
     constructor(
         {
             uniqueConnectionStore,
@@ -37,54 +44,106 @@ export class UniqueConnectionService {
         this.eventBus.on(SDK_CONNECTION_ID_RECEIVED, this.count.bind(this));
     }
 
-    count(connectionId: string) {
+    count({
+        connectionId,
+        type,
+    }: { connectionId: string; type: 'frontend' | 'backend' }) {
         if (!this.flagResolver.isEnabled('uniqueSdkTracking')) return;
-        this.hll.add(HyperLogLog.hash(connectionId));
+        const value = HyperLogLog.hash(connectionId);
+        this.hll.add(value);
+        if (type === 'frontend') {
+            this.frontendHll.add(value);
+        } else if (type === 'backend') {
+            this.backendHll.add(value);
+        }
     }
 
     async sync(currentTime = new Date()): Promise<void> {
         if (!this.flagResolver.isEnabled('uniqueSdkTracking')) return;
 
         const currentHour = currentTime.getHours();
-        const currentBucket = await this.uniqueConnectionStore.get('current');
+
+        await this.syncBuckets(currentTime, 'current', 'previous');
+        await this.syncBuckets(
+            currentTime,
+            'currentBackend',
+            'previousBackend',
+        );
+        await this.syncBuckets(
+            currentTime,
+            'currentFrontend',
+            'previousFrontend',
+        );
+
+        if (this.activeHour !== currentHour) {
+            this.activeHour = currentHour;
+        }
+    }
+
+    private resetHll(bucketId: BucketId) {
+        if (bucketId.toLowerCase().includes('frontend')) {
+            this.frontendHll = HyperLogLog(REGISTERS_EXPONENT);
+        } else if (bucketId.toLowerCase().includes('backend')) {
+            this.backendHll = HyperLogLog(REGISTERS_EXPONENT);
+        } else {
+            this.hll = HyperLogLog(REGISTERS_EXPONENT);
+        }
+    }
+
+    private getHll(bucketId: BucketId) {
+        if (bucketId.toLowerCase().includes('frontend')) {
+            return this.frontendHll;
+        } else if (bucketId.toLowerCase().includes('backend')) {
+            return this.backendHll;
+        } else {
+            return this.hll;
+        }
+    }
+
+    private async syncBuckets(
+        currentTime: Date,
+        current: BucketId,
+        previous: BucketId,
+    ): Promise<void> {
+        const currentHour = currentTime.getHours();
+        const currentBucket = await this.uniqueConnectionStore.get(current);
 
         if (this.activeHour !== currentHour && currentBucket) {
             if (currentBucket.updatedAt.getHours() < currentHour) {
-                this.hll.merge({
+                this.getHll(current).merge({
                     n: REGISTERS_EXPONENT,
                     buckets: currentBucket.hll,
                 });
                 await this.uniqueConnectionStore.insert({
-                    hll: this.hll.output().buckets,
-                    id: 'previous',
+                    hll: this.getHll(current).output().buckets,
+                    id: previous,
                 });
             } else {
                 const previousBucket =
-                    await this.uniqueConnectionStore.get('previous');
+                    await this.uniqueConnectionStore.get(previous);
                 if (previousBucket) {
-                    this.hll.merge({
+                    this.getHll(current).merge({
                         n: REGISTERS_EXPONENT,
                         buckets: previousBucket.hll,
                     });
                 }
                 await this.uniqueConnectionStore.insert({
-                    hll: this.hll.output().buckets,
-                    id: 'previous',
+                    hll: this.getHll(current).output().buckets,
+                    id: previous,
                 });
             }
 
-            this.activeHour = currentHour;
-            this.hll = HyperLogLog(REGISTERS_EXPONENT);
+            this.resetHll(current);
         } else if (currentBucket) {
-            this.hll.merge({
+            this.getHll(current).merge({
                 n: REGISTERS_EXPONENT,
                 buckets: currentBucket.hll,
             });
         }
 
         await this.uniqueConnectionStore.insert({
-            hll: this.hll.output().buckets,
-            id: 'current',
+            hll: this.getHll(current).output().buckets,
+            id: current,
         });
     }
 }

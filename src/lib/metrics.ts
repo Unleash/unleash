@@ -276,9 +276,33 @@ export function registerPrometheusMetrics(
             if (flagResolver.isEnabled('uniqueSdkTracking')) {
                 return stores.uniqueConnectionReadModel.getStats();
             }
-            return Promise.resolve({ current: 0, previous: 0 });
+            return Promise.resolve({ previous: 0 });
         },
         map: (result) => ({ value: result.previous }),
+    });
+
+    dbMetrics.registerGaugeDbMetric({
+        name: 'unique_backend_sdk_connections_total',
+        help: 'The number of unique backend SDK connections for the full previous hour across all instances. Available only for SDKs reporting `unleash-x-connection-id`',
+        query: () => {
+            if (flagResolver.isEnabled('uniqueSdkTracking')) {
+                return stores.uniqueConnectionReadModel.getStats();
+            }
+            return Promise.resolve({ previousBackend: 0 });
+        },
+        map: (result) => ({ value: result.previousBackend }),
+    });
+
+    dbMetrics.registerGaugeDbMetric({
+        name: 'unique_frontend_sdk_connections_total',
+        help: 'The number of unique frontend SDK connections for the full previous hour across all instances. Available only for SDKs reporting `unleash-x-connection-id`',
+        query: () => {
+            if (flagResolver.isEnabled('uniqueSdkTracking')) {
+                return stores.uniqueConnectionReadModel.getStats();
+            }
+            return Promise.resolve({ previousFrontend: 0 });
+        },
+        map: (result) => ({ value: result.previousFrontend }),
     });
 
     const featureTogglesArchivedTotal = createGauge({

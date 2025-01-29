@@ -165,9 +165,6 @@ const NewNetworkTrafficUsage: FC = () => {
         record,
         newPeriod,
         setNewPeriod,
-        selectablePeriods,
-        period,
-        setPeriod,
         toTrafficUsageSum,
         calculateOverageCost,
         calculateEstimatedMonthlyCost,
@@ -212,7 +209,6 @@ const NewNetworkTrafficUsage: FC = () => {
 
     const data = newToChartData(traffic.usage);
 
-    // these states can also be calculated without useEffect
     const [usageTotal, setUsageTotal] = useState<number>(0);
 
     const [overageCost, setOverageCost] = useState<number>(0);

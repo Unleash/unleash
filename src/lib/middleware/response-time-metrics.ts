@@ -70,13 +70,13 @@ export function responseTimeMetrics(
             const connectionId =
                 req.headers['x-unleash-connection-id'] ||
                 req.headers['unleash-instanceid'];
-            if (req.url.includes('/api/client') && connectionId) {
+            if (req.originalUrl.includes('/api/client') && connectionId) {
                 eventBus.emit(SDK_CONNECTION_ID_RECEIVED, {
                     connectionId,
                     type: 'backend',
                 });
             }
-            if (req.url.includes('/api/frontend') && connectionId) {
+            if (req.originalUrl.includes('/api/frontend') && connectionId) {
                 eventBus.emit(SDK_CONNECTION_ID_RECEIVED, {
                     connectionId,
                     type: 'frontend',

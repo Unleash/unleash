@@ -20,6 +20,10 @@ export class UniqueConnectionService {
 
     private hll = HyperLogLog(REGISTERS_EXPONENT);
 
+    private backendHll = HyperLogLog(REGISTERS_EXPONENT);
+
+    private frontendHll = HyperLogLog(REGISTERS_EXPONENT);
+
     constructor(
         {
             uniqueConnectionStore,
@@ -37,9 +41,18 @@ export class UniqueConnectionService {
         this.eventBus.on(SDK_CONNECTION_ID_RECEIVED, this.count.bind(this));
     }
 
-    count(connectionId: string) {
+    count({
+        connectionId,
+        type,
+    }: { connectionId: string; type: 'frontend' | 'backend' }) {
         if (!this.flagResolver.isEnabled('uniqueSdkTracking')) return;
-        this.hll.add(HyperLogLog.hash(connectionId));
+        const value = HyperLogLog.hash(connectionId);
+        this.hll.add(value);
+        if (type === 'frontend') {
+            this.frontendHll.add(value);
+        } else if (type === 'backend') {
+            this.backendHll.add(value);
+        }
     }
 
     async sync(currentTime = new Date()): Promise<void> {
@@ -73,7 +86,6 @@ export class UniqueConnectionService {
                 });
             }
 
-            this.activeHour = currentHour;
             this.hll = HyperLogLog(REGISTERS_EXPONENT);
         } else if (currentBucket) {
             this.hll.merge({
@@ -85,6 +97,101 @@ export class UniqueConnectionService {
         await this.uniqueConnectionStore.insert({
             hll: this.hll.output().buckets,
             id: 'current',
+        });
+
+        await this.syncBackend(currentTime);
+        await this.syncFrontend(currentTime);
+
+        if (this.activeHour !== currentHour) {
+            this.activeHour = currentHour;
+        }
+    }
+
+    async syncBackend(currentTime = new Date()): Promise<void> {
+        const currentHour = currentTime.getHours();
+        const currentBucket =
+            await this.uniqueConnectionStore.get('currentBackend');
+
+        if (this.activeHour !== currentHour && currentBucket) {
+            if (currentBucket.updatedAt.getHours() < currentHour) {
+                this.backendHll.merge({
+                    n: REGISTERS_EXPONENT,
+                    buckets: currentBucket.hll,
+                });
+                await this.uniqueConnectionStore.insert({
+                    hll: this.backendHll.output().buckets,
+                    id: 'previousBackend',
+                });
+            } else {
+                const previousBucket =
+                    await this.uniqueConnectionStore.get('previousBackend');
+                if (previousBucket) {
+                    this.backendHll.merge({
+                        n: REGISTERS_EXPONENT,
+                        buckets: previousBucket.hll,
+                    });
+                }
+                await this.uniqueConnectionStore.insert({
+                    hll: this.backendHll.output().buckets,
+                    id: 'previousBackend',
+                });
+            }
+
+            this.backendHll = HyperLogLog(REGISTERS_EXPONENT);
+        } else if (currentBucket) {
+            this.backendHll.merge({
+                n: REGISTERS_EXPONENT,
+                buckets: currentBucket.hll,
+            });
+        }
+
+        await this.uniqueConnectionStore.insert({
+            hll: this.backendHll.output().buckets,
+            id: 'currentBackend',
+        });
+    }
+
+    async syncFrontend(currentTime = new Date()): Promise<void> {
+        const currentHour = currentTime.getHours();
+        const currentBucket =
+            await this.uniqueConnectionStore.get('currentFrontend');
+
+        if (this.activeHour !== currentHour && currentBucket) {
+            if (currentBucket.updatedAt.getHours() < currentHour) {
+                this.frontendHll.merge({
+                    n: REGISTERS_EXPONENT,
+                    buckets: currentBucket.hll,
+                });
+                await this.uniqueConnectionStore.insert({
+                    hll: this.frontendHll.output().buckets,
+                    id: 'previousFrontend',
+                });
+            } else {
+                const previousBucket =
+                    await this.uniqueConnectionStore.get('previousFrontend');
+                if (previousBucket) {
+                    this.frontendHll.merge({
+                        n: REGISTERS_EXPONENT,
+                        buckets: previousBucket.hll,
+                    });
+                }
+                await this.uniqueConnectionStore.insert({
+                    hll: this.frontendHll.output().buckets,
+                    id: 'previousFrontend',
+                });
+            }
+
+            this.frontendHll = HyperLogLog(REGISTERS_EXPONENT);
+        } else if (currentBucket) {
+            this.frontendHll.merge({
+                n: REGISTERS_EXPONENT,
+                buckets: currentBucket.hll,
+            });
+        }
+
+        await this.uniqueConnectionStore.insert({
+            hll: this.frontendHll.output().buckets,
+            id: 'currentFrontend',
         });
     }
 }

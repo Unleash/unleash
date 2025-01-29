@@ -67,10 +67,15 @@ export function responseTimeMetrics(
         }
 
         if (flagResolver.isEnabled('uniqueSdkTracking')) {
+            // if some SDK doesn't provide any
             const connectionId =
                 req.headers['x-unleash-connection-id'] ||
                 `${req.headers['unleash-instanceid']}${req.ip}`;
-            eventBus.emit(SDK_CONNECTION_ID_RECEIVED, connectionId);
+            // todo: exclude short lived APIs like PHP and Next
+            eventBus.emit(SDK_CONNECTION_ID_RECEIVED, {
+                connectionId,
+                type: req.url.includes('/frontend') ? 'frontend' : 'backend',
+            });
         }
 
         const timingInfo = {

@@ -1,6 +1,8 @@
-import { styled } from '@mui/material';
+import { styled, Button, Popover, Box } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import type { ChartDataSelection } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
-import type { FC } from 'react';
+import { useRef, useState, type FC } from 'react';
 
 export type Period = {
     key: string;
@@ -58,6 +60,34 @@ const getSelectablePeriods = (): Period[] => {
     }
     return selectablePeriods;
 };
+
+// function SingleSelectConfigButton<T = string>({ onChange, ...props }) {
+//     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>();
+//     const [recentlyClosed, setRecentlyClosed] = useState(false);
+
+//     const handleChange = (value: T) => {
+//         onChange(value);
+//         setAnchorEl(null);
+//         props.onClose?.();
+
+//         setRecentlyClosed(true);
+//         // this is a hack to prevent the button from being
+//         // auto-clicked after you select an item by pressing enter
+//         // in the search bar for single-select lists.
+//         setTimeout(() => setRecentlyClosed(false), 1);
+//     };
+
+//     return (
+//         <ConfigButton
+//             {...props}
+//             preventOpen={recentlyClosed}
+//             anchorEl={anchorEl}
+//             setAnchorEl={setAnchorEl}
+//         >
+//             <DropdownList<T> {...props} onChange={handleChange} />
+//         </ConfigButton>
+//     );
+// }
 
 const Wrapper = styled('article')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -152,6 +182,51 @@ type Props = {
     setPeriod: (period: ChartDataSelection) => void;
 };
 
+const StyledPopover = styled(Popover)(({ theme }) => ({
+    '& .MuiPaper-root': {
+        borderRadius: `${theme.shape.borderRadiusMedium}px`,
+    },
+}));
+
+const DropdownButton: FC<Props> = (props) => {
+    const [open, setOpen] = useState(false);
+    const ref = useRef<HTMLDivElement>(null);
+    return (
+        <Box ref={ref}>
+            <Button
+                endIcon={open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                sx={(theme) => ({
+                    width: '100%',
+                    justifyContent: 'space-between',
+                    fontWeight: 'normal',
+                    color: theme.palette.text.primary,
+                    borderColor: theme.palette.divider,
+                })}
+                variant='outlined'
+                disableRipple
+                onClick={() => setOpen(!open)}
+            >
+                Last 3 months
+            </Button>
+            <StyledPopover
+                open={open}
+                anchorEl={ref.current}
+                // onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+            >
+                PeriodSelecto
+            </StyledPopover>
+        </Box>
+    );
+};
+
 export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
     const selectablePeriods = getSelectablePeriods();
 
@@ -161,64 +236,68 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
     }));
 
     return (
-        <Wrapper>
-            <MonthSelector>
-                <hgroup>
-                    <h3>Select month</h3>
-                    <p>Last 12 months</p>
-                </hgroup>
-                <MonthGrid>
-                    {selectablePeriods.map((period, index) => (
-                        <li key={period.label}>
-                            <button
-                                className={
-                                    selectedPeriod.grouping === 'daily' &&
-                                    period.key === selectedPeriod.month
-                                        ? 'selected'
-                                        : ''
-                                }
-                                type='button'
-                                disabled={!period.selectable}
-                                onClick={() => {
-                                    setPeriod({
-                                        grouping: 'daily',
-                                        month: period.key,
-                                    });
-                                }}
-                            >
-                                {period.shortLabel}
-                            </button>
-                        </li>
-                    ))}
-                </MonthGrid>
-            </MonthSelector>
-            <RangeSelector>
-                <h4>Range</h4>
+        <div>
+            <DropdownButton />
+            <Wrapper>
+                <MonthSelector>
+                    <hgroup>
+                        <h3>Select month</h3>
+                        <p>Last 12 months</p>
+                    </hgroup>
+                    <MonthGrid>
+                        {selectablePeriods.map((period, index) => (
+                            <li key={period.label}>
+                                <button
+                                    className={
+                                        selectedPeriod.grouping === 'daily' &&
+                                        period.key === selectedPeriod.month
+                                            ? 'selected'
+                                            : ''
+                                    }
+                                    type='button'
+                                    disabled={!period.selectable}
+                                    onClick={() => {
+                                        setPeriod({
+                                            grouping: 'daily',
+                                            month: period.key,
+                                        });
+                                    }}
+                                >
+                                    {period.shortLabel}
+                                </button>
+                            </li>
+                        ))}
+                    </MonthGrid>
+                </MonthSelector>
+                <RangeSelector>
+                    <h4>Range</h4>
 
-                <RangeList>
-                    {rangeOptions.map((option) => (
-                        <li key={option.label}>
-                            <button
-                                className={
-                                    selectedPeriod.grouping === 'monthly' &&
-                                    option.value === selectedPeriod.monthsBack
-                                        ? 'selected'
-                                        : ''
-                                }
-                                type='button'
-                                onClick={() => {
-                                    setPeriod({
-                                        grouping: 'monthly',
-                                        monthsBack: option.value,
-                                    });
-                                }}
-                            >
-                                Last {option.value} months
-                            </button>
-                        </li>
-                    ))}
-                </RangeList>
-            </RangeSelector>
-        </Wrapper>
+                    <RangeList>
+                        {rangeOptions.map((option) => (
+                            <li key={option.label}>
+                                <button
+                                    className={
+                                        selectedPeriod.grouping === 'monthly' &&
+                                        option.value ===
+                                            selectedPeriod.monthsBack
+                                            ? 'selected'
+                                            : ''
+                                    }
+                                    type='button'
+                                    onClick={() => {
+                                        setPeriod({
+                                            grouping: 'monthly',
+                                            monthsBack: option.value,
+                                        });
+                                    }}
+                                >
+                                    Last {option.value} months
+                                </button>
+                            </li>
+                        ))}
+                    </RangeList>
+                </RangeSelector>
+            </Wrapper>{' '}
+        </div>
     );
 };

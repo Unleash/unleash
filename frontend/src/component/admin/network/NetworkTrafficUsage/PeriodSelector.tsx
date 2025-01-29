@@ -66,8 +66,6 @@ const getSelectablePeriods = (): Period[] => {
 };
 
 const Wrapper = styled('article')(({ theme }) => ({
-    // borderRadius: theme.shape.borderRadiusLarge,
-    // border: `2px solid ${theme.palette.divider}`,
     width: dropdownWidth,
     paddingBlock: theme.spacing(2),
     display: 'flex',

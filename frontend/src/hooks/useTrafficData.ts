@@ -2,7 +2,6 @@ import { useState } from 'react';
 import type {
     ChartDataSelection,
     IInstanceTrafficMetricsResponse,
-    SegmentedSchema,
     SegmentedSchemaApiData,
 } from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { ChartDataset } from 'chart.js';
@@ -13,6 +12,7 @@ import {
     differenceInCalendarMonths,
     format,
 } from 'date-fns';
+import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
 
 const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
@@ -117,7 +117,7 @@ const toPeriodsRecord = (
 };
 
 export const newToChartData = (
-    traffic?: SegmentedSchema,
+    traffic?: TrafficUsageDataSegmentedCombinedSchema,
 ): { datasets: ChartDatasetType[]; labels: (string | number)[] } => {
     if (!traffic) {
         return { labels: [], datasets: [] };
@@ -130,7 +130,9 @@ export const newToChartData = (
     }
 };
 
-const prepareApiData = (apiData: SegmentedSchema['apiData']) =>
+const prepareApiData = (
+    apiData: TrafficUsageDataSegmentedCombinedSchema['apiData'],
+) =>
     apiData
         .filter((item) => item.apiPath in endpointsInfo)
         .sort(
@@ -140,7 +142,7 @@ const prepareApiData = (apiData: SegmentedSchema['apiData']) =>
         );
 
 const toMonthlyChartData = (
-    traffic: SegmentedSchema,
+    traffic: TrafficUsageDataSegmentedCombinedSchema,
 ): { datasets: ChartDatasetType[]; labels: string[] } => {
     const from = new Date(traffic.dateRange.from);
     const to = new Date(traffic.dateRange.to);
@@ -177,7 +179,7 @@ const toMonthlyChartData = (
 };
 
 const toDailyChartData = (
-    traffic: SegmentedSchema,
+    traffic: TrafficUsageDataSegmentedCombinedSchema,
     endpointsInfo: Record<string, EndpointInfo>,
 ): { datasets: ChartDatasetType[]; labels: number[] } => {
     const from = new Date(traffic.dateRange.from);

@@ -1,3 +1,10 @@
+import {
+    endOfDay,
+    endOfMonth,
+    startOfDay,
+    startOfMonth,
+    subMonths,
+} from 'date-fns';
 import type { Db } from '../../db/db';
 import type { Logger, LogProvider } from '../../logger';
 import type {
@@ -89,18 +96,20 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
             });
     }
 
-    async getTrafficDataUsageForPeriod(
-        period: string,
+    async getDailyTrafficDataUsageForPeriod(
+        from: Date,
+        to: Date,
     ): Promise<IStatTrafficUsage[]> {
-        const rows = await this.db<IStatTrafficUsage>(TABLE).whereRaw(
-            `to_char(day, 'YYYY-MM') = ?`,
-            [period],
-        );
+        const rows = await this.db<IStatTrafficUsage>(TABLE)
+            .where('day', '>=', startOfDay(from))
+            .andWhere('day', '<=', endOfDay(to));
+
         return rows.map(mapRow);
     }
 
-    async getTrafficDataForMonthRange(
-        monthsBack: number,
+    async getMonthlyTrafficDataUsageForPeriod(
+        from: Date,
+        to: Date,
     ): Promise<IStatMonthlyTrafficUsage[]> {
         const rows = await this.db(TABLE)
             .select(
@@ -109,10 +118,8 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
                 this.db.raw(`to_char(day, 'YYYY-MM') AS month`),
                 this.db.raw(`SUM(count) AS count`),
             )
-            .whereRaw(
-                `day >= date_trunc('month', CURRENT_DATE) - make_interval(months := ?)`,
-                [monthsBack],
-            )
+            .where('day', '>=', startOfDay(from))
+            .andWhere('day', '<=', endOfDay(to))
             .groupBy([
                 'traffic_group',
                 this.db.raw(`to_char(day, 'YYYY-MM')`),
@@ -130,5 +137,24 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
                 count: Number.parseInt(count),
             }),
         );
+    }
+
+    async getTrafficDataUsageForPeriod(
+        period: string,
+    ): Promise<IStatTrafficUsage[]> {
+        const month = new Date(period);
+        return this.getDailyTrafficDataUsageForPeriod(
+            startOfMonth(month),
+            endOfMonth(month),
+        );
+    }
+
+    // @deprecated: remove with flag `dataUsageMultiMonthView`
+    async getTrafficDataForMonthRange(
+        monthsBack: number,
+    ): Promise<IStatMonthlyTrafficUsage[]> {
+        const to = endOfMonth(new Date());
+        const from = startOfMonth(subMonths(to, monthsBack));
+        return this.getMonthlyTrafficDataUsageForPeriod(from, to);
     }
 }

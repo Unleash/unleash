@@ -6,9 +6,11 @@ import type {
 import type { ITrafficDataUsageStore } from '../../types';
 import {
     differenceInCalendarMonths,
+    endOfDay,
     format,
     isSameMonth,
     parse,
+    startOfDay,
 } from 'date-fns';
 
 export class FakeTrafficDataUsageStore implements ITrafficDataUsageStore {
@@ -68,6 +70,47 @@ export class FakeTrafficDataUsageStore implements ITrafficDataUsageStore {
                     (entry) =>
                         differenceInCalendarMonths(now, entry.day) <=
                         monthsBack,
+                )
+                .reduce((acc, entry) => {
+                    const month = format(entry.day, 'yyyy-MM');
+                    const key = `${month}-${entry.trafficGroup}-${entry.statusCodeSeries}`;
+
+                    if (acc[key]) {
+                        acc[key].count += entry.count;
+                    } else {
+                        acc[key] = {
+                            month,
+                            trafficGroup: entry.trafficGroup,
+                            statusCodeSeries: entry.statusCodeSeries,
+                            count: entry.count,
+                        };
+                    }
+
+                    return acc;
+                }, {});
+
+        return Object.values(data);
+    }
+
+    async getDailyTrafficDataUsageForPeriod(
+        from: Date,
+        to: Date,
+    ): Promise<IStatTrafficUsage[]> {
+        return this.trafficData.filter(
+            (data) => data.day >= startOfDay(from) && data.day <= endOfDay(to),
+        );
+    }
+
+    async getMonthlyTrafficDataUsageForPeriod(
+        from: Date,
+        to: Date,
+    ): Promise<IStatMonthlyTrafficUsage[]> {
+        const data: { [key: string]: IStatMonthlyTrafficUsage } =
+            this.trafficData
+                .filter(
+                    (data) =>
+                        data.day >= startOfDay(from) &&
+                        data.day <= endOfDay(to),
                 )
                 .reduce((acc, entry) => {
                     const month = format(entry.day, 'yyyy-MM');

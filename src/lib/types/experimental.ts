@@ -29,7 +29,6 @@ export type IFlagKey =
     | 'celebrateUnleash'
     | 'feedbackPosting'
     | 'extendedUsageMetrics'
-    | 'adminTokenKillSwitch'
     | 'feedbackComments'
     | 'showInactiveUsers'
     | 'killScheduledChangeRequestCache'
@@ -64,7 +63,8 @@ export type IFlagKey =
     | 'sortProjectRoles'
     | 'lifecycleImprovements'
     | 'frontendHeaderRedesign'
-    | 'dataUsageMultiMonthView';
+    | 'dataUsageMultiMonthView'
+    | 'uiGlobalFontSize';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -157,10 +157,6 @@ const flags: IFlags = {
     extendedUsageMetrics: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_EXTENDED_USAGE_METRICS,
         false,
-    ),
-    adminTokenKillSwitch: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_ADMIN_TOKEN_KILL_SWITCH,
-        true,
     ),
     outdatedSdksBanner: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_OUTDATED_SDKS_BANNER,
@@ -309,6 +305,17 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DATA_USAGE_MULTI_MONTH_VIEW,
         false,
     ),
+    uiGlobalFontSize: {
+        name: 'uiGlobalFontSize',
+        enabled: parseEnvVarBoolean(
+            process.env.EXPERIMENTAL_UI_GLOBAL_FONT_SIZE_NAME,
+            false,
+        ),
+        payload: {
+            type: PayloadType.JSON,
+            value: '14',
+        },
+    },
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

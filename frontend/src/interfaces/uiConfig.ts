@@ -95,6 +95,7 @@ export type UiFlags = {
     lifecycleImprovements?: boolean;
     frontendHeaderRedesign?: boolean;
     dataUsageMultiMonthView?: boolean;
+    uiGlobalFontSize?: Variant;
 };
 
 export interface IVersionInfo {

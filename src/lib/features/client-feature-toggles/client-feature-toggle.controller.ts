@@ -41,7 +41,6 @@ import {
 } from '../../internals';
 import isEqual from 'lodash.isequal';
 import { diff } from 'json-diff';
-import type { DeltaHydrationEvent } from './delta/client-feature-toggle-delta-types';
 
 const version = 2;
 
@@ -193,8 +192,7 @@ export default class FeatureController extends Controller {
                     a.name.localeCompare(b.name),
                 );
                 if (delta?.events[0].type === 'hydration') {
-                    const hydrationEvent: DeltaHydrationEvent =
-                        delta?.events[0];
+                    const hydrationEvent = delta?.events[0];
                     const sortedNewToggles = hydrationEvent.features.sort(
                         (a, b) => a.name.localeCompare(b.name),
                     );

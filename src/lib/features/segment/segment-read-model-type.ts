@@ -5,8 +5,9 @@ import type {
 } from '../../types';
 
 export interface ISegmentReadModel {
-    getAll(): Promise<ISegment[]>;
+    getAll(ids?: number[]): Promise<ISegment[]>;
     getAllFeatureStrategySegments(): Promise<IFeatureStrategySegment[]>;
     getActive(): Promise<ISegment[]>;
     getActiveForClient(): Promise<IClientSegment[]>;
+    getAllForClient(ids?: number[]): Promise<IClientSegment[]>;
 }

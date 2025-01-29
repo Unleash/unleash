@@ -72,10 +72,16 @@ const StyledContainer = styled('div', {
     },
 }));
 
-const StyledSearch = styled('div')(({ theme }) => ({
+const StyledSearch = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
+})<{
+    frontendHeaderRedesign?: boolean;
+}>(({ theme, frontendHeaderRedesign }) => ({
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: theme.palette.background.elevation1,
+    backgroundColor: frontendHeaderRedesign
+        ? theme.palette.background.paper
+        : theme.palette.background.elevation1,
     border: `1px solid ${theme.palette.neutral.border}`,
     borderRadius: theme.shape.borderRadiusExtraLarge,
     padding: '3px 5px 3px 12px',
@@ -83,10 +89,16 @@ const StyledSearch = styled('div')(({ theme }) => ({
     zIndex: 3,
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+const StyledInputBase = styled(InputBase, {
+    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
+})<{
+    frontendHeaderRedesign?: boolean;
+}>(({ theme, frontendHeaderRedesign }) => ({
     width: '100%',
     minWidth: '300px',
-    backgroundColor: theme.palette.background.elevation1,
+    backgroundColor: frontendHeaderRedesign
+        ? theme.palette.background.paper
+        : theme.palette.background.elevation1,
 }));
 
 const StyledClose = styled(Close)(({ theme }) => ({
@@ -306,6 +318,7 @@ export const CommandBar = () => {
         >
             <RecentlyVisitedRecorder />
             <StyledSearch
+                frontendHeaderRedesign={frontendHeaderRedesign}
                 sx={{
                     borderBottomLeftRadius: (theme) =>
                         showSuggestions
@@ -328,6 +341,7 @@ export const CommandBar = () => {
                     }}
                 />
                 <StyledInputBase
+                    frontendHeaderRedesign={frontendHeaderRedesign}
                     inputRef={searchInputRef}
                     placeholder={placeholder}
                     inputProps={{

@@ -203,13 +203,15 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                     fontWeight: 'normal',
                     color: theme.palette.text.primary,
                     borderColor: theme.palette.divider,
-                    borderWidth: '2px',
                     ':focus-within': {
                         borderColor: theme.palette.primary.main,
                     },
                     ':hover': {
-                        borderWidth: '2px', // Prevent the border from changing width on hover
+                        borderColor: theme.palette.text.disabled,
+                        backgroundColor: 'inherit',
                     },
+
+                    transition: 'border-color 0.1s ease',
                 })}
                 variant='outlined'
                 disableRipple

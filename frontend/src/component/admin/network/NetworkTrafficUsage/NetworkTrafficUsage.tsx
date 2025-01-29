@@ -298,7 +298,7 @@ const NewNetworkTrafficUsage: FC = () => {
                         </NewHeader>
                         <Bar
                             data={data}
-                            plugins={[customHighlightPlugin()]} // todo: accomodate wide bars when grouping by month
+                            plugins={[customHighlightPlugin()]}
                             options={options}
                             aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API' // todo: this isn't correct at all!
                         />

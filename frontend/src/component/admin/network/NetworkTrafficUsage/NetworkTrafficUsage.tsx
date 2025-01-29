@@ -41,6 +41,7 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { PeriodSelector } from './PeriodSelector';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { format } from 'date-fns';
+import { monthlyTrafficDataToCurrentUsage } from './monthly-traffic-data-to-current-usage';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -216,25 +217,9 @@ const NewNetworkTrafficUsage: FC = () => {
 
     useEffect(() => {
         if (data) {
-            // if daily, there is a sum. if monthly, use the count from the current month
             let usage: number;
             if (newPeriod.grouping === 'monthly') {
-                const currentMonth = format(new Date(), 'yyyy-MM');
-                if (!traffic.usage) {
-                    usage = 0;
-                } else {
-                    usage = traffic.usage.apiData.reduce((acc, current) => {
-                        const currentPoint = current.dataPoints.find(
-                            ({ period }) => period === currentMonth,
-                        );
-                        const pointUsage =
-                            currentPoint?.trafficTypes.reduce(
-                                (acc, next) => acc + next.count,
-                                0,
-                            ) ?? 0;
-                        return acc + pointUsage;
-                    }, 0);
-                }
+                usage = monthlyTrafficDataToCurrentUsage(traffic.usage);
             } else {
                 usage = toTrafficUsageSum(data.datasets);
             }
@@ -262,18 +247,6 @@ const NewNetworkTrafficUsage: FC = () => {
             }
         }
     }, [data]);
-
-    // if single month:
-    // overage warning
-    // num requests to unleash this month
-    // selector
-    // chart
-    //
-    // if multi month:
-    // overage warning
-    // avg requests per month for preceding n months
-    // selector
-    // char
 
     return (
         <ConditionallyRender
@@ -308,6 +281,10 @@ const NewNetworkTrafficUsage: FC = () => {
                     />
                     <StyledBox>
                         <NewHeader>
+                            {
+                                // todo: add new usage plan summary that works for monthly data as well as daily
+                            }
+
                             <NetworkTrafficUsagePlanSummary
                                 usageTotal={usageTotal}
                                 includedTraffic={includedTraffic}

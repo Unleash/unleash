@@ -194,7 +194,7 @@
     "@types/node": "20.17.14",
     "@types/nodemailer": "6.4.17",
     "@types/owasp-password-strength-test": "1.3.2",
-    "@types/pg": "8.11.10",
+    "@types/pg": "8.11.11",
     "@types/semver": "7.5.8",
     "@types/slug": "^5.0.8",
     "@types/stoppable": "1.1.3",

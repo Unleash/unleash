@@ -6,7 +6,7 @@ This guide explains the steps required to using the Admin API.
 
 ## Create API token
 
-First you'll need to create a [personal access token](../reference/api-tokens-and-client-keys.mdx#personal-access-tokens). To create one, follow the steps in the [_how to create personal access tokens_](./how-to-create-personal-access-tokens.mdx) guide.
+First you'll need to create a [personal access token](/reference/api-tokens-and-client-keys.mdx#personal-access-tokens).
 
 Please note that it may take up to 60 seconds for the new key to propagate to all Unleash instances due to eager caching.
 

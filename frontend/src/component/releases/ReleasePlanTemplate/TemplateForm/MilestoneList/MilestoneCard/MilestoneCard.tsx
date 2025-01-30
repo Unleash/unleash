@@ -24,7 +24,7 @@ import { MilestoneStrategyDraggableItem } from './MilestoneStrategyDraggableItem
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ReleasePlanTemplateAddStrategyForm } from '../../MilestoneStrategy/ReleasePlanTemplateAddStrategyForm';
 import DragIndicator from '@mui/icons-material/DragIndicator';
-import { type MoveListItem, useDragItem } from 'hooks/useDragItem';
+import { type OnMoveItem, useDragItem } from 'hooks/useDragItem';
 
 const StyledMilestoneCard = styled(Card, {
     shouldForwardProp: (prop) => prop !== 'hasError',
@@ -131,7 +131,7 @@ export interface IMilestoneCardProps {
     removable: boolean;
     onDeleteMilestone: () => void;
     index: number;
-    moveListItem: MoveListItem;
+    onMoveItem: OnMoveItem;
 }
 
 export const MilestoneCard = ({
@@ -142,7 +142,7 @@ export const MilestoneCard = ({
     removable,
     onDeleteMilestone,
     index,
-    moveListItem,
+    onMoveItem,
 }: IMilestoneCardProps) => {
     const [anchor, setAnchor] = useState<Element>();
     const [dragItem, setDragItem] = useState<{
@@ -162,7 +162,7 @@ export const MilestoneCard = ({
 
     const dragItemRef = useDragItem<HTMLTableRowElement>(
         index,
-        moveListItem,
+        onMoveItem,
         dragHandleRef,
     );
 

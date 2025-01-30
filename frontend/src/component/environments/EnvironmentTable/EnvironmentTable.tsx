@@ -11,7 +11,7 @@ import {
 import { useCallback, useMemo } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Alert, styled, TableBody } from '@mui/material';
-import type { MoveListItem } from 'hooks/useDragItem';
+import type { OnMoveItem } from 'hooks/useDragItem';
 import useToast from 'hooks/useToast';
 import useEnvironmentApi, {
     createSortOrderPayload,
@@ -38,17 +38,20 @@ export const EnvironmentTable = () => {
     const { environments, mutateEnvironments } = useEnvironments();
     const isFeatureEnabled = useUiFlag('EEA');
 
-    const moveListItem: MoveListItem = useCallback(
+    const onMoveItem: OnMoveItem = useCallback(
         async (dragIndex: number, dropIndex: number, save = false) => {
-            const copy = [...environments];
-            const tmp = copy[dragIndex];
-            copy.splice(dragIndex, 1);
-            copy.splice(dropIndex, 0, tmp);
-            await mutateEnvironments(copy);
+            const oldEnvironments = environments || [];
+            const newEnvironments = [...oldEnvironments];
+            const movedEnvironment = newEnvironments.splice(dragIndex, 1)[0];
+            newEnvironments.splice(dropIndex, 0, movedEnvironment);
+
+            await mutateEnvironments(newEnvironments);
 
             if (save) {
                 try {
-                    await changeSortOrder(createSortOrderPayload(copy));
+                    await changeSortOrder(
+                        createSortOrderPayload(newEnvironments),
+                    );
                 } catch (error: unknown) {
                     setToastApiError(formatUnknownError(error));
                 }
@@ -136,7 +139,7 @@ export const EnvironmentTable = () => {
                             return (
                                 <EnvironmentRow
                                     row={row as any}
-                                    moveListItem={moveListItem}
+                                    onMoveItem={onMoveItem}
                                     key={row.original.name}
                                 />
                             );

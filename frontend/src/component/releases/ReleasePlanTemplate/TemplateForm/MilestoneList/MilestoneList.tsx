@@ -3,7 +3,7 @@ import { styled, Button } from '@mui/material';
 import Add from '@mui/icons-material/Add';
 import { v4 as uuidv4 } from 'uuid';
 import { useCallback } from 'react';
-import type { MoveListItem } from 'hooks/useDragItem';
+import type { OnMoveItem } from 'hooks/useDragItem';
 import { MilestoneCard } from './MilestoneCard/MilestoneCard';
 
 interface IMilestoneListProps {
@@ -28,18 +28,20 @@ export const MilestoneList = ({
     clearErrors,
     milestoneChanged,
 }: IMilestoneListProps) => {
-    const moveListItem: MoveListItem = useCallback(
+    const onMoveItem: OnMoveItem = useCallback(
         async (dragIndex: number, dropIndex: number) => {
-            const oldMilestones = milestones || [];
-            const newMilestones = [...oldMilestones];
-            const movedMilestone = newMilestones.splice(dragIndex, 1)[0];
-            newMilestones.splice(dropIndex, 0, movedMilestone);
+            if (dragIndex !== dropIndex) {
+                const oldMilestones = milestones || [];
+                const newMilestones = [...oldMilestones];
+                const movedMilestone = newMilestones.splice(dragIndex, 1)[0];
+                newMilestones.splice(dropIndex, 0, movedMilestone);
 
-            newMilestones.forEach((milestone, index) => {
-                milestone.sortOrder = index;
-            });
+                newMilestones.forEach((milestone, index) => {
+                    milestone.sortOrder = index;
+                });
 
-            setMilestones(newMilestones);
+                setMilestones(newMilestones);
+            }
         },
         [milestones],
     );
@@ -58,7 +60,7 @@ export const MilestoneList = ({
                 <MilestoneCard
                     key={milestone.id}
                     index={index}
-                    moveListItem={moveListItem}
+                    onMoveItem={onMoveItem}
                     milestone={milestone}
                     milestoneChanged={milestoneChanged}
                     errors={errors}

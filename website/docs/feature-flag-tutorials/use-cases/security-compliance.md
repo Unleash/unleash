@@ -13,7 +13,7 @@ Unleash is designed to support critical enterprise compliance standards such as:
 
 [SOC 2 Type II](/using-unleash/compliance/soc2): Our architecture provides the necessary controls and audit trails to meet stringent SOC 2 requirements, ensuring your feature flag management processes are transparent, secure, and verifiable.
 
-[ISO 27001](/using-unleash/compliance/iso27001): Our security management system aligns with ISO 27001 standards, providing a structured approach to managing sensitive information and protecting data integrity.
+[ISO 27001](/using-unleash/compliance/iso27001): Our security, audit, and control capabilities align with ISO 27001 standards, providing a structured approach to managing sensitive information and protecting data integrity.
 
 ## Enable enterprise authentication controls in Unleash
 

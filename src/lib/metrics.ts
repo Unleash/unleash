@@ -271,7 +271,7 @@ export function registerPrometheusMetrics(
 
     dbMetrics.registerGaugeDbMetric({
         name: 'unique_sdk_connections_total',
-        help: 'The number of unique SDK connections for the full previous hour across all instances. Available only for SDKs reporting `unleash-x-connection-id`',
+        help: 'The number of unique SDK connections for the full previous hour across all instances. Available only for SDKs reporting `unleash-connection-id`',
         query: () => {
             if (flagResolver.isEnabled('uniqueSdkTracking')) {
                 return stores.uniqueConnectionReadModel.getStats();
@@ -283,7 +283,7 @@ export function registerPrometheusMetrics(
 
     dbMetrics.registerGaugeDbMetric({
         name: 'unique_backend_sdk_connections_total',
-        help: 'The number of unique backend SDK connections for the full previous hour across all instances. Available only for SDKs reporting `unleash-x-connection-id`',
+        help: 'The number of unique backend SDK connections for the full previous hour across all instances. Available only for SDKs reporting `unleash-connection-id`',
         query: () => {
             if (flagResolver.isEnabled('uniqueSdkTracking')) {
                 return stores.uniqueConnectionReadModel.getStats();
@@ -295,7 +295,7 @@ export function registerPrometheusMetrics(
 
     dbMetrics.registerGaugeDbMetric({
         name: 'unique_frontend_sdk_connections_total',
-        help: 'The number of unique frontend SDK connections for the full previous hour across all instances. Available only for SDKs reporting `unleash-x-connection-id`',
+        help: 'The number of unique frontend SDK connections for the full previous hour across all instances. Available only for SDKs reporting `unleash-connection-id`',
         query: () => {
             if (flagResolver.isEnabled('uniqueSdkTracking')) {
                 return stores.uniqueConnectionReadModel.getStats();

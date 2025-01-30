@@ -9,7 +9,7 @@ Enterprise organizations face the challenge of balancing innovative technology w
 
 Unleash is designed to support critical enterprise compliance standards such as:
 
-[FedRAMP](/using-unleash/compliance/fedramp): For government and highly regulated sectors, Unleash's security controls are designed to meet the rigorous requirements of the Federal Risk and Authorization Management Program (FedRAMP).
+[FedRAMP](/using-unleash/compliance/fedramp): For organizations listing their software on the FedRAMP marketplace, Unleash's security controls are designed to meet the rigorous requirements of the Federal Risk and Authorization Management Program (FedRAMP).
 
 [SOC 2 Type II](/using-unleash/compliance/soc2): Our architecture provides the necessary controls and audit trails to meet stringent SOC 2 requirements, ensuring your feature flag management processes are transparent, secure, and verifiable.
 

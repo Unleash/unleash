@@ -2,12 +2,14 @@ import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useToast from 'hooks/useToast';
 import { styled, Button } from '@mui/material';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 
 const StyledBoldSpan = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 }));
 
 interface IReleasePlanAddChangeRequestDialogProps {
+    projectId: string;
     featureId: string;
     environmentId: string;
     releaseTemplate: IReleasePlanTemplate | undefined;
@@ -15,14 +17,24 @@ interface IReleasePlanAddChangeRequestDialogProps {
 }
 
 export const ReleasePlanAddChangeRequestDialog = ({
+    projectId,
     featureId,
     environmentId,
     releaseTemplate,
     onClosing,
 }: IReleasePlanAddChangeRequestDialogProps) => {
     const { setToastData } = useToast();
+    const { addChange } = useChangeRequestApi();
 
     const addReleasePlanToChangeRequest = async () => {
+        addChange(projectId, environmentId, {
+            feature: featureId,
+            action: 'addReleasePlan',
+            payload: {
+                templateId: releaseTemplate?.id,
+            },
+        });
+
         setToastData({
             type: 'success',
             text: 'Added to draft',

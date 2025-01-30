@@ -17,7 +17,8 @@ export interface IChangeSchema {
         | 'archiveFeature'
         | 'updateSegment'
         | 'addDependency'
-        | 'deleteDependency';
+        | 'deleteDependency'
+        | 'addReleasePlan';
     payload: string | boolean | object | number | undefined;
 }
 

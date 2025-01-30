@@ -38,9 +38,9 @@ const addEventListeners = (
     const handleEl = handle ?? el;
 
     const moveDraggedElement = (save: boolean) => {
-        const fromIndex = Number(globalDraggedElement?.dataset.index);
-        const toIndex = Number(el.dataset.index);
         if (globalDraggedElement) {
+            const fromIndex = Number(globalDraggedElement.dataset.index);
+            const toIndex = Number(el.dataset.index);
             onMoveItem(fromIndex, toIndex, save);
         }
     };

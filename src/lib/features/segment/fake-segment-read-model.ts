@@ -7,8 +7,7 @@ import type { ISegmentReadModel } from './segment-read-model-type';
 
 export class FakeSegmentReadModel implements ISegmentReadModel {
     constructor(private segments: ISegment[] = []) {}
-
-    async getAll(): Promise<ISegment[]> {
+    async getAll(ids?: number[]): Promise<ISegment[]> {
         return this.segments;
     }
 
@@ -21,6 +20,10 @@ export class FakeSegmentReadModel implements ISegmentReadModel {
     }
 
     async getActiveForClient(): Promise<IClientSegment[]> {
+        return [];
+    }
+
+    async getAllForClient(ids?: number[]): Promise<IClientSegment[]> {
         return [];
     }
 }

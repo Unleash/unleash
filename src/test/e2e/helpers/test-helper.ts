@@ -117,6 +117,15 @@ export interface IUnleashHttpAPI {
     getRecordedEvents(): supertest.Test;
 
     createSegment(postData: object, expectStatusCode?: number): supertest.Test;
+    deleteSegment(
+        segmentId: number,
+        expectedResponseCode?: number,
+    ): supertest.Test;
+    updateSegment(
+        segmentId: number,
+        postData: object,
+        expectStatusCode?: number,
+    ): supertest.Test;
 }
 
 function httpApis(
@@ -288,7 +297,25 @@ function httpApis(
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },
-
+        deleteSegment(
+            segmentId: number,
+            expectedResponseCode = 204,
+        ): supertest.Test {
+            return request
+                .delete(`/api/admin/segments/${segmentId}`)
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+        updateSegment(
+            segmentId: number,
+            postData: object,
+            expectStatusCode = 204,
+        ): supertest.Test {
+            return request
+                .put(`/api/admin/segments/${segmentId}`)
+                .send(postData)
+                .expect(expectStatusCode);
+        },
         getRecordedEvents(
             project: string | null = null,
             expectedResponseCode: number = 200,

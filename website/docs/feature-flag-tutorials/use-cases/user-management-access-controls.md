@@ -21,13 +21,13 @@ When an enterprise like a global banking platform considers implementing feature
 
 To ensure proper user authentication and reduce risk exposure, Unleash provides [single sign-on](/how-to/sso) as the recommended centralized method for managing user access.
 
-Unleash supports any SSO option through OpenID Connect or SAML 2.0, including identity providers like Okta, Microsoft Entra ID, and Google Keycloak to create a unified authentication process.
+Unleash supports any SSO option through OpenID Connect or SAML 2.0, including identity providers like Okta, Microsoft Entra ID, and Keycloak to create a unified authentication process.
 
 To configure SSO for feature flags, navigate to **Admin > Single sign-on** in the Unleash Admin UI.
 
 ![In Unleash's Single Sign-On page, there are four tabs to set up Open ID Connect, SAML 2.0, traditional passwords, and SCIM.](/img/use-case-user-mgmt-saml.png)
 
-When you connect Unleash to your identity provider, user groups are no longer managed manually. Instead, the synchronization process becomes an automated, dynamic workflow that instantly reflects organizational changes. Follow our step-by-step guide to set up [user group syncing](/how-to/how-to-set-up-group-sso-sync).
+When you connect Unleash to your identity provider, you can synchronize user groups with the identity provider. That way, the synchronization process becomes automated so your group configuration reflects organizational changes. Follow our step-by-step guide to set up [user group syncing](/how-to/how-to-set-up-group-sso-sync).
 With SSO integration, groups defined in your identity provider are directly mapped to Unleash access groups. This means:
 
 -   New team members are automatically assigned correct permissions.
@@ -42,7 +42,7 @@ Password-based logins and sharing user accounts among team members at your organ
 
 To mitigate these issues, we recommend you disable password-based authentication for your team members administering Unleash.
 
-In your **Single sign-on** view, click on the **Password** tab, turn the **password based login** toggle off and click **Save**.
+Start by validating that SSO sign-in works as expected and that at least some of your team has administrative permissions. Then, in your **Single sign-on** view, click on the **Password** tab, turn the **password based login** toggle off and click **Save**.
 
 ![The password tab has a toggle that you can turn off.](/img/use-case-user-mgmt-disable-password-login.png)
 
@@ -103,7 +103,7 @@ For example, customize root permissions to perform CRUD operations for:
 
 -   Integrations
 -   API tokens
--   Strageties
+-   Strategies
 -   Segments
 -   Context fields
 

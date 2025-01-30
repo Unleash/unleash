@@ -30,6 +30,7 @@ import { CommandQuickSuggestions } from './CommandQuickSuggestions';
 import { CommandSearchPages } from './CommandSearchPages';
 import { CommandBarFeedback } from './CommandBarFeedback';
 import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -50,16 +51,20 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const StyledContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'active',
+    shouldForwardProp: (prop) =>
+        prop !== 'active' && prop !== 'frontendHeaderRedesign',
 })<{
     active: boolean | undefined;
-}>(({ theme, active }) => ({
+    frontendHeaderRedesign?: boolean;
+}>(({ theme, active, frontendHeaderRedesign }) => ({
     border: `1px solid transparent`,
     display: 'flex',
     flexGrow: 1,
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: frontendHeaderRedesign
+        ? theme.palette.background.application
+        : theme.palette.background.paper,
     maxWidth: active ? '100%' : '400px',
     [theme.breakpoints.down('md')]: {
         marginTop: theme.spacing(1),
@@ -67,10 +72,16 @@ const StyledContainer = styled('div', {
     },
 }));
 
-const StyledSearch = styled('div')(({ theme }) => ({
+const StyledSearch = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
+})<{
+    frontendHeaderRedesign?: boolean;
+}>(({ theme, frontendHeaderRedesign }) => ({
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: theme.palette.background.elevation1,
+    backgroundColor: frontendHeaderRedesign
+        ? theme.palette.background.paper
+        : theme.palette.background.elevation1,
     border: `1px solid ${theme.palette.neutral.border}`,
     borderRadius: theme.shape.borderRadiusExtraLarge,
     padding: '3px 5px 3px 12px',
@@ -78,10 +89,16 @@ const StyledSearch = styled('div')(({ theme }) => ({
     zIndex: 3,
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+const StyledInputBase = styled(InputBase, {
+    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
+})<{
+    frontendHeaderRedesign?: boolean;
+}>(({ theme, frontendHeaderRedesign }) => ({
     width: '100%',
     minWidth: '300px',
-    backgroundColor: theme.palette.background.elevation1,
+    backgroundColor: frontendHeaderRedesign
+        ? theme.palette.background.paper
+        : theme.palette.background.elevation1,
 }));
 
 const StyledClose = styled(Close)(({ theme }) => ({
@@ -97,6 +114,7 @@ interface IPageRouteInfo {
 
 export const CommandBar = () => {
     const { trackEvent } = usePlausibleTracker();
+    const frontendHeaderRedesign = useUiFlag('frontendHeaderRedesign');
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -293,9 +311,14 @@ export const CommandBar = () => {
     };
 
     return (
-        <StyledContainer ref={searchContainerRef} active={showSuggestions}>
+        <StyledContainer
+            ref={searchContainerRef}
+            active={showSuggestions}
+            frontendHeaderRedesign={frontendHeaderRedesign}
+        >
             <RecentlyVisitedRecorder />
             <StyledSearch
+                frontendHeaderRedesign={frontendHeaderRedesign}
                 sx={{
                     borderBottomLeftRadius: (theme) =>
                         showSuggestions
@@ -318,6 +341,7 @@ export const CommandBar = () => {
                     }}
                 />
                 <StyledInputBase
+                    frontendHeaderRedesign={frontendHeaderRedesign}
                     inputRef={searchInputRef}
                     placeholder={placeholder}
                     inputProps={{

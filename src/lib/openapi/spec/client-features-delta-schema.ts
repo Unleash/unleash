@@ -13,33 +13,76 @@ import { dependentFeatureSchema } from './dependent-feature-schema';
 export const clientFeaturesDeltaSchema = {
     $id: '#/components/schemas/clientFeaturesDeltaSchema',
     type: 'object',
-    required: ['updated', 'revisionId', 'removed'],
+    required: ['events'],
     description: 'Schema for delta updates of feature configurations.',
     properties: {
-        updated: {
-            description: 'A list of updated feature configurations.',
+        events: {
+            description: 'A list of delta events.',
             type: 'array',
             items: {
-                $ref: '#/components/schemas/clientFeatureSchema',
-            },
-        },
-        revisionId: {
-            type: 'number',
-            description: 'The revision ID of the delta update.',
-        },
-        removed: {
-            description: 'A list of feature names that were removed.',
-            type: 'array',
-            items: {
-                type: 'string',
-            },
-        },
-        segments: {
-            description:
-                'A list of [Segments](https://docs.getunleash.io/reference/segments) configured for this Unleash instance',
-            type: 'array',
-            items: {
-                $ref: '#/components/schemas/clientSegmentSchema',
+                type: 'object',
+                anyOf: [
+                    {
+                        type: 'object',
+                        required: ['eventId', 'type', 'feature'],
+                        properties: {
+                            eventId: { type: 'number' },
+                            type: { type: 'string', enum: ['feature-updated'] },
+                            feature: {
+                                $ref: '#/components/schemas/clientFeatureSchema',
+                            },
+                        },
+                    },
+                    {
+                        type: 'object',
+                        required: ['eventId', 'type', 'featureName'],
+                        properties: {
+                            eventId: { type: 'number' },
+                            type: { type: 'string', enum: ['feature-removed'] },
+                            featureName: { type: 'string' },
+                        },
+                    },
+                    {
+                        type: 'object',
+                        required: ['eventId', 'type', 'segment'],
+                        properties: {
+                            eventId: { type: 'number' },
+                            type: { type: 'string', enum: ['segment-updated'] },
+                            segment: {
+                                $ref: '#/components/schemas/clientSegmentSchema',
+                            },
+                        },
+                    },
+                    {
+                        type: 'object',
+                        required: ['eventId', 'type', 'segmentId'],
+                        properties: {
+                            eventId: { type: 'number' },
+                            type: { type: 'string', enum: ['segment-removed'] },
+                            segmentId: { type: 'number' },
+                        },
+                    },
+                    {
+                        type: 'object',
+                        required: ['type', 'features', 'segments', 'eventId'],
+                        properties: {
+                            eventId: { type: 'number' },
+                            type: { type: 'string', enum: ['hydration'] },
+                            features: {
+                                type: 'array',
+                                items: {
+                                    $ref: '#/components/schemas/clientFeatureSchema',
+                                },
+                            },
+                            segments: {
+                                type: 'array',
+                                items: {
+                                    $ref: '#/components/schemas/clientSegmentSchema',
+                                },
+                            },
+                        },
+                    },
+                ],
             },
         },
     },

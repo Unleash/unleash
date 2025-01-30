@@ -711,12 +711,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/state@npm:6.5.0":
-  version: 6.5.0
-  resolution: "@codemirror/state@npm:6.5.0"
+"@codemirror/state@npm:6.5.1":
+  version: 6.5.1
+  resolution: "@codemirror/state@npm:6.5.1"
   dependencies:
     "@marijn/find-cluster-break": "npm:^1.0.0"
-  checksum: 10c0/740425d605d7b12524e3abef242a8ca0ea1a17bab97f7583221f89c56b8f2eb236f8a227885e2bb472662b328d2a32b972fbf8543096224711679dfc3a28b492
+  checksum: 10c0/94c4ab3a55f580a0549b81a2264521fa0381c3766e32093e43ab0c5e54948e71fbc9939883be2340b7b7ccd2646a49e96b234f644877aa33b088eed901f6de57
   languageName: node
   linkType: hard
 
@@ -3063,20 +3063,20 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 22.10.2
-  resolution: "@types/node@npm:22.10.2"
+  version: 22.10.10
+  resolution: "@types/node@npm:22.10.10"
   dependencies:
     undici-types: "npm:~6.20.0"
-  checksum: 10c0/2c7b71a040f1ef5320938eca8ebc946e6905caa9bbf3d5665d9b3774a8d15ea9fab1582b849a6d28c7fc80756a62c5666bc66b69f42f4d5dafd1ccb193cdb4ac
+  checksum: 10c0/3425772d4513cd5dbdd87c00acda088113c03a97445f84f6a89744c60a66990b56c9d3a7213d09d57b6b944ae8ff45f985565e0c1846726112588e33a22dd12b
   languageName: node
   linkType: hard
 
 "@types/node@npm:^20.12.12":
-  version: 20.17.10
-  resolution: "@types/node@npm:20.17.10"
+  version: 20.17.16
+  resolution: "@types/node@npm:20.17.16"
   dependencies:
     undici-types: "npm:~6.19.2"
-  checksum: 10c0/458ec725319e57d4692cbb56d81f1a90f9074cef9ec185c59e6f6c557a3d2ded57c5e443b1e82eba923d53dda4db18797fb131ee6e46fdb3d7d2f54d54aaebe3
+  checksum: 10c0/50c589dd6a377238bc51b6fb5b8fc60ff6d688df0bde621d4a9fc59f480eb956cdf6d46052e1cb9536f150bc62e9194ddc733aa78b65e812155b4d3a32717de2
   languageName: node
   linkType: hard
 
@@ -3167,13 +3167,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:18.3.17":
-  version: 18.3.17
-  resolution: "@types/react@npm:18.3.17"
+"@types/react@npm:18.3.18":
+  version: 18.3.18
+  resolution: "@types/react@npm:18.3.18"
   dependencies:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.0.2"
-  checksum: 10c0/475191e9cd0ab5bef35cc1868295d6526cd78b25c1bb816f0747a1e92261688305f81c0e29aff52e6ea70397f133e34c399dc936cb5072f1acf465d9daacc0da
+  checksum: 10c0/8fb2b00672072135d0858dc9db07873ea107cc238b6228aaa2a9afd1ef7a64a7074078250db38afbeb19064be8ea6af5eac32d404efdd5f45e093cc4829d87f8
   languageName: node
   linkType: hard
 
@@ -10180,7 +10180,7 @@ __metadata:
     "@types/lodash.mapvalues": "npm:^4.6.9"
     "@types/lodash.omit": "npm:4.5.9"
     "@types/node": "npm:^20.12.12"
-    "@types/react": "npm:18.3.17"
+    "@types/react": "npm:18.3.18"
     "@types/react-dom": "npm:18.3.5"
     "@types/react-router-dom": "npm:5.3.3"
     "@types/react-table": "npm:7.7.20"
@@ -10241,7 +10241,7 @@ __metadata:
     typescript: "npm:5.4.5"
     use-query-params: "npm:^2.2.1"
     vanilla-jsoneditor: "npm:^0.23.0"
-    vite: "npm:5.4.11"
+    vite: "npm:5.4.12"
     vite-plugin-env-compatible: "npm:2.0.1"
     vite-plugin-svgr: "npm:3.3.0"
     vite-tsconfig-paths: "npm:4.3.2"
@@ -10514,9 +10514,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vite@npm:5.4.11":
-  version: 5.4.11
-  resolution: "vite@npm:5.4.11"
+"vite@npm:5.4.12":
+  version: 5.4.12
+  resolution: "vite@npm:5.4.12"
   dependencies:
     esbuild: "npm:^0.21.3"
     fsevents: "npm:~2.3.3"
@@ -10553,7 +10553,7 @@ __metadata:
       optional: true
   bin:
     vite: bin/vite.js
-  checksum: 10c0/d536bb7af57dd0eca2a808f95f5ff1d7b7ffb8d86e17c6893087680a0448bd0d15e07475270c8a6de65cb5115592d037130a1dd979dc76bcef8c1dda202a1874
+  checksum: 10c0/a0f130e3e0c781f54c60ee4b7cccf92c266e4117be1f65ab55c02abc27b29fa70dc0ed05eca54a9983f76450063a47f86db06ac49f28ee96392a0dc362b17da8
   languageName: node
   linkType: hard
 

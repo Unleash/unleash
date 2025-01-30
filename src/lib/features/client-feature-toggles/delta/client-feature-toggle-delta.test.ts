@@ -1,4 +1,12 @@
-import { calculateRequiredClientRevision } from './client-feature-toggle-delta';
+import {
+    type DeltaEvent,
+    filterEventsByQuery,
+    filterHydrationEventByQuery,
+} from './client-feature-toggle-delta';
+import {
+    DELTA_EVENT_TYPES,
+    type DeltaHydrationEvent,
+} from './client-feature-toggle-delta-types';
 
 const mockAdd = (params): any => {
     const base = {
@@ -16,166 +24,100 @@ const mockAdd = (params): any => {
     return { ...base, ...params };
 };
 
-test('compresses multiple revisions to a single update', () => {
-    const revisionList = [
+test('revision equal to the base case returns only later revisions ', () => {
+    const revisionList: DeltaEvent[] = [
         {
-            revisionId: 1,
-            updated: [mockAdd({ type: 'release' })],
-            removed: [],
+            eventId: 2,
+            type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            feature: mockAdd({ name: 'feature4' }),
         },
         {
-            revisionId: 2,
-            updated: [mockAdd({ type: 'test' })],
-            removed: [],
+            eventId: 3,
+            type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            feature: mockAdd({ name: 'feature5' }),
         },
     ];
 
-    const revisions = calculateRequiredClientRevision(revisionList, 0, [
-        'default',
-    ]);
+    const revisions = filterEventsByQuery(revisionList, 1, ['default'], '');
 
-    expect(revisions).toEqual({
-        revisionId: 2,
-        updated: [mockAdd({ type: 'test' })],
-        removed: [],
-    });
+    expect(revisions).toEqual([
+        {
+            eventId: 2,
+            type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            feature: mockAdd({ name: 'feature4' }),
+        },
+        {
+            eventId: 3,
+            type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            feature: mockAdd({ name: 'feature5' }),
+        },
+    ]);
 });
 
-test('revision that adds, removes then adds again does not end up with the remove', () => {
-    const revisionList = [
+test('project filter removes features not in project and nameprefix', () => {
+    const revisionList: DeltaEvent[] = [
         {
-            revisionId: 1,
-            updated: [mockAdd({ name: 'some-toggle' })],
-            removed: [],
+            eventId: 1,
+            type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            feature: mockAdd({ name: 'feature1', project: 'project1' }),
         },
         {
-            revisionId: 2,
-            updated: [],
-            removed: [
-                {
-                    name: 'some-toggle',
-                    project: 'default',
-                },
-            ],
+            eventId: 2,
+            type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            feature: mockAdd({ name: 'feature2', project: 'project2' }),
         },
         {
-            revisionId: 3,
-            updated: [mockAdd({ name: 'some-toggle' })],
-            removed: [],
+            eventId: 3,
+            type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            feature: mockAdd({ name: 'ffeature1', project: 'project1' }),
         },
     ];
 
-    const revisions = calculateRequiredClientRevision(revisionList, 0, [
-        'default',
-    ]);
+    const revisions = filterEventsByQuery(revisionList, 0, ['project1'], 'ff');
 
-    expect(revisions).toEqual({
-        revisionId: 3,
-        updated: [mockAdd({ name: 'some-toggle' })],
-        removed: [],
-    });
+    expect(revisions).toEqual([
+        {
+            eventId: 3,
+            type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            feature: mockAdd({ name: 'ffeature1', project: 'project1' }),
+        },
+    ]);
 });
 
-test('revision that removes, adds then removes again does not end up with the remove', () => {
-    const revisionList = [
-        {
-            revisionId: 1,
-            updated: [],
-            removed: [
-                {
-                    name: 'some-toggle',
-                    project: 'default',
-                },
-            ],
-        },
-        {
-            revisionId: 2,
-            updated: [mockAdd({ name: 'some-toggle' })],
-            removed: [],
-        },
-        {
-            revisionId: 3,
-            updated: [],
-            removed: [
-                {
-                    name: 'some-toggle',
-                    project: 'default',
-                },
-            ],
-        },
-    ];
-
-    const revisions = calculateRequiredClientRevision(revisionList, 0, [
-        'default',
-    ]);
-
-    expect(revisions).toEqual({
-        revisionId: 3,
-        updated: [],
-        removed: [
+test('project filter removes features not in project in hydration', () => {
+    const revisionList: DeltaHydrationEvent = {
+        eventId: 1,
+        type: 'hydration',
+        segments: [
             {
-                name: 'some-toggle',
-                project: 'default',
+                name: 'test',
+                constraints: [],
+                id: 1,
             },
         ],
-    });
-});
+        features: [
+            mockAdd({ name: 'feature1', project: 'project1' }),
+            mockAdd({ name: 'feature2', project: 'project2' }),
+            mockAdd({ name: 'myfeature2', project: 'project2' }),
+        ],
+    };
 
-test('revision equal to the base case returns only later revisions ', () => {
-    const revisionList = [
-        {
-            revisionId: 1,
-            updated: [
-                mockAdd({ name: 'feature1' }),
-                mockAdd({ name: 'feature2' }),
-                mockAdd({ name: 'feature3' }),
-            ],
-            removed: [],
-        },
-        {
-            revisionId: 2,
-            updated: [mockAdd({ name: 'feature4' })],
-            removed: [],
-        },
-        {
-            revisionId: 3,
-            updated: [mockAdd({ name: 'feature5' })],
-            removed: [],
-        },
-    ];
-
-    const revisions = calculateRequiredClientRevision(revisionList, 1, [
-        'default',
-    ]);
+    const revisions = filterHydrationEventByQuery(
+        revisionList,
+        ['project2'],
+        'my',
+    );
 
     expect(revisions).toEqual({
-        revisionId: 3,
-        updated: [mockAdd({ name: 'feature4' }), mockAdd({ name: 'feature5' })],
-        removed: [],
-    });
-});
-
-test('project filter removes features not in project', () => {
-    const revisionList = [
-        {
-            revisionId: 1,
-            updated: [mockAdd({ name: 'feature1', project: 'project1' })],
-            removed: [],
-        },
-        {
-            revisionId: 2,
-            updated: [mockAdd({ name: 'feature2', project: 'project2' })],
-            removed: [],
-        },
-    ];
-
-    const revisions = calculateRequiredClientRevision(revisionList, 0, [
-        'project1',
-    ]);
-
-    expect(revisions).toEqual({
-        revisionId: 2,
-        updated: [mockAdd({ name: 'feature1', project: 'project1' })],
-        removed: [],
+        eventId: 1,
+        type: 'hydration',
+        segments: [
+            {
+                name: 'test',
+                constraints: [],
+                id: 1,
+            },
+        ],
+        features: [mockAdd({ name: 'myfeature2', project: 'project2' })],
     });
 });

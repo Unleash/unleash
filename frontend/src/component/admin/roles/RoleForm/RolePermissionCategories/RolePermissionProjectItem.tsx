@@ -1,10 +1,4 @@
-import {
-    Box,
-    Checkbox,
-    FormControlLabel,
-    styled,
-    Typography,
-} from '@mui/material';
+import { Box, Checkbox, FormControlLabel } from '@mui/material';
 import type { IPermission } from 'interfaces/permissions';
 
 type RolePermissionProjectItemProps = {
@@ -14,11 +8,6 @@ type RolePermissionProjectItemProps = {
     hasParentPermission?: boolean;
     isParentPermissionChecked?: boolean;
 };
-
-const StyledLabel = styled(Typography)(({ theme }) => ({
-    lineHeight: 1.2,
-    marginBottom: theme.spacing(1),
-}));
 
 export const RolePermissionProjectItem = ({
     permission,
@@ -43,7 +32,7 @@ export const RolePermissionProjectItem = ({
                     disabled={isParentPermissionChecked}
                 />
             }
-            label={<StyledLabel>{permission.displayName}</StyledLabel>}
+            label={permission.displayName}
         />
     </Box>
 );

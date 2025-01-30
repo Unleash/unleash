@@ -59,7 +59,7 @@
     "@types/lodash.mapvalues": "^4.6.9",
     "@types/lodash.omit": "4.5.9",
     "@types/node": "^20.12.12",
-    "@types/react": "18.3.17",
+    "@types/react": "18.3.18",
     "@types/react-dom": "18.3.5",
     "@types/react-router-dom": "5.3.3",
     "@types/react-table": "7.7.20",
@@ -119,7 +119,7 @@
     "typescript": "5.4.5",
     "use-query-params": "^2.2.1",
     "vanilla-jsoneditor": "^0.23.0",
-    "vite": "5.4.11",
+    "vite": "5.4.12",
     "vite-plugin-env-compatible": "2.0.1",
     "vite-plugin-svgr": "3.3.0",
     "vite-tsconfig-paths": "4.3.2",
@@ -127,14 +127,14 @@
     "whatwg-fetch": "3.6.20"
   },
   "resolutions": {
-    "@codemirror/state": "6.5.0",
+    "@codemirror/state": "6.5.1",
     "@xmldom/xmldom": "^0.9.0",
     "jsonpath-plus": "10.2.0",
     "json5": "^2.2.2",
-    "vite": "5.4.11",
+    "vite": "5.4.12",
     "semver": "7.6.3",
     "ws": "^8.18.0",
-    "@types/react": "18.3.17"
+    "@types/react": "18.3.18"
   },
   "jest": {
     "moduleNameMapper": {

@@ -266,7 +266,7 @@ const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =
         applicationName: process.env.DATABASE_APPLICATION_NAME || 'unleash',
     };
 
-const defaultSessionOption: ISessionOption = {
+const defaultSessionOption = (isEnterprise: boolean): ISessionOption => ({
     ttlHours: parseEnvVarNumber(process.env.SESSION_TTL_HOURS, 48),
     clearSiteDataOnLogout: parseEnvVarBoolean(
         process.env.SESSION_CLEAR_SITE_DATA_ON_LOGOUT,
@@ -274,7 +274,16 @@ const defaultSessionOption: ISessionOption = {
     ),
     cookieName: 'unleash-session',
     db: true,
-};
+    // default limit of 100 for enterprise, 5 for pro and oss
+    // at least 1 session should be allowed
+    maxParallelSessions: Math.max(
+        parseEnvVarNumber(
+            process.env.MAX_PARALLEL_SESSIONS,
+            isEnterprise ? 100 : 5,
+        ),
+        1,
+    ),
+});
 
 const defaultServerOption: IServerOption = {
     pipe: undefined,
@@ -533,11 +542,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         options.db || {},
     ]);
 
-    const session: ISessionOption = mergeAll([
-        defaultSessionOption,
-        options.session || {},
-    ]);
-
     const logLevel =
         options.logLevel || LogLevel[process.env.LOG_LEVEL ?? LogLevel.error];
     const getLogger = options.getLogger || getDefaultLogProvider(logLevel);
@@ -638,6 +642,12 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ui.environment,
         isTest,
     );
+
+    const session: ISessionOption = mergeAll([
+        defaultSessionOption(isEnterprise),
+        options.session || {},
+    ]);
+
     const metricsRateLimiting = loadMetricsRateLimitingConfig(options);
 
     const rateLimiting = loadRateLimitingConfig(options);

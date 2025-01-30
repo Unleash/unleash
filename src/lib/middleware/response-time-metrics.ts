@@ -66,8 +66,10 @@ export function responseTimeMetrics(
                 req.query.appName;
         }
 
-        const connectionId = req.headers['x-unleash-connection-id'];
-        if (connectionId && flagResolver.isEnabled('uniqueSdkTracking')) {
+        if (flagResolver.isEnabled('uniqueSdkTracking')) {
+            const connectionId =
+                req.headers['x-unleash-connection-id'] ||
+                `${req.headers['unleash-instanceid']}${req.ip}`;
             eventBus.emit(SDK_CONNECTION_ID_RECEIVED, connectionId);
         }
 

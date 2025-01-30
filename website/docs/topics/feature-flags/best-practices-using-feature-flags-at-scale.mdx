@@ -212,19 +212,19 @@ Paying down technical debt–in its simplest form, removing old flags–requires
 
 All feature flags progress through a set of predefined lifecycle stages even if these stages are not explicitly defined in your feature flag system:
 
--   Initial: The feature flag is defined, but no code implementation has begun.
--   Pre-Live: Some code is implemented, but the feature is not enabled for any users in production. Internal testing and validation are ongoing.
--   Live: The code is deployed to production and gradually rolled out to a controlled set of users for validation with real users.
--   Completed: A team has decided to keep or cancel the feature. The feature flag still exists, but it is now time to clean up the code protected by it to ensure no more technical debt is acquired.
+-   Define: The feature flag is defined, but no code implementation has begun.
+-   Develop: Some code is implemented, but the feature is not enabled for any users in production. Internal testing and validation are ongoing.
+-   Production: The code is deployed to production and gradually rolled out to a controlled set of users for validation with real users.
+-   Cleanup: A team has decided to keep or cancel the feature. The feature flag still exists, but it is now time to clean up the code protected by it to ensure no more technical debt is acquired.
 -   Archived: The feature flag has reached its end-of-life and has been disabled. The code associated with the feature flag is cleaned up to avoid technical debt.
 
 By monitoring feature progression through the lifecycle stages, organizations gain valuable insights from which they can benefit to improve their development process and pay down technical debt. Some key benefits of tracking feature flag lifecycle include:
 
 -   Identifying Bottlenecks: Teams can analyze the average time spent in each stage and pinpoint bottlenecks. Some examples include:
-    1. Stuck in Initial: This may indicate issues like unclear requirements or integration difficulties in pre-production environments.
-    2. Stuck in Pre-live: Suggest challenges in achieving production readiness, like incomplete testing or code bugs.
-    3. Stuck in Live: This could imply difficulties gathering data or making decisions about the feature's future (e.g., lack of clear success metrics).
-    4. Stuck in Completed: Signals delays in decommissioning the feature flag and cleaning up resources, potentially creating technical debt.
+    1. Stuck in Define: This may indicate issues like unclear requirements or integration difficulties in pre-production environments.
+    2. Stuck in Develop: Suggest challenges in achieving production readiness, like incomplete testing or code bugs.
+    3. Stuck in Production: This could imply difficulties gathering data or making decisions about the feature's future (e.g., lack of clear success metrics).
+    4. Stuck in Cleanup: Signals delays in decommissioning the feature flag and cleaning up resources, potentially creating technical debt.
 -   Easily Remove Stale Feature Flags: Feature flags left active after their purpose is served tend to create technical debt. This code is unused, increasing the risk of accidental exposure in production and making the codebase more complex to maintain. By retiring flags promptly, developers understand which code sections can be safely cleaned up, reducing technical debt.
 -   Data-Driven Insights: By collecting and aggregating metrics across features and teams over time, organizations gain valuable insights into team performance trends. Suddenly, it is easy to measure time-to-production or the number of times we need to disable a feature in production. Over time, this level of insights allows organizations to identify gradual changes in team efficiency or identify areas needing improvement that might otherwise go unnoticed.
 

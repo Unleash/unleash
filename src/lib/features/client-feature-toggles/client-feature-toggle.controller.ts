@@ -191,22 +191,33 @@ export default class FeatureController extends Controller {
                 const sortedToggles = features.sort((a, b) =>
                     a.name.localeCompare(b.name),
                 );
-                const sortedNewToggles = delta?.updated.sort((a, b) =>
-                    a.name.localeCompare(b.name),
-                );
+                if (delta?.events[0].type === 'hydration') {
+                    const hydrationEvent = delta?.events[0];
+                    const sortedNewToggles = hydrationEvent.features.sort(
+                        (a, b) => a.name.localeCompare(b.name),
+                    );
 
-                if (
-                    !this.deepEqualIgnoreOrder(sortedToggles, sortedNewToggles)
-                ) {
-                    this.logger.warn(
-                        `old features and new features are different. Old count ${
-                            features.length
-                        }, new count ${delta?.updated.length}, query ${JSON.stringify(query)},
+                    if (
+                        !this.deepEqualIgnoreOrder(
+                            sortedToggles,
+                            sortedNewToggles,
+                        )
+                    ) {
+                        this.logger.warn(
+                            `old features and new features are different. Old count ${
+                                features.length
+                            }, new count ${hydrationEvent.features.length}, query ${JSON.stringify(query)},
                         diff ${JSON.stringify(
                             diff(sortedToggles, sortedNewToggles),
                         )}`,
+                        );
+                    }
+                } else {
+                    this.logger.warn(
+                        `Delta diff should have only hydration event, query ${JSON.stringify(query)}`,
                     );
                 }
+
                 this.storeFootprint();
             } catch (e) {
                 this.logger.error('Delta diff failed', e);

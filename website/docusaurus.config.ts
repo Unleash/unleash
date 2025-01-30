@@ -333,13 +333,6 @@ const config: Config = {
                 fromExtensions: ['html', 'htm'],
                 redirects: [
                     {
-                        to: '/how-to/how-to-create-api-tokens',
-                        from: [
-                            '/user_guide/api-token',
-                            '/deploy/user_guide/api-token',
-                        ],
-                    },
-                    {
                         from: '/advanced/audit_log',
                         to: '/reference/events',
                     },

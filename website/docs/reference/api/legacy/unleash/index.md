@@ -13,7 +13,7 @@ The docs in this category are legacy documentation. You should prefer to use the
 
 This describes the API provided to unleash-clients.
 
-Since v4.0.0 all operations require an [API token](/how-to/how-to-create-api-tokens.mdx) with `Client` level access.
+Since v4.0.0 all operations require an [API token](/reference/api-tokens-and-client-keys) with `Client` level access.
 
 With versions earlier than v4.0.0 and `insecure` authentication no authentication is required.
 
@@ -23,7 +23,7 @@ With versions earlier than v4.0.0 and `insecure` authentication no authenticatio
 
 ## Admin API (internal) {#admin-api-internal}
 
-The internal API used by the Admin UI (unleash-frontend). Since v4.0.0 all operations require an [API token](/how-to/how-to-create-api-tokens) with `Admin` level access:
+The internal API used by the Admin UI (unleash-frontend). Since v4.0.0 all operations require an [API token](/reference/api-tokens-and-client-keys) with `Admin` level access:
 
 With versions earlier than v4.0.0 and `insecure` authentication Basic Auth (with curl `-u myemail@test.com:`) is enough.
 

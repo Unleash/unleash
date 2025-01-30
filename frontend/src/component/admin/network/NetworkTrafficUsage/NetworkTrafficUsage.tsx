@@ -168,6 +168,7 @@ const NewNetworkTrafficUsage: FC = () => {
         toTrafficUsageSum,
         calculateOverageCost,
         calculateEstimatedMonthlyCost,
+        endpointsInfo,
     } = useTrafficDataEstimation();
 
     const includedTraffic = useTrafficLimit();
@@ -248,6 +249,12 @@ const NewNetworkTrafficUsage: FC = () => {
         }
     }, [data]);
 
+    // todo: extract this (and also endpoints info)
+    const [lastLabel, ...otherLabels] = Object.values(endpointsInfo)
+        .map((info) => info.label.toLowerCase())
+        .toReversed();
+    const requestTypes = `${otherLabels.toReversed().join(', ')}, and ${lastLabel}`;
+
     return (
         <ConditionallyRender
             condition={isOss()}
@@ -300,7 +307,16 @@ const NewNetworkTrafficUsage: FC = () => {
                             data={data}
                             plugins={[customHighlightPlugin()]}
                             options={options}
-                            aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API' // todo: this isn't correct at all!
+                            aria-label={
+                                newPeriod.grouping === 'daily'
+                                    ? `A bar chart showing daily traffic usage for ${new Date(
+                                          newPeriod.month,
+                                      ).toLocaleDateString('en-US', {
+                                          month: 'long',
+                                          year: 'numeric',
+                                      })}. Each date shows ${requestTypes} requests.`
+                                    : `A bar chart showing monthly total traffic usage for the current month and the preceding ${newPeriod.monthsBack} months. Each month shows ${requestTypes} requests.`
+                            }
                         />
                     </StyledBox>
                 </>

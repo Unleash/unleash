@@ -322,11 +322,10 @@ const NewNetworkTrafficUsage: FC = () => {
                                     }
                                     includedTraffic={50}
                                 />
-                                {(newPeriod.grouping === 'daily' &&
+                                {newPeriod.grouping === 'daily' &&
                                     includedTraffic > 0 &&
                                     usageTotal - includedTraffic > 0 &&
-                                    estimateTrafficDataCost) ||
-                                    (true && (
+                                    estimateTrafficDataCost && (
                                         <OverageInfo
                                             overageCost={overageCost}
                                             overages={
@@ -336,7 +335,7 @@ const NewNetworkTrafficUsage: FC = () => {
                                                 estimatedMonthlyCost
                                             }
                                         />
-                                    ))}
+                                    )}
                             </TrafficInfoBoxes>
                             <PeriodSelector
                                 selectedPeriod={newPeriod}

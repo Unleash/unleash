@@ -95,7 +95,7 @@ export const NetworkTrafficUsagePlanSummary = ({
                             </RowContainer>
                         </StyledCardDescription>
                         <ConditionallyRender
-                            condition={includedTraffic > 0}
+                            condition={true}
                             show={
                                 <StyledCardDescription>
                                     <RowContainer>
@@ -112,9 +112,7 @@ export const NetworkTrafficUsagePlanSummary = ({
                 </StyledContainer>
             </StyledGrid>
             <ConditionallyRender
-                condition={
-                    estimateFlagEnabled && includedTraffic > 0 && overages > 0
-                }
+                condition={true}
                 show={
                     <StyledGrid item xs={5.5} md={5.5}>
                         <StyledContainer>
@@ -142,7 +140,7 @@ export const NetworkTrafficUsagePlanSummary = ({
                                         </StyledNumbersDiv>
                                     </RowContainer>
                                     <ConditionallyRender
-                                        condition={estimatedMonthlyCost > 0}
+                                        condition={true}
                                         show={
                                             <RowContainer>
                                                 Estimated traffic charges based

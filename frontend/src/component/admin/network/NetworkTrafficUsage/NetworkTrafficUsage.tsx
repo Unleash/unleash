@@ -40,8 +40,10 @@ import { BILLING_TRAFFIC_BUNDLE_PRICE } from 'component/admin/billing/BillingDas
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { PeriodSelector } from './PeriodSelector';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { format } from 'date-fns';
+import { differenceInCalendarMonths, format } from 'date-fns';
 import { monthlyTrafficDataToCurrentUsage } from './monthly-traffic-data-to-current-usage';
+import { OverageInfo, RequestSummary } from './RequestSummary';
+import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -148,15 +150,62 @@ const createBarChartOptions = (
 });
 
 // this is primarily for dev purposes. The existing grid is very inflexible, so we might want to change it, but for demoing the design, this is enough.
-const NewHeader = styled('div')(() => ({
+const NewHeader = styled('div')(({ theme }) => ({
     display: 'flex',
+    flexFlow: 'row wrap',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    gap: theme.spacing(2, 4),
 }));
+
+const TrafficInfoBoxes = styled('div')(({ theme }) => ({
+    // display: 'flex',
+    // flexFlow: 'row wrap',
+    // justifyItems:
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(450px, max-content))',
+    flex: 1,
+
+    // width: 'min-content',
+    gap: theme.spacing(2, 4),
+}));
+
+const averageTrafficPreviousMonths = (
+    endpointData: string[],
+    traffic: TrafficUsageDataSegmentedCombinedSchema,
+) => {
+    if (!traffic || traffic.grouping === 'daily') {
+        return 0;
+    }
+
+    const monthsToCount = Math.abs(
+        differenceInCalendarMonths(
+            new Date(traffic.dateRange.to),
+            new Date(traffic.dateRange.from),
+        ),
+    );
+
+    const currentMonth = format(new Date(), 'yyyy-MM');
+
+    const totalTraffic = traffic.apiData
+        .filter((endpoint) => endpointData.includes(endpoint.apiPath))
+        .map((endpoint) =>
+            endpoint.dataPoints
+                .filter(({ period }) => period !== currentMonth)
+                .reduce(
+                    (acc, current) => acc + current.trafficTypes[0].count,
+                    0,
+                ),
+        )
+        .reduce((total, next) => total + next, 0);
+
+    return Math.round(totalTraffic / monthsToCount);
+};
 
 const NewNetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
+
+    const estimateTrafficDataCost = useUiFlag('estimateTrafficDataCost');
 
     const { isOss } = useUiConfig();
 
@@ -262,8 +311,9 @@ const NewNetworkTrafficUsage: FC = () => {
             elseShow={
                 <>
                     <ConditionallyRender
-                        condition={includedTraffic > 0 && overageCost > 0}
+                        condition={true}
                         show={
+                            // todo: we the text here should be modified based on the selection.
                             <Alert severity='warning' sx={{ mb: 4 }}>
                                 <b>Heads up!</b> You are currently consuming
                                 more requests than your plan includes and will
@@ -288,16 +338,42 @@ const NewNetworkTrafficUsage: FC = () => {
                     />
                     <StyledBox>
                         <NewHeader>
-                            {
-                                // todo: add new usage plan summary that works for monthly data as well as daily
-                            }
-
-                            <NetworkTrafficUsagePlanSummary
+                            {/* <NetworkTrafficUsagePlanSummary
                                 usageTotal={usageTotal}
                                 includedTraffic={includedTraffic}
                                 overageCost={overageCost}
                                 estimatedMonthlyCost={estimatedMonthlyCost}
-                            />
+                            /> */}
+
+                            <TrafficInfoBoxes>
+                                <RequestSummary
+                                    period={newPeriod}
+                                    usageTotal={
+                                        newPeriod.grouping === 'daily'
+                                            ? usageTotal
+                                            : averageTrafficPreviousMonths(
+                                                  Object.keys(endpointsInfo),
+                                                  traffic.usage,
+                                              )
+                                    }
+                                    includedTraffic={50}
+                                />
+                                {(newPeriod.grouping === 'daily' &&
+                                    includedTraffic > 0 &&
+                                    usageTotal - includedTraffic > 0 &&
+                                    estimateTrafficDataCost) ||
+                                    (true && (
+                                        <OverageInfo
+                                            overageCost={overageCost}
+                                            overages={
+                                                usageTotal - includedTraffic
+                                            }
+                                            estimatedMonthlyCost={
+                                                estimatedMonthlyCost
+                                            }
+                                        />
+                                    ))}
+                            </TrafficInfoBoxes>
                             <PeriodSelector
                                 selectedPeriod={newPeriod}
                                 setPeriod={setNewPeriod}

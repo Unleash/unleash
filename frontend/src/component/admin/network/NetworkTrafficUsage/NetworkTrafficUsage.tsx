@@ -282,7 +282,13 @@ const NewNetworkTrafficUsage: FC = () => {
             elseShow={
                 <>
                     <ConditionallyRender
-                        condition={includedTraffic > 0 && overageCost > 0}
+                        condition={
+                            (newPeriod.grouping === 'monthly' ||
+                                newPeriod.month ===
+                                    format(new Date(), 'yyyy-MM')) &&
+                            includedTraffic > 0 &&
+                            overageCost > 0
+                        }
                         show={
                             // todo: we the text here should be modified based on the selection.
                             <Alert severity='warning' sx={{ mb: 4 }}>
@@ -290,20 +296,14 @@ const NewNetworkTrafficUsage: FC = () => {
                                 consuming more requests than your plan includes
                                 and will be billed according to our terms.
                                 Please see{' '}
-                                <Link
-                                    component={RouterLink}
-                                    to='https://www.getunleash.io/pricing'
-                                >
+                                <RouterLink to='https://www.getunleash.io/pricing'>
                                     this page
-                                </Link>{' '}
+                                </RouterLink>{' '}
                                 for more information. In order to reduce your
                                 traffic consumption, you may configure an{' '}
-                                <Link
-                                    component={RouterLink}
-                                    to='https://docs.getunleash.io/reference/unleash-edge'
-                                >
+                                <RouterLink to='https://docs.getunleash.io/reference/unleash-edge'>
                                     Unleash Edge instance
-                                </Link>{' '}
+                                </RouterLink>{' '}
                                 in your own datacenter.
                             </Alert>
                         }

@@ -8387,15 +8387,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-activity-calendar@npm:^2.7.1":
-  version: 2.7.1
-  resolution: "react-activity-calendar@npm:2.7.1"
+"react-activity-calendar@npm:^2.7.8":
+  version: 2.7.8
+  resolution: "react-activity-calendar@npm:2.7.8"
   dependencies:
     date-fns: "npm:^4.1.0"
   peerDependencies:
-    react: ^18.0.0
-    react-dom: ^18.0.0
-  checksum: 10c0/2d4c9dd688c1187b75b8878094365ee7ef8cec361ac6a2a8088cf83296025c7849fe909487c415ce3e739642821800a6452f7ce4873b52270a3b47834ca2498e
+    react: ^18.0.0 || ^19.0.0
+  checksum: 10c0/e18d17cadc65480a8fa1df390598d7a4741a211b164091ca85fd2a21673fa667a5921f7b856e4ed92c2e8dedfb961426f163e517ea37336f2c3afb987740620d
   languageName: node
   linkType: hard
 
@@ -8470,14 +8469,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-error-boundary@npm:^4.1.2":
-  version: 4.1.2
-  resolution: "react-error-boundary@npm:4.1.2"
+"react-error-boundary@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "react-error-boundary@npm:5.0.0"
   dependencies:
     "@babel/runtime": "npm:^7.12.5"
   peerDependencies:
     react: ">=16.13.1"
-  checksum: 10c0/0737e5259bed40ce14eb0823b3c7b152171921f2179e604f48f3913490cdc594d6c22d43d7abb4ffb1512c832850228db07aa69d3b941db324953a5e393cb399
+  checksum: 10c0/38da5e7e81016a4750d3b090e3c740c2c1125c0bb9de14e1ab92ee3b5190d34517c199935302718a24aa35d3f89081412b3444edc23f63729bde2e862a2fbfec
   languageName: node
   linkType: hard
 
@@ -8505,15 +8504,14 @@ __metadata:
   linkType: hard
 
 "react-github-calendar@npm:^4.5.1":
-  version: 4.5.1
-  resolution: "react-github-calendar@npm:4.5.1"
+  version: 4.5.5
+  resolution: "react-github-calendar@npm:4.5.5"
   dependencies:
-    react-activity-calendar: "npm:^2.7.1"
-    react-error-boundary: "npm:^4.1.2"
+    react-activity-calendar: "npm:^2.7.8"
+    react-error-boundary: "npm:^5.0.0"
   peerDependencies:
-    react: ^17.0.0 || ^18.0.0
-    react-dom: ^17.0.0 || ^18.0.0
-  checksum: 10c0/51688983b28da92718cf2276e6c947b9639b529a93212d77a6c65040af2768b74153b32dee44eed4f706cf0cb4c025864327c51c9c666d1f5b88080f523ef672
+    react: ^18.0.0 || ^19.0.0
+  checksum: 10c0/e2d8dfba3781e1664065d7646e746e3c456c19f56787ae0d648dbff8eb3be6a098cefd6d92fc612e7df28632b2a2a0b9c4307b368c525e9cb0fbf6854936188f
   languageName: node
   linkType: hard
 

@@ -9,19 +9,22 @@ import {
     AccordionSummary,
     AccordionDetails,
     IconButton,
+    FormHelperText,
 } from '@mui/material';
 import Delete from '@mui/icons-material/DeleteOutlined';
 import type {
     IReleasePlanMilestonePayload,
     IReleasePlanMilestoneStrategy,
 } from 'interfaces/releasePlans';
-import { type DragEventHandler, type RefObject, useState } from 'react';
+import { type DragEventHandler, type RefObject, useRef, useState } from 'react';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { MilestoneCardName } from './MilestoneCardName';
 import { MilestoneStrategyMenuCards } from './MilestoneStrategyMenu/MilestoneStrategyMenuCards';
 import { MilestoneStrategyDraggableItem } from './MilestoneStrategyDraggableItem';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ReleasePlanTemplateAddStrategyForm } from '../../MilestoneStrategy/ReleasePlanTemplateAddStrategyForm';
+import DragIndicator from '@mui/icons-material/DragIndicator';
+import { type OnMoveItem, useDragItem } from 'hooks/useDragItem';
 
 const StyledMilestoneCard = styled(Card, {
     shouldForwardProp: (prop) => prop !== 'hasError',
@@ -110,13 +113,25 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.primary.main,
 }));
 
-interface IMilestoneCardProps {
+const StyledDragIcon = styled(IconButton)(({ theme }) => ({
+    padding: 0,
+    cursor: 'grab',
+    transition: 'color 0.2s ease-in-out',
+    marginRight: theme.spacing(1),
+    '& > svg': {
+        color: 'action.active',
+    },
+}));
+
+export interface IMilestoneCardProps {
     milestone: IReleasePlanMilestonePayload;
     milestoneChanged: (milestone: IReleasePlanMilestonePayload) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
     removable: boolean;
     onDeleteMilestone: () => void;
+    index: number;
+    onMoveItem: OnMoveItem;
 }
 
 export const MilestoneCard = ({
@@ -126,6 +141,8 @@ export const MilestoneCard = ({
     clearErrors,
     removable,
     onDeleteMilestone,
+    index,
+    onMoveItem,
 }: IMilestoneCardProps) => {
     const [anchor, setAnchor] = useState<Element>();
     const [dragItem, setDragItem] = useState<{
@@ -140,6 +157,20 @@ export const MilestoneCard = ({
     const popoverId = isPopoverOpen
         ? 'MilestoneStrategyMenuPopover'
         : undefined;
+
+    const dragHandleRef = useRef(null);
+
+    const dragItemRef = useDragItem<HTMLTableRowElement>(
+        index,
+        onMoveItem,
+        dragHandleRef,
+    );
+
+    const dragHandle = (
+        <StyledDragIcon ref={dragHandleRef} disableRipple size='small'>
+            <DragIndicator titleAccess='Drag to reorder' />
+        </StyledDragIcon>
+    );
 
     const onClose = () => {
         setAnchor(undefined);
@@ -217,7 +248,7 @@ export const MilestoneCard = ({
         setAddUpdateStrategyOpen(true);
     };
 
-    const onDragOver =
+    const onStrategyDragOver =
         (targetId: string) =>
         (
             ref: RefObject<HTMLDivElement>,
@@ -253,7 +284,7 @@ export const MilestoneCard = ({
             }
         };
 
-    const onDragStartRef =
+    const onStrategyDragStartRef =
         (
             ref: RefObject<HTMLDivElement>,
             index: number,
@@ -275,7 +306,7 @@ export const MilestoneCard = ({
                 event.dataTransfer.setDragImage(ref.current, 20, 20);
             }
         };
-    const onDragEnd = () => {
+    const onStrategyDragEnd = () => {
         setDragItem(null);
         onReOrderStrategies();
     };
@@ -313,10 +344,12 @@ export const MilestoneCard = ({
                         Boolean(errors?.[milestone.id]) ||
                         Boolean(errors?.[`${milestone.id}_name`])
                     }
+                    ref={dragItemRef}
                 >
                     <StyledMilestoneCardBody>
                         <Grid container>
                             <StyledGridItem item xs={6} md={6}>
+                                {dragHandle}
                                 <MilestoneCardName
                                     milestone={milestone}
                                     errors={errors}
@@ -368,6 +401,10 @@ export const MilestoneCard = ({
                     </StyledMilestoneCardBody>
                 </StyledMilestoneCard>
 
+                <FormHelperText error={Boolean(errors?.[milestone.id])}>
+                    {errors?.[milestone.id]}
+                </FormHelperText>
+
                 <SidebarModal
                     label='Add strategy to template milestone'
                     onClose={() => {
@@ -398,7 +435,9 @@ export const MilestoneCard = ({
             >
                 <StyledAccordionSummary
                     expandIcon={<ExpandMore titleAccess='Toggle' />}
+                    ref={dragItemRef}
                 >
+                    {dragHandle}
                     <MilestoneCardName
                         milestone={milestone}
                         errors={errors}
@@ -411,9 +450,9 @@ export const MilestoneCard = ({
                         <div key={strg.id}>
                             <MilestoneStrategyDraggableItem
                                 index={index}
-                                onDragEnd={onDragEnd}
-                                onDragStartRef={onDragStartRef}
-                                onDragOver={onDragOver(strg.id)}
+                                onDragEnd={onStrategyDragEnd}
+                                onDragStartRef={onStrategyDragStartRef}
+                                onDragOver={onStrategyDragOver(strg.id)}
                                 onDeleteClick={() =>
                                     milestoneStrategyDeleted(strg.id)
                                 }
@@ -462,6 +501,10 @@ export const MilestoneCard = ({
                     </StyledAccordionFooter>
                 </StyledAccordionDetails>
             </StyledAccordion>
+
+            <FormHelperText error={Boolean(errors?.[milestone.id])}>
+                {errors?.[milestone.id]}
+            </FormHelperText>
 
             <SidebarModal
                 label='Add strategy to template milestone'

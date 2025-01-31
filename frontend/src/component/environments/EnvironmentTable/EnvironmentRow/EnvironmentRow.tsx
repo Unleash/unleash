@@ -1,4 +1,4 @@
-import { type MoveListItem, useDragItem } from 'hooks/useDragItem';
+import { type OnMoveItem, useDragItem } from 'hooks/useDragItem';
 import type { Row } from 'react-table';
 import { styled, TableRow } from '@mui/material';
 import { TableCell } from 'component/common/Table';
@@ -18,10 +18,10 @@ const StyledTableRow = styled(TableRow)(() => ({
 
 interface IEnvironmentRowProps {
     row: Row;
-    moveListItem: MoveListItem;
+    onMoveItem: OnMoveItem;
 }
 
-export const EnvironmentRow = ({ row, moveListItem }: IEnvironmentRowProps) => {
+export const EnvironmentRow = ({ row, onMoveItem }: IEnvironmentRowProps) => {
     const { hasAccess } = useContext(AccessContext);
     const dragHandleRef = useRef(null);
     const { searchQuery } = useSearchHighlightContext();
@@ -29,15 +29,17 @@ export const EnvironmentRow = ({ row, moveListItem }: IEnvironmentRowProps) => {
 
     const dragItemRef = useDragItem<HTMLTableRowElement>(
         row.index,
-        moveListItem,
+        onMoveItem,
         dragHandleRef,
     );
 
     const renderCell = (cell: any, ref: ForwardedRef<HTMLElement>) => {
+        const { key, ...cellProps } = cell.getCellProps();
         if (draggable && cell.column.isDragHandle) {
             return (
                 <TableCell
-                    {...cell.getCellProps()}
+                    key={key}
+                    {...cellProps}
                     ref={ref}
                     className='drag-handle'
                 >
@@ -46,7 +48,7 @@ export const EnvironmentRow = ({ row, moveListItem }: IEnvironmentRowProps) => {
             );
         } else {
             return (
-                <TableCell {...cell.getCellProps()}>
+                <TableCell key={key} {...cellProps}>
                     {cell.render('Cell')}
                 </TableCell>
             );

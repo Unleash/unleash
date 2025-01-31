@@ -172,7 +172,9 @@ const toMonthlyChartData = (
     );
 
     const labels = Array.from({ length: numMonths }).map((_, index) =>
-        formatMonth(addMonths(from, index)),
+        index === numMonths - 1
+            ? 'Current month'
+            : formatMonth(addMonths(from, index)),
     );
 
     return { datasets, labels };

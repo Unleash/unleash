@@ -205,7 +205,11 @@ const NewNetworkTrafficUsage: FC = () => {
                         },
                     );
                 } else {
-                    return new Date(tooltipItems[0].label).toLocaleDateString(
+                    const timestamp = Date.parse(tooltipItems[0].label);
+                    if (Number.isNaN(timestamp)) {
+                        return 'Current month to date';
+                    }
+                    return new Date(timestamp).toLocaleDateString(
                         locationSettings?.locale ?? 'en-US',
                         {
                             month: 'long',

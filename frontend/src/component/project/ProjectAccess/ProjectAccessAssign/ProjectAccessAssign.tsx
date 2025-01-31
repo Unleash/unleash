@@ -414,34 +414,37 @@ export const ProjectAccessAssign = ({
                                     }
                                 }}
                                 filterOptions={(options, { inputValue }) =>
-                                    options.filter((option: IAccessOption) => {
-                                        if (
-                                            option.type === ENTITY_TYPE.USER ||
-                                            option.type ===
-                                                ENTITY_TYPE.SERVICE_ACCOUNT
-                                        ) {
-                                            const optionUser =
-                                                option.entity as IUser;
-                                            return (
-                                                caseInsensitiveSearch(
-                                                    inputValue,
-                                                    optionUser.email,
-                                                ) ||
-                                                caseInsensitiveSearch(
-                                                    inputValue,
-                                                    optionUser.name,
-                                                ) ||
-                                                caseInsensitiveSearch(
-                                                    inputValue,
-                                                    optionUser.username,
-                                                )
+                                    options
+                                        .filter((option: IAccessOption) => {
+                                            if (
+                                                option.type ===
+                                                    ENTITY_TYPE.USER ||
+                                                option.type ===
+                                                    ENTITY_TYPE.SERVICE_ACCOUNT
+                                            ) {
+                                                const optionUser =
+                                                    option.entity as IUser;
+                                                return (
+                                                    caseInsensitiveSearch(
+                                                        inputValue,
+                                                        optionUser.email,
+                                                    ) ||
+                                                    caseInsensitiveSearch(
+                                                        inputValue,
+                                                        optionUser.name,
+                                                    ) ||
+                                                    caseInsensitiveSearch(
+                                                        inputValue,
+                                                        optionUser.username,
+                                                    )
+                                                );
+                                            }
+                                            return caseInsensitiveSearch(
+                                                inputValue,
+                                                option.entity.name,
                                             );
-                                        }
-                                        return caseInsensitiveSearch(
-                                            inputValue,
-                                            option.entity.name,
-                                        );
-                                    })
+                                        })
+                                        .slice(0, 100)
                                 }
                                 isOptionEqualToValue={(option, value) =>
                                     option.type === value.type &&

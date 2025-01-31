@@ -46,6 +46,7 @@
     "@mui/material": "5.15.3",
     "@mui/x-date-pickers": "^7.0.0",
     "@tanstack/react-table": "^8.10.7",
+    "@tanstack/react-virtual": "^3.11.3",
     "@testing-library/dom": "10.4.0",
     "@testing-library/jest-dom": "6.6.3",
     "@testing-library/react": "16.1.0",

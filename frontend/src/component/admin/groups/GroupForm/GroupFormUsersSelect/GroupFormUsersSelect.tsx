@@ -1,4 +1,4 @@
-import { Autocomplete, Checkbox, styled, TextField } from '@mui/material';
+import { Checkbox, styled, TextField } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import type { IUser } from 'interfaces/user';
@@ -9,6 +9,7 @@ import { UG_USERS_ID } from 'utils/testIds';
 import { caseInsensitiveSearch } from 'utils/search';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import type { IServiceAccount } from 'interfaces/service-account';
+import AutocompleteVirtual from './AutcompleteVirtual';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -101,7 +102,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
 
     return (
         <StyledGroupFormUsersSelect>
-            <Autocomplete
+            <AutocompleteVirtual
                 data-testid={UG_USERS_ID}
                 size='small'
                 multiple
@@ -119,7 +120,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                     }
                     setUsers(newValue);
                 }}
-                groupBy={(option) => option.type}
+                // groupBy={(option) => option.type}
                 options={options}
                 renderOption={(props, option, { selected }) =>
                     renderOption(props, option as UserOption, selected)
@@ -132,7 +133,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                                 caseInsensitiveSearch(inputValue, name) ||
                                 caseInsensitiveSearch(inputValue, username),
                         )
-                        .slice(0, 100)
+                        .slice(0, 10000)
                 }
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(option: UserOption) =>

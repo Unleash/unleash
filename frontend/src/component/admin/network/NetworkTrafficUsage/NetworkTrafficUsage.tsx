@@ -274,6 +274,15 @@ const NewNetworkTrafficUsage: FC = () => {
         .map((info) => info.label.toLowerCase())
         .toReversed();
     const requestTypes = `${otherLabels.toReversed().join(', ')}, and ${lastLabel}`;
+    const chartLabel =
+        newPeriod.grouping === 'daily'
+            ? `A bar chart showing daily traffic usage for ${new Date(
+                  newPeriod.month,
+              ).toLocaleDateString('en-US', {
+                  month: 'long',
+                  year: 'numeric',
+              })}. Each date shows ${requestTypes} requests.`
+            : `A bar chart showing monthly total traffic usage for the current month and the preceding ${newPeriod.monthsBack} months. Each month shows ${requestTypes} requests.`;
 
     return (
         <ConditionallyRender
@@ -346,16 +355,7 @@ const NewNetworkTrafficUsage: FC = () => {
                             data={data}
                             plugins={[customHighlightPlugin()]}
                             options={options}
-                            aria-label={
-                                newPeriod.grouping === 'daily'
-                                    ? `A bar chart showing daily traffic usage for ${new Date(
-                                          newPeriod.month,
-                                      ).toLocaleDateString('en-US', {
-                                          month: 'long',
-                                          year: 'numeric',
-                                      })}. Each date shows ${requestTypes} requests.`
-                                    : `A bar chart showing monthly total traffic usage for the current month and the preceding ${newPeriod.monthsBack} months. Each month shows ${requestTypes} requests.`
-                            }
+                            aria-label={chartLabel}
                         />
                     </StyledBox>
                 </>

@@ -164,6 +164,10 @@ const TrafficInfoBoxes = styled('div')(({ theme }) => ({
     gap: theme.spacing(2, 4),
 }));
 
+const BoldText = styled('span')(({ theme }) => ({
+    fontWeight: 'bold',
+}));
+
 const NewNetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
@@ -278,13 +282,14 @@ const NewNetworkTrafficUsage: FC = () => {
             elseShow={
                 <>
                     <ConditionallyRender
-                        condition={true}
+                        condition={includedTraffic > 0 && overageCost > 0}
                         show={
                             // todo: we the text here should be modified based on the selection.
                             <Alert severity='warning' sx={{ mb: 4 }}>
-                                <b>Heads up!</b> You are currently consuming
-                                more requests than your plan includes and will
-                                be billed according to our terms. Please see{' '}
+                                <BoldText>Heads up!</BoldText> You are currently
+                                consuming more requests than your plan includes
+                                and will be billed according to our terms.
+                                Please see{' '}
                                 <Link
                                     component={RouterLink}
                                     to='https://www.getunleash.io/pricing'

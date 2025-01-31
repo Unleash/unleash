@@ -125,12 +125,14 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                     renderOption(props, option as UserOption, selected)
                 }
                 filterOptions={(options, { inputValue }) =>
-                    options.filter(
-                        ({ name, username, email }) =>
-                            caseInsensitiveSearch(inputValue, email) ||
-                            caseInsensitiveSearch(inputValue, name) ||
-                            caseInsensitiveSearch(inputValue, username),
-                    )
+                    options
+                        .filter(
+                            ({ name, username, email }) =>
+                                caseInsensitiveSearch(inputValue, email) ||
+                                caseInsensitiveSearch(inputValue, name) ||
+                                caseInsensitiveSearch(inputValue, username),
+                        )
+                        .slice(0, 100)
                 }
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(option: UserOption) =>

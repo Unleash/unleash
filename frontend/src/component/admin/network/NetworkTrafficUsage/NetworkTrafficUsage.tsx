@@ -158,14 +158,10 @@ const NewHeader = styled('div')(({ theme }) => ({
 }));
 
 const TrafficInfoBoxes = styled('div')(({ theme }) => ({
-    // display: 'flex',
-    // flexFlow: 'row wrap',
-    // justifyItems:
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(450px, max-content))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, max-content))',
     flex: 1,
 
-    // width: 'min-content',
     gap: theme.spacing(2, 4),
 }));
 

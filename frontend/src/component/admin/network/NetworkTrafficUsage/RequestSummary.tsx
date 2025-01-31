@@ -13,7 +13,9 @@ type Props = {
 
 const Container = styled('article')(({ theme }) => ({
     // flex: 'auto',
-    minWidth: 'min-content',
+    minWidth: '200px',
+    // width: 'max-content',
+    // flexGrow: 1,
     border: `2px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
@@ -25,7 +27,6 @@ const Container = styled('article')(({ theme }) => ({
 const Header = styled('h3')(({ theme }) => ({
     margin: 0,
     fontSize: theme.typography.body1.fontSize,
-    whiteSpace: 'nowrap',
 }));
 
 const List = styled('dl')(({ theme }) => ({
@@ -39,12 +40,11 @@ const List = styled('dl')(({ theme }) => ({
 const Row = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
-    // flexFlow: 'row ',
     justifyContent: 'space-between',
     gap: theme.spacing(1, 3),
     fontSize: theme.typography.body2.fontSize,
     color: theme.palette.text.secondary,
-    whiteSpace: 'nowrap',
+    // whiteSpace: 'nowrap',
 
     '& dd': {
         margin: 0,

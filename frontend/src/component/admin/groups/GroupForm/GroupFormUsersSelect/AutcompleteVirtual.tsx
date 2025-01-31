@@ -3,6 +3,7 @@ import {
     type HTMLAttributes,
     type ReactElement,
     type ReactNode,
+    cloneElement,
     forwardRef,
     useRef,
 } from 'react';
@@ -62,17 +63,13 @@ const ListboxComponent = forwardRef<
                             padding: 0,
                         };
 
-                        return (
-                            <li
-                                {...dataSet[0]}
-                                ref={rowVirtualizer.measureElement}
-                                key={virtualRow.key}
-                                data-index={virtualRow.index}
-                                style={inlineStyle}
-                            >
-                                {dataSet[1]}
-                            </li>
-                        );
+                        return cloneElement(dataSet[1], {
+                            ...dataSet[0],
+                            ref: rowVirtualizer.measureElement,
+                            key: virtualRow.key,
+                            'data-index': virtualRow.index,
+                            style: inlineStyle,
+                        });
                     })}
                 </ul>
             </div>
@@ -110,8 +107,8 @@ function AutocompleteVirtual<T>(props: TProps<T>) {
 
     return (
         <Autocomplete
-            // open
             {...restAutocompleteProps}
+            // open
             className={`autocomplete__virtual ${className || ''}`}
             autoHighlight
             disableListWrap

@@ -320,7 +320,7 @@ const NewNetworkTrafficUsage: FC = () => {
                                                   traffic.usage,
                                               )
                                     }
-                                    includedTraffic={50}
+                                    includedTraffic={includedTraffic}
                                 />
                                 {newPeriod.grouping === 'daily' &&
                                     includedTraffic > 0 &&

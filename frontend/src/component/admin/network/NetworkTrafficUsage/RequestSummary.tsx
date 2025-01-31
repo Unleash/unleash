@@ -144,10 +144,9 @@ export const OverageInfo: FC<OverageProps> = ({
                         <Badge color='secondary'>{overageCost} USD</Badge>
                     </dd>
                 </Row>
-                {true && (
+                {estimatedMonthlyCost > 0 && (
                     <Row>
                         <dt>Estimated charges based on current usage</dt>
-
                         <dd>
                             <Badge color='secondary'>
                                 {estimatedMonthlyCost} USD

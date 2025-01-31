@@ -33,12 +33,14 @@ const StyledGroupFormUsersSelect = styled('div')(({ theme }) => ({
     },
 }));
 
+const StrechedLi = styled('li')({ width: '100%' });
+
 const renderOption = (
     props: React.HTMLAttributes<HTMLLIElement>,
     option: IUser,
     selected: boolean,
 ) => (
-    <li {...props}>
+    <StrechedLi {...props}>
         <Checkbox
             icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
             checkedIcon={<CheckBoxIcon fontSize='small' />}
@@ -53,7 +55,7 @@ const renderOption = (
                     : option.email}
             </span>
         </StyledOption>
-    </li>
+    </StrechedLi>
 );
 
 const renderTags = (value: IGroupUser[]) => (

@@ -59,6 +59,7 @@ const ListboxComponent = forwardRef<
                             left: 0,
                             width: '100%',
                             top: `${virtualRow.start}px`,
+                            padding: 0,
                         };
 
                         return (

@@ -12,10 +12,7 @@ type Props = {
 };
 
 const Container = styled('article')(({ theme }) => ({
-    // flex: 'auto',
     minWidth: '200px',
-    // width: 'max-content',
-    // flexGrow: 1,
     border: `2px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusLarge,
     padding: theme.spacing(3),
@@ -44,7 +41,6 @@ const Row = styled('div')(({ theme }) => ({
     gap: theme.spacing(1, 3),
     fontSize: theme.typography.body2.fontSize,
     color: theme.palette.text.secondary,
-    // whiteSpace: 'nowrap',
 
     '& dd': {
         margin: 0,

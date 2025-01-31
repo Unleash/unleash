@@ -40,10 +40,10 @@ import { BILLING_TRAFFIC_BUNDLE_PRICE } from 'component/admin/billing/BillingDas
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { PeriodSelector } from './PeriodSelector';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { differenceInCalendarMonths, format } from 'date-fns';
+import { format } from 'date-fns';
 import { monthlyTrafficDataToCurrentUsage } from './monthly-traffic-data-to-current-usage';
 import { OverageInfo, RequestSummary } from './RequestSummary';
-import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
+import { averageTrafficPreviousMonths } from './average-traffic-previous-months';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -161,41 +161,8 @@ const TrafficInfoBoxes = styled('div')(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(200px, max-content))',
     flex: 1,
-
     gap: theme.spacing(2, 4),
 }));
-
-const averageTrafficPreviousMonths = (
-    endpointData: string[],
-    traffic: TrafficUsageDataSegmentedCombinedSchema,
-) => {
-    if (!traffic || traffic.grouping === 'daily') {
-        return 0;
-    }
-
-    const monthsToCount = Math.abs(
-        differenceInCalendarMonths(
-            new Date(traffic.dateRange.to),
-            new Date(traffic.dateRange.from),
-        ),
-    );
-
-    const currentMonth = format(new Date(), 'yyyy-MM');
-
-    const totalTraffic = traffic.apiData
-        .filter((endpoint) => endpointData.includes(endpoint.apiPath))
-        .map((endpoint) =>
-            endpoint.dataPoints
-                .filter(({ period }) => period !== currentMonth)
-                .reduce(
-                    (acc, current) => acc + current.trafficTypes[0].count,
-                    0,
-                ),
-        )
-        .reduce((total, next) => total + next, 0);
-
-    return Math.round(totalTraffic / monthsToCount);
-};
 
 const NewNetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Data Usage');

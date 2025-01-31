@@ -290,7 +290,6 @@ const NewNetworkTrafficUsage: FC = () => {
                             overageCost > 0
                         }
                         show={
-                            // todo: we the text here should be modified based on the selection.
                             <Alert severity='warning' sx={{ mb: 4 }}>
                                 <BoldText>Heads up!</BoldText> You are currently
                                 consuming more requests than your plan includes
@@ -310,13 +309,6 @@ const NewNetworkTrafficUsage: FC = () => {
                     />
                     <StyledBox>
                         <NewHeader>
-                            {/* <NetworkTrafficUsagePlanSummary
-                                usageTotal={usageTotal}
-                                includedTraffic={includedTraffic}
-                                overageCost={overageCost}
-                                estimatedMonthlyCost={estimatedMonthlyCost}
-                            /> */}
-
                             <TrafficInfoBoxes>
                                 <RequestSummary
                                     period={newPeriod}

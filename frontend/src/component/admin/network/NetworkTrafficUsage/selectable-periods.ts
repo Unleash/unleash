@@ -1,5 +1,5 @@
 import { getDaysInMonth, subMonths } from 'date-fns';
-import { currentDate, formatMonth } from './date-utils';
+import { currentDate, formatMonth } from './dates';
 
 export type Period = {
     key: string;

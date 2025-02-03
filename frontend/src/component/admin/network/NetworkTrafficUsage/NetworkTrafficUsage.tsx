@@ -28,10 +28,7 @@ import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import {
-    type ChartDatasetType,
-    useTrafficDataEstimation,
-} from 'hooks/useTrafficData';
+import { useTrafficDataEstimation } from 'hooks/useTrafficData';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { formatTickValue } from 'component/common/Chart/formatTickValue';
 import { useTrafficLimit } from './hooks/useTrafficLimit';
@@ -50,6 +47,7 @@ import { currentDate, currentMonth } from './dates';
 import { endpointsInfo } from './endpoint-info';
 import { type ChartDataSelection, toDateRange } from './chart-data-selection';
 import {
+    type ChartDatasetType,
     getChartLabel,
     toChartData as newToChartData,
 } from './chart-functions';

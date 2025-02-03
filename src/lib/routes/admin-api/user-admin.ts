@@ -441,6 +441,26 @@ export default class UserAdminController extends Controller {
                 }),
             ],
         });
+
+        //add a method to delete all scim users
+        this.route({
+            method: 'delete',
+            path: '/scim-users',
+            handler: this.deleteScimUsers,
+            permission: ADMIN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Users'],
+                    operationId: 'deleteScimUsers',
+                    summary: 'Delete all SCIM users',
+                    description: 'Deletes all users managed by SCIM',
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403),
+                    },
+                }),
+            ],
+        });
     }
 
     async resetUserPassword(
@@ -765,5 +785,11 @@ export default class UserAdminController extends Controller {
             Boolean(scimId) ||
             Boolean((await this.userService.getUser(id)).scimId)
         );
+    }
+
+    async deleteScimUsers(req: IAuthRequest, res: Response): Promise<void> {
+        const { audit } = req;
+        await this.userService.deleteScimUsers(audit);
+        res.status(200).send();
     }
 }

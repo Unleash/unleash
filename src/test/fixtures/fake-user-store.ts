@@ -159,6 +159,10 @@ class UserStoreMock implements IUserStore {
         return Promise.resolve(undefined);
     }
 
+    deleteScimUsers(): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
+
     upsert(user: ICreateUser): Promise<IUser> {
         this.data.splice(this.data.findIndex((u) => u.email === user.email));
         const userToReturn = {

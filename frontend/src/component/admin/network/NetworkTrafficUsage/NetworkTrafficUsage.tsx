@@ -45,11 +45,14 @@ import {
     calculateTotalUsage,
     calculateOverageCost,
     calculateEstimatedMonthlyCost,
-} from './util';
-import { currentDate, currentMonth } from './date-utils';
+} from './traffic-calculations';
+import { currentDate, currentMonth } from './dates';
 import { endpointsInfo } from './endpoint-info';
 import { type ChartDataSelection, toDateRange } from './chart-data-selection';
-import { getChartLabel, toChartData as newToChartData } from './chart-utils';
+import {
+    getChartLabel,
+    toChartData as newToChartData,
+} from './chart-functions';
 import { periodsRecord, selectablePeriods } from './selectable-periods';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -185,10 +188,11 @@ const NewNetworkTrafficUsage: FC = () => {
 
     const { locationSettings } = useLocationSettings();
 
-    const [newPeriod, setNewPeriod] = useState<ChartDataSelection>({
-        grouping: 'daily',
-        month: selectablePeriods[0].key,
-    });
+    const [chartDataSelection, setChartDataSelection] =
+        useState<ChartDataSelection>({
+            grouping: 'daily',
+            month: selectablePeriods[0].key,
+        });
 
     const includedTraffic = useTrafficLimit();
 
@@ -196,8 +200,8 @@ const NewNetworkTrafficUsage: FC = () => {
         return createBarChartOptions(
             theme,
             (tooltipItems: any) => {
-                if (newPeriod.grouping === 'daily') {
-                    const periodItem = periodsRecord[newPeriod.month];
+                if (chartDataSelection.grouping === 'daily') {
+                    const periodItem = periodsRecord[chartDataSelection.month];
                     const tooltipDate = new Date(
                         periodItem.year,
                         periodItem.month,
@@ -227,11 +231,11 @@ const NewNetworkTrafficUsage: FC = () => {
             },
             includedTraffic,
         );
-    }, [theme, newPeriod]);
+    }, [theme, chartDataSelection]);
 
     const traffic = useInstanceTrafficMetrics2(
-        newPeriod.grouping,
-        toDateRange(newPeriod),
+        chartDataSelection.grouping,
+        toDateRange(chartDataSelection),
     );
 
     const data = newToChartData(traffic.usage);
@@ -243,7 +247,9 @@ const NewNetworkTrafficUsage: FC = () => {
     );
 
     const estimatedMonthlyCost = calculateEstimatedMonthlyCost(
-        newPeriod.grouping === 'daily' ? newPeriod.month : currentMonth,
+        chartDataSelection.grouping === 'daily'
+            ? chartDataSelection.month
+            : currentMonth,
         data.datasets,
         includedTraffic,
         currentDate,
@@ -251,14 +257,14 @@ const NewNetworkTrafficUsage: FC = () => {
     );
 
     const showOverageInfo =
-        newPeriod.grouping === 'daily' &&
+        chartDataSelection.grouping === 'daily' &&
         includedTraffic > 0 &&
         usageTotal - includedTraffic > 0 &&
         estimateTrafficDataCost;
 
     const showOverageWarning =
-        (newPeriod.grouping === 'monthly' ||
-            newPeriod.month === currentMonth) &&
+        (chartDataSelection.grouping === 'monthly' ||
+            chartDataSelection.month === currentMonth) &&
         includedTraffic > 0 &&
         overageCost > 0;
 
@@ -292,9 +298,9 @@ const NewNetworkTrafficUsage: FC = () => {
                         <TopRow>
                             <TrafficInfoBoxes>
                                 <RequestSummary
-                                    period={newPeriod}
+                                    period={chartDataSelection}
                                     usageTotal={
-                                        newPeriod.grouping === 'daily'
+                                        chartDataSelection.grouping === 'daily'
                                             ? usageTotal
                                             : averageTrafficPreviousMonths(
                                                   Object.keys(endpointsInfo),
@@ -314,15 +320,15 @@ const NewNetworkTrafficUsage: FC = () => {
                                 )}
                             </TrafficInfoBoxes>
                             <PeriodSelector
-                                selectedPeriod={newPeriod}
-                                setPeriod={setNewPeriod}
+                                selectedPeriod={chartDataSelection}
+                                setPeriod={setChartDataSelection}
                             />
                         </TopRow>
                         <Bar
                             data={data}
                             plugins={[customHighlightPlugin()]}
                             options={options}
-                            aria-label={getChartLabel(newPeriod)}
+                            aria-label={getChartLabel(chartDataSelection)}
                         />
                     </StyledBox>
                 </>

@@ -49,8 +49,13 @@ import {
 } from './util';
 import { currentDate, currentMonth } from './date-utils';
 import { endpointsInfo } from './endpoint-info';
-import { toDateRange } from './chart-data-selection';
-import { getChartLabel, newToChartData } from './chart-utils';
+import { type ChartDataSelection, toDateRange } from './chart-data-selection';
+import {
+    getChartLabel,
+    newToChartData,
+    periodsRecord,
+    selectablePeriods,
+} from './chart-utils';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -184,7 +189,11 @@ const NewNetworkTrafficUsage: FC = () => {
     const { isOss } = useUiConfig();
 
     const { locationSettings } = useLocationSettings();
-    const { record, newPeriod, setNewPeriod } = useTrafficDataEstimation();
+
+    const [newPeriod, setNewPeriod] = useState<ChartDataSelection>({
+        grouping: 'daily',
+        month: selectablePeriods[0].key,
+    });
 
     const includedTraffic = useTrafficLimit();
 
@@ -193,7 +202,7 @@ const NewNetworkTrafficUsage: FC = () => {
             theme,
             (tooltipItems: any) => {
                 if (newPeriod.grouping === 'daily') {
-                    const periodItem = record[newPeriod.month];
+                    const periodItem = periodsRecord[newPeriod.month];
                     const tooltipDate = new Date(
                         periodItem.year,
                         periodItem.month,
@@ -223,7 +232,7 @@ const NewNetworkTrafficUsage: FC = () => {
             },
             includedTraffic,
         );
-    }, [theme, newPeriod, record]);
+    }, [theme, newPeriod]);
 
     const traffic = useInstanceTrafficMetrics2(
         newPeriod.grouping,

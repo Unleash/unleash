@@ -1,6 +1,5 @@
 import type { IInstanceTrafficMetricsResponse } from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { ChartDataset } from 'chart.js';
-import type { ChartDataSelection } from 'component/admin/network/NetworkTrafficUsage/chart-data-selection';
 import { useState } from 'react';
 
 // todo: remove with flag dataUsageMultiMonthView in favor of frontend/src/component/admin/network/NetworkTrafficUsage/endpoint-info.ts
@@ -239,19 +238,11 @@ export const useTrafficDataEstimation = () => {
     const record = toPeriodsRecord(selectablePeriods);
     const [period, setPeriod] = useState<string>(selectablePeriods[0].key);
 
-    // todo this should probably go into the component itself
-    const [newPeriod, setNewPeriod] = useState<ChartDataSelection>({
-        grouping: 'daily',
-        month: selectablePeriods[0].key,
-    });
-
     return {
         calculateTrafficDataCost,
         record,
         period,
         setPeriod,
-        newPeriod,
-        setNewPeriod,
         selectablePeriods,
         getDayLabels,
         currentPeriod,

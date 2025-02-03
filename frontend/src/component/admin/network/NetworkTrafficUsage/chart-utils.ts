@@ -7,10 +7,62 @@ import {
     addMonths,
     differenceInCalendarDays,
     differenceInCalendarMonths,
+    getDaysInMonth,
+    subMonths,
 } from 'date-fns';
-import { formatDay, formatMonth } from './date-utils';
+import { currentDate, formatDay, formatMonth } from './date-utils';
 import type { ChartDataSelection } from './chart-data-selection';
 export type ChartDatasetType = ChartDataset<'bar'>;
+
+export type Period = {
+    key: string;
+    dayCount: number;
+    label: string;
+    year: number;
+    month: number;
+    selectable: boolean;
+    shortLabel: string;
+};
+
+export const toSelectablePeriod = (
+    date: Date,
+    label?: string,
+    selectable = true,
+): Period => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const period = formatMonth(date);
+    const dayCount = getDaysInMonth(date);
+    return {
+        key: period,
+        year,
+        month,
+        dayCount,
+        shortLabel: date.toLocaleString('en-US', {
+            month: 'short',
+        }),
+        label:
+            label ||
+            date.toLocaleString('en-US', { month: 'long', year: 'numeric' }),
+        selectable,
+    };
+};
+
+const currentPeriod = toSelectablePeriod(currentDate, 'Current month');
+export const selectablePeriods = [currentPeriod];
+for (
+    let subtractMonthCount = 1;
+    subtractMonthCount < 12;
+    subtractMonthCount++
+) {
+    const date = subMonths(currentDate, subtractMonthCount);
+    selectablePeriods.push(
+        toSelectablePeriod(date, undefined, date >= new Date('2024-05-01')),
+    );
+}
+export const periodsRecord = Object.fromEntries(
+    selectablePeriods.map((period) => [period.key, period]),
+);
 
 export const newToChartData = (
     traffic?: TrafficUsageDataSegmentedCombinedSchema,

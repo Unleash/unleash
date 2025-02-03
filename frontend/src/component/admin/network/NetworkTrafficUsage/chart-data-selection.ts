@@ -10,6 +10,7 @@ export type ChartDataSelection =
           monthsBack: number;
       };
 
+// todo: write test
 export const toDateRange = (
     selection: ChartDataSelection,
 ): { from: string; to: string } => {

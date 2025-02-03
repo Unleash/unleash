@@ -49,12 +49,8 @@ import {
 import { currentDate, currentMonth } from './date-utils';
 import { endpointsInfo } from './endpoint-info';
 import { type ChartDataSelection, toDateRange } from './chart-data-selection';
-import {
-    getChartLabel,
-    newToChartData,
-    periodsRecord,
-    selectablePeriods,
-} from './chart-utils';
+import { getChartLabel, newToChartData } from './chart-utils';
+import { periodsRecord, selectablePeriods } from './selectable-periods';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',

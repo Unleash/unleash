@@ -1,10 +1,10 @@
 import { getDaysInMonth } from 'date-fns';
-import { toSelectablePeriod } from './chart-utils';
 import {
     calculateEstimatedMonthlyCost,
     calculateOverageCost,
     calculateProjectedUsage,
 } from './util';
+import { toSelectablePeriod } from './selectable-periods';
 
 const testData4Days = [
     {

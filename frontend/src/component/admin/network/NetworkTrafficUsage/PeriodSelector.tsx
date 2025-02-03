@@ -4,7 +4,7 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { useRef, useState, type FC } from 'react';
 import { format } from 'date-fns';
 import type { ChartDataSelection } from './chart-data-selection';
-import { selectablePeriods } from './chart-utils';
+import { selectablePeriods } from './selectable-periods';
 
 const dropdownWidth = '15rem';
 const dropdownInlinePadding = (theme: Theme) => theme.spacing(3);

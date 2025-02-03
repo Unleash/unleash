@@ -1,8 +1,8 @@
 import { useVirtualizer } from '@tanstack/react-virtual';
 import {
+    Children,
     type HTMLAttributes,
     type ReactElement,
-    type ReactNode,
     cloneElement,
     forwardRef,
     useRef,
@@ -14,17 +14,11 @@ const ListboxComponent = forwardRef<
     HTMLAttributes<HTMLElement>
 >(function ListboxComponent(props, ref) {
     const { children, ...other } = props;
-
     const parentRef = useRef(null);
-
-    const itemData: ReactElement[] = [];
-
-    (children as ReactElement[]).forEach((item: ReactElement) => {
-        itemData.push(item);
-    });
+    const items = Children.toArray(children);
 
     const rowVirtualizer = useVirtualizer({
-        count: itemData.length ?? 0,
+        count: Children.count(children),
         getScrollElement: () => parentRef.current,
         estimateSize: () => 56,
         overscan: 3,
@@ -41,12 +35,9 @@ const ListboxComponent = forwardRef<
                     }}
                 >
                     {rowVirtualizer.getVirtualItems().map((virtualRow) => {
-                        const dataSet = itemData[virtualRow.index] as Record<
-                            string,
-                            any
-                        >;
+                        const element = items[virtualRow.index] as ReactElement;
 
-                        if (!dataSet) {
+                        if (!element) {
                             return null;
                         }
 
@@ -57,8 +48,7 @@ const ListboxComponent = forwardRef<
                             top: `${virtualRow.start}px`,
                         };
 
-                        return cloneElement(dataSet[1], {
-                            ...dataSet[0],
+                        return cloneElement(element, {
                             ref: rowVirtualizer.measureElement,
                             key: virtualRow.key,
                             'data-index': virtualRow.index,
@@ -79,13 +69,8 @@ type TProps<T, M extends boolean | undefined> = Omit<
 function AutocompleteVirtual<T, M extends boolean | undefined>(
     props: TProps<T, M>,
 ) {
-    const {
-        getOptionLabel,
-        renderOption,
-        className,
-        isLoading,
-        ...restAutocompleteProps
-    } = props;
+    const { getOptionLabel, className, isLoading, ...restAutocompleteProps } =
+        props;
 
     return (
         <Autocomplete
@@ -93,9 +78,6 @@ function AutocompleteVirtual<T, M extends boolean | undefined>(
             disableListWrap
             getOptionLabel={getOptionLabel}
             ListboxComponent={ListboxComponent}
-            renderOption={(...props) => {
-                return [props[0], renderOption(...props)] as ReactNode;
-            }}
         />
     );
 }

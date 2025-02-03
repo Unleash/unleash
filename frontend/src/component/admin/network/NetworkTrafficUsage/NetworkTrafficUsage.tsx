@@ -155,6 +155,7 @@ const NewHeader = styled('div')(({ theme }) => ({
     flexFlow: 'row wrap',
     justifyContent: 'space-between',
     gap: theme.spacing(2, 4),
+    alignItems: 'start',
 }));
 
 const TrafficInfoBoxes = styled('div')(({ theme }) => ({

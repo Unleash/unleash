@@ -1,9 +1,9 @@
 import { Link, styled } from '@mui/material';
 import { Badge } from 'component/common/Badge/Badge';
 import { subMonths } from 'date-fns';
-import type { ChartDataSelection } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { FC } from 'react';
+import type { ChartDataSelection } from './chart-data-selection';
 
 type Props = {
     period: ChartDataSelection;

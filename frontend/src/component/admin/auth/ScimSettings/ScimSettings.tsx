@@ -9,6 +9,8 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { useScimSettingsApi } from 'hooks/api/actions/useScimSettingsApi/useScimSettingsApi';
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
+import { ScimDeleteEntityDialog } from './ScimDeleteUsersDialog';
+import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -25,8 +27,11 @@ export const ScimSettings = () => {
     const { setToastData, setToastApiError } = useToast();
     const [newToken, setNewToken] = useState('');
     const [tokenGenerationDialog, setTokenGenerationDialog] = useState(false);
+    const [deleteGroupsDialog, setDeleteGroupsDialog] = useState(false);
+    const [deleteUsersDialog, setDeleteUsersDialog] = useState(false);
     const [tokenDialog, setTokenDialog] = useState(false);
     const { settings, refetch } = useScimSettings();
+    const { deleteScimUsers } = useAdminUsersApi();
     const [enabled, setEnabled] = useState(settings.enabled ?? true);
 
     useEffect(() => {
@@ -38,6 +43,24 @@ export const ScimSettings = () => {
 
     const onGenerateNewToken = async () => {
         setTokenGenerationDialog(true);
+    };
+
+    const onDeleteScimGroups = async () => {
+        setDeleteGroupsDialog(true);
+    };
+
+    const onDeleteScimUsers = async () => {
+        try {
+            await deleteScimUsers();
+            setToastData({
+                text: 'Scim Users have been deleted',
+                type: 'success',
+            });
+            setDeleteUsersDialog(false);
+            refetch();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
     const onGenerateNewTokenConfirm = async () => {
@@ -138,6 +161,55 @@ export const ScimSettings = () => {
                         />
                     </Grid>
                 </Grid>
+
+                <Grid container spacing={3}>
+                    <Grid item md={10.5} mb={2}>
+                        <StyledTitleDiv>
+                            <strong>Delete SCIM Users</strong>
+                        </StyledTitleDiv>
+                        <p>
+                            This will remove all SCIM users from the Unleash
+                            database. This action cannot be undone through
+                            Unleash but the upstream SCIM provider may re sync
+                            these users.
+                        </p>
+                    </Grid>
+                    <Grid item md={1.5}>
+                        <Button
+                            variant='outlined'
+                            color='error'
+                            disabled={loading}
+                            onClick={() => {
+                                setDeleteUsersDialog(true);
+                            }}
+                        >
+                            Delete Users
+                        </Button>
+                    </Grid>
+                    <Grid item md={10.5} mb={2}>
+                        <StyledTitleDiv>
+                            <strong>Clear SCIM Groups</strong>
+                        </StyledTitleDiv>
+                        <p>
+                            This will remove all SCIM groups from the Unleash
+                            database. This action cannot be undone through
+                            Unleash but the upstream SCIM provider may re sync
+                            these groups. Note that this may affect the
+                            permissions of users present in those groups.
+                        </p>
+                    </Grid>
+                    <Grid item md={1.5}>
+                        <Button
+                            variant='outlined'
+                            color='error'
+                            disabled={loading}
+                            onClick={onDeleteScimGroups}
+                        >
+                            Delete Groups
+                        </Button>
+                    </Grid>
+                </Grid>
+
                 <ScimTokenGenerationDialog
                     open={tokenGenerationDialog}
                     setOpen={setTokenGenerationDialog}
@@ -148,6 +220,20 @@ export const ScimSettings = () => {
                     setOpen={setTokenDialog}
                     token={newToken}
                 />
+
+                <ScimDeleteEntityDialog
+                    open={deleteUsersDialog}
+                    closeDialog={() => setDeleteUsersDialog(false)}
+                    deleteEntities={onDeleteScimUsers}
+                    entityType='Users'
+                ></ScimDeleteEntityDialog>
+
+                <ScimDeleteEntityDialog
+                    open={deleteGroupsDialog}
+                    closeDialog={() => setDeleteGroupsDialog(false)}
+                    deleteEntities={onDeleteScimGroups}
+                    entityType='Groups'
+                ></ScimDeleteEntityDialog>
             </StyledContainer>
         </>
     );

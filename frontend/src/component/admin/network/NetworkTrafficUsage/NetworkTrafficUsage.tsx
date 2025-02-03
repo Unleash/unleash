@@ -39,7 +39,6 @@ import { BILLING_TRAFFIC_BUNDLE_PRICE } from 'component/admin/billing/BillingDas
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { PeriodSelector } from './PeriodSelector';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { format } from 'date-fns';
 import { OverageInfo, RequestSummary } from './RequestSummary';
 import { averageTrafficPreviousMonths } from './average-traffic-previous-months';
 import {
@@ -254,6 +253,18 @@ const NewNetworkTrafficUsage: FC = () => {
         BILLING_TRAFFIC_BUNDLE_PRICE,
     );
 
+    const showOverageInfo =
+        newPeriod.grouping === 'daily' &&
+        includedTraffic > 0 &&
+        usageTotal - includedTraffic > 0 &&
+        estimateTrafficDataCost;
+
+    const showOverageWarning =
+        (newPeriod.grouping === 'monthly' ||
+            newPeriod.month === currentMonth) &&
+        includedTraffic > 0 &&
+        overageCost > 0;
+
     return (
         <ConditionallyRender
             condition={isOss()}
@@ -261,13 +272,7 @@ const NewNetworkTrafficUsage: FC = () => {
             elseShow={
                 <>
                     <ConditionallyRender
-                        condition={
-                            (newPeriod.grouping === 'monthly' ||
-                                newPeriod.month ===
-                                    format(new Date(), 'yyyy-MM')) &&
-                            includedTraffic > 0 &&
-                            overageCost > 0
-                        }
+                        condition={showOverageWarning}
                         show={
                             <Alert severity='warning' sx={{ mb: 4 }}>
                                 <BoldText>Heads up!</BoldText> You are currently
@@ -301,20 +306,15 @@ const NewNetworkTrafficUsage: FC = () => {
                                     }
                                     includedTraffic={includedTraffic}
                                 />
-                                {newPeriod.grouping === 'daily' &&
-                                    includedTraffic > 0 &&
-                                    usageTotal - includedTraffic > 0 &&
-                                    estimateTrafficDataCost && (
-                                        <OverageInfo
-                                            overageCost={overageCost}
-                                            overages={
-                                                usageTotal - includedTraffic
-                                            }
-                                            estimatedMonthlyCost={
-                                                estimatedMonthlyCost
-                                            }
-                                        />
-                                    )}
+                                {showOverageInfo && (
+                                    <OverageInfo
+                                        overageCost={overageCost}
+                                        overages={usageTotal - includedTraffic}
+                                        estimatedMonthlyCost={
+                                            estimatedMonthlyCost
+                                        }
+                                    />
+                                )}
                             </TrafficInfoBoxes>
                             <PeriodSelector
                                 selectedPeriod={newPeriod}

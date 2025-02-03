@@ -83,28 +83,30 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
     const { serviceAccounts, loading: isServiceAccountsLoading } =
         useServiceAccounts();
 
-    const options = [
-        ...usersAll
-            .map((user: IUser) => ({ ...user, type: 'USERS' }))
-            .sort((a: IUser, b: IUser) => {
-                const aName = a.name || a.username || '';
-                const bName = b.name || b.username || '';
-                return aName.localeCompare(bName);
-            }),
-        ...serviceAccounts
-            .map((serviceAccount: IServiceAccount) => ({
-                ...serviceAccount,
-                type: 'SERVICE ACCOUNTS',
-            }))
-            .sort((a, b) => {
-                const aName = a.name || a.username || '';
-                const bName = b.name || b.username || '';
-                return aName.localeCompare(bName);
-            }),
-    ];
+    const isLoading = isUsersLoading || isServiceAccountsLoading;
+    const options = isLoading
+        ? []
+        : [
+              ...usersAll
+                  .map((user: IUser) => ({ ...user, type: 'USERS' }))
+                  .sort((a: IUser, b: IUser) => {
+                      const aName = a.name || a.username || '';
+                      const bName = b.name || b.username || '';
+                      return aName.localeCompare(bName);
+                  }),
+              ...serviceAccounts
+                  .map((serviceAccount: IServiceAccount) => ({
+                      ...serviceAccount,
+                      type: 'SERVICE ACCOUNTS',
+                  }))
+                  .sort((a, b) => {
+                      const aName = a.name || a.username || '';
+                      const bName = b.name || b.username || '';
+                      return aName.localeCompare(bName);
+                  }),
+          ];
 
     const isLargeList = options.length > 100;
-    const isLoading = isUsersLoading || isServiceAccountsLoading;
 
     return (
         <StyledGroupFormUsersSelect>

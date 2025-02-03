@@ -9872,9 +9872,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tss-react@npm:4.9.14":
-  version: 4.9.14
-  resolution: "tss-react@npm:4.9.14"
+"tss-react@npm:4.9.15":
+  version: 4.9.15
+  resolution: "tss-react@npm:4.9.15"
   dependencies:
     "@emotion/cache": "npm:*"
     "@emotion/serialize": "npm:*"
@@ -9884,13 +9884,13 @@ __metadata:
     "@emotion/server": ^11.4.0
     "@mui/material": ^5.0.0 || ^6.0.0
     "@types/react": ^16.8.0 || ^17.0.2 || ^18.0.0 || ^19.0.0
-    react: ^16.8.0 || ^17.0.2 || ^18.0.0 || ^19.0.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   peerDependenciesMeta:
     "@emotion/server":
       optional: true
     "@mui/material":
       optional: true
-  checksum: 10c0/ff6abf7bccd1913c4155714802cf22a02f229c64207c6687d7d4d7ee1961f0120c2c342faf106e490c0c2d944c489e626f4e47f0ab48567aa37f79bb3564288b
+  checksum: 10c0/f11069b19ec276f34a26f5f4a987c53f7898a16dcb344b3102c977070ce1a378ae14fa8a84330b2554564206d15c781cd7d181df89fc1c5039ce84047f6c9f33
   languageName: node
   linkType: hard
 
@@ -10235,7 +10235,7 @@ __metadata:
     sass: "npm:1.83.4"
     semver: "npm:7.6.3"
     swr: "npm:2.2.5"
-    tss-react: "npm:4.9.14"
+    tss-react: "npm:4.9.15"
     typescript: "npm:5.4.5"
     use-query-params: "npm:^2.2.1"
     vanilla-jsoneditor: "npm:^0.23.0"

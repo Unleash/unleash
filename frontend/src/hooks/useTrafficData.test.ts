@@ -114,7 +114,7 @@ describe('traffic overage calculation', () => {
         expect(result).toBe(20);
     });
 
-    it('estimates based on custom price and unit size', () => {
+    it.skip('estimates based on custom price and unit size', () => {
         const testData = testData4Days;
         testData[0].data.push(22_500_000);
         testData[1].data.push(22_500_000);

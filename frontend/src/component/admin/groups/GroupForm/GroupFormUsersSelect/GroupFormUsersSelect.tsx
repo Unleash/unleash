@@ -40,7 +40,7 @@ const renderOption = (
     option: IUser,
     { selected }: { selected: boolean },
 ) => (
-    <StrechedLi {...props}>
+    <StrechedLi {...props} key={option.id}>
         <Checkbox
             icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
             checkedIcon={<CheckBoxIcon fontSize='small' />}

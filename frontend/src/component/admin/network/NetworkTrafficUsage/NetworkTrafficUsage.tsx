@@ -256,13 +256,13 @@ const NewNetworkTrafficUsage: FC = () => {
         BILLING_TRAFFIC_BUNDLE_PRICE,
     );
 
-    const showOverageInfo =
+    const showOverageCalculations =
         chartDataSelection.grouping === 'daily' &&
         includedTraffic > 0 &&
         usageTotal - includedTraffic > 0 &&
         estimateTrafficDataCost;
 
-    const showOverageWarning =
+    const showConsumptionBillingWarning =
         (chartDataSelection.grouping === 'monthly' ||
             chartDataSelection.month === currentMonth) &&
         includedTraffic > 0 &&
@@ -275,7 +275,7 @@ const NewNetworkTrafficUsage: FC = () => {
             elseShow={
                 <>
                     <ConditionallyRender
-                        condition={showOverageWarning}
+                        condition={showConsumptionBillingWarning}
                         show={
                             <Alert severity='warning' sx={{ mb: 4 }}>
                                 <BoldText>Heads up!</BoldText> You are currently
@@ -309,7 +309,7 @@ const NewNetworkTrafficUsage: FC = () => {
                                     }
                                     includedTraffic={includedTraffic}
                                 />
-                                {showOverageInfo && (
+                                {showOverageCalculations && (
                                     <OverageInfo
                                         overageCost={overageCost}
                                         overages={usageTotal - includedTraffic}

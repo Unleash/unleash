@@ -73,12 +73,15 @@ function AutocompleteVirtual<T, M extends boolean | undefined>(
         props;
 
     return (
-        <Autocomplete
-            {...restAutocompleteProps}
-            disableListWrap
-            getOptionLabel={getOptionLabel}
-            ListboxComponent={ListboxComponent}
-        />
+        <div aria-busy={isLoading} aria-live='polite'>
+            <Autocomplete
+                {...restAutocompleteProps}
+                disableListWrap
+                getOptionLabel={getOptionLabel}
+                ListboxComponent={ListboxComponent}
+                noOptionsText={isLoading ? 'Loading…' : 'No options'}
+            />
+        </div>
     );
 }
 

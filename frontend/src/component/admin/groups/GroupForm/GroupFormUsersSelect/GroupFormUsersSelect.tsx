@@ -79,8 +79,9 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
     users,
     setUsers,
 }) => {
-    const { users: usersAll } = useUsers();
-    const { serviceAccounts } = useServiceAccounts();
+    const { users: usersAll, loading: isUsersLoading } = useUsers();
+    const { serviceAccounts, loading: isServiceAccountsLoading } =
+        useServiceAccounts();
 
     const options = [
         ...usersAll
@@ -141,6 +142,10 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                     <TextField {...params} label='Select users' />
                 )}
                 renderTags={(value) => renderTags(value)}
+                isLoading={
+                    options.length === 0 &&
+                    (isUsersLoading || isServiceAccountsLoading)
+                }
             />
         </StyledGroupFormUsersSelect>
     );

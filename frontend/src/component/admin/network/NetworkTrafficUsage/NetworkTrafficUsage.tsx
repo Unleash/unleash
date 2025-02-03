@@ -149,8 +149,7 @@ const createBarChartOptions = (
     },
 });
 
-// this is primarily for dev purposes. The existing grid is very inflexible, so we might want to change it, but for demoing the design, this is enough.
-const NewHeader = styled('div')(({ theme }) => ({
+const TopRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
     justifyContent: 'space-between',
@@ -318,7 +317,7 @@ const NewNetworkTrafficUsage: FC = () => {
                         }
                     />
                     <StyledBox>
-                        <NewHeader>
+                        <TopRow>
                             <TrafficInfoBoxes>
                                 <RequestSummary
                                     period={newPeriod}
@@ -351,7 +350,7 @@ const NewNetworkTrafficUsage: FC = () => {
                                 selectedPeriod={newPeriod}
                                 setPeriod={setNewPeriod}
                             />
-                        </NewHeader>
+                        </TopRow>
                         <Bar
                             data={data}
                             plugins={[customHighlightPlugin()]}

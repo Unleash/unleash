@@ -20,12 +20,12 @@ If you need an API token to use in a client SDK you should create a client token
 
 Now that you have an access token with admin privileges, you can use it to make changes in your Unleash instance.
 
-In the example below we will use the [Unleash Admin API](/reference/api/legacy/unleash/admin/features.md) to enable the `Demo` feature flag using curl.
+In the example below we will use the [Unleash Admin API](/reference/api/legacy/unleash/admin/features.md) to enable the `checkout-flow` feature flag in `development` using curl.
 
 ```sh
 curl -X POST -H "Content-Type: application/json" \
      -H "Authorization: <your-token>" \
-     https://app.unleash-hosted.com/demo/api/admin/features/Demo/toggle/on
+     https://app.unleash-hosted.com/docs-demo/api/admin/projects/docs-project/features/checkout-flow/environments/development/on
 ```
 
 We have now enabled the feature flag. We can also verify that it was actually changed by the API user by navigating to [Event Log](/reference/events#event-log) and filtering events for this feature flag.

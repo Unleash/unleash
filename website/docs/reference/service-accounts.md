@@ -8,7 +8,7 @@ title: Service Accounts
 
 :::
 
-Service accounts provide an identity for integration and automation tools to access the Unleash API. You can assign tokens to service accounts which give them a granular set of permissions. Service accounts do not have a password and, as such, cannot access the Unleash Admin UI.
+Service accounts provide an identity for integration and automation tools to access the Unleash API. You can assign a role to a service account, granting it a specific set of permissions. Service accounts authenticate using tokens. They do not have a password and cannot access the Unleash Admin UI.
 
 ## Create a service account
 

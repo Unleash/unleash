@@ -40,7 +40,7 @@ import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/Multiple
 import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles';
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
-import AutocompleteVirtual from '../../../common/AutocompleteVirtual/AutcompleteVirtual';
+import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',

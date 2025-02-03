@@ -106,7 +106,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                   }),
           ];
 
-    const isLargeList = options.length > 100;
+    const isLargeList = options.length > 200;
 
     return (
         <StyledGroupFormUsersSelect>

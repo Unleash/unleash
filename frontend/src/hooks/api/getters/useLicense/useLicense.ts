@@ -2,10 +2,12 @@ import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
+import type { BannerVariant } from 'interfaces/banner';
 
 export interface LicenseInfo {
     isValid: boolean;
     message?: string;
+    messageType?: BannerVariant;
     loading: boolean;
     reCheckLicense: () => void;
     error?: Error;

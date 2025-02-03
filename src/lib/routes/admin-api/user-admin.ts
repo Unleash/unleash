@@ -674,8 +674,6 @@ export default class UserAdminController extends Controller {
         const { user, params } = req;
         const { id } = params;
 
-        await this.throwIfScimUser({ id });
-
         await this.userService.deleteUser(+id, req.audit);
         res.status(200).send();
     }

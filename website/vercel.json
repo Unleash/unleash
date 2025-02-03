@@ -57,7 +57,7 @@
       "permanent": true
     },
     {
-      "source": "/how-to/how-to-create-personal-access-tokens",
+      "source": "/how-to/how-to-create-service-accounts",
       "destination": "/reference/service-accounts#create-a-service-account",
       "permanent": true
     },

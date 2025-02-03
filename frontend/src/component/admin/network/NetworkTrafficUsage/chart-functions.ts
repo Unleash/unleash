@@ -8,7 +8,7 @@ import {
     differenceInCalendarDays,
     differenceInCalendarMonths,
 } from 'date-fns';
-import { formatDay, formatMonth } from './date-utils';
+import { formatDay, formatMonth } from './dates';
 import type { ChartDataSelection } from './chart-data-selection';
 export type ChartDatasetType = ChartDataset<'bar'>;
 

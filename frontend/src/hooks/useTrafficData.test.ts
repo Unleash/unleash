@@ -1,3 +1,4 @@
+import { getDaysInMonth } from 'date-fns';
 import {
     toSelectablePeriod,
     calculateOverageCost,
@@ -122,18 +123,22 @@ describe('traffic overage calculation', () => {
         const now = new Date();
         const period = toSelectablePeriod(now);
         const testNow = new Date(now.getFullYear(), now.getMonth(), 5);
+        const includedTraffic = 53_000_000;
+        const trafficUnitSize = 500_000;
+        const trafficUnitCost = 10;
         const result = calculateEstimatedMonthlyCost(
             period.key,
             testData,
-            53_000_000,
+            includedTraffic,
             testNow,
-            10,
-            500_000,
+            trafficUnitCost,
+            trafficUnitSize,
         );
-        // 22_500_000 * 3 * 30 = 2_025_000_000 total usage
-        // 2_025_000_000 - 53_000_000 = 1_972_000_000 overage
-        // 1_972_000_000 / 500_000 = 3_944 overage units
-        // 3_944 * 10 = 39_440
-        expect(result).toBeGreaterThanOrEqual(39_440);
+
+        const totalExpectedUsage = 22_500_000 * 3 * getDaysInMonth(now);
+        const overage = totalExpectedUsage - includedTraffic;
+        const overageUnits = Math.floor(overage / trafficUnitSize);
+        const total = overageUnits * trafficUnitCost;
+        expect(result).toBe(total);
     });
 });

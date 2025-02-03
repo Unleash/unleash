@@ -7,7 +7,6 @@ import type {
     TrafficUsageDataSegmentedCombinedSchemaApiDataItem,
     TrafficUsageDataSegmentedSchema,
 } from 'openapi';
-import { endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 
 export interface IInstanceTrafficMetricsResponse {
     usage: TrafficUsageDataSegmentedSchema;
@@ -38,31 +37,6 @@ export const useInstanceTrafficMetrics = (
     );
 };
 
-export type ChartDataSelection =
-    | {
-          grouping: 'daily';
-          month: string;
-      }
-    | {
-          grouping: 'monthly';
-          monthsBack: number;
-      };
-
-const fromSelection = (selection: ChartDataSelection) => {
-    const fmt = (date: Date) => format(date, 'yyyy-MM-dd');
-    if (selection.grouping === 'daily') {
-        const month = new Date(selection.month);
-        const from = fmt(month);
-        const to = fmt(endOfMonth(month));
-        return { from, to };
-    } else {
-        const now = new Date();
-        const from = fmt(startOfMonth(subMonths(now, selection.monthsBack)));
-        const to = fmt(endOfMonth(now));
-        return { from, to };
-    }
-};
-
 export type SegmentedSchemaApiData =
     TrafficUsageDataSegmentedCombinedSchemaApiDataItem;
 
@@ -77,11 +51,16 @@ export type InstanceTrafficMetricsResponse2 = {
 };
 
 export const useInstanceTrafficMetrics2 = (
-    selection: ChartDataSelection,
+    grouping: 'monthly' | 'daily',
+    {
+        from,
+        to,
+    }: {
+        from: string;
+        to: string;
+    },
 ): InstanceTrafficMetricsResponse2 => {
-    const { from, to } = fromSelection(selection);
-
-    const apiPath = `api/admin/metrics/traffic-search?grouping=${selection.grouping}&from=${from}&to=${to}`;
+    const apiPath = `api/admin/metrics/traffic-search?grouping=${grouping}&from=${from}&to=${to}`;
 
     const { data, error, mutate } = useSWR(formatApiPath(apiPath), fetcher);
 

@@ -9,4 +9,5 @@ export const currentMonth = format(currentDate, 'yyyy-MM');
 
 export const daysInCurrentMonth = getDaysInMonth(currentDate);
 
-const formatMonth = (date: Date) => format(date, 'yyyy-MM');
+export const formatMonth = (date: Date) => format(date, 'yyyy-MM');
+export const formatDay = (date: Date) => format(date, 'yyyy-MM-dd');

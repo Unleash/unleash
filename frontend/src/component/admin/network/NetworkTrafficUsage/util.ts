@@ -3,11 +3,7 @@ import type {
     TrafficUsageDataSegmentedCombinedSchemaApiDataItem,
 } from 'openapi';
 import { currentMonth, daysInCurrentMonth } from './date-utils';
-import type { ChartDataset } from 'chart.js';
-import { endpointsInfo } from './endpoint-info';
-import type { ChartDataSelection } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
-
-type ChartDatasetType = ChartDataset<'bar'>;
+import type { ChartDatasetType } from './chart-utils';
 
 const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
@@ -153,18 +149,3 @@ export const calculateEstimatedMonthlyCost = (
         trafficUnitSize,
     );
 };
-
-const [lastLabel, ...otherLabels] = Object.values(endpointsInfo)
-    .map((info) => info.label.toLowerCase())
-    .toReversed();
-const requestTypes = `${otherLabels.toReversed().join(', ')}, and ${lastLabel}`;
-
-export const getChartLabel = (selectedPeriod: ChartDataSelection) =>
-    selectedPeriod.grouping === 'daily'
-        ? `A bar chart showing daily traffic usage for ${new Date(
-              selectedPeriod.month,
-          ).toLocaleDateString('en-US', {
-              month: 'long',
-              year: 'numeric',
-          })}. Each date shows ${requestTypes} requests.`
-        : `A bar chart showing monthly total traffic usage for the current month and the preceding ${selectedPeriod.monthsBack} months. Each month shows ${requestTypes} requests.`;

@@ -30,7 +30,6 @@ import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary
 import annotationPlugin from 'chartjs-plugin-annotation';
 import {
     type ChartDatasetType,
-    newToChartData,
     useTrafficDataEstimation,
 } from 'hooks/useTrafficData';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
@@ -47,10 +46,11 @@ import {
     calculateTotalUsage,
     calculateOverageCost as calculateOverageCost2,
     calculateEstimatedMonthlyCost as calculateEstimatedMonthlyCost2,
-    getChartLabel,
 } from './util';
 import { currentDate, currentMonth } from './date-utils';
 import { endpointsInfo } from './endpoint-info';
+import { toDateRange } from './chart-data-selection';
+import { getChartLabel, newToChartData } from './chart-utils';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -225,7 +225,10 @@ const NewNetworkTrafficUsage: FC = () => {
         );
     }, [theme, newPeriod, record]);
 
-    const traffic = useInstanceTrafficMetrics2(newPeriod);
+    const traffic = useInstanceTrafficMetrics2(
+        newPeriod.grouping,
+        toDateRange(newPeriod),
+    );
     const data = newToChartData(traffic.usage);
     const usageTotal = calculateTotalUsage(traffic.usage);
     const overageCost = calculateOverageCost2(

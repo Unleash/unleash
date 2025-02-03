@@ -1,4 +1,4 @@
-import Joi, { ValidationError } from 'joi';
+import { ValidationError } from 'joi';
 import { generateImageUrl } from '../util/generateImageUrl';
 
 export const AccountTypes = ['User', 'Service Account'] as const;
@@ -90,17 +90,6 @@ export default class User implements IUser {
         if (!id) {
             throw new ValidationError('Id is required', [], undefined);
         }
-        try {
-            Joi.assert(
-                email,
-                Joi.string().email({ ignoreLength: true }),
-                'Email',
-            );
-        } catch (e) {
-            console.error('Invalid email', email, e);
-        }
-        Joi.assert(username, Joi.string(), 'Username');
-        Joi.assert(name, Joi.string(), 'Name');
 
         this.id = id;
         this.name = name!;

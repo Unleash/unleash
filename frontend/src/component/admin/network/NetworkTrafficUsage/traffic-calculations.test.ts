@@ -3,7 +3,7 @@ import {
     calculateEstimatedMonthlyCost,
     calculateOverageCost,
     calculateProjectedUsage,
-} from './util';
+} from './traffic-calculations';
 import { toSelectablePeriod } from './selectable-periods';
 
 const testData4Days = [

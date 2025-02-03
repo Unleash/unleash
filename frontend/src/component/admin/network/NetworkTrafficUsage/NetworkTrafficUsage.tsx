@@ -42,6 +42,8 @@ import { PeriodSelector } from './PeriodSelector';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { format } from 'date-fns';
 import { monthlyTrafficDataToCurrentUsage } from './monthly-traffic-data-to-current-usage';
+import { OverageInfo, RequestSummary } from './RequestSummary';
+import { averageTrafficPreviousMonths } from './average-traffic-previous-months';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -148,15 +150,30 @@ const createBarChartOptions = (
 });
 
 // this is primarily for dev purposes. The existing grid is very inflexible, so we might want to change it, but for demoing the design, this is enough.
-const NewHeader = styled('div')(() => ({
+const NewHeader = styled('div')(({ theme }) => ({
     display: 'flex',
+    flexFlow: 'row wrap',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    gap: theme.spacing(2, 4),
+    alignItems: 'start',
+}));
+
+const TrafficInfoBoxes = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, max-content))',
+    flex: 1,
+    gap: theme.spacing(2, 4),
+}));
+
+const BoldText = styled('span')(({ theme }) => ({
+    fontWeight: 'bold',
 }));
 
 const NewNetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
+
+    const estimateTrafficDataCost = useUiFlag('estimateTrafficDataCost');
 
     const { isOss } = useUiConfig();
 
@@ -168,6 +185,7 @@ const NewNetworkTrafficUsage: FC = () => {
         toTrafficUsageSum,
         calculateOverageCost,
         calculateEstimatedMonthlyCost,
+        endpointsInfo,
     } = useTrafficDataEstimation();
 
     const includedTraffic = useTrafficLimit();
@@ -192,7 +210,11 @@ const NewNetworkTrafficUsage: FC = () => {
                         },
                     );
                 } else {
-                    return new Date(tooltipItems[0].label).toLocaleDateString(
+                    const timestamp = Date.parse(tooltipItems[0].label);
+                    if (Number.isNaN(timestamp)) {
+                        return 'Current month to date';
+                    }
+                    return new Date(timestamp).toLocaleDateString(
                         locationSettings?.locale ?? 'en-US',
                         {
                             month: 'long',
@@ -248,6 +270,21 @@ const NewNetworkTrafficUsage: FC = () => {
         }
     }, [data]);
 
+    // todo: extract this (and also endpoints info)
+    const [lastLabel, ...otherLabels] = Object.values(endpointsInfo)
+        .map((info) => info.label.toLowerCase())
+        .toReversed();
+    const requestTypes = `${otherLabels.toReversed().join(', ')}, and ${lastLabel}`;
+    const chartLabel =
+        newPeriod.grouping === 'daily'
+            ? `A bar chart showing daily traffic usage for ${new Date(
+                  newPeriod.month,
+              ).toLocaleDateString('en-US', {
+                  month: 'long',
+                  year: 'numeric',
+              })}. Each date shows ${requestTypes} requests.`
+            : `A bar chart showing monthly total traffic usage for the current month and the preceding ${newPeriod.monthsBack} months. Each month shows ${requestTypes} requests.`;
+
     return (
         <ConditionallyRender
             condition={isOss()}
@@ -255,42 +292,61 @@ const NewNetworkTrafficUsage: FC = () => {
             elseShow={
                 <>
                     <ConditionallyRender
-                        condition={includedTraffic > 0 && overageCost > 0}
+                        condition={
+                            (newPeriod.grouping === 'monthly' ||
+                                newPeriod.month ===
+                                    format(new Date(), 'yyyy-MM')) &&
+                            includedTraffic > 0 &&
+                            overageCost > 0
+                        }
                         show={
                             <Alert severity='warning' sx={{ mb: 4 }}>
-                                <b>Heads up!</b> You are currently consuming
-                                more requests than your plan includes and will
-                                be billed according to our terms. Please see{' '}
-                                <Link
-                                    component={RouterLink}
-                                    to='https://www.getunleash.io/pricing'
-                                >
+                                <BoldText>Heads up!</BoldText> You are currently
+                                consuming more requests than your plan includes
+                                and will be billed according to our terms.
+                                Please see{' '}
+                                <RouterLink to='https://www.getunleash.io/pricing'>
                                     this page
-                                </Link>{' '}
+                                </RouterLink>{' '}
                                 for more information. In order to reduce your
                                 traffic consumption, you may configure an{' '}
-                                <Link
-                                    component={RouterLink}
-                                    to='https://docs.getunleash.io/reference/unleash-edge'
-                                >
+                                <RouterLink to='https://docs.getunleash.io/reference/unleash-edge'>
                                     Unleash Edge instance
-                                </Link>{' '}
+                                </RouterLink>{' '}
                                 in your own datacenter.
                             </Alert>
                         }
                     />
                     <StyledBox>
                         <NewHeader>
-                            {
-                                // todo: add new usage plan summary that works for monthly data as well as daily
-                            }
-
-                            <NetworkTrafficUsagePlanSummary
-                                usageTotal={usageTotal}
-                                includedTraffic={includedTraffic}
-                                overageCost={overageCost}
-                                estimatedMonthlyCost={estimatedMonthlyCost}
-                            />
+                            <TrafficInfoBoxes>
+                                <RequestSummary
+                                    period={newPeriod}
+                                    usageTotal={
+                                        newPeriod.grouping === 'daily'
+                                            ? usageTotal
+                                            : averageTrafficPreviousMonths(
+                                                  Object.keys(endpointsInfo),
+                                                  traffic.usage,
+                                              )
+                                    }
+                                    includedTraffic={includedTraffic}
+                                />
+                                {newPeriod.grouping === 'daily' &&
+                                    includedTraffic > 0 &&
+                                    usageTotal - includedTraffic > 0 &&
+                                    estimateTrafficDataCost && (
+                                        <OverageInfo
+                                            overageCost={overageCost}
+                                            overages={
+                                                usageTotal - includedTraffic
+                                            }
+                                            estimatedMonthlyCost={
+                                                estimatedMonthlyCost
+                                            }
+                                        />
+                                    )}
+                            </TrafficInfoBoxes>
                             <PeriodSelector
                                 selectedPeriod={newPeriod}
                                 setPeriod={setNewPeriod}
@@ -300,7 +356,7 @@ const NewNetworkTrafficUsage: FC = () => {
                             data={data}
                             plugins={[customHighlightPlugin()]}
                             options={options}
-                            aria-label='An instance metrics line chart with two lines: requests per second for admin API and requests per second for client API' // todo: this isn't correct at all!
+                            aria-label={chartLabel}
                         />
                     </StyledBox>
                 </>

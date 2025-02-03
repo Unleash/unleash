@@ -29,6 +29,7 @@ interface IBadgeProps {
     children?: ReactNode;
     title?: string;
     onClick?: (event: React.SyntheticEvent) => void;
+    tabIndex?: number;
 }
 
 interface IBadgeIconProps {
@@ -96,13 +97,14 @@ export const Badge: FC<IBadgeProps> = forwardRef(
             className,
             sx,
             children,
+            tabIndex = 0,
             ...props
         }: IBadgeProps,
         ref: ForwardedRef<HTMLDivElement>,
     ) => (
         <StyledBadge
             as={as}
-            tabIndex={0}
+            tabIndex={tabIndex}
             color={color}
             icon={icon}
             className={className}

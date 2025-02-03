@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type {
     ChartDataSelection,
     IInstanceTrafficMetricsResponse,
@@ -13,7 +12,9 @@ import {
     format,
 } from 'date-fns';
 import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
+import { useState } from 'react';
 
+// todo: remove with flag dataUsageMultiMonthView in favor of frontend/src/component/admin/network/NetworkTrafficUsage/endpoint-info.ts
 const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
 
@@ -25,14 +26,16 @@ export type SelectablePeriod = {
     month: number;
 };
 
+export type ChartDatasetType = ChartDataset<'bar'>;
+
+// todo: remove with flag dataUsageMultiMonthView in favor of frontend/src/component/admin/network/NetworkTrafficUsage/endpoint-info.ts
 export type EndpointInfo = {
     label: string;
     color: string;
     order: number;
 };
 
-export type ChartDatasetType = ChartDataset<'bar'>;
-
+// todo: remove with flag dataUsageMultiMonthView in favor of frontend/src/component/admin/network/NetworkTrafficUsage/endpoint-info.ts
 const endpointsInfo: Record<string, EndpointInfo> = {
     '/api/admin': {
         label: 'Admin',

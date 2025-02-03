@@ -41,9 +41,16 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { PeriodSelector } from './PeriodSelector';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { format } from 'date-fns';
-import { monthlyTrafficDataToCurrentUsage } from './monthly-traffic-data-to-current-usage';
 import { OverageInfo, RequestSummary } from './RequestSummary';
 import { averageTrafficPreviousMonths } from './average-traffic-previous-months';
+import {
+    calculateTotalUsage,
+    calculateOverageCost as calculateOverageCost2,
+    calculateEstimatedMonthlyCost as calculateEstimatedMonthlyCost2,
+    getChartLabel,
+} from './util';
+import { currentDate, currentMonth } from './date-utils';
+import { endpointsInfo } from './endpoint-info';
 
 const StyledBox = styled(Box)(({ theme }) => ({
     display: 'grid',
@@ -177,15 +184,7 @@ const NewNetworkTrafficUsage: FC = () => {
     const { isOss } = useUiConfig();
 
     const { locationSettings } = useLocationSettings();
-    const {
-        record,
-        newPeriod,
-        setNewPeriod,
-        toTrafficUsageSum,
-        calculateOverageCost,
-        calculateEstimatedMonthlyCost,
-        endpointsInfo,
-    } = useTrafficDataEstimation();
+    const { record, newPeriod, setNewPeriod } = useTrafficDataEstimation();
 
     const includedTraffic = useTrafficLimit();
 
@@ -224,65 +223,24 @@ const NewNetworkTrafficUsage: FC = () => {
             },
             includedTraffic,
         );
-    }, [theme, newPeriod]);
+    }, [theme, newPeriod, record]);
 
     const traffic = useInstanceTrafficMetrics2(newPeriod);
-
     const data = newToChartData(traffic.usage);
+    const usageTotal = calculateTotalUsage(traffic.usage);
+    const overageCost = calculateOverageCost2(
+        usageTotal,
+        includedTraffic,
+        BILLING_TRAFFIC_BUNDLE_PRICE,
+    );
 
-    const [usageTotal, setUsageTotal] = useState<number>(0);
-
-    const [overageCost, setOverageCost] = useState<number>(0);
-
-    const [estimatedMonthlyCost, setEstimatedMonthlyCost] = useState<number>(0);
-
-    useEffect(() => {
-        if (data) {
-            let usage: number;
-            if (newPeriod.grouping === 'monthly') {
-                usage = monthlyTrafficDataToCurrentUsage(traffic.usage);
-            } else {
-                usage = toTrafficUsageSum(data.datasets);
-            }
-
-            setUsageTotal(usage);
-            if (includedTraffic > 0) {
-                const calculatedOverageCost = calculateOverageCost(
-                    usage,
-                    includedTraffic,
-                    BILLING_TRAFFIC_BUNDLE_PRICE,
-                );
-                setOverageCost(calculatedOverageCost);
-
-                setEstimatedMonthlyCost(
-                    calculateEstimatedMonthlyCost(
-                        newPeriod.grouping === 'daily'
-                            ? newPeriod.month
-                            : format(new Date(), 'yyyy-MM'),
-                        data.datasets,
-                        includedTraffic,
-                        new Date(),
-                        BILLING_TRAFFIC_BUNDLE_PRICE,
-                    ),
-                );
-            }
-        }
-    }, [data]);
-
-    // todo: extract this (and also endpoints info)
-    const [lastLabel, ...otherLabels] = Object.values(endpointsInfo)
-        .map((info) => info.label.toLowerCase())
-        .toReversed();
-    const requestTypes = `${otherLabels.toReversed().join(', ')}, and ${lastLabel}`;
-    const chartLabel =
-        newPeriod.grouping === 'daily'
-            ? `A bar chart showing daily traffic usage for ${new Date(
-                  newPeriod.month,
-              ).toLocaleDateString('en-US', {
-                  month: 'long',
-                  year: 'numeric',
-              })}. Each date shows ${requestTypes} requests.`
-            : `A bar chart showing monthly total traffic usage for the current month and the preceding ${newPeriod.monthsBack} months. Each month shows ${requestTypes} requests.`;
+    const estimatedMonthlyCost = calculateEstimatedMonthlyCost2(
+        newPeriod.grouping === 'daily' ? newPeriod.month : currentMonth,
+        data.datasets,
+        includedTraffic,
+        currentDate,
+        BILLING_TRAFFIC_BUNDLE_PRICE,
+    );
 
     return (
         <ConditionallyRender
@@ -355,7 +313,7 @@ const NewNetworkTrafficUsage: FC = () => {
                             data={data}
                             plugins={[customHighlightPlugin()]}
                             options={options}
-                            aria-label={chartLabel}
+                            aria-label={getChartLabel(newPeriod)}
                         />
                     </StyledBox>
                 </>

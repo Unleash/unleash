@@ -9,7 +9,7 @@ import { UG_USERS_ID } from 'utils/testIds';
 import { caseInsensitiveSearch } from 'utils/search';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import type { IServiceAccount } from 'interfaces/service-account';
-import AutocompleteVirtual from './AutcompleteVirtual';
+import AutocompleteVirtual from '../../../../common/AutocompleteVirtual/AutcompleteVirtual';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',

@@ -1,7 +1,6 @@
 import type { ChartDataset } from 'chart.js';
 import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
 import { endpointsInfo } from './endpoint-info';
-import type { SegmentedSchemaApiData } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import {
     addDays,
     addMonths,
@@ -26,6 +25,9 @@ export const toChartData = (
         return toDailyChartData(traffic);
     }
 };
+
+type SegmentedSchemaApiData =
+    TrafficUsageDataSegmentedCombinedSchema['apiData'][0];
 
 // todo: integrate filtering `filterData` frontend/src/component/admin/network/NetworkTrafficUsage/util.ts
 const prepareApiData = (

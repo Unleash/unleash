@@ -4,7 +4,6 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import type {
     TrafficUsageDataSegmentedCombinedSchema,
-    TrafficUsageDataSegmentedCombinedSchemaApiDataItem,
     TrafficUsageDataSegmentedSchema,
 } from 'openapi';
 
@@ -36,9 +35,6 @@ export const useInstanceTrafficMetrics = (
         [data, error, mutate],
     );
 };
-
-export type SegmentedSchemaApiData =
-    TrafficUsageDataSegmentedCombinedSchemaApiDataItem;
 
 export type InstanceTrafficMetricsResponse2 = {
     usage: TrafficUsageDataSegmentedCombinedSchema;

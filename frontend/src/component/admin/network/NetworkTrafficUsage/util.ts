@@ -8,6 +8,7 @@ import type { ChartDatasetType } from './chart-utils';
 const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
 
+// todo: implement and test
 export const filterData = (
     data?: TrafficUsageDataSegmentedCombinedSchema,
 ): TrafficUsageDataSegmentedCombinedSchema | undefined => {
@@ -16,6 +17,7 @@ export const filterData = (
     }
     // filter out endpoints not mentioned in endpointsInfo
     // filter out any data from before May 2024
+    return data;
 };
 
 const monthlyTrafficDataToCurrentUsage = (
@@ -46,6 +48,7 @@ const dailyTrafficDataToCurrentUsage = (
         .reduce((acc, count) => acc + count, 0);
 };
 
+// todo: test
 // Return the total number of requests for the selected month if showing daily
 // data, or the current month if showing monthly data
 export const calculateTotalUsage = (

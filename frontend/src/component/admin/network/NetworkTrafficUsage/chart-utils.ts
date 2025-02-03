@@ -12,7 +12,8 @@ import { formatDay, formatMonth } from './date-utils';
 import type { ChartDataSelection } from './chart-data-selection';
 export type ChartDatasetType = ChartDataset<'bar'>;
 
-export const newToChartData = (
+// todo: test
+export const toChartData = (
     traffic?: TrafficUsageDataSegmentedCombinedSchema,
 ): { datasets: ChartDatasetType[]; labels: (string | number)[] } => {
     if (!traffic) {
@@ -26,6 +27,7 @@ export const newToChartData = (
     }
 };
 
+// todo: integrate filtering `filterData` frontend/src/component/admin/network/NetworkTrafficUsage/util.ts
 const prepareApiData = (
     apiData: TrafficUsageDataSegmentedCombinedSchema['apiData'],
 ) =>

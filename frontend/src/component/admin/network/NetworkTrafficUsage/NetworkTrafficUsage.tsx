@@ -49,7 +49,7 @@ import {
 import { currentDate, currentMonth } from './date-utils';
 import { endpointsInfo } from './endpoint-info';
 import { type ChartDataSelection, toDateRange } from './chart-data-selection';
-import { getChartLabel, newToChartData } from './chart-utils';
+import { getChartLabel, toChartData as newToChartData } from './chart-utils';
 import { periodsRecord, selectablePeriods } from './selectable-periods';
 
 const StyledBox = styled(Box)(({ theme }) => ({
@@ -233,6 +233,7 @@ const NewNetworkTrafficUsage: FC = () => {
         newPeriod.grouping,
         toDateRange(newPeriod),
     );
+
     const data = newToChartData(traffic.usage);
     const usageTotal = calculateTotalUsage(traffic.usage);
     const overageCost = calculateOverageCost(

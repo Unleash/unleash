@@ -8,7 +8,7 @@ title: Frontend API
 
 :::
 
-The Unleash Frontend API offers a simplified workflow for connecting a client-side applications to Unleash. It provides the exact same API as [Unleash edge](https://docs.getunleash.io/reference/unleash-edge) and [Unleash proxy - deprecated](../generated/unleash-proxy.md). The frontend API is a quick and easy way to add Unleash to single-page applications and mobile apps.
+The Unleash Frontend API offers a simplified workflow for connecting client-side applications to Unleash. It provides the exact same API as [Unleash Edge](https://docs.getunleash.io/reference/unleash-edge) and [Unleash Proxy - deprecated](../generated/unleash-proxy.md). The Frontend API is a quick and easy way to add Unleash to single-page applications and mobile apps.
 
 Compared to using Unleash Edge, using the Frontend API has both benefits and drawbacks. The benefits are:
 
@@ -19,7 +19,7 @@ On the other hand, using the Frontend API has the following drawbacks compared t
 - **It can't handle a large number of requests per second.** Because the Frontend API is part of Unleash, you can't scale it horizontally the way you can scale Unleash Edge.
 - **It sends client details to your Unleash instance.** Unleash only stores these details in its short-term runtime cache, but this can be a privacy issue for some use cases.
 
-These points make the Unleash Frontend API best suited for development purposes and applications that don’t receive a lot of traffic, such as internal dashboards. However, because the API is identical to the Unleash Edge API, you can go from one to the other at any time. As such, you can start out by using the Frontend API and switch to using Unleash Edge when you need it.
+These points make the Unleash Frontend API best suited for development purposes and applications that don’t receive a lot of traffic, such as internal dashboards. However, because the API is identical to the Unleash Edge API, you can go from one to the other at any time. As such, you can start out by using the Frontend API and switch to Unleash Edge when you need it.
 
 ## Using the Unleash Frontend API
 
@@ -37,7 +37,7 @@ The client needs to point to the correct API endpoint. The Frontend API is avail
 
 ### API token
 
-The client needs a frontend [token](../reference/api-tokens-and-client-keys.mdx#front-end-tokens) to interacti witht he Frontend API.
+The client needs a frontend [token](../reference/api-tokens-and-client-keys.mdx#front-end-tokens) to interacting with the Frontend API.
 
 ### Refresh interval for tokens
 

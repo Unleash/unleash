@@ -24,7 +24,7 @@ export const ScimDeleteEntityDialog = ({
         open={open}
         primaryButtonText={`Delete SCIM ${entityType}`}
         secondaryButtonText='Cancel'
-        title={`Really Delete All SCIM ${entityType}?`}
+        title={`Do you really want to delete ALL SCIM ${entityType}?`}
         onClose={closeDialog}
         onClick={removeUser}
     >

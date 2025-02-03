@@ -9,11 +9,6 @@ import {
 } from 'react';
 import { Autocomplete, type AutocompleteProps } from '@mui/material';
 
-/**
- * @description Autocomplete with virtualization.
- *
- */
-
 const ListboxComponent = forwardRef<
     HTMLDivElement,
     HTMLAttributes<HTMLElement>
@@ -31,7 +26,7 @@ const ListboxComponent = forwardRef<
     const rowVirtualizer = useVirtualizer({
         count: itemData.length ?? 0,
         getScrollElement: () => parentRef.current,
-        estimateSize: () => 64,
+        estimateSize: () => 56,
         overscan: 3,
     });
 
@@ -60,7 +55,6 @@ const ListboxComponent = forwardRef<
                             left: 0,
                             width: '100%',
                             top: `${virtualRow.start}px`,
-                            padding: 0,
                         };
 
                         return cloneElement(dataSet[1], {
@@ -77,26 +71,14 @@ const ListboxComponent = forwardRef<
     );
 });
 
-/**
- * @link Props: https://mui.com/material-ui/api/autocomplete/
- *
- */
-
-/**
- * [BUG]: use getOptionDisabled + ArrowKeyUp/Down with virtualization [12/16/2023]
- *
- */
-
-type TProps<T> = Omit<
-    AutocompleteProps<T, false, boolean, false>,
-    | 'autoHighlight'
-    | 'disableListWrap'
-    | 'ListboxComponent'
-    | 'groupBy'
-    | 'multiple'
+type TProps<T, M extends boolean | undefined> = Omit<
+    AutocompleteProps<T, M, boolean, false>,
+    'autoHighlight' | 'disableListWrap' | 'ListboxComponent' | 'groupBy'
 > & { isLoading?: boolean };
 
-function AutocompleteVirtual<T>(props: TProps<T>) {
+function AutocompleteVirtual<T, M extends boolean | undefined>(
+    props: TProps<T, M>,
+) {
     const {
         getOptionLabel,
         renderOption,
@@ -108,26 +90,11 @@ function AutocompleteVirtual<T>(props: TProps<T>) {
     return (
         <Autocomplete
             {...restAutocompleteProps}
-            // open
-            className={`autocomplete__virtual ${className || ''}`}
-            autoHighlight
             disableListWrap
             getOptionLabel={getOptionLabel}
             ListboxComponent={ListboxComponent}
-            renderOption={(_props, option, { selected }) => {
-                const opt = getOptionLabel?.(option) ?? option;
-                return [
-                    _props,
-                    renderOption(_props, option, { selected }),
-                ] as ReactNode;
-            }}
-            onKeyDown={(event) => {
-                if (!restAutocompleteProps.getOptionDisabled) {
-                    return;
-                }
-                if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-                    event.defaultMuiPrevented = true;
-                }
+            renderOption={(...props) => {
+                return [props[0], renderOption(...props)] as ReactNode;
             }}
         />
     );

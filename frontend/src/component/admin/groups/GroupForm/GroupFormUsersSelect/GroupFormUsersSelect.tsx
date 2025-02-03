@@ -38,7 +38,7 @@ const StrechedLi = styled('li')({ width: '100%' });
 const renderOption = (
     props: React.HTMLAttributes<HTMLLIElement>,
     option: IUser,
-    selected: boolean,
+    { selected }: { selected: boolean },
 ) => (
     <StrechedLi {...props}>
         <Checkbox
@@ -107,9 +107,9 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
             <AutocompleteVirtual
                 data-testid={UG_USERS_ID}
                 size='small'
-                multiple
                 limitTags={1}
                 openOnFocus
+                multiple
                 disableCloseOnSelect
                 value={users as UserOption[]}
                 onChange={(event, newValue, reason) => {
@@ -124,18 +124,14 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                 }}
                 // groupBy={(option) => option.type}
                 options={options}
-                renderOption={(props, option, { selected }) =>
-                    renderOption(props, option as UserOption, selected)
-                }
+                renderOption={renderOption}
                 filterOptions={(options, { inputValue }) =>
-                    options
-                        .filter(
-                            ({ name, username, email }) =>
-                                caseInsensitiveSearch(inputValue, email) ||
-                                caseInsensitiveSearch(inputValue, name) ||
-                                caseInsensitiveSearch(inputValue, username),
-                        )
-                        .slice(0, 10000)
+                    options.filter(
+                        ({ name, username, email }) =>
+                            caseInsensitiveSearch(inputValue, email) ||
+                            caseInsensitiveSearch(inputValue, name) ||
+                            caseInsensitiveSearch(inputValue, username),
+                    )
                 }
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(option: UserOption) =>

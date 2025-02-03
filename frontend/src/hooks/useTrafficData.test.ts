@@ -139,6 +139,6 @@ describe('traffic overage calculation', () => {
         const overage = totalExpectedUsage - includedTraffic;
         const overageUnits = Math.floor(overage / trafficUnitSize);
         const total = overageUnits * trafficUnitCost;
-        expect(result).toBeGreaterThanOrEqual(total);
+        expect(result).toBe(total);
     });
 });

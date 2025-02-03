@@ -43,8 +43,8 @@ import { OverageInfo, RequestSummary } from './RequestSummary';
 import { averageTrafficPreviousMonths } from './average-traffic-previous-months';
 import {
     calculateTotalUsage,
-    calculateOverageCost as calculateOverageCost2,
-    calculateEstimatedMonthlyCost as calculateEstimatedMonthlyCost2,
+    calculateOverageCost,
+    calculateEstimatedMonthlyCost,
 } from './util';
 import { currentDate, currentMonth } from './date-utils';
 import { endpointsInfo } from './endpoint-info';
@@ -239,13 +239,13 @@ const NewNetworkTrafficUsage: FC = () => {
     );
     const data = newToChartData(traffic.usage);
     const usageTotal = calculateTotalUsage(traffic.usage);
-    const overageCost = calculateOverageCost2(
+    const overageCost = calculateOverageCost(
         usageTotal,
         includedTraffic,
         BILLING_TRAFFIC_BUNDLE_PRICE,
     );
 
-    const estimatedMonthlyCost = calculateEstimatedMonthlyCost2(
+    const estimatedMonthlyCost = calculateEstimatedMonthlyCost(
         newPeriod.grouping === 'daily' ? newPeriod.month : currentMonth,
         data.datasets,
         includedTraffic,
@@ -359,8 +359,6 @@ const OldNetworkTrafficUsage: FC = () => {
         toChartData,
         toTrafficUsageSum,
         endpointsInfo,
-        calculateOverageCost,
-        calculateEstimatedMonthlyCost,
     } = useTrafficDataEstimation();
 
     const includedTraffic = useTrafficLimit();

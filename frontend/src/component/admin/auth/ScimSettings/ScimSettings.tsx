@@ -11,6 +11,7 @@ import { useScimSettingsApi } from 'hooks/api/actions/useScimSettingsApi/useScim
 import { useScimSettings } from 'hooks/api/getters/useScimSettings/useScimSettings';
 import { ScimDeleteEntityDialog } from './ScimDeleteUsersDialog';
 import useAdminUsersApi from 'hooks/api/actions/useAdminUsersApi/useAdminUsersApi';
+import { useGroupApi } from 'hooks/api/actions/useGroupApi/useGroupApi';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -32,6 +33,7 @@ export const ScimSettings = () => {
     const [tokenDialog, setTokenDialog] = useState(false);
     const { settings, refetch } = useScimSettings();
     const { deleteScimUsers } = useAdminUsersApi();
+    const { deleteScimGroups } = useGroupApi();
     const [enabled, setEnabled] = useState(settings.enabled ?? true);
 
     useEffect(() => {
@@ -46,7 +48,17 @@ export const ScimSettings = () => {
     };
 
     const onDeleteScimGroups = async () => {
-        setDeleteGroupsDialog(true);
+        try {
+            await deleteScimGroups();
+            setToastData({
+                text: 'Scim Groups have been deleted',
+                type: 'success',
+            });
+            setDeleteGroupsDialog(false);
+            refetch();
+        } catch (error: unknown) {
+            setToastApiError(formatUnknownError(error));
+        }
     };
 
     const onDeleteScimUsers = async () => {
@@ -203,7 +215,9 @@ export const ScimSettings = () => {
                             variant='outlined'
                             color='error'
                             disabled={loading}
-                            onClick={onDeleteScimGroups}
+                            onClick={() => {
+                                setDeleteGroupsDialog(true);
+                            }}
                         >
                             Delete Groups
                         </Button>
@@ -226,14 +240,14 @@ export const ScimSettings = () => {
                     closeDialog={() => setDeleteUsersDialog(false)}
                     deleteEntities={onDeleteScimUsers}
                     entityType='Users'
-                ></ScimDeleteEntityDialog>
+                />
 
                 <ScimDeleteEntityDialog
                     open={deleteGroupsDialog}
                     closeDialog={() => setDeleteGroupsDialog(false)}
                     deleteEntities={onDeleteScimGroups}
                     entityType='Groups'
-                ></ScimDeleteEntityDialog>
+                />
             </StyledContainer>
         </>
     );

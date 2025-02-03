@@ -1,5 +1,5 @@
+// todo: delete file when you remove flag dataUsageMultiMonthView
 import type { IInstanceTrafficMetricsResponse } from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
-import type { ChartDataset } from 'chart.js';
 import { useState } from 'react';
 
 export type SelectablePeriod = {
@@ -10,16 +10,12 @@ export type SelectablePeriod = {
     month: number;
 };
 
-export type ChartDatasetType = ChartDataset<'bar'>;
-
-// todo: remove with flag dataUsageMultiMonthView in favor of frontend/src/component/admin/network/NetworkTrafficUsage/endpoint-info.ts
 export type EndpointInfo = {
     label: string;
     color: string;
     order: number;
 };
 
-// todo: remove with flag dataUsageMultiMonthView in favor of frontend/src/component/admin/network/NetworkTrafficUsage/endpoint-info.ts
 const endpointsInfo: Record<string, EndpointInfo> = {
     '/api/admin': {
         label: 'Admin',

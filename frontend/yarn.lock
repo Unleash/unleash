@@ -2768,10 +2768,29 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/react-virtual@npm:^3.11.3":
+  version: 3.11.3
+  resolution: "@tanstack/react-virtual@npm:3.11.3"
+  dependencies:
+    "@tanstack/virtual-core": "npm:3.11.3"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/9718379045ecda92d2c59f3c25699c703d98509ea569d7bfb0dbf78f1e0f46f0023d7a5d3a373fb7cdd4507286c1cf47648b5c0f4b1bdb85b2d2a6c26814b884
+  languageName: node
+  linkType: hard
+
 "@tanstack/table-core@npm:8.20.5":
   version: 8.20.5
   resolution: "@tanstack/table-core@npm:8.20.5"
   checksum: 10c0/3c27b5debd61b6bd9bfbb40bfc7c5d5af90873ae1a566b20e3bf2d2f4f2e9a78061c081aacc5259a00e256f8df506ec250eb5472f5c01ff04baf9918b554982b
+  languageName: node
+  linkType: hard
+
+"@tanstack/virtual-core@npm:3.11.3":
+  version: 3.11.3
+  resolution: "@tanstack/virtual-core@npm:3.11.3"
+  checksum: 10c0/94701b8d2da9167c8b4ba36bdaff22019b8ebb19224c357c1af16cbc375b39076ecc021a8c9581001607afc921d0a843019cb27168999065dda511c445a1a335
   languageName: node
   linkType: hard
 
@@ -10165,6 +10184,7 @@ __metadata:
     "@mui/material": "npm:5.15.3"
     "@mui/x-date-pickers": "npm:^7.0.0"
     "@tanstack/react-table": "npm:^8.10.7"
+    "@tanstack/react-virtual": "npm:^3.11.3"
     "@testing-library/dom": "npm:10.4.0"
     "@testing-library/jest-dom": "npm:6.6.3"
     "@testing-library/react": "npm:16.1.0"

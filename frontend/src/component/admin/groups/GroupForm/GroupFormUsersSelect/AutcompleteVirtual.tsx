@@ -64,24 +64,20 @@ const ListboxComponent = forwardRef<
 type TProps<T, M extends boolean | undefined> = Omit<
     AutocompleteProps<T, M, boolean, false>,
     'autoHighlight' | 'disableListWrap' | 'ListboxComponent' | 'groupBy'
-> & { isLoading?: boolean };
+>;
 
 function AutocompleteVirtual<T, M extends boolean | undefined>(
     props: TProps<T, M>,
 ) {
-    const { getOptionLabel, className, isLoading, ...restAutocompleteProps } =
-        props;
+    const { getOptionLabel, className, ...restAutocompleteProps } = props;
 
     return (
-        <div aria-busy={isLoading} aria-live='polite'>
-            <Autocomplete
-                {...restAutocompleteProps}
-                disableListWrap
-                getOptionLabel={getOptionLabel}
-                ListboxComponent={ListboxComponent}
-                noOptionsText={isLoading ? 'Loading…' : 'No options'}
-            />
-        </div>
+        <Autocomplete
+            {...restAutocompleteProps}
+            disableListWrap
+            getOptionLabel={getOptionLabel}
+            ListboxComponent={ListboxComponent}
+        />
     );
 }
 

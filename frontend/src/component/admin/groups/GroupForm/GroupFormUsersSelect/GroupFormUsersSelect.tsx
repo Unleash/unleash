@@ -103,7 +103,8 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
             }),
     ];
 
-    const isLargeList = users.length > 100;
+    const isLargeList = options.length > 100;
+    const isLoading = isUsersLoading || isServiceAccountsLoading;
 
     return (
         <StyledGroupFormUsersSelect>
@@ -147,10 +148,6 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                         <TextField {...params} label='Select users' />
                     )}
                     renderTags={(value) => renderTags(value)}
-                    isLoading={
-                        options.length === 0 &&
-                        (isUsersLoading || isServiceAccountsLoading)
-                    }
                 />
             ) : (
                 <Autocomplete
@@ -193,6 +190,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                         <TextField {...params} label='Select users' />
                     )}
                     renderTags={(value) => renderTags(value)}
+                    noOptionsText={isLoading ? 'Loading…' : 'No options'}
                 />
             )}
         </StyledGroupFormUsersSelect>

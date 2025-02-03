@@ -200,7 +200,7 @@ export const ScimSettings = () => {
                     </Grid>
                     <Grid item md={10.5} mb={2}>
                         <StyledTitleDiv>
-                            <strong>Clear SCIM Groups</strong>
+                            <strong>Delete SCIM Groups</strong>
                         </StyledTitleDiv>
                         <p>
                             This will remove all SCIM groups from the Unleash

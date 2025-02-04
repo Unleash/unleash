@@ -1,69 +1,13 @@
 import { styled, Button, Popover, Box, type Theme } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import type { ChartDataSelection } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import { useRef, useState, type FC } from 'react';
 import { format } from 'date-fns';
+import type { ChartDataSelection } from './chart-data-selection';
+import { selectablePeriods } from './selectable-periods';
 
 const dropdownWidth = '15rem';
 const dropdownInlinePadding = (theme: Theme) => theme.spacing(3);
-
-export type Period = {
-    key: string;
-    dayCount: number;
-    label: string;
-    year: number;
-    month: number;
-    selectable: boolean;
-    shortLabel: string;
-};
-
-export const toSelectablePeriod = (
-    date: Date,
-    label?: string,
-    selectable = true,
-): Period => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const period = `${year}-${(month + 1).toString().padStart(2, '0')}`;
-    const dayCount = new Date(year, month + 1, 0).getDate();
-    return {
-        key: period,
-        year,
-        month,
-        dayCount,
-        shortLabel: date.toLocaleString('en-US', {
-            month: 'short',
-        }),
-        label:
-            label ||
-            date.toLocaleString('en-US', { month: 'long', year: 'numeric' }),
-        selectable,
-    };
-};
-
-const currentDate = new Date(Date.now());
-const currentPeriod = toSelectablePeriod(currentDate, 'Current month');
-
-const getSelectablePeriods = (): Period[] => {
-    const selectablePeriods = [currentPeriod];
-    for (
-        let subtractMonthCount = 1;
-        subtractMonthCount < 12;
-        subtractMonthCount++
-    ) {
-        // JavaScript wraps around the year, so we don't need to handle that.
-        const date = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth() - subtractMonthCount,
-            1,
-        );
-        selectablePeriods.push(
-            toSelectablePeriod(date, undefined, date > new Date('2024-03-31')),
-        );
-    }
-    return selectablePeriods;
-};
 
 const Wrapper = styled('article')(({ theme }) => ({
     width: dropdownWidth,
@@ -167,8 +111,6 @@ const StyledPopover = styled(Popover)(({ theme }) => ({
 }));
 
 export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
-    const selectablePeriods = getSelectablePeriods();
-
     const rangeOptions = [3, 6, 12].map((monthsBack) => ({
         value: monthsBack,
         label: `Last ${monthsBack} months`,

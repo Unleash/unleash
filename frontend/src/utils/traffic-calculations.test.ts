@@ -1,10 +1,10 @@
 import { getDaysInMonth } from 'date-fns';
 import {
-    toSelectablePeriod,
-    calculateOverageCost,
     calculateEstimatedMonthlyCost,
+    calculateOverageCost,
     calculateProjectedUsage,
-} from './useTrafficData';
+} from './traffic-calculations';
+import { toSelectablePeriod } from '../component/admin/network/NetworkTrafficUsage/selectable-periods';
 
 const testData4Days = [
     {

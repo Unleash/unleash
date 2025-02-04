@@ -9,6 +9,59 @@ import { selectablePeriods } from './selectable-periods';
 const dropdownWidth = '15rem';
 const dropdownInlinePadding = (theme: Theme) => theme.spacing(3);
 
+const BaseButton = styled('button', {
+    shouldForwardProp: (prop) => prop !== 'selected',
+})<{ selected?: boolean }>(({ theme, selected }) => ({
+    cursor: 'pointer',
+    border: 'none',
+    backgroundColor: selected ? theme.palette.secondary.light : 'none',
+    fontSize: theme.typography.body1.fontSize,
+    padding: theme.spacing(0.5),
+    borderRadius: theme.shape.borderRadius,
+    color: theme.palette.text.primary,
+    transition: 'background-color 0.2s ease',
+
+    ':focus': {
+        outline: `2px solid ${theme.palette.primary.main}`,
+    },
+}));
+
+const GridButton = styled(BaseButton)(({ theme }) => ({
+    ':disabled': {
+        cursor: 'default',
+        color: theme.palette.text.disabled,
+    },
+    ':hover:not(:disabled)': {
+        backgroundColor: theme.palette.action.hover,
+    },
+}));
+
+const RangeButton = styled(BaseButton)(({ theme }) => ({
+    width: '100%',
+    paddingBlock: theme.spacing(1),
+    textAlign: 'left',
+    borderRadius: 0,
+    paddingInline: dropdownInlinePadding(theme),
+}));
+
+const SelectorDropdownButton = styled(Button)(({ theme }) => ({
+    whiteSpace: 'nowrap',
+    width: dropdownWidth,
+    justifyContent: 'space-between',
+    fontWeight: 'normal',
+    color: theme.palette.text.primary,
+    borderColor: theme.palette.divider,
+    ':focus-within': {
+        borderColor: theme.palette.primary.main,
+    },
+    ':hover': {
+        borderColor: theme.palette.text.disabled,
+        backgroundColor: 'inherit',
+    },
+
+    transition: 'border-color 0.1s ease',
+}));
+
 const Wrapper = styled('article')(({ theme }) => ({
     width: dropdownWidth,
     paddingBlock: theme.spacing(2),
@@ -136,31 +189,14 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
 
     return (
         <Box ref={ref}>
-            <Button
+            <SelectorDropdownButton
                 endIcon={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-                sx={(theme) => ({
-                    whiteSpace: 'nowrap',
-                    width: dropdownWidth,
-                    justifyContent: 'space-between',
-                    fontWeight: 'normal',
-                    color: theme.palette.text.primary,
-                    borderColor: theme.palette.divider,
-                    ':focus-within': {
-                        borderColor: theme.palette.primary.main,
-                    },
-                    ':hover': {
-                        borderColor: theme.palette.text.disabled,
-                        backgroundColor: 'inherit',
-                    },
-
-                    transition: 'border-color 0.1s ease',
-                })}
                 variant='outlined'
                 disableRipple
                 onClick={() => setOpen(true)}
             >
                 {buttonText}
-            </Button>
+            </SelectorDropdownButton>
             <StyledPopover
                 open={open}
                 anchorEl={ref.current}
@@ -183,15 +219,12 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                         <MonthGrid>
                             {selectablePeriods.map((period, index) => (
                                 <li key={period.label}>
-                                    <button
-                                        className={
+                                    <GridButton
+                                        selected={
                                             selectedPeriod.grouping ===
                                                 'daily' &&
                                             period.key === selectedPeriod.month
-                                                ? 'selected'
-                                                : ''
                                         }
-                                        type='button'
                                         disabled={!period.selectable}
                                         onClick={() => {
                                             selectPeriod({
@@ -201,7 +234,7 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                                         }}
                                     >
                                         {period.shortLabel}
-                                    </button>
+                                    </GridButton>
                                 </li>
                             ))}
                         </MonthGrid>
@@ -212,14 +245,12 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                         <RangeList>
                             {rangeOptions.map((option) => (
                                 <li key={option.label}>
-                                    <button
-                                        className={
+                                    <RangeButton
+                                        selected={
                                             selectedPeriod.grouping ===
                                                 'monthly' &&
                                             option.value ===
                                                 selectedPeriod.monthsBack
-                                                ? 'selected'
-                                                : ''
                                         }
                                         type='button'
                                         onClick={() => {
@@ -230,7 +261,7 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                                         }}
                                     >
                                         Last {option.value} months
-                                    </button>
+                                    </RangeButton>
                                 </li>
                             ))}
                         </RangeList>

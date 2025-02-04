@@ -14,7 +14,7 @@ const BaseButton = styled('button', {
 })<{ selected?: boolean }>(({ theme, selected }) => ({
     cursor: 'pointer',
     border: 'none',
-    backgroundColor: selected ? theme.palette.secondary.light : 'none',
+    backgroundColor: selected ? theme.palette.secondary.light : 'inherit',
     fontSize: theme.typography.body1.fontSize,
     padding: theme.spacing(0.5),
     borderRadius: theme.shape.borderRadius,
@@ -24,15 +24,15 @@ const BaseButton = styled('button', {
     ':focus': {
         outline: `2px solid ${theme.palette.primary.main}`,
     },
+    ':hover:not(:disabled)': {
+        backgroundColor: theme.palette.action.hover,
+    },
 }));
 
 const GridButton = styled(BaseButton)(({ theme }) => ({
     ':disabled': {
         cursor: 'default',
         color: theme.palette.text.disabled,
-    },
-    ':hover:not(:disabled)': {
-        backgroundColor: theme.palette.action.hover,
     },
 }));
 
@@ -68,30 +68,6 @@ const Wrapper = styled('article')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'column',
     gap: theme.spacing(2),
-    button: {
-        cursor: 'pointer',
-        border: 'none',
-        background: 'none',
-        fontSize: theme.typography.body1.fontSize,
-        padding: theme.spacing(0.5),
-        borderRadius: theme.shape.borderRadius,
-        color: theme.palette.text.primary,
-        transition: 'background-color 0.2s ease',
-
-        '&.selected': {
-            backgroundColor: theme.palette.secondary.light,
-        },
-    },
-    'button:disabled': {
-        cursor: 'default',
-        color: theme.palette.text.disabled,
-    },
-    'button:hover:not(:disabled)': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    'button:focus': {
-        outline: `2px solid ${theme.palette.primary.main}`,
-    },
 }));
 
 const MonthSelector = styled('article')(({ theme }) => ({
@@ -140,14 +116,6 @@ const RangeList = styled('ul')(({ theme }) => ({
     width: '100%',
     li: {
         width: '100%',
-    },
-
-    button: {
-        width: '100%',
-        paddingBlock: theme.spacing(1),
-        textAlign: 'left',
-        borderRadius: 0,
-        paddingInline: dropdownInlinePadding(theme),
     },
 }));
 

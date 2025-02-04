@@ -60,12 +60,14 @@ interface IReleasePlanMilestoneProps {
     milestone: IReleasePlanMilestone;
     status: MilestoneStatus;
     onStartMilestone: (milestone: IReleasePlanMilestone) => void;
+    readonly?: boolean;
 }
 
 export const ReleasePlanMilestone = ({
     milestone,
     status,
     onStartMilestone,
+    readonly,
 }: IReleasePlanMilestoneProps) => {
     const [expanded, setExpanded] = useState(false);
 
@@ -75,10 +77,14 @@ export const ReleasePlanMilestone = ({
                 <StyledAccordionSummary>
                     <StyledTitleContainer>
                         <StyledTitle>{milestone.name}</StyledTitle>
-                        <ReleasePlanMilestoneStatus
-                            status={status}
-                            onStartMilestone={() => onStartMilestone(milestone)}
-                        />
+                        {!readonly && (
+                            <ReleasePlanMilestoneStatus
+                                status={status}
+                                onStartMilestone={() =>
+                                    onStartMilestone(milestone)
+                                }
+                            />
+                        )}
                     </StyledTitleContainer>
                     <StyledSecondaryLabel>No strategies</StyledSecondaryLabel>
                 </StyledAccordionSummary>
@@ -94,10 +100,12 @@ export const ReleasePlanMilestone = ({
             <StyledAccordionSummary expandIcon={<ExpandMore />}>
                 <StyledTitleContainer>
                     <StyledTitle>{milestone.name}</StyledTitle>
-                    <ReleasePlanMilestoneStatus
-                        status={status}
-                        onStartMilestone={() => onStartMilestone(milestone)}
-                    />
+                    {!readonly && (
+                        <ReleasePlanMilestoneStatus
+                            status={status}
+                            onStartMilestone={() => onStartMilestone(milestone)}
+                        />
+                    )}
                 </StyledTitleContainer>
                 <StyledSecondaryLabel>
                     {milestone.strategies.length === 1

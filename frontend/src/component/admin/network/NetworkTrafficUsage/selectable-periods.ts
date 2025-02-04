@@ -1,5 +1,5 @@
 import { getDaysInMonth } from 'date-fns';
-import { formatMonth } from './dates';
+import { currentDate, formatMonth } from './dates';
 import { TRAFFIC_MEASUREMENT_START_DATE } from 'utils/traffic-calculations';
 
 export type Period = {
@@ -58,7 +58,7 @@ export const generateSelectablePeriodsFromDate = (now: Date) => {
     }
     return selectablePeriods;
 };
-export const selectablePeriods = [];
+export const selectablePeriods = generateSelectablePeriodsFromDate(currentDate);
 export const periodsRecord = Object.fromEntries(
     selectablePeriods.map((period) => [period.key, period]),
 );

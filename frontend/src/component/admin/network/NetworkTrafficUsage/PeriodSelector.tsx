@@ -72,17 +72,16 @@ const Wrapper = styled('article')(({ theme }) => ({
 
 const MonthSelector = styled('article')(({ theme }) => ({
     paddingInline: dropdownInlinePadding(theme),
-    hgroup: {
-        h3: {
-            margin: 0,
-            fontSize: theme.typography.h3.fontSize,
-        },
-        p: {
-            color: theme.palette.text.secondary,
-            fontSize: theme.typography.body2.fontSize,
-        },
+}));
 
-        marginBottom: theme.spacing(1),
+const MonthSelectorHeaderGroup = styled('hgroup')(({ theme }) => ({
+    h3: {
+        margin: 0,
+        fontSize: theme.typography.h3.fontSize,
+    },
+    p: {
+        color: theme.palette.text.secondary,
+        fontSize: theme.typography.body2.fontSize,
     },
 }));
 
@@ -98,13 +97,15 @@ const RangeSelector = styled('article')(({ theme }) => ({
     display: 'flex',
     width: '100%',
     flexFlow: 'column',
-    gap: theme.spacing(0),
-    h4: {
-        paddingInline: dropdownInlinePadding(theme),
-        fontSize: theme.typography.body2.fontSize,
-        margin: 0,
-        color: theme.palette.text.secondary,
-    },
+    gap: theme.spacing(0.5),
+}));
+
+const RangeHeader = styled('p')(({ theme }) => ({
+    paddingInline: dropdownInlinePadding(theme),
+    fontSize: theme.typography.body2.fontSize,
+    margin: 0,
+    color: theme.palette.text.secondary,
+    fontWeight: 'bold',
 }));
 
 const RangeList = styled('ul')(({ theme }) => ({
@@ -178,10 +179,10 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
             >
                 <Wrapper>
                     <MonthSelector>
-                        <hgroup>
+                        <MonthSelectorHeaderGroup>
                             <h3>Select month</h3>
                             <p>Last 12 months</p>
-                        </hgroup>
+                        </MonthSelectorHeaderGroup>
                         <MonthGrid>
                             {selectablePeriods.map((period, index) => (
                                 <li key={period.label}>
@@ -206,7 +207,7 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                         </MonthGrid>
                     </MonthSelector>
                     <RangeSelector>
-                        <h4>Range</h4>
+                        <RangeHeader>Range</RangeHeader>
 
                         <RangeList>
                             {rangeOptions.map((option) => (

@@ -32,11 +32,12 @@ afterAll(async () => {
 });
 
 describe('getSubscribedUsers', () => {
-    test('returns users that did not unsubscribe and logged in', async () => {
+    test('returns seen users that did not unsubscribe', async () => {
         const user1 = await userStore.insert({
             email: 'user1@example.com',
             name: 'User One',
         });
+        // user seen
         await userStore.successfullyLogin(user1);
         const user2 = await userStore.insert({
             email: 'user2@example.com',

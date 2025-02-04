@@ -240,6 +240,19 @@ class UserService {
         return this.store.getByQuery({ email });
     }
 
+    private validateEmail(email?: string): void {
+        if (email) {
+            Joi.assert(
+                email,
+                Joi.string().email({
+                    ignoreLength: true,
+                    minDomainSegments: 1,
+                }),
+                'Email',
+            );
+        }
+    }
+
     async createUser(
         { username, email, name, password, rootRole }: ICreateUser,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
@@ -248,13 +261,9 @@ class UserService {
             throw new BadDataError('You must specify username or email');
         }
 
-        if (email) {
-            Joi.assert(
-                email,
-                Joi.string().email({ ignoreLength: true }),
-                'Email',
-            );
-        }
+        Joi.assert(name, Joi.string(), 'Name');
+
+        this.validateEmail(email);
 
         const exists = await this.store.hasUser({ username, email });
         if (exists) {
@@ -348,13 +357,7 @@ class UserService {
     ): Promise<IUserWithRootRole> {
         const preUser = await this.getUser(id);
 
-        if (email) {
-            Joi.assert(
-                email,
-                Joi.string().email({ ignoreLength: true }),
-                'Email',
-            );
-        }
+        this.validateEmail(email);
 
         if (rootRole) {
             await this.accessService.setUserRootRole(id, rootRole);

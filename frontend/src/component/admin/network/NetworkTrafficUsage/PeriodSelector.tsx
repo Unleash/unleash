@@ -71,7 +71,6 @@ const Wrapper = styled('article')(({ theme }) => ({
 }));
 
 const MonthSelector = styled('article')(({ theme }) => ({
-    border: 'none',
     paddingInline: dropdownInlinePadding(theme),
     hgroup: {
         h3: {
@@ -93,7 +92,6 @@ const MonthGrid = styled('ul')(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(4, 1fr)',
     rowGap: theme.spacing(1),
-    columnGap: theme.spacing(2),
 }));
 
 const RangeSelector = styled('article')(({ theme }) => ({

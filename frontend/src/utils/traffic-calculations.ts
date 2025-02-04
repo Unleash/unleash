@@ -11,18 +11,35 @@ import type { ChartDatasetType } from '../component/admin/network/NetworkTraffic
 const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
 
-// todo: implement and test
-export const filterData = (
+export const TRAFFIC_MEASUREMENT_START_DATE = new Date('2024-05-01');
+
+export const METERED_TRAFFIC_ENDPOINTS = [
+    '/api/admin',
+    '/api/frontend',
+    '/api/client',
+];
+
+export const cleanTrafficData = (
     data?: TrafficUsageDataSegmentedCombinedSchema,
 ): TrafficUsageDataSegmentedCombinedSchema | undefined => {
     if (!data) {
         return;
     }
-    // filter out endpoints not mentioned in endpointsInfo
-    // filter out any data from before May 2024
-    return data;
+
+    const { apiData, ...rest } = data;
+    const cleanedApiData = apiData
+        .filter((item) => METERED_TRAFFIC_ENDPOINTS.includes(item.apiPath))
+        .map((item) => {
+            item.dataPoints = item.dataPoints.filter(
+                ({ period }) =>
+                    new Date(period) >= TRAFFIC_MEASUREMENT_START_DATE,
+            );
+            return item;
+        });
+    return { apiData: cleanedApiData, ...rest };
 };
 
+// todo: extract "currentMonth" into a function argument instead
 const monthlyTrafficDataToCurrentUsage = (
     apiData: TrafficUsageDataSegmentedCombinedSchemaApiDataItem[],
 ) => {

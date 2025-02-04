@@ -3,8 +3,10 @@ import {
     calculateEstimatedMonthlyCost,
     calculateOverageCost,
     calculateProjectedUsage,
+    cleanTrafficData,
 } from './traffic-calculations';
 import { toSelectablePeriod } from '../component/admin/network/NetworkTrafficUsage/selectable-periods';
+import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
 
 const testData4Days = [
     {
@@ -140,5 +142,73 @@ describe('traffic overage calculation', () => {
         const overageUnits = Math.floor(overage / trafficUnitSize);
         const total = overageUnits * trafficUnitCost;
         expect(result).toBe(total);
+    });
+});
+
+describe('filtering out unwanted data', () => {
+    test('it removes the /edge endpoint data', () => {
+        const input: TrafficUsageDataSegmentedCombinedSchema = {
+            grouping: 'daily',
+            dateRange: { from: '2025-02-01', to: '2025-02-28' },
+            apiData: [
+                { apiPath: '/api/client', dataPoints: [] },
+                { apiPath: '/edge', dataPoints: [] },
+                { apiPath: '/api/admin', dataPoints: [] },
+                { apiPath: '/api/frontend', dataPoints: [] },
+            ],
+        };
+
+        const expected = {
+            grouping: 'daily',
+            dateRange: { from: '2025-02-01', to: '2025-02-28' },
+            apiData: [
+                { apiPath: '/api/client', dataPoints: [] },
+                { apiPath: '/api/admin', dataPoints: [] },
+                { apiPath: '/api/frontend', dataPoints: [] },
+            ],
+        };
+
+        expect(cleanTrafficData(input)).toStrictEqual(expected);
+    });
+
+    test('it removes any data from before the traffic measuring was put in place', () => {
+        const input: TrafficUsageDataSegmentedCombinedSchema = {
+            grouping: 'monthly',
+            dateRange: {
+                from: '2024-02-01',
+                to: '2025-06-31',
+            },
+            apiData: [
+                {
+                    apiPath: '/api/client',
+                    dataPoints: [
+                        { period: '2024-06', trafficTypes: [] },
+                        { period: '2024-05', trafficTypes: [] },
+                        { period: '2024-04', trafficTypes: [] },
+                        { period: '2024-03', trafficTypes: [] },
+                        { period: '2024-02', trafficTypes: [] },
+                    ],
+                },
+            ],
+        };
+
+        const expected = {
+            grouping: 'monthly',
+            dateRange: {
+                from: '2024-02-01',
+                to: '2025-06-31',
+            },
+            apiData: [
+                {
+                    apiPath: '/api/client',
+                    dataPoints: [
+                        { period: '2024-06', trafficTypes: [] },
+                        { period: '2024-05', trafficTypes: [] },
+                    ],
+                },
+            ],
+        };
+
+        expect(cleanTrafficData(input)).toStrictEqual(expected);
     });
 });

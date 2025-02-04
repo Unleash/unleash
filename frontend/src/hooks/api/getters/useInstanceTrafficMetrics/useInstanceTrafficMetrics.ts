@@ -6,6 +6,7 @@ import type {
     TrafficUsageDataSegmentedCombinedSchema,
     TrafficUsageDataSegmentedSchema,
 } from 'openapi';
+import { cleanTrafficData } from 'utils/traffic-calculations';
 
 export interface IInstanceTrafficMetricsResponse {
     usage: TrafficUsageDataSegmentedSchema;
@@ -62,7 +63,7 @@ export const useInstanceTrafficMetrics2 = (
 
     return useMemo(
         () => ({
-            usage: data,
+            usage: cleanTrafficData(data) as any,
             loading: !error && !data,
             refetch: () => mutate(),
             error,

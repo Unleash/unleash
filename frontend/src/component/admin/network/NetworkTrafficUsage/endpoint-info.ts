@@ -1,10 +1,14 @@
+import type { METERED_TRAFFIC_ENDPOINTS } from 'utils/traffic-calculations';
 export type EndpointInfo = {
     label: string;
     color: string;
     order: number;
 };
 
-export const endpointsInfo: Record<string, EndpointInfo> = {
+export const endpointsInfo: Record<
+    (typeof METERED_TRAFFIC_ENDPOINTS)[number],
+    EndpointInfo
+> = {
     '/api/admin': {
         label: 'Admin',
         color: '#6D66D9',

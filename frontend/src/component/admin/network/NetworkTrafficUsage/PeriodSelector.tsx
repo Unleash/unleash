@@ -9,52 +9,79 @@ import { selectablePeriods } from './selectable-periods';
 const dropdownWidth = '15rem';
 const dropdownInlinePadding = (theme: Theme) => theme.spacing(3);
 
+const BaseButton = styled('button', {
+    shouldForwardProp: (prop) => prop !== 'selected',
+})<{ selected?: boolean }>(({ theme, selected }) => ({
+    cursor: 'pointer',
+    border: 'none',
+    backgroundColor: selected ? theme.palette.secondary.light : 'inherit',
+    fontSize: theme.typography.body1.fontSize,
+    padding: theme.spacing(0.5),
+    borderRadius: theme.shape.borderRadius,
+    color: theme.palette.text.primary,
+    transition: 'background-color 0.2s ease',
+
+    ':focus-visible': {
+        outline: `2px solid ${theme.palette.primary.main}`,
+    },
+    ':hover:not(:disabled)': {
+        backgroundColor: theme.palette.action.hover,
+    },
+}));
+
+const GridButton = styled(BaseButton)(({ theme }) => ({
+    ':disabled': {
+        cursor: 'default',
+        color: theme.palette.text.disabled,
+    },
+}));
+
+const RangeButton = styled(BaseButton)(({ theme }) => ({
+    width: '100%',
+    paddingBlock: theme.spacing(1),
+    textAlign: 'left',
+    borderRadius: 0,
+    paddingInline: dropdownInlinePadding(theme),
+}));
+
+const SelectorDropdownButton = styled(Button)(({ theme }) => ({
+    whiteSpace: 'nowrap',
+    width: dropdownWidth,
+    justifyContent: 'space-between',
+    fontWeight: 'normal',
+    color: theme.palette.text.primary,
+    borderColor: theme.palette.divider,
+    ':focus-within': {
+        borderColor: theme.palette.primary.main,
+    },
+    ':hover': {
+        borderColor: theme.palette.text.disabled,
+        backgroundColor: 'inherit',
+    },
+
+    transition: 'border-color 0.1s ease',
+}));
+
 const Wrapper = styled('article')(({ theme }) => ({
     width: dropdownWidth,
     paddingBlock: theme.spacing(2),
     display: 'flex',
     flexFlow: 'column',
     gap: theme.spacing(2),
-    button: {
-        cursor: 'pointer',
-        border: 'none',
-        background: 'none',
-        fontSize: theme.typography.body1.fontSize,
-        padding: theme.spacing(0.5),
-        borderRadius: theme.shape.borderRadius,
-        color: theme.palette.text.primary,
-        transition: 'background-color 0.2s ease',
-
-        '&.selected': {
-            backgroundColor: theme.palette.secondary.light,
-        },
-    },
-    'button:disabled': {
-        cursor: 'default',
-        color: theme.palette.text.disabled,
-    },
-    'button:hover:not(:disabled)': {
-        backgroundColor: theme.palette.action.hover,
-    },
-    'button:focus': {
-        outline: `2px solid ${theme.palette.primary.main}`,
-    },
 }));
 
 const MonthSelector = styled('article')(({ theme }) => ({
-    border: 'none',
     paddingInline: dropdownInlinePadding(theme),
-    hgroup: {
-        h3: {
-            margin: 0,
-            fontSize: theme.typography.h3.fontSize,
-        },
-        p: {
-            color: theme.palette.text.secondary,
-            fontSize: theme.typography.body2.fontSize,
-        },
+}));
 
-        marginBottom: theme.spacing(1),
+const MonthSelectorHeaderGroup = styled('hgroup')(({ theme }) => ({
+    h3: {
+        margin: 0,
+        fontSize: theme.typography.h3.fontSize,
+    },
+    p: {
+        color: theme.palette.text.secondary,
+        fontSize: theme.typography.body2.fontSize,
     },
 }));
 
@@ -64,20 +91,21 @@ const MonthGrid = styled('ul')(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: 'repeat(4, 1fr)',
     rowGap: theme.spacing(1),
-    columnGap: theme.spacing(2),
 }));
 
 const RangeSelector = styled('article')(({ theme }) => ({
     display: 'flex',
     width: '100%',
     flexFlow: 'column',
-    gap: theme.spacing(0),
-    h4: {
-        paddingInline: dropdownInlinePadding(theme),
-        fontSize: theme.typography.body2.fontSize,
-        margin: 0,
-        color: theme.palette.text.secondary,
-    },
+    gap: theme.spacing(0.5),
+}));
+
+const RangeHeader = styled('p')(({ theme }) => ({
+    paddingInline: dropdownInlinePadding(theme),
+    fontSize: theme.typography.body2.fontSize,
+    margin: 0,
+    color: theme.palette.text.secondary,
+    fontWeight: 'bold',
 }));
 
 const RangeList = styled('ul')(({ theme }) => ({
@@ -87,14 +115,6 @@ const RangeList = styled('ul')(({ theme }) => ({
     width: '100%',
     li: {
         width: '100%',
-    },
-
-    button: {
-        width: '100%',
-        paddingBlock: theme.spacing(1),
-        textAlign: 'left',
-        borderRadius: 0,
-        paddingInline: dropdownInlinePadding(theme),
     },
 }));
 
@@ -136,31 +156,14 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
 
     return (
         <Box ref={ref}>
-            <Button
+            <SelectorDropdownButton
                 endIcon={open ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
-                sx={(theme) => ({
-                    whiteSpace: 'nowrap',
-                    width: dropdownWidth,
-                    justifyContent: 'space-between',
-                    fontWeight: 'normal',
-                    color: theme.palette.text.primary,
-                    borderColor: theme.palette.divider,
-                    ':focus-within': {
-                        borderColor: theme.palette.primary.main,
-                    },
-                    ':hover': {
-                        borderColor: theme.palette.text.disabled,
-                        backgroundColor: 'inherit',
-                    },
-
-                    transition: 'border-color 0.1s ease',
-                })}
                 variant='outlined'
                 disableRipple
                 onClick={() => setOpen(true)}
             >
                 {buttonText}
-            </Button>
+            </SelectorDropdownButton>
             <StyledPopover
                 open={open}
                 anchorEl={ref.current}
@@ -176,22 +179,19 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
             >
                 <Wrapper>
                     <MonthSelector>
-                        <hgroup>
+                        <MonthSelectorHeaderGroup>
                             <h3>Select month</h3>
                             <p>Last 12 months</p>
-                        </hgroup>
+                        </MonthSelectorHeaderGroup>
                         <MonthGrid>
                             {selectablePeriods.map((period, index) => (
                                 <li key={period.label}>
-                                    <button
-                                        className={
+                                    <GridButton
+                                        selected={
                                             selectedPeriod.grouping ===
                                                 'daily' &&
                                             period.key === selectedPeriod.month
-                                                ? 'selected'
-                                                : ''
                                         }
-                                        type='button'
                                         disabled={!period.selectable}
                                         onClick={() => {
                                             selectPeriod({
@@ -201,25 +201,23 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                                         }}
                                     >
                                         {period.shortLabel}
-                                    </button>
+                                    </GridButton>
                                 </li>
                             ))}
                         </MonthGrid>
                     </MonthSelector>
                     <RangeSelector>
-                        <h4>Range</h4>
+                        <RangeHeader>Range</RangeHeader>
 
                         <RangeList>
                             {rangeOptions.map((option) => (
                                 <li key={option.label}>
-                                    <button
-                                        className={
+                                    <RangeButton
+                                        selected={
                                             selectedPeriod.grouping ===
                                                 'monthly' &&
                                             option.value ===
                                                 selectedPeriod.monthsBack
-                                                ? 'selected'
-                                                : ''
                                         }
                                         type='button'
                                         onClick={() => {
@@ -230,7 +228,7 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                                         }}
                                     >
                                         Last {option.value} months
-                                    </button>
+                                    </RangeButton>
                                 </li>
                             ))}
                         </RangeList>

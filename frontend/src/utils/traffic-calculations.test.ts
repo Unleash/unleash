@@ -3,6 +3,7 @@ import {
     calculateEstimatedMonthlyCost,
     calculateOverageCost,
     calculateProjectedUsage,
+    calculateTotalUsage,
     cleanTrafficData,
 } from './traffic-calculations';
 import { toSelectablePeriod } from '../component/admin/network/NetworkTrafficUsage/selectable-periods';
@@ -146,7 +147,7 @@ describe('traffic overage calculation', () => {
 });
 
 describe('filtering out unwanted data', () => {
-    test('it removes the /edge endpoint data', () => {
+    it('removes the /edge endpoint data', () => {
         const input: TrafficUsageDataSegmentedCombinedSchema = {
             grouping: 'daily',
             dateRange: { from: '2025-02-01', to: '2025-02-28' },
@@ -171,7 +172,7 @@ describe('filtering out unwanted data', () => {
         expect(cleanTrafficData(input)).toStrictEqual(expected);
     });
 
-    test('it removes any data from before the traffic measuring was put in place', () => {
+    it('removes any data from before the traffic measuring was put in place', () => {
         const input: TrafficUsageDataSegmentedCombinedSchema = {
             grouping: 'monthly',
             dateRange: {
@@ -210,5 +211,81 @@ describe('filtering out unwanted data', () => {
         };
 
         expect(cleanTrafficData(input)).toStrictEqual(expected);
+    });
+});
+
+describe('calculateTotalUsage', () => {
+    const dataPoint = (period: string, count: number) => ({
+        period,
+        trafficTypes: [{ count, group: 'successful-requests' }],
+    });
+    it('calculates total from daily data', () => {
+        const input: TrafficUsageDataSegmentedCombinedSchema = {
+            grouping: 'daily',
+            dateRange: { from: '2025-02-01', to: '2025-02-28' },
+            apiData: [
+                {
+                    apiPath: '/api/client',
+                    dataPoints: [
+                        dataPoint('2024-02-01', 1),
+                        dataPoint('2024-02-15', 2),
+                        dataPoint('2024-02-07', 3),
+                    ],
+                },
+                {
+                    apiPath: '/api/admin',
+                    dataPoints: [
+                        dataPoint('2024-02-01', 4),
+                        dataPoint('2024-02-15', 5),
+                        dataPoint('2024-02-07', 6),
+                    ],
+                },
+                {
+                    apiPath: '/api/frontend',
+                    dataPoints: [
+                        dataPoint('2024-02-01', 7),
+                        dataPoint('2024-02-15', 8),
+                        dataPoint('2024-02-07', 9),
+                    ],
+                },
+            ],
+        };
+
+        expect(calculateTotalUsage(input)).toBe(45);
+    });
+
+    it('calculates total for the most recent month in monthly data', () => {
+        const input: TrafficUsageDataSegmentedCombinedSchema = {
+            grouping: 'monthly',
+            dateRange: { from: '2024-10-01', to: '2025-01-31' },
+            apiData: [
+                {
+                    apiPath: '/api/client',
+                    dataPoints: [
+                        dataPoint('2025-01', 1),
+                        dataPoint('2024-12', 2),
+                        dataPoint('2024-10', 3),
+                    ],
+                },
+                {
+                    apiPath: '/api/admin',
+                    dataPoints: [
+                        dataPoint('2025-01', 4),
+                        dataPoint('2024-11', 5),
+                        dataPoint('2024-10', 6),
+                    ],
+                },
+                {
+                    apiPath: '/api/frontend',
+                    dataPoints: [
+                        dataPoint('2024-11', 7),
+                        dataPoint('2024-12', 8),
+                        dataPoint('2024-10', 9),
+                    ],
+                },
+            ],
+        };
+
+        expect(calculateTotalUsage(input)).toBe(5);
     });
 });

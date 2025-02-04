@@ -46,6 +46,7 @@ test('Subscribe and unsubscribe', async () => {
         email: 'test@getunleash.io',
         name: 'Sample Name',
     });
+    await userStore.successfullyLogin(user);
 
     const subscribers = await userSubscriptionsReadModel.getSubscribedUsers(
         'productivity-report',
@@ -79,6 +80,7 @@ test('Event log for subscription actions', async () => {
         email: 'test@getunleash.io',
         name: 'Sample Name',
     });
+    await userStore.successfullyLogin(user);
 
     await userSubscriptionService.unsubscribe(
         user.id,

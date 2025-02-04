@@ -63,7 +63,7 @@ const ListboxComponent = forwardRef<
 
 type AutocompleteVirtualProps<T, M extends boolean | undefined> = Omit<
     AutocompleteProps<T, M, boolean, false>,
-    'autoHighlight' | 'disableListWrap' | 'ListboxComponent'
+    'disableListWrap' | 'ListboxComponent'
 > & {
     virtualThreshold?: number;
 };

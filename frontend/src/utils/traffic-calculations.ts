@@ -7,14 +7,17 @@ import {
     daysInCurrentMonth,
 } from '../component/admin/network/NetworkTrafficUsage/dates';
 import type { ChartDatasetType } from '../component/admin/network/NetworkTrafficUsage/chart-functions';
-import { endpointsInfo } from 'component/admin/network/NetworkTrafficUsage/endpoint-info';
 
 const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
 
-// This is the first full month of data that we have on record for any of our
-// customers.
 export const TRAFFIC_MEASUREMENT_START_DATE = new Date('2024-05-01');
+
+export const METERED_TRAFFIC_ENDPOINTS = [
+    '/api/admin',
+    '/api/frontend',
+    '/api/client',
+];
 
 export const cleanTrafficData = (
     data?: TrafficUsageDataSegmentedCombinedSchema,
@@ -25,7 +28,7 @@ export const cleanTrafficData = (
 
     const { apiData, ...rest } = data;
     const cleanedApiData = apiData
-        .filter((item) => item.apiPath in endpointsInfo)
+        .filter((item) => METERED_TRAFFIC_ENDPOINTS.includes(item.apiPath))
         .map((item) => {
             item.dataPoints = item.dataPoints.filter(
                 ({ period }) =>
@@ -36,6 +39,7 @@ export const cleanTrafficData = (
     return { apiData: cleanedApiData, ...rest };
 };
 
+// todo: extract "currentMonth" into a function argument instead
 const monthlyTrafficDataToCurrentUsage = (
     apiData: TrafficUsageDataSegmentedCombinedSchemaApiDataItem[],
 ) => {

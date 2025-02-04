@@ -154,8 +154,12 @@ export class ClientFeatureToggleDelta {
         if (requiredRevisionId >= this.currentRevisionId) {
             return undefined;
         }
-        if (requiredRevisionId === 0) {
-            const hydrationEvent = this.delta[environment].getHydrationEvent();
+        const delta = this.delta[environment];
+        if (
+            requiredRevisionId === 0 ||
+            delta.isMissingRevision(requiredRevisionId)
+        ) {
+            const hydrationEvent = delta.getHydrationEvent();
             const filteredEvent = filterHydrationEventByQuery(
                 hydrationEvent,
                 projects,
@@ -168,7 +172,8 @@ export class ClientFeatureToggleDelta {
 
             return Promise.resolve(response);
         } else {
-            const environmentEvents = this.delta[environment].getEvents();
+            const environmentEvents = delta.getEvents();
+            // TODO: check if the rev exists in cache, if not return hydration
             const events = filterEventsByQuery(
                 environmentEvents,
                 requiredRevisionId,
@@ -299,7 +304,7 @@ export class ClientFeatureToggleDelta {
         });
     }
 
-    public async initEnvironmentDelta(environment: string) {
+    private async initEnvironmentDelta(environment: string) {
         // Todo: replace with method that gets all features for an environment
         const baseFeatures = await this.getClientFeatures({
             environment,

@@ -12,6 +12,22 @@ export class DeltaCache {
     constructor(hydrationEvent: DeltaHydrationEvent, maxLength: number = 20) {
         this.hydrationEvent = hydrationEvent;
         this.maxLength = maxLength;
+
+        this.addBaseEventFromHydration(hydrationEvent);
+    }
+
+    private addBaseEventFromHydration(
+        hydrationEvent: DeltaHydrationEvent,
+    ): void {
+        const lastFeature =
+            hydrationEvent.features[hydrationEvent.features.length - 1];
+        this.addEvents([
+            {
+                eventId: hydrationEvent.eventId,
+                type: 'feature-updated',
+                feature: lastFeature,
+            },
+        ]);
     }
 
     public addEvents(events: DeltaEvent[]): void {
@@ -25,6 +41,10 @@ export class DeltaCache {
 
     public getEvents(): DeltaEvent[] {
         return this.events;
+    }
+
+    public isMissingRevision(revisionId: number): boolean {
+        return !this.events.some((event) => event.eventId === revisionId);
     }
 
     public getHydrationEvent(): DeltaHydrationEvent {

@@ -91,7 +91,7 @@ export class ProjectApiTokenController extends Controller {
                     operationId: 'getProjectApiTokens',
                     summary: 'Get api tokens for project.',
                     description:
-                        'Returns the [project API tokens](https://docs.getunleash.io/how-to/how-to-create-project-api-tokens) that have been created for this project.',
+                        'Returns the project-specific [API tokens](https://docs.getunleash.io/reference/api-tokens) that have been created for this project.',
                     responses: {
                         200: createResponseSchema('apiTokensSchema'),
                         ...getStandardResponses(401, 403, 404),

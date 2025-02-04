@@ -163,7 +163,7 @@ export const AvailableIntegrations: VFC<IAvailableIntegrationsProps> = ({
                         need a client SDK (software developer kit) for your
                         programming language and an{' '}
                         <a
-                            href='https://docs.getunleash.io/how-to/how-to-create-api-tokens'
+                            href='https://docs.getunleash.io/reference/api-tokens-and-client-keys'
                             target='_blank'
                             rel='noopener noreferrer'
                         >

@@ -33,12 +33,32 @@
     },
     {
       "source": "/user_guide/api-token",
-      "destination": "/how-to/how-to-create-api-tokens",
+      "destination": "/reference/api-tokens-and-client-keys",
       "permanent": true
     },
     {
       "source": "/deploy/user_guide/api-token",
-      "destination": "/how-to/how-to-create-api-tokens",
+      "destination": "/reference/api-tokens-and-client-keys",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-api-tokens",
+      "destination": "/reference/api-tokens-and-client-keys#create-an-api-token",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-project-api-tokens",
+      "destination": "/reference/api-tokens-and-client-keys#create-an-api-token",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-personal-access-tokens",
+      "destination": "/reference/api-tokens-and-client-keys#create-an-api-token",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-service-accounts",
+      "destination": "/reference/service-accounts#create-a-service-account",
       "permanent": true
     },
     {

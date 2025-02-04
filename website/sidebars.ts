@@ -704,10 +704,6 @@ const sidebars: SidebarsConfig = {
                                 slug: '/how-to/api',
                             },
                             items: [
-                                'how-to/how-to-create-api-tokens',
-                                'how-to/how-to-create-personal-access-tokens',
-                                'how-to/how-to-create-project-api-tokens',
-                                'how-to/how-to-create-service-accounts',
                                 'how-to/how-to-download-login-history',
                                 'how-to/how-to-use-the-admin-api',
                                 'how-to/how-to-enable-openapi',

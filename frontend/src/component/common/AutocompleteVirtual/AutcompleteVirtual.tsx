@@ -68,6 +68,8 @@ type AutocompleteVirtualProps<T, M extends boolean | undefined> = Omit<
     virtualThreshold?: number;
 };
 
+// This component has a default threshold of 250 when virtualization kicks in
+// When virtualization is enabled we skip groupBy
 function AutocompleteVirtual<T, M extends boolean | undefined>(
     props: AutocompleteVirtualProps<T, M>,
 ) {

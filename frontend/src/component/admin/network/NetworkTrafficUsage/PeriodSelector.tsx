@@ -21,7 +21,7 @@ const BaseButton = styled('button', {
     color: theme.palette.text.primary,
     transition: 'background-color 0.2s ease',
 
-    ':focus': {
+    ':focus-visible': {
         outline: `2px solid ${theme.palette.primary.main}`,
     },
     ':hover:not(:disabled)': {

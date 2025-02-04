@@ -42,7 +42,7 @@ import {
     calculateTotalUsage,
     calculateOverageCost,
     calculateEstimatedMonthlyCost,
-} from './traffic-calculations';
+} from 'utils/traffic-calculations';
 import { currentDate, currentMonth } from './dates';
 import { endpointsInfo } from './endpoint-info';
 import { type ChartDataSelection, toDateRange } from './chart-data-selection';

@@ -4,7 +4,7 @@ import {
     calculateOverageCost,
     calculateProjectedUsage,
 } from './traffic-calculations';
-import { toSelectablePeriod } from './selectable-periods';
+import { toSelectablePeriod } from '../component/admin/network/NetworkTrafficUsage/selectable-periods';
 
 const testData4Days = [
     {

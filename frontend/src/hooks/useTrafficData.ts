@@ -1,4 +1,3 @@
-// todo: delete file when you remove flag dataUsageMultiMonthView
 import type { ChartDatasetType } from 'component/admin/network/NetworkTrafficUsage/chart-functions';
 import type { IInstanceTrafficMetricsResponse } from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import { useState } from 'react';

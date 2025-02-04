@@ -17,6 +17,7 @@ import {
     BILLING_TRAFFIC_BUNDLE_PRICE,
 } from './BillingPlan';
 import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import { calculateOverageCost } from 'utils/traffic-calculations';
 
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -47,7 +48,6 @@ export const BillingDetailsPro = ({
         toTrafficUsageSum,
         endpointsInfo,
         getDayLabels,
-        calculateOverageCost,
     } = useTrafficDataEstimation();
 
     const eligibleUsers = users.filter((user) => user.email);

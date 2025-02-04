@@ -15,6 +15,7 @@ import { useTrafficDataEstimation } from 'hooks/useTrafficData';
 import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import { useMemo } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { calculateOverageCost } from 'utils/traffic-calculations';
 
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -39,7 +40,6 @@ export const BillingDetailsPAYG = ({
         toTrafficUsageSum,
         endpointsInfo,
         getDayLabels,
-        calculateOverageCost,
     } = useTrafficDataEstimation();
 
     const eligibleUsers = users.filter((user) => user.email);

@@ -2,8 +2,11 @@ import type {
     TrafficUsageDataSegmentedCombinedSchema,
     TrafficUsageDataSegmentedCombinedSchemaApiDataItem,
 } from 'openapi';
-import { currentMonth, daysInCurrentMonth } from './dates';
-import type { ChartDatasetType } from './chart-functions';
+import {
+    currentMonth,
+    daysInCurrentMonth,
+} from '../component/admin/network/NetworkTrafficUsage/dates';
+import type { ChartDatasetType } from '../component/admin/network/NetworkTrafficUsage/chart-functions';
 
 const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;

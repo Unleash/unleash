@@ -22,7 +22,7 @@ describe('toChartData', () => {
             grouping: 'monthly',
             dateRange: {
                 from: '2025-01-01',
-                to: '2025-06-31',
+                to: '2025-06-30',
             },
             apiData: [
                 {

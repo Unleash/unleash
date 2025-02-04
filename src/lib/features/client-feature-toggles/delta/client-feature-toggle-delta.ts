@@ -173,7 +173,6 @@ export class ClientFeatureToggleDelta {
             return Promise.resolve(response);
         } else {
             const environmentEvents = delta.getEvents();
-            // TODO: check if the rev exists in cache, if not return hydration
             const events = filterEventsByQuery(
                 environmentEvents,
                 requiredRevisionId,
@@ -305,7 +304,6 @@ export class ClientFeatureToggleDelta {
     }
 
     private async initEnvironmentDelta(environment: string) {
-        // Todo: replace with method that gets all features for an environment
         const baseFeatures = await this.getClientFeatures({
             environment,
         });

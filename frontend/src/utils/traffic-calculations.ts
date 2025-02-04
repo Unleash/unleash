@@ -161,8 +161,6 @@ export const calculateEstimatedMonthlyCost = (
         return 0;
     }
 
-    // todo: rewrite this to use any month, regardless of which it is?
-
     const today = currentDate.getDate();
     const projectedUsage = calculateProjectedUsage(
         today,

@@ -1,7 +1,6 @@
 import type React from 'react';
 import { type FormEvent, useState } from 'react';
 import {
-    Autocomplete,
     Button,
     capitalize,
     Checkbox,
@@ -40,6 +39,7 @@ import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/Multiple
 import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles';
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -339,6 +339,7 @@ export const ProjectAccessAssign = ({
             userRoles.some((userrole) => role.id === userrole.id),
         );
     }
+
     return (
         <SidebarModal
             open
@@ -362,7 +363,7 @@ export const ProjectAccessAssign = ({
                             Select the {entityType}
                         </StyledInputDescription>
                         <StyledAutocompleteWrapper>
-                            <Autocomplete
+                            <AutocompleteVirtual
                                 data-testid={PA_USERS_GROUPS_ID}
                                 size='small'
                                 multiple
@@ -414,37 +415,34 @@ export const ProjectAccessAssign = ({
                                     }
                                 }}
                                 filterOptions={(options, { inputValue }) =>
-                                    options
-                                        .filter((option: IAccessOption) => {
-                                            if (
-                                                option.type ===
-                                                    ENTITY_TYPE.USER ||
-                                                option.type ===
-                                                    ENTITY_TYPE.SERVICE_ACCOUNT
-                                            ) {
-                                                const optionUser =
-                                                    option.entity as IUser;
-                                                return (
-                                                    caseInsensitiveSearch(
-                                                        inputValue,
-                                                        optionUser.email,
-                                                    ) ||
-                                                    caseInsensitiveSearch(
-                                                        inputValue,
-                                                        optionUser.name,
-                                                    ) ||
-                                                    caseInsensitiveSearch(
-                                                        inputValue,
-                                                        optionUser.username,
-                                                    )
-                                                );
-                                            }
-                                            return caseInsensitiveSearch(
-                                                inputValue,
-                                                option.entity.name,
+                                    options.filter((option: IAccessOption) => {
+                                        if (
+                                            option.type === ENTITY_TYPE.USER ||
+                                            option.type ===
+                                                ENTITY_TYPE.SERVICE_ACCOUNT
+                                        ) {
+                                            const optionUser =
+                                                option.entity as IUser;
+                                            return (
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.email,
+                                                ) ||
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.name,
+                                                ) ||
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.username,
+                                                )
                                             );
-                                        })
-                                        .slice(0, 100)
+                                        }
+                                        return caseInsensitiveSearch(
+                                            inputValue,
+                                            option.entity.name,
+                                        );
+                                    })
                                 }
                                 isOptionEqualToValue={(option, value) =>
                                     option.type === value.type &&

@@ -61,24 +61,38 @@ const ListboxComponent = forwardRef<
     );
 });
 
-type TProps<T, M extends boolean | undefined> = Omit<
+type AutocompleteVirtualProps<T, M extends boolean | undefined> = Omit<
     AutocompleteProps<T, M, boolean, false>,
-    'autoHighlight' | 'disableListWrap' | 'ListboxComponent' | 'groupBy'
->;
+    'disableListWrap' | 'ListboxComponent'
+> & {
+    virtualThreshold?: number;
+};
 
+// This component has a default threshold of 250 when virtualization kicks in
+// When virtualization is enabled we skip groupBy
 function AutocompleteVirtual<T, M extends boolean | undefined>(
-    props: TProps<T, M>,
+    props: AutocompleteVirtualProps<T, M>,
 ) {
-    const { getOptionLabel, className, ...restAutocompleteProps } = props;
+    const {
+        virtualThreshold = 250,
+        getOptionLabel,
+        className,
+        ...restAutocompleteProps
+    } = props;
 
-    return (
-        <Autocomplete
-            {...restAutocompleteProps}
-            disableListWrap
-            getOptionLabel={getOptionLabel}
-            ListboxComponent={ListboxComponent}
-        />
-    );
+    const isLargeList = props.options.length > virtualThreshold;
+
+    const autocompleteProps = {
+        ...restAutocompleteProps,
+        getOptionLabel,
+        disableListWrap: true,
+        ...(isLargeList && {
+            ListboxComponent: ListboxComponent,
+            groupBy: undefined,
+        }),
+    };
+
+    return <Autocomplete {...autocompleteProps} />;
 }
 
 export default AutocompleteVirtual;

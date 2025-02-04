@@ -270,3 +270,54 @@ test('should get segment updated and removed events', async () => {
         ],
     });
 });
+
+test('should return hydration if revision not in cache', async () => {
+    await app.createFeature('base_feature');
+    await syncRevisions();
+    const { body, headers } = await app.request
+        .get('/api/client/delta')
+        .expect(200);
+    const etag = headers.etag;
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                type: DELTA_EVENT_TYPES.HYDRATION,
+                features: [
+                    {
+                        name: 'base_feature',
+                    },
+                ],
+            },
+        ],
+    });
+
+    await app.createFeature('not_important1');
+    await syncRevisions();
+
+    const { body: deltaBody } = await app.request
+        .get('/api/client/delta')
+        .set('If-None-Match', etag)
+        .expect(200);
+
+    expect(deltaBody).toMatchObject({
+        events: [
+            {
+                type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            },
+        ],
+    });
+
+    const { body: rehydrationBody } = await app.request
+        .get('/api/client/delta')
+        .set('If-None-Match', '1')
+        .expect(200);
+
+    expect(rehydrationBody).toMatchObject({
+        events: [
+            {
+                type: DELTA_EVENT_TYPES.HYDRATION,
+            },
+        ],
+    });
+});

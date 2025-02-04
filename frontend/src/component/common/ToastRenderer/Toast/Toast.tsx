@@ -6,6 +6,7 @@ import CheckMarkBadge from 'component/common/CheckmarkBadge/CheckMarkBadge';
 import UIContext from 'contexts/UIContext';
 import Close from '@mui/icons-material/Close';
 import type { IToast } from 'interfaces/toast';
+import { Markdown } from 'component/common/Markdown/Markdown';
 
 const Toast = ({ text, type }: IToast) => {
     const { setToast } = useContext(UIContext);
@@ -20,7 +21,9 @@ const Toast = ({ text, type }: IToast) => {
         <div className={classnames(styles.container, 'dropdown-outline')}>
             <CheckMarkBadge type={type} className={styles.checkMark} />
 
-            <h3 className={styles.headerStyles}>{text}</h3>
+            <h3 className={styles.headerStyles}>
+                <Markdown>{text}</Markdown>
+            </h3>
 
             <Tooltip title='Close' arrow>
                 <IconButton

@@ -6295,8 +6295,8 @@ __metadata:
   linkType: hard
 
 "docusaurus-theme-openapi-docs@npm:^4.2.0":
-  version: 4.3.1
-  resolution: "docusaurus-theme-openapi-docs@npm:4.3.1"
+  version: 4.3.3
+  resolution: "docusaurus-theme-openapi-docs@npm:4.3.3"
   dependencies:
     "@hookform/error-message": "npm:^2.0.1"
     "@reduxjs/toolkit": "npm:^1.7.1"
@@ -6327,9 +6327,9 @@ __metadata:
     "@docusaurus/theme-common": ^3.5.0
     docusaurus-plugin-openapi-docs: ^4.0.0
     docusaurus-plugin-sass: ^0.2.3
-    react: ^16.8.4 || ^17.0.0 || ^18.0.0
-    react-dom: ^16.8.4 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/f91d7303779c3787529f6fd6610daab7e30de76abe5ec5fedbd1f27dc9009be6f7ebc01e0a9439bd83482abedb45134b8242650dd0b6b583dbc518539d41da81
+    react: ^16.8.4 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.4 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/cbfb149773b24f0969bc270d48b0cedd6245f32d8cbce74f17d5994bfb105c683ee86ca38af3a6a268991282b465b1dea78b9d9330ffb8ea00cd665622877e40
   languageName: node
   linkType: hard
 

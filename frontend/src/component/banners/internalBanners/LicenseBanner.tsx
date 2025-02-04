@@ -32,8 +32,7 @@ export const LicenseBanner = () => {
             if (!license.loading && !license.error && licenseInfo.message) {
                 const banner = {
                     message: licenseInfo.message,
-                    variant:
-                        licenseInfo.messageType ?? ('warning' as BannerVariant),
+                    variant: mapToVariant(licenseInfo.messageType),
                     sticky: true,
                 };
                 return <Banner key={banner.message} banner={banner} />;
@@ -43,3 +42,15 @@ export const LicenseBanner = () => {
 
     return null;
 };
+function mapToVariant(
+    messageType: string | undefined,
+): BannerVariant | undefined {
+    if (messageType) {
+        switch (messageType) {
+            case 'warn':
+                return 'warning';
+            default:
+                return messageType as BannerVariant;
+        }
+    }
+}

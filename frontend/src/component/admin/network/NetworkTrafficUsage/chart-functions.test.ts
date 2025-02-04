@@ -148,4 +148,11 @@ describe('toChartData', () => {
 
         expect(toChartData(input)).toMatchObject(expectedOutput);
     });
+
+    test('returns empty data if traffic is undefined', () => {
+        expect(toChartData(undefined)).toStrictEqual({
+            labels: [],
+            datasets: [],
+        });
+    });
 });

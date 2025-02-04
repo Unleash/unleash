@@ -14,7 +14,7 @@ export type ChartDatasetType = ChartDataset<'bar'>;
 // todo: test
 export const toChartData = (
     traffic?: TrafficUsageDataSegmentedCombinedSchema,
-): { datasets: ChartDatasetType[]; labels: (string | number)[] } => {
+): { datasets: ChartDatasetType[]; labels: string[] } => {
     if (!traffic) {
         return { labels: [], datasets: [] };
     }
@@ -29,17 +29,14 @@ export const toChartData = (
 type SegmentedSchemaApiData =
     TrafficUsageDataSegmentedCombinedSchema['apiData'][0];
 
-// todo: integrate filtering `filterData` frontend/src/component/admin/network/NetworkTrafficUsage/util.ts
 const prepareApiData = (
     apiData: TrafficUsageDataSegmentedCombinedSchema['apiData'],
 ) =>
-    apiData
-        .filter((item) => item.apiPath in endpointsInfo)
-        .sort(
-            (item1: SegmentedSchemaApiData, item2: SegmentedSchemaApiData) =>
-                endpointsInfo[item1.apiPath].order -
-                endpointsInfo[item2.apiPath].order,
-        );
+    apiData.sort(
+        (item1: SegmentedSchemaApiData, item2: SegmentedSchemaApiData) =>
+            endpointsInfo[item1.apiPath].order -
+            endpointsInfo[item2.apiPath].order,
+    );
 
 const toMonthlyChartData = (
     traffic: TrafficUsageDataSegmentedCombinedSchema,
@@ -75,13 +72,12 @@ const toMonthlyChartData = (
             ? 'Current month'
             : formatMonth(addMonths(from, index)),
     );
-
     return { datasets, labels };
 };
 
 const toDailyChartData = (
     traffic: TrafficUsageDataSegmentedCombinedSchema,
-): { datasets: ChartDatasetType[]; labels: number[] } => {
+): { datasets: ChartDatasetType[]; labels: string[] } => {
     const from = new Date(traffic.dateRange.from);
     const to = new Date(traffic.dateRange.to);
     const numDays = Math.abs(differenceInCalendarDays(to, from)) + 1;
@@ -115,7 +111,9 @@ const toDailyChartData = (
     );
 
     // simplification: assuming days run in a single month from the 1st onwards
-    const labels = Array.from({ length: numDays }).map((_, index) => index + 1);
+    const labels = Array.from({ length: numDays }).map((_, index) =>
+        (index + 1).toString(),
+    );
 
     return { datasets, labels };
 };

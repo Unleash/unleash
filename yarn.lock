@@ -9271,8 +9271,8 @@ __metadata:
   linkType: hard
 
 "unleash-client@npm:^6.4.0":
-  version: 6.4.0
-  resolution: "unleash-client@npm:6.4.0"
+  version: 6.4.4
+  resolution: "unleash-client@npm:6.4.4"
   dependencies:
     http-proxy-agent: "npm:^7.0.2"
     https-proxy-agent: "npm:^7.0.5"
@@ -9282,7 +9282,7 @@ __metadata:
     murmurhash3js: "npm:^3.0.1"
     proxy-from-env: "npm:^1.1.0"
     semver: "npm:^7.6.2"
-  checksum: 10c0/df9647b903d21537f1d4d1fbebc4bd1451e8e1f6090f17bdab1eba67158bd98794e535c7850be1472f839cd3f2b06398add097fc7a1a8c5c1ec936c6c0274427
+  checksum: 10c0/481c0eedac5299258f34d246f78215ee527848ca1b341538f287beb3477db20053861548ccf518c17fbf97245146c7c8bce649f807e4d07244581b3e44281172
   languageName: node
   linkType: hard
 

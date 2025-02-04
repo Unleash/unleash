@@ -18,7 +18,7 @@ export const toChartData = (
         return { labels: [], datasets: [] };
     }
 
-    const { getRecord: newRecord, labels } = getLabelsAndRecords(traffic);
+    const { newRecord, labels } = getLabelsAndRecords(traffic);
     const datasets = traffic.apiData
         .sort(
             (item1, item2) =>
@@ -61,7 +61,7 @@ const getLabelsAndRecords = (
                 ? 'Current month'
                 : formatMonth(addMonths(from, index)),
         );
-        return { getRecord: () => ({ ...monthsRec }), labels };
+        return { newRecord: () => ({ ...monthsRec }), labels };
     } else {
         const from = new Date(traffic.dateRange.from);
         const to = new Date(traffic.dateRange.to);
@@ -77,7 +77,7 @@ const getLabelsAndRecords = (
             (index + 1).toString(),
         );
 
-        return { getRecord: () => ({ ...daysRec }), labels };
+        return { newRecord: () => ({ ...daysRec }), labels };
     }
 };
 

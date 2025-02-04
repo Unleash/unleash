@@ -1,5 +1,5 @@
-import { getDaysInMonth, subMonths } from 'date-fns';
-import { currentDate, formatMonth } from './dates';
+import { getDaysInMonth } from 'date-fns';
+import { formatMonth } from './dates';
 import { TRAFFIC_MEASUREMENT_START_DATE } from 'utils/traffic-calculations';
 
 export type Period = {
@@ -36,26 +36,29 @@ export const toSelectablePeriod = (
     };
 };
 
-// todo: test
-const generateSelectablePeriodsFromDate = (now: Date) => {
+export const generateSelectablePeriodsFromDate = (now: Date) => {
     const selectablePeriods = [toSelectablePeriod(now, 'Current month')];
     for (
         let subtractMonthCount = 1;
         subtractMonthCount < 12;
         subtractMonthCount++
     ) {
-        const date = subMonths(now, subtractMonthCount);
+        // this complicated calc avoids DST issues
+        const utcYear = now.getUTCFullYear();
+        const utcMonth = now.getUTCMonth();
+        const targetMonth = utcMonth - subtractMonthCount;
+        const targetDate = new Date(Date.UTC(utcYear, targetMonth, 1, 0, 0, 0));
         selectablePeriods.push(
             toSelectablePeriod(
-                date,
+                targetDate,
                 undefined,
-                date >= TRAFFIC_MEASUREMENT_START_DATE,
+                targetDate >= TRAFFIC_MEASUREMENT_START_DATE,
             ),
         );
     }
     return selectablePeriods;
 };
-export const selectablePeriods = generateSelectablePeriodsFromDate(currentDate);
+export const selectablePeriods = [];
 export const periodsRecord = Object.fromEntries(
     selectablePeriods.map((period) => [period.key, period]),
 );

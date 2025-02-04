@@ -1,7 +1,6 @@
 import type React from 'react';
 import { type FormEvent, useState } from 'react';
 import {
-    Autocomplete,
     Button,
     capitalize,
     Checkbox,
@@ -341,8 +340,6 @@ export const ProjectAccessAssign = ({
         );
     }
 
-    const isLargeList = options.length > 200;
-
     return (
         <SidebarModal
             open
@@ -366,144 +363,59 @@ export const ProjectAccessAssign = ({
                             Select the {entityType}
                         </StyledInputDescription>
                         <StyledAutocompleteWrapper>
-                            {isLargeList ? (
-                                <AutocompleteVirtual
-                                    data-testid={PA_USERS_GROUPS_ID}
-                                    size='small'
-                                    multiple
-                                    openOnFocus
-                                    limitTags={10}
-                                    disableCloseOnSelect
-                                    disabled={edit}
-                                    value={selectedOptions}
-                                    getOptionDisabled={(option) => {
-                                        if (option.type === ENTITY_TYPE.GROUP) {
-                                            const optionGroup =
-                                                option.entity as IGroup;
-                                            return Boolean(
-                                                optionGroup.rootRole,
-                                            );
-                                        }
-                                        return false;
-                                    }}
-                                    onChange={(event, newValue, reason) => {
-                                        if (
-                                            event.type === 'keydown' &&
-                                            (event as React.KeyboardEvent)
-                                                .key === 'Backspace' &&
-                                            reason === 'removeOption'
-                                        ) {
-                                            return;
-                                        }
-                                        setSelectedOptions(newValue);
-                                    }}
-                                    options={options}
-                                    renderOption={(
-                                        props,
-                                        option,
-                                        { selected },
-                                    ) => renderOption(props, option, selected)}
-                                    getOptionLabel={(option: IAccessOption) => {
-                                        if (
-                                            option.type === ENTITY_TYPE.USER ||
-                                            option.type ===
-                                                ENTITY_TYPE.SERVICE_ACCOUNT
-                                        ) {
-                                            const optionUser =
-                                                option.entity as IUser;
-                                            return (
-                                                optionUser.email ||
-                                                optionUser.name ||
-                                                optionUser.username ||
-                                                ''
-                                            );
-                                        } else {
-                                            return option.entity.name;
-                                        }
-                                    }}
-                                    filterOptions={(options, { inputValue }) =>
-                                        options.filter(
-                                            (option: IAccessOption) => {
-                                                if (
-                                                    option.type ===
-                                                        ENTITY_TYPE.USER ||
-                                                    option.type ===
-                                                        ENTITY_TYPE.SERVICE_ACCOUNT
-                                                ) {
-                                                    const optionUser =
-                                                        option.entity as IUser;
-                                                    return (
-                                                        caseInsensitiveSearch(
-                                                            inputValue,
-                                                            optionUser.email,
-                                                        ) ||
-                                                        caseInsensitiveSearch(
-                                                            inputValue,
-                                                            optionUser.name,
-                                                        ) ||
-                                                        caseInsensitiveSearch(
-                                                            inputValue,
-                                                            optionUser.username,
-                                                        )
-                                                    );
-                                                }
-                                                return caseInsensitiveSearch(
-                                                    inputValue,
-                                                    option.entity.name,
-                                                );
-                                            },
-                                        )
+                            <AutocompleteVirtual
+                                data-testid={PA_USERS_GROUPS_ID}
+                                size='small'
+                                multiple
+                                openOnFocus
+                                limitTags={10}
+                                disableCloseOnSelect
+                                disabled={edit}
+                                value={selectedOptions}
+                                getOptionDisabled={(option) => {
+                                    if (option.type === ENTITY_TYPE.GROUP) {
+                                        const optionGroup =
+                                            option.entity as IGroup;
+                                        return Boolean(optionGroup.rootRole);
                                     }
-                                    isOptionEqualToValue={(option, value) =>
-                                        option.type === value.type &&
-                                        option.entity.id === value.entity.id
+                                    return false;
+                                }}
+                                onChange={(event, newValue, reason) => {
+                                    if (
+                                        event.type === 'keydown' &&
+                                        (event as React.KeyboardEvent).key ===
+                                            'Backspace' &&
+                                        reason === 'removeOption'
+                                    ) {
+                                        return;
                                     }
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label={capitalize(entityType)}
-                                        />
-                                    )}
-                                />
-                            ) : (
-                                <Autocomplete
-                                    data-testid={PA_USERS_GROUPS_ID}
-                                    size='small'
-                                    multiple
-                                    openOnFocus
-                                    limitTags={10}
-                                    disableCloseOnSelect
-                                    disabled={edit}
-                                    value={selectedOptions}
-                                    getOptionDisabled={(option) => {
-                                        if (option.type === ENTITY_TYPE.GROUP) {
-                                            const optionGroup =
-                                                option.entity as IGroup;
-                                            return Boolean(
-                                                optionGroup.rootRole,
-                                            );
-                                        }
-                                        return false;
-                                    }}
-                                    onChange={(event, newValue, reason) => {
-                                        if (
-                                            event.type === 'keydown' &&
-                                            (event as React.KeyboardEvent)
-                                                .key === 'Backspace' &&
-                                            reason === 'removeOption'
-                                        ) {
-                                            return;
-                                        }
-                                        setSelectedOptions(newValue);
-                                    }}
-                                    options={options}
-                                    groupBy={(option) => option.type}
-                                    renderOption={(
-                                        props,
-                                        option,
-                                        { selected },
-                                    ) => renderOption(props, option, selected)}
-                                    getOptionLabel={(option: IAccessOption) => {
+                                    setSelectedOptions(newValue);
+                                }}
+                                options={options}
+                                groupBy={(option) => option.type}
+                                renderOption={(props, option, { selected }) =>
+                                    renderOption(props, option, selected)
+                                }
+                                getOptionLabel={(option: IAccessOption) => {
+                                    if (
+                                        option.type === ENTITY_TYPE.USER ||
+                                        option.type ===
+                                            ENTITY_TYPE.SERVICE_ACCOUNT
+                                    ) {
+                                        const optionUser =
+                                            option.entity as IUser;
+                                        return (
+                                            optionUser.email ||
+                                            optionUser.name ||
+                                            optionUser.username ||
+                                            ''
+                                        );
+                                    } else {
+                                        return option.entity.name;
+                                    }
+                                }}
+                                filterOptions={(options, { inputValue }) =>
+                                    options.filter((option: IAccessOption) => {
                                         if (
                                             option.type === ENTITY_TYPE.USER ||
                                             option.type ===
@@ -512,60 +424,37 @@ export const ProjectAccessAssign = ({
                                             const optionUser =
                                                 option.entity as IUser;
                                             return (
-                                                optionUser.email ||
-                                                optionUser.name ||
-                                                optionUser.username ||
-                                                ''
-                                            );
-                                        } else {
-                                            return option.entity.name;
-                                        }
-                                    }}
-                                    filterOptions={(options, { inputValue }) =>
-                                        options.filter(
-                                            (option: IAccessOption) => {
-                                                if (
-                                                    option.type ===
-                                                        ENTITY_TYPE.USER ||
-                                                    option.type ===
-                                                        ENTITY_TYPE.SERVICE_ACCOUNT
-                                                ) {
-                                                    const optionUser =
-                                                        option.entity as IUser;
-                                                    return (
-                                                        caseInsensitiveSearch(
-                                                            inputValue,
-                                                            optionUser.email,
-                                                        ) ||
-                                                        caseInsensitiveSearch(
-                                                            inputValue,
-                                                            optionUser.name,
-                                                        ) ||
-                                                        caseInsensitiveSearch(
-                                                            inputValue,
-                                                            optionUser.username,
-                                                        )
-                                                    );
-                                                }
-                                                return caseInsensitiveSearch(
+                                                caseInsensitiveSearch(
                                                     inputValue,
-                                                    option.entity.name,
-                                                );
-                                            },
-                                        )
-                                    }
-                                    isOptionEqualToValue={(option, value) =>
-                                        option.type === value.type &&
-                                        option.entity.id === value.entity.id
-                                    }
-                                    renderInput={(params) => (
-                                        <TextField
-                                            {...params}
-                                            label={capitalize(entityType)}
-                                        />
-                                    )}
-                                />
-                            )}
+                                                    optionUser.email,
+                                                ) ||
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.name,
+                                                ) ||
+                                                caseInsensitiveSearch(
+                                                    inputValue,
+                                                    optionUser.username,
+                                                )
+                                            );
+                                        }
+                                        return caseInsensitiveSearch(
+                                            inputValue,
+                                            option.entity.name,
+                                        );
+                                    })
+                                }
+                                isOptionEqualToValue={(option, value) =>
+                                    option.type === value.type &&
+                                    option.entity.id === value.entity.id
+                                }
+                                renderInput={(params) => (
+                                    <TextField
+                                        {...params}
+                                        label={capitalize(entityType)}
+                                    />
+                                )}
+                            />
                         </StyledAutocompleteWrapper>
                         <StyledInputDescription>
                             Select the role to assign for this project

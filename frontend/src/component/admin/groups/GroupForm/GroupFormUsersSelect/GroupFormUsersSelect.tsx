@@ -1,4 +1,4 @@
-import { Autocomplete, Checkbox, styled, TextField } from '@mui/material';
+import { Checkbox, styled, TextField } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import type { IUser } from 'interfaces/user';
@@ -110,91 +110,45 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
 
     return (
         <StyledGroupFormUsersSelect>
-            {isLargeList ? (
-                <AutocompleteVirtual
-                    data-testid={UG_USERS_ID}
-                    size='small'
-                    limitTags={1}
-                    openOnFocus
-                    multiple
-                    disableCloseOnSelect
-                    value={users as UserOption[]}
-                    onChange={(event, newValue, reason) => {
-                        if (
-                            event.type === 'keydown' &&
-                            (event as React.KeyboardEvent).key ===
-                                'Backspace' &&
-                            reason === 'removeOption'
-                        ) {
-                            return;
-                        }
-                        setUsers(newValue);
-                    }}
-                    options={options}
-                    renderOption={renderOption}
-                    filterOptions={(options, { inputValue }) =>
-                        options.filter(
-                            ({ name, username, email }) =>
-                                caseInsensitiveSearch(inputValue, email) ||
-                                caseInsensitiveSearch(inputValue, name) ||
-                                caseInsensitiveSearch(inputValue, username),
-                        )
+            <AutocompleteVirtual
+                data-testid={UG_USERS_ID}
+                size='small'
+                limitTags={1}
+                openOnFocus
+                multiple
+                disableCloseOnSelect
+                value={users as UserOption[]}
+                onChange={(event, newValue, reason) => {
+                    if (
+                        event.type === 'keydown' &&
+                        (event as React.KeyboardEvent).key === 'Backspace' &&
+                        reason === 'removeOption'
+                    ) {
+                        return;
                     }
-                    isOptionEqualToValue={(option, value) =>
-                        option.id === value.id
-                    }
-                    getOptionLabel={(option: UserOption) =>
-                        option.email || option.name || option.username || ''
-                    }
-                    renderInput={(params) => (
-                        <TextField {...params} label='Select users' />
-                    )}
-                    renderTags={(value) => renderTags(value)}
-                />
-            ) : (
-                <Autocomplete
-                    data-testid={UG_USERS_ID}
-                    size='small'
-                    limitTags={1}
-                    openOnFocus
-                    multiple
-                    disableCloseOnSelect
-                    value={users as UserOption[]}
-                    onChange={(event, newValue, reason) => {
-                        if (
-                            event.type === 'keydown' &&
-                            (event as React.KeyboardEvent).key ===
-                                'Backspace' &&
-                            reason === 'removeOption'
-                        ) {
-                            return;
-                        }
-                        setUsers(newValue);
-                    }}
-                    groupBy={(option) => option.type}
-                    options={options}
-                    renderOption={renderOption}
-                    filterOptions={(options, { inputValue }) =>
-                        options.filter(
-                            ({ name, username, email }) =>
-                                caseInsensitiveSearch(inputValue, email) ||
-                                caseInsensitiveSearch(inputValue, name) ||
-                                caseInsensitiveSearch(inputValue, username),
-                        )
-                    }
-                    isOptionEqualToValue={(option, value) =>
-                        option.id === value.id
-                    }
-                    getOptionLabel={(option: UserOption) =>
-                        option.email || option.name || option.username || ''
-                    }
-                    renderInput={(params) => (
-                        <TextField {...params} label='Select users' />
-                    )}
-                    renderTags={(value) => renderTags(value)}
-                    noOptionsText={isLoading ? 'Loading…' : 'No options'}
-                />
-            )}
+                    setUsers(newValue);
+                }}
+                options={options}
+                groupBy={(option) => option.type}
+                renderOption={renderOption}
+                filterOptions={(options, { inputValue }) =>
+                    options.filter(
+                        ({ name, username, email }) =>
+                            caseInsensitiveSearch(inputValue, email) ||
+                            caseInsensitiveSearch(inputValue, name) ||
+                            caseInsensitiveSearch(inputValue, username),
+                    )
+                }
+                isOptionEqualToValue={(option, value) => option.id === value.id}
+                getOptionLabel={(option: UserOption) =>
+                    option.email || option.name || option.username || ''
+                }
+                renderInput={(params) => (
+                    <TextField {...params} label='Select users' />
+                )}
+                renderTags={(value) => renderTags(value)}
+                noOptionsText={isLoading ? 'Loading…' : 'No options'}
+            />
         </StyledGroupFormUsersSelect>
     );
 };

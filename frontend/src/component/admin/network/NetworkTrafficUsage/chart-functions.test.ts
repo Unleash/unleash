@@ -116,7 +116,34 @@ describe('toChartData', () => {
                     ...fromEndpointInfo('/api/client'),
                 },
             ],
-            labels: Array.from({ length: 31 }).map((_, index) => index + 1),
+            labels: Array.from({ length: 31 }).map((_, index) =>
+                (index + 1).toString(),
+            ),
+        };
+
+        expect(toChartData(input)).toMatchObject(expectedOutput);
+    });
+
+    test('sorts endpoints according to endpoint data spec', () => {
+        const input: TrafficUsageDataSegmentedCombinedSchema = {
+            grouping: 'daily',
+            dateRange: {
+                from: '2025-01-01',
+                to: '2025-01-31',
+            },
+            apiData: [
+                { apiPath: '/api/frontend', dataPoints: [] },
+                { apiPath: '/api/client', dataPoints: [] },
+                { apiPath: '/api/admin', dataPoints: [] },
+            ],
+        };
+
+        const expectedOutput = {
+            datasets: [
+                { label: 'Admin' },
+                { label: 'Frontend' },
+                { label: 'Server' },
+            ],
         };
 
         expect(toChartData(input)).toMatchObject(expectedOutput);

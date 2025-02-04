@@ -1,5 +1,5 @@
 import { useMemo, useState, type VFC } from 'react';
-import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IGroupUser } from 'interfaces/group';
 import { HighlightCell } from 'component/common/Table/cells/HighlightCell/HighlightCell';
@@ -10,10 +10,6 @@ import { VirtualizedTable } from 'component/common/Table';
 import { useFlexLayout, useSortBy, useTable } from 'react-table';
 import { sortTypes } from 'utils/sortTypes';
 import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
-import theme from 'themes/theme';
-import { useConditionallyHiddenColumns } from 'hooks/useConditionallyHiddenColumns';
-
-const hiddenColumnsSmall = ['imageUrl', 'name'];
 
 interface IGroupFormUsersTableProps {
     users: IGroupUser[];
@@ -24,8 +20,6 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
     users,
     setUsers,
 }) => {
-    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-
     const columns = useMemo(
         () => [
             {
@@ -100,7 +94,7 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
         hiddenColumns: ['Username', 'Email'],
     }));
 
-    const { headerGroups, rows, prepareRow, setHiddenColumns } = useTable(
+    const { headerGroups, rows, prepareRow } = useTable(
         {
             columns: columns as any[],
             data: users as any[],
@@ -113,17 +107,6 @@ export const GroupFormUsersTable: VFC<IGroupFormUsersTableProps> = ({
         },
         useSortBy,
         useFlexLayout,
-    );
-
-    useConditionallyHiddenColumns(
-        [
-            {
-                condition: isSmallScreen,
-                columns: hiddenColumnsSmall,
-            },
-        ],
-        setHiddenColumns,
-        columns,
     );
 
     return (

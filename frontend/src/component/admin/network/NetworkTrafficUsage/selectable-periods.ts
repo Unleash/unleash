@@ -1,5 +1,6 @@
 import { getDaysInMonth, subMonths } from 'date-fns';
 import { currentDate, formatMonth } from './dates';
+import { TRAFFIC_MEASUREMENT_START_DATE } from 'utils/traffic-calculations';
 
 export type Period = {
     key: string;
@@ -45,7 +46,11 @@ const generateSelectablePeriodsFromDate = (now: Date) => {
     ) {
         const date = subMonths(now, subtractMonthCount);
         selectablePeriods.push(
-            toSelectablePeriod(date, undefined, date >= new Date('2024-05')),
+            toSelectablePeriod(
+                date,
+                undefined,
+                date >= TRAFFIC_MEASUREMENT_START_DATE,
+            ),
         );
     }
     return selectablePeriods;

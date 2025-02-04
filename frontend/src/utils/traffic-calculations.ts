@@ -7,20 +7,33 @@ import {
     daysInCurrentMonth,
 } from '../component/admin/network/NetworkTrafficUsage/dates';
 import type { ChartDatasetType } from '../component/admin/network/NetworkTrafficUsage/chart-functions';
+import { endpointsInfo } from 'component/admin/network/NetworkTrafficUsage/endpoint-info';
 
 const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
 
-// todo: implement and test
-export const filterData = (
+// This is the first full month of data that we have on record for any of our
+// customers.
+export const TRAFFIC_MEASUREMENT_START_DATE = new Date('2024-05-01');
+
+export const cleanTrafficData = (
     data?: TrafficUsageDataSegmentedCombinedSchema,
 ): TrafficUsageDataSegmentedCombinedSchema | undefined => {
     if (!data) {
         return;
     }
-    // filter out endpoints not mentioned in endpointsInfo
-    // filter out any data from before May 2024
-    return data;
+
+    const { apiData, ...rest } = data;
+    const cleanedApiData = apiData
+        .filter((item) => item.apiPath in endpointsInfo)
+        .map((item) => {
+            item.dataPoints = item.dataPoints.filter(
+                ({ period }) =>
+                    new Date(period) >= TRAFFIC_MEASUREMENT_START_DATE,
+            );
+            return item;
+        });
+    return { apiData: cleanedApiData, ...rest };
 };
 
 const monthlyTrafficDataToCurrentUsage = (

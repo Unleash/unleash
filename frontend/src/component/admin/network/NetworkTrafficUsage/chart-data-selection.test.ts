@@ -13,6 +13,7 @@ test('daily conversion', () => {
 
     expect(toDateRange(input)).toStrictEqual(expectedOutput);
 });
+
 test('monthly conversion', () => {
     const now = new Date('2023-06-15');
     const input: ChartDataSelection = {

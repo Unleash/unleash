@@ -28,7 +28,10 @@ import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { useTrafficDataEstimation } from 'hooks/useTrafficData';
+import {
+    useTrafficDataEstimation,
+    calculateEstimatedMonthlyCost as deprecatedCalculateEstimatedMonthlyCost,
+} from 'hooks/useTrafficData';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { formatTickValue } from 'component/common/Chart/formatTickValue';
 import { useTrafficLimit } from './hooks/useTrafficLimit';
@@ -245,10 +248,7 @@ const NewNetworkTrafficUsage: FC = () => {
     );
 
     const estimatedMonthlyCost = calculateEstimatedMonthlyCost(
-        chartDataSelection.grouping === 'daily'
-            ? chartDataSelection.month
-            : currentMonth,
-        data.datasets,
+        traffic.usage.apiData,
         includedTraffic,
         currentDate,
         BILLING_TRAFFIC_BUNDLE_PRICE,
@@ -428,7 +428,7 @@ const OldNetworkTrafficUsage: FC = () => {
                 setOverageCost(calculatedOverageCost);
 
                 setEstimatedMonthlyCost(
-                    calculateEstimatedMonthlyCost(
+                    deprecatedCalculateEstimatedMonthlyCost(
                         period,
                         data.datasets,
                         includedTraffic,

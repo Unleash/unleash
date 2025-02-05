@@ -188,10 +188,12 @@ export const calculateProjectedUsage2 = ({
     }
 
     const trafficDataUpToYesterday = trafficData.map((item) => {
-        item.dataPoints = item.dataPoints.filter((point) => {
-            Number(point.period.slice(-2)) < dayOfMonth;
-        });
-        return item;
+        return {
+            ...item,
+            dataPoints: item.dataPoints.filter(
+                (point) => Number(point.period.slice(-2)) < dayOfMonth,
+            ),
+        };
     });
 
     const dataUsage = dailyTrafficDataToCurrentUsage(trafficDataUpToYesterday);

@@ -38,7 +38,7 @@ const dataPoint = (month: Date) => (day: number, count: number) => {
     const monthPrefix = format(month, 'yyyy-MM');
 
     return {
-        period: `${monthPrefix}-${day}`,
+        period: `${monthPrefix}-${day.toString().padStart(2, '0')}`,
         trafficTypes: [{ count, group: 'successful-requests' }],
     };
 };

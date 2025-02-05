@@ -30,16 +30,19 @@ const useNewOverageCostCalculation = (includedTraffic: number) => {
     const from = formatDate(startOfMonth(now));
     const to = formatDate(endOfMonth(now));
 
-    const { usage } = useTrafficSearch('daily', { from, to });
-
+    const { result } = useTrafficSearch('daily', { from, to });
     const overageCost = useMemo(() => {
-        const totalUsage = calculateTotalUsage(usage);
+        if (result.state !== 'success') {
+            return 0;
+        }
+
+        const totalUsage = calculateTotalUsage(result.usage);
         return calculateOverageCost(
             totalUsage,
             includedTraffic,
             BILLING_TRAFFIC_BUNDLE_PRICE,
         );
-    }, [includedTraffic, usage]);
+    }, [includedTraffic, JSON.stringify(result)]);
 
     return overageCost;
 };

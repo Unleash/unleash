@@ -56,26 +56,12 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
 }));
 
-interface IBaseReleasePlanMilestoneProps {
+interface IReleasePlanMilestoneProps {
     milestone: IReleasePlanMilestone;
     status?: MilestoneStatus;
+    onStartMilestone?: (milestone: IReleasePlanMilestone) => void;
+    readonly?: boolean;
 }
-
-interface IEditableReleasePlanMilestoneProps
-    extends IBaseReleasePlanMilestoneProps {
-    readonly?: false;
-    onStartMilestone: (milestone: IReleasePlanMilestone) => void;
-}
-
-interface IReadonlyReleasePlanMilestoneProps
-    extends IBaseReleasePlanMilestoneProps {
-    readonly: true;
-    onStartMilestone?: never;
-}
-
-type IReleasePlanMilestoneProps =
-    | IEditableReleasePlanMilestoneProps
-    | IReadonlyReleasePlanMilestoneProps;
 
 export const ReleasePlanMilestone = ({
     milestone,
@@ -91,7 +77,7 @@ export const ReleasePlanMilestone = ({
                 <StyledAccordionSummary>
                     <StyledTitleContainer>
                         <StyledTitle>{milestone.name}</StyledTitle>
-                        {!readonly && (
+                        {!readonly && onStartMilestone && (
                             <ReleasePlanMilestoneStatus
                                 status={status}
                                 onStartMilestone={() =>
@@ -114,7 +100,7 @@ export const ReleasePlanMilestone = ({
             <StyledAccordionSummary expandIcon={<ExpandMore />}>
                 <StyledTitleContainer>
                     <StyledTitle>{milestone.name}</StyledTitle>
-                    {!readonly && (
+                    {!readonly && onStartMilestone && (
                         <ReleasePlanMilestoneStatus
                             status={status}
                             onStartMilestone={() => onStartMilestone(milestone)}

@@ -233,7 +233,7 @@ const NewNetworkTrafficUsage: FC = () => {
 
     const traffic = useInstanceTrafficMetrics2(
         chartDataSelection.grouping,
-        toDateRange(chartDataSelection),
+        toDateRange(chartDataSelection, currentDate),
     );
 
     const data = newToChartData(traffic.usage);

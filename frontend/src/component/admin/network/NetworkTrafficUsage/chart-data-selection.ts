@@ -10,9 +10,9 @@ export type ChartDataSelection =
           monthsBack: number;
       };
 
-// todo: write test
 export const toDateRange = (
     selection: ChartDataSelection,
+    now = new Date(),
 ): { from: string; to: string } => {
     const fmt = (date: Date) => format(date, 'yyyy-MM-dd');
     if (selection.grouping === 'daily') {
@@ -21,7 +21,6 @@ export const toDateRange = (
         const to = fmt(endOfMonth(month));
         return { from, to };
     } else {
-        const now = new Date();
         const from = fmt(startOfMonth(subMonths(now, selection.monthsBack)));
         const to = fmt(endOfMonth(now));
         return { from, to };

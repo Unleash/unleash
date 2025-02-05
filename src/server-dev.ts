@@ -57,7 +57,6 @@ process.nextTick(async () => {
                         sortProjectRoles: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
-                        lifecycleImprovements: true,
                         frontendHeaderRedesign: true,
                         dataUsageMultiMonthView: true,
                     },

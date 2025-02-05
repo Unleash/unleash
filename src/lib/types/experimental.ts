@@ -62,7 +62,6 @@ export type IFlagKey =
     | 'deltaApi'
     | 'uniqueSdkTracking'
     | 'sortProjectRoles'
-    | 'lifecycleImprovements'
     | 'frontendHeaderRedesign'
     | 'dataUsageMultiMonthView'
     | 'uiGlobalFontSize';
@@ -296,10 +295,6 @@ const flags: IFlags = {
     ),
     sortProjectRoles: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_SORT_PROJECT_ROLES,
-        false,
-    ),
-    lifecycleImprovements: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_IMPROVEMENTS,
         false,
     ),
     frontendHeaderRedesign: parseEnvVarBoolean(

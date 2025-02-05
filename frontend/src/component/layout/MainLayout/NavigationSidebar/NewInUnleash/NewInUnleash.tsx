@@ -19,10 +19,8 @@ import {
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { ReactComponent as SignalsPreview } from 'assets/img/signals.svg';
 import LifecycleStagesImage from 'assets/img/lifecycle-stages.png';
-import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import MonitorHeartIcon from '@mui/icons-material/MonitorHeartOutlined';
 import { useNavigate } from 'react-router-dom';
-import { useHighlightContext } from 'component/common/Highlight/HighlightContext';
 import { formatAssetPath } from 'utils/formatPath';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
@@ -75,10 +73,6 @@ const StyledSignalsIcon = styled(Signals)(({ theme }) => ({
     color: theme.palette.primary.main,
 }));
 
-const StyledLinearScaleIcon = styled(LinearScaleIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
-}));
-
 const StyledImg = styled('img')(() => ({
     maxWidth: '100%',
 }));
@@ -93,7 +87,6 @@ export const NewInUnleash = ({
     onMiniModeClick,
 }: INewInUnleashProps) => {
     const navigate = useNavigate();
-    const { highlight } = useHighlightContext();
     const { trackEvent } = usePlausibleTracker();
     const [seenItems, setSeenItems] = useLocalStorageState(
         'new-in-unleash-seen:v1',
@@ -101,7 +94,6 @@ export const NewInUnleash = ({
     );
     const { isEnterprise } = useUiConfig();
     const signalsEnabled = useUiFlag('signals');
-    const improvedLifecycleEnabled = useUiFlag('lifecycleImprovements');
 
     const items: NewInUnleashItemDetails[] = [
         {
@@ -116,7 +108,7 @@ export const NewInUnleash = ({
             ),
             docsLink:
                 'https://docs.getunleash.io/reference/feature-toggles#feature-flag-lifecycle',
-            show: improvedLifecycleEnabled,
+            show: true,
             longDescription: (
                 <p>
                     We have updated the names, icons, and colors for the

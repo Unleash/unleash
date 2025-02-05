@@ -47,7 +47,7 @@ export type InstanceTrafficMetricsResponse2 = {
     error?: Error;
 };
 
-export const useInstanceTrafficMetrics2 = (
+export const useTrafficSearch = (
     grouping: 'monthly' | 'daily',
     {
         from,

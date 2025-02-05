@@ -20,7 +20,10 @@ import {
 } from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
-import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import {
+    useInstanceTrafficMetrics,
+    useTrafficSearch,
+} from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
@@ -179,23 +182,22 @@ const useTrafficStats = (
     includedTraffic: number,
     chartDataSelection: ChartDataSelection,
 ) => {
-    const query = useInstanceTrafficMetrics2(
+    const query = useTrafficSearch(
         chartDataSelection.grouping,
         toDateRange(chartDataSelection, currentDate),
     );
-
-    if (query.result.state !== 'success') {
-        return {
-            data: { datasets: [], labels: [] },
-            usageTotal: 0,
-            overageCost: 0,
-            estimatedMonthlyCost: 0,
-            requestSummaryUsage: 0,
-        };
-    }
-    const traffic = query.result.usage;
-
     const results = useMemo(() => {
+        if (query.result.state !== 'success') {
+            return {
+                data: { datasets: [], labels: [] },
+                usageTotal: 0,
+                overageCost: 0,
+                estimatedMonthlyCost: 0,
+                requestSummaryUsage: 0,
+            };
+        }
+        const traffic = query.result.usage;
+
         const data = newToChartData(traffic);
         const usageTotal = calculateTotalUsage(traffic);
         const overageCost = calculateOverageCost(

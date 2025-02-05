@@ -32,11 +32,13 @@ afterAll(async () => {
 });
 
 describe('User subscription read model', () => {
-    test('returns subscribes and unsubscribers', async () => {
+    test('returns seen users that did not unsubscribe', async () => {
         const user1 = await userStore.insert({
             email: 'user1@example.com',
             name: 'User One',
         });
+        // user seen
+        await userStore.successfullyLogin(user1);
         const user2 = await userStore.insert({
             email: 'user2@example.com',
             name: 'User Two',
@@ -54,11 +56,10 @@ describe('User subscription read model', () => {
         const subscribers =
             await userSubscriptionsReadModel.getSubscribedUsers(subscription);
 
-        expect(subscribers).toHaveLength(2);
+        expect(subscribers).toHaveLength(1);
         expect(subscribers).toEqual(
             expect.arrayContaining([
                 { email: 'user1@example.com', name: 'User One' },
-                { email: 'user3@example.com', name: 'User Three' },
             ]),
         );
 
@@ -76,6 +77,7 @@ describe('User subscription read model', () => {
             email: 'user7@example.com',
             name: 'User Seven',
         });
+        await userStore.successfullyLogin(user);
 
         let subscribers =
             await userSubscriptionsReadModel.getSubscribedUsers(subscription);

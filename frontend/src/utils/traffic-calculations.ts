@@ -2,15 +2,10 @@ import type {
     TrafficUsageDataSegmentedCombinedSchema,
     TrafficUsageDataSegmentedCombinedSchemaApiDataItem,
 } from 'openapi';
-import {
-    currentMonth,
-    daysInCurrentMonth,
-} from '../component/admin/network/NetworkTrafficUsage/dates';
-import type { ChartDatasetType } from '../component/admin/network/NetworkTrafficUsage/chart-functions';
+import { getDaysInMonth } from 'date-fns';
 import { format } from 'date-fns';
-
-const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
-const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
+export const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
+export const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
 
 export const TRAFFIC_MEASUREMENT_START_DATE = new Date('2024-05-01');
 
@@ -105,61 +100,53 @@ export const calculateOverageCost = (
         : 0;
 };
 
-export const calculateProjectedUsage = (
-    today: number,
-    trafficData: ChartDatasetType[],
-    daysInPeriod: number,
-) => {
-    if (today < 5) {
+export const calculateProjectedUsage = ({
+    dayOfMonth,
+    daysInMonth,
+    trafficData,
+}: {
+    dayOfMonth: number;
+    daysInMonth: number;
+    trafficData: TrafficUsageDataSegmentedCombinedSchemaApiDataItem[];
+}) => {
+    if (dayOfMonth < 5) {
         return 0;
     }
 
-    const spliceToYesterday = today - 1;
     const trafficDataUpToYesterday = trafficData.map((item) => {
         return {
             ...item,
-            data: item.data.slice(0, spliceToYesterday),
+            dataPoints: item.dataPoints.filter(
+                (point) => Number(point.period.slice(-2)) < dayOfMonth,
+            ),
         };
     });
 
-    const toTrafficUsageSum = (trafficData: ChartDatasetType[]): number => {
-        const data = trafficData.reduce(
-            (acc: number, current: ChartDatasetType) => {
-                return (
-                    acc +
-                    current.data.reduce(
-                        (acc_inner, current_inner) => acc_inner + current_inner,
-                        0,
-                    )
-                );
-            },
-            0,
-        );
-        return data;
-    };
+    const dataUsage = dailyTrafficDataToCurrentUsage(trafficDataUpToYesterday);
 
-    const dataUsage = toTrafficUsageSum(trafficDataUpToYesterday);
-    return (dataUsage / spliceToYesterday) * daysInPeriod;
+    return (dataUsage / (dayOfMonth - 1)) * daysInMonth;
 };
 
 export const calculateEstimatedMonthlyCost = (
-    period: string,
-    trafficData: ChartDatasetType[],
+    trafficData:
+        | TrafficUsageDataSegmentedCombinedSchemaApiDataItem[]
+        | undefined,
     includedTraffic: number,
     currentDate: Date,
     trafficUnitCost = DEFAULT_TRAFFIC_DATA_UNIT_COST,
     trafficUnitSize = DEFAULT_TRAFFIC_DATA_UNIT_SIZE,
 ) => {
-    if (period !== currentMonth) {
+    if (!trafficData) {
         return 0;
     }
+    const dayOfMonth = currentDate.getDate();
+    const daysInMonth = getDaysInMonth(currentDate);
 
-    const today = currentDate.getDate();
-    const projectedUsage = calculateProjectedUsage(
-        today,
+    const projectedUsage = calculateProjectedUsage({
+        dayOfMonth,
+        daysInMonth,
         trafficData,
-        daysInCurrentMonth,
-    );
+    });
 
     return calculateOverageCost(
         projectedUsage,

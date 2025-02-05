@@ -45,7 +45,7 @@ export type InstanceTrafficMetricsResponse2 = {
         | { state: 'loading' };
 };
 
-export const useInstanceTrafficMetrics2 = (
+export const useTrafficSearch = (
     grouping: 'monthly' | 'daily',
     {
         from,

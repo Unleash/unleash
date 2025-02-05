@@ -20,15 +20,15 @@ import {
 } from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
-import {
-    useInstanceTrafficMetrics,
-    useInstanceTrafficMetrics2,
-} from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
 import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { useTrafficDataEstimation } from 'hooks/useTrafficData';
+import {
+    useTrafficDataEstimation,
+    calculateEstimatedMonthlyCost as deprecatedCalculateEstimatedMonthlyCost,
+} from 'hooks/useTrafficData';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { formatTickValue } from 'component/common/Chart/formatTickValue';
 import { useTrafficLimit } from './hooks/useTrafficLimit';
@@ -44,7 +44,6 @@ import {
     calculateEstimatedMonthlyCost,
 } from 'utils/traffic-calculations';
 import { currentDate, currentMonth } from './dates';
-import { endpointsInfo } from './endpoint-info';
 import { type ChartDataSelection, toDateRange } from './chart-data-selection';
 import {
     type ChartDatasetType,
@@ -206,10 +205,7 @@ const useTrafficStats = (
         );
 
         const estimatedMonthlyCost = calculateEstimatedMonthlyCost(
-            chartDataSelection.grouping === 'daily'
-                ? chartDataSelection.month
-                : currentMonth,
-            data.datasets,
+            traffic.apiData,
             includedTraffic,
             currentDate,
             BILLING_TRAFFIC_BUNDLE_PRICE,
@@ -218,10 +214,7 @@ const useTrafficStats = (
         const requestSummaryUsage =
             chartDataSelection.grouping === 'daily'
                 ? usageTotal
-                : averageTrafficPreviousMonths(
-                      Object.keys(endpointsInfo),
-                      traffic,
-                  );
+                : averageTrafficPreviousMonths(traffic);
 
         return {
             data,
@@ -469,7 +462,7 @@ const OldNetworkTrafficUsage: FC = () => {
                 setOverageCost(calculatedOverageCost);
 
                 setEstimatedMonthlyCost(
-                    calculateEstimatedMonthlyCost(
+                    deprecatedCalculateEstimatedMonthlyCost(
                         period,
                         data.datasets,
                         includedTraffic,

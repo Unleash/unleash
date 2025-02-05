@@ -1,4 +1,4 @@
-import { getDaysInMonth } from 'date-fns';
+import { format, getDaysInMonth } from 'date-fns';
 import {
     calculateEstimatedMonthlyCost,
     calculateOverageCost,
@@ -7,7 +7,14 @@ import {
     cleanTrafficData,
 } from './traffic-calculations';
 import { toSelectablePeriod } from '../component/admin/network/NetworkTrafficUsage/selectable-periods';
-import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
+import type {
+    TrafficUsageDataSegmentedCombinedSchema,
+    TrafficUsageDataSegmentedCombinedSchemaApiDataItem,
+} from 'openapi';
+import {
+    calculateEstimatedMonthlyCost as deprecatedCalculateEstimatedMonthlyCost,
+    calculateProjectedUsage as deprecatedCalculateProjectedUsage,
+} from 'hooks/useTrafficData';
 
 const testData4Days = [
     {
@@ -29,6 +36,32 @@ const testData4Days = [
         hoverBackgroundColor: 'red',
     },
 ];
+
+const dataPoint = (month: Date) => (day: number, count: number) => {
+    const monthPrefix = format(month, 'yyyy-MM');
+
+    return {
+        period: `${monthPrefix}-${day.toString().padStart(2, '0')}`,
+        trafficTypes: [{ count, group: 'successful-requests' }],
+    };
+};
+
+const trafficData4Days = (
+    month: Date,
+): TrafficUsageDataSegmentedCombinedSchemaApiDataItem[] => {
+    const point = dataPoint(month);
+    const dataPoints = [
+        point(1, 23_000_000),
+        point(2, 22_000_000),
+        point(3, 24_000_000),
+        point(4, 21_000_000),
+    ];
+    return [
+        { apiPath: '/api/frontend', dataPoints },
+        { apiPath: '/api/admin', dataPoints },
+        { apiPath: '/api/client', dataPoints },
+    ];
+};
 
 describe('traffic overage calculation', () => {
     it('should return 0 if there is no overage this month', () => {
@@ -63,13 +96,22 @@ describe('traffic overage calculation', () => {
         const now = new Date();
         const period = toSelectablePeriod(now);
         const testNow = new Date(now.getFullYear(), now.getMonth(), 4);
-        const result = calculateEstimatedMonthlyCost(
+        const includedTraffic = 53_000_000;
+        const result = deprecatedCalculateEstimatedMonthlyCost(
             period.key,
             testData4Days,
-            53_000_000,
+            includedTraffic,
             testNow,
         );
         expect(result).toBe(0);
+
+        const rawData = trafficData4Days(now);
+        const result2 = calculateEstimatedMonthlyCost(
+            rawData,
+            includedTraffic,
+            testNow,
+        );
+        expect(result2).toBe(result);
     });
 
     it('needs 5 days or more to estimate for the month', () => {
@@ -80,13 +122,25 @@ describe('traffic overage calculation', () => {
         const now = new Date();
         const period = toSelectablePeriod(now);
         const testNow = new Date(now.getFullYear(), now.getMonth(), 5);
-        const result = calculateEstimatedMonthlyCost(
+        const includedTraffic = 53_000_000;
+        const result = deprecatedCalculateEstimatedMonthlyCost(
             period.key,
             testData,
-            53_000_000,
+            includedTraffic,
             testNow,
         );
         expect(result).toBeGreaterThan(1430);
+
+        const rawData = trafficData4Days(now);
+        rawData[0].dataPoints.push(dataPoint(now)(5, 23_000_000));
+        rawData[1].dataPoints.push(dataPoint(now)(5, 23_000_000));
+        rawData[2].dataPoints.push(dataPoint(now)(5, 23_000_000));
+        const result2 = calculateEstimatedMonthlyCost(
+            rawData,
+            includedTraffic,
+            testNow,
+        );
+        expect(result2).toBe(result);
     });
 
     it('estimates projected data usage', () => {
@@ -97,13 +151,34 @@ describe('traffic overage calculation', () => {
         // Testing April 5th of 2024 (30 days)
         const now = new Date(2024, 3, 5);
         const period = toSelectablePeriod(now);
-        const result = calculateProjectedUsage(
+        const result = deprecatedCalculateProjectedUsage(
             now.getDate(),
             testData,
             period.dayCount,
         );
         // 22_500_000 * 3 * 30 = 2_025_000_000
         expect(result).toBe(2_025_000_000);
+
+        const rawData = trafficData4Days(now);
+        rawData[0].dataPoints.push(dataPoint(now)(5, 22_500_000));
+        rawData[1].dataPoints.push(dataPoint(now)(5, 22_500_000));
+        rawData[2].dataPoints.push(dataPoint(now)(5, 22_500_000));
+        const result2 = calculateProjectedUsage({
+            dayOfMonth: now.getDate(),
+            daysInMonth: period.dayCount,
+            trafficData: rawData,
+        });
+        expect(result2).toBe(result);
+    });
+
+    it("doesn't die if traffic is undefined", () => {
+        expect(
+            calculateEstimatedMonthlyCost(
+                undefined,
+                500_000,
+                new Date('2024-05-15'),
+            ),
+        ).toBe(0);
     });
 
     it('supports custom price and unit size', () => {
@@ -129,7 +204,7 @@ describe('traffic overage calculation', () => {
         const includedTraffic = 53_000_000;
         const trafficUnitSize = 500_000;
         const trafficUnitCost = 10;
-        const result = calculateEstimatedMonthlyCost(
+        const result = deprecatedCalculateEstimatedMonthlyCost(
             period.key,
             testData,
             includedTraffic,
@@ -143,6 +218,20 @@ describe('traffic overage calculation', () => {
         const overageUnits = Math.floor(overage / trafficUnitSize);
         const total = overageUnits * trafficUnitCost;
         expect(result).toBe(total);
+
+        const rawData = trafficData4Days(now);
+        rawData[0].dataPoints.push(dataPoint(now)(5, 22_500_000));
+        rawData[1].dataPoints.push(dataPoint(now)(5, 22_500_000));
+        rawData[2].dataPoints.push(dataPoint(now)(5, 22_500_000));
+        const result2 = calculateEstimatedMonthlyCost(
+            rawData,
+            includedTraffic,
+            testNow,
+            trafficUnitCost,
+            trafficUnitSize,
+        );
+
+        expect(result2).toBe(result);
     });
 });
 

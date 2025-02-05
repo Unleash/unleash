@@ -21,6 +21,7 @@ import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useCh
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { RemoveReleasePlanChangeRequestDialog } from './ChangeRequest/RemoveReleasePlanChangeRequestDialog';
 import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMilestoneChangeRequestDialog';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'readonly',
@@ -100,6 +101,7 @@ export const ReleasePlan = ({
     const { removeReleasePlanFromFeature, startReleasePlanMilestone } =
         useReleasePlansApi();
     const { setToastData, setToastApiError } = useToast();
+    const { trackEvent } = usePlausibleTracker();
 
     const [removeOpen, setRemoveOpen] = useState(false);
     const [changeRequestDialogRemoveOpen, setChangeRequestDialogRemoveOpen] =
@@ -183,6 +185,14 @@ export const ReleasePlan = ({
                 text: `Release plan "${name}" has been removed from ${featureName} in ${environment}`,
                 type: 'success',
             });
+
+            trackEvent('release-management', {
+                props: {
+                    eventType: 'remove-plan',
+                    plan: name,
+                },
+            });
+
             refetch();
             setRemoveOpen(false);
         } catch (error: unknown) {
@@ -215,6 +225,14 @@ export const ReleasePlan = ({
                 setToastApiError(formatUnknownError(error));
             }
         }
+
+        trackEvent('release-management', {
+            props: {
+                eventType: 'start-milestone',
+                plan: name,
+                milestone: milestone.name,
+            },
+        });
     };
 
     const activeIndex = milestones.findIndex(

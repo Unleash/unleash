@@ -12,6 +12,7 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import useReleasePlanTemplatesApi from 'hooks/api/actions/useReleasePlanTemplatesApi/useReleasePlanTemplatesApi';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
@@ -29,6 +30,7 @@ export const EditReleasePlanTemplate = () => {
     const templateId = useRequiredPathParam('templateId');
     const { template, loading, error, refetch } =
         useReleasePlanTemplate(templateId);
+    const { trackEvent } = usePlausibleTracker();
     usePageTitle(`Edit release template`);
     const navigate = useNavigate();
     const { setToastApiError, setToastData } = useToast();
@@ -68,6 +70,14 @@ export const EditReleasePlanTemplate = () => {
                     type: 'success',
                     text: 'Release plan template updated',
                 });
+
+                trackEvent('release-management', {
+                    props: {
+                        eventType: 'edit-template',
+                        template: template.name,
+                    },
+                });
+
                 navigate('/release-management');
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));

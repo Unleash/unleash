@@ -12,6 +12,7 @@ import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledButtonContainer = styled('div')(() => ({
     marginTop: 'auto',
@@ -29,6 +30,7 @@ export const CreateReleasePlanTemplate = () => {
     const { setToastApiError, setToastData } = useToast();
     const navigate = useNavigate();
     const { createReleasePlanTemplate } = useReleasePlanTemplatesApi();
+    const { trackEvent } = usePlausibleTracker();
     usePageTitle('Create release plan template');
     const {
         name,
@@ -61,6 +63,14 @@ export const CreateReleasePlanTemplate = () => {
                     type: 'success',
                     text: 'Release plan template created',
                 });
+
+                trackEvent('release-management', {
+                    props: {
+                        eventType: 'create-template',
+                        template: template.name,
+                    },
+                });
+
                 navigate('/release-management');
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));

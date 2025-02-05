@@ -2,15 +2,11 @@ import type {
     TrafficUsageDataSegmentedCombinedSchema,
     TrafficUsageDataSegmentedCombinedSchemaApiDataItem,
 } from 'openapi';
-import {
-    currentMonth,
-    daysInCurrentMonth,
-} from '../component/admin/network/NetworkTrafficUsage/dates';
-import type { ChartDatasetType } from '../component/admin/network/NetworkTrafficUsage/chart-functions';
+import { currentMonth } from '../component/admin/network/NetworkTrafficUsage/dates';
 import { getDaysInMonth } from 'date-fns';
 
-const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
-const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
+export const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
+export const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
 
 export const TRAFFIC_MEASUREMENT_START_DATE = new Date('2024-05-01');
 
@@ -108,70 +104,6 @@ export const calculateOverageCost = (
     return overage > 0
         ? calculateTrafficDataCost(overage, trafficUnitCost, trafficUnitSize)
         : 0;
-};
-
-export const calculateProjectedUsage = (
-    today: number,
-    trafficData: ChartDatasetType[],
-    daysInPeriod: number,
-) => {
-    if (today < 5) {
-        return 0;
-    }
-
-    const spliceToYesterday = today - 1;
-    const trafficDataUpToYesterday = trafficData.map((item) => {
-        return {
-            ...item,
-            data: item.data.slice(0, spliceToYesterday),
-        };
-    });
-
-    const toTrafficUsageSum = (trafficData: ChartDatasetType[]): number => {
-        const data = trafficData.reduce(
-            (acc: number, current: ChartDatasetType) => {
-                return (
-                    acc +
-                    current.data.reduce(
-                        (acc_inner, current_inner) => acc_inner + current_inner,
-                        0,
-                    )
-                );
-            },
-            0,
-        );
-        return data;
-    };
-
-    const dataUsage = toTrafficUsageSum(trafficDataUpToYesterday);
-    return (dataUsage / spliceToYesterday) * daysInPeriod;
-};
-
-export const calculateEstimatedMonthlyCost = (
-    period: string,
-    trafficData: ChartDatasetType[],
-    includedTraffic: number,
-    currentDate: Date,
-    trafficUnitCost = DEFAULT_TRAFFIC_DATA_UNIT_COST,
-    trafficUnitSize = DEFAULT_TRAFFIC_DATA_UNIT_SIZE,
-) => {
-    if (period !== currentMonth) {
-        return 0;
-    }
-
-    const today = currentDate.getDate();
-    const projectedUsage = calculateProjectedUsage(
-        today,
-        trafficData,
-        daysInCurrentMonth,
-    );
-
-    return calculateOverageCost(
-        projectedUsage,
-        includedTraffic,
-        trafficUnitCost,
-        trafficUnitSize,
-    );
 };
 
 export const calculateProjectedUsage2 = ({

@@ -1,9 +1,7 @@
 import { format, getDaysInMonth } from 'date-fns';
 import {
-    calculateEstimatedMonthlyCost,
     calculateEstimatedMonthlyCost2,
     calculateOverageCost,
-    calculateProjectedUsage,
     calculateProjectedUsage2,
     cleanTrafficData,
 } from './traffic-calculations';
@@ -12,6 +10,10 @@ import type {
     TrafficUsageDataSegmentedCombinedSchema,
     TrafficUsageDataSegmentedCombinedSchemaApiDataItem,
 } from 'openapi';
+import {
+    calculateEstimatedMonthlyCost,
+    calculateProjectedUsage,
+} from 'hooks/useTrafficData';
 
 const testData4Days = [
     {

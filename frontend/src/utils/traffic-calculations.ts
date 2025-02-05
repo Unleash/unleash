@@ -128,9 +128,7 @@ export const calculateProjectedUsage = ({
 };
 
 export const calculateEstimatedMonthlyCost = (
-    trafficData:
-        | TrafficUsageDataSegmentedCombinedSchemaApiDataItem[]
-        | undefined,
+    trafficData: TrafficUsageDataSegmentedCombinedSchemaApiDataItem[],
     includedTraffic: number,
     currentDate: Date,
     trafficUnitCost = DEFAULT_TRAFFIC_DATA_UNIT_COST,

@@ -171,16 +171,6 @@ describe('traffic overage calculation', () => {
         expect(result2).toBe(result);
     });
 
-    it("doesn't die if traffic is undefined", () => {
-        expect(
-            calculateEstimatedMonthlyCost(
-                undefined,
-                500_000,
-                new Date('2024-05-15'),
-            ),
-        ).toBe(0);
-    });
-
     it('supports custom price and unit size', () => {
         const dataUsage = 54_000_000;
         const includedTraffic = 53_000_000;

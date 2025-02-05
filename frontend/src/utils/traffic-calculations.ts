@@ -7,6 +7,7 @@ import {
     daysInCurrentMonth,
 } from '../component/admin/network/NetworkTrafficUsage/dates';
 import type { ChartDatasetType } from '../component/admin/network/NetworkTrafficUsage/chart-functions';
+import { getDaysInMonth } from 'date-fns';
 
 const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
@@ -164,6 +165,55 @@ export const calculateEstimatedMonthlyCost = (
         trafficData,
         daysInCurrentMonth,
     );
+
+    return calculateOverageCost(
+        projectedUsage,
+        includedTraffic,
+        trafficUnitCost,
+        trafficUnitSize,
+    );
+};
+
+export const calculateProjectedUsage2 = ({
+    dayOfMonth,
+    daysInMonth,
+    trafficData,
+}: {
+    dayOfMonth: number;
+    daysInMonth: number;
+    trafficData: TrafficUsageDataSegmentedCombinedSchemaApiDataItem[];
+}) => {
+    if (dayOfMonth < 5) {
+        return 0;
+    }
+
+    const trafficDataUpToYesterday = trafficData.map((item) => {
+        item.dataPoints = item.dataPoints.filter((point) => {
+            Number(point.period.slice(-2)) < dayOfMonth;
+        });
+        return item;
+    });
+
+    const dataUsage = dailyTrafficDataToCurrentUsage(trafficDataUpToYesterday);
+
+    return (dataUsage / (dayOfMonth - 1)) * daysInMonth;
+};
+
+export const calculateEstimatedMonthlyCost2 = (
+    trafficData: TrafficUsageDataSegmentedCombinedSchemaApiDataItem[],
+    includedTraffic: number,
+    currentDate: Date,
+    trafficUnitCost = DEFAULT_TRAFFIC_DATA_UNIT_COST,
+    trafficUnitSize = DEFAULT_TRAFFIC_DATA_UNIT_SIZE,
+) => {
+    const dayOfMonth = currentDate.getDate();
+    const daysInMonth = getDaysInMonth(currentDate);
+
+    const projectedUsage = calculateProjectedUsage2({
+        dayOfMonth,
+        daysInMonth,
+        trafficData,
+    });
 
     return calculateOverageCost(
         projectedUsage,

@@ -14,6 +14,7 @@ import { EnvironmentStrategyExecutionOrder } from './EnvironmentStrategyExecutio
 import { ArchiveFeatureChange } from './ArchiveFeatureChange';
 import { DependencyChange } from './DependencyChange';
 import { Link } from 'react-router-dom';
+import { ReleasePlanChange } from './ReleasePlanChange';
 
 const StyledSingleChangeBox = styled(Box, {
     shouldForwardProp: (prop: string) => !prop.startsWith('$'),
@@ -190,6 +191,18 @@ export const FeatureChange: FC<{
                         environment={changeRequest.environment}
                         change={change}
                         actions={actions}
+                    />
+                )}
+                {(change.action === 'addReleasePlan' ||
+                    change.action === 'deleteReleasePlan' ||
+                    change.action === 'startMilestone') && (
+                    <ReleasePlanChange
+                        actions={actions}
+                        change={change}
+                        featureName={feature.name}
+                        environmentName={changeRequest.environment}
+                        projectId={changeRequest.project}
+                        changeRequestState={changeRequest.state}
                     />
                 )}
             </ChangeInnerBox>

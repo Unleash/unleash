@@ -61,7 +61,7 @@ export const useTrafficSearch = (
 
     return useMemo(() => {
         const result = data
-            ? { state: 'success' as const, usage: cleanTrafficData(data) }
+            ? { state: 'success' as const, data: cleanTrafficData(data) }
             : error
               ? { state: 'error' as const, error }
               : { state: 'loading' as const };

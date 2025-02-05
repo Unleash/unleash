@@ -5,6 +5,7 @@ import {
 } from 'hooks/api/getters/useLicense/useLicense';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import type { BannerVariant } from 'interfaces/banner';
+import { decorateEmailsAsMarkdown } from 'utils/decorateEmailsAsMarkdown';
 
 export const LicenseBanner = () => {
     const { isEnterprise } = useUiConfig();
@@ -20,9 +21,10 @@ export const LicenseBanner = () => {
     ) {
         if (!licenseInfo.isValid) {
             const banner = {
-                message:
+                message: decorateEmailsAsMarkdown(
                     licenseInfo.message ||
-                    'You have an invalid Unleash license.',
+                        'You have an invalid Unleash license.',
+                ),
                 variant: 'error' as BannerVariant,
                 sticky: true,
             };
@@ -31,7 +33,7 @@ export const LicenseBanner = () => {
         } else {
             if (!license.loading && !license.error && licenseInfo.message) {
                 const banner = {
-                    message: licenseInfo.message,
+                    message: decorateEmailsAsMarkdown(licenseInfo.message),
                     variant: mapToVariant(licenseInfo.messageType),
                     sticky: true,
                 };

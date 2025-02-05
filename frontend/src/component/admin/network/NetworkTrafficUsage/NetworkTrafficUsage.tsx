@@ -47,7 +47,6 @@ import {
     calculateEstimatedMonthlyCost,
 } from 'utils/traffic-calculations';
 import { currentDate, currentMonth } from './dates';
-import { endpointsInfo } from './endpoint-info';
 import { type ChartDataSelection, toDateRange } from './chart-data-selection';
 import {
     type ChartDatasetType,
@@ -301,7 +300,6 @@ const NewNetworkTrafficUsage: FC = () => {
                                         chartDataSelection.grouping === 'daily'
                                             ? usageTotal
                                             : averageTrafficPreviousMonths(
-                                                  Object.keys(endpointsInfo),
                                                   traffic.usage,
                                               )
                                     }

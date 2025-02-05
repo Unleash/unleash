@@ -11,11 +11,8 @@ import {
     BILLING_PAYG_USER_PRICE,
     BILLING_TRAFFIC_BUNDLE_PRICE,
 } from './BillingPlan';
-import { useTrafficDataEstimation } from 'hooks/useTrafficData';
-import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
-import { useMemo } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { calculateOverageCost } from 'utils/traffic-calculations';
+import { useOverageCost } from './useOverageCost';
 
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -34,13 +31,6 @@ export const BillingDetailsPAYG = ({
     instanceStatus,
 }: IBillingDetailsPAYGProps) => {
     const { users, loading } = useUsers();
-    const {
-        currentPeriod,
-        toChartData,
-        toTrafficUsageSum,
-        endpointsInfo,
-        getDayLabels,
-    } = useTrafficDataEstimation();
 
     const eligibleUsers = users.filter((user) => user.email);
 
@@ -51,24 +41,7 @@ export const BillingDetailsPAYG = ({
     const usersCost = BILLING_PAYG_USER_PRICE * billableUsers;
 
     const includedTraffic = BILLING_INCLUDED_REQUESTS;
-    const traffic = useInstanceTrafficMetrics(currentPeriod.key);
-
-    const overageCost = useMemo(() => {
-        if (!includedTraffic) {
-            return 0;
-        }
-        const trafficData = toChartData(
-            getDayLabels(currentPeriod.dayCount),
-            traffic,
-            endpointsInfo,
-        );
-        const totalTraffic = toTrafficUsageSum(trafficData);
-        return calculateOverageCost(
-            totalTraffic,
-            includedTraffic,
-            BILLING_TRAFFIC_BUNDLE_PRICE,
-        );
-    }, [includedTraffic, traffic, currentPeriod, endpointsInfo]);
+    const overageCost = useOverageCost(includedTraffic);
 
     const totalCost = usersCost + overageCost;
 

@@ -22,7 +22,7 @@ import {
 import { Bar } from 'react-chartjs-2';
 import {
     useInstanceTrafficMetrics,
-    useInstanceTrafficMetrics2,
+    useTrafficSearch,
 } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import type { Theme } from '@mui/material/styles/createTheme';
 import Grid from '@mui/material/Grid';
@@ -231,7 +231,7 @@ const NewNetworkTrafficUsage: FC = () => {
         );
     }, [theme, chartDataSelection]);
 
-    const traffic = useInstanceTrafficMetrics2(
+    const traffic = useTrafficSearch(
         chartDataSelection.grouping,
         toDateRange(chartDataSelection, currentDate),
     );

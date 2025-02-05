@@ -5,7 +5,7 @@ export const averageTrafficPreviousMonths = (
     endpointData: string[],
     traffic: TrafficUsageDataSegmentedCombinedSchema,
 ) => {
-    if (!traffic || traffic.grouping === 'daily') {
+    if (traffic.grouping === 'daily') {
         return 0;
     }
 

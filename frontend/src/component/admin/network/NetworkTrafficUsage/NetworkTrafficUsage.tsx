@@ -187,7 +187,7 @@ const useTrafficStats = (
 
     if (query.result.state !== 'success') {
         return {
-            data: newToChartData(undefined),
+            data: { datasets: [], labels: [] },
             usageTotal: 0,
             overageCost: 0,
             estimatedMonthlyCost: 0,

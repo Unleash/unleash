@@ -68,11 +68,8 @@ const dailyTrafficDataToCurrentUsage = (
 // Return the total number of requests for the selected month if showing daily
 // data, or the total for the most recent month if showing monthly data
 export const calculateTotalUsage = (
-    data?: TrafficUsageDataSegmentedCombinedSchema,
+    data: TrafficUsageDataSegmentedCombinedSchema,
 ): number => {
-    if (!data) {
-        return 0;
-    }
     const { grouping, apiData } = data;
     if (grouping === 'monthly') {
         const latestMonth = format(new Date(data.dateRange.to), 'yyyy-MM');

@@ -40,7 +40,7 @@ export const useInstanceTrafficMetrics = (
 export type InstanceTrafficMetricsResponse2 = {
     refetch: () => void;
     result:
-        | { state: 'success'; usage: TrafficUsageDataSegmentedCombinedSchema }
+        | { state: 'success'; data: TrafficUsageDataSegmentedCombinedSchema }
         | { state: 'error'; error: Error }
         | { state: 'loading' };
 };

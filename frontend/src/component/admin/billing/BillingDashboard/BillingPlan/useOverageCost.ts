@@ -36,7 +36,7 @@ const useNewOverageCostCalculation = (includedTraffic: number) => {
             return 0;
         }
 
-        const totalUsage = calculateTotalUsage(result.usage);
+        const totalUsage = calculateTotalUsage(result.data);
         return calculateOverageCost(
             totalUsage,
             includedTraffic,

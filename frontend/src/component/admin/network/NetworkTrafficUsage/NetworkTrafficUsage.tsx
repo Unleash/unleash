@@ -182,12 +182,12 @@ const useTrafficStats = (
     includedTraffic: number,
     chartDataSelection: ChartDataSelection,
 ) => {
-    const query = useTrafficSearch(
+    const { result } = useTrafficSearch(
         chartDataSelection.grouping,
         toDateRange(chartDataSelection, currentDate),
     );
     const results = useMemo(() => {
-        if (query.result.state !== 'success') {
+        if (result.state !== 'success') {
             return {
                 data: { datasets: [], labels: [] },
                 usageTotal: 0,
@@ -196,7 +196,7 @@ const useTrafficStats = (
                 requestSummaryUsage: 0,
             };
         }
-        const traffic = query.result.usage;
+        const traffic = result.data;
 
         const data = newToChartData(traffic);
         const usageTotal = calculateTotalUsage(traffic);

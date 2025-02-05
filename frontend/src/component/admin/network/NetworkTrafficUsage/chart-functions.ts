@@ -12,12 +12,8 @@ import type { ChartDataSelection } from './chart-data-selection';
 export type ChartDatasetType = ChartDataset<'bar'>;
 
 export const toChartData = (
-    traffic?: TrafficUsageDataSegmentedCombinedSchema,
+    traffic: TrafficUsageDataSegmentedCombinedSchema,
 ): { datasets: ChartDatasetType[]; labels: string[] } => {
-    if (!traffic) {
-        return { labels: [], datasets: [] };
-    }
-
     const { newRecord, labels } = getLabelsAndRecords(traffic);
     const datasets = traffic.apiData
         .sort(

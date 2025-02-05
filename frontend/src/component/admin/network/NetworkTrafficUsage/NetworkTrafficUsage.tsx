@@ -178,6 +178,62 @@ const BoldText = styled('span')(({ theme }) => ({
     fontWeight: 'bold',
 }));
 
+const useTrafficStats = (
+    includedTraffic: number,
+    chartDataSelection: ChartDataSelection,
+) => {
+    const { result } = useTrafficSearch(
+        chartDataSelection.grouping,
+        toDateRange(chartDataSelection, currentDate),
+    );
+    const results = useMemo(() => {
+        if (result.state !== 'success') {
+            return {
+                chartData: { datasets: [], labels: [] },
+                usageTotal: 0,
+                overageCost: 0,
+                estimatedMonthlyCost: 0,
+                requestSummaryUsage: 0,
+            };
+        }
+        const traffic = result.data;
+
+        const chartData = newToChartData(traffic);
+        const usageTotal = calculateTotalUsage(traffic);
+        const overageCost = calculateOverageCost(
+            usageTotal,
+            includedTraffic,
+            BILLING_TRAFFIC_BUNDLE_PRICE,
+        );
+
+        const estimatedMonthlyCost = calculateEstimatedMonthlyCost(
+            traffic.apiData,
+            includedTraffic,
+            currentDate,
+            BILLING_TRAFFIC_BUNDLE_PRICE,
+        );
+
+        const requestSummaryUsage =
+            chartDataSelection.grouping === 'daily'
+                ? usageTotal
+                : averageTrafficPreviousMonths(traffic);
+
+        return {
+            chartData,
+            usageTotal,
+            overageCost,
+            estimatedMonthlyCost,
+            requestSummaryUsage,
+        };
+    }, [
+        JSON.stringify(result),
+        includedTraffic,
+        JSON.stringify(chartDataSelection),
+    ]);
+
+    return results;
+};
+
 const NewNetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
@@ -233,25 +289,13 @@ const NewNetworkTrafficUsage: FC = () => {
         );
     }, [theme, chartDataSelection]);
 
-    const traffic = useTrafficSearch(
-        chartDataSelection.grouping,
-        toDateRange(chartDataSelection, currentDate),
-    );
-
-    const data = newToChartData(traffic.usage);
-    const usageTotal = calculateTotalUsage(traffic.usage);
-    const overageCost = calculateOverageCost(
+    const {
+        chartData,
         usageTotal,
-        includedTraffic,
-        BILLING_TRAFFIC_BUNDLE_PRICE,
-    );
-
-    const estimatedMonthlyCost = calculateEstimatedMonthlyCost(
-        traffic.usage?.apiData,
-        includedTraffic,
-        currentDate,
-        BILLING_TRAFFIC_BUNDLE_PRICE,
-    );
+        overageCost,
+        estimatedMonthlyCost,
+        requestSummaryUsage,
+    } = useTrafficStats(includedTraffic, chartDataSelection);
 
     const showOverageCalculations =
         chartDataSelection.grouping === 'daily' &&
@@ -296,13 +340,7 @@ const NewNetworkTrafficUsage: FC = () => {
                             <TrafficInfoBoxes>
                                 <RequestSummary
                                     period={chartDataSelection}
-                                    usageTotal={
-                                        chartDataSelection.grouping === 'daily'
-                                            ? usageTotal
-                                            : averageTrafficPreviousMonths(
-                                                  traffic.usage,
-                                              )
-                                    }
+                                    usageTotal={requestSummaryUsage}
                                     includedTraffic={includedTraffic}
                                 />
                                 {showOverageCalculations && (
@@ -321,7 +359,7 @@ const NewNetworkTrafficUsage: FC = () => {
                             />
                         </TopRow>
                         <Bar
-                            data={data}
+                            data={chartData}
                             plugins={[customHighlightPlugin()]}
                             options={options}
                             aria-label={getChartLabel(chartDataSelection)}

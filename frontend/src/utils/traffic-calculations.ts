@@ -16,12 +16,8 @@ export const METERED_TRAFFIC_ENDPOINTS = [
 ];
 
 export const cleanTrafficData = (
-    data?: TrafficUsageDataSegmentedCombinedSchema,
-): TrafficUsageDataSegmentedCombinedSchema | undefined => {
-    if (!data) {
-        return;
-    }
-
+    data: TrafficUsageDataSegmentedCombinedSchema,
+): TrafficUsageDataSegmentedCombinedSchema => {
     const { apiData, ...rest } = data;
     const cleanedApiData = apiData
         .filter((item) => METERED_TRAFFIC_ENDPOINTS.includes(item.apiPath))
@@ -67,11 +63,8 @@ const dailyTrafficDataToCurrentUsage = (
 // Return the total number of requests for the selected month if showing daily
 // data, or the total for the most recent month if showing monthly data
 export const calculateTotalUsage = (
-    data?: TrafficUsageDataSegmentedCombinedSchema,
+    data: TrafficUsageDataSegmentedCombinedSchema,
 ): number => {
-    if (!data) {
-        return 0;
-    }
     const { grouping, apiData } = data;
     if (grouping === 'monthly') {
         const latestMonth = format(new Date(data.dateRange.to), 'yyyy-MM');
@@ -135,9 +128,7 @@ export const calculateProjectedUsage = ({
 };
 
 export const calculateEstimatedMonthlyCost = (
-    trafficData:
-        | TrafficUsageDataSegmentedCombinedSchemaApiDataItem[]
-        | undefined,
+    trafficData: TrafficUsageDataSegmentedCombinedSchemaApiDataItem[],
     includedTraffic: number,
     currentDate: Date,
     trafficUnitCost = DEFAULT_TRAFFIC_DATA_UNIT_COST,

@@ -5,7 +5,7 @@ import { currentMonth } from './dates';
 export const averageTrafficPreviousMonths = (
     traffic: TrafficUsageDataSegmentedCombinedSchema,
 ) => {
-    if (!traffic || traffic.grouping === 'daily') {
+    if (traffic.grouping === 'daily') {
         return 0;
     }
 

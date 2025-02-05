@@ -5,6 +5,7 @@ export type Subscriber = {
 
 export interface IUserSubscriptionsReadModel {
     getSubscribedUsers(subscription: string): Promise<Subscriber[]>;
+    getUnsubscribedUsers(subscription: string): Promise<Subscriber[]>;
     getUserSubscriptions(userId: number): Promise<string[]>;
 }
 

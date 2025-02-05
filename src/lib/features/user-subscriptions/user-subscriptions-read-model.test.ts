@@ -31,8 +31,8 @@ afterAll(async () => {
     await db.destroy();
 });
 
-describe('getSubscribedUsers', () => {
-    test('returns users that did not unsubscribe', async () => {
+describe('User subscription read model', () => {
+    test('returns subscribes and unsubscribers', async () => {
         const user1 = await userStore.insert({
             email: 'user1@example.com',
             name: 'User One',
@@ -59,6 +59,14 @@ describe('getSubscribedUsers', () => {
             expect.arrayContaining([
                 { email: 'user1@example.com', name: 'User One' },
                 { email: 'user3@example.com', name: 'User Three' },
+            ]),
+        );
+
+        const unsubscribers =
+            await userSubscriptionsReadModel.getUnsubscribedUsers(subscription);
+        expect(unsubscribers).toEqual(
+            expect.arrayContaining([
+                { email: 'user2@example.com', name: 'User Two' },
             ]),
         );
     });
@@ -118,7 +126,7 @@ describe('getSubscribedUsers', () => {
     });
 });
 
-describe('getUserSubscriptions', () => {
+describe('User subscription read model', () => {
     test('returns all subscriptions if user has not unsubscribed', async () => {
         const user = await userStore.insert({
             email: 'user4@example.com',

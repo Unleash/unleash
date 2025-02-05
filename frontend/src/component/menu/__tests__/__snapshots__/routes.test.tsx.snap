@@ -266,7 +266,6 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "enterprise": true,
     "flag": "releasePlans",
     "menu": {
       "advanced": true,

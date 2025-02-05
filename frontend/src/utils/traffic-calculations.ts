@@ -106,7 +106,7 @@ export const calculateOverageCost = (
         : 0;
 };
 
-export const calculateProjectedUsage2 = ({
+export const calculateProjectedUsage = ({
     dayOfMonth,
     daysInMonth,
     trafficData,
@@ -133,7 +133,7 @@ export const calculateProjectedUsage2 = ({
     return (dataUsage / (dayOfMonth - 1)) * daysInMonth;
 };
 
-export const calculateEstimatedMonthlyCost2 = (
+export const calculateEstimatedMonthlyCost = (
     trafficData: TrafficUsageDataSegmentedCombinedSchemaApiDataItem[],
     includedTraffic: number,
     currentDate: Date,
@@ -143,7 +143,7 @@ export const calculateEstimatedMonthlyCost2 = (
     const dayOfMonth = currentDate.getDate();
     const daysInMonth = getDaysInMonth(currentDate);
 
-    const projectedUsage = calculateProjectedUsage2({
+    const projectedUsage = calculateProjectedUsage({
         dayOfMonth,
         daysInMonth,
         trafficData,

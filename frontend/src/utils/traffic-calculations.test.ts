@@ -1,8 +1,8 @@
 import { format, getDaysInMonth } from 'date-fns';
 import {
-    calculateEstimatedMonthlyCost2,
+    calculateEstimatedMonthlyCost,
     calculateOverageCost,
-    calculateProjectedUsage2,
+    calculateProjectedUsage,
     cleanTrafficData,
 } from './traffic-calculations';
 import { toSelectablePeriod } from '../component/admin/network/NetworkTrafficUsage/selectable-periods';
@@ -11,8 +11,8 @@ import type {
     TrafficUsageDataSegmentedCombinedSchemaApiDataItem,
 } from 'openapi';
 import {
-    calculateEstimatedMonthlyCost,
-    calculateProjectedUsage,
+    calculateEstimatedMonthlyCost as deprecatedCalculateEstimatedMonthlyCost,
+    calculateProjectedUsage as deprecatedCalculateProjectedUsage,
 } from 'hooks/useTrafficData';
 
 const testData4Days = [
@@ -96,7 +96,7 @@ describe('traffic overage calculation', () => {
         const period = toSelectablePeriod(now);
         const testNow = new Date(now.getFullYear(), now.getMonth(), 4);
         const includedTraffic = 53_000_000;
-        const result = calculateEstimatedMonthlyCost(
+        const result = deprecatedCalculateEstimatedMonthlyCost(
             period.key,
             testData4Days,
             includedTraffic,
@@ -105,7 +105,7 @@ describe('traffic overage calculation', () => {
         expect(result).toBe(0);
 
         const rawData = trafficData4Days(now);
-        const result2 = calculateEstimatedMonthlyCost2(
+        const result2 = calculateEstimatedMonthlyCost(
             rawData,
             includedTraffic,
             testNow,
@@ -122,7 +122,7 @@ describe('traffic overage calculation', () => {
         const period = toSelectablePeriod(now);
         const testNow = new Date(now.getFullYear(), now.getMonth(), 5);
         const includedTraffic = 53_000_000;
-        const result = calculateEstimatedMonthlyCost(
+        const result = deprecatedCalculateEstimatedMonthlyCost(
             period.key,
             testData,
             includedTraffic,
@@ -134,7 +134,7 @@ describe('traffic overage calculation', () => {
         rawData[0].dataPoints.push(dataPoint(now)(5, 23_000_000));
         rawData[1].dataPoints.push(dataPoint(now)(5, 23_000_000));
         rawData[2].dataPoints.push(dataPoint(now)(5, 23_000_000));
-        const result2 = calculateEstimatedMonthlyCost2(
+        const result2 = calculateEstimatedMonthlyCost(
             rawData,
             includedTraffic,
             testNow,
@@ -150,7 +150,7 @@ describe('traffic overage calculation', () => {
         // Testing April 5th of 2024 (30 days)
         const now = new Date(2024, 3, 5);
         const period = toSelectablePeriod(now);
-        const result = calculateProjectedUsage(
+        const result = deprecatedCalculateProjectedUsage(
             now.getDate(),
             testData,
             period.dayCount,
@@ -162,7 +162,7 @@ describe('traffic overage calculation', () => {
         rawData[0].dataPoints.push(dataPoint(now)(5, 22_500_000));
         rawData[1].dataPoints.push(dataPoint(now)(5, 22_500_000));
         rawData[2].dataPoints.push(dataPoint(now)(5, 22_500_000));
-        const result2 = calculateProjectedUsage2({
+        const result2 = calculateProjectedUsage({
             dayOfMonth: now.getDate(),
             daysInMonth: period.dayCount,
             trafficData: rawData,
@@ -193,7 +193,7 @@ describe('traffic overage calculation', () => {
         const includedTraffic = 53_000_000;
         const trafficUnitSize = 500_000;
         const trafficUnitCost = 10;
-        const result = calculateEstimatedMonthlyCost(
+        const result = deprecatedCalculateEstimatedMonthlyCost(
             period.key,
             testData,
             includedTraffic,
@@ -212,7 +212,7 @@ describe('traffic overage calculation', () => {
         rawData[0].dataPoints.push(dataPoint(now)(5, 22_500_000));
         rawData[1].dataPoints.push(dataPoint(now)(5, 22_500_000));
         rawData[2].dataPoints.push(dataPoint(now)(5, 22_500_000));
-        const result2 = calculateEstimatedMonthlyCost2(
+        const result2 = calculateEstimatedMonthlyCost(
             rawData,
             includedTraffic,
             testNow,

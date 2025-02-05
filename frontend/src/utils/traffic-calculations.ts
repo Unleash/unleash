@@ -2,9 +2,8 @@ import type {
     TrafficUsageDataSegmentedCombinedSchema,
     TrafficUsageDataSegmentedCombinedSchemaApiDataItem,
 } from 'openapi';
-import { currentMonth } from '../component/admin/network/NetworkTrafficUsage/dates';
 import { getDaysInMonth } from 'date-fns';
-
+import { format } from 'date-fns';
 export const DEFAULT_TRAFFIC_DATA_UNIT_COST = 5;
 export const DEFAULT_TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
 
@@ -36,13 +35,13 @@ export const cleanTrafficData = (
     return { apiData: cleanedApiData, ...rest };
 };
 
-// todo: extract "currentMonth" into a function argument instead
 const monthlyTrafficDataToCurrentUsage = (
     apiData: TrafficUsageDataSegmentedCombinedSchemaApiDataItem[],
+    latestMonth: string,
 ) => {
     return apiData.reduce((acc, current) => {
         const currentPoint = current.dataPoints.find(
-            ({ period }) => period === currentMonth,
+            ({ period }) => period === latestMonth,
         );
         const pointUsage =
             currentPoint?.trafficTypes.reduce(
@@ -65,9 +64,8 @@ const dailyTrafficDataToCurrentUsage = (
         .reduce((acc, count) => acc + count, 0);
 };
 
-// todo: test
 // Return the total number of requests for the selected month if showing daily
-// data, or the current month if showing monthly data
+// data, or the total for the most recent month if showing monthly data
 export const calculateTotalUsage = (
     data?: TrafficUsageDataSegmentedCombinedSchema,
 ): number => {
@@ -75,9 +73,12 @@ export const calculateTotalUsage = (
         return 0;
     }
     const { grouping, apiData } = data;
-    return grouping === 'monthly'
-        ? monthlyTrafficDataToCurrentUsage(apiData)
-        : dailyTrafficDataToCurrentUsage(apiData);
+    if (grouping === 'monthly') {
+        const latestMonth = format(new Date(data.dateRange.to), 'yyyy-MM');
+        return monthlyTrafficDataToCurrentUsage(apiData, latestMonth);
+    } else {
+        return dailyTrafficDataToCurrentUsage(apiData);
+    }
 };
 
 const calculateTrafficDataCost = (

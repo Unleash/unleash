@@ -1,5 +1,8 @@
 import { endOfMonth, format, startOfMonth } from 'date-fns';
-import { useTrafficSearch } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
+import {
+    useInstanceTrafficMetrics,
+    useTrafficSearch,
+} from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import { useMemo } from 'react';
 import {
     calculateOverageCost,
@@ -7,6 +10,7 @@ import {
 } from 'utils/traffic-calculations';
 import { BILLING_TRAFFIC_BUNDLE_PRICE } from './BillingPlan';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useTrafficDataEstimation } from 'hooks/useTrafficData';
 
 export const useOverageCost = (includedTraffic: number) => {
     if (useUiFlag('dataUsageMultiMonthView')) {

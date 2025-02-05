@@ -226,7 +226,7 @@ const useTrafficStats = (
             requestSummaryUsage,
         };
     }, [
-        JSON.stringify(query.result),
+        JSON.stringify(result),
         includedTraffic,
         JSON.stringify(chartDataSelection),
     ]);

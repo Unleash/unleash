@@ -7,6 +7,10 @@ export class FakeUserSubscriptionsReadModel
         return [];
     }
 
+    async getUnsubscribedUsers(subscription: string) {
+        return [];
+    }
+
     async getUserSubscriptions() {
         return ['productivity-report'];
     }

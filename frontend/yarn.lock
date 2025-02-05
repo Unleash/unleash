@@ -4473,14 +4473,14 @@ __metadata:
   linkType: hard
 
 "cypress-vite@npm:^1.4.0":
-  version: 1.5.0
-  resolution: "cypress-vite@npm:1.5.0"
+  version: 1.6.0
+  resolution: "cypress-vite@npm:1.6.0"
   dependencies:
     chokidar: "npm:^3.5.3"
     debug: "npm:^4.3.4"
   peerDependencies:
-    vite: ^2.9.0 || ^3.0.0 || ^4.0.0 || ^5.0.0
-  checksum: 10c0/a314cb6ffa080e8139e29d969190b3ca93d04c6fdc11fbf2e2e152bb91b8bebd100766653076c3d4c34f3d002e7cbc68b9bcc40ace19c557cac742cd0a987297
+    vite: ^2.9.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+  checksum: 10c0/0ea175b1cd5580046f76014138cc126f757789cae59c278cec029e95d704cb1cf48c46cb28e894c97bd87a252e5156a4923bbea51d71c347ff85b96668e458a4
   languageName: node
   linkType: hard
 
@@ -6674,12 +6674,12 @@ __metadata:
   linkType: hard
 
 "json-2-csv@npm:^5.5.5":
-  version: 5.5.7
-  resolution: "json-2-csv@npm:5.5.7"
+  version: 5.5.8
+  resolution: "json-2-csv@npm:5.5.8"
   dependencies:
     deeks: "npm:3.1.0"
     doc-path: "npm:4.1.1"
-  checksum: 10c0/b549753fd3155f2077e3f326a968f07afb5e2096d6fa3543de1dc6b836e3fe710ec3f63775e5f1b6a75d72d2c623db723d930b35a6d6d5bd26bb95cd557ec3ee
+  checksum: 10c0/6fe8bd21ae04c6494173e92fb47f0bef379222b5e6b9c1a25ff8faa5c7724a011170eee1f25782b2009fb263d13d943e76364833e742b1b67161da6adead708e
   languageName: node
   linkType: hard
 

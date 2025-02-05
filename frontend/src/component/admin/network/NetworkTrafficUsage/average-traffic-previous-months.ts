@@ -1,11 +1,11 @@
-import { differenceInCalendarMonths, format } from 'date-fns';
+import { differenceInCalendarMonths } from 'date-fns';
 import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
+import { currentMonth } from './dates';
 
 export const averageTrafficPreviousMonths = (
-    endpointData: string[],
     traffic: TrafficUsageDataSegmentedCombinedSchema,
 ) => {
-    if (!traffic || traffic.grouping === 'daily') {
+    if (traffic.grouping === 'daily') {
         return 0;
     }
 
@@ -16,10 +16,7 @@ export const averageTrafficPreviousMonths = (
         ),
     );
 
-    const currentMonth = format(new Date(), 'yyyy-MM');
-
     const totalTraffic = traffic.apiData
-        .filter((endpoint) => endpointData.includes(endpoint.apiPath))
         .map((endpoint) =>
             endpoint.dataPoints
                 .filter(({ period }) => period !== currentMonth)

@@ -39,6 +39,22 @@ export class UserSubscriptionsReadModel implements IUserSubscriptionsReadModel {
             .whereNotIn('id', unsubscribedUserIdsQuery)
             .andWhere('is_service', false)
             .andWhere('deleted_at', null)
+            .andWhereNot('seen_at', null)
+            .andWhereNot('email', null);
+
+        return users.map(mapRowToSubscriber);
+    }
+
+    async getUnsubscribedUsers(subscription: string) {
+        const unsubscribedUserIdsQuery = this.db(UNSUBSCRIPTION_TABLE)
+            .select('user_id')
+            .where('subscription', subscription);
+
+        const users = await this.db(USERS_TABLE)
+            .select(USER_COLUMNS)
+            .whereIn('id', unsubscribedUserIdsQuery)
+            .andWhere('is_service', false)
+            .andWhere('deleted_at', null)
             .andWhereNot('email', null);
 
         return users.map(mapRowToSubscriber);

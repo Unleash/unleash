@@ -31,21 +31,25 @@ afterAll(async () => {
     await db.destroy();
 });
 
-describe('getSubscribedUsers', () => {
-    test('returns users that did not unsubscribe', async () => {
+describe('User subscription read model', () => {
+    test('returns subscribed and unsubscribed users', async () => {
         const user1 = await userStore.insert({
             email: 'user1@example.com',
             name: 'User One',
         });
+        // user seen
+        await userStore.successfullyLogin(user1);
         const user2 = await userStore.insert({
             email: 'user2@example.com',
             name: 'User Two',
         });
+        // never seen
         const user3 = await userStore.insert({
             email: 'user3@example.com',
             name: 'User Three',
         });
 
+        // unsubscribe
         await userUnsubscribeStore.insert({
             userId: user2.id,
             subscription,
@@ -54,11 +58,18 @@ describe('getSubscribedUsers', () => {
         const subscribers =
             await userSubscriptionsReadModel.getSubscribedUsers(subscription);
 
-        expect(subscribers).toHaveLength(2);
+        expect(subscribers).toHaveLength(1);
         expect(subscribers).toEqual(
             expect.arrayContaining([
                 { email: 'user1@example.com', name: 'User One' },
-                { email: 'user3@example.com', name: 'User Three' },
+            ]),
+        );
+
+        const unsubscribers =
+            await userSubscriptionsReadModel.getUnsubscribedUsers(subscription);
+        expect(unsubscribers).toEqual(
+            expect.arrayContaining([
+                { email: 'user2@example.com', name: 'User Two' },
             ]),
         );
     });
@@ -68,6 +79,7 @@ describe('getSubscribedUsers', () => {
             email: 'user7@example.com',
             name: 'User Seven',
         });
+        await userStore.successfullyLogin(user);
 
         let subscribers =
             await userSubscriptionsReadModel.getSubscribedUsers(subscription);
@@ -118,8 +130,8 @@ describe('getSubscribedUsers', () => {
     });
 });
 
-describe('getUserSubscriptions', () => {
-    test('returns all subscriptions if user has not unsubscribed', async () => {
+describe('User subscription read model', () => {
+    test('returns all user subscriptions if user has not unsubscribed', async () => {
         const user = await userStore.insert({
             email: 'user4@example.com',
             name: 'User Four',

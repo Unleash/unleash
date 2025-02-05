@@ -6,9 +6,7 @@ import { GridCol } from 'component/common/GridCol/GridCol';
 import { GridColLink } from './GridColLink/GridColLink';
 import type { IInstanceStatus } from 'interfaces/instance';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { useMemo } from 'react';
 import { useUsers } from 'hooks/api/getters/useUsers/useUsers';
-import { useTrafficDataEstimation } from 'hooks/useTrafficData';
 import {
     BILLING_INCLUDED_REQUESTS,
     BILLING_PLAN_PRICES,
@@ -16,8 +14,7 @@ import {
     BILLING_PRO_USER_PRICE,
     BILLING_TRAFFIC_BUNDLE_PRICE,
 } from './BillingPlan';
-import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
-import { calculateOverageCost } from 'utils/traffic-calculations';
+import { useOverageCost } from './useOverageCost';
 
 const StyledInfoLabel = styled(Typography)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
@@ -42,14 +39,6 @@ export const BillingDetailsPro = ({
 }: IBillingDetailsProProps) => {
     const { users, loading } = useUsers();
 
-    const {
-        currentPeriod,
-        toChartData,
-        toTrafficUsageSum,
-        endpointsInfo,
-        getDayLabels,
-    } = useTrafficDataEstimation();
-
     const eligibleUsers = users.filter((user) => user.email);
 
     const planPrice = BILLING_PLAN_PRICES[instanceStatus.plan];
@@ -59,24 +48,7 @@ export const BillingDetailsPro = ({
     const paidAssigned = eligibleUsers.length - freeAssigned;
     const paidAssignedPrice = BILLING_PRO_USER_PRICE * paidAssigned;
     const includedTraffic = BILLING_INCLUDED_REQUESTS;
-    const traffic = useInstanceTrafficMetrics(currentPeriod.key);
-
-    const overageCost = useMemo(() => {
-        if (!includedTraffic) {
-            return 0;
-        }
-        const trafficData = toChartData(
-            getDayLabels(currentPeriod.dayCount),
-            traffic,
-            endpointsInfo,
-        );
-        const totalTraffic = toTrafficUsageSum(trafficData);
-        return calculateOverageCost(
-            totalTraffic,
-            includedTraffic,
-            BILLING_TRAFFIC_BUNDLE_PRICE,
-        );
-    }, [includedTraffic, traffic, currentPeriod, endpointsInfo]);
+    const overageCost = useOverageCost(includedTraffic);
 
     const totalCost = planPrice + paidAssignedPrice + overageCost;
 

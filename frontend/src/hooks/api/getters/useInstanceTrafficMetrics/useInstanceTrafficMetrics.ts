@@ -38,16 +38,14 @@ export const useInstanceTrafficMetrics = (
 };
 
 export type InstanceTrafficMetricsResponse2 = {
-    usage: TrafficUsageDataSegmentedCombinedSchema;
-
     refetch: () => void;
-
-    loading: boolean;
-
-    error?: Error;
+    result:
+        | { state: 'success'; data: TrafficUsageDataSegmentedCombinedSchema }
+        | { state: 'error'; error: Error }
+        | { state: 'loading' };
 };
 
-export const useInstanceTrafficMetrics2 = (
+export const useTrafficSearch = (
     grouping: 'monthly' | 'daily',
     {
         from,
@@ -61,15 +59,17 @@ export const useInstanceTrafficMetrics2 = (
 
     const { data, error, mutate } = useSWR(formatApiPath(apiPath), fetcher);
 
-    return useMemo(
-        () => ({
-            usage: cleanTrafficData(data) as any,
-            loading: !error && !data,
+    return useMemo(() => {
+        const result = data
+            ? { state: 'success' as const, data: cleanTrafficData(data) }
+            : error
+              ? { state: 'error' as const, error }
+              : { state: 'loading' as const };
+        return {
             refetch: () => mutate(),
-            error,
-        }),
-        [data, error, mutate],
-    );
+            result,
+        };
+    }, [data, error, mutate]);
 };
 
 const fetcher = (path: string) => {

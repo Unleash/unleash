@@ -43,6 +43,7 @@ export const useLicenseCheck = (): LicenseInfo => {
     return {
         isValid: data?.isValid,
         message: data?.message,
+        messageType: data?.messageType,
         loading: !error && !data,
         reCheckLicense: () => mutate(),
         error,

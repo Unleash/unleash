@@ -1,6 +1,15 @@
 import type { ChartDatasetType } from 'component/admin/network/NetworkTrafficUsage/chart-functions';
 import type { IInstanceTrafficMetricsResponse } from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import { useState } from 'react';
+import {
+    DEFAULT_TRAFFIC_DATA_UNIT_COST,
+    DEFAULT_TRAFFIC_DATA_UNIT_SIZE,
+    calculateOverageCost,
+} from 'utils/traffic-calculations';
+import {
+    currentMonth,
+    daysInCurrentMonth,
+} from 'component/admin/network/NetworkTrafficUsage/dates';
 
 export type SelectablePeriod = {
     key: string;
@@ -146,6 +155,54 @@ const toTrafficUsageSum = (trafficData: ChartDatasetType[]): number => {
         0,
     );
     return data;
+};
+
+export const calculateProjectedUsage = (
+    today: number,
+    trafficData: ChartDatasetType[],
+    daysInPeriod: number,
+) => {
+    if (today < 5) {
+        return 0;
+    }
+
+    const spliceToYesterday = today - 1;
+    const trafficDataUpToYesterday = trafficData.map((item) => {
+        return {
+            ...item,
+            data: item.data.slice(0, spliceToYesterday),
+        };
+    });
+
+    const dataUsage = toTrafficUsageSum(trafficDataUpToYesterday);
+    return (dataUsage / spliceToYesterday) * daysInPeriod;
+};
+
+export const calculateEstimatedMonthlyCost = (
+    period: string,
+    trafficData: ChartDatasetType[],
+    includedTraffic: number,
+    currentDate: Date,
+    trafficUnitCost = DEFAULT_TRAFFIC_DATA_UNIT_COST,
+    trafficUnitSize = DEFAULT_TRAFFIC_DATA_UNIT_SIZE,
+) => {
+    if (period !== currentMonth) {
+        return 0;
+    }
+
+    const today = currentDate.getDate();
+    const projectedUsage = calculateProjectedUsage(
+        today,
+        trafficData,
+        daysInCurrentMonth,
+    );
+
+    return calculateOverageCost(
+        projectedUsage,
+        includedTraffic,
+        trafficUnitCost,
+        trafficUnitSize,
+    );
 };
 
 const getDayLabels = (dayCount: number): number[] => {

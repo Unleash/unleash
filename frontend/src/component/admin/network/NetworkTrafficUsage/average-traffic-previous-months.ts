@@ -1,5 +1,6 @@
-import { differenceInCalendarMonths, format } from 'date-fns';
+import { differenceInCalendarMonths } from 'date-fns';
 import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
+import { currentMonth } from './dates';
 
 export const averageTrafficPreviousMonths = (
     traffic: TrafficUsageDataSegmentedCombinedSchema,
@@ -14,8 +15,6 @@ export const averageTrafficPreviousMonths = (
             new Date(traffic.dateRange.from),
         ),
     );
-
-    const currentMonth = format(new Date(), 'yyyy-MM');
 
     const totalTraffic = traffic.apiData
         .map((endpoint) =>

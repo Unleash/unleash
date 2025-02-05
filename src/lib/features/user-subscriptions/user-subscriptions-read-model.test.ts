@@ -32,7 +32,7 @@ afterAll(async () => {
 });
 
 describe('User subscription read model', () => {
-    test('returns seen users that did not unsubscribe', async () => {
+    test('returns subscribed and unsubscribed users', async () => {
         const user1 = await userStore.insert({
             email: 'user1@example.com',
             name: 'User One',
@@ -43,11 +43,13 @@ describe('User subscription read model', () => {
             email: 'user2@example.com',
             name: 'User Two',
         });
+        // never seen
         const user3 = await userStore.insert({
             email: 'user3@example.com',
             name: 'User Three',
         });
 
+        // unsubscribe
         await userUnsubscribeStore.insert({
             userId: user2.id,
             subscription,
@@ -129,7 +131,7 @@ describe('User subscription read model', () => {
 });
 
 describe('User subscription read model', () => {
-    test('returns all subscriptions if user has not unsubscribed', async () => {
+    test('returns all user subscriptions if user has not unsubscribed', async () => {
         const user = await userStore.insert({
             email: 'user4@example.com',
             name: 'User Four',

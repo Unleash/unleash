@@ -176,6 +176,69 @@ const BoldText = styled('span')(({ theme }) => ({
     fontWeight: 'bold',
 }));
 
+const useTrafficStats = (
+    includedTraffic: number,
+    chartDataSelection: ChartDataSelection,
+) => {
+    const query = useInstanceTrafficMetrics2(
+        chartDataSelection.grouping,
+        toDateRange(chartDataSelection, currentDate),
+    );
+
+    if (query.result.state !== 'success') {
+        return {
+            data: newToChartData(undefined),
+            usageTotal: 0,
+            overageCost: 0,
+            estimatedMonthlyCost: 0,
+            requestSummaryUsage: 0,
+        };
+    }
+    const traffic = query.result.usage;
+
+    const results = useMemo(() => {
+        const data = newToChartData(traffic);
+        const usageTotal = calculateTotalUsage(traffic);
+        const overageCost = calculateOverageCost(
+            usageTotal,
+            includedTraffic,
+            BILLING_TRAFFIC_BUNDLE_PRICE,
+        );
+
+        const estimatedMonthlyCost = calculateEstimatedMonthlyCost(
+            chartDataSelection.grouping === 'daily'
+                ? chartDataSelection.month
+                : currentMonth,
+            data.datasets,
+            includedTraffic,
+            currentDate,
+            BILLING_TRAFFIC_BUNDLE_PRICE,
+        );
+
+        const requestSummaryUsage =
+            chartDataSelection.grouping === 'daily'
+                ? usageTotal
+                : averageTrafficPreviousMonths(
+                      Object.keys(endpointsInfo),
+                      traffic,
+                  );
+
+        return {
+            data,
+            usageTotal,
+            overageCost,
+            estimatedMonthlyCost,
+            requestSummaryUsage,
+        };
+    }, [
+        JSON.stringify(query.result),
+        includedTraffic,
+        JSON.stringify(chartDataSelection),
+    ]);
+
+    return results;
+};
+
 const NewNetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Data Usage');
     const theme = useTheme();
@@ -231,28 +294,13 @@ const NewNetworkTrafficUsage: FC = () => {
         );
     }, [theme, chartDataSelection]);
 
-    const traffic = useInstanceTrafficMetrics2(
-        chartDataSelection.grouping,
-        toDateRange(chartDataSelection, currentDate),
-    );
-
-    const data = newToChartData(traffic.usage);
-    const usageTotal = calculateTotalUsage(traffic.usage);
-    const overageCost = calculateOverageCost(
+    const {
+        data,
         usageTotal,
-        includedTraffic,
-        BILLING_TRAFFIC_BUNDLE_PRICE,
-    );
-
-    const estimatedMonthlyCost = calculateEstimatedMonthlyCost(
-        chartDataSelection.grouping === 'daily'
-            ? chartDataSelection.month
-            : currentMonth,
-        data.datasets,
-        includedTraffic,
-        currentDate,
-        BILLING_TRAFFIC_BUNDLE_PRICE,
-    );
+        overageCost,
+        estimatedMonthlyCost,
+        requestSummaryUsage,
+    } = useTrafficStats(includedTraffic, chartDataSelection);
 
     const showOverageCalculations =
         chartDataSelection.grouping === 'daily' &&
@@ -297,14 +345,7 @@ const NewNetworkTrafficUsage: FC = () => {
                             <TrafficInfoBoxes>
                                 <RequestSummary
                                     period={chartDataSelection}
-                                    usageTotal={
-                                        chartDataSelection.grouping === 'daily'
-                                            ? usageTotal
-                                            : averageTrafficPreviousMonths(
-                                                  Object.keys(endpointsInfo),
-                                                  traffic.usage,
-                                              )
-                                    }
+                                    usageTotal={requestSummaryUsage}
                                     includedTraffic={includedTraffic}
                                 />
                                 {showOverageCalculations && (

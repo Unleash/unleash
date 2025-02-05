@@ -21,12 +21,8 @@ export const METERED_TRAFFIC_ENDPOINTS = [
 ];
 
 export const cleanTrafficData = (
-    data?: TrafficUsageDataSegmentedCombinedSchema,
-): TrafficUsageDataSegmentedCombinedSchema | undefined => {
-    if (!data) {
-        return;
-    }
-
+    data: TrafficUsageDataSegmentedCombinedSchema,
+): TrafficUsageDataSegmentedCombinedSchema => {
     const { apiData, ...rest } = data;
     const cleanedApiData = apiData
         .filter((item) => METERED_TRAFFIC_ENDPOINTS.includes(item.apiPath))

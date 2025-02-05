@@ -1,25 +1,25 @@
 import type { FC } from 'react';
-import { ReactComponent as Stage1 } from 'assets/icons/lifecycle/stage-1.svg';
-import { ReactComponent as Stage2 } from 'assets/icons/lifecycle/stage-2.svg';
-import { ReactComponent as Stage3 } from 'assets/icons/lifecycle/stage-3.svg';
-import { ReactComponent as Stage4 } from 'assets/icons/lifecycle/stage-4.svg';
-import { ReactComponent as Stage5 } from 'assets/icons/lifecycle/stage-5.svg';
+import { ReactComponent as CreatedIcon } from 'assets/icons/lifecycle/stage-created.svg';
+import { ReactComponent as PreLiveIcon } from 'assets/icons/lifecycle/stage-prelive.svg';
+import { ReactComponent as LiveIcon } from 'assets/icons/lifecycle/stage-live.svg';
+import { ReactComponent as CompletedIcon } from 'assets/icons/lifecycle/stage-completed.svg';
+import { ReactComponent as ArchivedIcon } from 'assets/icons/lifecycle/stage-archived.svg';
 import type { LifecycleStage } from '../../feature/FeatureView/FeatureOverview/FeatureLifecycle/LifecycleStage';
 
 export const FeatureLifecycleStageIcon: FC<{
     stage: Pick<LifecycleStage, 'name'>;
 }> = ({ stage, ...props }) => {
     if (stage.name === 'archived') {
-        return <Stage5 {...props} />;
+        return <ArchivedIcon {...props} />;
     }
     if (stage.name === 'pre-live') {
-        return <Stage2 {...props} />;
+        return <PreLiveIcon {...props} />;
     }
     if (stage.name === 'live') {
-        return <Stage3 {...props} />;
+        return <LiveIcon {...props} />;
     }
     if (stage.name === 'completed') {
-        return <Stage4 {...props} />;
+        return <CompletedIcon {...props} />;
     }
-    return <Stage1 {...props} />;
+    return <CreatedIcon {...props} />;
 };

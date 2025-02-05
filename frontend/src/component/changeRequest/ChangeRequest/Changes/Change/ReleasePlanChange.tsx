@@ -12,6 +12,7 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import EventDiff from 'component/events/EventDiff/EventDiff';
 import { ReleasePlan } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlan';
+import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -79,6 +80,8 @@ const DeleteReleasePlan: FC<{
             ? change.payload.snapshot
             : currentReleasePlan;
 
+    if (!releasePlan) return;
+
     return (
         <>
             <ChangeItemCreateEditDeleteWrapper>
@@ -126,6 +129,8 @@ const StartMilestone: FC<{
             ? change.payload.snapshot
             : currentReleasePlan;
 
+    if (!releasePlan) return;
+
     const previousMilestone = releasePlan.milestones.find(
         (milestone) => milestone.id === releasePlan.activeMilestoneId,
     );
@@ -134,6 +139,8 @@ const StartMilestone: FC<{
         (milestone) => milestone.id === change.payload.milestoneId,
     );
 
+    if (!newMilestone) return;
+
     return (
         <>
             <ChangeItemCreateEditDeleteWrapper>
@@ -141,7 +148,7 @@ const StartMilestone: FC<{
                     <Typography color='success.dark'>
                         + Start milestone:
                     </Typography>
-                    <Typography>{newMilestone?.name}</Typography>
+                    <Typography>{newMilestone.name}</Typography>
                     <TooltipLink
                         tooltip={
                             <StyledCodeSection>
@@ -163,6 +170,7 @@ const StartMilestone: FC<{
                 </ChangeItemInfo>
                 <div>{actions}</div>
             </ChangeItemCreateEditDeleteWrapper>
+            <ReleasePlanMilestone readonly milestone={newMilestone} />
         </>
     );
 };
@@ -174,6 +182,8 @@ const AddReleasePlan: FC<{
     actions?: ReactNode;
 }> = ({ change, environmentName, featureName, actions }) => {
     const { template } = useReleasePlanTemplate(change.payload.templateId);
+
+    if (!template) return;
 
     const tentativeReleasePlan = {
         ...template,

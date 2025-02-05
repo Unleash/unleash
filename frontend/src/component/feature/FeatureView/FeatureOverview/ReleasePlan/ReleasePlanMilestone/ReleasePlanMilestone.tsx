@@ -56,16 +56,30 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
 }));
 
-interface IReleasePlanMilestoneProps {
+interface IBaseReleasePlanMilestoneProps {
     milestone: IReleasePlanMilestone;
-    status: MilestoneStatus;
-    onStartMilestone: (milestone: IReleasePlanMilestone) => void;
-    readonly?: boolean;
+    status?: MilestoneStatus;
 }
+
+interface IEditableReleasePlanMilestoneProps
+    extends IBaseReleasePlanMilestoneProps {
+    readonly?: false;
+    onStartMilestone: (milestone: IReleasePlanMilestone) => void;
+}
+
+interface IReadonlyReleasePlanMilestoneProps
+    extends IBaseReleasePlanMilestoneProps {
+    readonly: true;
+    onStartMilestone?: never;
+}
+
+type IReleasePlanMilestoneProps =
+    | IEditableReleasePlanMilestoneProps
+    | IReadonlyReleasePlanMilestoneProps;
 
 export const ReleasePlanMilestone = ({
     milestone,
-    status,
+    status = 'not-started',
     onStartMilestone,
     readonly,
 }: IReleasePlanMilestoneProps) => {

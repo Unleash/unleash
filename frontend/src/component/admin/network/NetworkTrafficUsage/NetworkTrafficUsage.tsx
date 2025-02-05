@@ -189,7 +189,7 @@ const useTrafficStats = (
     const results = useMemo(() => {
         if (result.state !== 'success') {
             return {
-                data: { datasets: [], labels: [] },
+                chartData: { datasets: [], labels: [] },
                 usageTotal: 0,
                 overageCost: 0,
                 estimatedMonthlyCost: 0,
@@ -198,7 +198,7 @@ const useTrafficStats = (
         }
         const traffic = result.data;
 
-        const data = newToChartData(traffic);
+        const chartData = newToChartData(traffic);
         const usageTotal = calculateTotalUsage(traffic);
         const overageCost = calculateOverageCost(
             usageTotal,
@@ -219,7 +219,7 @@ const useTrafficStats = (
                 : averageTrafficPreviousMonths(traffic);
 
         return {
-            data,
+            chartData,
             usageTotal,
             overageCost,
             estimatedMonthlyCost,
@@ -290,7 +290,7 @@ const NewNetworkTrafficUsage: FC = () => {
     }, [theme, chartDataSelection]);
 
     const {
-        data,
+        chartData,
         usageTotal,
         overageCost,
         estimatedMonthlyCost,
@@ -359,7 +359,7 @@ const NewNetworkTrafficUsage: FC = () => {
                             />
                         </TopRow>
                         <Bar
-                            data={data}
+                            data={chartData}
                             plugins={[customHighlightPlugin()]}
                             options={options}
                             aria-label={getChartLabel(chartDataSelection)}

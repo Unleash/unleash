@@ -51,6 +51,7 @@ export type IFlagKey =
     | 'releasePlans'
     | 'releasePlanChangeRequests'
     | 'productivityReportEmail'
+    | 'productivityReportUnsubscribers'
     | 'enterprise-payg'
     | 'flagOverviewRedesign'
     | 'showUserDeviceCount'
@@ -254,6 +255,10 @@ const flags: IFlags = {
     ),
     productivityReportEmail: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_EMAIL,
+        false,
+    ),
+    productivityReportUnsubscribers: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_PRODUCTIVITY_REPORT_UNSUBSCRIBERS,
         false,
     ),
     'enterprise-payg': parseEnvVarBoolean(

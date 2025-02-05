@@ -248,7 +248,7 @@ const NewNetworkTrafficUsage: FC = () => {
     );
 
     const estimatedMonthlyCost = calculateEstimatedMonthlyCost(
-        traffic.usage.apiData,
+        traffic.usage?.apiData,
         includedTraffic,
         currentDate,
         BILLING_TRAFFIC_BUNDLE_PRICE,

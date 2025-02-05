@@ -134,12 +134,17 @@ export const calculateProjectedUsage = ({
 };
 
 export const calculateEstimatedMonthlyCost = (
-    trafficData: TrafficUsageDataSegmentedCombinedSchemaApiDataItem[],
+    trafficData:
+        | TrafficUsageDataSegmentedCombinedSchemaApiDataItem[]
+        | undefined,
     includedTraffic: number,
     currentDate: Date,
     trafficUnitCost = DEFAULT_TRAFFIC_DATA_UNIT_COST,
     trafficUnitSize = DEFAULT_TRAFFIC_DATA_UNIT_SIZE,
 ) => {
+    if (!trafficData) {
+        return 0;
+    }
     const dayOfMonth = currentDate.getDate();
     const daysInMonth = getDaysInMonth(currentDate);
 

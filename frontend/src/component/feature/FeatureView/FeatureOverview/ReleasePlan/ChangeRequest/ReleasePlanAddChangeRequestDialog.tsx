@@ -1,65 +1,39 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import useToast from 'hooks/useToast';
 import { styled, Button } from '@mui/material';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 const StyledBoldSpan = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 }));
 
 interface IReleasePlanAddChangeRequestDialogProps {
-    projectId: string;
     featureId: string;
     environmentId: string;
-    releaseTemplate?: IReleasePlanTemplate | undefined;
+    releaseTemplate?: IReleasePlanTemplate;
+    isOpen: boolean;
+    onConfirm: () => Promise<void>;
     onClosing: () => void;
 }
 
 export const ReleasePlanAddChangeRequestDialog = ({
-    projectId,
     featureId,
     environmentId,
     releaseTemplate,
+    isOpen,
+    onConfirm,
     onClosing,
 }: IReleasePlanAddChangeRequestDialogProps) => {
-    const { setToastData } = useToast();
-    const { addChange } = useChangeRequestApi();
-    const { refetch: refetchChangeRequests } =
-        usePendingChangeRequests(projectId);
-
-    const addReleasePlanToChangeRequest = async () => {
-        addChange(projectId, environmentId, {
-            feature: featureId,
-            action: 'addReleasePlan',
-            payload: {
-                templateId: releaseTemplate?.id,
-            },
-        });
-
-        refetchChangeRequests();
-
-        setToastData({
-            type: 'success',
-            text: 'Added to draft',
-        });
-        onClosing();
-    };
-
     return (
         <Dialogue
             title='Request changes'
-            open={Boolean(releaseTemplate)}
+            open={isOpen}
             secondaryButtonText='Cancel'
-            onClose={() => {
-                onClosing();
-            }}
+            onClose={onClosing}
             customButton={
                 <Button
                     color='primary'
                     variant='contained'
-                    onClick={addReleasePlanToChangeRequest}
+                    onClick={onConfirm}
                     autoFocus={true}
                 >
                     Add suggestion to draft

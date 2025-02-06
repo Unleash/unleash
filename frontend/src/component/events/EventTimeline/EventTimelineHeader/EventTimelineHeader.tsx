@@ -123,30 +123,28 @@ export const EventTimelineHeader = ({
                 </StyledFilter>
                 {frontendHeaderRefactor && <EnvironmentFilter />}
             </StyledCol>
-            <StyledCol>
-                {!frontendHeaderRefactor && (
-                    <>
-                        <EventTimelineHeaderTip />
-                        <EnvironmentFilter />
-                    </>
-                )}
-                <Tooltip title='Hide event timeline' arrow>
-                    <IconButton
-                        aria-label='close'
-                        size='small'
-                        onClick={() => {
-                            trackEvent('event-timeline', {
-                                props: {
-                                    eventType: 'close',
-                                },
-                            });
-                            setOpen(false);
-                        }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                </Tooltip>
-            </StyledCol>
+            {!frontendHeaderRefactor && (
+                <StyledCol>
+                    <EventTimelineHeaderTip />
+                    <EnvironmentFilter />
+                    <Tooltip title='Hide event timeline' arrow>
+                        <IconButton
+                            aria-label='close'
+                            size='small'
+                            onClick={() => {
+                                trackEvent('event-timeline', {
+                                    props: {
+                                        eventType: 'close',
+                                    },
+                                });
+                                setOpen(false);
+                            }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </Tooltip>
+                </StyledCol>
+            )}
         </>
     );
 };

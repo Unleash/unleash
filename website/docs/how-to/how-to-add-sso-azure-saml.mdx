@@ -3,8 +3,6 @@ title: How to add SSO with SAML 2.0 and Microsoft Entra ID
 description: 'Configure Microsoft Entra ID SSO with SAML 2.0 for your Unleash instance.'
 ---
 
-import Figure from '@site/src/components/Figure/Figure.tsx'
-
 :::note Availability
 
 **Plan**: [Enterprise](https://www.getunleash.io/pricing)
@@ -49,8 +47,7 @@ To configure attributes and claims for the new application, do the following:
 
 To populate the first and last names of users in Unleash, configure two additional claims with attributes `user.givenname` and `user.surname` with no namespace.
 
-<Figure caption="Edit the SAML configuration in Microsoft Entra admin center." img="/img/microsoft-entra-claims.png" />
-
+![SAML configuration in Microsoft Entra admin center](/img/microsoft-entra-claims.png)
 
 ### Save SAML certificate, identifier, and login URL
 
@@ -62,7 +59,7 @@ Save the following information from the single sign-on settings of your applicat
 #### SAML certificate
 To save the SAML certificate, go to the single sign-on settings of your application. In **SAML Certificates > Federation Metadata XML**, click **Download**. Open the file and copy the contents between the `X509Certificate` tag. 
 
-<Figure caption="Save the X509 Certificate from the SAML certificate XML file. The example has been redacted." img="/img/x509cert.png" />
+![X509 Certificate from the SAML certificate XML file](/img/x509cert.png)
 
 #### Login URL
 To find your login URL, go to the single sign-on settings of your application. In the **Set up `<your-application-name>`** section, copy and save **Login URL**. For example: `https://login.microsoftonline.com/<your_identifier>/saml2`.
@@ -83,7 +80,7 @@ To finalize the configuration, do the following:
 5. Optional: To automatically create users for first-time sign-ins, select **Auto-create users**. Select a default root role new users should have, and configure the list of valid email domains.
 6. Click **Save**.
 
-<Figure caption="Configure SAML 2.0 in Unleash." img="/img/saml2.0.png" />
+![Configure SAML 2.0 in Unleash](/img/saml2.0.png)
 
 ## Test your configuration
 

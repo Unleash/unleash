@@ -43,17 +43,22 @@ const addDocsRoutePrefix = ({ from, ...rest }) => {
 };
 
 const getUnleashRepoStars = async () => {
-    const response = await fetch(
-        `https://api.github.com/repos/unleash/unleash`,
-    );
-    const data = await response.json();
+    try {
+        const response = await fetch(
+            `https://api.github.com/repos/unleash/unleash`,
+        );
+        const data = await response.json();
 
-    const unleashRepoStars = data.stargazers_count;
-    const formattedStars =
-        unleashRepoStars >= 1000
-            ? `${(unleashRepoStars / 1000).toFixed(1)}k`
-            : unleashRepoStars?.toString() || '';
-    return formattedStars;
+        const unleashRepoStars = data.stargazers_count;
+        const formattedStars =
+            unleashRepoStars >= 1000
+                ? `${(unleashRepoStars / 1000).toFixed(1)}k`
+                : unleashRepoStars?.toString() || '';
+        return formattedStars;
+    } catch (e) {
+        console.error('Error fetching Unleash repo stars', e);
+        return '';
+    }
 };
 
 export default async function createConfigAsync(): Promise<Config> {

@@ -270,6 +270,11 @@ main img {
     box-shadow: var(--ifm-global-shadow-lw);
 }
 
+.medium-zoom-image--opened {
+    /* ensure images appear on top when zoomed in */
+    z-index: 9999;
+}
+
 main
     p
     > img:not(

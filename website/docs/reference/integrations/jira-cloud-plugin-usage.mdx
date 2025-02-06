@@ -2,8 +2,6 @@
 title: Jira Cloud Integration - Usage
 ---
 
-import Figure from '@site/src/components/Figure/Figure.tsx'
-
 With the Unleash Jira Cloud Plugin you can create, view and manage Unleash feature flags directly from a Jira issue.
 
 The plugin also shows you current status of connected flags.
@@ -12,11 +10,11 @@ The plugin also shows you current status of connected flags.
 
 To use the plugin, you'll need to create an issue or use an existing one. Once the issue is saved and you open up the issue panel, you'll be greeted with a button to activate the Unleash plugin for that issue.
 
-<Figure caption="The Unleash Feature Flags button gets added to the top-level actions of new issues. Use that button to activate the Unleash plugin for that issue." img="/img/jira-cloud-activate-unleash-panel-button.png" />
+![Activating the Unleash plugin](/img/jira-cloud-activate-unleash-panel-button.png)
 
 ### Connecting a flag to an issue
 
-<Figure caption="Once active, the Unleash plugin adds a button labeled 'connect toggle' to the issue." img="/img/jira-cloud-issue-button.png" />
+![Connecting a feature flag using the Unleash plugin](/img/jira-cloud-issue-button.png)
 
 
 Use the issue's "connect toggle" button to open a dialog. 
@@ -30,9 +28,9 @@ There are a few steps to connect a flag:
 
 2. Use the "create new toggle" option to choose whether you want to add an existing flag or create a new one.  
 
-<Figure caption="When you add an existing flag, use the flag name select list to choose from existing flags in the selected Unleash project." img="/img/jira-cloud-add-existing-toggle.png" />
+![Adding an existing flag using the Unleash plugin](/img/jira-cloud-add-existing-toggle.png)
 
-<Figure caption="When you add a new flag, you must give it a name and can choose to give it a description." img="/img/jira-cloud-add-new-toggle.png" />
+![Creating a new flag using the Unleash plugin](/img/jira-cloud-add-new-toggle.png)
 
 ### Flag status as part of Issue view
 
@@ -40,7 +38,7 @@ Once you've connected at least one flag to an issue, the Unleash plugin will lis
 that flag. If the current user is allowed to edit the issue, they can also enable or disable environments directly
 from Jira.
 
-<Figure caption="A Jira Cloud issue with a connected flag. The Unleash feature flags section now shows the connected flags along with the flag's environments. There are controls to enable or disable the flag in the development and production environments" img="/img/jira-cloud-toggle-status.png" />
+![Example of a Jira Cloud issue with a connected flag](/img/jira-cloud-toggle-status.png)
 
 ### Change Requests
 
@@ -51,7 +49,7 @@ If you already have an active change request for that project and that environme
 
 If you confirm that you would like to open a change request, then the plugin will create one for you and present a confirmation dialog.
 
-<Figure caption="A dialog appears when the plugin creates a change request for you. The dialog contains a link directly to the newly created change request." img="/img/jira-cloud-change-request-confirmation.png" />
+![Creating a change request using the Unleash plugin](/img/jira-cloud-change-request-confirmation.png)
 
 When the Change Request has been reviewed and applied in Unleash, the flag will show the requested state after the next refresh 
 of the issue and flag status page.

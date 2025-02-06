@@ -20,6 +20,7 @@ import { TemplateDeleteDialog } from '../TemplateDeleteDialog';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from 'react-router-dom';
+import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 const StyledActions = styled('div')(({ theme }) => ({
     margin: theme.spacing(-1),
@@ -41,6 +42,7 @@ export const ReleasePlanTemplateCardActions = ({
     const { deleteReleasePlanTemplate } = useReleasePlanTemplatesApi();
     const { refetch } = useReleasePlanTemplates();
     const { setToastData, setToastApiError } = useToast();
+    const { trackEvent } = usePlausibleTracker();
     const [deleteOpen, setDeleteOpen] = useState(false);
     const deleteReleasePlan = useCallback(async () => {
         try {
@@ -49,6 +51,13 @@ export const ReleasePlanTemplateCardActions = ({
             setToastData({
                 type: 'success',
                 text: 'Release plan template deleted',
+            });
+
+            trackEvent('release-management', {
+                props: {
+                    eventType: 'delete-template',
+                    template: template.name,
+                },
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

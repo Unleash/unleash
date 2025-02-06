@@ -93,16 +93,16 @@ export const FeatureReleasePlanCard = ({
                 });
                 refetch();
             }
+
+            trackEvent('release-management', {
+                props: {
+                    eventType: 'add-plan',
+                    plan: releasePlanTemplate.name,
+                },
+            });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
-
-        trackEvent('release-plans', {
-            props: {
-                eventType: 'add',
-                name: releasePlanTemplate.name,
-            },
-        });
     };
 
     return (

@@ -289,7 +289,6 @@ export const routes: IRoute[] = [
         type: 'protected',
         menu: { advanced: true, mode: ['enterprise'] },
         flag: 'releasePlans',
-        enterprise: true,
     },
     {
         path: '/release-management/create-template',

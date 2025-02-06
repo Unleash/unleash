@@ -1,11 +1,7 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
 import useToast from 'hooks/useToast';
 import { styled, Button } from '@mui/material';
-import type {
-    IReleasePlan,
-    IReleasePlanMilestone,
-    IReleasePlanTemplate,
-} from 'interfaces/releasePlans';
+import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
@@ -14,26 +10,18 @@ const StyledBoldSpan = styled('span')(({ theme }) => ({
 }));
 
 interface IReleasePlanAddChangeRequestDialogProps {
-    action: 'addReleasePlan' | 'deleteReleasePlan' | 'startMilestone';
     projectId: string;
     featureId: string;
     environmentId: string;
     releaseTemplate?: IReleasePlanTemplate | undefined;
-    releasePlan?: IReleasePlan | undefined;
-    milestone?: IReleasePlanMilestone | undefined;
-    environmentActive?: boolean;
     onClosing: () => void;
 }
 
 export const ReleasePlanAddChangeRequestDialog = ({
-    action,
     projectId,
     featureId,
     environmentId,
     releaseTemplate,
-    releasePlan,
-    milestone,
-    environmentActive,
     onClosing,
 }: IReleasePlanAddChangeRequestDialogProps) => {
     const { setToastData } = useToast();
@@ -62,7 +50,7 @@ export const ReleasePlanAddChangeRequestDialog = ({
     return (
         <Dialogue
             title='Request changes'
-            open={Boolean(releaseTemplate) || Boolean(releasePlan)}
+            open={Boolean(releaseTemplate)}
             secondaryButtonText='Cancel'
             onClose={() => {
                 onClosing();

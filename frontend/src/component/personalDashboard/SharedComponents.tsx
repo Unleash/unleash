@@ -1,5 +1,4 @@
-import { Box, List, styled } from '@mui/material';
-import type { Theme } from '@mui/material/styles/createTheme';
+import { Box, List, type Theme, styled } from '@mui/material';
 
 export const ContentGridContainer = styled('div')({
     containerType: 'inline-size',
@@ -57,10 +56,13 @@ export const FlagGrid = styled(ContentGrid)(
     }),
 );
 
-export const GridItem = styled('div', {
+export const AccordionContent = styled('div')(({ theme }) => ({
+    padding: theme.spacing(2, 4),
+}));
+
+export const GridItem = styled(AccordionContent, {
     shouldForwardProp: (prop) => !['gridArea'].includes(prop.toString()),
 })<{ gridArea: string }>(({ theme, gridArea }) => ({
-    padding: theme.spacing(2, 4),
     maxHeight: '100%',
     overflowY: 'auto',
     gridArea,

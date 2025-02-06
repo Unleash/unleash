@@ -24,7 +24,7 @@ import { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { InfoSection } from './InfoSection';
 import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
-import { GridItem } from './SharedComponents';
+import { AccordionContent } from './SharedComponents';
 import { Link } from 'react-router-dom';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
@@ -217,9 +217,9 @@ export const PersonalDashboard = () => {
                     </AccordionSummaryText>
                 </StyledAccordionSummary>
                 <StyledAccordionDetails>
-                    <GridItem>
+                    <AccordionContent>
                         <EventTimeline />
-                    </GridItem>
+                    </AccordionContent>
                 </StyledAccordionDetails>
             </SectionAccordion>
 

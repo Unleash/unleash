@@ -171,6 +171,13 @@ export const ReleasePlan = ({
         } else {
             setRemoveOpen(true);
         }
+
+        trackEvent('release-management', {
+            props: {
+                eventType: 'remove-plan',
+                plan: name,
+            },
+        });
     };
 
     const onRemoveConfirm = async () => {
@@ -184,13 +191,6 @@ export const ReleasePlan = ({
             setToastData({
                 text: `Release plan "${name}" has been removed from ${featureName} in ${environment}`,
                 type: 'success',
-            });
-
-            trackEvent('release-management', {
-                props: {
-                    eventType: 'remove-plan',
-                    plan: name,
-                },
             });
 
             refetch();

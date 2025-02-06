@@ -102,7 +102,7 @@ export const useDashboardState = (
         setActiveProject,
         expandFlags: state.expandFlags ?? true,
         expandProjects: state.expandProjects ?? true,
-        expandTimeline: state.expandTimeline ?? true,
+        expandTimeline: state.expandTimeline ?? false,
         toggleSectionState,
     };
 };

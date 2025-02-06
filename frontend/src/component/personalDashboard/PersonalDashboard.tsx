@@ -186,7 +186,7 @@ export const PersonalDashboard = () => {
             {showTimelinePanel && (
                 <SectionAccordion
                     disableGutters
-                    expanded={expandTimeline ?? true}
+                    expanded={expandTimeline ?? false}
                     onChange={() => toggleSectionState('timeline')}
                 >
                     <StyledAccordionSummary
@@ -214,8 +214,8 @@ export const PersonalDashboard = () => {
                                     }}
                                 >
                                     include external signals
-                                </Link>
-                                {' '}to get a fuller overview.
+                                </Link>{' '}
+                                to get a fuller overview.
                             </AccordionSummarySubtitle>
                         </AccordionSummaryText>
                     </StyledAccordionSummary>

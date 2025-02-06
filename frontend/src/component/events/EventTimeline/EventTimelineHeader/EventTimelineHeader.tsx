@@ -12,7 +12,6 @@ import { timeSpanOptions } from '../EventTimelineProvider';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEventTimelineContext } from '../EventTimelineContext';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { EventTimelineHeaderTip } from './EventTimelineHeaderTip';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 
 const StyledCol = styled('div')(({ theme }) => ({
@@ -93,7 +92,6 @@ export const EventTimelineHeader = ({
                     ))}
                 </StyledFilter>
             </StyledCol>
-            <EventTimelineHeaderTip />
             <StyledCol>
                 <ConditionallyRender
                     condition={Boolean(environment) && environments.length > 0}

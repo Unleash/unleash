@@ -1,12 +1,9 @@
 import { Dialogue } from 'component/common/Dialogue/Dialogue';
-import useToast from 'hooks/useToast';
 import { styled, Button } from '@mui/material';
 import type {
     IReleasePlan,
     IReleasePlanMilestone,
 } from 'interfaces/releasePlans';
-import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
-import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 
 const StyledBoldSpan = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
@@ -18,7 +15,8 @@ interface IStartMilestoneChangeRequestDialogProps {
     environmentId: string;
     releasePlan?: IReleasePlan | undefined;
     milestone?: IReleasePlanMilestone | undefined;
-    environmentActive?: boolean;
+    isOpen: boolean;
+    onConfirm: () => Promise<void>;
     onClosing: () => void;
 }
 
@@ -28,46 +26,21 @@ export const StartMilestoneChangeRequestDialog = ({
     environmentId,
     releasePlan,
     milestone,
-    environmentActive,
+    isOpen,
+    onConfirm,
     onClosing,
 }: IStartMilestoneChangeRequestDialogProps) => {
-    const { setToastData } = useToast();
-    const { addChange } = useChangeRequestApi();
-    const { refetch: refetchChangeRequests } =
-        usePendingChangeRequests(projectId);
-
-    const addStartMilestoneToChangeRequest = async () => {
-        addChange(projectId, environmentId, {
-            feature: featureId,
-            action: 'startMilestone',
-            payload: {
-                planId: releasePlan?.id,
-                milestoneId: releasePlan?.milestones[0].id,
-            },
-        });
-
-        refetchChangeRequests();
-
-        setToastData({
-            type: 'success',
-            text: 'Added to draft',
-        });
-        onClosing();
-    };
-
     return (
         <Dialogue
             title='Request changes'
-            open={Boolean(releasePlan)}
+            open={isOpen}
             secondaryButtonText='Cancel'
-            onClose={() => {
-                onClosing();
-            }}
+            onClose={onClosing}
             customButton={
                 <Button
                     color='primary'
                     variant='contained'
-                    onClick={addStartMilestoneToChangeRequest}
+                    onClick={onConfirm}
                     autoFocus={true}
                 >
                     Add suggestion to draft

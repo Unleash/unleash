@@ -17,6 +17,8 @@ import { ReleasePlanMilestone } from './ReleasePlanMilestone/ReleasePlanMileston
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
 import { RemoveReleasePlanChangeRequestDialog } from './ChangeRequest/RemoveReleasePlanChangeRequestDialog';
 import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMilestoneChangeRequestDialog';
 
@@ -100,29 +102,68 @@ export const ReleasePlan = ({
     const { setToastData, setToastApiError } = useToast();
 
     const [removeOpen, setRemoveOpen] = useState(false);
+    const [changeRequestDialogRemoveOpen, setChangeRequestDialogRemoveOpen] =
+        useState(false);
     const [
-        planForChangeRequestRemoveDialog,
-        setPlanForChangeRequestRemoveDialog,
-    ] = useState<IReleasePlan | undefined>();
-    const [
-        planForChangeRequestStartMilestoneDialog,
-        setPlanForChangeRequestStartMilestoneDialog,
-    ] = useState<IReleasePlan | undefined>();
+        changeRequestDialogStartMilestoneOpen,
+        setChangeRequestDialogStartMilestoneOpen,
+    ] = useState(false);
     const [
         milestoneForChangeRequestDialog,
         setMilestoneForChangeRequestDialog,
     ] = useState<IReleasePlanMilestone | undefined>();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const { addChange } = useChangeRequestApi();
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
+
     const releasePlanChangeRequestsEnabled = useUiFlag(
         'releasePlanChangeRequests',
     );
+
+    const onAddRemovePlanChangesConfirm = async () => {
+        addChange(projectId, environment, {
+            feature: featureName,
+            action: 'deleteReleasePlan',
+            payload: {
+                planId: plan.id,
+            },
+        });
+
+        refetchChangeRequests();
+
+        setToastData({
+            type: 'success',
+            text: 'Added to draft',
+        });
+
+        setChangeRequestDialogRemoveOpen(false);
+    };
+
+    const onAddStartMilestoneChangesConfirm = async () => {
+        addChange(projectId, environment, {
+            feature: featureName,
+            action: 'startMilestone',
+            payload: {
+                planId: plan.id,
+                milestoneId: milestoneForChangeRequestDialog?.id,
+            },
+        });
+
+        refetchChangeRequests();
+
+        setToastData({
+            type: 'success',
+            text: 'Added to draft',
+        });
+    };
 
     const confirmRemoveReleasePlan = () => {
         if (
             releasePlanChangeRequestsEnabled &&
             isChangeRequestConfigured(environment)
         ) {
-            setPlanForChangeRequestRemoveDialog(plan);
+            setChangeRequestDialogRemoveOpen(true);
         } else {
             setRemoveOpen(true);
         }
@@ -153,7 +194,7 @@ export const ReleasePlan = ({
             isChangeRequestConfigured(environment)
         ) {
             setMilestoneForChangeRequestDialog(milestone);
-            setPlanForChangeRequestStartMilestoneDialog(plan);
+            setChangeRequestDialogStartMilestoneOpen(true);
         } else {
             try {
                 await startReleasePlanMilestone(
@@ -238,20 +279,23 @@ export const ReleasePlan = ({
             <RemoveReleasePlanChangeRequestDialog
                 environmentId={environment}
                 featureId={featureName}
-                onClosing={() => setPlanForChangeRequestRemoveDialog(undefined)}
-                projectId={projectId}
-                releasePlan={planForChangeRequestRemoveDialog}
+                isOpen={changeRequestDialogRemoveOpen}
+                onConfirm={onAddRemovePlanChangesConfirm}
+                onClosing={() => setChangeRequestDialogRemoveOpen(false)}
+                releasePlan={plan}
                 environmentActive={!environmentIsDisabled}
             />
             <StartMilestoneChangeRequestDialog
                 environmentId={environment}
                 featureId={featureName}
+                isOpen={changeRequestDialogStartMilestoneOpen}
+                onConfirm={onAddStartMilestoneChangesConfirm}
                 onClosing={() => {
-                    setPlanForChangeRequestStartMilestoneDialog(undefined);
                     setMilestoneForChangeRequestDialog(undefined);
+                    setChangeRequestDialogStartMilestoneOpen(false);
                 }}
                 projectId={projectId}
-                releasePlan={planForChangeRequestStartMilestoneDialog}
+                releasePlan={plan}
                 milestone={milestoneForChangeRequestDialog}
             />
         </StyledContainer>

@@ -17,7 +17,8 @@ import { ReleasePlanMilestone } from './ReleasePlanMilestone/ReleasePlanMileston
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ReleasePlanAddChangeRequestDialog } from './ReleasePlanAddChangeRequestDialog';
+import { RemoveReleasePlanChangeRequestDialog } from './ChangeRequest/RemoveReleasePlanChangeRequestDialog';
+import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMilestoneChangeRequestDialog';
 
 const StyledContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'readonly',
@@ -234,8 +235,7 @@ export const ReleasePlan = ({
                 onConfirm={onRemoveConfirm}
                 environmentActive={!environmentIsDisabled}
             />
-            <ReleasePlanAddChangeRequestDialog
-                action='deleteReleasePlan'
+            <RemoveReleasePlanChangeRequestDialog
                 environmentId={environment}
                 featureId={featureName}
                 onClosing={() => setPlanForChangeRequestRemoveDialog(undefined)}
@@ -243,8 +243,7 @@ export const ReleasePlan = ({
                 releasePlan={planForChangeRequestRemoveDialog}
                 environmentActive={!environmentIsDisabled}
             />
-            <ReleasePlanAddChangeRequestDialog
-                action='startMilestone'
+            <StartMilestoneChangeRequestDialog
                 environmentId={environment}
                 featureId={featureName}
                 onClosing={() => {

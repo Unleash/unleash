@@ -11,7 +11,7 @@ import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrate
 import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { ReleasePlanAddChangeRequestDialog } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanAddChangeRequestDialog';
+import { ReleasePlanAddChangeRequestDialog } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ChangeRequest/ReleasePlanAddChangeRequestDialog';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 
 interface IFeatureStrategyMenuProps {
@@ -188,7 +188,6 @@ export const FeatureStrategyMenu = ({
                 />
             </Popover>
             <ReleasePlanAddChangeRequestDialog
-                action='addReleasePlan'
                 projectId={projectId}
                 onClosing={() => setTemplateForChangeRequestDialog(undefined)}
                 featureId={featureId}

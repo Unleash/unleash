@@ -14,6 +14,7 @@ export const useDashboardState = (
         activeFlag: PersonalDashboardSchemaFlagsItem | undefined;
         expandProjects: boolean;
         expandFlags: boolean;
+        expandTimeline: boolean;
     };
 
     const defaultState: State = {
@@ -21,6 +22,7 @@ export const useDashboardState = (
         activeFlag: undefined,
         expandProjects: true,
         expandFlags: true,
+        expandTimeline: false,
     };
 
     const [state, setState] = useLocalStorageState<State>(
@@ -76,8 +78,18 @@ export const useDashboardState = (
         });
     };
 
-    const toggleSectionState = (section: 'flags' | 'projects') => {
-        const property = section === 'flags' ? 'expandFlags' : 'expandProjects';
+    const toggleSectionState = (section: 'flags' | 'projects' | 'timeline') => {
+        const getProperty = () => {
+            switch (section) {
+                case 'flags':
+                    return 'expandFlags';
+                case 'projects':
+                    return 'expandProjects';
+                case 'timeline':
+                    return 'expandTimeline';
+            }
+        };
+        const property = getProperty();
         updateState({
             [property]: !(state[property] ?? true),
         });
@@ -90,6 +102,7 @@ export const useDashboardState = (
         setActiveProject,
         expandFlags: state.expandFlags ?? true,
         expandProjects: state.expandProjects ?? true,
+        expandTimeline: state.expandTimeline ?? false,
         toggleSectionState,
     };
 };

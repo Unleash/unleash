@@ -150,7 +150,10 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     show={<Header />}
                                 />
 
-                                <MainLayoutEventTimeline />
+                                <ConditionallyRender
+                                    condition={!frontendHeaderRedesign}
+                                    show={<MainLayoutEventTimeline />}
+                                />
 
                                 <MainLayoutContent>
                                     <SkipNavTarget />

@@ -19,13 +19,17 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ReleasePlanAddChangeRequestDialog } from './ReleasePlanAddChangeRequestDialog';
 
-const StyledContainer = styled('div')(({ theme }) => ({
+const StyledContainer = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'readonly',
+})<{ readonly?: boolean }>(({ theme, readonly }) => ({
     padding: theme.spacing(2),
     borderRadius: theme.shape.borderRadiusMedium,
     '& + &': {
         marginTop: theme.spacing(2),
     },
-    background: theme.palette.background.paper,
+    background: readonly
+        ? theme.palette.background.elevation1
+        : theme.palette.background.paper,
 }));
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -69,12 +73,14 @@ const StyledConnection = styled('div')(({ theme }) => ({
 
 interface IReleasePlanProps {
     plan: IReleasePlan;
-    environmentIsDisabled: boolean;
+    environmentIsDisabled?: boolean;
+    readonly?: boolean;
 }
 
 export const ReleasePlan = ({
     plan,
     environmentIsDisabled,
+    readonly,
 }: IReleasePlanProps) => {
     const {
         id,
@@ -172,7 +178,7 @@ export const ReleasePlan = ({
     );
 
     return (
-        <StyledContainer>
+        <StyledContainer readonly={readonly}>
             <StyledHeader>
                 <StyledHeaderTitleContainer>
                     <StyledHeaderTitleLabel>
@@ -183,22 +189,25 @@ export const ReleasePlan = ({
                         {description}
                     </StyledHeaderDescription>
                 </StyledHeaderTitleContainer>
-                <PermissionIconButton
-                    onClick={confirmRemoveReleasePlan}
-                    permission={DELETE_FEATURE_STRATEGY}
-                    environmentId={environment}
-                    projectId={projectId}
-                    tooltipProps={{
-                        title: 'Remove release plan',
-                    }}
-                >
-                    <Delete />
-                </PermissionIconButton>
+                {!readonly && (
+                    <PermissionIconButton
+                        onClick={confirmRemoveReleasePlan}
+                        permission={DELETE_FEATURE_STRATEGY}
+                        environmentId={environment}
+                        projectId={projectId}
+                        tooltipProps={{
+                            title: 'Remove release plan',
+                        }}
+                    >
+                        <Delete />
+                    </PermissionIconButton>
+                )}
             </StyledHeader>
             <StyledBody>
                 {milestones.map((milestone, index) => (
                     <div key={milestone.id}>
                         <ReleasePlanMilestone
+                            readonly={readonly}
                             milestone={milestone}
                             status={
                                 milestone.id === activeMilestoneId

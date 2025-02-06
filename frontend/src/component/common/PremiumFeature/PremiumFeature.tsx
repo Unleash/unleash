@@ -128,6 +128,11 @@ const PremiumFeatures = {
         url: 'https://docs.getunleash.io/reference/environments',
         label: 'Environments management',
     },
+    releaseManagement: {
+        plan: FeaturePlan.ENTERPRISE,
+        url: '',
+        label: 'Release management',
+    },
 };
 
 type PremiumFeatureType = keyof typeof PremiumFeatures;
@@ -255,14 +260,16 @@ export const PremiumFeature = ({
                                 </Button>
                             )}
 
-                            <Button
-                                href={url}
-                                target='_blank'
-                                rel='noreferrer'
-                                onClick={trackReadAbout}
-                            >
-                                Read about {label}
-                            </Button>
+                            {url && (
+                                <Button
+                                    href={url}
+                                    target='_blank'
+                                    rel='noreferrer'
+                                    onClick={trackReadAbout}
+                                >
+                                    Read about {label}
+                                </Button>
+                            )}
                         </StyledButtonContainer>
                     </>
                 }

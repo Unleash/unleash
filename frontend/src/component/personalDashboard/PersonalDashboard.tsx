@@ -198,7 +198,7 @@ export const PersonalDashboard = () => {
                     >
                         <AccordionSummaryText>
                             <AccordionSummaryHeader>
-                                Timeline of events
+                                Event timeline
                             </AccordionSummaryHeader>
                             <AccordionSummarySubtitle>
                                 Overview of recent activities across all

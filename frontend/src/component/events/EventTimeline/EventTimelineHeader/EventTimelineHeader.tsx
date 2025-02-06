@@ -50,7 +50,7 @@ export const EventTimelineHeader = ({
     const { timeSpan, environment, setOpen, setTimeSpan, setEnvironment } =
         useEventTimelineContext();
     const { environments } = useEnvironments();
-    const showSignalsLink = useUiFlag('frontendHeaderRedesign');
+    const frontendHeaderRefactor = useUiFlag('frontendHeaderRedesign');
 
     const activeEnvironments = useMemo(
         () => environments.filter(({ enabled }) => enabled),
@@ -66,6 +66,33 @@ export const EventTimelineHeader = ({
             setEnvironment(defaultEnvironment);
         }
     }, [activeEnvironments]);
+
+    const EnvironmentFilter = () => (
+        <ConditionallyRender
+            condition={Boolean(environment) && environments.length > 0}
+            show={() => (
+                <StyledFilter
+                    select
+                    size='small'
+                    variant='outlined'
+                    value={environment!.name}
+                    onChange={(e) =>
+                        setEnvironment(
+                            environments.find(
+                                ({ name }) => name === e.target.value,
+                            ) || environments[0],
+                        )
+                    }
+                >
+                    {environments.map(({ name }) => (
+                        <MenuItem key={name} value={name}>
+                            {name}
+                        </MenuItem>
+                    ))}
+                </StyledFilter>
+            )}
+        />
+    );
 
     return (
         <>
@@ -94,33 +121,11 @@ export const EventTimelineHeader = ({
                         </MenuItem>
                     ))}
                 </StyledFilter>
+                {frontendHeaderRefactor && <EnvironmentFilter />}
             </StyledCol>
             <StyledCol>
-                {showSignalsLink && <EventTimelineHeaderTip />}
-                <ConditionallyRender
-                    condition={Boolean(environment) && environments.length > 0}
-                    show={() => (
-                        <StyledFilter
-                            select
-                            size='small'
-                            variant='outlined'
-                            value={environment!.name}
-                            onChange={(e) =>
-                                setEnvironment(
-                                    environments.find(
-                                        ({ name }) => name === e.target.value,
-                                    ) || environments[0],
-                                )
-                            }
-                        >
-                            {environments.map(({ name }) => (
-                                <MenuItem key={name} value={name}>
-                                    {name}
-                                </MenuItem>
-                            ))}
-                        </StyledFilter>
-                    )}
-                />
+                {frontendHeaderRefactor && <EventTimelineHeaderTip />}
+                {!frontendHeaderRefactor && <EnvironmentFilter />}
                 <Tooltip title='Hide event timeline' arrow>
                     <IconButton
                         aria-label='close'

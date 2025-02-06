@@ -61,7 +61,6 @@ export type IFlagKey =
     | 'etagVariant'
     | 'deltaApi'
     | 'uniqueSdkTracking'
-    | 'sortProjectRoles'
     | 'frontendHeaderRedesign'
     | 'dataUsageMultiMonthView'
     | 'uiGlobalFontSize';
@@ -291,10 +290,6 @@ const flags: IFlags = {
     ),
     uniqueSdkTracking: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_UNIQUE_SDK_TRACKING,
-        false,
-    ),
-    sortProjectRoles: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_SORT_PROJECT_ROLES,
         false,
     ),
     frontendHeaderRedesign: parseEnvVarBoolean(

@@ -47,7 +47,6 @@ export const RolePermissionCategories = ({
     const granularAdminPermissionsEnabled = useUiFlag(
         'granularAdminPermissions',
     );
-    const sortProjectRoles = useUiFlag('sortProjectRoles');
 
     const isProjectRole = PROJECT_ROLE_TYPES.includes(type);
 
@@ -121,7 +120,7 @@ export const RolePermissionCategories = ({
                             checkedPermissions={checkedPermissions}
                             onCheckAll={() => onCheckAll(permissions)}
                         >
-                            {type === 'project' && sortProjectRoles ? (
+                            {type === 'project' ? (
                                 <RolePermissionProject
                                     permissions={permissions}
                                     checkedPermissions={checkedPermissions}

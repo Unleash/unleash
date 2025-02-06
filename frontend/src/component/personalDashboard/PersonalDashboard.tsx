@@ -23,6 +23,9 @@ import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData';
 import { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { InfoSection } from './InfoSection';
+import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
+import { GridItem } from './SharedComponents';
+import { Link } from 'react-router-dom';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -125,7 +128,10 @@ export const PersonalDashboard = () => {
         toggleSectionState,
         expandFlags,
         expandProjects,
+        expandTimeline,
     } = useDashboardState(projects, personalDashboard?.flags ?? []);
+
+    const signalsLink = '/integrations/signals';
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'open' | 'closed'
@@ -174,6 +180,48 @@ export const PersonalDashboard = () => {
                     View key concepts
                 </ViewKeyConceptsButton>
             </WelcomeSection>
+
+            <SectionAccordion
+                disableGutters
+                expanded={expandTimeline ?? true}
+                onChange={() => toggleSectionState('timeline')}
+            >
+                <StyledAccordionSummary
+                    expandIcon={
+                        <ExpandMore titleAccess='Toggle timeline section' />
+                    }
+                    id='timeline-panel-header'
+                    aria-controls='timeline-panel-content'
+                >
+                    <AccordionSummaryText>
+                        <AccordionSummaryHeader>
+                            Timeline of events
+                        </AccordionSummaryHeader>
+                        <AccordionSummarySubtitle>
+                            Overview of recent activities across all projects in
+                            Unleash. Make debugging easier and{' '}
+                            <Link
+                                to={signalsLink}
+                                onClick={() => {
+                                    trackEvent('event-timeline', {
+                                        props: {
+                                            eventType: 'signals clicked',
+                                        },
+                                    });
+                                }}
+                            >
+                                include external signals
+                            </Link>
+                            {''} to get a fuller overview.
+                        </AccordionSummarySubtitle>
+                    </AccordionSummaryText>
+                </StyledAccordionSummary>
+                <StyledAccordionDetails>
+                    <GridItem>
+                        <EventTimeline />
+                    </GridItem>
+                </StyledAccordionDetails>
+            </SectionAccordion>
 
             <SectionAccordion
                 disableGutters

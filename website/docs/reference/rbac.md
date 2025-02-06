@@ -182,7 +182,7 @@ environments.
 | **settings write** | Write access to other project settings (included in "update the project" permission)                            
 | **delete the project**                        | Lets the user delete the project.                                                                                                                                                                                                                 |
 
-#### API Tokens
+#### API tokens
 | Permission | Description |
 | --- | --- |
 | **read API token** | Read API tokens for a specific project |

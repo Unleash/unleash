@@ -124,8 +124,12 @@ export const EventTimelineHeader = ({
                 {frontendHeaderRefactor && <EnvironmentFilter />}
             </StyledCol>
             <StyledCol>
-                {frontendHeaderRefactor && <EventTimelineHeaderTip />}
-                {!frontendHeaderRefactor && <EnvironmentFilter />}
+                {!frontendHeaderRefactor && (
+                    <>
+                        <EventTimelineHeaderTip />
+                        <EnvironmentFilter />
+                    </>
+                )}
                 <Tooltip title='Hide event timeline' arrow>
                     <IconButton
                         aria-label='close'

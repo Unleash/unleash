@@ -183,7 +183,7 @@ export const PersonalDashboard = () => {
                 </ViewKeyConceptsButton>
             </WelcomeSection>
 
-            {showTimelinePanel ? (
+            {showTimelinePanel && (
                 <SectionAccordion
                     disableGutters
                     expanded={expandTimeline ?? true}
@@ -225,7 +225,7 @@ export const PersonalDashboard = () => {
                         </AccordionContent>
                     </StyledAccordionDetails>
                 </SectionAccordion>
-            ) : null}
+            )}
             <SectionAccordion
                 disableGutters
                 expanded={expandProjects ?? true}

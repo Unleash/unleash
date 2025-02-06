@@ -3,8 +3,6 @@ title: 'Feature flag management: Best practices for using feature flags at scale
 description: 'A feature flag is just an if statement, you say. When your organization has thousands of developers, those if statements can quickly become complex.'
 ---
 
-import Figure from '@site/src/components/Figure/Figure.tsx'
-
 “A feature flag is just an if statement,” you say. This is true in a way, but when your organization has thousands of developers, each managing dozens or hundreds of flags with complex targeting rules and audit trails across dozens of microservices-based applications, those if statements can quickly become complex. This is especially true if you don’t set up your system correctly in the first place.
 
 This guide to using feature flag systems at scale is based on lessons learned working with some of the largest feature flag deployments in the world through the [Unleash Open-Source](https://github.com/Unleash/unleash) and [Enterprise Feature Management platform](https://www.getunleash.io/enterprise-feature-management-platform). However, the principles outlined do not apply only to Unleash. They apply to any large-scale feature flag system, including one you build yourself or another commercial solution. For tips on how to stand up and run a feature flag system, see our [principles for building and scaling feature flags](./feature-flag-best-practices).
@@ -45,7 +43,7 @@ Before you add your first feature flag, you need to think about how organization
 
 – Melvin Conway
 
-<Figure img="/img/feature-flag-organization-methods.svg" caption="In situtations where predefined teams own a feature from start to finish, it makes sense to create a project for each team. In situtations where you have dynamic teams that form around feature work, you might instead want to create smaller projects for each feature, only giving access to the people who work on that feature."/>
+![Feature flag organization methods](/img/feature-flag-organization-methods.svg)
 
 There is no getting around [Conway’s law](https://martinfowler.com/bliki/ConwaysLaw.html). Applications tend to resemble the organizations that create them, and your feature flag system is no exception. Rather than fighting this law, acknowledge and embrace it, and pick a way to organize your feature flags that reflects your organization.
 
@@ -131,7 +129,7 @@ Users who are added or removed from your main SSO directory should be added or r
 
 ### 6. Implement flag approval workflows early.
 
-<Figure img="/img/change-request-flow.png" caption="Some changes require approval processes. Those processes will tend to let a reviewer approve or reject the proposed changes before someone with the required permissons can apply the changes."/>
+![Change request process](/img/change-request-flow.png)
 
 Depending on the industry and legal framework you’re operating in, you’ll need varying approvals for a feature flag change to go into production. You may be able to just roll something out on a whim, or you might need to get it approved by specific stakeholders before releasing it. Your feature flag tool should help you do this, regardless of how much oversight you need.
 
@@ -157,7 +155,7 @@ Flags live in code, and hundreds of small choices go into instrumenting flags in
 
 ### 7. Define flags in your code at the highest level of abstraction.
 
-<Figure img="/img/evaluate-flags-at-the-edge.svg" caption="Instead of evaluating a flag in a back-end service and then dynamically changing the behavior in that service (either by calling out to other services or changing how the service works), consider evaluating the flag as far out in the stack as you can and deciding which service to call based on the flag value."/>
+![Evaluate flags at the edge](/img/evaluate-flags-at-the-edge.svg)
 
 Defining your flag at the highest level in your code is important for both user-facing and backend changes.
 
@@ -188,7 +186,7 @@ Here are a few examples of functionality managed by feature flags and where you 
 
 ### 8. Evaluate a feature flag only once.
 
-<Figure img="/img/evaluate-flags-only-once.svg" caption="You should evaluate flags only once in a chain of services and pass the result on to the next service in the chain if it needs the value. If you evaluate the flag in each service, you risk the flag value changing between each service, causing unexpected results."/>
+![Evaluate flags once](/img/evaluate-flags-only-once.svg)
 
 When building new (often complex) features for users, systems require changes across multiple parts – modules within an application or services in a microservices architecture. While it's tempting to use a single feature flag to control all these changes and evaluate it locally in each module, we recommend against it for a few reasons:
 

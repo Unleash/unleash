@@ -2,8 +2,6 @@
 title: Slack App
 ---
 
-import Figure from '@site/src/components/Figure/Figure.tsx'
-
 :::note Availability
 
 **Version**: `5.5+`
@@ -97,4 +95,4 @@ Besides the configured channels, you can choose to notify other channels by tagg
 
 To exclusively use tags for determining notification channels, you can leave the "channels" field blank in the integration configuration. Since you can have multiple configurations for the integration, you're free to mix and match settings to meet your precise needs. Before posting a message, all channels for that event, both configured and tagged, are combined and duplicates are removed.
 
-<Figure caption="We have defined two Slack tags for the &quot;new-payment-system&quot; flag. In this example Unleash will post updates to the #notifications and #random channels, along with any channels defined in the integration configuration." img="/img/slack-addon-tags.png"/>
+![Example of Slack-specific tags](/img/slack-addon-tags.png)

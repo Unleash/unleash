@@ -2,8 +2,6 @@
 title: The Anatomy of Unleash
 ---
 
-import Figure from "@site/src/components/Figure/Figure.tsx";
-
 This guide's purpose is to give you a conceptual overview of how Unleash works. It covers the various components that exist within our system and how they interact with each other and with external applications. The diagrams help you understand the fundamental building blocks, such as [projects](../reference/projects), [environments](../reference/environments), [variants](../reference/strategy-variants) and of course, [feature flags](../reference/feature-toggles).
 
 The end of this guide presents a [short use case, explaining how you might configure Unleash](#use-case) to start working with feature flags.
@@ -28,18 +26,11 @@ All Unleash instances must have at least one project at any given time. New inst
 
 [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) customers can create, rename, and delete projects. [Open Source](https://www.getunleash.io/pricing) users have a single project called 'Default'.
 
-<Figure
-    caption="Unleash projects contain one or more environments."
-    alt="A square labeled 'project' containing another square, labeled 'environment'."
-    img="/img/anatomy-of-unleash-environment.png"
-/>
+![Unleash projects contain one or more environments](/img/anatomy-of-unleash-environment.png)
 
 ## Environments and project environments
 
-<Figure
-    img="/img/anatomy-of-unleash-customer-tiers.png"
-    caption="Feature flags can be activated or deactivated independently in different environments. For instance, a feature flag can be active in the development environment, and deactivated in the production environment. Even if their configuration is otherwise identical, deactivated feature flags will never be considered enabled."
-/>
+![Activating feature flags in environments](/img/anatomy-of-unleash-customer-tiers.png)
 
 [**Environments**](../reference/environments) in Unleash let you change how a feature flag works in your application’s different environments. For instance, while you are developing a feature, it’s likely that you’ll want it to be available in your development environment, but not in your production environment: environments let you do that. You might also want to enable a feature for only some users in your development environment, but no users in your production environment: environments let you do that.
 
@@ -51,10 +42,7 @@ Each project must always have **at least one** active environment.
 
 Environments are adjacent to [feature flags](../reference/feature-toggles) in Unleash: neither one contains the other, but they come together to let you define activation strategies.
 
-<Figure
-    img="/img/anatomy-of-unleash-new-feature-rollout.png"
-    caption="You can use different activation strategies and constraints in different environments. For instance, you can show a feature only to select user IDs in development, but roll it out to 25% of your user base in production."
-/>
+![Constraints and activation strategies](/img/anatomy-of-unleash-new-feature-rollout.png)
 
 :::info Environments and API keys
 
@@ -68,19 +56,11 @@ When connecting an SDK to Unleash, it's the **API key that decides which environ
 
 When creating a feature flag, you must assign a unique (across your Unleash instance) name, a [feature flag type](../reference/feature-toggles#feature-flag-types), a [project](../reference/projects) it belongs to, and an optional description. Everything except for the name can be changed later.
 
-<Figure
-    img="/img/anatomy-of-unleash-features.png"
-    caption="Feature flag states are evaluated independently in each environment."
-    alt="A hierarchy showing a project containing an environment containing a feature flag configuration."
-/>
+![An example of a project containing an environment containing a feature flag configuration](/img/anatomy-of-unleash-features.png)
 
 ## Activation strategies
 
-<Figure
-    img="/img/anatomy-of-unleash-strategy.png"
-    caption="Activation strategies are applied to feature flags on a per-environment basis and decide whether a feature is enabled or not."
-    alt="A hierarchy displaying an environment containing a feature flag configuration with an activation strategy."
-/>
+![An environment containing a feature flag configuration with an activation strategy](/img/anatomy-of-unleash-strategy.png)
 
 [**Activation strategies**](../reference/activation-strategies) (or just **strategies** for short) are the part of feature flags that tell Unleash **who should get a feature**. An activation strategy is assigned to **one **feature flag in **one **environment.
 
@@ -93,15 +73,9 @@ Activation strategies tie feature flags and [environments](../reference/environm
 
 Unleash comes with a number of [built-in strategies](../reference/activation-strategies). All strategies can be further augmented by [**strategy constraints**](../reference/activation-strategies#constraints).
 
-<Figure
-    img="/img/anatomy-of-unleash-environments-strategies.png"
-    caption="Feature flags exist across environments and can have different activation strategies in each environment."
-/>
+![Feature flags across environments with different activation strategies](/img/anatomy-of-unleash-environments-strategies.png)
 
-<Figure
-    img="/img/anatomy-of-unleash-environments-strategies2.png"
-    caption="Feature flag activation strategies can be copied between environments. You can also create new strategies in each environment."
-/>
+![Copying activation strategies](/img/anatomy-of-unleash-environments-strategies2.png)
 
 ## Strategy constraints
 
@@ -130,11 +104,7 @@ You can define constraints on whatever properties you want in your [Unleash cont
 
 Constraints are applied to individual strategies and do not stay in sync with each other. When you need to have the same constraints applied to multiple strategies and need those constraints to stay in sync, use [**segments**](../reference/segments).
 
-<Figure
-    img="/img/anatomy-of-unleash-constraint.png"
-    caption="Constraints can be applied to strategies, allowing you to narrow a feature's audience."
-    alt="A hierarchy drawing showing a constraint applied to an activation strategy."
-/>
+![Example of constraints applied to strategies](/img/anatomy-of-unleash-constraint.png)
 
 ## Segments
 
@@ -146,10 +116,7 @@ You can apply multiple segments to a strategy. Much like with constraints, **eve
 
 Segments are only available to [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) users.
 
-<Figure
-    img="/img/anatomy-of-unleash-segments.png"
-    caption="Segments are reusable lists of constraints that can be applied to a strategy instead of or in addition to constraints."
-/>
+![An example of segments](/img/anatomy-of-unleash-segments.png)
 
 ## Variants and feature flag payloads
 
@@ -167,17 +134,11 @@ A feature flag can have as many variants as you want.
 
 Prior to 4.21, variants were independent of [environments](../reference/environments). In other words: if you're on 4.19 or lower, you’ll always have the exact same variants with the exact same weightings and the exact same payloads in all environments.
 
-<Figure
-    img="/img/anatomy-of-unleash-variants.png"
-    caption="Before Unleash 4.21, feature flag variants were the same for all environments."
-/>
+![Variants prior to Unleash 4.21](/img/anatomy-of-unleash-variants.png)
 
 As of version 4.21, a feature can have different variants in different environments. For instance, a development environment might have no variants, while a production environment has 2 variants. Payloads, weightings, and anything else can also differ between environments.
 
-<Figure
-    img="/img/anatomy-of-unleash-variants-environment.png"
-    caption="From Unleash 4.21 on, a feature flag can have different variants in each environment."
-/>
+![Variants after version 4.21](/img/anatomy-of-unleash-variants-environment.png)
 
 ## Use case: changing website colors {#use-case}
 

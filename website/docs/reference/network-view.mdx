@@ -2,8 +2,6 @@
 title: Network View
 ---
 
-import Figure from '@site/src/components/Figure/Figure.tsx'
-
 :::note Availability
 
 **Plan**: [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.21+`
@@ -38,7 +36,7 @@ Each application shown on the diagram has:
 - An application name
 - the average number of requests per second (_req/s_) that we have registered over the last five minutes.
 
-<Figure caption="The network overview shows applications that have recently made requests to Unleash. In this figure, it's showing three different instances of the Unleash proxy connected to Unleash. Each instance has an average of 20 req/s." img="/img/network-overview.png"/>
+![Network overview chart](/img/network-overview.png)
 
 ## Network traffic
 
@@ -50,7 +48,7 @@ Unleash aggregates requests by **client** (using application name) and **base UR
 2. Within each of these groups, group all requests by their next URL path segment. For instance: `/client/features` and `/client/features/feature-a` are grouped together, while `/client/register` and `/admin/features` are separate groups.
 
 
-<Figure caption="The network traffic chart plots req/s on the Y axis and time on the X axis. Requests are bundled per endpoint per application." img="/img/network-traffic.png"/>
+![Network traffic chart](/img/network-traffic.png)
 
 ## Data source
 

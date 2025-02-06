@@ -13,6 +13,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useEventTimelineContext } from '../EventTimelineContext';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
+import { EventTimelineHeaderTip } from './EventTimelineHeaderTip';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledCol = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -48,6 +50,7 @@ export const EventTimelineHeader = ({
     const { timeSpan, environment, setOpen, setTimeSpan, setEnvironment } =
         useEventTimelineContext();
     const { environments } = useEnvironments();
+    const showSignalsLink = useUiFlag('frontendHeaderRedesign');
 
     const activeEnvironments = useMemo(
         () => environments.filter(({ enabled }) => enabled),
@@ -93,6 +96,7 @@ export const EventTimelineHeader = ({
                 </StyledFilter>
             </StyledCol>
             <StyledCol>
+                {showSignalsLink && <EventTimelineHeaderTip />}
                 <ConditionallyRender
                     condition={Boolean(environment) && environments.length > 0}
                     show={() => (

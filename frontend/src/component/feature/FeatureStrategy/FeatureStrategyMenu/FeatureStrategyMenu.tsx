@@ -188,6 +188,7 @@ export const FeatureStrategyMenu = ({
                 />
             </Popover>
             <ReleasePlanAddChangeRequestDialog
+                action='addReleasePlan'
                 projectId={projectId}
                 onClosing={() => setTemplateForChangeRequestDialog(undefined)}
                 featureId={featureId}

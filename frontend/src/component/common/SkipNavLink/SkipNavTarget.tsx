@@ -18,7 +18,7 @@ const SkipLinkTarget = styled('a')(({ theme }) => ({
         zIndex: 999,
         height: '80px',
         lineHeight: '80px',
-        fontSize: '1.2rem',
+        fontSize: theme.typography.body1.fontSize,
         textDecoration: 'none',
         textAlign: 'center',
 

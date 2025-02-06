@@ -9,7 +9,6 @@ import type { ProjectStatusSchemaLifecycleSummary } from 'openapi';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
 import { lifecycleMessages } from './LifecycleMessages';
 import InfoIcon from '@mui/icons-material/Info';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { getFeatureLifecycleName } from 'component/common/FeatureLifecycle/getFeatureLifecycleName';
 
 const LifecycleBoxContent = styled('div')(({ theme }) => ({
@@ -145,8 +144,6 @@ const BigNumber: FC<{ value?: number }> = ({ value }) => {
 export const ProjectLifecycleSummary = () => {
     const projectId = useRequiredPathParam('projectId');
     const { data, loading } = useProjectStatus(projectId);
-    const isLifecycleImprovementsEnabled = useUiFlag('lifecycleImprovements');
-
     const loadingRef = useLoading<HTMLUListElement>(
         loading,
         '[data-loading-project-lifecycle-summary=true]',
@@ -155,18 +152,10 @@ export const ProjectLifecycleSummary = () => {
     const flagWord = (stage: keyof ProjectStatusSchemaLifecycleSummary) => {
         const hasOneFlag = data?.lifecycleSummary[stage].currentFlags === 1;
 
-        if (hasOneFlag) {
-            return isLifecycleImprovementsEnabled ? 'Flag' : 'flag';
-        }
-
-        return isLifecycleImprovementsEnabled ? 'Flags' : 'flags';
+        return hasOneFlag ? 'Flag' : 'Flags';
     };
 
     const stageName = (stage: keyof ProjectStatusSchemaLifecycleSummary) => {
-        if (!isLifecycleImprovementsEnabled) {
-            return `${flagWord('initial')} in ${stage}`;
-        }
-
         const lifecycleStageName = stage === 'preLive' ? 'pre-live' : stage;
         return (
             <StyledStageTitle>

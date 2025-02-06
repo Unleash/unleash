@@ -199,7 +199,10 @@ const Header = () => {
                 <StyledNav>
                     <StyledUserContainer>
                         <CommandBar />
-                        <HeaderEventTimelineButton />
+                        <ConditionallyRender
+                            condition={!frontendHeaderRedesign}
+                            show={<HeaderEventTimelineButton />}
+                        />
                         <InviteLinkButton />
                         <Tooltip
                             title={

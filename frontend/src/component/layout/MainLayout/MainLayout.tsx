@@ -33,7 +33,7 @@ const MainLayoutContainer = styled(Grid)(() => ({
     position: 'relative',
 }));
 
-const MainLayoutContentWrapper = styled('main')(({ theme }) => ({
+const MainLayoutContentWrapper = styled('div')(({ theme }) => ({
     margin: theme.spacing(0, 'auto'),
     flexGrow: 1,
     width: '100%',
@@ -80,7 +80,7 @@ const StyledImg = styled('img')(() => ({
     userSelect: 'none',
 }));
 
-const MainLayoutContentContainer = styled('div')(({ theme }) => ({
+const MainLayoutContentContainer = styled('main')(({ theme }) => ({
     height: '100%',
     padding: theme.spacing(0, 0, 6.5, 0),
     position: 'relative',
@@ -110,7 +110,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                     show={<Header />}
                 />
 
-                <SkipNavTarget />
                 <MainLayoutContainer>
                     <MainLayoutContentWrapper>
                         <ConditionallyRender
@@ -151,9 +150,13 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     show={<Header />}
                                 />
 
-                                <MainLayoutEventTimeline />
+                                <ConditionallyRender
+                                    condition={!frontendHeaderRedesign}
+                                    show={<MainLayoutEventTimeline />}
+                                />
 
                                 <MainLayoutContent>
+                                    <SkipNavTarget />
                                     <MainLayoutContentContainer ref={ref}>
                                         <BreadcrumbNav />
                                         <Proclamation toast={uiConfig.toast} />

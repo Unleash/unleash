@@ -197,6 +197,8 @@ class UserStore implements IUserStore {
                 deleted_at: new Date(),
                 email: null,
                 username: null,
+                scim_id: null,
+                scim_external_id: null,
                 name: this.db.raw('name || ?', '(Deleted)'),
             });
     }

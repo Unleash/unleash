@@ -12,6 +12,7 @@ import { EmptyTemplatesListMessage } from './EmptyTemplatesListMessage';
 import { ReleasePlanTemplateList } from './ReleasePlanTemplateList';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 
 export const ReleaseManagement = () => {
     usePageTitle('Release management');
@@ -22,6 +23,10 @@ export const ReleaseManagement = () => {
     const releasePlansEnabled = useUiFlag('releasePlans');
     if (!releasePlansEnabled) {
         return null;
+    }
+
+    if (!isEnterprise()) {
+        return <PremiumFeature feature='releaseManagement' page />;
     }
 
     return (

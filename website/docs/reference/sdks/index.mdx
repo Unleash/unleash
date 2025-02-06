@@ -123,7 +123,6 @@ Here's some of the fantastic work our community has done to make Unleash work in
 -   Elixir ([afontaine/unleash_ex](https://gitlab.com/afontaine/unleash_ex))
 -   Haskell ([finn-no/unleash-client-haskell](https://github.com/finn-no/unleash-client-haskell))
 -   Kotlin ([silvercar/unleash-client-kotlin](https://github.com/silvercar/unleash-client-kotlin))
--   Laravel - PHP ([mikefrancis/laravel-unleash](https://github.com/mikefrancis/laravel-unleash))
 -   NestJS - Node.js ([pmb0/nestjs-unleash](https://github.com/pmb0/nestjs-unleash))
 -   PHP ([minds/unleash-client-php](https://gitlab.com/minds/unleash-client-php))
 -   PHP - Symfony ([Stogon/unleash-bundle](https://github.com/Stogon/unleash-bundle))
@@ -168,3 +167,14 @@ Bootstrapping is also supported by the following front-end client SDKs:
 -   [React Proxy SDK](/docs/generated/sdks/client-side/react.md)
 -   [Svelte Proxy SDK](/docs/generated/sdks/client-side/svelte.md)
 -   [Vue Proxy SDK](/docs/generated/sdks/client-side/vue.md)
+
+
+### SDK identification headers
+
+To identify which frontend and backend SDK instances are connected to Unleash, the following headers must be attached to all requests made by the SDK to the server (`/api/client` for backend SDKs and `/api/frontend` for frontend SDKs):
+
+- `unleash-connection-id`: A unique identifier for the current SDK instance, automatically generated using the idiomatic unique identifier generator for the specific programming ecosystem (for example, `randomUUID` from `crypto` in Node.js). This connection ID represents a long-lived connection between the SDK and the Unleash server. An SDK should generate a new connection ID each time an SDK instance is instantiated (for example, when calling `new Unleash()` in a Node SDK). The same connection ID should be used for each request when an SDK instance polls the API. Additionally, there is a legacy `unleash-instanceid` header that is not implemented by all SDKs and can be overwritten by the client, which is the main reason `unleash-connection-id` was introduced.
+- `unleash-sdk`: Provides information about the language/framework and version of the SDK making the request. The format is the language/framework followed by a colon and the semantic version of the SDK (for example, `unleash-client-java@10.0.1` or `unleash-client-node@6.4.4`). Each SDK implementation should use a platform-idiomatic method to read the version from a package manager and update it with each version release.
+- `unleash-appname` (optional): Specifies the name of your application that is communicating with Unleash. This name is user-defined with some SDKs providing a default fallback value. For example, `billing-service`.
+
+**Exceptions**: Backend SDKs used in short-lived request/response models (like Next.js server mode and PHP) should not provide the `unleash-connection-id` header.

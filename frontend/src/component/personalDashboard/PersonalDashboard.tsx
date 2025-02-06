@@ -23,6 +23,10 @@ import { fromPersonalDashboardProjectDetailsOutput } from './RemoteData';
 import { useEffect } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { InfoSection } from './InfoSection';
+import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
+import { AccordionContent } from './SharedComponents';
+import { Link } from 'react-router-dom';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -109,6 +113,7 @@ export const PersonalDashboard = () => {
     const { splash } = useAuthSplash();
     const { isOss } = useUiConfig();
     const name = user?.name || '';
+    const showTimelinePanel = useUiFlag('frontendHeaderRedesign');
 
     usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
 
@@ -125,7 +130,10 @@ export const PersonalDashboard = () => {
         toggleSectionState,
         expandFlags,
         expandProjects,
+        expandTimeline,
     } = useDashboardState(projects, personalDashboard?.flags ?? []);
+
+    const signalsLink = '/integrations/signals';
 
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'open' | 'closed'
@@ -175,6 +183,49 @@ export const PersonalDashboard = () => {
                 </ViewKeyConceptsButton>
             </WelcomeSection>
 
+            {showTimelinePanel && (
+                <SectionAccordion
+                    disableGutters
+                    expanded={expandTimeline ?? false}
+                    onChange={() => toggleSectionState('timeline')}
+                >
+                    <StyledAccordionSummary
+                        expandIcon={
+                            <ExpandMore titleAccess='Toggle timeline section' />
+                        }
+                        id='timeline-panel-header'
+                        aria-controls='timeline-panel-content'
+                    >
+                        <AccordionSummaryText>
+                            <AccordionSummaryHeader>
+                                Event timeline
+                            </AccordionSummaryHeader>
+                            <AccordionSummarySubtitle>
+                                Overview of recent activities across all
+                                projects in Unleash. Make debugging easier and{' '}
+                                <Link
+                                    to={signalsLink}
+                                    onClick={() => {
+                                        trackEvent('event-timeline', {
+                                            props: {
+                                                eventType: 'signals clicked',
+                                            },
+                                        });
+                                    }}
+                                >
+                                    include external signals
+                                </Link>{' '}
+                                to get a fuller overview.
+                            </AccordionSummarySubtitle>
+                        </AccordionSummaryText>
+                    </StyledAccordionSummary>
+                    <StyledAccordionDetails>
+                        <AccordionContent>
+                            <EventTimeline />
+                        </AccordionContent>
+                    </StyledAccordionDetails>
+                </SectionAccordion>
+            )}
             <SectionAccordion
                 disableGutters
                 expanded={expandProjects ?? true}

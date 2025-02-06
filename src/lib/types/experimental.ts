@@ -61,7 +61,6 @@ export type IFlagKey =
     | 'etagVariant'
     | 'deltaApi'
     | 'uniqueSdkTracking'
-    | 'lifecycleImprovements'
     | 'frontendHeaderRedesign'
     | 'dataUsageMultiMonthView'
     | 'uiGlobalFontSize';
@@ -291,10 +290,6 @@ const flags: IFlags = {
     ),
     uniqueSdkTracking: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_UNIQUE_SDK_TRACKING,
-        false,
-    ),
-    lifecycleImprovements: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_LIFECYCLE_IMPROVEMENTS,
         false,
     ),
     frontendHeaderRedesign: parseEnvVarBoolean(

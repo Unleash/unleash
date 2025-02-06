@@ -56,7 +56,6 @@ process.nextTick(async () => {
                         granularAdminPermissions: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
-                        lifecycleImprovements: true,
                         frontendHeaderRedesign: true,
                         dataUsageMultiMonthView: true,
                     },

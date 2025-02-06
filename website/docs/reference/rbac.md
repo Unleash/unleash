@@ -185,32 +185,32 @@ environments.
 | Delete the project                        | Lets the user delete the project.                                                                                                                                                                                                                 |
 
 #### API tokens
-| Permission | Description |
+| Permission Name | Description |
 | --- | --- |
-| **read API token** | Read API tokens for a specific project |
-| **create API token** | Create API tokens for a specific project |
-| **delete API token** | Delete API tokens for a specific project |
+| Read API token | Read API tokens for a specific project |
+| Create API token | Create API tokens for a specific project |
+| Delete API token | Delete API tokens for a specific project |
 
 #### Change requests
-| Permission | Description |
+| Permission Name | Description |
 | --- | --- |
-| **read change request**                       | Read access to change request configuration                                                                                                                                                         |
-| **write change request**                      | Write access to change request configuration                                                                                                                                                       |  
+| Read change request                      | Read access to change request configuration                                                                                                                                                         |
+| Write change request                      | Write access to change request configuration                                                                                                                                                       |  
 
 ### Environment permissions
 
 You can assign the following permissions on a per-environment level within the project:
 
-| Permission                       | Description                                                                                                                                                                                                                                                                                                                                           |
+| Permission Name                       | Description                                                                                                                                                                                                                                                                                                                                           |
 |----------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **create activation strategies** | Lets the user assign feature flag activation strategies within the environment.                                                                                                                                                                                                                                                                       |
-| **update activation strategies** | Lets the user update feature flag activation strategies within the environment.                                                                                                                                                                                                                                                                       |
-| **delete activation strategies** | Lets the user delete feature flag activation strategies within the environment.                                                                                                                                                                                                                                                                       |
-| **enable/disable flags**         | Lets the user enable and disable flags within the environment.                                                                                                                                                                                                                                                                                        |
-| **update variants**              | Lets the user create, edit and remove variants within the environment.                                                                                                                                                                                                                                                                                |
-| **approve a change request**     | Lets the user approve [change requests](./change-requests) in the environment.                                                                                                                                                                                                                                                                       |
-| **apply a change request**       | Lets the user apply change requests in the environment.                                                                                                                                                                                                                                                                                               |
-| **skip change requests**         | Lets the user skip the change request process for a project and environment where change requests are enabled.  |
+| Create activation strategies | Lets the user assign feature flag activation strategies within the environment.                                                                                                                                                                                                                                                                       |
+| Update activation strategies | Lets the user update feature flag activation strategies within the environment.                                                                                                                                                                                                                                                                       |
+| Delete activation strategies | Lets the user delete feature flag activation strategies within the environment.                                                                                                                                                                                                                                                                       |
+| Enable/disable flags         | Lets the user enable and disable flags within the environment.                                                                                                                                                                                                                                                                                        |
+| Update variants              | Lets the user create, edit and remove variants within the environment.                                                                                                                                                                                                                                                                                |
+| Approve a change request     | Lets the user approve [change requests](./change-requests) in the environment.                                                                                                                                                                                                                                                                       |
+| Apply a change request       | Lets the user apply change requests in the environment.                                                                                                                                                                                                                                                                                               |
+| Skip change requests         | Lets the user skip the change request process for a project and environment where change requests are enabled.  |
 
 ## Multiple Project Roles
 

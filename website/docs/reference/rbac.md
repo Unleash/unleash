@@ -161,23 +161,39 @@ Each custom project role consists of:
 You can assign the following project permissions. The permissions will be valid across all of the project's
 environments.
 
+#### Features and strategies
+| Permission | Description | 
+| --- | --- |
+| **create feature flags within the project** | Lets the user create feature flags within the project and create variants for said flag. Note that they **cannot assign strategies** to flags without having the _create activation strategy_ permission for the corresponding environment. |
+| **update feature flags within the project** | Lets the user update feature flag descriptions; mark flags as stale / not stale; add, update, and remove flag tags; and update flag variants within the project.                                                                          |
+| **delete feature flags within the project** | Lets the user archive feature flags within the project.                                                                                                                                                                                         |
+| **change feature flag project**             | Lets the user move flags to other projects they have access to.                                                                                                                                                                                 |
+| **create/edit variants**                      | Lets the user create and edit variants within the project. (Deprecated with v4.21 in favor of environment-specific permissions for working with variants[^1].)                                                                                    |
+
+#### Project settings
 | Permission                                    | Description                                                                                                                                                                                                                                       |
 |-----------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | **update the project**                        | Lets the user update project settings, such as enabling/disabling environments, add users, etc.                                                                                                                                                   |
 | **user access read**                          | Read access to Project User Access (included in "update the project" permission)                                                                                                                                                                  |
 | **user access write**                         | Write access to Project User Access (included in "update the project" permission)                                                                                                                                                                 
 | **default strategy read**                     | Read access to default strategy configuration (included in "update the project" permission)                                                                                                                                                       |
-| **default strategy write**                    | Write access to default strategy configuration (included in "update the project" permission)                                                                                                                                                      |                    
-| **change request read**                       | Read access to change request configuration (included in "update the project" permission)                                                                                                                                                         |                                                                                                                                                                                                                                              
-| **change request write**                      | Write access to change request configuration (included in "update the project" permission)                                                                                                                                                        |                      
+| **default strategy write**                    | Write access to default strategy configuration (included in "update the project" permission)                                                                                                                                                      |                           
 | **settings read**                             | Read access to other project settings (included in "update the project" permission) |                                                                                                                                                              |                             
 | **settings write** | Write access to other project settings (included in "update the project" permission)                            
 | **delete the project**                        | Lets the user delete the project.                                                                                                                                                                                                                 |
-| **create feature flags within the project** | Lets the user create feature flags within the project and create variants for said flag. Note that they **cannot assign strategies** to flags without having the _create activation strategy_ permission for the corresponding environment. |
-| **update feature flags within the project** | Lets the user update feature flag descriptions; mark flags as stale / not stale; add, update, and remove flag tags; and update flag variants within the project.                                                                          |
-| **delete feature flags within the project** | Lets the user archive feature flags within the project.                                                                                                                                                                                         |
-| **change feature flag project**             | Lets the user move flags to other projects they have access to.                                                                                                                                                                                 |
-| **create/edit variants**                      | Lets the user create and edit variants within the project. (Deprecated with v4.21 in favor of environment-specific permissions for working with variants[^1].)                                                                                    |
+
+#### API Tokens
+| Permission | Description |
+| --- | --- |
+| **read API token** | Read API tokens for a specific project |
+| **create API token** | Create API tokens for a specific project |
+| **delete API token** | Delete API tokens for a specific project |
+
+#### Change requests
+| Permission | Description |
+| --- | --- |
+| **read change request**                       | Read access to change request configuration (included in "update the project" permission)                                                                                                                                                         |
+| **write change request**                      | Write access to change request configuration (included in "update the project" permission)                                                                                                                                                        |  
 
 ### Environment permissions
 

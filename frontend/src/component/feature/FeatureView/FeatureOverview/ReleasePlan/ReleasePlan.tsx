@@ -111,7 +111,7 @@ export const ReleasePlan = ({
     const [
         milestoneForChangeRequestDialog,
         setMilestoneForChangeRequestDialog,
-    ] = useState<IReleasePlanMilestone | undefined>();
+    ] = useState<IReleasePlanMilestone>();
     const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =

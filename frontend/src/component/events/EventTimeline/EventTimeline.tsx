@@ -9,7 +9,6 @@ import { useSignalQuery } from 'hooks/api/getters/useSignalQuery/useSignalQuery'
 import type { ISignalQuerySignal } from 'interfaces/signal';
 import type { IEnvironment } from 'interfaces/environments';
 import { useEventTimelineContext } from './EventTimelineContext';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 export type TimelineEventType = 'signal' | EventSchemaType;
 
@@ -185,7 +184,6 @@ export const EventTimeline = () => {
     const startDate = sub(endDate, timeSpan.value);
     const endTime = endDate.getTime();
     const startTime = startDate.getTime();
-    const showSignalsLink = !useUiFlag('frontendHeaderRedesign');
 
     const { events: baseEvents } = useEventSearch(
         {

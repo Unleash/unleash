@@ -15,6 +15,12 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import { ReleasePlanRemoveDialog } from './ReleasePlanRemoveDialog';
 import { ReleasePlanMilestone } from './ReleasePlanMilestone/ReleasePlanMilestone';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import { RemoveReleasePlanChangeRequestDialog } from './ChangeRequest/RemoveReleasePlanChangeRequestDialog';
+import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMilestoneChangeRequestDialog';
 
 const StyledContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'readonly',
@@ -96,6 +102,74 @@ export const ReleasePlan = ({
     const { setToastData, setToastApiError } = useToast();
 
     const [removeOpen, setRemoveOpen] = useState(false);
+    const [changeRequestDialogRemoveOpen, setChangeRequestDialogRemoveOpen] =
+        useState(false);
+    const [
+        changeRequestDialogStartMilestoneOpen,
+        setChangeRequestDialogStartMilestoneOpen,
+    ] = useState(false);
+    const [
+        milestoneForChangeRequestDialog,
+        setMilestoneForChangeRequestDialog,
+    ] = useState<IReleasePlanMilestone>();
+    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
+    const { addChange } = useChangeRequestApi();
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
+
+    const releasePlanChangeRequestsEnabled = useUiFlag(
+        'releasePlanChangeRequests',
+    );
+
+    const onAddRemovePlanChangesConfirm = async () => {
+        addChange(projectId, environment, {
+            feature: featureName,
+            action: 'deleteReleasePlan',
+            payload: {
+                planId: plan.id,
+            },
+        });
+
+        refetchChangeRequests();
+
+        setToastData({
+            type: 'success',
+            text: 'Added to draft',
+        });
+
+        setChangeRequestDialogRemoveOpen(false);
+    };
+
+    const onAddStartMilestoneChangesConfirm = async () => {
+        addChange(projectId, environment, {
+            feature: featureName,
+            action: 'startMilestone',
+            payload: {
+                planId: plan.id,
+                milestoneId: milestoneForChangeRequestDialog?.id,
+            },
+        });
+
+        refetchChangeRequests();
+
+        setToastData({
+            type: 'success',
+            text: 'Added to draft',
+        });
+
+        setChangeRequestDialogStartMilestoneOpen(false);
+    };
+
+    const confirmRemoveReleasePlan = () => {
+        if (
+            releasePlanChangeRequestsEnabled &&
+            isChangeRequestConfigured(environment)
+        ) {
+            setChangeRequestDialogRemoveOpen(true);
+        } else {
+            setRemoveOpen(true);
+        }
+    };
 
     const onRemoveConfirm = async () => {
         try {
@@ -117,21 +191,29 @@ export const ReleasePlan = ({
     };
 
     const onStartMilestone = async (milestone: IReleasePlanMilestone) => {
-        try {
-            await startReleasePlanMilestone(
-                projectId,
-                featureName,
-                environment,
-                id,
-                milestone.id,
-            );
-            setToastData({
-                text: `Milestone "${milestone.name}" has started`,
-                type: 'success',
-            });
-            refetch();
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
+        if (
+            releasePlanChangeRequestsEnabled &&
+            isChangeRequestConfigured(environment)
+        ) {
+            setMilestoneForChangeRequestDialog(milestone);
+            setChangeRequestDialogStartMilestoneOpen(true);
+        } else {
+            try {
+                await startReleasePlanMilestone(
+                    projectId,
+                    featureName,
+                    environment,
+                    id,
+                    milestone.id,
+                );
+                setToastData({
+                    text: `Milestone "${milestone.name}" has started`,
+                    type: 'success',
+                });
+                refetch();
+            } catch (error: unknown) {
+                setToastApiError(formatUnknownError(error));
+            }
         }
     };
 
@@ -153,7 +235,7 @@ export const ReleasePlan = ({
                 </StyledHeaderTitleContainer>
                 {!readonly && (
                     <PermissionIconButton
-                        onClick={() => setRemoveOpen(true)}
+                        onClick={confirmRemoveReleasePlan}
                         permission={DELETE_FEATURE_STRATEGY}
                         environmentId={environment}
                         projectId={projectId}
@@ -195,6 +277,27 @@ export const ReleasePlan = ({
                 setOpen={setRemoveOpen}
                 onConfirm={onRemoveConfirm}
                 environmentActive={!environmentIsDisabled}
+            />
+            <RemoveReleasePlanChangeRequestDialog
+                environmentId={environment}
+                featureId={featureName}
+                isOpen={changeRequestDialogRemoveOpen}
+                onConfirm={onAddRemovePlanChangesConfirm}
+                onClosing={() => setChangeRequestDialogRemoveOpen(false)}
+                releasePlan={plan}
+                environmentActive={!environmentIsDisabled}
+            />
+            <StartMilestoneChangeRequestDialog
+                environmentId={environment}
+                featureId={featureName}
+                isOpen={changeRequestDialogStartMilestoneOpen}
+                onConfirm={onAddStartMilestoneChangesConfirm}
+                onClosing={() => {
+                    setMilestoneForChangeRequestDialog(undefined);
+                    setChangeRequestDialogStartMilestoneOpen(false);
+                }}
+                releasePlan={plan}
+                milestone={milestoneForChangeRequestDialog}
             />
         </StyledContainer>
     );

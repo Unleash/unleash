@@ -18,7 +18,9 @@ export interface IChangeSchema {
         | 'updateSegment'
         | 'addDependency'
         | 'deleteDependency'
-        | 'addReleasePlan';
+        | 'addReleasePlan'
+        | 'deleteReleasePlan'
+        | 'startMilestone';
     payload: string | boolean | object | number | undefined;
 }
 

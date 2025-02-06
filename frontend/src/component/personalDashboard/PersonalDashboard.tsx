@@ -215,7 +215,7 @@ export const PersonalDashboard = () => {
                                 >
                                     include external signals
                                 </Link>
-                                {''} to get a fuller overview.
+                                {' '}to get a fuller overview.
                             </AccordionSummarySubtitle>
                         </AccordionSummaryText>
                     </StyledAccordionSummary>

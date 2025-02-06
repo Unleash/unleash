@@ -156,6 +156,8 @@ export const ReleasePlan = ({
             type: 'success',
             text: 'Added to draft',
         });
+
+        setChangeRequestDialogStartMilestoneOpen(false);
     };
 
     const confirmRemoveReleasePlan = () => {
@@ -294,7 +296,6 @@ export const ReleasePlan = ({
                     setMilestoneForChangeRequestDialog(undefined);
                     setChangeRequestDialogStartMilestoneOpen(false);
                 }}
-                projectId={projectId}
                 releasePlan={plan}
                 milestone={milestoneForChangeRequestDialog}
             />

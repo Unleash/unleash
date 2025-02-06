@@ -10,7 +10,6 @@ const StyledBoldSpan = styled('span')(({ theme }) => ({
 }));
 
 interface IStartMilestoneChangeRequestDialogProps {
-    projectId: string;
     featureId: string;
     environmentId: string;
     releasePlan?: IReleasePlan | undefined;
@@ -21,7 +20,6 @@ interface IStartMilestoneChangeRequestDialogProps {
 }
 
 export const StartMilestoneChangeRequestDialog = ({
-    projectId,
     featureId,
     environmentId,
     releasePlan,

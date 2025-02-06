@@ -192,7 +192,7 @@ environments.
 #### Change requests
 | Permission | Description |
 | --- | --- |
-| **read change request**                       | Read access to change request configuration (included in "update the project" permission)                                                                                                                                                         |
+| **read change request**                       | Read access to change request configuration                                                                                                                                                         |
 | **write change request**                      | Write access to change request configuration (included in "update the project" permission)                                                                                                                                                        |  
 
 ### Environment permissions

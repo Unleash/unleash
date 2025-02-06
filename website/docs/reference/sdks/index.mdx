@@ -172,7 +172,7 @@ Bootstrapping is also supported by the following front-end client SDKs:
 
 ### SDK identification headers
 
-To identify which frontend and backend SDK instances are connected to Unleash, we have standardized three headers that should be attached to all requests made by the SDK to the server (`/api/client` for backend SDKs and `/api/frontend` for frontend SDKs):
+To identify which frontend and backend SDK instances are connected to Unleash, the following three headers must be attached to all requests made by the SDK to the server (`/api/client` for backend SDKs and `/api/frontend` for frontend SDKs):
 
 - `unleash-appname`: Specifies the name of your application that is communicating with Unleash. This name is user-defined with some SDKs providing a default fallback value. For example, `billing-service`.
 - `unleash-connection-id`: A unique identifier for the current SDK instance, automatically generated using the idiomatic unique identifier generator for the specific programming ecosystem (for example, `randomUUID` from `crypto` in Node.js). This connection ID represents a long-lived connection between the SDK and the Unleash server. An SDK should generate a new connection ID each time an SDK instance is instantiated (for example, when calling `new Unleash()` in a Node SDK). The same connection ID should be used for each request when an SDK instance polls the API. Additionally, there is a legacy `unleash-instanceid` header that is not implemented by all SDKs and can be overwritten by the client, which is the main reason `unleash-connection-id` was introduced.

@@ -217,6 +217,8 @@ export const RELEASE_PLAN_MILESTONE_STARTED =
     'release-plan-milestone-started' as const;
 
 export const USER_PREFERENCE_UPDATED = 'user-preference-updated' as const;
+export const SCIM_USERS_DELETED = 'scim-users-deleted' as const;
+export const SCIM_GROUPS_DELETED = 'scim-groups-deleted' as const;
 
 export const IEventTypes = [
     APPLICATION_CREATED,
@@ -372,6 +374,8 @@ export const IEventTypes = [
     RELEASE_PLAN_REMOVED,
     RELEASE_PLAN_MILESTONE_STARTED,
     USER_PREFERENCE_UPDATED,
+    SCIM_USERS_DELETED,
+    SCIM_GROUPS_DELETED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
@@ -1605,6 +1609,30 @@ export class UserDeletedEvent extends BaseEvent {
     }) {
         super(USER_DELETED, eventData.auditUser);
         this.preData = mapUserToData(eventData.deletedUser);
+    }
+}
+
+export class ScimUsersDeleted extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: {
+        data: any;
+        auditUser: IAuditUser;
+    }) {
+        super(SCIM_USERS_DELETED, eventData.auditUser);
+        this.data = eventData.data;
+    }
+}
+
+export class ScimGroupsDeleted extends BaseEvent {
+    readonly data: any;
+
+    constructor(eventData: {
+        data: any;
+        auditUser: IAuditUser;
+    }) {
+        super(SCIM_GROUPS_DELETED, eventData.auditUser);
+        this.data = eventData.data;
     }
 }
 

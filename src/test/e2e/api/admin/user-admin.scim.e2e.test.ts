@@ -12,6 +12,7 @@ let app: IUnleashTest;
 
 let scimUserId: number;
 let regularUserId: number;
+let scimDeletableUser: number;
 
 const scimUser = {
     email: 'scim-user@test.com',
@@ -22,6 +23,12 @@ const scimUser = {
 const regularUser = {
     email: 'regular-user@test.com',
     name: 'Regular User',
+};
+
+const scimUserToBeDeleted = {
+    email: 'scim-victim@test.com',
+    name: 'SCIM Victim',
+    scim_id: 'some-other-random-scim-id',
 };
 
 const scimGuardErrorMessage =
@@ -49,6 +56,13 @@ beforeAll(async () => {
 
     regularUserId = (
         await db.rawDatabase('users').insert(regularUser).returning('id')
+    )[0].id;
+
+    scimDeletableUser = (
+        await db
+            .rawDatabase('users')
+            .insert(scimUserToBeDeleted)
+            .returning('id')
     )[0].id;
 });
 
@@ -86,12 +100,10 @@ test('should prevent editing a SCIM user', async () => {
     expect(body.details[0].message).toBe(scimGuardErrorMessage);
 });
 
-test('should prevent deleting a SCIM user', async () => {
-    const { body } = await app.request
-        .delete(`/api/admin/user-admin/${scimUserId}`)
-        .expect(403);
-
-    expect(body.details[0].message).toBe(scimGuardErrorMessage);
+test('should not prevent deleting a SCIM user', async () => {
+    await app.request
+        .delete(`/api/admin/user-admin/${scimDeletableUser}`)
+        .expect(200);
 });
 
 test('should prevent changing password for a SCIM user', async () => {

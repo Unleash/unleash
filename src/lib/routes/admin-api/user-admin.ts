@@ -413,6 +413,26 @@ export default class UserAdminController extends Controller {
 
         this.route({
             method: 'delete',
+            path: '/scim-users',
+            acceptAnyContentType: true,
+            handler: this.deleteScimUsers,
+            permission: ADMIN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Users'],
+                    operationId: 'deleteScimUsers',
+                    summary: 'Delete all SCIM users',
+                    description: 'Deletes all users managed by SCIM',
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403),
+                    },
+                }),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
             path: '/:id',
             acceptAnyContentType: true,
             handler: this.deleteUser,
@@ -654,8 +674,6 @@ export default class UserAdminController extends Controller {
         const { user, params } = req;
         const { id } = params;
 
-        await this.throwIfScimUser({ id });
-
         await this.userService.deleteUser(+id, req.audit);
         res.status(200).send();
     }
@@ -765,5 +783,11 @@ export default class UserAdminController extends Controller {
             Boolean(scimId) ||
             Boolean((await this.userService.getUser(id)).scimId)
         );
+    }
+
+    async deleteScimUsers(req: IAuthRequest, res: Response): Promise<void> {
+        const { audit } = req;
+        await this.userService.deleteScimUsers(audit);
+        res.status(200).send();
     }
 }

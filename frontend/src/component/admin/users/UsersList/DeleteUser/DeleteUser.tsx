@@ -77,6 +77,9 @@ const DeleteUser = ({
                           })`
                         : ''}
                     ?
+                    {user.scimId
+                        ? ' This user is currently managed by SCIM and may be re-added by your SCIM provider.'
+                        : ''}
                 </Typography>
             </div>
         </Dialogue>

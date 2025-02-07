@@ -46,10 +46,20 @@ export const useGroupApi = () => {
         await makeRequest(req.caller, req.id);
     };
 
+    const deleteScimGroups = async () => {
+        const path = `api/admin/groups/scim-groups`;
+        const req = createRequest(path, {
+            method: 'DELETE',
+        });
+
+        await makeRequest(req.caller, req.id);
+    };
+
     return {
         createGroup,
         updateGroup,
         removeGroup,
+        deleteScimGroups,
         errors,
         loading,
     };

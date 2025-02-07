@@ -66,4 +66,6 @@ export interface IGroupStore extends Store<IGroup, number> {
     create(group: IStoreGroup): Promise<IGroup>;
 
     count(): Promise<number>;
+
+    deleteScimGroups(): Promise<void>;
 }

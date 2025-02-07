@@ -24,6 +24,7 @@ import type SessionService from './session-service';
 import type { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
 import {
+    ScimUsersDeleted,
     UserCreatedEvent,
     UserDeletedEvent,
     UserUpdatedEvent,
@@ -396,6 +397,17 @@ class UserService {
         await this.eventService.storeEvent(
             new UserDeletedEvent({
                 deletedUser: user,
+                auditUser,
+            }),
+        );
+    }
+
+    async deleteScimUsers(auditUser: IAuditUser): Promise<void> {
+        await this.store.deleteScimUsers();
+
+        await this.eventService.storeEvent(
+            new ScimUsersDeleted({
+                data: null,
                 auditUser,
             }),
         );

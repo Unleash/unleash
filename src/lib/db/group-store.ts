@@ -354,4 +354,8 @@ export default class GroupStore implements IGroupStore {
         const { present } = result.rows[0];
         return present;
     }
+
+    async deleteScimGroups(): Promise<void> {
+        await this.db(T.GROUPS).whereNotNull('scim_id').del();
+    }
 }

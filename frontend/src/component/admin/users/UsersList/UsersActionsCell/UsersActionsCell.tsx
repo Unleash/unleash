@@ -91,9 +91,8 @@ export const UsersActionsCell: VFC<IUsersActionsCellProps> = ({
                 onClick={onDelete}
                 permission={ADMIN}
                 tooltipProps={{
-                    title: isScimUser ? scimTooltip : 'Remove user',
+                    title: 'Remove user',
                 }}
-                disabled={isScimUser}
             >
                 <Delete />
             </PermissionIconButton>

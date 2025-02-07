@@ -21,6 +21,7 @@ import {
     GROUP_CREATED,
     GroupUserAdded,
     GroupUserRemoved,
+    ScimGroupsDeleted,
     type IBaseEvent,
 } from '../types/events';
 import NameExistsError from '../error/name-exists-error';
@@ -308,6 +309,16 @@ export class GroupService {
 
             await this.eventService.storeEvents(events);
         }
+    }
+
+    async deleteScimGroups(auditUser: IAuditUser): Promise<void> {
+        await this.groupStore.deleteScimGroups();
+        await this.eventService.storeEvent(
+            new ScimGroupsDeleted({
+                data: null,
+                auditUser,
+            }),
+        );
     }
 
     private mapGroupWithUsers(

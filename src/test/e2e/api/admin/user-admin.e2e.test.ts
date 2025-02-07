@@ -462,3 +462,32 @@ test('should return number of sessions per user', async () => {
         ]),
     });
 });
+
+test('should only delete scim users', async () => {
+    userStore.insert({
+        email: 'boring@example.com',
+    });
+
+    await userStore.insert({
+        email: 'really-boring@example.com',
+    });
+
+    const scimUser = (
+        await db
+            .rawDatabase('users')
+            .insert({
+                email: 'made-by-scim@example.com',
+                scim_id: 'some-random-scim-id',
+            })
+            .returning('id')
+    )[0].id;
+
+    await app.request.delete('/api/admin/user-admin/scim-users').expect(200);
+    const response = await app.request.get(`/api/admin/user-admin`).expect(200);
+    const users = response.body.users;
+
+    expect(users.length).toBe(2);
+    expect(users.every((u) => u.email !== 'made-by-scim@example.com')).toBe(
+        true,
+    );
+});

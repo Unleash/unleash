@@ -14,7 +14,7 @@ import type {
     IClientFeatureToggleDeltaReadModel,
 } from './client-feature-toggle-delta-read-model-type';
 import { CLIENT_DELTA_MEMORY } from '../../../metric-events';
-import type EventEmitter from 'events';
+import EventEmitter from 'events';
 import type { Logger } from '../../../logger';
 import type { ClientFeaturesDeltaSchema } from '../../../openapi';
 import {
@@ -27,6 +27,8 @@ import {
 } from './client-feature-toggle-delta-types';
 
 type EnvironmentRevisions = Record<string, DeltaCache>;
+
+export const UPDATE_DELTA = 'UPDATE_DELTA';
 
 export const filterEventsByQuery = (
     events: DeltaEvent[],
@@ -86,7 +88,9 @@ export const filterHydrationEventByQuery = (
     };
 };
 
-export class ClientFeatureToggleDelta {
+export class ClientFeatureToggleDelta extends EventEmitter {
+    private static instance: ClientFeatureToggleDelta;
+
     private clientFeatureToggleDeltaReadModel: IClientFeatureToggleDeltaReadModel;
 
     private delta: EnvironmentRevisions = {};
@@ -113,6 +117,7 @@ export class ClientFeatureToggleDelta {
         flagResolver: IFlagResolver,
         config: IUnleashConfig,
     ) {
+        super();
         this.eventStore = eventStore;
         this.configurationRevisionService = configurationRevisionService;
         this.clientFeatureToggleDeltaReadModel =
@@ -124,16 +129,31 @@ export class ClientFeatureToggleDelta {
         this.onUpdateRevisionEvent = this.onUpdateRevisionEvent.bind(this);
         this.delta = {};
 
-        this.initRevisionId();
         this.configurationRevisionService.on(
             UPDATE_REVISION,
             this.onUpdateRevisionEvent,
         );
     }
 
-    private async initRevisionId() {
-        this.currentRevisionId =
-            await this.configurationRevisionService.getMaxRevisionId();
+    static getInstance(
+        clientFeatureToggleDeltaReadModel: IClientFeatureToggleDeltaReadModel,
+        segmentReadModel: ISegmentReadModel,
+        eventStore: IEventStore,
+        configurationRevisionService: ConfigurationRevisionService,
+        flagResolver: IFlagResolver,
+        config: IUnleashConfig,
+    ) {
+        if (!ClientFeatureToggleDelta.instance) {
+            ClientFeatureToggleDelta.instance = new ClientFeatureToggleDelta(
+                clientFeatureToggleDeltaReadModel,
+                segmentReadModel,
+                eventStore,
+                configurationRevisionService,
+                flagResolver,
+                config,
+            );
+        }
+        return ClientFeatureToggleDelta.instance;
     }
 
     async getDelta(
@@ -198,6 +218,7 @@ export class ClientFeatureToggleDelta {
         if (this.flagResolver.isEnabled('deltaApi')) {
             await this.updateFeaturesDelta();
             this.storeFootprint();
+            this.emit(UPDATE_DELTA);
         }
     }
 

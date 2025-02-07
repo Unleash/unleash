@@ -22,7 +22,7 @@ export const createClientFeatureToggleDelta = (
 
     const segmentReadModel = new SegmentReadModel(db);
 
-    const clientFeatureToggleDelta = new ClientFeatureToggleDelta(
+    const clientFeatureToggleDelta = ClientFeatureToggleDelta.getInstance(
         clientFeatureToggleDeltaReadModel,
         segmentReadModel,
         eventStore,

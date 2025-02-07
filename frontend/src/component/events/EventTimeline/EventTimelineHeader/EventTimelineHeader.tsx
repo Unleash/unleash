@@ -94,6 +94,27 @@ export const EventTimelineHeader = ({
         />
     );
 
+    const TimeSpanFilter = () => (
+        <StyledFilter
+            select
+            size='small'
+            variant='outlined'
+            value={timeSpan.key}
+            onChange={(e) =>
+                setTimeSpan(
+                    timeSpanOptions.find(({ key }) => key === e.target.value) ||
+                        timeSpanOptions[0],
+                )
+            }
+        >
+            {timeSpanOptions.map(({ key, label }) => (
+                <MenuItem key={key} value={key}>
+                    {label}
+                </MenuItem>
+            ))}
+        </StyledFilter>
+    );
+
     return (
         <>
             <StyledCol>
@@ -102,49 +123,37 @@ export const EventTimelineHeader = ({
                     {totalEvents === 1 ? '' : 's'}
                     <HelpIcon tooltip='These are key events per environment across all your projects. For more details, visit the event log.' />
                 </StyledTimelineEventsCount>
-                <StyledFilter
-                    select
-                    size='small'
-                    variant='outlined'
-                    value={timeSpan.key}
-                    onChange={(e) =>
-                        setTimeSpan(
-                            timeSpanOptions.find(
-                                ({ key }) => key === e.target.value,
-                            ) || timeSpanOptions[0],
-                        )
-                    }
-                >
-                    {timeSpanOptions.map(({ key, label }) => (
-                        <MenuItem key={key} value={key}>
-                            {label}
-                        </MenuItem>
-                    ))}
-                </StyledFilter>
-                {frontendHeaderRefactor && <EnvironmentFilter />}
+                {!frontendHeaderRefactor && <TimeSpanFilter />}
             </StyledCol>
-            {!frontendHeaderRefactor && (
-                <StyledCol>
-                    <EventTimelineHeaderTip />
-                    <EnvironmentFilter />
-                    <Tooltip title='Hide event timeline' arrow>
-                        <IconButton
-                            aria-label='close'
-                            size='small'
-                            onClick={() => {
-                                trackEvent('event-timeline', {
-                                    props: {
-                                        eventType: 'close',
-                                    },
-                                });
-                                setOpen(false);
-                            }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    </Tooltip>
-                </StyledCol>
-            )}
+            <StyledCol>
+                {frontendHeaderRefactor ? (
+                    <>
+                        <TimeSpanFilter />
+                        <EnvironmentFilter />
+                    </>
+                ) : (
+                    <>
+                        <EventTimelineHeaderTip />
+                        <EnvironmentFilter />
+                        <Tooltip title='Hide event timeline' arrow>
+                            <IconButton
+                                aria-label='close'
+                                size='small'
+                                onClick={() => {
+                                    trackEvent('event-timeline', {
+                                        props: {
+                                            eventType: 'close',
+                                        },
+                                    });
+                                    setOpen(false);
+                                }}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </Tooltip>
+                    </>
+                )}
+            </StyledCol>
         </>
     );
 };

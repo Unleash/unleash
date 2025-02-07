@@ -288,6 +288,10 @@ export const CommandBar = () => {
         },
     );
 
+    useKeyboardShortcut({ key: 'Tab' }, () => {
+        setShowSuggestions(false);
+    });
+
     useOnClickOutside([searchContainerRef], hideSuggestions);
     const onKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Escape') {

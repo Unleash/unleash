@@ -305,15 +305,6 @@ export const CommandBar = () => {
         }
     };
 
-    const onBlur = (evt: React.FocusEvent) => {
-        if (
-            evt.relatedTarget === null ||
-            !searchContainerRef.current?.contains(evt.relatedTarget)
-        ) {
-            hideSuggestions();
-        }
-    };
-
     return (
         <StyledContainer
             ref={searchContainerRef}
@@ -386,10 +377,7 @@ export const CommandBar = () => {
             <ConditionallyRender
                 condition={Boolean(value) && showSuggestions}
                 show={
-                    <CommandResultsPaper
-                        onKeyDownCapture={onKeyDown}
-                        onBlur={onBlur}
-                    >
+                    <CommandResultsPaper onKeyDownCapture={onKeyDown}>
                         {searchString !== undefined && (
                             <CommandSearchFeatures
                                 searchString={searchString}
@@ -427,10 +415,7 @@ export const CommandBar = () => {
                 }
                 elseShow={
                     showSuggestions && (
-                        <CommandResultsPaper
-                            onKeyDownCapture={onKeyDown}
-                            onBlur={onBlur}
-                        >
+                        <CommandResultsPaper onKeyDownCapture={onKeyDown}>
                             <CommandQuickSuggestions
                                 routes={allRoutes}
                                 onClick={clearSearchValue}

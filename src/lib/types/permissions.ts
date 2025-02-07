@@ -214,8 +214,8 @@ export const PROJECT_PERMISSIONS_STRUCTURE: ProjectPermissionCategory[] = [
     {
         label: 'Change requests',
         permissions: [
-            [PROJECT_CHANGE_REQUEST_WRITE],
-            [PROJECT_CHANGE_REQUEST_READ],
+            [PROJECT_CHANGE_REQUEST_WRITE, UPDATE_PROJECT],
+            [PROJECT_CHANGE_REQUEST_READ, UPDATE_PROJECT],
         ],
     },
 ];

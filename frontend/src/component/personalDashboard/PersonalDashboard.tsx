@@ -107,7 +107,7 @@ const AccordionSummarySubtitle = styled(Typography)(({ theme }) => ({
 }));
 
 const EventTimelinePanel = () => {
-    const { toggleSectionState, expandTimeline } = useDashboardState([], []);
+    const { toggleSectionState, expandTimeline } = useDashboardState();
     const { trackEvent } = usePlausibleTracker();
 
     const signalsLink = '/integrations/signals';
@@ -163,7 +163,7 @@ const FlagPanel = () => {
     const projects = personalDashboard?.projects || [];
 
     const { activeFlag, setActiveFlag, toggleSectionState, expandFlags } =
-        useDashboardState(projects, personalDashboard?.flags ?? []);
+        useDashboardState({ flags: personalDashboard?.flags ?? [] });
 
     return (
         <SectionAccordion
@@ -214,7 +214,7 @@ const ProjectPanel = () => {
         setActiveProject,
         toggleSectionState,
         expandProjects,
-    } = useDashboardState(projects, personalDashboard?.flags ?? []);
+    } = useDashboardState({ projects });
 
     const personalDashboardProjectDetails =
         fromPersonalDashboardProjectDetailsOutput(

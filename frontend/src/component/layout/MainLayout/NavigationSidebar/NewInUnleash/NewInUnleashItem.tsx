@@ -12,6 +12,7 @@ import Close from '@mui/icons-material/Close';
 import { NewInUnleashTooltip } from './NewInUnleashTooltip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 export type NewInUnleashItemDetails = {
     label: string;
@@ -34,6 +35,10 @@ const StyledItemButton = styled(ListItemButton)(({ theme }) => ({
     alignItems: 'start',
     gap: theme.spacing(1),
     fontSize: theme.fontSizes.smallBody,
+    '& > svg': {
+        width: theme.spacing(3),
+        height: theme.spacing(3),
+    },
 }));
 
 const LabelWithSummary = styled('div')(({ theme }) => ({
@@ -114,7 +119,9 @@ export const NewInUnleashItem = ({
                     <LabelWithSummary>
                         <StyledItemTitle>
                             <Typography fontWeight='bold' fontSize='small'>
-                                {label}
+                                <Truncator title={label} arrow>
+                                    {label}
+                                </Truncator>
                             </Typography>
                             <ConditionallyRender
                                 condition={beta}

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import {
     Box,
     type BoxProps,
@@ -8,18 +8,20 @@ import {
 } from '@mui/material';
 
 const StyledTruncatorContainer = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'lines',
-})<{ lines: number }>(({ lines }) => ({
-    lineClamp: `${lines}`,
-    WebkitLineClamp: lines,
-    display: '-webkit-box',
-    boxOrient: 'vertical',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    alignItems: 'flex-start',
-    WebkitBoxOrient: 'vertical',
-    wordBreak: 'break-word',
-}));
+    shouldForwardProp: (prop) => prop !== 'lines' && prop !== 'wordBreak',
+})<{ lines: number; wordBreak?: CSSProperties['wordBreak'] }>(
+    ({ lines, wordBreak = 'break-all' }) => ({
+        lineClamp: `${lines}`,
+        WebkitLineClamp: lines,
+        display: '-webkit-box',
+        boxOrient: 'vertical',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        alignItems: 'flex-start',
+        WebkitBoxOrient: 'vertical',
+        wordBreak,
+    }),
+);
 
 type OverridableTooltipProps = Omit<TooltipProps, 'children'>;
 

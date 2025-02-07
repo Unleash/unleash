@@ -9,5 +9,5 @@ export interface ISegmentReadModel {
     getAllFeatureStrategySegments(): Promise<IFeatureStrategySegment[]>;
     getActive(): Promise<ISegment[]>;
     getActiveForClient(): Promise<IClientSegment[]>;
-    getAllForClient(ids?: number[]): Promise<IClientSegment[]>;
+    getAllForClientIds(ids?: number[]): Promise<IClientSegment[]>;
 }

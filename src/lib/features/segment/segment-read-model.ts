@@ -110,7 +110,11 @@ export class SegmentReadModel implements ISegmentReadModel {
         }));
     }
 
-    async getAllForClient(ids?: number[]): Promise<IClientSegment[]> {
+    async getAllForClientIds(ids?: number[]): Promise<IClientSegment[]> {
+        if (!ids || ids.length === 0) {
+            return [];
+        }
+
         const fullSegments = await this.getAll(ids);
 
         return fullSegments.map((segments) => ({

@@ -226,11 +226,6 @@ export class ClientFeatureToggleDelta {
             latestRevision,
         );
 
-        this.logger.info(
-            'Change events',
-            JSON.stringify(changeEvents, null, 2),
-        );
-
         const featuresUpdated = [
             ...new Set(
                 changeEvents
@@ -257,19 +252,12 @@ export class ClientFeatureToggleDelta {
             )
             .map((event) => event.data.id);
 
-        this.logger.info(
-            'Segments updated',
-            JSON.stringify(segmentsUpdated, null, 2),
-        );
-
         const segmentsRemoved = changeEvents
             .filter((event) => event.type === 'segment-deleted')
             .map((event) => event.preData.id);
 
         const segments =
             await this.segmentReadModel.getAllForClientIds(segmentsUpdated);
-
-        this.logger.info('segments', JSON.stringify(segments, null, 2));
 
         const segmentsUpdatedEvents: DeltaEvent[] = segments.map((segment) => ({
             eventId: latestRevision,

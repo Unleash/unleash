@@ -99,7 +99,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
         />
     );
 
-    const resultComponent = () => {
+    const ResultComponent = () => {
         if (loading) {
             return (
                 <StyledEventsList>
@@ -165,7 +165,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
                             />
                         }
                     />
-                    {resultComponent()}
+                    <ResultComponent />
                 </EventResultWrapper>
                 <ConditionallyRender
                     condition={total > 25}

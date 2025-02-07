@@ -171,6 +171,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         if (!hasDelta) {
             await this.initEnvironmentDelta(environment);
         }
+
         if (requiredRevisionId >= this.currentRevisionId) {
             return undefined;
         }
@@ -272,7 +273,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
             .map((event) => event.preData.id);
 
         const segments =
-            await this.segmentReadModel.getAllForClient(segmentsUpdated);
+            await this.segmentReadModel.getAllForClientIds(segmentsUpdated);
 
         const segmentsUpdatedEvents: DeltaEvent[] = segments.map((segment) => ({
             eventId: latestRevision,
@@ -328,7 +329,7 @@ export class ClientFeatureToggleDelta extends EventEmitter {
         const baseFeatures = await this.getClientFeatures({
             environment,
         });
-        const baseSegments = await this.segmentReadModel.getAllForClient();
+        const baseSegments = await this.segmentReadModel.getAllForClientIds();
 
         this.currentRevisionId =
             await this.configurationRevisionService.getMaxRevisionId();

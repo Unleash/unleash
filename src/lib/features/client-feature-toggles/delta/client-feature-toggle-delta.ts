@@ -152,11 +152,6 @@ export class ClientFeatureToggleDelta {
             await this.initEnvironmentDelta(environment);
         }
 
-        this.logger.info(
-            'Delta Cache',
-            JSON.stringify(this.delta[environment].getEvents(), null, 2),
-        );
-
         if (requiredRevisionId >= this.currentRevisionId) {
             return undefined;
         }

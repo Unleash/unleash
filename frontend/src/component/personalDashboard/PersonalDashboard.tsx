@@ -71,11 +71,16 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     '&>.MuiAccordionSummary-content.MuiAccordionSummary-content': {
         margin: '0',
     },
-    "&[aria-expanded='true']": {
-        // only add the border when it's open
-        borderBottom: `1px solid ${theme.palette.divider}`,
-    },
 }));
+
+const StyledAccordionSummaryWithBorder = styled(StyledAccordionSummary)(
+    ({ theme }) => ({
+        "&[aria-expanded='true']": {
+            // only add the border when it's open
+            borderBottom: `1px solid ${theme.palette.divider}`,
+        },
+    }),
+);
 
 const StyledAccordionDetails = styled(AccordionDetails)({
     padding: 0,
@@ -231,7 +236,7 @@ export const PersonalDashboard = () => {
                 expanded={expandProjects ?? true}
                 onChange={() => toggleSectionState('projects')}
             >
-                <StyledAccordionSummary
+                <StyledAccordionSummaryWithBorder
                     expandIcon={
                         <ExpandMore titleAccess='Toggle projects section' />
                     }
@@ -247,7 +252,7 @@ export const PersonalDashboard = () => {
                             you are a member of
                         </AccordionSummarySubtitle>
                     </AccordionSummaryText>
-                </StyledAccordionSummary>
+                </StyledAccordionSummaryWithBorder>
                 <StyledAccordionDetails>
                     <MyProjects
                         owners={personalDashboard?.projectOwners ?? []}
@@ -266,7 +271,7 @@ export const PersonalDashboard = () => {
                 expanded={expandFlags ?? true}
                 onChange={() => toggleSectionState('flags')}
             >
-                <StyledAccordionSummary
+                <StyledAccordionSummaryWithBorder
                     expandIcon={
                         <ExpandMore titleAccess='Toggle flags section' />
                     }
@@ -281,7 +286,7 @@ export const PersonalDashboard = () => {
                             Feature flags you have created or favorited
                         </AccordionSummarySubtitle>
                     </AccordionSummaryText>
-                </StyledAccordionSummary>
+                </StyledAccordionSummaryWithBorder>
                 <StyledAccordionDetails>
                     <MyFlags
                         hasProjects={projects?.length > 0}

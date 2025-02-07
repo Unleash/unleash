@@ -24,6 +24,11 @@ const StyledChip = styled(
               backgroundColor: theme.palette.secondary.light,
           }
         : {}),
+
+    ':focus-visible': {
+        outline: `1px solid ${theme.palette.primary.main}`,
+        borderColor: theme.palette.primary.main,
+    },
 }));
 
 const StyledLabel = styled('div')(({ theme }) => ({

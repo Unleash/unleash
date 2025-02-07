@@ -1,6 +1,7 @@
 name: PR -> Frontend Build & Test
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - frontend/**

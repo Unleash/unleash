@@ -55,6 +55,7 @@ beforeAll(async () => {
     db = await dbInit(
         'feature_toggle_service_v2_service_serial',
         config.getLogger,
+        { experimental: { testDbFromTemplate: false } },
     );
     unleashConfig = config;
     stores = db.stores;

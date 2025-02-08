@@ -146,7 +146,8 @@ const setupFeatures = async (
 };
 
 beforeAll(async () => {
-    db = await dbInit('client_feature_toggles', getLogger);
+    const dbOptions = { experimental: { testDbFromTemplate: true } };
+    db = await dbInit('client_feature_toggles', getLogger, dbOptions);
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -160,7 +161,11 @@ beforeAll(async () => {
         db.rawDatabase,
     );
 
-    enterpriseDb = await dbInit('client_feature_toggles_enterprise', getLogger);
+    enterpriseDb = await dbInit(
+        'client_feature_toggles_enterprise',
+        getLogger,
+        dbOptions,
+    );
     enterpriseApp = await setupAppWithCustomConfig(
         enterpriseDb.stores,
         {
@@ -176,7 +181,7 @@ beforeAll(async () => {
         enterpriseDb.rawDatabase,
     );
 
-    proDb = await dbInit('client_feature_toggles_pro', getLogger);
+    proDb = await dbInit('client_feature_toggles_pro', getLogger, dbOptions);
     proApp = await setupAppWithCustomConfig(
         proDb.stores,
         {

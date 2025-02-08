@@ -10,7 +10,9 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('project_feature_variants_api_sunset', getLogger);
+    db = await dbInit('project_feature_variants_api_sunset', getLogger, {
+        experimental: { testDbFromTemplate: true },
+    });
     app = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {
@@ -18,10 +20,6 @@ beforeAll(async () => {
                 enableLegacyVariants: false,
             },
         },
-    });
-    await db.stores.environmentStore.create({
-        name: 'development',
-        type: 'development',
     });
 });
 

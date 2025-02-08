@@ -14,7 +14,9 @@ let stores: IUnleashStores;
 let refreshDbMetrics: () => Promise<void>;
 
 beforeAll(async () => {
-    db = await dbInit('instance_admin_api_serial', getLogger);
+    db = await dbInit('instance_admin_api_serial', getLogger, {
+        experimental: { testDbFromTemplate: false },
+    });
     stores = db.stores;
     await stores.settingStore.insert('instanceInfo', { id: 'test-static' });
     app = await setupAppWithCustomConfig(

@@ -10,7 +10,11 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('project_environments_api_serial', getLogger);
+    db = await dbInit('project_environments_api_serial', getLogger, {
+        experimental: {
+            testDbFromTemplate: false,
+        },
+    });
     app = await setupAppWithCustomConfig(
         db.stores,
         {

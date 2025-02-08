@@ -12,7 +12,7 @@ let db: ITestDb;
 beforeAll(async () => {
     db = await dbInit('metrics_serial', getLogger, {
         experimental: {
-            flags: {},
+            testDbFromTemplate: false,
         },
     });
     app = await setupAppWithCustomConfig(

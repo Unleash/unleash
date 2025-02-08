@@ -117,6 +117,7 @@ beforeAll(async () => {
             flags: {
                 anonymiseEventLog: true,
             },
+            testDbFromTemplate: false,
         },
     };
 

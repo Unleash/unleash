@@ -9,7 +9,9 @@ let db: ITestDb;
 let readModel: IChangeRequestAccessReadModel;
 
 beforeAll(async () => {
-    db = await dbInit('change_request_access_read_model', getLogger);
+    db = await dbInit('change_request_access_read_model', getLogger, {
+        experimental: { testDbFromTemplate: true },
+    });
 
     const config = createTestConfig({
         getLogger,
@@ -31,7 +33,7 @@ test(`Should indicate change request enabled status`, async () => {
     // change request enabled in enabled environment
     await db.rawDatabase('change_request_settings').insert({
         project: 'default',
-        environment: 'default',
+        environment: 'development',
         required_approvals: 1,
     });
     const enabledStatus =
@@ -41,7 +43,7 @@ test(`Should indicate change request enabled status`, async () => {
     // change request enabled in disabled environment
     await db.stores.projectStore.deleteEnvironmentForProject(
         'default',
-        'default',
+        'development',
     );
     const disabledStatus =
         await readModel.isChangeRequestsEnabledForProject('default');

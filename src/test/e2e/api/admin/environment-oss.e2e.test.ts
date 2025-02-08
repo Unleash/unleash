@@ -11,6 +11,7 @@ let db: ITestDb;
 beforeAll(async () => {
     db = await dbInit('environment_api_is_oss_serial', getLogger, {
         isOss: true,
+        experimental: { testDbFromTemplate: true },
     });
     app = await setupAppWithCustomConfig(
         db.stores,
@@ -24,16 +25,6 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
-    await db.stores.environmentStore.create({
-        name: 'development',
-        type: 'development',
-        enabled: true,
-    });
-    await db.stores.environmentStore.create({
-        name: 'production',
-        type: 'production',
-        enabled: true,
-    });
     await db.stores.environmentStore.create({
         name: 'customenvironment',
         type: 'production',

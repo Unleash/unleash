@@ -12,7 +12,9 @@ let db: ITestDb;
 let user: IUser;
 
 beforeAll(async () => {
-    db = await dbInit('project_health_api_serial', getLogger);
+    db = await dbInit('project_health_api_serial', getLogger, {
+        experimental: { testDbFromTemplate: false },
+    });
     app = await setupAppWithCustomConfig(
         db.stores,
         {

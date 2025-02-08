@@ -14,7 +14,9 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('register_client', getLogger);
+    db = await dbInit('register_client', getLogger, {
+        experimental: { testDbFromTemplate: false },
+    });
     app = await setupApp(db.stores);
 });
 

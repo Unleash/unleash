@@ -11,7 +11,9 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('project_feature_variants_api_serial', getLogger);
+    db = await dbInit('project_feature_variants_api_serial', getLogger, {
+        experimental: { testDbFromTemplate: true },
+    });
     app = await setupAppWithCustomConfig(db.stores, {
         experimental: {
             flags: {
@@ -19,14 +21,6 @@ beforeAll(async () => {
                 enableLegacyVariants: true,
             },
         },
-    });
-    await db.stores.environmentStore.create({
-        name: 'development',
-        type: 'development',
-    });
-    await db.stores.environmentStore.create({
-        name: 'production',
-        type: 'production',
     });
 });
 

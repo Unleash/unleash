@@ -23,7 +23,9 @@ let app: IUnleashTest;
 let db: ITestDb;
 let frontendApiService: FrontendApiService;
 beforeAll(async () => {
-    db = await dbInit('frontend_api', getLogger);
+    db = await dbInit('frontend_api', getLogger, {
+        experimental: { testDbFromTemplate: false },
+    });
     app = await setupAppWithAuth(
         db.stores,
         {

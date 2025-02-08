@@ -12,6 +12,8 @@ import type { IUnleashStores } from '../../../lib/types';
 import type { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
 import type { IUnleashOptions, Knex } from '../../../lib/server-impl';
+import { Client } from 'pg';
+import { v4 as uuidv4 } from 'uuid';
 
 // require('db-migrate-shared').log.silence(false);
 
@@ -99,11 +101,16 @@ export default async function init(
     getLogger: LogProvider = noLoggerProvider,
     configOverride: Partial<IUnleashOptions> = {},
 ): Promise<ITestDb> {
+    const testDbName = `unleashtestdb_${uuidv4().replace(/-/g, '')}`;
+    const useDbTemplate =
+        configOverride.experimental?.testDbFromTemplate ?? true;
     const config = createTestConfig({
         db: {
             ...getDbConfig(),
             pool: { min: 1, max: 4 },
-            schema: databaseSchema,
+            ...(useDbTemplate
+                ? { database: testDbName }
+                : { schema: databaseSchema }),
             ssl: false,
         },
         ...configOverride,
@@ -111,29 +118,52 @@ export default async function init(
     });
 
     log.setLogLevel('error');
-    const db = createDb(config);
 
-    await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);
-    await db.raw(`CREATE SCHEMA IF NOT EXISTS ${config.db.schema}`);
-    await migrateDb(config);
-    await db.destroy();
+    if (useDbTemplate) {
+        const templateDBSchemaName = 'unleash_template_db';
+        const testDB = { ...config.db, database: 'unleash_test' };
+        const client = new Client(testDB);
+        await client.connect();
+
+        console.log(
+            `Creating database ${testDbName} from template ${templateDBSchemaName}`,
+        );
+        await client.query(
+            `CREATE DATABASE ${testDbName} TEMPLATE ${templateDBSchemaName}`,
+        );
+        await client.end();
+    } else {
+        const db = createDb(config);
+
+        await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);
+        await db.raw(`CREATE SCHEMA IF NOT EXISTS ${config.db.schema}`);
+        await migrateDb(config);
+        await db.destroy();
+    }
+
     const testDb = createDb(config);
     const stores = await createStores(config, testDb);
     stores.eventStore.setMaxListeners(0);
-    const defaultRolePermissions = await getDefaultEnvRolePermissions(testDb);
-    await resetDatabase(testDb);
-    await setupDatabase(stores);
-    await restoreRolePermissions(testDb, defaultRolePermissions);
+
+    if (!useDbTemplate) {
+        const defaultRolePermissions =
+            await getDefaultEnvRolePermissions(testDb);
+        await resetDatabase(testDb);
+        await setupDatabase(stores);
+        await restoreRolePermissions(testDb, defaultRolePermissions);
+    }
 
     return {
         rawDatabase: testDb,
         stores,
         reset: async () => {
-            const defaultRolePermissions =
-                await getDefaultEnvRolePermissions(testDb);
-            await resetDatabase(testDb);
-            await setupDatabase(stores);
-            await restoreRolePermissions(testDb, defaultRolePermissions);
+            if (!useDbTemplate) {
+                const defaultRolePermissions =
+                    await getDefaultEnvRolePermissions(testDb);
+                await resetDatabase(testDb);
+                await setupDatabase(stores);
+                await restoreRolePermissions(testDb, defaultRolePermissions);
+            }
         },
         destroy: async () => {
             return new Promise<void>((resolve, reject) => {

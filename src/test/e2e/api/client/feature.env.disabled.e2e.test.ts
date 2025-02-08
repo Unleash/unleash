@@ -11,12 +11,13 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 const featureName = 'feature.default.1';
-const username = 'test';
 const userId = -9999;
 const projectId = 'default';
 
 beforeAll(async () => {
-    db = await dbInit('feature_env_api_client', getLogger);
+    db = await dbInit('feature_env_api_client', getLogger, {
+        experimental: { testDbFromTemplate: false },
+    });
     app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
 
     await app.services.featureToggleServiceV2.createFeatureToggle(

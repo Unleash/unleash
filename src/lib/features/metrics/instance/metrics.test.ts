@@ -20,7 +20,9 @@ let db: ITestDb;
 
 async function getSetup(opts?: IUnleashOptions) {
     const config = createTestConfig(opts);
-    db = await dbInit('metrics', config.getLogger);
+    db = await dbInit('metrics', config.getLogger, {
+        experimental: { testDbFromTemplate: true },
+    });
 
     const services = createServices(db.stores, config, db.rawDatabase);
     const app = await getApp(config, db.stores, services);
@@ -356,12 +358,6 @@ describe('bulk metrics', () => {
                 type: IAuthType.DEMO,
                 enableApiToken: true,
             },
-        });
-        await authed.db('environments').insert({
-            name: 'development',
-            sort_order: 5000,
-            type: 'development',
-            enabled: true,
         });
         const clientToken =
             await authed.services.apiTokenService.createApiTokenWithProjects({

@@ -47,7 +47,6 @@ async function validateTablesHavePrimaryKeys(db: IDBOption) {
 }
 
 test('Up & down migrations work', async () => {
-    jest.setTimeout(15000);
     const config = createTestConfig({
         db: {
             ...getDbConfig(),

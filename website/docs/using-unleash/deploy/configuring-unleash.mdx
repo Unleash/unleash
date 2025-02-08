@@ -90,8 +90,7 @@ unleash.start(unleashOptions);
         - `none` - _Deprecated_ Turn off authentication completely. If no API token is provided towards /`api/client`
           or `/api/frontend` you will receive configuration for the "default" environment. We generally recommend you
           use the `demo` type for simple, insecure usage of Unleash. This auth type has many known limitations,
-          particularly related to personalized capabilities such as favorites
-          and [notifications](../../reference/notifications.md).
+          particularly related to personalized capabilities such as favorites.
     - `customAuthHandler`: function `(app: any, config: IUnleashConfig): void` — custom express middleware handling
       authentication. Used when type is set to `custom`. Can not be set via environment variables.
     - `initialAdminUser`: `{ username: string, password: string} | undefined` — The initial admin username and password - Defaults to `admin` and `unleash4all`, respectively. Can be set using the `UNLEASH_DEFAULT_ADMIN_USERNAME` and `UNLEASH_DEFAULT_ADMIN_PASSWORD` environment variables.

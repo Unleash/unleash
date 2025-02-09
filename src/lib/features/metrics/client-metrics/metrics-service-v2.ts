@@ -11,7 +11,7 @@ import type {
     IClientMetricsStoreV2,
 } from './client-metrics-store-v2-type';
 import { clientMetricsSchema } from '../shared/schema';
-import { compareAsc } from 'date-fns';
+import { compareAsc, secondsToMilliseconds } from 'date-fns';
 import { CLIENT_METRICS, CLIENT_REGISTER } from '../../../types/events';
 import ApiUser, { type IApiUser } from '../../../types/api-user';
 import { ALL } from '../../../types/models/api-token';
@@ -25,6 +25,7 @@ import {
 } from '../../../util/time-utils';
 import type { ClientMetricsSchema } from '../../../../lib/openapi';
 import { nameSchema } from '../../../schema/feature-schema';
+import memoizee from 'memoizee';
 
 export default class ClientMetricsServiceV2 {
     private config: IUnleashConfig;
@@ -39,6 +40,8 @@ export default class ClientMetricsServiceV2 {
 
     private logger: Logger;
 
+    private cachedFeatureNames: () => Promise<string[]>;
+
     constructor(
         { clientMetricsStoreV2 }: Pick<IUnleashStores, 'clientMetricsStoreV2'>,
         config: IUnleashConfig,
@@ -51,6 +54,13 @@ export default class ClientMetricsServiceV2 {
             '/services/client-metrics/client-metrics-service-v2.ts',
         );
         this.flagResolver = config.flagResolver;
+        this.cachedFeatureNames = memoizee(
+            async () => this.clientMetricsStoreV2.getFeatureFlagNames(),
+            {
+                promise: true,
+                maxAge: secondsToMilliseconds(10),
+            },
+        );
     }
 
     async clearMetrics(hoursAgo: number) {
@@ -103,6 +113,29 @@ export default class ClientMetricsServiceV2 {
         }
     }
 
+    async filterExistingToggleNames(toggleNames: string[]): Promise<string[]> {
+        if (this.flagResolver.isEnabled('filterExistingFlagNames')) {
+            try {
+                const validNames = await this.cachedFeatureNames();
+
+                const existingNames = toggleNames.filter((name) =>
+                    validNames.includes(name),
+                );
+                if (existingNames.length !== toggleNames.length) {
+                    this.logger.warn(
+                        `Filtered out ${toggleNames.length - existingNames.length} toggles with non-existing names`,
+                    );
+                }
+                return this.filterValidToggleNames(existingNames);
+            } catch (e) {
+                this.logger.error(e);
+                return this.filterValidToggleNames(toggleNames);
+            }
+        } else {
+            return this.filterValidToggleNames(toggleNames);
+        }
+    }
+
     async filterValidToggleNames(toggleNames: string[]): Promise<string[]> {
         const nameValidations: Promise<
             PromiseFulfilledResult<{ name: string }> | PromiseRejectedResult
@@ -151,7 +184,7 @@ export default class ClientMetricsServiceV2 {
         );
 
         const validatedToggleNames =
-            await this.filterValidToggleNames(toggleNames);
+            await this.filterExistingToggleNames(toggleNames);
 
         this.logger.debug(
             `Got ${toggleNames.length} (${validatedToggleNames.length} valid) metrics from ${clientIp}`,

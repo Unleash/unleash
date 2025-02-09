@@ -17,6 +17,11 @@ export default class FakeClientMetricsStoreV2
         super();
         this.setMaxListeners(0);
     }
+
+    getFeatureFlagNames(): Promise<string[]> {
+        throw new Error('Method not implemented.');
+    }
+
     getSeenTogglesForApp(
         appName: string,
         hoursBack?: number,

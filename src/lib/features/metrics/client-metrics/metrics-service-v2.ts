@@ -129,11 +129,9 @@ export default class ClientMetricsServiceV2 {
                 return this.filterValidToggleNames(existingNames);
             } catch (e) {
                 this.logger.error(e);
-                return this.filterValidToggleNames(toggleNames);
             }
-        } else {
-            return this.filterValidToggleNames(toggleNames);
         }
+        return this.filterValidToggleNames(toggleNames);
     }
 
     async filterValidToggleNames(toggleNames: string[]): Promise<string[]> {

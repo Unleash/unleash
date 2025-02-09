@@ -108,7 +108,8 @@ export default async function init(
     configOverride: Partial<IUnleashOptions & DBTestOptions> = {},
 ): Promise<ITestDb> {
     const testDbName = `unleashtestdb_${uuidv4().replace(/-/g, '')}`;
-    const useDbTemplate = configOverride.dbInitMethod === 'template' || true;
+    const useDbTemplate =
+        (configOverride.dbInitMethod ?? 'template') === 'template';
     const config = createTestConfig({
         db: {
             ...getDbConfig(),
@@ -126,8 +127,7 @@ export default async function init(
 
     if (useDbTemplate) {
         const templateDBSchemaName = 'unleash_template_db';
-        const testDB = { ...config.db, database: 'unleash_test' };
-        const client = new Client(testDB);
+        const client = new Client(getDbConfig());
         await client.connect();
 
         await client.query(

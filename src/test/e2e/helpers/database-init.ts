@@ -133,15 +133,11 @@ export default async function init(
         const client = new Client(getDbConfig());
         await client.connect();
 
-        console.log(
-            `Creating database ${testDbName} from template ${testDBTemplateName}`,
-        );
         await client.query(
             `CREATE DATABASE ${testDbName} TEMPLATE ${testDBTemplateName}`,
         );
         await client.end();
     } else {
-        console.log(`Creating database using legacy method`);
         const db = createDb(config);
 
         await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);
@@ -150,7 +146,6 @@ export default async function init(
         await db.destroy();
     }
 
-    console.log(`Using database ${JSON.stringify(config.db)}`);
     const testDb = createDb(config);
     const stores = createStores(config, testDb);
     stores.eventStore.setMaxListeners(0);

@@ -58,6 +58,7 @@ process.nextTick(async () => {
                         uniqueSdkTracking: true,
                         frontendHeaderRedesign: true,
                         dataUsageMultiMonthView: true,
+                        filterExistingFlagNames: true,
                     },
                 },
                 authentication: {

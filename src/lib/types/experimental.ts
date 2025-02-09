@@ -23,6 +23,7 @@ export type IFlagKey =
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
+    | 'filterExistingFlagNames'
     | 'disableMetrics'
     | 'signals'
     | 'automatedActions'
@@ -126,6 +127,10 @@ const flags: IFlags = {
         false,
     ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
+        process.env.FILTER_INVALID_CLIENT_METRICS,
+        false,
+    ),
+    filterExistingFlagNames: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
     ),

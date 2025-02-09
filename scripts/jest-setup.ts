@@ -1,54 +1,35 @@
-import { Client } from 'pg';
+import { Client, type ClientConfig } from 'pg';
 import { migrateDb } from '../src/migrator';
-const templateDBSchemaName = `unleash_template_db`;
+import { testDBTemplateName } from '../src/test/e2e/helpers/database-init';
+import { getDbConfig } from '../src/test/e2e/helpers/database-config';
+
 let initializationPromise: Promise<void> | null = null;
-const initializeTemplateDb = (client: Client, db: any): Promise<void> => {
+const initializeTemplateDb = (db: ClientConfig): Promise<void> => {
     if (!initializationPromise) {
         initializationPromise = (async () => {
-            console.log(
-                `Initializing template database ${templateDBSchemaName}`,
-            );
+            const client = new Client(db);
+            await client.connect();
+            console.log(`Initializing template database ${testDBTemplateName}`);
             // code to clean up, but only on next run, we could do it at tear down... but is it really needed?
             // const result = await client.query(`select datname from pg_database where datname like 'unleashtestdb_%';`)
             // result.rows.forEach(async (row: any) => {
             //     console.log(`Dropping test database ${row.datname}`);
             //     await client.query(`DROP DATABASE ${row.datname}`);
             // });
-            await client.query(
-                `DROP DATABASE IF EXISTS ${templateDBSchemaName}`,
-            );
-            await client.query(`CREATE DATABASE ${templateDBSchemaName}`);
-            console.log(`Migrating template database ${templateDBSchemaName}`);
+            await client.query(`DROP DATABASE IF EXISTS ${testDBTemplateName}`);
+            await client.query(`CREATE DATABASE ${testDBTemplateName}`);
+            console.log(`Migrating template database ${testDBTemplateName}`);
             await migrateDb({
-                db: { ...db, database: templateDBSchemaName },
+                db: { ...db, database: testDBTemplateName },
             } as any);
             console.log(`Template database migrated`);
+            await client.end();
         })();
     }
     return initializationPromise;
 };
 
-export async function initTemplate(db: any): Promise<void> {
-    const testDB = { ...db, database: 'unleash_test' };
-    const client = new Client(testDB);
-    await client.connect();
-
-    console.log(`Awaiting promise of template database initialization`);
-    await initializeTemplateDb(client, testDB);
-    console.log(`Template database initialized`);
-    await client.end();
-}
-
 export default async function globalSetup() {
     process.env.TZ = 'UTC';
-    await initTemplate({
-        user: process.env.DB_USER || 'unleash_user',
-        password: process.env.DB_PASSWORD || 'password',
-        host: 'localhost',
-        database: process.env.DB_NAME || 'unleash_test',
-        driver: 'postgres',
-        port: 5432,
-        ssl: false,
-        pool: { min: 0, max: 2 },
-    });
+    await initializeTemplateDb(getDbConfig());
 }

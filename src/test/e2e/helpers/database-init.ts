@@ -23,6 +23,8 @@ delete process.env.DATABASE_URL;
 // because of db-migrate bug (https://github.com/Unleash/unleash/issues/171)
 process.setMaxListeners(0);
 
+export const testDBTemplateName = `unleash_template_db`;
+
 async function getDefaultEnvRolePermissions(knex) {
     return knex.table('role_permission').whereIn('environment', ['default']);
 }

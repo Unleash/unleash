@@ -122,7 +122,7 @@ export default class ClientMetricsServiceV2 {
                     validNames.includes(name),
                 );
                 if (existingNames.length !== toggleNames.length) {
-                    this.logger.warn(
+                    this.logger.info(
                         `Filtered out ${toggleNames.length - existingNames.length} toggles with non-existing names`,
                     );
                 }

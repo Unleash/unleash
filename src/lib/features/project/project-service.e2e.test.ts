@@ -59,9 +59,7 @@ const isProjectUser = async (
 };
 
 beforeAll(async () => {
-    db = await dbInit('project_service_serial', getLogger, {
-        experimental: { testDbFromTemplate: true },
-    });
+    db = await dbInit('project_service_serial', getLogger);
     stores = db.stores;
     // @ts-ignore return type IUser type missing generateImageUrl
     user = await stores.userStore.insert({

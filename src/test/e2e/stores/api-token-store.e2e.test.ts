@@ -9,7 +9,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('api_token_store_serial', getLogger, {
-        experimental: { testDbFromTemplate: false },
+        dbInitMethod: 'legacy' as const,
     });
     stores = db.stores;
 });

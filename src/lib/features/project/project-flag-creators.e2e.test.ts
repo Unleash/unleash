@@ -9,9 +9,7 @@ let app: IUnleashTest;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('project_flag_creators', getLogger, {
-        experimental: { testDbFromTemplate: true },
-    });
+    db = await dbInit('project_flag_creators', getLogger);
     app = await setupAppWithAuth(
         db.stores,
         {

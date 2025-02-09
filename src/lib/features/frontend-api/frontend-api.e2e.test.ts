@@ -24,7 +24,7 @@ let db: ITestDb;
 let frontendApiService: FrontendApiService;
 beforeAll(async () => {
     db = await dbInit('frontend_api', getLogger, {
-        experimental: { testDbFromTemplate: false },
+        dbInitMethod: 'legacy' as const,
     });
     app = await setupAppWithAuth(
         db.stores,

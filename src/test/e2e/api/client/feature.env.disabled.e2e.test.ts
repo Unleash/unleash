@@ -16,7 +16,7 @@ const projectId = 'default';
 
 beforeAll(async () => {
     db = await dbInit('feature_env_api_client', getLogger, {
-        experimental: { testDbFromTemplate: false },
+        dbInitMethod: 'legacy' as const,
     });
     app = await setupAppWithCustomConfig(db.stores, {}, db.rawDatabase);
 

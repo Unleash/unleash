@@ -11,7 +11,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('advanced_playground', getLogger, {
-        experimental: { testDbFromTemplate: false },
+        dbInitMethod: 'legacy' as const,
     });
     app = await setupAppWithCustomConfig(
         db.stores,
@@ -22,7 +22,6 @@ beforeAll(async () => {
                     strictSchemaValidation: true,
                     strategyVariant: true,
                 },
-                testDbFromTemplate: false,
             },
         },
         db.rawDatabase,

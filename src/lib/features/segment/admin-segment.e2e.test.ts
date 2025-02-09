@@ -117,8 +117,8 @@ beforeAll(async () => {
             flags: {
                 anonymiseEventLog: true,
             },
-            testDbFromTemplate: false,
         },
+        dbInitMethod: 'legacy' as const,
     };
 
     db = await dbInit('segments_api_serial', getLogger, customOptions);

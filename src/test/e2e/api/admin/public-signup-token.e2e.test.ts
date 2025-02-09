@@ -9,9 +9,7 @@ let stores: IUnleashStores;
 let db: ITestDb;
 
 beforeAll(async () => {
-    db = await dbInit('public_signup_test', getLogger, {
-        experimental: { testDbFromTemplate: true },
-    });
+    db = await dbInit('public_signup_test', getLogger);
     stores = db.stores;
 });
 

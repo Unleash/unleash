@@ -15,7 +15,7 @@ let refreshDbMetrics: () => Promise<void>;
 
 beforeAll(async () => {
     db = await dbInit('instance_admin_api_serial', getLogger, {
-        experimental: { testDbFromTemplate: false },
+        dbInitMethod: 'legacy' as const,
     });
     stores = db.stores;
     await stores.settingStore.insert('instanceInfo', { id: 'test-static' });

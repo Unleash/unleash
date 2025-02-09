@@ -43,9 +43,7 @@ const noEnvironmentEvent = (days: number) => {
 };
 
 beforeAll(async () => {
-    db = await dbInit('product_changes_serial', getLogger, {
-        experimental: { testDbFromTemplate: true },
-    });
+    db = await dbInit('product_changes_serial', getLogger);
     getProductionChanges = createGetProductionChanges(db.rawDatabase);
 });
 

@@ -96,14 +96,17 @@ export interface ITestDb {
     rawDatabase: Knex;
 }
 
+type DBTestOptions = {
+    dbInitMethod?: 'legacy' | 'template';
+};
+
 export default async function init(
     databaseSchema = 'test',
     getLogger: LogProvider = noLoggerProvider,
-    configOverride: Partial<IUnleashOptions> = {},
+    configOverride: Partial<IUnleashOptions & DBTestOptions> = {},
 ): Promise<ITestDb> {
     const testDbName = `unleashtestdb_${uuidv4().replace(/-/g, '')}`;
-    const useDbTemplate =
-        configOverride.experimental?.testDbFromTemplate ?? true;
+    const useDbTemplate = configOverride.dbInitMethod === 'template' || true;
     const config = createTestConfig({
         db: {
             ...getDbConfig(),
@@ -125,9 +128,6 @@ export default async function init(
         const client = new Client(testDB);
         await client.connect();
 
-        console.log(
-            `Creating database ${testDbName} from template ${templateDBSchemaName}`,
-        );
         await client.query(
             `CREATE DATABASE ${testDbName} TEMPLATE ${templateDBSchemaName}`,
         );

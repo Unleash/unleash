@@ -14,7 +14,7 @@ let db: ITestDb;
 let defaultToken: IApiToken;
 beforeAll(async () => {
     db = await dbInit('metrics_two_api_client', getLogger, {
-        experimental: { testDbFromTemplate: false },
+        dbInitMethod: 'legacy' as const,
     });
     app = await setupAppWithAuth(db.stores, {}, db.rawDatabase);
     defaultToken =

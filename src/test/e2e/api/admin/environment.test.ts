@@ -11,7 +11,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('environment_api_serial', getLogger, {
-        experimental: { testDbFromTemplate: false },
+        dbInitMethod: 'legacy' as const,
     });
     app = await setupAppWithCustomConfig(
         db.stores,

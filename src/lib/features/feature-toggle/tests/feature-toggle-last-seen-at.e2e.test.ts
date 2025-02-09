@@ -22,7 +22,6 @@ const setupLastSeenAtTest = async (featureName: string) => {
 beforeAll(async () => {
     const config: Partial<IUnleashOptions> = {
         experimental: {
-            testDbFromTemplate: true,
             flags: {
                 strictSchemaValidation: true,
             },

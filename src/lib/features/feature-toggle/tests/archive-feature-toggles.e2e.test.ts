@@ -12,7 +12,7 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('archive_test_serial', getLogger, {
-        experimental: { testDbFromTemplate: false },
+        dbInitMethod: 'legacy' as const,
     });
     app = await setupAppWithCustomConfig(
         db.stores,

@@ -20,9 +20,7 @@ let db: ITestDb;
 
 async function getSetup(opts?: IUnleashOptions) {
     const config = createTestConfig(opts);
-    db = await dbInit('metrics', config.getLogger, {
-        experimental: { testDbFromTemplate: true },
-    });
+    db = await dbInit('metrics', config.getLogger);
 
     const services = createServices(db.stores, config, db.rawDatabase);
     const app = await getApp(config, db.stores, services);

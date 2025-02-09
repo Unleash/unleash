@@ -18,7 +18,7 @@ const testDate = '2023-10-01T12:34:56.000Z';
 
 beforeAll(async () => {
     db = await dbInit('projects_api_serial', getLogger, {
-        experimental: { testDbFromTemplate: false },
+        dbInitMethod: 'legacy' as const,
     });
     app = await setupAppWithCustomConfig(
         db.stores,

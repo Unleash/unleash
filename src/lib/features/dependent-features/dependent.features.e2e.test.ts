@@ -20,7 +20,7 @@ let eventStore: IEventStore;
 
 beforeAll(async () => {
     db = await dbInit('dependent_features', getLogger, {
-        experimental: { testDbFromTemplate: false },
+        dbInitMethod: 'legacy' as const,
     });
     app = await setupAppWithCustomConfig(
         db.stores,

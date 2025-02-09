@@ -324,7 +324,6 @@ export const defaultExperimentalOptions: IExperimentalOptions = {
 export interface IExperimentalOptions {
     flags: IFlags;
     externalResolver: IExternalFlagResolver;
-    testDbFromTemplate?: boolean;
 }
 
 export interface IFlagContext {

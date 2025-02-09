@@ -17,6 +17,9 @@ export async function migrateDb({ db }: IUnleashConfig): Promise<void> {
         cwd: __dirname,
         config: { custom },
         env: 'custom',
+        cmdOptions: {
+            verbose: true,
+        },
     });
 
     return dbm.up();

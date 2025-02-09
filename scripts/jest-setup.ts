@@ -1,12 +1,12 @@
 import { Client, type ClientConfig } from 'pg';
 import { migrateDb } from '../src/migrator';
-import { testDBTemplateName } from '../src/test/e2e/helpers/database-init';
 import { getDbConfig } from '../src/test/e2e/helpers/database-config';
 
 let initializationPromise: Promise<void> | null = null;
 const initializeTemplateDb = (db: ClientConfig): Promise<void> => {
     if (!initializationPromise) {
         initializationPromise = (async () => {
+            const testDBTemplateName = process.env.TEST_DB_TEMPLATE_NAME;
             const client = new Client(db);
             await client.connect();
             console.log(`Initializing template database ${testDBTemplateName}`);
@@ -31,5 +31,6 @@ const initializeTemplateDb = (db: ClientConfig): Promise<void> => {
 
 export default async function globalSetup() {
     process.env.TZ = 'UTC';
+    process.env.TEST_DB_TEMPLATE_NAME = 'unleash_template_db';
     await initializeTemplateDb(getDbConfig());
 }

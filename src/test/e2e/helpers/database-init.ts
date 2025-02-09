@@ -23,8 +23,6 @@ delete process.env.DATABASE_URL;
 // because of db-migrate bug (https://github.com/Unleash/unleash/issues/171)
 process.setMaxListeners(0);
 
-export const testDBTemplateName = `unleash_template_db`;
-
 async function getDefaultEnvRolePermissions(knex) {
     return knex.table('role_permission').whereIn('environment', ['default']);
 }
@@ -110,6 +108,7 @@ export default async function init(
     const testDbName = `unleashtestdb_${uuidv4().replace(/-/g, '')}`;
     const useDbTemplate =
         (configOverride.dbInitMethod ?? 'template') === 'template';
+    const testDBTemplateName = process.env.TEST_DB_TEMPLATE_NAME;
     const config = createTestConfig({
         db: {
             ...getDbConfig(),
@@ -126,12 +125,16 @@ export default async function init(
     log.setLogLevel('error');
 
     if (useDbTemplate) {
-        const templateDBSchemaName = 'unleash_template_db';
+        if (!testDBTemplateName) {
+            throw new Error(
+                'TEST_DB_TEMPLATE_NAME environment variable is not set',
+            );
+        }
         const client = new Client(getDbConfig());
         await client.connect();
 
         await client.query(
-            `CREATE DATABASE ${testDbName} TEMPLATE ${templateDBSchemaName}`,
+            `CREATE DATABASE ${testDbName} TEMPLATE ${testDBTemplateName}`,
         );
         await client.end();
     } else {

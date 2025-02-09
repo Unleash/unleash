@@ -150,8 +150,9 @@ export default async function init(
         await db.destroy();
     }
 
+    console.log(`Using database ${JSON.stringify(config.db)}`);
     const testDb = createDb(config);
-    const stores = await createStores(config, testDb);
+    const stores = createStores(config, testDb);
     stores.eventStore.setMaxListeners(0);
 
     if (!useDbTemplate) {

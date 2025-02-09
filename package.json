@@ -54,7 +54,7 @@
     "test": "NODE_ENV=test PORT=4243 node --trace-warnings node_modules/.bin/jest",
     "test:unit": "NODE_ENV=test PORT=4243 jest --testPathIgnorePatterns=src/test/e2e --testPathIgnorePatterns=dist",
     "test:docker": "./scripts/docker-postgres.sh",
-    "test:report": "NODE_ENV=test PORT=4243 jest --reporters=\"default\" --reporters=\"jest-junit\"",
+    "test:report": "NODE_ENV=test PORT=4243 jest --bail --reporters=\"default\" --reporters=\"jest-junit\"",
     "test:docker:cleanup": "docker rm -f unleash-postgres",
     "test:watch": "yarn test --watch",
     "test:coverage": "NODE_ENV=test PORT=4243 jest --coverage --testLocationInResults --outputFile=\"coverage/report.json\" --forceExit --testTimeout=10000",

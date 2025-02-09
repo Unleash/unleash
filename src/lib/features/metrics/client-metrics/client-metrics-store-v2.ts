@@ -155,6 +155,7 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         throw new NotFoundError(`Could not find metric`);
     }
 
+    //TODO: Consider moving this to a specific feature store
     async getFeatureFlagNames(): Promise<string[]> {
         return this.db(FEATURES_TABLE).distinct('name').pluck('name');
     }

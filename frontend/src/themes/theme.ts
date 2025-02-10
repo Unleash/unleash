@@ -74,7 +74,7 @@ export const baseTheme = {
     },
 } as const;
 
-export const theme = {
+const theme = {
     ...baseTheme,
     mode: 'light',
     boxShadows: {
@@ -306,7 +306,7 @@ export const theme = {
     },
 } as const;
 
-export default createTheme({
+export const lightTheme = createTheme({
     ...theme,
     components: {
         // Skeleton
@@ -578,3 +578,8 @@ export default createTheme({
         },
     },
 });
+
+/**
+ * @deprecated Do not import directly! Include using `useTheme` hook.
+ */
+export default lightTheme;

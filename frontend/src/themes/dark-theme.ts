@@ -252,7 +252,7 @@ const theme = {
     },
 } as const;
 
-export default createTheme({
+export const darkTheme = createTheme({
     ...theme,
     components: {
         // Skeleton

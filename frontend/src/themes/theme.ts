@@ -323,6 +323,17 @@ export default createTheme({
             },
         },
 
+        // Buttons
+        MuiButton: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    fontSize: theme.typography.body1.fontSize,
+                    borderRadius: '3px',
+                    textTransform: 'none',
+                }),
+            },
+        },
+
         // Links
         MuiLink: {
             styleOverrides: {

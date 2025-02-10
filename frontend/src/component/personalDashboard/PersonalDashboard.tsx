@@ -42,26 +42,41 @@ const ViewKeyConceptsButton = styled(Button)({
     margin: 0,
 });
 
-const SectionAccordion = styled(Accordion)(({ theme }) => ({
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusMedium,
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: 'none',
-    '& .expanded': {
-        '&:before': {
-            opacity: '0 !important',
-        },
-    },
+const SectionAccordion = styled(Accordion, {
+    shouldForwardProp: (prop) => prop !== 'withSummaryContentBorder',
+})<{ withSummaryContentBorder?: boolean }>(
+    ({ theme, withSummaryContentBorder = true }) => {
+        const borderStyle = `1px solid ${theme.palette.divider}`;
+        return {
+            border: `1px solid ${theme.palette.divider}`,
+            borderRadius: theme.shape.borderRadiusMedium,
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: 'none',
+            '& .expanded': {
+                '&:before': {
+                    opacity: '0 !important',
+                },
+            },
 
-    // add a top border to the region when the accordion is collapsed.
-    // This retains the border between the summary and the region
-    // during the collapsing animation
-    "[aria-expanded='false']+.MuiCollapse-root .MuiAccordion-region": {
-        borderTop: `1px solid ${theme.palette.divider}`,
-    },
+            ...(withSummaryContentBorder && {
+                // add a top border to the region when the accordion is collapsed.
+                // This retains the border between the summary and the region
+                // during the collapsing animation
+                "[aria-expanded='false']+.MuiCollapse-root .MuiAccordion-region":
+                    {
+                        borderTop: borderStyle,
+                    },
 
-    overflow: 'hidden',
-}));
+                // add the border to the region for the accordion is expanded
+                "&>.MuiAccordionSummary-root[aria-expanded='true']": {
+                    borderBottom: borderStyle,
+                },
+            }),
+
+            overflow: 'hidden',
+        };
+    },
+);
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     border: 'none',
@@ -72,15 +87,6 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
         margin: '0',
     },
 }));
-
-const StyledAccordionSummaryWithBorder = styled(StyledAccordionSummary)(
-    ({ theme }) => ({
-        "&[aria-expanded='true']": {
-            // only add the border when it's open
-            borderBottom: `1px solid ${theme.palette.divider}`,
-        },
-    }),
-);
 
 const StyledAccordionDetails = styled(AccordionDetails)({
     padding: 0,
@@ -121,6 +127,7 @@ const EventTimelinePanel = () => {
             disableGutters
             expanded={expandTimeline ?? false}
             onChange={() => toggleSectionState('timeline')}
+            withSummaryContentBorder={false}
         >
             <StyledAccordionSummary
                 expandIcon={
@@ -175,7 +182,7 @@ const FlagPanel = () => {
             expanded={expandFlags ?? true}
             onChange={() => toggleSectionState('flags')}
         >
-            <StyledAccordionSummaryWithBorder
+            <StyledAccordionSummary
                 expandIcon={<ExpandMore titleAccess='Toggle flags section' />}
                 id='flags-panel-header'
                 aria-controls='flags-panel-content'
@@ -188,7 +195,7 @@ const FlagPanel = () => {
                         Feature flags you have created or favorited
                     </AccordionSummarySubtitle>
                 </AccordionSummaryText>
-            </StyledAccordionSummaryWithBorder>
+            </StyledAccordionSummary>
             <StyledAccordionDetails>
                 <MyFlags
                     hasProjects={projects?.length > 0}
@@ -232,7 +239,7 @@ const ProjectPanel = () => {
             expanded={expandProjects ?? true}
             onChange={() => toggleSectionState('projects')}
         >
-            <StyledAccordionSummaryWithBorder
+            <StyledAccordionSummary
                 expandIcon={
                     <ExpandMore titleAccess='Toggle projects section' />
                 }
@@ -246,7 +253,7 @@ const ProjectPanel = () => {
                         are a member of
                     </AccordionSummarySubtitle>
                 </AccordionSummaryText>
-            </StyledAccordionSummaryWithBorder>
+            </StyledAccordionSummary>
             <StyledAccordionDetails>
                 <MyProjects
                     owners={personalDashboard?.projectOwners ?? []}

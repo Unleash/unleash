@@ -94,6 +94,19 @@ const useAdminUsersApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const deleteScimUsers = async () => {
+        const requestId = 'deleteScimUsers';
+        const req = createRequest(
+            'api/admin/user-admin/scim-users',
+            {
+                method: 'DELETE',
+            },
+            requestId,
+        );
+
+        return makeRequest(req.caller, req.id);
+    };
+
     return {
         addUser,
         updateUser,
@@ -101,6 +114,7 @@ const useAdminUsersApi = () => {
         changePassword,
         validatePassword,
         resetPassword,
+        deleteScimUsers,
         userApiErrors: errors,
         userLoading: loading,
     };

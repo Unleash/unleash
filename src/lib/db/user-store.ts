@@ -274,6 +274,10 @@ class UserStore implements IUserStore {
         await this.activeUsers().del();
     }
 
+    async deleteScimUsers(): Promise<void> {
+        await this.db(TABLE).whereNotNull('scim_id').del();
+    }
+
     async count(): Promise<number> {
         return this.activeUsers()
             .count('*')

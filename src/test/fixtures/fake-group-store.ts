@@ -125,4 +125,8 @@ export default class FakeGroupStore implements IGroupStore {
     hasProjectRole(groupId: number): Promise<boolean> {
         throw new Error('Method not implemented.');
     }
+
+    deleteScimGroups(): Promise<void> {
+        throw new Error('Method not implemented.');
+    }
 }

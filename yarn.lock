@@ -4293,19 +4293,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fetch-mock@npm:^11.1.3":
-  version: 11.1.5
-  resolution: "fetch-mock@npm:11.1.5"
+"fetch-mock@npm:^12.0.0":
+  version: 12.3.0
+  resolution: "fetch-mock@npm:12.3.0"
   dependencies:
     "@types/glob-to-regexp": "npm:^0.4.4"
     dequal: "npm:^2.0.3"
     glob-to-regexp: "npm:^0.4.1"
-    is-subset: "npm:^0.1.1"
+    is-subset-of: "npm:^3.1.10"
     regexparam: "npm:^3.0.0"
-  peerDependenciesMeta:
-    node-fetch:
-      optional: true
-  checksum: 10c0/f32f1d7879b654a3fab7c3576901193ddd4c63cb9aeae2ed66ff42062400c0937d4696b1a5171e739d5f62470e6554e190f14816789f5e3b2bf1ad90208222e6
+  checksum: 10c0/e755db174bc07f0c01fa76de4e74597583a31c65c19474c028d63d94e635bfcb4d4c1da4b58ad80644f8809dfab34fc965742c9b82d55efa5b408daeae080f0f
   languageName: node
   linkType: hard
 
@@ -5253,10 +5250,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-subset@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "is-subset@npm:0.1.1"
-  checksum: 10c0/d8125598ab9077a76684e18726fb915f5cea7a7358ed0c6ff723f4484d71a0a9981ee5aae06c44de99cfdef0fefce37438c6257ab129e53c82045ea0c2acdebf
+"is-subset-of@npm:^3.1.10":
+  version: 3.1.10
+  resolution: "is-subset-of@npm:3.1.10"
+  dependencies:
+    typedescriptor: "npm:3.0.2"
+  checksum: 10c0/79d569c05fe64b7fe8f12b22205064b0fe67ed90e4359b3eb1622d8cfcc48d289b0c49310c7547dec2a4a13561e99e157088e3f67b00a02829a89acb3862225e
   languageName: node
   linkType: hard
 
@@ -9195,6 +9194,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"typedescriptor@npm:3.0.2":
+  version: 3.0.2
+  resolution: "typedescriptor@npm:3.0.2"
+  checksum: 10c0/7e3daf4857ad2f03e8fbbe3683b219c80183637d3f849a52ff8246f0b6e852ca46f9f6d6c2c05c7fa8fe895afc7c07c2a071a25049a4ce26bd2eed1e00935465
+  languageName: node
+  linkType: hard
+
 "typescript@npm:5.4.5":
   version: 5.4.5
   resolution: "typescript@npm:5.4.5"
@@ -9347,7 +9353,7 @@ __metadata:
     faker: "npm:5.5.3"
     fast-check: "npm:3.23.2"
     fast-json-patch: "npm:^3.1.0"
-    fetch-mock: "npm:^11.1.3"
+    fetch-mock: "npm:^12.0.0"
     hash-sum: "npm:^2.0.0"
     helmet: "npm:^6.0.0"
     http-errors: "npm:^2.0.0"

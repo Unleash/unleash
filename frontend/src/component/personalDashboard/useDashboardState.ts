@@ -5,10 +5,11 @@ import type {
 } from 'openapi';
 import { useEffect } from 'react';
 
-export const useDashboardState = (
-    projects: PersonalDashboardSchemaProjectsItem[],
-    flags: PersonalDashboardSchemaFlagsItem[],
-) => {
+type StateProps = {
+    projects?: PersonalDashboardSchemaProjectsItem[];
+    flags?: PersonalDashboardSchemaFlagsItem[];
+};
+export const useDashboardState = (props?: StateProps) => {
     type State = {
         activeProject: string | undefined;
         activeFlag: PersonalDashboardSchemaFlagsItem | undefined;
@@ -35,34 +36,31 @@ export const useDashboardState = (
 
     useEffect(() => {
         const updates: Partial<State> = {};
-        const setDefaultFlag =
-            flags.length &&
-            (!state.activeFlag ||
-                !flags.some((flag) => flag.name === state.activeFlag?.name));
 
-        if (setDefaultFlag) {
-            updates.activeFlag = flags[0];
+        if (
+            props?.flags?.length &&
+            (!state.activeFlag ||
+                !props.flags.some(
+                    (flag) => flag.name === state.activeFlag?.name,
+                ))
+        ) {
+            updates.activeFlag = props.flags[0];
         }
 
-        const setDefaultProject =
-            projects.length &&
+        if (
+            props?.projects?.length &&
             (!state.activeProject ||
-                !projects.some(
+                !props.projects.some(
                     (project) => project.id === state.activeProject,
-                ));
-
-        if (setDefaultProject) {
-            updates.activeProject = projects[0].id;
+                ))
+        ) {
+            updates.activeProject = props.projects[0].id;
         }
 
         if (Object.keys(updates).length) {
             updateState(updates);
         }
-    }, [
-        JSON.stringify(projects),
-        JSON.stringify(flags),
-        JSON.stringify(state),
-    ]);
+    }, [JSON.stringify(props), JSON.stringify(state)]);
 
     const { activeFlag, activeProject } = state;
 

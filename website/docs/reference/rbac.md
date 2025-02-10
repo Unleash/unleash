@@ -185,7 +185,7 @@ environments.
 | Update feature flag dependency | Update feature flag dependencies within the project. |
 | Delete feature flags | Archive feature flags within the project.                                                                                                                                                                                         |
 | Change feature flag project            | Move flags to other projects they have access to.                                                                                                                                                                                 |
-| Create/edit variants                      | Create and edit [variants](./variants) within the project. (Deprecated with v4.21. Use environment-specific permissions for working with variants.)                                                                                    |
+| Create/edit variants                      | Create and edit [variants](./strategy-variants) within the project. (Deprecated with v4.21. Use environment-specific permissions for working with variants.)                                                                                    |
 | Create/edit project segment | Create and edit [segments](./segments) within the project. |
 
 #### Projects

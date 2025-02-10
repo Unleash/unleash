@@ -4,11 +4,11 @@ title: License Keys
 
 :::note Availability
 
-**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `5.8+`
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) self-hosted | **Version**: `5.8+`
 
 :::
 
-Unleash Enterprise uses license keys to ensure you comply with the terms of your contract. For hosted versions of Unleash, license management is handled automatically. If you self-host Unleash Enterprise, you must manage your license key.
+Self-hosted Unleash Enterprise uses license keys to ensure you comply with the terms of your contract.
 
 ## License policy
 
@@ -74,7 +74,7 @@ After updating a license key, you may need to refresh your browser for the licen
 
 ### Using an environment variable
 
-You can also install or update your license key on container deployment, using the environment variable `UNLEASH_LICENSE`.
+You can also install or update your license key on container deployment, using the environment variable `UNLEASH_LICENSE`. If you attempt to update your license with an invalid or older one, your existing license will remain in effect.
 
 For security reasons, if using [Helm charts](https://github.com/Unleash/helm-charts) or Docker Compose to deploy Unleash, set up the license key as a secret and reference it in the Helm configuration [values.yaml](https://github.com/Unleash/helm-charts/blob/main/charts/unleash/values.yaml) files or in [docker-compose.yml](https://github.com/Unleash/unleash/blob/main/docker-compose.yml).
 

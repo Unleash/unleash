@@ -199,7 +199,7 @@ export const PersonalDashboard = () => {
                     disableGutters
                     expanded={expandTimeline ?? false}
                     onChange={() => toggleSectionState('timeline')}
-                    noSummaryContentBorder={false}
+                    withSummaryContentBorder={false}
                 >
                     <StyledAccordionSummary
                         expandIcon={

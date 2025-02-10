@@ -23,6 +23,7 @@ export type IFlagKey =
     | 'disableNotifications'
     | 'advancedPlayground'
     | 'filterInvalidClientMetrics'
+    | 'filterExistingFlagNames'
     | 'disableMetrics'
     | 'signals'
     | 'automatedActions'
@@ -60,6 +61,7 @@ export type IFlagKey =
     | 'streaming'
     | 'etagVariant'
     | 'deltaApi'
+    | 'deltaApiStreaming'
     | 'uniqueSdkTracking'
     | 'frontendHeaderRedesign'
     | 'dataUsageMultiMonthView'
@@ -126,6 +128,10 @@ const flags: IFlags = {
         false,
     ),
     filterInvalidClientMetrics: parseEnvVarBoolean(
+        process.env.FILTER_INVALID_CLIENT_METRICS,
+        false,
+    ),
+    filterExistingFlagNames: parseEnvVarBoolean(
         process.env.FILTER_INVALID_CLIENT_METRICS,
         false,
     ),
@@ -286,6 +292,10 @@ const flags: IFlags = {
     },
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
+        false,
+    ),
+    deltaApiStreaming: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DELTA_API_STREAMING,
         false,
     ),
     uniqueSdkTracking: parseEnvVarBoolean(

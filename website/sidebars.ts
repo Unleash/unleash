@@ -444,10 +444,9 @@ const sidebars: SidebarsConfig = {
                             type: 'category',
                             link: {
                                 type: 'doc',
-                                id: 'reference/notifications',
+                                id: 'reference/login-history',
                             },
                             items: [
-                                'reference/notifications',
                                 'reference/login-history',
                                 'reference/banners',
                                 'reference/command-menu',

@@ -40,4 +40,5 @@ export interface IUserStore extends Store<IUser, number> {
     count(): Promise<number>;
     countRecentlyDeleted(): Promise<number>;
     countServiceAccounts(): Promise<number>;
+    deleteScimUsers(): Promise<void>;
 }

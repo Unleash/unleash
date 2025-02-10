@@ -48,4 +48,5 @@ export interface IClientMetricsStoreV2
         variantCount: number;
     }>;
     aggregateDailyMetrics(): Promise<void>;
+    getFeatureFlagNames(): Promise<string[]>;
 }

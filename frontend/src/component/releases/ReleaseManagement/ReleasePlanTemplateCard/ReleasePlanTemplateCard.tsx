@@ -32,11 +32,13 @@ export const ReleasePlanTemplateCard = ({
         <Card
             icon={<ReleaseTemplateIcon />}
             title={
-                <StyledCardTitle>
-                    <Truncator title={template.name} arrow>
-                        {template.name}
-                    </Truncator>
-                </StyledCardTitle>
+                <Truncator
+                    title={template.name}
+                    arrow
+                    component={StyledCardTitle}
+                >
+                    {template.name}
+                </Truncator>
             }
             headerActions={
                 <ReleasePlanTemplateCardActions template={template} />

@@ -1,13 +1,13 @@
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import {
-    useState,
-    useEffect,
-    useRef,
-    type CSSProperties,
-    type HTMLAttributes,
-} from 'react';
-import { styled, Tooltip, type TooltipProps } from '@mui/material';
+    Box,
+    type BoxProps,
+    styled,
+    Tooltip,
+    type TooltipProps,
+} from '@mui/material';
 
-const StyledTruncatorContainer = styled('span', {
+const StyledTruncatorContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'lines' && prop !== 'wordBreak',
 })<{ lines: number; wordBreak?: CSSProperties['wordBreak'] }>(
     ({ lines, wordBreak = 'break-all' }) => ({
@@ -25,7 +25,7 @@ const StyledTruncatorContainer = styled('span', {
 
 type OverridableTooltipProps = Omit<TooltipProps, 'children'>;
 
-interface ITruncatorProps extends HTMLAttributes<HTMLSpanElement> {
+interface ITruncatorProps extends BoxProps {
     lines?: number;
     title?: string;
     arrow?: boolean;
@@ -39,10 +39,11 @@ export const Truncator = ({
     arrow,
     tooltipProps,
     children,
+    component = 'span',
     ...props
 }: ITruncatorProps) => {
     const [isTruncated, setIsTruncated] = useState(false);
-    const ref = useRef<HTMLSpanElement>(null);
+    const ref = useRef<HTMLDivElement>(null);
 
     const checkTruncation = () => {
         if (ref.current) {
@@ -69,7 +70,12 @@ export const Truncator = ({
 
     return (
         <Tooltip title={isTruncated ? tooltipTitle : ''} {...otherTooltipProps}>
-            <StyledTruncatorContainer ref={ref} lines={lines} {...props}>
+            <StyledTruncatorContainer
+                ref={ref}
+                lines={lines}
+                component={component}
+                {...props}
+            >
                 {children}
             </StyledTruncatorContainer>
         </Tooltip>

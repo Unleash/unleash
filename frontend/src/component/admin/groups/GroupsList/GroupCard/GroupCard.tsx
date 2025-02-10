@@ -49,11 +49,9 @@ export const GroupCard = ({
     const isScimGroup = scimEnabled && Boolean(group.scimId);
 
     const title = (
-        <StyledCardTitle>
-            <Truncator title={group.name} arrow>
-                <Highlighter search={searchQuery}>{group.name}</Highlighter>
-            </Truncator>
-        </StyledCardTitle>
+        <Truncator title={group.name} arrow component={StyledCardTitle}>
+            <Highlighter search={searchQuery}>{group.name}</Highlighter>
+        </Truncator>
     );
 
     const headerActions = (

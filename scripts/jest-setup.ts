@@ -19,13 +19,9 @@ const initializeTemplateDb = (db: ClientConfig): Promise<void> => {
             await client.query(`DROP DATABASE IF EXISTS ${testDBTemplateName}`);
             await client.query(`CREATE DATABASE ${testDBTemplateName}`);
             await client.end();
-            // unset DATABASE_URL so it doesn't take presedence over the provided db config
-            const dbUrlEnv = process.env.DATABASE_URL;
-            delete process.env.DATABASE_URL;
             await migrateDb({
                 db: { ...db, database: testDBTemplateName },
             } as any);
-            process.env.DATABASE_URL = dbUrlEnv;
             console.log(`Template database ${testDBTemplateName} migrated`);
         })();
     }

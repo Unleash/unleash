@@ -11,14 +11,15 @@ import type EnvironmentStore from '../../../lib/features/project-environments/en
 import type { IUnleashStores } from '../../../lib/types';
 import type { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
-import type { IUnleashOptions, Knex } from '../../../lib/server-impl';
+import type {
+    IUnleashConfig,
+    IUnleashOptions,
+    Knex,
+} from '../../../lib/server-impl';
 import { Client } from 'pg';
 import { v4 as uuidv4 } from 'uuid';
 
 // require('db-migrate-shared').log.silence(false);
-
-// because of migrator bug
-delete process.env.DATABASE_URL;
 
 // because of db-migrate bug (https://github.com/Unleash/unleash/issues/171)
 process.setMaxListeners(0);
@@ -90,6 +91,7 @@ async function setupDatabase(stores) {
 }
 
 export interface ITestDb {
+    config: IUnleashConfig;
     stores: IUnleashStores;
     reset: () => Promise<void>;
     destroy: () => Promise<void>;
@@ -98,6 +100,7 @@ export interface ITestDb {
 
 type DBTestOptions = {
     dbInitMethod?: 'legacy' | 'template';
+    stopMigrationAt?: string; // filename where migration should stop
 };
 
 export default async function init(
@@ -142,7 +145,7 @@ export default async function init(
 
         await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);
         await db.raw(`CREATE SCHEMA IF NOT EXISTS ${config.db.schema}`);
-        await migrateDb(config);
+        await migrateDb(config, configOverride.stopMigrationAt);
         await db.destroy();
     }
 
@@ -159,6 +162,7 @@ export default async function init(
     }
 
     return {
+        config,
         rawDatabase: testDb,
         stores,
         reset: async () => {

@@ -39,6 +39,7 @@ export const Truncator = ({
     arrow,
     tooltipProps,
     children,
+    component = 'span',
     ...props
 }: ITruncatorProps) => {
     const [isTruncated, setIsTruncated] = useState(false);
@@ -69,7 +70,12 @@ export const Truncator = ({
 
     return (
         <Tooltip title={isTruncated ? tooltipTitle : ''} {...otherTooltipProps}>
-            <StyledTruncatorContainer ref={ref} lines={lines} {...props}>
+            <StyledTruncatorContainer
+                ref={ref}
+                lines={lines}
+                component={component}
+                {...props}
+            >
                 {children}
             </StyledTruncatorContainer>
         </Tooltip>

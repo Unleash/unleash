@@ -97,6 +97,9 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
         [setContext],
     );
 
+    // (placeholder line count * font size * line height) + padding
+    const codeInputHeight = `calc(6 * ${theme.typography.body1.fontSize} * ${theme.typography.body1.lineHeight}) + 8px`;
+
     return (
         <Box sx={{ width: '100%' }}>
             <StyledEditorHeader>
@@ -119,7 +122,7 @@ export const PlaygroundEditor: VFC<IPlaygroundEditorProps> = ({
             </StyledEditorHeader>
             <CodeMirror
                 value={context}
-                height='150px'
+                height={codeInputHeight}
                 theme={themeMode === 'dark' ? duotoneDark : duotoneLight}
                 extensions={[json()]}
                 onChange={onCodeFieldChange}

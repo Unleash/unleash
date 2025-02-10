@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import {
-    Box,
-    type BoxProps,
-    styled,
-    Tooltip,
-    type TooltipProps,
-} from '@mui/material';
+    useState,
+    useEffect,
+    useRef,
+    type CSSProperties,
+    type HTMLAttributes,
+} from 'react';
+import { styled, Tooltip, type TooltipProps } from '@mui/material';
 
-const StyledTruncatorContainer = styled(Box, {
+const StyledTruncatorContainer = styled('span', {
     shouldForwardProp: (prop) => prop !== 'lines' && prop !== 'wordBreak',
 })<{ lines: number; wordBreak?: CSSProperties['wordBreak'] }>(
     ({ lines, wordBreak = 'break-all' }) => ({
@@ -25,7 +25,7 @@ const StyledTruncatorContainer = styled(Box, {
 
 type OverridableTooltipProps = Omit<TooltipProps, 'children'>;
 
-interface ITruncatorProps extends BoxProps {
+interface ITruncatorProps extends HTMLAttributes<HTMLSpanElement> {
     lines?: number;
     title?: string;
     arrow?: boolean;
@@ -42,7 +42,7 @@ export const Truncator = ({
     ...props
 }: ITruncatorProps) => {
     const [isTruncated, setIsTruncated] = useState(false);
-    const ref = useRef<HTMLDivElement>(null);
+    const ref = useRef<HTMLSpanElement>(null);
 
     const checkTruncation = () => {
         if (ref.current) {

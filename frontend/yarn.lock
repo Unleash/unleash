@@ -711,12 +711,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codemirror/state@npm:6.5.1":
-  version: 6.5.1
-  resolution: "@codemirror/state@npm:6.5.1"
+"@codemirror/state@npm:6.5.2":
+  version: 6.5.2
+  resolution: "@codemirror/state@npm:6.5.2"
   dependencies:
     "@marijn/find-cluster-break": "npm:^1.0.0"
-  checksum: 10c0/94c4ab3a55f580a0549b81a2264521fa0381c3766e32093e43ab0c5e54948e71fbc9939883be2340b7b7ccd2646a49e96b234f644877aa33b088eed901f6de57
+  checksum: 10c0/1ef773394e32c077a8cfc1ec6d881aefb1918876f82161748e505c38d143aa1c6893c314cfec91097d28f704ec07b2a6c6b75abd435086208974256dee997282
   languageName: node
   linkType: hard
 

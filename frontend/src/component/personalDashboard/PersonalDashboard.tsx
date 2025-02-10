@@ -45,33 +45,37 @@ const ViewKeyConceptsButton = styled(Button)({
 const SectionAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'withSummaryContentBorder',
 })<{ withSummaryContentBorder?: boolean }>(
-    ({ theme, withSummaryContentBorder = true }) => ({
-        border: `1px solid ${theme.palette.divider}`,
-        borderRadius: theme.shape.borderRadiusMedium,
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: 'none',
-        '& .expanded': {
-            '&:before': {
-                opacity: '0 !important',
-            },
-        },
-
-        ...(withSummaryContentBorder && {
-            // add a top border to the region when the accordion is collapsed.
-            // This retains the border between the summary and the region
-            // during the collapsing animation
-            "[aria-expanded='false']+.MuiCollapse-root .MuiAccordion-region": {
-                borderTop: `1px solid ${theme.palette.divider}`,
+    ({ theme, withSummaryContentBorder = true }) => {
+        const borderStyle = `1px solid ${theme.palette.divider}`;
+        return {
+            border: `1px solid ${theme.palette.divider}`,
+            borderRadius: theme.shape.borderRadiusMedium,
+            backgroundColor: theme.palette.background.paper,
+            boxShadow: 'none',
+            '& .expanded': {
+                '&:before': {
+                    opacity: '0 !important',
+                },
             },
 
-            // add the border to the region for the accordion is expanded
-            "&>.MuiAccordionSummary-root[aria-expanded='true']": {
-                borderBottom: `1px solid ${theme.palette.divider}`,
-            },
-        }),
+            ...(withSummaryContentBorder && {
+                // add a top border to the region when the accordion is collapsed.
+                // This retains the border between the summary and the region
+                // during the collapsing animation
+                "[aria-expanded='false']+.MuiCollapse-root .MuiAccordion-region":
+                    {
+                        borderTop: borderStyle,
+                    },
 
-        overflow: 'hidden',
-    }),
+                // add the border to the region for the accordion is expanded
+                "&>.MuiAccordionSummary-root[aria-expanded='true']": {
+                    borderBottom: borderStyle,
+                },
+            }),
+
+            overflow: 'hidden',
+        };
+    },
 );
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -195,7 +199,7 @@ export const PersonalDashboard = () => {
                     disableGutters
                     expanded={expandTimeline ?? false}
                     onChange={() => toggleSectionState('timeline')}
-                    withSummaryContentBorder={false}
+                    noSummaryContentBorder={false}
                 >
                     <StyledAccordionSummary
                         expandIcon={

@@ -117,6 +117,159 @@ const AccordionSummarySubtitle = styled(Typography)(({ theme }) => ({
     fontWeight: theme.typography.body2.fontWeight,
 }));
 
+const EventTimelinePanel = () => {
+    const { toggleSectionState, expandTimeline } = useDashboardState();
+    const { trackEvent } = usePlausibleTracker();
+
+    const signalsLink = '/integrations/signals';
+    return (
+        <SectionAccordion
+            disableGutters
+            expanded={expandTimeline ?? false}
+            onChange={() => toggleSectionState('timeline')}
+            withSummaryContentBorder={false}
+        >
+            <StyledAccordionSummary
+                expandIcon={
+                    <ExpandMore titleAccess='Toggle timeline section' />
+                }
+                id='timeline-panel-header'
+                aria-controls='timeline-panel-content'
+            >
+                <AccordionSummaryText>
+                    <AccordionSummaryHeader>
+                        Event timeline
+                    </AccordionSummaryHeader>
+                    <AccordionSummarySubtitle>
+                        Overview of recent activities across all projects in
+                        Unleash. Make debugging easier and{' '}
+                        <Link
+                            to={signalsLink}
+                            onClick={() => {
+                                trackEvent('event-timeline', {
+                                    props: {
+                                        eventType: 'signals clicked',
+                                    },
+                                });
+                            }}
+                        >
+                            include external signals
+                        </Link>{' '}
+                        to get a fuller overview.
+                    </AccordionSummarySubtitle>
+                </AccordionSummaryText>
+            </StyledAccordionSummary>
+            <StyledAccordionDetails>
+                <AccordionContent>
+                    <EventTimeline />
+                </AccordionContent>
+            </StyledAccordionDetails>
+        </SectionAccordion>
+    );
+};
+
+const FlagPanel = () => {
+    const { personalDashboard, refetch: refetchDashboard } =
+        usePersonalDashboard();
+
+    const projects = personalDashboard?.projects || [];
+
+    const { activeFlag, setActiveFlag, toggleSectionState, expandFlags } =
+        useDashboardState({ flags: personalDashboard?.flags ?? [] });
+
+    return (
+        <SectionAccordion
+            expanded={expandFlags ?? true}
+            onChange={() => toggleSectionState('flags')}
+        >
+            <StyledAccordionSummary
+                expandIcon={<ExpandMore titleAccess='Toggle flags section' />}
+                id='flags-panel-header'
+                aria-controls='flags-panel-content'
+            >
+                <AccordionSummaryText>
+                    <AccordionSummaryHeader>
+                        My feature flags
+                    </AccordionSummaryHeader>
+                    <AccordionSummarySubtitle>
+                        Feature flags you have created or favorited
+                    </AccordionSummarySubtitle>
+                </AccordionSummaryText>
+            </StyledAccordionSummary>
+            <StyledAccordionDetails>
+                <MyFlags
+                    hasProjects={projects?.length > 0}
+                    flagData={
+                        personalDashboard?.flags.length
+                            ? {
+                                  state: 'flags' as const,
+                                  activeFlag,
+                                  flags: personalDashboard.flags,
+                              }
+                            : { state: 'no flags' as const }
+                    }
+                    setActiveFlag={setActiveFlag}
+                    refetchDashboard={refetchDashboard}
+                />
+            </StyledAccordionDetails>
+        </SectionAccordion>
+    );
+};
+
+const ProjectPanel = () => {
+    const { personalDashboard } = usePersonalDashboard();
+
+    const projects = personalDashboard?.projects || [];
+
+    const {
+        activeProject,
+        setActiveProject,
+        toggleSectionState,
+        expandProjects,
+    } = useDashboardState({ projects });
+
+    const personalDashboardProjectDetails =
+        fromPersonalDashboardProjectDetailsOutput(
+            usePersonalDashboardProjectDetails(activeProject),
+        );
+
+    return (
+        <SectionAccordion
+            disableGutters
+            expanded={expandProjects ?? true}
+            onChange={() => toggleSectionState('projects')}
+        >
+            <StyledAccordionSummary
+                expandIcon={
+                    <ExpandMore titleAccess='Toggle projects section' />
+                }
+                id='projects-panel-header'
+                aria-controls='projects-panel-content'
+            >
+                <AccordionSummaryText>
+                    <AccordionSummaryHeader>My projects</AccordionSummaryHeader>
+                    <AccordionSummarySubtitle>
+                        Favorite projects, projects you own, and projects you
+                        are a member of
+                    </AccordionSummarySubtitle>
+                </AccordionSummaryText>
+            </StyledAccordionSummary>
+            <StyledAccordionDetails>
+                <MyProjects
+                    owners={personalDashboard?.projectOwners ?? []}
+                    admins={personalDashboard?.admins ?? []}
+                    projects={projects}
+                    activeProject={activeProject || ''}
+                    setActiveProject={setActiveProject}
+                    personalDashboardProjectDetails={
+                        personalDashboardProjectDetails
+                    }
+                />
+            </StyledAccordionDetails>
+        </SectionAccordion>
+    );
+};
+
 export const PersonalDashboard = () => {
     const { user } = useAuthUser();
     const { trackEvent } = usePlausibleTracker();
@@ -128,35 +281,12 @@ export const PersonalDashboard = () => {
 
     usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
 
-    const { personalDashboard, refetch: refetchDashboard } =
-        usePersonalDashboard();
-
-    const projects = personalDashboard?.projects || [];
-
-    const {
-        activeProject,
-        setActiveProject,
-        activeFlag,
-        setActiveFlag,
-        toggleSectionState,
-        expandFlags,
-        expandProjects,
-        expandTimeline,
-    } = useDashboardState(projects, personalDashboard?.flags ?? []);
-
-    const signalsLink = '/integrations/signals';
-
     const [welcomeDialog, setWelcomeDialog] = useLocalStorageState<
         'open' | 'closed'
     >(
         'welcome-dialog:v1',
         splash?.personalDashboardKeyConcepts ? 'closed' : 'open',
     );
-
-    const personalDashboardProjectDetails =
-        fromPersonalDashboardProjectDetailsOutput(
-            usePersonalDashboardProjectDetails(activeProject),
-        );
 
     useEffect(() => {
         trackEvent('personal-dashboard', {
@@ -194,123 +324,12 @@ export const PersonalDashboard = () => {
                 </ViewKeyConceptsButton>
             </WelcomeSection>
 
-            {showTimelinePanel && (
-                <SectionAccordion
-                    disableGutters
-                    expanded={expandTimeline ?? false}
-                    onChange={() => toggleSectionState('timeline')}
-                    withSummaryContentBorder={false}
-                >
-                    <StyledAccordionSummary
-                        expandIcon={
-                            <ExpandMore titleAccess='Toggle timeline section' />
-                        }
-                        id='timeline-panel-header'
-                        aria-controls='timeline-panel-content'
-                    >
-                        <AccordionSummaryText>
-                            <AccordionSummaryHeader>
-                                Event timeline
-                            </AccordionSummaryHeader>
-                            <AccordionSummarySubtitle>
-                                Overview of recent activities across all
-                                projects in Unleash. Make debugging easier and{' '}
-                                <Link
-                                    to={signalsLink}
-                                    onClick={() => {
-                                        trackEvent('event-timeline', {
-                                            props: {
-                                                eventType: 'signals clicked',
-                                            },
-                                        });
-                                    }}
-                                >
-                                    include external signals
-                                </Link>{' '}
-                                to get a fuller overview.
-                            </AccordionSummarySubtitle>
-                        </AccordionSummaryText>
-                    </StyledAccordionSummary>
-                    <StyledAccordionDetails>
-                        <AccordionContent>
-                            <EventTimeline />
-                        </AccordionContent>
-                    </StyledAccordionDetails>
-                </SectionAccordion>
-            )}
-            <SectionAccordion
-                disableGutters
-                expanded={expandProjects ?? true}
-                onChange={() => toggleSectionState('projects')}
-            >
-                <StyledAccordionSummary
-                    expandIcon={
-                        <ExpandMore titleAccess='Toggle projects section' />
-                    }
-                    id='projects-panel-header'
-                    aria-controls='projects-panel-content'
-                >
-                    <AccordionSummaryText>
-                        <AccordionSummaryHeader>
-                            My projects
-                        </AccordionSummaryHeader>
-                        <AccordionSummarySubtitle>
-                            Favorite projects, projects you own, and projects
-                            you are a member of
-                        </AccordionSummarySubtitle>
-                    </AccordionSummaryText>
-                </StyledAccordionSummary>
-                <StyledAccordionDetails>
-                    <MyProjects
-                        owners={personalDashboard?.projectOwners ?? []}
-                        admins={personalDashboard?.admins ?? []}
-                        projects={projects}
-                        activeProject={activeProject || ''}
-                        setActiveProject={setActiveProject}
-                        personalDashboardProjectDetails={
-                            personalDashboardProjectDetails
-                        }
-                    />
-                </StyledAccordionDetails>
-            </SectionAccordion>
+            {showTimelinePanel && <EventTimelinePanel />}
 
-            <SectionAccordion
-                expanded={expandFlags ?? true}
-                onChange={() => toggleSectionState('flags')}
-            >
-                <StyledAccordionSummary
-                    expandIcon={
-                        <ExpandMore titleAccess='Toggle flags section' />
-                    }
-                    id='flags-panel-header'
-                    aria-controls='flags-panel-content'
-                >
-                    <AccordionSummaryText>
-                        <AccordionSummaryHeader>
-                            My feature flags
-                        </AccordionSummaryHeader>
-                        <AccordionSummarySubtitle>
-                            Feature flags you have created or favorited
-                        </AccordionSummarySubtitle>
-                    </AccordionSummaryText>
-                </StyledAccordionSummary>
-                <StyledAccordionDetails>
-                    <MyFlags
-                        hasProjects={projects?.length > 0}
-                        flagData={
-                            personalDashboard?.flags.length
-                                ? {
-                                      state: 'flags' as const,
-                                      activeFlag,
-                                      flags: personalDashboard.flags,
-                                  }
-                                : { state: 'no flags' as const }
-                        }
-                        setActiveFlag={setActiveFlag}
-                        refetchDashboard={refetchDashboard}
-                    />
-                </StyledAccordionDetails>
-            </SectionAccordion>
+            <ProjectPanel />
+
+            <FlagPanel />
+
             <WelcomeDialog
                 open={welcomeDialog === 'open'}
                 onClose={() => {

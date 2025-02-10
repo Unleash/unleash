@@ -2,6 +2,7 @@ import { createTheme } from '@mui/material/styles';
 import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
 import { colors } from './colors';
+import { baseTheme } from './theme';
 
 const actionColors = {
     0.54: 'rgba(223, 222, 255, 0.54)',
@@ -12,16 +13,8 @@ const actionColors = {
 };
 
 const theme = {
+    ...baseTheme,
     mode: 'dark',
-    breakpoints: {
-        values: {
-            xs: 0,
-            sm: 600,
-            md: 960,
-            lg: 1280,
-            xl: 1536,
-        },
-    },
     boxShadows: {
         main: '0px 2px 4px rgba(129, 122, 254, 0.2)',
         card: '0px 2px 10px rgba(28, 25, 78, 0.12)',
@@ -31,59 +24,6 @@ const theme = {
         separator: '0px 2px 4px rgba(32, 32, 33, 0.12)', // Notifications header
         accordionFooter: 'inset 0px 2px 4px rgba(32, 32, 33, 0.05)',
         reverseFooter: 'inset 0px -2px 4px rgba(32, 32, 33, 0.05)',
-    },
-    typography: {
-        fontFamily: 'Sen, Roboto, sans-serif',
-        fontWeightBold: '700',
-        fontWeightMedium: '700',
-        allVariants: { lineHeight: 1.4 },
-        button: { lineHeight: 1.75 },
-        h1: {
-            fontSize: '1.5rem',
-            lineHeight: 1.875,
-        },
-        h2: {
-            fontSize: `${20 / 16}rem`,
-            fontWeight: '700',
-        },
-        h3: {
-            fontSize: '1rem',
-            fontWeight: '700',
-        },
-        h4: {
-            fontSize: '1rem',
-            fontWeight: '400',
-        },
-        caption: {
-            fontSize: `${12 / 16}rem`,
-        },
-    },
-    fontSizes: {
-        extraLargeHeader: '2.5rem',
-        largeHeader: '2rem',
-        mediumHeader: '1.5rem',
-        mainHeader: '1.25rem',
-        bodySize: '1rem',
-        smallBody: `${14 / 16}rem`,
-        smallerBody: `${12 / 16}rem`,
-    },
-    fontWeight: {
-        thin: 300,
-        medium: 400,
-        semi: 700,
-        bold: 700,
-    },
-    shape: {
-        borderRadius: 4,
-        borderRadiusMedium: 8,
-        borderRadiusLarge: 12,
-        borderRadiusExtraLarge: 20,
-        tableRowHeight: 64,
-        tableRowHeightCompact: 56,
-        tableRowHeightDense: 48,
-    },
-    zIndex: {
-        sticky: 1400,
     },
 
     palette: {

@@ -60,6 +60,7 @@ export type IFlagKey =
     | 'streaming'
     | 'etagVariant'
     | 'deltaApi'
+    | 'deltaApiStreaming'
     | 'uniqueSdkTracking'
     | 'frontendHeaderRedesign'
     | 'dataUsageMultiMonthView'
@@ -286,6 +287,10 @@ const flags: IFlags = {
     },
     deltaApi: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DELTA_API,
+        false,
+    ),
+    deltaApiStreaming: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_DELTA_API_STREAMING,
         false,
     ),
     uniqueSdkTracking: parseEnvVarBoolean(

@@ -39,7 +39,12 @@ const theme = {
         fontWeightBold: '700',
         fontWeightMedium: '700',
         allVariants: { lineHeight: 1.4 },
-        button: { lineHeight: 1.75, fontSize: '16px' },
+        button: {
+            lineHeight: 1.75,
+            '&&&': {
+                fontSize: '16px',
+            },
+        },
         h1: {
             fontSize: '1.5rem',
             lineHeight: 1.875,

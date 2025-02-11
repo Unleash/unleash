@@ -75,7 +75,7 @@ exports[`renders an empty list correctly 1`] = `
               />
               <button
                 aria-labelledby="useId-0"
-                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1xfu7h-MuiButtonBase-root-MuiButton-root"
+                className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1cn29am-MuiButtonBase-root-MuiButton-root"
                 disabled={false}
                 onBlur={[Function]}
                 onClick={[Function]}

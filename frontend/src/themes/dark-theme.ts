@@ -535,6 +535,8 @@ export const darkTheme = createTheme({
         MuiButton: {
             styleOverrides: {
                 root: ({ theme }) => ({
+                    borderRadius: theme.shape.borderRadius,
+                    textTransform: 'none',
                     '&:not(.Mui-disabled).MuiButton-containedPrimary': {
                         backgroundColor: theme.palette.background.alternative,
                         '&:hover': {

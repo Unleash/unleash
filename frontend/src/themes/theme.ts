@@ -18,7 +18,10 @@ export const baseTheme = {
         fontWeightBold: '700',
         fontWeightMedium: '700',
         allVariants: { lineHeight: 1.4 },
-        button: { lineHeight: 1.75 },
+        button: {
+            fontSize: `${15 / 16}rem`,
+            lineHeight: 1.75,
+        },
         h1: {
             fontSize: '1.5rem',
             lineHeight: 1.875,
@@ -336,8 +339,7 @@ export const lightTheme = createTheme({
         MuiButton: {
             styleOverrides: {
                 root: ({ theme }) => ({
-                    fontSize: theme.typography.body1.fontSize,
-                    borderRadius: '3px',
+                    borderRadius: theme.shape.borderRadius,
                     textTransform: 'none',
                 }),
             },

@@ -94,6 +94,7 @@ export type UiFlags = {
     frontendHeaderRedesign?: boolean;
     dataUsageMultiMonthView?: boolean;
     uiGlobalFontSize?: boolean;
+    connectionCount?: boolean;
 };
 
 export interface IVersionInfo {

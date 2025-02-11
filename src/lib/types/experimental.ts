@@ -65,7 +65,8 @@ export type IFlagKey =
     | 'uniqueSdkTracking'
     | 'frontendHeaderRedesign'
     | 'dataUsageMultiMonthView'
-    | 'uiGlobalFontSize';
+    | 'uiGlobalFontSize'
+    | 'connectionCount';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -312,6 +313,10 @@ const flags: IFlags = {
     ),
     uiGlobalFontSize: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_UI_GLOBAL_FONT_SIZE_NAME,
+        false,
+    ),
+    connectionCount: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_CONNECTION_COUNT,
         false,
     ),
 };

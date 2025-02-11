@@ -52,6 +52,7 @@ import {
     type ChartDatasetType,
     getChartLabel,
     toChartData as newToChartData,
+    toConnectionChartData,
 } from './chart-functions';
 import { periodsRecord, selectablePeriods } from './selectable-periods';
 
@@ -182,6 +183,7 @@ const useTrafficStats = (
     includedTraffic: number,
     chartDataSelection: ChartDataSelection,
 ) => {
+    const connectionCountEnabled = useUiFlag('connectionCount');
     const { result } = useTrafficSearch(
         chartDataSelection.grouping,
         toDateRange(chartDataSelection, currentDate),
@@ -198,7 +200,9 @@ const useTrafficStats = (
         }
         const traffic = result.data;
 
-        const chartData = newToChartData(traffic);
+        const chartData = connectionCountEnabled
+            ? toConnectionChartData(traffic)
+            : newToChartData(traffic);
         const usageTotal = calculateTotalUsage(traffic);
         const overageCost = calculateOverageCost(
             usageTotal,
@@ -296,6 +300,8 @@ const NewNetworkTrafficUsage: FC = () => {
         estimatedMonthlyCost,
         requestSummaryUsage,
     } = useTrafficStats(includedTraffic, chartDataSelection);
+
+    // console.log(chartData, chartDataSelection.grouping, chartDataSelection);
 
     const showOverageCalculations =
         chartDataSelection.grouping === 'daily' &&

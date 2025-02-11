@@ -6,6 +6,8 @@ import {
     addMonths,
     differenceInCalendarDays,
     differenceInCalendarMonths,
+    getDaysInMonth,
+    parseISO,
 } from 'date-fns';
 import { formatDay, formatMonth } from './dates';
 import type { ChartDataSelection } from './chart-data-selection';
@@ -25,6 +27,46 @@ export const toChartData = (
             const record = newRecord();
             for (const dataPoint of Object.values(item.dataPoints)) {
                 record[dataPoint.period] = dataPoint.trafficTypes[0].count;
+            }
+
+            const epInfo = endpointsInfo[item.apiPath];
+
+            return {
+                label: epInfo.label,
+                data: Object.values(record),
+                backgroundColor: epInfo.color,
+                hoverBackgroundColor: epInfo.color,
+            };
+        });
+
+    return { datasets, labels };
+};
+
+export const toConnectionChartData = (
+    traffic: TrafficUsageDataSegmentedCombinedSchema,
+): { datasets: ChartDatasetType[]; labels: string[] } => {
+    const { newRecord, labels } = getLabelsAndRecords(traffic);
+    const datasets = traffic.apiData
+        .sort(
+            (item1, item2) =>
+                endpointsInfo[item1.apiPath].order -
+                endpointsInfo[item2.apiPath].order,
+        )
+        .map((item) => {
+            const record = newRecord();
+            for (const dataPoint of Object.values(item.dataPoints)) {
+                const date = parseISO(dataPoint.period);
+                const requestCount = dataPoint.trafficTypes[0].count;
+
+                if (dataPoint.period.length === 7) {
+                    // 1 connections = 7200 * days in month requests per day
+                    const daysInMonth = getDaysInMonth(date);
+                    record[dataPoint.period] =
+                        requestCount / (daysInMonth * 7200);
+                } else {
+                    // 1 connection = 7200 requests per day
+                    record[dataPoint.period] = requestCount / 7200;
+                }
             }
 
             const epInfo = endpointsInfo[item.apiPath];

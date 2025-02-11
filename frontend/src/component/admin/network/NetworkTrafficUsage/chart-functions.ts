@@ -58,7 +58,7 @@ export const toConnectionChartData = (
                 const date = parseISO(dataPoint.period);
                 const requestCount = dataPoint.trafficTypes[0].count;
 
-                if (dataPoint.period.length === 7) {
+                if (traffic.grouping === 'monthly') {
                     // 1 connections = 7200 * days in month requests per day
                     const daysInMonth = getDaysInMonth(date);
                     record[dataPoint.period] =

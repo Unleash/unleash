@@ -2088,7 +2088,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/core@npm:3.7.0, @docusaurus/core@npm:^3.6.0":
+"@docusaurus/core@npm:3.7.0, @docusaurus/core@npm:^3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/core@npm:3.7.0"
   dependencies:
@@ -2201,7 +2201,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/module-type-aliases@npm:3.7.0, @docusaurus/module-type-aliases@npm:^3.6.0":
+"@docusaurus/module-type-aliases@npm:3.7.0, @docusaurus/module-type-aliases@npm:^3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/module-type-aliases@npm:3.7.0"
   dependencies:
@@ -2219,7 +2219,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/plugin-client-redirects@npm:^3.6.0":
+"@docusaurus/plugin-client-redirects@npm:^3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/plugin-client-redirects@npm:3.7.0"
   dependencies:
@@ -2333,7 +2333,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/plugin-google-analytics@npm:3.7.0, @docusaurus/plugin-google-analytics@npm:^3.6.0":
+"@docusaurus/plugin-google-analytics@npm:3.7.0, @docusaurus/plugin-google-analytics@npm:^3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/plugin-google-analytics@npm:3.7.0"
   dependencies:
@@ -2418,7 +2418,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/preset-classic@npm:^3.6.0":
+"@docusaurus/preset-classic@npm:^3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/preset-classic@npm:3.7.0"
   dependencies:
@@ -2554,7 +2554,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/types@npm:3.7.0, @docusaurus/types@npm:^3.6.0":
+"@docusaurus/types@npm:3.7.0, @docusaurus/types@npm:^3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/types@npm:3.7.0"
   dependencies:
@@ -15437,13 +15437,13 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   version: 0.0.0-use.local
   resolution: "websitev-2@workspace:."
   dependencies:
-    "@docusaurus/core": "npm:^3.6.0"
-    "@docusaurus/module-type-aliases": "npm:^3.6.0"
-    "@docusaurus/plugin-client-redirects": "npm:^3.6.0"
-    "@docusaurus/plugin-google-analytics": "npm:^3.6.0"
-    "@docusaurus/preset-classic": "npm:^3.6.0"
+    "@docusaurus/core": "npm:^3.7.0"
+    "@docusaurus/module-type-aliases": "npm:^3.7.0"
+    "@docusaurus/plugin-client-redirects": "npm:^3.7.0"
+    "@docusaurus/plugin-google-analytics": "npm:^3.7.0"
+    "@docusaurus/preset-classic": "npm:^3.7.0"
     "@docusaurus/remark-plugin-npm2yarn": "npm:3.7.0"
-    "@docusaurus/types": "npm:^3.6.0"
+    "@docusaurus/types": "npm:^3.7.0"
     "@mdx-js/react": "npm:^3.1.0"
     "@tsconfig/docusaurus": "npm:2.0.3"
     "@types/react": "npm:^18.3.12"

@@ -301,8 +301,6 @@ const NewNetworkTrafficUsage: FC = () => {
         requestSummaryUsage,
     } = useTrafficStats(includedTraffic, chartDataSelection);
 
-    // console.log(chartData, chartDataSelection.grouping, chartDataSelection);
-
     const showOverageCalculations =
         chartDataSelection.grouping === 'daily' &&
         includedTraffic > 0 &&

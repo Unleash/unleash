@@ -2,8 +2,17 @@ import { useState } from 'react';
 
 import Close from '@mui/icons-material/Close';
 import Help from '@mui/icons-material/Help';
-import { Box, IconButton, Popper, Paper } from '@mui/material';
+import { Box, IconButton, Popover, styled } from '@mui/material';
 import { PlaygroundGuidance } from '../PlaygroundGuidance/PlaygroundGuidance';
+
+const StyledPopover = styled(Popover)(({ theme }) => ({
+    '& .MuiPaper-root': {
+        borderRadius: theme.shape.borderRadiusExtraLarge,
+        border: `1px solid ${theme.palette.divider}`,
+        padding: theme.spacing(8, 4),
+        maxWidth: '500px',
+    },
+}));
 
 export const PlaygroundGuidancePopper = () => {
     const [anchor, setAnchorEl] = useState<null | Element>(null);
@@ -15,36 +24,37 @@ export const PlaygroundGuidancePopper = () => {
 
     const open = Boolean(anchor);
 
-    const id = 'playground-guidance-popper';
-
     return (
         <Box>
-            <IconButton onClick={onOpen} aria-describedby={id}>
+            <IconButton onClick={onOpen} aria-label='Open Playground guidance'>
                 <Help />
             </IconButton>
 
-            <Popper
-                id={id}
+            <StyledPopover
                 open={open}
                 anchorEl={anchor}
-                sx={(theme) => ({ zIndex: theme.zIndex.tooltip })}
+                onClose={onClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'center',
+                }}
+                transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'center',
+                }}
+                sx={(theme) => ({
+                    zIndex: theme.zIndex.tooltip,
+                    background: 'none',
+                })}
             >
-                <Paper
-                    sx={(theme) => ({
-                        padding: theme.spacing(8, 4),
-                        maxWidth: '500px',
-                        borderRadius: `${theme.shape.borderRadiusExtraLarge}px`,
-                    })}
+                <IconButton
+                    onClick={onClose}
+                    sx={{ position: 'absolute', right: 25, top: 15 }}
                 >
-                    <IconButton
-                        onClick={onClose}
-                        sx={{ position: 'absolute', right: 25, top: 15 }}
-                    >
-                        <Close />
-                    </IconButton>
-                    <PlaygroundGuidance />
-                </Paper>
-            </Popper>
+                    <Close />
+                </IconButton>
+                <PlaygroundGuidance />
+            </StyledPopover>
         </Box>
     );
 };

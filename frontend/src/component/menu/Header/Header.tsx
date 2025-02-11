@@ -199,14 +199,19 @@ const Header = () => {
                 <StyledNav>
                     <StyledUserContainer>
                         <CommandBar />
-                        <Divider
-                            orientation='vertical'
-                            variant='middle'
-                            flexItem
-                            sx={(theme) => ({
-                                marginLeft: theme.spacing(1),
-                                border: 'transparent',
-                            })}
+                        <ConditionallyRender
+                            condition={frontendHeaderRedesign}
+                            show={
+                                <Divider
+                                    orientation='vertical'
+                                    variant='middle'
+                                    flexItem
+                                    sx={(theme) => ({
+                                        marginLeft: theme.spacing(1),
+                                        border: 'transparent',
+                                    })}
+                                />
+                            }
                         />
                         <ConditionallyRender
                             condition={!frontendHeaderRedesign}

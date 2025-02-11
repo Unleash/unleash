@@ -2,7 +2,7 @@
 import crypto from 'crypto';
 import type { Context } from 'unleash-client';
 
-export function createContext(value: any): Context {
+export function createContext(contextData: any): Context {
     const {
         appName,
         environment,
@@ -11,7 +11,7 @@ export function createContext(value: any): Context {
         remoteAddress,
         properties,
         ...rest
-    } = value;
+    } = contextData;
 
     // move non root context fields to properties
     const context: Context = {
@@ -31,8 +31,9 @@ export function createContext(value: any): Context {
     return cleanContext;
 }
 
-export const enrichContextWithIp = (query: any, ip: string): Context => {
-    query.remoteAddress = query.remoteAddress || ip;
-    query.sessionId = query.sessionId || crypto.randomBytes(18).toString('hex');
-    return createContext(query);
+export const enrichContextWithIp = (contextData: any, ip: string): Context => {
+    contextData.remoteAddress = contextData.remoteAddress || ip;
+    contextData.sessionId =
+        contextData.sessionId || crypto.randomBytes(18).toString('hex');
+    return createContext(contextData);
 };

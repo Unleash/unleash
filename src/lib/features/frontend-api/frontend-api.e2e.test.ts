@@ -279,12 +279,6 @@ test('should allow requests with a frontend token', async () => {
 test('should return 405 from unimplemented endpoints', async () => {
     const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
     await app.request
-        .post('/api/frontend')
-        .send({})
-        .set('Authorization', frontendToken.secret)
-        .expect('Content-Type', /json/)
-        .expect(405);
-    await app.request
         .get('/api/frontend/client/features')
         .set('Authorization', frontendToken.secret)
         .expect('Content-Type', /json/)
@@ -1233,4 +1227,104 @@ test('should resolve variable rollout percentage consistently', async () => {
             expect(body.toggles[0].variant.name).toBe('a');
         }
     }
+});
+
+test('should return enabled feature flags using POST', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    await createFeatureToggle({
+        name: 'enabledFeature1',
+        enabled: true,
+        strategies: [{ name: 'default', constraints: [], parameters: {} }],
+    });
+    await createFeatureToggle({
+        name: 'enabledFeature2',
+        enabled: true,
+        strategies: [{ name: 'default', constraints: [], parameters: {} }],
+    });
+    await createFeatureToggle({
+        name: 'disabledFeature',
+        enabled: false,
+        strategies: [{ name: 'default', constraints: [], parameters: {} }],
+    });
+    await frontendApiService.refreshData();
+    await app.request
+        .post('/api/frontend')
+        .set('Authorization', frontendToken.secret)
+        .set('Content-Type', 'application/json')
+        .send()
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body).toEqual({
+                toggles: [
+                    {
+                        name: 'enabledFeature1',
+                        enabled: true,
+                        impressionData: false,
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
+                    },
+                    {
+                        name: 'enabledFeature2',
+                        enabled: true,
+                        impressionData: false,
+                        variant: {
+                            enabled: false,
+                            name: 'disabled',
+                            feature_enabled: true,
+                            featureEnabled: true,
+                        },
+                    },
+                ],
+            });
+        });
+});
+
+test('should return enabled feature flags based on context using POST', async () => {
+    const frontendToken = await createApiToken(ApiTokenType.FRONTEND);
+    const featureName = 'featureWithEnvironmentConstraint';
+    await createFeatureToggle({
+        name: featureName,
+        enabled: true,
+        strategies: [
+            {
+                name: 'default',
+                constraints: [
+                    {
+                        contextName: 'userId',
+                        operator: 'IN',
+                        values: ['1337'],
+                    },
+                ],
+                parameters: {},
+            },
+        ],
+    });
+
+    await frontendApiService.refreshData();
+    await app.request
+        .post('/api/frontend')
+        .set('Authorization', frontendToken.secret)
+        .set('Content-Type', 'application/json')
+        .send({ context: { userId: '1337' } })
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.toggles).toHaveLength(1);
+            expect(res.body.toggles[0].name).toBe(featureName);
+        });
+
+    await app.request
+        .post('/api/frontend')
+        .set('Authorization', frontendToken.secret)
+        .send({ context: { appName: 'test', userId: '42' } })
+        .expect('Content-Type', /json/)
+        .expect(200)
+        .expect((res) => {
+            expect(res.body.toggles).toHaveLength(0);
+        });
 });

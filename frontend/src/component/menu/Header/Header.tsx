@@ -200,6 +200,20 @@ const Header = () => {
                     <StyledUserContainer>
                         <CommandBar />
                         <ConditionallyRender
+                            condition={frontendHeaderRedesign}
+                            show={
+                                <Divider
+                                    orientation='vertical'
+                                    variant='middle'
+                                    flexItem
+                                    sx={(theme) => ({
+                                        marginLeft: theme.spacing(1),
+                                        border: 'transparent',
+                                    })}
+                                />
+                            }
+                        />
+                        <ConditionallyRender
                             condition={!frontendHeaderRedesign}
                             show={<HeaderEventTimelineButton />}
                         />
@@ -234,7 +248,9 @@ const Header = () => {
                                 target='_blank'
                                 rel='noopener noreferrer'
                                 size='large'
-                                sx={{ mr: 1 }}
+                                sx={(theme) => ({
+                                    marginRight: theme.spacing(1),
+                                })}
                             >
                                 <MenuBookIcon />
                             </StyledIconButton>

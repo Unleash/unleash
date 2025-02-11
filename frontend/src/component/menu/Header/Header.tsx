@@ -199,6 +199,12 @@ const Header = () => {
                 <StyledNav>
                     <StyledUserContainer>
                         <CommandBar />
+                        <Divider
+                            orientation='vertical'
+                            variant='middle'
+                            flexItem
+                            sx={{ ml: 1, border: 'transparent' }}
+                        />
                         <ConditionallyRender
                             condition={!frontendHeaderRedesign}
                             show={<HeaderEventTimelineButton />}

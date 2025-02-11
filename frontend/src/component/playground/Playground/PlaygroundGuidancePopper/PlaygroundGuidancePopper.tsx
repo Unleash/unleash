@@ -24,20 +24,13 @@ export const PlaygroundGuidancePopper = () => {
 
     const open = Boolean(anchor);
 
-    const id = 'playground-guidance-popper';
-
     return (
         <Box>
-            <IconButton
-                onClick={onOpen}
-                aria-label='Open guidance'
-                aria-details={id}
-            >
+            <IconButton onClick={onOpen} aria-label='Open Playground guidance'>
                 <Help />
             </IconButton>
 
             <StyledPopover
-                id={id}
                 open={open}
                 anchorEl={anchor}
                 onClose={onClose}

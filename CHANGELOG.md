@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.7.1] - 2025-02-11
+
+### Bug Fixes
+
+- Font size flag change to boolean ([#9290](https://github.com/Unleash/unleash/issues/9290))
+
+- Use the right theme even if the payload is a variant. ([#9292](https://github.com/Unleash/unleash/issues/9292))
+
+
+### Miscellaneous Tasks
+
+- Create test db from template ([#9265](https://github.com/Unleash/unleash/issues/9265))
+
+
 ## [6.7.0] - 2025-02-11
 
 ### Bug Fixes

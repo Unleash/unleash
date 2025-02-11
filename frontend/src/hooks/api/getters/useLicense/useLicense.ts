@@ -1,4 +1,3 @@
-import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
@@ -51,7 +50,8 @@ export const useLicenseCheck = (): LicenseInfo => {
 };
 
 export const useLicense = (): License => {
-    const { data, error, mutate } = useSWR(
+    const { data, error, mutate } = useEnterpriseSWR(
+        undefined,
         formatApiPath(`api/admin/license`),
         fetcher,
     );

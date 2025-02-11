@@ -31,6 +31,7 @@ import { CommandSearchPages } from './CommandSearchPages';
 import { CommandBarFeedback } from './CommandBarFeedback';
 import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -335,12 +336,16 @@ export const CommandBar = () => {
                         color: (theme) => theme.palette.action.disabled,
                     }}
                 />
+
+                <ScreenReaderOnly>
+                    <label htmlFor={'command-bar-input'}>{placeholder}</label>
+                </ScreenReaderOnly>
                 <StyledInputBase
+                    id='command-bar-input'
                     frontendHeaderRedesign={frontendHeaderRedesign}
                     inputRef={searchInputRef}
                     placeholder={placeholder}
                     inputProps={{
-                        'aria-label': placeholder,
                         'data-testid': SEARCH_INPUT,
                     }}
                     value={value}

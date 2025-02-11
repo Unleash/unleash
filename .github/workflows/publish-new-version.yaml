@@ -27,7 +27,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    outputs:
+      changelog: ${{ steps.generate_changelog.outputs.changelog }}
     strategy:
       matrix:
         node-version: [ 20.x ]
@@ -81,6 +82,19 @@ jobs:
           else
             echo "No changes to CHANGELOG.md"
           fi
+      - name: Output changelong from ${{ env.PREV }}
+        continue-on-error: true
+        id: generate_changelog
+        if: ${{ !contains(github.event.inputs.version, '-') }}
+        env:
+          PREV: ${{ env.PREV }}
+        run: |
+          # Run git-cliff again and capture its output in a variable
+          changelog=$(git-cliff $PREV..HEAD --tag v${{ github.event.inputs.version }})
+          # Set the changelog as an output for the step using the new GITHUB_OUTPUT file
+          echo "changelog<<EOF" >> $GITHUB_OUTPUT
+          echo "$changelog" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       - run: yarn install --immutable
         env:
           YARN_ENABLE_SCRIPTS: false
@@ -149,9 +163,17 @@ jobs:
 
   release-changelog: # TODO this changelog is different than the git-cliff one above
     needs: build
-    uses: ./.github/workflows/release_changelog.yml
-    with:
-      version: ${{ github.event.inputs.version }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.version }}
+          name: v${{ inputs.version }}
+          body: ${{ needs.build.outputs.changelog }}
+          prerelease: ${{ contains(inputs.version, 'beta') || contains(inputs.version, 'alpha') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
 
   update-version-checker:
     needs: publish-docker

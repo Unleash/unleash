@@ -19,12 +19,19 @@ export const useThemeMode = (): IUseThemeModeOutput => {
     const key = 'unleash-theme';
     const uiGlobalFontSizeEnabled = useUiFlag('uiGlobalFontSize');
 
+    let useNewTheme = false;
+    if (typeof uiGlobalFontSizeEnabled === 'boolean') {
+        useNewTheme = uiGlobalFontSizeEnabled;
+    } else if (typeof uiGlobalFontSizeEnabled === 'object') {
+        useNewTheme = uiGlobalFontSizeEnabled.name !== 'disabled';
+    }
+
     const resolveTheme = () => {
         if (themeMode === 'light') {
-            return uiGlobalFontSizeEnabled ? lightTheme : legacyLightTheme;
+            return useNewTheme ? lightTheme : legacyLightTheme;
         }
 
-        return uiGlobalFontSizeEnabled ? darkTheme : legacyDarkTheme;
+        return useNewTheme ? darkTheme : legacyDarkTheme;
     };
 
     const onSetThemeMode = () => {

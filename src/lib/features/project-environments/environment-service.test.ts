@@ -18,7 +18,9 @@ let eventService: EventService;
 
 beforeAll(async () => {
     const config = createTestConfig();
-    db = await dbInit('environment_service_serial', config.getLogger);
+    db = await dbInit('environment_service_serial', config.getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     stores = db.stores;
     eventService = createEventsService(db.rawDatabase, config);
     service = new EnvironmentService(stores, config, eventService);

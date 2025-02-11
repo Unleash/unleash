@@ -25,16 +25,6 @@ beforeAll(async () => {
         db.rawDatabase,
     );
     await db.stores.environmentStore.create({
-        name: 'development',
-        type: 'development',
-        enabled: true,
-    });
-    await db.stores.environmentStore.create({
-        name: 'production',
-        type: 'production',
-        enabled: true,
-    });
-    await db.stores.environmentStore.create({
         name: 'customenvironment',
         type: 'production',
         enabled: true,

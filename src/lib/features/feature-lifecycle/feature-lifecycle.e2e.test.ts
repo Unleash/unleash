@@ -27,7 +27,9 @@ let eventBus: EventEmitter;
 let featureLifecycleReadModel: IFeatureLifecycleReadModel;
 
 beforeAll(async () => {
-    db = await dbInit('feature_lifecycle', getLogger);
+    db = await dbInit('feature_lifecycle', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithAuth(
         db.stores,
         {

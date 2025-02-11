@@ -9,7 +9,9 @@ let db: ITestDb;
 let app: IUnleashTest;
 
 beforeAll(async () => {
-    db = await dbInit('context_api_serial', getLogger);
+    db = await dbInit('context_api_serial', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithCustomConfig(
         db.stores,
         {

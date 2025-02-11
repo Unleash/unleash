@@ -11,12 +11,15 @@ import type EnvironmentStore from '../../../lib/features/project-environments/en
 import type { IUnleashStores } from '../../../lib/types';
 import type { IFeatureEnvironmentStore } from '../../../lib/types/stores/feature-environment-store';
 import { DEFAULT_ENV } from '../../../lib/util/constants';
-import type { IUnleashOptions, Knex } from '../../../lib/server-impl';
+import type {
+    IUnleashConfig,
+    IUnleashOptions,
+    Knex,
+} from '../../../lib/server-impl';
+import { Client } from 'pg';
+import { v4 as uuidv4 } from 'uuid';
 
 // require('db-migrate-shared').log.silence(false);
-
-// because of migrator bug
-delete process.env.DATABASE_URL;
 
 // because of db-migrate bug (https://github.com/Unleash/unleash/issues/171)
 process.setMaxListeners(0);
@@ -88,22 +91,34 @@ async function setupDatabase(stores) {
 }
 
 export interface ITestDb {
+    config: IUnleashConfig;
     stores: IUnleashStores;
     reset: () => Promise<void>;
     destroy: () => Promise<void>;
     rawDatabase: Knex;
 }
 
+type DBTestOptions = {
+    dbInitMethod?: 'legacy' | 'template';
+    stopMigrationAt?: string; // filename where migration should stop
+};
+
 export default async function init(
     databaseSchema = 'test',
     getLogger: LogProvider = noLoggerProvider,
-    configOverride: Partial<IUnleashOptions> = {},
+    configOverride: Partial<IUnleashOptions & DBTestOptions> = {},
 ): Promise<ITestDb> {
+    const testDbName = `unleashtestdb_${uuidv4().replace(/-/g, '')}`;
+    const useDbTemplate =
+        (configOverride.dbInitMethod ?? 'template') === 'template';
+    const testDBTemplateName = process.env.TEST_DB_TEMPLATE_NAME;
     const config = createTestConfig({
         db: {
             ...getDbConfig(),
             pool: { min: 1, max: 4 },
-            schema: databaseSchema,
+            ...(useDbTemplate
+                ? { database: testDbName }
+                : { schema: databaseSchema }),
             ssl: false,
         },
         ...configOverride,
@@ -111,29 +126,53 @@ export default async function init(
     });
 
     log.setLogLevel('error');
-    const db = createDb(config);
 
-    await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);
-    await db.raw(`CREATE SCHEMA IF NOT EXISTS ${config.db.schema}`);
-    await migrateDb(config);
-    await db.destroy();
+    if (useDbTemplate) {
+        if (!testDBTemplateName) {
+            throw new Error(
+                'TEST_DB_TEMPLATE_NAME environment variable is not set',
+            );
+        }
+        const client = new Client(getDbConfig());
+        await client.connect();
+
+        await client.query(
+            `CREATE DATABASE ${testDbName} TEMPLATE ${testDBTemplateName}`,
+        );
+        await client.end();
+    } else {
+        const db = createDb(config);
+
+        await db.raw(`DROP SCHEMA IF EXISTS ${config.db.schema} CASCADE`);
+        await db.raw(`CREATE SCHEMA IF NOT EXISTS ${config.db.schema}`);
+        await migrateDb(config, configOverride.stopMigrationAt);
+        await db.destroy();
+    }
+
     const testDb = createDb(config);
-    const stores = await createStores(config, testDb);
+    const stores = createStores(config, testDb);
     stores.eventStore.setMaxListeners(0);
-    const defaultRolePermissions = await getDefaultEnvRolePermissions(testDb);
-    await resetDatabase(testDb);
-    await setupDatabase(stores);
-    await restoreRolePermissions(testDb, defaultRolePermissions);
+
+    if (!useDbTemplate) {
+        const defaultRolePermissions =
+            await getDefaultEnvRolePermissions(testDb);
+        await resetDatabase(testDb);
+        await setupDatabase(stores);
+        await restoreRolePermissions(testDb, defaultRolePermissions);
+    }
 
     return {
+        config,
         rawDatabase: testDb,
         stores,
         reset: async () => {
-            const defaultRolePermissions =
-                await getDefaultEnvRolePermissions(testDb);
-            await resetDatabase(testDb);
-            await setupDatabase(stores);
-            await restoreRolePermissions(testDb, defaultRolePermissions);
+            if (!useDbTemplate) {
+                const defaultRolePermissions =
+                    await getDefaultEnvRolePermissions(testDb);
+                await resetDatabase(testDb);
+                await setupDatabase(stores);
+                await restoreRolePermissions(testDb, defaultRolePermissions);
+            }
         },
         destroy: async () => {
             return new Promise<void>((resolve, reject) => {

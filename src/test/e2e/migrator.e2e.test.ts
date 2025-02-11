@@ -1,21 +1,13 @@
-import { getDbConfig } from './helpers/database-config';
-import { createTestConfig } from '../config/test-config';
-import { getInstance } from 'db-migrate';
+import dbInit, { type ITestDb } from '../../test/e2e/helpers/database-init';
+
+import getLogger from '../../test/fixtures/no-logger';
+
 import { log } from 'db-migrate-shared';
 import { Client } from 'pg';
 import type { IDBOption } from '../../lib/types';
+import { resetDb } from '../../migrator';
 
 log.setLogLevel('error');
-
-const schema = 'up_n_down_migrations_test';
-
-async function initSchema(db: IDBOption): Promise<void> {
-    const client = new Client(db);
-    await client.connect();
-    await client.query(`DROP SCHEMA IF EXISTS ${db.schema} CASCADE`);
-    await client.query(`CREATE SCHEMA IF NOT EXISTS ${db.schema}`);
-    await client.end();
-}
 
 async function validateTablesHavePrimaryKeys(db: IDBOption) {
     const client = new Client(db);
@@ -31,7 +23,6 @@ async function validateTablesHavePrimaryKeys(db: IDBOption) {
         AND tc.constraint_type = 'PRIMARY KEY'
     WHERE 
         t.table_type = 'BASE TABLE'
-        AND t.table_schema = '${schema}' 
         AND t.table_schema NOT IN ('pg_catalog', 'information_schema')
         AND tc.constraint_name IS NULL;
     `,
@@ -45,34 +36,15 @@ async function validateTablesHavePrimaryKeys(db: IDBOption) {
         );
     }
 }
-
+let db: ITestDb;
+afterAll(async () => {
+    await db.destroy();
+});
 test('Up & down migrations work', async () => {
-    jest.setTimeout(15000);
-    const config = createTestConfig({
-        db: {
-            ...getDbConfig(),
-            pool: { min: 1, max: 4 },
-            schema: schema,
-            ssl: false,
-        },
-    });
-
-    await initSchema(config.db);
-
-    const e2e = {
-        ...config.db,
-        connectionTimeoutMillis: 2000,
-    };
-
-    // disable Intellij/WebStorm from setting verbose CLI argument to db-migrator
-    process.argv = process.argv.filter((it) => !it.includes('--verbose'));
-    const dbm = getInstance(true, {
-        cwd: `${__dirname}/../../`, // relative to src/test/e2e
-        config: { e2e },
-        env: 'e2e',
-    });
-
-    await dbm.up();
-    await validateTablesHavePrimaryKeys(config.db);
-    await dbm.reset();
+    db = await dbInit('system_user_migration', getLogger);
+    // up migration is performed at the beginning of tests
+    // here we just validate that the tables have primary keys
+    await validateTablesHavePrimaryKeys(db.config.db);
+    // then we test down migrations
+    await resetDb(db.config);
 });

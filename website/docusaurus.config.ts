@@ -76,7 +76,7 @@ export default async function createConfigAsync(): Promise<Config> {
         trailingSlash: false,
         markdown: {
             mermaid: true,
-          },
+        },
         customFields: {
             // expose env vars etc here
             environment: process.env.NODE_ENV,

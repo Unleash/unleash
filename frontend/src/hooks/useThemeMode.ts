@@ -23,7 +23,9 @@ export const useThemeMode = (): IUseThemeModeOutput => {
     if (typeof uiGlobalFontSizeEnabled === 'boolean') {
         useNewTheme = uiGlobalFontSizeEnabled;
     } else if (typeof uiGlobalFontSizeEnabled === 'object') {
-        useNewTheme = uiGlobalFontSizeEnabled.name !== 'disabled';
+        useNewTheme =
+            'name' in uiGlobalFontSizeEnabled &&
+            uiGlobalFontSizeEnabled.name !== 'disabled';
     }
 
     const resolveTheme = () => {

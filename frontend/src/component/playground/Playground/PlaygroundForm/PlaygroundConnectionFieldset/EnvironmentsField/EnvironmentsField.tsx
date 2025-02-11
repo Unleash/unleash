@@ -64,7 +64,7 @@ export const EnvironmentsField: FC<IEnvironmentsFieldProps> = ({
                     const { key, ...props } = getTagProps({ index });
                     return (
                         <Chip
-                            size='small'
+                            // size='small'
                             key={key}
                             {...props}
                             label={option.label}

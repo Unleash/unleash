@@ -7,6 +7,7 @@ import legacyLightTheme from 'themes/theme.legacy';
 import legacyDarkTheme from 'themes/dark-theme.legacy';
 import type { Theme } from '@mui/material/styles/createTheme';
 import { useUiFlag } from './useUiFlag';
+import type { Variant } from 'utils/variants';
 
 interface IUseThemeModeOutput {
     resolveTheme: () => Theme;
@@ -19,12 +20,22 @@ export const useThemeMode = (): IUseThemeModeOutput => {
     const key = 'unleash-theme';
     const uiGlobalFontSizeEnabled = useUiFlag('uiGlobalFontSize');
 
+    let useNewTheme = false;
+    if (typeof uiGlobalFontSizeEnabled === 'boolean') {
+        useNewTheme = uiGlobalFontSizeEnabled;
+    } else if (
+        typeof uiGlobalFontSizeEnabled === 'object' &&
+        'name' in uiGlobalFontSizeEnabled
+    ) {
+        useNewTheme = (uiGlobalFontSizeEnabled as Variant).name !== 'disabled';
+    }
+
     const resolveTheme = () => {
         if (themeMode === 'light') {
-            return uiGlobalFontSizeEnabled ? lightTheme : legacyLightTheme;
+            return useNewTheme ? lightTheme : legacyLightTheme;
         }
 
-        return uiGlobalFontSizeEnabled ? darkTheme : legacyDarkTheme;
+        return useNewTheme ? darkTheme : legacyDarkTheme;
     };
 
     const onSetThemeMode = () => {

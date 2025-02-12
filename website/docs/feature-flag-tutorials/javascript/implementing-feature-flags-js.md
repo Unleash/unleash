@@ -48,7 +48,7 @@ Click **New feature flag** to create a new feature flag.
 
 Call it `show-info` and enable it in the `development` environment.
 
-Everything's now set up on the Unleash side. Let's look at the HTML and JavaScript code next.
+Everything's now set up in Unleash. Let's look at the HTML and JavaScript code next.
 
 ## Make a basic HTML website
 

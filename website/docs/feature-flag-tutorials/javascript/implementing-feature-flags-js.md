@@ -19,7 +19,7 @@ For this tutorial, you'll need the following:
 
 ![architecture diagram for our implementation](./diagram.png)
 
-The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. In this example, we'll set up our script to make a request to Unleash using the Unleash SDK and show/hide a DOM element based on the flag data we receive. 
+The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. In this example, we'll set up a script to make requests to Unleash using the Unleash SDK and show/hide a DOM element based on the flag data we receive. 
 
 ## Install Unleash
 
@@ -108,7 +108,7 @@ Open the file in your browser, you'll see something like this:
 
 ## Fetch images from the API
 
-Let's add a bit of JavaScript to fetch a photo of a Corgi from the [dog.ceo API](https://dog.ceo/) and insert a random fun fact in the notice box. We'll add an event listener to the button so we can fetch a new image on click. In this file, we'll also import the Unleash Client.
+Let's add a bit of JavaScript to fetch a photo of a Corgi from the [dog.ceo API](https://dog.ceo/) and insert a random fun fact in the notice box. We'll add an event listener to the button so we can fetch a new image on click. In this file, we'll also import the Unleash client.
 
 Create a file called `index.js`:
 

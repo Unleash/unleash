@@ -2,7 +2,7 @@ exports.up = (db, cb) => {
     db.runSql(`
         UPDATE users
         SET email_hash = md5(email::text)
-        WHERE scim_external_id IS NOT NULL;
+        WHERE scim_id IS NOT NULL;
     `, cb);
   
   };

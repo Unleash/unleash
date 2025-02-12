@@ -60,7 +60,7 @@ cd unleash-js
 touch index.html
 ```
 
-Create an HTML file called `index.html`:
+In the `index.html` file, add the following:
 
 ```html
 <!DOCTYPE html>

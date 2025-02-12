@@ -163,7 +163,7 @@ Now, let's connect our project to Unleash so that you can toggle a feature flag 
 You'll need two things:
 
 -   The URL of your Unleash instance's API. It's `http://localhost:4242/api/` for your local version.
--   A [client API token](./reference/api-tokens-and-client-keys#client-tokens). You can create one inside a project in **Settings > API access**.
+-   A [client API token](/reference/api-tokens-and-client-keys#client-tokens). You can create one inside a project in **Settings > API access**.
 
 You can now initialize your Unleash client as follows:
 

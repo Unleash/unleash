@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { type PropsWithChildren, useState, type FC } from 'react';
 import {
     IconButton,
     styled,
@@ -9,11 +9,16 @@ import {
     useMediaQuery,
 } from '@mui/material';
 import Archive from '@mui/icons-material/Archive';
+import ArchiveOutlined from '@mui/icons-material/ArchiveOutlined';
 import FileCopy from '@mui/icons-material/FileCopy';
+import FileCopyOutlined from '@mui/icons-material/FileCopyOutlined';
 import Label from '@mui/icons-material/Label';
 import WatchLater from '@mui/icons-material/WatchLater';
+import WatchLaterOutlined from '@mui/icons-material/WatchLaterOutlined';
 import LibraryAdd from '@mui/icons-material/LibraryAdd';
+import LibraryAddOutlined from '@mui/icons-material/LibraryAddOutlined';
 import Check from '@mui/icons-material/Check';
+import Star from '@mui/icons-material/Star';
 import {
     Link,
     Route,
@@ -50,6 +55,8 @@ import useToast from 'hooks/useToast';
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { Collaborators } from './Collaborators';
+import StarBorder from '@mui/icons-material/StarBorder';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 const NewStyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: 'none',
@@ -67,7 +74,29 @@ const LowerHeaderRow = styled('div')(({ theme }) => ({
 const HeaderActions = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
+    alignItems: 'center',
 }));
+
+const IconButtonWithTooltip: FC<
+    PropsWithChildren<{
+        onClick: () => void;
+        label: string;
+    }>
+> = ({ children, label, onClick }) => {
+    return (
+        <TooltipResolver
+            title={label}
+            arrow
+            onClick={(e) => e.preventDefault()}
+        >
+            <div>
+                <IconButton aria-label={label} onClick={onClick}>
+                    {children}
+                </IconButton>
+            </div>
+        </TooltipResolver>
+    );
+};
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -251,7 +280,7 @@ export const FeatureView = () => {
 
     return (
         <div ref={ref}>
-            {flagOverviewRedesign && (
+            {flagOverviewRedesign ? (
                 <NewStyledHeader>
                     <Typography variant='h1'>{feature.name}</Typography>
                     <LowerHeaderRow>
@@ -271,30 +300,140 @@ export const FeatureView = () => {
                             ))}
                         </Tabs>
                         <HeaderActions>
+                            <IconButtonWithTooltip
+                                label='Favorite this feature flag'
+                                onClick={onFavorite}
+                                data-loading
+                            >
+                                {feature?.favorite ? <Star /> : <StarBorder />}
+                            </IconButtonWithTooltip>
+
+                            <IconButtonWithTooltip
+                                label='Copy flag name'
+                                onClick={handleCopyToClipboard}
+                                data-loading
+                            >
+                                {isFeatureNameCopied ? (
+                                    <Check />
+                                ) : (
+                                    <FileCopyOutlined />
+                                )}
+                            </IconButtonWithTooltip>
+                            <PermissionIconButton
+                                permission={CREATE_FEATURE}
+                                projectId={projectId}
+                                data-loading
+                                component={Link}
+                                to={`/projects/${projectId}/features/${featureId}/copy`}
+                                tooltipProps={{
+                                    title: 'Clone',
+                                }}
+                            >
+                                <LibraryAddOutlined />
+                            </PermissionIconButton>
+
+                            <PermissionIconButton
+                                permission={DELETE_FEATURE}
+                                projectId={projectId}
+                                tooltipProps={{
+                                    title: 'Archive feature flag',
+                                }}
+                                data-loading
+                                onClick={() => setShowDelDialog(true)}
+                            >
+                                <ArchiveOutlined />
+                            </PermissionIconButton>
+                            <PermissionIconButton
+                                onClick={() => setOpenStaleDialog(true)}
+                                permission={UPDATE_FEATURE}
+                                projectId={projectId}
+                                tooltipProps={{
+                                    title: 'Toggle stale state',
+                                }}
+                                data-loading
+                            >
+                                <WatchLaterOutlined />
+                            </PermissionIconButton>
+                        </HeaderActions>
+                    </LowerHeaderRow>
+                </NewStyledHeader>
+            ) : (
+                <StyledHeader>
+                    <StyledInnerContainer>
+                        <StyledFlagInfoContainer>
                             <FavoriteIconButton
                                 onClick={onFavorite}
                                 isFavorite={feature?.favorite}
                             />
-                            <Tooltip
-                                title={
-                                    isFeatureNameCopied
-                                        ? 'Copied!'
-                                        : 'Copy name'
-                                }
-                                arrow
-                            >
-                                <IconButton
-                                    onClick={handleCopyToClipboard}
-                                    style={{ marginLeft: 8 }}
-                                >
-                                    {isFeatureNameCopied ? (
-                                        <Check style={{ fontSize: 16 }} />
-                                    ) : (
-                                        <FileCopy style={{ fontSize: 16 }} />
-                                    )}
-                                </IconButton>
-                            </Tooltip>
+                            <div>
+                                <StyledFlagInfoContainer>
+                                    <StyledFeatureViewHeader data-loading>
+                                        {feature.name}{' '}
+                                    </StyledFeatureViewHeader>
+                                    <Tooltip
+                                        title={
+                                            isFeatureNameCopied
+                                                ? 'Copied!'
+                                                : 'Copy name'
+                                        }
+                                        arrow
+                                    >
+                                        <IconButton
+                                            onClick={handleCopyToClipboard}
+                                            style={{ marginLeft: 8 }}
+                                        >
+                                            {isFeatureNameCopied ? (
+                                                <Check
+                                                    style={{ fontSize: 16 }}
+                                                />
+                                            ) : (
+                                                <FileCopy
+                                                    style={{ fontSize: 16 }}
+                                                />
+                                            )}
+                                        </IconButton>
+                                    </Tooltip>
+                                    <ConditionallyRender
+                                        condition={!smallScreen}
+                                        show={
+                                            <FeatureStatusChip
+                                                stale={feature?.stale}
+                                            />
+                                        }
+                                    />
+                                </StyledFlagInfoContainer>
+                                <ConditionallyRender
+                                    condition={feature.dependencies.length > 0}
+                                    show={
+                                        <StyledDependency>
+                                            <b>Has parent: </b>
+                                            <StyledLink
+                                                to={`/projects/${feature.project}/features/${feature?.dependencies[0]?.feature}`}
+                                            >
+                                                {
+                                                    feature?.dependencies[0]
+                                                        ?.feature
+                                                }
+                                            </StyledLink>
+                                        </StyledDependency>
+                                    }
+                                />
+                                <ConditionallyRender
+                                    condition={feature.children.length > 0}
+                                    show={
+                                        <StyledDependency>
+                                            <b>Has children:</b>
+                                            <ChildrenTooltip
+                                                childFeatures={feature.children}
+                                                project={feature.project}
+                                            />
+                                        </StyledDependency>
+                                    }
+                                />
+                            </div>
+                        </StyledFlagInfoContainer>
 
+                        <StyledToolbarContainer>
                             <PermissionIconButton
                                 permission={CREATE_FEATURE}
                                 projectId={projectId}
@@ -307,7 +446,6 @@ export const FeatureView = () => {
                             >
                                 <LibraryAdd />
                             </PermissionIconButton>
-
                             <PermissionIconButton
                                 permission={DELETE_FEATURE}
                                 projectId={projectId}
@@ -330,148 +468,40 @@ export const FeatureView = () => {
                             >
                                 <WatchLater />
                             </PermissionIconButton>
-                        </HeaderActions>
-                    </LowerHeaderRow>
-                </NewStyledHeader>
-            )}
-            <StyledHeader>
-                <StyledInnerContainer>
-                    <StyledFlagInfoContainer>
-                        <FavoriteIconButton
-                            onClick={onFavorite}
-                            isFavorite={feature?.favorite}
-                        />
-                        <div>
-                            <StyledFlagInfoContainer>
-                                <StyledFeatureViewHeader data-loading>
-                                    {feature.name}{' '}
-                                </StyledFeatureViewHeader>
-                                <Tooltip
-                                    title={
-                                        isFeatureNameCopied
-                                            ? 'Copied!'
-                                            : 'Copy name'
-                                    }
-                                    arrow
-                                >
-                                    <IconButton
-                                        onClick={handleCopyToClipboard}
-                                        style={{ marginLeft: 8 }}
-                                    >
-                                        {isFeatureNameCopied ? (
-                                            <Check style={{ fontSize: 16 }} />
-                                        ) : (
-                                            <FileCopy
-                                                style={{ fontSize: 16 }}
-                                            />
-                                        )}
-                                    </IconButton>
-                                </Tooltip>
-                                <ConditionallyRender
-                                    condition={!smallScreen}
-                                    show={
-                                        <FeatureStatusChip
-                                            stale={feature?.stale}
-                                        />
-                                    }
+                            <PermissionIconButton
+                                onClick={() => setOpenTagDialog(true)}
+                                permission={UPDATE_FEATURE}
+                                projectId={projectId}
+                                tooltipProps={{ title: 'Add tag' }}
+                                data-loading
+                            >
+                                <Label />
+                            </PermissionIconButton>
+                        </StyledToolbarContainer>
+                    </StyledInnerContainer>
+                    <StyledSeparator />
+                    <StyledTabRow>
+                        <Tabs
+                            value={activeTab.path}
+                            indicatorColor='primary'
+                            textColor='primary'
+                        >
+                            {tabData.map((tab) => (
+                                <StyledTabButton
+                                    key={tab.title}
+                                    label={tab.title}
+                                    value={tab.path}
+                                    onClick={() => navigate(tab.path)}
+                                    data-testid={`TAB-${tab.title}`}
                                 />
-                            </StyledFlagInfoContainer>
-                            <ConditionallyRender
-                                condition={feature.dependencies.length > 0}
-                                show={
-                                    <StyledDependency>
-                                        <b>Has parent: </b>
-                                        <StyledLink
-                                            to={`/projects/${feature.project}/features/${feature?.dependencies[0]?.feature}`}
-                                        >
-                                            {feature?.dependencies[0]?.feature}
-                                        </StyledLink>
-                                    </StyledDependency>
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={feature.children.length > 0}
-                                show={
-                                    <StyledDependency>
-                                        <b>Has children:</b>
-                                        <ChildrenTooltip
-                                            childFeatures={feature.children}
-                                            project={feature.project}
-                                        />
-                                    </StyledDependency>
-                                }
-                            />
-                        </div>
-                    </StyledFlagInfoContainer>
-
-                    <StyledToolbarContainer>
-                        <PermissionIconButton
-                            permission={CREATE_FEATURE}
-                            projectId={projectId}
-                            data-loading
-                            component={Link}
-                            to={`/projects/${projectId}/features/${featureId}/copy`}
-                            tooltipProps={{
-                                title: 'Clone',
-                            }}
-                        >
-                            <LibraryAdd />
-                        </PermissionIconButton>
-                        <PermissionIconButton
-                            permission={DELETE_FEATURE}
-                            projectId={projectId}
-                            tooltipProps={{
-                                title: 'Archive feature flag',
-                            }}
-                            data-loading
-                            onClick={() => setShowDelDialog(true)}
-                        >
-                            <Archive />
-                        </PermissionIconButton>
-                        <PermissionIconButton
-                            onClick={() => setOpenStaleDialog(true)}
-                            permission={UPDATE_FEATURE}
-                            projectId={projectId}
-                            tooltipProps={{
-                                title: 'Toggle stale state',
-                            }}
-                            data-loading
-                        >
-                            <WatchLater />
-                        </PermissionIconButton>
-                        <PermissionIconButton
-                            onClick={() => setOpenTagDialog(true)}
-                            permission={UPDATE_FEATURE}
-                            projectId={projectId}
-                            tooltipProps={{ title: 'Add tag' }}
-                            data-loading
-                        >
-                            <Label />
-                        </PermissionIconButton>
-                    </StyledToolbarContainer>
-                </StyledInnerContainer>
-                <StyledSeparator />
-                <StyledTabRow>
-                    <Tabs
-                        value={activeTab.path}
-                        indicatorColor='primary'
-                        textColor='primary'
-                    >
-                        {tabData.map((tab) => (
-                            <StyledTabButton
-                                key={tab.title}
-                                label={tab.title}
-                                value={tab.path}
-                                onClick={() => navigate(tab.path)}
-                                data-testid={`TAB-${tab.title}`}
-                            />
-                        ))}
-                    </Tabs>
-                    <Collaborators
-                        collaborators={feature.collaborators?.users}
-                    />
-                </StyledTabRow>
-            </StyledHeader>
+                            ))}
+                        </Tabs>
+                        <Collaborators
+                            collaborators={feature.collaborators?.users}
+                        />
+                    </StyledTabRow>
+                </StyledHeader>
+            )}
             <Routes>
                 <Route path='metrics' element={<FeatureMetrics />} />
                 <Route path='logs' element={<FeatureLog />} />

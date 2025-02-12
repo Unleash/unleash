@@ -64,6 +64,7 @@ export const FeatureStrategyMenu = ({
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
+    const uiFontSizeRedesign = useUiFlag('uiGlobalFontSize');
 
     const onClose = () => {
         setAnchor(undefined);
@@ -120,7 +121,7 @@ export const FeatureStrategyMenu = ({
                     onClick={openMoreStrategies}
                     aria-labelledby={popoverId}
                     variant={variant}
-                    size={size}
+                    size={uiFontSizeRedesign ? 'medium' : size}
                     sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
                     disabled={Boolean(disableReason)}
                     tooltipProps={{
@@ -164,7 +165,7 @@ export const FeatureStrategyMenu = ({
                 onClick={openDefaultStrategyCreationModal}
                 aria-labelledby={popoverId}
                 variant={variant}
-                size={size}
+                size={uiFontSizeRedesign ? 'medium' : size}
                 sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
                 disabled={Boolean(disableReason)}
                 tooltipProps={{
@@ -180,7 +181,7 @@ export const FeatureStrategyMenu = ({
                 environmentId={environmentId}
                 onClick={openMoreStrategies}
                 variant='outlined'
-                size={size}
+                size={uiFontSizeRedesign ? 'medium' : size}
                 hideLockIcon
                 disabled={Boolean(disableReason)}
                 tooltipProps={{

@@ -28,19 +28,18 @@ interface IFeatureStrategyMenuProps {
     disableReason?: string;
 }
 
-const StyledStrategyMenu = styled('div')({
+const StyledStrategyMenu = styled('div')(({ theme }) => ({
     flexShrink: 0,
-});
+    display: 'flex',
+    flexFlow: 'row',
+    gap: theme.spacing(1),
+}));
 
 const StyledAdditionalMenuButton = styled(PermissionButton)(({ theme }) => ({
-    paddingBlock: theme.spacing(0.25),
     minWidth: 0,
     width: theme.spacing(4.5),
-    alignItems: 'center',
-    justifyContent: 'center',
-    align: 'center',
-    flexDirection: 'column',
-    marginLeft: theme.spacing(1),
+    alignSelf: 'stretch',
+    paddingBlock: 0,
 }));
 
 export const FeatureStrategyMenu = ({
@@ -188,12 +187,7 @@ export const FeatureStrategyMenu = ({
                     title: disableReason ? disableReason : 'More strategies',
                 }}
             >
-                <MoreVert
-                    sx={(theme) => ({
-                        margin: theme.spacing(0.25, 0),
-                        fontSize: theme.typography.h2.fontSize,
-                    })}
-                />
+                <MoreVert />
             </StyledAdditionalMenuButton>
             <Popover
                 id={popoverId}

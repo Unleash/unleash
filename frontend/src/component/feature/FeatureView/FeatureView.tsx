@@ -89,11 +89,9 @@ const IconButtonWithTooltip: FC<
             arrow
             onClick={(e) => e.preventDefault()}
         >
-            <div>
-                <IconButton aria-label={label} onClick={onClick}>
-                    {children}
-                </IconButton>
-            </div>
+            <IconButton aria-label={label} onClick={onClick}>
+                {children}
+            </IconButton>
         </TooltipResolver>
     );
 };

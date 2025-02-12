@@ -28,18 +28,18 @@ interface IFeatureStrategyMenuProps {
     disableReason?: string;
 }
 
-const StyledStrategyMenu = styled('div')({
+const StyledStrategyMenu = styled('div')(({ theme }) => ({
     flexShrink: 0,
-});
+    display: 'flex',
+    flexFlow: 'row',
+    gap: theme.spacing(1),
+}));
 
 const StyledAdditionalMenuButton = styled(PermissionButton)(({ theme }) => ({
     minWidth: 0,
     width: theme.spacing(4.5),
-    alignItems: 'center',
-    justifyContent: 'center',
-    align: 'center',
-    flexDirection: 'column',
-    marginLeft: theme.spacing(1),
+    alignSelf: 'stretch',
+    paddingBlock: 0,
 }));
 
 export const FeatureStrategyMenu = ({
@@ -64,6 +64,7 @@ export const FeatureStrategyMenu = ({
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
+    const uiFontSizeRedesign = useUiFlag('uiGlobalFontSize');
 
     const onClose = () => {
         setAnchor(undefined);
@@ -120,7 +121,7 @@ export const FeatureStrategyMenu = ({
                     onClick={openMoreStrategies}
                     aria-labelledby={popoverId}
                     variant={variant}
-                    size={size}
+                    size={uiFontSizeRedesign ? undefined : size}
                     sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
                     disabled={Boolean(disableReason)}
                     tooltipProps={{
@@ -164,7 +165,7 @@ export const FeatureStrategyMenu = ({
                 onClick={openDefaultStrategyCreationModal}
                 aria-labelledby={popoverId}
                 variant={variant}
-                size={size}
+                size={uiFontSizeRedesign ? undefined : size}
                 sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
                 disabled={Boolean(disableReason)}
                 tooltipProps={{
@@ -179,18 +180,15 @@ export const FeatureStrategyMenu = ({
                 projectId={projectId}
                 environmentId={environmentId}
                 onClick={openMoreStrategies}
-                aria-labelledby={popoverId}
                 variant='outlined'
-                size={size}
+                size={uiFontSizeRedesign ? undefined : size}
                 hideLockIcon
                 disabled={Boolean(disableReason)}
                 tooltipProps={{
                     title: disableReason ? disableReason : 'More strategies',
                 }}
             >
-                <MoreVert
-                    sx={(theme) => ({ margin: theme.spacing(0.25, 0) })}
-                />
+                <MoreVert />
             </StyledAdditionalMenuButton>
             <Popover
                 id={popoverId}

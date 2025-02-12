@@ -27,12 +27,6 @@ button {
     margin: 0;
 }
 
-.MuiButton-root {
-    border-radius: 3px;
-    text-transform: none;
-    font-size: 16px;
-}
-
 .skeleton {
     position: relative;
     overflow: hidden;
@@ -161,7 +155,7 @@ input.hide-clear[type="search"]::-webkit-search-results-decoration {
 
 /*
     This style is to hide the error message block from "vanilla-jsoneditor" package.
-    The package has another minmal way to show error inline with the editor. And so we are hiding this block 
+    The package has another minimal way to show error inline with the editor. And so we are hiding this block
     which shows at the bottom of the editor and does not have the best UX - because it shows errors even as user
     is typing in the editor.
 */

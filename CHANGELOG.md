@@ -2,6 +2,313 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.7.1] - 2025-02-11
+
+### Bug Fixes
+
+- Font size flag change to boolean ([#9290](https://github.com/Unleash/unleash/issues/9290))
+
+- Use the right theme even if the payload is a variant. ([#9292](https://github.com/Unleash/unleash/issues/9292))
+
+
+### Miscellaneous Tasks
+
+- Create test db from template ([#9265](https://github.com/Unleash/unleash/issues/9265))
+
+
+## [6.7.0] - 2025-02-11
+
+### Bug Fixes
+
+- Add removed back after deleting from updated ([#9099](https://github.com/Unleash/unleash/issues/9099))
+
+- Feature-dependencies-removed event should not be created always ([#9100](https://github.com/Unleash/unleash/issues/9100))
+
+- Setup id-token permissions
+
+- Setup concurrency limitation and rename session to reflect unleash (not edge)
+
+- Remove deleted event from being update event ([#9106](https://github.com/Unleash/unleash/issues/9106))
+
+- Resolve lifecycle image from asset path ([#9121](https://github.com/Unleash/unleash/issues/9121))
+
+- Align project roles checkboxes ([#9123](https://github.com/Unleash/unleash/issues/9123))
+
+- Specify colors for buttons ([#9124](https://github.com/Unleash/unleash/issues/9124))
+
+- Add a hover color for buttons in the period selectors. ([#9125](https://github.com/Unleash/unleash/issues/9125))
+
+- Correct name order -> traffic usage data -> traffic data usage ([#9156](https://github.com/Unleash/unleash/issues/9156))
+
+- Tabs not growing to fill all available space ([#9161](https://github.com/Unleash/unleash/issues/9161))
+
+- Commandbar colors ([#9162](https://github.com/Unleash/unleash/issues/9162))
+
+- Dynamic highlight width ([#9166](https://github.com/Unleash/unleash/issues/9166))
+
+- Original url for uniqueness tracking ([#9172](https://github.com/Unleash/unleash/issues/9172))
+
+- Relax email checking ([#9182](https://github.com/Unleash/unleash/issues/9182))
+
+- Relax email checking ([#9183](https://github.com/Unleash/unleash/issues/9183))
+
+- Re-align the dropdown menu with the dropdown ([#9188](https://github.com/Unleash/unleash/issues/9188))
+
+- Make traffic usage test more robust by using this month's actual numbers ([#9193](https://github.com/Unleash/unleash/issues/9193))
+
+- Heroku reset for tests ([#9197](https://github.com/Unleash/unleash/issues/9197))
+
+- Update dependency docusaurus-plugin-openapi-docs to v4.3.2 ([#9200](https://github.com/Unleash/unleash/issues/9200))
+
+- Update dependency docusaurus-theme-openapi-docs to v4.3.2 ([#9201](https://github.com/Unleash/unleash/issues/9201))
+
+- Users groups table columns on small screens ([#9194](https://github.com/Unleash/unleash/issues/9194))
+
+- Now hydration event is being returned if revision does not exist in cache ([#9203](https://github.com/Unleash/unleash/issues/9203))
+
+- License banner using message type ([#9209](https://github.com/Unleash/unleash/issues/9209))
+
+- Update dependency json-2-csv to v5.5.8 ([#9211](https://github.com/Unleash/unleash/issues/9211))
+
+- Update dependency unleash-client to v6.4.2 ([#9213](https://github.com/Unleash/unleash/issues/9213))
+
+- Fix broken skip link ([#9239](https://github.com/Unleash/unleash/issues/9239))
+
+- Identyfication headers typo ([#9244](https://github.com/Unleash/unleash/issues/9244))
+
+- Project roles - include change request config in project update ([#9256](https://github.com/Unleash/unleash/issues/9256))
+
+- Return if empty array ([#9254](https://github.com/Unleash/unleash/issues/9254))
+
+- Don't navigate through the list on tab ([#9259](https://github.com/Unleash/unleash/issues/9259))
+
+- Update docusaurus monorepo to v3.7.0 ([#9261](https://github.com/Unleash/unleash/issues/9261))
+
+- Update dependency nodemailer to v6.10.0 ([#9260](https://github.com/Unleash/unleash/issues/9260))
+
+- Killwitch to block usage-metrics from non-exiting flag-names ([#9266](https://github.com/Unleash/unleash/issues/9266))
+
+- Change log-level to info for filterExistingFlagNames
+
+- Open/close animation on personal dashboard is choppy ([#9253](https://github.com/Unleash/unleash/issues/9253))
+
+- Don't check license in OSS ([#9277](https://github.com/Unleash/unleash/issues/9277))
+
+- Some accessibility issues ([#9282](https://github.com/Unleash/unleash/issues/9282))
+
+- Add legacy button styles ([#9283](https://github.com/Unleash/unleash/issues/9283))
+
+
+### Documentation
+
+- Enterprise Use Case Tutorial - User Management, Access Controls, and Auditing with Feature Flags ([#8998](https://github.com/Unleash/unleash/issues/8998))
+
+- New theme ([#8994](https://github.com/Unleash/unleash/issues/8994))
+
+- Fix table of contents horizontal scroll ([#9137](https://github.com/Unleash/unleash/issues/9137))
+
+- New landing page ([#9087](https://github.com/Unleash/unleash/issues/9087))
+
+- Improve ASK AI button ([#9140](https://github.com/Unleash/unleash/issues/9140))
+
+- Align table of contents with content ([#9141](https://github.com/Unleash/unleash/issues/9141))
+
+- Add previously resolved suggestions to commit ([#9142](https://github.com/Unleash/unleash/issues/9142))
+
+- New theme header ([#9151](https://github.com/Unleash/unleash/issues/9151))
+
+- Fix background img dark mode opacity ([#9157](https://github.com/Unleash/unleash/issues/9157))
+
+- New theme footer ([#9158](https://github.com/Unleash/unleash/issues/9158))
+
+- Identification headers ([#9241](https://github.com/Unleash/unleash/issues/9241))
+
+- Organize/update custom project permissions to reflect Unleash Admin UI ([#9246](https://github.com/Unleash/unleash/issues/9246))
+
+- Remove notifications docs ([#9258](https://github.com/Unleash/unleash/issues/9258))
+
+- Update CHANGELOG.md
+
+
+### Features
+
+- New lifecycle icons ([#9098](https://github.com/Unleash/unleash/issues/9098))
+
+- Conditionally show groupId in StrategyExecution under rollout ([#9101](https://github.com/Unleash/unleash/issues/9101))
+
+- Rename lifecycle stages ([#9102](https://github.com/Unleash/unleash/issues/9102))
+
+- Update lifecycle tooltip style ([#9107](https://github.com/Unleash/unleash/issues/9107))
+
+- Transparent header ([#9108](https://github.com/Unleash/unleash/issues/9108))
+
+- Connection id counting fallback ([#9115](https://github.com/Unleash/unleash/issues/9115))
+
+- Max parallel sessions config ([#9109](https://github.com/Unleash/unleash/issues/9109))
+
+- New in Unleash - Lifecycle 2.0 ([#9112](https://github.com/Unleash/unleash/issues/9112))
+
+- Initial impl of new month/range picker ([#9122](https://github.com/Unleash/unleash/issues/9122))
+
+- Store support for data traffic from a range ([#9127](https://github.com/Unleash/unleash/issues/9127))
+
+- Delta rework ([#9133](https://github.com/Unleash/unleash/issues/9133))
+
+- Show a dialog when adding a release plan to a change request enabled feature environment ([#9139](https://github.com/Unleash/unleash/issues/9139))
+
+- Configurable global font size ([#9155](https://github.com/Unleash/unleash/issues/9155))
+
+- Segment implementation in delta ([#9148](https://github.com/Unleash/unleash/issues/9148))
+
+- Use new API for chart creation ([#9149](https://github.com/Unleash/unleash/issues/9149))
+
+- Separate frontend backend counting ([#9167](https://github.com/Unleash/unleash/issues/9167))
+
+- Wraps the new datepicker in a dropdown ([#9169](https://github.com/Unleash/unleash/issues/9169))
+
+- Send the add release plan change request from dialog when submitted ([#9174](https://github.com/Unleash/unleash/issues/9174))
+
+- Drop x- header prefix ([#9175](https://github.com/Unleash/unleash/issues/9175))
+
+- Limit user filter options ([#9179](https://github.com/Unleash/unleash/issues/9179))
+
+- Ability to communicate other license messages ([#9192](https://github.com/Unleash/unleash/issues/9192))
+
+- Move create user validations to the input ([#9189](https://github.com/Unleash/unleash/issues/9189))
+
+- Virtual autocomplete ([#9181](https://github.com/Unleash/unleash/issues/9181))
+
+- Render markdown in toats ([#9207](https://github.com/Unleash/unleash/issues/9207))
+
+- Productivity report only for seen users ([#9204](https://github.com/Unleash/unleash/issues/9204))
+
+- Productivity report unsubscribed users ([#9220](https://github.com/Unleash/unleash/issues/9220))
+
+- Client spec to support deltaApi ([#9222](https://github.com/Unleash/unleash/issues/9222))
+
+- Move timeline to panel ([#9243](https://github.com/Unleash/unleash/issues/9243))
+
+- Implement dialogs for changerequest milestone handling and removing release plans ([#9240](https://github.com/Unleash/unleash/issues/9240))
+
+- Emit delta updated event ([#9250](https://github.com/Unleash/unleash/issues/9250))
+
+- Add delta api streaming flag ([#9269](https://github.com/Unleash/unleash/issues/9269))
+
+- Allow SCIM user deletion ([#9190](https://github.com/Unleash/unleash/issues/9190))
+
+
+### Miscellaneous Tasks
+
+- Move strategy UI into milestonecard and open milestone when adding strategy to it ([#9095](https://github.com/Unleash/unleash/issues/9095))
+
+- New release plan template card ([#9096](https://github.com/Unleash/unleash/issues/9096))
+
+- Feature release plans other strategies indicator ([#9097](https://github.com/Unleash/unleash/issues/9097))
+
+- Prioritize milestone strategies in sorting ([#9081](https://github.com/Unleash/unleash/issues/9081))
+
+- Make remove release plan warning conditional on env. enabled ([#9103](https://github.com/Unleash/unleash/issues/9103))
+
+- Fix release template strategy padding and spacing ([#9104](https://github.com/Unleash/unleash/issues/9104))
+
+- Added push to public.ecr ([#9105](https://github.com/Unleash/unleash/issues/9105))
+
+- Fix traffic data timezone visualization issue with getUTCDate ([#9110](https://github.com/Unleash/unleash/issues/9110))
+
+- Use the user's locale settings for formatting the tooltip date ([#9113](https://github.com/Unleash/unleash/issues/9113))
+
+- Move the bricks ([#9114](https://github.com/Unleash/unleash/issues/9114))
+
+- Switch notify enterprise to main ([#9119](https://github.com/Unleash/unleash/issues/9119))
+
+- Create the releasePlanChangeRequests feature flag ([#9126](https://github.com/Unleash/unleash/issues/9126))
+
+- Remove feature toggle kill switch for admin token UI ([#9154](https://github.com/Unleash/unleash/issues/9154))
+
+- Add new query for daily data that uses  date ranges ([#9150](https://github.com/Unleash/unleash/issues/9150))
+
+- Add orval schemas for the new API endpoint ([#9164](https://github.com/Unleash/unleash/issues/9164))
+
+- Gather metrics every hour ([#9163](https://github.com/Unleash/unleash/issues/9163))
+
+- Add website docs generated to the ignore list
+
+- Ignore website docs generated in biome ([#9168](https://github.com/Unleash/unleash/issues/9168))
+
+- Minor button style adjustments ([#9170](https://github.com/Unleash/unleash/issues/9170))
+
+- Add hint to release plan template gradual rollout strategy groupId ([#9171](https://github.com/Unleash/unleash/issues/9171))
+
+- Drag to reorder release plan template milestones ([#9176](https://github.com/Unleash/unleash/issues/9176))
+
+- Update request info boxes to new design ([#9180](https://github.com/Unleash/unleash/issues/9180))
+
+- Drop release plan template view permissions ([#9195](https://github.com/Unleash/unleash/issues/9195))
+
+- Filters data coming from the API to remove data points we're not  interested in ([#9205](https://github.com/Unleash/unleash/issues/9205))
+
+- Pull delta controller out of OSS ([#9206](https://github.com/Unleash/unleash/issues/9206))
+
+- Add tests for new traffic usage functions ([#9208](https://github.com/Unleash/unleash/issues/9208))
+
+- Extract into hook, use new endpoint if flag on ([#9218](https://github.com/Unleash/unleash/issues/9218))
+
+- Use union type for traffic search data ([#9221](https://github.com/Unleash/unleash/issues/9221))
+
+- Clear scim fields when deleting user + migration for existing cases ([#9217](https://github.com/Unleash/unleash/issues/9217))
+
+- Release plan changes in change request view ([#9225](https://github.com/Unleash/unleash/issues/9225))
+
+- Mark release management as an enterprise feature ([#9229](https://github.com/Unleash/unleash/issues/9229))
+
+- Remove lifecycle v2 flag ([#9224](https://github.com/Unleash/unleash/issues/9224))
+
+- Changes the panel title to "Event timeline" ([#9245](https://github.com/Unleash/unleash/issues/9245))
+
+- Release management plausible events ([#9230](https://github.com/Unleash/unleash/issues/9230))
+
+- Remove sortProjectRoles flag ([#9226](https://github.com/Unleash/unleash/issues/9226))
+
+- Ability to run FE tests manually ([#9249](https://github.com/Unleash/unleash/issues/9249))
+
+- No border for event timeline / dropdowns to the right ([#9252](https://github.com/Unleash/unleash/issues/9252))
+
+- Make the milestone status a button ([#9255](https://github.com/Unleash/unleash/issues/9255))
+
+- Add release management to new in unleash ([#9257](https://github.com/Unleash/unleash/issues/9257))
+
+- Tests are timing out ([#9264](https://github.com/Unleash/unleash/issues/9264))
+
+- Removes extra border on collapse for the event timeline ([#9270](https://github.com/Unleash/unleash/issues/9270))
+
+- Make truncator a span ([#9272](https://github.com/Unleash/unleash/issues/9272))
+
+- Make playground code editor height dynamic ([#9271](https://github.com/Unleash/unleash/issues/9271))
+
+- Make mui buttons respect font size changes ([#9275](https://github.com/Unleash/unleash/issues/9275))
+
+- Add button styles to dark mode too ([#9285](https://github.com/Unleash/unleash/issues/9285))
+
+- Retry release 6.7 ([#9287](https://github.com/Unleash/unleash/issues/9287))
+
+- Remove concurrency block ([#9286](https://github.com/Unleash/unleash/issues/9286))
+
+
+### Refactor
+
+- Project permissions list ([#9082](https://github.com/Unleash/unleash/issues/9082))
+
+- Project users virtual autocomplete ([#9196](https://github.com/Unleash/unleash/issues/9196))
+
+- UseTrafficData / NetworkTrafficUsage.tsx cleanup ([#9191](https://github.com/Unleash/unleash/issues/9191))
+
+- Period selector component ([#9202](https://github.com/Unleash/unleash/issues/9202))
+
+- Add functions to estimate monthly usage from data directly ([#9219](https://github.com/Unleash/unleash/issues/9219))
+
+- Theme - font size ([#9273](https://github.com/Unleash/unleash/issues/9273))
+
+
 ## [6.6.0] - 2025-01-14
 
 ### Bug Fixes

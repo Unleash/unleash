@@ -65,7 +65,8 @@ export type IFlagKey =
     | 'uniqueSdkTracking'
     | 'frontendHeaderRedesign'
     | 'dataUsageMultiMonthView'
-    | 'uiGlobalFontSize';
+    | 'uiGlobalFontSize'
+    | 'connectionCount';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -310,17 +311,14 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DATA_USAGE_MULTI_MONTH_VIEW,
         false,
     ),
-    uiGlobalFontSize: {
-        name: 'uiGlobalFontSize',
-        enabled: parseEnvVarBoolean(
-            process.env.EXPERIMENTAL_UI_GLOBAL_FONT_SIZE_NAME,
-            false,
-        ),
-        payload: {
-            type: PayloadType.JSON,
-            value: '14',
-        },
-    },
+    uiGlobalFontSize: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_UI_GLOBAL_FONT_SIZE_NAME,
+        false,
+    ),
+    connectionCount: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_CONNECTION_COUNT,
+        false,
+    ),
 };
 
 export const defaultExperimentalOptions: IExperimentalOptions = {

@@ -1274,7 +1274,7 @@ test('A newly created project only gets connected to enabled environments', asyn
     await projectService.createProject(project, user, auditUser);
     const connectedEnvs =
         await db.stores.projectStore.getEnvironmentsForProject(project.id);
-    expect(connectedEnvs).toHaveLength(2); // default, connection_test
+    expect(connectedEnvs).toHaveLength(1); // connection_test
     expect(
         connectedEnvs.some((e) => e.environment === enabledEnv),
     ).toBeTruthy();
@@ -1321,7 +1321,6 @@ test('should have environments sorted in order', async () => {
         await db.stores.projectStore.getEnvironmentsForProject(project.id);
 
     expect(connectedEnvs.map((e) => e.environment)).toEqual([
-        'default',
         first,
         second,
         third,
@@ -2809,13 +2808,7 @@ describe('create project with environments', () => {
         disabledEnv,
     ];
 
-    const allEnabledEnvs = [
-        'QA',
-        'default',
-        'development',
-        'production',
-        'staging',
-    ];
+    const allEnabledEnvs = ['QA', 'development', 'production', 'staging'];
 
     beforeEach(async () => {
         await Promise.all(

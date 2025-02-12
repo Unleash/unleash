@@ -92,7 +92,9 @@ const updateStrategy = async (
 };
 
 beforeAll(async () => {
-    db = await dbInit('feature_strategy_api_serial', getLogger);
+    db = await dbInit('feature_strategy_api_serial', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithCustomConfig(
         db.stores,
         {

@@ -19,7 +19,9 @@ let db: ITestDb;
 let stores: IUnleashStores;
 
 beforeAll(async () => {
-    db = await dbInit('feature_search', getLogger);
+    db = await dbInit('feature_search', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithAuth(
         db.stores,
         {

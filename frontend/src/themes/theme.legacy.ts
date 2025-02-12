@@ -1,20 +1,21 @@
+// Remove this file with `uiGlobalFontSize` flag
+
 import { createTheme } from '@mui/material/styles';
+import { colors } from './colors';
 import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
-import { colors } from './colors';
-import { baseTheme } from './theme';
 
-const actionColors = {
-    0.54: 'rgba(223, 222, 255, 0.54)',
-    0.32: 'rgba(223, 222, 255, 0.32)',
-    0.12: 'rgba(223, 222, 255, 0.12)',
-    0.08: 'rgba(223, 222, 255, 0.08)',
-    0.05: 'rgba(223, 222, 255, 0.05)',
-};
-
-const theme = {
-    ...baseTheme,
-    mode: 'dark',
+export const theme = {
+    mode: 'light',
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 600,
+            md: 960,
+            lg: 1280,
+            xl: 1536,
+        },
+    },
     boxShadows: {
         main: '0px 2px 4px rgba(129, 122, 254, 0.2)',
         card: '0px 2px 10px rgba(28, 25, 78, 0.12)',
@@ -25,181 +26,232 @@ const theme = {
         accordionFooter: 'inset 0px 2px 4px rgba(32, 32, 33, 0.05)',
         reverseFooter: 'inset 0px -2px 4px rgba(32, 32, 33, 0.05)',
     },
+    typography: {
+        fontFamily: 'Sen, Roboto, sans-serif',
+        fontWeightBold: '700',
+        fontWeightMedium: '700',
+        allVariants: { lineHeight: 1.4 },
+        button: {
+            lineHeight: 1.75,
+            '&&&': {
+                fontSize: '16px',
+            },
+        },
+        h1: {
+            fontSize: '1.5rem',
+            lineHeight: 1.875,
+        },
+        h2: {
+            fontSize: `${20 / 16}rem`,
+            fontWeight: '700',
+        },
+        h3: {
+            fontSize: '1rem',
+            fontWeight: '700',
+        },
+        h4: {
+            fontSize: '1rem',
+            fontWeight: '400',
+        },
+        caption: {
+            fontSize: `${12 / 16}rem`,
+        },
+    },
+    fontSizes: {
+        extraLargeHeader: '2.5rem',
+        largeHeader: '2rem',
+        mediumHeader: '1.5rem',
+        mainHeader: '1.25rem',
+        bodySize: '1rem',
+        smallBody: `${14 / 16}rem`,
+        smallerBody: `${12 / 16}rem`,
+    },
+    fontWeight: {
+        thin: 300,
+        medium: 400,
+        semi: 700,
+        bold: 700,
+    },
+    shape: {
+        borderRadius: 4,
+        borderRadiusMedium: 8,
+        borderRadiusLarge: 12,
+        borderRadiusExtraLarge: 20,
+        tableRowHeight: 64,
+        tableRowHeightCompact: 56,
+        tableRowHeightDense: 48,
+    },
+    zIndex: {
+        sticky: 1400,
+    },
 
     palette: {
         common: {
-            white: '#EEEEFC', // Switch base (OFF) // Tooltips text color // Text color
-            black: '#A0A0B1', // Switch track (OFF)
+            white: colors.grey[50], // Tooltips text color // Switch base (OFF) // Text color
+            black: colors.grey[900], // Switch track (OFF)
         },
         text: {
-            primary: '#EEEEFC',
-            secondary: '#A0A0B1',
-            disabled: '#888799',
+            primary: colors.grey[900],
+            secondary: colors.grey[800],
+            disabled: colors.grey[600],
         },
         primary: {
-            main: '#9792ED',
-            light: '#4C4992',
-            // Maybe to move links color to another variable????
-            dark: '#9792ED', // Color used for links and on hover for primary buttons
-            contrastText: '#EEEEFC', // Color used for content when primary.main is used as a background
+            main: colors.purple[800],
+            light: colors.purple[700],
+            dark: colors.purple[900],
+            contrastText: colors.grey[50], // Color used for content when primary.main is used as a background
         },
         secondary: {
-            // Used for purple badges and puple light elements
-            main: '#9792ED', // used on icons on these elements
-            light: '#34325E', // used as a bakground on these elements
-            dark: '#EEEEFC', // used for text on these elements
-            border: '#4C4992',
-            contrastText: '#EEEEFC', // Color used for content when info.main is used as a background
+            // Used for purple badges and purple light elements
+            main: colors.purple[800],
+            light: colors.purple[50],
+            dark: colors.purple[900], // Color used for text
+            border: colors.purple[300],
+            contrastText: colors.purple[900], // Color used for text inside badge
         },
         info: {
-            // main: '#5483C9',  // used on icons on these elements
-            main: '#a2bbe2', // used on icons on these elements
-            light: '#1A2641', // used as a bakground on these elements
-            dark: '#a2bbe2', // used for text on these elements
-            border: '#1B407A',
-            contrastText: '#EEEEFC', // Color used for content when info.main is used as a background
+            main: colors.blue[500],
+            light: colors.blue[50],
+            dark: colors.blue[800], // Color used for text
+            border: colors.blue[200],
+            contrastText: colors.blue[800], // Color used for text inside alert
         },
         success: {
-            // main: '#62872F',  // used on icons on these elements
-            main: '#94ae6f', // used on icons on these elements
-            light: '#333D30', // used as a bakground on these elements
-            dark: '#94ae6f', // used for text on these elements
-            border: '#3D600C',
-            contrastText: '#EEEEFC', // Color used for content when success.main is used as a background
+            main: colors.green[600],
+            light: colors.green[50],
+            dark: colors.green[800], // Color used for text
+            border: colors.green[300],
+            contrastText: colors.green[800], // Color used for text inside alert
         },
         warning: {
-            // main: '#9E691C',  // used on icons on these elements
-            main: '#bc7d21', // used on icons on these elements
-            light: '#3B302C', // used as a bakground on these elements
-            dark: '#bc7d21', // used for text on these elements
-            contrastText: '#EEEEFC', // Color used for content when warning.main is used as a background
-            border: '#6C4A19',
+            main: colors.orange[800],
+            light: colors.orange[100],
+            dark: colors.orange[900], // Color used for text
+            border: colors.orange[500],
+            contrastText: colors.orange[900], // Color used for text inside alert
         },
         error: {
-            // main: '#B93F4A',  // used on error buttons // used on icons on these elements
-            main: '#ff6472', // used on error buttons // used on icons on these elements
-            light: '#3F2835', // used as a bakground on these elements
-            // dark: '#F15260',  // used for text on these elements
-            dark: '#ff6472', // used for text on these elements
-            border: '#8A3E45',
-            contrastText: '#EEEEFC', // Color used for content when error.main is used as a background
+            main: colors.red[700], // used on error buttons // used on icons on these elements
+            light: colors.red[50],
+            dark: colors.red[800], // Color used for text
+            border: colors.red[300],
+            contrastText: colors.red[800], // Color used for text inside alert
         },
         web: {
             main: '#1A4049', // used on sales-related elements
-            contrastText: '#EEEEFC', // Color used for inner text
+            contrastText: colors.grey[50], // Color used for inner text
         },
 
         /**
          *  Used for grey badges, hover elements, and grey light elements
          */
         neutral: {
-            main: '#858699', // used on icons on these elements
-            light: '#2B2A3C', // used as a bakground on these elements
-            dark: '#EEEEFC', // used for text on these elements
-            border: '#454360',
-            contrastText: '#EEEEFC', // Color used for text inside badge
+            main: colors.grey[700],
+            light: colors.grey[100],
+            dark: colors.grey[800],
+            border: colors.grey[500],
+            contrastText: colors.grey[800], // Color used for text inside badge
         },
 
         background: {
-            paper: '#222130', // Background color for all containers
-            default: '#222130',
-            application: '#1A1924',
-            sidebar: '#4C4992',
-            alternative: '#4C4992', // used on the dark theme to shwitch primary main to a darker shade
-            elevation1: '#2B2A3C',
-            elevation2: '#2B2A3C',
-            // elevation2: '#302E42',
+            paper: colors.grey[50],
+            default: colors.grey[50],
+            application: colors.grey[300],
+            sidebar: colors.purple[800],
+            alternative: colors.purple[800], // used on the dark theme to switch primary main to a darker shade
+            elevation1: colors.grey[100],
+            elevation2: colors.grey[200],
         },
 
         action: {
             // Colors used for Icons and Buttons -> this comes from MUI and we overwriting it with our colors
-            active: actionColors[0.54],
-            hover: actionColors[0.05],
+            active: colors.action[0.54],
+            hover: colors.action[0.05],
             hoverOpacity: 0.05,
-            selected: actionColors[0.08],
+            selected: colors.action[0.08],
             selectedOpacity: 0.08,
-            disabled: actionColors[0.32],
-            disabledBackground: actionColors[0.12],
+            disabled: colors.action[0.32],
+            disabledBackground: colors.action[0.12],
             disabledOpacity: 0.38,
-            focus: actionColors[0.12],
+            focus: colors.action[0.12],
             focusOpacity: 0.12,
             activatedOpacity: 0.12,
-            alternative: colors.purple[1000],
+            alternative: colors.purple[900],
         },
 
         /**
          * General divider
          */
-        divider: '#39384C',
+        divider: colors.grey[400],
 
         /**
          * Table colors.
          */
         table: {
-            headerBackground: '#2B2A3C',
-            headerHover: '#313045',
-            divider: '#323144',
-            rowHover: '#262536',
+            headerBackground: colors.grey[200],
+            headerHover: colors.grey[300],
+            divider: colors.grey[300],
+            rowHover: colors.grey[100],
         },
 
         /**
          * Text highlight effect color. Used when filtering/searching over content
          */
-        highlight: 'rgba(255, 234, 204, 0.7)',
+        highlight: colors.orange[200],
 
         /**
          * Used for the interactive guide spotlight
          */
         spotlight: {
-            border: '#8c89bf',
-            outline: '#bcb9f3',
-            pulse: '#bcb9f3',
+            border: '#463cfb',
+            outline: '#6058f5',
+            pulse: '#463cfb',
         },
 
         /**
          * Background color used for the API command in the sidebar
          */
-        codebox: 'rgba(52, 50, 94, 0.3)',
+        codebox: colors.action[0.12],
 
         /**
          * Links color
          */
-        links: '#9792ED',
+        links: colors.purple[900],
 
         /**
          * Gradient for the login page
          */
         loginGradient: {
-            from: '#4C4992',
-            to: '#4944a7',
+            from: colors.purple[800],
+            to: colors.purple[950],
         },
 
         /**
          * Colors for event log output
          */
         eventLog: {
-            diffAdd: '#77AB2E',
-            diffSub: '#df626c',
-            edited: '#EEEEFC',
+            diffAdd: colors.green[800],
+            diffSub: colors.red[800],
+            edited: colors.grey[900],
         },
 
         /**
          * For 'Seen' column on feature flags list and other
          */
         seen: {
-            unknown: '#2B2A3C',
-            recent: '#4E6131',
-            inactive: '#875D21',
-            abandoned: '#8A3E45',
-            primary: '#302E42',
+            unknown: colors.grey[100],
+            recent: colors.green[100],
+            inactive: colors.orange[200],
+            abandoned: colors.red[200],
+            primary: colors.purple[100],
         },
 
         /**
-         * For Environment Accordion
+         * For Environment Accordion.
          */
         envAccordion: {
-            disabled: '#2B2A3C',
-            expanded: '#1A1924',
+            disabled: colors.grey[100],
+            expanded: colors.grey[200],
         },
 
         /**
@@ -208,13 +260,13 @@ const theme = {
         grey: {
             // This was to see were these colors are used from MUI
             // 50: '#A6000E',
-            100: '#888799', // Disabled Switch base (OFF)
+            100: colors.grey[100], // Disabled Switch base (OFF)
             // 200: '#A6000E',
             // 300: '#A6000E',
             // 400: '#A6000E',
             // 500: '#A6000E',
-            600: '#343348', // slider tooltip background
-            700: '#343348', // Dark tooltip background
+            600: colors.grey[800], // slider tooltip background
+            700: colors.grey[800], // Dark tooltip background
             // 800: '#A6000E',
             // 900: '#A6000E',
             // A100: '#A6000E',
@@ -229,30 +281,30 @@ const theme = {
          */
         charts: {
             gauge: {
-                gradientStart: '#4C4992',
-                gradientEnd: '#9792ED',
-                background: '#39384C',
-                sectionLine: '#8c89bf',
-                text: colors.grey[800],
+                gradientStart: colors.purple[100],
+                gradientEnd: colors.purple[700],
+                background: colors.purple[50],
+                sectionLine: colors.purple[500],
+                text: colors.grey[600],
             },
             health: {
-                mainCircleBackground: '#34325E',
-                orbit: '#4C4992',
-                circles: '#2B2A3C',
-                text: colors.grey[500],
+                mainCircleBackground: colors.purple[800],
+                orbit: colors.grey[300],
+                circles: colors.grey[50],
+                text: colors.grey[900],
                 title: colors.grey[50],
                 healthy: colors.purple[800],
                 stale: colors.red[800],
-                potentiallyStale: colors.orange[800],
-                gradientStale: '#8A3E45',
-                gradientPotentiallyStale: '#875D21',
+                potentiallyStale: colors.orange[900],
+                gradientStale: colors.red[300],
+                gradientPotentiallyStale: colors.orange[500],
             },
             series: colors.chartSeries,
         },
     },
 } as const;
 
-export const darkTheme = createTheme({
+export default createTheme({
     ...theme,
     components: {
         // Skeleton
@@ -268,16 +320,23 @@ export const darkTheme = createTheme({
                     },
                     '&::after': {
                         background:
-                            'linear-gradient(90deg, rgba(223, 222, 255, 0) 0, rgba(223, 222, 255, 0.2) 100%, rgba(223, 222, 255, 0.5) 100%, rgba(223, 222, 255, 0))',
+                            'linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.2) 100%, rgba(255, 255, 255, 0.5) 100%, rgba(255, 255, 255, 0))',
                     },
                 },
+
                 a: {
                     color: theme.palette.links,
                 },
-                '.dropdown-outline, .MuiAutocomplete-popper': {
-                    // used for user dropdown, autocomplete, and change request primary button dropdown, notifications dropdown
-                    outline: `1px solid ${theme.palette.divider}`,
-                },
+            },
+        },
+
+        // Buttons
+        MuiButton: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    borderRadius: '3px',
+                    textTransform: 'none',
+                }),
             },
         },
 
@@ -371,7 +430,7 @@ export const darkTheme = createTheme({
                     },
                     '&.MuiAlert-standardInfo': {
                         backgroundColor: theme.palette.info.light,
-                        color: theme.palette.info.contrastText,
+                        color: theme.palette.info.dark,
                         border: `1px solid ${theme.palette.info.border}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.info.main,
@@ -379,7 +438,7 @@ export const darkTheme = createTheme({
                     },
                     '&.MuiAlert-standardSuccess': {
                         backgroundColor: theme.palette.success.light,
-                        color: theme.palette.success.contrastText,
+                        color: theme.palette.success.dark,
                         border: `1px solid ${theme.palette.success.border}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.success.main,
@@ -387,7 +446,7 @@ export const darkTheme = createTheme({
                     },
                     '&.MuiAlert-standardWarning': {
                         backgroundColor: theme.palette.warning.light,
-                        color: theme.palette.warning.contrastText,
+                        color: theme.palette.warning.dark,
                         border: `1px solid ${theme.palette.warning.border}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.warning.main,
@@ -395,7 +454,7 @@ export const darkTheme = createTheme({
                     },
                     '&.MuiAlert-standardError': {
                         backgroundColor: theme.palette.error.light,
-                        color: theme.palette.error.contrastText,
+                        color: theme.palette.error.dark,
                         border: `1px solid ${theme.palette.error.border}`,
                         '& .MuiAlert-icon': {
                             color: theme.palette.error.main,
@@ -410,7 +469,6 @@ export const darkTheme = createTheme({
             styleOverrides: {
                 root: ({ theme }) => ({
                     '& .MuiTabs-indicator': {
-                        backgroundColor: theme.palette.background.alternative,
                         height: '4px',
                     },
                     '& .MuiTabs-flexContainer': {
@@ -463,14 +521,6 @@ export const darkTheme = createTheme({
                             0.2,
                         )}`,
                     },
-                    '&.accordion-disabled': {
-                        outline: `1px solid ${alpha('#39384C', 0.5)}`,
-                        backgroundColor: theme.palette.background.application,
-                    },
-                    '&.accordion-disabled.Mui-expanded .MuiAccordionSummary-root':
-                        {
-                            borderBottom: `1px solid ${theme.palette.divider}`,
-                        },
                 }),
             },
         },
@@ -487,17 +537,15 @@ export const darkTheme = createTheme({
             },
         },
 
-        // Project overview, improve switch (ON - state) hover effect color
+        // Project overview, improve switch (OFF - state) focus effect color
         MuiSwitch: {
             styleOverrides: {
                 root: ({ theme }) => ({
                     zIndex: 1,
-                    '&&& > .Mui-checked:hover': {
-                        backgroundColor: actionColors[0.08],
-                    },
-                    '&&& > .Mui-checked.Mui-disabled': {
-                        color: '#423F6E',
-                    },
+                    '.MuiSwitch-switchBase:not(.Mui-checked) .MuiTouchRipple-child':
+                        {
+                            color: theme.palette.action.disabled,
+                        },
                 }),
             },
         },
@@ -507,13 +555,13 @@ export const darkTheme = createTheme({
             styleOverrides: {
                 root: {
                     '&.Mui-disabled': {
-                        opacity: 0.4,
+                        opacity: 0.66,
                     },
                 },
             },
         },
 
-        // Inputs background - This is used when we have inputs on a darker background (e.g. edit contstraints, playground)
+        // Inputs background - This is used when we have inputs on a grey background (e.g. edit contstraints, playground)
         MuiInputBase: {
             styleOverrides: {
                 root: ({ theme }) => ({
@@ -527,67 +575,6 @@ export const darkTheme = createTheme({
             styleOverrides: {
                 root: ({ theme }) => ({
                     color: theme.palette.text.primary,
-                }),
-            },
-        },
-
-        // For dark theme, primary buttons are a bit darker then the primary.main that we use as a primary color
-        MuiButton: {
-            styleOverrides: {
-                root: ({ theme }) => ({
-                    borderRadius: theme.shape.borderRadius,
-                    textTransform: 'none',
-                    '&:not(.Mui-disabled).MuiButton-containedPrimary': {
-                        backgroundColor: theme.palette.background.alternative,
-                        '&:hover': {
-                            backgroundColor: theme.palette.secondary.light,
-                        },
-                    },
-                }),
-            },
-        },
-
-        // Constraints negation icon
-        MuiIconButton: {
-            styleOverrides: {
-                root: ({ theme }) => ({
-                    '&.operator-is-active svg': {
-                        fill: theme.palette.background.application,
-                    },
-                }),
-            },
-        },
-
-        // Inputs
-        MuiOutlinedInput: {
-            styleOverrides: {
-                root: ({ theme }) => ({
-                    fieldset: {
-                        borderColor: '#646382',
-                    },
-
-                    '&&&:hover fieldset': {
-                        borderColor: '#8B8BA7',
-                    },
-
-                    '&&&.Mui-focused fieldset': {
-                        borderColor: '#9792ED',
-                    },
-
-                    '&&&.Mui-disabled fieldset': {
-                        borderColor: '#47475D',
-                    },
-                }),
-            },
-        },
-
-        // Popovers
-        MuiPopover: {
-            styleOverrides: {
-                root: ({ theme }) => ({
-                    '.MuiPopover-paper': {
-                        outline: `1px solid ${theme.palette.divider}`,
-                    },
                 }),
             },
         },

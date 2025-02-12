@@ -93,7 +93,8 @@ export type UiFlags = {
     granularAdminPermissions?: boolean;
     frontendHeaderRedesign?: boolean;
     dataUsageMultiMonthView?: boolean;
-    uiGlobalFontSize?: Variant;
+    uiGlobalFontSize?: boolean;
+    connectionCount?: boolean;
 };
 
 export interface IVersionInfo {

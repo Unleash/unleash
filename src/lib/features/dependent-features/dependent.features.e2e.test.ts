@@ -19,7 +19,9 @@ let db: ITestDb;
 let eventStore: IEventStore;
 
 beforeAll(async () => {
-    db = await dbInit('dependent_features', getLogger);
+    db = await dbInit('dependent_features', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithCustomConfig(
         db.stores,
         {

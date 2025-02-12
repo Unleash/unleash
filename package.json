@@ -1,7 +1,7 @@
 {
   "name": "unleash-server",
   "description": "Unleash is an enterprise ready feature flag service. It provides different strategies for handling feature flags.",
-  "version": "6.6.0",
+  "version": "6.7.1",
   "keywords": [
     "unleash",
     "feature flag",
@@ -57,9 +57,9 @@
     "test:report": "NODE_ENV=test PORT=4243 jest --reporters=\"default\" --reporters=\"jest-junit\"",
     "test:docker:cleanup": "docker rm -f unleash-postgres",
     "test:watch": "yarn test --watch",
-    "test:coverage": "NODE_ENV=test PORT=4243 jest --coverage --testLocationInResults --outputFile=\"coverage/report.json\" --forceExit --testTimeout=10000",
-    "test:coverage:jest": "NODE_ENV=test PORT=4243 jest --silent --ci --json --coverage --testLocationInResults --outputFile=\"report.json\" --forceExit --testTimeout=10000",
-    "test:updateSnapshot": "NODE_ENV=test PORT=4243 jest --updateSnapshot --testTimeout=10000",
+    "test:coverage": "NODE_ENV=test PORT=4243 jest --coverage --testLocationInResults --outputFile=\"coverage/report.json\" --forceExit",
+    "test:coverage:jest": "NODE_ENV=test PORT=4243 jest --silent --ci --json --coverage --testLocationInResults --outputFile=\"report.json\" --forceExit",
+    "test:updateSnapshot": "NODE_ENV=test PORT=4243 jest --updateSnapshot",
     "seed:setup": "ts-node --compilerOptions '{\"strictNullChecks\": false}' src/test/e2e/seed/segment.seed.ts",
     "seed:serve": "UNLEASH_DATABASE_NAME=unleash_test UNLEASH_DATABASE_SCHEMA=seed yarn run start:dev",
     "clean": "del-cli --force dist",
@@ -81,7 +81,7 @@
     "automock": false,
     "maxWorkers": 4,
     "testTimeout": 20000,
-    "globalSetup": "./scripts/jest-setup.js",
+    "globalSetup": "./scripts/jest-setup.ts",
     "transform": {
       "^.+\\.tsx?$": [
         "@swc/jest"

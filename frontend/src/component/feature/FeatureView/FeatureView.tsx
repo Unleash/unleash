@@ -5,6 +5,7 @@ import {
     Tab,
     Tabs,
     Tooltip,
+    Typography,
     useMediaQuery,
 } from '@mui/material';
 import Archive from '@mui/icons-material/Archive';
@@ -49,6 +50,24 @@ import useToast from 'hooks/useToast';
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { Collaborators } from './Collaborators';
+
+const NewStyledHeader = styled('div')(({ theme }) => ({
+    backgroundColor: 'none',
+    marginBottom: theme.spacing(2),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+}));
+
+const LowerHeaderRow = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    justifyContent: 'space-between',
+    gap: theme.spacing(4),
+}));
+
+const HeaderActions = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row nowrap',
+}));
 
 const StyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -139,6 +158,7 @@ const useLegacyVariants = (environments: IFeatureToggle['environments']) => {
 export const FeatureView = () => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
+    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
     const { favorite, unfavorite } = useFavoriteFeaturesApi();
     const { refetchFeature } = useFeature(projectId, featureId);
     const { setToastData, setToastApiError } = useToast();
@@ -231,6 +251,89 @@ export const FeatureView = () => {
 
     return (
         <div ref={ref}>
+            {flagOverviewRedesign && (
+                <NewStyledHeader>
+                    <Typography variant='h1'>{feature.name}</Typography>
+                    <LowerHeaderRow>
+                        <Tabs
+                            value={activeTab.path}
+                            indicatorColor='primary'
+                            textColor='primary'
+                        >
+                            {tabData.map((tab) => (
+                                <StyledTabButton
+                                    key={tab.title}
+                                    label={tab.title}
+                                    value={tab.path}
+                                    onClick={() => navigate(tab.path)}
+                                    data-testid={`TAB-${tab.title}`}
+                                />
+                            ))}
+                        </Tabs>
+                        <HeaderActions>
+                            <FavoriteIconButton
+                                onClick={onFavorite}
+                                isFavorite={feature?.favorite}
+                            />
+                            <Tooltip
+                                title={
+                                    isFeatureNameCopied
+                                        ? 'Copied!'
+                                        : 'Copy name'
+                                }
+                                arrow
+                            >
+                                <IconButton
+                                    onClick={handleCopyToClipboard}
+                                    style={{ marginLeft: 8 }}
+                                >
+                                    {isFeatureNameCopied ? (
+                                        <Check style={{ fontSize: 16 }} />
+                                    ) : (
+                                        <FileCopy style={{ fontSize: 16 }} />
+                                    )}
+                                </IconButton>
+                            </Tooltip>
+
+                            <PermissionIconButton
+                                permission={CREATE_FEATURE}
+                                projectId={projectId}
+                                data-loading
+                                component={Link}
+                                to={`/projects/${projectId}/features/${featureId}/copy`}
+                                tooltipProps={{
+                                    title: 'Clone',
+                                }}
+                            >
+                                <LibraryAdd />
+                            </PermissionIconButton>
+
+                            <PermissionIconButton
+                                permission={DELETE_FEATURE}
+                                projectId={projectId}
+                                tooltipProps={{
+                                    title: 'Archive feature flag',
+                                }}
+                                data-loading
+                                onClick={() => setShowDelDialog(true)}
+                            >
+                                <Archive />
+                            </PermissionIconButton>
+                            <PermissionIconButton
+                                onClick={() => setOpenStaleDialog(true)}
+                                permission={UPDATE_FEATURE}
+                                projectId={projectId}
+                                tooltipProps={{
+                                    title: 'Toggle stale state',
+                                }}
+                                data-loading
+                            >
+                                <WatchLater />
+                            </PermissionIconButton>
+                        </HeaderActions>
+                    </LowerHeaderRow>
+                </NewStyledHeader>
+            )}
             <StyledHeader>
                 <StyledInnerContainer>
                     <StyledFlagInfoContainer>

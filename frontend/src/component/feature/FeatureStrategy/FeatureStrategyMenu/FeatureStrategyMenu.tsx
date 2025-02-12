@@ -179,7 +179,6 @@ export const FeatureStrategyMenu = ({
                 projectId={projectId}
                 environmentId={environmentId}
                 onClick={openMoreStrategies}
-                aria-labelledby={popoverId}
                 variant='outlined'
                 size={size}
                 hideLockIcon

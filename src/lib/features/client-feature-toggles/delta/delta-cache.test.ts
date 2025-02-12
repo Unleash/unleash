@@ -182,4 +182,68 @@ describe('RevisionCache', () => {
             ]),
         );
     });
+
+    it('should not mutate previous feature-updated events when new events with the same feature name are added', () => {
+        // Arrange: Create a minimal base hydration event.
+        const baseEvent: DeltaHydrationEvent = {
+            eventId: 1,
+            features: [
+                {
+                    name: 'base-flag',
+                    type: 'release',
+                    enabled: true,
+                    project: 'streaming-deltas',
+                    stale: false,
+                    strategies: [],
+                    variants: [],
+                    description: null,
+                    impressionData: false,
+                },
+            ],
+            type: 'hydration',
+            segments: [],
+        };
+
+        // Use a cache that will not drop events (maxLength is high).
+        const deltaCache = new DeltaCache(baseEvent, 10);
+
+        // Add an initial "feature-updated" event for "streaming-test".
+        const initialFeatureEvent: DeltaEvent = {
+            eventId: 129,
+            type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            feature: {
+                impressionData: false,
+                enabled: false,
+                name: 'streaming-test',
+                description: null,
+                project: 'streaming-deltas',
+                stale: false,
+                type: 'release',
+                variants: [],
+                strategies: [],
+            },
+        };
+        deltaCache.addEvents([JSON.parse(JSON.stringify(initialFeatureEvent))]);
+
+        // Act: Add a new "feature-updated" event for "streaming-test" with updated details.
+        const updatedFeatureEvent: DeltaEvent = {
+            eventId: 130,
+            type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            feature: {
+                impressionData: false,
+                enabled: true,
+                name: 'streaming-test',
+                description: null,
+                project: 'streaming-deltas',
+                stale: false,
+                type: 'release',
+                variants: [],
+                strategies: [{ name: 'new-strategy', parameters: {} }],
+            },
+        };
+        deltaCache.addEvents([updatedFeatureEvent]);
+        // Assert: Verify that the snapshot taken before adding the new event remains unchanged.
+        // @ts-ignore
+        expect(deltaCache.events[1]).toStrictEqual(initialFeatureEvent);
+    });
 });

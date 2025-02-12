@@ -55,11 +55,13 @@ export class DeltaCache {
         for (const appliedEvent of events) {
             switch (appliedEvent.type) {
                 case DELTA_EVENT_TYPES.FEATURE_UPDATED: {
-                    const featureToUpdate = this.hydrationEvent.features.find(
+                    const featureIndex = this.hydrationEvent.features.findIndex(
                         (feature) => feature.name === appliedEvent.feature.name,
                     );
-                    if (featureToUpdate) {
-                        Object.assign(featureToUpdate, appliedEvent.feature);
+
+                    if (featureIndex > -1) {
+                        this.hydrationEvent.features[featureIndex] =
+                            appliedEvent.feature;
                     } else {
                         this.hydrationEvent.features.push(appliedEvent.feature);
                     }
@@ -74,11 +76,12 @@ export class DeltaCache {
                     break;
                 }
                 case DELTA_EVENT_TYPES.SEGMENT_UPDATED: {
-                    const segmentToUpdate = this.hydrationEvent.segments.find(
+                    const segmentIndex = this.hydrationEvent.segments.findIndex(
                         (segment) => segment.id === appliedEvent.segment.id,
                     );
-                    if (segmentToUpdate) {
-                        Object.assign(segmentToUpdate, appliedEvent.segment);
+                    if (segmentIndex > -1) {
+                        this.hydrationEvent.segments[segmentIndex] =
+                            appliedEvent.segment;
                     } else {
                         this.hydrationEvent.segments.push(appliedEvent.segment);
                     }

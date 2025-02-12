@@ -99,6 +99,8 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         checkAccess(CREATE_FEATURE_STRATEGY, environment),
     );
 
+    const label = `Copy to environment${enabled ? '' : ' (Access denied)'}`;
+
     return (
         <div>
             <ChangeRequestDialogue
@@ -115,15 +117,12 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                     />
                 }
             />
-            <Tooltip
-                title={`Copy to environment${
-                    enabled ? '' : ' (Access denied)'
-                }`}
-            >
+            <Tooltip title={label}>
                 <div>
                     <IconButton
                         size='large'
                         id={`copy-strategy-icon-menu-${strategy.id}`}
+                        aria-label={label}
                         aria-controls={open ? 'basic-menu' : undefined}
                         aria-haspopup='true'
                         aria-expanded={open ? 'true' : undefined}

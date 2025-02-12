@@ -74,6 +74,9 @@ export default async function createConfigAsync(): Promise<Config> {
         organizationName: 'Unleash', // Usually your GitHub org/user name.
         projectName: 'unleash.github.io', // Usually your repo name.
         trailingSlash: false,
+        markdown: {
+            mermaid: true,
+        },
         customFields: {
             // expose env vars etc here
             environment: process.env.NODE_ENV,
@@ -1028,6 +1031,7 @@ class="header-github-link"
         ],
         themes: [
             'docusaurus-theme-openapi-docs', // Allows use of @theme/ApiItem and other components
+            '@docusaurus/theme-mermaid',
         ],
         scripts: [
             {

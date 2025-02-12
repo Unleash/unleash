@@ -26,6 +26,7 @@ jobs:
       - name: Reset Postgres
         run: |
           heroku pg:reset DATABASE --app unleash --confirm unleash
+          sleep 10
           heroku pg:psql DATABASE --app unleash <<EOF
           INSERT INTO settings(name, content) VALUES ('license', '{"token": "${{ secrets.TEST_LICENSE }}"}') ON CONFLICT (name) DO UPDATE SET content = EXCLUDED.content;
           EOF

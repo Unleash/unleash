@@ -184,7 +184,6 @@ describe('RevisionCache', () => {
     });
 
     it('should not mutate previous feature-updated events when new events with the same feature name are added', () => {
-        // Arrange: Create a minimal base hydration event.
         const baseEvent: DeltaHydrationEvent = {
             eventId: 1,
             features: [
@@ -204,10 +203,8 @@ describe('RevisionCache', () => {
             segments: [],
         };
 
-        // Use a cache that will not drop events (maxLength is high).
         const deltaCache = new DeltaCache(baseEvent, 10);
 
-        // Add an initial "feature-updated" event for "streaming-test".
         const initialFeatureEvent: DeltaEvent = {
             eventId: 129,
             type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
@@ -225,7 +222,6 @@ describe('RevisionCache', () => {
         };
         deltaCache.addEvents([JSON.parse(JSON.stringify(initialFeatureEvent))]);
 
-        // Act: Add a new "feature-updated" event for "streaming-test" with updated details.
         const updatedFeatureEvent: DeltaEvent = {
             eventId: 130,
             type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
@@ -242,7 +238,6 @@ describe('RevisionCache', () => {
             },
         };
         deltaCache.addEvents([updatedFeatureEvent]);
-        // Assert: Verify that the snapshot taken before adding the new event remains unchanged.
         // @ts-ignore
         expect(deltaCache.events[1]).toStrictEqual(initialFeatureEvent);
     });

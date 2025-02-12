@@ -101,6 +101,7 @@ export * from './feedback-response-schema';
 export * from './feedback-update-schema';
 export * from './frontend-api-client-schema';
 export * from './frontend-api-feature-schema';
+export * from './frontend-api-features-post-schema';
 export * from './frontend-api-features-schema';
 export * from './group-schema';
 export * from './group-user-model-schema';

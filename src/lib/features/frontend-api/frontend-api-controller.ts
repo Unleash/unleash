@@ -83,8 +83,25 @@ export default class FrontendAPIController extends Controller {
         this.route({
             method: 'post',
             path: '',
-            handler: FrontendAPIController.endpointNotImplemented,
+            handler: this.getFrontendApiFeatures,
             permission: NONE,
+            middleware: [
+                this.services.openApiService.validPath({
+                    tags: ['Frontend API'],
+                    operationId: 'getFrontendApiFeaturesWithPost',
+                    requestBody: createRequestSchema(
+                        'frontendApiFeaturesPostSchema',
+                    ),
+                    responses: {
+                        200: createResponseSchema('frontendApiFeaturesSchema'),
+                        ...getStandardResponses(401, 404),
+                    },
+                    summary:
+                        'Retrieve enabled feature flags for the provided context, using POST.',
+                    description:
+                        'This endpoint returns the list of feature flags that the frontend API evaluates to enabled for the given context, using POST. Context values are provided as a `context` property in the request body. If the Frontend API is disabled 404 is returned.',
+                }),
+            ],
         });
 
         this.route({
@@ -233,7 +250,11 @@ export default class FrontendAPIController extends Controller {
     }
 
     private static createContext(req: ApiUserRequest): Context {
-        const { query } = req;
-        return enrichContextWithIp(query, req.ip);
+        const { query, body } = req;
+
+        const bodyContext = body.context ?? {};
+        const contextData = req.method === 'POST' ? bodyContext : query;
+
+        return enrichContextWithIp(contextData, req.ip);
     }
 }

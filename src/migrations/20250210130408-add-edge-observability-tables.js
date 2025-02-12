@@ -10,7 +10,11 @@ exports.up = (db, cb) => {
         cpu_usage NUMERIC DEFAULT 0.0,
         memory_usage INTEGER DEFAULT 0,
         connected_streaming_clients INTEGER NOT NULL DEFAULT 0,
-        connected_via TEXT
+        connected_via TEXT,
+        client_features_average_latency_ms NUMERIC DEFAULT 0.0,
+        client_features_p99_latency_ms NUMERIC DEFAULT 0.0,
+        frontend_api_average_latency_ms NUMERIC DEFAULT 0.0,
+        frontend_api_p99_latency_ms NUMERIC DEFAULT 0.0
     );
     CREATE INDEX edge_observability_connected_via_idx ON stat_edge_observability(connected_via) WHERE connected_via IS NOT NULL;
     CREATE INDEX edge_observability_app_name_idx ON stat_edge_observability(app_name) WHERE app_name IS NOT NULL;

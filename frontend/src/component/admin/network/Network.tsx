@@ -6,6 +6,9 @@ import { TabLink } from 'component/common/TabNav/TabLink';
 import { PageContent } from 'component/common/PageContent/PageContent';
 
 const NetworkOverview = lazy(() => import('./NetworkOverview/NetworkOverview'));
+const NetworkConnectedEdges = lazy(
+    () => import('./NetworkConnectedEdges/NetworkConnectedEdges'),
+);
 const NetworkTraffic = lazy(() => import('./NetworkTraffic/NetworkTraffic'));
 const NetworkTrafficUsage = lazy(
     () => import('./NetworkTrafficUsage/NetworkTrafficUsage'),
@@ -15,6 +18,10 @@ const tabs = [
     {
         label: 'Overview',
         path: '/admin/network',
+    },
+    {
+        label: 'Connected Edges',
+        path: '/admin/network/connected-edges',
     },
     {
         label: 'Traffic',
@@ -57,8 +64,12 @@ export const Network = () => {
                 }
             >
                 <Routes>
-                    <Route path='traffic' element={<NetworkTraffic />} />
                     <Route path='*' element={<NetworkOverview />} />
+                    <Route
+                        path='connected-edges'
+                        element={<NetworkConnectedEdges />}
+                    />
+                    <Route path='traffic' element={<NetworkTraffic />} />
                     <Route
                         path='data-usage'
                         element={<NetworkTrafficUsage />}

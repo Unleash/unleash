@@ -220,6 +220,10 @@ describe('RevisionCache', () => {
                 strategies: [],
             },
         };
+        // This tests is to verify that the initialFeatureEvent is not mutated when a new event with the same feature name is added
+        // the following dirty way to clone this object is to avoid mutation on the comparison object. Because the object is passed by reference
+        // we would be comparing the same object with itself which would cause the expect check to always pass because the comparison would
+        // also change to match the object being compared.
         deltaCache.addEvents([JSON.parse(JSON.stringify(initialFeatureEvent))]);
 
         const updatedFeatureEvent: DeltaEvent = {

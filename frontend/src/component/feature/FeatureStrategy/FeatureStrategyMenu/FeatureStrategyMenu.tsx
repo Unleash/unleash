@@ -33,6 +33,7 @@ const StyledStrategyMenu = styled('div')({
 });
 
 const StyledAdditionalMenuButton = styled(PermissionButton)(({ theme }) => ({
+    paddingBlock: theme.spacing(0.25),
     minWidth: 0,
     width: theme.spacing(4.5),
     alignItems: 'center',
@@ -188,7 +189,10 @@ export const FeatureStrategyMenu = ({
                 }}
             >
                 <MoreVert
-                    sx={(theme) => ({ margin: theme.spacing(0.25, 0) })}
+                    sx={(theme) => ({
+                        margin: theme.spacing(0.25, 0),
+                        fontSize: theme.typography.h2.fontSize,
+                    })}
                 />
             </StyledAdditionalMenuButton>
             <Popover

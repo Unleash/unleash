@@ -52,7 +52,7 @@ process.nextTick(async () => {
                         releasePlans: false,
                         releasePlanChangeRequests: false,
                         showUserDeviceCount: true,
-                        flagOverviewRedesign: false,
+                        flagOverviewRedesign: true,
                         granularAdminPermissions: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,

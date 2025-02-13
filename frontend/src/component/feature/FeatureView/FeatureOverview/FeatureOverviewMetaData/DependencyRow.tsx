@@ -128,7 +128,7 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                                 setShowDependencyDialogue(true);
                             }}
                         >
-                            Add parent feature
+                            Add parent flag
                         </StyledPermissionButton>
                     </StyledMetaDataItem>
                 }

@@ -4,10 +4,11 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import type { ConnectedEdge } from 'interfaces/connectedEdge';
+import type { SWRConfiguration } from 'swr';
 
 const DEFAULT_DATA: ConnectedEdge[] = [];
 
-export const useConnectedEdges = () => {
+export const useConnectedEdges = (options?: SWRConfiguration) => {
     const { isEnterprise } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR<ConnectedEdge[]>(
@@ -15,6 +16,7 @@ export const useConnectedEdges = () => {
         DEFAULT_DATA,
         formatApiPath('api/admin/metrics/edges'),
         fetcher,
+        options,
     );
 
     return useMemo(

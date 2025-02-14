@@ -60,6 +60,7 @@ process.nextTick(async () => {
                         dataUsageMultiMonthView: true,
                         filterExistingFlagNames: true,
                         uiGlobalFontSize: true,
+                        teamsIntegrationChangeRequests: true,
                     },
                 },
                 authentication: {

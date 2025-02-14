@@ -66,7 +66,8 @@ export type IFlagKey =
     | 'frontendHeaderRedesign'
     | 'dataUsageMultiMonthView'
     | 'uiGlobalFontSize'
-    | 'connectionCount';
+    | 'connectionCount'
+    | 'teamsIntegrationChangeRequests';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -317,6 +318,10 @@ const flags: IFlags = {
     ),
     connectionCount: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_CONNECTION_COUNT,
+        false,
+    ),
+    teamsIntegrationChangeRequests: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_TEAMS_INTEGRATION_CHANGE_REQUESTS,
         false,
     ),
 };

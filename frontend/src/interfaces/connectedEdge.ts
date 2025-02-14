@@ -5,6 +5,8 @@ export type ConnectedEdge = {
     instanceId: string;
     region: string | null;
     reportedAt: string;
-    start: string;
+    started: string;
     connectedVia?: string;
+    cpuUsage: number;
+    memoryUsage: number;
 };

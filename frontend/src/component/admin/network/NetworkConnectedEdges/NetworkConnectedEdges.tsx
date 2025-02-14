@@ -1,14 +1,6 @@
 import { usePageTitle } from 'hooks/usePageTitle';
 import { ArcherContainer, ArcherElement } from 'react-archer';
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Alert,
-    Typography,
-    styled,
-    useTheme,
-} from '@mui/material';
+import { Alert, Typography, styled, useTheme } from '@mui/material';
 import { unknownify } from 'utils/unknownify';
 import { useMemo } from 'react';
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
@@ -16,6 +8,7 @@ import { ReactComponent as LogoIconWhite } from 'assets/icons/logoWhiteBg.svg';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { useConnectedEdges } from 'hooks/api/getters/useConnectedEdges/useConnectedEdges';
 import type { ConnectedEdge } from 'interfaces/connectedEdge';
+import { NetworkConnectedEdgeInstance } from './NetworkConnectedEdgeInstance';
 
 const UNLEASH = 'Unleash';
 
@@ -50,9 +43,9 @@ const StyledElement = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledGroup = styled(StyledElement)(({ theme }) => ({
+const StyledGroup = styled(StyledElement)({
     backgroundColor: 'transparent',
-}));
+});
 
 const StyledElementHeader = styled(Typography)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
@@ -63,36 +56,12 @@ const StyledElementDescription = styled(Typography)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledInstanceAccordion = styled(Accordion)(({ theme }) => ({
-    background: 'transparent',
-    boxShadow: 'none',
-}));
-
-type ConnectedEdgeInstance = ConnectedEdge & {
-    connectionStatus: InstanceConnectionStatus;
-};
-
 type AppNameGroup = {
     appName: string;
-    instances: ConnectedEdgeInstance[];
+    instances: ConnectedEdge[];
     groupTargets: Set<string>;
     level: number;
     levelComputed?: boolean;
-};
-
-type InstanceConnectionStatus = 'Connected' | 'Stale' | 'Disconnected';
-
-const getConnectionStatus = (
-    { reportedAt }: ConnectedEdge,
-    now: number,
-): InstanceConnectionStatus => {
-    const reportedTime = new Date(reportedAt).getTime();
-    const reportedSecondsAgo = (now - reportedTime) / 1000;
-
-    if (reportedSecondsAgo > 60) return 'Disconnected';
-    if (reportedSecondsAgo > 30) return 'Stale';
-
-    return 'Connected';
 };
 
 const computeLevel = (
@@ -117,23 +86,17 @@ const computeLevel = (
 const processGraph = (
     connectedEdges: ConnectedEdge[],
 ): Map<number, AppNameGroup[]> => {
-    const now = Date.now();
     const groups = new Map<string, AppNameGroup>();
-
     connectedEdges.forEach((edge) => {
-        const instance: ConnectedEdgeInstance = {
-            ...edge,
-            connectionStatus: getConnectionStatus(edge, now),
-        };
         if (!groups.has(edge.appName)) {
             groups.set(edge.appName, {
                 appName: edge.appName,
-                instances: [instance],
+                instances: [edge],
                 groupTargets: new Set<string>(),
                 level: 0,
             });
         } else {
-            groups.get(edge.appName)!.instances.push(instance);
+            groups.get(edge.appName)!.instances.push(edge);
         }
     });
 
@@ -176,7 +139,10 @@ const processGraph = (
 export const NetworkConnectedEdges = () => {
     usePageTitle('Network - Connected Edges');
     const theme = useTheme();
-    const { connectedEdges } = useConnectedEdges();
+
+    const { connectedEdges } = useConnectedEdges({
+        refreshInterval: 30 * 1000,
+    });
 
     const appNamesByLevel = useMemo(
         () => processGraph(connectedEdges),
@@ -233,40 +199,12 @@ export const NetworkConnectedEdges = () => {
                                         {instances.length} instance
                                         {instances.length === 1 ? '' : 's'}
                                     </StyledElementDescription>
-                                    {instances.map(
-                                        ({
-                                            instanceId,
-                                            edgeVersion,
-                                            connectedVia,
-                                        }) => (
-                                            <StyledElement key={instanceId}>
-                                                <StyledInstanceAccordion>
-                                                    <AccordionSummary>
-                                                        <StyledElementHeader>
-                                                            {instanceId}
-                                                        </StyledElementHeader>
-                                                    </AccordionSummary>
-                                                    <AccordionDetails>
-                                                        <p>
-                                                            Connected to:{' '}
-                                                            <strong>
-                                                                {connectedVia ||
-                                                                    UNLEASH}
-                                                            </strong>
-                                                        </p>
-                                                        <br />
-                                                        <p>
-                                                            (Edge {edgeVersion})
-                                                        </p>
-                                                        <p>
-                                                            Some more details
-                                                            here...
-                                                        </p>
-                                                    </AccordionDetails>
-                                                </StyledInstanceAccordion>
-                                            </StyledElement>
-                                        ),
-                                    )}
+                                    {instances.map((instance) => (
+                                        <NetworkConnectedEdgeInstance
+                                            key={instance.instanceId}
+                                            instance={instance}
+                                        />
+                                    ))}
                                 </StyledGroup>
                             </ArcherElement>
                         ))}

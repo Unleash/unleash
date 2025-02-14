@@ -169,6 +169,7 @@ describe('RevisionCache', () => {
 
         const hydrationEvent = deltaCache.getHydrationEvent();
         expect(hydrationEvent.features).toHaveLength(2);
+        expect(hydrationEvent.eventId).toEqual(7);
         expect(hydrationEvent.features).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({ name: 'my-feature-flag' }),

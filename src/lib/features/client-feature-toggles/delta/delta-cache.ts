@@ -92,6 +92,7 @@ export class DeltaCache {
                     break;
                 }
             }
+            this.hydrationEvent.eventId = appliedEvent.eventId;
         }
     }
 }

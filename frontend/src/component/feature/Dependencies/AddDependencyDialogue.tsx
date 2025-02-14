@@ -90,7 +90,7 @@ export const AddDependencyDialogue = ({
     return (
         <Dialogue
             open={showDependencyDialogue}
-            title='Add parent feature dependency'
+            title='Add parent flag dependency'
             onClose={onClose}
             onClick={manageDependency}
             primaryButtonText={

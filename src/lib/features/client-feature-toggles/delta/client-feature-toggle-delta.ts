@@ -201,6 +201,10 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 namePrefix,
             );
 
+            if (events.length === 0) {
+                return undefined;
+            }
+
             const response: ClientFeaturesDeltaSchema = {
                 events: events.map((event) => {
                     if (event.type === 'feature-removed') {

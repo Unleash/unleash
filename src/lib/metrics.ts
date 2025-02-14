@@ -169,6 +169,11 @@ export function registerPrometheusMetrics(
         help: 'Number of times a feature flag has been used',
         labelNames: ['toggle', 'active', 'appName'],
     });
+    const clientRegistrationTotal = createCounter({
+        name: 'client_registration_total',
+        help: 'Number of times a an application have registered',
+        labelNames: ['appName', 'environment'],
+    });
 
     dbMetrics.registerGaugeDbMetric({
         name: 'feature_toggles_total',
@@ -806,6 +811,9 @@ export function registerPrometheusMetrics(
     eventBus.on(events.CLIENT_DELTA_MEMORY, (event: { memory: number }) => {
         clientDeltaMemory.reset();
         clientDeltaMemory.set(event.memory);
+    });
+    eventBus.on(events.CLIENT_REGISTERED, ({ appName, environment }) => {
+        clientRegistrationTotal.labels({ appName, environment }).inc();
     });
 
     events.onMetricEvent(

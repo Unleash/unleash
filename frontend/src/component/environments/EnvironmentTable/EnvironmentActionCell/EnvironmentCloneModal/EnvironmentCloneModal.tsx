@@ -184,7 +184,7 @@ export const EnvironmentCloneModal = ({
                 newToken(token);
             }
             setToastData({
-                title: 'Environment successfully cloned!',
+                text: 'Environment cloned',
                 type: 'success',
             });
             refetchEnvironments();
@@ -238,7 +238,7 @@ export const EnvironmentCloneModal = ({
                 modal
                 title={`Clone ${environment.name} environment`}
                 description='Cloning an environment will clone all feature flags and their configuration (activation strategies, segments, status, etc) into a new environment.'
-                documentationLink='https://docs.getunleash.io/reference/environments#cloning-environments'
+                documentationLink='https://docs.getunleash.io/reference/environments#clone-an-environment'
                 documentationLinkLabel='Cloning environments documentation'
                 formatApiCode={formatApiCode}
             >

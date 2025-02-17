@@ -2,7 +2,6 @@ import type {
     ICreateGroupModel,
     IGroup,
     IGroupModel,
-    IGroupModelWithProjectRole,
     IGroupProject,
     IGroupRole,
     IGroupUser,
@@ -22,6 +21,7 @@ import {
     GROUP_CREATED,
     GroupUserAdded,
     GroupUserRemoved,
+    ScimGroupsDeleted,
     type IBaseEvent,
 } from '../types/events';
 import NameExistsError from '../error/name-exists-error';
@@ -29,6 +29,7 @@ import type { IAccountStore } from '../types/stores/account-store';
 import type { IUser } from '../types/user';
 import type EventService from '../features/events/event-service';
 import { SSO_SYNC_USER } from '../db/group-store';
+import type { IGroupWithProjectRoles } from '../types/stores/access-store';
 
 const setsAreEqual = (firstSet, secondSet) =>
     firstSet.size === secondSet.size &&
@@ -179,7 +180,7 @@ export class GroupService {
 
     async getProjectGroups(
         projectId: string,
-    ): Promise<IGroupModelWithProjectRole[]> {
+    ): Promise<IGroupWithProjectRoles[]> {
         const projectGroups = await this.groupStore.getProjectGroups(projectId);
 
         if (projectGroups.length > 0) {
@@ -308,6 +309,16 @@ export class GroupService {
 
             await this.eventService.storeEvents(events);
         }
+    }
+
+    async deleteScimGroups(auditUser: IAuditUser): Promise<void> {
+        await this.groupStore.deleteScimGroups();
+        await this.eventService.storeEvent(
+            new ScimGroupsDeleted({
+                data: null,
+                auditUser,
+            }),
+        );
     }
 
     private mapGroupWithUsers(

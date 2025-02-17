@@ -4,7 +4,7 @@ export const featureTypeSchema = {
     $id: '#/components/schemas/featureTypeSchema',
     type: 'object',
     description:
-        'A [feature flag type](https://docs.getunleash.io/reference/feature-toggle-types).',
+        'A [feature flag type](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types).',
     additionalProperties: false,
     required: ['id', 'name', 'description', 'lifetimeDays'],
     properties: {

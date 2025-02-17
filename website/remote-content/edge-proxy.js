@@ -1,10 +1,10 @@
-const {
+import {
     enrich,
     mapObject,
     modifyContent,
     getRepoData,
     getUrls,
-} = require('./shared');
+} from './shared';
 
 const DOCS = mapObject(enrich)({
     'unleash-proxy': {
@@ -28,14 +28,7 @@ const DOCS = mapObject(enrich)({
 });
 
 const getAdmonitions = (data) => {
-    const admonitions = {
-        'unleash-proxy': `:::tip
-
-Looking for how to run the Unleash proxy? Check out the [_how to run the Unleash proxy_ guide](../how-to/how-to-run-the-unleash-proxy.mdx)!
-
-:::`,
-        'unleash-edge': ``,
-    };
+    const admonitions = {};
 
     return [admonitions[data.slugName]];
 };
@@ -46,7 +39,7 @@ const modifyContent2 = modifyContent({
     getAdditionalAdmonitions: getAdmonitions,
 });
 
-module.exports.docs = {
+export const docs = {
     urls: getUrls(DOCS),
     modifyContent: modifyContent2,
 };

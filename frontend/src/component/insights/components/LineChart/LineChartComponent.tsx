@@ -24,6 +24,7 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/material';
 import { createOptions } from './createChartOptions';
+import merge from 'deepmerge';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -81,6 +82,10 @@ const customHighlightPlugin = {
     },
 };
 
+function mergeAll<T>(objects: Partial<T>[]): T {
+    return merge.all<T>(objects.filter((i) => i));
+}
+
 const LineChartComponent: FC<{
     data: ChartData<'line', unknown>;
     aspectRatio?: number;
@@ -100,16 +105,18 @@ const LineChartComponent: FC<{
     const { locationSettings } = useLocationSettings();
 
     const [tooltip, setTooltip] = useState<null | TooltipState>(null);
+
     const options = useMemo(
-        () => ({
-            ...createOptions(
-                theme,
-                locationSettings,
-                setTooltip,
-                Boolean(cover),
-            ),
-            ...overrideOptions,
-        }),
+        () =>
+            mergeAll([
+                createOptions(
+                    theme,
+                    locationSettings,
+                    setTooltip,
+                    Boolean(cover),
+                ),
+                overrideOptions ?? {},
+            ]),
         [theme, locationSettings, overrideOptions, cover],
     );
 

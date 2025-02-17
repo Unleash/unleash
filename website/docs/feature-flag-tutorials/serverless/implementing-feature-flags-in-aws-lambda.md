@@ -1,6 +1,6 @@
 ---
-title: How to Implement Feature Flags in a Serverless Environment using AWS Lambda
-description: New to feature flags in serverless environments? This guide will walk you through a practical example using the Unleash Node.js SDK in AWS Lambda.
+title: 'Serverless feature flags: How to'
+description: 'Use the Unleash Node.js SDK with AWS Lambda to implement feature flags in a serverless environment.'
 slug: /feature-flag-tutorials/serverless/lambda
 ---
 
@@ -31,7 +31,7 @@ You should only initialize the Unleash SDK once during the lifespan of a serverl
 
 Why? AWS Lambda is designed to reuse the same instance for multiple invocations, enabling the expensive initialization process to occur only during the Lambda's "cold start." Subsequent "warm" invocations can then leverage the SDK, which has been pre-initialized, with all feature flag configurations cached in memory. This ensures efficient operation by minimizing initialization overhead and enhancing performance.
 
-You’ll also need to provide an [Unleash Server side API Token](/how-to/how-to-create-api-tokens) as an environment variable for the AWS Lambda. This authorizes the SDK to connect to the Unleash API.
+You’ll also need to provide an [Unleash Server side API Token](/reference/api-tokens-and-client-keys) as an environment variable for the AWS Lambda. This authorizes the SDK to connect to the Unleash API.
 
 ```javascript
 import {

@@ -15,7 +15,7 @@ import {
     RoleName,
 } from '../../types';
 import type { ImportTogglesSchema, VariantsSchema } from '../../openapi';
-import type { IContextFieldDto } from '../../types/stores/context-field-store';
+import type { IContextFieldDto } from '../context/context-field-store-type';
 import type { AccessService } from '../../services';
 import { DEFAULT_ENV } from '../../util';
 import type { IRole } from '../../types/stores/access-store';
@@ -249,9 +249,7 @@ beforeAll(async () => {
         db.stores,
         {
             experimental: {
-                flags: {
-                    featuresExportImport: true,
-                },
+                flags: {},
             },
         },
         db.rawDatabase,

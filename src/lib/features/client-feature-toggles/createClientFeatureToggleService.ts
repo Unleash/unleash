@@ -5,28 +5,29 @@ import FakeClientFeatureToggleStore from './fakes/fake-client-feature-toggle-sto
 import { ClientFeatureToggleService } from './client-feature-toggle-service';
 import { SegmentReadModel } from '../segment/segment-read-model';
 import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
+import { createClientFeatureToggleDelta } from './delta/createClientFeatureToggleDelta';
 
 export const createClientFeatureToggleService = (
     db: Db,
     config: IUnleashConfig,
 ): ClientFeatureToggleService => {
-    const { getLogger, eventBus, flagResolver } = config;
-
     const featureToggleClientStore = new FeatureToggleClientStore(
         db,
-        eventBus,
-        getLogger,
-        flagResolver,
+        config.eventBus,
+        config,
     );
 
     const segmentReadModel = new SegmentReadModel(db);
+
+    const clientFeatureToggleCache = createClientFeatureToggleDelta(db, config);
 
     const clientFeatureToggleService = new ClientFeatureToggleService(
         {
             clientFeatureToggleStore: featureToggleClientStore,
         },
         segmentReadModel,
-        { getLogger, flagResolver },
+        clientFeatureToggleCache,
+        config,
     );
 
     return clientFeatureToggleService;
@@ -35,8 +36,6 @@ export const createClientFeatureToggleService = (
 export const createFakeClientFeatureToggleService = (
     config: IUnleashConfig,
 ): ClientFeatureToggleService => {
-    const { getLogger, flagResolver } = config;
-
     const fakeClientFeatureToggleStore = new FakeClientFeatureToggleStore();
 
     const fakeSegmentReadModel = new FakeSegmentReadModel();
@@ -46,7 +45,8 @@ export const createFakeClientFeatureToggleService = (
             clientFeatureToggleStore: fakeClientFeatureToggleStore,
         },
         fakeSegmentReadModel,
-        { getLogger, flagResolver },
+        null,
+        config,
     );
 
     return clientFeatureToggleService;

@@ -5,7 +5,7 @@ import type StrategyService from '../services/strategy-service';
 import type TagTypeService from '../features/tag-type/tag-type-service';
 import type TagService from '../services/tag-service';
 import type ClientInstanceService from '../features/metrics/instance/instance-service';
-import type ContextService from '../services/context-service';
+import type ContextService from '../features/context/context-service';
 import type VersionService from '../services/version-service';
 import type { ApiTokenService } from '../services/api-token-service';
 import type { EmailService } from '../services/email-service';
@@ -56,8 +56,13 @@ import type { JobService } from '../features/scheduler/job-service';
 import type { FeatureLifecycleService } from '../features/feature-lifecycle/feature-lifecycle-service';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
 import type { OnboardingService } from '../features/onboarding/onboarding-service';
+import type { PersonalDashboardService } from '../features/personal-dashboard/personal-dashboard-service';
+import type { ProjectStatusService } from '../features/project-status/project-status-service';
+import type { UserSubscriptionsService } from '../features/user-subscriptions/user-subscriptions-service';
+import type { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
 
 export interface IUnleashServices {
+    transactionalAccessService: WithTransactional<AccessService>;
     accessService: AccessService;
     accountService: AccountService;
     addonService: AddonService;
@@ -65,6 +70,7 @@ export interface IUnleashServices {
     clientInstanceService: ClientInstanceService;
     clientMetricsServiceV2: ClientMetricsServiceV2;
     contextService: ContextService;
+    transactionalContextService: WithTransactional<ContextService>;
     emailService: EmailService;
     environmentService: EnvironmentService;
     transactionalEnvironmentService: WithTransactional<EnvironmentService>;
@@ -123,4 +129,8 @@ export interface IUnleashServices {
     transactionalFeatureLifecycleService: WithTransactional<FeatureLifecycleService>;
     integrationEventsService: IntegrationEventsService;
     onboardingService: OnboardingService;
+    personalDashboardService: PersonalDashboardService;
+    projectStatusService: ProjectStatusService;
+    transactionalUserSubscriptionsService: WithTransactional<UserSubscriptionsService>;
+    uniqueConnectionService: UniqueConnectionService;
 }

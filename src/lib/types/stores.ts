@@ -5,7 +5,7 @@ import { IStrategyStore } from './stores/strategy-store';
 import { IClientApplicationsStore } from './stores/client-applications-store';
 import { IClientInstanceStore } from './stores/client-instance-store';
 import { IFeatureToggleStore } from '../features/feature-toggle/types/feature-toggle-store-type';
-import { IContextFieldStore } from './stores/context-field-store';
+import { IContextFieldStore } from '../features/context/context-field-store-type';
 import { ISettingStore } from './stores/settings-store';
 import { ISessionStore } from './stores/session-store';
 import { ITagStore } from './stores/tag-store';
@@ -51,6 +51,10 @@ import { IFeatureCollaboratorsReadModel } from '../features/feature-toggle/types
 import type { IProjectReadModel } from '../features/project/project-read-model-type';
 import { IOnboardingReadModel } from '../features/onboarding/onboarding-read-model-type';
 import { IOnboardingStore } from '../features/onboarding/onboarding-store-type';
+import type { IUserUnsubscribeStore } from '../features/user-subscriptions/user-unsubscribe-store-type';
+import type { IUserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model-type';
+import { IUniqueConnectionStore } from '../features/unique-connection/unique-connection-store-type';
+import { IUniqueConnectionReadModel } from '../features/unique-connection/unique-connection-read-model-type';
 
 export interface IUnleashStores {
     accessStore: IAccessStore;
@@ -106,6 +110,10 @@ export interface IUnleashStores {
     projectReadModel: IProjectReadModel;
     onboardingReadModel: IOnboardingReadModel;
     onboardingStore: IOnboardingStore;
+    userUnsubscribeStore: IUserUnsubscribeStore;
+    userSubscriptionsReadModel: IUserSubscriptionsReadModel;
+    uniqueConnectionStore: IUniqueConnectionStore;
+    uniqueConnectionReadModel: IUniqueConnectionReadModel;
 }
 
 export {
@@ -160,4 +168,7 @@ export {
     type IntegrationEventsStore,
     type IProjectReadModel,
     IOnboardingStore,
+    type IUserSubscriptionsReadModel,
+    IUniqueConnectionStore,
+    IUniqueConnectionReadModel,
 };

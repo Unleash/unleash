@@ -197,14 +197,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                         {actions}
                     </Box>
                 </StyledHeader>
-                <Box
-                    sx={{
-                        p: 2,
-                        justifyItems: 'center',
-                    }}
-                >
-                    {children}
-                </Box>
+                <Box sx={{ p: 2 }}>{children}</Box>
             </StyledContainer>
         </Box>
     );

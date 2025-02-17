@@ -61,11 +61,16 @@ export class SegmentReadModel implements ISegmentReadModel {
         };
     }
 
-    async getAll(): Promise<ISegment[]> {
-        const rows: ISegmentRow[] = await this.db
+    async getAll(ids?: number[]): Promise<ISegment[]> {
+        let query = this.db
             .select(this.prefixColumns())
             .from('segments')
             .orderBy('segments.name', 'asc');
+
+        if (ids && ids.length > 0) {
+            query = query.whereIn('id', ids);
+        }
+        const rows = await query;
 
         return rows.map(this.mapRow);
     }
@@ -82,7 +87,7 @@ export class SegmentReadModel implements ISegmentReadModel {
     }
 
     async getActive(): Promise<ISegment[]> {
-        const rows: ISegmentRow[] = await this.db
+        const query = this.db
             .distinct(this.prefixColumns())
             .from('segments')
             .orderBy('name', 'asc')
@@ -91,12 +96,26 @@ export class SegmentReadModel implements ISegmentReadModel {
                 'feature_strategy_segment.segment_id',
                 'segments.id',
             );
-
+        const rows: ISegmentRow[] = await query;
         return rows.map(this.mapRow);
     }
 
     async getActiveForClient(): Promise<IClientSegment[]> {
         const fullSegments = await this.getActive();
+
+        return fullSegments.map((segments) => ({
+            id: segments.id,
+            name: segments.name,
+            constraints: segments.constraints,
+        }));
+    }
+
+    async getAllForClientIds(ids?: number[]): Promise<IClientSegment[]> {
+        if (!ids || ids.length === 0) {
+            return [];
+        }
+
+        const fullSegments = await this.getAll(ids);
 
         return fullSegments.map((segments) => ({
             id: segments.id,

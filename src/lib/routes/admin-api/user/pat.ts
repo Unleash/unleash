@@ -28,7 +28,6 @@ import {
     createPatSchema,
 } from '../../../openapi/spec/create-pat-schema';
 import { ForbiddenError, NotFoundError } from '../../../error';
-import idNumberMiddleware from '../../../middleware/id-number-middleware';
 
 export default class PatController extends Controller {
     private patService: PatService;
@@ -63,7 +62,7 @@ export default class PatController extends Controller {
                     summary:
                         'Get all personal access tokens (PATs) for the current user.',
                     description:
-                        'Returns all of the [personal access tokens](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens) (PATs) belonging to the current user.',
+                        'Returns all of the [personal access tokens](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens) (PATs) belonging to the current user.',
                     responses: {
                         200: createResponseSchema(patsSchema.$id),
                         ...getStandardResponses(401, 403, 404),
@@ -83,7 +82,7 @@ export default class PatController extends Controller {
                     summary:
                         'Create a new personal access token (PAT) for the current user.',
                     description:
-                        'Creates a new [personal access token](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens) (PAT) belonging to the current user.',
+                        'Creates a new [personal access token](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens (PAT) belonging to the current user.',
                     requestBody: createRequestSchema(createPatSchema.$id),
                     responses: {
                         201: resourceCreatedResponseSchema(patSchema.$id),
@@ -106,13 +105,23 @@ export default class PatController extends Controller {
                     summary:
                         'Delete a personal access token (PAT) for the current user.',
                     description:
-                        'Deletes a [personal access token](https://docs.getunleash.io/how-to/how-to-create-personal-access-tokens) (PAT) belonging to the current user.',
+                        'Deletes a [personal access token](https://docs.getunleash.io/reference/api-tokens-and-client-keys#personal-access-tokens) (PAT) belonging to the current user.',
+                    parameters: [
+                        {
+                            name: 'id',
+                            in: 'path',
+                            required: true,
+                            schema: {
+                                type: 'integer',
+                            },
+                            description: 'a personal access token id',
+                        },
+                    ],
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
-                idNumberMiddleware(),
             ],
         });
     }

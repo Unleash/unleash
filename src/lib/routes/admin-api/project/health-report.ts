@@ -42,10 +42,11 @@ export default class ProjectHealthReport extends Controller {
             middleware: [
                 openApiService.validPath({
                     tags: ['Projects'],
+                    deprecated: true,
                     operationId: 'getProjectHealthReport',
                     summary: 'Get a health report for a project.',
                     description:
-                        'This endpoint returns a health report for the specified project. This data is used for [the technical debt dashboard](https://docs.getunleash.io/reference/technical-debt#the-technical-debt-dashboard)',
+                        'This endpoint returns a health report for the specified project. This data is used for [the technical debt insights](https://docs.getunleash.io/reference/technical-debt)',
                     responses: {
                         200: createResponseSchema('healthReportSchema'),
                         ...getStandardResponses(401, 403, 404),

@@ -1,7 +1,6 @@
 import { URL } from 'url';
 import UserService from './user-service';
 import UserStoreMock from '../../test/fixtures/fake-user-store';
-import EventStoreMock from '../../test/fixtures/fake-event-store';
 import AccessServiceMock from '../../test/fixtures/access-service-mock';
 import ResetTokenService from './reset-token-service';
 import { EmailService } from './email-service';
@@ -21,58 +20,59 @@ const config: IUnleashConfig = createTestConfig();
 
 const systemUser = new User({ id: -1, username: 'system' });
 
-test('Should create new user', async () => {
-    const userStore = new UserStoreMock();
-    const eventStore = new EventStoreMock();
-    const accessService = new AccessServiceMock();
-    const resetTokenStore = new FakeResetTokenStore();
-    const resetTokenService = new ResetTokenService(
-        { resetTokenStore },
-        config,
-    );
-    const sessionStore = new FakeSessionStore();
-    const sessionService = new SessionService({ sessionStore }, config);
-    const emailService = new EmailService(config);
-    const eventService = createFakeEventsService(config);
-    const settingService = new SettingService(
-        {
-            settingStore: new FakeSettingStore(),
-        },
-        config,
-        eventService,
-    );
+test.each([undefined, 'test-unleash@example.com', 'top-level-domain@jp'])(
+    'Should create new user with email %s',
+    async (email?: string) => {
+        const userStore = new UserStoreMock();
+        const accessService = new AccessServiceMock();
+        const resetTokenStore = new FakeResetTokenStore();
+        const resetTokenService = new ResetTokenService(
+            { resetTokenStore },
+            config,
+        );
+        const sessionStore = new FakeSessionStore();
+        const sessionService = new SessionService({ sessionStore }, config);
+        const emailService = new EmailService(config);
+        const eventService = createFakeEventsService(config);
+        const settingService = new SettingService(
+            {
+                settingStore: new FakeSettingStore(),
+            },
+            config,
+            eventService,
+        );
 
-    const service = new UserService({ userStore }, config, {
-        accessService,
-        resetTokenService,
-        emailService,
-        eventService,
-        sessionService,
-        settingService,
-    });
-    const user = await service.createUser(
-        {
-            username: 'test',
-            rootRole: 1,
-        },
-        extractAuditInfoFromUser(systemUser),
-    );
-    const storedUser = await userStore.get(user.id);
-    const allUsers = await userStore.getAll();
+        const service = new UserService({ userStore }, config, {
+            accessService,
+            resetTokenService,
+            emailService,
+            eventService,
+            sessionService,
+            settingService,
+        });
+        const user = await service.createUser(
+            {
+                username: 'test',
+                rootRole: 1,
+                email,
+            },
+            extractAuditInfoFromUser(systemUser),
+        );
+        const storedUser = await userStore.get(user.id);
+        const allUsers = await userStore.getAll();
 
-    expect(user.id).toBeTruthy();
-    expect(user.username).toBe('test');
-    expect(allUsers.length).toBe(1);
-    expect(storedUser.username).toBe('test');
-});
+        expect(user.id).toBeTruthy();
+        expect(user.username).toBe('test');
+        expect(allUsers.length).toBe(1);
+        expect(storedUser.username).toBe('test');
+    },
+);
 
 describe('Default admin initialization', () => {
     const DEFAULT_ADMIN_USERNAME = 'admin';
     const DEFAULT_ADMIN_PASSWORD = 'unleash4all';
     const CUSTOM_ADMIN_USERNAME = 'custom-admin';
     const CUSTOM_ADMIN_PASSWORD = 'custom-password';
-    const CUSTOM_ADMIN_NAME = 'Custom Admin';
-    const CUSTOM_ADMIN_EMAIL = 'custom-admin@getunleash.io';
 
     let userService: UserService;
     const sendGettingStartedMailMock = jest.fn();
@@ -81,7 +81,6 @@ describe('Default admin initialization', () => {
         jest.clearAllMocks();
 
         const userStore = new UserStoreMock();
-        const eventStore = new EventStoreMock();
         const accessService = new AccessServiceMock();
         const resetTokenStore = new FakeResetTokenStore();
         const resetTokenService = new ResetTokenService(
@@ -151,7 +150,6 @@ describe('Default admin initialization', () => {
 
     test('Should not create any default admin user if `createAdminUser` is not true and `initialAdminUser` is not set', async () => {
         const userStore = new UserStoreMock();
-        const eventStore = new EventStoreMock();
         const accessService = new AccessServiceMock();
         const resetTokenStore = new FakeResetTokenStore();
         const resetTokenService = new ResetTokenService(
@@ -185,11 +183,27 @@ describe('Default admin initialization', () => {
             'The combination of password and username you provided is invalid',
         );
     });
+
+    test('Should use the correct environment variables when initializing the default admin account', async () => {
+        jest.resetModules();
+
+        process.env.UNLEASH_DEFAULT_ADMIN_USERNAME = CUSTOM_ADMIN_USERNAME;
+        process.env.UNLEASH_DEFAULT_ADMIN_PASSWORD = CUSTOM_ADMIN_PASSWORD;
+
+        const createTestConfig =
+            require('../../test/config/test-config').createTestConfig;
+
+        const config = createTestConfig();
+
+        expect(config.authentication.initialAdminUser).toStrictEqual({
+            username: CUSTOM_ADMIN_USERNAME,
+            password: CUSTOM_ADMIN_PASSWORD,
+        });
+    });
 });
 
 test('Should be a valid password', async () => {
     const userStore = new UserStoreMock();
-    const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
@@ -225,7 +239,6 @@ test('Should be a valid password', async () => {
 
 test('Password must be at least 10 chars', async () => {
     const userStore = new UserStoreMock();
-    const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
@@ -262,7 +275,6 @@ test('Password must be at least 10 chars', async () => {
 
 test('The password must contain at least one uppercase letter.', async () => {
     const userStore = new UserStoreMock();
-    const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
@@ -300,7 +312,6 @@ test('The password must contain at least one uppercase letter.', async () => {
 
 test('The password must contain at least one number', async () => {
     const userStore = new UserStoreMock();
-    const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
@@ -339,7 +350,6 @@ test('The password must contain at least one number', async () => {
 
 test('The password must contain at least one special character', async () => {
     const userStore = new UserStoreMock();
-    const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
@@ -377,7 +387,6 @@ test('The password must contain at least one special character', async () => {
 
 test('Should be a valid password with special chars', async () => {
     const userStore = new UserStoreMock();
-    const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
@@ -412,7 +421,6 @@ test('Should be a valid password with special chars', async () => {
 
 test('Should send password reset email if user exists', async () => {
     const userStore = new UserStoreMock();
-    const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(
@@ -463,7 +471,6 @@ test('Should send password reset email if user exists', async () => {
 
 test('Should throttle password reset email', async () => {
     const userStore = new UserStoreMock();
-    const eventStore = new EventStoreMock();
     const accessService = new AccessServiceMock();
     const resetTokenStore = new FakeResetTokenStore();
     const resetTokenService = new ResetTokenService(

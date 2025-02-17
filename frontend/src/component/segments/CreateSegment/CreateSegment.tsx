@@ -76,8 +76,7 @@ export const CreateSegment = ({ modal }: ICreateSegmentProps) => {
                 navigate('/segments/');
             }
             setToastData({
-                title: 'Segment created',
-                confetti: true,
+                text: 'Segment created',
                 type: 'success',
             });
             showFeedbackCES({

@@ -57,6 +57,9 @@ export const createFeature_UI = (
     const projectName = project || 'default';
     const uiOpts = forceInteractions ? { force: true } : undefined;
     cy.visit(`/projects/${projectName}`);
+
+    cy.wait(5_000);
+
     cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click(uiOpts);
 
     cy.intercept('POST', `/api/admin/projects/${projectName}/features`).as(
@@ -227,7 +230,6 @@ export const deleteFeatureStrategy_UI = (
         },
     ).as('deleteUserStrategy');
     cy.visit(`/projects/${project}/features/${featureToggleName}`);
-    cy.get('[data-testid=FEATURE_ENVIRONMENT_ACCORDION_development]').click();
     cy.get('[data-testid=STRATEGY_REMOVE_MENU_BTN]').first().click();
     cy.get('[data-testid=STRATEGY_FORM_REMOVE_ID]').first().click();
     if (!shouldWait) return cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();

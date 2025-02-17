@@ -1,7 +1,15 @@
 import type { VFC } from 'react';
-import { Box } from '@mui/material';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { InviteLinkBarContent } from './InviteLinkBarContent';
+import { styled } from '@mui/material';
+
+const Bar = styled('article')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row wrap',
+    gap: theme.spacing(2),
+    justifyContent: 'space-between',
+    alignItems: 'center',
+}));
 
 export const InviteLinkBar: VFC = () => {
     const { trackEvent } = usePlausibleTracker();
@@ -16,23 +24,8 @@ export const InviteLinkBar: VFC = () => {
     };
 
     return (
-        <Box
-            sx={(theme) => ({
-                backgroundColor: theme.palette.background.paper,
-                py: 2,
-                px: 4,
-                mb: 2,
-                borderRadius: `${theme.shape.borderRadiusLarge}px`,
-                display: 'flex',
-                flexDirection: {
-                    xs: 'column',
-                    md: 'row',
-                },
-                border: '2px solid',
-                borderColor: theme.palette.background.alternative,
-            })}
-        >
+        <Bar>
             <InviteLinkBarContent onActionClick={onInviteLinkActionClick} />
-        </Box>
+        </Bar>
     );
 };

@@ -1,8 +1,16 @@
 import { styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IGroupUser } from 'interfaces/group';
-import { useMemo } from 'react';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar'; // usage
+import {
+    type ForwardRefExoticComponent,
+    type FunctionComponent,
+    type RefAttributes,
+    useMemo,
+} from 'react';
+import {
+    type IUserAvatarProps,
+    UserAvatar,
+} from 'component/common/UserAvatar/UserAvatar';
 import { objectId } from 'utils/objectId';
 import millify from 'millify';
 
@@ -14,6 +22,12 @@ const StyledAvatars = styled('div')(({ theme }) => ({
     justifyContent: 'start',
 }));
 
+export type AvatarComponentType =
+    | FunctionComponent<IUserAvatarProps>
+    | ForwardRefExoticComponent<
+          IUserAvatarProps & RefAttributes<HTMLDivElement>
+      >;
+
 export const AvatarComponent = styled(UserAvatar)(({ theme }) => ({
     outline: `${theme.spacing(0.25)} solid ${theme.palette.background.paper}`,
     margin: 0,
@@ -21,7 +35,7 @@ export const AvatarComponent = styled(UserAvatar)(({ theme }) => ({
     '&:hover': {
         outlineColor: theme.palette.primary.main,
     },
-}));
+})) as AvatarComponentType;
 
 type User = {
     name: string;
@@ -32,7 +46,7 @@ type User = {
 type AvatarGroupProps = {
     users: User[];
     avatarLimit?: number;
-    AvatarComponent?: typeof UserAvatar;
+    AvatarComponent?: AvatarComponentType;
     className?: string;
 };
 
@@ -44,7 +58,7 @@ export const AvatarGroup = ({ ...props }: AvatarGroupProps) => (
 );
 
 type AvatarGroupInnerProps = Omit<AvatarGroupProps, 'AvatarComponent'> & {
-    AvatarComponent: typeof UserAvatar;
+    AvatarComponent: AvatarComponentType;
 };
 
 const MAX_OVERFLOW_DISPLAY_NUMBER = 99;
@@ -71,7 +85,7 @@ const AvatarGroupInner = ({
                     return 0;
                 })
                 .slice(0, avatarLimit),
-        [users],
+        [users, avatarLimit],
     );
 
     const overflow = users.length - avatarLimit;

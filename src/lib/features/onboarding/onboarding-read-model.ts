@@ -3,6 +3,7 @@ import type {
     IOnboardingReadModel,
     InstanceOnboarding,
     ProjectOnboarding,
+    OnboardingStatus,
 } from './onboarding-read-model-type';
 
 const instanceEventLookup = {
@@ -77,5 +78,47 @@ export class OnboardingReadModel implements IOnboardingReadModel {
         });
 
         return projects;
+    }
+
+    async getOnboardingStatusForProject(
+        projectId: string,
+    ): Promise<OnboardingStatus | null> {
+        const projectExists = await this.db('projects')
+            .select(1)
+            .where('id', projectId)
+            .first();
+
+        if (!projectExists) {
+            return null;
+        }
+
+        const db = this.db;
+        const lastSeen = await db
+            .select(db.raw('1'))
+            .from('last_seen_at_metrics as lsm')
+            .innerJoin('features as f', 'f.name', 'lsm.feature_name')
+            .innerJoin('projects as p', 'p.id', 'f.project')
+            .where('p.id', projectId)
+            .union((qb) => {
+                qb.select(db.raw('1'))
+                    .from('client_applications_usage as cau')
+                    .where('cau.project', projectId);
+            })
+            .first();
+
+        if (lastSeen) {
+            return { status: 'onboarded' };
+        }
+
+        const feature = await this.db('features')
+            .select('name')
+            .where('project', projectId)
+            .where('archived_at', null)
+            .first();
+
+        if (!feature) {
+            return { status: 'onboarding-started' };
+        }
+        return { status: 'first-flag-created', feature: feature.name };
     }
 }

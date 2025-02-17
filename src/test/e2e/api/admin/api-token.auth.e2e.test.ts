@@ -7,7 +7,6 @@ import getLogger from '../../../fixtures/no-logger';
 import { ApiTokenType } from '../../../../lib/types/models/api-token';
 import { RoleName } from '../../../../lib/types/model';
 import {
-    ADMIN_TOKEN_USER,
     CREATE_CLIENT_API_TOKEN,
     CREATE_PROJECT_API_TOKEN,
     DELETE_CLIENT_API_TOKEN,
@@ -195,7 +194,7 @@ test('Only token-admins should be allowed to create token', async () => {
     await destroy();
 });
 
-test('Token-admin should be allowed to create token', async () => {
+test('Token-admin should not be allowed to create token', async () => {
     expect.assertions(0);
 
     const preHook = (app, config, { userService, accessService }) => {
@@ -223,14 +222,12 @@ test('Token-admin should be allowed to create token', async () => {
             type: 'admin',
         })
         .set('Content-Type', 'application/json')
-        .expect(201);
+        .expect(403);
 
     await destroy();
 });
 
-test('An admin token should be allowed to create a token', async () => {
-    expect.assertions(2);
-
+test('An admin should be forbidden to create an admin token', async () => {
     const { request, destroy, services } = await setupAppWithAuth(
         stores,
         undefined,
@@ -256,11 +253,7 @@ test('An admin token should be allowed to create a token', async () => {
         })
         .set('Authorization', secret)
         .set('Content-Type', 'application/json')
-        .expect(201);
-
-    const event = await getLastEvent();
-    expect(event.createdBy).toBe('default-admin');
-    expect(event.createdByUserId).toBe(ADMIN_TOKEN_USER.id);
+        .expect(403);
     await destroy();
 });
 

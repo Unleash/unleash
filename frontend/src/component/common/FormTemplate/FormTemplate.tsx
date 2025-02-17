@@ -26,7 +26,7 @@ import { relative } from 'themes/themeStyles';
 
 interface ICreateProps {
     title?: ReactNode;
-    description: string;
+    description: ReactNode;
     documentationLink?: string;
     documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
@@ -210,7 +210,7 @@ const StyledDescriptionCard = styled('article')(({ theme }) => ({
     marginBlockEnd: theme.spacing(3),
 }));
 
-const StyledDescription = styled('p')(({ theme }) => ({
+const StyledDescription = styled('div')(() => ({
     width: '100%',
 }));
 
@@ -259,16 +259,14 @@ const FormTemplate: React.FC<ICreateProps> = ({
         if (formatApiCode !== undefined) {
             if (copy(formatApiCode())) {
                 setToastData({
-                    title: 'Successfully copied the command',
-                    text: 'The command should now be automatically copied to your clipboard',
+                    text: 'Command copied',
                     autoHideDuration: 6000,
                     type: 'success',
                     show: true,
                 });
             } else {
                 setToastData({
-                    title: 'Could not copy the command',
-                    text: 'Sorry, but we could not copy the command.',
+                    text: 'Could not copy the command',
                     autoHideDuration: 6000,
                     type: 'error',
                     show: true,
@@ -370,7 +368,7 @@ const FormTemplate: React.FC<ICreateProps> = ({
 };
 
 interface IMobileGuidance {
-    description: string;
+    description: ReactNode;
     documentationLink?: string;
     documentationIcon?: ReactNode;
     documentationLinkLabel?: string;
@@ -410,7 +408,7 @@ const MobileGuidance = ({
 };
 
 interface IGuidanceProps {
-    description: string;
+    description: ReactNode;
     documentationIcon?: ReactNode;
     documentationLink?: string;
     documentationLinkLabel?: string;

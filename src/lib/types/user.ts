@@ -1,4 +1,4 @@
-import Joi, { ValidationError } from 'joi';
+import { ValidationError } from 'joi';
 import { generateImageUrl } from '../util/generateImageUrl';
 
 export const AccountTypes = ['User', 'Service Account'] as const;
@@ -31,7 +31,14 @@ export interface IUser {
     imageUrl?: string;
     accountType?: AccountType;
     scimId?: string;
+    deletedSessions?: number;
+    activeSessions?: number;
 }
+
+export type MinimalUser = Pick<
+    IUser,
+    'id' | 'name' | 'username' | 'email' | 'imageUrl'
+>;
 
 export interface IProjectUser extends IUser {
     addedAt: Date;
@@ -83,9 +90,6 @@ export default class User implements IUser {
         if (!id) {
             throw new ValidationError('Id is required', [], undefined);
         }
-        Joi.assert(email, Joi.string().email({ ignoreLength: true }), 'Email');
-        Joi.assert(username, Joi.string(), 'Username');
-        Joi.assert(name, Joi.string(), 'Name');
 
         this.id = id;
         this.name = name!;

@@ -27,6 +27,8 @@ import BillingIcon from '@mui/icons-material/CreditCardOutlined';
 import EventLogIcon from '@mui/icons-material/EventNoteOutlined';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
+import PersonalDashboardIcon from '@mui/icons-material/DashboardOutlined';
 import type { FC } from 'react';
 
 // TODO: move to routes
@@ -56,6 +58,8 @@ const icons: Record<string, typeof SvgIcon> = {
     '/admin/cors': CorsIcon,
     '/admin/billing': BillingIcon,
     '/history': EventLogIcon,
+    '/release-management': FactCheckOutlinedIcon,
+    '/personal': PersonalDashboardIcon,
     GitHub: GitHubIcon,
     Documentation: LibraryBooksIcon,
 };

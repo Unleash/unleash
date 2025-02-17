@@ -24,6 +24,7 @@ export const applicationEnvironmentInstancesSchema = {
                     },
                     sdkVersion: {
                         type: 'string',
+                        nullable: true,
                         description:
                             'An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>"',
                         example: 'unleash-client-java:7.0.0',

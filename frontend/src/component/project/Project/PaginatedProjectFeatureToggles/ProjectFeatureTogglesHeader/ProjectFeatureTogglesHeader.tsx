@@ -26,6 +26,9 @@ import { useFeedback } from 'component/feedbackNew/useFeedback';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { CreateFeatureDialog } from './CreateFeatureDialog';
 import IosShare from '@mui/icons-material/IosShare';
+import type { OverridableStringUnion } from '@mui/types';
+import type { ButtonPropsVariantOverrides } from '@mui/material/Button/Button';
+import { NAVIGATE_TO_CREATE_FEATURE } from 'utils/testIds';
 
 interface IProjectFeatureTogglesHeaderProps {
     isLoading?: boolean;
@@ -37,16 +40,33 @@ interface IProjectFeatureTogglesHeaderProps {
     actions?: ReactNode;
 }
 
+interface IFlagCreationButtonProps {
+    text?: string;
+    variant?: OverridableStringUnion<
+        'text' | 'outlined' | 'contained',
+        ButtonPropsVariantOverrides
+    >;
+    skipNavigationOnComplete?: boolean;
+    isLoading?: boolean;
+    onSuccess?: () => void;
+}
+
 const StyledResponsiveButton = styled(ResponsiveButton)(() => ({
     whiteSpace: 'nowrap',
 }));
 
-export const FlagCreationButton: FC = () => {
+export const FlagCreationButton = ({
+    variant,
+    text = 'New feature flag',
+    skipNavigationOnComplete,
+    isLoading,
+    onSuccess,
+}: IFlagCreationButtonProps) => {
+    const { loading } = useUiConfig();
     const [searchParams] = useSearchParams();
     const projectId = useRequiredPathParam('projectId');
     const showCreateDialog = Boolean(searchParams.get('create'));
     const [openCreateDialog, setOpenCreateDialog] = useState(showCreateDialog);
-    const { loading } = useUiConfig();
 
     return (
         <>
@@ -55,15 +75,20 @@ export const FlagCreationButton: FC = () => {
                 maxWidth='960px'
                 Icon={Add}
                 projectId={projectId}
-                disabled={loading}
+                disabled={loading || isLoading}
+                variant={variant}
                 permission={CREATE_FEATURE}
-                data-testid='NAVIGATE_TO_CREATE_FEATURE'
+                data-testid={
+                    loading || isLoading ? '' : NAVIGATE_TO_CREATE_FEATURE
+                }
             >
-                New feature flag
+                {text}
             </StyledResponsiveButton>
             <CreateFeatureDialog
                 open={openCreateDialog}
                 onClose={() => setOpenCreateDialog(false)}
+                skipNavigationOnComplete={skipNavigationOnComplete}
+                onSuccess={onSuccess}
             />
         </>
     );
@@ -84,7 +109,6 @@ export const ProjectFeatureTogglesHeader: FC<
     const [showTitle, setShowTitle] = useState(true);
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-    const featuresExportImportFlag = useUiFlag('featuresExportImport');
     const [showExportDialog, setShowExportDialog] = useState(false);
     const { trackEvent } = usePlausibleTracker();
     const projectOverviewRefactorFeedback = useUiFlag(
@@ -148,46 +172,28 @@ export const ProjectFeatureTogglesHeader: FC<
                         />
                         {actions}
                         <PageHeader.Divider sx={{ marginLeft: 0 }} />
-                        <ConditionallyRender
-                            condition={featuresExportImportFlag}
-                            show={
-                                <>
-                                    <Tooltip
-                                        title='Export all project flags'
-                                        arrow
-                                    >
-                                        <IconButton
-                                            data-loading
-                                            onClick={() =>
-                                                setShowExportDialog(true)
-                                            }
-                                            sx={(theme) => ({
-                                                marginRight: theme.spacing(2),
-                                            })}
-                                        >
-                                            <IosShare />
-                                        </IconButton>
-                                    </Tooltip>
+                        <Tooltip title='Export all project flags' arrow>
+                            <IconButton
+                                data-loading
+                                onClick={() => setShowExportDialog(true)}
+                                sx={(theme) => ({
+                                    marginRight: theme.spacing(2),
+                                })}
+                            >
+                                <IosShare />
+                            </IconButton>
+                        </Tooltip>
 
-                                    <ConditionallyRender
-                                        condition={!isLoading}
-                                        show={
-                                            <ExportDialog
-                                                showExportDialog={
-                                                    showExportDialog
-                                                }
-                                                project={projectId}
-                                                data={[]}
-                                                onClose={() =>
-                                                    setShowExportDialog(false)
-                                                }
-                                                environments={
-                                                    environmentsToExport || []
-                                                }
-                                            />
-                                        }
-                                    />
-                                </>
+                        <ConditionallyRender
+                            condition={!isLoading}
+                            show={
+                                <ExportDialog
+                                    showExportDialog={showExportDialog}
+                                    project={projectId}
+                                    data={[]}
+                                    onClose={() => setShowExportDialog(false)}
+                                    environments={environmentsToExport || []}
+                                />
                             }
                         />
                         <ConditionallyRender
@@ -206,7 +212,7 @@ export const ProjectFeatureTogglesHeader: FC<
                                 </Button>
                             }
                         />
-                        <FlagCreationButton />
+                        <FlagCreationButton isLoading={isLoading} />
                     </>
                 }
             >

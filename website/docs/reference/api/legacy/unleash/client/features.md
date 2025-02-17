@@ -114,13 +114,13 @@ Used to fetch details about a specific feature flag. This is mainly provided to 
 
 ### Strategy Constraints {#strategy-constraints}
 
-:::info Availability
+:::note Availability
 
-Before Unleash 4.16, strategy constraints were only available to Unleash Pro and Enterprise users. From 4.16 onwards, they're **available to everyone**.
+**Version**: `4.16+`
 
 :::
 
-Strategy definitions may also contain a `constraints` property. Strategy constraints is a feature in Unleash which work on context fields, which is defined as part of the [Unleash Context](/reference/unleash-context.md). The purpose is to define a set of rules where all needs to be satisfied in order for the activation strategy to evaluate to true. A [high level description](https://www.unleash-hosted.com/articles/strategy-constraints) of it is available online.
+Strategy definitions may also contain a `constraints` property. Strategy constraints is a feature in Unleash which work on context fields, which is defined as part of the [Unleash Context](/reference/unleash-context.md). The purpose is to define a set of rules where all needs to be satisfied in order for the activation strategy to evaluate to true.
 
 **Example response:**
 

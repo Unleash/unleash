@@ -4,16 +4,17 @@ title: Segments
 
 import VideoContent from '@site/src/components/VideoContent.jsx'
 
-:::info Availability
 
-Segments are available to Unleash Pro and Unleash Enterprise users since **Unleash 4.13** and
-was made available for Open Source from Unleash v5.5.
+:::note Availability
+
+**Version**: `4.13+` for [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing).
+**Version**: `5.5+` for [Open Source](https://www.getunleash.io/pricing).
 
 :::
 
 <VideoContent videoUrls={["https://www.youtube.com/embed/LWMCCFcRic0"]}/>
 
-A **segment** is a reusable collection of [strategy constraints](../reference/strategy-constraints.md). Like with strategy constraints, you apply segments to [feature flag activation strategies](../reference/activation-strategies.md).
+A **segment** is a reusable collection of [strategy constraints](./activation-strategies#-constraints). Like with strategy constraints, you apply segments to [feature flag activation strategies](./activation-strategies).
 
 You can apply the same segment to multiple activation strategies. If you update the segment, the changes will affect every strategy that uses that segment.
 
@@ -29,7 +30,7 @@ Because segments stay in sync across strategies, any changes will propagate to a
 -   release one or more new features at a specified time
 -   create events with start and end times and guarantee that features will only be active during that period
 
-Segments can be global or scoped to a specific project. If a segment is scoped to a single project, it can only be used in that project and it adheres to that project's [change request](change-requests.md#change-request-for-segments "change requests for segments") settings.
+Segments can be global or scoped to a specific project. If a segment is scoped to a single project, it can only be used in that project and it adheres to that project's [change request](./change-requests#change-request-for-segments "change requests for segments") settings.
 
 ## Structure and evaluation
 
@@ -41,33 +42,31 @@ If an activation strategy has a segment _and_ additional constraints applied, th
 
 In theory, you could create segments with a thousand constraints, each with a million values. But this wouldn't scale well, so there are limitations in place to stop you from doing this. Unleash enforces the following limits on use of segments:
 
-- If you're on a Pro plan
+- If you're on a [Pro](/availability#plans) plan:
 
     A segment can have **at most 250 values** specified across all of its constraints. That means that if you add a constraint that uses 10 values, you will have 240 more values to use for any other constraints you add to the same segment.
 
-- If you're on an Enterprise plan
+- If you're on an [Enterprise](https://www.getunleash.io/pricing) plan:
 
     A segment can have **at most 1000 values** specified across all of its constraints. That means that if you add a constraint that uses 70 values, you will have 930 more values to use for any other constraints you add to the same segment.
 
 By default, you can apply **at most 5 segments to any one strategy**. Separate strategies (even on the same feature) do not count towards the same total, so you can have two strategies with 5 segments each.
 
-You **can** [configure segment limits](/using-unleash/deploy/configuring-unleash.md#segments) with environment variables.
+You **can** [configure segment limits](/using-unleash/deploy/configuring-unleash#segments) with environment variables.
 
 ### A note on large segments {#large-segments}
 
-Segments are just constraints, so any limitations that apply to constraints also apply to segments.
-
-This means that if you want to add a hundred different user IDs to one of your constraints, you are most likely better off thinking about finding another way to solve this problem. That may be using a different abstraction or finding another pattern that you can use instead. Refer to the section on [constraint limitations](../reference/strategy-constraints.md#limitations) for a more thorough explanation or to [the topic guide on using Unleash with large constraints](../understanding-unleash/managing-constraints.mdx) for a more thorough .
+Segments are just constraints, so any limitations that apply to constraints also apply to segments. See [Using Unleash with large constraints](../understanding-unleash/managing-constraints) for a more guidance.
 
 ## Creating, updating, and deleting segments
 
 :::info
 
-Currently in development, Unleash will soon count segments as being in use when they are used in [change requests](change-requests.md).
+Currently in development, Unleash will soon count segments as being in use when they are used in [change requests](./change-requests).
 
 :::
 
-Segments can be created, edited, and deleted from the segments page in the admin UI or via the API (see the [segments API documentation](/reference/api/legacy/unleash/admin/segments.mdx)).
+Segments can be created, edited, and deleted from the segments page in the admin UI or via the API (see the [segments API documentation](/reference/api/legacy/unleash/admin/segments)).
 
 A segment that is in use cannot be deleted. If you'd like to delete a segment that is in use, you must first remove the segment from all the activation strategies that are currently using it. If a segment is in use by an archived flag, you must either unarchive the flag and remove the segment or delete the flag entirely before the segment can be deleted.
 

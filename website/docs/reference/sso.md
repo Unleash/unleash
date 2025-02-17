@@ -2,23 +2,22 @@
 title: Single Sign-On
 ---
 
-> The **Single-Sign-On capability** is only available for customers on the Enterprise subscription. Check out the [Unleash plans](https://www.getunleash.io/plans) for details.
 
-Unleash Enterprise supports SAML 2.0, OpenID Connect and Google Authentication. In addition, Unleash supports username/password authentication out of the box.
+:::note Availability
 
-### Before you start
+**Plan**: [Enterprise](https://www.getunleash.io/pricing)
 
-In order to configure Single-Sign-On you will need to log in to the Unleash instance with a user that have "Admin" role. If you are self-hosting Unleash then a default user will be automatically created the first time you start unleash:
+:::
 
-- username: `admin`
-- password: `unleash4all` _(or `admin` if you started with Unleash v3)._
+## Overview
 
-## Guides
+Unleash provides single sign-on (SSO) support through SAML 2.0, OpenID Connect, and username/password authentication.
 
-Unleash enterprise supports multiple authentication providers.
+To configure SSO, navigate to **Admin > Single sign-on** in the Unleash Admin UI. Admin access is required.
 
-- [OpenID Connect with Okta](../how-to/how-to-add-sso-open-id-connect.md)
-- [SAML 2.0 with Okta](../how-to/how-to-add-sso-saml.md)
-- [SAML 2.0 with Keycloak](../how-to/how-to-add-sso-saml-keycloak.md)
-- [SAML 2.0 with Azure](../how-to/how-to-add-sso-azure-saml.md)
-- [Google Authentication](../how-to/how-to-add-sso-google.md) (deprecated)
+For step-by-step configuration instructions, refer to the following guides:
+- [OpenID Connect with Okta](../how-to/how-to-add-sso-open-id-connect)
+- [SAML 2.0 with Okta](../how-to/how-to-add-sso-saml)
+- [SAML 2.0 with Keycloak](../how-to/how-to-add-sso-saml-keycloak)
+- [SAML 2.0 with Microsoft Entra ID](../how-to/how-to-add-sso-azure-saml)
+- [Google Authentication](../how-to/how-to-add-sso-google) (deprecated) 

@@ -10,6 +10,7 @@ import { AnnouncerProvider } from '../common/Announcer/AnnouncerProvider/Announc
 import { testServerRoute, testServerSetup } from '../../utils/testServer';
 import { UIProviderContainer } from '../providers/UIProvider/UIProviderContainer';
 import { StickyProvider } from 'component/common/Sticky/StickyProvider';
+import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
 
 const server = testServerSetup();
 
@@ -233,14 +234,16 @@ const UnleashUiSetup: FC<{
                 <ThemeProvider>
                     <AnnouncerProvider>
                         <StickyProvider>
-                            <Routes>
-                                <Route
-                                    path={pathTemplate}
-                                    element={
-                                        <MainLayout>{children}</MainLayout>
-                                    }
-                                />
-                            </Routes>
+                            <HighlightProvider>
+                                <Routes>
+                                    <Route
+                                        path={pathTemplate}
+                                        element={
+                                            <MainLayout>{children}</MainLayout>
+                                        }
+                                    />
+                                </Routes>
+                            </HighlightProvider>
                         </StickyProvider>
                     </AnnouncerProvider>
                 </ThemeProvider>

@@ -12,8 +12,7 @@ interface IRowSelectCellProps {
 const StyledBoxCell = styled(Box)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
+    marginRight: theme.spacing(-2),
 }));
 
 export const RowSelectCell: FC<IRowSelectCellProps> = ({

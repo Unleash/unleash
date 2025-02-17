@@ -25,7 +25,7 @@ export const useSuggestEnableDisable = ({
                 },
             });
             setToastData({
-                title: 'Changes added to the draft!',
+                text: 'Changes added to draft',
                 type: 'success',
             });
             await refetchChangeRequests();

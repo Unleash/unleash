@@ -16,6 +16,9 @@ test('projectOverviewSchema', () => {
                 count: 1,
             },
         ],
+        onboardingStatus: {
+            status: 'onboarding-started',
+        },
     };
 
     expect(

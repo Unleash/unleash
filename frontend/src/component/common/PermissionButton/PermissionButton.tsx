@@ -1,4 +1,4 @@
-import { Button, type ButtonProps } from '@mui/material';
+import { Button, styled, type ButtonProps } from '@mui/material';
 import Lock from '@mui/icons-material/Lock';
 import React from 'react';
 import {
@@ -11,6 +11,11 @@ import {
     useHasRootAccess,
     useHasProjectEnvironmentAccess,
 } from 'hooks/useHasAccess';
+
+const StyledButton = styled(Button)({
+    justifySelf: 'start',
+    alignSelf: 'start',
+});
 
 export interface IPermissionButtonProps extends Omit<ButtonProps, 'title'> {
     permission: string | string[];
@@ -104,20 +109,18 @@ const BasePermissionButton = React.forwardRef<
                 title={formatAccessText(access, tooltipProps?.title)}
                 arrow
             >
-                <span id={id}>
-                    <Button
-                        ref={ref}
-                        onClick={onClick}
-                        disabled={disabled || !access}
-                        aria-labelledby={id}
-                        variant={variant}
-                        color={color}
-                        {...rest}
-                        endIcon={endIcon}
-                    >
-                        {children}
-                    </Button>
-                </span>
+                <StyledButton
+                    ref={ref}
+                    onClick={onClick}
+                    disabled={disabled || !access}
+                    aria-labelledby={id}
+                    variant={variant}
+                    color={color}
+                    {...rest}
+                    endIcon={endIcon}
+                >
+                    {children}
+                </StyledButton>
             </TooltipResolver>
         );
     },

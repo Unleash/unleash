@@ -15,7 +15,11 @@ import {
     FEATURE_UPDATED,
     PROJECT_ENVIRONMENT_REMOVED,
 } from './types/events';
-import { createMetricsMonitor } from './metrics';
+import {
+    createMetricsMonitor,
+    registerPrometheusMetrics,
+    registerPrometheusPostgresMetrics,
+} from './metrics';
 import createStores from '../test/fixtures/store';
 import { InstanceStatsService } from './features/instance-stats/instance-stats-service';
 import VersionService from './services/version-service';
@@ -34,6 +38,7 @@ import getLogger from '../test/fixtures/no-logger';
 import dbInit, { type ITestDb } from '../test/e2e/helpers/database-init';
 import { FeatureLifecycleStore } from './features/feature-lifecycle/feature-lifecycle-store';
 import { FeatureLifecycleReadModel } from './features/feature-lifecycle/feature-lifecycle-read-model';
+import { createFakeGetLicensedUsers } from './features/instance-stats/getLicensedUsers';
 
 const monitor = createMetricsMonitor();
 const eventBus = new EventEmitter();
@@ -46,6 +51,7 @@ let schedulerService: SchedulerService;
 let featureLifeCycleStore: IFeatureLifecycleStore;
 let featureLifeCycleReadModel: IFeatureLifecycleReadModel;
 let db: ITestDb;
+let refreshDbMetrics: () => Promise<void>;
 
 beforeAll(async () => {
     const config = createTestConfig({
@@ -57,12 +63,7 @@ beforeAll(async () => {
     eventStore = stores.eventStore;
     environmentStore = new FakeEnvironmentStore();
     stores.environmentStore = environmentStore;
-    const versionService = new VersionService(
-        stores,
-        config,
-        createFakeGetActiveUsers(),
-        createFakeGetProductionChanges(),
-    );
+    const versionService = new VersionService(stores, config);
     db = await dbInit('metrics_test', getLogger);
 
     featureLifeCycleReadModel = new FeatureLifecycleReadModel(
@@ -79,6 +80,7 @@ beforeAll(async () => {
         versionService,
         createFakeGetActiveUsers(),
         createFakeGetProductionChanges(),
+        createFakeGetLicensedUsers(),
     );
 
     schedulerService = new SchedulerService(
@@ -102,16 +104,16 @@ beforeAll(async () => {
         },
     };
 
-    await monitor.startMonitoring(
-        config,
-        stores,
-        '4.0.0',
-        eventBus,
-        statsService,
-        schedulerService,
-        // @ts-ignore - We don't want a full knex implementation for our tests, it's enough that it actually yields the numbers we want.
-        metricsDbConf,
-    );
+    const { collectAggDbMetrics, collectStaticCounters } =
+        registerPrometheusMetrics(
+            config,
+            stores,
+            '4.0.0',
+            eventBus,
+            statsService,
+        );
+    refreshDbMetrics = collectAggDbMetrics;
+    await collectStaticCounters();
 });
 
 afterAll(async () => {
@@ -141,7 +143,7 @@ test('should collect metrics for updated toggles', async () => {
 
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(
-        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="default",environmentType="production"\} 1/,
+        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="default",environmentType="production",action="updated"\} 1/,
     );
 });
 
@@ -166,7 +168,7 @@ test('should set environmentType when toggle is flipped', async () => {
     const metrics = await prometheusRegister.metrics();
 
     expect(metrics).toMatch(
-        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="testEnvironment",environmentType="testType"\} 1/,
+        /feature_toggle_update_total\{toggle="TestToggle",project="default",environment="testEnvironment",environmentType="testType",action="updated"\} 1/,
     );
 });
 
@@ -212,6 +214,7 @@ test('should collect metrics for function timings', async () => {
 });
 
 test('should collect metrics for feature flag size', async () => {
+    await refreshDbMetrics();
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/feature_toggles_total\{version="(.*)"\} 0/);
 });
@@ -222,12 +225,13 @@ test('should collect metrics for archived feature flag size', async () => {
 });
 
 test('should collect metrics for total client apps', async () => {
-    await statsService.refreshAppCountSnapshot();
+    await refreshDbMetrics();
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/client_apps_total\{range="(.*)"\} 0/);
 });
 
 test('Should collect metrics for database', async () => {
+    registerPrometheusPostgresMetrics(db.rawDatabase, eventBus, '15.0.0');
     const metrics = await prometheusRegister.metrics();
     expect(metrics).toMatch(/db_pool_max/);
     expect(metrics).toMatch(/db_pool_min/);
@@ -343,4 +347,16 @@ test('should collect limit exceeded metrics', async () => {
     expect(recordedMetric).toMatch(
         /exceeds_limit_error{resource=\"feature flags\",limit=\"5000\"} 1/,
     );
+});
+
+test('should collect traffic_total metrics', async () => {
+    const recordedMetric =
+        await prometheusRegister.getSingleMetricAsString('traffic_total');
+    expect(recordedMetric).toMatch(/traffic_total 0/);
+});
+
+test('should collect licensed_users metrics', async () => {
+    const recordedMetric =
+        await prometheusRegister.getSingleMetricAsString('licensed_users');
+    expect(recordedMetric).toMatch(/licensed_users 0/);
 });

@@ -1,4 +1,5 @@
 import { Button, styled } from '@mui/material';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 const StyledTab = styled(Button)<{ selected: boolean }>(
     ({ theme, selected }) => ({
@@ -17,7 +18,8 @@ const StyledTab = styled(Button)<{ selected: boolean }>(
             transition: 'background-color 0.2s ease',
             color: theme.palette.text.primary,
             textAlign: 'left',
-            padding: theme.spacing(2, 4),
+            padding: theme.spacing(0, 2),
+            gap: theme.spacing(1),
             fontSize: theme.fontSizes.bodySize,
             fontWeight: selected
                 ? theme.fontWeight.bold
@@ -41,27 +43,53 @@ const StyledTab = styled(Button)<{ selected: boolean }>(
     }),
 );
 
+const StyledTabLabel = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(0.5),
+}));
+
+const StyledTabDescription = styled('div')(({ theme }) => ({
+    fontWeight: theme.fontWeight.medium,
+    fontSize: theme.fontSizes.smallBody,
+    color: theme.palette.text.secondary,
+}));
+
 interface IVerticalTabProps {
     label: string;
+    description?: string;
     selected?: boolean;
     onClick: () => void;
-    icon?: React.ReactNode;
+    startIcon?: React.ReactNode;
+    endIcon?: React.ReactNode;
 }
 
 export const VerticalTab = ({
     label,
+    description,
     selected,
     onClick,
-    icon,
+    startIcon,
+    endIcon,
 }: IVerticalTabProps) => (
     <StyledTab
         selected={Boolean(selected)}
+        className={selected ? 'selected' : ''}
         onClick={onClick}
         disableElevation
         disableFocusRipple
         fullWidth
     >
-        {label}
-        {icon}
+        {startIcon}
+        <StyledTabLabel>
+            {label}
+            <ConditionallyRender
+                condition={Boolean(description)}
+                show={
+                    <StyledTabDescription>{description}</StyledTabDescription>
+                }
+            />
+        </StyledTabLabel>
+        {endIcon}
     </StyledTab>
 );

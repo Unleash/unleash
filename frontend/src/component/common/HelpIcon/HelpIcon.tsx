@@ -1,6 +1,9 @@
 import { styled, Tooltip, type TooltipProps } from '@mui/material';
 import HelpOutline from '@mui/icons-material/HelpOutline';
-import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
+import {
+    HtmlTooltip,
+    type IHtmlTooltipProps,
+} from 'component/common/HtmlTooltip/HtmlTooltip';
 
 const StyledContainer = styled('span')<{ size: string | undefined }>(
     ({ theme, size }) => ({
@@ -24,13 +27,18 @@ const StyledContainer = styled('span')<{ size: string | undefined }>(
     }),
 );
 
-interface IHelpIconProps {
+type IHelpIconProps = {
     tooltip: React.ReactNode;
-    htmlTooltip?: boolean;
     placement?: TooltipProps['placement'];
     children?: React.ReactNode;
     size?: string;
-}
+} & (
+    | {
+          htmlTooltip: true;
+          htmlTooltipMaxWidth?: IHtmlTooltipProps['maxWidth'];
+      }
+    | { htmlTooltip?: false }
+);
 
 export const HelpIcon = ({
     tooltip,
@@ -38,10 +46,20 @@ export const HelpIcon = ({
     placement,
     children,
     size,
+    ...props
 }: IHelpIconProps) => {
     if (htmlTooltip) {
+        const { htmlTooltipMaxWidth } = props as {
+            htmlTooltipMaxWidth?: IHtmlTooltipProps['maxWidth'];
+        };
+
         return (
-            <HtmlTooltip title={tooltip} placement={placement} arrow>
+            <HtmlTooltip
+                title={tooltip}
+                placement={placement}
+                arrow
+                maxWidth={htmlTooltipMaxWidth}
+            >
                 <StyledContainer size={size} tabIndex={0} aria-label='Help'>
                     {children ?? <HelpOutline />}
                 </StyledContainer>

@@ -11,7 +11,7 @@ interface IArchivedFeatureDeleteConfirmProps {
     deletedFeatures: string[];
     projectId: string;
     open: boolean;
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpen: (open: boolean) => void;
     refetch: () => void;
 }
 
@@ -49,10 +49,7 @@ export const ArchivedFeatureDeleteConfirm = ({
             await refetch();
             setToastData({
                 type: 'success',
-                title: `Feature ${singularOrPluralFlags} deleted`,
-                text: `You have successfully deleted the following feature ${singularOrPluralFlags}: ${deletedFeatures.join(
-                    ', ',
-                )}.`,
+                text: `Feature ${singularOrPluralFlags} deleted`,
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

@@ -1,9 +1,9 @@
 import { useMemo } from 'react';
 import { groupProjects } from '../group-projects';
-import type { IProjectCard } from 'interfaces/project';
+import type { ProjectSchema } from 'openapi';
 
 export const useGroupedProjects = (
-    filteredAndSortedProjects: IProjectCard[],
+    filteredAndSortedProjects: ProjectSchema[],
     myProjects: Set<string>,
 ) =>
     useMemo(

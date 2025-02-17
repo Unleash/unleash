@@ -2,130 +2,169 @@
 title: Activation Strategies
 ---
 
-It is powerful to be able to turn a feature on and off instantaneously, without redeploying the application. Activation strategies let you enable a feature only for a specified audience. Different strategies use different parameters. Predefined strategies are bundled with Unleash. The recommended strategy is the gradual rollout strategy with 100% rollout, which basically means that the feature should be enabled to everyone.
+import VideoContent from '@site/src/components/VideoContent.jsx'
 
-Unleash comes with a number of built-in strategies (described below) that can be enhanced with [constraints](https://docs.getunleash.io/reference/strategy-constraints) for fine-grained control. For more advanced use cases, where constraints do not fulfill your needs, you can add your own [custom activation strategies](../reference/custom-activation-strategies.md). However, while activation strategies are _defined_ on the server, the server does not _implement_ the strategies. Instead, activation strategy implementation is done client-side. This means that it is _the client_ that decides whether a feature should be enabled or not.
+## Overview 
 
-All [server-side client SDKs](../reference/sdks/index.md#server-side-sdks) and the [Unleash Proxy](../generated/unleash-proxy.md) implement the default strategies (and allow you to add your own [custom strategy implementations](../reference/custom-activation-strategies.md#implementation)). The [front-end client SDKs](../reference/sdks/index.md#front-end-sdks) do not do the evaluation themselves, instead relying on the [Unleash Proxy](../generated/unleash-proxy.md) to take care of the implementation and evaluation.
+An activation strategy determines who should get a feature. They allow you to enable and disable features for certain users without having to redeploy your application. For example, you can release features only to users with a specific user ID, email, IP address, and more. You can implement gradual rollouts to specific user segments, for example, those on a specific subscription plan or region. You can also use them to schedule feature releases or make features available for a limited time.
 
-Some activation strategies require the client to provide the current [Unleash context](unleash-context.md) to the flag evaluation function for the evaluation to be done correctly.
+An activation strategy is assigned to one [feature flag](/reference/feature-toggles) in one [environment](/reference/environments). A feature flag is enabled in a given context (for example, user or application) if at least one of its activation strategies resolves to true.
 
-The following activation strategies are bundled with Unleash and always available:
+The default activation strategy is a 100% gradual rollout, enabling the flag for all users. You can refine this using [rollout percentage](#rollout-percentage), [targeting](#targeting), and [variants](/reference/strategy-variants).
 
-- [Standard](#standard)
-- [UserIDs](#userids)
-- [Gradual Rollout](#gradual-rollout)
-- [IPs](#ips)
-- [Hostnames](#hostnames)
+Feature flags can have multiple activation strategies. Unleash evaluates each strategy independently, enabling the flag if any resolves to true. This behavior is equivalent to the OR logical operator.
 
-## Standard {#standard}
+For example, to roll out a feature to 75% of users while granting access to internal users, you can add two activation strategies as follows: 
+1. Gradual rollout to 100% with a constraint on the email address.
+2. Gradual rollout to 75% (of all users).
+   
+![A feature flag with two strategies](/img/activation-strategies-example.png)
 
-A basic strategy that means "active for everyone".
+## Rollout percentage
 
-This strategy has the following modelling name in the code:
+The rollout percentage determines the proportion of users exposed to a feature. It uses a normalized [MurmurHash](https://en.wikipedia.org/wiki/MurmurHash) of a user’s unique ID, ensuring consistent and random feature distribution. [Stickiness](/reference/stickiness) maintains a stable user experience across sessions.
 
-- **default**
+## Targeting
 
-## UserIDs {#userids}
+Segmentation and constraints allow you to define conditions for your activation strategies so that they will only be evaluated for users and applications that match those criteria. Constraints are individual conditional statements, while [segments](/reference/segments) are a reusable set of constraints that you can apply to multiple strategies.
 
-Active for users with a `userId` defined in the `userIds` list. A typical use case is to enable a feature for a few specific devs or key persons before enabling the feature for everyone else. This strategy allows you to specify a list of user IDs that you want to expose the new feature for. (A user id may, of course, be an email if that is more appropriate in your system.)
+### Constraints
 
-**Parameters**
+:::note Availability
 
-- userIds - _List of user IDs you want the feature flag to be enabled for_
-
-This strategy has the following modelling name in the code:
-
-- **userWithId**
-
-## Gradual Rollout {#gradual-rollout}
-
-A flexible rollout strategy which combines all gradual rollout strategies in to a single strategy. This strategy allows you to customize what parameter should be sticky, and defaults to userId or sessionId.
-
-**Parameters**
-
-- **stickiness** is used to define how we guarantee consistency for a gradual rollout. The same userId and the same rollout percentage should give predictable results. Configuration that should be supported:
-  - **default** - Unleash chooses the first value present on the context in defined order userId, sessionId, random.
-  - **userId** - guaranteed to be sticky on userId. If userId not present the behavior would be false
-  - **sessionId** - guaranteed to be sticky on sessionId. If sessionId not present the behavior would be false.
-  - **random** - no stickiness guaranteed. For every isEnabled call it will yield a random true/false based on the selected rollout percentage.
-- **groupId** is used to ensure that different flags will **hash differently** for the same user. The groupId defaults to _feature flag name_, but the user can override it to _correlate rollout_ of multiple feature flags.
-- **rollout** The percentage (0-100) you want to enable the feature flag for.
-
-This strategy has the following modelling name in the code:
-
-- **flexibleRollout**
-
-### Custom stickiness {#custom-stickiness}
-
-:::note SDK compatibility
-
-Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) for the full overview.
+**Version**: `4.16+`
 
 :::
 
-By enabling the stickiness option on a custom context field you can use the custom context field to group users with the gradual rollout strategy. This will guarantee a consistent behavior for specific values of this context field.
+Constraints are conditional rules that determine whether a strategy applies, based on fields from the [Unleash context](/reference/unleash-context). Constraints can reference both [standard context fields](../reference/unleash-context#overview) and [custom context fields](../reference/unleash-context#custom-context-fields).
 
-## IPs {#ips}
+An activation strategy can have as many constraints as needed. When an activation strategy has multiple constraints, then every constraint must be evaluated to true for the strategy to be evaluated. This behavior is equivalent to the AND logical operator.
 
-The remote address strategy activates a feature flag for remote addresses defined in the IP list. We occasionally use this strategy to enable a feature only for IPs in our office network.
+You can use [Playground](/reference/playground) to experiment with different strategy and constraint configurations and how they would evaluate in a given context.
 
-**Parameters**
+For example, if you have two constraints: one where the user email must have the domain "@mycompany.com" and one where the user must have signed up for a beta program, then the strategy would only be evaluated for users with "@mycompany.com" emails that have signed up for the beta program.
 
-- IPs - _List of IPs to enable the feature for._
+<VideoContent videoUrls={["https://www.youtube.com/embed/kqtqMFhLRBE"]}/>
 
-This strategy has the following modelling name in the code:
+#### Constraint structure
 
-- **remoteAddress**
+A constraint has three parts:
+- A **context field**: The [context field](/reference/unleash-context) to use for evaluation.
+- An **operator**: One of the [constraint operators](#strategy-constraint-operators).
+- **Values**: A value or list of values to use in the evaluation of the constraint.
 
-## Hostnames {#hostnames}
+These parts turn the constraint into an expression that evaluates to true or false. Here are a few example constraints:
 
-The application hostname strategy activates a feature flag for client instances with a hostName in the `hostNames` list.
+| Context field   | Operator        | Values                       | Description                                                                                                                                         |
+|-----------------|-----------------|--------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
+| `userId`        | `STR_ENDS_WITH` | `@example.com, @mycompany.com` | Evaluates to `true` for users whose user IDs end with `@example.com` or `@mycompany.com`.                                                           |
+| `currentTime`   | `DATE_AFTER`    | `2022-06-05 21:43:22Z`         | Evaluates to `true` if the current time is after `2022-06-05 21:43:22Z`.                                                                            |
+| `plan` | `IN`       | `Premium`, `Plus`                         | Evaluates to `true` if the [custom context field](../reference/unleash-context#custom-context-fields) `plan` is either 'Premium' or 'Plus'. |
 
-**Parameters**
+#### Constraint operators
 
-- hostNames - _List of hostnames to enable the feature flag for._
+Constraint operators help you define the conditional statements that get evaluated as part of the constraint. [Basic operators](#basic-operators) are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](/reference/sdks#strategy-constraints).
 
-This strategy has the following modelling name in the code:
+All constraints can be negated. For example: 
 
-- **applicationHostname**
+| Operator      | Value |  Context field | Result |
+|-----------|--------------------------------------------------------------------|--|--------|
+| `STR_ENDS_WITH`  | "@user.com" | "hello@user.com" | true |
+| NOT `STR_ENDS_WITH`  | "@user.com" | "hello@user.com" | false |
 
-## Multiple activation strategies {#multiple-activation-strategies}
+##### Basic operators
 
-You can apply as many activation strategies to a flag as you want. When a flag has multiple strategies, Unleash will check each strategy in isolation. If any one of the strategies would enable the flag for the current user, then the flag is enabled.
+| Operator      | Description
+|-----------|--------------------------------------------------------------------------------|
+| `IN`  | The context field is equal to any of the provided values; case sensitive. |
+| `NOT_IN`  | The context field is not equal to any of the values provided; case sensitive. |
 
-As an example, consider a case where you want to roll a feature out to 75% of your users. However, you also want to make sure that you and your product lead get access to the feature. To achieve this, you would apply a **gradual rollout** strategy and set it to 75%. Additionally, you would add a **user IDs** strategy and add `engineer@mycompany.com` and `productlead@mycompany.com`.
+#### Numeric operators
 
-![A feature flag with two active strategies: a user ID strategy and a gradual rollout strategy. The strategies are configured as described in the preceding paragraph.](/img/control_rollout_multiple_strategies.png)
+Numeric operators compare the numeric value of context fields with the provided value. Numeric operators only accept single values.
 
-## Deprecated strategies
+| Operator      | The context field is                                           |
+|-----------|--------------------------------------------------------------------------------|
+| `NUM_EQ`  | The context field is equal to the provided value. |
+| `NUM_GT`  | The context field is strictly greater than the provided value.   |
+| `NUM_GTE` | The context field is greater than or equal to the provided value. |
+| `NUM_LT`  | The context field is strictly less than the provided value.       |
+| `NUM_LTE` | The context field is less than or equal to the provided value.    |
 
-### gradualRolloutUserId (DEPRECATED from v4) - Use Gradual rollout instead {#gradualrolloutuserid-deprecated-from-v4---use-gradual-rollout-instead}
 
-The `gradualRolloutUserId` strategy gradually activates a feature flag for logged-in users. Stickiness is based on the user ID. The strategy guarantees that the same user gets the same experience every time across devices. It also assures that a user which is among the first 10% will also be among the first 20% of the users. That way, we ensure the users get the same experience, even if we gradually increase the number of users exposed to a particular feature. To achieve this, we hash the user ID and normalize the hash value to a number between 1 and 100 with a simple modulo operator.
+##### Date and time operators
 
-![hash_and_normalise](/img/hash_and_normalise.png)
+All date and time operators require the `currentTime` context field, and the `currentTime` context field can only be used with date and time operators. With these operators, you can enable a feature before or after a specified time or make it available for a specific time span by combining the two operators.
 
-Starting from v3.x all clients should use the 32-bit [MurmurHash3](https://en.wikipedia.org/wiki/MurmurHash) algorithm to normalize values. ([issue 247](https://github.com/Unleash/unleash/issues/247))
+Date and time operators only support single values.
 
-**Parameters**
+| Operator          | Description |
+|---------------|--------------------------------|
+| `DATE_AFTER`  | `currentTime` is a date after the provided value. |
+| `DATE_BEFORE` | `currentTime` is a date before the provided date. |
 
-- percentage - _The percentage (0-100) you want to enable the feature flag for._
-- groupId - _Used to define an activation group, which allows you to correlate rollout across feature flags._
+##### String operators
 
-### gradualRolloutSessionId (DEPRECATED from v4) - Use Gradual rollout instead {#gradualrolloutsessionid-deprecated-from-v4---use-gradual-rollout-instead}
+String operators accept multiple values and can be set to be case-sensitive or case-insensitive.
 
-Similar to `gradualRolloutUserId` strategy, this strategy gradually activates a feature flag, with the exception being that the stickiness is based on the session IDs. This makes it possible to target all users (not just logged-in users), guaranteeing that a user will get the same experience within a session.
+| Operator              | Description |
+|-------------------|------------------------------------------------|
+| `STR_CONTAINS`    | The context field contains any of the provided string values.       |
+| `STR_ENDS_WITH`   | The context field ends with any of the provided string values.     |
+| `STR_STARTS_WITH` | The context field starts with any of the provided string values.    |
 
-**Parameters**
 
-- percentage - _The percentage (0-100) you want to enable the feature flag for._
-- groupId - _Used to define an activation group, which allows you to correlate rollout across feature flags._
+##### Versioning (SemVer) operators
 
-### gradualRolloutRandom (DEPRECATED from v4) - Use Gradual rollout instead {#gradualrolloutrandom-deprecated-from-v4---use-gradual-rollout-instead}
+SemVer operators are used to compare version numbers such as application versions or dependency versions. SemVer operators only support single values.
 
-The `gradualRolloutRandom` strategy randomly activates a feature flag and has no stickiness. We have found this rollout strategy very useful in some scenarios, especially when we enable a feature which is not visible to the user. It is also the strategy we use to sample metrics and error reports.
+The value must start with and contain at least major, minor, and patch versions. For example, `1.2.3`. Optionally, you can also define pre-release version information by adding a hyphen and series of full-stop separated identifiers after the patch version. For example, `1.2.3-rc.2`. Values with pre-release versions are considered less than versions without a pre-release in accordance with [the SemVer specification, item 11](https://semver.org/#spec-item-11).
 
-**Parameters**
+| Operator        | Description           |
+|-------------|----------------------------------------------|
+| `SEMVER_EQ` | The context field is equal to the provided value.              |
+| `SEMVER_GT` | The context field is strictly greater than the provided value. |
+| `SEMVER_LT` | The context field is strictly less than the provided value.    |
 
-- percentage - _The percentage (0-100) you want to enable the feature flag for._
+#### Best practices
+
+Server-side SDKs fetch the full feature flag configuration associated with your API key from Unleash. You can use API keys scoped to specific projects or environments to optimize payload size.
+
+However, every value that you add to your feature flag constraints, increases the payload size. We recommend avoiding large constraint value lists. For example, instead of adding many user IDs or emails to the constraint value list, consider what properties those users share. This typically helps define and use a [custom context field](/reference/unleash-context#custom-context-field) instead.
+
+
+## Add an activation strategy with a constraint
+
+To add an activation strategy with a constraint to a feature flag, do the following:
+
+1. Open the Admin UI and go to the feature flag you'd like to add a strategy to.
+2. Select the environment you want to configure and click **Add strategy**.
+3. In the **Targeting** tab, go to the **Constraints** section, and click **Add constraint**.
+4. Select a context field to constrain on, for example, `email`.
+5. Set your desired operator, for example, `STR_ENDS_WITH`.
+6. Enter a value that the operator should evaluate, such as `@user.com`, and click **Add values**. Then click **Done**.
+7. Click **Save strategy**.
+
+## Client-side implementation
+
+Activation strategies are defined on the server but implemented client-side. The client determines whether a feature should be enabled based on the activation strategies.
+
+All [server-side client SDKs](../reference/sdks#server-side-sdks) and [Unleash Edge](../reference/unleash-edge) implement the default activation strategy. The [front-end client SDKs](../reference/sdks#front-end-sdks) do not perform evaluations themselves. Instead, they rely on [Unleash Edge](../reference/unleash-edge) to handle the implementation and evaluation.
+
+When using strategies with constraints, the client must provide the current [Unleash context](unleash-context) to the flag evaluation function for the evaluation to be done correctly. All official Unleash client SDKs support the option to pass dynamic context values to the `isEnabled()` function (or the SDK's equivalent).
+
+If the constraint uses a standard Unleash context field, set the context field to the required value. If the constraint uses a custom context field, use the Unleash context's `properties` field. Use the name of the custom context field as a key and set the value to your desired string.
+
+Unleash SDKs expect all context values to be strings. If you use an operator that acts on non-string values, such as [numeric operators](#numeric-operators) or [date and time operators](#date-and-time-operators), the SDKs attempt to convert the string into the expected type. If the conversion fails, the constraint evaluates to `false`.
+
+## Predefined strategy types
+
+:::caution
+[Predefined strategy types](/reference/predefined-strategy-types), such as UserIDs, IPs, and Hosts are a legacy implementation. Please use the default strategy with constraints to achieve your desired targeting.
+:::
+
+## Custom activation strategies
+
+:::caution
+[Custom activation strategies](/reference/custom-activation-strategies) are deprecated. Please use the default strategy with constraints.
+:::

@@ -6,17 +6,12 @@ import getApp from '../../app';
 import supertest from 'supertest';
 import { addDays } from 'date-fns';
 
-async function getSetup(adminTokenKillSwitchEnabled: boolean) {
+async function getSetup() {
     const base = `/random${Math.round(Math.random() * 1000)}`;
     const perms = permissions();
     const config = createTestConfig({
         preHook: perms.hook,
         server: { baseUriPath: base },
-        experimental: {
-            flags: {
-                adminTokenKillSwitch: adminTokenKillSwitchEnabled,
-            },
-        },
         //@ts-ignore - Just testing, so only need the isEnabled call here
     });
     const stores = createStores();
@@ -41,23 +36,8 @@ async function getSetup(adminTokenKillSwitchEnabled: boolean) {
 }
 
 describe('Admin token killswitch', () => {
-    test('If killswitch is off we can still create admin tokens', async () => {
-        const setup = await getSetup(false);
-        return setup.request
-            .post(`${setup.base}/api/admin/api-tokens`)
-            .set('Content-Type', 'application/json')
-            .send({
-                expiresAt: addDays(new Date(), 60),
-                type: 'ADMIN',
-                tokenName: 'Non killswitched',
-            })
-            .expect(201)
-            .expect((res) => {
-                expect(res.body.secret).toBeTruthy();
-            });
-    });
     test('If killswitch is on we will get an operation denied if we try to create an admin token', async () => {
-        const setup = await getSetup(true);
+        const setup = await getSetup();
         return setup.request
             .post(`${setup.base}/api/admin/api-tokens`)
             .set('Content-Type', 'application/json')
@@ -74,7 +54,7 @@ describe('Admin token killswitch', () => {
             });
     });
     test('If killswitch is on we can still create a client token', async () => {
-        const setup = await getSetup(true);
+        const setup = await getSetup();
         return setup.request
             .post(`${setup.base}/api/admin/api-tokens`)
             .set('Content-Type', 'application/json')
@@ -91,7 +71,7 @@ describe('Admin token killswitch', () => {
             });
     });
     test('If killswitch is on we can still create a frontend token', async () => {
-        const setup = await getSetup(true);
+        const setup = await getSetup();
         return setup.request
             .post(`${setup.base}/api/admin/api-tokens`)
             .set('Content-Type', 'application/json')

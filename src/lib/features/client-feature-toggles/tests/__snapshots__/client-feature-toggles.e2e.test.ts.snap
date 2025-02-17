@@ -1,0 +1,76 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should match snapshot from /api/client/features 1`] = `
+{
+  "features": [
+    {
+      "description": null,
+      "enabled": false,
+      "impressionData": false,
+      "name": "test1",
+      "project": "default",
+      "stale": false,
+      "strategies": [
+        {
+          "constraints": [
+            {
+              "caseInsensitive": false,
+              "contextName": "appName",
+              "inverted": false,
+              "operator": "IN",
+              "values": [
+                "test",
+              ],
+            },
+          ],
+          "name": "flexibleRollout",
+          "parameters": {
+            "groupId": "test1",
+            "rollout": "100",
+            "stickiness": "default",
+          },
+          "variants": [],
+        },
+      ],
+      "type": "release",
+      "variants": [],
+    },
+    {
+      "description": null,
+      "enabled": false,
+      "impressionData": false,
+      "name": "test2",
+      "project": "default",
+      "stale": false,
+      "strategies": [
+        {
+          "constraints": [
+            {
+              "contextName": "userId",
+              "operator": "IN",
+              "values": [
+                "123",
+              ],
+            },
+          ],
+          "name": "default",
+          "parameters": {},
+          "variants": [],
+        },
+      ],
+      "type": "release",
+      "variants": [],
+    },
+  ],
+  "meta": {
+    "etag": ""61824cd0:11"",
+    "queryHash": "61824cd0",
+    "revisionId": 11,
+  },
+  "query": {
+    "environment": "default",
+    "inlineSegmentConstraints": true,
+  },
+  "version": 2,
+}
+`;

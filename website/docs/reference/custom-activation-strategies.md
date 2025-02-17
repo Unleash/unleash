@@ -2,12 +2,8 @@
 title: Custom Activation Strategies
 ---
 
-:::tip
-
-This document is a reference for custom activation strategies. If you're looking for a guide on how to use them, see the [_how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md).
-
-Custom activation strategies should be considered an advanced feature. In most cases [strategy constraints](https://docs.getunleash.io/reference/strategy-constraints) provides enough control without the additional complexity.
-
+:::caution
+[Custom activation strategies](/reference/custom-activation-strategies) are deprecated. Please use the [default activation strategy](/reference/activation-strategies) with constraints.
 :::
 
 **Custom activation strategies** let you define your own activation strategies to use with Unleash. When the [built-in activation strategies](../reference/activation-strategies.md) aren't enough, custom activation strategies are there to provide you with the flexibility you need.
@@ -22,7 +18,7 @@ You define custom activation strategies on your Unleash instance, either via the
 
 - A strategy **name**: You'll use this to refer to the strategy in the UI and in code. The strategy name should make it easy to understand what the strategy does. For instance, if a strategy uses contact numbers to determine whether a feature should be enabled, then _ContactNumbers_ would be a good name.
 - An optional **description**: Use this to describe what the strategy should do.
-- An optional list of **parameters**: The parameter list lets you pass arguments to your custom activation strategy. These will be made available to your custom strategy implementation. How you interact with them differs between SDKs, but refer to the [Node.js example in the how-to guide](../how-to/how-to-use-custom-strategies.md) for a rough idea.
+- An optional list of **parameters**: The parameter list lets you pass arguments to your custom activation strategy. These will be made available to your custom strategy implementation.
 
 The strategy **name** is the only required parameter, but adding a good **description** will make it easier to remember what a strategy should do. The list of **parameters** lets you pass data from the Unleash instance to the strategy implementation.
 
@@ -62,7 +58,7 @@ If you have not implemented the strategy in your client SDK, the check will alwa
 
 :::
 
-While custom strategies are _defined_ on the Unleash server, they must be _implemented_ on the client. All official Unleash client SDKs provide a way for you to implement custom strategies. You should refer to the individual SDK's documentation for specifics, but for an example, you can have a look at the [_Node.js client implementation_ section in the _how to use custom strategies_ guide](../how-to/how-to-use-custom-strategies.md#step-3-a).
+While custom strategies are _defined_ on the Unleash server, they must be _implemented_ on the client. All official Unleash client SDKs provide a way for you to implement custom strategies.
 
 The exact method for implementing custom strategies will vary between SDKs, but the server SDKs follow the same patterns. For front-end client SDKs ([Android](/docs/generated/sdks/client-side/android-proxy.md), [JavaScript](/docs/generated/sdks/client-side/javascript-browser.md), [React](/docs/generated/sdks/client-side/react.md), [iOS](/docs/generated/sdks/client-side/ios-proxy.md), [Flutter](/docs/generated/sdks/client-side/flutter.md)), the custom activation strategy must be implemented in the [Unleash Proxy](../generated/unleash-proxy.md).
 

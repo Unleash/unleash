@@ -357,12 +357,6 @@ describe('bulk metrics', () => {
                 enableApiToken: true,
             },
         });
-        await authed.db('environments').insert({
-            name: 'development',
-            sort_order: 5000,
-            type: 'development',
-            enabled: true,
-        });
         const clientToken =
             await authed.services.apiTokenService.createApiTokenWithProjects({
                 tokenName: 'bulk-metrics-test',

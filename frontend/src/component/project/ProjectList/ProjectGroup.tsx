@@ -1,35 +1,14 @@
 import type { ComponentType, ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ProjectCard as LegacyProjectCard } from '../ProjectCard/LegacyProjectCard';
-import { ProjectCard as NewProjectCard } from '../ProjectCard/ProjectCard';
-
-import type { IProjectCard } from 'interfaces/project';
+import { ProjectCard as DefaultProjectCard } from '../ProjectCard/ProjectCard';
+import type { ProjectSchema } from 'openapi';
 import loadingData from './loadingData';
 import { TablePlaceholder } from 'component/common/Table';
-import { styled, Typography } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { styled } from '@mui/material';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
-import { flexColumn } from 'themes/themeStyles';
-
-const StyledContainer = styled('article')(({ theme }) => ({
-    ...flexColumn,
-    gap: theme.spacing(2),
-}));
-
-const StyledHeaderContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column-reverse',
-    gap: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-        flexDirection: 'row',
-        alignItems: 'flex-end',
-    },
-}));
-
-const StyledHeaderTitle = styled('div')(() => ({
-    flexGrow: 0,
-}));
+import { UpgradeProjectCard } from '../ProjectCard/UpgradeProjectCard';
+import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledGridContainer = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -51,69 +30,35 @@ type ProjectGroupProps = {
     sectionTitle?: string;
     sectionSubtitle?: string;
     HeaderActions?: ReactNode;
-    projects: IProjectCard[];
+    projects: ProjectSchema[];
     loading: boolean;
-    /**
-     * @deprecated remove with projectListImprovements
-     */
-    searchValue?: string;
     placeholder?: string;
-    ProjectCardComponent?: ComponentType<IProjectCard & any>;
+    ProjectCardComponent?: ComponentType<ProjectSchema & any>;
     link?: boolean;
 };
 
 export const ProjectGroup = ({
-    sectionTitle,
-    sectionSubtitle,
-    HeaderActions,
     projects,
     loading,
-    searchValue,
     placeholder = 'No projects available.',
     ProjectCardComponent,
     link = true,
 }: ProjectGroupProps) => {
-    const projectListImprovementsEnabled = useUiFlag('projectListImprovements');
-    const ProjectCard =
-        ProjectCardComponent ??
-        (projectListImprovementsEnabled ? NewProjectCard : LegacyProjectCard);
+    const ProjectCard = ProjectCardComponent ?? DefaultProjectCard;
+    const { isOss } = useUiConfig();
     const { searchQuery } = useSearchHighlightContext();
 
     return (
-        <StyledContainer>
-            <StyledHeaderContainer>
-                <StyledHeaderTitle>
-                    <ConditionallyRender
-                        condition={Boolean(sectionTitle)}
-                        show={
-                            <Typography component='h2' variant='h2'>
-                                {sectionTitle}
-                            </Typography>
-                        }
-                    />
-                    <ConditionallyRender
-                        condition={
-                            Boolean(sectionSubtitle) &&
-                            projectListImprovementsEnabled
-                        }
-                        show={
-                            <Typography variant='body2' color='text.secondary'>
-                                {sectionSubtitle}
-                            </Typography>
-                        }
-                    />
-                </StyledHeaderTitle>
-                {HeaderActions}
-            </StyledHeaderContainer>
+        <>
             <ConditionallyRender
                 condition={projects.length < 1 && !loading}
                 show={
                     <ConditionallyRender
-                        condition={(searchValue || searchQuery)?.length > 0}
+                        condition={searchQuery?.length > 0}
                         show={
                             <TablePlaceholder>
                                 No projects found matching &ldquo;
-                                {searchValue || searchQuery}
+                                {searchQuery}
                                 &rdquo;
                             </TablePlaceholder>
                         }
@@ -129,7 +74,7 @@ export const ProjectGroup = ({
                             show={() => (
                                 <>
                                     {loadingData.map(
-                                        (project: IProjectCard) => (
+                                        (project: ProjectSchema) => (
                                             <ProjectCard
                                                 data-loading
                                                 createdAt={project.createdAt}
@@ -171,9 +116,10 @@ export const ProjectGroup = ({
                                 </>
                             )}
                         />
+                        {isOss() ? <UpgradeProjectCard /> : null}
                     </StyledGridContainer>
                 }
             />
-        </StyledContainer>
+        </>
     );
 };

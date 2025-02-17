@@ -4,6 +4,8 @@ import {
     type IBaseEvent,
     type IEvent,
     type IEventType,
+    SEGMENT_CREATED,
+    SEGMENT_DELETED,
     SEGMENT_UPDATED,
 } from '../../types/events';
 import type { Logger, LogProvider } from '../../logger';
@@ -17,7 +19,10 @@ import type { Db } from '../../db/db';
 import type { Knex } from 'knex';
 import type EventEmitter from 'events';
 import { ADMIN_TOKEN_USER, SYSTEM_USER, SYSTEM_USER_ID } from '../../types';
-import type { DeprecatedSearchEventsSchema } from '../../openapi';
+import type {
+    DeprecatedSearchEventsSchema,
+    ProjectActivitySchema,
+} from '../../openapi';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { applyGenericQueryParams } from '../feature-search/search-utils';
 
@@ -196,6 +201,29 @@ class EventStore implements IEventStore {
             .andWhere('id', '>=', largerThan)
             .first();
         return row?.max ?? 0;
+    }
+
+    async getRevisionRange(start: number, end: number): Promise<IEvent[]> {
+        const query = this.db
+            .select(EVENT_COLUMNS)
+            .from(TABLE)
+            .where('id', '>', start)
+            .andWhere('id', '<=', end)
+            .andWhere((builder) =>
+                builder
+                    .whereNotNull('feature_name')
+                    .orWhereIn('type', [
+                        SEGMENT_UPDATED,
+                        FEATURE_IMPORT,
+                        FEATURES_IMPORTED,
+                        SEGMENT_CREATED,
+                        SEGMENT_DELETED,
+                    ]),
+            )
+            .orderBy('id', 'asc');
+
+        const rows = await query;
+        return rows.map(this.rowToEvent);
     }
 
     async delete(key: number): Promise<void> {
@@ -404,6 +432,29 @@ class EventStore implements IEventStore {
                 id: Number(row.id),
                 name: String(row.name || row.username || row.email),
             }));
+    }
+
+    async getProjectRecentEventActivity(
+        project: string,
+    ): Promise<ProjectActivitySchema> {
+        const result = await this.db('events')
+            .select(
+                this.db.raw("TO_CHAR(created_at::date, 'YYYY-MM-DD') AS date"),
+            )
+            .count('* AS count')
+            .where('project', project)
+            .andWhere(
+                'created_at',
+                '>=',
+                this.db.raw("NOW() - INTERVAL '1 year'"),
+            )
+            .groupBy(this.db.raw("TO_CHAR(created_at::date, 'YYYY-MM-DD')"))
+            .orderBy('date', 'asc');
+
+        return result.map((row) => ({
+            date: row.date,
+            count: Number(row.count),
+        }));
     }
 
     async deprecatedSearchEvents(

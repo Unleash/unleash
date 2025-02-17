@@ -6,6 +6,8 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { useProjectOverviewNameOrId } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
+import { useChangeRequestConfig } from 'hooks/api/getters/useChangeRequestConfig/useChangeRequestConfig';
+import { Link } from 'react-router-dom';
 
 export const ProjectChangeRequests = () => {
     const projectId = useRequiredPathParam('projectId');
@@ -15,6 +17,11 @@ export const ProjectChangeRequests = () => {
     usePageTitle(`Change requests – ${projectName}`);
 
     const { changeRequests, loading } = useProjectChangeRequests(projectId);
+    const { data: configData, loading: configLoading } =
+        useChangeRequestConfig(projectId);
+    const isConfigured = configData.some(
+        (config) => config.changeRequestEnabled,
+    );
 
     if (isOss() || isPro()) {
         return (
@@ -29,6 +36,19 @@ export const ProjectChangeRequests = () => {
             changeRequests={changeRequests}
             projectId={projectId}
             loading={loading}
+            placeholder={
+                !configLoading && !isConfigured ? (
+                    <p>
+                        Change requests are not configured for this project.
+                        <br />
+                        <Link
+                            to={`/projects/${projectId}/settings/change-requests`}
+                        >
+                            Configure change requests
+                        </Link>
+                    </p>
+                ) : undefined
+            }
         />
     );
 };

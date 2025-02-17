@@ -12,7 +12,7 @@ import {
 } from '../../../lib/types';
 import type { IUnleashServices } from '../../../lib/types/services';
 import type { Db } from '../../../lib/db/db';
-import type { IContextFieldDto } from '../../../lib/types/stores/context-field-store';
+import type { IContextFieldDto } from '../../../lib/features/context/context-field-store-type';
 import { DEFAULT_ENV } from '../../../lib/util';
 import type {
     CreateDependentFeatureSchema,
@@ -117,6 +117,15 @@ export interface IUnleashHttpAPI {
     getRecordedEvents(): supertest.Test;
 
     createSegment(postData: object, expectStatusCode?: number): supertest.Test;
+    deleteSegment(
+        segmentId: number,
+        expectedResponseCode?: number,
+    ): supertest.Test;
+    updateSegment(
+        segmentId: number,
+        postData: object,
+        expectStatusCode?: number,
+    ): supertest.Test;
 }
 
 function httpApis(
@@ -288,7 +297,25 @@ function httpApis(
                 .set('Content-Type', 'application/json')
                 .expect(expectedResponseCode);
         },
-
+        deleteSegment(
+            segmentId: number,
+            expectedResponseCode = 204,
+        ): supertest.Test {
+            return request
+                .delete(`/api/admin/segments/${segmentId}`)
+                .set('Content-Type', 'application/json')
+                .expect(expectedResponseCode);
+        },
+        updateSegment(
+            segmentId: number,
+            postData: object,
+            expectStatusCode = 204,
+        ): supertest.Test {
+            return request
+                .put(`/api/admin/segments/${segmentId}`)
+                .send(postData)
+                .expect(expectStatusCode);
+        },
         getRecordedEvents(
             project: string | null = null,
             expectedResponseCode: number = 200,
@@ -450,7 +477,7 @@ export const insertLastSeenAt = async (
     featureName: string,
     db: Knex,
     environment: string = 'default',
-    date: string = '2023-10-01 12:34:56',
+    date: string = '2023-10-01T12:34:56.000Z',
 ): Promise<string> => {
     try {
         await db.raw(`INSERT INTO last_seen_at_metrics (feature_name, environment, last_seen_at)
@@ -467,7 +494,7 @@ export const insertFeatureEnvironmentsLastSeen = async (
     featureName: string,
     db: Knex,
     environment: string = 'default',
-    date: string = '2022-05-01 12:34:56',
+    date: string = '2022-05-01T12:34:56.000Z',
 ): Promise<string> => {
     await db.raw(`
         INSERT INTO feature_environments (feature_name, environment, last_seen_at, enabled)

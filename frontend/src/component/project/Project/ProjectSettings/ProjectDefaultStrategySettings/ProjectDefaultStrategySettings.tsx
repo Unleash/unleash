@@ -6,6 +6,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import {
     PROJECT_DEFAULT_STRATEGY_READ,
+    PROJECT_DEFAULT_STRATEGY_WRITE,
     UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
 import { Alert, styled } from '@mui/material';
@@ -29,7 +30,14 @@ export const ProjectDefaultStrategySettings = () => {
     usePageTitle(`Project default strategy configuration – ${projectName}`);
 
     if (
-        !hasAccess([UPDATE_PROJECT, PROJECT_DEFAULT_STRATEGY_READ], projectId)
+        !hasAccess(
+            [
+                UPDATE_PROJECT,
+                PROJECT_DEFAULT_STRATEGY_READ,
+                PROJECT_DEFAULT_STRATEGY_WRITE,
+            ],
+            projectId,
+        )
     ) {
         return (
             <PageContent

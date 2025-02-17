@@ -101,6 +101,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
             limit,
             sortOrder,
             sortBy,
+            archived,
             favoritesFirst,
         }: IFeatureSearchParams,
         queryParams: IQueryParam[],
@@ -120,6 +121,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'features.name as feature_name',
                     'features.description as description',
                     'features.type as type',
+                    'features.archived_at as archived_at',
                     'features.project as project',
                     'features.created_at as created_at',
                     'features.stale as stale',
@@ -188,9 +190,8 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         }
                     });
                 }
-
                 query
-                    .modify(FeatureToggleStore.filterByArchived, false)
+                    .modify(FeatureToggleStore.filterByArchived, archived)
                     .leftJoin(
                         'feature_environments',
                         'feature_environments.feature_name',
@@ -475,6 +476,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     name: row.feature_name,
                     createdAt: row.created_at,
                     stale: row.stale,
+                    archivedAt: row.archived_at,
                     impressionData: row.impression_data,
                     lastSeenAt: row.last_seen_at,
                     dependencyType: row.dependency,
@@ -567,18 +569,118 @@ class FeatureSearchStore implements IFeatureSearchStore {
     }
 }
 
+const applyStaleConditions = (
+    query: Knex.QueryBuilder,
+    staleConditions?: IQueryParam,
+): void => {
+    if (!staleConditions) return;
+
+    const { values, operator } = staleConditions;
+
+    if (!values.includes('potentially-stale')) {
+        applyGenericQueryParams(query, [
+            {
+                ...staleConditions,
+                values: values.map((value) =>
+                    value === 'active' ? 'false' : 'true',
+                ),
+            },
+        ]);
+        return;
+    }
+
+    const valueSet = new Set(
+        values.filter((value) =>
+            ['stale', 'active', 'potentially-stale'].includes(value || ''),
+        ),
+    );
+    const allSelected = valueSet.size === 3;
+    const onlyPotentiallyStale = valueSet.size === 1;
+    const staleAndPotentiallyStale =
+        valueSet.has('stale') && valueSet.size === 2;
+
+    if (allSelected) {
+        switch (operator) {
+            case 'IS':
+            case 'IS_ANY_OF':
+                // All flags included; no action needed
+                break;
+            case 'IS_NOT':
+            case 'IS_NONE_OF':
+                // All flags excluded
+                query.whereNotIn('features.stale', [false, true]);
+                break;
+        }
+        return;
+    }
+
+    if (onlyPotentiallyStale) {
+        switch (operator) {
+            case 'IS':
+            case 'IS_ANY_OF':
+                query
+                    .where('features.stale', false)
+                    .where('features.potentially_stale', true);
+                break;
+            case 'IS_NOT':
+            case 'IS_NONE_OF':
+                query.where((qb) =>
+                    qb
+                        .where('features.stale', true)
+                        .orWhere('features.potentially_stale', false),
+                );
+                break;
+        }
+        return;
+    }
+
+    if (staleAndPotentiallyStale) {
+        switch (operator) {
+            case 'IS':
+            case 'IS_ANY_OF':
+                query.where((qb) =>
+                    qb
+                        .where('features.stale', true)
+                        .orWhere('features.potentially_stale', true),
+                );
+                break;
+            case 'IS_NOT':
+            case 'IS_NONE_OF':
+                query
+                    .where('features.stale', false)
+                    .where('features.potentially_stale', false);
+                break;
+        }
+    } else {
+        switch (operator) {
+            case 'IS':
+            case 'IS_ANY_OF':
+                query.where('features.stale', false);
+                break;
+            case 'IS_NOT':
+            case 'IS_NONE_OF':
+                query.where('features.stale', true);
+                break;
+        }
+    }
+};
 const applyQueryParams = (
     query: Knex.QueryBuilder,
     queryParams: IQueryParam[],
 ): void => {
     const tagConditions = queryParams.filter((param) => param.field === 'tag');
+    const staleConditions = queryParams.find(
+        (param) => param.field === 'stale',
+    );
     const segmentConditions = queryParams.filter(
         (param) => param.field === 'segment',
     );
     const genericConditions = queryParams.filter(
-        (param) => param.field !== 'tag',
+        (param) => !['tag', 'stale'].includes(param.field),
     );
     applyGenericQueryParams(query, genericConditions);
+
+    applyStaleConditions(query, staleConditions);
 
     applyMultiQueryParams(
         query,

@@ -27,7 +27,7 @@ exports[`should create default config 1`] = `
     "enabled": true,
     "maxAge": 3600000,
   },
-  "dailyMetricsStorageDays": 31,
+  "dailyMetricsStorageDays": 91,
   "db": {
     "acquireConnectionTimeout": 30000,
     "applicationName": "unleash",
@@ -53,6 +53,7 @@ exports[`should create default config 1`] = `
   "disableScheduler": undefined,
   "email": {
     "host": undefined,
+    "optionalHeaders": {},
     "port": 587,
     "secure": false,
     "sender": "Unleash <noreply@getunleash.io>",
@@ -84,6 +85,7 @@ exports[`should create default config 1`] = `
   },
   "inlineSegmentConstraints": true,
   "isEnterprise": false,
+  "isOss": false,
   "listen": {
     "host": undefined,
     "port": 4242,
@@ -94,6 +96,7 @@ exports[`should create default config 1`] = `
     "frontendMetricsMaxPerMinute": 6000,
     "frontendRegisterMaxPerMinute": 6000,
   },
+  "openAIAPIKey": undefined,
   "preHook": undefined,
   "preRouterHook": undefined,
   "prometheusApi": undefined,
@@ -146,6 +149,7 @@ exports[`should create default config 1`] = `
     "clearSiteDataOnLogout": true,
     "cookieName": "unleash-session",
     "db": true,
+    "maxParallelSessions": 5,
     "ttlHours": 48,
   },
   "strategySegmentsLimit": 5,
@@ -153,6 +157,7 @@ exports[`should create default config 1`] = `
   "ui": {
     "environment": "Open Source",
   },
+  "userInactivityThresholdInDays": 180,
   "versionCheck": {
     "enable": true,
     "url": "https://version.unleash.run",

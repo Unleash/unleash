@@ -16,8 +16,8 @@ const RouteNameRender: FC<{}> = () => {
     return (
         <div>
             <RecentlyVisitedRecorder />
-            {lastVisited.map((visited) => (
-                <div>{visited.pathName}</div>
+            {lastVisited.map((visited, index) => (
+                <div key={index}>{visited.pathName}</div>
             ))}
         </div>
     );

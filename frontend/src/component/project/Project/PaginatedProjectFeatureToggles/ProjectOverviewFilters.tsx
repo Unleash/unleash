@@ -42,6 +42,10 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 label: 'Stale',
                 value: 'stale',
             },
+            {
+                label: 'Potentially stale',
+                value: 'potentially-stale',
+            },
         ];
 
         const availableFilters: IFilterItem[] = [
@@ -94,6 +98,14 @@ export const ProjectOverviewFilters: VFC<IProjectOverviewFilters> = ({
                 filterKey: 'createdBy',
                 singularOperators: ['IS', 'IS_NOT'],
                 pluralOperators: ['IS_ANY_OF', 'IS_NONE_OF'],
+            },
+            {
+                label: 'Show only archived',
+                icon: 'inventory',
+                options: [{ label: 'True', value: 'true' }],
+                filterKey: 'archived',
+                singularOperators: ['IS'],
+                pluralOperators: ['IS_ANY_OF'],
             },
         ];
 

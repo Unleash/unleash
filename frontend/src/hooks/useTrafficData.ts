@@ -1,9 +1,15 @@
-import { useState } from 'react';
+import type { ChartDatasetType } from 'component/admin/network/NetworkTrafficUsage/chart-functions';
 import type { IInstanceTrafficMetricsResponse } from './api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
-import type { ChartDataset } from 'chart.js';
-
-const TRAFFIC_DATA_UNIT_COST = 5;
-const TRAFFIC_DATA_UNIT_SIZE = 1_000_000;
+import { useState } from 'react';
+import {
+    DEFAULT_TRAFFIC_DATA_UNIT_COST,
+    DEFAULT_TRAFFIC_DATA_UNIT_SIZE,
+    calculateOverageCost,
+} from 'utils/traffic-calculations';
+import {
+    currentMonth,
+    daysInCurrentMonth,
+} from 'component/admin/network/NetworkTrafficUsage/dates';
 
 export type SelectablePeriod = {
     key: string;
@@ -18,8 +24,6 @@ export type EndpointInfo = {
     color: string;
     order: number;
 };
-
-export type ChartDatasetType = ChartDataset<'bar'>;
 
 const endpointsInfo: Record<string, EndpointInfo> = {
     '/api/admin': {
@@ -39,13 +43,7 @@ const endpointsInfo: Record<string, EndpointInfo> = {
     },
 };
 
-const calculateTrafficDataCost = (trafficData: number) => {
-    const unitCount = Math.ceil(trafficData / TRAFFIC_DATA_UNIT_SIZE);
-    return unitCount * TRAFFIC_DATA_UNIT_COST;
-};
-
-const padMonth = (month: number): string =>
-    month < 10 ? `0${month}` : `${month}`;
+const padMonth = (month: number): string => month.toString().padStart(2, '0');
 
 export const toSelectablePeriod = (
     date: Date,
@@ -100,7 +98,6 @@ const toPeriodsRecord = (
         {} as Record<string, SelectablePeriod>,
     );
 };
-
 const toChartData = (
     days: number[],
     traffic: IInstanceTrafficMetricsResponse,
@@ -128,7 +125,7 @@ const toChartData = (
 
             for (const dayKey in item.days) {
                 const day = item.days[dayKey];
-                const dayNum = new Date(Date.parse(day.day)).getDate();
+                const dayNum = new Date(Date.parse(day.day)).getUTCDate();
                 daysRec[`d${dayNum}`] = day.trafficTypes[0].count;
             }
             const epInfo = endpointsInfo[item.apiPath];
@@ -160,22 +157,6 @@ const toTrafficUsageSum = (trafficData: ChartDatasetType[]): number => {
     return data;
 };
 
-const getDayLabels = (dayCount: number): number[] => {
-    return [...Array(dayCount).keys()].map((i) => i + 1);
-};
-
-export const calculateOverageCost = (
-    dataUsage: number,
-    includedTraffic: number,
-): number => {
-    if (dataUsage === 0) {
-        return 0;
-    }
-
-    const overage = dataUsage - includedTraffic;
-    return overage > 0 ? calculateTrafficDataCost(overage) : 0;
-};
-
 export const calculateProjectedUsage = (
     today: number,
     trafficData: ChartDatasetType[],
@@ -202,8 +183,10 @@ export const calculateEstimatedMonthlyCost = (
     trafficData: ChartDatasetType[],
     includedTraffic: number,
     currentDate: Date,
+    trafficUnitCost = DEFAULT_TRAFFIC_DATA_UNIT_COST,
+    trafficUnitSize = DEFAULT_TRAFFIC_DATA_UNIT_SIZE,
 ) => {
-    if (period !== currentPeriod.key) {
+    if (period !== currentMonth) {
         return 0;
     }
 
@@ -211,9 +194,19 @@ export const calculateEstimatedMonthlyCost = (
     const projectedUsage = calculateProjectedUsage(
         today,
         trafficData,
-        currentPeriod.dayCount,
+        daysInCurrentMonth,
     );
-    return calculateOverageCost(projectedUsage, includedTraffic);
+
+    return calculateOverageCost(
+        projectedUsage,
+        includedTraffic,
+        trafficUnitCost,
+        trafficUnitSize,
+    );
+};
+
+const getDayLabels = (dayCount: number): number[] => {
+    return [...Array(dayCount).keys()].map((i) => i + 1);
 };
 
 export const useTrafficDataEstimation = () => {
@@ -222,7 +215,6 @@ export const useTrafficDataEstimation = () => {
     const [period, setPeriod] = useState<string>(selectablePeriods[0].key);
 
     return {
-        calculateTrafficDataCost,
         record,
         period,
         setPeriod,
@@ -232,7 +224,5 @@ export const useTrafficDataEstimation = () => {
         toChartData,
         toTrafficUsageSum,
         endpointsInfo,
-        calculateOverageCost,
-        calculateEstimatedMonthlyCost,
     };
 };

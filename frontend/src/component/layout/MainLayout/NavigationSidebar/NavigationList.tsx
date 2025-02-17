@@ -15,6 +15,7 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import SearchIcon from '@mui/icons-material/Search';
 import PlaygroundIcon from '@mui/icons-material/AutoFixNormal';
 import InsightsIcon from '@mui/icons-material/Insights';
+import PersonalDashboardIcon from '@mui/icons-material/DashboardOutlined';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -159,6 +160,15 @@ export const PrimaryNavigationList: FC<{
 
     return (
         <List>
+            <DynamicListItem
+                href='/personal'
+                text='Dashboard'
+                onClick={() => onClick('/personal')}
+                selected={activeItem === '/personal'}
+            >
+                <PersonalDashboardIcon />
+            </DynamicListItem>
+
             <DynamicListItem
                 href='/projects'
                 text='Projects'

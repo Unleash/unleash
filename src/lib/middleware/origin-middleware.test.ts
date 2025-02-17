@@ -31,7 +31,7 @@ describe('originMiddleware', () => {
                 getLogger,
                 experimental: {
                     flags: {
-                        originMiddleware: true,
+                        originMiddlewareRequestLogging: true,
                     },
                 },
             }),

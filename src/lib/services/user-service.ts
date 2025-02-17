@@ -24,6 +24,7 @@ import type SessionService from './session-service';
 import type { IUnleashStores } from '../types/stores';
 import PasswordUndefinedError from '../error/password-undefined';
 import {
+    ScimUsersDeleted,
     UserCreatedEvent,
     UserDeletedEvent,
     UserUpdatedEvent,
@@ -40,7 +41,7 @@ import type { TokenUserSchema } from '../openapi/spec/token-user-schema';
 import PasswordMismatch from '../error/password-mismatch';
 import type EventService from '../features/events/event-service';
 
-import { SYSTEM_USER, SYSTEM_USER_AUDIT } from '../types';
+import { type IFlagResolver, SYSTEM_USER, SYSTEM_USER_AUDIT } from '../types';
 import { PasswordPreviouslyUsedError } from '../error/password-previously-used';
 import { RateLimitError } from '../error/rate-limit-error';
 import type EventEmitter from 'events';
@@ -90,11 +91,15 @@ class UserService {
 
     private settingService: SettingService;
 
+    private flagResolver: IFlagResolver;
+
     private passwordResetTimeouts: { [key: string]: NodeJS.Timeout } = {};
 
     private baseUriPath: string;
 
     readonly unleashUrl: string;
+
+    readonly maxParallelSessions: number;
 
     constructor(
         stores: Pick<IUnleashStores, 'userStore'>,
@@ -103,9 +108,16 @@ class UserService {
             getLogger,
             authentication,
             eventBus,
+            flagResolver,
+            session,
         }: Pick<
             IUnleashConfig,
-            'getLogger' | 'authentication' | 'server' | 'eventBus'
+            | 'getLogger'
+            | 'authentication'
+            | 'server'
+            | 'eventBus'
+            | 'flagResolver'
+            | 'session'
         >,
         services: {
             accessService: AccessService;
@@ -125,6 +137,8 @@ class UserService {
         this.emailService = services.emailService;
         this.sessionService = services.sessionService;
         this.settingService = services.settingService;
+        this.flagResolver = flagResolver;
+        this.maxParallelSessions = session.maxParallelSessions;
 
         process.nextTick(() => this.initAdminUser(authentication));
 
@@ -201,6 +215,15 @@ class UserService {
             const roleId = rootRole ? rootRole.roleId : defaultRole.id;
             return { ...u, rootRole: roleId };
         });
+        if (this.flagResolver.isEnabled('showUserDeviceCount')) {
+            const sessionCounts = await this.sessionService.getSessionsCount();
+            const usersWithSessionCounts = usersWithRootRole.map((u) => ({
+                ...u,
+                activeSessions: sessionCounts[u.id] || 0,
+            }));
+            return usersWithSessionCounts;
+        }
+
         return usersWithRootRole;
     }
 
@@ -218,6 +241,19 @@ class UserService {
         return this.store.getByQuery({ email });
     }
 
+    private validateEmail(email?: string): void {
+        if (email) {
+            Joi.assert(
+                email,
+                Joi.string().email({
+                    ignoreLength: true,
+                    minDomainSegments: 1,
+                }),
+                'Email',
+            );
+        }
+    }
+
     async createUser(
         { username, email, name, password, rootRole }: ICreateUser,
         auditUser: IAuditUser = SYSTEM_USER_AUDIT,
@@ -226,13 +262,9 @@ class UserService {
             throw new BadDataError('You must specify username or email');
         }
 
-        if (email) {
-            Joi.assert(
-                email,
-                Joi.string().email({ ignoreLength: true }),
-                'Email',
-            );
-        }
+        Joi.assert(name, Joi.string(), 'Name');
+
+        this.validateEmail(email);
 
         const exists = await this.store.hasUser({ username, email });
         if (exists) {
@@ -326,13 +358,7 @@ class UserService {
     ): Promise<IUserWithRootRole> {
         const preUser = await this.getUser(id);
 
-        if (email) {
-            Joi.assert(
-                email,
-                Joi.string().email({ ignoreLength: true }),
-                'Email',
-            );
-        }
+        this.validateEmail(email);
 
         if (rootRole) {
             await this.accessService.setUserRootRole(id, rootRole);
@@ -376,7 +402,22 @@ class UserService {
         );
     }
 
-    async loginUser(usernameOrEmail: string, password: string): Promise<IUser> {
+    async deleteScimUsers(auditUser: IAuditUser): Promise<void> {
+        await this.store.deleteScimUsers();
+
+        await this.eventService.storeEvent(
+            new ScimUsersDeleted({
+                data: null,
+                auditUser,
+            }),
+        );
+    }
+
+    async loginUser(
+        usernameOrEmail: string,
+        password: string,
+        device?: { userAgent: string; ip: string },
+    ): Promise<IUser> {
         const settings = await this.settingService.get<SimpleAuthSettings>(
             simpleAuthSettingsKey,
         );
@@ -400,6 +441,25 @@ class UserService {
             const match = await bcrypt.compare(password, passwordHash);
             if (match) {
                 const loginOrder = await this.store.successfullyLogin(user);
+
+                const sessions = await this.sessionService.getSessionsForUser(
+                    user.id,
+                );
+                if (sessions.length >= 5 && device) {
+                    this.logger.info(
+                        `Excessive login (user id: ${user.id}, user agent: ${device.userAgent}, IP: ${device.ip})`,
+                    );
+                }
+
+                // subtract current user session that will be created
+                const deletedSessionsCount =
+                    await this.sessionService.deleteStaleSessionsForUser(
+                        user.id,
+                        Math.max(this.maxParallelSessions - 1, 0),
+                    );
+                user.deletedSessions = deletedSessionsCount;
+                user.activeSessions = this.maxParallelSessions;
+
                 this.eventBus.emit(USER_LOGIN, { loginOrder });
                 return user;
             }

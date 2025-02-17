@@ -116,7 +116,9 @@ const StrategyDeprecationWarning = () => (
         version. We recommend not using custom strategies going forward and
         instead using the predefined strategies with{' '}
         <Link
-            href={'https://docs.getunleash.io/reference/strategy-constraints'}
+            href={
+                'https://docs.getunleash.io/reference/activation-strategies#constraints'
+            }
             target='_blank'
             variant='body2'
         >
@@ -182,8 +184,7 @@ export const StrategiesList = () => {
                             refetchStrategies();
                             setToastData({
                                 type: 'success',
-                                title: 'Success',
-                                text: 'Strategy reactivated successfully',
+                                text: 'Strategy reactivated',
                             });
                         } catch (error: unknown) {
                             setToastApiError(formatUnknownError(error));
@@ -200,8 +201,7 @@ export const StrategiesList = () => {
                             refetchStrategies();
                             setToastData({
                                 type: 'success',
-                                title: 'Success',
-                                text: 'Strategy deprecated successfully',
+                                text: 'Strategy deprecated',
                             });
                         } catch (error: unknown) {
                             setToastApiError(formatUnknownError(error));
@@ -230,8 +230,7 @@ export const StrategiesList = () => {
                         refetchStrategies();
                         setToastData({
                             type: 'success',
-                            title: 'Success',
-                            text: 'Strategy deleted successfully',
+                            text: 'Strategy deleted',
                         });
                     } catch (error: unknown) {
                         setToastApiError(formatUnknownError(error));
@@ -397,9 +396,10 @@ export const StrategiesList = () => {
             <PageContent
                 isLoading={loading}
                 header={
-                    <PageHeader>
-                        <PredefinedStrategyTitle />
-                    </PageHeader>
+                    <PageHeader
+                        titleElement={<PredefinedStrategyTitle />}
+                        title='Strategy types'
+                    />
                 }
             >
                 <Box>
@@ -408,13 +408,22 @@ export const StrategiesList = () => {
                         <TableBody {...getTableBodyProps()}>
                             {rows.map((row) => {
                                 prepareRow(row);
+                                const { key, ...rowProps } = row.getRowProps();
                                 return (
-                                    <TableRow hover {...row.getRowProps()}>
-                                        {row.cells.map((cell) => (
-                                            <TableCell {...cell.getCellProps()}>
-                                                {cell.render('Cell')}
-                                            </TableCell>
-                                        ))}
+                                    <TableRow hover key={key} {...rowProps}>
+                                        {row.cells.map((cell) => {
+                                            const { key, ...cellProps } =
+                                                cell.getCellProps();
+
+                                            return (
+                                                <TableCell
+                                                    key={key}
+                                                    {...cellProps}
+                                                >
+                                                    {cell.render('Cell')}
+                                                </TableCell>
+                                            );
+                                        })}
                                     </TableRow>
                                 );
                             })}
@@ -459,13 +468,22 @@ export const StrategiesList = () => {
                         <TableBody {...customGetTableBodyProps()}>
                             {customRows.map((row) => {
                                 customPrepareRow(row);
+                                const { key, ...rowProps } = row.getRowProps();
                                 return (
-                                    <TableRow hover {...row.getRowProps()}>
-                                        {row.cells.map((cell) => (
-                                            <TableCell {...cell.getCellProps()}>
-                                                {cell.render('Cell')}
-                                            </TableCell>
-                                        ))}
+                                    <TableRow hover key={key} {...rowProps}>
+                                        {row.cells.map((cell) => {
+                                            const { key, ...cellProps } =
+                                                cell.getCellProps();
+
+                                            return (
+                                                <TableCell
+                                                    key={key}
+                                                    {...cellProps}
+                                                >
+                                                    {cell.render('Cell')}
+                                                </TableCell>
+                                            );
+                                        })}
                                     </TableRow>
                                 );
                             })}

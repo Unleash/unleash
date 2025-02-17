@@ -59,7 +59,7 @@ export default class ConfigurationRevisionService extends EventEmitter {
         }
     }
 
-    async updateMaxRevisionId(): Promise<number> {
+    async updateMaxRevisionId(emit: boolean = true): Promise<number> {
         if (this.flagResolver.isEnabled('disableUpdateMaxRevisionId')) {
             return 0;
         }
@@ -72,8 +72,10 @@ export default class ConfigurationRevisionService extends EventEmitter {
                 'Updating feature configuration with new revision Id',
                 revisionId,
             );
-            this.emit(UPDATE_REVISION, revisionId);
             this.revisionId = revisionId;
+            if (emit) {
+                this.emit(UPDATE_REVISION, revisionId);
+            }
         }
 
         return this.revisionId;

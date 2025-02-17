@@ -208,6 +208,23 @@ export class FrontendApiService {
         );
     }
 
+    async setFrontendCorsSettings(
+        value: FrontendSettings['frontendApiOrigins'],
+        auditUser: IAuditUser,
+    ): Promise<void> {
+        const error = validateOrigins(value);
+        if (error) {
+            throw new BadDataError(error);
+        }
+        const settings = (await this.getFrontendSettings(false)) || {};
+        await this.services.settingService.insert(
+            frontendSettingsKey,
+            { ...settings, frontendApiOrigins: value },
+            auditUser,
+            false,
+        );
+    }
+
     async fetchFrontendSettings(): Promise<FrontendSettings> {
         try {
             this.cachedFrontendSettings =

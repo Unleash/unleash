@@ -98,7 +98,7 @@ export const ChangeActions: FC<{
                 change.id,
             );
             setToastData({
-                title: 'Change discarded from change request draft.',
+                text: 'Change discarded from change request draft.',
                 type: 'success',
             });
             onRefetch?.();

@@ -18,6 +18,7 @@ export const setupSegmentsEndpoint = () => {
     testServerRoute(server, '/api/admin/segments', {
         segments: [
             {
+                id: 1,
                 name: 'test',
                 constraints: [],
             },

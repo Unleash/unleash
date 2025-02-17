@@ -30,7 +30,7 @@ import type {
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { AdvancedPlaygroundEnvironmentDiffCell } from './AdvancedPlaygroundEnvironmentCell/AdvancedPlaygroundEnvironmentDiffCell';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { countCombinations } from './combinationCounter';
+import { countCombinations, getBucket } from './combinationCounter';
 
 const defaultSort: SortingRule<string> = { id: 'name' };
 const { value, setValue } = createLocalStorage(
@@ -54,7 +54,7 @@ export const AdvancedPlaygroundResultsTable = ({
         trackEvent('playground', {
             props: {
                 eventType: 'number-of-combinations',
-                count: countCombinations(features),
+                count: getBucket(countCombinations(features)),
             },
         });
     }

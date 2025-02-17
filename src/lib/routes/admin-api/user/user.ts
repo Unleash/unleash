@@ -13,7 +13,10 @@ import { createRequestSchema } from '../../../openapi/util/create-request-schema
 import { createResponseSchema } from '../../../openapi/util/create-response-schema';
 import { meSchema, type MeSchema } from '../../../openapi/spec/me-schema';
 import { serializeDates } from '../../../types/serialize-dates';
-import type { IUserPermission } from '../../../types/stores/access-store';
+import type {
+    IRole,
+    IUserPermission,
+} from '../../../types/stores/access-store';
 import type { PasswordSchema } from '../../../openapi/spec/password-schema';
 import {
     emptyResponse,
@@ -28,6 +31,8 @@ import {
     rolesSchema,
     type RolesSchema,
 } from '../../../openapi/spec/roles-schema';
+import type { IFlagResolver } from '../../../types';
+import type { UserSubscriptionsService } from '../../../features/user-subscriptions/user-subscriptions-service';
 
 class UserController extends Controller {
     private accessService: AccessService;
@@ -42,6 +47,10 @@ class UserController extends Controller {
 
     private projectService: ProjectService;
 
+    private flagResolver: IFlagResolver;
+
+    private userSubscriptionsService: UserSubscriptionsService;
+
     constructor(
         config: IUnleashConfig,
         {
@@ -51,6 +60,7 @@ class UserController extends Controller {
             userSplashService,
             openApiService,
             projectService,
+            transactionalUserSubscriptionsService,
         }: Pick<
             IUnleashServices,
             | 'accessService'
@@ -59,6 +69,7 @@ class UserController extends Controller {
             | 'userSplashService'
             | 'openApiService'
             | 'projectService'
+            | 'transactionalUserSubscriptionsService'
         >,
     ) {
         super(config);
@@ -68,6 +79,8 @@ class UserController extends Controller {
         this.userSplashService = userSplashService;
         this.openApiService = openApiService;
         this.projectService = projectService;
+        this.userSubscriptionsService = transactionalUserSubscriptionsService;
+        this.flagResolver = config.flagResolver;
 
         this.route({
             method: 'get',
@@ -174,10 +187,15 @@ class UserController extends Controller {
     ): Promise<void> {
         const { projectId } = req.query;
         if (projectId) {
-            const roles = await this.accessService.getAllProjectRolesForUser(
-                req.user.id,
-                projectId,
-            );
+            let roles: IRole[];
+            if (this.flagResolver.isEnabled('projectRoleAssignment')) {
+                roles = await this.accessService.getProjectRoles();
+            } else {
+                roles = await this.accessService.getAllProjectRolesForUser(
+                    req.user.id,
+                    projectId,
+                );
+            }
             this.openApiService.respondWithValidation(
                 200,
                 res,
@@ -225,12 +243,16 @@ class UserController extends Controller {
     ): Promise<void> {
         const { user } = req;
 
-        const projects = await this.projectService.getProjectsByUser(user.id);
+        const [projects, rootRole, subscriptions] = await Promise.all([
+            this.projectService.getProjectsByUser(user.id),
+            this.accessService.getRootRoleForUser(user.id),
+            this.userSubscriptionsService.getUserSubscriptions(user.id),
+        ]);
 
-        const rootRole = await this.accessService.getRootRoleForUser(user.id);
         const responseData: ProfileSchema = {
             projects,
             rootRole,
+            subscriptions,
             features: [],
         };
 

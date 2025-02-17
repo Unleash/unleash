@@ -2,6 +2,7 @@
 
 exports[`Should format specialised text for events when IPs changed 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*user@company.com* updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *[my-other-project](unleashUrl/projects/my-other-project)* by updating strategy *remoteAddress* in *production* IPs from empty set of IPs to [127.0.0.1]; constraints from empty set of constraints to [appName is one of (x,y)]",
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
 }
@@ -9,6 +10,7 @@ exports[`Should format specialised text for events when IPs changed 1`] = `
 
 exports[`Should format specialised text for events when a scheduled change request is suspended 1`] = `
 {
+  "label": "Change request suspended",
   "text": "Change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* was suspended for the following reason: The user who scheduled this change request (user id: 6) has been deleted from this Unleash instance.",
   "url": "unleashUrl/projects/my-other-project/change-requests/1",
 }
@@ -16,13 +18,15 @@ exports[`Should format specialised text for events when a scheduled change reque
 
 exports[`Should format specialised text for events when change request is scheduled 1`] = `
 {
-  "text": "*user@company.com* scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature flag *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* to be applied at  in project *my-other-project*",
+  "label": "Change request scheduled",
+  "text": "*user@company.com* scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature flag *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* to be applied at 2024-06-01T10:03:11.549Z.",
   "url": "unleashUrl/projects/my-other-project/change-requests/1",
 }
 `;
 
 exports[`Should format specialised text for events when constraints and rollout percentage and stickiness changed 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*user@company.com* updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *[my-other-project](unleashUrl/projects/my-other-project)* by updating strategy *flexibleRollout* in *production* stickiness from default to random; rollout from 67% to 32%; constraints from empty set of constraints to [appName is one of (x,y)]",
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
 }
@@ -30,6 +34,7 @@ exports[`Should format specialised text for events when constraints and rollout 
 
 exports[`Should format specialised text for events when default strategy updated 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is one of (x,y), appName not is one of (x)]",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -37,6 +42,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated 2`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is not one of (x,y), appName not is not one of (x)]",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -44,6 +50,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated 3`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is a string that contains (x,y), appName not is a string that contains (x)]",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -51,6 +58,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated 4`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is a string that starts with (x,y), appName not is a string that starts with (x)]",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -58,6 +66,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated 5`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from empty set of constraints to [appName is a string that ends with (x,y), appName not is a string that ends with (x)]",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -65,6 +74,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated with numeric constraint DATE_AFTER 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from [appName is a date after 4] to empty set of constraints",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -72,6 +82,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated with numeric constraint DATE_BEFORE 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from [appName is a date before 4] to empty set of constraints",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -79,6 +90,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated with numeric constraint NUM_EQ 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from [appName is a number equal to 4] to empty set of constraints",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -86,6 +98,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated with numeric constraint NUM_GT 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from [appName is a number greater than 4] to empty set of constraints",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -93,6 +106,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated with numeric constraint NUM_GTE 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from [appName is a number greater than or equal to 4] to empty set of constraints",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -100,6 +114,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated with numeric constraint NUM_LT 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from [appName is a number less than 4] to empty set of constraints",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -107,6 +122,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated with numeric constraint NUM_LTE 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from [appName is a number less than or equal to 4] to empty set of constraints",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -114,6 +130,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated with numeric constraint SEMVER_EQ 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from [appName is a SemVer equal to 4] to empty set of constraints",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -121,6 +138,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated with numeric constraint SEMVER_GT 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from [appName is a SemVer greater than 4] to empty set of constraints",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -128,6 +146,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when default strategy updated with numeric constraint SEMVER_LT 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*admin* updated *[aaa](unleashUrl/projects/default/features/aaa)* in project *[default](unleashUrl/projects/default)* by updating strategy *default* in *production* constraints from [appName is a SemVer less than 4] to empty set of constraints",
   "url": "unleashUrl/projects/default/features/aaa",
 }
@@ -135,6 +154,7 @@ exports[`Should format specialised text for events when default strategy updated
 
 exports[`Should format specialised text for events when groupId changed 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*user@company.com* updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *[my-other-project](unleashUrl/projects/my-other-project)* by updating strategy *flexibleRollout* in *production* groupId from new-feature to different-feature",
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
 }
@@ -142,6 +162,7 @@ exports[`Should format specialised text for events when groupId changed 1`] = `
 
 exports[`Should format specialised text for events when host names changed 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*user@company.com* updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *[my-other-project](unleashUrl/projects/my-other-project)* by updating strategy *applicationHostname* in *production* hostNames from empty set of hostNames to [unleash.com]; constraints from empty set of constraints to [appName is one of (x,y)]",
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
 }
@@ -149,6 +170,7 @@ exports[`Should format specialised text for events when host names changed 1`] =
 
 exports[`Should format specialised text for events when neither rollout percentage nor stickiness changed 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*user@company.com* updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *[my-other-project](unleashUrl/projects/my-other-project)* by updating strategy *flexibleRollout* in *production*",
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
 }
@@ -156,13 +178,23 @@ exports[`Should format specialised text for events when neither rollout percenta
 
 exports[`Should format specialised text for events when no specific text for strategy exists yet 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*user@company.com* updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *[my-other-project](unleashUrl/projects/my-other-project)* by updating strategy *newStrategy* in *production*",
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
 }
 `;
 
+exports[`Should format specialised text for events when project archived 1`] = `
+{
+  "label": "Project archived",
+  "text": "*user@company.com* archived project *my-other-project*",
+  "url": "unleashUrl/projects-archive",
+}
+`;
+
 exports[`Should format specialised text for events when rollout percentage changed 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*user@company.com* updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *[my-other-project](unleashUrl/projects/my-other-project)* by updating strategy *flexibleRollout* in *production* rollout from 67% to 32%",
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
 }
@@ -170,20 +202,23 @@ exports[`Should format specialised text for events when rollout percentage chang
 
 exports[`Should format specialised text for events when scheduled change request fails  1`] = `
 {
-  "text": "*Failed* to apply the scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature flag *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* by *user@company.com* in project *my-other-project*.",
+  "label": "Scheduled change request failed",
+  "text": "*Failed* to apply the scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature flag *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* by *user@company.com*.",
   "url": "unleashUrl/projects/my-other-project/change-requests/1",
 }
 `;
 
 exports[`Should format specialised text for events when scheduled change request succeeds  1`] = `
 {
-  "text": "*Successfully* applied the scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature flag *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* by *user@company.com* in project *my-other-project*.",
+  "label": "Scheduled change request applied successfully",
+  "text": "*Successfully* applied the scheduled change request *[#1](unleashUrl/projects/my-other-project/change-requests/1)* for feature flag *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)* by *user@company.com*.",
   "url": "unleashUrl/projects/my-other-project/change-requests/1",
 }
 `;
 
 exports[`Should format specialised text for events when stickiness changed 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*user@company.com* updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *[my-other-project](unleashUrl/projects/my-other-project)* by updating strategy *flexibleRollout* in *production* stickiness from default to random",
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
 }
@@ -191,6 +226,7 @@ exports[`Should format specialised text for events when stickiness changed 1`] =
 
 exports[`Should format specialised text for events when strategy added 1`] = `
 {
+  "label": "Flag strategy added",
   "text": "*user@company.com* added strategy *flexibleRollout* to *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* for the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)*",
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
 }
@@ -198,6 +234,7 @@ exports[`Should format specialised text for events when strategy added 1`] = `
 
 exports[`Should format specialised text for events when strategy removed 1`] = `
 {
+  "label": "Flag strategy removed",
   "text": "*user@company.com* removed strategy *default* from *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* for the *production* environment in project *[my-other-project](unleashUrl/projects/my-other-project)*",
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
 }
@@ -205,6 +242,7 @@ exports[`Should format specialised text for events when strategy removed 1`] = `
 
 exports[`Should format specialised text for events when userIds changed 1`] = `
 {
+  "label": "Flag strategy updated",
   "text": "*user@company.com* updated *[new-feature](unleashUrl/projects/my-other-project/features/new-feature)* in project *[my-other-project](unleashUrl/projects/my-other-project)* by updating strategy *userWithId* in *production* userIds from empty set of userIds to [a,b]; constraints from empty set of constraints to [appName is one of (x,y)]",
   "url": "unleashUrl/projects/my-other-project/features/new-feature",
 }

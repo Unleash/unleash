@@ -8,6 +8,12 @@ The Jira Server plugin is **deprecated**, please use the [Unleash Jira Cloud plu
 
 :::
 
+:::note Availability
+
+**Version**: `4.0+`
+
+:::
+
 With the Unleash Jira server plugin you can create new feature flags in Unleash from a Jira issue as well as link
 existing flags to Jira issues.
 
@@ -20,10 +26,6 @@ The plugin also shows you current status of connected flags.
 - [Jira **data center**](https://www.atlassian.com/enterprise/data-center/jira), v8.0 or higher
 
 For Jira Cloud, refer to the [Jira Cloud plugin](jira-cloud-plugin-installation)
-
-### Unleash
-
-- Unleash v4 or higher
 
 ## Required access levels
 
@@ -68,7 +70,7 @@ server configured for a specific Jira project.
 
 ![A table marked Unleash Server Configuration, listing Unleash server instances.](/img/jira_server_manage_servers.png)
 
-Once you have configured at least one Unleash server, your users should be ready to [use the Jira Server plugin](/integrations/jira_server_plugin_usage)
+Once you have configured at least one Unleash server, your users should be ready to [use the Jira Server plugin](/reference/integrations/jira-server-plugin-usage)
 
 ### Edit existing servers
 

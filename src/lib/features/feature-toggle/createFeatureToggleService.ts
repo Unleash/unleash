@@ -8,7 +8,7 @@ import FeatureToggleStore from './feature-toggle-store';
 import FeatureToggleClientStore from '../client-feature-toggles/client-feature-toggle-store';
 import ProjectStore from '../project/project-store';
 import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
-import ContextFieldStore from '../../db/context-field-store';
+import ContextFieldStore from '../context/context-field-store';
 import GroupStore from '../../db/group-store';
 import { AccountStore } from '../../db/account-store';
 import { AccessStore } from '../../db/access-store';
@@ -22,7 +22,7 @@ import FakeFeatureToggleStore from './fakes/fake-feature-toggle-store';
 import FakeClientFeatureToggleStore from '../client-feature-toggles/fakes/fake-client-feature-toggle-store';
 import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
-import FakeContextFieldStore from '../../../test/fixtures/fake-context-field-store';
+import FakeContextFieldStore from '../context/fake-context-field-store';
 import FakeGroupStore from '../../../test/fixtures/fake-group-store';
 import { FakeAccountStore } from '../../../test/fixtures/fake-account-store';
 import FakeAccessStore from '../../../test/fixtures/fake-access-store';
@@ -80,19 +80,13 @@ export const createFeatureToggleService = (
     const featureToggleClientStore = new FeatureToggleClientStore(
         db,
         eventBus,
-        getLogger,
-        flagResolver,
+        config,
     );
-    const projectStore = new ProjectStore(
-        db,
-        eventBus,
-        getLogger,
-        flagResolver,
-    );
+    const projectStore = new ProjectStore(db, eventBus, config);
     const featureEnvironmentStore = new FeatureEnvironmentStore(
         db,
         eventBus,
-        getLogger,
+        config,
     );
     const contextFieldStore = new ContextFieldStore(
         db,
@@ -105,7 +99,7 @@ export const createFeatureToggleService = (
     const accessStore = new AccessStore(db, eventBus, getLogger);
     const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
     const roleStore = new RoleStore(db, eventBus, getLogger);
-    const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+    const environmentStore = new EnvironmentStore(db, eventBus, config);
     const eventService = createEventsService(db, config);
     const groupService = new GroupService(
         { groupStore, accountStore },

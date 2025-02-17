@@ -5,7 +5,7 @@ import FakeFeatureToggleStore from '../../lib/features/feature-toggle/fakes/fake
 import FakeTagStore from './fake-tag-store';
 import FakeTagTypeStore from '../../lib/features/tag-type/fake-tag-type-store';
 import FakeEventStore from './fake-event-store';
-import FakeContextFieldStore from './fake-context-field-store';
+import FakeContextFieldStore from '../../lib/features/context/fake-context-field-store';
 import FakeSettingStore from './fake-setting-store';
 import FakeAddonStore from './fake-addon-store';
 import FakeProjectStore from './fake-project-store';
@@ -52,8 +52,12 @@ import { FakeFeatureLifecycleReadModel } from '../../lib/features/feature-lifecy
 import { FakeLargestResourcesReadModel } from '../../lib/features/metrics/sizes/fake-largest-resources-read-model';
 import { FakeFeatureCollaboratorsReadModel } from '../../lib/features/feature-toggle/fake-feature-collaborators-read-model';
 import { createFakeProjectReadModel } from '../../lib/features/project/createProjectReadModel';
-import { FakeOnboardingReadModel } from '../../lib/features/onboarding/fake-onboarding-read-model';
 import { FakeOnboardingStore } from '../../lib/features/onboarding/fake-onboarding-store';
+import { createFakeOnboardingReadModel } from '../../lib/features/onboarding/createOnboardingReadModel';
+import { FakeUserUnsubscribeStore } from '../../lib/features/user-subscriptions/fake-user-unsubscribe-store';
+import { FakeUserSubscriptionsReadModel } from '../../lib/features/user-subscriptions/fake-user-subscriptions-read-model';
+import { FakeUniqueConnectionStore } from '../../lib/features/unique-connection/fake-unique-connection-store';
+import { UniqueConnectionReadModel } from '../../lib/features/unique-connection/unique-connection-read-model';
 
 const db = {
     select: () => ({
@@ -62,6 +66,8 @@ const db = {
 };
 
 const createStores: () => IUnleashStores = () => {
+    const uniqueConnectionStore = new FakeUniqueConnectionStore();
+
     return {
         db,
         clientApplicationsStore: new FakeClientApplicationsStore(),
@@ -111,12 +117,18 @@ const createStores: () => IUnleashStores = () => {
         featureLifecycleStore: new FakeFeatureLifecycleStore(),
         featureStrategiesReadModel: new FakeFeatureStrategiesReadModel(),
         featureLifecycleReadModel: new FakeFeatureLifecycleReadModel(),
-        onboardingReadModel: new FakeOnboardingReadModel(),
+        onboardingReadModel: createFakeOnboardingReadModel(),
         largestResourcesReadModel: new FakeLargestResourcesReadModel(),
         integrationEventsStore: {} as IntegrationEventsStore,
         featureCollaboratorsReadModel: new FakeFeatureCollaboratorsReadModel(),
         projectReadModel: createFakeProjectReadModel(),
         onboardingStore: new FakeOnboardingStore(),
+        userUnsubscribeStore: new FakeUserUnsubscribeStore(),
+        userSubscriptionsReadModel: new FakeUserSubscriptionsReadModel(),
+        uniqueConnectionStore,
+        uniqueConnectionReadModel: new UniqueConnectionReadModel(
+            uniqueConnectionStore,
+        ),
     };
 };
 

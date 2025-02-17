@@ -3,152 +3,68 @@ id: environments
 title: Environments
 ---
 
-:::info Availability
+:::note Availability
 
-Environments were released in Unleash v4.3.0.
+**Version**: `4.3+`
 
 :::
+## Overview
 
-<div style={{position: 'relative', paddingBottom: '56.25%', height: '0'}}>
-    <iframe src="https://www.loom.com/embed/95239e875bbc4e09a5c5833e1942e4b0" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style={{position: 'absolute', top: '0', left: '0', width: '100%', height: '100%'}}></iframe>
-</div>
+Environments represent different stages in your development lifecycle. They allow you to manage your product releases from local development to production. [Projects](/reference/projects) and [feature flags](/reference/feature-toggles) are accessible in all environments, but each environment has different feature flag configurations. This allows you to enable a flag in development or test without enabling it in production.
 
-Environments is a new way to organize activation strategy configurations for feature flags into separate environments. In Unleash, a feature lives across all your environments — after all, the goal is to get the new feature released as soon as possible — but it makes sense to configure the activation differently per environment. You might want the feature enabled for everyone in development, but only for yourself in production, for instance.
+The default environments are **development** and **production**. Unleash instances created before version `4.3` also have an environment called **default**. [Enterprise](https://www.getunleash.io/pricing) customers can create, clone, deprecate, and delete environments.
 
-Previously, Unleash Enterprise could use [strategy constraints](../reference/strategy-constraints.md) to control the rollout across environments. With the new environments feature, this is no longer necessary. Now all activation strategies belong to an explicit environment instead.
-
-Further, connected applications will use environment-scoped API keys to make sure they only download feature flag configurations for the environment they are running in.
-
-Finally, metrics have also been upgraded to record the environment. This, in turn, means that Unleash can display usage metrics per environment.
-
-Despite this being a shift in how Unleash works, everything will continue to work exactly how it did for existing users. For backwards compatibility, we have created an environment named "default" that will contain all of the existing flags and API keys. Read more about that in [the migration section](#migration).
-
-![A graph showing how environments work. Each project can have multiple features, and each feature can have different activation strategies in each of its environments.](/img/environments_overview.svg 'A feature flag exists across all environments, but take different activation strategies per environment.')
+The set of all available environments is defined at the instance level. Additionally, each project can choose which of the environments are visible on the project level. The set of environments available to any given project is always a subset of the environments at the instance level. Each project must always have at least one active environment.
 
 ## Environment types
 
-All environments in Unleash have a **type**. When you create a new environment, you must also assign it a type.
-
-The built-in environment types are:
+Each environment has a name and one of the following types:
 - Development
 - Test
 - Pre-production
 - Production
 
-The **production** environment type is special: Unleash will show additional confirmation prompts when you change something that could impact users in environments of this type. The built-in "production" environment is a production-type environment.
+Meeting specific conditions in a given environment type affects a feature's [lifecycle stage](/reference/feature-toggles#feature-flag-lifecycle). For example, a feature that is receiving metrics and is exposed to users in a production environment moves to the [live](/reference/feature-toggles#live) stage. Production environments also display additional confirmation prompts for changes that may impact users. The default **production** environment is of type production.
 
-The other environment types do not currently have any functionality associated with them. This may change in the future.
+## Activation strategies
 
-## Global and project-level environments
+[Activation strategies](/reference/activation-strategies) are the component of feature flags that define who should get a feature. An activation strategy is assigned to one feature flag in one environment. For example, you can use activation strategies to show a feature only to select users in development, but roll it out to 25% of users in production.
 
-Environments exist on a global level, so they are available to all projects within Unleash. However, every [project](./projects.md) might not need to use every environment. That's why you can also choose which of the global environments should be available within a project.
+![Figure demonstrating the relationship between projects, environments, feature flags, and activation strategies](/img/environments-activation-strategy.png)
 
-## How to start using environments
+## Connected applications and usage metrics
 
-In order to start using environments you need to be on Unleash v4.2 or higher.
+When connecting an SDK to Unleash, the API key determines which environment to fetch feature flag configurations for. Therefore, connected applications must use environment-scoped [API tokens](/reference/api-tokens-and-client-keys).
 
-If you are on v4.2, you also need to have the environment feature enabled (if you are using Unleash Hosted, please reach out on [contact@getunleash.io](mailto:contact@getunleash.io) if you want to start using environments.
+:::caution deprecation
 
-If you are on v4.3 or later, environments are already enabled for you.
-
-Note that in order to enable an environment for a feature flag, you must first add activation strategies for that environment. You cannot enable an environment without activation strategies.
-
-### Step 1: Enable new environments for your Project
-
-Navigate to the project and choose the “environments” tab.
-
-![A project view showing the Environments tab. The UI displays three environment flags: "default", "development", and "production". The "default" environment is enabled.](/img/environments_configure.png 'Configure environment for this project')
-
-### Step 2: Configure activation strategies for the new environment
-
-From the “feature flag view” you will now be able to configure activation strategies per environment. You can also enable and disable environments here. Remember that an environment must have activation strategies before you can enable it.
-
-![A feature flag strategies tab showing three different environments, of which one is active. The UI displays data about the currently selected environment, ](/img/environments_strategies.png 'Add strategy configuration per environment')
-
-### Step 3: Create environment specific API keys
-
-In order for the SDK to download the feature flag configuration for the correct environment you will need to create an API token for a defined environment.
-
-![An API key creation form. The form's fields are "username", "token type", "project", and, crucially, "environment". The development environment is selected.](/img/environments_api_keys.png 'Create Environment specific API Keys')
-
-## Cloning environments
-
-:::note Availability
-
-Environment cloning was made available in Unleash 4.19.
+The `environment` context field in SDKs is a legacy implementation and does not affect environment access. 
 
 :::
 
-Unleash environments can be cloned. Cloning an environment creates a **new** environment based on the selected source environment. When cloning an environment, you select any number of projects whose feature flag configurations will also be cloned. These projects will have identical configurations for the source and target environments. However, the environments can then be configured independently and will not stay in sync with each other.
+Unleash tracks usage metrics per environment.
 
-When cloning an environment, you must give the new environment
-- a name
-- an environment type
-- a list of projects to clone feature configurations in
+## Enable an environment
 
-You can also clone user permissions into the new environment. When you do that, permissions in the new environment will be the same as in the environment you cloned from. If you don't clone permissions, only admins and project editors can make changes in the new environment. You can change permissions after creation by using [custom project roles](../reference/rbac#custom-project-roles).
+To enable an environment for a feature flag, you must first add [activation strategies](#activation-strategies) for that environment. If you don't define an activation strategy, the default is a gradual rollout to 100% of users.
 
-In order to clone an environment, you can follow the [how to clone environments](../how-to/how-to-clone-environments.mdx) guide.
+To enable a feature flag in a specific environment, do the following:
+1. In the Admin UI, navigate to the feature flag you'd like to enable in an environment.
+2. In the list of environments, click **Add strategy** for the environment you want to enable.
+3. Enter a strategy name and define the rollout percentage. Optionally, you can configure segments, constraints, and variants.
+4. Click **Save strategy**.
+5. In the **Enabled in environments** section, toggle the environment you want to enable. 
 
-Once created, the new environment works just as any other environment.
+## Clone an environment
 
-## Migration
+:::note Availability
 
-To ease migration we have created a special environment called “default”. All existing activation strategies have been added to this environment. All existing Client API keys have also been scoped to work against the default environment to ensure zero disruption as part of the upgrade.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.19+`
 
-If you're currently using strategy constraints together with the “environment” field on the Unleash Context, you should be aware that the new environment support works slightly differently. With environments, the SDK API will use the client's API key to determine which environment the client is configured for. The API then sends _only_ strategies belonging to the client's environment. This means that you might not need the "environment" property of the Unleash Context anymore.
+:::
 
-![A strategy constraint using the environment field of the unleash context.](/img/environments_strategy_constraints.png 'You will not use strategy constraints for environments any more.')
+Cloning an environment allows you to duplicate environments, including all feature flag strategies and their states. To clone an environment in the Admin UI, go to **Configure > Environments**. Under **Actions**, select **Clone** for the environment you want to clone.
 
-### Integrations
+Cloning an environment creates a copy of the selected source environment. You can select which projects to clone the environment configuration in. This means that the default visibility of the source environment, as well as any feature flag configurations, are cloned in the new environment. For example, if a feature flag had a gradual rollout to 67% in the source environment, then your new environment will have the same feature enabled with the same activation strategy in the new environment. After cloning, the environments are independent and do not stay in sync.
 
-We have made some slight changes to events related to feature flags: there's one deprecation and several new event types. Most of the new events contain _project_ and _environment_ data.
-
-To avoid missing important updates, you will also need to update your integration configuration to subscribe to the new events.
-
-**Deprecated events:**
-
-- **FEATURE_UPDATE** - _not used after switching to environments_
-
-**New Events**
-
-- **FEATURE-METADATA-UPDATED** - The feature flag metadata was updated (across all environments).
-- **FEATURE-STRATEGY-ADD**¹ - An activation strategy was added to a feature flag in an environment. The _data_ will contain the updated strategy configuration.
-- **FEATURE-STRATEGY-UPDATE**¹ - An activation strategy was updated for a feature flag. The _data_ will contain the updated strategy configuration.
-- **FEATURE-STRATEGY-REMOVE**¹ - An activation strategy was removed for a feature flag.
-- **FEATURE-ENVIRONMENT-ENABLED**¹ - Signals that a feature flag has been _enabled_ in a defined environment.
-- **FEATURE-ENVIRONMENT-DISABLED**¹ - Signals that a feature flag has been _disabled_ in a defined environment.
-- **FEATURE-PROJECT-CHANGE**¹ - The feature flag was moved to a new project.
-
-> 1. These feature events will contain _project_ and _environment_ as part of the event metadata.
-
-### API
-
-In order to support configuration per environment we had to rebuild our feature flag admin API to account for environments as well. This means that we're making the following changes to the API:
-
-- **/api/admin/features** - _deprecated (scheduled for removal in Unleash v5.0). The [old feature flags admin API](/reference/api/legacy/unleash/admin/features.md) still works, but strategy configuration will be assumed to target the “default” environment._
-- **/api/admin/projects/:projectId/features** - New feature API to be used for feature flags which also adds support for environments. See [the documentation](/reference/api/legacy/unleash/admin/features.md) to learn more.
-
-## Plan Differences
-
-### Open-Source (free)
-
-- Will get access to two preconfigured environments: “development” and “production”. Existing users of Unleash will also get an additional “default” environment to simplify the adoption of environments.
-- Will be possible to turn environments on/off for all projects.
-
-### Pro (commercial)
-
-- Will get access to two preconfigured environments: “development” and “production”. Existing users of Unleash will also get an additional “default” environment to simplify the adoption of environments.
-- Will be possible to turn environments on/off for the default project.
-
-### Enterprise (commercial)
-
-- Will get access to two preconfigured environments: “development” and “production”. Existing users of Unleash will also get an additional “default” environment to simplify the adoption of environments.
-- Will be possible to turn environments on/off for all projects
-- Will be allowed to update and remove environments.
-- Will be allowed to create new environments and clone existing environments.
-
-## Rollout Plan
-
-- **Unleash v4.2** will provide _early access_ to environment support. This means that it can be enabled per customer via a feature flag.
-- **Unleash v4.3** plans to provide general access to the environment support for all users of Unleash (Open-Source, Pro, Enterprise).
+You can also clone the [user permissions](/reference/rbac) of the source environment. If you don't clone permissions, only Admins and Editors can make changes in the new environment. 

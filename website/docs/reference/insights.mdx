@@ -2,13 +2,12 @@
 title: Insights
 ---
 
-import Figure from '@site/src/components/Figure/Figure.tsx'
+:::note Availability
 
-:::info Availability
-
-Insights is released in Unleash 6.0 and is available for Enterprise and Pro customers. For Pro customers only the Total users and Total flags charts are available.
+**Plan**: [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) | **Version**: `6.0+`
 
 :::
+
 
 Insights is a feature designed to help you better understand and gain insights into what is happening in your Unleash instance. You can view insights across all projects or by selecting single or multiple projects using the filter.
 
@@ -22,39 +21,38 @@ In total, there are 6 different charts available that show information over time
 - Updates per environment type (Enterprise)
 
 
-
 ### Total users
 
 The Total users chart provides information about the total number of current users in your Unleash instance. This chart helps you understand how the user base is growing or changing over time. Additionally, it shows the number of users in selected projects and how the user distribution varies among them.
 
-<Figure img="/img/insights-total-users.png" caption="Total users chart showing the growth of users over time."/>
+![Total users chart](/img/insights-total-users.png)
 
 ### Flags
 
 The flags chart displays the total number of active (not archived) feature flags across all projects. It provides insights into how the number of flags has changed over time, helping you track the growth and usage of feature flags. You can also view the data for specific projects.
 
-<Figure img="/img/insights-total-flags.png" caption="Total flags chart illustrating the active feature flags and their trends over time."/>
+![Flags chart](/img/insights-total-flags.png)
 
 ### Health
 
 The health chart represents the percentage of flags in the selected projects that are not stale or potentially stale. This chart helps you monitor the overall health of your feature flags, ensuring that they are actively maintained and relevant. The chart also shows how the overall health changes over time, allowing you to identify potential issues early and take corrective actions.
 
-<Figure img="/img/insights-health.png" caption="Health chart displaying the percentage of non-stale flags and their changes over time."/>
+![Health chart](/img/insights-health.png)
 
 ### Median time to production
 
 The median time to production chart measures the average time from when a feature flag is created until it is enabled in a "production" type environment. This metric is calculated only for feature flags of the type "release" and is the median across the selected projects. Understanding this metric helps in assessing the efficiency of your development and deployment processes. It also highlights areas where you can improve to reduce time to market for new features.
 
-<Figure img="/img/insights-production.png" caption="Median time to production chart showing the average time taken for feature flags to go live."/>
+![Time to production chart](/img/insights-production.png)
 
 ### Flag evaluation metrics
 
 The flag evaluation metrics chart provides a summary of all flag evaluations reported by SDKs across all projects. This chart helps you understand how often feature flags are being evaluated and used within your applications. It can indicate the performance impact and the effectiveness of your feature flag implementations. By analyzing these metrics per project, you can gain deeper insights into the usage patterns and optimize accordingly.
 
-<Figure img="/img/insights-evaluation.png" caption="Flag evaluation metrics chart summarizing the evaluations and usage patterns of feature flags."/>
+![Flag evaluation metrics chart](/img/insights-evaluation.png)
 
 ### Updates per environment type
 
 The updates per environment type chart summarizes all feature configuration updates per environment type. This chart is crucial for understanding how configuration changes propagate across different environments, such as development, testing, and production. It helps in tracking the frequency and impact of updates, ensuring that changes are consistently and safely deployed. Monitoring updates per environment type can also help identify potential bottlenecks or issues in the deployment pipeline.
 
-<Figure img="/img/insights-updates.png" caption="Updates per environment type chart showing the summary of configuration updates across different environments."/>
+![Updates per environment type chart](/img/insights-updates.png)

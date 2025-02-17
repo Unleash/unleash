@@ -11,11 +11,11 @@ import {
     type FeatureSearchResponseSchema,
     type SearchFeaturesParams,
 } from 'openapi';
-import type { IProjectCard } from 'interfaces/project';
+import type { ProjectSchema } from 'openapi';
 import { useEventCreators } from 'hooks/api/getters/useEventCreators/useEventCreators';
 
 export const useEventLogFilters = (
-    projectsHook: () => { projects: IProjectCard[] },
+    projectsHook: () => { projects: ProjectSchema[] },
     featuresHook: (params: SearchFeaturesParams) => {
         features: FeatureSearchResponseSchema[];
     },
@@ -27,7 +27,7 @@ export const useEventLogFilters = (
     const [availableFilters, setAvailableFilters] = useState<IFilterItem[]>([]);
     useEffect(() => {
         const projectOptions =
-            projects?.map((project: IProjectCard) => ({
+            projects?.map((project: ProjectSchema) => ({
                 label: project.name,
                 value: project.id,
             })) ?? [];
@@ -57,6 +57,9 @@ export const useEventLogFilters = (
                 options: [],
                 filterKey: 'from',
                 dateOperators: ['IS'],
+                fromFilterKey: 'from',
+                toFilterKey: 'to',
+                persistent: true,
             },
             {
                 label: 'Date To',
@@ -64,6 +67,9 @@ export const useEventLogFilters = (
                 options: [],
                 filterKey: 'to',
                 dateOperators: ['IS'],
+                fromFilterKey: 'from',
+                toFilterKey: 'to',
+                persistent: true,
             },
             {
                 label: 'Created by',

@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'src/migrations/**'
+      - 'frontend/cypress/**'
       - '.github/workflows/validate-migrations.yaml'
       - 'test-migrations/**'
       - 'frontend/cypress'

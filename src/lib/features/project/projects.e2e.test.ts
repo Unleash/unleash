@@ -17,7 +17,9 @@ let projectStore: IProjectStore;
 const testDate = '2023-10-01T12:34:56.000Z';
 
 beforeAll(async () => {
-    db = await dbInit('projects_api_serial', getLogger);
+    db = await dbInit('projects_api_serial', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithCustomConfig(
         db.stores,
         {
@@ -251,19 +253,19 @@ test('response should include last seen at per environment for multiple environm
         'multiple-environment-last-seen-at',
         db.rawDatabase,
         'default',
-        '2023-10-01 12:32:56',
+        '2023-10-01T12:32:56.000Z',
     );
     await insertLastSeenAt(
         'multiple-environment-last-seen-at',
         db.rawDatabase,
         'development',
-        '2023-10-01 12:34:56',
+        '2023-10-01T12:34:56.000Z',
     );
     await insertLastSeenAt(
         'multiple-environment-last-seen-at',
         db.rawDatabase,
         'production',
-        '2023-10-01 12:33:56',
+        '2023-10-01T12:33:56.000Z',
     );
 
     const { body } = await appWithLastSeenRefactor.request

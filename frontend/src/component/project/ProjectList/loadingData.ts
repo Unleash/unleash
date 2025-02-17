@@ -7,7 +7,7 @@ const loadingData = [
         featureCount: 4,
         createdAt: '',
         description: '',
-        mode: '',
+        mode: 'open' as const,
     },
     {
         id: 'loading2',
@@ -17,7 +17,7 @@ const loadingData = [
         featureCount: 4,
         createdAt: '',
         description: '',
-        mode: '',
+        mode: 'open' as const,
     },
     {
         id: 'loading3',
@@ -27,7 +27,7 @@ const loadingData = [
         featureCount: 4,
         createdAt: '',
         description: '',
-        mode: '',
+        mode: 'open' as const,
     },
     {
         id: 'loading4',
@@ -37,7 +37,7 @@ const loadingData = [
         featureCount: 4,
         createdAt: '',
         description: '',
-        mode: '',
+        mode: 'open' as const,
     },
 ];
 

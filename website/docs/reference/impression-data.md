@@ -1,10 +1,11 @@
 ---
 title: Impression Data
+pagination_next: reference/events
 ---
 
-:::info Availability
+:::note Availability
 
-The impression data feature was introduced in **Unleash 4.7**. It is available in the JavaScript-based proxy clients and in some server-side SDKs. Please refer to the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) for an overview of server-side SDKs that support it.
+**Version**: `4.7+`. Requires [SDK compatibility](../reference/sdks#server-side-sdk-compatibility-table).
 
 :::
 
@@ -12,7 +13,7 @@ Unleash can provide you with **impression data** about the flags in your applica
 
 :::caution Front-end SDKs and disabled flags
 
-Older versions of the front-end SDKs and other SDKs that connect the [Unleash proxy](../generated/unleash-proxy.md) or the [Unleash front-end API](../reference/front-end-api.md) would **not** emit impression events when a flag is disabled.
+Older versions of the front-end SDKs and other SDKs that connect the [Unleash proxy](./unleash-proxy) or the [Unleash front-end API](./front-end-api) would **not** emit impression events when a flag is disabled.
 
 This is because impression data is a **per-flag** setting and the Proxy and front-end API only transmit information about flags that are enabled. As such, the SDK will never know that it should emit an impression event if a flag is disabled.
 
@@ -20,7 +21,7 @@ Some of the front-end SDKs now include a include a configuration property that l
 
 :::
 
-Impression data was designed to make it easier for you to **collect analytics data**, **perform A/B tests**, and **enrich experiments** in your applications. It contains information about the feature flag and the related [Unleash Context](../reference/unleash-context.md).
+Impression data was designed to make it easier for you to **collect analytics data**, **perform A/B tests**, and **enrich experiments** in your applications. It contains information about the feature flag and the related [Unleash Context](./unleash-context).
 
 Impression data is **opt-in on a per-flag basis**. Unleash will not emit impression events for flags not marked as such. Once you've turned impression data on for a flag, you can start listening for impression events in your client SDK.
 
@@ -39,7 +40,7 @@ This table describes all the properties on the impression events:
 | --- | --- | --- |
 | `eventType` | The type of the event: `isEnabled` or `getVariant` | All |
 | `eventId` | A globally unique id (GUID) assigned to this event. | All |
-| `context` | A representation of the current [Unleash Context](../reference/unleash-context.md). | All |
+| `context` | A representation of the current [Unleash Context](./unleash-context). | All |
 | `enabled` | Whether the flag was enabled or not at when the client made the request. | All |
 | `featureName` | The name of the feature flag. | All |
 | `variant` | The name of the active variant | `getVariant` events only |
@@ -81,13 +82,13 @@ This table describes all the properties on the impression events:
 
 Impression data is strictly an **opt-in** feature and must be enabled on a **per-flag basis**. You can enable and disable it both when you create a flag and when you edit a flag.
 
-You can enable impression data via the impression data flag in the admin UI's flag creation form. You can also go via the [the API, using the `impressionData` option](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle). For more detailed instructions, see [the section on enabling impression data in the how-to guide for capturing impression data](../how-to/how-to-capture-impression-data.mdx#step-1).
+You can enable impression data via the impression data flag in the admin UI's flag creation form. You can also go via the [the API, using the `impressionData` option](/reference/api/legacy/unleash/admin/features-v2#create-toggle). For more detailed instructions, see [the section on enabling impression data in the how-to guide for capturing impression data](../how-to/how-to-capture-impression-data#step-1).
 
 ![A feature flag creation form. At the end of the form is a heading that says "Impression data", a short paragraph that describes the feature, and a flag to opt in or out of it.](/img/create_feat_impression.png)
 
 ## Example setup
 
-The exact setup will vary depending on your [client SDK](../reference/sdks/index.md). The below example configures the [Unleash Proxy client../reference/sdks/javascript-browser) to listen for impression events and log them to the console. If "my-feature-flag" is configured to emit impression data, then it will trigger an impression event as soon as Unleash is ready.
+The exact setup will vary depending on your [client SDK](./sdks). The below example configures the [Unleash Proxy client](/reference/sdks/javascript-browser) to listen for impression events and log them to the console. If "my-feature-flag" is configured to emit impression data, then it will trigger an impression event as soon as Unleash is ready.
 
 ```js
 const unleash = new UnleashClient({

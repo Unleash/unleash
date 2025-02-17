@@ -33,6 +33,8 @@ const DAILY_TABLE = 'client_metrics_env_daily';
 const HOURLY_TABLE_VARIANTS = 'client_metrics_env_variants';
 const DAILY_TABLE_VARIANTS = 'client_metrics_env_variants_daily';
 
+const FEATURES_TABLE = 'features';
+
 const fromRow = (row: ClientMetricsEnvTable) => ({
     featureName: row.feature_name,
     appName: row.app_name,
@@ -119,7 +121,7 @@ const variantRowReducerV2 = (acc, tokenRow) => {
         };
     }
     if (variant) {
-        acc[key].variants[variant] = count;
+        acc[key].variants[variant] = Number(count);
     }
 
     return acc;
@@ -151,6 +153,11 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             return fromRow(row);
         }
         throw new NotFoundError(`Could not find metric`);
+    }
+
+    //TODO: Consider moving this to a specific feature store
+    async getFeatureFlagNames(): Promise<string[]> {
+        return this.db(FEATURES_TABLE).distinct('name').pluck('name');
     }
 
     async getAll(query: Object = {}): Promise<IClientMetricsEnv[]> {

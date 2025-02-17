@@ -17,6 +17,7 @@ const ajv = new Ajv({
     keywords: ['example', 'x-enforcer-exception-skip-codes'],
     formats: {
         'date-time': true,
+        date: true,
         uri: true,
     },
 });

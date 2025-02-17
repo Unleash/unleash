@@ -1,4 +1,4 @@
-import { useState, type VFC } from 'react';
+import { useState } from 'react';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { Link } from 'react-router-dom';
@@ -33,27 +33,34 @@ import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
+import { HeaderEventTimelineButton } from './HeaderEventTimelineButton';
 
-const HeaderComponent = styled(AppBar)(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(1),
-    boxShadow: 'none',
-    position: 'relative',
-    zIndex: 300,
-    paddingRight: theme.spacing(9),
-    [theme.breakpoints.down('lg')]: {
-        paddingLeft: theme.spacing(1),
-        paddingRight: theme.spacing(1),
-    },
-    [theme.breakpoints.down(1024)]: {
-        marginLeft: 0,
-        marginRight: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-        minWidth: '100%',
-    },
-    margin: '0 auto',
-}));
+const HeaderComponent = styled(AppBar, {
+    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
+})<{ frontendHeaderRedesign?: boolean }>(
+    ({ theme, frontendHeaderRedesign }) => ({
+        backgroundColor: frontendHeaderRedesign
+            ? theme.palette.background.application
+            : theme.palette.background.paper,
+        padding: theme.spacing(1),
+        boxShadow: 'none',
+        position: 'relative',
+        zIndex: 300,
+        paddingRight: theme.spacing(9),
+        [theme.breakpoints.down('lg')]: {
+            paddingLeft: theme.spacing(1),
+            paddingRight: theme.spacing(1),
+        },
+        [theme.breakpoints.down(1024)]: {
+            marginLeft: 0,
+            marginRight: 0,
+        },
+        [theme.breakpoints.down('sm')]: {
+            minWidth: '100%',
+        },
+        margin: '0 auto',
+    }),
+);
 
 const ContainerComponent = styled(Box)(() => ({
     display: 'flex',
@@ -96,7 +103,7 @@ const StyledIconButton = styled(IconButton)<{
     },
 }));
 
-const Header: VFC = () => {
+const Header = () => {
     const { onSetThemeMode, themeMode } = useThemeMode();
     const theme = useTheme();
 
@@ -106,6 +113,7 @@ const Header: VFC = () => {
     const [openDrawer, setOpenDrawer] = useState(false);
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
+    const frontendHeaderRedesign = useUiFlag('frontendHeaderRedesign');
 
     const routes = getRoutes();
     const adminRoutes = useAdminRoutes();
@@ -122,7 +130,10 @@ const Header: VFC = () => {
 
     if (smallScreen) {
         return (
-            <HeaderComponent position='static'>
+            <HeaderComponent
+                position='static'
+                frontendHeaderRedesign={frontendHeaderRedesign}
+            >
                 <ContainerComponent>
                     <Tooltip title='Menu' arrow>
                         <IconButton
@@ -152,34 +163,60 @@ const Header: VFC = () => {
     }
 
     return (
-        <HeaderComponent position='static'>
+        <HeaderComponent
+            frontendHeaderRedesign={frontendHeaderRedesign}
+            position='static'
+        >
             <ContainerComponent>
-                <StyledLink to='/' sx={flexRow} aria-label='Home'>
-                    <ThemeMode
-                        darkmode={
-                            <ConditionallyRender
-                                condition={celebatoryUnleash}
-                                show={<CelebatoryUnleashLogoWhite />}
-                                elseShow={
-                                    <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                <ConditionallyRender
+                    condition={!frontendHeaderRedesign}
+                    show={
+                        <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                            <ThemeMode
+                                darkmode={
+                                    <ConditionallyRender
+                                        condition={celebatoryUnleash}
+                                        show={<CelebatoryUnleashLogoWhite />}
+                                        elseShow={
+                                            <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                                        }
+                                    />
+                                }
+                                lightmode={
+                                    <ConditionallyRender
+                                        condition={celebatoryUnleash}
+                                        show={<StyledCelebatoryLogo />}
+                                        elseShow={
+                                            <StyledUnleashLogo aria-label='Unleash logo' />
+                                        }
+                                    />
                                 }
                             />
-                        }
-                        lightmode={
-                            <ConditionallyRender
-                                condition={celebatoryUnleash}
-                                show={<StyledCelebatoryLogo />}
-                                elseShow={
-                                    <StyledUnleashLogo aria-label='Unleash logo' />
-                                }
-                            />
-                        }
-                    />
-                </StyledLink>
+                        </StyledLink>
+                    }
+                />
 
                 <StyledNav>
                     <StyledUserContainer>
                         <CommandBar />
+                        <ConditionallyRender
+                            condition={frontendHeaderRedesign}
+                            show={
+                                <Divider
+                                    orientation='vertical'
+                                    variant='middle'
+                                    flexItem
+                                    sx={(theme) => ({
+                                        marginLeft: theme.spacing(1),
+                                        border: 'transparent',
+                                    })}
+                                />
+                            }
+                        />
+                        <ConditionallyRender
+                            condition={!frontendHeaderRedesign}
+                            show={<HeaderEventTimelineButton />}
+                        />
                         <InviteLinkButton />
                         <Tooltip
                             title={
@@ -211,7 +248,9 @@ const Header: VFC = () => {
                                 target='_blank'
                                 rel='noopener noreferrer'
                                 size='large'
-                                sx={{ mr: 1 }}
+                                sx={(theme) => ({
+                                    marginRight: theme.spacing(1),
+                                })}
                             >
                                 <MenuBookIcon />
                             </StyledIconButton>

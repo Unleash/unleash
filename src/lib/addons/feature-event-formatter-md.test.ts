@@ -7,6 +7,7 @@ import {
     FEATURE_STRATEGY_REMOVE,
     FEATURE_STRATEGY_UPDATE,
     type IEvent,
+    PROJECT_ARCHIVED,
     SYSTEM_USER_ID,
 } from '../types';
 
@@ -509,6 +510,7 @@ const testCases: [string, IEvent][] = [
             createdByUserId: SYSTEM_USER_ID,
             data: {
                 changeRequestId: 1,
+                scheduledDate: '2024-06-01T10:03:11.549Z',
             },
             preData: {},
             tags: [],
@@ -571,11 +573,29 @@ const testCases: [string, IEvent][] = [
             environment: 'production',
         },
     ],
+    [
+        'when project archived',
+        {
+            id: 922,
+            type: PROJECT_ARCHIVED,
+            createdBy: 'user@company.com',
+            createdByUserId: SYSTEM_USER_ID,
+            createdAt: new Date('2024-11-25T10:33:59.459Z'),
+            data: null,
+            preData: null,
+            tags: [],
+            featureName: undefined,
+            project: 'my-other-project',
+            environment: 'production',
+        },
+    ],
 ];
 
 testCases.forEach(([description, event]) =>
     test(`Should format specialised text for events ${description}`, () => {
-        const formatter = new FeatureEventFormatterMd('unleashUrl');
+        const formatter = new FeatureEventFormatterMd({
+            unleashUrl: 'unleashUrl',
+        });
         const formattedEvent = formatter.format(event);
         expect(formattedEvent).toMatchSnapshot();
     }),

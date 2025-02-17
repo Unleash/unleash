@@ -1,4 +1,4 @@
-import { createConfig } from './create-config';
+import { createConfig, resolveIsOss } from './create-config';
 import { ApiTokenType } from './types/models/api-token';
 
 test('should create default config', async () => {
@@ -497,4 +497,37 @@ test('Config with enterpriseVersion set and not pro environment should set isEnt
         ui: { environment: 'Enterprise' },
     });
     expect(config.isEnterprise).toBe(true);
+});
+
+describe('isOSS', () => {
+    test('Config with pro environment should set isOss to false regardless of pro casing', async () => {
+        const isOss = resolveIsOss(false, false, 'Pro');
+        expect(isOss).toBe(false);
+        const lowerCase = resolveIsOss(false, false, 'pro');
+        expect(lowerCase).toBe(false);
+        const strangeCase = resolveIsOss(false, false, 'PrO');
+        expect(strangeCase).toBe(false);
+    });
+    test('Config with enterpriseVersion set should set isOss to false', async () => {
+        const isOss = resolveIsOss(true, false, 'Enterprise');
+        expect(isOss).toBe(false);
+    });
+    test('Config with no enterprise version and any other environment than pro should have isOss as true', async () => {
+        const isOss = resolveIsOss(false, false, 'my oss environment');
+        expect(isOss).toBe(true);
+    });
+    test('Config with enterprise false and isOss option set to false should return false in test mode', async () => {
+        const isOss = resolveIsOss(false, false, 'my environment', true);
+        expect(isOss).toBe(false);
+    });
+    test('Config with isOss option set to true should return true when test environment is active', async () => {
+        let isOss = resolveIsOss(false, true, 'Pro', true);
+        expect(isOss).toBe(true);
+
+        isOss = resolveIsOss(true, true, 'Pro', true);
+        expect(isOss).toBe(true);
+
+        isOss = resolveIsOss(false, true, 'some environment', true);
+        expect(isOss).toBe(true);
+    });
 });

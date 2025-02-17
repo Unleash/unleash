@@ -27,7 +27,9 @@ let eventBus: EventEmitter;
 let featureLifecycleReadModel: IFeatureLifecycleReadModel;
 
 beforeAll(async () => {
-    db = await dbInit('feature_lifecycle', getLogger);
+    db = await dbInit('feature_lifecycle', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithAuth(
         db.stores,
         {
@@ -192,19 +194,50 @@ test('should be able to toggle between completed/uncompleted', async () => {
     expect(body).toEqual([]);
 });
 
-test('should backfill initial stage when no stages', async () => {
+test('should backfill intialized feature', async () => {
     await app.createFeature('my_feature_c');
-
     await featureLifecycleStore.delete('my_feature_c');
-
-    const currentStage = await getCurrentStage('my_feature_c');
-    expect(currentStage).toBe(undefined);
 
     await featureLifecycleStore.backfill();
 
-    const backfilledCurrentStage = await getCurrentStage('my_feature_c');
-    expect(backfilledCurrentStage).toEqual({
-        stage: 'initial',
-        enteredStageAt: expect.any(Date),
-    });
+    const { body } = await getFeatureLifecycle('my_feature_c');
+    expect(body).toEqual([
+        { stage: 'initial', enteredStageAt: expect.any(String) },
+    ]);
+});
+
+test('should backfill archived feature', async () => {
+    await app.createFeature('my_feature_d');
+    await app.archiveFeature('my_feature_d');
+    await featureLifecycleStore.delete('my_feature_d');
+
+    await featureLifecycleStore.backfill();
+
+    const { body } = await getFeatureLifecycle('my_feature_d');
+    expect(body).toEqual([
+        { stage: 'initial', enteredStageAt: expect.any(String) },
+        { stage: 'archived', enteredStageAt: expect.any(String) },
+    ]);
+});
+
+test('should not backfill for existing lifecycle', async () => {
+    await app.createFeature('my_feature_e');
+    await app.enableFeature('my_feature_e', 'default');
+    eventStore.emit(FEATURE_CREATED, { featureName: 'my_feature_e' });
+    eventBus.emit(CLIENT_METRICS_ADDED, [
+        {
+            featureName: 'my_feature_e',
+            environment: 'default',
+        },
+    ]);
+    await reachedStage('my_feature_e', 'live');
+
+    await featureLifecycleStore.backfill();
+
+    const { body } = await getFeatureLifecycle('my_feature_e');
+    expect(body).toEqual([
+        { stage: 'initial', enteredStageAt: expect.any(String) },
+        { stage: 'pre-live', enteredStageAt: expect.any(String) },
+        { stage: 'live', enteredStageAt: expect.any(String) },
+    ]);
 });

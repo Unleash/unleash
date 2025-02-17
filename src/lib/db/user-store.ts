@@ -108,8 +108,15 @@ class UserStore implements IUserStore {
     }
 
     async insert(user: ICreateUser): Promise<User> {
+        const emailHash = user.email
+            ? this.db.raw('md5(?)', [user.email])
+            : null;
         const rows = await this.db(TABLE)
-            .insert({ ...mapUserToColumns(user), created_at: new Date() })
+            .insert({
+                ...mapUserToColumns(user),
+                email_hash: emailHash,
+                created_at: new Date(),
+            })
             .returning(USER_COLUMNS);
         return rowToUser(rows[0]);
     }
@@ -190,6 +197,8 @@ class UserStore implements IUserStore {
                 deleted_at: new Date(),
                 email: null,
                 username: null,
+                scim_id: null,
+                scim_external_id: null,
                 name: this.db.raw('name || ?', '(Deleted)'),
             });
     }
@@ -240,23 +249,21 @@ class UserStore implements IUserStore {
 
         let firstLoginOrder = 0;
 
-        if (this.flagResolver.isEnabled('onboardingMetrics')) {
-            const existingUser =
-                await this.buildSelectUser(user).first('first_seen_at');
+        const existingUser =
+            await this.buildSelectUser(user).first('first_seen_at');
 
-            if (!existingUser.first_seen_at) {
-                const countEarlierUsers = await this.db(TABLE)
-                    .whereNotNull('first_seen_at')
-                    .andWhere('first_seen_at', '<', currentDate)
-                    .count('*')
-                    .then((res) => Number(res[0].count));
+        if (!existingUser.first_seen_at) {
+            const countEarlierUsers = await this.db(TABLE)
+                .whereNotNull('first_seen_at')
+                .andWhere('first_seen_at', '<', currentDate)
+                .count('*')
+                .then((res) => Number(res[0].count));
 
-                firstLoginOrder = countEarlierUsers;
+            firstLoginOrder = countEarlierUsers;
 
-                await updateQuery.update({
-                    first_seen_at: currentDate,
-                });
-            }
+            await updateQuery.update({
+                first_seen_at: currentDate,
+            });
         }
 
         await updateQuery;
@@ -265,6 +272,10 @@ class UserStore implements IUserStore {
 
     async deleteAll(): Promise<void> {
         await this.activeUsers().del();
+    }
+
+    async deleteScimUsers(): Promise<void> {
+        await this.db(TABLE).whereNotNull('scim_id').del();
     }
 
     async count(): Promise<number> {
@@ -279,6 +290,19 @@ class UserStore implements IUserStore {
                 deleted_at: null,
                 is_service: true,
             })
+            .count('*')
+            .then((res) => Number(res[0].count));
+    }
+
+    async countRecentlyDeleted(): Promise<number> {
+        return this.db(TABLE)
+            .whereNotNull('deleted_at')
+            .andWhere(
+                'deleted_at',
+                '>=',
+                this.db.raw(`NOW() - INTERVAL '1 month'`),
+            )
+            .andWhere({ is_service: false, is_system: false })
             .count('*')
             .then((res) => Number(res[0].count));
     }
@@ -302,6 +326,7 @@ class UserStore implements IUserStore {
     async getFirstUserDate(): Promise<Date | null> {
         const firstInstanceUser = await this.db('users')
             .select('created_at')
+            .where('is_system', '=', false)
             .orderBy('created_at', 'asc')
             .first();
 

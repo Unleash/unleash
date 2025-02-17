@@ -1,5 +1,5 @@
 import { validateSemver, validateLegalValues } from './constraint-types';
-import type { ILegalValue } from '../../types/stores/context-field-store';
+import type { ILegalValue } from '../../features/context/context-field-store-type';
 
 const legalValues: Readonly<ILegalValue[]> = [
     { value: '100' },

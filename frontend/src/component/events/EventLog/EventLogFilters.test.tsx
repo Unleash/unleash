@@ -36,7 +36,6 @@ test('When you have no projects, you should not get a project filter', () => {
 test('When you have only one project, you should not get a project filter', () => {
     const { result } = renderHook(() =>
         useEventLogFilters(
-            // @ts-expect-error: omitting other properties we don't need
             () => ({ projects: [{ id: 'a', name: 'A' }] }),
             () => ({ features: [] }),
         ),
@@ -52,9 +51,7 @@ test('When you have two one project, you should not get a project filter', () =>
         useEventLogFilters(
             () => ({
                 projects: [
-                    // @ts-expect-error: omitting other properties we don't need
                     { id: 'a', name: 'A' },
-                    // @ts-expect-error: omitting other properties we don't need
                     { id: 'b', name: 'B' },
                 ],
             }),

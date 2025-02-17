@@ -3,8 +3,8 @@ import {
     type AutocompleteProps,
     type AutocompleteRenderOptionState,
     Checkbox,
-    TextField,
     styled,
+    TextField,
 } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -13,6 +13,7 @@ import { RoleDescription } from '../RoleDescription/RoleDescription';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 
 const StyledRoleOption = styled('div')(({ theme }) => ({
+    paddingTop: theme.spacing(0.75),
     display: 'flex',
     flexDirection: 'column',
     '& > span:last-of-type': {
@@ -29,6 +30,25 @@ interface IMultipleRoleSelectProps
     required?: boolean;
 }
 
+function sortItems<T extends { name: string; type: string }>(items: T[]): T[] {
+    return items.sort((a, b) => {
+        if (a.type !== b.type) {
+            return a.type === 'project' ? -1 : 1;
+        }
+
+        if (a.type === 'custom') {
+            return a.name.localeCompare(b.name);
+        }
+
+        return 0;
+    });
+}
+
+const StyledListItem = styled('li')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(0.5),
+}));
+
 export const MultipleRoleSelect = ({
     roles,
     value,
@@ -41,30 +61,48 @@ export const MultipleRoleSelect = ({
         option: IRole,
         state: AutocompleteRenderOptionState,
     ) => (
-        <li {...props}>
+        <StyledListItem {...props} key={option.id}>
             <Checkbox
                 icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
                 checkedIcon={<CheckBoxIcon fontSize='small' />}
-                style={{ marginRight: 8 }}
                 checked={state.selected}
             />
             <StyledRoleOption>
                 <span>{option.name}</span>
                 <span>{option.description}</span>
             </StyledRoleOption>
-        </li>
+        </StyledListItem>
     );
+
+    const sortedRoles = sortItems(roles);
 
     return (
         <>
             <Autocomplete
+                slotProps={{
+                    paper: {
+                        sx: {
+                            '& .MuiAutocomplete-listbox': {
+                                '& .MuiAutocomplete-option': {
+                                    paddingLeft: (theme) => theme.spacing(0.5),
+                                    alignItems: 'flex-start',
+                                },
+                            },
+                        },
+                    },
+                }}
                 multiple
                 disableCloseOnSelect
                 openOnFocus
                 size='small'
                 value={value}
+                groupBy={(option) => {
+                    return option.type === 'project'
+                        ? 'Predefined project roles'
+                        : 'Custom project roles';
+                }}
                 onChange={(_, roles) => setValue(roles)}
-                options={roles}
+                options={sortedRoles}
                 renderOption={renderRoleOption}
                 getOptionLabel={(option) => option.name}
                 renderInput={(params) => (

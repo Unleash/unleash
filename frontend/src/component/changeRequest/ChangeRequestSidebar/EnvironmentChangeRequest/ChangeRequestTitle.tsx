@@ -49,7 +49,7 @@ export const ChangeRequestTitle: FC<{
             );
             setToastData({
                 type: 'success',
-                title: 'Change request title updated!',
+                text: 'Change request title updated!',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

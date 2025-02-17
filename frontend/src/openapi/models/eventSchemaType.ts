@@ -162,4 +162,11 @@ export const EventSchemaType = {
     'actions-created': 'actions-created',
     'actions-updated': 'actions-updated',
     'actions-deleted': 'actions-deleted',
+    'release-plan-template-created': 'release-plan-template-created',
+    'release-plan-template-updated': 'release-plan-template-updated',
+    'release-plan-template-deleted': 'release-plan-template-deleted',
+    'release-plan-added': 'release-plan-added',
+    'release-plan-removed': 'release-plan-removed',
+    'release-plan-milestone-started': 'release-plan-milestone-started',
+    'user-preference-updated': 'user-preference-updated',
 } as const;

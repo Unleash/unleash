@@ -1,6 +1,6 @@
 'use strict';
 
-const unleash = require('unleash-server');
+const unleash = require('./build');
 
 let options = {};
 

@@ -15,13 +15,11 @@ import type { VariantSchema } from './variantSchema';
  * A feature flag definition
  */
 export interface FeatureSearchResponseSchema {
-    /** `true` if the feature is archived */
-    archived?: boolean;
     /**
      * The date the feature was archived
      * @nullable
      */
-    archivedAt?: string | null;
+    archivedAt: string | null;
     /**
      * The date the feature was created
      * @nullable

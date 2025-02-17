@@ -2,9 +2,9 @@
 title: How to create and manage user groups
 ---
 
-:::info availability
+:::note Availability
 
-User groups are available to Unleash Enterprise users since **Unleash 4.14**.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.14+`
 
 :::
 

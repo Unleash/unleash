@@ -4,7 +4,7 @@ description: "How to use Unleash feature flags with Rails."
 slug: /feature-flag-tutorials/rails
 ---
 
-Hello! In this tutorial, we’ll show you how to add feature flags to your Ruby on Rails app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Ruby SDK](https://docs.getunleash.io/reference/sdks/ruby). With Unleash, an open-source feature flag service, you can use our tooling to add feature flags to your application and release new features faster.
+Hello! In this tutorial, we’ll show you how to add feature flags to your Ruby on Rails app, using [Unleash](https://www.getunleash.io/) and the official [Unleash Ruby SDK](/reference/sdks/ruby). With Unleash, an open-source feature flag service, you can use our tooling to add feature flags to your application and release new features faster.
 
 In a classic tutorial fashion, we’ll add feature flags to a blog app made with Ruby on Rails. We’ll use feature flags to decide how many blog posts to show on the index page.
 
@@ -30,7 +30,7 @@ For this tutorial, you’ll need the following:
 
 ![architecture diagram for our implementation](./diagram.png)
 
-The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. There are also [API commands available](https://docs.getunleash.io/reference/api/unleash) to perform the same actions straight from your CLI or server-side app.
+The Unleash Server is a **Feature Flag Control Service**, which manages your feature flags and lets you retrieve flag data. Unleash has a UI for creating and managing projects and feature flags. There are also [API commands available](/reference/api/unleash) to perform the same actions straight from your CLI or server-side app.
 
 ## 1. Best practices for back-end apps with Unleash
 
@@ -41,7 +41,7 @@ Most importantly, you must:
 -   Limit feature flag payloads for scalability, security, and efficiency
 -   Use graceful degradation where possible to improve the resiliency of your architecture
 
-For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](https://docs.getunleash.io/topics/feature-flags/feature-flag-best-practices).
+For a complete list of architectural guidelines, including caching strategies, see our [best practices for building and scaling feature flag systems](/topics/feature-flags/feature-flag-best-practices).
 
 ## 2. Install a local feature flag provider
 
@@ -147,7 +147,7 @@ You’ll need 2 things:
 First, install the `unleash` gem.
 
 ```sh
-gem install unleash
+bundle add unleash
 ```
 
 Then, create `config/initializers/unleash.rb`, and add the following:
@@ -165,7 +165,7 @@ UNLEASH = Unleash::Client.new
 
 ```
 
-You can check our [API tokens and client keys documentation](https://docs.getunleash.io/reference/api-tokens-and-client-keys) for more information.
+You can check our [API tokens and client keys documentation](/reference/api-tokens-and-client-keys) for more information.
 
 Then, in `app/controllers/application_controller.rb`, add the following method:
 
@@ -197,7 +197,7 @@ class PostsController < ApplicationController
 
 Reload your browser and check that you see three blog posts displayed. Turn off the flag in your Unleash instance and reload the page. You should see all the blog posts again.
 
-See additional use cases in our [Server-Side SDK with Ruby](https://docs.getunleash.io/reference/sdks/ruby) documentation.
+See additional use cases in our [Server-Side SDK with Ruby](/reference/sdks/ruby) documentation.
 
 > **Note:** An update to a feature flag may take 30 seconds to propagate.
 

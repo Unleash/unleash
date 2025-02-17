@@ -23,7 +23,6 @@ const SeparatorContent = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
     textAlign: 'center',
     padding: '0 1rem',
-    background: theme.palette.envAccordion.expanded,
     position: 'relative',
     maxWidth: '80%',
     color: theme.palette.text.primary,

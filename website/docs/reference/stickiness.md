@@ -14,21 +14,18 @@ If both the user id and the session id is unavailable, the calculation returns a
 
 Because the number assigned to a user won't change, Unleash also guarantees that the a user will keep seeing the same features even if certain other parameters change.
 
-For instance: When using the [gradual rollout activation strategy](../reference/activation-strategies.md#gradual-rollout), any user whose number is less than or equal to the rollout percentage will see the feature. This means that the same users will keep seeing the feature even as you increase the percentage of your user base that sees the feature.
+For instance: When using the [gradual rollout activation strategy](../reference/activation-strategies#gradual-rollout), any user whose number is less than or equal to the rollout percentage will see the feature. This means that the same users will keep seeing the feature even as you increase the percentage of your user base that sees the feature.
 
-## Custom stickiness {#custom-stickiness}
+## Custom stickiness
 
-:::info
-Custom stickiness is available starting from Unleash Enterprise v4.
-:::
+:::note Availability
 
-When using [the gradual rollout strategy](../reference/activation-strategies.md#gradual-rollout) or [feature flag variants](./feature-toggle-variants.md), you can use parameters other than the user id to calculate stickiness. More specifically, you can use any field, custom or otherwise, of the [Unleash Context](../reference/unleash-context.md) as long as you have enabled custom stickiness for these fields.
-
-:::note SDK compatibility
-
-Custom stickiness is supported by all of our SDKs except for the Rust SDK. You can always refer to the [SDK compatibility table](../reference/sdks/index.md#server-side-sdk-compatibility-table) for the full overview.
+**Plan**: [Enterprise](https://www.getunleash.io/pricing) | **Version**: `4.0+` and [SDK compatibility](../reference/sdks#server-side-sdk-compatibility-table).
 
 :::
+
+When using [the gradual rollout strategy](../reference/activation-strategies#gradual-rollout) or [feature flag variants](./feature-toggle-variants), you can use parameters other than the user id to calculate stickiness. More specifically, you can use any field, custom or otherwise, of the [Unleash Context](../reference/unleash-context) as long as you have enabled custom stickiness for these fields.
+
 
 ### Enabling custom stickiness
 
@@ -38,15 +35,15 @@ To enable custom stickiness on a field, navigate to the Create Context screen in
 
 ## Project default stickiness
 
-:::info Availability
+:::note Availability
 
-Project default stickiness was introduced in **Unleash v5**.
+**Version**: `5.0+`
 
 :::
 
 Each project in Unleash can have its own default stickiness context field. Whenever you add a gradual rollout strategy or variants to a feature in that project, Unleash will use the configured context field as the initial value. 
 
-Only context fields that have the [custom stickiness](unleash-context.md#custom-stickiness) option turned on can be used as default stickiness fields.
+Only context fields that have the [custom stickiness](unleash-context#custom-stickiness) option turned on can be used as default stickiness fields.
 
 If you don't specify a default custom stickiness, the project will use the "default" stickiness option, which works as described in the [calculation section](#calculation).
 

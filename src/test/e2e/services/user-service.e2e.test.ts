@@ -45,10 +45,14 @@ let eventService: EventService;
 let accessService: AccessService;
 let eventBus: EventEmitter;
 
+const allowedSessions = 2;
+
 beforeAll(async () => {
     db = await dbInit('user_service_serial', getLogger);
     stores = db.stores;
-    const config = createTestConfig();
+    const config = createTestConfig({
+        session: { maxParallelSessions: allowedSessions },
+    });
     eventBus = config.eventBus;
     eventService = createEventsService(db.rawDatabase, config);
     const groupService = new GroupService(stores, config, eventService);
@@ -95,8 +99,9 @@ afterAll(async () => {
     await db.destroy();
 });
 
-afterEach(async () => {
+beforeEach(async () => {
     await userStore.deleteAll();
+    await settingService.deleteAll();
 });
 
 test('should create initial admin user', async () => {
@@ -357,9 +362,45 @@ test("deleting a user should delete the user's sessions", async () => {
     const userSessions = await sessionService.getSessionsForUser(user.id);
     expect(userSessions.length).toBe(1);
     await userService.deleteUser(user.id, TEST_AUDIT_USER);
-    await expect(async () =>
-        sessionService.getSessionsForUser(user.id),
-    ).rejects.toThrow(NotFoundError);
+    const noSessions = await sessionService.getSessionsForUser(user.id);
+    expect(noSessions.length).toBe(0);
+});
+
+test('user login should remove stale sessions', async () => {
+    const email = 'some@test.com';
+    const user = await userService.createUser(
+        {
+            email,
+            password: 'A very strange P4ssw0rd_',
+            rootRole: adminRole.id,
+        },
+        TEST_AUDIT_USER,
+    );
+    const userSession = (index: number) => ({
+        sid: `sid${index}`,
+        sess: {
+            cookie: {
+                originalMaxAge: minutesToMilliseconds(48),
+                expires: addDays(Date.now(), 1).toDateString(),
+                secure: false,
+                httpOnly: true,
+                path: '/',
+            },
+            user,
+        },
+    });
+
+    for (let i = 0; i < allowedSessions; i++) {
+        await sessionService.insertSession(userSession(i));
+    }
+
+    const loggedInUser = await userService.loginUser(
+        email,
+        'A very strange P4ssw0rd_',
+    );
+
+    expect(loggedInUser.deletedSessions).toBe(1);
+    expect(loggedInUser.activeSessions).toBe(allowedSessions);
 });
 
 test('updating a user without an email should not strip the email', async () => {

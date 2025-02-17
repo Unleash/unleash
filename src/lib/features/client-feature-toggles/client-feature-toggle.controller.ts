@@ -23,6 +23,7 @@ import type { OpenApiService } from '../../services/openapi-service';
 import { NONE } from '../../types/permissions';
 import { createResponseSchema } from '../../openapi/util/create-response-schema';
 import type { ClientFeaturesQuerySchema } from '../../openapi/spec/client-features-query-schema';
+import type EventEmitter from 'events';
 import {
     clientFeatureSchema,
     type ClientFeatureSchema,
@@ -33,10 +34,17 @@ import {
 } from '../../openapi/spec/client-features-schema';
 import type ConfigurationRevisionService from '../feature-toggle/configuration-revision-service';
 import type { ClientFeatureToggleService } from './client-feature-toggle-service';
+import {
+    CLIENT_FEATURES_MEMORY,
+    CLIENT_METRICS_NAMEPREFIX,
+    CLIENT_METRICS_TAGS,
+} from '../../internals';
+import isEqual from 'lodash.isequal';
+import { diff } from 'json-diff';
 
 const version = 2;
 
-interface QueryOverride {
+export interface QueryOverride {
     project?: string[];
     environment?: string;
 }
@@ -61,6 +69,10 @@ export default class FeatureController extends Controller {
     private featureToggleService: FeatureToggleService;
 
     private flagResolver: IFlagResolver;
+
+    private eventBus: EventEmitter;
+
+    private clientFeaturesCacheMap = new Map<string, number>();
 
     private featuresAndSegments: (
         query: IFeatureToggleQuery,
@@ -92,6 +104,7 @@ export default class FeatureController extends Controller {
         this.configurationRevisionService = configurationRevisionService;
         this.featureToggleService = featureToggleService;
         this.flagResolver = config.flagResolver;
+        this.eventBus = config.eventBus;
         this.logger = config.getLogger('client-api/feature.js');
 
         this.route({
@@ -154,6 +167,64 @@ export default class FeatureController extends Controller {
     private async resolveFeaturesAndSegments(
         query?: IFeatureToggleQuery,
     ): Promise<[FeatureConfigurationClient[], IClientSegment[]]> {
+        if (this.flagResolver.isEnabled('deltaApi')) {
+            const features =
+                await this.clientFeatureToggleService.getClientFeatures(query);
+
+            const segments =
+                await this.clientFeatureToggleService.getActiveSegmentsForClient();
+
+            try {
+                const featuresSize = this.getCacheSizeInBytes(features);
+                const segmentsSize = this.getCacheSizeInBytes(segments);
+                this.clientFeaturesCacheMap.set(
+                    JSON.stringify(query),
+                    featuresSize + segmentsSize,
+                );
+
+                const delta =
+                    await this.clientFeatureToggleService.getClientDelta(
+                        undefined,
+                        query!,
+                    );
+
+                const sortedToggles = features.sort((a, b) =>
+                    a.name.localeCompare(b.name),
+                );
+                if (delta?.events[0].type === 'hydration') {
+                    const hydrationEvent = delta?.events[0];
+                    const sortedNewToggles = hydrationEvent.features.sort(
+                        (a, b) => a.name.localeCompare(b.name),
+                    );
+
+                    if (
+                        !this.deepEqualIgnoreOrder(
+                            sortedToggles,
+                            sortedNewToggles,
+                        )
+                    ) {
+                        this.logger.warn(
+                            `old features and new features are different. Old count ${
+                                features.length
+                            }, new count ${hydrationEvent.features.length}, query ${JSON.stringify(query)},
+                        diff ${JSON.stringify(
+                            diff(sortedToggles, sortedNewToggles),
+                        )}`,
+                        );
+                    }
+                } else {
+                    this.logger.warn(
+                        `Delta diff should have only hydration event, query ${JSON.stringify(query)}`,
+                    );
+                }
+
+                this.storeFootprint();
+            } catch (e) {
+                this.logger.error('Delta diff failed', e);
+            }
+
+            return [features, segments];
+        }
         return Promise.all([
             this.clientFeatureToggleService.getClientFeatures(query),
             this.clientFeatureToggleService.getActiveSegmentsForClient(),
@@ -210,6 +281,14 @@ export default class FeatureController extends Controller {
             return {};
         }
 
+        if (namePrefix) {
+            this.eventBus.emit(CLIENT_METRICS_NAMEPREFIX);
+        }
+
+        if (tag) {
+            this.eventBus.emit(CLIENT_METRICS_TAGS);
+        }
+
         const tagQuery = this.paramToArray(tag);
         const projectQuery = this.paramToArray(project);
         const query = await querySchema.validateAsync({
@@ -254,7 +333,6 @@ export default class FeatureController extends Controller {
             query,
             etag,
         );
-
         if (this.clientSpecService.requestSupportsSpec(req, 'segments')) {
             this.openApiService.respondWithValidation(
                 200,
@@ -285,8 +363,14 @@ export default class FeatureController extends Controller {
 
         // TODO: We will need to standardize this to be able to implement this a cross languages (Edge in Rust?).
         const queryHash = hashSum(query);
-        const etag = `"${queryHash}:${revisionId}"`;
-        return { revisionId, etag, queryHash };
+        const etagVariant = this.flagResolver.getVariant('etagVariant');
+        if (etagVariant.feature_enabled && etagVariant.enabled) {
+            const etag = `"${queryHash}:${revisionId}:${etagVariant.name}"`;
+            return { revisionId, etag, queryHash };
+        } else {
+            const etag = `"${queryHash}:${revisionId}"`;
+            return { revisionId, etag, queryHash };
+        }
     }
 
     async getFeatureToggle(
@@ -313,4 +397,27 @@ export default class FeatureController extends Controller {
             },
         );
     }
+
+    storeFootprint() {
+        let memory = 0;
+        for (const value of this.clientFeaturesCacheMap.values()) {
+            memory += value;
+        }
+        this.eventBus.emit(CLIENT_FEATURES_MEMORY, { memory });
+    }
+
+    getCacheSizeInBytes(value: any): number {
+        const jsonString = JSON.stringify(value);
+        return Buffer.byteLength(jsonString, 'utf8');
+    }
+
+    deepEqualIgnoreOrder = (obj1, obj2) => {
+        const sortedObj1 = JSON.parse(
+            JSON.stringify(obj1, Object.keys(obj1).sort()),
+        );
+        const sortedObj2 = JSON.parse(
+            JSON.stringify(obj2, Object.keys(obj2).sort()),
+        );
+        return isEqual(sortedObj1, sortedObj2);
+    };
 }

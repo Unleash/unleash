@@ -6,7 +6,12 @@ import {
 } from '../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../test/fixtures/no-logger';
 import type { FeatureSearchQueryParameters } from '../../openapi/spec/feature-search-query-parameters';
-import { DEFAULT_PROJECT, type IUnleashStores } from '../../types';
+import {
+    CREATE_FEATURE_STRATEGY,
+    DEFAULT_PROJECT,
+    type IUnleashStores,
+    UPDATE_FEATURE_ENVIRONMENT,
+} from '../../types';
 import { DEFAULT_ENV } from '../../util';
 
 let app: IUnleashTest;
@@ -14,7 +19,9 @@ let db: ITestDb;
 let stores: IUnleashStores;
 
 beforeAll(async () => {
-    db = await dbInit('feature_search', getLogger);
+    db = await dbInit('feature_search', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithAuth(
         db.stores,
         {
@@ -29,7 +36,7 @@ beforeAll(async () => {
     );
     stores = db.stores;
 
-    await app.request
+    const { body } = await app.request
         .post(`/auth/demo/login`)
         .send({
             email: 'user@getunleash.io',
@@ -43,12 +50,30 @@ beforeAll(async () => {
 
     await app.linkProjectToEnvironment('default', 'development');
 
+    await stores.accessStore.addPermissionsToRole(
+        body.rootRole,
+        [
+            { name: UPDATE_FEATURE_ENVIRONMENT },
+            { name: CREATE_FEATURE_STRATEGY },
+        ],
+        'development',
+    );
+
     await stores.environmentStore.create({
         name: 'production',
         type: 'production',
     });
 
     await app.linkProjectToEnvironment('default', 'production');
+
+    await stores.accessStore.addPermissionsToRole(
+        body.rootRole,
+        [
+            { name: UPDATE_FEATURE_ENVIRONMENT },
+            { name: CREATE_FEATURE_STRATEGY },
+        ],
+        'production',
+    );
 });
 
 afterAll(async () => {
@@ -57,16 +82,23 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
+    await db.stores.dependentFeaturesStore.deleteAll();
     await db.stores.featureToggleStore.deleteAll();
     await db.stores.segmentStore.deleteAll();
 });
 
 const searchFeatures = async (
-    { query = '', project = 'IS:default' }: FeatureSearchQueryParameters,
+    {
+        query = '',
+        project = 'IS:default',
+        archived = 'IS:false',
+    }: FeatureSearchQueryParameters,
     expectedCode = 200,
 ) => {
     return app.request
-        .get(`/api/admin/search/features?query=${query}&project=${project}`)
+        .get(
+            `/api/admin/search/features?query=${query}&project=${project}&archived=${archived}`,
+        )
         .expect(expectedCode);
 };
 
@@ -171,6 +203,11 @@ const filterFeaturesByEnvironmentStatus = async (
 
 const searchFeaturesWithoutQueryParams = async (expectedCode = 200) => {
     return app.request.get(`/api/admin/search/features`).expect(expectedCode);
+};
+const getProjectArchive = async (projectId = 'default', expectedCode = 200) => {
+    return app.request
+        .get(`/api/admin/archive/features/${projectId}`)
+        .expect(expectedCode);
 };
 
 test('should search matching features by name', async () => {
@@ -956,27 +993,74 @@ test('should search features by state with operators', async () => {
     });
 });
 
-test('should search features by created date with operators', async () => {
+test('should search features by potentially stale', async () => {
     await app.createFeature({
         name: 'my_feature_a',
-        createdAt: '2023-01-27T15:21:39.975Z',
+        stale: false,
     });
     await app.createFeature({
         name: 'my_feature_b',
-        createdAt: '2023-01-29T15:21:39.975Z',
+        stale: true,
+    });
+    await app.createFeature({
+        name: 'my_feature_c',
+        stale: false,
+    });
+    await app.createFeature({
+        name: 'my_feature_d',
+        stale: true,
     });
 
-    const { body } = await filterFeaturesByCreated('IS_BEFORE:2023-01-28');
-    expect(body).toMatchObject({
-        features: [{ name: 'my_feature_a' }],
-    });
+    // this is all done on a schedule, so there's no imperative way to mark something as potentially stale today.
+    await db
+        .rawDatabase('features')
+        .update('potentially_stale', true)
+        .whereIn('name', ['my_feature_c', 'my_feature_d']);
 
-    const { body: afterBody } = await filterFeaturesByCreated(
-        'IS_ON_OR_AFTER:2023-01-28',
-    );
-    expect(afterBody).toMatchObject({
-        features: [{ name: 'my_feature_b' }],
-    });
+    const check = async (filter: string, expectedFlags: string[]) => {
+        const { body } = await filterFeaturesByState(filter);
+        expect(body).toMatchObject({
+            features: expectedFlags.map((flag) => ({ name: flag })),
+        });
+    };
+
+    // single filters work
+    await check('IS:potentially-stale', ['my_feature_c']);
+    // (stale or !potentially-stale)
+    await check('IS_NOT:potentially-stale', [
+        'my_feature_a',
+        'my_feature_b',
+        'my_feature_d',
+    ]);
+
+    // combo filters work
+    await check('IS_ANY_OF:active,potentially-stale', [
+        'my_feature_a',
+        'my_feature_c',
+    ]);
+
+    // (potentially-stale OR stale)
+    await check('IS_ANY_OF:potentially-stale, stale', [
+        'my_feature_b',
+        'my_feature_c',
+        'my_feature_d',
+    ]);
+
+    await check('IS_ANY_OF:active,potentially-stale,stale', [
+        'my_feature_a',
+        'my_feature_b',
+        'my_feature_c',
+        'my_feature_d',
+    ]);
+
+    await check('IS_NONE_OF:active,potentially-stale,stale', []);
+
+    await check('IS_NONE_OF:active,potentially-stale', [
+        'my_feature_b',
+        'my_feature_d',
+    ]);
+
+    await check('IS_NONE_OF:potentially-stale,stale', ['my_feature_a']);
 });
 
 test('should filter features by combined operators', async () => {
@@ -1124,6 +1208,46 @@ test('should return dependencyType', async () => {
             {
                 name: 'my_feature_d',
                 dependencyType: null,
+            },
+        ],
+    });
+});
+
+test('should return archived when query param set', async () => {
+    await app.createFeature({
+        name: 'my_feature_a',
+        createdAt: '2023-01-29T15:21:39.975Z',
+    });
+    await app.createFeature({
+        name: 'my_feature_b',
+        createdAt: '2023-01-29T15:21:39.975Z',
+        archived: true,
+    });
+
+    const { body } = await searchFeatures({
+        query: 'my_feature',
+    });
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                archivedAt: null,
+            },
+        ],
+    });
+
+    const { body: archivedFeatures } = await searchFeatures({
+        query: 'my_feature',
+        archived: 'IS:true',
+    });
+
+    const { body: archive } = await getProjectArchive();
+
+    expect(archivedFeatures).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_b',
+                archivedAt: archive.features[0].archivedAt,
             },
         ],
     });

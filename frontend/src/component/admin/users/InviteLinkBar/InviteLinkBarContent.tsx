@@ -7,7 +7,6 @@ import { LinkField } from '../LinkField/LinkField';
 import { add, formatDistanceToNowStrict, isAfter, parseISO } from 'date-fns';
 import { formatDateYMD } from 'utils/formatDate';
 import { useLocationSettings } from 'hooks/useLocationSettings';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 
 interface IInviteLinkBarContentProps {
     onActionClick?: (inviteLink?: string) => void;
@@ -23,19 +22,12 @@ export const StyledBox = styled(Box)(() => ({
     flexDirection: 'column',
 }));
 
-export const StyledButtonBox = styled(Box)(() => ({
-    display: 'flex',
-    alignItems: 'center',
-    flexGrow: 1,
-}));
-
 export const InviteLinkBarContent = ({
     onActionClick,
 }: IInviteLinkBarContentProps) => {
     const navigate = useNavigate();
     const { data, loading } = useInviteTokens();
     const ref = useLoading(loading);
-    const { trackEvent } = usePlausibleTracker();
     const inviteToken =
         data?.tokens?.find((token) => token.name === 'default') ?? null;
     const inviteLink = inviteToken?.url;
@@ -104,29 +96,19 @@ export const InviteLinkBarContent = ({
                     }
                     elseShow={
                         <Typography variant='body2' data-loading>
-                            You can easily create an invite link here that you
-                            can share and use to invite people from your company
-                            to your Unleash setup.
+                            Create a link to invite people from your company to
+                            your Unleash setup.
                         </Typography>
                     }
                 />
             </StyledBox>
-            <StyledButtonBox
-                sx={{
-                    justifyContent: {
-                        xs: 'center',
-                        md: 'flex-end',
-                    },
-                }}
+            <Button
+                variant='outlined'
+                onClick={onInviteLinkActionClick}
+                data-loading
             >
-                <Button
-                    variant='outlined'
-                    onClick={onInviteLinkActionClick}
-                    data-loading
-                >
-                    {inviteLink ? 'Update' : 'Create'} invite link
-                </Button>
-            </StyledButtonBox>
+                {inviteLink ? 'Update' : 'Create'} invite link
+            </Button>
         </>
     );
 };

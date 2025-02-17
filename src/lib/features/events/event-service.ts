@@ -13,7 +13,7 @@ import { ApiTokenType } from '../../types/models/api-token';
 import { EVENTS_CREATED_BY_PROCESSED } from '../../metric-events';
 import type { IQueryParam } from '../feature-toggle/types/feature-toggle-strategies-store-type';
 import { parseSearchOperatorValue } from '../feature-search/search-utils';
-import { endOfDay, formatISO } from 'date-fns';
+import { addDays, formatISO } from 'date-fns';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type { ProjectAccess } from '../private-project/privateProjectStore';
 import type { IAccessReadModel } from '../access/access-read-model-type';
@@ -184,18 +184,20 @@ export default class EventService {
         }
 
         if (params.to) {
-            const parsed = parseSearchOperatorValue(
-                'created_at',
-                formatISO(endOfDay(new Date(params.to)), {
-                    representation: 'date',
-                }),
-            );
-
+            const parsed = parseSearchOperatorValue('created_at', params.to);
             if (parsed) {
+                const values = parsed.values
+                    .filter((v): v is string => v !== null)
+                    .map((date) =>
+                        formatISO(addDays(new Date(date), 1), {
+                            representation: 'date',
+                        }),
+                    );
+
                 queryParams.push({
                     field: parsed.field,
                     operator: 'IS_BEFORE',
-                    values: parsed.values,
+                    values,
                 });
             }
         }

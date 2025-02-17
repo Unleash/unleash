@@ -125,7 +125,7 @@ export const UpdateEnterpriseSettings = ({
             await editProjectSettings(id, payload);
             refetch();
             setToastData({
-                title: 'Project information updated',
+                text: 'Project information updated',
                 type: 'success',
             });
             trackPattern(featureNamingPattern);

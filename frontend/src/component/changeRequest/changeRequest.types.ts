@@ -3,6 +3,7 @@ import type { ISegment } from 'interfaces/segment';
 import type { IFeatureStrategy } from '../../interfaces/strategy';
 import type { IUser } from '../../interfaces/user';
 import type { SetStrategySortOrderSchema } from '../../openapi';
+import type { IReleasePlan } from 'interfaces/releasePlans';
 
 type BaseChangeRequest = {
     id: number;
@@ -126,7 +127,10 @@ type ChangeRequestPayload =
     | IChangeRequestDeleteSegment
     | SetStrategySortOrderSchema
     | IChangeRequestArchiveFeature
-    | ChangeRequestAddDependency;
+    | ChangeRequestAddDependency
+    | ChangeRequestAddReleasePlan
+    | ChangeRequestDeleteReleasePlan
+    | ChangeRequestStartMilestone;
 
 export interface IChangeRequestAddStrategy extends IChangeRequestChangeBase {
     action: 'addStrategy';
@@ -167,6 +171,22 @@ export interface IChangeRequestDeleteDependency
     action: 'deleteDependency';
 }
 
+export interface IChangeRequestAddReleasePlan extends IChangeRequestChangeBase {
+    action: 'addReleasePlan';
+    payload: ChangeRequestAddReleasePlan;
+}
+
+export interface IChangeRequestDeleteReleasePlan
+    extends IChangeRequestChangeBase {
+    action: 'deleteReleasePlan';
+    payload: ChangeRequestDeleteReleasePlan;
+}
+
+export interface IChangeRequestStartMilestone extends IChangeRequestChangeBase {
+    action: 'startMilestone';
+    payload: ChangeRequestStartMilestone;
+}
+
 export interface IChangeRequestReorderStrategy
     extends IChangeRequestChangeBase {
     action: 'reorderStrategy';
@@ -196,6 +216,7 @@ export interface IChangeRequestDeleteSegment {
     payload: {
         id: number;
         name: string;
+        snapshot?: ISegment;
     };
 }
 
@@ -210,7 +231,10 @@ export type IFeatureChange =
     | IChangeRequestReorderStrategy
     | IChangeRequestArchiveFeature
     | IChangeRequestAddDependency
-    | IChangeRequestDeleteDependency;
+    | IChangeRequestDeleteDependency
+    | IChangeRequestAddReleasePlan
+    | IChangeRequestDeleteReleasePlan
+    | IChangeRequestStartMilestone;
 
 export type ISegmentChange =
     | IChangeRequestUpdateSegment
@@ -229,6 +253,20 @@ type ChangeRequestAddDependency = {
     variants?: string[];
 };
 
+type ChangeRequestAddReleasePlan = {
+    templateId: string;
+};
+
+type ChangeRequestDeleteReleasePlan = {
+    planId: string;
+    snapshot?: IReleasePlan;
+};
+
+type ChangeRequestStartMilestone = {
+    milestoneId: string;
+    snapshot?: IReleasePlan;
+};
+
 export type ChangeRequestAddStrategy = Pick<
     IFeatureStrategy,
     | 'parameters'
@@ -241,14 +279,15 @@ export type ChangeRequestAddStrategy = Pick<
 
 export type ChangeRequestEditStrategy = ChangeRequestAddStrategy & {
     id: string;
-    snapshot?: Omit<IFeatureStrategy, 'title'> & { title?: string | null };
+    snapshot?: IFeatureStrategy;
 };
 
 type ChangeRequestDeleteStrategy = {
     id: string;
-    name: string;
+    name?: string;
     title?: string;
     disabled?: boolean;
+    snapshot?: IFeatureStrategy;
 };
 
 export type ChangeRequestAction =
@@ -262,4 +301,7 @@ export type ChangeRequestAction =
     | 'deleteSegment'
     | 'archiveFeature'
     | 'addDependency'
-    | 'deleteDependency';
+    | 'deleteDependency'
+    | 'addReleasePlan'
+    | 'deleteReleasePlan'
+    | 'startMilestone';

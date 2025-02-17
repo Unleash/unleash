@@ -58,7 +58,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Feature Types',
         description:
-            'Manage [feature flag types](https://docs.getunleash.io/reference/feature-toggle-types).',
+            'Manage [feature flag types](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types).',
     },
     {
         name: 'Features',
@@ -136,7 +136,7 @@ const OPENAPI_TAGS = [
     {
         name: 'Tags',
         description:
-            'Create, update, and delete [tags and tag types](https://docs.getunleash.io/reference/tags).',
+            'Create, update, and delete [tags and tag types](https://docs.getunleash.io/reference/feature-toggles#tags).',
     },
     {
         name: 'Telemetry',

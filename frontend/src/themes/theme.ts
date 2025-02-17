@@ -3,7 +3,7 @@ import { colors } from './colors';
 import { alpha } from '@mui/material';
 import { focusable } from 'themes/themeStyles';
 
-export const theme = {
+export const baseTheme = {
     breakpoints: {
         values: {
             xs: 0,
@@ -13,22 +13,15 @@ export const theme = {
             xl: 1536,
         },
     },
-    boxShadows: {
-        main: '0px 2px 4px rgba(129, 122, 254, 0.2)',
-        card: '0px 2px 10px rgba(28, 25, 78, 0.12)',
-        elevated: '0px 1px 20px rgba(45, 42, 89, 0.1)',
-        popup: '0px 2px 6px rgba(0, 0, 0, 0.25)',
-        primaryHeader: '0px 8px 24px rgba(97, 91, 194, 0.2)',
-        separator: '0px 2px 4px rgba(32, 32, 33, 0.12)', // Notifications header
-        accordionFooter: 'inset 0px 2px 4px rgba(32, 32, 33, 0.05)',
-        reverseFooter: 'inset 0px -2px 4px rgba(32, 32, 33, 0.05)',
-    },
     typography: {
         fontFamily: 'Sen, Roboto, sans-serif',
         fontWeightBold: '700',
         fontWeightMedium: '700',
         allVariants: { lineHeight: 1.4 },
-        button: { lineHeight: 1.75 },
+        button: {
+            fontSize: `${15 / 16}rem`,
+            lineHeight: 1.75,
+        },
         h1: {
             fontSize: '1.5rem',
             lineHeight: 1.875,
@@ -38,15 +31,21 @@ export const theme = {
             fontWeight: '700',
         },
         h3: {
-            fontSize: '1rem',
+            fontSize: `${15 / 16}rem`,
             fontWeight: '700',
         },
         h4: {
-            fontSize: '1rem',
+            fontSize: `${15 / 16}rem`,
             fontWeight: '400',
         },
         caption: {
             fontSize: `${12 / 16}rem`,
+        },
+        body1: {
+            fontSize: `${15 / 16}rem`,
+        },
+        body2: {
+            fontSize: `${14 / 16}rem`,
         },
     },
     fontSizes: {
@@ -54,7 +53,7 @@ export const theme = {
         largeHeader: '2rem',
         mediumHeader: '1.5rem',
         mainHeader: '1.25rem',
-        bodySize: '1rem',
+        bodySize: `${15 / 16}rem`,
         smallBody: `${14 / 16}rem`,
         smallerBody: `${12 / 16}rem`,
     },
@@ -76,7 +75,21 @@ export const theme = {
     zIndex: {
         sticky: 1400,
     },
+} as const;
 
+const theme = {
+    ...baseTheme,
+    mode: 'light',
+    boxShadows: {
+        main: '0px 2px 4px rgba(129, 122, 254, 0.2)',
+        card: '0px 2px 10px rgba(28, 25, 78, 0.12)',
+        elevated: '0px 1px 20px rgba(45, 42, 89, 0.1)',
+        popup: '0px 2px 6px rgba(0, 0, 0, 0.25)',
+        primaryHeader: '0px 8px 24px rgba(97, 91, 194, 0.2)',
+        separator: '0px 2px 4px rgba(32, 32, 33, 0.12)', // Notifications header
+        accordionFooter: 'inset 0px 2px 4px rgba(32, 32, 33, 0.05)',
+        reverseFooter: 'inset 0px -2px 4px rgba(32, 32, 33, 0.05)',
+    },
     palette: {
         common: {
             white: colors.grey[50], // Tooltips text color // Switch base (OFF) // Text color
@@ -94,7 +107,7 @@ export const theme = {
             contrastText: colors.grey[50], // Color used for content when primary.main is used as a background
         },
         secondary: {
-            // Used for purple badges and puple light elements
+            // Used for purple badges and purple light elements
             main: colors.purple[800],
             light: colors.purple[50],
             dark: colors.purple[900], // Color used for text
@@ -150,7 +163,7 @@ export const theme = {
             default: colors.grey[50],
             application: colors.grey[300],
             sidebar: colors.purple[800],
-            alternative: colors.purple[800], // used on the dark theme to shwitch primary main to a darker shade
+            alternative: colors.purple[800], // used on the dark theme to switch primary main to a darker shade
             elevation1: colors.grey[100],
             elevation2: colors.grey[200],
         },
@@ -294,9 +307,9 @@ export const theme = {
             series: colors.chartSeries,
         },
     },
-};
+} as const;
 
-export default createTheme({
+export const lightTheme = createTheme({
     ...theme,
     components: {
         // Skeleton
@@ -319,6 +332,16 @@ export default createTheme({
                 a: {
                     color: theme.palette.links,
                 },
+            },
+        },
+
+        // Buttons
+        MuiButton: {
+            styleOverrides: {
+                root: ({ theme }) => ({
+                    borderRadius: theme.shape.borderRadius,
+                    textTransform: 'none',
+                }),
             },
         },
 
@@ -464,7 +487,7 @@ export default createTheme({
             styleOverrides: {
                 root: ({ theme }) => ({
                     color: theme.palette.text.primary,
-                    fontSize: '1rem',
+                    fontSize: theme.typography.body1.fontSize,
                     textTransform: 'none',
                     fontWeight: 400,
                     lineHeight: '1',
@@ -568,3 +591,8 @@ export default createTheme({
         },
     },
 });
+
+/**
+ * @deprecated Do not import directly! Include using `useTheme` hook.
+ */
+export default lightTheme;

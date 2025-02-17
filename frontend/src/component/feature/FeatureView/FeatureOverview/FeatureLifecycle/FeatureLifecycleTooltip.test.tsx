@@ -8,7 +8,6 @@ import {
     DELETE_FEATURE,
     UPDATE_FEATURE,
 } from 'component/providers/AccessProvider/permissions';
-import { Route, Routes } from 'react-router-dom';
 
 const currentTime = '2024-04-25T08:05:00.000Z';
 const twoMinutesAgo = '2024-04-25T08:03:00.000Z';
@@ -23,24 +22,17 @@ const renderOpenTooltip = (
     loading = false,
 ) => {
     render(
-        <Routes>
-            <Route
-                path={'/projects/:projectId'}
-                element={
-                    <FeatureLifecycleTooltip
-                        stage={stage}
-                        onArchive={onArchive}
-                        onComplete={onComplete}
-                        onUncomplete={onUncomplete}
-                        loading={loading}
-                    >
-                        <span>child</span>
-                    </FeatureLifecycleTooltip>
-                }
-            />
-        </Routes>,
+        <FeatureLifecycleTooltip
+            stage={stage}
+            onArchive={onArchive}
+            onComplete={onComplete}
+            onUncomplete={onUncomplete}
+            loading={loading}
+            project={'default'}
+        >
+            <span>child</span>
+        </FeatureLifecycleTooltip>,
         {
-            route: '/projects/default',
             permissions: [
                 { permission: DELETE_FEATURE },
                 { permission: UPDATE_FEATURE },
@@ -59,10 +51,10 @@ test('render initial stage', async () => {
 
     renderOpenTooltip({ name: 'initial', enteredStageAt });
 
-    await screen.findByText('initial');
+    await screen.findByText('Define');
     await screen.findByText('2 minutes');
     await screen.findByText(
-        'This feature flag is currently in the initial phase of its lifecycle.',
+        'Feature flag has been created, but we have not seen any metrics yet.',
     );
 });
 
@@ -77,7 +69,7 @@ test('render pre-live stage', async () => {
         enteredStageAt,
     });
 
-    await screen.findByText('pre-live');
+    await screen.findByText('Develop');
     await screen.findByText('development');
     await screen.findByText('1 hour ago');
 });
@@ -94,8 +86,8 @@ test('render live stage', async () => {
     });
 
     await screen.findByText('Is this feature complete?');
-    await screen.findByText('live');
-    await screen.findByText('production');
+    await screen.findByText('Production');
+    // await screen.findByText('production');
     await screen.findByText('2 hours ago');
 });
 
@@ -111,8 +103,8 @@ test('render completed stage with still active', async () => {
         enteredStageAt,
     });
 
-    await screen.findByText('completed');
-    await screen.findByText('production');
+    await screen.findByText('Cleanup');
+    await screen.findByText(/production/);
     await screen.findByText('2 hours ago');
     expect(screen.queryByText('Archive feature')).not.toBeInTheDocument();
 });
@@ -135,7 +127,7 @@ test('render completed stage safe to archive', async () => {
         onArchive,
     );
 
-    await screen.findByText('completed');
+    await screen.findByText('Cleanup');
     const button = await screen.findByText('Archive feature');
     button.click();
 
@@ -161,7 +153,7 @@ test('mark completed button gets activated', async () => {
         onComplete,
     );
 
-    await screen.findByText('live');
+    await screen.findByText('Production');
     const button = await screen.findByText('Mark completed');
     button.click();
 

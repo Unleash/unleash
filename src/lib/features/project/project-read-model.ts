@@ -6,7 +6,7 @@ import type {
     ProjectForInsights,
     ProjectForUi,
 } from './project-read-model-type';
-import type { IProjectQuery } from './project-store-type';
+import type { IProjectQuery, IProjectsQuery } from './project-store-type';
 import metricsHelper from '../../util/metrics-helper';
 import type EventEmitter from 'events';
 import type { IProjectMembersCount } from './project-store';
@@ -79,11 +79,18 @@ export class ProjectReadModel implements IProjectReadModel {
     }
 
     async getProjectsForAdminUi(
-        query?: IProjectQuery,
+        query?: IProjectQuery & IProjectsQuery,
         userId?: number,
     ): Promise<ProjectForUi[]> {
         const projectTimer = this.timer('getProjectsForAdminUi');
-        let projects = this.db(TABLE)
+        let projects = this.db
+            .with('latest_events', (qb) => {
+                qb.select('project', 'feature_name')
+                    .max('created_at as last_updated')
+                    .whereNotNull('feature_name')
+                    .from('events')
+                    .groupBy('project', 'feature_name');
+            })
             .leftJoin('features', 'features.project', 'projects.id')
             .leftJoin(
                 'last_seen_at_metrics',
@@ -95,25 +102,27 @@ export class ProjectReadModel implements IProjectReadModel {
                 'project_settings.project',
                 'projects.id',
             )
-            .leftJoin('events', (join) => {
-                join.on('events.feature_name', '=', 'features.name').andOn(
-                    'events.project',
+            .leftJoin('latest_events', (join) => {
+                join.on(
+                    'latest_events.feature_name',
                     '=',
-                    'projects.id',
-                );
+                    'features.name',
+                ).andOn('latest_events.project', '=', 'projects.id');
             })
+            .from(TABLE)
             .orderBy('projects.name', 'asc');
 
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            if (query?.archived === true) {
-                projects = projects.whereNot(`${TABLE}.archived_at`, null);
-            } else {
-                projects = projects.where(`${TABLE}.archived_at`, null);
-            }
+        if (query?.archived === true) {
+            projects = projects.whereNot(`${TABLE}.archived_at`, null);
+        } else {
+            projects = projects.where(`${TABLE}.archived_at`, null);
         }
 
         if (query?.id) {
             projects = projects.where(`${TABLE}.id`, query.id);
+        }
+        if (query?.ids) {
+            projects = projects.whereIn(`${TABLE}.id`, query.ids);
         }
 
         let selectColumns = [
@@ -121,14 +130,11 @@ export class ProjectReadModel implements IProjectReadModel {
                 'projects.id, projects.name, projects.description, projects.health, projects.created_at, ' +
                     'count(DISTINCT features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
                     'MAX(last_seen_at_metrics.last_seen_at) AS last_usage, ' +
-                    'MAX(events.created_at) AS last_updated',
+                    'MAX(latest_events.last_updated) AS last_updated',
             ),
             'project_settings.project_mode',
+            'projects.archived_at',
         ] as (string | Raw<any>)[];
-
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            selectColumns.push(`${TABLE}.archived_at`);
-        }
 
         let groupByColumns = ['projects.id', 'project_settings.project_mode'];
 
@@ -179,12 +185,10 @@ export class ProjectReadModel implements IProjectReadModel {
             .leftJoin('project_stats', 'project_stats.project', 'projects.id')
             .orderBy('projects.name', 'asc');
 
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            if (query?.archived === true) {
-                projects = projects.whereNot(`${TABLE}.archived_at`, null);
-            } else {
-                projects = projects.where(`${TABLE}.archived_at`, null);
-            }
+        if (query?.archived === true) {
+            projects = projects.whereNot(`${TABLE}.archived_at`, null);
+        } else {
+            projects = projects.where(`${TABLE}.archived_at`, null);
         }
 
         if (query?.id) {
@@ -196,14 +200,11 @@ export class ProjectReadModel implements IProjectReadModel {
                 'projects.id, projects.health, ' +
                     'count(features.name) FILTER (WHERE features.archived_at is null) AS number_of_features, ' +
                     'count(features.name) FILTER (WHERE features.archived_at is null and features.stale IS TRUE) AS stale_feature_count, ' +
-                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE) AS potentially_stale_feature_count',
+                    'count(features.name) FILTER (WHERE features.archived_at is null and features.potentially_stale IS TRUE and features.stale IS FALSE) AS potentially_stale_feature_count',
             ),
             'project_stats.avg_time_to_prod_current_window',
+            'projects.archived_at',
         ] as (string | Raw<any>)[];
-
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            selectColumns.push(`${TABLE}.archived_at`);
-        }
 
         const groupByColumns = [
             'projects.id',
@@ -258,5 +259,49 @@ export class ProjectReadModel implements IProjectReadModel {
 
         memberTimer();
         return members;
+    }
+
+    async getProjectsByUser(userId: number): Promise<string[]> {
+        const projects = await this.db
+            .from((db) => {
+                db.select('role_user.project')
+                    .from('role_user')
+                    .leftJoin('roles', 'role_user.role_id', 'roles.id')
+                    .leftJoin('projects', 'role_user.project', 'projects.id')
+                    .where('user_id', userId)
+                    .andWhere('projects.archived_at', null)
+                    .union((queryBuilder) => {
+                        queryBuilder
+                            .select('group_role.project')
+                            .from('group_role')
+                            .leftJoin(
+                                'group_user',
+                                'group_user.group_id',
+                                'group_role.group_id',
+                            )
+                            .leftJoin(
+                                'projects',
+                                'group_role.project',
+                                'projects.id',
+                            )
+                            .where('group_user.user_id', userId)
+                            .andWhere('projects.archived_at', null);
+                    })
+                    .as('query');
+            })
+            .pluck('project');
+        return projects;
+    }
+
+    async getProjectsFavoritedByUser(userId: number): Promise<string[]> {
+        const favoritedProjects = await this.db
+            .select('favorite_projects.project')
+            .from('favorite_projects')
+            .leftJoin('projects', 'favorite_projects.project', 'projects.id')
+            .where('favorite_projects.user_id', userId)
+            .andWhere('projects.archived_at', null)
+            .pluck('project');
+
+        return favoritedProjects;
     }
 }

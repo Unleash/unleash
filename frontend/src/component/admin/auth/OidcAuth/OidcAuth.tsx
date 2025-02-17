@@ -97,7 +97,7 @@ export const OidcAuth = () => {
         try {
             await updateSettings(removeEmptyStringFields(data));
             setToastData({
-                title: 'Settings stored',
+                text: 'Settings stored',
                 type: 'success',
             });
         } catch (error: unknown) {
@@ -136,8 +136,8 @@ export const OidcAuth = () => {
                         >
                             documentation
                         </a>{' '}
-                        to learn how to integrate with specific Open Id Connect
-                        providers (Okta, Keycloak, Google, etc). <br />
+                        to learn how to integrate with specific OpenID Connect
+                        providers (such as Okta and Keycloak). <br />
                         Callback URL:{' '}
                         <code>{uiConfig.unleashUrl}/auth/oidc/callback</code>
                     </Alert>

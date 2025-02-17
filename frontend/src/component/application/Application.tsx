@@ -93,8 +93,7 @@ export const Application = () => {
         try {
             await deleteApplication(appName);
             setToastData({
-                title: 'Deleted Successfully',
-                text: 'Application deleted successfully',
+                text: 'Deleted Successfully',
                 type: 'success',
             });
             navigate('/applications');

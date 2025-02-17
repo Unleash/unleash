@@ -12,12 +12,12 @@ import { Box, styled } from '@mui/material';
 import { flexColumn } from 'themes/themeStyles';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen';
-import type { IProjectCard } from 'interfaces/project';
 import { Highlighter } from 'component/common/Highlighter/Highlighter';
 import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { ProjectMembers } from './ProjectCardFooter/ProjectMembers/ProjectMembers';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
+import type { ProjectSchema } from 'openapi';
 
 const StyledUpdated = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -45,6 +45,8 @@ const StyledHeader = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
+type ProjectCardProps = ProjectSchema & { onHover?: () => void };
+
 export const ProjectCard = ({
     name,
     featureCount,
@@ -58,7 +60,7 @@ export const ProjectCard = ({
     createdAt,
     lastUpdatedAt,
     lastReportedFlagUsage,
-}: IProjectCard) => {
+}: ProjectCardProps) => {
     const { searchQuery } = useSearchHighlightContext();
 
     return (

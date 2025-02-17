@@ -42,7 +42,7 @@ export const BannersTable = () => {
         try {
             await toggleBanner(banner.id, enabled);
             setToastData({
-                title: `"${banner.message}" has been ${
+                text: `"${banner.message}" has been ${
                     enabled ? 'enabled' : 'disabled'
                 }`,
                 type: 'success',
@@ -57,7 +57,7 @@ export const BannersTable = () => {
         try {
             await removeBanner(banner.id);
             setToastData({
-                title: `"${banner.message}" has been deleted`,
+                text: `"${banner.message}" has been deleted`,
                 type: 'success',
             });
             refetch();

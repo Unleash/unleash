@@ -7,7 +7,6 @@ import useProjectOverview, {
 } from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
-import { ProjectOverviewChangeRequests } from './ProjectOverviewChangeRequests';
 import { OutdatedSdksBanner } from '../../banners/OutdatedSdksBanner/OutdatedSdksBanner';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
@@ -54,12 +53,10 @@ const ProjectOverview: FC = () => {
     return (
         <StyledContainer key={projectId}>
             <StyledContentContainer>
-                <ProjectOverviewChangeRequests project={projectId} />
                 <ConditionallyRender
                     condition={outdatedSdksBannerEnabled}
                     show={<OutdatedSdksBanner project={projectId} />}
                 />
-
                 <StyledProjectToggles>
                     <ProjectFeatureToggles
                         environments={project.environments.map(

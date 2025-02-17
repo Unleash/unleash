@@ -69,11 +69,11 @@ const StyledSwitchContainer = styled('div')({
     marginLeft: '-9px',
 });
 
-const StyledButtonContainer = styled('div')({
-    marginTop: 'auto',
+const StyledButtonContainer = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(3),
     display: 'flex',
     justifyContent: 'flex-end',
-});
+}));
 
 const StyledCancelButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(3),

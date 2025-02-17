@@ -52,6 +52,10 @@ import {
     createFakeProjectReadModel,
     createProjectReadModel,
 } from './createProjectReadModel';
+import {
+    createFakeOnboardingReadModel,
+    createOnboardingReadModel,
+} from '../onboarding/createOnboardingReadModel';
 
 export const createProjectService = (
     db: Db,
@@ -59,12 +63,7 @@ export const createProjectService = (
 ): ProjectService => {
     const { eventBus, getLogger, flagResolver } = config;
     const eventStore = new EventStore(db, getLogger);
-    const projectStore = new ProjectStore(
-        db,
-        eventBus,
-        getLogger,
-        flagResolver,
-    );
+    const projectStore = new ProjectStore(db, eventBus, config);
     const projectOwnersReadModel = new ProjectOwnersReadModel(db);
     const projectFlagCreatorsReadModel = new ProjectFlagCreatorsReadModel(db);
     const groupStore = new GroupStore(db);
@@ -75,11 +74,11 @@ export const createProjectService = (
         flagResolver,
     );
     const accountStore = new AccountStore(db, getLogger);
-    const environmentStore = new EnvironmentStore(db, eventBus, getLogger);
+    const environmentStore = new EnvironmentStore(db, eventBus, config);
     const featureEnvironmentStore = new FeatureEnvironmentStore(
         db,
         eventBus,
-        getLogger,
+        config,
     );
     const projectStatsStore = new ProjectStatsStore(db, eventBus, getLogger);
     const accessService: AccessService = createAccessService(db, config);
@@ -130,6 +129,8 @@ export const createProjectService = (
         config.flagResolver,
     );
 
+    const onboardingReadModel = createOnboardingReadModel(db);
+
     return new ProjectService(
         {
             projectStore,
@@ -142,6 +143,7 @@ export const createProjectService = (
             projectOwnersReadModel,
             projectFlagCreatorsReadModel,
             projectReadModel,
+            onboardingReadModel,
         },
         config,
         accessService,
@@ -197,6 +199,8 @@ export const createFakeProjectService = (
 
     const projectReadModel = createFakeProjectReadModel();
 
+    const onboardingReadModel = createFakeOnboardingReadModel();
+
     return new ProjectService(
         {
             projectStore,
@@ -209,6 +213,7 @@ export const createFakeProjectService = (
             accountStore,
             projectStatsStore,
             projectReadModel,
+            onboardingReadModel,
         },
         config,
         accessService,

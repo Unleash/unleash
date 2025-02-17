@@ -1,6 +1,6 @@
 import * as responseTime from 'response-time';
 import type EventEmitter from 'events';
-import { REQUEST_TIME } from '../metric-events';
+import { REQUEST_TIME, SDK_CONNECTION_ID_RECEIVED } from '../metric-events';
 import type { IFlagResolver } from '../types/experimental';
 import type { InstanceStatsService } from '../services';
 import type { RequestHandler } from 'express';
@@ -60,7 +60,29 @@ export function responseTimeMetrics(
             (instanceStatsService.getAppCountSnapshot('7d') ??
                 appNameReportingThreshold) < appNameReportingThreshold
         ) {
-            appName = req.headers['unleash-appname'] ?? req.query.appName;
+            appName =
+                req.headers['x-unleash-appname'] ??
+                req.headers['unleash-appname'] ??
+                req.query.appName;
+        }
+
+        if (flagResolver.isEnabled('uniqueSdkTracking')) {
+            const connectionId =
+                req.headers['unleash-connection-id'] ||
+                req.headers['x-unleash-connection-id'] ||
+                req.headers['unleash-instanceid'];
+            if (req.originalUrl.includes('/api/client') && connectionId) {
+                eventBus.emit(SDK_CONNECTION_ID_RECEIVED, {
+                    connectionId,
+                    type: 'backend',
+                });
+            }
+            if (req.originalUrl.includes('/api/frontend') && connectionId) {
+                eventBus.emit(SDK_CONNECTION_ID_RECEIVED, {
+                    connectionId,
+                    type: 'frontend',
+                });
+            }
         }
 
         const timingInfo = {

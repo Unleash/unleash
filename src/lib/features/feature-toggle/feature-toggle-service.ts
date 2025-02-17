@@ -86,7 +86,7 @@ import {
     validateSemver,
     validateString,
 } from '../../util/validators/constraint-types';
-import type { IContextFieldStore } from '../../types/stores/context-field-store';
+import type { IContextFieldStore } from '../context/context-field-store-type';
 import type { SetStrategySortOrderSchema } from '../../openapi/spec/set-strategy-sort-order-schema';
 import {
     getDefaultStrategy,
@@ -112,6 +112,7 @@ import type { IFeatureLifecycleReadModel } from '../feature-lifecycle/feature-li
 import type { ResourceLimitsSchema } from '../../openapi';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 import type { Collaborator } from './types/feature-collaborators-read-model-type';
+import { sortStrategies } from '../../util/sortStrategies';
 
 interface IFeatureContext {
     featureName: string;
@@ -596,15 +597,7 @@ class FeatureToggleService {
                 environment,
             )
         )
-            .sort((strategy1, strategy2) => {
-                if (
-                    typeof strategy1.sortOrder === 'number' &&
-                    typeof strategy2.sortOrder === 'number'
-                ) {
-                    return strategy1.sortOrder - strategy2.sortOrder;
-                }
-                return 0;
-            })
+            .sort(sortStrategies)
             .map((strategy) => strategy.id);
 
         const eventPreData: StrategyIds = { strategyIds: existingOrder };
@@ -624,15 +617,7 @@ class FeatureToggleService {
                 environment,
             )
         )
-            .sort((strategy1, strategy2) => {
-                if (
-                    typeof strategy1.sortOrder === 'number' &&
-                    typeof strategy2.sortOrder === 'number'
-                ) {
-                    return strategy1.sortOrder - strategy2.sortOrder;
-                }
-                return 0;
-            })
+            .sort(sortStrategies)
             .map((strategy) => strategy.id);
 
         const eventData: StrategyIds = { strategyIds: newOrder };
@@ -983,27 +968,13 @@ class FeatureToggleService {
 
         await this.featureStrategiesStore.delete(id);
 
-        const featureStrategies =
-            await this.featureStrategiesStore.getStrategiesForFeatureEnv(
-                projectId,
-                featureName,
-                environment,
-            );
-
-        const hasOnlyDisabledStrategies = featureStrategies.every(
-            (strategy) => strategy.disabled,
+        // Disable the feature in the environment if it only has disabled strategies
+        await this.optionallyDisableFeature(
+            featureName,
+            environment,
+            projectId,
+            auditUser,
         );
-
-        if (hasOnlyDisabledStrategies) {
-            // Disable the feature in the environment if it only has disabled strategies
-            await this.unprotectedUpdateEnabled(
-                projectId,
-                featureName,
-                environment,
-                false,
-                auditUser,
-            );
-        }
 
         const preData = this.featureStrategyToPublic(existingStrategy);
 
@@ -1056,6 +1027,7 @@ class FeatureToggleService {
                     title: strat.title,
                     disabled: strat.disabled,
                     sortOrder: strat.sortOrder,
+                    milestoneId: strat.milestoneId,
                     segments,
                 });
             }
@@ -1230,14 +1202,12 @@ class FeatureToggleService {
     }
 
     private async validateActiveProject(projectId: string) {
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            const hasActiveProject =
-                await this.projectStore.hasActiveProject(projectId);
-            if (!hasActiveProject) {
-                throw new NotFoundError(
-                    `Active project with id ${projectId} does not exist`,
-                );
-            }
+        const hasActiveProject =
+            await this.projectStore.hasActiveProject(projectId);
+        if (!hasActiveProject) {
+            throw new NotFoundError(
+                `Active project with id ${projectId} does not exist`,
+            );
         }
     }
 
@@ -1253,12 +1223,8 @@ class FeatureToggleService {
         await this.validateName(value.name);
         await this.validateFeatureFlagNameAgainstPattern(value.name, projectId);
 
-        let projectExists: boolean;
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            projectExists = await this.projectStore.hasActiveProject(projectId);
-        } else {
-            projectExists = await this.projectStore.hasProject(projectId);
-        }
+        const projectExists =
+            await this.projectStore.hasActiveProject(projectId);
 
         if (await this.projectStore.isFeatureLimitReached(projectId)) {
             throw new InvalidOperationError(

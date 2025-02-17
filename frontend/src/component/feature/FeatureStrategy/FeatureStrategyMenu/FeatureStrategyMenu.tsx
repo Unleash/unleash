@@ -10,6 +10,12 @@ import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStra
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ReleasePlanAddChangeRequestDialog } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ChangeRequest/ReleasePlanAddChangeRequestDialog';
+import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
+import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
+import useToast from 'hooks/useToast';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -22,18 +28,18 @@ interface IFeatureStrategyMenuProps {
     disableReason?: string;
 }
 
-const StyledStrategyMenu = styled('div')({
+const StyledStrategyMenu = styled('div')(({ theme }) => ({
     flexShrink: 0,
-});
+    display: 'flex',
+    flexFlow: 'row',
+    gap: theme.spacing(1),
+}));
 
 const StyledAdditionalMenuButton = styled(PermissionButton)(({ theme }) => ({
     minWidth: 0,
     width: theme.spacing(4.5),
-    alignItems: 'center',
-    justifyContent: 'center',
-    align: 'center',
-    flexDirection: 'column',
-    marginLeft: theme.spacing(1),
+    alignSelf: 'stretch',
+    paddingBlock: 0,
 }));
 
 export const FeatureStrategyMenu = ({
@@ -49,8 +55,16 @@ export const FeatureStrategyMenu = ({
     const [anchor, setAnchor] = useState<Element>();
     const navigate = useNavigate();
     const { trackEvent } = usePlausibleTracker();
+    const [templateForChangeRequestDialog, setTemplateForChangeRequestDialog] =
+        useState<IReleasePlanTemplate | undefined>();
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen ? 'FeatureStrategyMenuPopover' : undefined;
+    const flagOverviewRedesignEnabled = useUiFlag('flagOverviewRedesign');
+    const { setToastData } = useToast();
+    const { addChange } = useChangeRequestApi();
+    const { refetch: refetchChangeRequests } =
+        usePendingChangeRequests(projectId);
+    const uiFontSizeRedesign = useUiFlag('uiGlobalFontSize');
 
     const onClose = () => {
         setAnchor(undefined);
@@ -69,6 +83,25 @@ export const FeatureStrategyMenu = ({
         setAnchor(event.currentTarget);
     };
 
+    const addReleasePlanToChangeRequest = async () => {
+        addChange(projectId, environmentId, {
+            feature: featureId,
+            action: 'addReleasePlan',
+            payload: {
+                templateId: templateForChangeRequestDialog?.id,
+            },
+        });
+
+        refetchChangeRequests();
+
+        setToastData({
+            type: 'success',
+            text: 'Added to draft',
+        });
+
+        setTemplateForChangeRequestDialog(undefined);
+    };
+
     const createStrategyPath = formatCreateStrategyPath(
         projectId,
         featureId,
@@ -77,16 +110,62 @@ export const FeatureStrategyMenu = ({
         true,
     );
 
+    if (flagOverviewRedesignEnabled) {
+        return (
+            <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
+                <PermissionButton
+                    data-testid='ADD_STRATEGY_BUTTON'
+                    permission={CREATE_FEATURE_STRATEGY}
+                    projectId={projectId}
+                    environmentId={environmentId}
+                    onClick={openMoreStrategies}
+                    aria-labelledby={popoverId}
+                    variant={variant}
+                    size={uiFontSizeRedesign ? undefined : size}
+                    sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
+                    disabled={Boolean(disableReason)}
+                    tooltipProps={{
+                        title: disableReason ? disableReason : undefined,
+                    }}
+                >
+                    {label}
+                </PermissionButton>
+                <Popover
+                    id={popoverId}
+                    open={isPopoverOpen}
+                    anchorEl={anchor}
+                    onClose={onClose}
+                    onClick={onClose}
+                    PaperProps={{
+                        sx: (theme) => ({
+                            paddingBottom: theme.spacing(1),
+                        }),
+                    }}
+                >
+                    <FeatureStrategyMenuCards
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        setTemplateForChangeRequestDialog={
+                            setTemplateForChangeRequestDialog
+                        }
+                    />
+                </Popover>
+            </StyledStrategyMenu>
+        );
+    }
+
     return (
         <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
             <PermissionButton
+                data-testid='ADD_STRATEGY_BUTTON'
                 permission={CREATE_FEATURE_STRATEGY}
                 projectId={projectId}
                 environmentId={environmentId}
                 onClick={openDefaultStrategyCreationModal}
                 aria-labelledby={popoverId}
                 variant={variant}
-                size={size}
+                size={uiFontSizeRedesign ? undefined : size}
                 sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
                 disabled={Boolean(disableReason)}
                 tooltipProps={{
@@ -101,18 +180,15 @@ export const FeatureStrategyMenu = ({
                 projectId={projectId}
                 environmentId={environmentId}
                 onClick={openMoreStrategies}
-                aria-labelledby={popoverId}
                 variant='outlined'
-                size={size}
+                size={uiFontSizeRedesign ? undefined : size}
                 hideLockIcon
                 disabled={Boolean(disableReason)}
                 tooltipProps={{
                     title: disableReason ? disableReason : 'More strategies',
                 }}
             >
-                <MoreVert
-                    sx={(theme) => ({ margin: theme.spacing(0.25, 0) })}
-                />
+                <MoreVert />
             </StyledAdditionalMenuButton>
             <Popover
                 id={popoverId}
@@ -130,8 +206,19 @@ export const FeatureStrategyMenu = ({
                     projectId={projectId}
                     featureId={featureId}
                     environmentId={environmentId}
+                    setTemplateForChangeRequestDialog={
+                        setTemplateForChangeRequestDialog
+                    }
                 />
             </Popover>
+            <ReleasePlanAddChangeRequestDialog
+                onConfirm={addReleasePlanToChangeRequest}
+                onClosing={() => setTemplateForChangeRequestDialog(undefined)}
+                isOpen={Boolean(templateForChangeRequestDialog)}
+                featureId={featureId}
+                environmentId={environmentId}
+                releaseTemplate={templateForChangeRequestDialog}
+            />
         </StyledStrategyMenu>
     );
 };

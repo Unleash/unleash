@@ -33,17 +33,52 @@
     },
     {
       "source": "/user_guide/api-token",
-      "destination": "/how-to/how-to-create-api-tokens",
+      "destination": "/reference/api-tokens-and-client-keys",
       "permanent": true
     },
     {
       "source": "/deploy/user_guide/api-token",
-      "destination": "/how-to/how-to-create-api-tokens",
+      "destination": "/reference/api-tokens-and-client-keys",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-api-tokens",
+      "destination": "/reference/api-tokens-and-client-keys#create-an-api-token",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-project-api-tokens",
+      "destination": "/reference/api-tokens-and-client-keys#create-an-api-token",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-personal-access-tokens",
+      "destination": "/reference/api-tokens-and-client-keys#create-an-api-token",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-service-accounts",
+      "destination": "/reference/service-accounts#create-a-service-account",
       "permanent": true
     },
     {
       "source": "/advanced/audit_log",
-      "destination": "/reference/event-log",
+      "destination": "/reference/events",
+      "permanent": true
+    },
+    {
+      "source": "/reference/event-log",
+      "destination": "/reference/events#event-log",
+      "permanent": true
+    },
+    {
+      "source": "/topics/a-b-testing",
+      "destination": "/feature-flag-tutorials/use-cases/a-b-testing",
+      "permanent": true
+    },
+    {
+      "source": "/reference/event-types",
+      "destination": "/reference/events#event-types",
       "permanent": true
     },
     {
@@ -58,7 +93,7 @@
     },
     {
       "source": "/advanced/archived_toggles",
-      "destination": "/reference/archived-toggles",
+      "destination": "/reference/feature-toggles#archive-a-feature-toggle",
       "permanent": true
     },
     {
@@ -73,7 +108,32 @@
     },
     {
       "source": "/advanced/feature_toggle_types",
-      "destination": "/reference/feature-toggle-types",
+      "destination": "/reference/feature-toggles#feature-flag-types",
+      "permanent": true
+    },
+    {
+      "source": "/reference/feature-toggle-types",
+      "destination": "/reference/feature-toggles#feature-flag-types",
+      "permanent": true
+    },
+    {
+      "source": "/reference/feature-lifecycle",
+      "destination": "/reference/feature-toggles#feature-flag-lifecycle",
+      "permanent": true
+    },
+    {
+      "source": "/reference/feature-flag-naming-patterns",
+      "destination": "/reference/feature-toggles#set-a-naming-pattern",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-feature-flag-naming-patterns",
+      "destination": "/reference/feature-toggles#set-a-naming-pattern",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-clone-environments",
+      "destination": "/reference/environments#clone-an-environment",
       "permanent": true
     },
     {
@@ -112,6 +172,16 @@
       "permanent": true
     },
     {
+      "source": "/reference/archived-toggles",
+      "destination": "/reference/feature-toggles#archive-a-feature-flag",
+      "permanent": true
+    },
+    {
+      "source": "/reference/dependent-features",
+      "destination": "/reference/feature-toggles#feature-flag-dependencies",
+      "permanent": true
+    },
+    {
       "source": "/advanced/sso-open-id-connect",
       "destination": "/how-to/how-to-add-sso-open-id-connect",
       "permanent": true
@@ -128,12 +198,17 @@
     },
     {
       "source": "/advanced/strategy_constraints",
-      "destination": "/reference/strategy-constraints",
+      "destination": "/reference/activation-strategies#constraints",
       "permanent": true
     },
     {
       "source": "/advanced/tags",
-      "destination": "/reference/tags",
+      "destination": "/reference/feature-toggles#tags",
+      "permanent": true
+    },
+    {
+      "source": "/reference/tags",
+      "destination": "/reference/feature-toggles#tags",
       "permanent": true
     },
     {
@@ -343,7 +418,7 @@
     },
     {
       "source": "/user_guide/create_feature_toggle",
-      "destination": "/how-to/how-to-create-feature-toggles",
+      "destination": "/how-to-create-feature-flag",
       "permanent": true
     },
     {
@@ -669,6 +744,31 @@
     {
       "source": "/how-to/how-to-troubleshoot-feature-not-available",
       "destination": "/using-unleash/troubleshooting/feature-not-available",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-create-feature-toggles",
+      "destination": "/how-to-create-feature-flag",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-add-strategy-constraints",
+      "destination": "/reference/activation-strategies#add-strategy-constraint",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-use-custom-strategies",
+      "destination": "/reference/activation-strategies",
+      "permanent": true
+    },
+    {
+      "source": "/reference/strategy-constraints",
+      "destination": "/reference/activation-strategies#constraints",
+      "permanent": true
+    },
+    {
+      "source": "/how-to/how-to-define-custom-context-fields",
+      "destination": "/reference/activation-strategies#create-a-custom-context-field",
       "permanent": true
     },
     {

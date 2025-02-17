@@ -270,11 +270,8 @@ export const Group: VFC = () => {
                                     onClick={() => setRemoveOpen(true)}
                                     permission={ADMIN}
                                     tooltipProps={{
-                                        title: isScimGroup
-                                            ? scimGroupTooltip
-                                            : 'Delete group',
+                                        title: 'Delete group',
                                     }}
-                                    disabled={isScimGroup}
                                 >
                                     <Delete />
                                 </PermissionIconButton>

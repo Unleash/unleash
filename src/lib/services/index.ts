@@ -14,7 +14,7 @@ import TagTypeService from '../features/tag-type/tag-type-service';
 import TagService from './tag-service';
 import StrategyService from './strategy-service';
 import AddonService from './addon-service';
-import ContextService from './context-service';
+import ContextService from '../features/context/context-service';
 import VersionService from './version-service';
 import { EmailService } from './email-service';
 import { AccessService } from './access-service';
@@ -63,14 +63,18 @@ import {
 } from '../features/change-request-segment-usage-service/createChangeRequestSegmentUsageReadModel';
 import ConfigurationRevisionService from '../features/feature-toggle/configuration-revision-service';
 import {
+    createAccessService,
     createEnvironmentService,
     createEventsService,
+    createFakeAccessService,
     createFakeEnvironmentService,
     createFakeEventsService,
     createFakeProjectService,
+    createFakeUserSubscriptionsService,
     createFeatureLifecycleService,
     createFeatureToggleService,
     createProjectService,
+    createUserSubscriptionsService,
 } from '../features';
 import EventAnnouncerService from './event-announcer-service';
 import { createGroupService } from '../features/group/createGroupService';
@@ -78,10 +82,6 @@ import {
     createFakePrivateProjectChecker,
     createPrivateProjectChecker,
 } from '../features/private-project/createPrivateProjectChecker';
-import {
-    createFakeGetActiveUsers,
-    createGetActiveUsers,
-} from '../features/instance-stats/getActiveUsers';
 import { DependentFeaturesService } from '../features/dependent-features/dependent-features-service';
 import {
     createDependentFeaturesService,
@@ -93,10 +93,6 @@ import {
     createFakeLastSeenService,
     createLastSeenService,
 } from '../features/metrics/last-seen/createLastSeenService';
-import {
-    createFakeGetProductionChanges,
-    createGetProductionChanges,
-} from '../features/instance-stats/getProductionChanges';
 import {
     createClientFeatureToggleService,
     createFakeClientFeatureToggleService,
@@ -125,6 +121,7 @@ import {
     createProjectInsightsService,
 } from '../features/project-insights/createProjectInsightsService';
 import { JobService } from '../features/scheduler/job-service';
+import { UserSubscriptionsService } from '../features/user-subscriptions/user-subscriptions-service';
 import { JobStore } from '../features/scheduler/job-store';
 import { FeatureLifecycleService } from '../features/feature-lifecycle/feature-lifecycle-service';
 import { createFakeFeatureLifecycleService } from '../features/feature-lifecycle/createFeatureLifecycle';
@@ -146,6 +143,21 @@ import {
     createOnboardingService,
 } from '../features/onboarding/createOnboardingService';
 import { OnboardingService } from '../features/onboarding/onboarding-service';
+import { PersonalDashboardService } from '../features/personal-dashboard/personal-dashboard-service';
+import {
+    createFakePersonalDashboardService,
+    createPersonalDashboardService,
+} from '../features/personal-dashboard/createPersonalDashboardService';
+import {
+    createFakeProjectStatusService,
+    createProjectStatusService,
+} from '../features/project-status/createProjectStatusService';
+import { ProjectStatusService } from '../features/project-status/project-status-service';
+import {
+    createContextService,
+    createFakeContextService,
+} from '../features/context/createContextService';
+import { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -160,6 +172,11 @@ export const createServices = (
         ? createEventsService(db, config)
         : createFakeEventsService(config, stores);
     const groupService = new GroupService(stores, config, eventService);
+
+    const transactionalAccessService = db
+        ? withTransactional((db) => createAccessService(db, config), db)
+        : withFakeTransactional(createFakeAccessService(config).accessService);
+
     const accessService = new AccessService(
         stores,
         config,
@@ -184,12 +201,10 @@ export const createServices = (
         ? new FeatureLifecycleReadModel(db, config.flagResolver)
         : new FakeFeatureLifecycleReadModel();
 
-    const contextService = new ContextService(
-        stores,
-        config,
-        eventService,
-        privateProjectChecker,
-    );
+    const transactionalContextService = db
+        ? withTransactional(createContextService(config), db)
+        : withFakeTransactional(createFakeContextService(config));
+    const contextService = transactionalContextService;
     const emailService = new EmailService(config);
     const featureTypeService = new FeatureTypeService(
         stores,
@@ -227,19 +242,8 @@ export const createServices = (
     const accountService = new AccountService(stores, config, {
         accessService,
     });
-    const getActiveUsers = db
-        ? createGetActiveUsers(db)
-        : createFakeGetActiveUsers();
-    const getProductionChanges = db
-        ? createGetProductionChanges(db)
-        : createFakeGetProductionChanges();
 
-    const versionService = new VersionService(
-        stores,
-        config,
-        getActiveUsers,
-        getProductionChanges,
-    );
+    const versionService = new VersionService(stores, config);
     const healthService = new HealthService(stores, config);
     const userFeedbackService = new UserFeedbackService(stores, config);
     const changeRequestAccessReadModel = db
@@ -311,6 +315,10 @@ export const createServices = (
     const projectInsightsService = db
         ? createProjectInsightsService(db, config)
         : createFakeProjectInsightsService().projectInsightsService;
+
+    const projectStatusService = db
+        ? createProjectStatusService(db, config)
+        : createFakeProjectStatusService().projectStatusService;
 
     const projectHealthService = new ProjectHealthService(
         stores,
@@ -396,12 +404,24 @@ export const createServices = (
     const featureLifecycleService = transactionalFeatureLifecycleService;
     featureLifecycleService.listen();
 
+    const uniqueConnectionService = new UniqueConnectionService(stores, config);
+    uniqueConnectionService.listen();
+
     const onboardingService = db
         ? createOnboardingService(config)(db)
         : createFakeOnboardingService(config).onboardingService;
     onboardingService.listen();
 
+    const personalDashboardService = db
+        ? createPersonalDashboardService(db, config, stores)
+        : createFakePersonalDashboardService(config);
+
+    const transactionalUserSubscriptionsService = db
+        ? withTransactional(createUserSubscriptionsService(config), db)
+        : withFakeTransactional(createFakeUserSubscriptionsService(config));
+
     return {
+        transactionalAccessService,
         accessService,
         accountService,
         addonService,
@@ -419,6 +439,7 @@ export const createServices = (
         clientInstanceService,
         clientMetricsServiceV2,
         contextService,
+        transactionalContextService,
         versionService,
         apiTokenService,
         emailService,
@@ -464,6 +485,10 @@ export const createServices = (
         transactionalFeatureLifecycleService,
         integrationEventsService,
         onboardingService,
+        personalDashboardService,
+        projectStatusService,
+        transactionalUserSubscriptionsService,
+        uniqueConnectionService,
     };
 };
 
@@ -514,4 +539,8 @@ export {
     FeatureLifecycleService,
     IntegrationEventsService,
     OnboardingService,
+    PersonalDashboardService,
+    ProjectStatusService,
+    UserSubscriptionsService,
+    UniqueConnectionService,
 };

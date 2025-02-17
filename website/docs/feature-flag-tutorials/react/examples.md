@@ -98,7 +98,7 @@ Unleash has a few ways to help manage canary deployments for React apps at scale
 
 -   Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented in a previous section](#gradual-rollouts-for-react-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
--   Using either [constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
+-   Using either [constraints](/reference/activation-strategies#constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
 
 -   [Strategy variants](/reference/strategy-variants) are used to do the same canary deployment, but can be scaled to more _advanced_ cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use variants to split your population of users and conduct an A/B test with them.
 
@@ -162,7 +162,7 @@ curl --location --request PUT 'http://localhost:4242/api/admin/projects/default/
 }'
 ```
 
-Read our documentation for more context on the robustness of [strategy constraint configurations](/reference/strategy-constraints) and use cases.
+Read our documentation for more context on the robustness of [strategy constraint configurations](/reference/activation-strategies#constraints) and use cases.
 
 ## A/B Testing in React
 
@@ -400,15 +400,15 @@ Fortunately, this is straightforward in Unleash Enterprise.
 
 Unleash provides the data to log any change that has happened over time, at the flag level from a global level. In conjunction with Unleash, tools like [Splunk](https://www.splunk.com/) can help you combine logs and run advanced queries against them. Logs are useful for downstream data warehouses or data lakes.
 
-In our React tutorial application, we can view Event logs to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
+For our React tutorial application, we can view events in [Event Log](/reference/events#event-log) to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
 
 -   When the `newNotificationsBadge` flag was created
 -   How the gradual rollout strategy was configured
 -   When and how the variants were created and configured
 
-![Feature flag event log. The flag's variant's have been updated.](/img/react-ex-event-log.png)
+![Feature flag events showing that the flag's variants have been updated.](/img/react-ex-event-log.png)
 
-You can also retrieve event log data by using an API command below:
+You can also retrieve events by using the API command below:
 
 ```
 curl -L -X GET '<your-unleash-url>/api/admin/events/:featureName' \
@@ -416,7 +416,7 @@ curl -L -X GET '<your-unleash-url>/api/admin/events/:featureName' \
 -H 'Authorization: <API_KEY_VALUE>'
 ```
 
-Read our documentation on [Event logs](/reference/event-log) and [APIs](/reference/api/unleash/events) to learn more.
+Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/reference/api/unleash/events) to learn more.
 
 ## Change Management & Feature Flag Approvals in React
 

@@ -15,16 +15,28 @@ import {
 import { useInitialPathname } from './useInitialPathname';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
-import { NewInUnleash } from './NewInUnleash/NewInUnleash';
+import type { NewInUnleash } from './NewInUnleash/NewInUnleash';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { flexRow, focusable } from 'themes/themeStyles';
+import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
+import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
+import { ReactComponent as CelebatoryUnleashLogo } from 'assets/img/unleashHoliday.svg';
+import { ReactComponent as CelebatoryUnleashLogoWhite } from 'assets/img/unleashHolidayDark.svg';
+import { ReactComponent as LogoOnlyWhite } from 'assets/img/logo.svg';
+import { ReactComponent as LogoOnly } from 'assets/img/logoDark.svg';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { Link } from 'react-router-dom';
 
-export const MobileNavigationSidebar: FC<{ onClick: () => void }> = ({
-    onClick,
-}) => {
+export const MobileNavigationSidebar: FC<{
+    onClick: () => void;
+    NewInUnleash?: typeof NewInUnleash;
+}> = ({ onClick, NewInUnleash }) => {
     const { routes } = useRoutes();
 
     return (
         <>
-            <NewInUnleash onItemClick={onClick} />
+            {NewInUnleash ? <NewInUnleash /> : null}
             <PrimaryNavigationList mode='full' onClick={onClick} />
             <SecondaryNavigationList
                 routes={routes.mainNavRoutes}
@@ -51,10 +63,30 @@ export const StretchContainer = styled(Box)<{ mode: string }>(
         gap: theme.spacing(2),
         zIndex: 1,
         overflowAnchor: 'none',
-        minWidth: mode === 'full' ? theme.spacing(40) : 'auto',
-        width: mode === 'full' ? theme.spacing(40) : 'auto',
+        minWidth: mode === 'full' ? theme.spacing(32) : 'auto',
+        width: mode === 'full' ? theme.spacing(32) : 'auto',
     }),
 );
+
+const StyledLink = styled(Link)(({ theme }) => focusable(theme));
+
+const StyledUnleashLogoWhite = styled(UnleashLogoWhite)({ width: '150px' });
+
+const StyledUnleashLogo = styled(UnleashLogo)({ width: '150px' });
+
+const StyledCelebatoryLogo = styled(CelebatoryUnleashLogo)({ width: '150px' });
+
+const StyledUnleashLogoOnly = styled(LogoOnly)(({ theme }) => ({
+    width: '58px',
+    marginTop: theme.spacing(0.5),
+    margin: '0 auto',
+}));
+
+const StyledUnleashLogoOnlyWhite = styled(LogoOnlyWhite)(({ theme }) => ({
+    width: '37px',
+    marginTop: theme.spacing(1),
+    margin: '0 auto',
+}));
 
 // This component is needed when the sticky item could overlap with nav items. You can replicate it on a short screen.
 const StickyContainer = styled(Box)(({ theme }) => ({
@@ -66,8 +98,12 @@ const StickyContainer = styled(Box)(({ theme }) => ({
     borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-export const NavigationSidebar = () => {
+export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
+    NewInUnleash,
+}) => {
     const { routes } = useRoutes();
+    const celebatoryUnleash = useUiFlag('celebrateUnleash');
+    const frontendHeaderRedesign = useUiFlag('frontendHeaderRedesign');
 
     const [mode, setMode] = useNavigationMode();
     const [expanded, changeExpanded] = useExpanded<'configure' | 'admin'>();
@@ -87,6 +123,49 @@ export const NavigationSidebar = () => {
 
     return (
         <StretchContainer mode={mode}>
+            <ConditionallyRender
+                condition={frontendHeaderRedesign}
+                show={
+                    <ConditionallyRender
+                        condition={mode === 'full'}
+                        show={
+                            <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                                <ThemeMode
+                                    darkmode={
+                                        <ConditionallyRender
+                                            condition={celebatoryUnleash}
+                                            show={
+                                                <CelebatoryUnleashLogoWhite />
+                                            }
+                                            elseShow={
+                                                <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                                            }
+                                        />
+                                    }
+                                    lightmode={
+                                        <ConditionallyRender
+                                            condition={celebatoryUnleash}
+                                            show={<StyledCelebatoryLogo />}
+                                            elseShow={
+                                                <StyledUnleashLogo aria-label='Unleash logo' />
+                                            }
+                                        />
+                                    }
+                                />
+                            </StyledLink>
+                        }
+                        elseShow={
+                            <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                                <ThemeMode
+                                    darkmode={<StyledUnleashLogoOnlyWhite />}
+                                    lightmode={<StyledUnleashLogoOnly />}
+                                />
+                            </StyledLink>
+                        }
+                    />
+                }
+            />
+
             <PrimaryNavigationList
                 mode={mode}
                 onClick={setActiveItem}
@@ -154,10 +233,12 @@ export const NavigationSidebar = () => {
             <Box sx={{ flex: 1 }} />
 
             <StickyContainer>
-                <NewInUnleash
-                    mode={mode}
-                    onMiniModeClick={() => setMode('full')}
-                />
+                {NewInUnleash ? (
+                    <NewInUnleash
+                        mode={mode}
+                        onMiniModeClick={() => setMode('full')}
+                    />
+                ) : null}
                 <ShowHide
                     mode={mode}
                     onChange={() => {

@@ -13,7 +13,7 @@ export const permissionRoleSchema = joi
 export const roleSchema = joi
     .object()
     .keys({
-        name: joi.string().required(),
+        name: joi.string().trim().required(),
         description: joi.string().optional().allow('').allow(null).default(''),
         permissions: joi
             .array()

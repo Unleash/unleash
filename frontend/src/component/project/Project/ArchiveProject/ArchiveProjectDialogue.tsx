@@ -29,9 +29,8 @@ export const ArchiveProjectDialogue = ({
             await archiveProject(project);
             refetchProjectOverview();
             setToastData({
-                title: 'Archived project',
+                text: 'Project archived',
                 type: 'success',
-                text: 'Successfully archived project',
             });
             onSuccess?.();
         } catch (ex: unknown) {

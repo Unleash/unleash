@@ -77,7 +77,7 @@ export const EditGroupUsers: FC<IEditGroupUsersProps> = ({
             refetchGroups();
             setOpen(false);
             setToastData({
-                title: 'Group users saved successfully',
+                text: 'Group users saved successfully',
                 type: 'success',
             });
         } catch (error: unknown) {

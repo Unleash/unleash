@@ -12,7 +12,24 @@ import {
 } from './feature-event-formatter-md';
 import type { IEvent } from '../types/events';
 import type { IntegrationEventState } from '../features/integration-events/integration-events-store';
-import { ADDON_EVENTS_HANDLED } from '../metric-events';
+
+import {
+    CHANGE_ADDED,
+    CHANGE_DISCARDED,
+    CHANGE_EDITED,
+    CHANGE_REQUEST_APPLIED,
+    CHANGE_REQUEST_APPROVAL_ADDED,
+    CHANGE_REQUEST_APPROVED,
+    CHANGE_REQUEST_CANCELLED,
+    CHANGE_REQUEST_CREATED,
+    CHANGE_REQUEST_DISCARDED,
+    CHANGE_REQUEST_REJECTED,
+    CHANGE_REQUEST_SENT_TO_REVIEW,
+    CHANGE_REQUEST_SCHEDULED,
+    CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
+    CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
+    CHANGE_REQUEST_SCHEDULE_SUSPENDED,
+} from '../types/events';
 
 interface ITeamsParameters {
     url: string;
@@ -24,8 +41,30 @@ export default class TeamsAddon extends Addon {
     flagResolver: IFlagResolver;
 
     constructor(args: IAddonConfig) {
+        if (args.flagResolver.isEnabled('teamsIntegrationChangeRequests')) {
+            teamsDefinition.events = [
+                ...teamsDefinition.events!,
+                CHANGE_ADDED,
+                CHANGE_DISCARDED,
+                CHANGE_EDITED,
+                CHANGE_REQUEST_APPLIED,
+                CHANGE_REQUEST_APPROVAL_ADDED,
+                CHANGE_REQUEST_APPROVED,
+                CHANGE_REQUEST_CANCELLED,
+                CHANGE_REQUEST_CREATED,
+                CHANGE_REQUEST_DISCARDED,
+                CHANGE_REQUEST_REJECTED,
+                CHANGE_REQUEST_SENT_TO_REVIEW,
+                CHANGE_REQUEST_SCHEDULED,
+                CHANGE_REQUEST_SCHEDULED_APPLICATION_SUCCESS,
+                CHANGE_REQUEST_SCHEDULED_APPLICATION_FAILURE,
+                CHANGE_REQUEST_SCHEDULE_SUSPENDED,
+            ];
+        }
         super(teamsDefinition, args);
-        this.msgFormatter = new FeatureEventFormatterMd(args.unleashUrl);
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: args.unleashUrl,
+        });
         this.flagResolver = args.flagResolver;
     }
 
@@ -105,13 +144,6 @@ export default class TeamsAddon extends Addon {
             state = 'failed';
             const failedMessage = `Teams webhook request failed with status code: ${res.status}.`;
             stateDetails.push(failedMessage);
-            if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-                this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                    result: state,
-                    destination: 'teams',
-                });
-            }
-
             this.logger.warn(failedMessage);
         }
 

@@ -45,6 +45,7 @@ export interface ISessionOption {
     db: boolean;
     clearSiteDataOnLogout: boolean;
     cookieName: string;
+    maxParallelSessions: number;
 }
 
 export interface IVersionOption {
@@ -54,7 +55,13 @@ export interface IVersionOption {
 export enum IAuthType {
     OPEN_SOURCE = 'open-source',
     DEMO = 'demo',
+    /**
+     * Self-hosted by the customer. Should eventually be renamed to better reflect this.
+     */
     ENTERPRISE = 'enterprise',
+    /**
+     * Hosted by Unleash.
+     */
     HOSTED = 'hosted',
     CUSTOM = 'custom',
     NONE = 'none',
@@ -143,6 +150,7 @@ export interface IUnleashOptions {
     metricsRateLimiting?: Partial<IMetricsRateLimiting>;
     dailyMetricsStorageDays?: number;
     rateLimiting?: Partial<IRateLimiting>;
+    isOss?: boolean;
     resourceLimits?: Partial<
         Pick<
             ResourceLimitsSchema,
@@ -156,6 +164,7 @@ export interface IUnleashOptions {
             | 'segments'
         >
     >;
+    userInactivityThresholdInDays?: number;
 }
 
 export interface IEmailOption {
@@ -166,6 +175,7 @@ export interface IEmailOption {
     smtpuser?: string;
     smtppass?: string;
     transportOptions?: SMTPTransport.Options;
+    optionalHeaders?: Record<string, unknown>;
 }
 
 export interface IListeningPipe {
@@ -271,6 +281,9 @@ export interface IUnleashConfig {
     publicFolder?: string;
     disableScheduler?: boolean;
     isEnterprise: boolean;
+    isOss: boolean;
     rateLimiting: IRateLimiting;
     feedbackUriPath?: string;
+    openAIAPIKey?: string;
+    userInactivityThresholdInDays: number;
 }

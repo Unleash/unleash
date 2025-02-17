@@ -86,8 +86,7 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
             refetchFeature();
             refetchFeatureImmutable();
             setToastData({
-                title: `Strategy created`,
-                text: `Successfully copied a strategy to ${targetEnvironment}`,
+                text: `Strategy copied to ${targetEnvironment}`,
                 type: 'success',
             });
         } catch (error) {
@@ -99,6 +98,8 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
     const enabled = environments.some((environment) =>
         checkAccess(CREATE_FEATURE_STRATEGY, environment),
     );
+
+    const label = `Copy to environment${enabled ? '' : ' (Access denied)'}`;
 
     return (
         <div>
@@ -116,15 +117,12 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
                     />
                 }
             />
-            <Tooltip
-                title={`Copy to environment${
-                    enabled ? '' : ' (Access denied)'
-                }`}
-            >
+            <Tooltip title={label}>
                 <div>
                     <IconButton
                         size='large'
                         id={`copy-strategy-icon-menu-${strategy.id}`}
+                        aria-label={label}
                         aria-controls={open ? 'basic-menu' : undefined}
                         aria-haspopup='true'
                         aria-expanded={open ? 'true' : undefined}

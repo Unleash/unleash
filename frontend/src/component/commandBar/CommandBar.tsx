@@ -21,12 +21,17 @@ import { CommandPageSuggestions } from './CommandPageSuggestions';
 import { useRoutes } from 'component/layout/MainLayout/NavigationSidebar/useRoutes';
 import { useAsyncDebounce } from 'react-table';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { CommandSearchFeatures } from './CommandSearchFeatures';
+import {
+    type CommandQueryCounter,
+    CommandSearchFeatures,
+} from './CommandSearchFeatures';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { CommandQuickSuggestions } from './CommandQuickSuggestions';
 import { CommandSearchPages } from './CommandSearchPages';
 import { CommandBarFeedback } from './CommandBarFeedback';
 import { RecentlyVisitedRecorder } from './RecentlyVisitedRecorder';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 
 export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     position: 'absolute',
@@ -47,16 +52,20 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
 }));
 
 const StyledContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'active',
+    shouldForwardProp: (prop) =>
+        prop !== 'active' && prop !== 'frontendHeaderRedesign',
 })<{
     active: boolean | undefined;
-}>(({ theme, active }) => ({
+    frontendHeaderRedesign?: boolean;
+}>(({ theme, active, frontendHeaderRedesign }) => ({
     border: `1px solid transparent`,
     display: 'flex',
     flexGrow: 1,
     alignItems: 'center',
     position: 'relative',
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: frontendHeaderRedesign
+        ? theme.palette.background.application
+        : theme.palette.background.paper,
     maxWidth: active ? '100%' : '400px',
     [theme.breakpoints.down('md')]: {
         marginTop: theme.spacing(1),
@@ -64,10 +73,16 @@ const StyledContainer = styled('div', {
     },
 }));
 
-const StyledSearch = styled('div')(({ theme }) => ({
+const StyledSearch = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
+})<{
+    frontendHeaderRedesign?: boolean;
+}>(({ theme, frontendHeaderRedesign }) => ({
     display: 'flex',
     alignItems: 'center',
-    backgroundColor: theme.palette.background.elevation1,
+    backgroundColor: frontendHeaderRedesign
+        ? theme.palette.background.paper
+        : theme.palette.background.elevation1,
     border: `1px solid ${theme.palette.neutral.border}`,
     borderRadius: theme.shape.borderRadiusExtraLarge,
     padding: '3px 5px 3px 12px',
@@ -75,10 +90,16 @@ const StyledSearch = styled('div')(({ theme }) => ({
     zIndex: 3,
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
+const StyledInputBase = styled(InputBase, {
+    shouldForwardProp: (prop) => prop !== 'frontendHeaderRedesign',
+})<{
+    frontendHeaderRedesign?: boolean;
+}>(({ theme, frontendHeaderRedesign }) => ({
     width: '100%',
     minWidth: '300px',
-    backgroundColor: theme.palette.background.elevation1,
+    backgroundColor: frontendHeaderRedesign
+        ? theme.palette.background.paper
+        : theme.palette.background.elevation1,
 }));
 
 const StyledClose = styled(Close)(({ theme }) => ({
@@ -94,6 +115,7 @@ interface IPageRouteInfo {
 
 export const CommandBar = () => {
     const { trackEvent } = usePlausibleTracker();
+    const frontendHeaderRedesign = useUiFlag('frontendHeaderRedesign');
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchContainerRef = useRef<HTMLInputElement>(null);
     const [showSuggestions, setShowSuggestions] = useState(false);
@@ -105,7 +127,8 @@ export const CommandBar = () => {
     const [searchedPages, setSearchedPages] = useState<
         CommandResultGroupItem[]
     >([]);
-    const [searchedFlagCount, setSearchedFlagCount] = useState(0);
+    const [searchedFlagCount, setSearchedFlagCount] =
+        useState<CommandQueryCounter>({ query: '', count: 0 });
     const [hasNoResults, setHasNoResults] = useState(false);
     const [value, setValue] = useState<string>('');
     const { routes } = useRoutes();
@@ -155,7 +178,8 @@ export const CommandBar = () => {
             query.length !== 0 &&
             mappedProjects.length === 0 &&
             mappedPages.length === 0 &&
-            searchedFlagCount === 0;
+            searchedFlagCount.count === 0 &&
+            searchedFlagCount.query === query;
         if (noResultsFound) {
             trackEvent('command-bar', {
                 props: {
@@ -169,7 +193,7 @@ export const CommandBar = () => {
 
     useEffect(() => {
         debouncedSetSearchState(value);
-    }, [searchedFlagCount]);
+    }, [JSON.stringify(searchedFlagCount)]);
 
     const onSearchChange = (value: string) => {
         debouncedSetSearchState(value);
@@ -265,6 +289,10 @@ export const CommandBar = () => {
         },
     );
 
+    useKeyboardShortcut({ key: 'Tab' }, () => {
+        setShowSuggestions(false);
+    });
+
     useOnClickOutside([searchContainerRef], hideSuggestions);
     const onKeyDown = (event: React.KeyboardEvent) => {
         if (event.key === 'Escape') {
@@ -278,19 +306,15 @@ export const CommandBar = () => {
         }
     };
 
-    const onBlur = (evt: React.FocusEvent) => {
-        if (
-            evt.relatedTarget === null ||
-            !searchContainerRef.current?.contains(evt.relatedTarget)
-        ) {
-            hideSuggestions();
-        }
-    };
-
     return (
-        <StyledContainer ref={searchContainerRef} active={showSuggestions}>
+        <StyledContainer
+            ref={searchContainerRef}
+            active={showSuggestions}
+            frontendHeaderRedesign={frontendHeaderRedesign}
+        >
             <RecentlyVisitedRecorder />
             <StyledSearch
+                frontendHeaderRedesign={frontendHeaderRedesign}
                 sx={{
                     borderBottomLeftRadius: (theme) =>
                         showSuggestions
@@ -312,11 +336,16 @@ export const CommandBar = () => {
                         color: (theme) => theme.palette.action.disabled,
                     }}
                 />
+
+                <ScreenReaderOnly>
+                    <label htmlFor={'command-bar-input'}>{placeholder}</label>
+                </ScreenReaderOnly>
                 <StyledInputBase
+                    id='command-bar-input'
+                    frontendHeaderRedesign={frontendHeaderRedesign}
                     inputRef={searchInputRef}
                     placeholder={placeholder}
                     inputProps={{
-                        'aria-label': placeholder,
                         'data-testid': SEARCH_INPUT,
                     }}
                     value={value}
@@ -353,10 +382,7 @@ export const CommandBar = () => {
             <ConditionallyRender
                 condition={Boolean(value) && showSuggestions}
                 show={
-                    <CommandResultsPaper
-                        onKeyDownCapture={onKeyDown}
-                        onBlur={onBlur}
-                    >
+                    <CommandResultsPaper onKeyDownCapture={onKeyDown}>
                         {searchString !== undefined && (
                             <CommandSearchFeatures
                                 searchString={searchString}
@@ -394,10 +420,7 @@ export const CommandBar = () => {
                 }
                 elseShow={
                     showSuggestions && (
-                        <CommandResultsPaper
-                            onKeyDownCapture={onKeyDown}
-                            onBlur={onBlur}
-                        >
+                        <CommandResultsPaper onKeyDownCapture={onKeyDown}>
                             <CommandQuickSuggestions
                                 routes={allRoutes}
                                 onClick={clearSearchValue}

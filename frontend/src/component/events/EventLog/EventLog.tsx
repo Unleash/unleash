@@ -9,7 +9,6 @@ import theme from 'themes/theme';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { styled } from '@mui/system';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { EventLogFilters } from './EventLogFilters';
 import { useEventLogSearch } from './useEventLogSearch';
 import { StickyPaginationBar } from 'component/common/Table/StickyPaginationBar/StickyPaginationBar';
@@ -51,7 +50,7 @@ const Placeholder = styled('li')({
 
 export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     const { isEnterprise } = useUiConfig();
-    const showFilters = useUiFlag('newEventSearch') && isEnterprise();
+    const showFilters = isEnterprise();
     const {
         events,
         total,
@@ -100,7 +99,7 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
         />
     );
 
-    const resultComponent = () => {
+    const ResultComponent = () => {
         if (loading) {
             return (
                 <StyledEventsList>
@@ -131,55 +130,57 @@ export const EventLog = ({ title, project, feature }: IEventLogProps) => {
     };
 
     return (
-        <PageContent
-            bodyClass={'no-padding'}
-            header={
-                <PageHeader
-                    title={`${title} (${total})`}
-                    actions={
-                        <>
-                            {showDataSwitch}
-                            <EventActions events={events} />
-                            {!isSmallScreen && searchInputField}
-                        </>
-                    }
-                >
-                    {isSmallScreen && searchInputField}
-                </PageHeader>
-            }
-        >
-            <EventResultWrapper ref={ref} withFilters={showFilters}>
+        <>
+            <PageContent
+                bodyClass={'no-padding'}
+                header={
+                    <PageHeader
+                        title={`${title} (${total})`}
+                        actions={
+                            <>
+                                {showDataSwitch}
+                                <EventActions events={events} />
+                                {!isSmallScreen && searchInputField}
+                            </>
+                        }
+                    >
+                        {isSmallScreen && searchInputField}
+                    </PageHeader>
+                }
+            >
+                <EventResultWrapper ref={ref} withFilters={showFilters}>
+                    <ConditionallyRender
+                        condition={showFilters}
+                        show={
+                            <StyledFilters
+                                logType={
+                                    project
+                                        ? 'project'
+                                        : feature
+                                          ? 'flag'
+                                          : 'global'
+                                }
+                                state={filterState}
+                                onChange={setTableState}
+                            />
+                        }
+                    />
+                    <ResultComponent />
+                </EventResultWrapper>
                 <ConditionallyRender
-                    condition={showFilters}
+                    condition={total > 25}
                     show={
-                        <StyledFilters
-                            logType={
-                                project
-                                    ? 'project'
-                                    : feature
-                                      ? 'flag'
-                                      : 'global'
-                            }
-                            state={filterState}
-                            onChange={setTableState}
+                        <StickyPaginationBar
+                            totalItems={total}
+                            pageSize={pagination.pageSize}
+                            pageIndex={pagination.currentPage}
+                            fetchPrevPage={pagination.prevPage}
+                            fetchNextPage={pagination.nextPage}
+                            setPageLimit={pagination.setPageLimit}
                         />
                     }
                 />
-                {resultComponent()}
-            </EventResultWrapper>
-            <ConditionallyRender
-                condition={total > 25}
-                show={
-                    <StickyPaginationBar
-                        totalItems={total}
-                        pageSize={pagination.pageSize}
-                        pageIndex={pagination.currentPage}
-                        fetchPrevPage={pagination.prevPage}
-                        fetchNextPage={pagination.nextPage}
-                        setPageLimit={pagination.setPageLimit}
-                    />
-                }
-            />
-        </PageContent>
+            </PageContent>
+        </>
     );
 };

@@ -2,20 +2,13 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { CREATE_FEATURE } from 'component/providers/AccessProvider/permissions';
-import {
-    type ReactNode,
-    useState,
-    useContext,
-    type FormEvent,
-    useMemo,
-} from 'react';
+import { type ReactNode, useState, type FormEvent, useMemo } from 'react';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
 import { Dialog, styled } from '@mui/material';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { Limit } from 'component/common/Limit/Limit';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import UIContext from 'contexts/UIContext';
 import useFeatureForm from 'component/feature/hooks/useFeatureForm';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import FlagIcon from '@mui/icons-material/Flag';
@@ -36,10 +29,13 @@ import { MultiSelectConfigButton } from 'component/common/DialogFormTemplate/Con
 import type { ITag } from 'interfaces/tags';
 import { ToggleConfigButton } from 'component/common/DialogFormTemplate/ConfigButtons/ToggleConfigButton';
 import { useFlagLimits } from './useFlagLimits';
+import { useFeatureCreatedFeedback } from './hooks/useFeatureCreatedFeedback';
 
 interface ICreateFeatureDialogProps {
     open: boolean;
     onClose: () => void;
+    skipNavigationOnComplete?: boolean;
+    onSuccess?: () => void;
 }
 
 const StyledDialog = styled(Dialog)(({ theme }) => ({
@@ -78,22 +74,33 @@ const configButtonData = {
 export const CreateFeatureDialog = ({
     open,
     onClose,
+    onSuccess,
+    skipNavigationOnComplete,
 }: ICreateFeatureDialogProps) => {
     if (open) {
         // wrap the inner component so that we only fetch data etc
         // when the dialog is actually open.
-        return <CreateFeatureDialogContent open={open} onClose={onClose} />;
+        return (
+            <CreateFeatureDialogContent
+                open={open}
+                onClose={onClose}
+                skipNavigationOnComplete={skipNavigationOnComplete}
+                onSuccess={onSuccess}
+            />
+        );
     }
 };
 
 const CreateFeatureDialogContent = ({
     open,
     onClose,
+    skipNavigationOnComplete,
+    onSuccess,
 }: ICreateFeatureDialogProps) => {
     const { setToastData, setToastApiError } = useToast();
-    const { setShowFeedback } = useContext(UIContext);
     const { uiConfig, isOss } = useUiConfig();
     const navigate = useNavigate();
+    const openFeatureCreatedFeedback = useFeatureCreatedFeedback();
 
     const {
         type,
@@ -153,14 +160,16 @@ const CreateFeatureDialogContent = ({
             const payload = getTogglePayload();
             try {
                 await createFeatureToggle(project, payload);
-                navigate(`/projects/${project}/features/${name}`);
+                if (!skipNavigationOnComplete) {
+                    navigate(`/projects/${project}/features/${name}`);
+                }
                 setToastData({
-                    title: 'Flag created successfully',
-                    text: 'Now you can start using your flag.',
-                    confetti: true,
+                    text: 'Flag created successfully',
                     type: 'success',
                 });
-                setShowFeedback(true);
+                onClose();
+                onSuccess?.();
+                openFeatureCreatedFeedback();
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }

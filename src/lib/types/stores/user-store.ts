@@ -38,5 +38,7 @@ export interface IUserStore extends Store<IUser, number> {
     incLoginAttempts(user: IUser): Promise<void>;
     successfullyLogin(user: IUser): Promise<number>;
     count(): Promise<number>;
+    countRecentlyDeleted(): Promise<number>;
     countServiceAccounts(): Promise<number>;
+    deleteScimUsers(): Promise<void>;
 }

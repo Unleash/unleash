@@ -1,4 +1,4 @@
-import { Fragment, useMemo, type VFC } from 'react';
+import { type FC, Fragment, useMemo } from 'react';
 import { Alert, Box, Chip, Link, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
@@ -21,6 +21,7 @@ import { BuiltInStrategies } from 'utils/strategyNames';
 
 interface IStrategyExecutionProps {
     strategy: IFeatureStrategyPayload | CreateFeatureStrategySchema;
+    displayGroupId?: boolean;
 }
 
 const StyledContainer = styled(Box, {
@@ -47,7 +48,9 @@ const CustomStrategyDeprecationWarning = () => (
         Custom strategies are deprecated and may be removed in a future major
         version. Consider rewriting this strategy as a predefined strategy with{' '}
         <Link
-            href={'https://docs.getunleash.io/reference/strategy-constraints'}
+            href={
+                'https://docs.getunleash.io/reference/activation-strategies#constraints'
+            }
             target='_blank'
             variant='body2'
         >
@@ -56,7 +59,7 @@ const CustomStrategyDeprecationWarning = () => (
     </Alert>
 );
 
-const NoItems: VFC = () => (
+const NoItems: FC = () => (
     <Box sx={{ px: 3, color: 'text.disabled' }}>
         This strategy does not have constraints or parameters.
     </Box>
@@ -73,8 +76,9 @@ const StyledValueSeparator = styled('span')(({ theme }) => ({
     color: theme.palette.neutral.main,
 }));
 
-export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
+export const StrategyExecution: FC<IStrategyExecutionProps> = ({
     strategy,
+    displayGroupId = false,
 }) => {
     const { parameters, constraints = [] } = strategy;
     const stickiness = parameters?.stickiness;
@@ -131,6 +135,18 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
                                     is included.
                                 </span>
                             </div>
+                            {displayGroupId && parameters.groupId && (
+                                <Box
+                                    sx={(theme) => ({
+                                        ml: 1,
+                                        color: theme.palette.info.contrastText,
+                                    })}
+                                >
+                                    <Badge color='info'>
+                                        GroupId: {parameters.groupId}
+                                    </Badge>
+                                </Box>
+                            )}
                         </StyledValueContainer>
                     );
                 }

@@ -1,7 +1,6 @@
 import type React from 'react';
 import { type FormEvent, useState } from 'react';
 import {
-    Autocomplete,
     Button,
     capitalize,
     Checkbox,
@@ -40,6 +39,7 @@ import { MultipleRoleSelect } from 'component/common/MultipleRoleSelect/Multiple
 import type { IUserProjectRole } from '../../../../interfaces/userProjectRoles';
 import { useCheckProjectPermissions } from 'hooks/useHasAccess';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
+import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
 
 const StyledForm = styled('form')(() => ({
     display: 'flex',
@@ -233,7 +233,7 @@ export const ProjectAccessAssign = ({
             refetchProjectAccess();
             navigate(GO_BACK);
             setToastData({
-                title: `${selectedOptions.length} ${
+                text: `${selectedOptions.length} ${
                     selectedOptions.length === 1 ? 'access' : 'accesses'
                 } ${!edit ? 'assigned' : 'edited'} successfully`,
                 type: 'success',
@@ -267,7 +267,7 @@ export const ProjectAccessAssign = ({
 
     const createRootGroupWarning = (group?: IGroup): string | undefined => {
         if (group && Boolean(group.rootRole)) {
-            return 'This group has an Admin or Editor role associated with it. Groups with a root role association cannot be assigned to projects, and users in this group already have the role applied globally.';
+            return 'This group has a root role associated with it. Groups with a root role association cannot be assigned to projects, and users in this group already have the role applied globally.';
         }
     };
 
@@ -339,6 +339,7 @@ export const ProjectAccessAssign = ({
             userRoles.some((userrole) => role.id === userrole.id),
         );
     }
+
     return (
         <SidebarModal
             open
@@ -362,7 +363,7 @@ export const ProjectAccessAssign = ({
                             Select the {entityType}
                         </StyledInputDescription>
                         <StyledAutocompleteWrapper>
-                            <Autocomplete
+                            <AutocompleteVirtual
                                 data-testid={PA_USERS_GROUPS_ID}
                                 size='small'
                                 multiple

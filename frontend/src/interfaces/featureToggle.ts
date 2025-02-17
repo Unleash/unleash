@@ -1,4 +1,4 @@
-import type { CreateFeatureSchemaType } from 'openapi';
+import type { CreateFeatureSchemaType, FeatureSchema } from 'openapi';
 import type { IFeatureStrategy } from './strategy';
 import type { ITag } from './tags';
 
@@ -34,7 +34,7 @@ export type ILastSeenEnvironments = Pick<
 >;
 
 export type Lifecycle = {
-    stage: 'initial' | 'pre-live' | 'live' | 'completed' | 'archived';
+    stage: Required<FeatureSchema>['lifecycle']['stage'];
     status?: string;
     enteredStageAt: string;
 };

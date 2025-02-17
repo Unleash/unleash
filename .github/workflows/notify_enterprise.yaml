@@ -29,10 +29,10 @@ jobs:
           github-token: ${{ secrets.UNLEASH_CI_BUILDER_GITHUB_TOKEN }}
           script: |
             await github.rest.actions.createWorkflowDispatch({
-              owner: 'ivarconr',
+              owner: 'bricks-software',
               repo: 'unleash-enterprise',
               workflow_id: 'cicd.yaml',
-              ref: 'master',
+              ref: 'main',
               inputs: {
                  commit: "${{ github.event.head_commit.id }}",
                  actor: ${{ toJSON(env.COMMIT_ACTOR) }},

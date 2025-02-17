@@ -24,6 +24,11 @@ const StyledChip = styled(
               backgroundColor: theme.palette.secondary.light,
           }
         : {}),
+
+    ':focus-visible': {
+        outline: `1px solid ${theme.palette.primary.main}`,
+        borderColor: theme.palette.primary.main,
+    },
 }));
 
 const StyledLabel = styled('div')(({ theme }) => ({
@@ -31,6 +36,7 @@ const StyledLabel = styled('div')(({ theme }) => ({
     alignItems: 'center',
     justifyContent: 'space-between',
     fontWeight: theme.typography.fontWeightBold,
+    minHeight: theme.spacing(3.5),
 }));
 
 const StyledOptions = styled('button')(({ theme }) => ({

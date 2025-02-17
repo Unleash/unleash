@@ -1,9 +1,9 @@
-const {
+import {
     enrichAdditional,
     modifyContent,
     getRepoData,
     getUrls,
-} = require('./shared');
+} from './shared';
 
 // Type definitions
 //
@@ -27,7 +27,7 @@ const SERVER_SIDE_SDK = 'server-side';
 const serverSideSdks = {
     'unleash-client-go': {
         sidebarName: 'Go',
-        branch: 'v3',
+        branch: 'v4',
     },
     'unleash-client-java': {
         sidebarName: 'Java',
@@ -117,7 +117,7 @@ const modifyContent2 = modifyContent({
     getAdditionalAdmonitions: getAdmonitions,
 });
 
-module.exports.sdks = {
+export const sdks = {
     urls: getUrls(SDKS),
     modifyContent: modifyContent2,
 };

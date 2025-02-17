@@ -214,17 +214,26 @@ export class DependentFeaturesService {
         projectId: string,
         auditUser: IAuditUser,
     ): Promise<void> {
-        await this.dependentFeaturesStore.deleteAll(features);
-        await this.eventService.storeEvents(
-            features.map(
-                (feature) =>
-                    new FeatureDependenciesRemovedEvent({
-                        project: projectId,
-                        featureName: feature,
-                        auditUser,
-                    }),
-            ),
+        const dependencies =
+            await this.dependentFeaturesReadModel.getDependencies(features);
+        const featuresWithDependencies = dependencies.map(
+            (dependency) => dependency.feature,
         );
+        if (featuresWithDependencies.length > 0) {
+            await this.dependentFeaturesStore.deleteAll(
+                featuresWithDependencies,
+            );
+            await this.eventService.storeEvents(
+                featuresWithDependencies.map(
+                    (feature) =>
+                        new FeatureDependenciesRemovedEvent({
+                            project: projectId,
+                            featureName: feature,
+                            auditUser,
+                        }),
+                ),
+            );
+        }
     }
 
     async getPossibleParentFeatures(feature: string): Promise<string[]> {

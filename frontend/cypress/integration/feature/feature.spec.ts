@@ -1,6 +1,7 @@
 ///<reference path="../../global.d.ts" />
 
 describe('feature', () => {
+    const baseUrl = Cypress.config().baseUrl;
     const randomId = String(Math.random()).split('.')[1];
     const featureToggleName = `unleash-e2e-${randomId}`;
     const projectName = `unleash-e2e-project-${randomId}`;
@@ -35,11 +36,24 @@ describe('feature', () => {
     beforeEach(() => {
         cy.login_UI();
         cy.visit('/features');
+
+        cy.intercept('GET', `${baseUrl}/api/admin/ui-config`, (req) => {
+            req.headers['cache-control'] =
+                'no-cache, no-store, must-revalidate';
+            req.on('response', (res) => {
+                if (res.body) {
+                    res.body.flags = {
+                        ...res.body.flags,
+                        flagOverviewRedesign: true,
+                    };
+                }
+            });
+        });
     });
 
     it('can create a feature flag', () => {
         cy.createFeature_UI(featureToggleName, true, projectName);
-        cy.url().should('include', featureToggleName);
+        cy.contains('td', featureToggleName).should('exist');
     });
 
     it('gives an error if a toggle exists with the same name', () => {
@@ -60,17 +74,10 @@ describe('feature', () => {
         cy.addFlexibleRolloutStrategyToFeature_UI({
             featureToggleName,
             project: projectName,
-        }).then(() => {
-            cy.updateFlexibleRolloutStrategy_UI(
-                featureToggleName,
-                projectName,
-            ).then(() =>
-                cy.deleteFeatureStrategy_UI(
-                    featureToggleName,
-                    false,
-                    projectName,
-                ),
-            );
         });
+
+        cy.updateFlexibleRolloutStrategy_UI(featureToggleName, projectName);
+
+        cy.deleteFeatureStrategy_UI(featureToggleName, false, projectName);
     });
 });

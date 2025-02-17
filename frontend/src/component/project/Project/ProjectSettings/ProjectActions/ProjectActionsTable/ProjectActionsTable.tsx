@@ -57,7 +57,7 @@ export const ProjectActionsTable = ({
         try {
             await toggleActionSet(action.id, enabled);
             setToastData({
-                title: `"${action.name}" has been ${
+                text: `"${action.name}" has been ${
                     enabled ? 'enabled' : 'disabled'
                 }`,
                 type: 'success',
@@ -72,7 +72,7 @@ export const ProjectActionsTable = ({
         try {
             await removeActionSet(action.id);
             setToastData({
-                title: `"${action.name}" has been deleted`,
+                text: `"${action.name}" has been deleted`,
                 type: 'success',
             });
             refetch();

@@ -16,8 +16,12 @@ export interface IChangeSchema {
         | 'reorderStrategy'
         | 'archiveFeature'
         | 'updateSegment'
+        | 'deleteSegment'
         | 'addDependency'
-        | 'deleteDependency';
+        | 'deleteDependency'
+        | 'addReleasePlan'
+        | 'deleteReleasePlan'
+        | 'startMilestone';
     payload: string | boolean | object | number | undefined;
 }
 

@@ -126,8 +126,7 @@ const secureHeaders: (config: IUnleashConfig) => RequestHandler = (config) => {
             if (req.method === 'OPTIONS') {
                 return next();
             } else if (
-                req.path.startsWith(`${config.server.baseUriPath}/api/`) &&
-                config.flagResolver.isEnabled('stripHeadersOnAPI')
+                req.path.startsWith(`${config.server.baseUriPath}/api/`)
             ) {
                 apiHelmet(req, res, next);
             } else {

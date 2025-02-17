@@ -7,6 +7,7 @@ import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
 import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
 import type { FeatureTypeCountSchema } from './featureTypeCountSchema';
 import type { ProjectOverviewSchemaMode } from './projectOverviewSchemaMode';
+import type { ProjectOverviewSchemaOnboardingStatus } from './projectOverviewSchemaOnboardingStatus';
 import type { ProjectStatsSchema } from './projectStatsSchema';
 
 /**
@@ -50,6 +51,8 @@ export interface ProjectOverviewSchema {
     mode?: ProjectOverviewSchemaMode;
     /** The name of this project */
     name: string;
+    /** The current onboarding status of the project. */
+    onboardingStatus: ProjectOverviewSchemaOnboardingStatus;
     /** Project statistics */
     stats?: ProjectStatsSchema;
     /**

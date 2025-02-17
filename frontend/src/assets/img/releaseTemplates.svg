@@ -1,0 +1,39 @@
+<svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g clip-path="url(#clip0_28054_15343)">
+<path d="M62.9208 75.54C69.8033 75.54 75.3826 69.9606 75.3826 63.0781C75.3826 56.1957 69.8033 50.6163 62.9208 50.6163C56.0383 50.6163 50.459 56.1957 50.459 63.0781C50.459 69.9606 56.0383 75.54 62.9208 75.54Z" fill="#194049"/>
+<path d="M16.834 71.409V67.2181H12.6431V71.409H16.834Z" fill="#F5A69A"/>
+<path d="M37.8536 15.4618H12.6445V67.2163H37.8536V15.4618Z" fill="#1A4049"/>
+<path d="M37.8554 67.2181H63.0645L63.0645 15.4636H37.8554L37.8554 67.2181Z" fill="#31545C"/>
+<path d="M55.4316 46.9564H21.668V55.1928H55.4316V46.9564Z" fill="#B3DAED"/>
+<g opacity="0.8">
+<mask id="mask0_28054_15343" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="21" y="46" width="17" height="10">
+<path d="M37.8389 46.9564V55.2346L21.668 55.1491V46.9564H37.8389Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_28054_15343)">
+<rect width="114.233" height="158.028" transform="matrix(-0.851658 0.524097 0.524097 0.851658 44.8789 -54.2181)" fill="url(#pattern0_28054_15343)"/>
+</g>
+</g>
+<path d="M55.4316 27.4454H21.668V35.6818H55.4316V27.4454Z" fill="#B3DAED"/>
+<g opacity="0.8">
+<mask id="mask1_28054_15343" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="21" y="27" width="17" height="9">
+<path d="M37.8389 27.4454V35.7236L21.668 35.6382V27.4454H37.8389Z" fill="white"/>
+</mask>
+<g mask="url(#mask1_28054_15343)">
+<rect width="114.233" height="158.028" transform="matrix(-0.851658 0.524097 0.524097 0.851658 44.8789 -73.731)" fill="url(#pattern1_28054_15343)"/>
+</g>
+</g>
+<path d="M56.5577 15.4636H63.0723V8.94908H56.5577V15.4636Z" fill="#F5A69A"/>
+<path d="M63.0728 19.6545H67.2637V15.4636H63.0728V19.6545Z" fill="#F5A69A"/>
+</g>
+<defs>
+<pattern id="pattern0_28054_15343" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_28054_15343" transform="scale(0.00145773 0.00105374)"/>
+</pattern>
+<pattern id="pattern1_28054_15343" patternContentUnits="objectBoundingBox" width="1" height="1">
+<use xlink:href="#image0_28054_15343" transform="scale(0.00145773 0.00105374)"/>
+</pattern>
+<clipPath id="clip0_28054_15343">
+<rect width="80" height="80" fill="white"/>
+</clipPath>
+</defs>
+</svg>

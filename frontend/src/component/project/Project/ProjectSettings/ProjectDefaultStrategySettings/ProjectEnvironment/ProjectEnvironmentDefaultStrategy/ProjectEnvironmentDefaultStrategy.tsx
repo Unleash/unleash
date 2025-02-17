@@ -1,13 +1,17 @@
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
 import { Link } from 'react-router-dom';
 import Edit from '@mui/icons-material/Edit';
 import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 import type { ProjectEnvironmentType } from 'interfaces/environments';
 import { useMemo } from 'react';
 import type { CreateFeatureStrategySchema } from 'openapi';
+import {
+    PROJECT_DEFAULT_STRATEGY_WRITE,
+    UPDATE_PROJECT,
+} from '@server/types/permissions';
+import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
 
 interface ProjectEnvironmentDefaultStrategyProps {
     environment: ProjectEnvironmentType;
@@ -59,7 +63,10 @@ const ProjectEnvironmentDefaultStrategy = ({
                 actions={
                     <>
                         <PermissionIconButton
-                            permission={UPDATE_FEATURE_STRATEGY}
+                            permission={[
+                                PROJECT_DEFAULT_STRATEGY_WRITE,
+                                UPDATE_PROJECT,
+                            ]}
                             environmentId={environmentId}
                             projectId={projectId}
                             component={Link}
@@ -75,6 +82,10 @@ const ProjectEnvironmentDefaultStrategy = ({
                 }
             >
                 <StrategyExecution strategy={strategy} />
+
+                {strategy.variants && strategy.variants.length > 0 ? (
+                    <SplitPreviewSlider variants={strategy.variants} />
+                ) : null}
             </StrategyItemContainer>
         </>
     );

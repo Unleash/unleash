@@ -7,7 +7,6 @@ import { createTestConfig } from '../../../test/config/test-config';
 import { createOnboardingService } from './createOnboardingService';
 import type EventEmitter from 'events';
 import { STAGE_ENTERED, USER_LOGIN } from '../../metric-events';
-import { OnboardingReadModel } from './onboarding-read-model';
 
 let db: ITestDb;
 let stores: IUnleashStores;
@@ -18,13 +17,13 @@ let onboardingReadModel: IOnboardingReadModel;
 beforeAll(async () => {
     db = await dbInit('onboarding_store', getLogger);
     const config = createTestConfig({
-        experimental: { flags: { onboardingMetrics: true } },
+        experimental: { flags: {} },
     });
     stores = db.stores;
     eventBus = config.eventBus;
     onboardingService = createOnboardingService(config)(db.rawDatabase);
     onboardingService.listen();
-    onboardingReadModel = new OnboardingReadModel(db.rawDatabase);
+    onboardingReadModel = db.stores.onboardingReadModel;
 });
 
 afterAll(async () => {
@@ -35,14 +34,78 @@ beforeEach(async () => {
     await stores.featureToggleStore.deleteAll();
     await stores.projectStore.deleteAll();
     await stores.onboardingStore.deleteAll();
+    await stores.userStore.deleteAll();
     jest.useRealTimers();
+});
+
+test('Default project should take first user created instead of project created as start time', async () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date());
+    const { userStore, featureToggleStore, projectStore } = stores;
+
+    // default projects are created in advance and should be ignored
+    await projectStore.create({ id: 'default', name: 'irrelevant' });
+
+    jest.advanceTimersByTime(minutesToMilliseconds(1));
+    const user = await userStore.insert({});
+    await featureToggleStore.create('default', {
+        name: 'test-default',
+        createdByUserId: user.id,
+    });
+
+    jest.advanceTimersByTime(minutesToMilliseconds(1));
+    await onboardingService.insert({
+        type: 'flag-created',
+        flag: 'test-default',
+    });
+    await onboardingService.insert({ type: 'pre-live', flag: 'test-default' });
+    await onboardingService.insert({ type: 'live', flag: 'test-default' });
+
+    const { rows: projectEvents } = await db.rawDatabase.raw(
+        'SELECT * FROM onboarding_events_project',
+    );
+    expect(projectEvents).toMatchObject([
+        { event: 'first-flag', time_to_event: 60, project: 'default' },
+        {
+            event: 'first-pre-live',
+            time_to_event: 60,
+            project: 'default',
+        },
+        { event: 'first-live', time_to_event: 60, project: 'default' },
+    ]);
+});
+
+test('Ignore events for existing customers', async () => {
+    jest.useFakeTimers();
+    jest.setSystemTime(new Date(2024, 8, 2)); // day before we added metrics
+    const { userStore } = stores;
+    await userStore.insert({});
+
+    jest.setSystemTime(new Date());
+    await onboardingService.insert({ type: 'first-user-login' });
+
+    const { rows: instanceEvents } = await db.rawDatabase.raw(
+        'SELECT * FROM onboarding_events_instance',
+    );
+    expect(instanceEvents).toMatchObject([]);
+});
+
+test('Ignore system user in onboarding events', async () => {
+    // system users are not counted towards onboarding metrics
+    await db.rawDatabase.raw('INSERT INTO users (is_system) VALUES (true)');
+
+    await onboardingService.insert({ type: 'first-user-login' });
+
+    const { rows: instanceEvents } = await db.rawDatabase.raw(
+        'SELECT * FROM onboarding_events_instance',
+    );
+    expect(instanceEvents).toMatchObject([]);
 });
 
 test('Storing onboarding events', async () => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date());
-    const { userStore, featureToggleStore, projectStore, projectReadModel } =
-        stores;
+    const { userStore, featureToggleStore, projectStore } = stores;
     const user = await userStore.insert({});
     await projectStore.create({ id: 'test_project', name: 'irrelevant' });
     await featureToggleStore.create('test_project', {
@@ -107,8 +170,7 @@ const reachedOnboardingEvents = (count: number) => {
 test('Reacting to events', async () => {
     jest.useFakeTimers();
     jest.setSystemTime(new Date());
-    const { userStore, featureToggleStore, projectStore, projectReadModel } =
-        stores;
+    const { userStore, featureToggleStore, projectStore } = stores;
     const user = await userStore.insert({});
     await projectStore.create({ id: 'test_project', name: 'irrelevant' });
     await featureToggleStore.create('test_project', {

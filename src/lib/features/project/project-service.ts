@@ -54,6 +54,7 @@ import {
     RoleName,
     SYSTEM_USER_ID,
     type IProjectReadModel,
+    type IOnboardingReadModel,
 } from '../../types';
 import type {
     IProjectAccessModel,
@@ -82,12 +83,14 @@ import type {
     IProjectApplicationsSearchParams,
     IProjectEnterpriseSettingsUpdate,
     IProjectQuery,
+    IProjectsQuery,
 } from './project-store-type';
 import type { IProjectFlagCreatorsReadModel } from './project-flag-creators-read-model.type';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 import type EventEmitter from 'events';
 import type { ApiTokenService } from '../../services/api-token-service';
-import type { TransitionalProjectData } from './project-read-model-type';
+import type { ProjectForUi } from './project-read-model-type';
+import { canGrantProjectRole } from './can-grant-project-role';
 
 type Days = number;
 type Count = number;
@@ -164,6 +167,8 @@ export default class ProjectService {
 
     private projectReadModel: IProjectReadModel;
 
+    private onboardingReadModel: IOnboardingReadModel;
+
     constructor(
         {
             projectStore,
@@ -176,6 +181,7 @@ export default class ProjectService {
             accountStore,
             projectStatsStore,
             projectReadModel,
+            onboardingReadModel,
         }: Pick<
             IUnleashStores,
             | 'projectStore'
@@ -188,6 +194,7 @@ export default class ProjectService {
             | 'accountStore'
             | 'projectStatsStore'
             | 'projectReadModel'
+            | 'onboardingReadModel'
         >,
         config: IUnleashConfig,
         accessService: AccessService,
@@ -220,17 +227,17 @@ export default class ProjectService {
         this.resourceLimits = config.resourceLimits;
         this.eventBus = config.eventBus;
         this.projectReadModel = projectReadModel;
+        this.onboardingReadModel = onboardingReadModel;
     }
 
     async getProjects(
-        query?: IProjectQuery,
+        query?: IProjectQuery & IProjectsQuery,
         userId?: number,
-    ): Promise<TransitionalProjectData[]> {
-        const getProjects = this.flagResolver.isEnabled('useProjectReadModel')
-            ? () => this.projectReadModel.getProjectsForAdminUi(query, userId)
-            : () => this.projectStore.getProjectsWithCounts(query, userId);
-
-        const projects = await getProjects();
+    ): Promise<ProjectForUi[]> {
+        const projects = await this.projectReadModel.getProjectsForAdminUi(
+            query,
+            userId,
+        );
 
         if (userId) {
             const projectAccess =
@@ -250,15 +257,9 @@ export default class ProjectService {
     }
 
     async addOwnersToProjects(
-        projects: TransitionalProjectData[],
-    ): Promise<TransitionalProjectData[]> {
-        const anonymizeProjectOwners = this.flagResolver.isEnabled(
-            'anonymizeProjectOwners',
-        );
-        return this.projectOwnersReadModel.addOwners(
-            projects,
-            anonymizeProjectOwners,
-        );
+        projects: ProjectForUi[],
+    ): Promise<ProjectForUi[]> {
+        return this.projectOwnersReadModel.addOwners(projects);
     }
 
     async getProject(id: string): Promise<IProject> {
@@ -493,14 +494,12 @@ export default class ProjectService {
     }
 
     private async validateActiveProject(projectId: string) {
-        if (this.flagResolver.isEnabled('archiveProjects')) {
-            const hasActiveProject =
-                await this.projectStore.hasActiveProject(projectId);
-            if (!hasActiveProject) {
-                throw new NotFoundError(
-                    `Active project with id ${projectId} does not exist`,
-                );
-            }
+        const hasActiveProject =
+            await this.projectStore.hasActiveProject(projectId);
+        if (!hasActiveProject) {
+            throw new NotFoundError(
+                `Active project with id ${projectId} does not exist`,
+            );
         }
     }
 
@@ -934,15 +933,38 @@ export default class ProjectService {
             userAddingAccess.id,
             projectId,
         );
+
         if (
             this.isAdmin(userAddingAccess.id, userRoles) ||
             this.isProjectOwner(userRoles, projectId)
         ) {
             return true;
         }
-        return rolesBeingAdded.every((roleId) =>
-            userRoles.some((userRole) => userRole.id === roleId),
-        );
+
+        // Users may have access to multiple projects, so we need to filter out the permissions based on this project.
+        // Since the project roles are just collections of permissions that are not tied to a project in the database
+        // not filtering here might lead to false positives as they may have the permission in another project.
+        if (this.flagResolver.isEnabled('projectRoleAssignment')) {
+            const filteredUserPermissions = userPermissions.filter(
+                (permission) => permission.project === projectId,
+            );
+
+            const rolesToBeAssignedData = await Promise.all(
+                rolesBeingAdded.map((role) => this.accessService.getRole(role)),
+            );
+            const rolesToBeAssignedPermissions = rolesToBeAssignedData.flatMap(
+                (role) => role.permissions,
+            );
+
+            return canGrantProjectRole(
+                filteredUserPermissions,
+                rolesToBeAssignedPermissions,
+            );
+        } else {
+            return rolesBeingAdded.every((roleId) =>
+                userRoles.some((userRole) => userRole.id === roleId),
+            );
+        }
     }
 
     async addAccess(
@@ -1124,8 +1146,8 @@ export default class ProjectService {
                 projectId,
             );
             const groups = await this.groupService.getProjectGroups(projectId);
-            const roleGroups = groups.filter(
-                (g) => g.roleId === currentRole.id,
+            const roleGroups = groups.filter((g) =>
+                g.roles?.includes(currentRole.id),
             );
             if (users.length + roleGroups.length < 2) {
                 throw new ProjectWithoutOwnerError();
@@ -1242,11 +1264,11 @@ export default class ProjectService {
         auditUser: IAuditUser,
     ): Promise<void> {
         const usersWithRoles = await this.getAccessToProject(projectId);
-        const user = usersWithRoles.groups.find((u) => u.id === userId);
-        if (!user)
+        const userGroup = usersWithRoles.groups.find((u) => u.id === userId);
+        if (!userGroup)
             throw new ValidationError('Unexpected empty user', [], undefined);
-        const currentRole = usersWithRoles.roles.find(
-            (r) => r.id === user.roleId,
+        const currentRole = usersWithRoles.roles.find((r) =>
+            userGroup.roles?.includes(r.id),
         );
         if (!currentRole)
             throw new ValidationError(
@@ -1317,7 +1339,7 @@ export default class ProjectService {
     }
 
     async getProjectsByUser(userId: number): Promise<string[]> {
-        return this.projectStore.getProjectsByUser(userId);
+        return this.projectReadModel.getProjectsByUser(userId);
     }
 
     async getProjectRoleUsage(roleId: number): Promise<IProjectRoleUsage[]> {
@@ -1491,6 +1513,7 @@ export default class ProjectService {
             members,
             favorite,
             projectStats,
+            onboardingStatus,
         ] = await Promise.all([
             this.projectStore.get(projectId),
             this.projectStore.getEnvironmentsForProject(projectId),
@@ -1507,6 +1530,7 @@ export default class ProjectService {
                   })
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
+            this.onboardingReadModel.getOnboardingStatusForProject(projectId),
         ]);
 
         return {
@@ -1520,10 +1544,11 @@ export default class ProjectService {
             health: project.health || 0,
             favorite: favorite,
             updatedAt: project.updatedAt,
-            ...(this.flagResolver.isEnabled('archiveProjects')
-                ? { archivedAt: project.archivedAt }
-                : {}),
+            archivedAt: project.archivedAt,
             createdAt: project.createdAt,
+            onboardingStatus: onboardingStatus ?? {
+                status: 'onboarding-started',
+            },
             environments,
             featureTypeCounts,
             members,

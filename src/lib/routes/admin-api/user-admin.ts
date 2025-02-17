@@ -55,7 +55,6 @@ import {
     type CreateUserResponseSchema,
 } from '../../openapi/spec/create-user-response-schema';
 import type { IRoleWithPermissions } from '../../types/stores/access-store';
-import idNumberMiddleware from '../../middleware/id-number-middleware';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -144,6 +143,17 @@ export default class UserAdminController extends Controller {
                     operationId: 'changeUserPassword',
                     summary: 'Change password for a user',
                     description: 'Change password for a user as an admin',
+                    parameters: [
+                        {
+                            name: 'id',
+                            in: 'path',
+                            required: true,
+                            schema: {
+                                type: 'integer',
+                            },
+                            description: 'a user id',
+                        },
+                    ],
                     requestBody: createRequestSchema('passwordSchema'),
                     responses: {
                         200: emptyResponse,
@@ -257,6 +267,15 @@ export default class UserAdminController extends Controller {
                         'Gets a list of permissions for a user, additional project and environment can be specified.',
                     parameters: [
                         {
+                            name: 'id',
+                            in: 'path',
+                            required: true,
+                            schema: {
+                                type: 'integer',
+                            },
+                            description: 'a user id',
+                        },
+                        {
                             name: 'project',
                             in: 'query',
                             required: false,
@@ -341,12 +360,22 @@ export default class UserAdminController extends Controller {
                     operationId: 'getUser',
                     summary: 'Get user',
                     description: 'Will return a single user by id',
+                    parameters: [
+                        {
+                            name: 'id',
+                            in: 'path',
+                            required: true,
+                            schema: {
+                                type: 'integer',
+                            },
+                            description: 'a user id',
+                        },
+                    ],
                     responses: {
                         200: createResponseSchema('userSchema'),
                         ...getStandardResponses(400, 401, 404),
                     },
                 }),
-                idNumberMiddleware(),
             ],
         });
 
@@ -367,9 +396,11 @@ export default class UserAdminController extends Controller {
                         {
                             name: 'id',
                             in: 'path',
+                            required: true,
                             schema: {
                                 type: 'integer',
                             },
+                            description: 'a user id',
                         },
                     ],
                     responses: {
@@ -377,7 +408,26 @@ export default class UserAdminController extends Controller {
                         ...getStandardResponses(400, 401, 403, 404),
                     },
                 }),
-                idNumberMiddleware(),
+            ],
+        });
+
+        this.route({
+            method: 'delete',
+            path: '/scim-users',
+            acceptAnyContentType: true,
+            handler: this.deleteScimUsers,
+            permission: ADMIN,
+            middleware: [
+                openApiService.validPath({
+                    tags: ['Users'],
+                    operationId: 'deleteScimUsers',
+                    summary: 'Delete all SCIM users',
+                    description: 'Deletes all users managed by SCIM',
+                    responses: {
+                        200: emptyResponse,
+                        ...getStandardResponses(401, 403),
+                    },
+                }),
             ],
         });
 
@@ -393,12 +443,22 @@ export default class UserAdminController extends Controller {
                     operationId: 'deleteUser',
                     summary: 'Delete a user',
                     description: 'Deletes the user with the given userId',
+                    parameters: [
+                        {
+                            name: 'id',
+                            in: 'path',
+                            required: true,
+                            schema: {
+                                type: 'integer',
+                            },
+                            description: 'a user id',
+                        },
+                    ],
                     responses: {
                         200: emptyResponse,
                         ...getStandardResponses(401, 403, 404),
                     },
                 }),
-                idNumberMiddleware(),
             ],
         });
     }
@@ -507,9 +567,12 @@ export default class UserAdminController extends Controller {
         );
     }
 
-    async getUser(req: Request, res: Response<UserSchema>): Promise<void> {
+    async getUser(
+        req: Request<{ id: number }>,
+        res: Response<UserSchema>,
+    ): Promise<void> {
         const { id } = req.params;
-        const user = await this.userService.getUser(Number(id));
+        const user = await this.userService.getUser(id);
 
         this.openApiService.respondWithValidation(
             200,
@@ -568,7 +631,7 @@ export default class UserAdminController extends Controller {
 
     async updateUser(
         req: IAuthRequest<
-            { id: string },
+            { id: number },
             CreateUserResponseSchema,
             UpdateUserSchema
         >,
@@ -578,14 +641,14 @@ export default class UserAdminController extends Controller {
         const { id } = params;
         const { name, email, rootRole } = body;
 
-        await this.throwIfScimUser({ id: Number(id) });
+        await this.throwIfScimUser({ id });
         const normalizedRootRole = Number.isInteger(Number(rootRole))
             ? Number(rootRole)
             : (rootRole as RoleName);
 
         const updateUser = await this.userService.updateUser(
             {
-                id: Number(id),
+                id,
                 name,
                 email,
                 rootRole: normalizedRootRole,
@@ -604,11 +667,12 @@ export default class UserAdminController extends Controller {
         );
     }
 
-    async deleteUser(req: IAuthRequest, res: Response): Promise<void> {
+    async deleteUser(
+        req: IAuthRequest<{ id: number }>,
+        res: Response,
+    ): Promise<void> {
         const { user, params } = req;
         const { id } = params;
-
-        await this.throwIfScimUser({ id: Number(id) });
 
         await this.userService.deleteUser(+id, req.audit);
         res.status(200).send();
@@ -625,13 +689,13 @@ export default class UserAdminController extends Controller {
     }
 
     async changeUserPassword(
-        req: IAuthRequest<{ id: string }, unknown, PasswordSchema>,
+        req: IAuthRequest<{ id: number }, unknown, PasswordSchema>,
         res: Response,
     ): Promise<void> {
         const { id } = req.params;
         const { password } = req.body;
 
-        await this.throwIfScimUser({ id: Number(id) });
+        await this.throwIfScimUser({ id });
 
         await this.userService.changePassword(+id, password);
         res.status(200).send();
@@ -719,5 +783,11 @@ export default class UserAdminController extends Controller {
             Boolean(scimId) ||
             Boolean((await this.userService.getUser(id)).scimId)
         );
+    }
+
+    async deleteScimUsers(req: IAuthRequest, res: Response): Promise<void> {
+        const { audit } = req;
+        await this.userService.deleteScimUsers(audit);
+        res.status(200).send();
     }
 }

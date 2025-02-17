@@ -5,13 +5,11 @@ import { ImportTogglesStore } from './import-toggles-store';
 import FeatureToggleStore from '../feature-toggle/feature-toggle-store';
 import TagStore from '../../db/tag-store';
 import TagTypeStore from '../tag-type/tag-type-store';
-import ProjectStore from '../project/project-store';
 import FeatureTagStore from '../../db/feature-tag-store';
 import StrategyStore from '../../db/strategy-store';
-import ContextFieldStore from '../../db/context-field-store';
+import ContextFieldStore from '../context/context-field-store';
 import FeatureStrategiesStore from '../feature-toggle/feature-toggle-strategies-store';
 import {
-    ContextService,
     FeatureTagService,
     StrategyService,
     TagTypeService,
@@ -28,17 +26,12 @@ import { FeatureEnvironmentStore } from '../../db/feature-environment-store';
 import FakeFeatureToggleStore from '../feature-toggle/fakes/fake-feature-toggle-store';
 import FakeTagStore from '../../../test/fixtures/fake-tag-store';
 import FakeTagTypeStore from '../tag-type/fake-tag-type-store';
-import FakeProjectStore from '../../../test/fixtures/fake-project-store';
 import FakeFeatureTagStore from '../../../test/fixtures/fake-feature-tag-store';
-import FakeContextFieldStore from '../../../test/fixtures/fake-context-field-store';
+import FakeContextFieldStore from '../context/fake-context-field-store';
 import FakeFeatureStrategiesStore from '../feature-toggle/fakes/fake-feature-strategies-store';
 import FakeFeatureEnvironmentStore from '../../../test/fixtures/fake-feature-environment-store';
 import FakeStrategiesStore from '../../../test/fixtures/fake-strategies-store';
-import EventStore from '../events/event-store';
-import {
-    createFakePrivateProjectChecker,
-    createPrivateProjectChecker,
-} from '../private-project/createPrivateProjectChecker';
+import { createPrivateProjectChecker } from '../private-project/createPrivateProjectChecker';
 import type { DeferredServiceFactory } from '../../db/transaction';
 import { DependentFeaturesReadModel } from '../dependent-features/dependent-features-read-model';
 import { FakeDependentFeaturesReadModel } from '../dependent-features/fake-dependent-features-read-model';
@@ -52,16 +45,19 @@ import {
 } from '../events/createEventsService';
 import { SegmentReadModel } from '../segment/segment-read-model';
 import { FakeSegmentReadModel } from '../segment/fake-segment-read-model';
+import {
+    createContextService,
+    createFakeContextService,
+} from '../context/createContextService';
 
 export const createFakeExportImportTogglesService = (
     config: IUnleashConfig,
 ): ExportImportService => {
-    const { getLogger, flagResolver } = config;
+    const { getLogger } = config;
     const importTogglesStore = {} as ImportTogglesStore;
     const featureToggleStore = new FakeFeatureToggleStore();
     const tagStore = new FakeTagStore();
     const tagTypeStore = new FakeTagTypeStore();
-    const projectStore = new FakeProjectStore();
     const featureTagStore = new FakeFeatureTagStore();
     const strategyStore = new FakeStrategiesStore();
     const contextFieldStore = new FakeContextFieldStore();
@@ -69,7 +65,6 @@ export const createFakeExportImportTogglesService = (
     const featureEnvironmentStore = new FakeFeatureEnvironmentStore();
     const { accessService } = createFakeAccessService(config);
     const { featureToggleService } = createFakeFeatureToggleService(config);
-    const privateProjectChecker = createFakePrivateProjectChecker();
 
     const eventService = createFakeEventsService(config);
 
@@ -82,16 +77,7 @@ export const createFakeExportImportTogglesService = (
         { getLogger },
         eventService,
     );
-    const contextService = new ContextService(
-        {
-            projectStore,
-            contextFieldStore,
-            featureStrategiesStore,
-        },
-        { getLogger, flagResolver },
-        eventService,
-        privateProjectChecker,
-    );
+    const contextService = createFakeContextService(config);
     const strategyService = new StrategyService(
         { strategyStore },
         { getLogger },
@@ -108,7 +94,7 @@ export const createFakeExportImportTogglesService = (
 
     const dependentFeaturesService = createFakeDependentFeaturesService(config);
 
-    const exportImportService = new ExportImportService(
+    return new ExportImportService(
         {
             importTogglesStore,
             featureStrategiesStore,
@@ -132,8 +118,6 @@ export const createFakeExportImportTogglesService = (
         dependentFeaturesReadModel,
         segmentReadModel,
     );
-
-    return exportImportService;
 };
 
 export const deferredExportImportTogglesService = (
@@ -150,12 +134,6 @@ export const deferredExportImportTogglesService = (
         );
         const tagStore = new TagStore(db, eventBus, getLogger);
         const tagTypeStore = new TagTypeStore(db, eventBus, getLogger);
-        const projectStore = new ProjectStore(
-            db,
-            eventBus,
-            getLogger,
-            flagResolver,
-        );
         const featureTagStore = new FeatureTagStore(db, eventBus, getLogger);
         const strategyStore = new StrategyStore(db, getLogger);
         const contextFieldStore = new ContextFieldStore(
@@ -172,13 +150,11 @@ export const deferredExportImportTogglesService = (
         const featureEnvironmentStore = new FeatureEnvironmentStore(
             db,
             eventBus,
-            getLogger,
+            config,
         );
-        const eventStore = new EventStore(db, getLogger);
         const accessService = createAccessService(db, config);
         const featureToggleService = createFeatureToggleService(db, config);
-        const privateProjectChecker = createPrivateProjectChecker(db, config);
-
+        createPrivateProjectChecker(db, config);
         const eventService = createEventsService(db, config);
 
         const featureTagService = new FeatureTagService(
@@ -190,16 +166,7 @@ export const deferredExportImportTogglesService = (
             { getLogger },
             eventService,
         );
-        const contextService = new ContextService(
-            {
-                projectStore,
-                contextFieldStore,
-                featureStrategiesStore,
-            },
-            { getLogger, flagResolver },
-            eventService,
-            privateProjectChecker,
-        );
+        const contextService = createContextService(config)(db);
         const strategyService = new StrategyService(
             { strategyStore },
             { getLogger },
@@ -217,7 +184,7 @@ export const deferredExportImportTogglesService = (
         const dependentFeaturesService =
             createDependentFeaturesService(config)(db);
 
-        const exportImportService = new ExportImportService(
+        return new ExportImportService(
             {
                 importTogglesStore,
                 featureStrategiesStore,
@@ -241,8 +208,6 @@ export const deferredExportImportTogglesService = (
             dependentFeaturesReadModel,
             segmentReadModel,
         );
-
-        return exportImportService;
     };
 };
 export const createExportImportTogglesService = (

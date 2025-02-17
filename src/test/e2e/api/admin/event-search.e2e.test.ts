@@ -339,6 +339,66 @@ test('should include dates created on the `to` date', async () => {
     });
 });
 
+test('should not include events before `from` or after `to`', async () => {
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { featureName: 'early-event' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { featureName: 'late-event' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    await eventService.storeEvent({
+        type: FEATURE_CREATED,
+        project: 'default',
+        data: { featureName: 'goldilocks' },
+        createdBy: 'test-user',
+        createdByUserId: TEST_USER_ID,
+        ip: '127.0.0.1',
+    });
+
+    const { events } = await eventService.getEvents();
+    const earlyEvent = events.find((e) => e.data.featureName === 'early-event');
+    await db.rawDatabase.raw(
+        `UPDATE events SET created_at = created_at - interval '1 day' where id = ?`,
+        [earlyEvent?.id],
+    );
+
+    const lateEvent = events.find((e) => e.data.featureName === 'late-event');
+    await db.rawDatabase.raw(
+        `UPDATE events SET created_at = created_at + interval '1 day' where id = ?`,
+        [lateEvent?.id],
+    );
+
+    const today = new Date();
+    const todayString = today.toISOString().split('T')[0];
+
+    const { body } = await searchEvents({
+        from: `IS:${todayString}`,
+        to: `IS:${todayString}`,
+    });
+
+    expect(body).toMatchObject({
+        events: [
+            {
+                type: FEATURE_CREATED,
+                data: { featureName: 'goldilocks' },
+            },
+        ],
+        total: 1,
+    });
+});
+
 test('should paginate with offset and limit', async () => {
     for (let i = 0; i < 5; i++) {
         await eventService.storeEvent({

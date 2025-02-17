@@ -8,10 +8,10 @@ import {
     Table,
     TablePlaceholder,
 } from 'component/common/Table';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import { Alert, styled, TableBody } from '@mui/material';
-import type { MoveListItem } from 'hooks/useDragItem';
+import type { OnMoveItem } from 'hooks/useDragItem';
 import useToast from 'hooks/useToast';
 import useEnvironmentApi, {
     createSortOrderPayload,
@@ -28,7 +28,6 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IEnvironment } from 'interfaces/environments';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
-
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
@@ -39,17 +38,20 @@ export const EnvironmentTable = () => {
     const { environments, mutateEnvironments } = useEnvironments();
     const isFeatureEnabled = useUiFlag('EEA');
 
-    const moveListItem: MoveListItem = useCallback(
+    const onMoveItem: OnMoveItem = useCallback(
         async (dragIndex: number, dropIndex: number, save = false) => {
-            const copy = [...environments];
-            const tmp = copy[dragIndex];
-            copy.splice(dragIndex, 1);
-            copy.splice(dropIndex, 0, tmp);
-            await mutateEnvironments(copy);
+            const oldEnvironments = environments || [];
+            const newEnvironments = [...oldEnvironments];
+            const movedEnvironment = newEnvironments.splice(dragIndex, 1)[0];
+            newEnvironments.splice(dropIndex, 0, movedEnvironment);
+
+            await mutateEnvironments(newEnvironments);
 
             if (save) {
                 try {
-                    await changeSortOrder(createSortOrderPayload(copy));
+                    await changeSortOrder(
+                        createSortOrderPayload(newEnvironments),
+                    );
                 } catch (error: unknown) {
                     setToastApiError(formatUnknownError(error));
                 }
@@ -57,6 +59,28 @@ export const EnvironmentTable = () => {
         },
         [changeSortOrder, environments, mutateEnvironments, setToastApiError],
     );
+
+    const columnsWithActions = useMemo(() => {
+        if (isFeatureEnabled) {
+            return [
+                ...COLUMNS,
+                {
+                    Header: 'Actions',
+                    id: 'Actions',
+                    align: 'center',
+                    width: '1%',
+                    Cell: ({
+                        row: { original },
+                    }: { row: { original: IEnvironment } }) => (
+                        <EnvironmentActionCell environment={original} />
+                    ),
+                    disableGlobalFilter: true,
+                },
+            ];
+        }
+
+        return COLUMNS;
+    }, [isFeatureEnabled]);
 
     const {
         getTableProps,
@@ -68,7 +92,7 @@ export const EnvironmentTable = () => {
         setGlobalFilter,
     } = useTable(
         {
-            columns: COLUMNS as any,
+            columns: columnsWithActions as any,
             data: environments,
             disableSortBy: true,
         },
@@ -115,7 +139,7 @@ export const EnvironmentTable = () => {
                             return (
                                 <EnvironmentRow
                                     row={row as any}
-                                    moveListItem={moveListItem}
+                                    onMoveItem={onMoveItem}
                                     key={row.original.name}
                                 />
                             );
@@ -184,15 +208,5 @@ const COLUMNS = [
         accessor: (row: IEnvironment) =>
             row.apiTokenCount === 1 ? '1 token' : `${row.apiTokenCount} tokens`,
         Cell: TextCell,
-    },
-    {
-        Header: 'Actions',
-        id: 'Actions',
-        align: 'center',
-        width: '1%',
-        Cell: ({ row: { original } }: { row: { original: IEnvironment } }) => (
-            <EnvironmentActionCell environment={original} />
-        ),
-        disableGlobalFilter: true,
     },
 ];

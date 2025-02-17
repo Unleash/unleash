@@ -76,10 +76,9 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
             refetchAddons();
             setToastData({
                 type: 'success',
-                title: 'Success',
                 text: !addon.enabled
-                    ? 'Integration is now enabled'
-                    : 'Integration is now disabled',
+                    ? 'Integration enabled'
+                    : 'Integration disabled',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -92,8 +91,7 @@ export const IntegrationCardMenu: VFC<IIntegrationCardMenuProps> = ({
             refetchAddons();
             setToastData({
                 type: 'success',
-                title: 'Success',
-                text: 'Integration has been deleted',
+                text: 'Integration deleted',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));

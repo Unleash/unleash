@@ -4,7 +4,10 @@ import type { IRole } from './stores/access-store';
 import type { IUser } from './user';
 import type { ALL_OPERATORS } from '../util';
 import type { IProjectStats } from '../features/project/project-service';
-import type { CreateFeatureStrategySchema } from '../openapi';
+import type {
+    CreateFeatureStrategySchema,
+    ProjectOverviewSchema,
+} from '../openapi';
 import type { ProjectEnvironment } from '../features/project/project-store-type';
 import type { FeatureSearchEnvironmentSchema } from '../openapi/spec/feature-search-environment-schema';
 import type { IntegrationEventsService } from '../features/integration-events/integration-events-service';
@@ -35,6 +38,7 @@ export interface IStrategyConfig {
     segments?: number[];
     parameters?: { [key: string]: string };
     sortOrder?: number;
+    milestoneId?: string;
     title?: string | null;
     disabled?: boolean | null;
 }
@@ -46,6 +50,7 @@ export interface IFeatureStrategy {
     strategyName: string;
     parameters: { [key: string]: string };
     sortOrder?: number;
+    milestoneId?: string;
     constraints: IConstraint[];
     variants?: IStrategyVariant[];
     createdAt?: Date;
@@ -258,6 +263,7 @@ export type IFeatureSearchOverview = Exclude<
 > & {
     dependencyType: 'parent' | 'child' | null;
     environments: FeatureSearchEnvironmentSchema[];
+    archivedAt: string;
     createdBy: {
         id: number;
         name: string;
@@ -313,6 +319,7 @@ export interface IProjectOverview {
     featureLimit?: number;
     featureNaming?: IFeatureNaming;
     defaultStickiness: string;
+    onboardingStatus: ProjectOverviewSchema['onboardingStatus'];
 }
 
 export interface IProjectHealthReport extends IProjectHealth {
@@ -338,6 +345,11 @@ export interface IFeatureToggleQuery {
     namePrefix?: string;
     environment?: string;
     inlineSegmentConstraints?: boolean;
+}
+
+export interface IFeatureToggleDeltaQuery extends IFeatureToggleQuery {
+    toggleNames?: string[];
+    environment: string;
 }
 
 export interface ITag {
@@ -415,7 +427,7 @@ export interface IPermission {
     name: string;
     displayName: string;
     type: string;
-    environment?: string;
+    environment?: string | null;
 }
 
 export interface IEnvironmentPermission {
@@ -568,17 +580,6 @@ export interface IProjectUpdate {
  */
 export interface ICustomRole extends IRole {
     description: string;
-}
-
-// @deprecated Remove with flag useProjectReadModel
-export interface IProjectWithCount extends IProject {
-    featureCount: number;
-    staleFeatureCount: number;
-    potentiallyStaleFeatureCount: number;
-    memberCount: number;
-    favorite?: boolean;
-    avgTimeToProduction: number;
-    archivedAt?: Date;
 }
 
 export interface IClientSegment {

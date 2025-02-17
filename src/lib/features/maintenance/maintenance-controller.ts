@@ -1,4 +1,9 @@
-import { ADMIN, type IUnleashConfig, type IUnleashServices } from '../../types';
+import {
+    ADMIN,
+    UPDATE_MAINTENANCE_MODE,
+    type IUnleashConfig,
+    type IUnleashServices,
+} from '../../types';
 import type { Request, Response } from 'express';
 import Controller from '../../routes/controller';
 import type { Logger } from '../../logger';
@@ -38,7 +43,7 @@ export default class MaintenanceController extends Controller {
         this.route({
             method: 'post',
             path: '',
-            permission: ADMIN,
+            permission: [ADMIN, UPDATE_MAINTENANCE_MODE],
             handler: this.toggleMaintenance,
             middleware: [
                 this.openApiService.validPath({
@@ -58,7 +63,7 @@ export default class MaintenanceController extends Controller {
         this.route({
             method: 'get',
             path: '',
-            permission: ADMIN,
+            permission: [ADMIN, UPDATE_MAINTENANCE_MODE],
             handler: this.getMaintenance,
             middleware: [
                 this.openApiService.validPath({

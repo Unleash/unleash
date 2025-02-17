@@ -1,194 +1,125 @@
 ---
 title: API Tokens and Client Keys
+pagination_next: reference/front-end-api
 ---
 
-For Unleash to be of any use, it requires at least a server and a [consuming client](../reference/sdks/index.md). More advanced use cases may call for multiple clients, automated feature flag updates, the [Unleash proxy](../generated/unleash-proxy.md) and [Unleash proxy clients](../reference/sdks/index.md#front-end-sdks), and more. To facilitate communication between all these moving parts, Unleash uses a system of API tokens and client keys, all with a specific purpose in mind.
+## Overview
 
-This document details the three kinds of tokens and keys that you will need to fully connect any Unleash system:
+Unleash uses API keys to facilitate communication between consuming clients such as [SDKs](../reference/sdks), [Unleash Edge](../reference/unleash-edge), or other tools and automation.
 
--   [Admin tokens](#admin-tokens) for updating resources in Unleash (**Deprecated**) We recommend you use [Personal Access Tokens](#personal-access-tokens) instead.
--   [Client tokens](#client-tokens) for connecting server-side client SDKs and the Unleash proxy to the Unleash server
--   [Proxy client keys](#proxy-client-keys) for connecting proxy client SDKs to the Unleash proxy.
+Unleash supports the following types of API tokens:
+- [Client tokens](#client-tokens) for connecting [server-side client SDKs](../reference/sdks#server-side-sdks), [Unleash Edge](../reference/unleash-edge), and [Unleash Proxy](../reference/unleash-proxy) to Unleash.
+- [Frontend tokens](#frontend-tokens) for connecting [client-side SDKs](../reference/sdks#front-end-sdks) to Unleash using the [Frontend API](../reference/front-end-api) or [Unleash Edge](../reference/unleash-edge).
+- [Personal access tokens](#personal-access-tokens) for testing and debugging or providing temporary access to an automation tool.
+- [Service account tokens](/reference/service-accounts) for providing API access to integrations or automation tools.
 
-## API tokens
+To connect a client-side SDK to Unleash using Unleash Edge, you need both a [client](#client-tokens) and [frontend token](#frontend-tokens). See [Connect a client-side SDK to Unleash using Edge](#connect-a-client-side-sdk-to-unleash-using-edge) for an example.
 
-:::tip
-
-This section describes what API tokens are. For information on how to create them, refer to the [how-to guide for creating API tokens](../how-to/how-to-create-api-tokens.mdx).
-
-:::
-
-Use API tokens to connect to the Unleash server API. API tokens come in four distinct types:
-
--   [Admin tokens](#admin-tokens) (**Deprecated**)
--   [Personal access tokens](#personal-access-tokens)
--   [Client tokens](#client-tokens)
--   [Front-end tokens](#front-end-tokens)
-
-All types use [the same format](#format) but have different intended uses. Admin and client tokens are _secrets_ and should _not_ be exposed to end users. Front-end tokens, on the other hand, are not secret.
-
-### The parts of an API token {#token-data}
-
-Admin, client and front-end tokens contain the following pieces of information:
-
-| Name | Description |
-| --- | --- |
-| Token name (sometimes called "username") | The token's name. Names are **not** required to be unique. |
-| Type | What kind of token it is: admin, client, or front-end. |
-| Projects | What projects a token has access to. |
-| Environment | What environment the token has access to. |
-
-Personal access tokens follow their own special format, and only contain an optional description for the token and an expiry date.
-
-
-### API token visibility
-
-:::info project-level visibility
-
-Project-level visibility and access to API tokens was introduced in Unleash 4.22.
-
-:::
-
-By default, only admin users can create API tokens, and only admins can see their values.
-
-However, any [client](#client-tokens client tokens) and [front-end tokens](#front-end-tokens) that are applicable to a project, will also be visible to any members of that project that have the `READ_PROJECT_API_TOKEN` permission (all project members by default).
-
-Similarly, any project members with the `CREATE_PROJECT_API_TOKEN` permission can also create client and front-end tokens for that specific project ([how to create project API tokens](../how-to/how-to-create-project-api-tokens.mdx)).
-### Admin tokens
-
-**Admin tokens** grant _full read and write access_ to all resources in the Unleash server API. Admin tokens have access to all projects, all environments, and all root resources (find out more about [resources in the RBAC document](../reference/rbac.md#core-principles)).
-
-Use admin tokens to:
-
--   Automate Unleash behavior such as creating feature flags, projects, etc.
--   Write custom Unleash UIs to replace the default Unleash admin UI.
-Do **not** use admin tokens for:
-
--   [Client SDKs](../reference/sdks/index.md): You will _not_ be able to read flag data from multiple environments. Use [client tokens](#client-tokens) instead.
-
-Support for scoped admin tokens with more fine-grained permissions is currently in the planning stage.
-
-**Deprecation Notice**
-We do not recommend using admin tokens anymore, they are not connected to any user, and as such is a lot harder to track.
-* For OSS and Pro users, we recommend using [Personal Access Tokens](#personal-access-tokens) instead.
-* Enterprise users have the option to use [Service accounts](./service-accounts).
-
-
-
-
-
-### Personal access tokens
-
-**Personal access tokens** are a special form of admin tokens and grant access to the same resources that the user that created them has access to. These permissions are dynamic, so if a user's permissions change through addition of a custom role, the token will likewise have altered permissions.
-
-When using a personal access token to modify resources, the event log will list the token creator's name for that operation.
-
-Personal access tokens with a lifetime **will stop working after the expiration date**.
-
-Use personal access tokens to:
-
-- Provide more fine-grained permissions for automation than an admin token provides
-- Give temporary access to an automation tool
-
-:::info On token expiration
-
-It is possible to set a token's expiration date to **never**. However, a token that doesn't expire brings with it a few security concerns. We recommend that you use tokens with expiration dates whenever possible.
-
-:::
-
-Do **not** use personal access tokens for:
-
--   [Client SDKs](../reference/sdks/index.md): You will _not_ be able to read flag data from multiple environments. Use [client tokens](#client-tokens) instead.
--   Write custom Unleash UIs: Personal access tokens may expire and their permissions may change. It's better to use [admin tokens](#admin-tokens) tokens instead.
+## API token types
 
 ### Client tokens
 
-**Client tokens** are intended for use in [server-side client SDKs](../reference/sdks/index.md#server-side-sdks) (including the Unleash Proxy) and grant the user permissions to:
+Client tokens are intended for use in [server-side client SDKs](../reference/sdks#server-side-sdks), [Unleash Edge](../reference/unleash-edge), and [Unleash Proxy](../reference/unleash-proxy) to grant the permissions to:
+-   Reading feature flag information
+-   Registering applications with the Unleash server
+-   Sending usage metrics
 
--   Read feature flag information
--   Register applications with the Unleash server
--   Send usage metrics
+Client tokens are scoped to one or more projects and a single environment. When creating a client token, you can give it access to a specific list of projects or to all current or future projects. Client tokens are secrets and must not be exposed to end users.
 
-When creating a client token, you can choose which projects it should be able to read data from. You can give it access to a specific list of projects or to all projects (including projects that don't exist yet). Prior to Unleash 4.10, a token could be valid only for a _single project_ or _all projects_.
+Client tokens cannot be used in frontend SDKs; use [frontend tokens](#frontend-tokens) instead.
 
-Each client token is only **valid for a single environment**.
+### Frontend tokens
 
-Use client tokens:
+Use frontend tokens for connecting [frontend SDKs](../reference/sdks#front-end-sdks) to Unleash using the [Unleash Frontend API](./front-end-api) or [Unleash Edge](../reference/unleash-edge). They grant the user permission to:
+-   Reading enabled flags for a given context
+-   Registering applications with the Unleash server
+-   Sending usage metrics
 
--   In [server-side client SDKs](../reference/sdks/index.md#server-side-sdks)
--   To connect [the Unleash Proxy](../generated/unleash-proxy.md) to the Unleash API
+Frontend tokens are scoped to one or more projects and a single environment. When creating a frontend token, you can give it access to a specific list of projects or to all current or future projects. Frontend tokens are not considered secret and are safe to expose client-side.
 
-Do **not** use client tokens in:
+Frontend tokens cannot be used in server-side SDKs; use [client tokens](#client-tokens) instead.
 
--   [Front-end SDKs](../reference/sdks/index.md#front-end-sdks). You will _not_ be able to connect to the Unleash server due to CORS restrictions. To connect front-end SDKs, choose one of the following options:
--   Enable the [Unleash front-end API](./front-end-api.md) and create a [front-end token](#front-end-tokens).
--   Configure an [Unleash Proxy](../generated/unleash-proxy.md) and use [Proxy client keys](#proxy-client-keys).
+### Personal access tokens
 
-### Front-end tokens
+Personal access tokens reflect the permissions of the user who creates them. If the user's permissions change, such as through the addition of a custom role, the token automatically updates to match the new permissions.
+You can use personal access tokens for testing, debugging, or giving temporary access to automation tools.
 
-**Front-end tokens** are used with [front-end SDKs](../reference/sdks/index.md#front-end-sdks) when used with the [Unleash front-end API](./front-end-api.md). They grant the user permission to:
+When you use a personal access token to modify resources, the events record the token creator's name for that operation.
 
--   Read the enabled flagd for a given context
--   Register applications with the Unleash server
--   Send usage metrics
+Personal access tokens with a lifetime expire and stop working after their expiration date. Although you can set the token to not expire, we recommend using tokens with expiration dates to follow security best practices.
 
-As with [client tokens](#client-tokens), front-end tokens can read data from one, multiple, or all existing projects.
+Personal access tokens are not suitable for client SDKs, as they are not bound to an environment, they may expire, or their permissions may change. Use [client tokens](#client-tokens) instead.
 
-Each front-end token is only **valid for a single environment**.
+### Service account tokens
 
-Use front-end tokens in:
+Service account tokens provide API access to integration and automation tools. To learn more, go to [Service Accounts](/reference/service-accounts).
 
--   [Front-end SDKs (also known as _proxy clients_)](../reference/sdks/index.md#front-end-sdks).
+### Admin tokens
 
-Do **not** use front-end tokens in:
+:::warning
 
--   [Server-side SDKs](../reference/sdks/index.md#server-side-sdks). The format is different, so they won't work correctly.
+Admin tokens are deprecated. Use other token types:
+- With [Open Source](https://www.getunleash.io/pricing) and [Pro](../availability#plans); use [personal access tokens](#personal-access-tokens).
+- With [Enterprise](https://www.getunleash.io/pricing); use [service accounts](./service-accounts).
 
-### Format
+:::
 
-API tokens come in one of two formats. When we introduced [environments](./environments.md) in Unleash 4.3, we updated the format of the tokens to provide more human-readable information to the user. Both formats are still valid (you don't need to update a working token of the old format) and are described below.
+Admin tokens grant full read and write access to all resources in the Unleash server API. This includes all projects, all environments, and all [root resources](../reference/rbac#core-principles).
 
-#### Version 1
 
-The first version of API tokens was a 64 character long hexadecimal string. Example:
+## API token permissions
 
-```
-be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178
-```
+:::note Availability
 
-#### Version 2
+**Version**: `4.22+`
+
+:::
+
+The following table provides a summary of what actions different roles can perform with API tokens:
+
+| Role/Permission                               | Details                                                                 |
+|-----------------------------------------------|-------------------------------------------------------------------------|
+| Admin root role                               | Can view, create, update, or delete tokens for any project.             |
+| Custom root role with API token permission    | Can view, create, update, or delete tokens for any project with the corresponding permission, such as `CREATE_CLIENT_API_TOKEN`. |
+| Member project role                           | Can view, create, update, or delete tokens within the project.          |
+| Custom project role with API token permission | Can view, create, update, or delete tokens within the project with the corresponding permission, `CREATE_PROJECT_API_TOKEN`. |
+| Viewer root role                              | Cannot view, create, update, or delete tokens.                          |
+| Any role                                      | Can create personal access tokens.                          | 
+
+## API token format
 
 API tokens consist of three parts:
 
-1. Project(s)
+1. Project information
 2. Environment
 3. Hash
 
-The parts are separated by two different separators: A colon (`:`) between the project(s) and the environment, and a full stop (`.`) between the environment and the hash.
+The parts are separated by two delimiters: a colon (`:`) between the projects and the environment, and a period (`.`) between the environment and the hash.
 
-The **project(s)** part is one of:
+```
+{{projects}}:{{environment}}.{{hash}}
+```
 
--   The id of a specific project, for example: `default`. This indicates that the token is **only valid for this project**.
--   A pair of opening and closing square brackets: `[]`. This indicates that the token is **valid for a discrete list of projects**. The list of projects is not shown in the token.
--   An asterisk: `*`. This indicates that the token is **valid for all projects (current and future)**.
+The project value of the token can be one of:
+-   A single project ID, for example, `default`: when the token can only access a single project.
+-   `[]`: when the token is valid for a specific set of projects. The list of projects is not shown in the token.
+-   `*`: when the token is valid for all current and future projects.
 
-The **environment** is the name of an environment on your Unleash server, such as `development`.
+The environment value of the token is the name of an environment on your Unleash instance, such as `development`. The hash is a 64-character-long hexadecimal string.
 
-The **hash** is 64 character long hexadecimal string.
+Personal access tokens start with the string `user`, and do not contain additional project or environment information.
 
-Personal access tokens do not contain project or environment information, since they mimic the user that created them. Instead, the token starts with the string `user`.
+Some example API tokens are:
 
-Some example client tokens are:
-
--   A token with access to flags in the "development" environment of a single project, "project-a":
+-   A token with access to the `development` environment of a single project, `new-checkout-flow`:
     ```
-    project-a:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178
+    new-checkout-flow:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178
     ```
--   A token with access to flags in the "production" environment multiple projects:
+-   A token with access to the `production` environment in multiple projects:
     ```
     []:production.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178
     ```
--   A token with access to flags in the "development" environment of all projects:
+-   A token with access to the `development` environment in all current and future projects:
     ```
     *:development.be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178
     ```
@@ -197,25 +128,47 @@ Some example client tokens are:
     user:be7536c3a160ff15e3a92da45de531dd54bc1ae15d8455c0476f086b
     ```
 
-## Proxy client keys {#proxy-client-keys}
 
-Use proxy client keys to connect [Proxy client SDKs (front-end SDKs)](../reference/sdks/index.md#front-end-sdks) to the [Unleash Proxy](../generated/unleash-proxy.md). As opposed to the [API tokens](#api-tokens), Proxy client keys are _not_ considered secret and are safe to use on any clients (refer to the [the proxy documentation for more about privacy](../generated/unleash-proxy.md#we-care-about-privacy)). They do _not_ let you connect to the Unleash server API.
+Note, in Unleash v4.3 or less, API tokens are a 64-character-long hexadecimal string with no additional information. For example:
 
-Proxy client keys are arbitrary strings that you _must_ provide the Unleash proxy with on startup. They can be whatever you want and you **create them yourself**.
+```
+be44368985f7fb3237c584ef86f3d6bdada42ddbd63a019d26955178
+```
 
-:::info Creating proxy client keys
+## Create an API token
 
-To designate a string as a proxy client key, add it to the `clientKeys` list when starting the proxy, as mentioned in the [_configuration_ section of the Unleash proxy documentation](../generated/unleash-proxy.md#configuration). Connecting clients should then specify the same string as their client key.
+Depending on your [permissions](#api-token-permissions), you can create API tokens in the Unleash Admin UI in three ways:
+- **Admin > API access**: for client or frontend tokens; requires the Admin root role, or a custom root role with [API token permissions](#api-token-permissions).
+- **Settings > API access** inside a project: for project-specific client or frontend tokens; permitted for project Members or users with a [corresponding root role](#api-token-permissions).
+- **Profile > View profile settings > Personal API tokens**: for [personal access tokens](#personal-access-tokens).
+
+## Connect a client-side SDK to Unleash using Edge
+
+To connect a client-side SDK to Unleash using Unleash Edge, you need both a [client](#client-tokens) and [frontend token](#frontend-tokens):
+    - The client-side SDK needs a frontend token to communicate with Edge.
+    - Edge needs a client token to communicate with the Unleash server.
+
+Ensure that the client token has at least the same project and environment scope as the frontend token.
+
+![Diagram showing the types of tokens needed to connect a client-side SDK with Edge, and Edge with Unleash](/img/token-types-example.png)
+
+
+## Proxy client keys
+
+:::warning
+
+Unleash Proxy is in maintenance mode. Use [Unleash Edge](../reference/unleash-edge) instead.
 
 :::
 
-Unleash does not generate proxy client keys for you. Because of this, they have no specific format.
+You can use proxy client keys to connect [frontend SDKs](../reference/sdks#front-end-sdks) to [Unleash Proxy](../reference/unleash-proxy). Proxy client keys are not considered a secret and are safe to expose client-side.
 
-Use Proxy client keys to:
+Proxy client keys are arbitrary strings that you provide the Unleash proxy with on startup. They can be any string you choose, and you create them yourself.
 
--   Connect [Proxy client SDKs](../reference/sdks/index.md#front-end-sdks) to the [Unleash Proxy](../generated/unleash-proxy.md)
--   Connect your own custom Proxy clients (or pure HTTP requests) to the Unleash Proxy
+:::info Creating proxy client keys
 
-Do **not** use Proxy client keys to:
+To designate a string as a proxy client key, add it to the `clientKeys` list when [starting the proxy](../reference/unleash-proxy#configuration). Connecting clients should then specify the same string as their client key.
 
--   Connect to the Unleash API. It will not work. Use an appropriate [API token](#api-tokens) instead.
+:::
+
+Proxy client keys cannot be used to connect to the Unleash API; use [API tokens](#api-tokens) instead.

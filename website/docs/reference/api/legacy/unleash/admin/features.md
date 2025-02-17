@@ -4,7 +4,7 @@ title: /api/admin/features
 
 :::caution Deprecation notice
 
-Most of this API was removed in Unleash v5 (after being deprecated since Unleash v4.3). You should use [the project-based API (/api/admin/projects/:projectId)](/reference/api/legacy/unleash/admin/features-v2.md) instead.
+Most of this API was removed in Unleash v5 (after being deprecated since Unleash v4.3). You should use [the project-based API (/api/admin/projects/:projectId)](/reference/api/legacy/unleash/admin/features-v2.mdx) instead.
 
 :::
 
@@ -18,7 +18,7 @@ In order to access the admin API endpoints you need to identify yourself. Unless
 
 :::caution Deprecation notice
 
-This endpoint was removed in Unleash v5. Please use the [project-based endpoint to fetch all flags](/reference/api/legacy/unleash/admin/features-v2.md#fetching-toggles) instead.
+This endpoint was removed in Unleash v5. Please use the [project-based endpoint to fetch all flags](/reference/api/legacy/unleash/admin/features-v2.mdx#fetching-toggles) instead.
 
 :::
 
@@ -112,7 +112,7 @@ Response format is the same as `api/admin/features`
 
 :::caution Removal notice
 
-This endpoint was removed in Unleash v5 (deprecated since v4). Please use the [project-based endpoint to fetch specific flags](/reference/api/legacy/unleash/admin/features-v2.md#get-toggle) instead.
+This endpoint was removed in Unleash v5 (deprecated since v4). Please use the [project-based endpoint to fetch specific flags](/reference/api/legacy/unleash/admin/features-v2.mdx#get-toggle) instead.
 
 :::
 
@@ -142,7 +142,7 @@ Used to fetch details about a specific featureToggle. This is mostly provded to 
 
 :::caution Removal notice
 
-This endpoint was removed in Unleash v5 (deprecated since v4). Please use the [project-based endpoint to create feature flags](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle) instead.
+This endpoint was removed in Unleash v5 (deprecated since v4). Please use the [project-based endpoint to create feature flags](/reference/api/legacy/unleash/admin/features-v2.mdx#create-toggle) instead.
 
 :::
 
@@ -180,7 +180,7 @@ Returns 200-response if the feature flag was created successfully.
 ## Update a Feature Flag {#update-a-feature-toggle}
 
 :::caution Removal notice
-This endpoint was removed in Unleash v5. Please use the [project-based endpoint to update a feature flag](/reference/api/legacy/unleash/admin/features-v2.md#update-toggle) instead.
+This endpoint was removed in Unleash v5. Please use the [project-based endpoint to update a feature flag](/reference/api/legacy/unleash/admin/features-v2.mdx#update-toggle) instead.
 :::
 
 
@@ -253,7 +253,7 @@ Removes the specified tag from the `(type, value)` tuple from the Feature Flag's
 ## Archive a Feature Flag {#archive-a-feature-toggle}
 
 :::caution Removal notice
-This endpoint was removed in v5. Please use the [project-based endpoint to archive flags](/reference/api/legacy/unleash/admin/features-v2.md#archive-toggle) instead.
+This endpoint was removed in v5. Please use the [project-based endpoint to archive flags](/reference/api/legacy/unleash/admin/features-v2.mdx#archive-toggle) instead.
 :::
 
 
@@ -264,7 +264,7 @@ Used to archive a feature flag. A feature flag can never be totally be deleted, 
 ## Enable a Feature Flag {#enable-a-feature-toggle}
 
 :::caution Removal notice
-This endpoint was removed in v5. Please use the [project-based endpoint to enable feature flags](/reference/api/legacy/unleash/admin/features-v2.md#enable-env) instead.
+This endpoint was removed in v5. Please use the [project-based endpoint to enable feature flags](/reference/api/legacy/unleash/admin/features-v2.mdx#enable-env) instead.
 :::
 
 
@@ -298,7 +298,7 @@ None
 ## Disable a Feature Flag {#disable-a-feature-toggle}
 
 :::caution Removal notice
-This endpoint was removed in v5. Please use the [project-based endpoint to disable feature flags](/reference/api/legacy/unleash/admin/features-v2.md#disable-env) instead.
+This endpoint was removed in v5. Please use the [project-based endpoint to disable feature flags](/reference/api/legacy/unleash/admin/features-v2.mdx#disable-env) instead.
 :::
 
 `POST: http://unleash.host.com/api/admin/features/:featureName/toggle/off`
@@ -332,7 +332,7 @@ None
 ## Mark a Feature Flag as "stale" {#mark-a-feature-toggle-as-stale}
 
 :::caution Removal notice
-This endpoint was removed in v5. Please use the [project-based endpoint to patch a feature flag and mark it as stale](/reference/api/legacy/unleash/admin/features-v2.md#patch-toggle) instead.
+This endpoint was removed in v5. Please use the [project-based endpoint to patch a feature flag and mark it as stale](/reference/api/legacy/unleash/admin/features-v2.mdx#patch-toggle) instead.
 :::
 
 
@@ -367,7 +367,7 @@ None
 ## Mark a Feature Flag as "active" {#mark-a-feature-toggle-as-active}
 
 :::caution Removal notice
-This endpoint was removed in v5. Please use the [project-based endpoint to patch a feature flag and mark it as not stale](/reference/api/legacy/unleash/admin/features-v2.md#patch-toggle) instead.
+This endpoint was removed in v5. Please use the [project-based endpoint to patch a feature flag and mark it as not stale](/reference/api/legacy/unleash/admin/features-v2.mdx#patch-toggle) instead.
 :::
 
 `POST: http://unleash.host.com/api/admin/features/:featureName/stale/off`

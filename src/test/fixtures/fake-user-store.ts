@@ -67,6 +67,10 @@ class UserStoreMock implements IUserStore {
         return this.data.length;
     }
 
+    async countRecentlyDeleted(): Promise<number> {
+        return Promise.resolve(0);
+    }
+
     async get(key: number): Promise<IUser> {
         return this.data.find((u) => u.id === key)!;
     }
@@ -153,6 +157,10 @@ class UserStoreMock implements IUserStore {
 
     deleteAll(): Promise<void> {
         return Promise.resolve(undefined);
+    }
+
+    deleteScimUsers(): Promise<void> {
+        throw new Error('Method not implemented.');
     }
 
     upsert(user: ICreateUser): Promise<IUser> {

@@ -28,10 +28,10 @@ const StyledInputFullWidth = styled(Input)({
 interface IRoleFormProps {
     type?: PredefinedRoleType;
     name: string;
-    setName: React.Dispatch<React.SetStateAction<string>>;
+    setName: (name: string) => void;
     validateName: (name: string) => boolean;
     description: string;
-    setDescription: React.Dispatch<React.SetStateAction<string>>;
+    setDescription: (description: string) => void;
     validateDescription: (description: string) => boolean;
     checkedPermissions: ICheckedPermissions;
     setCheckedPermissions: React.Dispatch<

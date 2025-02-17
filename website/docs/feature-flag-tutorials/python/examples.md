@@ -95,7 +95,7 @@ Unleash has a few ways to help manage canary deployments for Python apps at scal
 
 -   Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented in a previous section](#gradual-rollouts-for-python-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
--   Using either [constraints](/reference/strategy-constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
+-   Using either [constraints](/reference/activation-strategies#constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
 
 -   [Strategy variants](/reference/strategy-variants) are used to do the same canary deployment, but can be scaled to more _advanced_ cases. For example, if you have 2+ new features and are testing to see if they are better than the old one, you can use variants to split your population of users and conduct an A/B test with them.
 
@@ -177,7 +177,7 @@ print(response.text)
 
 Check out our [API docs on updating flag strategies](/reference/api/unleash/update-feature-strategy) to learn more.
 
-Read our documentation for more context on [strategy constraint configurations](/reference/strategy-constraints) and use cases.
+Read our documentation for more context on [strategy constraint configurations](/reference/activation-strategies#constraints) and use cases.
 
 ## Server-side A/B Testing in Python
 
@@ -347,15 +347,15 @@ Because a feature flag service controls how an application behaves in production
 
 Unleash provides the data to log any change over time at the flag level and at the project level. Logs are useful for downstream data warehouses or data lakes. Tools like [Splunk](https://www.splunk.com/) can help you combine logs and run advanced queries against them.
 
-For our Python app, we can view Event logs to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
+For our Python app, we can view events in [Event Log](/reference/events#event-log) to monitor the changes to flag strategies and statuses we have made throughout our examples, such as:
 
 -   When the flag was created
 -   How the gradual rollout strategy was configured
 -   When and how the variants were created and configured
 
-![Event logs in Unleash track every single change made to flags, similar to Git commit history.](/img/python-ex-logs.png)
+![Event Log in Unleash tracks every single change made to flags, similar to Git commit history.](/img/python-ex-logs.png)
 
-You can also retrieve event log data by using an API command below:
+You can also retrieve events by using the API command below:
 
 ```py
 import requests
@@ -373,7 +373,7 @@ response = requests.request("GET", url, headers=headers, data=payload)
 print(response.text)
 ```
 
-Read our documentation on [Event logs](/reference/event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
+Read our documentation on [Event Log](/reference/events#event-log) and [APIs](/reference/api/unleash/get-events-for-toggle) to learn more.
 
 ## Flag Automation & Workflow Integration for Python Apps
 

@@ -173,7 +173,7 @@ export const ProjectAccessTable: VFC = () => {
                     row: { original: IProjectAccess };
                     value: string;
                 }) => <RoleCell value={value} roles={row.entity.roles} />,
-                maxWidth: 125,
+                maxWidth: 175,
                 filterName: 'role',
             },
             {
@@ -382,14 +382,14 @@ export const ProjectAccessTable: VFC = () => {
             refetchProjectAccess();
             setToastData({
                 type: 'success',
-                title: `${
+                text: `${
                     name || `The ${entityType}`
                 } has been removed from project`,
             });
         } catch (err: any) {
             setToastData({
                 type: 'error',
-                title:
+                text:
                     err.message ||
                     `Server problems when removing ${entityType}.`,
             });
@@ -402,7 +402,7 @@ export const ProjectAccessTable: VFC = () => {
             header={
                 <PageHeader
                     secondary
-                    title={`Access (${
+                    title={`User access (${
                         rows.length < data.length
                             ? `${rows.length} of ${data.length}`
                             : data.length

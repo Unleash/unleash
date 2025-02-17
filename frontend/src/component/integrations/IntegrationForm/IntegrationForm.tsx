@@ -5,7 +5,7 @@ import {
     useContext,
     useEffect,
     useState,
-    type VFC,
+    type FC,
 } from 'react';
 import {
     Alert,
@@ -74,7 +74,7 @@ type IntegrationFormProps = {
     addon: AddonSchema | Omit<AddonSchema, 'id'>;
 };
 
-export const IntegrationForm: VFC<IntegrationFormProps> = ({
+export const IntegrationForm: FC<IntegrationFormProps> = ({
     editMode,
     provider,
     addon: initialValues,
@@ -251,15 +251,14 @@ export const IntegrationForm: VFC<IntegrationFormProps> = ({
                 navigate('/integrations');
                 setToastData({
                     type: 'success',
-                    title: 'Integration updated successfully',
+                    text: 'Integration updated',
                 });
             } else {
                 await createAddon(formValues as Omit<AddonSchema, 'id'>);
                 navigate('/integrations');
                 setToastData({
                     type: 'success',
-                    confetti: true,
-                    title: 'Integration created successfully',
+                    text: 'Integration created',
                 });
             }
         } catch (error) {

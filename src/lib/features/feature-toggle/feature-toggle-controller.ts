@@ -571,7 +571,7 @@ export default class ProjectFeaturesController extends Controller {
                     tags: ['Features'],
                     operationId: 'staleFeatures',
                     summary: 'Mark features as stale / not stale',
-                    description: `This endpoint marks the provided list of features as either [stale](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-toggles) or not stale depending on the request body you send. Any provided features that don't exist are ignored.`,
+                    description: `This endpoint marks the provided list of features as either [stale](https://docs.getunleash.io/reference/technical-debt#stale-and-potentially-stale-flags) or not stale depending on the request body you send. Any provided features that don't exist are ignored.`,
                     requestBody: createRequestSchema('batchStaleSchema'),
                     responses: {
                         202: emptyResponse,
@@ -856,6 +856,7 @@ export default class ProjectFeaturesController extends Controller {
                     projectId: project,
                     environment: environmentId,
                     createdAt,
+                    milestoneId,
                     ...rest
                 } = strategy;
                 return { ...rest, name: strategyName };

@@ -21,6 +21,8 @@ import { InternalBanners } from './banners/internalBanners/InternalBanners';
 import { ExternalBanners } from './banners/externalBanners/ExternalBanners';
 import { LicenseBanner } from './banners/internalBanners/LicenseBanner';
 import { Demo } from './demo/Demo';
+import { LoginRedirect } from './common/LoginRedirect/LoginRedirect';
+import { SecurityBanner } from './banners/internalBanners/SecurityBanner';
 
 const StyledContainer = styled('div')(() => ({
     '& ul': {
@@ -31,7 +33,6 @@ const StyledContainer = styled('div')(() => ({
 export const App = () => {
     const { authDetails } = useAuthDetails();
     const { refetch: refetchUiConfig } = useUiConfig();
-
     const { user } = useAuthUser();
     const hasFetchedAuth = Boolean(authDetails || user);
 
@@ -46,6 +47,8 @@ export const App = () => {
             refetchUiConfig();
         }
     }, [authDetails, user]);
+
+    const isLoggedIn = Boolean(user?.id);
 
     return (
         <SWRProvider>
@@ -63,6 +66,7 @@ export const App = () => {
                                     show={<MaintenanceBanner />}
                                 />
                                 <LicenseBanner />
+                                <SecurityBanner />
                                 <ExternalBanners />
                                 <InternalBanners />
                                 <StyledContainer>
@@ -92,7 +96,13 @@ export const App = () => {
                                         />
                                         <Route
                                             path='*'
-                                            element={<NotFound />}
+                                            element={
+                                                isLoggedIn ? (
+                                                    <NotFound />
+                                                ) : (
+                                                    <LoginRedirect />
+                                                )
+                                            }
                                         />
                                     </Routes>
 

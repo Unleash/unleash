@@ -82,9 +82,7 @@ beforeAll(async () => {
     await stores.accessStore.addUserToRole(opsUser.id, 1, '');
     const config = createTestConfig({
         getLogger,
-        experimental: {
-            flags: { archiveProjects: true, useProjectReadModel: true },
-        },
+        experimental: {},
     });
     eventService = createEventsService(db.rawDatabase, config);
     accessService = createAccessService(db.rawDatabase, config);
@@ -154,6 +152,11 @@ test('should create new project', async () => {
     expect(project.name).toEqual(ret.name);
     expect(project.description).toEqual(ret.description);
     expect(ret.createdAt).toBeTruthy();
+
+    const projectsById = await projectService.getProjects({ id: 'test' });
+    const projectsByIds = await projectService.getProjects({ ids: ['test'] });
+    expect(projectsById).toMatchObject([{ id: 'test' }]);
+    expect(projectsByIds).toMatchObject([{ id: 'test' }]);
 });
 
 test('should create new private project', async () => {
@@ -319,6 +322,27 @@ test('should archive project', async () => {
 
     const archivedProject = await projectService.getProject(project.id);
     expect(archivedProject).toMatchObject({ archivedAt: expect.any(Date) });
+});
+
+test('archive project removes it from user projects', async () => {
+    const project = {
+        id: 'test-user-archive',
+        name: 'New project',
+        description: 'Blah',
+        mode: 'open' as const,
+        defaultStickiness: 'default',
+    };
+    await projectService.createProject(project, user, TEST_AUDIT_USER);
+
+    const userProjectsBeforeArchive = await projectService.getProjectsByUser(
+        user.id,
+    );
+    expect(userProjectsBeforeArchive).toEqual(['test-user-archive']);
+
+    await projectService.archiveProject(project.id, TEST_AUDIT_USER);
+
+    const userProjects = await projectService.getProjectsByUser(user.id);
+    expect(userProjects).toEqual([]);
 });
 
 test('should revive project', async () => {
@@ -772,7 +796,8 @@ describe('Managing Project access', () => {
             ),
         );
     });
-    test('Users can not assign roles they do not have to a user through explicit roles endpoint', async () => {
+
+    test('Users can not assign roles where they do not hold the same permissions', async () => {
         const project = {
             id: 'user_fail_assign_to_user',
             name: 'user_fail_assign_to_user',
@@ -780,64 +805,88 @@ describe('Managing Project access', () => {
             mode: 'open' as const,
             defaultStickiness: 'clientId',
         };
+        await db.stores.environmentStore.create({
+            name: 'production',
+            type: 'production',
+            enabled: true,
+        });
+
+        const auditUser = extractAuditInfoFromUser(user);
         await projectService.createProject(project, user, auditUser);
         const projectUser = await stores.userStore.insert({
             name: 'Some project user',
             email: 'fail_assign_role_to_user@example.com',
         });
-        const projectAuditUser = extractAuditInfoFromUser(projectUser);
         const secondUser = await stores.userStore.insert({
             name: 'Some other user',
             email: 'otheruser_no_roles@example.com',
         });
-        const customRole = await stores.roleStore.create({
-            name: 'role_that_noone_has',
-            roleType: 'custom',
-            description:
-                'Used to prove that you can not assign a role you do not have via setRolesForUser',
-        });
+
+        const customRoleUserAccess = await accessService.createRole(
+            {
+                name: 'Project-permissions-lead',
+                description: 'Role',
+                permissions: [
+                    {
+                        name: 'PROJECT_USER_ACCESS_WRITE',
+                    },
+                ],
+                createdByUserId: SYSTEM_USER_ID,
+            },
+            SYSTEM_USER_AUDIT,
+        );
+
+        const customRoleUpdateEnvironments = await accessService.createRole(
+            {
+                name: 'Project Lead',
+                description: 'Role',
+                permissions: [
+                    {
+                        name: 'UPDATE_FEATURE_ENVIRONMENT',
+                        environment: 'production',
+                    },
+                    {
+                        name: 'CREATE_FEATURE_STRATEGY',
+                        environment: 'production',
+                    },
+                ],
+                createdByUserId: SYSTEM_USER_ID,
+            },
+            SYSTEM_USER_AUDIT,
+        );
+
+        await projectService.setRolesForUser(
+            project.id,
+            projectUser.id,
+            [customRoleUserAccess.id],
+            auditUser,
+        );
+
+        const auditProjectUser = extractAuditInfoFromUser(projectUser);
+
         await expect(
             projectService.setRolesForUser(
                 project.id,
                 secondUser.id,
-                [customRole.id],
-                projectAuditUser,
+                [customRoleUpdateEnvironments.id],
+                auditProjectUser,
             ),
         ).rejects.toThrow(
             new InvalidOperationError(
                 'User tried to assign a role they did not have access to',
             ),
         );
-    });
-    test('Users can not assign roles they do not have to a group through explicit roles endpoint', async () => {
-        const project = {
-            id: 'user_fail_assign_to_group',
-            name: 'user_fail_assign_to_group',
-            description: '',
-            mode: 'open' as const,
-            defaultStickiness: 'clientId',
-        };
-        await projectService.createProject(project, user, auditUser);
-        const projectUser = await stores.userStore.insert({
-            name: 'Some project user',
-            email: 'fail_assign_role_to_group@example.com',
-        });
-        const projectAuditUser = extractAuditInfoFromUser(projectUser);
+
         const group = await stores.groupStore.create({
             name: 'Some group_awaiting_role',
         });
-        const customRole = await stores.roleStore.create({
-            name: 'role_that_noone_has_fail_assign_group',
-            roleType: 'custom',
-            description:
-                'Used to prove that you can not assign a role you do not have via setRolesForGroup',
-        });
-        return expect(
+
+        await expect(
             projectService.setRolesForGroup(
                 project.id,
                 group.id,
-                [customRole.id],
-                projectAuditUser,
+                [customRoleUpdateEnvironments.id],
+                auditProjectUser,
             ),
         ).rejects.toThrow(
             new InvalidOperationError(
@@ -1225,7 +1274,7 @@ test('A newly created project only gets connected to enabled environments', asyn
     await projectService.createProject(project, user, auditUser);
     const connectedEnvs =
         await db.stores.projectStore.getEnvironmentsForProject(project.id);
-    expect(connectedEnvs).toHaveLength(2); // default, connection_test
+    expect(connectedEnvs).toHaveLength(1); // connection_test
     expect(
         connectedEnvs.some((e) => e.environment === enabledEnv),
     ).toBeTruthy();
@@ -1272,7 +1321,6 @@ test('should have environments sorted in order', async () => {
         await db.stores.projectStore.getEnvironmentsForProject(project.id);
 
     expect(connectedEnvs.map((e) => e.environment)).toEqual([
-        'default',
         first,
         second,
         third,
@@ -2760,13 +2808,7 @@ describe('create project with environments', () => {
         disabledEnv,
     ];
 
-    const allEnabledEnvs = [
-        'QA',
-        'default',
-        'development',
-        'production',
-        'staging',
-    ];
+    const allEnabledEnvs = ['QA', 'development', 'production', 'staging'];
 
     beforeEach(async () => {
         await Promise.all(

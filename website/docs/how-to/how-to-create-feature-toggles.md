@@ -1,8 +1,10 @@
 ---
 title: How to create a feature flag
+description: 'This guide shows you how to create feature flags in Unleash and how to add constraints, segments, variants, and more.'
+slug: /how-to-create-feature-flag
 ---
 
-[Feature flags](../reference/feature-toggles.mdx) are the foundation of Unleash. They are at the core of everything we do and are a fundamental building block in any feature management system. This guide shows you how to create feature flags in Unleash and how to add any optional constraints, segments, variants, and more. Links to learn more about these concepts will be scattered throughout the text.
+[Feature flags](../reference/feature-toggles) are the foundation of Unleash. They are at the core of everything we do and are a fundamental building block in any feature management system. This guide shows you how to create feature flags in Unleash and how to add any optional constraints, segments, variants, and more. Links to learn more about these concepts will be scattered throughout the text.
 
 You can perform every action both via the UI and the admin API. This guide includes screenshots to highlight the relevant UI controls and links to the relevant API methods for each step.
 
@@ -19,9 +21,9 @@ To perform all the steps in this guide, you will need:
 - A running Unleash instance
 - A project to hold the flag
 - A user with an **editor** or **admin** role OR a user with the following permissions inside the target project:
-  - **[project-level permissions](../reference/rbac.md#project-permissions)**
+  - **[project-level permissions](../reference/rbac#project-permissions)**
     - create feature flags
-  - **[environment-level permissions](../reference/rbac.md#environment-permissions)**
+  - **[environment-level permissions](../reference/rbac#environment-permissions)**
     - create/edit variants[^1]
     - create activation strategies
     - update activation strategies
@@ -29,7 +31,7 @@ To perform all the steps in this guide, you will need:
 
 :::info roles
 
-Refer to [the documentation on role-based access control](../reference/rbac.md) for more information about the available roles and their permissions.
+Refer to [the documentation on role-based access control](../reference/rbac) for more information about the available roles and their permissions.
 
 :::
 
@@ -41,11 +43,11 @@ This section takes you through the required steps to create and activate a featu
 
 :::tip API: create a flag
 
-Use the [Admin API endpoint for creating a feature flag](/reference/api/legacy/unleash/admin/features-v2.md#create-toggle). The payload accepts all the same fields as the Admin UI form. The Admin UI also displays the corresponding cURL command when you use the form.
+Use the [Admin API endpoint for creating a feature flag](/reference/api/legacy/unleash/admin/features-v2#create-toggle). The payload accepts all the same fields as the Admin UI form. The Admin UI also displays the corresponding cURL command when you use the form.
 
 :::
 
-In the project that you want to create the flag in, use the "new feature flag" button and fill the form out with your desired configuration. Refer to the [feature flag reference documentation](../reference/feature-toggles.mdx) for the full list of configuration options and explanations.
+In the project that you want to create the flag in, use the "new feature flag" button and fill the form out with your desired configuration. Refer to the [feature flag reference documentation](../reference/feature-toggles) for the full list of configuration options and explanations.
 
 ![](/img/create-toggle-new-toggle.png)
 
@@ -53,11 +55,11 @@ In the project that you want to create the flag in, use the "new feature flag" b
 
 :::tip API: Add a strategy
 
-Use the [API for adding a strategy to a feature flag](/reference/api/legacy/unleash/admin/features-v2.md#add-strategy). You can find the configuration options for each strategy in the [activation strategy reference documentation](../reference/activation-strategies.md).
+Use the [API for adding a strategy to a feature flag](/reference/api/legacy/unleash/admin/features-v2#add-strategy). You can find the configuration options for each strategy in the [activation strategy reference documentation](../reference/activation-strategies).
 
 :::
 
-Decide which environment you want to enable the flag in. Select that environment and add an activation strategy. Different activation strategies will act differently as described in the [activation strategy documentation](../reference/activation-strategies.md). The configuration for each strategy differs accordingly. After selecting a strategy, complete the steps to configure it.
+Decide which environment you want to enable the flag in. Select that environment and add an activation strategy. Different activation strategies will act differently as described in the [activation strategy documentation](../reference/activation-strategies). The configuration for each strategy differs accordingly. After selecting a strategy, complete the steps to configure it.
 
 ![](/img/create-toggle-add-strategy.png)
 
@@ -65,7 +67,7 @@ Decide which environment you want to enable the flag in. Select that environment
 
 :::tip API: Enable a flag
 
-Use the [API for enabling an environment for a flag](/reference/api/legacy/unleash/admin/features-v2.md#enable-env) and specify the environment you'd like to enable.
+Use the [API for enabling an environment for a flag](/reference/api/legacy/unleash/admin/features-v2#enable-env) and specify the environment you'd like to enable.
 
 :::
 
@@ -79,7 +81,7 @@ These optional steps allow you to further configure your feature flags to add op
 
 ### Add constraints and segmentation
 
-Constraints and segmentation allow you to set filters on your strategies, so that they will only be evaluated for users and applications that match the specified preconditions. Refer to the [strategy constraints](../reference/strategy-constraints.md 'strategy constraints reference documentation') and [segments reference documentation](../reference/segments.mdx) for more information.
+Constraints and segmentation allow you to set filters on your strategies, so that they will only be evaluated for users and applications that match the specified preconditions. Refer to the [strategy constraints](../reference/activation-strategies#constraints) and [segments reference documentation](../reference/segments) for more information.
 
 To add constraints and segmentation, use the "edit strategy" button for the desired strategy.
 
@@ -95,7 +97,7 @@ Constraints aren't fixed and can be changed later to further narrow your audienc
 
 :::tip API: Add constraints
 
-You can either [add constraints when you add the strategy](/reference/api/legacy/unleash/admin/features-v2.md#add-strategy) or [PUT](/reference/api/legacy/unleash/admin/features-v2.md#update-strategy 'PUT an activation strategy') or [PATCH the strategy afterwards](/reference/api/legacy/unleash/admin/features-v2.md#put-strategy)
+You can either [add constraints when you add the strategy](/reference/api/legacy/unleash/admin/features-v2#add-strategy) or [PUT](/reference/api/legacy/unleash/admin/features-v2#update-strategy 'PUT an activation strategy') or [PATCH the strategy afterwards](/reference/api/legacy/unleash/admin/features-v2#put-strategy)
 
 :::
 
@@ -113,7 +115,7 @@ This can be done after you have created a strategy.
 
 :::tip API: add segments
 
-Use the [API for adding segments to a strategy](/reference/api/legacy/unleash/admin/segments.mdx#replace-activation-strategy-segments) to add segments to your strategy.
+Use the [API for adding segments to a strategy](/reference/api/legacy/unleash/admin/segments#replace-activation-strategy-segments) to add segments to your strategy.
 
 :::
 
@@ -131,11 +133,11 @@ This can be done at any point after you've created your flag.
 
 :::tip API: add variants
 
-Use the [update variants endpoint](/reference/api/legacy/unleash/admin/features-v2.md#update-variants). The payload should be your desired variant configuration.
+Use the [update variants endpoint](/reference/api/legacy/unleash/admin/features-v2#update-variants). The payload should be your desired variant configuration.
 
 :::
 
-[Variants](../reference/feature-toggle-variants.md) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing. On the flag overview page, select the variants tab. Use the "new variant" button to add the variants that you want.
+[Variants](../reference/feature-toggle-variants) give you the ability to further target your users and split them into groups of your choosing, such as for A/B testing. On the flag overview page, select the variants tab. Use the "new variant" button to add the variants that you want.
 
 ![](/img/create-toggle-add-variants.png)
 

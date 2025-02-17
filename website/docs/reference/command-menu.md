@@ -4,7 +4,7 @@ title: Command Menu
 
 :::note Availability
 
-**Version**: 6.2+.
+**Version**: `6.2+`
 
 :::
 

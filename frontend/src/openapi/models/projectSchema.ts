@@ -41,6 +41,16 @@ export interface ProjectSchema {
     health?: number;
     /** The id of this project */
     id: string;
+    /**
+     * Across all flags in your project this is the last time usage metrics where reported from connected applications.
+     * @nullable
+     */
+    lastReportedFlagUsage?: string | null;
+    /**
+     * When this project was last updated.
+     * @nullable
+     */
+    lastUpdatedAt?: string | null;
     /** The number of members this project has */
     memberCount?: number;
     /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */

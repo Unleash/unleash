@@ -14,6 +14,8 @@ import { useSegmentsApi } from 'hooks/api/actions/useSegmentsApi/useSegmentsApi'
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useState } from 'react';
 import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
+import { useHighestPermissionChangeRequestEnvironment } from 'hooks/useHighestPermissionChangeRequestEnvironment';
+import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 
 interface IRemoveSegmentButtonProps {
     segment: ISegment;
@@ -25,14 +27,29 @@ export const RemoveSegmentButton = ({ segment }: IRemoveSegmentButtonProps) => {
     const { deleteSegment } = useSegmentsApi();
     const { setToastData, setToastApiError } = useToast();
     const [showModal, toggleModal] = useState(false);
+    const highestPermissionChangeRequestEnv =
+        useHighestPermissionChangeRequestEnvironment(segment?.project);
+    const changeRequestEnv = highestPermissionChangeRequestEnv();
+    const { addChange } = useChangeRequestApi();
 
     const onRemove = async () => {
         try {
-            await deleteSegment(segment.id);
+            if (changeRequestEnv && segment.project) {
+                await addChange(segment.project, changeRequestEnv, {
+                    action: 'deleteSegment',
+                    feature: null,
+                    payload: { id: segment.id },
+                });
+            } else {
+                await deleteSegment(segment.id);
+            }
+
             await refetchSegments();
             setToastData({
+                text: `Segment ${
+                    changeRequestEnv ? 'change added to draft' : 'deleted'
+                }`,
                 type: 'success',
-                title: 'Successfully deleted segment',
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
@@ -60,6 +77,7 @@ export const RemoveSegmentButton = ({ segment }: IRemoveSegmentButtonProps) => {
                         open={showModal}
                         onClose={() => toggleModal(false)}
                         onRemove={onRemove}
+                        title={changeRequestEnv ? 'Add to draft' : 'Save'}
                     />
                 )}
             />

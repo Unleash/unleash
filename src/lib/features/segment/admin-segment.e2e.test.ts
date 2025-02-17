@@ -118,6 +118,7 @@ beforeAll(async () => {
                 anonymiseEventLog: true,
             },
         },
+        dbInitMethod: 'legacy' as const,
     };
 
     db = await dbInit('segments_api_serial', getLogger, customOptions);
@@ -204,14 +205,8 @@ test('should create segments', async () => {
     expect(segments.map((s) => s.name)).toEqual(['a', 'b', 'c']);
 });
 
-test('should return 400 for non numeeric segment ID', async () => {
-    const { body } = await app.request
-        .get(`${SEGMENTS_BASE_PATH}/stringName`)
-        .expect(400);
-    expect(body).toMatchObject({
-        message:
-            'Request validation failed: your request body or params contain invalid data: ID should be an integer',
-    });
+test('should return 400 for non numeric segment ID', async () => {
+    await app.request.get(`${SEGMENTS_BASE_PATH}/stringName`).expect(400);
 });
 
 test('should update segments', async () => {

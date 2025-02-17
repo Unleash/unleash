@@ -17,6 +17,7 @@ export interface IUiConfig {
     name: string;
     slogan: string;
     environment?: string;
+    billing?: 'subscription' | 'pay-as-you-go';
     unleashUrl?: string;
     version: string;
     versionInfo?: IVersionInfo;
@@ -32,6 +33,7 @@ export interface IUiConfig {
     resourceLimits: ResourceLimitsSchema;
     oidcConfiguredThroughEnv?: boolean;
     samlConfiguredThroughEnv?: boolean;
+    maxSessionsCount?: number;
 }
 
 export interface IProclamationToast {
@@ -53,7 +55,6 @@ export type UiFlags = {
     maintenanceMode?: boolean;
     messageBanner?: Variant;
     banner?: Variant;
-    featuresExportImport?: boolean;
     caseInsensitiveInOperators?: boolean;
     notifications?: boolean;
     personalAccessTokensKillSwitch?: boolean;
@@ -69,27 +70,31 @@ export type UiFlags = {
     signals?: boolean;
     automatedActions?: boolean;
     celebrateUnleash?: boolean;
-    featureSearchFeedback?: Variant;
     enableLicense?: boolean;
     adminTokenKillSwitch?: boolean;
     feedbackComments?: Variant;
     showInactiveUsers?: boolean;
-    featureSearchFeedbackPosting?: boolean;
+    feedbackPosting?: boolean;
     userAccessUIEnabled?: boolean;
     outdatedSdksBanner?: boolean;
-    displayTrafficDataUsage?: boolean;
     estimateTrafficDataCost?: boolean;
     disableShowContextFieldSelectionValues?: boolean;
     projectOverviewRefactorFeedback?: boolean;
     featureLifecycle?: boolean;
     manyStrategiesPagination?: boolean;
     enableLegacyVariants?: boolean;
-    navigationSidebar?: boolean;
     flagCreator?: boolean;
-    newEventSearch?: boolean;
-    archiveProjects?: boolean;
-    projectListImprovements?: boolean;
-    onboardingUI?: boolean;
+    releasePlans?: boolean;
+    releasePlanChangeRequests?: boolean;
+    'enterprise-payg'?: boolean;
+    productivityReportEmail?: boolean;
+    showUserDeviceCount?: boolean;
+    flagOverviewRedesign?: boolean;
+    granularAdminPermissions?: boolean;
+    frontendHeaderRedesign?: boolean;
+    dataUsageMultiMonthView?: boolean;
+    uiGlobalFontSize?: boolean;
+    connectionCount?: boolean;
 };
 
 export interface IVersionInfo {

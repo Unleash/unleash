@@ -44,7 +44,7 @@ export const CommandBarFeedback = ({ onSubmit }: ICommandBarFeedbackProps) => {
         });
         onSubmit();
         setToastData({
-            title: 'Feedback sent',
+            text: 'Feedback sent',
             type: 'success',
         });
     };

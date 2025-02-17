@@ -1,4 +1,4 @@
-import { Autocomplete, Checkbox, styled, TextField } from '@mui/material';
+import { Checkbox, styled, TextField } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import type { IUser } from 'interfaces/user';
@@ -9,6 +9,7 @@ import { UG_USERS_ID } from 'utils/testIds';
 import { caseInsensitiveSearch } from 'utils/search';
 import { useServiceAccounts } from 'hooks/api/getters/useServiceAccounts/useServiceAccounts';
 import type { IServiceAccount } from 'interfaces/service-account';
+import AutocompleteVirtual from 'component/common/AutocompleteVirtual/AutcompleteVirtual';
 
 const StyledOption = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -32,12 +33,14 @@ const StyledGroupFormUsersSelect = styled('div')(({ theme }) => ({
     },
 }));
 
+const StrechedLi = styled('li')({ width: '100%' });
+
 const renderOption = (
     props: React.HTMLAttributes<HTMLLIElement>,
     option: IUser,
-    selected: boolean,
+    { selected }: { selected: boolean },
 ) => (
-    <li {...props}>
+    <StrechedLi {...props} key={option.id}>
         <Checkbox
             icon={<CheckBoxOutlineBlankIcon fontSize='small' />}
             checkedIcon={<CheckBoxIcon fontSize='small' />}
@@ -52,7 +55,7 @@ const renderOption = (
                     : option.email}
             </span>
         </StyledOption>
-    </li>
+    </StrechedLi>
 );
 
 const renderTags = (value: IGroupUser[]) => (
@@ -76,37 +79,43 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
     users,
     setUsers,
 }) => {
-    const { users: usersAll } = useUsers();
-    const { serviceAccounts } = useServiceAccounts();
+    const { users: usersAll, loading: isUsersLoading } = useUsers();
+    const { serviceAccounts, loading: isServiceAccountsLoading } =
+        useServiceAccounts();
 
-    const options = [
-        ...usersAll
-            .map((user: IUser) => ({ ...user, type: 'USERS' }))
-            .sort((a: IUser, b: IUser) => {
-                const aName = a.name || a.username || '';
-                const bName = b.name || b.username || '';
-                return aName.localeCompare(bName);
-            }),
-        ...serviceAccounts
-            .map((serviceAccount: IServiceAccount) => ({
-                ...serviceAccount,
-                type: 'SERVICE ACCOUNTS',
-            }))
-            .sort((a, b) => {
-                const aName = a.name || a.username || '';
-                const bName = b.name || b.username || '';
-                return aName.localeCompare(bName);
-            }),
-    ];
+    const isLoading = isUsersLoading || isServiceAccountsLoading;
+    const options = isLoading
+        ? []
+        : [
+              ...usersAll
+                  .map((user: IUser) => ({ ...user, type: 'USERS' }))
+                  .sort((a: IUser, b: IUser) => {
+                      const aName = a.name || a.username || '';
+                      const bName = b.name || b.username || '';
+                      return aName.localeCompare(bName);
+                  }),
+              ...serviceAccounts
+                  .map((serviceAccount: IServiceAccount) => ({
+                      ...serviceAccount,
+                      type: 'SERVICE ACCOUNTS',
+                  }))
+                  .sort((a, b) => {
+                      const aName = a.name || a.username || '';
+                      const bName = b.name || b.username || '';
+                      return aName.localeCompare(bName);
+                  }),
+          ];
+
+    const isLargeList = options.length > 200;
 
     return (
         <StyledGroupFormUsersSelect>
-            <Autocomplete
+            <AutocompleteVirtual
                 data-testid={UG_USERS_ID}
                 size='small'
-                multiple
                 limitTags={1}
                 openOnFocus
+                multiple
                 disableCloseOnSelect
                 value={users as UserOption[]}
                 onChange={(event, newValue, reason) => {
@@ -119,11 +128,9 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                     }
                     setUsers(newValue);
                 }}
-                groupBy={(option) => option.type}
                 options={options}
-                renderOption={(props, option, { selected }) =>
-                    renderOption(props, option as UserOption, selected)
-                }
+                groupBy={(option) => option.type}
+                renderOption={renderOption}
                 filterOptions={(options, { inputValue }) =>
                     options.filter(
                         ({ name, username, email }) =>
@@ -140,6 +147,7 @@ export const GroupFormUsersSelect: VFC<IGroupFormUsersSelectProps> = ({
                     <TextField {...params} label='Select users' />
                 )}
                 renderTags={(value) => renderTags(value)}
+                noOptionsText={isLoading ? 'Loading…' : 'No options'}
             />
         </StyledGroupFormUsersSelect>
     );

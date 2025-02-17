@@ -18,6 +18,7 @@ export interface IUser {
     addedAt?: string;
     accountType?: AccountType;
     scimId?: string;
+    activeSessions?: number;
 }
 
 export interface IPermission {

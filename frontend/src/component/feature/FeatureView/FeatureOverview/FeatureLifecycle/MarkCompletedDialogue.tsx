@@ -72,12 +72,12 @@ export const MarkCompletedDialogue = ({
                         mb: 4,
                     }}
                 >
-                    Marking the feature flag as complete does not affect any
-                    configuration, but it moves the feature flag into it’s next
-                    life cycle stage and is an indication that you have learned
-                    what you needed in order to progress with the feature. It
-                    serves as a reminder to start cleaning up the feature flag
-                    and removing it from the code.
+                    Marking the feature <b>{featureId}</b> as complete does not
+                    affect any configuration, but it moves the feature flag into
+                    it’s next life cycle stage and is an indication that you
+                    have learned what you needed in order to progress with the
+                    feature. It serves as a reminder to start cleaning up the
+                    feature flag and removing it from the code.
                 </Box>
 
                 <Typography

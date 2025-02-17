@@ -11,9 +11,7 @@ import type { IntegrationEventState } from '../features/integration-events/integ
 import {
     type FeatureEventFormatter,
     FeatureEventFormatterMd,
-    LinkStyle,
 } from './feature-event-formatter-md';
-import { ADDON_EVENTS_HANDLED } from '../metric-events';
 
 interface IParameters {
     url: string;
@@ -31,10 +29,9 @@ export default class Webhook extends Addon {
 
     constructor(args: IAddonConfig) {
         super(definition, args);
-        this.msgFormatter = new FeatureEventFormatterMd(
-            args.unleashUrl,
-            LinkStyle.MD,
-        );
+        this.msgFormatter = new FeatureEventFormatterMd({
+            unleashUrl: args.unleashUrl,
+        });
         this.flagResolver = args.flagResolver;
     }
 
@@ -106,17 +103,12 @@ export default class Webhook extends Addon {
             this.logger.warn(failedMessage);
         }
 
-        if (this.flagResolver.isEnabled('addonUsageMetrics')) {
-            this.eventBus.emit(ADDON_EVENTS_HANDLED, {
-                result: state,
-                destination: 'webhook',
+        if (this.flagResolver.isEnabled('webhookDomainLogging')) {
+            const domain = new URL(url).hostname;
+            this.logger.info(`Webhook invoked`, {
+                domain,
             });
         }
-
-        const domain = new URL(url).hostname;
-        this.logger.info(`Webhook invoked`, {
-            domain,
-        });
 
         this.registerEvent({
             integrationId,

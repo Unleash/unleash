@@ -31,7 +31,9 @@ export const ShowHide: FC<{ mode: NavigationMode; onChange: () => void }> = ({
                     Hide (⌘ + B)
                 </Box>
             )}
-            <IconButton>
+            <IconButton
+                aria-label={`${mode === 'full' ? 'Collapse' : 'Expand'} (⌘ + B)`}
+            >
                 {mode === 'full' ? (
                     <HideIcon color='primary' />
                 ) : (

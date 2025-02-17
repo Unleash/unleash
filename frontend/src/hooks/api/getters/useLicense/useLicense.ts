@@ -1,11 +1,12 @@
-import useSWR from 'swr';
 import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import { useEnterpriseSWR } from '../useEnterpriseSWR/useEnterpriseSWR';
+import type { BannerVariant } from 'interfaces/banner';
 
 export interface LicenseInfo {
     isValid: boolean;
     message?: string;
+    messageType?: BannerVariant;
     loading: boolean;
     reCheckLicense: () => void;
     error?: Error;
@@ -41,6 +42,7 @@ export const useLicenseCheck = (): LicenseInfo => {
     return {
         isValid: data?.isValid,
         message: data?.message,
+        messageType: data?.messageType,
         loading: !error && !data,
         reCheckLicense: () => mutate(),
         error,
@@ -48,7 +50,8 @@ export const useLicenseCheck = (): LicenseInfo => {
 };
 
 export const useLicense = (): License => {
-    const { data, error, mutate } = useSWR(
+    const { data, error, mutate } = useEnterpriseSWR(
+        undefined,
         formatApiPath(`api/admin/license`),
         fetcher,
     );

@@ -1,6 +1,6 @@
-ARG NODE_VERSION=20.16.0-alpine
+ARG NODE_VERSION=20.18.2-alpine
 
-FROM node:$NODE_VERSION as builder
+FROM node:$NODE_VERSION AS builder
 
 WORKDIR /unleash
 
@@ -15,19 +15,21 @@ RUN yarn build:frontend:if-needed
 
 RUN mkdir -p /unleash/build/frontend && mv /unleash/frontend/build /unleash/build/frontend/build
 
-WORKDIR /unleash/docker
-
 RUN yarn workspaces focus -A --production
 
 FROM node:$NODE_VERSION
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
-ENV TZ UTC
+ENV TZ=UTC
 
 WORKDIR /unleash
 
-COPY --from=builder /unleash/docker /unleash
+COPY --from=builder /unleash/build /unleash/build
+
+COPY --from=builder /unleash/node_modules /unleash/node_modules
+
+COPY ./docker/index.js /unleash/index.js
 
 RUN rm -rf /usr/local/lib/node_modules/npm/
 

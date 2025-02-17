@@ -3,26 +3,7 @@ import { screen } from '@testing-library/react';
 import { useDefaultColumnVisibility } from './useDefaultColumnVisibility';
 import { render } from 'utils/testRenderer';
 import { ThemeProvider } from 'themes/ThemeProvider';
-import mediaQuery from 'css-mediaquery';
-
-const createMatchMedia = (width: number) => {
-    return (query: string) => {
-        return {
-            matches: mediaQuery.match(query, { width }),
-            media: '',
-            addListener: () => {},
-            removeListener: () => {},
-            onchange: () => {},
-            addEventListener: () => {},
-            removeEventListener: () => {},
-            dispatchEvent: () => true,
-        };
-    };
-};
-
-const resizeScreen = (width: number) => {
-    window.matchMedia = createMatchMedia(width);
-};
+import { resizeScreen } from 'utils/resizeScreen';
 
 const columnIds = [
     'select',

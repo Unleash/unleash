@@ -11,6 +11,15 @@ exports[`returns all baseRoutes 1`] = `
     "type": "protected",
   },
   {
+    "component": [Function],
+    "menu": {
+      "mobile": true,
+    },
+    "path": "/personal",
+    "title": "Dashboard",
+    "type": "protected",
+  },
+  {
     "component": {
       "$$typeof": Symbol(react.lazy),
       "_init": [Function],
@@ -238,7 +247,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "EEA",
+    "enterprise": true,
     "menu": {
       "advanced": true,
       "mobile": true,
@@ -249,10 +258,51 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "flag": "featureSearchFeedbackPosting",
+    "flag": "feedbackPosting",
     "menu": {},
     "path": "/feedback",
     "title": "Feedback",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "flag": "releasePlans",
+    "menu": {
+      "advanced": true,
+      "mode": [
+        "enterprise",
+      ],
+    },
+    "path": "/release-management",
+    "title": "Release management",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "enterprise": true,
+    "flag": "releasePlans",
+    "menu": {
+      "mode": [
+        "enterprise",
+      ],
+    },
+    "parent": "/release-management",
+    "path": "/release-management/create-template",
+    "title": "Create release plan template",
+    "type": "protected",
+  },
+  {
+    "component": [Function],
+    "enterprise": true,
+    "flag": "releasePlans",
+    "menu": {
+      "mode": [
+        "enterprise",
+      ],
+    },
+    "parent": "/release-management",
+    "path": "/release-management/edit/:templateId",
+    "title": "Edit release plan template",
     "type": "protected",
   },
   {

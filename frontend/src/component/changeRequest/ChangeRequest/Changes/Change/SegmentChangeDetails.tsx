@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { VFC, FC, ReactNode } from 'react';
+import type { FC, ReactNode } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import type {
     ChangeRequestState,
@@ -52,12 +52,19 @@ const SegmentContainer = styled(Box, {
     borderRadius: `0 0 ${theme.shape.borderRadiusLarge}px ${theme.shape.borderRadiusLarge}px`,
 }));
 
-export const SegmentChangeDetails: VFC<{
+export const SegmentChangeDetails: FC<{
     actions?: ReactNode;
     change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
     changeRequestState: ChangeRequestState;
 }> = ({ actions, change, changeRequestState }) => {
     const { segment: currentSegment } = useSegment(change.payload.id);
+    const snapshotSegment = change.payload.snapshot;
+    const previousName =
+        changeRequestState === 'Applied'
+            ? change.payload?.snapshot?.name
+            : currentSegment?.name;
+    const referenceSegment =
+        changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
 
     return (
         <SegmentContainer conflict={change.conflict}>
@@ -71,10 +78,13 @@ export const SegmentChangeDetails: VFC<{
                         >
                             - Deleting segment:
                         </Typography>
-                        <SegmentTooltipLink change={change}>
+                        <SegmentTooltipLink
+                            name={change.payload.name}
+                            previousName={previousName}
+                        >
                             <SegmentDiff
                                 change={change}
-                                currentSegment={currentSegment}
+                                currentSegment={referenceSegment}
                             />
                         </SegmentTooltipLink>
                     </ChangeItemInfo>
@@ -94,10 +104,10 @@ export const SegmentChangeDetails: VFC<{
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
                             <Typography>Editing segment:</Typography>
-                            <SegmentTooltipLink change={change}>
+                            <SegmentTooltipLink name={change.payload.name}>
                                 <SegmentDiff
                                     change={change}
-                                    currentSegment={currentSegment}
+                                    currentSegment={referenceSegment}
                                 />
                             </SegmentTooltipLink>
                         </ChangeItemInfo>

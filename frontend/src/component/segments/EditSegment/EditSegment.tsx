@@ -101,7 +101,7 @@ export const EditSegment = ({ modal }: IEditSegmentProps) => {
                     navigate('/segments/');
                 }
                 setToastData({
-                    title: `Segment ${
+                    text: `Segment ${
                         changeRequestEnv ? 'change added to draft' : 'updated'
                     }`,
                     type: 'success',

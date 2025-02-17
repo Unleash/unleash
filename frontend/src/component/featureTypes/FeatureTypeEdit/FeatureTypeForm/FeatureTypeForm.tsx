@@ -82,7 +82,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
             await updateFeatureTypeLifetime(featureType.id, value);
             refetch();
             setToastData({
-                title: 'Feature type updated',
+                text: 'Feature type updated',
                 type: 'success',
             });
             navigate('/feature-toggle-type');
@@ -125,7 +125,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                     : `Edit flag type: ${featureType?.name}`
             }
             description={featureType?.description || ''}
-            documentationLink='https://docs.getunleash.io/reference/feature-toggle-types'
+            documentationLink='https://docs.getunleash.io/reference/feature-toggles#feature-flag-types'
             documentationLinkLabel='Feature flag types documentation'
             formatApiCode={formatApiCode}
         >
@@ -151,7 +151,7 @@ export const FeatureTypeForm: VFC<FeatureTypeFormProps> = ({
                                 </p>
                                 <br />
                                 <a
-                                    href='https://docs.getunleash.io/reference/feature-toggle-types#expected-lifetime'
+                                    href='https://docs.getunleash.io/reference/feature-toggles#feature-flag-types'
                                     target='_blank'
                                     rel='noreferrer'
                                 >

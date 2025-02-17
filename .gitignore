@@ -3,6 +3,7 @@ lerna-debug
 npm-debug
 .DS_Store
 /dist
+.vscode
 
 # Logs
 logs
@@ -38,6 +39,21 @@ jsconfig.json
 typings
 .nyc_output
 
+# Emacs, nix, devenv, pijul
+# Only Thomas uses this and he doesn't want to add it to the repo
+.devenv
+.devenv.flake.nix
+.dir-locals.el
+.envrc
+shell.nix
+# Pijul + ignore
+.ignore
+.pijul
+# Custom hooks in husky directory
+.husky/pre-push
+.husky/prepare-commit-msg
+
+
 # We use yarn.lock
 package-lock.json
 
@@ -57,7 +73,7 @@ frontend/src/openapi/apis
 frontend/src/openapi/index.ts
 
 # Generated docs
-website/docs/reference/api/**/sidebar.js
+website/docs/reference/api/**/sidebar.ts
 website/docs/reference/api/**/**.info.mdx
 website/docs/generated
 reports/jest-junit.xml

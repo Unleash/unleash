@@ -62,21 +62,18 @@ export const ManageTags: VFC<IManageTagsProps> = ({
         const features = data.map(({ name }) => name);
         const payload = { features, tags: { addedTags, removedTags } };
         try {
-            await bulkUpdateTags(payload, projectId);
-            const added = addedTags.length
-                ? `Added tags: ${addedTags
-                      .map(({ type, value }) => `${type}:${value}`)
-                      .join(', ')}.`
-                : '';
-            const removed = removedTags.length
-                ? `Removed tags: ${removedTags
-                      .map(({ type, value }) => `${type}:${value}`)
-                      .join(', ')}.`
-                : '';
+            const toastText = [
+                addedTags.length > 0 &&
+                    `added ${addedTags.length} tag${addedTags.length > 1 ? 's' : ''}`,
+                removedTags.length > 0 &&
+                    `removed ${removedTags.length} tag${removedTags.length > 1 ? 's' : ''}`,
+            ]
+                .filter(Boolean)
+                .join(' and ');
 
+            await bulkUpdateTags(payload, projectId);
             setToastData({
-                title: 'Tags updated',
-                text: `${features.length} feature flags updated. ${added} ${removed}`,
+                text: toastText,
                 type: 'success',
                 autoHideDuration: 12000,
             });
@@ -96,14 +93,16 @@ export const ManageTags: VFC<IManageTagsProps> = ({
         <>
             <PermissionHOC projectId={projectId} permission={UPDATE_FEATURE}>
                 {({ hasAccess }) => (
-                    <Button
-                        disabled={!hasAccess || isOpen}
-                        variant='outlined'
-                        size='small'
-                        onClick={() => setIsOpen(true)}
-                    >
-                        Tags
-                    </Button>
+                    <span>
+                        <Button
+                            disabled={!hasAccess || isOpen}
+                            variant='outlined'
+                            size='small'
+                            onClick={() => setIsOpen(true)}
+                        >
+                            Tags
+                        </Button>
+                    </span>
                 )}
             </PermissionHOC>
             <ManageBulkTagsDialog

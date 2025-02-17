@@ -10,7 +10,7 @@ html {
 
 body {
     min-height: 100%;
-    font-family: 'Sen', sans-serif;
+    font-family: "Sen", sans-serif;
     font-size: 16px;
     font-variant-ligatures: none;
     padding: 0;
@@ -19,18 +19,12 @@ body {
 }
 
 button {
-    font-family: 'Sen', sans-serif;
+    font-family: "Sen", sans-serif;
     font-variant-ligatures: none;
 }
 
 .MuiAccordion-root.Mui-expanded {
     margin: 0;
-}
-
-.MuiButton-root {
-    border-radius: 3px;
-    text-transform: none;
-    font-size: 16px;
 }
 
 .skeleton {
@@ -43,7 +37,7 @@ button {
 }
 
 .skeleton::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0px;
     right: 0;
@@ -61,7 +55,7 @@ button {
     left: 0;
     transform: translateX(-100%);
     animation: shimmer 3s infinite;
-    content: '';
+    content: "";
     z-index: 5001;
 }
 
@@ -104,8 +98,8 @@ button {
     --dropdownMenuWidth: 200px;
 
     /* BOX SHADOWS */
-    --chip-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
-        0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+    --chip-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px
+        rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
 
     /* BORDERS */
     --default-border: 1px solid #f1f1f1;
@@ -152,16 +146,16 @@ a:hover {
     }
 }
 
-input.hide-clear[type='search']::-webkit-search-decoration,
-input.hide-clear[type='search']::-webkit-search-cancel-button,
-input.hide-clear[type='search']::-webkit-search-results-button,
-input.hide-clear[type='search']::-webkit-search-results-decoration {
+input.hide-clear[type="search"]::-webkit-search-decoration,
+input.hide-clear[type="search"]::-webkit-search-cancel-button,
+input.hide-clear[type="search"]::-webkit-search-results-button,
+input.hide-clear[type="search"]::-webkit-search-results-decoration {
     display: none;
 }
 
 /*
     This style is to hide the error message block from "vanilla-jsoneditor" package.
-    The package has another minmal way to show error inline with the editor. And so we are hiding this block 
+    The package has another minimal way to show error inline with the editor. And so we are hiding this block
     which shows at the bottom of the editor and does not have the best UX - because it shows errors even as user
     is typing in the editor.
 */

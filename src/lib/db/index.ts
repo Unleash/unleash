@@ -6,7 +6,7 @@ import FeatureTypeStore from './feature-type-store';
 import StrategyStore from './strategy-store';
 import ClientInstanceStore from './client-instance-store';
 import ClientApplicationsStore from './client-applications-store';
-import ContextFieldStore from './context-field-store';
+import ContextFieldStore from '../features/context/context-field-store';
 import SettingStore from './setting-store';
 import UserStore from './user-store';
 import ProjectStore from '../features/project/project-store';
@@ -52,8 +52,12 @@ import { LargestResourcesReadModel } from '../features/metrics/sizes/largest-res
 import { IntegrationEventsStore } from '../features/integration-events/integration-events-store';
 import { FeatureCollaboratorsReadModel } from '../features/feature-toggle/feature-collaborators-read-model';
 import { createProjectReadModel } from '../features/project/createProjectReadModel';
-import { OnboardingReadModel } from '../features/onboarding/onboarding-read-model';
 import { OnboardingStore } from '../features/onboarding/onboarding-store';
+import { createOnboardingReadModel } from '../features/onboarding/createOnboardingReadModel';
+import { UserUnsubscribeStore } from '../features/user-subscriptions/user-unsubscribe-store';
+import { UserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model';
+import { UniqueConnectionStore } from '../features/unique-connection/unique-connection-store';
+import { UniqueConnectionReadModel } from '../features/unique-connection/unique-connection-read-model';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -92,12 +96,7 @@ export const createStores = (
         settingStore: new SettingStore(db, getLogger),
         userStore: new UserStore(db, getLogger, config.flagResolver),
         accountStore: new AccountStore(db, getLogger),
-        projectStore: new ProjectStore(
-            db,
-            eventBus,
-            getLogger,
-            config.flagResolver,
-        ),
+        projectStore: new ProjectStore(db, eventBus, config),
         tagStore: new TagStore(db, eventBus, getLogger),
         tagTypeStore: new TagTypeStore(db, eventBus, getLogger),
         addonStore: new AddonStore(db, eventBus, getLogger),
@@ -120,15 +119,14 @@ export const createStores = (
         clientFeatureToggleStore: new FeatureToggleClientStore(
             db,
             eventBus,
-            getLogger,
-            config.flagResolver,
+            config,
         ),
-        environmentStore: new EnvironmentStore(db, eventBus, getLogger),
+        environmentStore: new EnvironmentStore(db, eventBus, config),
         featureTagStore: new FeatureTagStore(db, eventBus, getLogger),
         featureEnvironmentStore: new FeatureEnvironmentStore(
             db,
             eventBus,
-            getLogger,
+            config,
         ),
         userSplashStore: new UserSplashStore(db, eventBus, getLogger),
         roleStore: new RoleStore(db, eventBus, getLogger),
@@ -173,7 +171,7 @@ export const createStores = (
         projectFlagCreatorsReadModel: new ProjectFlagCreatorsReadModel(db),
         featureLifecycleStore: new FeatureLifecycleStore(db),
         featureStrategiesReadModel: new FeatureStrategiesReadModel(db),
-        onboardingReadModel: new OnboardingReadModel(db),
+        onboardingReadModel: createOnboardingReadModel(db),
         onboardingStore: new OnboardingStore(db),
         featureLifecycleReadModel: new FeatureLifecycleReadModel(
             db,
@@ -186,6 +184,12 @@ export const createStores = (
             db,
             eventBus,
             config.flagResolver,
+        ),
+        userUnsubscribeStore: new UserUnsubscribeStore(db),
+        userSubscriptionsReadModel: new UserSubscriptionsReadModel(db),
+        uniqueConnectionStore: new UniqueConnectionStore(db),
+        uniqueConnectionReadModel: new UniqueConnectionReadModel(
+            new UniqueConnectionStore(db),
         ),
     };
 };

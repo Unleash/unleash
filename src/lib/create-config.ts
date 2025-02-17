@@ -39,6 +39,7 @@ import {
 } from './types/models/api-token';
 import {
     parseEnvVarBoolean,
+    parseEnvVarJSON,
     parseEnvVarNumber,
     parseEnvVarStrings,
 } from './util/parseEnvVar';
@@ -258,11 +259,14 @@ const defaultDbOptions: WithOptional<IDBOption, 'user' | 'password' | 'host'> =
             propagateCreateError: false,
         },
         schema: process.env.DATABASE_SCHEMA || 'public',
-        disableMigration: false,
+        disableMigration: parseEnvVarBoolean(
+            process.env.DATABASE_DISABLE_MIGRATION,
+            false,
+        ),
         applicationName: process.env.DATABASE_APPLICATION_NAME || 'unleash',
     };
 
-const defaultSessionOption: ISessionOption = {
+const defaultSessionOption = (isEnterprise: boolean): ISessionOption => ({
     ttlHours: parseEnvVarNumber(process.env.SESSION_TTL_HOURS, 48),
     clearSiteDataOnLogout: parseEnvVarBoolean(
         process.env.SESSION_CLEAR_SITE_DATA_ON_LOGOUT,
@@ -270,7 +274,16 @@ const defaultSessionOption: ISessionOption = {
     ),
     cookieName: 'unleash-session',
     db: true,
-};
+    // default limit of 100 for enterprise, 5 for pro and oss
+    // at least 1 session should be allowed
+    maxParallelSessions: Math.max(
+        parseEnvVarNumber(
+            process.env.MAX_PARALLEL_SESSIONS,
+            isEnterprise ? 100 : 5,
+        ),
+        1,
+    ),
+});
 
 const defaultServerOption: IServerOption = {
     pipe: undefined,
@@ -317,8 +330,8 @@ const defaultVersionOption: IVersionOption = {
 };
 
 const parseEnvVarInitialAdminUser = (): UsernameAdminUser | undefined => {
-    const username = process.env.INITIAL_ADMIN_USER_USERNAME;
-    const password = process.env.INITIAL_ADMIN_USER_PASSWORD;
+    const username = process.env.UNLEASH_DEFAULT_ADMIN_USERNAME;
+    const password = process.env.UNLEASH_DEFAULT_ADMIN_PASSWORD;
     return username && password ? { username, password } : undefined;
 };
 
@@ -348,6 +361,7 @@ const defaultEmail: IEmailOption = {
     sender: process.env.EMAIL_SENDER || 'Unleash <noreply@getunleash.io>',
     smtpuser: process.env.EMAIL_USER,
     smtppass: process.env.EMAIL_PASSWORD,
+    optionalHeaders: parseEnvVarJSON(process.env.EMAIL_OPTIONAL_HEADERS, {}),
 };
 
 const dbPort = (dbConfig: Partial<IDBOption>): Partial<IDBOption> => {
@@ -491,6 +505,17 @@ const parseFrontendApiOrigins = (options: IUnleashOptions): string[] => {
     return frontendApiOrigins;
 };
 
+export function resolveIsOss(
+    isEnterprise: boolean,
+    isOssOption?: boolean,
+    uiEnvironment?: string,
+    testEnvironmentActive: boolean = false,
+): boolean {
+    return testEnvironmentActive
+        ? (isOssOption ?? false)
+        : !isEnterprise && uiEnvironment?.toLowerCase() !== 'pro';
+}
+
 export function createConfig(options: IUnleashOptions): IUnleashConfig {
     let extraDbOptions = {};
 
@@ -515,11 +540,6 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         dbPort(extraDbOptions),
         dbPort(fileDbOptions),
         options.db || {},
-    ]);
-
-    const session: ISessionOption = mergeAll([
-        defaultSessionOption,
-        options.session || {},
     ]);
 
     const logLevel =
@@ -615,6 +635,19 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         Boolean(options.enterpriseVersion) &&
         ui.environment?.toLowerCase() !== 'pro';
 
+    const isTest = process.env.NODE_ENV === 'test';
+    const isOss = resolveIsOss(
+        isEnterprise,
+        options.isOss,
+        ui.environment,
+        isTest,
+    );
+
+    const session: ISessionOption = mergeAll([
+        defaultSessionOption(isEnterprise),
+        options.session || {},
+    ]);
+
     const metricsRateLimiting = loadMetricsRateLimitingConfig(options);
 
     const rateLimiting = loadRateLimitingConfig(options);
@@ -622,7 +655,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
     const feedbackUriPath = process.env.FEEDBACK_URI_PATH;
 
     const dailyMetricsStorageDays = Math.min(
-        parseEnvVarNumber(process.env.DAILY_METRICS_STORAGE_DAYS, 31),
+        parseEnvVarNumber(process.env.DAILY_METRICS_STORAGE_DAYS, 91),
         91,
     );
 
@@ -711,6 +744,16 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         ),
     };
 
+    const openAIAPIKey = process.env.OPENAI_API_KEY;
+
+    const defaultDaysToBeConsideredInactive = 180;
+    const userInactivityThresholdInDays =
+        options.userInactivityThresholdInDays ??
+        parseEnvVarNumber(
+            process.env.USER_INACTIVITY_THRESHOLD_IN_DAYS,
+            defaultDaysToBeConsideredInactive,
+        );
+
     return {
         db,
         session,
@@ -745,14 +788,18 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         publicFolder: options.publicFolder,
         disableScheduler: options.disableScheduler,
         isEnterprise: isEnterprise,
+        isOss: isOss,
         metricsRateLimiting,
         rateLimiting,
         feedbackUriPath,
         dailyMetricsStorageDays,
+        openAIAPIKey,
+        userInactivityThresholdInDays,
     };
 }
 
 module.exports = {
     createConfig,
+    resolveIsOss,
     authTypeFromString,
 };

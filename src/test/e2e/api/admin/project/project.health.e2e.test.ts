@@ -12,7 +12,9 @@ let db: ITestDb;
 let user: IUser;
 
 beforeAll(async () => {
-    db = await dbInit('project_health_api_serial', getLogger);
+    db = await dbInit('project_health_api_serial', getLogger, {
+        dbInitMethod: 'legacy' as const,
+    });
     app = await setupAppWithCustomConfig(
         db.stores,
         {

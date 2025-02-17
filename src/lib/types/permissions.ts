@@ -41,6 +41,12 @@ export const CREATE_TAG_TYPE = 'CREATE_TAG_TYPE';
 export const UPDATE_TAG_TYPE = 'UPDATE_TAG_TYPE';
 export const DELETE_TAG_TYPE = 'DELETE_TAG_TYPE';
 
+export const READ_LOGS = 'READ_LOGS';
+export const UPDATE_MAINTENANCE_MODE = 'UPDATE_MAINTENANCE_MODE';
+export const UPDATE_INSTANCE_BANNERS = 'UPDATE_INSTANCE_BANNERS';
+export const UPDATE_CORS = 'UPDATE_CORS';
+export const UPDATE_AUTH_CONFIGURATION = 'UPDATE_AUTH_CONFIGURATION';
+
 // Project
 export const CREATE_FEATURE = 'CREATE_FEATURE';
 export const UPDATE_FEATURE = 'UPDATE_FEATURE';
@@ -73,9 +79,14 @@ export const PROJECT_USER_ACCESS_WRITE = 'PROJECT_USER_ACCESS_WRITE';
 export const PROJECT_DEFAULT_STRATEGY_WRITE = 'PROJECT_DEFAULT_STRATEGY_WRITE';
 export const PROJECT_CHANGE_REQUEST_WRITE = 'PROJECT_CHANGE_REQUEST_WRITE';
 export const PROJECT_SETTINGS_WRITE = 'PROJECT_SETTINGS_WRITE';
+
+export const RELEASE_PLAN_TEMPLATE_CREATE = 'RELEASE_PLAN_TEMPLATE_CREATE';
+export const RELEASE_PLAN_TEMPLATE_UPDATE = 'RELEASE_PLAN_TEMPLATE_UPDATE';
+export const RELEASE_PLAN_TEMPLATE_DELETE = 'RELEASE_PLAN_TEMPLATE_DELETE';
+
 export const ROOT_PERMISSION_CATEGORIES = [
     {
-        label: 'Addon',
+        label: 'Integration',
         permissions: [CREATE_ADDON, UPDATE_ADDON, DELETE_ADDON],
     },
     {
@@ -122,5 +133,89 @@ export const ROOT_PERMISSION_CATEGORIES = [
     {
         label: 'Tag type',
         permissions: [CREATE_TAG_TYPE, UPDATE_TAG_TYPE, DELETE_TAG_TYPE],
+    },
+    {
+        label: 'Release plan templates',
+        permissions: [
+            RELEASE_PLAN_TEMPLATE_CREATE,
+            RELEASE_PLAN_TEMPLATE_DELETE,
+            RELEASE_PLAN_TEMPLATE_UPDATE,
+        ],
+    },
+    {
+        label: 'Instance maintenance',
+        permissions: [
+            READ_LOGS,
+            UPDATE_MAINTENANCE_MODE,
+            UPDATE_INSTANCE_BANNERS,
+            UPDATE_CORS,
+        ],
+    },
+    {
+        label: 'Authentication',
+        permissions: [UPDATE_AUTH_CONFIGURATION],
+    },
+];
+
+// Used on Frontend, to allow admin panel use for users with custom root roles
+export const MAINTENANCE_MODE_PERMISSIONS = [
+    ADMIN,
+    READ_ROLE,
+    READ_CLIENT_API_TOKEN,
+    READ_FRONTEND_API_TOKEN,
+    UPDATE_MAINTENANCE_MODE,
+    READ_LOGS,
+];
+
+export type ProjectPermissionCategory = {
+    label: string;
+    permissions: Array<[string, string?]>; // [permission, is subset of]
+};
+
+export const PROJECT_PERMISSIONS_STRUCTURE: ProjectPermissionCategory[] = [
+    {
+        label: 'Features and strategies',
+        permissions: [
+            [CREATE_FEATURE],
+            [UPDATE_FEATURE],
+            [UPDATE_FEATURE_DEPENDENCY],
+            [DELETE_FEATURE],
+            [UPDATE_FEATURE_VARIANTS],
+            [MOVE_FEATURE_TOGGLE],
+            [CREATE_FEATURE_STRATEGY],
+            [UPDATE_FEATURE_STRATEGY],
+            [DELETE_FEATURE_STRATEGY],
+            [UPDATE_FEATURE_ENVIRONMENT],
+            [UPDATE_FEATURE_ENVIRONMENT_VARIANTS],
+            [UPDATE_PROJECT_SEGMENT],
+        ],
+    },
+    {
+        label: 'Project settings',
+        permissions: [
+            [UPDATE_PROJECT],
+            [PROJECT_USER_ACCESS_READ, UPDATE_PROJECT],
+            [PROJECT_USER_ACCESS_WRITE, UPDATE_PROJECT],
+            [PROJECT_DEFAULT_STRATEGY_READ, UPDATE_PROJECT],
+            [PROJECT_DEFAULT_STRATEGY_WRITE, UPDATE_PROJECT],
+            [PROJECT_SETTINGS_READ, UPDATE_PROJECT],
+            [PROJECT_SETTINGS_WRITE, UPDATE_PROJECT],
+            [DELETE_PROJECT],
+        ],
+    },
+    {
+        label: 'API tokens',
+        permissions: [
+            [READ_PROJECT_API_TOKEN],
+            [CREATE_PROJECT_API_TOKEN],
+            [DELETE_PROJECT_API_TOKEN],
+        ],
+    },
+    {
+        label: 'Change requests',
+        permissions: [
+            [PROJECT_CHANGE_REQUEST_WRITE, UPDATE_PROJECT],
+            [PROJECT_CHANGE_REQUEST_READ, UPDATE_PROJECT],
+        ],
     },
 ];

@@ -12,10 +12,9 @@ import { useLocationSettings } from 'hooks/useLocationSettings';
 import { useShowDependentFeatures } from './useShowDependentFeatures';
 import { FeatureLifecycle } from '../FeatureLifecycle/FeatureLifecycle';
 import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue';
-import { UserAvatar } from 'component/common/UserAvatar/UserAvatar';
 import { TagRow } from './TagRow';
-import { CreateFeatureSchemaType } from 'openapi';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
+import { Collaborators } from './Collaborators';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -33,6 +32,7 @@ const StyledMetaDataContainer = styled('div')(({ theme }) => ({
 const StyledTitle = styled('h2')(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
     fontWeight: theme.typography.fontWeightBold,
+    marginBottom: theme.spacing(0.5),
 }));
 
 const StyledBody = styled('div')({
@@ -44,7 +44,7 @@ export const StyledMetaDataItem = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    minHeight: theme.spacing(4.25),
+    minHeight: theme.spacing(4.5),
     fontSize: theme.fontSizes.smallBody,
 }));
 
@@ -61,11 +61,6 @@ export const StyledMetaDataItemValue = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
-}));
-
-const StyledUserAvatar = styled(UserAvatar)(({ theme }) => ({
-    height: theme.spacing(3.5),
-    width: theme.spacing(3.5),
 }));
 
 const FeatureOverviewMetaData = () => {
@@ -106,14 +101,6 @@ const FeatureOverviewMetaData = () => {
                             {capitalizeFirst(type)} flag
                         </StyledMetaDataItemText>
                     </StyledMetaDataItem>
-                    {/* <StyledMetaDataItem>
-                        <StyledMetaDataItemLabel>
-                            Project:
-                        </StyledMetaDataItemLabel>
-                        <StyledMetaDataItemText data-loading>
-                            {project}
-                        </StyledMetaDataItemText>
-                    </StyledMetaDataItem> */}
                     {feature.lifecycle ? (
                         <StyledMetaDataItem data-loading>
                             <StyledMetaDataItemLabel>
@@ -149,7 +136,19 @@ const FeatureOverviewMetaData = () => {
                                 <StyledMetaDataItemText data-loading>
                                     {feature.createdBy?.name}
                                 </StyledMetaDataItemText>
-                                {/* <StyledUserAvatar user={feature.createdBy} /> */}
+                            </StyledMetaDataItemValue>
+                        </StyledMetaDataItem>
+                    ) : null}
+                    {feature.collaborators?.users &&
+                    feature.collaborators?.users.length > 0 ? (
+                        <StyledMetaDataItem>
+                            <StyledMetaDataItemLabel>
+                                Collaborators:
+                            </StyledMetaDataItemLabel>
+                            <StyledMetaDataItemValue>
+                                <Collaborators
+                                    collaborators={feature.collaborators?.users}
+                                />
                             </StyledMetaDataItemValue>
                         </StyledMetaDataItem>
                     ) : null}

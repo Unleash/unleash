@@ -16,6 +16,7 @@ export interface IChangeSchema {
         | 'reorderStrategy'
         | 'archiveFeature'
         | 'updateSegment'
+        | 'deleteSegment'
         | 'addDependency'
         | 'deleteDependency'
         | 'addReleasePlan'

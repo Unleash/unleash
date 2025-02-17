@@ -169,6 +169,7 @@ describe('RevisionCache', () => {
 
         const hydrationEvent = deltaCache.getHydrationEvent();
         expect(hydrationEvent.features).toHaveLength(2);
+        expect(hydrationEvent.eventId).toEqual(7);
         expect(hydrationEvent.features).toEqual(
             expect.arrayContaining([
                 expect.objectContaining({ name: 'my-feature-flag' }),
@@ -181,5 +182,68 @@ describe('RevisionCache', () => {
                 expect.objectContaining({ name: 'new-segment' }),
             ]),
         );
+    });
+
+    it('should not mutate previous feature-updated events when new events with the same feature name are added', () => {
+        const baseEvent: DeltaHydrationEvent = {
+            eventId: 1,
+            features: [
+                {
+                    name: 'base-flag',
+                    type: 'release',
+                    enabled: true,
+                    project: 'streaming-deltas',
+                    stale: false,
+                    strategies: [],
+                    variants: [],
+                    description: null,
+                    impressionData: false,
+                },
+            ],
+            type: 'hydration',
+            segments: [],
+        };
+
+        const deltaCache = new DeltaCache(baseEvent, 10);
+
+        const initialFeatureEvent: DeltaEvent = {
+            eventId: 129,
+            type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            feature: {
+                impressionData: false,
+                enabled: false,
+                name: 'streaming-test',
+                description: null,
+                project: 'streaming-deltas',
+                stale: false,
+                type: 'release',
+                variants: [],
+                strategies: [],
+            },
+        };
+        // This tests is to verify that the initialFeatureEvent is not mutated when a new event with the same feature name is added
+        // the following dirty way to clone this object is to avoid mutation on the comparison object. Because the object is passed by reference
+        // we would be comparing the same object with itself which would cause the expect check to always pass because the comparison would
+        // also change to match the object being compared.
+        deltaCache.addEvents([JSON.parse(JSON.stringify(initialFeatureEvent))]);
+
+        const updatedFeatureEvent: DeltaEvent = {
+            eventId: 130,
+            type: DELTA_EVENT_TYPES.FEATURE_UPDATED,
+            feature: {
+                impressionData: false,
+                enabled: true,
+                name: 'streaming-test',
+                description: null,
+                project: 'streaming-deltas',
+                stale: false,
+                type: 'release',
+                variants: [],
+                strategies: [{ name: 'new-strategy', parameters: {} }],
+            },
+        };
+        deltaCache.addEvents([updatedFeatureEvent]);
+        // @ts-ignore
+        expect(deltaCache.events[1]).toStrictEqual(initialFeatureEvent);
     });
 });

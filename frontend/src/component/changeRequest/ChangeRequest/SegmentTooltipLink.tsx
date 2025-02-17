@@ -42,8 +42,9 @@ export const SegmentDiff: FC<{
     );
 };
 interface IStrategyTooltipLinkProps {
-    change: IChangeRequestUpdateSegment | IChangeRequestDeleteSegment;
     children?: React.ReactNode;
+    name?: string;
+    previousName?: string;
 }
 
 const StyledContainer: FC<{ children?: React.ReactNode }> = styled('div')(
@@ -68,15 +69,13 @@ const Truncated = styled('div')(() => ({
 }));
 
 export const SegmentTooltipLink: FC<IStrategyTooltipLinkProps> = ({
-    change,
+    name,
+    previousName,
     children,
 }) => (
     <StyledContainer>
         <Truncated>
-            <NameWithChangeInfo
-                previousName={change.name}
-                newName={change.payload.name}
-            />
+            <NameWithChangeInfo previousName={previousName} newName={name} />
             <TooltipLink
                 tooltip={children}
                 tooltipProps={{

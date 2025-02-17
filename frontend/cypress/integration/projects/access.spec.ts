@@ -126,8 +126,8 @@ describe('project-access', () => {
 
         cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
         cy.wait('@editAccess');
-        cy.get("td span:contains('Owner')").should('have.length', 2);
-        cy.get("td span:contains('Member')").should('have.length', 1);
+        cy.get("td a span:contains('Owner')").should('have.length', 2);
+        cy.get("td a span:contains('Member')").should('have.length', 1);
     });
 
     it('can edit role to multiple roles', () => {
@@ -145,8 +145,8 @@ describe('project-access', () => {
 
         cy.get(`[data-testid='${PA_ASSIGN_CREATE_ID}']`).click();
         cy.wait('@editAccess');
-        cy.get("td span:contains('Owner')").should('have.length', 2);
-        cy.get("td span:contains('2 roles')").should('have.length', 1);
+        cy.get("td a span:contains('Owner')").should('have.length', 2);
+        cy.get("td a span:contains('2 roles')").should('have.length', 1);
     });
 
     it('can remove access', () => {

@@ -52,7 +52,7 @@ process.nextTick(async () => {
                         releasePlans: false,
                         releasePlanChangeRequests: false,
                         showUserDeviceCount: true,
-                        flagOverviewRedesign: false,
+                        flagOverviewRedesign: true,
                         granularAdminPermissions: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
@@ -60,6 +60,7 @@ process.nextTick(async () => {
                         dataUsageMultiMonthView: true,
                         filterExistingFlagNames: true,
                         uiGlobalFontSize: true,
+                        teamsIntegrationChangeRequests: true,
                     },
                 },
                 authentication: {

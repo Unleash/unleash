@@ -167,10 +167,10 @@ export const ProjectLifecycleSummary = () => {
         );
     };
 
-    const totalArchivedStat = () => {
-        const count = data?.lifecycleSummary.archived.last30Days ?? 0;
-        return `${count} ${count === 1 ? 'flag' : 'flags'} archived`;
-    };
+    const archivedLast30DaysCount =
+        data?.lifecycleSummary.archived.last30Days ?? 0;
+    const totalArchivedText = `${archivedLast30DaysCount} ${archivedLast30DaysCount === 1 ? 'flag' : 'flags'} archived`;
+
     return (
         <LifecycleList ref={loadingRef}>
             <LifecycleBox tooltipText={lifecycleMessages.initial}>
@@ -264,7 +264,7 @@ export const ProjectLifecycleSummary = () => {
                 <Stats>
                     <dt>Last 30 days</dt>
                     <dd data-loading-project-lifecycle-summary>
-                        {totalArchivedStat()}
+                        {totalArchivedText}
                     </dd>
                 </Stats>
             </LifecycleBox>

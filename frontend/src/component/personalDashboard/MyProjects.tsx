@@ -88,9 +88,10 @@ const ProjectListItem: FC<{
     useEffect(() => {
         if (activeProjectRef.current) {
             activeProjectRef.current.scrollIntoView({
-                block: 'nearest',
+                block: 'start',
                 inline: 'start',
             });
+            window.scrollTo({ top: 0 });
         }
     }, []);
 

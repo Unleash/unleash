@@ -59,6 +59,10 @@ export const SegmentChangeDetails: FC<{
 }> = ({ actions, change, changeRequestState }) => {
     const { segment: currentSegment } = useSegment(change.payload.id);
     const snapshotSegment = change.payload.snapshot;
+    const previousName =
+        changeRequestState === 'Applied'
+            ? change.payload?.snapshot?.name
+            : currentSegment?.name;
     const referenceSegment =
         changeRequestState === 'Applied' ? snapshotSegment : currentSegment;
 
@@ -74,10 +78,13 @@ export const SegmentChangeDetails: FC<{
                         >
                             - Deleting segment:
                         </Typography>
-                        <SegmentTooltipLink change={change}>
+                        <SegmentTooltipLink
+                            name={change.payload.name}
+                            previousName={previousName}
+                        >
                             <SegmentDiff
                                 change={change}
-                                currentSegment={currentSegment}
+                                currentSegment={referenceSegment}
                             />
                         </SegmentTooltipLink>
                     </ChangeItemInfo>
@@ -97,7 +104,7 @@ export const SegmentChangeDetails: FC<{
                     <ChangeItemCreateEditWrapper>
                         <ChangeItemInfo>
                             <Typography>Editing segment:</Typography>
-                            <SegmentTooltipLink change={change}>
+                            <SegmentTooltipLink name={change.payload.name}>
                                 <SegmentDiff
                                     change={change}
                                     currentSegment={referenceSegment}

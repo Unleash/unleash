@@ -58,6 +58,10 @@ const StyledAddTagButton = styled(PermissionButton)(({ theme }) => ({
     height: theme.spacing(3.5),
 }));
 
+const StyledEllipsis = styled('span')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+}));
+
 interface IFeatureOverviewSidePanelTagsProps {
     feature: IFeatureToggle;
 }
@@ -119,30 +123,44 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
                     <StyledTagContainer>
                         {tags.map((tag) => {
                             const tagLabel = `${tag.type}:${tag.value}`;
+                            const isOverflowing = tagLabel.length > 25;
                             return (
-                                <Tooltip
-                                    key={tagLabel}
-                                    title={tagLabel.length > 35 ? tagLabel : ''}
-                                    arrow
-                                >
-                                    <StyledTag
-                                        label={tagLabel}
-                                        size='small'
-                                        deleteIcon={
-                                            <Tooltip title='Remove tag' arrow>
-                                                <DeleteTagIcon />
-                                            </Tooltip>
-                                        }
-                                        onDelete={
-                                            canUpdateTags
-                                                ? () => {
-                                                      setRemoveTagOpen(true);
-                                                      setSelectedTag(tag);
-                                                  }
-                                                : undefined
-                                        }
-                                    />
-                                </Tooltip>
+                                <StyledTag
+                                    label={
+                                        <Tooltip
+                                            key={tagLabel}
+                                            title={
+                                                isOverflowing ? tagLabel : ''
+                                            }
+                                            arrow
+                                        >
+                                            <span>
+                                                {tagLabel.substring(0, 25)}
+                                                {isOverflowing ? (
+                                                    <StyledEllipsis>
+                                                        …
+                                                    </StyledEllipsis>
+                                                ) : (
+                                                    ''
+                                                )}
+                                            </span>
+                                        </Tooltip>
+                                    }
+                                    size='small'
+                                    deleteIcon={
+                                        <Tooltip title='Remove tag' arrow>
+                                            <DeleteTagIcon />
+                                        </Tooltip>
+                                    }
+                                    onDelete={
+                                        canUpdateTags
+                                            ? () => {
+                                                  setRemoveTagOpen(true);
+                                                  setSelectedTag(tag);
+                                              }
+                                            : undefined
+                                    }
+                                />
                             );
                         })}
                         {canUpdateTags ? addTagButton : null}
@@ -160,6 +178,7 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
                 onClose={() => {
                     setRemoveTagOpen(false);
                     setSelectedTag(undefined);
+                    refetch();
                 }}
                 onClick={() => {
                     setRemoveTagOpen(false);

@@ -98,7 +98,7 @@ const FeatureOverviewMetaData = () => {
                             Flag type:
                         </StyledMetaDataItemLabel>
                         <StyledMetaDataItemText data-loading>
-                            {capitalizeFirst(type)} flag
+                            {capitalizeFirst(type || '')} flag
                         </StyledMetaDataItemText>
                     </StyledMetaDataItem>
                     {feature.lifecycle ? (

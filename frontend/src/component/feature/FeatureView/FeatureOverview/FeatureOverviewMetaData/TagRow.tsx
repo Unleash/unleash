@@ -2,8 +2,8 @@ import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useContext, useState } from 'react';
 import { Chip, styled, Tooltip } from '@mui/material';
 import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
-import Add from '@mui/icons-material/Add';
-import ClearIcon from '@mui/icons-material/Clear';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteTagIcon from '@mui/icons-material/Cancel';
 import { ManageTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageTagsDialog';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
 import AccessContext from 'contexts/AccessContext';
@@ -12,57 +12,50 @@ import type { ITag } from 'interfaces/tags';
 import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    StyledMetaDataItem,
-    StyledMetaDataItemLabel,
-} from './FeatureOverviewMetaData';
+import { StyledMetaDataItem } from './FeatureOverviewMetaData';
 import PermissionButton from 'component/common/PermissionButton/PermissionButton';
 
-const StyledPermissionButton = styled(PermissionButton)(({ theme }) => ({
-    '&&&': {
-        fontSize: theme.fontSizes.smallBody,
-        lineHeight: 1,
-        margin: 0,
-    },
+const StyledLabel = styled('span')(({ theme }) => ({
+    marginTop: theme.spacing(1),
+    color: theme.palette.text.secondary,
+    marginRight: theme.spacing(1),
+}));
+
+const StyledAddIcon = styled(AddIcon)(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
 }));
 
 const StyledTagRow = styled('div')(({ theme }) => ({
     display: 'flex',
-    alignItems: 'start',
-    minHeight: theme.spacing(4.25),
-    lineHeight: theme.spacing(4.25),
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    minHeight: theme.spacing(4.5),
     fontSize: theme.fontSizes.smallBody,
-    justifyContent: 'start',
 }));
 
 const StyledTagContainer = styled('div')(({ theme }) => ({
     display: 'flex',
-    flex: 1,
     overflow: 'hidden',
     gap: theme.spacing(1),
     flexWrap: 'wrap',
     marginTop: theme.spacing(0.75),
 }));
 
-const StyledChip = styled(Chip)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallerBody,
+const StyledTag = styled(Chip)(({ theme }) => ({
     overflowWrap: 'anywhere',
+    lineHeight: theme.typography.body1.lineHeight,
     backgroundColor: theme.palette.neutral.light,
-    color: theme.palette.neutral.dark,
-    '&&& > svg': {
-        color: theme.palette.neutral.dark,
-        fontSize: theme.fontSizes.smallBody,
-    },
+    color: theme.palette.text.primary,
+    padding: theme.spacing(0.25),
+    height: theme.spacing(3.5),
 }));
 
-const StyledAddedTag = styled(StyledChip)(({ theme }) => ({
-    backgroundColor: theme.palette.secondary.light,
-    color: theme.palette.secondary.dark,
-    '&&& > svg': {
-        color: theme.palette.secondary.dark,
-        fontSize: theme.fontSizes.smallBody,
-    },
+const StyledAddTagButton = styled(PermissionButton)(({ theme }) => ({
+    lineHeight: theme.typography.body1.lineHeight,
+    borderRadius: theme.shape.borderRadiusExtraLarge,
+    background: theme.palette.secondary.light,
+    padding: theme.spacing(0.5, 1),
+    height: theme.spacing(3.5),
 }));
 
 interface IFeatureOverviewSidePanelTagsProps {
@@ -99,80 +92,63 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
         }
     };
 
+    const addTagButton = (
+        <StyledAddTagButton
+            size='small'
+            permission={UPDATE_FEATURE}
+            projectId={feature.project}
+            variant='text'
+            onClick={() => {
+                setManageTagsOpen(true);
+            }}
+        >
+            <StyledAddIcon /> Add tag
+        </StyledAddTagButton>
+    );
+
     return (
         <>
-            <ConditionallyRender
-                condition={!tags.length}
-                show={
-                    <StyledMetaDataItem>
-                        <StyledMetaDataItemLabel>Tags:</StyledMetaDataItemLabel>
-                        <StyledPermissionButton
-                            size='small'
-                            permission={UPDATE_FEATURE}
-                            projectId={feature.project}
-                            variant='text'
-                            onClick={() => {
-                                setManageTagsOpen(true);
-                            }}
-                        >
-                            Add tag
-                        </StyledPermissionButton>
-                    </StyledMetaDataItem>
-                }
-                elseShow={
-                    <StyledTagRow>
-                        <StyledMetaDataItemLabel>Tags:</StyledMetaDataItemLabel>
-                        <StyledTagContainer>
-                            {tags.map((tag) => {
-                                const tagLabel = `${tag.type}:${tag.value}`;
-                                return (
-                                    <Tooltip
-                                        key={tagLabel}
-                                        title={
-                                            tagLabel.length > 35 ? tagLabel : ''
-                                        }
-                                        arrow
-                                    >
-                                        <StyledAddedTag
-                                            label={tagLabel}
-                                            size='small'
-                                            deleteIcon={
-                                                <Tooltip
-                                                    title='Remove tag'
-                                                    arrow
-                                                >
-                                                    <ClearIcon />
-                                                </Tooltip>
-                                            }
-                                            onDelete={
-                                                canUpdateTags
-                                                    ? () => {
-                                                          setRemoveTagOpen(
-                                                              true,
-                                                          );
-                                                          setSelectedTag(tag);
-                                                      }
-                                                    : undefined
-                                            }
-                                        />
-                                    </Tooltip>
-                                );
-                            })}
-                            <ConditionallyRender
-                                condition={canUpdateTags}
-                                show={
-                                    <StyledChip
-                                        icon={<Add />}
-                                        label='Add tag'
+            {!tags.length ? (
+                <StyledMetaDataItem>
+                    <StyledLabel>Tags:</StyledLabel>
+                    <StyledTagContainer>{addTagButton}</StyledTagContainer>
+                </StyledMetaDataItem>
+            ) : (
+                <StyledTagRow>
+                    <StyledLabel>Tags:</StyledLabel>
+                    <StyledTagContainer>
+                        {tags.map((tag) => {
+                            const tagLabel = `${tag.type}:${tag.value}`;
+                            return (
+                                <Tooltip
+                                    key={tagLabel}
+                                    title={tagLabel.length > 35 ? tagLabel : ''}
+                                    arrow
+                                >
+                                    <StyledTag
+                                        label={tagLabel}
                                         size='small'
-                                        onClick={() => setManageTagsOpen(true)}
+                                        deleteIcon={
+                                            <Tooltip title='Remove tag' arrow>
+                                                <DeleteTagIcon />
+                                            </Tooltip>
+                                        }
+                                        onDelete={
+                                            canUpdateTags
+                                                ? () => {
+                                                      setRemoveTagOpen(true);
+                                                      setSelectedTag(tag);
+                                                  }
+                                                : undefined
+                                        }
                                     />
-                                }
-                            />
-                        </StyledTagContainer>
-                    </StyledTagRow>
-                }
-            />
+                                </Tooltip>
+                            );
+                        })}
+                        {canUpdateTags ? addTagButton : null}
+                    </StyledTagContainer>
+                </StyledTagRow>
+            )}
             <ManageTagsDialog
                 open={manageTagsOpen}
                 setOpen={setManageTagsOpen}

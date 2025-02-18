@@ -51,11 +51,15 @@ const NewStyledHeader = styled('div')(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const LowerHeaderRow = styled('div')(({ theme }) => ({
+const UpperHeaderRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
-    justifyContent: 'space-between',
     columnGap: theme.spacing(4),
+    alignItems: 'center',
+}));
+
+const LowerHeaderRow = styled(UpperHeaderRow)(({ theme }) => ({
+    justifyContent: 'space-between',
 }));
 
 const HeaderActions = styled('div')(({ theme }) => ({
@@ -259,7 +263,15 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
         <>
             {flagOverviewRedesign ? (
                 <NewStyledHeader>
-                    <Typography variant='h1'>{feature.name}</Typography>
+                    <UpperHeaderRow>
+                        <Typography variant='h1'>{feature.name}</Typography>
+                        {feature.stale ? (
+                            <FeatureStatusChip
+                                withLeftMargin={false}
+                                stale={true}
+                            />
+                        ) : null}
+                    </UpperHeaderRow>
                     <LowerHeaderRow>
                         <Tabs
                             value={activeTab.path}

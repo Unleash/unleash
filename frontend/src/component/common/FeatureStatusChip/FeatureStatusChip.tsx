@@ -3,13 +3,11 @@ import { Badge } from 'component/common/Badge/Badge';
 interface IStatusChip {
     stale: boolean;
     showActive?: boolean;
-    withLeftMargin?: boolean;
 }
 
 export const FeatureStatusChip = ({
     stale,
     showActive = true,
-    withLeftMargin = true,
 }: IStatusChip) => {
     if (!stale && !showActive) {
         return null;
@@ -21,7 +19,7 @@ export const FeatureStatusChip = ({
     const value = stale ? 'Stale' : 'Active';
 
     return (
-        <div data-loading style={{ marginLeft: withLeftMargin ? '8px' : 0 }}>
+        <div data-loading>
             <Badge color={stale ? 'error' : 'success'} title={title}>
                 {value}
             </Badge>

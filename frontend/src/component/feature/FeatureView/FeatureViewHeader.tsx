@@ -103,10 +103,11 @@ const StyledInnerContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledFlagInfoContainer = styled('div')({
+const StyledFlagInfoContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-});
+    columnGap: theme.spacing(1),
+}));
 
 const StyledDependency = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -266,10 +267,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                     <UpperHeaderRow>
                         <Typography variant='h1'>{feature.name}</Typography>
                         {feature.stale ? (
-                            <FeatureStatusChip
-                                withLeftMargin={false}
-                                stale={true}
-                            />
+                            <FeatureStatusChip stale={true} />
                         ) : null}
                     </UpperHeaderRow>
                     <LowerHeaderRow>
@@ -369,7 +367,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                                     >
                                         <IconButton
                                             onClick={handleCopyToClipboard}
-                                            style={{ marginLeft: 8 }}
                                         >
                                             {isFeatureNameCopied ? (
                                                 <Check

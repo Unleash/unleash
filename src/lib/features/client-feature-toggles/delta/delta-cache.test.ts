@@ -131,13 +131,13 @@ describe('RevisionCache', () => {
             },
             {
                 eventId: 4,
-                type: 'feature-removed',
+                type: DELTA_EVENT_TYPES.FEATURE_REMOVED,
                 featureName: 'test-flag',
                 project: 'default',
             },
             {
                 eventId: 5,
-                type: 'segment-updated',
+                type: DELTA_EVENT_TYPES.SEGMENT_UPDATED,
                 segment: {
                     id: 1,
                     name: 'update-segment-new',
@@ -146,12 +146,12 @@ describe('RevisionCache', () => {
             },
             {
                 eventId: 6,
-                type: 'segment-removed',
+                type: DELTA_EVENT_TYPES.SEGMENT_REMOVED,
                 segmentId: 2,
             },
             {
                 eventId: 7,
-                type: 'segment-updated',
+                type: DELTA_EVENT_TYPES.SEGMENT_UPDATED,
                 segment: {
                     id: 3,
                     name: 'new-segment',

@@ -5,14 +5,16 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 import type { ConnectedEdge } from 'interfaces/connectedEdge';
 import type { SWRConfiguration } from 'swr';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const DEFAULT_DATA: ConnectedEdge[] = [];
 
 export const useConnectedEdges = (options?: SWRConfiguration) => {
     const { isEnterprise } = useUiConfig();
+    const edgeObservabilityEnabled = useUiFlag('edgeObservability');
 
     const { data, error, mutate } = useConditionalSWR<ConnectedEdge[]>(
-        isEnterprise(),
+        isEnterprise() && edgeObservabilityEnabled,
         DEFAULT_DATA,
         formatApiPath('api/admin/metrics/edges'),
         fetcher,

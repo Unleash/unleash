@@ -71,13 +71,13 @@ export const Network = () => {
             >
                 <Routes>
                     <Route path='*' element={<NetworkOverview />} />
+                    <Route path='traffic' element={<NetworkTraffic />} />
                     {edgeObservabilityEnabled && (
                         <Route
                             path='connected-edges'
                             element={<NetworkConnectedEdges />}
                         />
                     )}
-                    <Route path='traffic' element={<NetworkTraffic />} />
                     <Route
                         path='data-usage'
                         element={<NetworkTrafficUsage />}

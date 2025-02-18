@@ -26,7 +26,6 @@ import {
 
 const StyledPermissionButton = styled(PermissionButton)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    alignSelf: 'auto',
 }));
 
 const useDeleteDependency = (project: string, featureId: string) => {

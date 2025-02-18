@@ -178,6 +178,8 @@ type Props = {
     feature: IFeatureToggle;
 };
 
+// todo: make the breakpoint 700px
+
 export const FeatureViewHeader: FC<Props> = ({ feature }) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');

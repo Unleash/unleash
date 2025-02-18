@@ -1,23 +1,21 @@
-// TODO: Implement
-export const NetworkConnectedEdgeInstanceLatency = () => {
-    const latencyData = {
-        clientFeatures: { avg: 120, p99: 300 },
-        frontend: { avg: 100, p99: 250 },
-        upstream: {
-            'Client features': { avg: 130, p99: 320 },
-            Metrics: { avg: 90, p99: 200 },
-            Edge: { avg: 110, p99: 290 },
-        },
-    };
+import { styled } from '@mui/material';
+import type { ConnectedEdge } from 'interfaces/connectedEdge';
 
+const StyledTable = styled('table')(({ theme }) => ({
+    width: '100%',
+    borderCollapse: 'collapse',
+    fontSize: theme.fontSizes.smallerBody,
+}));
+
+interface INetworkConnectedEdgeInstanceLatencyProps {
+    instance: ConnectedEdge;
+}
+
+export const NetworkConnectedEdgeInstanceLatency = ({
+    instance,
+}: INetworkConnectedEdgeInstanceLatencyProps) => {
     return (
-        <table
-            style={{
-                width: '100%',
-                borderCollapse: 'collapse',
-                fontSize: '12px',
-            }}
-        >
+        <StyledTable>
             <thead>
                 <tr style={{ textAlign: 'left' }}>
                     <th
@@ -49,19 +47,19 @@ export const NetworkConnectedEdgeInstanceLatency = () => {
                 <tr>
                     <td style={{ padding: '4px' }}>Client Features</td>
                     <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {latencyData.clientFeatures.avg}
+                        {instance.clientFeaturesAverageLatencyMs}
                     </td>
                     <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {latencyData.clientFeatures.p99}
+                        {instance.clientFeaturesP99LatencyMs}
                     </td>
                 </tr>
                 <tr>
                     <td style={{ padding: '4px' }}>Frontend</td>
                     <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {latencyData.frontend.avg}
+                        {instance.frontendApiAverageLatencyMs}
                     </td>
                     <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {latencyData.frontend.p99}
+                        {instance.frontendApiP99LatencyMs}
                     </td>
                 </tr>
                 <tr>
@@ -72,18 +70,34 @@ export const NetworkConnectedEdgeInstanceLatency = () => {
                         Upstream
                     </td>
                 </tr>
-                {Object.entries(latencyData.upstream).map(([key, values]) => (
-                    <tr key={key}>
-                        <td style={{ padding: '4px 8px' }}>{key}</td>
-                        <td style={{ padding: '4px', textAlign: 'right' }}>
-                            {values.avg}
-                        </td>
-                        <td style={{ padding: '4px', textAlign: 'right' }}>
-                            {values.p99}
-                        </td>
-                    </tr>
-                ))}
+                <tr>
+                    <td style={{ padding: '4px 8px' }}>Client Features</td>
+                    <td style={{ padding: '4px', textAlign: 'right' }}>
+                        {instance.upstreamFeaturesAverageLatencyMs}
+                    </td>
+                    <td style={{ padding: '4px', textAlign: 'right' }}>
+                        {instance.upstreamFeaturesP99LatencyMs}
+                    </td>
+                </tr>
+                <tr>
+                    <td style={{ padding: '4px 8px' }}>Metrics</td>
+                    <td style={{ padding: '4px', textAlign: 'right' }}>
+                        {instance.upstreamMetricsAverageLatencyMs}
+                    </td>
+                    <td style={{ padding: '4px', textAlign: 'right' }}>
+                        {instance.upstreamMetricsP99LatencyMs}
+                    </td>
+                </tr>
+                <tr>
+                    <td style={{ padding: '4px 8px' }}>Edge</td>
+                    <td style={{ padding: '4px', textAlign: 'right' }}>
+                        {instance.upstreamEdgeAverageLatencyMs}
+                    </td>
+                    <td style={{ padding: '4px', textAlign: 'right' }}>
+                        {instance.upstreamEdgeP99LatencyMs}
+                    </td>
+                </tr>
             </tbody>
-        </table>
+        </StyledTable>
     );
 };

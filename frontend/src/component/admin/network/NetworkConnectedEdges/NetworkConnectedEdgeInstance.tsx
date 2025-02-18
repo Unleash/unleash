@@ -80,12 +80,6 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     padding: theme.spacing(0, 1),
 }));
 
-type InstanceConnectionStatus = 'Connected' | 'Stale' | 'Disconnected';
-
-interface INetworkConnectedEdgeInstanceProps {
-    instance: ConnectedEdge;
-}
-
 const getConnectionStatus = ({
     reportedAt,
 }: ConnectedEdge): InstanceConnectionStatus => {
@@ -128,6 +122,12 @@ const getMemory = ({ memoryUsage }: ConnectedEdge): string => {
 
     return `${size.toFixed(2)} ${units[unitIndex]}`;
 };
+
+type InstanceConnectionStatus = 'Connected' | 'Stale' | 'Disconnected';
+
+interface INetworkConnectedEdgeInstanceProps {
+    instance: ConnectedEdge;
+}
 
 export const NetworkConnectedEdgeInstance = ({
     instance,
@@ -239,7 +239,13 @@ export const NetworkConnectedEdgeInstance = ({
                         </span>
                     </StyledDetailRow>
                     <StyledDetailRow>
-                        <NetworkConnectedEdgeInstanceLatency />
+                        <strong>Stream clients</strong>
+                        <span>{instance.connectedStreamingClients}</span>
+                    </StyledDetailRow>
+                    <StyledDetailRow>
+                        <NetworkConnectedEdgeInstanceLatency
+                            instance={instance}
+                        />
                     </StyledDetailRow>
                 </StyledAccordionDetails>
             </StyledAccordion>

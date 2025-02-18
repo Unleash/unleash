@@ -26,7 +26,7 @@ const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
     width: '350px',
     border: `1px solid ${theme.palette.divider}`,
-    [theme.breakpoints.down(1000)]: {
+    [theme.breakpoints.down('md')]: {
         width: '100%',
     },
 }));

@@ -97,11 +97,11 @@ test('show dependency dialogue', async () => {
         },
     );
 
-    const addParentButton = await screen.findByText('Add parent feature');
+    const addParentButton = await screen.findByText('Add parent flag');
 
     addParentButton.click();
 
-    await screen.findByText('Add parent feature dependency');
+    await screen.findByText('Add parent flag dependency');
 });
 
 test('show dependency dialogue for OSS with dependencies', async () => {
@@ -127,11 +127,11 @@ test('show dependency dialogue for OSS with dependencies', async () => {
         },
     );
 
-    const addParentButton = await screen.findByText('Add parent feature');
+    const addParentButton = await screen.findByText('Add parent flag');
 
     addParentButton.click();
 
-    await screen.findByText('Add parent feature dependency');
+    await screen.findByText('Add parent flag dependency');
 });
 
 test('show child', async () => {
@@ -291,7 +291,7 @@ test('edit dependency', async () => {
     const editButton = await screen.findByText('Edit');
     fireEvent.click(editButton);
 
-    await screen.findByText('Add parent feature dependency');
+    await screen.findByText('Add parent flag dependency');
 });
 
 test('show variant dependencies', async () => {

@@ -17,7 +17,6 @@ import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
 import { useUiFlag } from 'hooks/useUiFlag';
 import OldFeatureOverviewMetaData from './FeatureOverviewMetaData/OldFeatureOverviewMetaData';
 import { OldFeatureOverviewSidePanel } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewSidePanel/OldFeatureOverviewSidePanel';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { NewFeatureOverviewEnvironment } from './NewFeatureOverviewEnvironment/NewFeatureOverviewEnvironment';
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -51,39 +50,37 @@ const FeatureOverview = () => {
         setLastViewed({ featureId, projectId });
     }, [featureId]);
     const [environmentId, setEnvironmentId] = useState('');
-
     const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
-    const FeatureOverviewMetaData = flagOverviewRedesign
-        ? NewFeatureOverviewMetaData
-        : OldFeatureOverviewMetaData;
-    const FeatureOverviewSidePanel = flagOverviewRedesign ? (
-        <NewFeatureOverviewSidePanel
-            environmentId={environmentId}
-            setEnvironmentId={setEnvironmentId}
-        />
-    ) : (
-        <OldFeatureOverviewSidePanel
-            hiddenEnvironments={hiddenEnvironments}
-            setHiddenEnvironments={setHiddenEnvironments}
-        />
-    );
 
     return (
         <StyledContainer>
             <div>
-                <FeatureOverviewMetaData />
-                {FeatureOverviewSidePanel}
+                {flagOverviewRedesign ? (
+                    <>
+                        <NewFeatureOverviewMetaData />
+                        <NewFeatureOverviewSidePanel
+                            environmentId={environmentId}
+                            setEnvironmentId={setEnvironmentId}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <OldFeatureOverviewMetaData />
+                        <OldFeatureOverviewSidePanel
+                            hiddenEnvironments={hiddenEnvironments}
+                            setHiddenEnvironments={setHiddenEnvironments}
+                        />
+                    </>
+                )}
             </div>
             <StyledMainContent>
-                <ConditionallyRender
-                    condition={flagOverviewRedesign}
-                    show={
-                        <NewFeatureOverviewEnvironment
-                            environmentId={environmentId}
-                        />
-                    }
-                    elseShow={<FeatureOverviewEnvironments />}
-                />
+                {flagOverviewRedesign ? (
+                    <NewFeatureOverviewEnvironment
+                        environmentId={environmentId}
+                    />
+                ) : (
+                    <FeatureOverviewEnvironments />
+                )}
             </StyledMainContent>
             <Routes>
                 <Route

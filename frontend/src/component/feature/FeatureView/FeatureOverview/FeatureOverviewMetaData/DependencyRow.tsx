@@ -1,4 +1,3 @@
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { AddDependencyDialogue } from 'component/feature/Dependencies/AddDependencyDialogue';
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useState } from 'react';
@@ -26,11 +25,8 @@ import {
 } from './FeatureOverviewMetaData';
 
 const StyledPermissionButton = styled(PermissionButton)(({ theme }) => ({
-    '&&&': {
-        fontSize: theme.fontSizes.smallBody,
-        lineHeight: 1,
-        margin: 0,
-    },
+    fontSize: theme.fontSizes.smallBody,
+    lineHeight: theme.typography.body1.lineHeight,
 }));
 
 const useDeleteDependency = (project: string, featureId: string) => {
@@ -112,13 +108,12 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
 
     return (
         <>
-            <ConditionallyRender
-                condition={canAddParentDependency}
-                show={
-                    <StyledMetaDataItem>
-                        <StyledMetaDataItemLabel>
-                            Dependency:
-                        </StyledMetaDataItemLabel>
+            {canAddParentDependency ? (
+                <StyledMetaDataItem>
+                    <StyledMetaDataItemLabel>
+                        Dependency:
+                    </StyledMetaDataItemLabel>
+                    <div>
                         <StyledPermissionButton
                             size='small'
                             permission={UPDATE_FEATURE_DEPENDENCY}
@@ -128,99 +123,69 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                                 setShowDependencyDialogue(true);
                             }}
                         >
-                            Add parent feature
+                            Add parent flag
                         </StyledPermissionButton>
-                    </StyledMetaDataItem>
-                }
-            />
-            <ConditionallyRender
-                condition={hasParentDependency}
-                show={
-                    <StyledMetaDataItem>
-                        <StyledMetaDataItemLabel>
-                            Dependency:
-                        </StyledMetaDataItemLabel>
-                        <StyledMetaDataItemValue>
-                            <StyledLink
-                                to={`/projects/${feature.project}/features/${feature.dependencies[0]?.feature}`}
-                            >
-                                {feature.dependencies[0]?.feature}
-                            </StyledLink>
-                            <ConditionallyRender
-                                condition={checkAccess(
-                                    UPDATE_FEATURE_DEPENDENCY,
-                                    environment,
-                                )}
-                                show={
-                                    <DependencyActions
-                                        feature={feature.name}
-                                        onEdit={() =>
-                                            setShowDependencyDialogue(true)
-                                        }
-                                        onDelete={deleteDependency}
-                                    />
-                                }
+                    </div>
+                </StyledMetaDataItem>
+            ) : null}
+            {hasParentDependency ? (
+                <StyledMetaDataItem>
+                    <StyledMetaDataItemLabel>
+                        Dependency:
+                    </StyledMetaDataItemLabel>
+                    <StyledMetaDataItemValue>
+                        <StyledLink
+                            to={`/projects/${feature.project}/features/${feature.dependencies[0]?.feature}`}
+                        >
+                            {feature.dependencies[0]?.feature}
+                        </StyledLink>
+                        {checkAccess(UPDATE_FEATURE_DEPENDENCY, environment) ? (
+                            <DependencyActions
+                                feature={feature.name}
+                                onEdit={() => setShowDependencyDialogue(true)}
+                                onDelete={deleteDependency}
                             />
-                        </StyledMetaDataItemValue>
-                    </StyledMetaDataItem>
-                }
-            />
-            <ConditionallyRender
-                condition={
-                    hasParentDependency && !feature.dependencies[0]?.enabled
-                }
-                show={
-                    <StyledMetaDataItem>
-                        <StyledMetaDataItemLabel>
-                            Dependency value:
-                        </StyledMetaDataItemLabel>
-                        <span>disabled</span>
-                    </StyledMetaDataItem>
-                }
-            />
-            <ConditionallyRender
-                condition={
-                    hasParentDependency &&
-                    Boolean(feature.dependencies[0]?.variants?.length)
-                }
-                show={
-                    <StyledMetaDataItem>
-                        <StyledMetaDataItemLabel>
-                            Dependency value:
-                        </StyledMetaDataItemLabel>
-                        <VariantsTooltip
-                            variants={feature.dependencies[0]?.variants || []}
-                        />
-                    </StyledMetaDataItem>
-                }
-            />
-            <ConditionallyRender
-                condition={hasChildren}
-                show={
-                    <StyledMetaDataItem>
-                        <StyledMetaDataItemLabel>
-                            Children:
-                        </StyledMetaDataItemLabel>
-                        <ChildrenTooltip
-                            childFeatures={feature.children}
-                            project={feature.project}
-                        />
-                    </StyledMetaDataItem>
-                }
-            />
-
-            <ConditionallyRender
-                condition={Boolean(feature.project)}
-                show={
-                    <AddDependencyDialogue
-                        project={feature.project}
-                        featureId={feature.name}
-                        parentDependency={feature.dependencies[0]}
-                        onClose={() => setShowDependencyDialogue(false)}
-                        showDependencyDialogue={showDependencyDialogue}
+                        ) : null}
+                    </StyledMetaDataItemValue>
+                </StyledMetaDataItem>
+            ) : null}
+            {hasParentDependency && !feature.dependencies[0]?.enabled ? (
+                <StyledMetaDataItem>
+                    <StyledMetaDataItemLabel>
+                        Dependency value:
+                    </StyledMetaDataItemLabel>
+                    <span>disabled</span>
+                </StyledMetaDataItem>
+            ) : null}
+            {hasParentDependency &&
+            Boolean(feature.dependencies[0]?.variants?.length) ? (
+                <StyledMetaDataItem>
+                    <StyledMetaDataItemLabel>
+                        Dependency value:
+                    </StyledMetaDataItemLabel>
+                    <VariantsTooltip
+                        variants={feature.dependencies[0]?.variants || []}
                     />
-                }
-            />
+                </StyledMetaDataItem>
+            ) : null}
+            {hasChildren ? (
+                <StyledMetaDataItem>
+                    <StyledMetaDataItemLabel>Children:</StyledMetaDataItemLabel>
+                    <ChildrenTooltip
+                        childFeatures={feature.children}
+                        project={feature.project}
+                    />
+                </StyledMetaDataItem>
+            ) : null}
+            {feature.project ? (
+                <AddDependencyDialogue
+                    project={feature.project}
+                    featureId={feature.name}
+                    parentDependency={feature.dependencies[0]}
+                    onClose={() => setShowDependencyDialogue(false)}
+                    showDependencyDialogue={showDependencyDialogue}
+                />
+            ) : null}
         </>
     );
 };

@@ -119,7 +119,7 @@ export const OldDependencyRow: FC<{ feature: IFeatureToggle }> = ({
                                     marginBottom: theme.spacing(0.4),
                                 })}
                             >
-                                Add parent feature
+                                Add parent flag
                             </PermissionButton>
                         </StyledDetail>
                     </FlexRow>

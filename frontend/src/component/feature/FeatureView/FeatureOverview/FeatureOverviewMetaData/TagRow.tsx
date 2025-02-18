@@ -105,8 +105,9 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
             onClick={() => {
                 setManageTagsOpen(true);
             }}
+            startIcon={<StyledAddIcon />}
         >
-            <StyledAddIcon /> Add tag
+            Add tag
         </StyledAddTagButton>
     );
 

@@ -1,9 +1,9 @@
+import { type FC, useState } from 'react';
 import { styled } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
-import { useState } from 'react';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 import { formatDateYMD } from 'utils/formatDate';
 import { parseISO } from 'date-fns';
@@ -15,6 +15,7 @@ import { MarkCompletedDialogue } from '../FeatureLifecycle/MarkCompletedDialogue
 import { TagRow } from './TagRow';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { Collaborators } from './Collaborators';
+import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -24,6 +25,7 @@ const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(2),
     width: '350px',
+    border: `1px solid ${theme.palette.divider}`,
     [theme.breakpoints.down(1000)]: {
         width: '100%',
     },
@@ -63,7 +65,15 @@ export const StyledMetaDataItemValue = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const FeatureOverviewMetaData = () => {
+type FeatureOverviewMetaDataProps = {
+    hiddenEnvironments: string[];
+    onEnvironmentVisibilityChange: (environment: string) => void;
+};
+
+const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
+    hiddenEnvironments,
+    onEnvironmentVisibilityChange,
+}) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { feature, refetchFeature } = useFeature(projectId, featureId);
@@ -156,6 +166,11 @@ const FeatureOverviewMetaData = () => {
                         <DependencyRow feature={feature} />
                     ) : null}
                     <TagRow feature={feature} />
+                    <EnvironmentVisibilityMenu
+                        environments={feature.environments || []}
+                        hiddenEnvironments={hiddenEnvironments}
+                        onChange={onEnvironmentVisibilityChange}
+                    />
                 </StyledBody>
             </StyledMetaDataContainer>
             {feature.children.length > 0 ? (

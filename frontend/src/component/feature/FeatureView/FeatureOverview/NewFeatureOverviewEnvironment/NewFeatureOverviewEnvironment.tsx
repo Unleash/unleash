@@ -13,6 +13,7 @@ const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 3),
     borderRadius: theme.shape.borderRadiusLarge,
     backgroundColor: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledFeatureOverviewEnvironmentBody = styled(
@@ -52,80 +53,99 @@ const StyledHeaderTitle = styled('span')(({ theme }) => ({
 }));
 
 interface INewFeatureOverviewEnvironmentProps {
-    environmentId: string;
+    hiddenEnvironments: string[];
 }
 
-export const NewFeatureOverviewEnvironment = ({
-    environmentId,
+export const FeatureOverviewEnvironment = ({
+    hiddenEnvironments,
 }: INewFeatureOverviewEnvironmentProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { metrics } = useFeatureMetrics(projectId, featureId);
     const { feature } = useFeature(projectId, featureId);
 
-    const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
-    const environmentMetric = featureMetrics.find(
-        ({ environment }) => environment === environmentId,
-    );
-    const featureEnvironment = feature?.environments.find(
-        ({ name }) => name === environmentId,
-    );
+    const environments =
+        feature?.environments.filter(
+            ({ name }) => !hiddenEnvironments.includes(name),
+        ) || [];
 
-    if (!featureEnvironment)
+    if (!environments || environments.length === 0) {
         return (
             <StyledFeatureOverviewEnvironment className='skeleton'>
                 <Box sx={{ height: '400px' }} />
             </StyledFeatureOverviewEnvironment>
         );
+    }
 
-    return (
-        <StyledFeatureOverviewEnvironment>
-            <StyledHeader data-loading>
-                <StyledHeaderToggleContainer>
-                    <FeatureOverviewEnvironmentToggle
-                        environment={featureEnvironment}
+    return environments.map(({ name: environmentId }) => {
+        const featureMetrics = getFeatureMetrics(
+            feature?.environments,
+            metrics,
+        );
+        const environmentMetric = featureMetrics.find(
+            ({ environment }) => environment === environmentId,
+        );
+        const featureEnvironment = feature?.environments.find(
+            ({ name }) => name === environmentId,
+        );
+
+        if (!featureEnvironment) {
+            return null;
+        }
+
+        return (
+            <StyledFeatureOverviewEnvironment key={environmentId}>
+                <StyledHeader data-loading>
+                    <StyledHeaderToggleContainer>
+                        <FeatureOverviewEnvironmentToggle
+                            environment={featureEnvironment}
+                        />
+                        <StyledHeaderTitleContainer>
+                            <StyledHeaderTitleLabel>
+                                Environment
+                            </StyledHeaderTitleLabel>
+                            <StyledHeaderTitle>
+                                {environmentId}
+                            </StyledHeaderTitle>
+                        </StyledHeaderTitleContainer>
+                    </StyledHeaderToggleContainer>
+                    <FeatureOverviewEnvironmentMetrics
+                        environmentMetric={environmentMetric}
+                        disabled={!featureEnvironment.enabled}
                     />
-                    <StyledHeaderTitleContainer>
-                        <StyledHeaderTitleLabel>
-                            Environment
-                        </StyledHeaderTitleLabel>
-                        <StyledHeaderTitle>{environmentId}</StyledHeaderTitle>
-                    </StyledHeaderTitleContainer>
-                </StyledHeaderToggleContainer>
-                <FeatureOverviewEnvironmentMetrics
-                    environmentMetric={environmentMetric}
-                    disabled={!featureEnvironment.enabled}
-                />
-            </StyledHeader>
+                </StyledHeader>
 
-            <StyledFeatureOverviewEnvironmentBody
-                featureEnvironment={featureEnvironment}
-                isDisabled={!featureEnvironment.enabled}
-                otherEnvironments={feature?.environments
-                    .map(({ name }) => name)
-                    .filter((name) => name !== environmentId)}
-            />
-            <ConditionallyRender
-                condition={(featureEnvironment?.strategies?.length || 0) > 0}
-                show={
-                    <>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                py: 1,
-                            }}
-                        >
-                            <FeatureStrategyMenu
-                                label='Add strategy'
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentId}
-                            />
-                        </Box>
-                    </>
-                }
-            />
-        </StyledFeatureOverviewEnvironment>
-    );
+                <StyledFeatureOverviewEnvironmentBody
+                    featureEnvironment={featureEnvironment}
+                    isDisabled={!featureEnvironment.enabled}
+                    otherEnvironments={feature?.environments
+                        .map(({ name }) => name)
+                        .filter((name) => name !== environmentId)}
+                />
+                <ConditionallyRender
+                    condition={
+                        (featureEnvironment?.strategies?.length || 0) > 0
+                    }
+                    show={
+                        <>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    py: 1,
+                                }}
+                            >
+                                <FeatureStrategyMenu
+                                    label='Add strategy'
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={environmentId}
+                                />
+                            </Box>
+                        </>
+                    }
+                />
+            </StyledFeatureOverviewEnvironment>
+        );
+    });
 };

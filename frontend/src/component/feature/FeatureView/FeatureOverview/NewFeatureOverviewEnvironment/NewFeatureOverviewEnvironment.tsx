@@ -2,7 +2,6 @@ import { Box, styled } from '@mui/material';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { getFeatureMetrics } from 'utils/getFeatureMetrics';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureOverviewEnvironmentBody } from './FeatureOverviewEnvironmentBody';
 import FeatureOverviewEnvironmentMetrics from '../FeatureOverviewEnvironments/FeatureOverviewEnvironment/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
@@ -114,7 +113,6 @@ export const FeatureOverviewEnvironment = ({
                         disabled={!featureEnvironment.enabled}
                     />
                 </StyledHeader>
-
                 <StyledFeatureOverviewEnvironmentBody
                     featureEnvironment={featureEnvironment}
                     isDisabled={!featureEnvironment.enabled}
@@ -122,29 +120,24 @@ export const FeatureOverviewEnvironment = ({
                         .map(({ name }) => name)
                         .filter((name) => name !== environmentId)}
                 />
-                <ConditionallyRender
-                    condition={
-                        (featureEnvironment?.strategies?.length || 0) > 0
-                    }
-                    show={
-                        <>
-                            <Box
-                                sx={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    py: 1,
-                                }}
-                            >
-                                <FeatureStrategyMenu
-                                    label='Add strategy'
-                                    projectId={projectId}
-                                    featureId={featureId}
-                                    environmentId={environmentId}
-                                />
-                            </Box>
-                        </>
-                    }
-                />
+                {featureEnvironment?.strategies?.length > 0 ? (
+                    <>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                justifyContent: 'center',
+                                py: 1,
+                            }}
+                        >
+                            <FeatureStrategyMenu
+                                label='Add strategy'
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentId}
+                            />
+                        </Box>
+                    </>
+                ) : null}
             </StyledFeatureOverviewEnvironment>
         );
     });

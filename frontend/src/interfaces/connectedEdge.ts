@@ -1,4 +1,5 @@
 export type ConnectedEdge = {
+    id?: string;
     appName: string;
     connectedStreamingClients: number;
     edgeVersion: string;

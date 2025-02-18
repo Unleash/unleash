@@ -66,14 +66,15 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const StyledDetailRow = styled('div')({
+const StyledDetailRow = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'space-between',
+    gap: theme.spacing(2),
     '& > span': {
         display: 'flex',
         alignItems: 'center',
     },
-});
+}));
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     padding: theme.spacing(0, 1),
@@ -159,7 +160,7 @@ export const NetworkConnectedEdgeInstance = ({
                     >
                         <CircleIcon />
                     </Tooltip>
-                    {instance.instanceId}
+                    {instance.id || instance.instanceId}
                 </StyledAccordionSummary>
                 <StyledAccordionDetails>
                     <StyledDetailRow>

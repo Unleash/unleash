@@ -8,6 +8,7 @@ test('clientFeaturesDeltaSchema all fields', () => {
                 eventId: 1,
                 type: 'feature-removed',
                 featureName: 'removed-event',
+                project: 'default',
             },
             {
                 eventId: 1,

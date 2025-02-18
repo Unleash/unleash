@@ -2,7 +2,6 @@ import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useContext, useState } from 'react';
 import { Chip, styled, Tooltip } from '@mui/material';
 import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
-import AddIcon from '@mui/icons-material/Add';
 import DeleteTagIcon from '@mui/icons-material/Cancel';
 import { ManageTagsDialog } from 'component/feature/FeatureView/FeatureOverview/ManageTagsDialog/ManageTagsDialog';
 import { UPDATE_FEATURE } from 'component/providers/AccessProvider/permissions';
@@ -13,16 +12,12 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { StyledMetaDataItem } from './FeatureOverviewMetaData';
-import PermissionButton from 'component/common/PermissionButton/PermissionButton';
+import { AddTagButton } from './AddTagButton';
 
 const StyledLabel = styled('span')(({ theme }) => ({
     marginTop: theme.spacing(1),
     color: theme.palette.text.secondary,
     marginRight: theme.spacing(1),
-}));
-
-const StyledAddIcon = styled(AddIcon)(({ theme }) => ({
-    fontSize: theme.typography.body2.fontSize,
 }));
 
 const StyledTagRow = styled('div')(({ theme }) => ({
@@ -50,14 +45,6 @@ const StyledTag = styled(Chip)(({ theme }) => ({
     height: theme.spacing(3.5),
 }));
 
-const StyledAddTagButton = styled(PermissionButton)(({ theme }) => ({
-    lineHeight: theme.typography.body1.lineHeight,
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    background: theme.palette.secondary.light,
-    padding: theme.spacing(0.5, 1),
-    height: theme.spacing(3.5),
-}));
-
 const StyledEllipsis = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
@@ -78,6 +65,10 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
     const { hasAccess } = useContext(AccessContext);
     const canUpdateTags = hasAccess(UPDATE_FEATURE, feature.project);
 
+    const handleAdd = () => {
+        setManageTagsOpen(true);
+    };
+
     const handleRemove = async () => {
         if (!selectedTag) return;
         try {
@@ -96,27 +87,17 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
         }
     };
 
-    const addTagButton = (
-        <StyledAddTagButton
-            size='small'
-            permission={UPDATE_FEATURE}
-            projectId={feature.project}
-            variant='text'
-            onClick={() => {
-                setManageTagsOpen(true);
-            }}
-            startIcon={<StyledAddIcon />}
-        >
-            Add tag
-        </StyledAddTagButton>
-    );
-
     return (
         <>
             {!tags.length ? (
                 <StyledMetaDataItem>
                     <StyledLabel>Tags:</StyledLabel>
-                    <StyledTagContainer>{addTagButton}</StyledTagContainer>
+                    <StyledTagContainer>
+                        <AddTagButton
+                            project={feature.project}
+                            onClick={handleAdd}
+                        />
+                    </StyledTagContainer>
                 </StyledMetaDataItem>
             ) : (
                 <StyledTagRow>
@@ -164,7 +145,12 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
                                 />
                             );
                         })}
-                        {canUpdateTags ? addTagButton : null}
+                        {canUpdateTags ? (
+                            <AddTagButton
+                                project={feature.project}
+                                onClick={handleAdd}
+                            />
+                        ) : null}
                     </StyledTagContainer>
                 </StyledTagRow>
             )}

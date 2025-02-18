@@ -101,7 +101,7 @@ export const uiConfigSchema = {
         },
         networkViewEnabled: {
             type: 'boolean',
-            description: 'Whether to enable the Unleash network view or not.',
+            description: 'Whether a Prometheus API is available.',
             example: true,
         },
         frontendApiOrigins: {

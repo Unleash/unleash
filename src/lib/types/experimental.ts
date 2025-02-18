@@ -67,7 +67,8 @@ export type IFlagKey =
     | 'dataUsageMultiMonthView'
     | 'uiGlobalFontSize'
     | 'connectionCount'
-    | 'teamsIntegrationChangeRequests';
+    | 'teamsIntegrationChangeRequests'
+    | 'edgeObservability';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -322,6 +323,10 @@ const flags: IFlags = {
     ),
     teamsIntegrationChangeRequests: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_TEAMS_INTEGRATION_CHANGE_REQUESTS,
+        false,
+    ),
+    edgeObservability: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
         false,
     ),
 };

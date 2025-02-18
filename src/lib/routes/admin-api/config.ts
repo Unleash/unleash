@@ -186,7 +186,7 @@ class ConfigController extends Controller {
             strategySegmentsLimit: this.config.resourceLimits.strategySegments,
             frontendApiOrigins: frontendSettings.frontendApiOrigins,
             versionInfo: await this.versionService.getVersionInfo(),
-            networkViewEnabled: this.config.prometheusApi !== undefined, // TODO: Should we free this up? Will there be a scenario where we want to show Edge data but we don't have Prometheus API configured here? YES
+            networkViewEnabled: this.config.prometheusApi !== undefined,
             resourceLimits: this.config.resourceLimits,
             disablePasswordAuth,
             maintenanceMode,

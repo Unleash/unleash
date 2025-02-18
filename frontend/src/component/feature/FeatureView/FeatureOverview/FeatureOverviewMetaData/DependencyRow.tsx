@@ -26,6 +26,7 @@ import {
 
 const StyledPermissionButton = styled(PermissionButton)(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
+    lineHeight: theme.typography.body1.lineHeight,
 }));
 
 const useDeleteDependency = (project: string, featureId: string) => {
@@ -112,17 +113,19 @@ export const DependencyRow = ({ feature }: IDependencyRowProps) => {
                     <StyledMetaDataItemLabel>
                         Dependency:
                     </StyledMetaDataItemLabel>
-                    <StyledPermissionButton
-                        size='small'
-                        permission={UPDATE_FEATURE_DEPENDENCY}
-                        projectId={feature.project}
-                        variant='text'
-                        onClick={() => {
-                            setShowDependencyDialogue(true);
-                        }}
-                    >
-                        Add parent flag
-                    </StyledPermissionButton>
+                    <div>
+                        <StyledPermissionButton
+                            size='small'
+                            permission={UPDATE_FEATURE_DEPENDENCY}
+                            projectId={feature.project}
+                            variant='text'
+                            onClick={() => {
+                                setShowDependencyDialogue(true);
+                            }}
+                        >
+                            Add parent flag
+                        </StyledPermissionButton>
+                    </div>
                 </StyledMetaDataItem>
             ) : null}
             {hasParentDependency ? (

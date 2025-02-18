@@ -66,8 +66,8 @@ export const StyledMetaDataItemValue = styled('div')(({ theme }) => ({
 }));
 
 type FeatureOverviewMetaDataProps = {
-    hiddenEnvironments: string[];
-    onEnvironmentVisibilityChange: (environment: string) => void;
+    hiddenEnvironments?: string[];
+    onEnvironmentVisibilityChange?: (environment: string) => void;
 };
 
 const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
@@ -166,11 +166,13 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                         <DependencyRow feature={feature} />
                     ) : null}
                     <TagRow feature={feature} />
-                    <EnvironmentVisibilityMenu
-                        environments={feature.environments || []}
-                        hiddenEnvironments={hiddenEnvironments}
-                        onChange={onEnvironmentVisibilityChange}
-                    />
+                    {onEnvironmentVisibilityChange ? (
+                        <EnvironmentVisibilityMenu
+                            environments={feature.environments || []}
+                            hiddenEnvironments={hiddenEnvironments || []}
+                            onChange={onEnvironmentVisibilityChange}
+                        />
+                    ) : null}
                 </StyledBody>
             </StyledMetaDataContainer>
             {feature.children.length > 0 ? (

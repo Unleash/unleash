@@ -19,7 +19,7 @@ export const FeatureStatusChip = ({
     const value = stale ? 'Stale' : 'Active';
 
     return (
-        <div data-loading style={{ marginLeft: '8px' }}>
+        <div data-loading>
             <Badge color={stale ? 'error' : 'success'} title={title}>
                 {value}
             </Badge>

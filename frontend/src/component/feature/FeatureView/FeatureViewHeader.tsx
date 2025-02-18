@@ -51,11 +51,15 @@ const NewStyledHeader = styled('div')(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
-const LowerHeaderRow = styled('div')(({ theme }) => ({
+const UpperHeaderRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
-    justifyContent: 'space-between',
     columnGap: theme.spacing(4),
+    alignItems: 'center',
+}));
+
+const LowerHeaderRow = styled(UpperHeaderRow)(({ theme }) => ({
+    justifyContent: 'space-between',
 }));
 
 const HeaderActions = styled('div')(({ theme }) => ({
@@ -99,10 +103,11 @@ const StyledInnerContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledFlagInfoContainer = styled('div')({
+const StyledFlagInfoContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
-});
+    columnGap: theme.spacing(1),
+}));
 
 const StyledDependency = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -259,7 +264,12 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
         <>
             {flagOverviewRedesign ? (
                 <NewStyledHeader>
-                    <Typography variant='h1'>{feature.name}</Typography>
+                    <UpperHeaderRow>
+                        <Typography variant='h1'>{feature.name}</Typography>
+                        {feature.stale ? (
+                            <FeatureStatusChip stale={true} />
+                        ) : null}
+                    </UpperHeaderRow>
                     <LowerHeaderRow>
                         <Tabs
                             value={activeTab.path}
@@ -357,7 +367,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                                     >
                                         <IconButton
                                             onClick={handleCopyToClipboard}
-                                            style={{ marginLeft: 8 }}
                                         >
                                             {isFeatureNameCopied ? (
                                                 <Check

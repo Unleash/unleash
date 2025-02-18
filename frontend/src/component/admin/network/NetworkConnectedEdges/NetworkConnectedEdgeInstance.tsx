@@ -97,7 +97,8 @@ const getCPUPercentage = ({
     reportedAt,
     cpuUsage,
 }: ConnectedEdge): string => {
-    if (!cpuUsage) return 'No usage';
+    const cpuUsageSeconds = Number(cpuUsage);
+    if (!cpuUsageSeconds) return 'No usage';
 
     const startedTimestamp = new Date(started).getTime();
     const reportedTimestamp = new Date(reportedAt).getTime();
@@ -105,7 +106,7 @@ const getCPUPercentage = ({
     const totalRuntimeSeconds = (reportedTimestamp - startedTimestamp) / 1000;
     if (totalRuntimeSeconds === 0) return 'No usage';
 
-    return `${((cpuUsage / totalRuntimeSeconds) * 100).toFixed(2)} %`;
+    return `${((cpuUsageSeconds / totalRuntimeSeconds) * 100).toFixed(2)} %`;
 };
 
 const getMemory = ({ memoryUsage }: ConnectedEdge): string => {

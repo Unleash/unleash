@@ -5,6 +5,23 @@ const StyledTable = styled('table')(({ theme }) => ({
     width: '100%',
     borderCollapse: 'collapse',
     fontSize: theme.fontSizes.smallerBody,
+    '& > thead': {
+        borderBottom: `1px solid ${theme.palette.text.primary}`,
+    },
+    '& tr': {
+        textAlign: 'right',
+        '& > th:first-of-type,td:first-of-type': {
+            textAlign: 'left',
+        },
+    },
+}));
+
+const StyledUpstreamSection = styled('tr')(({ theme }) => ({
+    fontWeight: theme.fontWeight.bold,
+    borderBottom: `1px solid ${theme.palette.text.primary}`,
+    '& > td:first-of-type': {
+        paddingTop: theme.spacing(1),
+    },
 }));
 
 interface INetworkConnectedEdgeInstanceLatencyProps {
@@ -17,85 +34,40 @@ export const NetworkConnectedEdgeInstanceLatency = ({
     return (
         <StyledTable>
             <thead>
-                <tr style={{ textAlign: 'left' }}>
-                    <th
-                        style={{
-                            borderBottom: '1px solid #ccc',
-                        }}
-                    >
-                        Latency (ms)
-                    </th>
-                    <th
-                        style={{
-                            borderBottom: '1px solid #ccc',
-                            textAlign: 'right',
-                        }}
-                    >
-                        Avg
-                    </th>
-                    <th
-                        style={{
-                            borderBottom: '1px solid #ccc',
-                            textAlign: 'right',
-                        }}
-                    >
-                        p99
-                    </th>
+                <tr>
+                    <th>Latency (ms)</th>
+                    <th>Avg</th>
+                    <th>p99</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td style={{ padding: '4px' }}>Client Features</td>
-                    <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {instance.clientFeaturesAverageLatencyMs}
-                    </td>
-                    <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {instance.clientFeaturesP99LatencyMs}
-                    </td>
+                    <td>Client Features</td>
+                    <td>{instance.clientFeaturesAverageLatencyMs}</td>
+                    <td>{instance.clientFeaturesP99LatencyMs}</td>
                 </tr>
                 <tr>
-                    <td style={{ padding: '4px' }}>Frontend</td>
-                    <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {instance.frontendApiAverageLatencyMs}
-                    </td>
-                    <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {instance.frontendApiP99LatencyMs}
-                    </td>
+                    <td>Frontend</td>
+                    <td>{instance.frontendApiAverageLatencyMs}</td>
+                    <td>{instance.frontendApiP99LatencyMs}</td>
+                </tr>
+                <StyledUpstreamSection>
+                    <td colSpan={3}>Upstream</td>
+                </StyledUpstreamSection>
+                <tr>
+                    <td>Client Features</td>
+                    <td>{instance.upstreamFeaturesAverageLatencyMs}</td>
+                    <td>{instance.upstreamFeaturesP99LatencyMs}</td>
                 </tr>
                 <tr>
-                    <td
-                        colSpan={3}
-                        style={{ fontWeight: 'bold', paddingTop: '6px' }}
-                    >
-                        Upstream
-                    </td>
+                    <td>Metrics</td>
+                    <td>{instance.upstreamMetricsAverageLatencyMs}</td>
+                    <td>{instance.upstreamMetricsP99LatencyMs}</td>
                 </tr>
                 <tr>
-                    <td style={{ padding: '4px 8px' }}>Client Features</td>
-                    <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {instance.upstreamFeaturesAverageLatencyMs}
-                    </td>
-                    <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {instance.upstreamFeaturesP99LatencyMs}
-                    </td>
-                </tr>
-                <tr>
-                    <td style={{ padding: '4px 8px' }}>Metrics</td>
-                    <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {instance.upstreamMetricsAverageLatencyMs}
-                    </td>
-                    <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {instance.upstreamMetricsP99LatencyMs}
-                    </td>
-                </tr>
-                <tr>
-                    <td style={{ padding: '4px 8px' }}>Edge</td>
-                    <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {instance.upstreamEdgeAverageLatencyMs}
-                    </td>
-                    <td style={{ padding: '4px', textAlign: 'right' }}>
-                        {instance.upstreamEdgeP99LatencyMs}
-                    </td>
+                    <td>Edge</td>
+                    <td>{instance.upstreamEdgeAverageLatencyMs}</td>
+                    <td>{instance.upstreamEdgeP99LatencyMs}</td>
                 </tr>
             </tbody>
         </StyledTable>

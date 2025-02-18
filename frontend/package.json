@@ -130,7 +130,7 @@
   "resolutions": {
     "@codemirror/state": "6.5.2",
     "@xmldom/xmldom": "^0.9.0",
-    "jsonpath-plus": "10.2.0",
+    "jsonpath-plus": "10.3.0",
     "json5": "^2.2.2",
     "vite": "5.4.14",
     "semver": "7.7.0",

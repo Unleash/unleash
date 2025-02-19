@@ -205,9 +205,9 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 return undefined;
             }
 
-            return Promise.resolve({
+            return {
                 events,
-            });
+            };
         }
     }
 

@@ -99,7 +99,7 @@ export const uiConfigSchema = {
                 ),
             },
         },
-        networkViewEnabled: {
+        prometheusAPIAvailable: {
             type: 'boolean',
             description: 'Whether a Prometheus API is available.',
             example: true,

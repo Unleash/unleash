@@ -20,11 +20,11 @@ export const useInstanceMetrics = (
     options: SWRConfiguration = {},
 ): IInstanceMetricsResponse => {
     const {
-        uiConfig: { networkViewEnabled },
+        uiConfig: { prometheusAPIAvailable },
     } = useUiConfig();
 
     const { data, error, mutate } = useConditionalSWR(
-        networkViewEnabled,
+        prometheusAPIAvailable,
         {},
         formatApiPath(`api/admin/metrics/rps`),
         fetcher,

@@ -2,10 +2,10 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 
 export const NetworkPrometheusAPIWarning = () => {
     const {
-        uiConfig: { networkViewEnabled },
+        uiConfig: { prometheusAPIAvailable },
     } = useUiConfig();
 
-    if (networkViewEnabled) return null;
+    if (prometheusAPIAvailable) return null;
 
     return (
         <p>

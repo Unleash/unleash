@@ -71,7 +71,6 @@ export type UiFlags = {
     automatedActions?: boolean;
     celebrateUnleash?: boolean;
     enableLicense?: boolean;
-    adminTokenKillSwitch?: boolean;
     feedbackComments?: Variant;
     showInactiveUsers?: boolean;
     feedbackPosting?: boolean;

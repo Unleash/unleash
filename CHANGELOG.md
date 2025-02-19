@@ -2,6 +2,83 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.7.2] - 2025-02-19
+
+### Bug Fixes
+
+- Command bar spacing ([#9288](https://github.com/Unleash/unleash/issues/9288))
+
+- Make the chip in the playground project selector small ([#9298](https://github.com/Unleash/unleash/issues/9298))
+
+- Add some missing button labels on the project page ([#9299](https://github.com/Unleash/unleash/issues/9299))
+
+- Add strategy and more strategies button are different heights ([#9300](https://github.com/Unleash/unleash/issues/9300))
+
+- Hydration event should update with every event ([#9310](https://github.com/Unleash/unleash/issues/9310))
+
+- Mutating delta events ([#9303](https://github.com/Unleash/unleash/issues/9303))
+
+- Return undefined from delta if no events ([#9311](https://github.com/Unleash/unleash/issues/9311))
+
+- Access e2e test ([#9313](https://github.com/Unleash/unleash/issues/9313))
+
+- Add a metric to track client registrations ([#9314](https://github.com/Unleash/unleash/issues/9314))
+
+- Delete project segment with change request ([#9315](https://github.com/Unleash/unleash/issues/9315))
+
+- Fix unintended scroll on dashboard ([#9316](https://github.com/Unleash/unleash/issues/9316))
+
+- Handle singular counts in project status lifecycle boxes ([#9317](https://github.com/Unleash/unleash/issues/9317))
+
+- Use bucket stop as timestamp for metrics bucket ([#9327](https://github.com/Unleash/unleash/issues/9327))
+
+
+### Documentation
+
+- Include create db permission required for new tests ([#9301](https://github.com/Unleash/unleash/issues/9301))
+
+
+### Features
+
+- Connection count usage ([#9294](https://github.com/Unleash/unleash/issues/9294))
+
+- Frontend API POST endpoint ([#9291](https://github.com/Unleash/unleash/issues/9291))
+
+- New flag header ([#9302](https://github.com/Unleash/unleash/issues/9302))
+
+- New flag info box ([#9308](https://github.com/Unleash/unleash/issues/9308))
+
+- Add stale badge to the new header ([#9320](https://github.com/Unleash/unleash/issues/9320))
+
+- Project field to feature removed event ([#9322](https://github.com/Unleash/unleash/issues/9322))
+
+
+### Miscellaneous Tasks
+
+- Use gitcliff changelog for release ([#9289](https://github.com/Unleash/unleash/issues/9289))
+
+- Add migration that backfills scim user email hashes ([#9295](https://github.com/Unleash/unleash/issues/9295))
+
+- Bump unleash client version to beta 6.5 ([#9305](https://github.com/Unleash/unleash/issues/9305))
+
+- Make setting service handle conflict on insert ([#9160](https://github.com/Unleash/unleash/issues/9160))
+
+- Add edge observability tables ([#9307](https://github.com/Unleash/unleash/issues/9307))
+
+- Add change request events to teams integration ([#9309](https://github.com/Unleash/unleash/issues/9309))
+
+- Add status_code to edge traffic table to store 304s as well ([#9312](https://github.com/Unleash/unleash/issues/9312))
+
+- Remove references to admin token kill switch ([#9324](https://github.com/Unleash/unleash/issues/9324))
+
+
+### Refactor
+
+- MuiTab font sizes ([#9296](https://github.com/Unleash/unleash/issues/9296))
+
+- Move feature overview header into separate file ([#9319](https://github.com/Unleash/unleash/issues/9319))
+
+
 ## [6.7.1] - 2025-02-11
 
 ### Bug Fixes

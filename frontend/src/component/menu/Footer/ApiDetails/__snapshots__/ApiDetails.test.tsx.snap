@@ -7,7 +7,7 @@ exports[`renders correctly with empty version 1`] = `
       title="API details"
     >
       <h2
-        class="css-gtu1fw"
+        class="css-wc53hr"
       >
         Unleash
          
@@ -39,7 +39,7 @@ exports[`renders correctly with ui-config 1`] = `
       title="API details"
     >
       <h2
-        class="css-gtu1fw"
+        class="css-wc53hr"
       >
         Unleash
          
@@ -72,7 +72,7 @@ exports[`renders correctly with versionInfo 1`] = `
       title="API details"
     >
       <h2
-        class="css-gtu1fw"
+        class="css-wc53hr"
       >
         Unleash
          
@@ -109,7 +109,7 @@ exports[`renders correctly without uiConfig 1`] = `
       title="API details"
     >
       <h2
-        class="css-gtu1fw"
+        class="css-wc53hr"
       >
         Unleash
          

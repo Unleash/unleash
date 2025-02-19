@@ -3,12 +3,11 @@ import { useState, type FC } from 'react';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import type { FeatureEnvironmentSchema } from 'openapi';
 
 type EnvironmentVisibilityMenuProps = {
-    environments: Pick<FeatureEnvironmentSchema, 'name'>[];
-    hiddenEnvironments: FeatureEnvironmentSchema['name'][];
-    onChange: (name: FeatureEnvironmentSchema['name']) => void;
+    environments: Array<{ name: string }>;
+    hiddenEnvironments: string[];
+    onChange: (name: string) => void;
 };
 
 const buttonId = 'environment-visibility-button';

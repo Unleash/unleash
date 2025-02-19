@@ -2,7 +2,7 @@ import { useLocalStorageState } from 'hooks/useLocalStorageState';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { createLocalStorage } from 'utils/createLocalStorage';
 
-// Reading legacy value be safely refactored out in a next version - related to `flagOverviewRedesign` flag
+// Reading legacy value will be safely refactored out in a next version - related to `flagOverviewRedesign` flag
 const { value: legacyStoreValue } = createLocalStorage<{
     hiddenEnvironments?: Array<string>;
 }>('global:v1', {});

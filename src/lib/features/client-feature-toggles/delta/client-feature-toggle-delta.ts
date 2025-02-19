@@ -205,17 +205,9 @@ export class ClientFeatureToggleDelta extends EventEmitter {
                 return undefined;
             }
 
-            const response: ClientFeaturesDeltaSchema = {
-                events: events.map((event) => {
-                    if (event.type === 'feature-removed') {
-                        const { project, ...rest } = event;
-                        return rest;
-                    }
-                    return event;
-                }),
+            return {
+                events,
             };
-
-            return Promise.resolve(response);
         }
     }
 

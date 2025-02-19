@@ -65,7 +65,6 @@ export type IFlagKey =
     | 'uniqueSdkTracking'
     | 'frontendHeaderRedesign'
     | 'dataUsageMultiMonthView'
-    | 'uiGlobalFontSize'
     | 'connectionCount'
     | 'teamsIntegrationChangeRequests'
     | 'edgeObservability';
@@ -311,10 +310,6 @@ const flags: IFlags = {
     ),
     dataUsageMultiMonthView: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_DATA_USAGE_MULTI_MONTH_VIEW,
-        false,
-    ),
-    uiGlobalFontSize: parseEnvVarBoolean(
-        process.env.EXPERIMENTAL_UI_GLOBAL_FONT_SIZE_NAME,
         false,
     ),
     connectionCount: parseEnvVarBoolean(

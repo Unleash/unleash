@@ -3,11 +3,7 @@ import { useContext } from 'react';
 import { setLocalStorageItem } from 'utils/storage';
 import { lightTheme } from 'themes/theme';
 import { darkTheme } from 'themes/dark-theme';
-import legacyLightTheme from 'themes/theme.legacy';
-import legacyDarkTheme from 'themes/dark-theme.legacy';
 import type { Theme } from '@mui/material/styles/createTheme';
-import { useUiFlag } from './useUiFlag';
-import type { Variant } from 'utils/variants';
 
 interface IUseThemeModeOutput {
     resolveTheme: () => Theme;
@@ -18,25 +14,8 @@ interface IUseThemeModeOutput {
 export const useThemeMode = (): IUseThemeModeOutput => {
     const { themeMode, setThemeMode } = useContext(UIContext);
     const key = 'unleash-theme';
-    const uiGlobalFontSizeEnabled = useUiFlag('uiGlobalFontSize');
 
-    let useNewTheme = false;
-    if (typeof uiGlobalFontSizeEnabled === 'boolean') {
-        useNewTheme = uiGlobalFontSizeEnabled;
-    } else if (
-        typeof uiGlobalFontSizeEnabled === 'object' &&
-        'name' in uiGlobalFontSizeEnabled
-    ) {
-        useNewTheme = (uiGlobalFontSizeEnabled as Variant).name !== 'disabled';
-    }
-
-    const resolveTheme = () => {
-        if (themeMode === 'light') {
-            return useNewTheme ? lightTheme : legacyLightTheme;
-        }
-
-        return useNewTheme ? darkTheme : legacyDarkTheme;
-    };
+    const resolveTheme = () => (themeMode === 'light' ? lightTheme : darkTheme);
 
     const onSetThemeMode = () => {
         setThemeMode((prev: themeMode) => {

@@ -84,7 +84,7 @@ export const FeatureStrategyMenu = ({
     };
 
     const addReleasePlanToChangeRequest = async () => {
-        addChange(projectId, environmentId, {
+        await addChange(projectId, environmentId, {
             feature: featureId,
             action: 'addReleasePlan',
             payload: {
@@ -92,7 +92,7 @@ export const FeatureStrategyMenu = ({
             },
         });
 
-        refetchChangeRequests();
+        await refetchChangeRequests();
 
         setToastData({
             type: 'success',

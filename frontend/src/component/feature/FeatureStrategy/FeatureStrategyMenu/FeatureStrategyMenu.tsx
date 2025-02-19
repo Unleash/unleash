@@ -59,7 +59,6 @@ export const FeatureStrategyMenu = ({
         useState<IReleasePlanTemplate | undefined>();
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen ? 'FeatureStrategyMenuPopover' : undefined;
-    const flagOverviewRedesignEnabled = useUiFlag('flagOverviewRedesign');
     const { setToastData } = useToast();
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
@@ -109,51 +108,6 @@ export const FeatureStrategyMenu = ({
         'flexibleRollout',
         true,
     );
-
-    if (flagOverviewRedesignEnabled) {
-        return (
-            <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
-                <PermissionButton
-                    data-testid='ADD_STRATEGY_BUTTON'
-                    permission={CREATE_FEATURE_STRATEGY}
-                    projectId={projectId}
-                    environmentId={environmentId}
-                    onClick={openMoreStrategies}
-                    aria-labelledby={popoverId}
-                    variant={variant}
-                    size={uiFontSizeRedesign ? undefined : size}
-                    sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
-                    disabled={Boolean(disableReason)}
-                    tooltipProps={{
-                        title: disableReason ? disableReason : undefined,
-                    }}
-                >
-                    {label}
-                </PermissionButton>
-                <Popover
-                    id={popoverId}
-                    open={isPopoverOpen}
-                    anchorEl={anchor}
-                    onClose={onClose}
-                    onClick={onClose}
-                    PaperProps={{
-                        sx: (theme) => ({
-                            paddingBottom: theme.spacing(1),
-                        }),
-                    }}
-                >
-                    <FeatureStrategyMenuCards
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        setTemplateForChangeRequestDialog={
-                            setTemplateForChangeRequestDialog
-                        }
-                    />
-                </Popover>
-            </StyledStrategyMenu>
-        );
-    }
 
     return (
         <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>

@@ -10,7 +10,6 @@ import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { StrategyDraggableItem } from '../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyDraggableItem';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
-import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -307,13 +306,8 @@ export const FeatureOverviewEnvironmentBody = ({
                             </>
                         )}
                     </>
-                ) : (
-                    <FeatureStrategyEmpty
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={featureEnvironment.name}
-                    />
-                )}
+                ) : null}
+                {/* TODO: fit "copy from other environment" option somewhere */}
             </StyledAccordionBodyInnerContainer>
         </StyledAccordionBody>
     );

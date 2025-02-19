@@ -120,24 +120,21 @@ export const FeatureOverviewEnvironment = ({
                         .map(({ name }) => name)
                         .filter((name) => name !== environmentId)}
                 />
-                {featureEnvironment?.strategies?.length > 0 ? (
-                    <>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                justifyContent: 'center',
-                                py: 1,
-                            }}
-                        >
-                            <FeatureStrategyMenu
-                                label='Add strategy'
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environmentId}
-                            />
-                        </Box>
-                    </>
-                ) : null}
+                <Box
+                    sx={{
+                        display: 'flex', // TODO: refactor styles
+                        justifyContent: 'end',
+                        pt: 1,
+                        pb: 2,
+                    }}
+                >
+                    <FeatureStrategyMenu
+                        label='Add strategy'
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                    />
+                </Box>
             </StyledFeatureOverviewEnvironment>
         );
     });

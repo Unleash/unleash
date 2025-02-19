@@ -79,6 +79,10 @@ exports[`order of items in navigation > menu for enterprise plan 1`] = `
     "text": "Single sign-on",
   },
   {
+    "icon": "HubOutlinedIcon",
+    "text": "Network",
+  },
+  {
     "icon": "BuildOutlinedIcon",
     "text": "Maintenance",
   },
@@ -255,6 +259,10 @@ exports[`order of items in navigation > menu for pro plan 1`] = `
   {
     "icon": "AssignmentOutlinedIcon",
     "text": "Single sign-on",
+  },
+  {
+    "icon": "HubOutlinedIcon",
+    "text": "Network",
   },
   {
     "icon": "BuildOutlinedIcon",

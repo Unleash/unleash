@@ -11,6 +11,7 @@ import type {
 import { ReactComponent as LogoIcon } from 'assets/icons/logoBg.svg';
 import { ReactComponent as LogoIconWhite } from 'assets/icons/logoWhiteBg.svg';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import { NetworkPrometheusAPIWarning } from '../NetworkPrometheusAPIWarning';
 
 const StyleUnleashContainer = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(18),
@@ -122,7 +123,12 @@ export const NetworkOverview = () => {
     }, [metrics]);
 
     if (apps.length === 0) {
-        return <Alert severity='warning'>No data available.</Alert>;
+        return (
+            <Alert severity='warning'>
+                No data available.
+                <NetworkPrometheusAPIWarning />
+            </Alert>
+        );
     }
 
     return (

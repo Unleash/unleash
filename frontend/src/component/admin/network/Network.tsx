@@ -4,8 +4,12 @@ import { Tab, Tabs } from '@mui/material';
 import { Route, Routes, useLocation } from 'react-router-dom';
 import { TabLink } from 'component/common/TabNav/TabLink';
 import { PageContent } from 'component/common/PageContent/PageContent';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 const NetworkOverview = lazy(() => import('./NetworkOverview/NetworkOverview'));
+const NetworkConnectedEdges = lazy(
+    () => import('./NetworkConnectedEdges/NetworkConnectedEdges'),
+);
 const NetworkTraffic = lazy(() => import('./NetworkTraffic/NetworkTraffic'));
 const NetworkTrafficUsage = lazy(
     () => import('./NetworkTrafficUsage/NetworkTrafficUsage'),
@@ -21,6 +25,10 @@ const tabs = [
         path: '/admin/network/traffic',
     },
     {
+        label: 'Connected Edges',
+        path: '/admin/network/connected-edges',
+    },
+    {
         label: 'Data Usage',
         path: '/admin/network/data-usage',
     },
@@ -28,6 +36,11 @@ const tabs = [
 
 export const Network = () => {
     const { pathname } = useLocation();
+    const edgeObservabilityEnabled = useUiFlag('edgeObservability');
+
+    const filteredTabs = tabs.filter(
+        ({ label }) => label !== 'Connected Edges' || edgeObservabilityEnabled,
+    );
 
     return (
         <div>
@@ -41,7 +54,7 @@ export const Network = () => {
                         variant='scrollable'
                         allowScrollButtonsMobile
                     >
-                        {tabs.map(({ label, path }) => (
+                        {filteredTabs.map(({ label, path }) => (
                             <Tab
                                 key={label}
                                 value={path}
@@ -57,8 +70,14 @@ export const Network = () => {
                 }
             >
                 <Routes>
-                    <Route path='traffic' element={<NetworkTraffic />} />
                     <Route path='*' element={<NetworkOverview />} />
+                    <Route path='traffic' element={<NetworkTraffic />} />
+                    {edgeObservabilityEnabled && (
+                        <Route
+                            path='connected-edges'
+                            element={<NetworkConnectedEdges />}
+                        />
+                    )}
                     <Route
                         path='data-usage'
                         element={<NetworkTrafficUsage />}

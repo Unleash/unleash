@@ -8,7 +8,6 @@ import { Alert, Pagination, styled } from '@mui/material';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategyDraggableItem } from '../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyDraggableItem';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
@@ -230,132 +229,91 @@ export const FeatureOverviewEnvironmentBody = ({
     return (
         <StyledAccordionBody>
             <StyledAccordionBodyInnerContainer>
-                <ConditionallyRender
-                    condition={
-                        (releasePlans.length > 0 ||
-                            strategiesToDisplay.length > 0) &&
-                        isDisabled
-                    }
-                    show={() => (
-                        <Alert severity='warning' sx={{ mb: 2 }}>
-                            This environment is disabled, which means that none
-                            of your strategies are executing.
-                        </Alert>
-                    )}
-                />
-                <ConditionallyRender
-                    condition={
-                        releasePlans.length > 0 ||
-                        strategiesToDisplay.length > 0
-                    }
-                    show={
-                        <>
-                            {releasePlans.map((plan) => (
-                                <ReleasePlan
-                                    key={plan.id}
-                                    plan={plan}
-                                    environmentIsDisabled={isDisabled}
+                {(releasePlans.length > 0 || strategiesToDisplay.length > 0) &&
+                isDisabled ? (
+                    <Alert severity='warning' sx={{ mb: 2 }}>
+                        This environment is disabled, which means that none of
+                        your strategies are executing.
+                    </Alert>
+                ) : null}
+                {releasePlans.length > 0 || strategiesToDisplay.length > 0 ? (
+                    <>
+                        {releasePlans.map((plan) => (
+                            <ReleasePlan
+                                key={plan.id}
+                                plan={plan}
+                                environmentIsDisabled={isDisabled}
+                            />
+                        ))}
+                        {releasePlans.length > 0 && strategies.length > 0 ? (
+                            <SectionSeparator>
+                                <StyledBadge>OR</StyledBadge>
+                            </SectionSeparator>
+                        ) : null}
+                        {strategiesToDisplay.length < 50 ||
+                        !manyStrategiesPagination ? (
+                            <>
+                                {strategiesToDisplay.map((strategy, index) => (
+                                    <StrategyDraggableItem
+                                        key={strategy.id}
+                                        strategy={strategy}
+                                        index={index}
+                                        environmentName={
+                                            featureEnvironment.name
+                                        }
+                                        otherEnvironments={otherEnvironments}
+                                        isDragging={
+                                            dragItem?.id === strategy.id
+                                        }
+                                        onDragStartRef={onDragStartRef}
+                                        onDragOver={onDragOver(strategy.id)}
+                                        onDragEnd={onDragEnd}
+                                    />
+                                ))}
+                            </>
+                        ) : (
+                            <>
+                                <Alert severity='error'>
+                                    We noticed you're using a high number of
+                                    activation strategies. To ensure a more
+                                    targeted approach, consider leveraging
+                                    constraints or segments.
+                                </Alert>
+                                <br />
+                                {page.map((strategy, index) => (
+                                    <StrategyDraggableItem
+                                        key={strategy.id}
+                                        strategy={strategy}
+                                        index={index + pageIndex * pageSize}
+                                        environmentName={
+                                            featureEnvironment.name
+                                        }
+                                        otherEnvironments={otherEnvironments}
+                                        isDragging={false}
+                                        onDragStartRef={(() => {}) as any}
+                                        onDragOver={(() => {}) as any}
+                                        onDragEnd={(() => {}) as any}
+                                    />
+                                ))}
+                                <br />
+                                <Pagination
+                                    count={pages.length}
+                                    shape='rounded'
+                                    page={pageIndex + 1}
+                                    onChange={(_, page) =>
+                                        setPageIndex(page - 1)
+                                    }
                                 />
-                            ))}
-                            <ConditionallyRender
-                                condition={
-                                    releasePlans.length > 0 &&
-                                    strategies.length > 0
-                                }
-                                show={
-                                    <SectionSeparator>
-                                        <StyledBadge>OR</StyledBadge>
-                                    </SectionSeparator>
-                                }
-                            />
-                            <ConditionallyRender
-                                condition={
-                                    strategiesToDisplay.length < 50 ||
-                                    !manyStrategiesPagination
-                                }
-                                show={
-                                    <>
-                                        {strategiesToDisplay.map(
-                                            (strategy, index) => (
-                                                <StrategyDraggableItem
-                                                    key={strategy.id}
-                                                    strategy={strategy}
-                                                    index={index}
-                                                    environmentName={
-                                                        featureEnvironment.name
-                                                    }
-                                                    otherEnvironments={
-                                                        otherEnvironments
-                                                    }
-                                                    isDragging={
-                                                        dragItem?.id ===
-                                                        strategy.id
-                                                    }
-                                                    onDragStartRef={
-                                                        onDragStartRef
-                                                    }
-                                                    onDragOver={onDragOver(
-                                                        strategy.id,
-                                                    )}
-                                                    onDragEnd={onDragEnd}
-                                                />
-                                            ),
-                                        )}
-                                    </>
-                                }
-                                elseShow={
-                                    <>
-                                        <Alert severity='error'>
-                                            We noticed you're using a high
-                                            number of activation strategies. To
-                                            ensure a more targeted approach,
-                                            consider leveraging constraints or
-                                            segments.
-                                        </Alert>
-                                        <br />
-                                        {page.map((strategy, index) => (
-                                            <StrategyDraggableItem
-                                                key={strategy.id}
-                                                strategy={strategy}
-                                                index={
-                                                    index + pageIndex * pageSize
-                                                }
-                                                environmentName={
-                                                    featureEnvironment.name
-                                                }
-                                                otherEnvironments={
-                                                    otherEnvironments
-                                                }
-                                                isDragging={false}
-                                                onDragStartRef={
-                                                    (() => {}) as any
-                                                }
-                                                onDragOver={(() => {}) as any}
-                                                onDragEnd={(() => {}) as any}
-                                            />
-                                        ))}
-                                        <br />
-                                        <Pagination
-                                            count={pages.length}
-                                            shape='rounded'
-                                            page={pageIndex + 1}
-                                            onChange={(_, page) =>
-                                                setPageIndex(page - 1)
-                                            }
-                                        />
-                                    </>
-                                }
-                            />
-                        </>
-                    }
-                    elseShow={
-                        <FeatureStrategyEmpty
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={featureEnvironment.name}
-                        />
-                    }
-                />
+                            </>
+                        )}
+                    </>
+                ) : (
+                    <FeatureStrategyEmpty
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={featureEnvironment.name}
+                    />
+                )}
             </StyledAccordionBodyInnerContainer>
         </StyledAccordionBody>
     );

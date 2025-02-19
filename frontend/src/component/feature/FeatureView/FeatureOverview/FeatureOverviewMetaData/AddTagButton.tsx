@@ -29,6 +29,7 @@ export const AddTagButton: FC<AddTagButtonProps> = ({ project, onClick }) => (
         variant='text'
         onClick={onClick}
         startIcon={<StyledAddIcon />}
+        data-loading
     >
         Add tag
     </StyledAddTagButton>

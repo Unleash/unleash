@@ -24,7 +24,7 @@ export interface IUiConfig {
     links: ILinks[];
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
-    networkViewEnabled: boolean;
+    prometheusAPIAvailable: boolean;
     maintenanceMode?: boolean;
     toast?: IProclamationToast;
     segmentValuesLimit?: number;

@@ -27,7 +27,7 @@ export const defaultValue: IUiConfig = {
             title: 'Source code on GitHub',
         },
     ],
-    networkViewEnabled: false,
+    prometheusAPIAvailable: false,
     resourceLimits: {
         segmentValues: 1000,
         strategySegments: 5,

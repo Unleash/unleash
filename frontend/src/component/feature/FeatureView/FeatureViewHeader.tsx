@@ -4,6 +4,7 @@ import {
     styled,
     Tab,
     Tabs,
+    type Theme,
     Tooltip,
     Typography,
     useMediaQuery,
@@ -49,7 +50,15 @@ const NewStyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: 'none',
     marginBottom: theme.spacing(2),
     borderBottom: `1px solid ${theme.palette.divider}`,
+    containerType: 'inline-size',
 }));
+
+const onNarrowHeader = (theme: Theme, css: object) => ({
+    '@container (max-width: 650px)': css,
+    '@supports not (container-type: inline-size)': {
+        [theme.breakpoints.down('md')]: css,
+    },
+});
 
 const UpperHeaderRow = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -60,12 +69,23 @@ const UpperHeaderRow = styled('div')(({ theme }) => ({
 
 const LowerHeaderRow = styled(UpperHeaderRow)(({ theme }) => ({
     justifyContent: 'space-between',
+    flexFlow: 'row nowrap',
+    ...onNarrowHeader(theme, {
+        flexFlow: 'column nowrap',
+        alignItems: 'flex-start',
+    }),
 }));
 
-const HeaderActions = styled('div')(({ theme }) => ({
-    display: 'flex',
+const HeaderActions = styled('div', {
+    shouldForwardProp: (propName) => propName !== 'showOnNarrowScreens',
+})<{ showOnNarrowScreens?: boolean }>(({ theme, showOnNarrowScreens }) => ({
+    display: showOnNarrowScreens ? 'none' : 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
+
+    ...onNarrowHeader(theme, {
+        display: showOnNarrowScreens ? 'flex' : 'none',
+    }),
 }));
 
 const IconButtonWithTooltip: FC<
@@ -174,6 +194,79 @@ const useLegacyVariants = (environments: IFeatureToggle['environments']) => {
     return enableLegacyVariants || existingLegacyVariantsExist;
 };
 
+type HeaderActionsProps = {
+    feature: IFeatureToggle;
+    showOnNarrowScreens?: boolean;
+    onFavorite: () => void;
+    handleCopyToClipboard: () => void;
+    isFeatureNameCopied: boolean;
+    openStaleDialog: () => void;
+    openDeleteDialog: () => void;
+};
+
+const HeaderActionsComponent = ({
+    showOnNarrowScreens,
+    feature,
+    onFavorite,
+    handleCopyToClipboard,
+    isFeatureNameCopied,
+    openStaleDialog,
+    openDeleteDialog,
+}: HeaderActionsProps) => (
+    <HeaderActions showOnNarrowScreens={showOnNarrowScreens}>
+        <IconButtonWithTooltip
+            label='Favorite this feature flag'
+            onClick={onFavorite}
+            data-loading
+        >
+            {feature.favorite ? <Star /> : <StarBorder />}
+        </IconButtonWithTooltip>
+
+        <IconButtonWithTooltip
+            label='Copy flag name'
+            onClick={handleCopyToClipboard}
+            data-loading
+        >
+            {isFeatureNameCopied ? <Check /> : <FileCopyOutlined />}
+        </IconButtonWithTooltip>
+        <PermissionIconButton
+            permission={CREATE_FEATURE}
+            projectId={feature.project}
+            data-loading
+            component={Link}
+            to={`/projects/${feature.project}/features/${feature.name}/copy`}
+            tooltipProps={{
+                title: 'Clone',
+            }}
+        >
+            <LibraryAddOutlined />
+        </PermissionIconButton>
+
+        <PermissionIconButton
+            permission={DELETE_FEATURE}
+            projectId={feature.project}
+            tooltipProps={{
+                title: 'Archive feature flag',
+            }}
+            data-loading
+            onClick={openDeleteDialog}
+        >
+            <ArchiveOutlined />
+        </PermissionIconButton>
+        <PermissionIconButton
+            onClick={openStaleDialog}
+            permission={UPDATE_FEATURE}
+            projectId={feature.project}
+            tooltipProps={{
+                title: 'Toggle stale state',
+            }}
+            data-loading
+        >
+            <WatchLaterOutlined />
+        </PermissionIconButton>
+    </HeaderActions>
+);
+
 type Props = {
     feature: IFeatureToggle;
 };
@@ -260,6 +353,22 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
         }
     };
 
+    const HeaderActionsInner: FC<{ showOnNarrowScreens?: boolean }> = ({
+        showOnNarrowScreens,
+    }) => {
+        return (
+            <HeaderActionsComponent
+                showOnNarrowScreens={showOnNarrowScreens}
+                feature={feature}
+                onFavorite={onFavorite}
+                handleCopyToClipboard={handleCopyToClipboard}
+                isFeatureNameCopied={isFeatureNameCopied}
+                openStaleDialog={() => setOpenStaleDialog(true)}
+                openDeleteDialog={() => setShowDelDialog(true)}
+            />
+        );
+    };
+
     return (
         <>
             {flagOverviewRedesign ? (
@@ -271,6 +380,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                         ) : null}
                     </UpperHeaderRow>
                     <LowerHeaderRow>
+                        <HeaderActionsInner showOnNarrowScreens />
                         <Tabs
                             value={activeTab.path}
                             indicatorColor='primary'
@@ -286,62 +396,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                                 />
                             ))}
                         </Tabs>
-                        <HeaderActions>
-                            <IconButtonWithTooltip
-                                label='Favorite this feature flag'
-                                onClick={onFavorite}
-                                data-loading
-                            >
-                                {feature.favorite ? <Star /> : <StarBorder />}
-                            </IconButtonWithTooltip>
-
-                            <IconButtonWithTooltip
-                                label='Copy flag name'
-                                onClick={handleCopyToClipboard}
-                                data-loading
-                            >
-                                {isFeatureNameCopied ? (
-                                    <Check />
-                                ) : (
-                                    <FileCopyOutlined />
-                                )}
-                            </IconButtonWithTooltip>
-                            <PermissionIconButton
-                                permission={CREATE_FEATURE}
-                                projectId={projectId}
-                                data-loading
-                                component={Link}
-                                to={`/projects/${projectId}/features/${featureId}/copy`}
-                                tooltipProps={{
-                                    title: 'Clone',
-                                }}
-                            >
-                                <LibraryAddOutlined />
-                            </PermissionIconButton>
-
-                            <PermissionIconButton
-                                permission={DELETE_FEATURE}
-                                projectId={projectId}
-                                tooltipProps={{
-                                    title: 'Archive feature flag',
-                                }}
-                                data-loading
-                                onClick={() => setShowDelDialog(true)}
-                            >
-                                <ArchiveOutlined />
-                            </PermissionIconButton>
-                            <PermissionIconButton
-                                onClick={() => setOpenStaleDialog(true)}
-                                permission={UPDATE_FEATURE}
-                                projectId={projectId}
-                                tooltipProps={{
-                                    title: 'Toggle stale state',
-                                }}
-                                data-loading
-                            >
-                                <WatchLaterOutlined />
-                            </PermissionIconButton>
-                        </HeaderActions>
+                        <HeaderActionsInner />
                     </LowerHeaderRow>
                 </NewStyledHeader>
             ) : (

@@ -146,7 +146,7 @@ export const NetworkConnectedEdgeInstance = ({
     const memory = getMemory(instance);
     const archWarning = cpuPercentage === 'No usage' &&
         memory === 'No usage' && (
-            <p>Resource metrics are only available when running on Linux</p>
+            <p>Resource metrics are only available when running on Linux.</p>
         );
 
     return (
@@ -216,7 +216,7 @@ export const NetworkConnectedEdgeInstance = ({
                                     <>
                                         <p>
                                             CPU average usage since instance
-                                            started
+                                            started.
                                         </p>
                                         {archWarning}
                                     </>
@@ -232,7 +232,7 @@ export const NetworkConnectedEdgeInstance = ({
                             <HelpIcon
                                 tooltip={
                                     <>
-                                        <p>Current memory usage</p>
+                                        <p>Current memory usage.</p>
                                         {archWarning}
                                     </>
                                 }

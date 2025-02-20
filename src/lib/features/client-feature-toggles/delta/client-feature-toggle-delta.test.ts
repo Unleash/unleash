@@ -35,7 +35,13 @@ describe('filterEventsByQuery', () => {
         { eventId: 5, type: 'segment-removed', segmentId: 2 },
     ];
     test('filters events based on eventId', () => {
-        const result = filterEventsByQuery(mockEvents, 2, ['project3'], '');
+        const requiredRevisionId = 2;
+        const result = filterEventsByQuery(
+            mockEvents,
+            requiredRevisionId,
+            ['project3'],
+            '',
+        );
         expect(result).toEqual([
             {
                 eventId: 3,
@@ -52,7 +58,7 @@ describe('filterEventsByQuery', () => {
         ]);
     });
 
-    test('allows all projects when * is provided', () => {
+    test('returns all projects', () => {
         const result = filterEventsByQuery(mockEvents, 0, ['*'], '');
         expect(result).toEqual(mockEvents);
     });

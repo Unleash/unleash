@@ -43,7 +43,7 @@ export const EnvironmentVisibilityMenu: FC<EnvironmentVisibilityMenuProps> = ({
 
     const allEnvironments = useMemo(
         () => environments.map((environment) => environment.name),
-        [environments],
+        [JSON.stringify(environments)],
     );
 
     const selectedOptions = useMemo(

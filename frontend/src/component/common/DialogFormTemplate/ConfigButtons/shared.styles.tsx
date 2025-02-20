@@ -15,6 +15,7 @@ const visuallyHiddenStyles = {
 export const StyledDropdownSearch = styled(TextField, {
     shouldForwardProp: (prop) => prop !== 'hideLabel',
 })<{ hideLabel?: boolean }>(({ theme, hideLabel }) => ({
+    padding: theme.spacing(0, 1.5),
     '& .MuiInputBase-root': {
         padding: theme.spacing(0, 1.5),
         borderRadius: `${theme.shape.borderRadiusMedium}px`,

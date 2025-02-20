@@ -83,7 +83,7 @@ You should remove all unnecessary properties. This ensures that Entra will reach
 - emails
 - externalId
 
-**4) Update the email property to**
+**4) Update the email property to "userPrincipleName"**
 
 ![Update provisioning properties](/img/scim-entra-config-6.png)
 

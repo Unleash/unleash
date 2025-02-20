@@ -4,6 +4,7 @@ import {
     styled,
     Tab,
     Tabs,
+    type Theme,
     Tooltip,
     Typography,
     useMediaQuery,
@@ -52,10 +53,10 @@ const NewStyledHeader = styled('div')(({ theme }) => ({
     containerType: 'inline-size',
 }));
 
-const onNarrowHeader = (css: object) => ({
+const onNarrowHeader = (theme: Theme, css: object) => ({
     '@container (max-width: 650px)': css,
     '@supports not (container-type: inline-size)': {
-        '@media (max-width: 700px)': css,
+        [theme.breakpoints.down('md')]: css,
     },
 });
 
@@ -68,7 +69,11 @@ const UpperHeaderRow = styled('div')(({ theme }) => ({
 
 const LowerHeaderRow = styled(UpperHeaderRow)(({ theme }) => ({
     justifyContent: 'space-between',
-    ...onNarrowHeader({ flexFlow: 'column nowrap', alignItems: 'flex-start' }),
+    flexFlow: 'row nowrap',
+    ...onNarrowHeader(theme, {
+        flexFlow: 'column nowrap',
+        alignItems: 'flex-start',
+    }),
 }));
 
 const HeaderActions = styled('div', {
@@ -78,7 +83,7 @@ const HeaderActions = styled('div', {
     flexFlow: 'row nowrap',
     alignItems: 'center',
 
-    ...onNarrowHeader({
+    ...onNarrowHeader(theme, {
         display: showOnNarrowScreens ? 'flex' : 'none',
     }),
 }));

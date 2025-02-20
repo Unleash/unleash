@@ -180,7 +180,7 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
     fontSize: theme.fontSizes.bodySize,
     padding: '0 !important',
     [theme.breakpoints.up('md')]: {
-        minWidth: 160,
+        minWidth: 100,
     },
 }));
 

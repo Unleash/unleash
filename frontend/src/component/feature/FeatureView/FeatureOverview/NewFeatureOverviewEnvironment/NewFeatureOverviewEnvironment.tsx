@@ -3,10 +3,10 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
 import { getFeatureMetrics } from 'utils/getFeatureMetrics';
 import { FeatureOverviewEnvironmentBody } from './FeatureOverviewEnvironmentBody';
-import FeatureOverviewEnvironmentMetrics from '../FeatureOverviewEnvironments/FeatureOverviewEnvironment/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
+import FeatureOverviewEnvironmentMetrics from '../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentHeader/FeatureOverviewEnvironmentMetrics/LegacyFeatureOverviewEnvironmentMetrics';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { FeatureOverviewEnvironmentToggle } from './FeatureOverviewEnvironmentToggle';
+import { FeatureOverviewEnvironmentToggle } from '../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     padding: theme.spacing(1, 3),

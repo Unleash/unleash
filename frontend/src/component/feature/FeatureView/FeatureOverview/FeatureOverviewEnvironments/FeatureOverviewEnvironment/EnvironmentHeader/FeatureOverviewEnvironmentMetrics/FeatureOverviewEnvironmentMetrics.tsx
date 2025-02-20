@@ -1,5 +1,3 @@
-import FiberManualRecord from '@mui/icons-material/FiberManualRecord';
-import { useTheme } from '@mui/system';
 import type { IFeatureEnvironmentMetrics } from 'interfaces/featureToggle';
 import { calculatePercentage } from 'utils/calculatePercentage';
 import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
@@ -18,7 +16,7 @@ const StyledContainer = styled('div')({
 });
 
 const StyledInfo = styled('div')(({ theme }) => ({
-    marginRight: theme.spacing(1),
+    marginRight: theme.spacing(1.5),
     display: 'flex',
     flexDirection: 'column',
 }));
@@ -30,26 +28,15 @@ const StyledPercentage = styled('p')(({ theme }) => ({
 }));
 
 const StyledInfoParagraph = styled('p')(({ theme }) => ({
-    maxWidth: '270px',
-    marginTop: theme.spacing(0.5),
-    fontSize: theme.fontSizes.smallBody,
+    fontSize: theme.typography.body2.fontSize,
     textAlign: 'right',
-    [theme.breakpoints.down(700)]: {
-        display: 'none',
-    },
-}));
-
-const StyledIcon = styled(FiberManualRecord)(({ theme }) => ({
-    fill: theme.palette.background.elevation2,
-    height: '75px',
-    width: '75px',
-    [theme.breakpoints.down(500)]: {
+    [theme.breakpoints.down('xl')]: {
         display: 'none',
     },
 }));
 
 const StyledPercentageCircle = styled('div')(({ theme }) => ({
-    margin: theme.spacing(0, 2),
+    marginRight: theme.spacing(1),
     [theme.breakpoints.down(500)]: {
         display: 'none',
     },
@@ -59,8 +46,6 @@ const FeatureOverviewEnvironmentMetrics = ({
     environmentMetric,
     disabled = false,
 }: IFeatureOverviewEnvironmentMetrics) => {
-    const theme = useTheme();
-
     if (!environmentMetric) return null;
 
     const total = environmentMetric.yes + environmentMetric.no;
@@ -70,35 +55,7 @@ const FeatureOverviewEnvironmentMetrics = ({
         !environmentMetric ||
         (environmentMetric.yes === 0 && environmentMetric.no === 0)
     ) {
-        return (
-            <StyledContainer>
-                <StyledInfo>
-                    <StyledPercentage
-                        style={{
-                            color: disabled
-                                ? theme.palette.text.secondary
-                                : undefined,
-                        }}
-                        data-loading
-                    >
-                        {percentage}%
-                    </StyledPercentage>
-                    <StyledInfoParagraph
-                        style={{
-                            color: disabled
-                                ? theme.palette.text.secondary
-                                : theme.palette.text.primary,
-                        }}
-                        data-loading
-                    >
-                        The feature has been requested <b>0 times</b> and
-                        exposed
-                        <b> 0 times</b> in the last hour
-                    </StyledInfoParagraph>
-                </StyledInfo>
-                <StyledIcon style={{ transform: 'scale(1.1)' }} data-loading />
-            </StyledContainer>
-        );
+        return null;
     }
 
     return (
@@ -106,10 +63,11 @@ const FeatureOverviewEnvironmentMetrics = ({
             <StyledInfo>
                 <StyledPercentage>{percentage}%</StyledPercentage>
                 <StyledInfoParagraph>
-                    The feature has been requested{' '}
+                    The flag has been requested{' '}
                     <b>
                         <PrettifyLargeNumber value={total} /> times
-                    </b>{' '}
+                    </b>
+                    <br />
                     and exposed{' '}
                     <b>
                         <PrettifyLargeNumber value={environmentMetric.yes} />{' '}
@@ -119,7 +77,11 @@ const FeatureOverviewEnvironmentMetrics = ({
                 </StyledInfoParagraph>
             </StyledInfo>
             <StyledPercentageCircle data-loading>
-                <PercentageCircle percentage={percentage} size='3rem' />
+                <PercentageCircle
+                    percentage={percentage}
+                    size='3rem'
+                    strokeWidth={0.25}
+                />
             </StyledPercentageCircle>
         </StyledContainer>
     );

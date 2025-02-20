@@ -1,3 +1,4 @@
+import { styled } from '@mui/material';
 import { useFeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/useFeatureToggleSwitch';
 import { FeatureToggleSwitch } from 'component/project/Project/ProjectFeatureToggles/FeatureToggleSwitch/FeatureToggleSwitch';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
@@ -5,13 +6,20 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 
-interface IFeatureOverviewEnvironmentToggleProps {
-    environment: IFeatureEnvironment;
-}
+const StyledContainer = styled('div')(() => ({
+    order: -1,
+}));
+
+type FeatureOverviewEnvironmentToggleProps = {
+    environment: Pick<
+        IFeatureEnvironment,
+        'name' | 'type' | 'strategies' | 'enabled'
+    >;
+};
 
 export const FeatureOverviewEnvironmentToggle = ({
     environment: { name, type, strategies, enabled },
-}: IFeatureOverviewEnvironmentToggleProps) => {
+}: FeatureOverviewEnvironmentToggleProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { refetchFeature } = useFeature(projectId, featureId);
@@ -37,7 +45,7 @@ export const FeatureOverviewEnvironmentToggle = ({
         });
 
     return (
-        <>
+        <StyledContainer onClick={(event) => event.stopPropagation()}>
             <FeatureToggleSwitch
                 projectId={projectId}
                 value={enabled}
@@ -46,6 +54,6 @@ export const FeatureOverviewEnvironmentToggle = ({
                 onToggle={onToggle}
             />
             {featureToggleModals}
-        </>
+        </StyledContainer>
     );
 };

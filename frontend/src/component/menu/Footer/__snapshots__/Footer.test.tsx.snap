@@ -20,7 +20,7 @@ exports[`should render DrawerMenu 1`] = `
           title="API details"
         >
           <h2
-            className="css-gtu1fw"
+            className="css-wc53hr"
           >
             Unleash
              
@@ -48,7 +48,7 @@ exports[`should render DrawerMenu 1`] = `
               title="Unleash SDK"
             >
               <h2
-                className="css-gtu1fw"
+                className="css-wc53hr"
               >
                 Server SDKs
               </h2>
@@ -63,7 +63,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/node"
@@ -83,7 +83,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/java"
@@ -103,7 +103,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/go"
@@ -124,7 +124,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/rust"
@@ -145,7 +145,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/ruby"
@@ -166,7 +166,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/python"
@@ -186,7 +186,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/dotnet"
@@ -206,7 +206,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/php"
@@ -226,7 +226,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks"
@@ -248,7 +248,7 @@ exports[`should render DrawerMenu 1`] = `
               title="Unleash SDK"
             >
               <h2
-                className="css-gtu1fw"
+                className="css-wc53hr"
               >
                 Frontend SDKs
               </h2>
@@ -263,7 +263,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/unleash-proxy"
@@ -283,7 +283,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/javascript-browser"
@@ -303,7 +303,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/react"
@@ -323,7 +323,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/next-js"
@@ -343,7 +343,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/vue"
@@ -363,7 +363,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/ios-proxy"
@@ -383,7 +383,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/android-proxy"
@@ -403,7 +403,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/flutter"
@@ -423,7 +423,7 @@ exports[`should render DrawerMenu 1`] = `
           >
             <section>
               <h2
-                className="css-gtu1fw"
+                className="css-wc53hr"
               >
                 About
               </h2>
@@ -438,7 +438,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://www.getunleash.io/"
@@ -458,7 +458,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://twitter.com/getunleash"
@@ -478,7 +478,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://www.linkedin.com/company/getunleash"
@@ -498,7 +498,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://github.com/Unleash/unleash"
@@ -518,7 +518,7 @@ exports[`should render DrawerMenu 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://slack.unleash.run"
@@ -567,7 +567,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
           title="API details"
         >
           <h2
-            className="css-gtu1fw"
+            className="css-wc53hr"
           >
             Unleash
              
@@ -595,7 +595,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
               title="Unleash SDK"
             >
               <h2
-                className="css-gtu1fw"
+                className="css-wc53hr"
               >
                 Server SDKs
               </h2>
@@ -610,7 +610,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/node"
@@ -630,7 +630,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/java"
@@ -650,7 +650,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/go"
@@ -671,7 +671,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/rust"
@@ -692,7 +692,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/ruby"
@@ -713,7 +713,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/python"
@@ -733,7 +733,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/dotnet"
@@ -753,7 +753,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/php"
@@ -773,7 +773,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks"
@@ -795,7 +795,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
               title="Unleash SDK"
             >
               <h2
-                className="css-gtu1fw"
+                className="css-wc53hr"
               >
                 Frontend SDKs
               </h2>
@@ -810,7 +810,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/unleash-proxy"
@@ -830,7 +830,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/javascript-browser"
@@ -850,7 +850,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/react"
@@ -870,7 +870,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/next-js"
@@ -890,7 +890,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/vue"
@@ -910,7 +910,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/ios-proxy"
@@ -930,7 +930,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/android-proxy"
@@ -950,7 +950,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://docs.getunleash.io/reference/sdks/flutter"
@@ -970,7 +970,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
           >
             <section>
               <h2
-                className="css-gtu1fw"
+                className="css-wc53hr"
               >
                 About
               </h2>
@@ -985,7 +985,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://www.getunleash.io/"
@@ -1005,7 +1005,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://twitter.com/getunleash"
@@ -1025,7 +1025,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://www.linkedin.com/company/getunleash"
@@ -1045,7 +1045,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://github.com/Unleash/unleash"
@@ -1065,7 +1065,7 @@ exports[`should render DrawerMenu with "features" selected 1`] = `
                     className="MuiListItemText-root MuiListItemText-dense css-tlelie-MuiListItemText-root"
                   >
                     <span
-                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1nhzl8d-MuiTypography-root"
+                      className="MuiTypography-root MuiTypography-body2 MuiListItemText-primary css-1f1ka7g-MuiTypography-root"
                     >
                       <a
                         href="https://slack.unleash.run"

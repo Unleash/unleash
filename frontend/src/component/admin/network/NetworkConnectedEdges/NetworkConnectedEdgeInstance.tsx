@@ -15,6 +15,7 @@ import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import { NetworkConnectedEdgeInstanceLatency } from './NetworkConnectedEdgeInstanceLatency';
 
 const StyledInstance = styled('div')(({ theme }) => ({
+    width: '100%',
     borderRadius: theme.shape.borderRadiusMedium,
     border: '1px solid',
     borderColor: theme.palette.secondary.border,

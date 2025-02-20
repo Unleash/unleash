@@ -93,7 +93,12 @@ export const useTemplateForm = (
         return {
             name,
             description,
-            milestones,
+            milestones: milestones.map((milestone) => {
+                return {
+                    ...milestone,
+                    new: undefined,
+                };
+            }),
         };
     };
 

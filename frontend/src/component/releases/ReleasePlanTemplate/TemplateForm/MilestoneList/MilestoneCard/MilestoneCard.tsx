@@ -123,8 +123,13 @@ const StyledDragIcon = styled(IconButton)(({ theme }) => ({
     },
 }));
 
+export interface IExtendedMilestonePayload
+    extends IReleasePlanMilestonePayload {
+    new?: boolean;
+}
+
 export interface IMilestoneCardProps {
-    milestone: IReleasePlanMilestonePayload;
+    milestone: IExtendedMilestonePayload;
     milestoneChanged: (milestone: IReleasePlanMilestonePayload) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
@@ -152,7 +157,7 @@ export const MilestoneCard = ({
     } | null>(null);
     const [addUpdateStrategyOpen, setAddUpdateStrategyOpen] = useState(false);
     const [strategyModeEdit, setStrategyModeEdit] = useState(false);
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(Boolean(milestone.new));
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen
         ? 'MilestoneStrategyMenuPopover'

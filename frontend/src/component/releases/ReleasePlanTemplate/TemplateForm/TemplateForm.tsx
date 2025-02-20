@@ -6,7 +6,6 @@ import { TemplateFormDescription } from './TemplateFormDescription';
 import { MilestoneList } from './MilestoneList/MilestoneList';
 
 const StyledInput = styled(Input)(({ theme }) => ({
-    width: '100%',
     maxWidth: theme.spacing(50),
     fieldset: { border: 'none' },
     'label::first-letter': {
@@ -14,6 +13,16 @@ const StyledInput = styled(Input)(({ theme }) => ({
     },
     marginBottom: theme.spacing(2),
     padding: theme.spacing(0),
+}));
+
+const StyledDescriptionInput = styled(Input)(({ theme }) => ({
+    width: '100%',
+    fieldset: { border: 'none' },
+    'label::first-letter': {
+        textTransform: 'uppercase',
+    },
+    marginBottom: theme.spacing(2),
+    padding: theme.spacing(2, 5, 1, 1.75),
 }));
 
 const StyledForm = styled('form')(({ theme }) => ({
@@ -91,8 +100,9 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                     }}
                     size='medium'
                 />
-                <StyledInput
+                <StyledDescriptionInput
                     label='Template description (optional)'
+                    multiline
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     InputProps={{
@@ -107,7 +117,7 @@ export const TemplateForm: React.FC<ITemplateFormProps> = ({
                             padding: 0,
                         },
                     }}
-                    size='medium'
+                    size='small'
                 />
                 <MilestoneList
                     milestones={milestones}

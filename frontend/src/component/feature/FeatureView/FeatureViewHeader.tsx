@@ -46,17 +46,6 @@ import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureS
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 
-const StyledTabs = styled(Tabs)({
-    minWidth: 0,
-    maxWidth: '100%',
-
-    '& .MuiTabs-flexContainer': {
-        // remove the global min height set in frontend/src/themes/theme.ts
-        // (70px) and use the height of the tabs instead.
-        minHeight: 'unset',
-    },
-});
-
 const NewStyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: 'none',
     marginBottom: theme.spacing(2),
@@ -180,6 +169,16 @@ const StyledTabRow = styled('div')(({ theme }) => ({
     paddingInline: theme.spacing(4),
     justifyContent: 'space-between',
 }));
+
+const StyledTabs = styled(Tabs)({
+    minWidth: 0,
+    maxWidth: '100%',
+    '& .MuiTabs-flexContainer': {
+        // remove the global min height set in frontend/src/themes/theme.ts
+        // (70px) and use the height of the tabs instead.
+        minHeight: 'unset',
+    },
+});
 
 const StyledTabButton = styled(Tab)(({ theme }) => ({
     textTransform: 'none',

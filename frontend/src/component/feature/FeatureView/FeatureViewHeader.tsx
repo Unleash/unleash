@@ -46,6 +46,11 @@ import { FeatureStaleDialog } from 'component/common/FeatureStaleDialog/FeatureS
 import { FeatureArchiveDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveDialog';
 import { FeatureArchiveNotAllowedDialog } from 'component/common/FeatureArchiveDialog/FeatureArchiveNotAllowedDialog';
 
+const StyledTabs = styled(Tabs)({
+    minWidth: 0,
+    maxWidth: '100%',
+});
+
 const NewStyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: 'none',
     marginBottom: theme.spacing(2),
@@ -381,12 +386,13 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                     </UpperHeaderRow>
                     <LowerHeaderRow>
                         <HeaderActionsInner showOnNarrowScreens />
-                        <Tabs
+                        <StyledTabs
                             value={activeTab.path}
                             indicatorColor='primary'
                             textColor='primary'
                             aria-label='Feature flag tabs'
-                            scrollButtons='auto'
+                            // scrollButtons={true}
+                            allowScrollButtonsMobile={true}
                             variant='scrollable'
                         >
                             {tabData.map((tab) => (
@@ -398,7 +404,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                                     data-testid={`TAB-${tab.title}`}
                                 />
                             ))}
-                        </Tabs>
+                        </StyledTabs>
                         <HeaderActionsInner />
                     </LowerHeaderRow>
                 </NewStyledHeader>

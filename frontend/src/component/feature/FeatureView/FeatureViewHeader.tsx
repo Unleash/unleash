@@ -58,10 +58,10 @@ const NewStyledHeader = styled('div')(({ theme }) => ({
     containerType: 'inline-size',
 }));
 
-const onNarrowHeader = (theme: Theme, css: object) => ({
-    '@container (max-width: 650px)': css,
+const onWideHeader = (theme: Theme, css: object) => ({
+    '@container (min-width: 650px)': css,
     '@supports not (container-type: inline-size)': {
-        [theme.breakpoints.down('md')]: css,
+        [theme.breakpoints.up('md')]: css,
     },
 });
 
@@ -74,23 +74,24 @@ const UpperHeaderRow = styled('div')(({ theme }) => ({
 
 const LowerHeaderRow = styled(UpperHeaderRow)(({ theme }) => ({
     justifyContent: 'space-between',
-    flexFlow: 'row nowrap',
     columnGap: 0,
-    ...onNarrowHeader(theme, {
-        flexFlow: 'column nowrap',
-        alignItems: 'flex-start',
+    flexFlow: 'column nowrap',
+    alignItems: 'flex-start',
+    ...onWideHeader(theme, {
+        alignItems: 'center',
+        flexFlow: 'row nowrap',
     }),
 }));
 
 const HeaderActions = styled('div', {
     shouldForwardProp: (propName) => propName !== 'showOnNarrowScreens',
 })<{ showOnNarrowScreens?: boolean }>(({ theme, showOnNarrowScreens }) => ({
-    display: showOnNarrowScreens ? 'none' : 'flex',
+    display: showOnNarrowScreens ? 'flex' : 'none',
     flexFlow: 'row nowrap',
     alignItems: 'center',
 
-    ...onNarrowHeader(theme, {
-        display: showOnNarrowScreens ? 'flex' : 'none',
+    ...onWideHeader(theme, {
+        display: showOnNarrowScreens ? 'none' : 'flex',
     }),
 }));
 
@@ -179,9 +180,9 @@ const StyledTabButton = styled(Tab)(({ theme }) => ({
     width: 'auto',
     fontSize: theme.fontSizes.bodySize,
     padding: '0 !important',
-    [theme.breakpoints.up('md')]: {
+    ...onWideHeader(theme, {
         minWidth: 100,
-    },
+    }),
 }));
 
 export const StyledLink = styled(Link)(() => ({

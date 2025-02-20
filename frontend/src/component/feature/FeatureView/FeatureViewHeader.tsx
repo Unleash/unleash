@@ -53,38 +53,40 @@ const NewStyledHeader = styled('div')(({ theme }) => ({
     containerType: 'inline-size',
 }));
 
-const onNarrowHeader = (theme: Theme, css: object) => ({
-    '@container (max-width: 650px)': css,
+const onWideHeader = (theme: Theme, css: object) => ({
+    '@container (min-width: 650px)': css,
     '@supports not (container-type: inline-size)': {
-        [theme.breakpoints.down('md')]: css,
+        [theme.breakpoints.up('md')]: css,
     },
 });
 
 const UpperHeaderRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
-    columnGap: theme.spacing(4),
     alignItems: 'center',
+    columnGap: theme.spacing(2),
 }));
 
 const LowerHeaderRow = styled(UpperHeaderRow)(({ theme }) => ({
     justifyContent: 'space-between',
-    flexFlow: 'row nowrap',
-    ...onNarrowHeader(theme, {
-        flexFlow: 'column nowrap',
-        alignItems: 'flex-start',
+    columnGap: 0,
+    flexFlow: 'column nowrap',
+    alignItems: 'flex-start',
+    ...onWideHeader(theme, {
+        alignItems: 'center',
+        flexFlow: 'row nowrap',
     }),
 }));
 
 const HeaderActions = styled('div', {
     shouldForwardProp: (propName) => propName !== 'showOnNarrowScreens',
 })<{ showOnNarrowScreens?: boolean }>(({ theme, showOnNarrowScreens }) => ({
-    display: showOnNarrowScreens ? 'none' : 'flex',
+    display: showOnNarrowScreens ? 'flex' : 'none',
     flexFlow: 'row nowrap',
     alignItems: 'center',
 
-    ...onNarrowHeader(theme, {
-        display: showOnNarrowScreens ? 'flex' : 'none',
+    ...onWideHeader(theme, {
+        display: showOnNarrowScreens ? 'none' : 'flex',
     }),
 }));
 
@@ -168,14 +170,24 @@ const StyledTabRow = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
 }));
 
+const StyledTabs = styled(Tabs)({
+    minWidth: 0,
+    maxWidth: '100%',
+    '& .MuiTabs-flexContainer': {
+        // remove the global min height set in frontend/src/themes/theme.ts
+        // (70px) and use the height of the tabs instead.
+        minHeight: 'unset',
+    },
+});
+
 const StyledTabButton = styled(Tab)(({ theme }) => ({
     textTransform: 'none',
     width: 'auto',
     fontSize: theme.fontSizes.bodySize,
     padding: '0 !important',
-    [theme.breakpoints.up('md')]: {
-        minWidth: 160,
-    },
+    ...onWideHeader(theme, {
+        minWidth: 100,
+    }),
 }));
 
 export const StyledLink = styled(Link)(() => ({
@@ -381,10 +393,12 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                     </UpperHeaderRow>
                     <LowerHeaderRow>
                         <HeaderActionsInner showOnNarrowScreens />
-                        <Tabs
+                        <StyledTabs
                             value={activeTab.path}
                             indicatorColor='primary'
                             textColor='primary'
+                            aria-label='Feature flag tabs'
+                            variant='scrollable'
                         >
                             {tabData.map((tab) => (
                                 <StyledTabButton
@@ -395,7 +409,7 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                                     data-testid={`TAB-${tab.title}`}
                                 />
                             ))}
-                        </Tabs>
+                        </StyledTabs>
                         <HeaderActionsInner />
                     </LowerHeaderRow>
                 </NewStyledHeader>

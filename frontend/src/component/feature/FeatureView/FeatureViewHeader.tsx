@@ -68,13 +68,14 @@ const onNarrowHeader = (theme: Theme, css: object) => ({
 const UpperHeaderRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
-    columnGap: theme.spacing(4),
     alignItems: 'center',
+    columnGap: theme.spacing(2),
 }));
 
 const LowerHeaderRow = styled(UpperHeaderRow)(({ theme }) => ({
     justifyContent: 'space-between',
     flexFlow: 'row nowrap',
+    columnGap: 0,
     ...onNarrowHeader(theme, {
         flexFlow: 'column nowrap',
         alignItems: 'flex-start',
@@ -391,8 +392,6 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                             indicatorColor='primary'
                             textColor='primary'
                             aria-label='Feature flag tabs'
-                            // scrollButtons={true}
-                            allowScrollButtonsMobile={true}
                             variant='scrollable'
                         >
                             {tabData.map((tab) => (

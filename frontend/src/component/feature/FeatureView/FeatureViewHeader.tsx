@@ -385,6 +385,9 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                             value={activeTab.path}
                             indicatorColor='primary'
                             textColor='primary'
+                            aria-label='Feature flag tabs'
+                            scrollButtons='auto'
+                            variant='scrollable'
                         >
                             {tabData.map((tab) => (
                                 <StyledTabButton

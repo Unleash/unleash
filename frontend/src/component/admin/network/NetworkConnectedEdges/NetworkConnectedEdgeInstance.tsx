@@ -29,6 +29,7 @@ const StyledInstance = styled('div')(({ theme }) => ({
 }));
 
 const StyledAccordion = styled(Accordion)({
+    width: '100%',
     background: 'transparent',
     boxShadow: 'none',
 });

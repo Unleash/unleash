@@ -80,6 +80,15 @@ export const MilestoneList = ({
                             id: uuidv4(),
                             name: `Milestone ${prev.length + 1}`,
                             sortOrder: prev.length,
+                            strategies: prev[prev.length - 1].strategies?.map(
+                                (strat) => {
+                                    return {
+                                        ...strat,
+                                        id: uuidv4(),
+                                    };
+                                },
+                            ),
+                            startExpanded: true,
                         },
                     ])
                 }

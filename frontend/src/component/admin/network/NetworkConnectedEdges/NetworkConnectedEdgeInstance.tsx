@@ -170,8 +170,16 @@ export const NetworkConnectedEdgeInstance = ({
                         <span>{instance.instanceId}</span>
                     </StyledDetailRow>
                     <StyledDetailRow>
-                        <strong>Upstream</strong>
+                        <strong>Upstream server</strong>
                         <span>{instance.connectedVia || 'Unleash'}</span>
+                    </StyledDetailRow>
+                    <StyledDetailRow>
+                        <strong>Region</strong>
+                        <span>{instance.region || 'Unknown'}</span>
+                    </StyledDetailRow>
+                    <StyledDetailRow>
+                        <strong>Version</strong>
+                        <span>{instance.edgeVersion}</span>
                     </StyledDetailRow>
                     <StyledDetailRow>
                         <strong>Status</strong>
@@ -194,18 +202,6 @@ export const NetworkConnectedEdgeInstance = ({
                     <StyledDetailRow>
                         <strong>Last report</strong>
                         <span>{lastReport}</span>
-                    </StyledDetailRow>
-                    <StyledDetailRow>
-                        <strong>App name</strong>
-                        <span>{instance.appName}</span>
-                    </StyledDetailRow>
-                    <StyledDetailRow>
-                        <strong>Region</strong>
-                        <span>{instance.region || 'Unknown'}</span>
-                    </StyledDetailRow>
-                    <StyledDetailRow>
-                        <strong>Version</strong>
-                        <span>{instance.edgeVersion}</span>
                     </StyledDetailRow>
                     <StyledDetailRow>
                         <strong>CPU</strong>

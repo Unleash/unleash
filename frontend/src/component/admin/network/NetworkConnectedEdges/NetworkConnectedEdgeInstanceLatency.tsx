@@ -20,11 +20,9 @@ const StyledTable = styled('table')(({ theme }) => ({
 const StyledSectionHeader = styled('tr')(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
     '&&& > td': {
-        textAlign: 'center',
         paddingTop: theme.spacing(1),
         '& > div': {
             display: 'flex',
-            justifyContent: 'center',
             alignItems: 'center',
         },
     },

@@ -4,10 +4,7 @@ import { useState, type FC } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { DropdownList } from 'component/common/DialogFormTemplate/ConfigButtons/DropdownList';
-import {
-    StyledDropdown,
-    StyledPopover,
-} from 'component/common/DialogFormTemplate/ConfigButtons/ConfigButton.styles';
+import { StyledPopover } from 'component/common/DialogFormTemplate/ConfigButtons/shared.styles';
 
 type EnvironmentVisibilityMenuProps = {
     environments: Array<{ name: string }>;
@@ -79,22 +76,20 @@ export const EnvironmentVisibilityMenu: FC<EnvironmentVisibilityMenuProps> = ({
                     horizontal: 'left',
                 }}
             >
-                <StyledDropdown>
-                    <DropdownList
-                        multiselect={{
-                            selectedOptions,
-                        }}
-                        onChange={handleToggle}
-                        options={allEnvironments.map((env) => ({
-                            label: env,
-                            value: env,
-                        }))}
-                        search={{
-                            label: 'Filter environments',
-                            placeholder: 'Filter environments',
-                        }}
-                    />
-                </StyledDropdown>
+                <DropdownList
+                    multiselect={{
+                        selectedOptions,
+                    }}
+                    onChange={handleToggle}
+                    options={allEnvironments.map((env) => ({
+                        label: env,
+                        value: env,
+                    }))}
+                    search={{
+                        label: 'Filter environments',
+                        placeholder: 'Filter environments',
+                    }}
+                />
             </StyledPopover>
         </StyledContainer>
     );

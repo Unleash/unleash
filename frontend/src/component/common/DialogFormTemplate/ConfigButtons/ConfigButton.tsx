@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { type FC, type ReactNode, useRef, type PropsWithChildren } from 'react';
 import { Box, Button } from '@mui/material';
 import {
-    StyledDropdown,
     StyledPopover,
     ButtonLabel,
     StyledTooltipContent,
@@ -98,9 +97,7 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
                 <ScreenReaderOnly>
                     <p id={descriptionId}>{description}</p>
                 </ScreenReaderOnly>
-                <StyledDropdown aria-describedby={descriptionId}>
-                    {children}
-                </StyledDropdown>
+                {children}
             </StyledPopover>
         </>
     );

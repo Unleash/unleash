@@ -4,6 +4,7 @@ import { useState, type FC } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { DropdownList } from 'component/common/DialogFormTemplate/ConfigButtons/DropdownList';
+import { StyledDropdown } from 'component/common/DialogFormTemplate/ConfigButtons/ConfigButton.styles';
 
 type EnvironmentVisibilityMenuProps = {
     environments: Array<{ name: string }>;
@@ -23,10 +24,6 @@ const StyledContainer = styled('div')(({ theme }) => ({
 export const StyledPopover = styled(Popover)(({ theme }) => ({
     '& .MuiPaper-root': {
         borderRadius: `${theme.shape.borderRadiusMedium}px`,
-        paddingTop: theme.spacing(2),
-        rowGap: theme.spacing(1.5),
-        display: 'flex',
-        flexFlow: 'column',
     },
 }));
 
@@ -85,20 +82,22 @@ export const EnvironmentVisibilityMenu: FC<EnvironmentVisibilityMenuProps> = ({
                     horizontal: 'left',
                 }}
             >
-                <DropdownList
-                    multiselect={{
-                        selectedOptions,
-                    }}
-                    onChange={handleToggle}
-                    options={allEnvironments.map((env) => ({
-                        label: env,
-                        value: env,
-                    }))}
-                    search={{
-                        label: 'Filter environments',
-                        placeholder: 'Filter environments',
-                    }}
-                />
+                <StyledDropdown>
+                    <DropdownList
+                        multiselect={{
+                            selectedOptions,
+                        }}
+                        onChange={handleToggle}
+                        options={allEnvironments.map((env) => ({
+                            label: env,
+                            value: env,
+                        }))}
+                        search={{
+                            label: 'Filter environments',
+                            placeholder: 'Filter environments',
+                        }}
+                    />
+                </StyledDropdown>
             </StyledPopover>
         </StyledContainer>
     );

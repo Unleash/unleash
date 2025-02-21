@@ -52,6 +52,8 @@ This guide assumes you already have an SSO application setup for Unleash. If you
 
 This the SCIM API URL provided by the Unleash UI in the [configuring Unleash](how-to-setup-provisioning-with-entra#unleash-setup-step-1) section.**
 
+If you plan on deprovisioning users at any point with SCIM, you'll also need to enable the [SCIM compliance flag](https://learn.microsoft.com/en-us/entra/identity/app-provisioning/application-provisioning-config-problem-scim-compatibility#flags-to-alter-the-scim-behavior) on Entra. This can be done by appending `?aadOptscim062020` to your URL.
+
 **3) Set the Secret Token**
 
 This was provided by the Unleash UI in the [configuring Unleash](how-to-setup-provisioning-with-entra#unleash-setup-step-2) section.
@@ -81,17 +83,11 @@ You should remove all unnecessary properties. This ensures that Entra will reach
 - emails
 - externalId
 
-**4) Update the active property**
-
-You need to set the active property to the following (lowercase the boolean values):
-
-Switch([IsSoftDeleted], , "false", "true", "true", "false")
-
-**5) Update the email property to **
+**4) Update the email property to "userPrincipleName"**
 
 ![Update provisioning properties](/img/scim-entra-config-6.png)
 
-**6) Save**
+**5) Save**
 
 ### Step 4: Enable Provisioning {#entra-setup-step-4}
 

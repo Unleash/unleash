@@ -1,10 +1,13 @@
-import { Button, Popover, styled } from '@mui/material';
+import { Button, styled } from '@mui/material';
 import { useState, type FC } from 'react';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import { DropdownList } from 'component/common/DialogFormTemplate/ConfigButtons/DropdownList';
-import { StyledDropdown } from 'component/common/DialogFormTemplate/ConfigButtons/ConfigButton.styles';
+import {
+    StyledDropdown,
+    StyledPopover,
+} from 'component/common/DialogFormTemplate/ConfigButtons/ConfigButton.styles';
 
 type EnvironmentVisibilityMenuProps = {
     environments: Array<{ name: string }>;
@@ -19,12 +22,6 @@ const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     justifyContent: 'center',
     paddingTop: theme.spacing(4),
-}));
-
-export const StyledPopover = styled(Popover)(({ theme }) => ({
-    '& .MuiPaper-root': {
-        borderRadius: `${theme.shape.borderRadiusMedium}px`,
-    },
 }));
 
 export const EnvironmentVisibilityMenu: FC<EnvironmentVisibilityMenuProps> = ({

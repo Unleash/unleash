@@ -92,8 +92,8 @@ export const EnvironmentVisibilityMenu: FC<EnvironmentVisibilityMenuProps> = ({
                         value: env,
                     }))}
                     search={{
-                        label: '',
-                        placeholder: 'Select environment',
+                        label: 'Filter environments',
+                        placeholder: 'Filter environments',
                     }}
                 />
             </StyledPopover>

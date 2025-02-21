@@ -1,5 +1,5 @@
 import { Button, Popover, styled } from '@mui/material';
-import { useMemo, useState, type FC } from 'react';
+import { useState, type FC } from 'react';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -41,19 +41,12 @@ export const EnvironmentVisibilityMenu: FC<EnvironmentVisibilityMenuProps> = ({
         setAnchorEl(null);
     };
 
-    const allEnvironments = useMemo(
-        () => environments.map((environment) => environment.name),
-        [JSON.stringify(environments)],
-    );
+    const allEnvironments = environments.map((environment) => environment.name);
 
-    const selectedOptions = useMemo(
-        () =>
-            new Set(
-                allEnvironments.filter(
-                    (environment) => !hiddenEnvironments.includes(environment),
-                ),
-            ),
-        [environments, hiddenEnvironments],
+    const selectedOptions = new Set(
+        allEnvironments.filter(
+            (environment) => !hiddenEnvironments.includes(environment),
+        ),
     );
 
     const handleToggle = (value: string) => {

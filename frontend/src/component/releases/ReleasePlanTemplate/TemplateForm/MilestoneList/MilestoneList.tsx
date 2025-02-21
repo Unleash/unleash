@@ -88,7 +88,7 @@ export const MilestoneList = ({
                                     };
                                 },
                             ),
-                            new: true,
+                            startExpanded: true,
                         },
                     ])
                 }

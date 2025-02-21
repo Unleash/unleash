@@ -12,10 +12,7 @@ import {
     FormHelperText,
 } from '@mui/material';
 import Delete from '@mui/icons-material/DeleteOutlined';
-import type {
-    IReleasePlanMilestonePayload,
-    IReleasePlanMilestoneStrategy,
-} from 'interfaces/releasePlans';
+import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import { type DragEventHandler, type RefObject, useRef, useState } from 'react';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { MilestoneCardName } from './MilestoneCardName';
@@ -25,6 +22,7 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ReleasePlanTemplateAddStrategyForm } from '../../MilestoneStrategy/ReleasePlanTemplateAddStrategyForm';
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { type OnMoveItem, useDragItem } from 'hooks/useDragItem';
+import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
 
 const StyledMilestoneCard = styled(Card, {
     shouldForwardProp: (prop) => prop !== 'hasError',
@@ -123,14 +121,9 @@ const StyledDragIcon = styled(IconButton)(({ theme }) => ({
     },
 }));
 
-export interface IExtendedMilestonePayload
-    extends IReleasePlanMilestonePayload {
-    new?: boolean;
-}
-
 export interface IMilestoneCardProps {
     milestone: IExtendedMilestonePayload;
-    milestoneChanged: (milestone: IReleasePlanMilestonePayload) => void;
+    milestoneChanged: (milestone: IExtendedMilestonePayload) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
     removable: boolean;

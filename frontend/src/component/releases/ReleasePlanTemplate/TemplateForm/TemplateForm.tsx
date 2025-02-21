@@ -4,6 +4,7 @@ import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import FormTemplate from 'component/common/FormTemplate/FormTemplate';
 import { TemplateFormDescription } from './TemplateFormDescription';
 import { MilestoneList } from './MilestoneList/MilestoneList';
+import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
 
 const StyledInput = styled(Input)(({ theme }) => ({
     maxWidth: theme.spacing(50),
@@ -37,9 +38,9 @@ interface ITemplateFormProps {
     setName: React.Dispatch<React.SetStateAction<string>>;
     description: string;
     setDescription: React.Dispatch<React.SetStateAction<string>>;
-    milestones: IReleasePlanMilestonePayload[];
+    milestones: IExtendedMilestonePayload[];
     setMilestones: React.Dispatch<
-        React.SetStateAction<IReleasePlanMilestonePayload[]>
+        React.SetStateAction<IExtendedMilestonePayload[]>
     >;
     errors: { [key: string]: string };
     clearErrors: () => void;

@@ -1,4 +1,5 @@
 import { styled } from '@mui/material';
+import { HelpIcon } from 'component/common/HelpIcon/HelpIcon';
 import type { ConnectedEdge } from 'interfaces/connectedEdge';
 
 const StyledTable = styled('table')(({ theme }) => ({
@@ -10,17 +11,20 @@ const StyledTable = styled('table')(({ theme }) => ({
     },
     '& tr': {
         textAlign: 'right',
-        '& > th:first-of-type,td:first-of-type': {
+        '& > th:first-of-type, td:first-of-type': {
             textAlign: 'left',
         },
     },
 }));
 
-const StyledUpstreamSection = styled('tr')(({ theme }) => ({
+const StyledSectionHeader = styled('tr')(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
-    borderBottom: `1px solid ${theme.palette.text.primary}`,
-    '& > td:first-of-type': {
+    '&&& > td': {
         paddingTop: theme.spacing(1),
+        '& > div': {
+            display: 'flex',
+            alignItems: 'center',
+        },
     },
 }));
 
@@ -41,19 +45,19 @@ export const NetworkConnectedEdgeInstanceLatency = ({
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>Client Features</td>
-                    <td>{instance.clientFeaturesAverageLatencyMs}</td>
-                    <td>{instance.clientFeaturesP99LatencyMs}</td>
-                </tr>
-                <tr>
-                    <td>Frontend</td>
-                    <td>{instance.frontendApiAverageLatencyMs}</td>
-                    <td>{instance.frontendApiP99LatencyMs}</td>
-                </tr>
-                <StyledUpstreamSection>
-                    <td colSpan={3}>Upstream</td>
-                </StyledUpstreamSection>
+                <StyledSectionHeader>
+                    <td colSpan={3}>
+                        <div>
+                            Upstream{' '}
+                            <HelpIcon
+                                tooltip={
+                                    'Latency measured for requests sent from this Edge instance to the configured upstream, i.e. Unleash or another Edge instance.'
+                                }
+                                size='16px'
+                            />
+                        </div>
+                    </td>
+                </StyledSectionHeader>
                 <tr>
                     <td>Client Features</td>
                     <td>{instance.upstreamFeaturesAverageLatencyMs}</td>
@@ -68,6 +72,29 @@ export const NetworkConnectedEdgeInstanceLatency = ({
                     <td>Edge</td>
                     <td>{instance.upstreamEdgeAverageLatencyMs}</td>
                     <td>{instance.upstreamEdgeP99LatencyMs}</td>
+                </tr>
+                <StyledSectionHeader>
+                    <td colSpan={3}>
+                        <div>
+                            Downstream{' '}
+                            <HelpIcon
+                                tooltip={
+                                    'Latency measured when serving requests from clients, i.e. SDKs or other Edge instances.'
+                                }
+                                size='16px'
+                            />
+                        </div>
+                    </td>
+                </StyledSectionHeader>
+                <tr>
+                    <td>Client Features</td>
+                    <td>{instance.clientFeaturesAverageLatencyMs}</td>
+                    <td>{instance.clientFeaturesP99LatencyMs}</td>
+                </tr>
+                <tr>
+                    <td>Frontend</td>
+                    <td>{instance.frontendApiAverageLatencyMs}</td>
+                    <td>{instance.frontendApiP99LatencyMs}</td>
                 </tr>
             </tbody>
         </StyledTable>

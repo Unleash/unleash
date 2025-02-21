@@ -146,7 +146,7 @@ export const NetworkConnectedEdgeInstance = ({
     const memory = getMemory(instance);
     const archWarning = cpuPercentage === 'No usage' &&
         memory === 'No usage' && (
-            <p>Resource metrics are only available when running on Linux</p>
+            <p>Resource metrics are only available when running on Linux.</p>
         );
 
     return (
@@ -170,8 +170,16 @@ export const NetworkConnectedEdgeInstance = ({
                         <span>{instance.instanceId}</span>
                     </StyledDetailRow>
                     <StyledDetailRow>
-                        <strong>Upstream</strong>
+                        <strong>Upstream server</strong>
                         <span>{instance.connectedVia || 'Unleash'}</span>
+                    </StyledDetailRow>
+                    <StyledDetailRow>
+                        <strong>Region</strong>
+                        <span>{instance.region || 'Unknown'}</span>
+                    </StyledDetailRow>
+                    <StyledDetailRow>
+                        <strong>Version</strong>
+                        <span>{instance.edgeVersion}</span>
                     </StyledDetailRow>
                     <StyledDetailRow>
                         <strong>Status</strong>
@@ -196,18 +204,6 @@ export const NetworkConnectedEdgeInstance = ({
                         <span>{lastReport}</span>
                     </StyledDetailRow>
                     <StyledDetailRow>
-                        <strong>App name</strong>
-                        <span>{instance.appName}</span>
-                    </StyledDetailRow>
-                    <StyledDetailRow>
-                        <strong>Region</strong>
-                        <span>{instance.region || 'Unknown'}</span>
-                    </StyledDetailRow>
-                    <StyledDetailRow>
-                        <strong>Version</strong>
-                        <span>{instance.edgeVersion}</span>
-                    </StyledDetailRow>
-                    <StyledDetailRow>
                         <strong>CPU</strong>
                         <span>
                             {cpuPercentage}{' '}
@@ -216,7 +212,7 @@ export const NetworkConnectedEdgeInstance = ({
                                     <>
                                         <p>
                                             CPU average usage since instance
-                                            started
+                                            started.
                                         </p>
                                         {archWarning}
                                     </>
@@ -232,7 +228,7 @@ export const NetworkConnectedEdgeInstance = ({
                             <HelpIcon
                                 tooltip={
                                     <>
-                                        <p>Current memory usage</p>
+                                        <p>Current memory usage.</p>
                                         {archWarning}
                                     </>
                                 }

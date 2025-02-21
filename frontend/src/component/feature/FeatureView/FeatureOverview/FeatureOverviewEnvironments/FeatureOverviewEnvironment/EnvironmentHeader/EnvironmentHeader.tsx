@@ -24,8 +24,6 @@ const StyledHeader = styled('div')(({ theme }) => ({
 }));
 
 const StyledHeaderTitle = styled('div')(({ theme }) => ({
-    marginRight: 'auto',
-    flexGrow: 1,
     display: 'flex',
     flexDirection: 'column',
 }));
@@ -56,7 +54,12 @@ export const EnvironmentHeader: FC<EnvironmentHeaderProps> = ({
         <StyledAccordionSummary
             {...props}
             expandIcon={
-                expandable ? <ExpandMore titleAccess='Toggle' /> : <></>
+                <ExpandMore
+                    titleAccess='Toggle'
+                    sx={{
+                        opacity: expandable ? 1 : 0,
+                    }}
+                />
             }
             sx={{ cursor: expandable ? 'pointer' : 'default !important' }}
         >
@@ -65,8 +68,8 @@ export const EnvironmentHeader: FC<EnvironmentHeaderProps> = ({
                     <StyledHeaderTitleLabel>Environment</StyledHeaderTitleLabel>
                     <StyledStringTruncator
                         text={environmentId}
-                        maxWidth='100'
-                        maxLength={15}
+                        maxWidth='150'
+                        maxLength={20}
                     />
                 </StyledHeaderTitle>
                 {children}

@@ -1,8 +1,8 @@
-import { Accordion, AccordionDetails, styled } from '@mui/material';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
-import type { IFeatureEnvironment } from 'interfaces/featureToggle';
-import { getFeatureMetrics } from 'utils/getFeatureMetrics';
+import { Accordion, AccordionDetails, Box, styled } from '@mui/material';
+import type {
+    IFeatureEnvironment,
+    IFeatureEnvironmentMetrics,
+} from 'interfaces/featureToggle';
 import EnvironmentAccordionBody from './EnvironmentAccordionBody/EnvironmentAccordionBody';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
@@ -13,11 +13,7 @@ import { EnvironmentHeader } from './EnvironmentHeader/EnvironmentHeader';
 import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle';
 import { useState } from 'react';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
-
-interface IFeatureOverviewEnvironmentProps {
-    env: IFeatureEnvironment;
-}
+import type { IReleasePlan } from 'interfaces/releasePlans';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -57,73 +53,67 @@ const StyledEnvironmentAccordionContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3, 3, 1),
 }));
 
+type FeatureOverviewEnvironmentProps = {
+    environment: IFeatureEnvironment & {
+        releasePlans?: IReleasePlan[];
+    };
+    metrics?: Pick<IFeatureEnvironmentMetrics, 'yes' | 'no'>;
+    otherEnvironments?: string[];
+};
+
 export const FeatureOverviewEnvironment = ({
-    env,
-}: IFeatureOverviewEnvironmentProps) => {
+    environment,
+    metrics = { yes: 0, no: 0 },
+    otherEnvironments = [],
+}: FeatureOverviewEnvironmentProps) => {
     const [isOpen, setIsOopen] = useState(false);
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
-    const { metrics } = useFeatureMetrics(projectId, featureId);
-    const { feature } = useFeature(projectId, featureId);
-
-    const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
-    const environmentMetric = featureMetrics.find(
-        (featureMetric) => featureMetric.environment === env.name,
-    );
-    const featureEnvironment = feature?.environments.find(
-        (featureEnvironment) => featureEnvironment.name === env.name,
-    );
     const { isOss } = useUiConfig();
-    const showChangeRequestUpgrade = env.type === 'production' && isOss();
-    const { releasePlans } = useReleasePlans(
-        projectId,
-        featureId,
-        featureEnvironment?.name,
-    );
     const hasActivations = Boolean(
-        env.enabled ||
-            (featureEnvironment?.strategies &&
-                featureEnvironment?.strategies.length > 0) ||
-            (releasePlans && releasePlans.length > 0),
+        environment?.enabled ||
+            (environment?.strategies && environment?.strategies.length > 0) ||
+            (environment?.releasePlans && environment?.releasePlans.length > 0),
     );
 
     return (
         <StyledFeatureOverviewEnvironment>
             <StyledAccordion
                 TransitionProps={{ mountOnEnter: true }}
-                data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
+                data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${environment.name}`}
                 expanded={isOpen && hasActivations}
                 onChange={() => setIsOopen(isOpen ? !isOpen : hasActivations)}
             >
                 <EnvironmentHeader
-                    environmentId={env.name}
+                    environmentId={environment.name}
                     expandable={hasActivations}
                 >
-                    <FeatureOverviewEnvironmentToggle environment={env} />
-                    {hasActivations ? (
-                        <FeatureOverviewEnvironmentMetrics
-                            environmentMetric={environmentMetric}
-                            disabled={!env.enabled}
-                        />
-                    ) : (
-                        <FeatureStrategyMenu
-                            label='Add strategy'
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={env.name}
-                            variant='outlined'
-                            size='small'
-                        />
-                    )}
+                    <FeatureOverviewEnvironmentToggle
+                        environment={environment}
+                    />
+                    {!hasActivations ? (
+                        <Box sx={{ ml: 2 }}>
+                            <FeatureStrategyMenu
+                                label='Add strategy'
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environment.name}
+                                variant='outlined'
+                                size='small'
+                            />
+                        </Box>
+                    ) : null}
+                    <FeatureOverviewEnvironmentMetrics
+                        environmentMetric={metrics}
+                        disabled={!environment.enabled}
+                    />
                 </EnvironmentHeader>
                 <StyledAccordionDetails>
                     <StyledEnvironmentAccordionContainer>
                         <EnvironmentAccordionBody
-                            featureEnvironment={featureEnvironment}
-                            isDisabled={!env.enabled}
-                            otherEnvironments={feature?.environments
-                                .map(({ name }) => name)
-                                .filter((name) => name !== env.name)}
+                            featureEnvironment={environment}
+                            isDisabled={!environment.enabled}
+                            otherEnvironments={otherEnvironments}
                         />
                     </StyledEnvironmentAccordionContainer>
                     <StyledAccordionFooter>
@@ -131,9 +121,9 @@ export const FeatureOverviewEnvironment = ({
                             label='Add strategy'
                             projectId={projectId}
                             featureId={featureId}
-                            environmentId={env.name}
+                            environmentId={environment.name}
                         />
-                        {showChangeRequestUpgrade ? (
+                        {isOss() && environment?.type === 'production' ? (
                             <UpgradeChangeRequests />
                         ) : null}
                     </StyledAccordionFooter>

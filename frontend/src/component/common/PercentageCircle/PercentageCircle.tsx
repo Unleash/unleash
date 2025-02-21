@@ -5,17 +5,12 @@ type PercentageCircleProps = {
     percentage: number;
     size?: `${number}rem`;
     disabled?: boolean | null;
-    /**
-     * set to between 0 and 1 to create a donut chart
-     */
-    strokeWidth?: number;
 };
 
 const PercentageCircle = ({
     percentage,
     size = '4rem',
     disabled = false,
-    strokeWidth = 1,
 }: PercentageCircleProps) => {
     const theme = useTheme();
 
@@ -25,6 +20,7 @@ const PercentageCircle = ({
         transform: 'rotate(-90deg)',
         height: size,
         width: size,
+        background: theme.palette.background.elevation2,
     };
 
     // The percentage circle used to be drawn by CSS with a conic-gradient,
@@ -45,16 +41,8 @@ const PercentageCircle = ({
                 cx={r}
                 cy={r}
                 fill='none'
-                stroke={theme.palette.background.elevation2}
-                strokeWidth={d * strokeWidth}
-            />
-            <circle
-                r={r}
-                cx={r}
-                cy={r}
-                fill='none'
                 stroke={color}
-                strokeWidth={d * strokeWidth}
+                strokeWidth={d}
                 strokeDasharray={`${percentage} 100`}
             />
         </svg>

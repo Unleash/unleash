@@ -1,13 +1,8 @@
 import type { IFeatureEnvironmentMetrics } from 'interfaces/featureToggle';
 import { calculatePercentage } from 'utils/calculatePercentage';
-import PercentageCircle from 'component/common/PercentageCircle/PercentageCircle';
 import { PrettifyLargeNumber } from 'component/common/PrettifyLargeNumber/PrettifyLargeNumber';
 import { styled } from '@mui/material';
-
-interface IFeatureOverviewEnvironmentMetrics {
-    environmentMetric?: IFeatureEnvironmentMetrics;
-    disabled?: boolean;
-}
+import { PercentageDonut } from 'component/common/PercentageCircle/PercentageDonut';
 
 const StyledContainer = styled('div')({
     marginLeft: 'auto',
@@ -30,9 +25,9 @@ const StyledPercentage = styled('p')(({ theme }) => ({
 const StyledInfoParagraph = styled('p')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     textAlign: 'right',
-    [theme.breakpoints.down('xl')]: {
-        display: 'none',
-    },
+    // [theme.breakpoints.down('xl')]: {
+    //     display: 'none',
+    // },
 }));
 
 const StyledPercentageCircle = styled('div')(({ theme }) => ({
@@ -42,46 +37,53 @@ const StyledPercentageCircle = styled('div')(({ theme }) => ({
     },
 }));
 
+type FeatureOverviewEnvironmentMetrics = {
+    environmentMetric?: Pick<IFeatureEnvironmentMetrics, 'yes' | 'no'>;
+    disabled?: boolean;
+};
+
 const FeatureOverviewEnvironmentMetrics = ({
     environmentMetric,
-    disabled = false,
-}: IFeatureOverviewEnvironmentMetrics) => {
+}: FeatureOverviewEnvironmentMetrics) => {
     if (!environmentMetric) return null;
 
     const total = environmentMetric.yes + environmentMetric.no;
     const percentage = calculatePercentage(total, environmentMetric?.yes);
 
-    if (
+    const isEmpty =
         !environmentMetric ||
-        (environmentMetric.yes === 0 && environmentMetric.no === 0)
-    ) {
-        return null;
-    }
+        (environmentMetric.yes === 0 && environmentMetric.no === 0);
 
     return (
         <StyledContainer>
             <StyledInfo>
-                <StyledPercentage>{percentage}%</StyledPercentage>
-                <StyledInfoParagraph>
-                    The flag has been requested{' '}
-                    <b>
-                        <PrettifyLargeNumber value={total} /> times
-                    </b>
-                    <br />
-                    and exposed{' '}
-                    <b>
-                        <PrettifyLargeNumber value={environmentMetric.yes} />{' '}
-                        times
-                    </b>{' '}
-                    in the last hour
-                </StyledInfoParagraph>
+                {/* <StyledPercentage>{percentage}%</StyledPercentage> */}
+                {isEmpty ? (
+                    <StyledInfoParagraph>
+                        No evaluation metrics
+                        <br />
+                        received in the last hour
+                    </StyledInfoParagraph>
+                ) : (
+                    <StyledInfoParagraph>
+                        The flag has been evaluated{' '}
+                        <b>
+                            <PrettifyLargeNumber value={total} /> times
+                        </b>
+                        <br />
+                        and enabled{' '}
+                        <b>
+                            <PrettifyLargeNumber
+                                value={environmentMetric.yes}
+                            />{' '}
+                            times
+                        </b>{' '}
+                        in the last hour
+                    </StyledInfoParagraph>
+                )}
             </StyledInfo>
             <StyledPercentageCircle data-loading>
-                <PercentageCircle
-                    percentage={percentage}
-                    size='3rem'
-                    strokeWidth={0.25}
-                />
+                <PercentageDonut percentage={percentage} size='3rem' />
             </StyledPercentageCircle>
         </StyledContainer>
     );

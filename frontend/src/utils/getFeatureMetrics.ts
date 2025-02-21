@@ -13,11 +13,10 @@ const emptyMetric = (environment: string) => ({
 export const getFeatureMetrics = (
     environments: IFeatureEnvironment[],
     metrics: IFeatureMetrics,
-) => {
-    return environments.map((env) => {
+) =>
+    environments.map((env) => {
         const envMetric = metrics.lastHourUsage.find(
             (metric) => metric.environment === env.name,
         );
         return envMetric || emptyMetric(env.name);
     });
-};

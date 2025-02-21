@@ -12,7 +12,7 @@ import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/Feature
 import { useEffect } from 'react';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
 import { useUiFlag } from 'hooks/useUiFlag';
-import { FeatureOverviewEnvironment } from './NewFeatureOverviewEnvironment/NewFeatureOverviewEnvironment';
+import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
 import { default as LegacyFleatureOverview } from './LegacyFeatureOverview';
 import { useEnvironmentVisibility } from './FeatureOverviewMetaData/EnvironmentVisibilityMenu/hooks/useEnvironmentVisibility';
 
@@ -62,7 +62,7 @@ export const FeatureOverview = () => {
                 />
             </div>
             <StyledMainContent>
-                <FeatureOverviewEnvironment
+                <FeatureOverviewEnvironments
                     hiddenEnvironments={hiddenEnvironments}
                 />
             </StyledMainContent>

@@ -51,6 +51,9 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
     color: theme.palette.common.white,
 }));
 
+/**
+ * @deprecated initial version, clean up after done with `flagOverviewRedesign`
+ */
 export const FeatureOverviewEnvironmentBody = ({
     featureEnvironment,
     isDisabled,

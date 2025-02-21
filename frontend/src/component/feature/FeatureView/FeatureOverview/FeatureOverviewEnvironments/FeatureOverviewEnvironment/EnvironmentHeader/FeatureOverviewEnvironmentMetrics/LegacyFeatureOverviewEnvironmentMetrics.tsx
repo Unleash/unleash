@@ -55,6 +55,9 @@ const StyledPercentageCircle = styled('div')(({ theme }) => ({
     },
 }));
 
+/**
+ * @deprecated remove with `flagOverviewRedesign` flag
+ */
 const FeatureOverviewEnvironmentMetrics = ({
     environmentMetric,
     disabled = false,

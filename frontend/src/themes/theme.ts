@@ -509,13 +509,13 @@ export const lightTheme = createTheme({
             },
         },
 
-        // Environment accordion
         MuiAccordion: {
             styleOverrides: {
                 root: ({ theme }) => ({
                     '&:first-of-type, &:last-of-type': {
                         borderRadius: theme.shape.borderRadiusLarge,
                     },
+                    // Environment accordion -- clean up with `flagOverviewRedesign` flag
                     '&.environment-accordion.Mui-expanded': {
                         outline: `2px solid ${alpha(
                             theme.palette.background.alternative,

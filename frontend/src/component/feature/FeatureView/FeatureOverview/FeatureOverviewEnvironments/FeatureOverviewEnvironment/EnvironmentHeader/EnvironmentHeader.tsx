@@ -7,11 +7,18 @@ import {
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
-const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
+const StyledAccordionSummary = styled(AccordionSummary, {
+    shouldForwardProp: (prop) => prop !== 'expandable',
+})<{
+    expandable?: boolean;
+}>(({ theme, expandable }) => ({
     boxShadow: 'none',
     padding: theme.spacing(0.5, 3, 0.5, 2),
     [theme.breakpoints.down(400)]: {
         padding: theme.spacing(1, 2),
+    },
+    '&&&': {
+        cursor: expandable ? 'pointer' : 'default',
     },
 }));
 
@@ -61,7 +68,7 @@ export const EnvironmentHeader: FC<EnvironmentHeaderProps> = ({
                     }}
                 />
             }
-            sx={{ cursor: expandable ? 'pointer' : 'default !important' }}
+            expandable={expandable}
         >
             <StyledHeader data-loading>
                 <StyledHeaderTitle>

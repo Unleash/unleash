@@ -1,13 +1,5 @@
 import { Popover, styled } from '@mui/material';
 
-export const StyledDropdown = styled('div')(({ theme }) => ({
-    paddingInline: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1),
-    maxHeight: '70vh',
-}));
-
 export const StyledPopover = styled(Popover)(({ theme }) => ({
     '& .MuiPaper-root': {
         borderRadius: `${theme.shape.borderRadiusMedium}px`,

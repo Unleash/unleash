@@ -93,6 +93,7 @@ export const ConfigButton: FC<PropsWithChildren<ConfigButtonProps>> = ({
                     vertical: 'top',
                     horizontal: 'left',
                 }}
+                aria-describedby={descriptionId}
             >
                 <ScreenReaderOnly>
                     <p id={descriptionId}>{description}</p>

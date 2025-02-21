@@ -1,7 +1,8 @@
 import { Popover, styled } from '@mui/material';
 
 export const StyledDropdown = styled('div')(({ theme }) => ({
-    padding: theme.spacing(2),
+    paddingInline: 0,
+    paddingTop: theme.spacing(1.5),
     display: 'flex',
     flexDirection: 'column',
     gap: theme.spacing(1),

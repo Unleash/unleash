@@ -24,6 +24,9 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
     '& .MuiPaper-root': {
         borderRadius: `${theme.shape.borderRadiusMedium}px`,
         paddingTop: theme.spacing(2),
+        rowGap: theme.spacing(1.5),
+        display: 'flex',
+        flexFlow: 'column',
     },
 }));
 

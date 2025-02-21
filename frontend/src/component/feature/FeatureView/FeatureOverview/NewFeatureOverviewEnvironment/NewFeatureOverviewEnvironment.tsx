@@ -55,6 +55,9 @@ interface INewFeatureOverviewEnvironmentProps {
     hiddenEnvironments: string[];
 }
 
+/**
+ * @deprecated initial version, clean up after done with `flagOverviewRedesign`
+ */
 export const FeatureOverviewEnvironment = ({
     hiddenEnvironments,
 }: INewFeatureOverviewEnvironmentProps) => {

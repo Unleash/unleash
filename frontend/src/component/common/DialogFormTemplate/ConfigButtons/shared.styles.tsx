@@ -1,4 +1,4 @@
-import { Popover, TextField, type Theme, styled } from '@mui/material';
+import { Popover, TextField, styled } from '@mui/material';
 
 const visuallyHiddenStyles = {
     border: 0,
@@ -12,13 +12,13 @@ const visuallyHiddenStyles = {
     whiteSpace: 'nowrap',
 };
 
-const padding = (theme: Theme) => theme.spacing(1.5);
+const dropdownPadding = 1.5;
 
 export const StyledPopover = styled(Popover)(({ theme }) => ({
     '& .MuiPaper-root': {
         borderRadius: `${theme.shape.borderRadiusMedium}px`,
         paddingInline: 0,
-        paddingTop: padding(theme),
+        paddingTop: theme.spacing(dropdownPadding),
         display: 'flex',
         flexDirection: 'column',
 
@@ -30,9 +30,9 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
 export const StyledDropdownSearch = styled(TextField, {
     shouldForwardProp: (prop) => prop !== 'hideLabel',
 })<{ hideLabel?: boolean }>(({ theme, hideLabel }) => ({
-    paddingInline: padding(theme),
+    paddingInline: theme.spacing(dropdownPadding),
     '& .MuiInputBase-root': {
-        paddingInline: padding(theme),
+        paddingInline: theme.spacing(1.5),
         borderRadius: `${theme.shape.borderRadiusMedium}px`,
     },
     '& .MuiInputBase-input': {

@@ -81,7 +81,38 @@ export default mergeConfig(
                 allow: ['..'],
             },
         },
-        plugins: [react(), tsconfigPaths(), svgr(), envCompatible()],
+        plugins: [
+            react({
+                babel: {
+                    plugins: [
+                        [
+                            '@emotion',
+                            {
+                                autoLabel: 'always',
+                                labelFormat: '[filename]--[local]',
+                                importMap: {
+                                    '@mui/material': {
+                                        styled: {
+                                            canonicalImport: [
+                                                '@emotion/styled',
+                                                'default',
+                                            ],
+                                            styledBaseImport: [
+                                                '@mui/material',
+                                                'styled',
+                                            ],
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    ],
+                },
+            }),
+            tsconfigPaths(),
+            svgr(),
+            envCompatible(),
+        ],
         esbuild: {
             logOverride: { 'this-is-undefined-in-esm': 'silent' },
         },

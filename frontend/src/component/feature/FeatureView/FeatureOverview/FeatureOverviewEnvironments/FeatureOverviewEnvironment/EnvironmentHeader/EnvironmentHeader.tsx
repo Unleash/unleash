@@ -4,8 +4,8 @@ import {
     type AccordionSummaryProps,
     styled,
 } from '@mui/material';
-import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledAccordionSummary = styled(AccordionSummary, {
     shouldForwardProp: (prop) => prop !== 'expandable',
@@ -14,8 +14,10 @@ const StyledAccordionSummary = styled(AccordionSummary, {
 }>(({ theme, expandable }) => ({
     boxShadow: 'none',
     padding: theme.spacing(0.5, 3, 0.5, 2),
-    [theme.breakpoints.down(400)]: {
-        padding: theme.spacing(1, 2),
+    display: 'flex',
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+        fontWeight: 'bold',
     },
     '&&&': {
         cursor: expandable ? 'pointer' : 'default',
@@ -24,6 +26,8 @@ const StyledAccordionSummary = styled(AccordionSummary, {
 
 const StyledHeader = styled('div')(({ theme }) => ({
     display: 'flex',
+    columnGap: theme.spacing(1),
+    paddingRight: theme.spacing(1),
     width: '100%',
     color: theme.palette.text.primary,
     alignItems: 'center',
@@ -33,6 +37,7 @@ const StyledHeader = styled('div')(({ theme }) => ({
 const StyledHeaderTitle = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
+    flex: 1,
 }));
 
 const StyledHeaderTitleLabel = styled('span')(({ theme }) => ({
@@ -40,8 +45,8 @@ const StyledHeaderTitleLabel = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-const StyledStringTruncator = styled(StringTruncator)(({ theme }) => ({
-    fontSize: theme.fontSizes.bodySize,
+const StyledTruncator = styled(Truncator)(({ theme }) => ({
+    fontSize: theme.typography.body1.fontSize,
     fontWeight: theme.typography.fontWeightMedium,
 }));
 
@@ -54,18 +59,18 @@ type EnvironmentHeaderProps = {
 export const EnvironmentHeader: FC<EnvironmentHeaderProps> = ({
     environmentId,
     children,
-    expandable,
+    expandable = true,
     ...props
 }) => {
     return (
         <StyledAccordionSummary
             {...props}
+            as='header'
             expandIcon={
                 <ExpandMore
                     titleAccess='Toggle'
-                    sx={{
-                        opacity: expandable ? 1 : 0,
-                    }}
+                    sx={{ visibility: expandable ? 'visible' : 'hidden' }}
+                    aria-hidden={!expandable}
                 />
             }
             expandable={expandable}
@@ -73,11 +78,9 @@ export const EnvironmentHeader: FC<EnvironmentHeaderProps> = ({
             <StyledHeader data-loading>
                 <StyledHeaderTitle>
                     <StyledHeaderTitleLabel>Environment</StyledHeaderTitleLabel>
-                    <StyledStringTruncator
-                        text={environmentId}
-                        maxWidth='150'
-                        maxLength={20}
-                    />
+                    <StyledTruncator component='h2'>
+                        {environmentId}
+                    </StyledTruncator>
                 </StyledHeaderTitle>
                 {children}
             </StyledHeader>

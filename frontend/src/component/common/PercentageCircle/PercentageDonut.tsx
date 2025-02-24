@@ -1,17 +1,39 @@
-import { useTheme } from '@mui/material';
-import type { CSSProperties } from 'react';
+import { styled, useTheme } from '@mui/material';
+import type { CSSProperties, ReactNode } from 'react';
+
+const StyledContainer = styled('figure')(() => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    margin: 0,
+}));
+
+const StyledContent = styled('figcaption', {
+    shouldForwardProp: (prop) => prop !== 'color',
+})<{ color?: string }>(({ theme, color }) => ({
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    color,
+    fontSize: theme.fontSizes.smallerBody,
+    margin: 0,
+}));
 
 type PercentageDonutProps = {
     percentage: number;
     size?: `${number}rem`;
     disabled?: boolean | null;
     donut?: boolean;
+    children?: ReactNode;
 };
 
 export const PercentageDonut = ({
     percentage,
     size = '4rem',
     disabled = false,
+    children,
 }: PercentageDonutProps) => {
     const theme = useTheme();
 
@@ -35,9 +57,9 @@ export const PercentageDonut = ({
         : theme.palette.primary.light;
 
     return (
-        <div style={{ position: 'relative' }}>
+        <StyledContainer>
+            {/* biome-ignore lint/a11y/noSvgWithoutTitle: figure with figcaption */}
             <svg viewBox={`0 0 ${d} ${d}`} style={style} aria-hidden>
-                <title>Rollout</title>
                 <circle
                     r={r}
                     cx={r}
@@ -56,18 +78,7 @@ export const PercentageDonut = ({
                     strokeDasharray={`${percentage} 100`}
                 />
             </svg>
-            <span
-                style={{
-                    position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    color: color,
-                    fontSize: theme.fontSizes.smallerBody,
-                }}
-            >
-                {percentage}%
-            </span>
-        </div>
+            <StyledContent color={color}>{children}</StyledContent>
+        </StyledContainer>
     );
 };

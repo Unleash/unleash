@@ -6,8 +6,9 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 
-const StyledContainer = styled('div')(() => ({
+const StyledContainer = styled('div')(({ theme }) => ({
     order: -1,
+    flex: 0,
 }));
 
 type FeatureOverviewEnvironmentToggleProps = {

@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, Box, styled } from '@mui/material';
+import { Accordion, AccordionDetails, styled } from '@mui/material';
 import type {
     IFeatureEnvironment,
     IFeatureEnvironmentMetrics,
@@ -21,10 +21,16 @@ const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
 }));
 
-const StyledAccordion = styled(Accordion)({
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
     boxShadow: 'none',
     background: 'none',
-});
+    '&&& .MuiAccordionSummary-root': {
+        borderRadius: theme.shape.borderRadiusLarge,
+        pointerEvents: 'auto',
+        opacity: 1,
+        backgroundColor: theme.palette.background.paper,
+    },
+}));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: 0,
@@ -32,7 +38,6 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
     boxShadow: theme.boxShadows.accordionFooter,
-
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(2, 1),
     },
@@ -79,9 +84,10 @@ export const FeatureOverviewEnvironment = ({
     return (
         <StyledFeatureOverviewEnvironment>
             <StyledAccordion
-                TransitionProps={{ mountOnEnter: true }}
+                TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
                 data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${environment.name}`}
                 expanded={isOpen && hasActivations}
+                disabled={!hasActivations}
                 onChange={() => setIsOopen(isOpen ? !isOpen : hasActivations)}
             >
                 <EnvironmentHeader
@@ -92,20 +98,18 @@ export const FeatureOverviewEnvironment = ({
                         environment={environment}
                     />
                     {!hasActivations ? (
-                        <Box sx={{ ml: 2 }}>
-                            <FeatureStrategyMenu
-                                label='Add strategy'
-                                projectId={projectId}
-                                featureId={featureId}
-                                environmentId={environment.name}
-                                variant='outlined'
-                                size='small'
-                            />
-                        </Box>
+                        <FeatureStrategyMenu
+                            label='Add strategy'
+                            projectId={projectId}
+                            featureId={featureId}
+                            environmentId={environment.name}
+                            variant='outlined'
+                            size='small'
+                        />
                     ) : null}
                     <FeatureOverviewEnvironmentMetrics
                         environmentMetric={metrics}
-                        disabled={!environment.enabled}
+                        collapsed={!hasActivations}
                     />
                 </EnvironmentHeader>
                 <StyledAccordionDetails>

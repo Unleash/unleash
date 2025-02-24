@@ -795,6 +795,7 @@ export function createConfig(options: IUnleashOptions): IUnleashConfig {
         dailyMetricsStorageDays,
         openAIAPIKey,
         userInactivityThresholdInDays,
+        buildDate: process.env.BUILD_DATE,
     };
 }
 

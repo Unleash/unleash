@@ -286,4 +286,5 @@ export interface IUnleashConfig {
     feedbackUriPath?: string;
     openAIAPIKey?: string;
     userInactivityThresholdInDays: number;
+    buildDate?: string;
 }

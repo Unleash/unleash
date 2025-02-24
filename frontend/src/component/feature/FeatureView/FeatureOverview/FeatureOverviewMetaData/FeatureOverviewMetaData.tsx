@@ -16,6 +16,7 @@ import { TagRow } from './TagRow';
 import { capitalizeFirst } from 'utils/capitalizeFirst';
 import { Collaborators } from './Collaborators';
 import { EnvironmentVisibilityMenu } from './EnvironmentVisibilityMenu/EnvironmentVisibilityMenu';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledMetaDataContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(3),
@@ -97,7 +98,9 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                     {description ? (
                         <StyledMetaDataItem data-loading>
                             <StyledMetaDataItemText>
-                                {description}
+                                <Truncator lines={5} title={description}>
+                                    {description}
+                                </Truncator>
                             </StyledMetaDataItemText>
                         </StyledMetaDataItem>
                     ) : null}

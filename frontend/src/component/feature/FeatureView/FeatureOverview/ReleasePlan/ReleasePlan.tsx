@@ -247,8 +247,10 @@ export const ReleasePlan = ({
                         Release plan
                     </StyledHeaderTitleLabel>
                     <span>{name}</span>
-                    <StyledHeaderDescription title={description}>
-                        <Truncator lines={2}>{description}</Truncator>
+                    <StyledHeaderDescription>
+                        <Truncator lines={2} title={description}>
+                            {description}
+                        </Truncator>
                     </StyledHeaderDescription>
                 </StyledHeaderTitleContainer>
                 {!readonly && (

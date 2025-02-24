@@ -23,6 +23,7 @@ exports[`should create default config 1`] = `
     "initialAdminUser": undefined,
     "type": "open-source",
   },
+  "buildDate": undefined,
   "clientFeatureCaching": {
     "enabled": true,
     "maxAge": 3600000,

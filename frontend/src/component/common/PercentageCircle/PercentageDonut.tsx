@@ -1,7 +1,7 @@
 import { styled, useTheme } from '@mui/material';
 import type { CSSProperties, ReactNode } from 'react';
 
-const StyledContainer = styled('figure')(() => ({
+const StyledContainer = styled('div')(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -9,7 +9,7 @@ const StyledContainer = styled('figure')(() => ({
     margin: 0,
 }));
 
-const StyledContent = styled('figcaption', {
+const StyledContent = styled('div', {
     shouldForwardProp: (prop) => prop !== 'color',
 })<{ color?: string }>(({ theme, color }) => ({
     position: 'absolute',
@@ -58,7 +58,7 @@ export const PercentageDonut = ({
 
     return (
         <StyledContainer>
-            {/* biome-ignore lint/a11y/noSvgWithoutTitle: figure with figcaption */}
+            {/* biome-ignore lint/a11y/noSvgWithoutTitle: should be in a figure with figcaption */}
             <svg viewBox={`0 0 ${d} ${d}`} style={style} aria-hidden>
                 <circle
                     r={r}

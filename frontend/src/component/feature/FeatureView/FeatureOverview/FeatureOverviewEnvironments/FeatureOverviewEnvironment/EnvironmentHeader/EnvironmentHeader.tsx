@@ -24,7 +24,7 @@ const StyledAccordionSummary = styled(AccordionSummary, {
     },
 }));
 
-const StyledHeader = styled('div')(({ theme }) => ({
+const StyledHeader = styled('header')(({ theme }) => ({
     display: 'flex',
     columnGap: theme.spacing(1),
     paddingRight: theme.spacing(1),
@@ -65,10 +65,8 @@ export const EnvironmentHeader: FC<EnvironmentHeaderProps> = ({
     return (
         <StyledAccordionSummary
             {...props}
-            as='header'
             expandIcon={
                 <ExpandMore
-                    titleAccess='Toggle'
                     sx={{ visibility: expandable ? 'visible' : 'hidden' }}
                     aria-hidden={!expandable}
                 />

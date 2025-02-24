@@ -9,13 +9,15 @@ import {
 } from '@mui/material';
 import { PercentageDonut } from 'component/common/PercentageCircle/PercentageDonut';
 
-const StyledContainer = styled('div')(({ theme }) => ({
+const StyledContainer = styled('figure')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
+    margin: 0,
+    padding: 0,
 }));
 
-const StyledInfo = styled('p')(({ theme }) => ({
+const StyledInfo = styled('figcaption')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
     textAlign: 'right',
     [theme.breakpoints.down('xl')]: {
@@ -24,6 +26,8 @@ const StyledInfo = styled('p')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
+    margin: 0,
+    padding: 0,
     span: {
         textWrap: 'nowrap',
     },

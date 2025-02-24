@@ -37,85 +37,92 @@ const vitestConfig = vitestDefineConfig({
     },
 });
 
-export default mergeConfig(
-    defineConfig({
-        base: UNLEASH_BASE_PATH,
-        build: {
-            outDir: 'build',
-            assetsDir: 'static',
-            assetsInlineLimit: 0,
-            modulePreload: false,
-            cssCodeSplit: false,
-        },
-        server: {
-            open: true,
-            host: true,
-            port: 3000,
-            proxy: {
-                [`${UNLEASH_BASE_PATH}api`]: {
-                    target: UNLEASH_API,
-                    changeOrigin: true,
+export default defineConfig(({ mode }) => {
+    const reactPluginArgs =
+        mode === 'development'
+            ? {
+                  babel: {
+                      plugins: [
+                          [
+                              '@emotion',
+                              {
+                                  autoLabel: 'always',
+                                  labelFormat: '[filename]--[local]',
+                                  importMap: {
+                                      '@mui/material': {
+                                          styled: {
+                                              canonicalImport: [
+                                                  '@emotion/styled',
+                                                  'default',
+                                              ],
+                                              styledBaseImport: [
+                                                  '@mui/material',
+                                                  'styled',
+                                              ],
+                                          },
+                                      },
+                                  },
+                              },
+                          ],
+                      ],
+                  },
+              }
+            : undefined;
+
+    return mergeConfig(
+        {
+            base: UNLEASH_BASE_PATH,
+            build: {
+                outDir: 'build',
+                assetsDir: 'static',
+                assetsInlineLimit: 0,
+                modulePreload: false,
+                cssCodeSplit: false,
+            },
+            server: {
+                open: true,
+                host: true,
+                port: 3000,
+                proxy: {
+                    [`${UNLEASH_BASE_PATH}api`]: {
+                        target: UNLEASH_API,
+                        changeOrigin: true,
+                    },
+                    [`${UNLEASH_BASE_PATH}auth`]: {
+                        target: UNLEASH_API,
+                        changeOrigin: true,
+                    },
+                    [`${UNLEASH_BASE_PATH}logout`]: {
+                        target: UNLEASH_API,
+                        changeOrigin: true,
+                    },
+                    [`${UNLEASH_BASE_PATH}health`]: {
+                        target: UNLEASH_API,
+                        changeOrigin: true,
+                    },
+                    [`${UNLEASH_BASE_PATH}invite`]: {
+                        target: UNLEASH_API,
+                        changeOrigin: true,
+                    },
+                    [`${UNLEASH_BASE_PATH}edge`]: {
+                        target: UNLEASH_API,
+                        changeOrigin: true,
+                    },
                 },
-                [`${UNLEASH_BASE_PATH}auth`]: {
-                    target: UNLEASH_API,
-                    changeOrigin: true,
-                },
-                [`${UNLEASH_BASE_PATH}logout`]: {
-                    target: UNLEASH_API,
-                    changeOrigin: true,
-                },
-                [`${UNLEASH_BASE_PATH}health`]: {
-                    target: UNLEASH_API,
-                    changeOrigin: true,
-                },
-                [`${UNLEASH_BASE_PATH}invite`]: {
-                    target: UNLEASH_API,
-                    changeOrigin: true,
-                },
-                [`${UNLEASH_BASE_PATH}edge`]: {
-                    target: UNLEASH_API,
-                    changeOrigin: true,
+                fs: {
+                    allow: ['..'],
                 },
             },
-            fs: {
-                allow: ['..'],
+            plugins: [
+                react(reactPluginArgs),
+                tsconfigPaths(),
+                svgr(),
+                envCompatible(),
+            ],
+            esbuild: {
+                logOverride: { 'this-is-undefined-in-esm': 'silent' },
             },
         },
-        plugins: [
-            react({
-                babel: {
-                    plugins: [
-                        [
-                            '@emotion',
-                            {
-                                autoLabel: 'always',
-                                labelFormat: '[filename]--[local]',
-                                importMap: {
-                                    '@mui/material': {
-                                        styled: {
-                                            canonicalImport: [
-                                                '@emotion/styled',
-                                                'default',
-                                            ],
-                                            styledBaseImport: [
-                                                '@mui/material',
-                                                'styled',
-                                            ],
-                                        },
-                                    },
-                                },
-                            },
-                        ],
-                    ],
-                },
-            }),
-            tsconfigPaths(),
-            svgr(),
-            envCompatible(),
-        ],
-        esbuild: {
-            logOverride: { 'this-is-undefined-in-esm': 'silent' },
-        },
-    }),
-    vitestConfig,
-);
+        vitestConfig,
+    );
+});

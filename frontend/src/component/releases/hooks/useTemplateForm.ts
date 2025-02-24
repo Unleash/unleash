@@ -2,10 +2,15 @@ import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
+export interface IExtendedMilestonePayload
+    extends IReleasePlanMilestonePayload {
+    startExpanded?: boolean;
+}
+
 export const useTemplateForm = (
     initialName = '',
     initialDescription = '',
-    initialMilestones: IReleasePlanMilestonePayload[] = [
+    initialMilestones: IExtendedMilestonePayload[] = [
         { id: uuidv4(), name: 'Milestone 1', sortOrder: 0 },
     ],
 ) => {
@@ -93,7 +98,9 @@ export const useTemplateForm = (
         return {
             name,
             description,
-            milestones,
+            milestones: milestones.map(
+                ({ startExpanded, ...milestone }) => milestone,
+            ),
         };
     };
 

@@ -22,6 +22,7 @@ import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequ
 import { RemoveReleasePlanChangeRequestDialog } from './ChangeRequest/RemoveReleasePlanChangeRequestDialog';
 import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMilestoneChangeRequestDialog';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { Truncator } from 'component/common/Truncator/Truncator';
 
 const StyledContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'readonly',
@@ -58,7 +59,6 @@ const StyledHeaderTitleLabel = styled('span')(({ theme }) => ({
 
 const StyledHeaderDescription = styled('span')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
-    lineHeight: 0.5,
     color: theme.palette.text.secondary,
 }));
 
@@ -248,7 +248,9 @@ export const ReleasePlan = ({
                     </StyledHeaderTitleLabel>
                     <span>{name}</span>
                     <StyledHeaderDescription>
-                        {description}
+                        <Truncator lines={2} title={description}>
+                            {description}
+                        </Truncator>
                     </StyledHeaderDescription>
                 </StyledHeaderTitleContainer>
                 {!readonly && (

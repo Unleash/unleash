@@ -12,10 +12,7 @@ import {
     FormHelperText,
 } from '@mui/material';
 import Delete from '@mui/icons-material/DeleteOutlined';
-import type {
-    IReleasePlanMilestonePayload,
-    IReleasePlanMilestoneStrategy,
-} from 'interfaces/releasePlans';
+import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import { type DragEventHandler, type RefObject, useRef, useState } from 'react';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { MilestoneCardName } from './MilestoneCardName';
@@ -25,6 +22,7 @@ import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ReleasePlanTemplateAddStrategyForm } from '../../MilestoneStrategy/ReleasePlanTemplateAddStrategyForm';
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { type OnMoveItem, useDragItem } from 'hooks/useDragItem';
+import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
 
 const StyledMilestoneCard = styled(Card, {
     shouldForwardProp: (prop) => prop !== 'hasError',
@@ -124,8 +122,8 @@ const StyledDragIcon = styled(IconButton)(({ theme }) => ({
 }));
 
 export interface IMilestoneCardProps {
-    milestone: IReleasePlanMilestonePayload;
-    milestoneChanged: (milestone: IReleasePlanMilestonePayload) => void;
+    milestone: IExtendedMilestonePayload;
+    milestoneChanged: (milestone: IExtendedMilestonePayload) => void;
     errors: { [key: string]: string };
     clearErrors: () => void;
     removable: boolean;
@@ -152,7 +150,7 @@ export const MilestoneCard = ({
     } | null>(null);
     const [addUpdateStrategyOpen, setAddUpdateStrategyOpen] = useState(false);
     const [strategyModeEdit, setStrategyModeEdit] = useState(false);
-    const [expanded, setExpanded] = useState(false);
+    const [expanded, setExpanded] = useState(Boolean(milestone.startExpanded));
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen
         ? 'MilestoneStrategyMenuPopover'

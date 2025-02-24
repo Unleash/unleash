@@ -150,7 +150,7 @@ export const MilestoneCard = ({
     } | null>(null);
     const [addUpdateStrategyOpen, setAddUpdateStrategyOpen] = useState(false);
     const [strategyModeEdit, setStrategyModeEdit] = useState(false);
-    const [expanded, setExpanded] = useState(Boolean(milestone.new));
+    const [expanded, setExpanded] = useState(Boolean(milestone.startExpanded));
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen
         ? 'MilestoneStrategyMenuPopover'

@@ -4,6 +4,7 @@ import {
     styled,
     Tab,
     Tabs,
+    type Theme,
     Tooltip,
     Typography,
     useMediaQuery,
@@ -49,23 +50,44 @@ const NewStyledHeader = styled('div')(({ theme }) => ({
     backgroundColor: 'none',
     marginBottom: theme.spacing(2),
     borderBottom: `1px solid ${theme.palette.divider}`,
+    containerType: 'inline-size',
 }));
+
+const onWideHeader = (theme: Theme, css: object) => ({
+    '@container (min-width: 650px)': css,
+    '@supports not (container-type: inline-size)': {
+        [theme.breakpoints.up('md')]: css,
+    },
+});
 
 const UpperHeaderRow = styled('div')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row wrap',
-    columnGap: theme.spacing(4),
     alignItems: 'center',
+    columnGap: theme.spacing(2),
 }));
 
 const LowerHeaderRow = styled(UpperHeaderRow)(({ theme }) => ({
     justifyContent: 'space-between',
+    columnGap: 0,
+    flexFlow: 'column nowrap',
+    alignItems: 'flex-start',
+    ...onWideHeader(theme, {
+        alignItems: 'center',
+        flexFlow: 'row nowrap',
+    }),
 }));
 
-const HeaderActions = styled('div')(({ theme }) => ({
-    display: 'flex',
+const HeaderActions = styled('div', {
+    shouldForwardProp: (propName) => propName !== 'showOnNarrowScreens',
+})<{ showOnNarrowScreens?: boolean }>(({ theme, showOnNarrowScreens }) => ({
+    display: showOnNarrowScreens ? 'flex' : 'none',
     flexFlow: 'row nowrap',
     alignItems: 'center',
+
+    ...onWideHeader(theme, {
+        display: showOnNarrowScreens ? 'none' : 'flex',
+    }),
 }));
 
 const IconButtonWithTooltip: FC<
@@ -148,14 +170,24 @@ const StyledTabRow = styled('div')(({ theme }) => ({
     justifyContent: 'space-between',
 }));
 
+const StyledTabs = styled(Tabs)({
+    minWidth: 0,
+    maxWidth: '100%',
+    '& .MuiTabs-flexContainer': {
+        // remove the global min height set in frontend/src/themes/theme.ts
+        // (70px) and use the height of the tabs instead.
+        minHeight: 'unset',
+    },
+});
+
 const StyledTabButton = styled(Tab)(({ theme }) => ({
     textTransform: 'none',
     width: 'auto',
     fontSize: theme.fontSizes.bodySize,
     padding: '0 !important',
-    [theme.breakpoints.up('md')]: {
-        minWidth: 160,
-    },
+    ...onWideHeader(theme, {
+        minWidth: 100,
+    }),
 }));
 
 export const StyledLink = styled(Link)(() => ({
@@ -173,6 +205,79 @@ const useLegacyVariants = (environments: IFeatureToggle['environments']) => {
     );
     return enableLegacyVariants || existingLegacyVariantsExist;
 };
+
+type HeaderActionsProps = {
+    feature: IFeatureToggle;
+    showOnNarrowScreens?: boolean;
+    onFavorite: () => void;
+    handleCopyToClipboard: () => void;
+    isFeatureNameCopied: boolean;
+    openStaleDialog: () => void;
+    openDeleteDialog: () => void;
+};
+
+const HeaderActionsComponent = ({
+    showOnNarrowScreens,
+    feature,
+    onFavorite,
+    handleCopyToClipboard,
+    isFeatureNameCopied,
+    openStaleDialog,
+    openDeleteDialog,
+}: HeaderActionsProps) => (
+    <HeaderActions showOnNarrowScreens={showOnNarrowScreens}>
+        <IconButtonWithTooltip
+            label='Favorite this feature flag'
+            onClick={onFavorite}
+            data-loading
+        >
+            {feature.favorite ? <Star /> : <StarBorder />}
+        </IconButtonWithTooltip>
+
+        <IconButtonWithTooltip
+            label='Copy flag name'
+            onClick={handleCopyToClipboard}
+            data-loading
+        >
+            {isFeatureNameCopied ? <Check /> : <FileCopyOutlined />}
+        </IconButtonWithTooltip>
+        <PermissionIconButton
+            permission={CREATE_FEATURE}
+            projectId={feature.project}
+            data-loading
+            component={Link}
+            to={`/projects/${feature.project}/features/${feature.name}/copy`}
+            tooltipProps={{
+                title: 'Clone',
+            }}
+        >
+            <LibraryAddOutlined />
+        </PermissionIconButton>
+
+        <PermissionIconButton
+            permission={DELETE_FEATURE}
+            projectId={feature.project}
+            tooltipProps={{
+                title: 'Archive feature flag',
+            }}
+            data-loading
+            onClick={openDeleteDialog}
+        >
+            <ArchiveOutlined />
+        </PermissionIconButton>
+        <PermissionIconButton
+            onClick={openStaleDialog}
+            permission={UPDATE_FEATURE}
+            projectId={feature.project}
+            tooltipProps={{
+                title: 'Toggle stale state',
+            }}
+            data-loading
+        >
+            <WatchLaterOutlined />
+        </PermissionIconButton>
+    </HeaderActions>
+);
 
 type Props = {
     feature: IFeatureToggle;
@@ -260,6 +365,22 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
         }
     };
 
+    const HeaderActionsInner: FC<{ showOnNarrowScreens?: boolean }> = ({
+        showOnNarrowScreens,
+    }) => {
+        return (
+            <HeaderActionsComponent
+                showOnNarrowScreens={showOnNarrowScreens}
+                feature={feature}
+                onFavorite={onFavorite}
+                handleCopyToClipboard={handleCopyToClipboard}
+                isFeatureNameCopied={isFeatureNameCopied}
+                openStaleDialog={() => setOpenStaleDialog(true)}
+                openDeleteDialog={() => setShowDelDialog(true)}
+            />
+        );
+    };
+
     return (
         <>
             {flagOverviewRedesign ? (
@@ -271,10 +392,13 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                         ) : null}
                     </UpperHeaderRow>
                     <LowerHeaderRow>
-                        <Tabs
+                        <HeaderActionsInner showOnNarrowScreens />
+                        <StyledTabs
                             value={activeTab.path}
                             indicatorColor='primary'
                             textColor='primary'
+                            aria-label='Feature flag tabs'
+                            variant='scrollable'
                         >
                             {tabData.map((tab) => (
                                 <StyledTabButton
@@ -285,63 +409,8 @@ export const FeatureViewHeader: FC<Props> = ({ feature }) => {
                                     data-testid={`TAB-${tab.title}`}
                                 />
                             ))}
-                        </Tabs>
-                        <HeaderActions>
-                            <IconButtonWithTooltip
-                                label='Favorite this feature flag'
-                                onClick={onFavorite}
-                                data-loading
-                            >
-                                {feature.favorite ? <Star /> : <StarBorder />}
-                            </IconButtonWithTooltip>
-
-                            <IconButtonWithTooltip
-                                label='Copy flag name'
-                                onClick={handleCopyToClipboard}
-                                data-loading
-                            >
-                                {isFeatureNameCopied ? (
-                                    <Check />
-                                ) : (
-                                    <FileCopyOutlined />
-                                )}
-                            </IconButtonWithTooltip>
-                            <PermissionIconButton
-                                permission={CREATE_FEATURE}
-                                projectId={projectId}
-                                data-loading
-                                component={Link}
-                                to={`/projects/${projectId}/features/${featureId}/copy`}
-                                tooltipProps={{
-                                    title: 'Clone',
-                                }}
-                            >
-                                <LibraryAddOutlined />
-                            </PermissionIconButton>
-
-                            <PermissionIconButton
-                                permission={DELETE_FEATURE}
-                                projectId={projectId}
-                                tooltipProps={{
-                                    title: 'Archive feature flag',
-                                }}
-                                data-loading
-                                onClick={() => setShowDelDialog(true)}
-                            >
-                                <ArchiveOutlined />
-                            </PermissionIconButton>
-                            <PermissionIconButton
-                                onClick={() => setOpenStaleDialog(true)}
-                                permission={UPDATE_FEATURE}
-                                projectId={projectId}
-                                tooltipProps={{
-                                    title: 'Toggle stale state',
-                                }}
-                                data-loading
-                            >
-                                <WatchLaterOutlined />
-                            </PermissionIconButton>
-                        </HeaderActions>
+                        </StyledTabs>
+                        <HeaderActionsInner />
                     </LowerHeaderRow>
                 </NewStyledHeader>
             ) : (

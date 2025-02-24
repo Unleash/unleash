@@ -1,7 +1,7 @@
 import { Link, Route, Routes } from 'react-router-dom';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import FeatureLog from './FeatureLog/FeatureLog';
-import FeatureOverview from './FeatureOverview/FeatureOverview';
+import { FeatureOverview } from './FeatureOverview/FeatureOverview';
 import { FeatureEnvironmentVariants } from './FeatureVariants/FeatureEnvironmentVariants/FeatureEnvironmentVariants';
 import { FeatureMetrics } from './FeatureMetrics/FeatureMetrics';
 import { FeatureSettings } from './FeatureSettings/FeatureSettings';

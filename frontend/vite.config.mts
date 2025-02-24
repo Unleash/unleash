@@ -22,6 +22,11 @@ const vitestConfig = vitestDefineConfig({
         setupFiles: 'src/setupTests.ts',
         environment: 'jsdom',
         exclude: [...configDefaults.exclude, '**/cypress/**'],
+        server: {
+            deps: {
+                inline: ['chartjs-adapter-date-fns'],
+            },
+        },
     },
     css: {
         preprocessorOptions: {

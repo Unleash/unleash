@@ -24,7 +24,7 @@ export interface IUiConfig {
     links: ILinks[];
     disablePasswordAuth?: boolean;
     emailEnabled?: boolean;
-    networkViewEnabled: boolean;
+    prometheusAPIAvailable: boolean;
     maintenanceMode?: boolean;
     toast?: IProclamationToast;
     segmentValuesLimit?: number;
@@ -71,7 +71,6 @@ export type UiFlags = {
     automatedActions?: boolean;
     celebrateUnleash?: boolean;
     enableLicense?: boolean;
-    adminTokenKillSwitch?: boolean;
     feedbackComments?: Variant;
     showInactiveUsers?: boolean;
     feedbackPosting?: boolean;
@@ -95,6 +94,7 @@ export type UiFlags = {
     dataUsageMultiMonthView?: boolean;
     uiGlobalFontSize?: boolean;
     connectionCount?: boolean;
+    edgeObservability?: boolean;
 };
 
 export interface IVersionInfo {

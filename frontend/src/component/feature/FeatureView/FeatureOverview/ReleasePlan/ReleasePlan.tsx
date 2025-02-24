@@ -124,7 +124,7 @@ export const ReleasePlan = ({
     );
 
     const onAddRemovePlanChangesConfirm = async () => {
-        addChange(projectId, environment, {
+        await addChange(projectId, environment, {
             feature: featureName,
             action: 'deleteReleasePlan',
             payload: {
@@ -132,7 +132,7 @@ export const ReleasePlan = ({
             },
         });
 
-        refetchChangeRequests();
+        await refetchChangeRequests();
 
         setToastData({
             type: 'success',
@@ -143,7 +143,7 @@ export const ReleasePlan = ({
     };
 
     const onAddStartMilestoneChangesConfirm = async () => {
-        addChange(projectId, environment, {
+        await addChange(projectId, environment, {
             feature: featureName,
             action: 'startMilestone',
             payload: {
@@ -152,7 +152,7 @@ export const ReleasePlan = ({
             },
         });
 
-        refetchChangeRequests();
+        await refetchChangeRequests();
 
         setToastData({
             type: 'success',

@@ -55,7 +55,6 @@ const StyledAccordionFooter = styled('footer')(({ theme }) => ({
 const StyledEnvironmentAccordionContainer = styled('div')(({ theme }) => ({
     width: '100%',
     position: 'relative',
-    padding: theme.spacing(3, 3, 1),
 }));
 
 type FeatureOverviewEnvironmentProps = {

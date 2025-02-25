@@ -78,6 +78,15 @@ const StyledContainer = styled(Box, {
         : theme.palette.background.paper,
 }));
 
+const NewStyledContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'disabled',
+})(({ theme }) => ({
+    '& + &': {
+        marginTop: theme.spacing(2),
+    },
+    background: 'inherit',
+}));
+
 const StyledHeader = styled('div', {
     shouldForwardProp: (prop) => prop !== 'draggable' && prop !== 'disabled',
 })<{ draggable: boolean; disabled: boolean }>(
@@ -87,6 +96,22 @@ const StyledHeader = styled('div', {
         gap: theme.spacing(1),
         alignItems: 'center',
         borderBottom: `1px solid ${theme.palette.divider}`,
+        fontWeight: theme.typography.fontWeightMedium,
+        paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
+        color: disabled
+            ? theme.palette.text.secondary
+            : theme.palette.text.primary,
+    }),
+);
+
+const NewStyledHeader = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'draggable' && prop !== 'disabled',
+})<{ draggable: boolean; disabled: boolean }>(
+    ({ theme, draggable, disabled }) => ({
+        padding: theme.spacing(0.5, 2),
+        display: 'flex',
+        gap: theme.spacing(1),
+        alignItems: 'center',
         fontWeight: theme.typography.fontWeightMedium,
         paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
         color: disabled
@@ -222,15 +247,11 @@ export const NewStrategyItemContainer: FC<IStrategyItemContainerProps> = ({
 
     return (
         <Box sx={{ position: 'relative' }}>
-            <ConditionallyRender
-                condition={orderNumber !== undefined}
-                show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
-            />
-            <StyledContainer
+            <NewStyledContainer
                 disabled={strategy?.disabled || false}
                 style={style}
             >
-                <StyledHeader
+                <NewStyledHeader
                     draggable={Boolean(onDragStart)}
                     disabled={Boolean(strategy?.disabled)}
                 >
@@ -304,9 +325,9 @@ export const NewStrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                     >
                         {actions}
                     </Box>
-                </StyledHeader>
+                </NewStyledHeader>
                 <Box sx={{ p: 2 }}>{children}</Box>
-            </StyledContainer>
+            </NewStyledContainer>
         </Box>
     );
 };

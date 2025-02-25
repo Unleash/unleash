@@ -1,7 +1,10 @@
 import { type DragEventHandler, type RefObject, useRef } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import {
+    NewStrategySeparator,
+    StrategySeparator,
+} from 'component/common/StrategySeparator/StrategySeparator';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { NewStrategyItem, StrategyItem } from './StrategyItem/StrategyItem';
@@ -180,7 +183,7 @@ export const NewStrategyDraggableItem = ({
         >
             <ConditionallyRender
                 condition={index > 0}
-                show={<StrategySeparator text='OR' />}
+                show={<NewStrategySeparator text='OR' />}
             />
 
             <NewStrategyItem

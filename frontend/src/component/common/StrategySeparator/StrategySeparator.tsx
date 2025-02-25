@@ -49,3 +49,42 @@ export const StrategySeparator = ({ text }: IStrategySeparatorProps) => {
         </Box>
     );
 };
+
+const StyledAnd = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0.75, 1),
+    color: theme.palette.text.primary,
+    fontSize: theme.fontSizes.smallerBody,
+    backgroundColor: theme.palette.background.primary,
+    borderRadius: theme.shape.borderRadius,
+    position: 'absolute',
+    zIndex: theme.zIndex.fab,
+    top: '50%',
+    left: theme.spacing(2),
+    transform: 'translateY(-50%)',
+    lineHeight: 1,
+}));
+
+const StyledOr = styled(StyledAnd)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadiusLarge,
+    fontWeight: 'bold',
+    backgroundColor: theme.palette.background.alternative,
+    color: 'white',
+}));
+
+export const NewStrategySeparator = ({ text }: IStrategySeparatorProps) => {
+    const theme = useTheme();
+    return (
+        <Box
+            sx={{
+                height: theme.spacing(text === 'AND' ? 1 : 1.5),
+                position: 'relative',
+            }}
+        >
+            {text === 'AND' ? (
+                <StyledAnd>{text}</StyledAnd>
+            ) : (
+                <StyledOr>{text}</StyledOr>
+            )}
+        </Box>
+    );
+};

@@ -520,18 +520,6 @@ export const NewEnvironmentAccordionBody = ({
         <StyledAccordionBody>
             <StyledAccordionBodyInnerContainer>
                 <ConditionallyRender
-                    condition={
-                        (releasePlans.length > 0 || strategies.length > 0) &&
-                        isDisabled
-                    }
-                    show={() => (
-                        <Alert severity='warning' sx={{ mb: 2 }}>
-                            This environment is disabled, which means that none
-                            of your strategies are executing.
-                        </Alert>
-                    )}
-                />
-                <ConditionallyRender
                     condition={releasePlans.length > 0 || strategies.length > 0}
                     show={
                         <>
@@ -565,6 +553,7 @@ export const NewEnvironmentAccordionBody = ({
                                 }
                                 show={
                                     <>
+                                        {/* This should be an `ol` with `li`s for each strategy */}
                                         {strategies.map((strategy, index) => (
                                             <NewStrategyDraggableItem
                                                 key={strategy.id}
@@ -598,6 +587,7 @@ export const NewEnvironmentAccordionBody = ({
                                             segments.
                                         </Alert>
                                         <br />
+                                        {/* This should be an `ol` with `li`s for each strategy */}
                                         {page.map((strategy, index) => (
                                             <StrategyDraggableItem
                                                 key={strategy.id}

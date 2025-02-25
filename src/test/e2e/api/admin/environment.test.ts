@@ -159,3 +159,12 @@ test('Getting a non existing environment yields 404', async () => {
         .get('/api/admin/environments/this-does-not-exist')
         .expect(404);
 });
+
+test('Can deprecate and undeprecate protected environments', async () => {
+    await app.request
+        .post(`/api/admin/environments/${DEFAULT_ENV}/off`)
+        .expect(204);
+    await app.request
+        .post(`/api/admin/environments/${DEFAULT_ENV}/on`)
+        .expect(204);
+});

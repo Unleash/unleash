@@ -68,7 +68,8 @@ export type IFlagKey =
     | 'uiGlobalFontSize'
     | 'connectionCount'
     | 'teamsIntegrationChangeRequests'
-    | 'edgeObservability';
+    | 'edgeObservability'
+    | 'optionallyDisableWithStrategiesCheckOnly';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -327,6 +328,10 @@ const flags: IFlags = {
     ),
     edgeObservability: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
+        false,
+    ),
+    optionallyDisableWithStrategiesCheckOnly: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_OPTIONALLY_DISABLE_WITH_STRATEGIES_CHECK_ONLY,
         false,
     ),
 };

@@ -793,6 +793,33 @@ class FeatureToggleService {
         auditUser: IAuditUser,
         user?: IUser,
     ): Promise<void> {
+        if (
+            this.flagResolver.isEnabled(
+                'optionallyDisableWithStrategiesCheckOnly',
+            )
+        ) {
+            const strategies =
+                await this.featureStrategiesStore.getStrategiesForFeatureEnv(
+                    projectId,
+                    featureName,
+                    environment,
+                );
+            const hasOnlyDisabledStrategies = strategies.every(
+                (strategy) => strategy.disabled,
+            );
+            if (hasOnlyDisabledStrategies) {
+                await this.unprotectedUpdateEnabled(
+                    projectId,
+                    featureName,
+                    environment,
+                    false,
+                    auditUser,
+                    user,
+                );
+            }
+            return Promise.resolve();
+        }
+
         const feature = await this.getFeature({ featureName });
 
         const env = feature.environments.find((e) => e.name === environment);
@@ -1093,6 +1120,7 @@ class FeatureToggleService {
                     userId,
                     archived,
                 );
+            console.log(JSON.stringify(result));
             return {
                 ...result,
                 dependencies,

@@ -61,6 +61,7 @@ process.nextTick(async () => {
                         filterExistingFlagNames: true,
                         uiGlobalFontSize: true,
                         teamsIntegrationChangeRequests: true,
+                        optionallyDisableWithStrategiesCheckOnly: true,
                     },
                 },
                 authentication: {

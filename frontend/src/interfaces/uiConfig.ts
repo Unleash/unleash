@@ -102,6 +102,7 @@ export interface IVersionInfo {
     isLatest: boolean;
     latest: Partial<IVersion>;
     current: IVersion;
+    buildDate?: string;
 }
 
 export interface IVersion {

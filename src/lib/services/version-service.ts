@@ -15,6 +15,7 @@ export interface IVersionHolder {
     latest: Partial<IVersionInfo>;
     isLatest: boolean;
     instanceId: string;
+    buildDate?: string;
 }
 
 export interface IVersionResponse {
@@ -72,6 +73,8 @@ export default class VersionService {
 
     private timer: NodeJS.Timeout;
 
+    private readonly buildDate?: string;
+
     constructor(
         { settingStore }: Pick<IUnleashStores, 'settingStore'>,
         {
@@ -79,9 +82,14 @@ export default class VersionService {
             versionCheck,
             enterpriseVersion,
             telemetry,
+            buildDate,
         }: Pick<
             IUnleashConfig,
-            'getLogger' | 'versionCheck' | 'enterpriseVersion' | 'telemetry'
+            | 'getLogger'
+            | 'versionCheck'
+            | 'enterpriseVersion'
+            | 'telemetry'
+            | 'buildDate'
         >,
     ) {
         this.logger = getLogger('lib/services/version-service.js');
@@ -94,6 +102,7 @@ export default class VersionService {
         this.telemetryEnabled = telemetry;
         this.versionCheckUrl = versionCheck.url;
         this.isLatest = true;
+        this.buildDate = buildDate;
     }
 
     private async readInstanceId(): Promise<string | undefined> {
@@ -164,6 +173,7 @@ export default class VersionService {
             latest: this.latest || {},
             isLatest: this.isLatest,
             instanceId: instanceId || 'unresolved-instance-id',
+            buildDate: this.buildDate,
         };
     }
 }

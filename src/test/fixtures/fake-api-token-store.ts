@@ -75,9 +75,12 @@ export default class FakeApiTokenStore
     }
 
     async setExpiry(secret: string, expiresAt: Date): Promise<IApiToken> {
-        const t = await this.get(secret);
-        t.expiresAt = expiresAt;
-        return t;
+        const found = this.tokens.find((t) => t.secret === secret);
+        if (!found) {
+            return undefined;
+        }
+        found.expiresAt = expiresAt;
+        return found;
     }
 
     async countDeprecatedTokens(): Promise<{

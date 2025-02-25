@@ -98,7 +98,7 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                     {description ? (
                         <StyledMetaDataItem data-loading>
                             <StyledMetaDataItemText>
-                                <Truncator lines={5} title={description}>
+                                <Truncator arrow lines={5} title={description}>
                                     {description}
                                 </Truncator>
                             </StyledMetaDataItemText>

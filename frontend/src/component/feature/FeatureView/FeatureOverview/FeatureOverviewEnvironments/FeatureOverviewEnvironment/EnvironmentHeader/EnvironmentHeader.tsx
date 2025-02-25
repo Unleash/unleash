@@ -34,15 +34,16 @@ const StyledHeader = styled('header')(({ theme }) => ({
     minHeight: theme.spacing(8),
 }));
 
-const StyledHeaderTitle = styled('div')(({ theme }) => ({
+const StyledHeaderTitle = styled('hgroup')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
     flex: 1,
 }));
 
-const StyledHeaderTitleLabel = styled('span')(({ theme }) => ({
+const StyledHeaderTitleLabel = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
+    margin: 0,
 }));
 
 const StyledTruncator = styled(Truncator)(({ theme }) => ({

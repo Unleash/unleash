@@ -220,9 +220,6 @@ export const ProjectFeatureToggles = ({
                 header: 'Name',
                 cell: FeatureOverviewCell(onTagClick, onFlagTypeClick),
                 enableHiding: false,
-                meta: {
-                    width: '50%',
-                },
             }),
             columnHelper.accessor('createdAt', {
                 id: 'createdAt',

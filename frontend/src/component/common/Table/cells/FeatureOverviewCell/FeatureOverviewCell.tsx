@@ -132,6 +132,7 @@ const FeatureName: FC<{
                     style={{
                         WebkitLineClamp: 1,
                         lineClamp: 1,
+                        overflowWrap: 'anywhere',
                     }}
                 >
                     <Highlighter search={searchQuery}>{feature}</Highlighter>

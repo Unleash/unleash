@@ -21,7 +21,6 @@ export const StyledPopover = styled(Popover)(({ theme }) => ({
         paddingTop: theme.spacing(dropdownPadding),
         display: 'flex',
         flexDirection: 'column',
-
         gap: theme.spacing(1),
         maxHeight: '70vh',
     },

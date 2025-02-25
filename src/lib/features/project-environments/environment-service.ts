@@ -94,7 +94,7 @@ export default class EnvironmentService {
     async toggleEnvironment(name: string, value: boolean): Promise<void> {
         const exists = await this.environmentStore.exists(name);
         if (exists) {
-            return this.environmentStore.updateProperty(name, 'enabled', value);
+            return this.environmentStore.toggle(name, value);
         }
         throw new NotFoundError(`Could not find environment ${name}`);
     }

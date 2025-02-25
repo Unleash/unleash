@@ -92,6 +92,14 @@ export default class FakeEnvironmentStore implements IEnvironmentStore {
         return Promise.resolve();
     }
 
+    async toggle(name: string, enabled: boolean): Promise<void> {
+        const environment = this.environments.find(
+            (env: IEnvironment) => env.name === name,
+        );
+        if (environment) environment.enabled = enabled;
+        return Promise.resolve();
+    }
+
     async connectProject(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environment: string,

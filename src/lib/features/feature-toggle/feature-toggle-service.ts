@@ -1120,7 +1120,7 @@ class FeatureToggleService {
                     userId,
                     archived,
                 );
-            console.log(JSON.stringify(result));
+
             return {
                 ...result,
                 dependencies,

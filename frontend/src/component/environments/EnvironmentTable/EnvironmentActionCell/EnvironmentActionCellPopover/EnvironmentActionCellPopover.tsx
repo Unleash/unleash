@@ -140,7 +140,7 @@ export const EnvironmentActionCellPopover = ({
                                     onDeprecateToggle();
                                     handleClose();
                                 }}
-                                disabled={!hasAccess || environment.protected}
+                                disabled={!hasAccess}
                             >
                                 <ListItemIcon>
                                     <ConditionallyRender

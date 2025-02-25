@@ -309,6 +309,14 @@ export default class EnvironmentStore implements IEnvironmentStore {
             .where({ name: id });
     }
 
+    async toggle(name: string, enabled: boolean): Promise<void> {
+        await this.db(TABLE)
+            .update({
+                enabled,
+            })
+            .where({ name });
+    }
+
     async update(
         env: Pick<IEnvironment, 'type' | 'protected'>,
         name: string,

@@ -10,7 +10,10 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
-import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
+import {
+    NewStrategyItemContainer,
+    StrategyItemContainer,
+} from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove';
 import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
 import { Box } from '@mui/material';
@@ -98,5 +101,82 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                     <SplitPreviewSlider variants={strategy.variants} />
                 ))}
         </StrategyItemContainer>
+    );
+};
+
+export const NewStrategyItem: FC<IStrategyItemProps> = ({
+    environmentId,
+    strategy,
+    onDragStart,
+    onDragEnd,
+    otherEnvironments,
+    orderNumber,
+    headerChildren,
+}) => {
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
+
+    const editStrategyPath = formatEditStrategyPath(
+        projectId,
+        featureId,
+        environmentId,
+        strategy.id,
+    );
+
+    return (
+        <NewStrategyItemContainer
+            strategy={strategy}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            orderNumber={orderNumber}
+            actions={
+                <>
+                    {headerChildren}
+                    <ConditionallyRender
+                        condition={Boolean(
+                            otherEnvironments && otherEnvironments?.length > 0,
+                        )}
+                        show={() => (
+                            <CopyStrategyIconMenu
+                                environmentId={environmentId}
+                                environments={otherEnvironments as string[]}
+                                strategy={strategy}
+                            />
+                        )}
+                    />
+                    <PermissionIconButton
+                        permission={UPDATE_FEATURE_STRATEGY}
+                        environmentId={environmentId}
+                        projectId={projectId}
+                        component={Link}
+                        to={editStrategyPath}
+                        tooltipProps={{
+                            title: 'Edit strategy',
+                        }}
+                        data-testid={`STRATEGY_EDIT-${strategy.name}`}
+                    >
+                        <Edit />
+                    </PermissionIconButton>
+                    <MenuStrategyRemove
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentId}
+                        strategy={strategy}
+                    />
+                </>
+            }
+        >
+            <StrategyExecution strategy={strategy} />
+
+            {strategy.variants &&
+                strategy.variants.length > 0 &&
+                (strategy.disabled ? (
+                    <Box sx={{ opacity: '0.5' }}>
+                        <SplitPreviewSlider variants={strategy.variants} />
+                    </Box>
+                ) : (
+                    <SplitPreviewSlider variants={strategy.variants} />
+                ))}
+        </NewStrategyItemContainer>
     );
 };

@@ -202,3 +202,111 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
         </Box>
     );
 };
+
+export const NewStrategyItemContainer: FC<IStrategyItemContainerProps> = ({
+    strategy,
+    onDragStart,
+    onDragEnd,
+    actions,
+    children,
+    orderNumber,
+    style = {},
+    description,
+}) => {
+    const Icon = getFeatureStrategyIcon(strategy.name);
+
+    const StrategyHeaderLink: React.FC<{ children?: React.ReactNode }> =
+        'links' in strategy
+            ? ({ children }) => <Link to={strategy.links.edit}>{children}</Link>
+            : ({ children }) => <> {children} </>;
+
+    return (
+        <Box sx={{ position: 'relative' }}>
+            <ConditionallyRender
+                condition={orderNumber !== undefined}
+                show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
+            />
+            <StyledContainer
+                disabled={strategy?.disabled || false}
+                style={style}
+            >
+                <StyledHeader
+                    draggable={Boolean(onDragStart)}
+                    disabled={Boolean(strategy?.disabled)}
+                >
+                    <ConditionallyRender
+                        condition={Boolean(onDragStart)}
+                        show={() => (
+                            <DragIcon
+                                draggable
+                                disableRipple
+                                size='small'
+                                onDragStart={onDragStart}
+                                onDragEnd={onDragEnd}
+                                sx={{ cursor: 'move' }}
+                            >
+                                <DragIndicator
+                                    titleAccess='Drag to reorder'
+                                    cursor='grab'
+                                    sx={{ color: 'action.active' }}
+                                />
+                            </DragIcon>
+                        )}
+                    />
+                    <Icon
+                        sx={{
+                            fill: (theme) => theme.palette.action.disabled,
+                        }}
+                    />
+                    <StyledHeaderContainer>
+                        <StrategyHeaderLink>
+                            <StringTruncator
+                                maxWidth='400'
+                                maxLength={15}
+                                text={formatStrategyName(String(strategy.name))}
+                            />
+                            <ConditionallyRender
+                                condition={Boolean(strategy.title)}
+                                show={
+                                    <StyledCustomTitle>
+                                        {formatStrategyName(
+                                            String(strategy.title),
+                                        )}
+                                    </StyledCustomTitle>
+                                }
+                            />
+                        </StrategyHeaderLink>
+                        <ConditionallyRender
+                            condition={Boolean(description)}
+                            show={
+                                <StyledDescription>
+                                    {description}
+                                </StyledDescription>
+                            }
+                        />
+                    </StyledHeaderContainer>
+
+                    <ConditionallyRender
+                        condition={Boolean(strategy?.disabled)}
+                        show={() => (
+                            <>
+                                <Badge color='disabled'>Disabled</Badge>
+                            </>
+                        )}
+                    />
+                    <Box
+                        sx={{
+                            marginLeft: 'auto',
+                            display: 'flex',
+                            minHeight: (theme) => theme.spacing(6),
+                            alignItems: 'center',
+                        }}
+                    >
+                        {actions}
+                    </Box>
+                </StyledHeader>
+                <Box sx={{ p: 2 }}>{children}</Box>
+            </StyledContainer>
+        </Box>
+    );
+};

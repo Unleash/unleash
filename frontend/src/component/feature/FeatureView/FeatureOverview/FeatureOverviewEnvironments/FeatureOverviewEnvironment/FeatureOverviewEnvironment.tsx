@@ -3,7 +3,6 @@ import type {
     IFeatureEnvironment,
     IFeatureEnvironmentMetrics,
 } from 'interfaces/featureToggle';
-import EnvironmentAccordionBody from './EnvironmentAccordionBody/EnvironmentAccordionBody';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -14,6 +13,7 @@ import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOvervi
 import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle';
 import { useState } from 'react';
 import type { IReleasePlan } from 'interfaces/releasePlans';
+import { NewEnvironmentAccordionBody } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -113,7 +113,7 @@ export const FeatureOverviewEnvironment = ({
                 </EnvironmentHeader>
                 <StyledAccordionDetails>
                     <StyledEnvironmentAccordionContainer>
-                        <EnvironmentAccordionBody
+                        <NewEnvironmentAccordionBody
                             featureEnvironment={environment}
                             isDisabled={!environment.enabled}
                             otherEnvironments={otherEnvironments}

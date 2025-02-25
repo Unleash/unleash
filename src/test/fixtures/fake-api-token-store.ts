@@ -37,9 +37,10 @@ export default class FakeApiTokenStore
         return this.tokens.some((token) => token.secret === key);
     }
 
-    async get(key: string): Promise<IApiToken> {
-        // get can return undefined. See api-token-store.e2e.test.ts
-        return this.tokens.find((t) => t.secret === key);
+    async get(key: string): Promise<IApiToken | undefined> {
+        const found = this.tokens.find((t) => t.secret === key);
+        // clone the object to get a copy
+        return found ? { ...found } : undefined;
     }
 
     async getAll(): Promise<IApiToken[]> {

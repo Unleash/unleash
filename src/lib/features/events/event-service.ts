@@ -154,9 +154,16 @@ export default class EventService {
     }
 
     async storeEvents(events: IBaseEvent[]): Promise<void> {
+        // if the event comes with both preData and data, we need to check if they are different before storing, otherwise we discard the event
         let enhancedEvents = events.filter(
-            (event) => !isEqual(event.preData, event.data),
+            (event) =>
+                !event.preData ||
+                !event.data ||
+                !isEqual(event.preData, event.data),
         );
+        if (enhancedEvents.length === 0) {
+            return;
+        }
         for (const enhancer of [this.enhanceEventsWithTags.bind(this)]) {
             enhancedEvents = await enhancer(enhancedEvents);
         }

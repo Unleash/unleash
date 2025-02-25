@@ -97,7 +97,17 @@ describe('Strategy limits', () => {
         const { featureToggleService, featureStrategiesStore } =
             createFakeFeatureToggleService({
                 getLogger,
-                flagResolver: alwaysOnFlagResolver,
+                flagResolver: {
+                    isEnabled(feature) {
+                        if (
+                            feature ===
+                            'optionallyDisableWithStrategiesCheckOnly'
+                        ) {
+                            return false;
+                        }
+                        return true;
+                    },
+                } as unknown as IFlagResolver,
                 resourceLimits: {
                     constraints: LIMIT,
                 },
@@ -201,7 +211,17 @@ describe('Strategy limits', () => {
         const { featureToggleService, featureStrategiesStore } =
             createFakeFeatureToggleService({
                 getLogger,
-                flagResolver: alwaysOnFlagResolver,
+                flagResolver: {
+                    isEnabled(feature) {
+                        if (
+                            feature ===
+                            'optionallyDisableWithStrategiesCheckOnly'
+                        ) {
+                            return false;
+                        }
+                        return true;
+                    },
+                } as unknown as IFlagResolver,
                 resourceLimits: {
                     constraintValues: LIMIT,
                 },

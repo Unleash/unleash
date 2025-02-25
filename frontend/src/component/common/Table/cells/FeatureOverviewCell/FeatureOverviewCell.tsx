@@ -129,7 +129,6 @@ const FeatureName: FC<{
         <Box
             sx={(theme) => ({
                 fontWeight: theme.typography.fontWeightBold,
-                overflowWrap: 'anywhere',
             })}
         >
             <StyledFeatureLink to={`/projects/${project}/features/${feature}`}>
@@ -137,6 +136,7 @@ const FeatureName: FC<{
                     style={{
                         WebkitLineClamp: 1,
                         lineClamp: 1,
+                        overflowWrap: 'anywhere',
                     }}
                 >
                     <Highlighter search={searchQuery}>{feature}</Highlighter>

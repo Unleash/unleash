@@ -25,7 +25,7 @@ import type { IChangeRequestAccessReadModel } from '../change-request-access-ser
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type EventService from '../events/event-service';
 import type { IChangeRequestSegmentUsageReadModel } from '../change-request-segment-usage-service/change-request-segment-usage-read-model';
-import type { ResourceLimitsSchema } from '../../openapi';
+import type { ResourceLimitsSchema, UpsertSegmentSchema } from '../../openapi';
 import { throwExceedsLimitError } from '../../error/exceeds-limit-error';
 
 export class SegmentService implements ISegmentService {
@@ -162,7 +162,7 @@ export class SegmentService implements ISegmentService {
 
     async update(
         id: number,
-        data: unknown,
+        data: UpsertSegmentSchema,
         user: User,
         auditUser: IAuditUser,
     ): Promise<void> {
@@ -173,7 +173,7 @@ export class SegmentService implements ISegmentService {
 
     async unprotectedUpdate(
         id: number,
-        data: unknown,
+        data: UpsertSegmentSchema,
         auditUser: IAuditUser,
     ): Promise<void> {
         const input = await segmentSchema.validateAsync(data);

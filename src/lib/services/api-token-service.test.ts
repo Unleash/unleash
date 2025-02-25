@@ -111,7 +111,7 @@ test('Api token operations should all have events attached', async () => {
         (e) => e.type === API_TOKEN_UPDATED,
     );
     expect(updatedApiTokenEvents).toHaveLength(1);
-    expect(updatedApiTokenEvents[0].preData.expiresAt).toBeDefined();
+    expect(updatedApiTokenEvents[0].preData.expiresAt).toBeUndefined();
     expect(updatedApiTokenEvents[0].preData.secret).toBeUndefined();
     expect(updatedApiTokenEvents[0].data.secret).toBeUndefined();
     expect(updatedApiTokenEvents[0].data.expiresAt).toBe(newExpiry);

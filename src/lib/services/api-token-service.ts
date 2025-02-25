@@ -244,7 +244,7 @@ export class ApiTokenService {
         expiresAt: Date,
         auditUser: IAuditUser,
     ): Promise<IApiToken> {
-        const previous = await this.store.get(secret);
+        const previous = (await this.store.get(secret))!;
         const token = await this.store.setExpiry(secret, expiresAt);
         await this.eventService.storeEvent(
             new ApiTokenUpdatedEvent({

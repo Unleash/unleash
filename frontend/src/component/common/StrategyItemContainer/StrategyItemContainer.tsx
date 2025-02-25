@@ -78,6 +78,15 @@ const StyledContainer = styled(Box, {
         : theme.palette.background.paper,
 }));
 
+const NewStyledContainer = styled(Box, {
+    shouldForwardProp: (prop) => prop !== 'disabled',
+})(({ theme }) => ({
+    '& + &': {
+        marginTop: theme.spacing(2),
+    },
+    background: 'inherit',
+}));
+
 const StyledHeader = styled('div', {
     shouldForwardProp: (prop) => prop !== 'draggable' && prop !== 'disabled',
 })<{ draggable: boolean; disabled: boolean }>(
@@ -87,6 +96,22 @@ const StyledHeader = styled('div', {
         gap: theme.spacing(1),
         alignItems: 'center',
         borderBottom: `1px solid ${theme.palette.divider}`,
+        fontWeight: theme.typography.fontWeightMedium,
+        paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
+        color: disabled
+            ? theme.palette.text.secondary
+            : theme.palette.text.primary,
+    }),
+);
+
+const NewStyledHeader = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'draggable' && prop !== 'disabled',
+})<{ draggable: boolean; disabled: boolean }>(
+    ({ theme, draggable, disabled }) => ({
+        padding: theme.spacing(0.5, 2),
+        display: 'flex',
+        gap: theme.spacing(1),
+        alignItems: 'center',
         fontWeight: theme.typography.fontWeightMedium,
         paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
         color: disabled
@@ -199,6 +224,110 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                 </StyledHeader>
                 <Box sx={{ p: 2 }}>{children}</Box>
             </StyledContainer>
+        </Box>
+    );
+};
+
+export const NewStrategyItemContainer: FC<IStrategyItemContainerProps> = ({
+    strategy,
+    onDragStart,
+    onDragEnd,
+    actions,
+    children,
+    orderNumber,
+    style = {},
+    description,
+}) => {
+    const Icon = getFeatureStrategyIcon(strategy.name);
+
+    const StrategyHeaderLink: React.FC<{ children?: React.ReactNode }> =
+        'links' in strategy
+            ? ({ children }) => <Link to={strategy.links.edit}>{children}</Link>
+            : ({ children }) => <> {children} </>;
+
+    return (
+        <Box sx={{ position: 'relative' }}>
+            <NewStyledContainer
+                disabled={strategy?.disabled || false}
+                style={style}
+            >
+                <NewStyledHeader
+                    draggable={Boolean(onDragStart)}
+                    disabled={Boolean(strategy?.disabled)}
+                >
+                    <ConditionallyRender
+                        condition={Boolean(onDragStart)}
+                        show={() => (
+                            <DragIcon
+                                draggable
+                                disableRipple
+                                size='small'
+                                onDragStart={onDragStart}
+                                onDragEnd={onDragEnd}
+                                sx={{ cursor: 'move' }}
+                            >
+                                <DragIndicator
+                                    titleAccess='Drag to reorder'
+                                    cursor='grab'
+                                    sx={{ color: 'action.active' }}
+                                />
+                            </DragIcon>
+                        )}
+                    />
+                    <Icon
+                        sx={{
+                            fill: (theme) => theme.palette.action.disabled,
+                        }}
+                    />
+                    <StyledHeaderContainer>
+                        <StrategyHeaderLink>
+                            <StringTruncator
+                                maxWidth='400'
+                                maxLength={15}
+                                text={formatStrategyName(String(strategy.name))}
+                            />
+                            <ConditionallyRender
+                                condition={Boolean(strategy.title)}
+                                show={
+                                    <StyledCustomTitle>
+                                        {formatStrategyName(
+                                            String(strategy.title),
+                                        )}
+                                    </StyledCustomTitle>
+                                }
+                            />
+                        </StrategyHeaderLink>
+                        <ConditionallyRender
+                            condition={Boolean(description)}
+                            show={
+                                <StyledDescription>
+                                    {description}
+                                </StyledDescription>
+                            }
+                        />
+                    </StyledHeaderContainer>
+
+                    <ConditionallyRender
+                        condition={Boolean(strategy?.disabled)}
+                        show={() => (
+                            <>
+                                <Badge color='disabled'>Disabled</Badge>
+                            </>
+                        )}
+                    />
+                    <Box
+                        sx={{
+                            marginLeft: 'auto',
+                            display: 'flex',
+                            minHeight: (theme) => theme.spacing(6),
+                            alignItems: 'center',
+                        }}
+                    >
+                        {actions}
+                    </Box>
+                </NewStyledHeader>
+                <Box sx={{ p: 2 }}>{children}</Box>
+            </NewStyledContainer>
         </Box>
     );
 };

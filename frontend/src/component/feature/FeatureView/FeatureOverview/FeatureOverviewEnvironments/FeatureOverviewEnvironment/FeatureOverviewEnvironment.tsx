@@ -3,7 +3,6 @@ import type {
     IFeatureEnvironment,
     IFeatureEnvironmentMetrics,
 } from 'interfaces/featureToggle';
-import EnvironmentAccordionBody from './EnvironmentAccordionBody/EnvironmentAccordionBody';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -14,6 +13,7 @@ import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOvervi
 import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle';
 import { useState } from 'react';
 import type { IReleasePlan } from 'interfaces/releasePlans';
+import { NewEnvironmentAccordionBody } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -34,7 +34,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: 0,
-    background: theme.palette.envAccordion.expanded,
+    background: theme.palette.background.elevation1,
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
     boxShadow: theme.boxShadows.accordionFooter,
@@ -55,7 +55,6 @@ const StyledAccordionFooter = styled('footer')(({ theme }) => ({
 const StyledEnvironmentAccordionContainer = styled('div')(({ theme }) => ({
     width: '100%',
     position: 'relative',
-    padding: theme.spacing(3, 3, 1),
 }));
 
 type FeatureOverviewEnvironmentProps = {
@@ -114,7 +113,7 @@ export const FeatureOverviewEnvironment = ({
                 </EnvironmentHeader>
                 <StyledAccordionDetails>
                     <StyledEnvironmentAccordionContainer>
-                        <EnvironmentAccordionBody
+                        <NewEnvironmentAccordionBody
                             featureEnvironment={environment}
                             isDisabled={!environment.enabled}
                             otherEnvironments={otherEnvironments}

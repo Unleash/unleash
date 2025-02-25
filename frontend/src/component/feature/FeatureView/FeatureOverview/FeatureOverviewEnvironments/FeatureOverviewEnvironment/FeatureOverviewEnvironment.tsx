@@ -34,7 +34,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: 0,
-    background: theme.palette.envAccordion.expanded,
+    background: theme.palette.background.elevation1,
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
     boxShadow: theme.boxShadows.accordionFooter,

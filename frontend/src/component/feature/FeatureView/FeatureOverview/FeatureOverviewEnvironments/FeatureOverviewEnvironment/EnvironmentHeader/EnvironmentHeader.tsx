@@ -68,7 +68,6 @@ export const EnvironmentHeader: FC<EnvironmentHeaderProps> = ({
             expandIcon={
                 <ExpandMore
                     sx={{ visibility: expandable ? 'visible' : 'hidden' }}
-                    aria-hidden={!expandable}
                 />
             }
             expandable={expandable}

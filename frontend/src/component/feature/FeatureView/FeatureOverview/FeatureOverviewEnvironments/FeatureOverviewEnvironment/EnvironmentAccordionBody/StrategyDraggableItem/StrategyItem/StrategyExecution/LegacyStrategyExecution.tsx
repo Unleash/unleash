@@ -18,8 +18,6 @@ import { Badge } from 'component/common/Badge/Badge';
 import type { CreateFeatureStrategySchema } from 'openapi';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { BuiltInStrategies } from 'utils/strategyNames';
-import { useUiFlag } from 'hooks/useUiFlag';
-import { StrategyExecution as LegacyStrategyExecution } from './LegacyStrategyExecution';
 
 interface IStrategyExecutionProps {
     strategy: IFeatureStrategyPayload | CreateFeatureStrategySchema;
@@ -78,7 +76,7 @@ const StyledValueSeparator = styled('span')(({ theme }) => ({
     color: theme.palette.neutral.main,
 }));
 
-const NewStrategyExecution: FC<IStrategyExecutionProps> = ({
+export const StrategyExecution: FC<IStrategyExecutionProps> = ({
     strategy,
     displayGroupId = false,
 }) => {
@@ -370,17 +368,5 @@ const NewStrategyExecution: FC<IStrategyExecutionProps> = ({
                 elseShow={<NoItems />}
             />
         </>
-    );
-};
-
-export const StrategyExecution: FC<IStrategyExecutionProps> = ({
-    ...props
-}) => {
-    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
-
-    return flagOverviewRedesign ? (
-        <NewStrategyExecution {...props} />
-    ) : (
-        <LegacyStrategyExecution {...props} />
     );
 };

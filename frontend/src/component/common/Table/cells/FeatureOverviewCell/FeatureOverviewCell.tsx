@@ -126,7 +126,12 @@ const FeatureName: FC<{
     searchQuery: string;
 }> = ({ project, feature, searchQuery }) => {
     return (
-        <Box sx={(theme) => ({ fontWeight: theme.typography.fontWeightBold })}>
+        <Box
+            sx={(theme) => ({
+                fontWeight: theme.typography.fontWeightBold,
+                overflowWrap: 'anywhere',
+            })}
+        >
             <StyledFeatureLink to={`/projects/${project}/features/${feature}`}>
                 <StyledTitle
                     style={{

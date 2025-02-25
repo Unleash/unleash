@@ -1,249 +1,138 @@
-import {
-    Accordion,
-    AccordionDetails,
-    AccordionSummary,
-    Box,
-    styled,
-} from '@mui/material';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
-import useFeatureMetrics from 'hooks/api/getters/useFeatureMetrics/useFeatureMetrics';
-import type { IFeatureEnvironment } from 'interfaces/featureToggle';
-import { getFeatureMetrics } from 'utils/getFeatureMetrics';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
-import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import { Accordion, AccordionDetails, styled } from '@mui/material';
+import type {
+    IFeatureEnvironment,
+    IFeatureEnvironmentMetrics,
+} from 'interfaces/featureToggle';
 import EnvironmentAccordionBody from './EnvironmentAccordionBody/EnvironmentAccordionBody';
-import { EnvironmentFooter } from './EnvironmentFooter/EnvironmentFooter';
-import FeatureOverviewEnvironmentMetrics from './FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';
 import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { FeatureStrategyIcons } from 'component/feature/FeatureStrategy/FeatureStrategyIcons/FeatureStrategyIcons';
-import { useGlobalLocalStorage } from 'hooks/useGlobalLocalStorage';
-import { Badge } from 'component/common/Badge/Badge';
-import { UpgradeChangeRequests } from './UpgradeChangeRequests';
+import { UpgradeChangeRequests } from './UpgradeChangeRequests/UpgradeChangeRequests';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { EnvironmentHeader } from './EnvironmentHeader/EnvironmentHeader';
+import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
+import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle';
+import { useState } from 'react';
+import type { IReleasePlan } from 'interfaces/releasePlans';
 
-interface IFeatureOverviewEnvironmentProps {
-    env: IFeatureEnvironment;
-}
-
-const StyledFeatureOverviewEnvironment = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'enabled',
-})<{ enabled: boolean }>(({ theme, enabled }) => ({
+const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
-    marginBottom: theme.spacing(2),
-    backgroundColor: enabled
-        ? theme.palette.background.paper
-        : theme.palette.envAccordion.disabled,
+    backgroundColor: theme.palette.background.paper,
+    border: `1px solid ${theme.palette.divider}`,
 }));
 
-const StyledAccordion = styled(Accordion)({
+const StyledAccordion = styled(Accordion)(({ theme }) => ({
     boxShadow: 'none',
     background: 'none',
-});
-
-const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
-    boxShadow: 'none',
-    padding: theme.spacing(2, 4),
-    [theme.breakpoints.down(400)]: {
-        padding: theme.spacing(1, 2),
+    '&&& .MuiAccordionSummary-root': {
+        borderRadius: theme.shape.borderRadiusLarge,
+        pointerEvents: 'auto',
+        opacity: 1,
+        backgroundColor: theme.palette.background.paper,
     },
 }));
 
-const StyledAccordionDetails = styled(AccordionDetails, {
-    shouldForwardProp: (prop) => prop !== 'enabled',
-})<{ enabled: boolean }>(({ theme }) => ({
-    padding: theme.spacing(3),
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    padding: 0,
     background: theme.palette.envAccordion.expanded,
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
     boxShadow: theme.boxShadows.accordionFooter,
-
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(2, 1),
     },
 }));
 
-const StyledEnvironmentAccordionBody = styled(EnvironmentAccordionBody)(
-    ({ theme }) => ({
-        width: '100%',
-        position: 'relative',
-        paddingBottom: theme.spacing(2),
-    }),
-);
-
-const StyledHeader = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'enabled',
-})<{ enabled: boolean }>(({ theme, enabled }) => ({
+const StyledAccordionFooter = styled('footer')(({ theme }) => ({
+    padding: theme.spacing(2, 3, 3),
     display: 'flex',
-    justifyContent: 'center',
     flexDirection: 'column',
-    color: enabled ? theme.palette.text.primary : theme.palette.text.secondary,
-}));
-
-const StyledHeaderTitle = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    [theme.breakpoints.down(560)]: {
-        flexDirection: 'column',
-        textAlign: 'center',
-    },
-}));
-
-const StyledEnvironmentIcon = styled(EnvironmentIcon)(({ theme }) => ({
-    [theme.breakpoints.down(560)]: {
-        marginBottom: '0.5rem',
-    },
-}));
-
-const StyledStringTruncator = styled(StringTruncator)(({ theme }) => ({
-    fontSize: theme.fontSizes.bodySize,
-    fontWeight: theme.typography.fontWeightMedium,
-    [theme.breakpoints.down(560)]: {
-        textAlign: 'center',
-    },
-}));
-
-const StyledButtonContainer = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: theme.spacing(2),
+    alignItems: 'flex-end',
     gap: theme.spacing(2),
-    flexWrap: 'wrap',
-    [theme.breakpoints.down(560)]: {
-        flexDirection: 'column',
-    },
+    borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
-const FeatureOverviewEnvironment = ({
-    env,
-}: IFeatureOverviewEnvironmentProps) => {
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
-    const { metrics } = useFeatureMetrics(projectId, featureId);
-    const { feature } = useFeature(projectId, featureId);
-    const { value: globalStore } = useGlobalLocalStorage();
+const StyledEnvironmentAccordionContainer = styled('div')(({ theme }) => ({
+    width: '100%',
+    position: 'relative',
+    padding: theme.spacing(3, 3, 1),
+}));
 
-    const featureMetrics = getFeatureMetrics(feature?.environments, metrics);
-    const environmentMetric = featureMetrics.find(
-        (featureMetric) => featureMetric.environment === env.name,
-    );
-    const featureEnvironment = feature?.environments.find(
-        (featureEnvironment) => featureEnvironment.name === env.name,
-    );
-    const { isOss } = useUiConfig();
-    const showChangeRequestUpgrade = env.type === 'production' && isOss();
-
-    return (
-        <ConditionallyRender
-            condition={!new Set(globalStore.hiddenEnvironments).has(env.name)}
-            show={
-                <StyledFeatureOverviewEnvironment enabled={env.enabled}>
-                    <StyledAccordion
-                        TransitionProps={{ mountOnEnter: true }}
-                        data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${env.name}`}
-                        className={`environment-accordion ${
-                            env.enabled ? '' : 'accordion-disabled'
-                        }`}
-                    >
-                        <StyledAccordionSummary
-                            expandIcon={<ExpandMore titleAccess='Toggle' />}
-                        >
-                            <StyledHeader data-loading enabled={env.enabled}>
-                                <StyledHeaderTitle>
-                                    <StyledEnvironmentIcon
-                                        enabled={env.enabled}
-                                    />
-                                    <div>
-                                        <StyledStringTruncator
-                                            text={env.name}
-                                            maxWidth='100'
-                                            maxLength={15}
-                                        />
-                                    </div>
-                                    <ConditionallyRender
-                                        condition={!env.enabled}
-                                        show={
-                                            <Badge
-                                                color='neutral'
-                                                sx={{ ml: 1 }}
-                                            >
-                                                Disabled
-                                            </Badge>
-                                        }
-                                    />
-                                </StyledHeaderTitle>
-                                <StyledButtonContainer>
-                                    <FeatureStrategyMenu
-                                        label='Add strategy'
-                                        projectId={projectId}
-                                        featureId={featureId}
-                                        environmentId={env.name}
-                                        variant='outlined'
-                                        size='small'
-                                    />
-                                    <FeatureStrategyIcons
-                                        strategies={
-                                            featureEnvironment?.strategies
-                                        }
-                                    />
-                                </StyledButtonContainer>
-                            </StyledHeader>
-
-                            <FeatureOverviewEnvironmentMetrics
-                                environmentMetric={environmentMetric}
-                                disabled={!env.enabled}
-                            />
-                        </StyledAccordionSummary>
-
-                        <StyledAccordionDetails enabled={env.enabled}>
-                            <StyledEnvironmentAccordionBody
-                                featureEnvironment={featureEnvironment}
-                                isDisabled={!env.enabled}
-                                otherEnvironments={feature?.environments
-                                    .map(({ name }) => name)
-                                    .filter((name) => name !== env.name)}
-                            />
-                            <ConditionallyRender
-                                condition={
-                                    (featureEnvironment?.strategies?.length ||
-                                        0) > 0
-                                }
-                                show={
-                                    <>
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                py: 1,
-                                            }}
-                                        >
-                                            <FeatureStrategyMenu
-                                                label='Add strategy'
-                                                projectId={projectId}
-                                                featureId={featureId}
-                                                environmentId={env.name}
-                                            />
-                                        </Box>
-                                        <EnvironmentFooter
-                                            environmentMetric={
-                                                environmentMetric
-                                            }
-                                        />
-                                        {showChangeRequestUpgrade ? (
-                                            <UpgradeChangeRequests />
-                                        ) : null}
-                                    </>
-                                }
-                            />
-                        </StyledAccordionDetails>
-                    </StyledAccordion>
-                </StyledFeatureOverviewEnvironment>
-            }
-        />
-    );
+type FeatureOverviewEnvironmentProps = {
+    environment: IFeatureEnvironment & {
+        releasePlans?: IReleasePlan[];
+    };
+    metrics?: Pick<IFeatureEnvironmentMetrics, 'yes' | 'no'>;
+    otherEnvironments?: string[];
 };
 
-export default FeatureOverviewEnvironment;
+export const FeatureOverviewEnvironment = ({
+    environment,
+    metrics = { yes: 0, no: 0 },
+    otherEnvironments = [],
+}: FeatureOverviewEnvironmentProps) => {
+    const [isOpen, setIsOopen] = useState(false);
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
+    const { isOss } = useUiConfig();
+    const hasActivations = Boolean(
+        environment?.enabled ||
+            (environment?.strategies && environment?.strategies.length > 0) ||
+            (environment?.releasePlans && environment?.releasePlans.length > 0),
+    );
+
+    return (
+        <StyledFeatureOverviewEnvironment>
+            <StyledAccordion
+                TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
+                data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${environment.name}`}
+                expanded={isOpen && hasActivations}
+                disabled={!hasActivations}
+                onChange={() => setIsOopen(isOpen ? !isOpen : hasActivations)}
+            >
+                <EnvironmentHeader
+                    environmentId={environment.name}
+                    expandable={hasActivations}
+                >
+                    <FeatureOverviewEnvironmentToggle
+                        environment={environment}
+                    />
+                    {!hasActivations ? (
+                        <FeatureStrategyMenu
+                            label='Add strategy'
+                            projectId={projectId}
+                            featureId={featureId}
+                            environmentId={environment.name}
+                            variant='outlined'
+                            size='small'
+                        />
+                    ) : null}
+                    <FeatureOverviewEnvironmentMetrics
+                        environmentMetric={metrics}
+                        collapsed={!hasActivations}
+                    />
+                </EnvironmentHeader>
+                <StyledAccordionDetails>
+                    <StyledEnvironmentAccordionContainer>
+                        <EnvironmentAccordionBody
+                            featureEnvironment={environment}
+                            isDisabled={!environment.enabled}
+                            otherEnvironments={otherEnvironments}
+                        />
+                    </StyledEnvironmentAccordionContainer>
+                    <StyledAccordionFooter>
+                        <FeatureStrategyMenu
+                            label='Add strategy'
+                            projectId={projectId}
+                            featureId={featureId}
+                            environmentId={environment.name}
+                        />
+                        {isOss() && environment?.type === 'production' ? (
+                            <UpgradeChangeRequests />
+                        ) : null}
+                    </StyledAccordionFooter>
+                </StyledAccordionDetails>
+            </StyledAccordion>
+        </StyledFeatureOverviewEnvironment>
+    );
+};

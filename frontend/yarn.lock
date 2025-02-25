@@ -3291,9 +3291,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-extensions-basic-setup@npm:4.23.7":
-  version: 4.23.7
-  resolution: "@uiw/codemirror-extensions-basic-setup@npm:4.23.7"
+"@uiw/codemirror-extensions-basic-setup@npm:4.23.8":
+  version: 4.23.8
+  resolution: "@uiw/codemirror-extensions-basic-setup@npm:4.23.8"
   dependencies:
     "@codemirror/autocomplete": "npm:^6.0.0"
     "@codemirror/commands": "npm:^6.0.0"
@@ -3310,7 +3310,7 @@ __metadata:
     "@codemirror/search": ">=6.0.0"
     "@codemirror/state": ">=6.0.0"
     "@codemirror/view": ">=6.0.0"
-  checksum: 10c0/9b0852d3a12024b306daa418c930c56d657e0c1522f98eff1bd2ac7fa1613af034f847304dcd7c6dde21c22c609b2e595393ed3ec6ff33da3f551f1b9c8eaba2
+  checksum: 10c0/167397afe54a8840b50225532419b3e0b2c12b6c380ef2862d5a0377df2fc9fe48a36b21133f2d48275465433c79a96a2cddd2a243cbd38d67ba14e57c4341fb
   languageName: node
   linkType: hard
 
@@ -3338,15 +3338,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/react-codemirror@npm:4.23.7":
-  version: 4.23.7
-  resolution: "@uiw/react-codemirror@npm:4.23.7"
+"@uiw/react-codemirror@npm:4.23.8":
+  version: 4.23.8
+  resolution: "@uiw/react-codemirror@npm:4.23.8"
   dependencies:
     "@babel/runtime": "npm:^7.18.6"
     "@codemirror/commands": "npm:^6.1.0"
     "@codemirror/state": "npm:^6.1.1"
     "@codemirror/theme-one-dark": "npm:^6.0.0"
-    "@uiw/codemirror-extensions-basic-setup": "npm:4.23.7"
+    "@uiw/codemirror-extensions-basic-setup": "npm:4.23.8"
     codemirror: "npm:^6.0.0"
   peerDependencies:
     "@babel/runtime": ">=7.11.0"
@@ -3356,7 +3356,7 @@ __metadata:
     codemirror: ">=6.0.0"
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: 10c0/6f5dac1af0f6bb25779fa8af1eb7e21e407a3175141bbed4b292e5837bb0953d1409ad1a59d181b343c1976e3f30f6f96bc895dc2e60ada2d6c21d6f94c49597
+  checksum: 10c0/4d60fb8ea71de4e06d2105b977f81b8ef125fc09e726511f9479b52a0320e589dec6fb780d34eefc255879e1cc692a833666c85a1a65bc134d23e48025f66875
   languageName: node
   linkType: hard
 
@@ -9006,12 +9006,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:7.7.0":
-  version: 7.7.0
-  resolution: "semver@npm:7.7.0"
+"semver@npm:7.7.1":
+  version: 7.7.1
+  resolution: "semver@npm:7.7.1"
   bin:
     semver: bin/semver.js
-  checksum: 10c0/bcd1c03209b4be7d8ca86c976a0410beba7d4ec1d49d846a4be154b958db1ff5eaee50760c1d4f4070b19dee3236b8672d3e09642c53ea23740398bba2538a2d
+  checksum: 10c0/fd603a6fb9c399c6054015433051bdbe7b99a940a8fb44b85c2b524c4004b023d7928d47cb22154f8d054ea7ee8597f586605e05b52047f048278e4ac56ae958
   languageName: node
   linkType: hard
 
@@ -10104,7 +10104,7 @@ __metadata:
     "@types/semver": "npm:7.5.8"
     "@types/uuid": "npm:^9.0.0"
     "@uiw/codemirror-theme-duotone": "npm:4.23.8"
-    "@uiw/react-codemirror": "npm:4.23.7"
+    "@uiw/react-codemirror": "npm:4.23.8"
     "@vitejs/plugin-react": "npm:4.3.4"
     cartesian: "npm:^1.0.1"
     chart.js: "npm:3.9.1"
@@ -10151,7 +10151,7 @@ __metadata:
     react-table: "npm:7.8.0"
     react-test-renderer: "npm:18.3.1"
     sass: "npm:1.83.4"
-    semver: "npm:7.7.0"
+    semver: "npm:7.7.1"
     swr: "npm:2.3.0"
     tss-react: "npm:4.9.15"
     typescript: "npm:5.4.5"

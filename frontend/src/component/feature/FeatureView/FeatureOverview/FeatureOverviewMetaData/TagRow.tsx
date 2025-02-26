@@ -108,6 +108,7 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
                             const isOverflowing = tagLabel.length > 25;
                             return (
                                 <StyledTag
+                                    key={tagLabel}
                                     label={
                                         <Tooltip
                                             key={tagLabel}

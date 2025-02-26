@@ -1,10 +1,7 @@
 import { type DragEventHandler, type RefObject, useRef } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    NewStrategySeparator,
-    StrategySeparator,
-} from 'component/common/StrategySeparator/LegacyStrategySeparator';
+import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import {
@@ -23,6 +20,7 @@ import {
     type ScheduledChangeRequestViewModel,
     useScheduledChangeRequestsWithStrategy,
 } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
+import { StrategySeparator as NewStrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 
 interface IStrategyDraggableItemProps {
     strategy: IFeatureStrategy;

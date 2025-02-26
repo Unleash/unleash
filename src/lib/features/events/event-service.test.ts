@@ -1,5 +1,15 @@
+import { getLogger } from 'log4js';
+import {
+    type IBaseEvent,
+    type IEventStore,
+    type IFeatureTagStore,
+    type IUnleashConfig,
+    USER_UPDATED,
+} from '../../internals';
+import type { IAccessReadModel } from '../access/access-read-model-type';
+import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type { ProjectAccess } from '../private-project/privateProjectStore';
-import { filterAccessibleProjects } from './event-service';
+import EventService, { filterAccessibleProjects } from './event-service';
 
 describe('filterPrivateProjectsFromParams', () => {
     it('should return IS_ANY_OF with allowed projects when projectParam is undefined and mode is limited', () => {
@@ -89,5 +99,91 @@ describe('filterPrivateProjectsFromParams', () => {
         expect(() =>
             filterAccessibleProjects(projectParam, projectAccess),
         ).toThrow('No accessible projects in the search parameters');
+    });
+});
+
+describe('storeEvents', () => {
+    test.each([
+        {},
+        {
+            data: {
+                name: 'test',
+            },
+        },
+        {
+            predata: {
+                name: 'pretest',
+            },
+            data: {
+                name: 'test',
+            },
+        },
+    ])(
+        'should store the event %s',
+        async (preDataAndData: Pick<IBaseEvent, 'preData' | 'data'>) => {
+            const eventStore = {
+                batchStore: jest.fn(),
+            } as unknown as IEventStore;
+            const eventService = new EventService(
+                {
+                    eventStore,
+                    featureTagStore: {
+                        getAllByFeatures: jest.fn().mockReturnValue([]),
+                    } as unknown as IFeatureTagStore,
+                },
+                { getLogger, eventBus: undefined } as unknown as IUnleashConfig,
+                undefined as unknown as IPrivateProjectChecker,
+                undefined as unknown as IAccessReadModel,
+            );
+
+            const event = {
+                type: USER_UPDATED,
+                createdBy: 'test',
+                createdByUserId: 1,
+                ip: '127.0.0.1',
+                ...preDataAndData,
+            };
+
+            await eventService.storeEvent(event);
+            expect(eventStore.batchStore).toHaveBeenCalledWith([event]);
+        },
+    );
+    test('should not store the event when predata and data are the same', async () => {
+        const eventStore = {
+            batchStore: jest.fn(),
+        } as unknown as IEventStore;
+        const eventService = new EventService(
+            {
+                eventStore,
+                featureTagStore: {
+                    getAllByFeatures: jest.fn().mockReturnValue([]),
+                } as unknown as IFeatureTagStore,
+            },
+            { getLogger, eventBus: undefined } as unknown as IUnleashConfig,
+            undefined as unknown as IPrivateProjectChecker,
+            undefined as unknown as IAccessReadModel,
+        );
+
+        const event = {
+            type: USER_UPDATED,
+            createdBy: 'test',
+            createdByUserId: 1,
+            ip: '127.0.0.1',
+            preData: {
+                name: 'test',
+                nest: {
+                    this: 'object',
+                },
+            },
+            data: {
+                name: 'test',
+                nest: {
+                    this: 'object',
+                },
+            },
+        };
+
+        await eventService.storeEvent(event);
+        expect(eventStore.batchStore).not.toHaveBeenCalled();
     });
 });

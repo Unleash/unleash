@@ -1,5 +1,5 @@
 export interface Store<T, K> {
-    get(key: K): Promise<T>;
+    get(key: K): Promise<T | undefined>;
     getAll(query?: Object): Promise<T[]>;
     exists(key: K): Promise<boolean>;
     delete(key: K): Promise<void>;

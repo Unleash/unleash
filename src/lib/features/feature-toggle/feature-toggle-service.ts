@@ -603,12 +603,9 @@ class FeatureToggleService {
         const eventPreData: StrategyIds = { strategyIds: existingOrder };
 
         await Promise.all(
-            sortOrders.map(async ({ id, sortOrder }) => {
-                await this.featureStrategiesStore.updateSortOrder(
-                    id,
-                    sortOrder,
-                );
-            }),
+            sortOrders.map(({ id, sortOrder }) =>
+                this.featureStrategiesStore.updateSortOrder(id, sortOrder),
+            ),
         );
         const newOrder = (
             await this.getStrategiesForEnvironment(

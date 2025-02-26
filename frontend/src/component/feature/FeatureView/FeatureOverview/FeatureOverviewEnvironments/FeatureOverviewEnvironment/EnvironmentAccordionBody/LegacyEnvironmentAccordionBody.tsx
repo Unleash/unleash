@@ -1,3 +1,4 @@
+// deprecated; remove with the `flagOverviewRedesign` flag
 import {
     type DragEventHandler,
     type RefObject,
@@ -25,7 +26,6 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
 import { Badge } from 'component/common/Badge/Badge';
 import { SectionSeparator } from '../SectionSeparator/SectionSeparator';
-import { StrategyDraggableItem as NewStrategyDraggableItem } from './StrategyDraggableItem/StrategyDraggableItem';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -60,7 +60,7 @@ const AdditionalStrategiesDiv = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-export const EnvironmentAccordionBody = ({
+const EnvironmentAccordionBody = ({
     featureEnvironment,
     isDisabled,
     otherEnvironments,
@@ -225,6 +225,18 @@ export const EnvironmentAccordionBody = ({
         <StyledAccordionBody>
             <StyledAccordionBodyInnerContainer>
                 <ConditionallyRender
+                    condition={
+                        (releasePlans.length > 0 || strategies.length > 0) &&
+                        isDisabled
+                    }
+                    show={() => (
+                        <Alert severity='warning' sx={{ mb: 2 }}>
+                            This environment is disabled, which means that none
+                            of your strategies are executing.
+                        </Alert>
+                    )}
+                />
+                <ConditionallyRender
                     condition={releasePlans.length > 0 || strategies.length > 0}
                     show={
                         <>
@@ -259,7 +271,7 @@ export const EnvironmentAccordionBody = ({
                                 show={
                                     <>
                                         {strategies.map((strategy, index) => (
-                                            <NewStrategyDraggableItem
+                                            <StrategyDraggableItem
                                                 key={strategy.id}
                                                 strategy={strategy}
                                                 index={index}
@@ -338,3 +350,5 @@ export const EnvironmentAccordionBody = ({
         </StyledAccordionBody>
     );
 };
+
+export default EnvironmentAccordionBody;

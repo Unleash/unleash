@@ -13,7 +13,7 @@ import { getFeatureMetrics } from 'utils/getFeatureMetrics';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import EnvironmentAccordionBody from './EnvironmentAccordionBody/EnvironmentAccordionBody';
+import EnvironmentAccordionBody from './EnvironmentAccordionBody/LegacyEnvironmentAccordionBody';
 import { EnvironmentFooter } from './EnvironmentFooter/EnvironmentFooter';
 import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/LegacyFeatureOverviewEnvironmentMetrics';
 import { FeatureStrategyMenu } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/FeatureStrategyMenu';

@@ -59,7 +59,6 @@ process.nextTick(async () => {
                         frontendHeaderRedesign: true,
                         dataUsageMultiMonthView: true,
                         filterExistingFlagNames: true,
-                        uiGlobalFontSize: true,
                         teamsIntegrationChangeRequests: true,
                     },
                 },

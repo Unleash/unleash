@@ -25,6 +25,7 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
 import { Badge } from 'component/common/Badge/Badge';
 import { SectionSeparator } from '../SectionSeparator/SectionSeparator';
+import { StrategyDraggableItem as NewStrategyDraggableItem } from './StrategyDraggableItem/StrategyDraggableItem';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -59,7 +60,7 @@ const AdditionalStrategiesDiv = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
-const EnvironmentAccordionBody = ({
+export const EnvironmentAccordionBody = ({
     featureEnvironment,
     isDisabled,
     otherEnvironments,
@@ -224,18 +225,6 @@ const EnvironmentAccordionBody = ({
         <StyledAccordionBody>
             <StyledAccordionBodyInnerContainer>
                 <ConditionallyRender
-                    condition={
-                        (releasePlans.length > 0 || strategies.length > 0) &&
-                        isDisabled
-                    }
-                    show={() => (
-                        <Alert severity='warning' sx={{ mb: 2 }}>
-                            This environment is disabled, which means that none
-                            of your strategies are executing.
-                        </Alert>
-                    )}
-                />
-                <ConditionallyRender
                     condition={releasePlans.length > 0 || strategies.length > 0}
                     show={
                         <>
@@ -269,8 +258,9 @@ const EnvironmentAccordionBody = ({
                                 }
                                 show={
                                     <>
+                                        {/* This should be an `ol` with `li`s for each strategy */}
                                         {strategies.map((strategy, index) => (
-                                            <StrategyDraggableItem
+                                            <NewStrategyDraggableItem
                                                 key={strategy.id}
                                                 strategy={strategy}
                                                 index={index}
@@ -302,6 +292,7 @@ const EnvironmentAccordionBody = ({
                                             segments.
                                         </Alert>
                                         <br />
+                                        {/* This should be an `ol` with `li`s for each strategy */}
                                         {page.map((strategy, index) => (
                                             <StrategyDraggableItem
                                                 key={strategy.id}
@@ -349,5 +340,3 @@ const EnvironmentAccordionBody = ({
         </StyledAccordionBody>
     );
 };
-
-export default EnvironmentAccordionBody;

@@ -81,9 +81,6 @@ const StyledContainer = styled(Box, {
 const NewStyledContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'disabled',
 })(({ theme }) => ({
-    '& + &': {
-        marginTop: theme.spacing(2),
-    },
     background: 'inherit',
 }));
 

@@ -42,7 +42,7 @@ export const StrategySeparator = ({ text }: IStrategySeparatorProps) => {
                 height: theme.spacing(text === 'AND' ? 1 : 1.5),
                 position: 'relative',
             }}
-            aria-hidden={true} // maybe
+            aria-hidden={true}
         >
             {text === 'AND' ? (
                 <StyledAnd>{text}</StyledAnd>

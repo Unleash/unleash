@@ -282,7 +282,6 @@ export const CommandBar = () => {
             const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
 
             const newIndex = selectedIndex - 1;
-            console.log(newIndex, allCommandBarLinks);
 
             if (newIndex >= 0) {
                 (allCommandBarLinks[newIndex] as HTMLElement).focus();

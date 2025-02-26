@@ -287,7 +287,7 @@ export const ApplicationChart = ({ data }: IApplicationChartProps) => {
                                                         theme.fontSizes
                                                             .smallBody
                                                     }
-                                                    tooltip='Active instances in the last 2 days'
+                                                    tooltip='Active instances in the last 24 hours'
                                                 />
                                             </StyledCell>
                                             <StyledCell>

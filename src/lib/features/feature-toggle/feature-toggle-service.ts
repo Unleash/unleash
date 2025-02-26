@@ -793,9 +793,13 @@ class FeatureToggleService {
         auditUser: IAuditUser,
         user?: IUser,
     ): Promise<void> {
-        const disableFeature = async (
-            strategies: (IFeatureStrategy | IStrategyConfig)[],
-        ) => {
+        if (this.flagResolver.isEnabled('simplifyDisableFeature')) {
+            const strategies =
+                await this.featureStrategiesStore.getStrategiesForFeatureEnv(
+                    projectId,
+                    featureName,
+                    environment,
+                );
             const hasOnlyDisabledStrategies = strategies.every(
                 (strategy) => strategy.disabled,
             );
@@ -809,23 +813,24 @@ class FeatureToggleService {
                     user,
                 );
             }
-        };
-
-        if (this.flagResolver.isEnabled('simplifyDisableFeature')) {
-            const strategies =
-                await this.featureStrategiesStore.getStrategiesForFeatureEnv(
-                    projectId,
-                    featureName,
-                    environment,
-                );
-            await disableFeature(strategies);
             return;
         }
-
         const feature = await this.getFeature({ featureName });
+
         const env = feature.environments.find((e) => e.name === environment);
-        if (env) {
-            disableFeature(env.strategies);
+        const hasOnlyDisabledStrategies = env?.strategies.every(
+            (strategy) => strategy.disabled,
+        );
+
+        if (hasOnlyDisabledStrategies) {
+            await this.unprotectedUpdateEnabled(
+                projectId,
+                featureName,
+                environment,
+                false,
+                auditUser,
+                user,
+            );
         }
     }
 

@@ -32,17 +32,6 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     },
 }));
 
-const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    padding: 0,
-    background: theme.palette.background.elevation1,
-    borderBottomLeftRadius: theme.shape.borderRadiusLarge,
-    borderBottomRightRadius: theme.shape.borderRadiusLarge,
-    boxShadow: theme.boxShadows.accordionFooter,
-    [theme.breakpoints.down('md')]: {
-        padding: theme.spacing(2, 1),
-    },
-}));
-
 const NewStyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: 0,
     background: theme.palette.background.elevation1,

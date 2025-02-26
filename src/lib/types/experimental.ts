@@ -69,7 +69,7 @@ export type IFlagKey =
     | 'connectionCount'
     | 'teamsIntegrationChangeRequests'
     | 'edgeObservability'
-    | 'optionallyDisableWithStrategiesCheckOnly';
+    | 'simplifyDisableFeature';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -330,8 +330,8 @@ const flags: IFlags = {
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
         false,
     ),
-    optionallyDisableWithStrategiesCheckOnly: parseEnvVarBoolean(
-        process.env.EXPERIMENTAL_OPTIONALLY_DISABLE_WITH_STRATEGIES_CHECK_ONLY,
+    simplifyDisableFeature: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_SIMPLIFY_DISABLE_FEATURE,
         false,
     ),
 };

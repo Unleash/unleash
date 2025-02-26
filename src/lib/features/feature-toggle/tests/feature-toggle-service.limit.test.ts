@@ -97,17 +97,7 @@ describe('Strategy limits', () => {
         const { featureToggleService, featureStrategiesStore } =
             createFakeFeatureToggleService({
                 getLogger,
-                flagResolver: {
-                    isEnabled(feature) {
-                        if (
-                            feature ===
-                            'optionallyDisableWithStrategiesCheckOnly'
-                        ) {
-                            return false;
-                        }
-                        return true;
-                    },
-                } as unknown as IFlagResolver,
+                flagResolver: alwaysOnFlagResolver,
                 resourceLimits: {
                     constraints: LIMIT,
                 },
@@ -153,7 +143,11 @@ describe('Strategy limits', () => {
                 {
                     constraints: newConstraints,
                 },
-                { projectId: 'default', featureName: 'feature' } as any,
+                {
+                    projectId: 'default',
+                    featureName: 'feature',
+                    environment: 'default',
+                },
                 {} as IAuditUser,
             );
 
@@ -211,17 +205,7 @@ describe('Strategy limits', () => {
         const { featureToggleService, featureStrategiesStore } =
             createFakeFeatureToggleService({
                 getLogger,
-                flagResolver: {
-                    isEnabled(feature) {
-                        if (
-                            feature ===
-                            'optionallyDisableWithStrategiesCheckOnly'
-                        ) {
-                            return false;
-                        }
-                        return true;
-                    },
-                } as unknown as IFlagResolver,
+                flagResolver: alwaysOnFlagResolver,
                 resourceLimits: {
                     constraintValues: LIMIT,
                 },
@@ -266,7 +250,11 @@ describe('Strategy limits', () => {
                 {
                     constraints: constraints(valueCount),
                 },
-                { projectId: 'default', featureName: 'feature' } as any,
+                {
+                    projectId: 'default',
+                    featureName: 'feature',
+                    environment: 'default',
+                },
                 {} as IAuditUser,
             );
 

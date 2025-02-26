@@ -793,11 +793,7 @@ class FeatureToggleService {
         auditUser: IAuditUser,
         user?: IUser,
     ): Promise<void> {
-        if (
-            this.flagResolver.isEnabled(
-                'optionallyDisableWithStrategiesCheckOnly',
-            )
-        ) {
+        if (this.flagResolver.isEnabled('simplifyDisableFeature')) {
             const strategies =
                 await this.featureStrategiesStore.getStrategiesForFeatureEnv(
                     projectId,
@@ -819,13 +815,13 @@ class FeatureToggleService {
             }
             return Promise.resolve();
         }
-
         const feature = await this.getFeature({ featureName });
 
         const env = feature.environments.find((e) => e.name === environment);
         const hasOnlyDisabledStrategies = env?.strategies.every(
             (strategy) => strategy.disabled,
         );
+
         if (hasOnlyDisabledStrategies) {
             await this.unprotectedUpdateEnabled(
                 projectId,

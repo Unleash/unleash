@@ -235,6 +235,7 @@ export const MilestoneCard = ({
             title: '',
             id: 'temp',
         });
+        clearErrors();
     };
 
     const openAddUpdateStrategyForm = (

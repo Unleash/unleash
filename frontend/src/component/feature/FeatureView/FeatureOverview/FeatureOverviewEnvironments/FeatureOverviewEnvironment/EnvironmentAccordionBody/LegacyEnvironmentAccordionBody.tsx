@@ -12,7 +12,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import {
     NewStrategyDraggableItem,
     StrategyDraggableItem,
-} from './StrategyDraggableItem/StrategyDraggableItem';
+} from './StrategyDraggableItem/LegacyStrategyDraggableItem';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';

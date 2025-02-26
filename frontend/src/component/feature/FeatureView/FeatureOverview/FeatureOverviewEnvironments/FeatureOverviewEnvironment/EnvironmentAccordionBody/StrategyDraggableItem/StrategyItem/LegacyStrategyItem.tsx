@@ -10,13 +10,11 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
-import {
-    NewStrategyItemContainer,
-    StrategyItemContainer,
-} from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
+import { StrategyItemContainer } from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
 import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove';
 import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
 import { Box } from '@mui/material';
+import { StrategyItemContainer as NewStrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 interface IStrategyItemProps {
     environmentId: string;
     strategy: IFeatureStrategy;

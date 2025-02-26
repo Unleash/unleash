@@ -43,6 +43,14 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     },
 }));
 
+const NewStyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    padding: 0,
+    background: theme.palette.background.elevation1,
+    borderBottomLeftRadius: theme.shape.borderRadiusLarge,
+    borderBottomRightRadius: theme.shape.borderRadiusLarge,
+    boxShadow: theme.boxShadows.accordionFooter,
+}));
+
 const StyledAccordionFooter = styled('footer')(({ theme }) => ({
     padding: theme.spacing(2, 3, 3),
     display: 'flex',
@@ -111,7 +119,7 @@ export const FeatureOverviewEnvironment = ({
                         collapsed={!hasActivations}
                     />
                 </EnvironmentHeader>
-                <StyledAccordionDetails>
+                <NewStyledAccordionDetails>
                     <StyledEnvironmentAccordionContainer>
                         <NewEnvironmentAccordionBody
                             featureEnvironment={environment}
@@ -130,7 +138,7 @@ export const FeatureOverviewEnvironment = ({
                             <UpgradeChangeRequests />
                         ) : null}
                     </StyledAccordionFooter>
-                </StyledAccordionDetails>
+                </NewStyledAccordionDetails>
             </StyledAccordion>
         </StyledFeatureOverviewEnvironment>
     );

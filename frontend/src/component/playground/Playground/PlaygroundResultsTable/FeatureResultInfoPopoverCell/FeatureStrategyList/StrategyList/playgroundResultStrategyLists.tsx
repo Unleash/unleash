@@ -7,7 +7,7 @@ import type {
 } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 
 const StyledAlertWrapper = styled('div')(({ theme }) => ({
     display: 'flex',

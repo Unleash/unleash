@@ -1,6 +1,6 @@
 import { Fragment, type VFC } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { styled } from '@mui/material';
 import type {
     PlaygroundRequestSchema,

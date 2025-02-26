@@ -4,7 +4,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import {
     NewStrategySeparator,
     StrategySeparator,
-} from 'component/common/StrategySeparator/StrategySeparator';
+} from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { NewStrategyItem, StrategyItem } from './StrategyItem/StrategyItem';

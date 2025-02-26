@@ -8,7 +8,7 @@ import {
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ReleasePlanMilestoneStrategy } from './ReleasePlanMilestoneStrategy';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import {
     ReleasePlanMilestoneStatus,
     type MilestoneStatus,

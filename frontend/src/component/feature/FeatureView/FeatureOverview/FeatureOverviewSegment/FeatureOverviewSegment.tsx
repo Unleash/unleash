@@ -1,6 +1,6 @@
 import { Fragment } from 'react';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { SegmentItem } from '../../../../common/SegmentItem/SegmentItem';
 import type { ISegment } from 'interfaces/segment';
 

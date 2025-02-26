@@ -50,25 +50,24 @@ export const StrategySeparator = ({ text }: IStrategySeparatorProps) => {
     );
 };
 
-const StyledAnd = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0.75, 1),
-    color: theme.palette.text.primary,
-    fontSize: theme.fontSizes.smallerBody,
-    backgroundColor: theme.palette.background.primary,
-    borderRadius: theme.shape.borderRadius,
-    position: 'absolute',
-    zIndex: theme.zIndex.fab,
-    top: '50%',
-    left: theme.spacing(2),
-    transform: 'translateY(-50%)',
-    lineHeight: 1,
+const StyledAnd = styled(StyledContent)(({ theme }) => ({
+    borderRadius: theme.shape.borderRadiusLarge,
 }));
 
 const StyledOr = styled(StyledAnd)(({ theme }) => ({
-    borderRadius: theme.shape.borderRadiusLarge,
     fontWeight: 'bold',
     backgroundColor: theme.palette.background.alternative,
-    color: 'white',
+    color: theme.palette.primary.contrastText,
+    left: theme.spacing(4),
+}));
+
+const StyledSeparator = styled('hr')(({ theme }) => ({
+    border: 0,
+    borderTop: `1px solid ${theme.palette.divider}`,
+    margin: 0,
+    position: 'absolute',
+    top: '50%',
+    width: '100%',
 }));
 
 export const NewStrategySeparator = ({ text }: IStrategySeparatorProps) => {
@@ -79,11 +78,15 @@ export const NewStrategySeparator = ({ text }: IStrategySeparatorProps) => {
                 height: theme.spacing(text === 'AND' ? 1 : 1.5),
                 position: 'relative',
             }}
+            aria-hidden={true} // maybe
         >
             {text === 'AND' ? (
                 <StyledAnd>{text}</StyledAnd>
             ) : (
-                <StyledOr>{text}</StyledOr>
+                <>
+                    <StyledSeparator />
+                    <StyledOr>{text}</StyledOr>
+                </>
             )}
         </Box>
     );

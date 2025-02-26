@@ -9544,15 +9544,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swr@npm:2.3.0":
-  version: 2.3.0
-  resolution: "swr@npm:2.3.0"
+"swr@npm:2.3.2":
+  version: 2.3.2
+  resolution: "swr@npm:2.3.2"
   dependencies:
     dequal: "npm:^2.0.3"
     use-sync-external-store: "npm:^1.4.0"
   peerDependencies:
     react: ^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/192497881013654bc82d2787b60ad0701113e8ae41c511dfa8d55bcf58582657a92a4cb2854d4ea2ceaa1055e67e58daf9bd98ada2786a3035ba12898da578f1
+  checksum: 10c0/981d3138c1959f1f15ddb74ed3c98f34fbcae8e68ee1b0e6ce3af7e1fcf65ecdb3a2c525b42338cbcef0f7a992d41e1aeb3982501e86239e8aeef6c34fe3b580
   languageName: node
   linkType: hard
 
@@ -10152,7 +10152,7 @@ __metadata:
     react-test-renderer: "npm:18.3.1"
     sass: "npm:1.83.4"
     semver: "npm:7.7.1"
-    swr: "npm:2.3.0"
+    swr: "npm:2.3.2"
     tss-react: "npm:4.9.15"
     typescript: "npm:5.4.5"
     use-query-params: "npm:^2.2.1"

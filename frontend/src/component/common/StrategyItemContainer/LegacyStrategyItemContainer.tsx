@@ -1,3 +1,4 @@
+// deprecated; remove with the `flagOverviewRedesign` flag
 import type React from 'react';
 import type { DragEventHandler, FC, ReactNode } from 'react';
 import DragIndicator from '@mui/icons-material/DragIndicator';
@@ -31,6 +32,17 @@ const DragIcon = styled(IconButton)({
     transition: 'color 0.2s ease-in-out',
 });
 
+const StyledIndexLabel = styled('div')(({ theme }) => ({
+    fontSize: theme.typography.fontSize,
+    color: theme.palette.text.secondary,
+    position: 'absolute',
+    display: 'none',
+    right: 'calc(100% + 6px)',
+    top: theme.spacing(2.5),
+    [theme.breakpoints.up('md')]: {
+        display: 'block',
+    },
+}));
 const StyledDescription = styled('div')(({ theme }) => ({
     fontSize: theme.typography.fontSize,
     fontWeight: 'normal',
@@ -54,13 +66,20 @@ const StyledHeaderContainer = styled('div')({
     verticalAlign: 'middle',
 });
 
-const NewStyledContainer = styled(Box, {
+const StyledContainer = styled(Box, {
     shouldForwardProp: (prop) => prop !== 'disabled',
-})({
-    background: 'inherit',
-});
+})<{ disabled?: boolean }>(({ theme, disabled }) => ({
+    borderRadius: theme.shape.borderRadiusMedium,
+    border: `1px solid ${theme.palette.divider}`,
+    '& + &': {
+        marginTop: theme.spacing(2),
+    },
+    background: disabled
+        ? theme.palette.envAccordion.disabled
+        : theme.palette.background.paper,
+}));
 
-const NewStyledHeader = styled('div', {
+const StyledHeader = styled('div', {
     shouldForwardProp: (prop) => prop !== 'draggable' && prop !== 'disabled',
 })<{ draggable: boolean; disabled: boolean }>(
     ({ theme, draggable, disabled }) => ({
@@ -68,6 +87,7 @@ const NewStyledHeader = styled('div', {
         display: 'flex',
         gap: theme.spacing(1),
         alignItems: 'center',
+        borderBottom: `1px solid ${theme.palette.divider}`,
         fontWeight: theme.typography.fontWeightMedium,
         paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
         color: disabled
@@ -82,6 +102,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     onDragEnd,
     actions,
     children,
+    orderNumber,
     style = {},
     description,
 }) => {
@@ -94,8 +115,15 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
 
     return (
         <Box sx={{ position: 'relative' }}>
-            <NewStyledContainer style={style}>
-                <NewStyledHeader
+            <ConditionallyRender
+                condition={orderNumber !== undefined}
+                show={<StyledIndexLabel>{orderNumber}</StyledIndexLabel>}
+            />
+            <StyledContainer
+                disabled={strategy?.disabled || false}
+                style={style}
+            >
+                <StyledHeader
                     draggable={Boolean(onDragStart)}
                     disabled={Boolean(strategy?.disabled)}
                 >
@@ -169,9 +197,9 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                     >
                         {actions}
                     </Box>
-                </NewStyledHeader>
-                <Box sx={{ p: 2, pt: 0 }}>{children}</Box>
-            </NewStyledContainer>
+                </StyledHeader>
+                <Box sx={{ p: 2 }}>{children}</Box>
+            </StyledContainer>
         </Box>
     );
 };

@@ -17,6 +17,7 @@ import { addDays, formatISO } from 'date-fns';
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type { ProjectAccess } from '../private-project/privateProjectStore';
 import type { IAccessReadModel } from '../access/access-read-model-type';
+import { isEqual } from 'lodash';
 
 export default class EventService {
     private logger: Logger;
@@ -153,7 +154,16 @@ export default class EventService {
     }
 
     async storeEvents(events: IBaseEvent[]): Promise<void> {
-        let enhancedEvents = events;
+        // if the event comes with both preData and data, we need to check if they are different before storing, otherwise we discard the event
+        let enhancedEvents = events.filter(
+            (event) =>
+                !event.preData ||
+                !event.data ||
+                !isEqual(event.preData, event.data),
+        );
+        if (enhancedEvents.length === 0) {
+            return;
+        }
         for (const enhancer of [this.enhanceEventsWithTags.bind(this)]) {
             enhancedEvents = await enhancer(enhancedEvents);
         }

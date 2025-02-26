@@ -3609,11 +3609,16 @@ test('Updating feature strategy sort-order should trigger a an event', async () 
     );
 
     const strategies: FeatureStrategySchema[] = body;
-    let order = 1;
     const sortOrders: SetStrategySortOrderSchema = [];
 
-    strategies.forEach((strategy) => {
-        sortOrders.push({ id: strategy.id!, sortOrder: order++ });
+    // swap two strategies with different sort orders (note: first and second have the same sort order)
+    sortOrders.push({
+        id: strategies[0].id!,
+        sortOrder: strategies[2].sortOrder ?? 0,
+    });
+    sortOrders.push({
+        id: strategies[2].id!,
+        sortOrder: strategies[0].sortOrder ?? 0,
     });
 
     await app.request

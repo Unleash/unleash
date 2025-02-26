@@ -1,6 +1,7 @@
 import { Children, type FC, type ReactNode } from 'react';
 import { styled } from '@mui/material';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+
 import type { CreateFeatureStrategySchema } from 'openapi';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useUiFlag } from 'hooks/useUiFlag';

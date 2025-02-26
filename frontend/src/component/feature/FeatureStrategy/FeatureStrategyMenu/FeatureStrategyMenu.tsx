@@ -10,7 +10,6 @@ import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStra
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { useUiFlag } from 'hooks/useUiFlag';
 import { ReleasePlanAddChangeRequestDialog } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ChangeRequest/ReleasePlanAddChangeRequestDialog';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -63,7 +62,6 @@ export const FeatureStrategyMenu = ({
     const { addChange } = useChangeRequestApi();
     const { refetch: refetchChangeRequests } =
         usePendingChangeRequests(projectId);
-    const uiFontSizeRedesign = useUiFlag('uiGlobalFontSize');
 
     const onClose = () => {
         setAnchor(undefined);
@@ -119,7 +117,6 @@ export const FeatureStrategyMenu = ({
                 onClick={openDefaultStrategyCreationModal}
                 aria-labelledby={popoverId}
                 variant={variant}
-                size={uiFontSizeRedesign ? undefined : size}
                 sx={{ minWidth: matchWidth ? '282px' : 'auto' }}
                 disabled={Boolean(disableReason)}
                 tooltipProps={{
@@ -135,7 +132,6 @@ export const FeatureStrategyMenu = ({
                 environmentId={environmentId}
                 onClick={openMoreStrategies}
                 variant='outlined'
-                size={uiFontSizeRedesign ? undefined : size}
                 hideLockIcon
                 disabled={Boolean(disableReason)}
                 tooltipProps={{

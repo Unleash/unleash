@@ -1,3 +1,5 @@
+import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
+import { useOptionalPathParam } from 'hooks/useOptionalPathParam';
 import type { IReleasePlanMilestonePayload } from 'interfaces/releasePlans';
 import { useEffect, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
@@ -14,6 +16,9 @@ export const useTemplateForm = (
         { id: uuidv4(), name: 'Milestone 1', sortOrder: 0 },
     ],
 ) => {
+    const templateId = useOptionalPathParam('templateId');
+    const { templates } = useReleasePlanTemplates();
+
     const [name, setName] = useState(initialName);
     const [description, setDescription] = useState(initialDescription);
     const [milestones, setMilestones] = useState(initialMilestones);
@@ -39,6 +44,19 @@ export const useTemplateForm = (
             valid = false;
         }
 
+        if (
+            templates.some(
+                (template) =>
+                    template.name === name && template.id !== templateId,
+            )
+        ) {
+            setErrors((prev) => ({
+                ...prev,
+                name: 'A template with this name already exists.',
+            }));
+            valid = false;
+        }
+
         if (milestones.length === 0) {
             setErrors((prev) => ({
                 ...prev,
@@ -47,42 +65,31 @@ export const useTemplateForm = (
             valid = false;
         }
 
-        const milestoneNames = milestones.filter(
-            (m) => !m.name || m.name.length === 0,
-        );
-        if (milestoneNames && milestoneNames.length > 0) {
-            setErrors((prev) => ({
-                ...prev,
-                ...Object.assign(
-                    {},
-                    ...milestoneNames.map((mst) => ({
-                        [mst.id]: 'Milestone must have a valid name.',
-                    })),
-                ),
-                ...Object.assign(
-                    {},
-                    ...milestoneNames.map((mst) => ({
-                        [`${mst.id}_name`]: 'Milestone must have a valid name.',
-                    })),
-                ),
-            }));
-            valid = false;
-        }
+        const errors: Record<string, string> = {};
+        const nameSet = new Set();
+        milestones.forEach((m) => {
+            if (!m.name || m.name.length === 0) {
+                errors[m.id] = 'Milestone must have a valid name.';
+                errors[`${m.id}_name`] = 'Milestone must have a valid name.';
+            }
 
-        const emptyMilestones = milestones.filter(
-            (m) => !m.strategies || m.strategies.length === 0,
-        );
-        if (emptyMilestones && emptyMilestones.length > 0) {
+            if (!m.strategies || m.strategies.length === 0) {
+                errors[m.id] = 'Milestone must have at least one strategy.';
+            }
+
+            if (nameSet.has(m.name)) {
+                errors[m.id] = 'Milestone names must be unique.';
+            } else if (m.name) {
+                nameSet.add(m.name);
+            }
+        });
+
+        if (Object.keys(errors).length > 0) {
             setErrors((prev) => ({
                 ...prev,
+                ...errors,
                 milestones:
-                    'All milestones must have at least one strategy each.',
-                ...Object.assign(
-                    {},
-                    ...emptyMilestones.map((mst) => ({
-                        [mst.id]: 'Milestone must have at least one strategy.',
-                    })),
-                ),
+                    'All milestones must have unique names and at least one strategy each.',
             }));
             valid = false;
         }

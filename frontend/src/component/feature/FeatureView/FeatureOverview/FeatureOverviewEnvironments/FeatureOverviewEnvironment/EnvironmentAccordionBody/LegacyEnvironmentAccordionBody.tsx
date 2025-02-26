@@ -9,10 +9,7 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    NewStrategyDraggableItem,
-    StrategyDraggableItem,
-} from './StrategyDraggableItem/LegacyStrategyDraggableItem';
+import { StrategyDraggableItem } from './StrategyDraggableItem/LegacyStrategyDraggableItem';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -28,6 +25,7 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
 import { Badge } from 'component/common/Badge/Badge';
 import { SectionSeparator } from '../SectionSeparator/SectionSeparator';
+import { StrategyDraggableItem as NewStrategyDraggableItem } from './StrategyDraggableItem/StrategyDraggableItem';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;

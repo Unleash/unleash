@@ -1,10 +1,8 @@
 import { type DragEventHandler, type RefObject, useRef } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { StrategyItem } from './StrategyItem/LegacyStrategyItem';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import {
     useStrategyChangesFromRequest,
@@ -17,6 +15,8 @@ import {
     type ScheduledChangeRequestViewModel,
     useScheduledChangeRequestsWithStrategy,
 } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
+import { StrategySeparator as NewStrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { StrategyItem as NewStrategyItem } from './StrategyItem/StrategyItem';
 
 interface IStrategyDraggableItemProps {
     strategy: IFeatureStrategy;
@@ -34,57 +34,6 @@ interface IStrategyDraggableItemProps {
     ) => DragEventHandler<HTMLDivElement>;
     onDragEnd: () => void;
 }
-
-export const StrategyDraggableItem = ({
-    strategy,
-    index,
-    environmentName,
-    otherEnvironments,
-    isDragging,
-    onDragStartRef,
-    onDragOver,
-    onDragEnd,
-}: IStrategyDraggableItemProps) => {
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
-    const ref = useRef<HTMLDivElement>(null);
-    const strategyChangesFromRequest = useStrategyChangesFromRequest(
-        projectId,
-        featureId,
-        environmentName,
-        strategy.id,
-    );
-
-    const { changeRequests: scheduledChangesUsingStrategy } =
-        useScheduledChangeRequestsWithStrategy(projectId, strategy.id);
-
-    return (
-        <Box
-            key={strategy.id}
-            ref={ref}
-            onDragOver={onDragOver(ref, index)}
-            sx={{ opacity: isDragging ? '0.5' : '1' }}
-        >
-            <ConditionallyRender
-                condition={index > 0}
-                show={<StrategySeparator text='OR' />}
-            />
-
-            <StrategyItem
-                strategy={strategy}
-                environmentId={environmentName}
-                otherEnvironments={otherEnvironments}
-                onDragStart={onDragStartRef(ref, index)}
-                onDragEnd={onDragEnd}
-                orderNumber={index + 1}
-                headerChildren={renderHeaderChildren(
-                    strategyChangesFromRequest,
-                    scheduledChangesUsingStrategy,
-                )}
-            />
-        </Box>
-    );
-};
 
 const ChangeRequestStatusBadge = ({
     change,
@@ -146,4 +95,55 @@ const renderHeaderChildren = (
     }
 
     return badges;
+};
+
+export const StrategyDraggableItem = ({
+    strategy,
+    index,
+    environmentName,
+    otherEnvironments,
+    isDragging,
+    onDragStartRef,
+    onDragOver,
+    onDragEnd,
+}: IStrategyDraggableItemProps) => {
+    const projectId = useRequiredPathParam('projectId');
+    const featureId = useRequiredPathParam('featureId');
+    const ref = useRef<HTMLDivElement>(null);
+    const strategyChangesFromRequest = useStrategyChangesFromRequest(
+        projectId,
+        featureId,
+        environmentName,
+        strategy.id,
+    );
+
+    const { changeRequests: scheduledChangesUsingStrategy } =
+        useScheduledChangeRequestsWithStrategy(projectId, strategy.id);
+
+    return (
+        <Box
+            key={strategy.id}
+            ref={ref}
+            onDragOver={onDragOver(ref, index)}
+            sx={{ opacity: isDragging ? '0.5' : '1' }}
+        >
+            <ConditionallyRender
+                condition={index > 0}
+                show={<NewStrategySeparator text='OR' />}
+            />
+
+            <NewStrategyItem
+                strategy={strategy}
+                environmentId={environmentName}
+                otherEnvironments={otherEnvironments}
+                onDragStart={onDragStartRef(ref, index)}
+                onDragEnd={onDragEnd}
+                orderNumber={index + 1}
+                headerChildren={renderHeaderChildren(
+                    strategyChangesFromRequest,
+                    scheduledChangesUsingStrategy,
+                )}
+            />
+        </Box>
+    );
 };

@@ -257,9 +257,18 @@ export const CommandBar = () => {
             const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
 
             const newIndex = selectedIndex + 1;
-            if (newIndex >= allCommandBarLinks.length) return;
-
-            (allCommandBarLinks[newIndex] as HTMLElement).focus();
+            if (newIndex >= allCommandBarLinks.length) {
+                const element = searchInputRef.current;
+                if (element) {
+                    element.focus();
+                    element.setSelectionRange(
+                        element.value.length,
+                        element.value.length,
+                    );
+                }
+            } else {
+                (allCommandBarLinks[newIndex] as HTMLElement).focus();
+            }
         },
     );
     useKeyboardShortcut(
@@ -273,10 +282,11 @@ export const CommandBar = () => {
             const { allCommandBarLinks, selectedIndex } = itemsAndIndex;
 
             const newIndex = selectedIndex - 1;
+            console.log(newIndex, allCommandBarLinks);
 
             if (newIndex >= 0) {
                 (allCommandBarLinks[newIndex] as HTMLElement).focus();
-            } else {
+            } else if (newIndex === -1) {
                 const element = searchInputRef.current;
                 if (element) {
                     element.focus();
@@ -285,6 +295,12 @@ export const CommandBar = () => {
                         element.value.length,
                     );
                 }
+            } else if (newIndex === -2) {
+                (
+                    allCommandBarLinks[
+                        allCommandBarLinks.length - 1
+                    ] as HTMLElement
+                ).focus();
             }
         },
     );

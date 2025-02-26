@@ -7,7 +7,10 @@ import {
 } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import { NewStrategyItem, StrategyItem } from './StrategyItem/StrategyItem';
+import {
+    NewStrategyItem,
+    StrategyItem,
+} from './StrategyItem/LegacyStrategyItem';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import {
     useStrategyChangesFromRequest,

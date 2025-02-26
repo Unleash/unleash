@@ -1,3 +1,4 @@
+// deprecated; remove with the `flagOverviewRedesign` flag
 import { Box, styled, useTheme } from '@mui/material';
 import { ConditionallyRender } from '../ConditionallyRender/ConditionallyRender';
 

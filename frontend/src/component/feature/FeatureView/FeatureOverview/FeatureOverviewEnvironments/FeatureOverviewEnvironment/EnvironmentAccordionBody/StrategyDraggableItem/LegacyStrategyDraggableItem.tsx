@@ -1,3 +1,4 @@
+// deprecated; remove with the `flagOverviewRedesign` flag
 import { type DragEventHandler, type RefObject, useRef } from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';

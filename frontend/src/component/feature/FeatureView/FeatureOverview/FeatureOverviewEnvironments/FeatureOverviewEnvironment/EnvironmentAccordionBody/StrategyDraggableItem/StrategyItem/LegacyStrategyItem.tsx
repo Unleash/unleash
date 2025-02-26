@@ -1,3 +1,4 @@
+// deprecated; remove with the `flagOverviewRedesign` flag
 import type { DragEventHandler, FC } from 'react';
 import Edit from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';

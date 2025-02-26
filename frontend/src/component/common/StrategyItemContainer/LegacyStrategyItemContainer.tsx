@@ -1,3 +1,4 @@
+// deprecated; remove with the `flagOverviewRedesign` flag
 import type React from 'react';
 import type { DragEventHandler, FC, ReactNode } from 'react';
 import DragIndicator from '@mui/icons-material/DragIndicator';

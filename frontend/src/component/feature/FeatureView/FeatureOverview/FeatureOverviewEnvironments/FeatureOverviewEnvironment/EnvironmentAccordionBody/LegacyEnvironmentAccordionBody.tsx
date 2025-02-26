@@ -1,3 +1,4 @@
+// deprecated; remove with the `flagOverviewRedesign` flag
 import {
     type DragEventHandler,
     type RefObject,

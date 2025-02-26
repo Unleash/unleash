@@ -244,10 +244,7 @@ export const NewStrategyItemContainer: FC<IStrategyItemContainerProps> = ({
 
     return (
         <Box sx={{ position: 'relative' }}>
-            <NewStyledContainer
-                disabled={strategy?.disabled || false}
-                style={style}
-            >
+            <NewStyledContainer style={style}>
                 <NewStyledHeader
                     draggable={Boolean(onDragStart)}
                     disabled={Boolean(strategy?.disabled)}
@@ -323,7 +320,7 @@ export const NewStrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                         {actions}
                     </Box>
                 </NewStyledHeader>
-                <Box sx={{ p: 2 }}>{children}</Box>
+                <Box sx={{ p: 2, pt: 0 }}>{children}</Box>
             </NewStyledContainer>
         </Box>
     );

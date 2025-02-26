@@ -13,7 +13,7 @@ import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOvervi
 import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle';
 import { useState } from 'react';
 import type { IReleasePlan } from 'interfaces/releasePlans';
-import { NewEnvironmentAccordionBody } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
+import { NewEnvironmentAccordionBody } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/LegacyEnvironmentAccordionBody';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,

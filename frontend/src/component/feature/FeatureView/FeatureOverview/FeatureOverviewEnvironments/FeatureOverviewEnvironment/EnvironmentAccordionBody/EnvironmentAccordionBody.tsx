@@ -258,7 +258,6 @@ export const EnvironmentAccordionBody = ({
                                 }
                                 show={
                                     <>
-                                        {/* This should be an `ol` with `li`s for each strategy */}
                                         {strategies.map((strategy, index) => (
                                             <NewStrategyDraggableItem
                                                 key={strategy.id}
@@ -292,7 +291,6 @@ export const EnvironmentAccordionBody = ({
                                             segments.
                                         </Alert>
                                         <br />
-                                        {/* This should be an `ol` with `li`s for each strategy */}
                                         {page.map((strategy, index) => (
                                             <StrategyDraggableItem
                                                 key={strategy.id}

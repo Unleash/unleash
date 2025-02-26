@@ -93,7 +93,7 @@ export default class FakeClientInstanceStore implements IClientInstanceStore {
         return this.instances.filter((i) => i.appName === appName);
     }
 
-    async getByAppNameAndEnvironment(
+    async getRecentByAppNameAndEnvironment(
         appName: string,
         environment: string,
     ): Promise<IClientInstance[]> {

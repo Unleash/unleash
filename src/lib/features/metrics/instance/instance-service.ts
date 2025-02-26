@@ -262,12 +262,12 @@ export default class ClientInstanceService {
         return result;
     }
 
-    async getApplicationEnvironmentInstances(
+    async getRecentApplicationEnvironmentInstances(
         appName: string,
         environment: string,
     ) {
         const instances =
-            await this.clientInstanceStore.getByAppNameAndEnvironment(
+            await this.clientInstanceStore.getRecentByAppNameAndEnvironment(
                 appName,
                 environment,
             );

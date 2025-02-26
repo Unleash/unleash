@@ -13,7 +13,7 @@ import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMen
 import {
     NewStrategyItemContainer,
     StrategyItemContainer,
-} from 'component/common/StrategyItemContainer/StrategyItemContainer';
+} from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
 import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove';
 import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
 import { Box } from '@mui/material';

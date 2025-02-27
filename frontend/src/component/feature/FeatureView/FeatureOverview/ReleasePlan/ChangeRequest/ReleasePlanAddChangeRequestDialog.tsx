@@ -7,45 +7,44 @@ const StyledBoldSpan = styled('span')(({ theme }) => ({
 }));
 
 interface IReleasePlanAddChangeRequestDialogProps {
-    featureId: string;
-    environmentId: string;
-    releaseTemplate?: IReleasePlanTemplate;
-    isOpen: boolean;
-    onConfirm: () => Promise<void>;
-    onClosing: () => void;
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onConfirm: () => void;
+    template?: IReleasePlanTemplate;
+    featureName: string;
+    environment: string;
 }
 
 export const ReleasePlanAddChangeRequestDialog = ({
-    featureId,
-    environmentId,
-    releaseTemplate,
-    isOpen,
+    open,
+    setOpen,
     onConfirm,
-    onClosing,
-}: IReleasePlanAddChangeRequestDialogProps) => {
-    return (
-        <Dialogue
-            title='Request changes'
-            open={isOpen}
-            secondaryButtonText='Cancel'
-            onClose={onClosing}
-            customButton={
-                <Button
-                    color='primary'
-                    variant='contained'
-                    onClick={onConfirm}
-                    autoFocus={true}
-                >
-                    Add suggestion to draft
-                </Button>
-            }
-        >
-            <p>
-                <StyledBoldSpan>Add</StyledBoldSpan> release template{' '}
-                <StyledBoldSpan>{releaseTemplate?.name}</StyledBoldSpan> to{' '}
-                <StyledBoldSpan>{featureId}</StyledBoldSpan> in{' '}
-                <StyledBoldSpan>{environmentId}</StyledBoldSpan>
-            </p>
-        </Dialogue>
-    );
-};
+    template,
+    featureName,
+    environment,
+}: IReleasePlanAddChangeRequestDialogProps) => (
+    <Dialogue
+        title='Request changes'
+        open={open}
+        primaryButtonText='Add suggestion to draft'
+        secondaryButtonText='Cancel'
+        onClose={() => setOpen(false)}
+        customButton={
+            <Button
+                color='primary'
+                variant='contained'
+                onClick={onConfirm}
+                autoFocus={true}
+            >
+                Add suggestion to draft
+            </Button>
+        }
+    >
+        <p>
+            <StyledBoldSpan>Add</StyledBoldSpan> release template{' '}
+            <StyledBoldSpan>{template?.name}</StyledBoldSpan> to{' '}
+            <StyledBoldSpan>{featureName}</StyledBoldSpan> in{' '}
+            <StyledBoldSpan>{environment}</StyledBoldSpan>
+        </p>
+    </Dialogue>
+);

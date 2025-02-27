@@ -7,7 +7,7 @@ import type {
     IChangeRequestDeleteReleasePlan,
     IChangeRequestStartMilestone,
 } from 'component/changeRequest/changeRequest.types';
-import { useReleasePlanTemplate } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplate';
+import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import EventDiff from 'component/events/EventDiff/EventDiff';
@@ -181,32 +181,11 @@ const AddReleasePlan: FC<{
     featureName: string;
     actions?: ReactNode;
 }> = ({ change, environmentName, featureName, actions }) => {
-    const { template } = useReleasePlanTemplate(change.payload.templateId);
-
-    if (!template) return;
-
-    const tentativeReleasePlan = {
-        ...template,
-        environment: environmentName,
+    const planPreview = useReleasePlanPreview(
+        change.payload.templateId,
         featureName,
-        milestones: template.milestones.map((milestone) => ({
-            ...milestone,
-            releasePlanDefinitionId: template.id,
-            strategies: (milestone.strategies || []).map((strategy) => ({
-                ...strategy,
-                parameters: {
-                    ...strategy.parameters,
-                    ...(strategy.parameters.groupId && {
-                        groupId: String(strategy.parameters.groupId).replaceAll(
-                            '{{featureName}}',
-                            featureName,
-                        ),
-                    }),
-                },
-                milestoneId: milestone.id,
-            })),
-        })),
-    };
+        environmentName,
+    );
 
     return (
         <>
@@ -215,11 +194,11 @@ const AddReleasePlan: FC<{
                     <Typography color='success.dark'>
                         + Adding release plan:
                     </Typography>
-                    <Typography>{template.name}</Typography>
+                    <Typography>{planPreview.name}</Typography>
                 </ChangeItemInfo>
                 <div>{actions}</div>
             </ChangeItemCreateEditDeleteWrapper>
-            <ReleasePlan plan={tentativeReleasePlan} readonly />
+            <ReleasePlan plan={planPreview} readonly />
         </>
     );
 };

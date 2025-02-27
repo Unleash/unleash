@@ -253,6 +253,8 @@ const theme = {
 
         /**
          * For Environment Accordion.
+         * @deprecated You're probably looking for `elevation1` instead.
+         * remove with the flagOverviewRedesign flag
          */
         envAccordion: {
             disabled: colors.grey[100],

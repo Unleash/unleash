@@ -22,7 +22,6 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
-import { Badge } from 'component/common/Badge/Badge';
 import { StrategyDraggableItem as NewStrategyDraggableItem } from './StrategyDraggableItem/StrategyDraggableItem';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
@@ -43,21 +42,6 @@ const StyledAccordionBodyInnerContainer = styled('div')(({ theme }) => ({
     [theme.breakpoints.down(400)]: {
         padding: theme.spacing(1),
     },
-}));
-
-const StyledBadge = styled(Badge)(({ theme }) => ({
-    backgroundColor: theme.palette.primary.light,
-    border: 'none',
-    padding: theme.spacing(0.75, 1.5),
-    borderRadius: theme.shape.borderRadiusLarge,
-    color: theme.palette.common.white,
-}));
-
-const AdditionalStrategiesDiv = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: theme.spacing(2),
 }));
 
 const StyledStrategyList = styled('ol')({

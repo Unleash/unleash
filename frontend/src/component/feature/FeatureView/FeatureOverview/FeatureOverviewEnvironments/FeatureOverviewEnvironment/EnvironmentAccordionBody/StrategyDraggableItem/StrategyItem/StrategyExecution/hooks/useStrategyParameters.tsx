@@ -81,7 +81,13 @@ export const useStrategyParameters = (
     };
 
     return useMemo(
-        () => parameterKeys.map(mapPredefinedStrategies).filter(Boolean),
+        () =>
+            [
+                ...parameterKeys.map(mapPredefinedStrategies),
+                strategy.name === 'default' ? (
+                    <RolloutParameter value={100} />
+                ) : null,
+            ].filter(Boolean),
         [parameters, hasConstraints, displayGroupId],
     );
 };

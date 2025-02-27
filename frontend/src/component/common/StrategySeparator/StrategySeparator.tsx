@@ -25,15 +25,6 @@ const StyledOr = styled(StyledAnd)(({ theme }) => ({
     left: theme.spacing(4),
 }));
 
-const StyledSeparator = styled('hr')(({ theme }) => ({
-    border: 0,
-    borderTop: `1px solid ${theme.palette.divider}`,
-    margin: 0,
-    position: 'absolute',
-    top: '50%',
-    width: '100%',
-}));
-
 export const StrategySeparator = ({ text }: IStrategySeparatorProps) => {
     const theme = useTheme();
     return (
@@ -48,7 +39,6 @@ export const StrategySeparator = ({ text }: IStrategySeparatorProps) => {
                 <StyledAnd>{text}</StyledAnd>
             ) : (
                 <>
-                    <StyledSeparator />
                     <StyledOr>{text}</StyledOr>
                 </>
             )}

@@ -55,7 +55,7 @@ const StyledReleasePlanList = styled(StyledStrategyList)(({ theme }) => ({
 }));
 
 const StyledListItem = styled('li')(({ theme }) => ({
-    borderBottom: `1px solid ${theme.palette.background.elevation2}`,
+    borderBottom: `1px solid ${theme.palette.divider}`,
     background: 'inherit',
 }));
 
@@ -235,12 +235,12 @@ export const EnvironmentAccordionBody = ({
                         <>
                             <StyledReleasePlanList>
                                 {releasePlans.map((plan) => (
-                                    <li key={plan.id}>
+                                    <StyledListItem key={plan.id}>
                                         <ReleasePlan
                                             plan={plan}
                                             environmentIsDisabled={isDisabled}
                                         />
-                                    </li>
+                                    </StyledListItem>
                                 ))}
                             </StyledReleasePlanList>
                             {releasePlans.length > 0 &&

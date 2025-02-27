@@ -60,6 +60,12 @@ const AdditionalStrategiesDiv = styled('div')(({ theme }) => ({
     marginBottom: theme.spacing(2),
 }));
 
+const StyledStrategyList = styled('ol')({
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+});
+
 export const EnvironmentAccordionBody = ({
     featureEnvironment,
     isDisabled,
@@ -257,29 +263,33 @@ export const EnvironmentAccordionBody = ({
                                     !manyStrategiesPagination
                                 }
                                 show={
-                                    <>
+                                    <StyledStrategyList>
                                         {strategies.map((strategy, index) => (
-                                            <NewStrategyDraggableItem
-                                                key={strategy.id}
-                                                strategy={strategy}
-                                                index={index}
-                                                environmentName={
-                                                    featureEnvironment.name
-                                                }
-                                                otherEnvironments={
-                                                    otherEnvironments
-                                                }
-                                                isDragging={
-                                                    dragItem?.id === strategy.id
-                                                }
-                                                onDragStartRef={onDragStartRef}
-                                                onDragOver={onDragOver(
-                                                    strategy.id,
-                                                )}
-                                                onDragEnd={onDragEnd}
-                                            />
+                                            <li key={strategy.id}>
+                                                <NewStrategyDraggableItem
+                                                    strategy={strategy}
+                                                    index={index}
+                                                    environmentName={
+                                                        featureEnvironment.name
+                                                    }
+                                                    otherEnvironments={
+                                                        otherEnvironments
+                                                    }
+                                                    isDragging={
+                                                        dragItem?.id ===
+                                                        strategy.id
+                                                    }
+                                                    onDragStartRef={
+                                                        onDragStartRef
+                                                    }
+                                                    onDragOver={onDragOver(
+                                                        strategy.id,
+                                                    )}
+                                                    onDragEnd={onDragEnd}
+                                                />
+                                            </li>
                                         ))}
-                                    </>
+                                    </StyledStrategyList>
                                 }
                                 elseShow={
                                     <>
@@ -291,27 +301,35 @@ export const EnvironmentAccordionBody = ({
                                             segments.
                                         </Alert>
                                         <br />
-                                        {page.map((strategy, index) => (
-                                            <StrategyDraggableItem
-                                                key={strategy.id}
-                                                strategy={strategy}
-                                                index={
-                                                    index + pageIndex * pageSize
-                                                }
-                                                environmentName={
-                                                    featureEnvironment.name
-                                                }
-                                                otherEnvironments={
-                                                    otherEnvironments
-                                                }
-                                                isDragging={false}
-                                                onDragStartRef={
-                                                    (() => {}) as any
-                                                }
-                                                onDragOver={(() => {}) as any}
-                                                onDragEnd={(() => {}) as any}
-                                            />
-                                        ))}
+                                        <StyledStrategyList>
+                                            {page.map((strategy, index) => (
+                                                <li key={strategy.id}>
+                                                    <StrategyDraggableItem
+                                                        strategy={strategy}
+                                                        index={
+                                                            index +
+                                                            pageIndex * pageSize
+                                                        }
+                                                        environmentName={
+                                                            featureEnvironment.name
+                                                        }
+                                                        otherEnvironments={
+                                                            otherEnvironments
+                                                        }
+                                                        isDragging={false}
+                                                        onDragStartRef={
+                                                            (() => {}) as any
+                                                        }
+                                                        onDragOver={
+                                                            (() => {}) as any
+                                                        }
+                                                        onDragEnd={
+                                                            (() => {}) as any
+                                                        }
+                                                    />
+                                                </li>
+                                            ))}
+                                        </StyledStrategyList>
                                         <br />
                                         <Pagination
                                             count={pages.length}

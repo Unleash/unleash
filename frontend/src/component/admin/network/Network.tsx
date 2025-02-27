@@ -14,6 +14,9 @@ const NetworkTraffic = lazy(() => import('./NetworkTraffic/NetworkTraffic'));
 const NetworkTrafficUsage = lazy(
     () => import('./NetworkTrafficUsage/NetworkTrafficUsage'),
 );
+const BackendConnections = lazy(
+    () => import('./NetworkTrafficUsage/BackendConnections'),
+);
 
 const tabs = [
     {
@@ -28,17 +31,31 @@ const tabs = [
         label: 'Connected Edges',
         path: '/admin/network/connected-edges',
     },
+];
+
+const seatModelTabs = [
     {
         label: 'Data Usage',
         path: '/admin/network/data-usage',
     },
 ];
 
+const consumptionModelTabs = [
+    {
+        label: 'Backend Connections',
+        path: '/admin/network/backend-connections',
+    },
+];
+
 export const Network = () => {
     const { pathname } = useLocation();
     const edgeObservabilityEnabled = useUiFlag('edgeObservability');
+    const consumptionModelEnabled = useUiFlag('consumptionModel');
+    const allTabs = consumptionModelEnabled
+        ? [...tabs, ...consumptionModelTabs]
+        : [...tabs, ...seatModelTabs];
 
-    const filteredTabs = tabs.filter(
+    const filteredTabs = allTabs.filter(
         ({ label }) => label !== 'Connected Edges' || edgeObservabilityEnabled,
     );
 
@@ -81,6 +98,10 @@ export const Network = () => {
                     <Route
                         path='data-usage'
                         element={<NetworkTrafficUsage />}
+                    />
+                    <Route
+                        path='backend-connections'
+                        element={<BackendConnections />}
                     />
                 </Routes>
             </PageContent>

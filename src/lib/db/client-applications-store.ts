@@ -331,6 +331,7 @@ export default class ClientApplicationsStore
                 ])
                     .from('client_instances as ci')
                     .where('ci.app_name', appName)
+                    .whereRaw("ci.last_seen >= NOW() - INTERVAL '24 hours'")
                     .groupBy('ci.app_name', 'ci.environment');
             })
             .select([
@@ -378,7 +379,7 @@ export default class ClientApplicationsStore
 
             if (!environment) return acc;
 
-            strategies.forEach((strategy) => {
+            strategies?.forEach((strategy) => {
                 if (
                     !DEPRECATED_STRATEGIES.includes(strategy) &&
                     !existingStrategies.includes(strategy)

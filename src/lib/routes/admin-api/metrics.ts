@@ -168,9 +168,9 @@ class MetricsController extends Controller {
                 openApiService.validPath({
                     tags: ['Metrics'],
                     operationId: 'getApplicationEnvironmentInstances',
-                    summary: 'Get application environment instances',
+                    summary: 'Get application environment instances (Last 24h)',
                     description:
-                        'Returns an overview of the instances for the given `appName` and `environment` that receive traffic.',
+                        'Returns an overview of the instances for the given `appName` and `environment` that have received traffic in the last 24 hours.',
                     responses: {
                         200: createResponseSchema(
                             'applicationEnvironmentInstancesSchema',
@@ -315,7 +315,7 @@ class MetricsController extends Controller {
     ): Promise<void> {
         const { appName, environment } = req.params;
         const instances =
-            await this.clientInstanceService.getApplicationEnvironmentInstances(
+            await this.clientInstanceService.getRecentApplicationEnvironmentInstances(
                 appName,
                 environment,
             );

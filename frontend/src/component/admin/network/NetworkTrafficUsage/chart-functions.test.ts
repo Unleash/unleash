@@ -1,5 +1,5 @@
 import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
-import { toChartData } from './chart-functions';
+import { toTrafficUsageChartData } from './chart-functions';
 import { endpointsInfo } from './endpoint-info';
 
 describe('toChartData', () => {
@@ -67,7 +67,7 @@ describe('toChartData', () => {
             ],
         };
 
-        expect(toChartData(input)).toMatchObject(expectedOutput);
+        expect(toTrafficUsageChartData(input)).toMatchObject(expectedOutput);
     });
 
     test('daily data conversion', () => {
@@ -121,7 +121,7 @@ describe('toChartData', () => {
             ),
         };
 
-        expect(toChartData(input)).toMatchObject(expectedOutput);
+        expect(toTrafficUsageChartData(input)).toMatchObject(expectedOutput);
     });
 
     test('sorts endpoints according to endpoint data spec', () => {
@@ -146,6 +146,6 @@ describe('toChartData', () => {
             ],
         };
 
-        expect(toChartData(input)).toMatchObject(expectedOutput);
+        expect(toTrafficUsageChartData(input)).toMatchObject(expectedOutput);
     });
 });

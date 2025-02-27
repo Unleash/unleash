@@ -1,172 +1,45 @@
-import { useMemo, useState, useEffect, type FC } from 'react';
+import { type FC, useEffect, useMemo, useState } from 'react';
 import useTheme from '@mui/material/styles/useTheme';
 import styled from '@mui/material/styles/styled';
 import { usePageTitle } from 'hooks/usePageTitle';
 import Select from 'component/common/select';
-import Box from '@mui/system/Box';
 import { Link as RouterLink } from 'react-router-dom';
 import { Alert, Link } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import {
-    Chart as ChartJS,
-    type ChartOptions,
-    CategoryScale,
-    LinearScale,
     BarElement,
+    CategoryScale,
+    Chart as ChartJS,
+    Legend,
+    LinearScale,
     Title,
     Tooltip,
-    Legend,
 } from 'chart.js';
 
 import { Bar } from 'react-chartjs-2';
-import {
-    useInstanceTrafficMetrics,
-    useTrafficSearch,
-} from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
-import type { Theme } from '@mui/material/styles/createTheme';
+import { useInstanceTrafficMetrics } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 import Grid from '@mui/material/Grid';
 import { NetworkTrafficUsagePlanSummary } from './NetworkTrafficUsagePlanSummary';
 import annotationPlugin from 'chartjs-plugin-annotation';
 import {
-    useTrafficDataEstimation,
     calculateEstimatedMonthlyCost as deprecatedCalculateEstimatedMonthlyCost,
+    useTrafficDataEstimation,
 } from 'hooks/useTrafficData';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
-import { formatTickValue } from 'component/common/Chart/formatTickValue';
 import { useTrafficLimit } from './hooks/useTrafficLimit';
 import { BILLING_TRAFFIC_BUNDLE_PRICE } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { PeriodSelector } from './PeriodSelector';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { OverageInfo, RequestSummary } from './RequestSummary';
-import { averageTrafficPreviousMonths } from './average-traffic-previous-months';
-import {
-    calculateTotalUsage,
-    calculateOverageCost,
-    calculateEstimatedMonthlyCost,
-} from 'utils/traffic-calculations';
-import { currentDate, currentMonth } from './dates';
-import { type ChartDataSelection, toDateRange } from './chart-data-selection';
-import {
-    type ChartDatasetType,
-    getChartLabel,
-    toChartData as newToChartData,
-    toConnectionChartData,
-} from './chart-functions';
-import { periodsRecord, selectablePeriods } from './selectable-periods';
-
-const StyledBox = styled(Box)(({ theme }) => ({
-    display: 'grid',
-    gap: theme.spacing(5),
-}));
-
-const createBarChartOptions = (
-    theme: Theme,
-    tooltipTitleCallback: (tooltipItems: any) => string,
-    includedTraffic?: number,
-): ChartOptions<'bar'> => ({
-    plugins: {
-        annotation: {
-            clip: false,
-            annotations: {
-                line: {
-                    type: 'line',
-                    borderDash: [5, 5],
-                    yMin: includedTraffic ? includedTraffic / 30 : 0,
-                    yMax: includedTraffic ? includedTraffic / 30 : 0,
-                    borderColor: 'gray',
-                    borderWidth: 1,
-                    display: !!includedTraffic,
-
-                    label: {
-                        backgroundColor: 'rgba(192, 192, 192,  0.8)',
-                        color: 'black',
-                        padding: {
-                            top: 10,
-                            bottom: 10,
-                            left: 10,
-                            right: 10,
-                        },
-                        content: 'Average daily requests included in your plan',
-                        display: !!includedTraffic,
-                    },
-                },
-            },
-        },
-        legend: {
-            position: 'bottom',
-            labels: {
-                color: theme.palette.text.primary,
-                pointStyle: 'circle',
-                usePointStyle: true,
-                boxHeight: 6,
-                padding: 15,
-                boxPadding: 5,
-            },
-        },
-        tooltip: {
-            backgroundColor: theme.palette.background.paper,
-            titleColor: theme.palette.text.primary,
-            bodyColor: theme.palette.text.primary,
-            bodySpacing: 6,
-            padding: {
-                top: 20,
-                bottom: 20,
-                left: 30,
-                right: 30,
-            },
-            borderColor: 'rgba(0, 0, 0, 0.05)',
-            borderWidth: 3,
-            usePointStyle: true,
-            caretSize: 0,
-            boxPadding: 10,
-            callbacks: {
-                title: tooltipTitleCallback,
-            },
-        },
-    },
-    responsive: true,
-    scales: {
-        x: {
-            stacked: true,
-            ticks: {
-                color: theme.palette.text.secondary,
-            },
-            grid: {
-                display: false,
-            },
-        },
-        y: {
-            stacked: true,
-            ticks: {
-                color: theme.palette.text.secondary,
-                maxTicksLimit: 5,
-                callback: formatTickValue,
-            },
-            grid: {
-                drawBorder: false,
-            },
-        },
-    },
-    elements: {
-        bar: {
-            borderRadius: 5,
-        },
-    },
-    interaction: {
-        mode: 'index',
-        intersect: false,
-    },
-});
-
-const TopRow = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexFlow: 'row wrap',
-    justifyContent: 'space-between',
-    gap: theme.spacing(2, 4),
-    alignItems: 'start',
-}));
+import { calculateOverageCost } from 'utils/traffic-calculations';
+import { currentMonth } from './dates';
+import { type ChartDatasetType, getChartLabel } from './chart-functions';
+import { createBarChartOptions } from './bar-chart-options';
+import { useTrafficStats } from './hooks/useStats';
+import { BoldText, StyledBox, TopRow } from './SharedComponents';
+import { useChartDataSelection } from './hooks/useChartDataSelection';
 
 const TrafficInfoBoxes = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -175,123 +48,17 @@ const TrafficInfoBoxes = styled('div')(({ theme }) => ({
     gap: theme.spacing(2, 4),
 }));
 
-const BoldText = styled('span')(({ theme }) => ({
-    fontWeight: 'bold',
-}));
-
-const useTrafficStats = (
-    includedTraffic: number,
-    chartDataSelection: ChartDataSelection,
-) => {
-    const consumptionModelEnabled = useUiFlag('consumptionModel');
-    const { result } = useTrafficSearch(
-        chartDataSelection.grouping,
-        toDateRange(chartDataSelection, currentDate),
-    );
-    const results = useMemo(() => {
-        if (result.state !== 'success') {
-            return {
-                chartData: { datasets: [], labels: [] },
-                usageTotal: 0,
-                overageCost: 0,
-                estimatedMonthlyCost: 0,
-                requestSummaryUsage: 0,
-            };
-        }
-        const traffic = result.data;
-
-        const chartData = consumptionModelEnabled
-            ? toConnectionChartData(traffic)
-            : newToChartData(traffic);
-        const usageTotal = calculateTotalUsage(traffic);
-        const overageCost = calculateOverageCost(
-            usageTotal,
-            includedTraffic,
-            BILLING_TRAFFIC_BUNDLE_PRICE,
-        );
-
-        const estimatedMonthlyCost = calculateEstimatedMonthlyCost(
-            traffic.apiData,
-            includedTraffic,
-            currentDate,
-            BILLING_TRAFFIC_BUNDLE_PRICE,
-        );
-
-        const requestSummaryUsage =
-            chartDataSelection.grouping === 'daily'
-                ? usageTotal
-                : averageTrafficPreviousMonths(traffic);
-
-        return {
-            chartData,
-            usageTotal,
-            overageCost,
-            estimatedMonthlyCost,
-            requestSummaryUsage,
-        };
-    }, [
-        JSON.stringify(result),
-        includedTraffic,
-        JSON.stringify(chartDataSelection),
-    ]);
-
-    return results;
-};
-
 const NewNetworkTrafficUsage: FC = () => {
     usePageTitle('Network - Data Usage');
-    const theme = useTheme();
 
     const estimateTrafficDataCost = useUiFlag('estimateTrafficDataCost');
 
     const { isOss } = useUiConfig();
 
-    const { locationSettings } = useLocationSettings();
-
-    const [chartDataSelection, setChartDataSelection] =
-        useState<ChartDataSelection>({
-            grouping: 'daily',
-            month: selectablePeriods[0].key,
-        });
-
     const includedTraffic = useTrafficLimit();
 
-    const options = useMemo(() => {
-        return createBarChartOptions(
-            theme,
-            (tooltipItems: any) => {
-                if (chartDataSelection.grouping === 'daily') {
-                    const periodItem = periodsRecord[chartDataSelection.month];
-                    const tooltipDate = new Date(
-                        periodItem.year,
-                        periodItem.month,
-                        Number.parseInt(tooltipItems[0].label),
-                    );
-                    return tooltipDate.toLocaleDateString(
-                        locationSettings?.locale ?? 'en-US',
-                        {
-                            month: 'long',
-                            day: 'numeric',
-                            year: 'numeric',
-                        },
-                    );
-                } else {
-                    const timestamp = Date.parse(tooltipItems[0].label);
-                    if (Number.isNaN(timestamp)) {
-                        return 'Current month to date';
-                    }
-                    return new Date(timestamp).toLocaleDateString(
-                        locationSettings?.locale ?? 'en-US',
-                        {
-                            month: 'long',
-                            year: 'numeric',
-                        },
-                    );
-                }
-            },
-            includedTraffic,
-        );
-    }, [theme, chartDataSelection]);
+    const { chartDataSelection, setChartDataSelection, options } =
+        useChartDataSelection(includedTraffic);
 
     const {
         chartData,

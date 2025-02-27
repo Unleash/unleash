@@ -13,7 +13,7 @@ import { formatDay, formatMonth } from './dates';
 import type { ChartDataSelection } from './chart-data-selection';
 export type ChartDatasetType = ChartDataset<'bar'>;
 
-export const toChartData = (
+export const toTrafficUsageChartData = (
     traffic: TrafficUsageDataSegmentedCombinedSchema,
 ): { datasets: ChartDatasetType[]; labels: string[] } => {
     const { newRecord, labels } = getLabelsAndRecords(traffic);
@@ -47,6 +47,7 @@ export const toConnectionChartData = (
 ): { datasets: ChartDatasetType[]; labels: string[] } => {
     const { newRecord, labels } = getLabelsAndRecords(traffic);
     const datasets = traffic.apiData
+        .filter((apiData) => apiData.apiPath === '/api/client')
         .sort(
             (item1, item2) =>
                 endpointsInfo[item1.apiPath].order -
@@ -61,11 +62,14 @@ export const toConnectionChartData = (
                 if (traffic.grouping === 'monthly') {
                     // 1 connections = 7200 * days in month requests per day
                     const daysInMonth = getDaysInMonth(date);
-                    record[dataPoint.period] =
-                        requestCount / (daysInMonth * 7200);
+                    record[dataPoint.period] = Number(
+                        (requestCount / (daysInMonth * 7200)).toFixed(1),
+                    );
                 } else {
                     // 1 connection = 7200 requests per day
-                    record[dataPoint.period] = requestCount / 7200;
+                    record[dataPoint.period] = Number(
+                        (requestCount / 7200).toFixed(1),
+                    );
                 }
             }
 

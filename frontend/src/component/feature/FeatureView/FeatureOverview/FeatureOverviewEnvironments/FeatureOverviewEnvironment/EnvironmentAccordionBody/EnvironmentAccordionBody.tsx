@@ -75,6 +75,12 @@ const StyledListItem = styled('li')(({ theme }) => ({
     background: 'inherit',
 }));
 
+const PaginatedStrategyContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'column nowrap',
+    gap: theme.spacing(2),
+}));
+
 export const EnvironmentAccordionBody = ({
     featureEnvironment,
     isDisabled,
@@ -292,7 +298,7 @@ export const EnvironmentAccordionBody = ({
                                     </StyledStrategyList>
                                 }
                                 elseShow={
-                                    <>
+                                    <PaginatedStrategyContainer>
                                         <Alert severity='error'>
                                             We noticed you're using a high
                                             number of activation strategies. To
@@ -300,7 +306,6 @@ export const EnvironmentAccordionBody = ({
                                             consider leveraging constraints or
                                             segments.
                                         </Alert>
-                                        <br />
                                         <StyledStrategyList>
                                             {page.map((strategy, index) => (
                                                 <StyledListItem
@@ -332,7 +337,6 @@ export const EnvironmentAccordionBody = ({
                                                 </StyledListItem>
                                             ))}
                                         </StyledStrategyList>
-                                        <br />
                                         <Pagination
                                             count={pages.length}
                                             shape='rounded'
@@ -341,7 +345,7 @@ export const EnvironmentAccordionBody = ({
                                                 setPageIndex(page - 1)
                                             }
                                         />
-                                    </>
+                                    </PaginatedStrategyContainer>
                                 }
                             />
                         </>

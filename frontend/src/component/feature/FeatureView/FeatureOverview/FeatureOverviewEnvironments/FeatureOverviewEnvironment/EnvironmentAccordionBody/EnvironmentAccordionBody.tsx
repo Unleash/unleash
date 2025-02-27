@@ -21,7 +21,6 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import { StrategyDraggableItem as NewStrategyDraggableItem } from './StrategyDraggableItem/StrategyDraggableItem';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
 
 interface IEnvironmentAccordionBodyProps {
@@ -36,13 +35,13 @@ const StyledAccordionBodyInnerContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledStrategyList = styled('ol')({
+const StyledContentList = styled('ol')({
     listStyle: 'none',
     padding: 0,
     margin: 0,
 });
 
-const StyledReleasePlanList = styled(StyledStrategyList)(({ theme }) => ({
+const StyledReleasePlanList = styled(StyledContentList)(({ theme }) => ({
     background: theme.palette.background.elevation2,
 }));
 
@@ -53,9 +52,7 @@ const StyledListItem = styled('li')(({ theme }) => ({
     paddingBlock: theme.spacing(2.5),
 }));
 
-const StrategyContainer = styled('div')(({ theme }) => ({
-    position: 'relative',
-}));
+const StrategyContainer = styled('div')(({ theme }) => ({}));
 
 const PaginatedStrategyContainer = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2.5),
@@ -234,97 +231,81 @@ export const EnvironmentAccordionBody = ({
         <div>
             <StyledAccordionBodyInnerContainer>
                 {releasePlans.length > 0 || strategies.length > 0 ? (
-                    <>
-                        <StyledReleasePlanList>
-                            {releasePlans.map((plan) => (
-                                <StyledListItem key={plan.id}>
-                                    <ReleasePlan
-                                        plan={plan}
-                                        environmentIsDisabled={isDisabled}
-                                    />
-                                </StyledListItem>
-                            ))}
-                        </StyledReleasePlanList>
-                        <StrategyContainer>
-                            {releasePlans.length > 0 &&
-                            strategies.length > 0 ? (
-                                <StrategySeparator text='OR' />
-                            ) : null}
-                            {strategies.length < 50 ||
-                            !manyStrategiesPagination ? (
-                                <StyledStrategyList>
-                                    {strategies.map((strategy, index) => (
+                    <StyledReleasePlanList>
+                        {releasePlans.map((plan) => (
+                            <StyledListItem key={plan.id}>
+                                <ReleasePlan
+                                    plan={plan}
+                                    environmentIsDisabled={isDisabled}
+                                />
+                            </StyledListItem>
+                        ))}
+                        {strategies.length < 50 || !manyStrategiesPagination ? (
+                            <StyledContentList>
+                                {strategies.map((strategy, index) => (
+                                    <StyledListItem key={strategy.id}>
+                                        <NewStrategyDraggableItem
+                                            strategy={strategy}
+                                            index={index}
+                                            environmentName={
+                                                featureEnvironment.name
+                                            }
+                                            otherEnvironments={
+                                                otherEnvironments
+                                            }
+                                            isDragging={
+                                                dragItem?.id === strategy.id
+                                            }
+                                            onDragStartRef={onDragStartRef}
+                                            onDragOver={onDragOver(strategy.id)}
+                                            onDragEnd={onDragEnd}
+                                        />
+                                    </StyledListItem>
+                                ))}
+                            </StyledContentList>
+                        ) : (
+                            <PaginatedStrategyContainer>
+                                <StyledAlert severity='warning'>
+                                    We noticed you're using a high number of
+                                    activation strategies. To ensure a more
+                                    targeted approach, consider leveraging
+                                    constraints or segments.
+                                </StyledAlert>
+                                <StyledContentList>
+                                    {page.map((strategy, index) => (
                                         <StyledListItem key={strategy.id}>
                                             <NewStrategyDraggableItem
                                                 strategy={strategy}
-                                                index={index}
+                                                index={
+                                                    index + pageIndex * pageSize
+                                                }
                                                 environmentName={
                                                     featureEnvironment.name
                                                 }
                                                 otherEnvironments={
                                                     otherEnvironments
                                                 }
-                                                isDragging={
-                                                    dragItem?.id === strategy.id
+                                                isDragging={false}
+                                                onDragStartRef={
+                                                    (() => {}) as any
                                                 }
-                                                onDragStartRef={onDragStartRef}
-                                                onDragOver={onDragOver(
-                                                    strategy.id,
-                                                )}
-                                                onDragEnd={onDragEnd}
+                                                onDragOver={(() => {}) as any}
+                                                onDragEnd={(() => {}) as any}
                                             />
                                         </StyledListItem>
                                     ))}
-                                </StyledStrategyList>
-                            ) : (
-                                <PaginatedStrategyContainer>
-                                    <StyledAlert severity='warning'>
-                                        We noticed you're using a high number of
-                                        activation strategies. To ensure a more
-                                        targeted approach, consider leveraging
-                                        constraints or segments.
-                                    </StyledAlert>
-                                    <StyledStrategyList>
-                                        {page.map((strategy, index) => (
-                                            <StyledListItem key={strategy.id}>
-                                                <NewStrategyDraggableItem
-                                                    strategy={strategy}
-                                                    index={
-                                                        index +
-                                                        pageIndex * pageSize
-                                                    }
-                                                    environmentName={
-                                                        featureEnvironment.name
-                                                    }
-                                                    otherEnvironments={
-                                                        otherEnvironments
-                                                    }
-                                                    isDragging={false}
-                                                    onDragStartRef={
-                                                        (() => {}) as any
-                                                    }
-                                                    onDragOver={
-                                                        (() => {}) as any
-                                                    }
-                                                    onDragEnd={
-                                                        (() => {}) as any
-                                                    }
-                                                />
-                                            </StyledListItem>
-                                        ))}
-                                    </StyledStrategyList>
-                                    <Pagination
-                                        count={pages.length}
-                                        shape='rounded'
-                                        page={pageIndex + 1}
-                                        onChange={(_, page) =>
-                                            setPageIndex(page - 1)
-                                        }
-                                    />
-                                </PaginatedStrategyContainer>
-                            )}
-                        </StrategyContainer>
-                    </>
+                                </StyledContentList>
+                                <Pagination
+                                    count={pages.length}
+                                    shape='rounded'
+                                    page={pageIndex + 1}
+                                    onChange={(_, page) =>
+                                        setPageIndex(page - 1)
+                                    }
+                                />
+                            </PaginatedStrategyContainer>
+                        )}
+                    </StyledReleasePlanList>
                 ) : (
                     <FeatureStrategyEmpty
                         projectId={projectId}

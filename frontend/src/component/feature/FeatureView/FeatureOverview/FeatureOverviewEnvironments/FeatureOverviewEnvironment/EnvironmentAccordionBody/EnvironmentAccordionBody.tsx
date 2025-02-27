@@ -9,7 +9,6 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StrategyDraggableItem } from './StrategyDraggableItem/LegacyStrategyDraggableItem';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -285,7 +284,7 @@ export const EnvironmentAccordionBody = ({
                                     <StyledStrategyList>
                                         {page.map((strategy, index) => (
                                             <StyledListItem key={strategy.id}>
-                                                <StrategyDraggableItem
+                                                <NewStrategyDraggableItem
                                                     strategy={strategy}
                                                     index={
                                                         index +

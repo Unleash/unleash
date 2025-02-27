@@ -57,6 +57,7 @@ const StyledReleasePlanList = styled(StyledStrategyList)(({ theme }) => ({
 const StyledListItem = styled('li')(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     background: 'inherit',
+    paddingBottom: theme.spacing(2.5),
 }));
 
 const PaginatedStrategyContainer = styled('div')(({ theme }) => ({

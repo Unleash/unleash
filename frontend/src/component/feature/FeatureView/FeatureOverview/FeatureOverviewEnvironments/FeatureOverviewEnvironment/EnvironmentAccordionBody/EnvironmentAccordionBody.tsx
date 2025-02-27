@@ -70,6 +70,11 @@ const StyledReleasePlanList = styled(StyledStrategyList)(({ theme }) => ({
     background: theme.palette.background.elevation2,
 }));
 
+const StyledListItem = styled('li')(({ theme }) => ({
+    borderBottom: `1px solid ${theme.palette.background.elevation2}`,
+    background: 'inherit',
+}));
+
 export const EnvironmentAccordionBody = ({
     featureEnvironment,
     isDisabled,
@@ -260,7 +265,7 @@ export const EnvironmentAccordionBody = ({
                                 show={
                                     <StyledStrategyList>
                                         {strategies.map((strategy, index) => (
-                                            <li key={strategy.id}>
+                                            <StyledListItem key={strategy.id}>
                                                 <NewStrategyDraggableItem
                                                     strategy={strategy}
                                                     index={index}
@@ -282,7 +287,7 @@ export const EnvironmentAccordionBody = ({
                                                     )}
                                                     onDragEnd={onDragEnd}
                                                 />
-                                            </li>
+                                            </StyledListItem>
                                         ))}
                                     </StyledStrategyList>
                                 }
@@ -298,7 +303,9 @@ export const EnvironmentAccordionBody = ({
                                         <br />
                                         <StyledStrategyList>
                                             {page.map((strategy, index) => (
-                                                <li key={strategy.id}>
+                                                <StyledListItem
+                                                    key={strategy.id}
+                                                >
                                                     <StrategyDraggableItem
                                                         strategy={strategy}
                                                         index={
@@ -322,7 +329,7 @@ export const EnvironmentAccordionBody = ({
                                                             (() => {}) as any
                                                         }
                                                     />
-                                                </li>
+                                                </StyledListItem>
                                             ))}
                                         </StyledStrategyList>
                                         <br />

@@ -10,6 +10,8 @@ import { objectId } from 'utils/objectId';
 import { StrategyExecutionSeparator } from './StrategyExecutionSeparator/StrategyExecutionSeparator';
 import { useCustomStrategyParameters } from './hooks/useCustomStrategyItems';
 import { useStrategyParameters } from './hooks/useStrategyParameters';
+import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
+import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 
 const StyledGrayscale = styled('div', {
     shouldForwardProp: (prop) => prop !== 'enabled',
@@ -70,15 +72,21 @@ const NewStrategyExecution: FC<StrategyExecutionProps> = ({
     displayGroupId = false,
 }) => {
     const { strategies } = useStrategies();
+    const { segments } = useSegments();
     const { isCustomStrategy, customStrategyParameters: customStrategyItems } =
         useCustomStrategyParameters(strategy, strategies);
     const strategyParameters = useStrategyParameters(strategy, displayGroupId);
     const { constraints } = strategy;
+    const strategySegments = segments?.filter((segment) =>
+        strategy.segments?.includes(segment.id),
+    );
 
     return (
         <StyledGrayscale enabled={strategy.disabled === true}>
             <List>
-                {/* TODO: segments */}
+                {strategySegments?.map((segment) => (
+                    <SegmentItem segment={segment} />
+                ))}
                 {constraints?.map((constraint, index) => (
                     <ConstraintItem
                         key={`${objectId(constraint)}-${index}`}

@@ -253,17 +253,26 @@ export default class ClientInstanceStore implements IClientInstanceStore {
     }
 
     async getDistinctApplicationsCount(daysBefore?: number): Promise<number> {
-        let query = this.db.from(TABLE);
-        if (daysBefore) {
-            query = query.where(
-                'last_seen',
-                '>',
-                subDays(new Date(), daysBefore),
-            );
-        }
-        return query
-            .countDistinct('app_name')
-            .then((res) => Number(res[0].count));
+        const query = this.db
+            .from((qb) =>
+                qb
+                    .select('app_name')
+                    .from(TABLE)
+                    .modify((qb) => {
+                        if (daysBefore) {
+                            qb.where(
+                                'last_seen',
+                                '>',
+                                subDays(new Date(), daysBefore),
+                            );
+                        }
+                    })
+                    .groupBy('app_name')
+                    .as('subquery'),
+            )
+            .count('* as count');
+
+        return query.then((res) => Number(res[0].count));
     }
 
     async deleteForApplication(appName: string): Promise<void> {

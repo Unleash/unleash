@@ -253,7 +253,7 @@ const theme = {
 
         /**
          * For Environment Accordion.
-         * @deprecated You're probably looking for `elevation1` instead.
+         * @deprecated Use `elevation1` for `disabled` and `elevation2` for `expanded` instead.
          * remove with the flagOverviewRedesign flag
          */
         envAccordion: {

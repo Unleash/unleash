@@ -180,7 +180,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
         return rows.map(mapRow);
     }
 
-    async getByAppNameAndEnvironment(
+    async getRecentByAppNameAndEnvironment(
         appName: string,
         environment: string,
     ): Promise<IClientInstance[]> {
@@ -189,6 +189,7 @@ export default class ClientInstanceStore implements IClientInstanceStore {
             .from(TABLE)
             .where('app_name', appName)
             .where('environment', environment)
+            .whereRaw("last_seen >= NOW() - INTERVAL '24 hours'")
             .orderBy('last_seen', 'desc')
             .limit(1000);
 

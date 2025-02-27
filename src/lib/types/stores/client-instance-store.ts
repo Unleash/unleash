@@ -21,7 +21,7 @@ export interface IClientInstanceStore
     setLastSeen(INewClientInstance): Promise<void>;
     insert(details: INewClientInstance): Promise<void>;
     getByAppName(appName: string): Promise<IClientInstance[]>;
-    getByAppNameAndEnvironment(
+    getRecentByAppNameAndEnvironment(
         appName: string,
         environment: string,
     ): Promise<IClientInstance[]>;

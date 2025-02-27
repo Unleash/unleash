@@ -221,3 +221,50 @@ test('should show missing features and strategies', async () => {
 
     expect(body).toMatchObject(expected);
 });
+
+test('should not return instances older than 24h', async () => {
+    await app.request
+        .post('/api/client/metrics')
+        .set('Authorization', defaultToken.secret)
+        .send(metrics)
+        .expect(202);
+
+    await app.services.clientMetricsServiceV2.bulkAdd();
+
+    await db.stores.clientApplicationsStore.upsert({
+        appName: metrics.appName,
+    });
+    await db.stores.clientInstanceStore.insert({
+        appName: metrics.appName,
+        clientIp: '127.0.0.1',
+        instanceId: 'old-instance',
+        lastSeen: new Date(Date.now() - 26 * 60 * 60 * 1000), // 26 hours ago
+    });
+
+    const { body } = await app.request
+        .get(`/api/admin/metrics/applications/${metrics.appName}/overview`)
+        .expect(200);
+
+    const expected = {
+        environments: [
+            {
+                instanceCount: 1,
+            },
+        ],
+    };
+
+    expect(body).toMatchObject(expected);
+
+    const { body: instancesBody } = await app.request
+        .get(
+            `/api/admin/metrics/instances/${metrics.appName}/environment/default`,
+        )
+        .expect(200);
+
+    expect(instancesBody.instances).toHaveLength(1);
+    expect(instancesBody.instances).toMatchObject([
+        {
+            instanceId: metrics.instanceId,
+        },
+    ]);
+});

@@ -23,7 +23,7 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
-import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
+import { ReleasePlan } from '../../../ReleasePlan/LegacyReleasePlan';
 import { Badge } from 'component/common/Badge/Badge';
 import { SectionSeparator } from '../SectionSeparator/SectionSeparator';
 

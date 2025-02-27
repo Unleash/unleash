@@ -28,10 +28,13 @@ const StyledContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'readonly',
 })<{ readonly?: boolean }>(({ theme, readonly }) => ({
     padding: theme.spacing(2),
+    borderRadius: theme.shape.borderRadiusMedium,
     '& + &': {
         marginTop: theme.spacing(2),
     },
-    background: 'inherit',
+    background: readonly
+        ? theme.palette.background.elevation1
+        : theme.palette.background.paper,
 }));
 
 const StyledHeader = styled('div')(({ theme }) => ({
@@ -40,28 +43,22 @@ const StyledHeader = styled('div')(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-const StyledHeaderGroup = styled('hgroup')(({ theme }) => ({
-    paddingTop: theme.spacing(1.5),
+const StyledHeaderTitleContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    gap: theme.spacing(1),
 }));
 
-const StyledHeaderTitleLabel = styled('p')(({ theme }) => ({
-    fontWeight: 'bold',
-    fontSize: theme.typography.body1.fontSize,
+const StyledHeaderTitleLabel = styled('span')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
     lineHeight: 0.5,
+    color: theme.palette.text.secondary,
     marginBottom: theme.spacing(0.5),
-    display: 'inline',
 }));
 
-const StyledHeaderTitle = styled('h3')(({ theme }) => ({
-    display: 'inline',
-    margin: 0,
-    fontWeight: 'normal',
-    fontSize: theme.typography.body1.fontSize,
-}));
-
-const StyledHeaderDescription = styled('p')(({ theme }) => ({
-    marginTop: theme.spacing(1),
-    fontSize: theme.typography.body2.fontSize,
+const StyledHeaderDescription = styled('span')(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
     color: theme.palette.text.secondary,
 }));
 
@@ -245,17 +242,17 @@ export const ReleasePlan = ({
     return (
         <StyledContainer readonly={readonly}>
             <StyledHeader>
-                <StyledHeaderGroup>
+                <StyledHeaderTitleContainer>
                     <StyledHeaderTitleLabel>
-                        Release plan:{' '}
+                        Release plan
                     </StyledHeaderTitleLabel>
-                    <StyledHeaderTitle>{name}</StyledHeaderTitle>
+                    <span>{name}</span>
                     <StyledHeaderDescription>
                         <Truncator lines={2} title={description}>
                             {description}
                         </Truncator>
                     </StyledHeaderDescription>
-                </StyledHeaderGroup>
+                </StyledHeaderTitleContainer>
                 {!readonly && (
                     <PermissionIconButton
                         onClick={confirmRemoveReleasePlan}

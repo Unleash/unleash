@@ -68,7 +68,6 @@ const StyledHeaderDescription = styled('p')(({ theme }) => ({
 const StyledBody = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    marginTop: theme.spacing(3),
 }));
 
 const StyledConnection = styled('div')(({ theme }) => ({

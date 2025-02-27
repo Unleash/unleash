@@ -10,7 +10,6 @@ import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStra
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';
 import MoreVert from '@mui/icons-material/MoreVert';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { ReleasePlanAddChangeRequestDialog } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ChangeRequest/ReleasePlanAddChangeRequestDialog';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
 import { usePendingChangeRequests } from 'hooks/api/getters/usePendingChangeRequests/usePendingChangeRequests';
@@ -63,7 +62,6 @@ export const FeatureStrategyMenu = ({
     const [selectedTemplate, setSelectedTemplate] =
         useState<IReleasePlanTemplate>();
     const [addReleasePlanOpen, setAddReleasePlanOpen] = useState(false);
-    const [addCRReleasePlanOpen, setAddCRReleasePlanOpen] = useState(false);
     const isPopoverOpen = Boolean(anchor);
     const popoverId = isPopoverOpen ? 'FeatureStrategyMenuPopover' : undefined;
     const { setToastApiError, setToastData } = useToast();
@@ -76,6 +74,10 @@ export const FeatureStrategyMenu = ({
     const releasePlanChangeRequestsEnabled = useUiFlag(
         'releasePlanChangeRequests',
     );
+
+    const crProtected =
+        releasePlanChangeRequestsEnabled &&
+        isChangeRequestConfigured(environmentId);
 
     const onClose = () => {
         setAnchor(undefined);
@@ -98,11 +100,21 @@ export const FeatureStrategyMenu = ({
         if (!selectedTemplate) return;
 
         try {
-            if (
-                releasePlanChangeRequestsEnabled &&
-                isChangeRequestConfigured(environmentId)
-            ) {
-                setAddCRReleasePlanOpen(true);
+            if (crProtected) {
+                await addChange(projectId, environmentId, {
+                    feature: featureId,
+                    action: 'addReleasePlan',
+                    payload: {
+                        templateId: selectedTemplate.id,
+                    },
+                });
+
+                setToastData({
+                    type: 'success',
+                    text: 'Added to draft',
+                });
+
+                refetchChangeRequests();
             } else {
                 await addReleasePlanToFeature(
                     featureId,
@@ -117,42 +129,7 @@ export const FeatureStrategyMenu = ({
                 });
 
                 refetch();
-                setAddReleasePlanOpen(false);
-                setSelectedTemplate(undefined);
-
-                trackEvent('release-management', {
-                    props: {
-                        eventType: 'add-plan',
-                        plan: selectedTemplate.name,
-                    },
-                });
             }
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
-
-    const addReleasePlanToChangeRequest = async () => {
-        if (!selectedTemplate) return;
-
-        try {
-            await addChange(projectId, environmentId, {
-                feature: featureId,
-                action: 'addReleasePlan',
-                payload: {
-                    templateId: selectedTemplate.id,
-                },
-            });
-
-            setToastData({
-                type: 'success',
-                text: 'Added to draft',
-            });
-
-            refetchChangeRequests();
-            setAddCRReleasePlanOpen(false);
-            setSelectedTemplate(undefined);
-
             trackEvent('release-management', {
                 props: {
                     eventType: 'add-plan',
@@ -161,6 +138,9 @@ export const FeatureStrategyMenu = ({
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
+        } finally {
+            setAddReleasePlanOpen(false);
+            setSelectedTemplate(undefined);
         }
     };
 
@@ -227,22 +207,18 @@ export const FeatureStrategyMenu = ({
                     }}
                 />
             </Popover>
-            <ReleasePlanAddDialog
-                open={addReleasePlanOpen}
-                setOpen={setAddReleasePlanOpen}
-                onConfirm={addReleasePlan}
-                template={selectedTemplate}
-                featureName={featureId}
-                environment={environmentId}
-            />
-            <ReleasePlanAddChangeRequestDialog
-                open={addCRReleasePlanOpen}
-                setOpen={setAddCRReleasePlanOpen}
-                onConfirm={addReleasePlanToChangeRequest}
-                template={selectedTemplate}
-                featureName={featureId}
-                environment={environmentId}
-            />
+            {selectedTemplate && (
+                <ReleasePlanAddDialog
+                    open={addReleasePlanOpen}
+                    setOpen={setAddReleasePlanOpen}
+                    onConfirm={addReleasePlan}
+                    template={selectedTemplate}
+                    projectId={projectId}
+                    featureName={featureId}
+                    environment={environmentId}
+                    crProtected={crProtected}
+                />
+            )}
         </StyledStrategyMenu>
     );
 };

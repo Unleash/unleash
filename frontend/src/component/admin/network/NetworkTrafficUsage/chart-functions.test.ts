@@ -52,10 +52,6 @@ describe('toTrafficUsageChartData', () => {
         const expectedOutput = {
             datasets: [
                 {
-                    data: [0, 6, 0, 2, 4, 5],
-                    ...fromEndpointInfo('/api/admin'),
-                },
-                {
                     data: [7, 0, 11, 13, 0, 10],
                     ...fromEndpointInfo('/api/client'),
                 },
@@ -70,7 +66,9 @@ describe('toTrafficUsageChartData', () => {
             ],
         };
 
-        expect(toTrafficUsageChartData(input)).toMatchObject(expectedOutput);
+        expect(toTrafficUsageChartData(input, '/api/client')).toMatchObject(
+            expectedOutput,
+        );
     });
 
     test('daily data conversion', () => {

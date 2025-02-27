@@ -15,9 +15,11 @@ export type ChartDatasetType = ChartDataset<'bar'>;
 
 export const toTrafficUsageChartData = (
     traffic: TrafficUsageDataSegmentedCombinedSchema,
+    filter?: string,
 ): { datasets: ChartDatasetType[]; labels: string[] } => {
     const { newRecord, labels } = getLabelsAndRecords(traffic);
     const datasets = traffic.apiData
+        .filter((apiData) => (filter ? apiData.apiPath === filter : true))
         .sort(
             (item1, item2) =>
                 endpointsInfo[item1.apiPath].order -

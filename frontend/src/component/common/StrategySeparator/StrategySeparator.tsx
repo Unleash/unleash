@@ -1,4 +1,4 @@
-import { Box, styled, useTheme } from '@mui/material';
+import { styled, useTheme } from '@mui/material';
 
 interface IStrategySeparatorProps {
     text: 'AND' | 'OR';
@@ -11,7 +11,7 @@ const StyledAnd = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.elevation2,
     position: 'absolute',
     zIndex: theme.zIndex.fab,
-    top: '50%',
+    top: 0,
     left: theme.spacing(2),
     transform: 'translateY(-50%)',
     lineHeight: 1,
@@ -27,21 +27,11 @@ const StyledOr = styled(StyledAnd)(({ theme }) => ({
 
 export const StrategySeparator = ({ text }: IStrategySeparatorProps) => {
     const theme = useTheme();
-    return (
-        <Box
-            sx={{
-                height: theme.spacing(text === 'AND' ? 1 : 1.5),
-                position: 'relative',
-            }}
-            aria-hidden={true}
-        >
-            {text === 'AND' ? (
-                <StyledAnd>{text}</StyledAnd>
-            ) : (
-                <>
-                    <StyledOr>{text}</StyledOr>
-                </>
-            )}
-        </Box>
+    return text === 'AND' ? (
+        <StyledAnd>{text}</StyledAnd>
+    ) : (
+        <>
+            <StyledOr>{text}</StyledOr>
+        </>
     );
 };

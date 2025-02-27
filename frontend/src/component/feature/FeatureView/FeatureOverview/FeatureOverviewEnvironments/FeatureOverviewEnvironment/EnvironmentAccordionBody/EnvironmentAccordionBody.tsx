@@ -22,10 +22,10 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
-import { ReleasePlan } from '../../../ReleasePlan/LegacyReleasePlan';
 import { Badge } from 'component/common/Badge/Badge';
 import { StrategyDraggableItem as NewStrategyDraggableItem } from './StrategyDraggableItem/StrategyDraggableItem';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;

@@ -5,8 +5,8 @@ import {
     parseParameterString,
     parseParameterStrings,
 } from 'utils/parseParameter';
-import { StrategyExecutionItem } from '../StrategyExecutionItem/StrategyExecutionItem';
-import { StrategyChip } from '../StrategyChip/StrategyChip';
+import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
+import { StrategyEvaluation } from '../StrategyEvaluationChip/StrategyEvaluationChip';
 import type {
     CreateFeatureStrategySchema,
     StrategySchema,
@@ -45,7 +45,7 @@ export const useCustomStrategyParameters = (
                 }
 
                 return (
-                    <StrategyExecutionItem
+                    <StrategyEvaluationItem
                         key={key}
                         type={typeItem}
                         values={values}
@@ -53,25 +53,25 @@ export const useCustomStrategyParameters = (
                         {values.length === 1
                             ? 'has 1 item:'
                             : `has ${values.length} items:`}
-                    </StrategyExecutionItem>
+                    </StrategyEvaluationItem>
                 );
             }
 
             case 'percentage': {
                 const value = parseParameterNumber(parameters[name]);
                 return (
-                    <StrategyExecutionItem key={key} type={typeItem}>
-                        is set to <StrategyChip label={`${value}%`} />
-                    </StrategyExecutionItem>
+                    <StrategyEvaluationItem key={key} type={typeItem}>
+                        is set to <StrategyEvaluation label={`${value}%`} />
+                    </StrategyEvaluationItem>
                 );
             }
 
             case 'boolean': {
                 const value = parameters[name];
                 return (
-                    <StrategyExecutionItem key={key} type={typeItem}>
-                        is set to <StrategyChip label={value} />
-                    </StrategyExecutionItem>
+                    <StrategyEvaluationItem key={key} type={typeItem}>
+                        is set to <StrategyEvaluation label={value} />
+                    </StrategyEvaluationItem>
                 );
             }
 
@@ -79,26 +79,26 @@ export const useCustomStrategyParameters = (
                 const value = parseParameterString(parameters[name]);
 
                 return (
-                    <StrategyExecutionItem
+                    <StrategyEvaluationItem
                         key={key}
                         type={typeItem}
                         values={value === '' ? undefined : [value]}
                     >
                         {value === '' ? 'is an empty string' : 'is set to'}
-                    </StrategyExecutionItem>
+                    </StrategyEvaluationItem>
                 );
             }
 
             case 'number': {
                 const value = parseParameterNumber(parameters[name]);
                 return (
-                    <StrategyExecutionItem
+                    <StrategyEvaluationItem
                         key={key}
                         type={typeItem}
                         values={[`${value}`]}
                     >
                         is a number set to
-                    </StrategyExecutionItem>
+                    </StrategyEvaluationItem>
                 );
             }
 

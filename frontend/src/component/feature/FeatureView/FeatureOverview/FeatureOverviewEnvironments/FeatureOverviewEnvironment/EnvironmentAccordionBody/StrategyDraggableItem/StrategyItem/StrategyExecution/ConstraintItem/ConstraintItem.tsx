@@ -1,25 +1,25 @@
 import type { FC } from 'react';
-import { StrategyExecutionItem } from '../StrategyExecutionItem/StrategyExecutionItem';
+import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
 import type { ConstraintSchema } from 'openapi';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
-import { StrategyChip } from '../StrategyChip/StrategyChip';
+import { StrategyEvaluation } from '../StrategyEvaluationChip/StrategyEvaluationChip';
 import { styled, Tooltip } from '@mui/material';
 
 const Inverted: FC = () => (
     <Tooltip title='NOT (operator is negated)' arrow>
-        <StrategyChip label='≠' />
+        <StrategyEvaluation label='≠' />
     </Tooltip>
 );
 
 const Operator: FC<{ label: ConstraintSchema['operator'] }> = ({ label }) => (
     <Tooltip title={label} arrow>
-        <StrategyChip label={formatOperatorDescription(label)} />
+        <StrategyEvaluation label={formatOperatorDescription(label)} />
     </Tooltip>
 );
 
 const CaseInsensitive: FC = () => (
     <Tooltip title='Case sensitive' arrow>
-        <StrategyChip label={<del>Aa</del>} />
+        <StrategyEvaluation label={<del>Aa</del>} />
     </Tooltip>
 );
 
@@ -40,13 +40,13 @@ export const ConstraintItem: FC<ConstraintSchema> = ({
     const items = value ? [value, ...(values || [])] : values || [];
 
     return (
-        <StrategyExecutionItem type='Constraint' values={items}>
+        <StrategyEvaluationItem type='Constraint' values={items}>
             {contextName}
             <StyledOperatorGroup>
                 {inverted ? <Inverted /> : null}
                 <Operator label={operator} />
                 {caseInsensitive ? <CaseInsensitive /> : null}
             </StyledOperatorGroup>
-        </StrategyExecutionItem>
+        </StrategyEvaluationItem>
     );
 };

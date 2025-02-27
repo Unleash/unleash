@@ -7,8 +7,8 @@ import { StrategyExecution as LegacyStrategyExecution } from './LegacyStrategyEx
 import { ConstraintItem } from './ConstraintItem/ConstraintItem';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { objectId } from 'utils/objectId';
-import { StrategyExecutionSeparator } from './StrategyExecutionSeparator/StrategyExecutionSeparator';
-import { useCustomStrategyParameters } from './hooks/useCustomStrategyItems';
+import { StrategyEvaluationSeparator } from './StrategyEvaluationSeparator/StrategyEvaluationSeparator';
+import { useCustomStrategyParameters } from './hooks/useCustomStrategyParameters';
 import { useStrategyParameters } from './hooks/useStrategyParameters';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
@@ -47,7 +47,7 @@ const List: FC<{ children: ReactNode }> = ({ children }) => {
             result.push(
                 <ListItem key={index}>
                     {index > 0 ? (
-                        <StrategyExecutionSeparator key={`${index}-divider`} />
+                        <StrategyEvaluationSeparator key={`${index}-divider`} />
                     ) : null}
                     {child}
                 </ListItem>,

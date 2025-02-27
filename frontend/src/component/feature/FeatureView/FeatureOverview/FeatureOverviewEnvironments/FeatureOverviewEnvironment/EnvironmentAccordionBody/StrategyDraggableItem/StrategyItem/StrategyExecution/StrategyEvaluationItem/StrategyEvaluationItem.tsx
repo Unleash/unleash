@@ -38,7 +38,7 @@ const StyledValue = styled(({ ...props }: ChipProps) => (
 /**
  * Abstract building block for a list of constraints, segments and other items inside a strategy
  */
-export const StrategyExecutionItem: FC<StrategyItemProps> = ({
+export const StrategyEvaluationItem: FC<StrategyItemProps> = ({
     type,
     children,
     values,

@@ -13,6 +13,6 @@ const StyledChip = styled(Chip)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
 }));
 
-export const StrategyChip = forwardRef<HTMLDivElement, ChipProps>(
+export const StrategyEvaluation = forwardRef<HTMLDivElement, ChipProps>(
     (props, ref) => <StyledChip size='small' ref={ref} {...props} />,
 );

@@ -13,6 +13,6 @@ const StyledAnd = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
 }));
 
-export const StrategyExecutionSeparator = () => (
+export const StrategyEvaluationSeparator = () => (
     <StyledAnd role='separator'>AND</StyledAnd>
 );

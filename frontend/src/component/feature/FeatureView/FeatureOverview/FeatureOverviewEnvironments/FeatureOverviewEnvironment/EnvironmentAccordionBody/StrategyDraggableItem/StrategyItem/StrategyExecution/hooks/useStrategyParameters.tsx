@@ -1,10 +1,10 @@
 import { type FC, useMemo } from 'react';
-import { StrategyChip } from '../StrategyChip/StrategyChip';
+import { StrategyEvaluation } from '../StrategyEvaluationChip/StrategyEvaluationChip';
 import {
     parseParameterNumber,
     parseParameterStrings,
 } from 'utils/parseParameter';
-import { StrategyExecutionItem } from '../StrategyExecutionItem/StrategyExecutionItem';
+import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import type { CreateFeatureStrategySchema } from 'openapi';
 
@@ -31,14 +31,15 @@ const RolloutParameter: FC<{
     );
 
     return (
-        <StrategyExecutionItem type='Rollout %'>
-            <StrategyChip label={`${percentage}%`} /> of your base {stickiness}
+        <StrategyEvaluationItem type='Rollout %'>
+            <StrategyEvaluation label={`${percentage}%`} /> of your base{' '}
+            {stickiness}
             <span>
                 {hasConstraints ? 'who match constraints ' : ' '}
                 is included.
             </span>
             {/* TODO: displayGroupId */}
-        </StrategyExecutionItem>
+        </StrategyEvaluationItem>
     );
 };
 
@@ -69,7 +70,7 @@ export const useStrategyParameters = (
             )
         ) {
             return (
-                <StrategyExecutionItem
+                <StrategyEvaluationItem
                     key={key}
                     type={key}
                     values={parseParameterStrings(parameters?.[key])}

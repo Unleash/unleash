@@ -275,7 +275,7 @@ export const EnvironmentAccordionBody = ({
                                 </StyledStrategyList>
                             ) : (
                                 <PaginatedStrategyContainer>
-                                    <Alert severity='error'>
+                                    <Alert severity='warning'>
                                         We noticed you're using a high number of
                                         activation strategies. To ensure a more
                                         targeted approach, consider leveraging

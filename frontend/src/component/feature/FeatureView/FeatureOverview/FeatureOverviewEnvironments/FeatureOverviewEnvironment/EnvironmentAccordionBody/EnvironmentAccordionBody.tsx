@@ -22,6 +22,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import { StrategyDraggableItem as NewStrategyDraggableItem } from './StrategyDraggableItem/StrategyDraggableItem';
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -41,18 +42,20 @@ const StyledContentList = styled('ol')({
     margin: 0,
 });
 
-const StyledReleasePlanList = styled(StyledContentList)(({ theme }) => ({
-    background: theme.palette.background.elevation2,
-}));
-
-const StyledListItem = styled('li')(({ theme }) => ({
+const StyledListItem = styled('li', {
+    shouldForwardProp: (prop) => prop !== 'type',
+})<{ type?: 'release plan' | 'strategy' }>(({ theme, type }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
-    background: 'inherit',
+    background:
+        type === 'release plan'
+            ? theme.palette.background.elevation2
+            : theme.palette.background.elevation1,
     position: 'relative',
     paddingBlock: theme.spacing(2.5),
+    '&:first-of-type': {
+        paddingTop: theme.spacing(1),
+    },
 }));
-
-const StrategyContainer = styled('div')(({ theme }) => ({}));
 
 const PaginatedStrategyContainer = styled('div')(({ theme }) => ({
     paddingTop: theme.spacing(2.5),
@@ -231,9 +234,9 @@ export const EnvironmentAccordionBody = ({
         <div>
             <StyledAccordionBodyInnerContainer>
                 {releasePlans.length > 0 || strategies.length > 0 ? (
-                    <StyledReleasePlanList>
+                    <StyledContentList>
                         {releasePlans.map((plan) => (
-                            <StyledListItem key={plan.id}>
+                            <StyledListItem type='release plan' key={plan.id}>
                                 <ReleasePlan
                                     plan={plan}
                                     environmentIsDisabled={isDisabled}
@@ -244,6 +247,11 @@ export const EnvironmentAccordionBody = ({
                             <StyledContentList>
                                 {strategies.map((strategy, index) => (
                                     <StyledListItem key={strategy.id}>
+                                        {index > 0 ||
+                                        releasePlans.length > 0 ? (
+                                            <StrategySeparator text='OR' />
+                                        ) : null}
+
                                         <NewStrategyDraggableItem
                                             strategy={strategy}
                                             index={index}
@@ -274,6 +282,11 @@ export const EnvironmentAccordionBody = ({
                                 <StyledContentList>
                                     {page.map((strategy, index) => (
                                         <StyledListItem key={strategy.id}>
+                                            {index > 0 ||
+                                            releasePlans.length > 0 ? (
+                                                <StrategySeparator text='OR' />
+                                            ) : null}
+
                                             <NewStrategyDraggableItem
                                                 strategy={strategy}
                                                 index={
@@ -305,7 +318,7 @@ export const EnvironmentAccordionBody = ({
                                 />
                             </PaginatedStrategyContainer>
                         )}
-                    </StyledReleasePlanList>
+                    </StyledContentList>
                 ) : (
                     <FeatureStrategyEmpty
                         projectId={projectId}

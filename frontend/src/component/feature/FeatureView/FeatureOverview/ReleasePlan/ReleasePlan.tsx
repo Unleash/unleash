@@ -28,10 +28,11 @@ const StyledContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'readonly',
 })<{ readonly?: boolean }>(({ theme, readonly }) => ({
     padding: theme.spacing(2),
-    '& + &': {
-        marginTop: theme.spacing(2),
-    },
+    paddingTop: theme.spacing(0),
     background: 'inherit',
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(1),
 }));
 
 const StyledHeader = styled('div')(({ theme }) => ({

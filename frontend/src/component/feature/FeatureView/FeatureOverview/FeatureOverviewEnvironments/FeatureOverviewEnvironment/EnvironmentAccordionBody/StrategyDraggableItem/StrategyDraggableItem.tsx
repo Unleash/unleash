@@ -15,7 +15,6 @@ import {
     type ScheduledChangeRequestViewModel,
     useScheduledChangeRequestsWithStrategy,
 } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { StrategyItem } from './StrategyItem/StrategyItem';
 
 interface IStrategyDraggableItemProps {
@@ -65,11 +64,6 @@ export const StrategyDraggableItem = ({
             onDragOver={onDragOver(ref, index)}
             sx={{ opacity: isDragging ? '0.5' : '1' }}
         >
-            <ConditionallyRender
-                condition={index > 0}
-                show={<StrategySeparator text='OR' />}
-            />
-
             <StrategyItem
                 strategy={strategy}
                 environmentId={environmentName}

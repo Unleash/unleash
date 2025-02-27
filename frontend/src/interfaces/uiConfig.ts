@@ -92,7 +92,7 @@ export type UiFlags = {
     granularAdminPermissions?: boolean;
     frontendHeaderRedesign?: boolean;
     dataUsageMultiMonthView?: boolean;
-    connectionCount?: boolean;
+    consumptionModel?: boolean;
     edgeObservability?: boolean;
 };
 

@@ -64,7 +64,7 @@ export type IFlagKey =
     | 'uniqueSdkTracking'
     | 'frontendHeaderRedesign'
     | 'dataUsageMultiMonthView'
-    | 'connectionCount'
+    | 'consumptionModel'
     | 'teamsIntegrationChangeRequests'
     | 'edgeObservability';
 
@@ -307,8 +307,8 @@ const flags: IFlags = {
         process.env.UNLEASH_EXPERIMENTAL_DATA_USAGE_MULTI_MONTH_VIEW,
         false,
     ),
-    connectionCount: parseEnvVarBoolean(
-        process.env.EXPERIMENTAL_CONNECTION_COUNT,
+    consumptionModel: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_CONSUMPTION_MODEL,
         false,
     ),
     teamsIntegrationChangeRequests: parseEnvVarBoolean(

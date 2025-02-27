@@ -183,7 +183,7 @@ const useTrafficStats = (
     includedTraffic: number,
     chartDataSelection: ChartDataSelection,
 ) => {
-    const connectionCountEnabled = useUiFlag('connectionCount');
+    const consumptionModelEnabled = useUiFlag('consumptionModel');
     const { result } = useTrafficSearch(
         chartDataSelection.grouping,
         toDateRange(chartDataSelection, currentDate),
@@ -200,7 +200,7 @@ const useTrafficStats = (
         }
         const traffic = result.data;
 
-        const chartData = connectionCountEnabled
+        const chartData = consumptionModelEnabled
             ? toConnectionChartData(traffic)
             : newToChartData(traffic);
         const usageTotal = calculateTotalUsage(traffic);

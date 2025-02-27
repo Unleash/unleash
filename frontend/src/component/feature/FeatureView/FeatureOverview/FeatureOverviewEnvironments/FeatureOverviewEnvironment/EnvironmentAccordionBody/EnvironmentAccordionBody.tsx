@@ -24,8 +24,8 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
 import { Badge } from 'component/common/Badge/Badge';
-import { SectionSeparator } from '../SectionSeparator/SectionSeparator';
 import { StrategyDraggableItem as NewStrategyDraggableItem } from './StrategyDraggableItem/StrategyDraggableItem';
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -65,6 +65,10 @@ const StyledStrategyList = styled('ol')({
     padding: 0,
     margin: 0,
 });
+
+const StyledReleasePlanList = styled(StyledStrategyList)(({ theme }) => ({
+    background: theme.palette.background.elevation2,
+}));
 
 export const EnvironmentAccordionBody = ({
     featureEnvironment,
@@ -234,29 +238,20 @@ export const EnvironmentAccordionBody = ({
                     condition={releasePlans.length > 0 || strategies.length > 0}
                     show={
                         <>
-                            {releasePlans.map((plan) => (
-                                <ReleasePlan
-                                    key={plan.id}
-                                    plan={plan}
-                                    environmentIsDisabled={isDisabled}
-                                />
-                            ))}
-                            <ConditionallyRender
-                                condition={
-                                    releasePlans.length > 0 &&
-                                    strategies.length > 0
-                                }
-                                show={
-                                    <>
-                                        <SectionSeparator>
-                                            <StyledBadge>OR</StyledBadge>
-                                        </SectionSeparator>
-                                        <AdditionalStrategiesDiv>
-                                            Additional strategies
-                                        </AdditionalStrategiesDiv>
-                                    </>
-                                }
-                            />
+                            <StyledReleasePlanList>
+                                {releasePlans.map((plan) => (
+                                    <li key={plan.id}>
+                                        <ReleasePlan
+                                            plan={plan}
+                                            environmentIsDisabled={isDisabled}
+                                        />
+                                    </li>
+                                ))}
+                            </StyledReleasePlanList>
+                            {releasePlans.length > 0 &&
+                            strategies.length > 0 ? (
+                                <StrategySeparator text='OR' />
+                            ) : null}
                             <ConditionallyRender
                                 condition={
                                     strategies.length < 50 ||

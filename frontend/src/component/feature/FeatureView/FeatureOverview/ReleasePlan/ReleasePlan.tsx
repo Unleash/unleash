@@ -41,7 +41,7 @@ const StyledHeader = styled('div')(({ theme }) => ({
 }));
 
 const StyledHeaderHgroup = styled('hgroup')(({ theme }) => ({
-    paddingBlock: theme.spacing(1.5),
+    paddingTop: theme.spacing(1.5),
 }));
 
 const StyledHeaderTitleLabel = styled('p')(({ theme }) => ({

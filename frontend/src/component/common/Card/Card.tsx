@@ -66,7 +66,7 @@ const StyledCardBodyContent = styled(Box)(({ theme }) => ({
 const StyledCardFooter = styled(Box)(({ theme }) => ({
     padding: theme.spacing(0, 2),
     display: 'flex',
-    background: theme.palette.envAccordion.expanded,
+    background: theme.palette.background.elevation1,
     boxShadow: theme.boxShadows.accordionFooter,
     alignItems: 'center',
     justifyContent: 'space-between',

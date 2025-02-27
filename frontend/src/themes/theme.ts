@@ -253,6 +253,8 @@ const theme = {
 
         /**
          * For Environment Accordion.
+         * @deprecated Use `elevation1` for `disabled` and `elevation2` for `expanded` instead.
+         * remove with the flagOverviewRedesign flag
          */
         envAccordion: {
             disabled: colors.grey[100],

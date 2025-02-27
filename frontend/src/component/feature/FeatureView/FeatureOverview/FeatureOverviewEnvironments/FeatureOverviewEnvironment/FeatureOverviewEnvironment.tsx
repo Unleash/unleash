@@ -46,7 +46,6 @@ const StyledAccordionFooter = styled('footer')(({ theme }) => ({
     flexDirection: 'column',
     alignItems: 'flex-end',
     gap: theme.spacing(2),
-    borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledEnvironmentAccordionContainer = styled('div')(({ theme }) => ({

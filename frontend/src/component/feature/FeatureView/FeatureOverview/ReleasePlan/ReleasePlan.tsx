@@ -40,7 +40,7 @@ const StyledHeader = styled('div')(({ theme }) => ({
     color: theme.palette.text.primary,
 }));
 
-const StyledHeaderHgroup = styled('hgroup')(({ theme }) => ({
+const StyledHeaderGroup = styled('hgroup')(({ theme }) => ({
     paddingTop: theme.spacing(1.5),
 }));
 
@@ -245,7 +245,7 @@ export const ReleasePlan = ({
     return (
         <StyledContainer readonly={readonly}>
             <StyledHeader>
-                <StyledHeaderHgroup>
+                <StyledHeaderGroup>
                     <StyledHeaderTitleLabel>
                         Release plan:{' '}
                     </StyledHeaderTitleLabel>
@@ -255,7 +255,7 @@ export const ReleasePlan = ({
                             {description}
                         </Truncator>
                     </StyledHeaderDescription>
-                </StyledHeaderHgroup>
+                </StyledHeaderGroup>
                 {!readonly && (
                     <PermissionIconButton
                         onClick={confirmRemoveReleasePlan}

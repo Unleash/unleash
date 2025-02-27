@@ -1,10 +1,6 @@
 import { styled } from '@mui/material';
 
-interface IStrategySeparatorProps {
-    text: 'AND' | 'OR';
-}
-
-const StyledOr = styled('div')(({ theme }) => ({
+const Chip = styled('div')(({ theme }) => ({
     padding: theme.spacing(0.75, 1),
     fontSize: theme.fontSizes.smallerBody,
     position: 'absolute',
@@ -19,6 +15,6 @@ const StyledOr = styled('div')(({ theme }) => ({
     left: theme.spacing(4),
 }));
 
-export const StrategySeparator = ({ text }: IStrategySeparatorProps) => {
-    return <StyledOr>{text}</StyledOr>;
+export const StrategySeparator = () => {
+    return <Chip>OR</Chip>;
 };

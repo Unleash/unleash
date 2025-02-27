@@ -249,7 +249,7 @@ export const EnvironmentAccordionBody = ({
                                     <StyledListItem key={strategy.id}>
                                         {index > 0 ||
                                         releasePlans.length > 0 ? (
-                                            <StrategySeparator text='OR' />
+                                            <StrategySeparator />
                                         ) : null}
 
                                         <StrategyDraggableItem
@@ -284,7 +284,7 @@ export const EnvironmentAccordionBody = ({
                                         <StyledListItem key={strategy.id}>
                                             {index > 0 ||
                                             releasePlans.length > 0 ? (
-                                                <StrategySeparator text='OR' />
+                                                <StrategySeparator />
                                             ) : null}
 
                                             <StrategyDraggableItem

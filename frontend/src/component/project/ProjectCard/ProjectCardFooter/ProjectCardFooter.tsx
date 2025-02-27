@@ -19,7 +19,7 @@ const StyledFooter = styled(Box)<{ disabled: boolean }>(
         display: 'flex',
         background: disabled
             ? theme.palette.background.paper
-            : theme.palette.envAccordion.expanded,
+            : theme.palette.background.elevation1,
         boxShadow: theme.boxShadows.accordionFooter,
         alignItems: 'center',
         justifyContent: 'space-between',

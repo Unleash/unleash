@@ -19,9 +19,7 @@ const StyledAnd = styled('div')(({ theme }) => ({
 }));
 
 const StyledOr = styled(StyledAnd)(({ theme }) => ({
-    fontWeight: 'bold',
-    backgroundColor: theme.palette.background.alternative,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: theme.palette.secondary.border,
     left: theme.spacing(4),
 }));
 

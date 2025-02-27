@@ -17,6 +17,9 @@ const NetworkTrafficUsage = lazy(
 const BackendConnections = lazy(
     () => import('./NetworkTrafficUsage/BackendConnections'),
 );
+const FrontendNetworkTrafficUsage = lazy(
+    () => import('./NetworkTrafficUsage/FrontendNetworkTrafficUsage'),
+);
 
 const tabs = [
     {
@@ -44,6 +47,10 @@ const consumptionModelTabs = [
     {
         label: 'Backend Connections',
         path: '/admin/network/backend-connections',
+    },
+    {
+        label: 'Frontend Traffic',
+        path: '/admin/network/frontend-data-usage',
     },
 ];
 
@@ -102,6 +109,10 @@ export const Network = () => {
                     <Route
                         path='backend-connections'
                         element={<BackendConnections />}
+                    />
+                    <Route
+                        path='frontend-data-usage'
+                        element={<FrontendNetworkTrafficUsage />}
                     />
                 </Routes>
             </PageContent>

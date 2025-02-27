@@ -17,6 +17,7 @@ import { averageTrafficPreviousMonths } from '../average-traffic-previous-months
 export const useTrafficStats = (
     includedTraffic: number,
     chartDataSelection: ChartDataSelection,
+    filter?: string,
 ) => {
     const { result } = useTrafficSearch(
         chartDataSelection.grouping,
@@ -34,7 +35,7 @@ export const useTrafficStats = (
         }
         const traffic = result.data;
 
-        const chartData = newToChartData(traffic);
+        const chartData = newToChartData(traffic, filter);
         const usageTotal = calculateTotalUsage(traffic);
         const overageCost = calculateOverageCost(
             usageTotal,

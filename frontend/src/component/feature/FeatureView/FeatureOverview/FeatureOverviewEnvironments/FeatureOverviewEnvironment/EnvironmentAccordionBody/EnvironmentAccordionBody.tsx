@@ -65,6 +65,10 @@ const PaginatedStrategyContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginInline: theme.spacing(2), // should consider finding a variable here
+}));
+
 export const EnvironmentAccordionBody = ({
     featureEnvironment,
     isDisabled,
@@ -275,12 +279,12 @@ export const EnvironmentAccordionBody = ({
                                 </StyledStrategyList>
                             ) : (
                                 <PaginatedStrategyContainer>
-                                    <Alert severity='warning'>
+                                    <StyledAlert severity='warning'>
                                         We noticed you're using a high number of
                                         activation strategies. To ensure a more
                                         targeted approach, consider leveraging
                                         constraints or segments.
-                                    </Alert>
+                                    </StyledAlert>
                                     <StyledStrategyList>
                                         {page.map((strategy, index) => (
                                             <StyledListItem key={strategy.id}>

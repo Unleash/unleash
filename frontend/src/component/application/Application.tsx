@@ -129,7 +129,7 @@ export const Application = () => {
             name: 'overview',
         },
         {
-            title: 'Last Seen Instances (24h)',
+            title: 'Last seen instances (24h)',
             path: `${basePath}/instances`,
             name: 'instances',
         },

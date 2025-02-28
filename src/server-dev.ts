@@ -60,6 +60,7 @@ process.nextTick(async () => {
                         dataUsageMultiMonthView: true,
                         filterExistingFlagNames: true,
                         teamsIntegrationChangeRequests: true,
+                        simplifyDisableFeature: true,
                     },
                 },
                 authentication: {

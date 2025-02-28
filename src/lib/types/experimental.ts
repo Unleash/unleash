@@ -66,7 +66,8 @@ export type IFlagKey =
     | 'dataUsageMultiMonthView'
     | 'consumptionModel'
     | 'teamsIntegrationChangeRequests'
-    | 'edgeObservability';
+    | 'edgeObservability'
+    | 'simplifyDisableFeature';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -317,6 +318,10 @@ const flags: IFlags = {
     ),
     edgeObservability: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_EDGE_OBSERVABILITY,
+        false,
+    ),
+    simplifyDisableFeature: parseEnvVarBoolean(
+        process.env.EXPERIMENTAL_SIMPLIFY_DISABLE_FEATURE,
         false,
     ),
 };

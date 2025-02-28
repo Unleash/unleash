@@ -112,7 +112,7 @@ export const UpdateProject = ({ project }: IUpdateProject) => {
                 loading={loading}
                 title='General settings'
                 description='Projects allow you to group feature flags together in the management UI.'
-                documentationLink='https://docs.getunleash.io/reference/projects'
+                documentationLink='https://docs.getunleash.io/reference/projects#update-a-project'
                 documentationLinkLabel='Projects documentation'
                 formatApiCode={formatProjectApiCode}
                 compactPadding

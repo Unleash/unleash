@@ -313,18 +313,6 @@ export default class ProjectService {
         }
     }
 
-    async validateProjectEnvironments(environments: string[] | undefined) {
-        if (environments) {
-            if (environments.length === 0) {
-                throw new BadDataError(
-                    'A project must always have at least one environment.',
-                );
-            }
-
-            await this.validateEnvironmentsExist(environments);
-        }
-    }
-
     async validateProjectLimit() {
         const limit = Math.max(this.resourceLimits.projects, 1);
         const projectCount = await this.projectStore.count();
@@ -365,8 +353,6 @@ export default class ProjectService {
         await this.validateProjectLimit();
 
         const validateData = async () => {
-            await this.validateProjectEnvironments(newProject.environments);
-
             if (!newProject.id?.trim()) {
                 newProject.id = await this.generateProjectId(newProject.name);
                 return await projectSchema.validateAsync(newProject);
@@ -383,7 +369,7 @@ export default class ProjectService {
 
         await this.projectStore.create(data);
 
-        const envsToEnable = newProject.environments?.length
+        const envsToEnable = newProject.environments
             ? newProject.environments
             : (
                   await this.environmentStore.getAll({

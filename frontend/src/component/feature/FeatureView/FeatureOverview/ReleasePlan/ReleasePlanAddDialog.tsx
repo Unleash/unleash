@@ -4,6 +4,7 @@ import { ReleasePlan } from './ReleasePlan';
 import { useReleasePlanPreview } from 'hooks/useReleasePlanPreview';
 import { styled, Typography, Alert } from '@mui/material';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
+import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
 
 const StyledReleasePlanContainer = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0),
@@ -30,6 +31,13 @@ export const ReleasePlanAddDialog = ({
     crProtected,
 }: IReleasePlanAddDialogProps) => {
     const { feature } = useFeature(projectId, featureName);
+    const { releasePlans } = useReleasePlans(
+        projectId,
+        featureName,
+        environment,
+    );
+
+    const activeReleasePlan = releasePlans[0];
 
     const environmentData = feature?.environments.find(
         ({ name }) => name === environment,
@@ -55,6 +63,15 @@ export const ReleasePlanAddDialog = ({
             onClick={onConfirm}
             onClose={() => setOpen(false)}
         >
+            {activeReleasePlan && (
+                <Alert severity='error' sx={{ mb: 1 }}>
+                    This feature environment currently has{' '}
+                    <strong>{activeReleasePlan.name}</strong> -{' '}
+                    <strong>{activeReleasePlan.milestones[0].name}</strong>
+                    {environmentEnabled ? ' running' : ' paused'}. Adding a new
+                    release plan will replace the existing release plan.
+                </Alert>
+            )}
             {environmentEnabled ? (
                 <Alert severity='info'>
                     This environment is currently <strong>enabled</strong>.
@@ -70,8 +87,8 @@ export const ReleasePlanAddDialog = ({
                 <Alert severity='warning'>
                     This environment is currently <strong>disabled</strong>.
                     <p>
-                        The milestones will not start automatically after adding
-                        the release plan. They will remain paused until the
+                        Milestones will not start automatically after adding the
+                        release plan. They will remain paused until the
                         environment is enabled.
                     </p>
                 </Alert>

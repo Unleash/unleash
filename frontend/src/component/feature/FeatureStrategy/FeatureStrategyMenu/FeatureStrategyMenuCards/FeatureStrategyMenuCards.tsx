@@ -10,7 +10,7 @@ interface IFeatureStrategyMenuCardsProps {
     projectId: string;
     featureId: string;
     environmentId: string;
-    setTemplateForChangeRequestDialog: (template: IReleasePlanTemplate) => void;
+    onAddReleasePlan: (template: IReleasePlanTemplate) => void;
 }
 
 const StyledTypography = styled(Typography)(({ theme }) => ({
@@ -22,7 +22,7 @@ export const FeatureStrategyMenuCards = ({
     projectId,
     featureId,
     environmentId,
-    setTemplateForChangeRequestDialog,
+    onAddReleasePlan,
 }: IFeatureStrategyMenuCardsProps) => {
     const { strategies } = useStrategies();
     const { templates } = useReleasePlanTemplates();
@@ -67,13 +67,8 @@ export const FeatureStrategyMenuCards = ({
                         {templates.map((template) => (
                             <ListItem key={template.id}>
                                 <FeatureReleasePlanCard
-                                    projectId={projectId}
-                                    featureId={featureId}
-                                    environmentId={environmentId}
-                                    releasePlanTemplate={template}
-                                    setTemplateForChangeRequestDialog={
-                                        setTemplateForChangeRequestDialog
-                                    }
+                                    template={template}
+                                    onClick={() => onAddReleasePlan(template)}
                                 />
                             </ListItem>
                         ))}

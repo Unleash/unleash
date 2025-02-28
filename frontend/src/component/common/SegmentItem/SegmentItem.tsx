@@ -56,6 +56,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
         textDecoration: 'underline',
     },
 }));
+
 const StyledText = styled('span', {
     shouldForwardProp: (prop) => prop !== 'disabled',
 })<{ disabled: boolean | null }>(({ theme, disabled }) => ({

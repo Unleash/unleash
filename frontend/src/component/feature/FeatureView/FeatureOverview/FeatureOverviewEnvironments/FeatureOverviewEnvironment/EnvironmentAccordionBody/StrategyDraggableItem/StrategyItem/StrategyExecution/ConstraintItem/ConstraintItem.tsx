@@ -1,60 +1,52 @@
-import { Chip, styled } from '@mui/material';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import StringTruncator from 'component/common/StringTruncator/StringTruncator';
+import type { FC } from 'react';
+import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
+import type { ConstraintSchema } from 'openapi';
+import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
+import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip';
+import { styled, Tooltip } from '@mui/material';
 
-interface IConstraintItemProps {
-    value: string[];
-    text: string;
-}
+const Inverted: FC = () => (
+    <Tooltip title='NOT (operator is negated)' arrow>
+        <StrategyEvaluationChip label='≠' />
+    </Tooltip>
+);
 
-const StyledContainer = styled('div')(({ theme }) => ({
-    width: '100%',
-    padding: theme.spacing(2, 3),
-    borderRadius: theme.shape.borderRadiusMedium,
-    background: theme.palette.background.default,
-    border: `1px solid ${theme.palette.divider}`,
+const Operator: FC<{ label: ConstraintSchema['operator'] }> = ({ label }) => (
+    <Tooltip title={label} arrow>
+        <StrategyEvaluationChip label={formatOperatorDescription(label)} />
+    </Tooltip>
+);
+
+const CaseInsensitive: FC = () => (
+    <Tooltip title='Case sensitive' arrow>
+        <StrategyEvaluationChip label={<s>Aa</s>} />
+    </Tooltip>
+);
+
+const StyledOperatorGroup = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(0.5),
 }));
 
-const StyledParagraph = styled('p')(({ theme }) => ({
-    display: 'inline',
-    margin: theme.spacing(0.5, 0),
-    maxWidth: '95%',
-    textAlign: 'center',
-    wordBreak: 'break-word',
-}));
+export const ConstraintItem: FC<ConstraintSchema> = ({
+    caseInsensitive,
+    contextName,
+    inverted,
+    operator,
+    value,
+    values,
+}) => {
+    const items = value ? [value, ...(values || [])] : values || [];
 
-const StyledChip = styled(Chip)(({ theme }) => ({
-    margin: theme.spacing(0.5),
-}));
-
-export const ConstraintItem = ({ value, text }: IConstraintItemProps) => {
     return (
-        <StyledContainer>
-            <ConditionallyRender
-                condition={value.length === 0}
-                show={<p>No {text}s added yet.</p>}
-                elseShow={
-                    <div>
-                        <StyledParagraph>
-                            {value.length}{' '}
-                            {value.length > 1 ? `${text}s` : text} will get
-                            access.
-                        </StyledParagraph>
-                        {value.map((v: string) => (
-                            <StyledChip
-                                key={v}
-                                label={
-                                    <StringTruncator
-                                        maxWidth='300'
-                                        text={v}
-                                        maxLength={50}
-                                    />
-                                }
-                            />
-                        ))}
-                    </div>
-                }
-            />
-        </StyledContainer>
+        <StrategyEvaluationItem type='Constraint' values={items}>
+            {contextName}
+            <StyledOperatorGroup>
+                {inverted ? <Inverted /> : null}
+                <Operator label={operator} />
+                {caseInsensitive ? <CaseInsensitive /> : null}
+            </StyledOperatorGroup>
+        </StrategyEvaluationItem>
     );
 };

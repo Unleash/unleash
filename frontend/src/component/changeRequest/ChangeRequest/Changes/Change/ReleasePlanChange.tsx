@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { FC, ReactNode } from 'react';
+import { useRef, useState, type FC, type ReactNode } from 'react';
 import { Box, styled, Typography } from '@mui/material';
 import type {
     ChangeRequestState,
@@ -13,6 +13,7 @@ import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import EventDiff from 'component/events/EventDiff/EventDiff';
 import { ReleasePlan } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlan';
 import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
+import type { IReleasePlan } from 'interfaces/releasePlans';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -55,26 +56,10 @@ const StyledCodeSection = styled('div')(({ theme }) => ({
 
 const DeleteReleasePlan: FC<{
     change: IChangeRequestDeleteReleasePlan;
-    environmentName: string;
-    featureName: string;
-    projectId: string;
+    currentReleasePlan?: IReleasePlan;
     changeRequestState: ChangeRequestState;
     actions?: ReactNode;
-}> = ({
-    change,
-    environmentName,
-    featureName,
-    projectId,
-    changeRequestState,
-    actions,
-}) => {
-    const { releasePlans } = useReleasePlans(
-        projectId,
-        featureName,
-        environmentName,
-    );
-    const currentReleasePlan = releasePlans[0];
-
+}> = ({ change, currentReleasePlan, changeRequestState, actions }) => {
     const releasePlan =
         changeRequestState === 'Applied' && change.payload.snapshot
             ? change.payload.snapshot
@@ -104,26 +89,10 @@ const DeleteReleasePlan: FC<{
 
 const StartMilestone: FC<{
     change: IChangeRequestStartMilestone;
-    environmentName: string;
-    featureName: string;
-    projectId: string;
+    currentReleasePlan?: IReleasePlan;
     changeRequestState: ChangeRequestState;
     actions?: ReactNode;
-}> = ({
-    change,
-    environmentName,
-    featureName,
-    projectId,
-    changeRequestState,
-    actions,
-}) => {
-    const { releasePlans } = useReleasePlans(
-        projectId,
-        featureName,
-        environmentName,
-    );
-    const currentReleasePlan = releasePlans[0];
-
+}> = ({ change, currentReleasePlan, changeRequestState, actions }) => {
     const releasePlan =
         changeRequestState === 'Applied' && change.payload.snapshot
             ? change.payload.snapshot
@@ -177,24 +146,107 @@ const StartMilestone: FC<{
 
 const AddReleasePlan: FC<{
     change: IChangeRequestAddReleasePlan;
+    currentReleasePlan?: IReleasePlan;
     environmentName: string;
     featureName: string;
     actions?: ReactNode;
-}> = ({ change, environmentName, featureName, actions }) => {
+}> = ({
+    change,
+    currentReleasePlan,
+    environmentName,
+    featureName,
+    actions,
+}) => {
+    const [currentTooltipOpen, setCurrentTooltipOpen] = useState(false);
+    const currentTooltipCloseTimeoutRef = useRef<NodeJS.Timeout>();
+    const openCurrentTooltip = () => {
+        if (currentTooltipCloseTimeoutRef.current) {
+            clearTimeout(currentTooltipCloseTimeoutRef.current);
+        }
+        setCurrentTooltipOpen(true);
+    };
+    const closeCurrentTooltip = () => {
+        currentTooltipCloseTimeoutRef.current = setTimeout(() => {
+            setCurrentTooltipOpen(false);
+        }, 100);
+    };
+
     const planPreview = useReleasePlanPreview(
         change.payload.templateId,
         featureName,
         environmentName,
     );
 
+    const planPreviewDiff = {
+        ...planPreview,
+        discriminator: 'plan',
+        releasePlanTemplateId: change.payload.templateId,
+    };
+
     return (
         <>
             <ChangeItemCreateEditDeleteWrapper>
                 <ChangeItemInfo>
-                    <Typography color='success.dark'>
-                        + Adding release plan:
-                    </Typography>
+                    {currentReleasePlan ? (
+                        <Typography>
+                            Replacing{' '}
+                            <TooltipLink
+                                tooltip={
+                                    <div
+                                        onMouseEnter={() =>
+                                            openCurrentTooltip()
+                                        }
+                                        onMouseLeave={() =>
+                                            closeCurrentTooltip()
+                                        }
+                                    >
+                                        <ReleasePlan
+                                            plan={currentReleasePlan}
+                                            readonly
+                                        />
+                                    </div>
+                                }
+                                tooltipProps={{
+                                    open: currentTooltipOpen,
+                                    maxWidth: 500,
+                                    maxHeight: 600,
+                                }}
+                            >
+                                <span
+                                    onMouseEnter={() => openCurrentTooltip()}
+                                    onMouseLeave={() => closeCurrentTooltip()}
+                                >
+                                    current
+                                </span>
+                            </TooltipLink>{' '}
+                            release plan with:
+                        </Typography>
+                    ) : (
+                        <Typography color='success.dark'>
+                            + Adding release plan:
+                        </Typography>
+                    )}
                     <Typography>{planPreview.name}</Typography>
+                    {currentReleasePlan && (
+                        <TooltipLink
+                            tooltip={
+                                <StyledCodeSection>
+                                    <EventDiff
+                                        entry={{
+                                            preData: currentReleasePlan,
+                                            data: planPreviewDiff,
+                                        }}
+                                    />
+                                </StyledCodeSection>
+                            }
+                            tooltipProps={{
+                                maxWidth: 500,
+                                maxHeight: 600,
+                            }}
+                        >
+                            <ViewDiff>View Diff</ViewDiff>
+                        </TooltipLink>
+                    )}
                 </ChangeItemInfo>
                 <div>{actions}</div>
             </ChangeItemCreateEditDeleteWrapper>
@@ -221,11 +273,19 @@ export const ReleasePlanChange: FC<{
     projectId,
     changeRequestState,
 }) => {
+    const { releasePlans } = useReleasePlans(
+        projectId,
+        featureName,
+        environmentName,
+    );
+    const currentReleasePlan = releasePlans[0];
+
     return (
         <>
             {change.action === 'addReleasePlan' && (
                 <AddReleasePlan
                     change={change}
+                    currentReleasePlan={currentReleasePlan}
                     environmentName={environmentName}
                     featureName={featureName}
                     actions={actions}
@@ -234,9 +294,7 @@ export const ReleasePlanChange: FC<{
             {change.action === 'deleteReleasePlan' && (
                 <DeleteReleasePlan
                     change={change}
-                    environmentName={environmentName}
-                    featureName={featureName}
-                    projectId={projectId}
+                    currentReleasePlan={currentReleasePlan}
                     changeRequestState={changeRequestState}
                     actions={actions}
                 />
@@ -244,9 +302,7 @@ export const ReleasePlanChange: FC<{
             {change.action === 'startMilestone' && (
                 <StartMilestone
                     change={change}
-                    environmentName={environmentName}
-                    featureName={featureName}
-                    projectId={projectId}
+                    currentReleasePlan={currentReleasePlan}
                     changeRequestState={changeRequestState}
                     actions={actions}
                 />

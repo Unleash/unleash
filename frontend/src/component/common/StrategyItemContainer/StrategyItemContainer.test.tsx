@@ -4,6 +4,7 @@ import { StrategyItemContainer as LegacyStrategyItemContainer } from './LegacySt
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { StrategyItemContainer } from './StrategyItemContainer';
 
+// todo: remove this test along with the flag flagOverviewRedesign
 test('(deprecated) should render strategy name, custom title and description', async () => {
     const strategy: IFeatureStrategy = {
         id: 'irrelevant',

@@ -2,24 +2,24 @@ import type { FC } from 'react';
 import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
 import type { ConstraintSchema } from 'openapi';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
-import { StrategyEvaluation } from '../StrategyEvaluationChip/StrategyEvaluationChip';
+import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip';
 import { styled, Tooltip } from '@mui/material';
 
 const Inverted: FC = () => (
     <Tooltip title='NOT (operator is negated)' arrow>
-        <StrategyEvaluation label='≠' />
+        <StrategyEvaluationChip label='≠' />
     </Tooltip>
 );
 
 const Operator: FC<{ label: ConstraintSchema['operator'] }> = ({ label }) => (
     <Tooltip title={label} arrow>
-        <StrategyEvaluation label={formatOperatorDescription(label)} />
+        <StrategyEvaluationChip label={formatOperatorDescription(label)} />
     </Tooltip>
 );
 
 const CaseInsensitive: FC = () => (
     <Tooltip title='Case sensitive' arrow>
-        <StrategyEvaluation label={<del>Aa</del>} />
+        <StrategyEvaluationChip label={<s>Aa</s>} />
     </Tooltip>
 );
 

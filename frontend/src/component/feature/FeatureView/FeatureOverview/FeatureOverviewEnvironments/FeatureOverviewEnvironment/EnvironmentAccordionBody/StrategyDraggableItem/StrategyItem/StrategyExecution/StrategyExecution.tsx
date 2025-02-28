@@ -13,10 +13,10 @@ import { useStrategyParameters } from './hooks/useStrategyParameters';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 
-const StyledGrayscale = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'enabled',
-})<{ enabled: boolean }>(({ enabled }) =>
-    enabled ? { filter: 'grayscale(1)', opacity: 0.67 } : {},
+const FilterContainer = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'grayscale',
+})<{ grayscale: boolean }>(({ grayscale }) =>
+    grayscale ? { filter: 'grayscale(1)', opacity: 0.67 } : {},
 );
 
 const StyledList = styled('ul')(({ theme }) => ({
@@ -67,7 +67,7 @@ type StrategyExecutionProps = {
     displayGroupId?: boolean;
 };
 
-const NewStrategyExecution: FC<StrategyExecutionProps> = ({
+export const StrategyExecution: FC<StrategyExecutionProps> = ({
     strategy,
     displayGroupId = false,
 }) => {
@@ -80,9 +80,19 @@ const NewStrategyExecution: FC<StrategyExecutionProps> = ({
     const strategySegments = segments?.filter((segment) =>
         strategy.segments?.includes(segment.id),
     );
+    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
+
+    if (!flagOverviewRedesign) {
+        return (
+            <LegacyStrategyExecution
+                strategy={strategy}
+                displayGroupId={displayGroupId}
+            />
+        );
+    }
 
     return (
-        <StyledGrayscale enabled={strategy.disabled === true}>
+        <FilterContainer grayscale={strategy.disabled === true}>
             <List>
                 {strategySegments?.map((segment) => (
                     <SegmentItem segment={segment} />
@@ -95,16 +105,6 @@ const NewStrategyExecution: FC<StrategyExecutionProps> = ({
                 ))}
                 {isCustomStrategy ? customStrategyItems : strategyParameters}
             </List>
-        </StyledGrayscale>
-    );
-};
-
-export const StrategyExecution: FC<StrategyExecutionProps> = ({ ...props }) => {
-    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign'); 
-
-    return flagOverviewRedesign ? (
-        <NewStrategyExecution {...props} />
-    ) : (
-        <LegacyStrategyExecution {...props} />
+        </FilterContainer>
     );
 };

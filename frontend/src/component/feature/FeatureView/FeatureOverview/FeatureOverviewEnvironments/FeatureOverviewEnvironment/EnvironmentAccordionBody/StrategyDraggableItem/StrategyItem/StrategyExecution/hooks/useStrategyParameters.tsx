@@ -1,5 +1,5 @@
 import { type FC, useMemo } from 'react';
-import { StrategyEvaluation } from '../StrategyEvaluationChip/StrategyEvaluationChip';
+import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip';
 import {
     parseParameterNumber,
     parseParameterStrings,
@@ -32,7 +32,7 @@ const RolloutParameter: FC<{
 
     return (
         <StrategyEvaluationItem type='Rollout %'>
-            <StrategyEvaluation label={`${percentage}%`} /> of your base{' '}
+            <StrategyEvaluationChip label={`${percentage}%`} /> of your base{' '}
             {stickiness}
             <span>
                 {hasConstraints ? 'who match constraints ' : ' '}
@@ -52,7 +52,9 @@ export const useStrategyParameters = (
     const hasConstraints = Boolean(constraints?.length);
     const parameterKeys = parameters ? Object.keys(parameters) : [];
     const mapPredefinedStrategies = (key: string) => {
-        if (key === 'rollout' || key === 'Rollout') {
+        const type = key.toLocaleLowerCase();
+
+        if (type === 'rollout') {
             return (
                 <RolloutParameter
                     key={key}
@@ -64,11 +66,7 @@ export const useStrategyParameters = (
             );
         }
 
-        if (
-            ['userIds', 'UserIds', 'hostNames', 'HostNames', 'IPs'].includes(
-                key,
-            )
-        ) {
+        if (['userids', 'hostnames', 'ips'].includes(type)) {
             return (
                 <StrategyEvaluationItem
                     key={key}

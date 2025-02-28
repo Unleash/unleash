@@ -6,7 +6,7 @@ import {
     parseParameterStrings,
 } from 'utils/parseParameter';
 import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
-import { StrategyEvaluation } from '../StrategyEvaluationChip/StrategyEvaluationChip';
+import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip';
 import type {
     CreateFeatureStrategySchema,
     StrategySchema,
@@ -61,7 +61,7 @@ export const useCustomStrategyParameters = (
                 const value = parseParameterNumber(parameters[name]);
                 return (
                     <StrategyEvaluationItem key={key} type={typeItem}>
-                        is set to <StrategyEvaluation label={`${value}%`} />
+                        is set to <StrategyEvaluationChip label={`${value}%`} />
                     </StrategyEvaluationItem>
                 );
             }
@@ -70,7 +70,7 @@ export const useCustomStrategyParameters = (
                 const value = parameters[name];
                 return (
                     <StrategyEvaluationItem key={key} type={typeItem}>
-                        is set to <StrategyEvaluation label={value} />
+                        is set to <StrategyEvaluationChip label={value} />
                     </StrategyEvaluationItem>
                 );
             }

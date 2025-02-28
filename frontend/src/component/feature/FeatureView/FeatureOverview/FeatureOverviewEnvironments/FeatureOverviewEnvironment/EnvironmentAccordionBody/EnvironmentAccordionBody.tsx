@@ -298,12 +298,6 @@ export const EnvironmentAccordionBody = ({
                                                 otherEnvironments={
                                                     otherEnvironments
                                                 }
-                                                isDragging={false}
-                                                onDragStartRef={
-                                                    (() => {}) as any
-                                                }
-                                                onDragOver={(() => {}) as any}
-                                                onDragEnd={(() => {}) as any}
                                             />
                                         </StyledListItem>
                                     ))}

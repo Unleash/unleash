@@ -5,8 +5,8 @@ import {
     parseParameterString,
     parseParameterStrings,
 } from 'utils/parseParameter';
-import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
-import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip';
+import { StrategyEvaluationItem } from 'component/common/ConstraintsList/StrategyEvaluationItem/StrategyEvaluationItem';
+import { StrategyEvaluationChip } from 'component/common/ConstraintsList/StrategyEvaluationChip/StrategyEvaluationChip';
 import type {
     CreateFeatureStrategySchema,
     StrategySchema,

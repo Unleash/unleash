@@ -1,65 +1,22 @@
-import { Children, isValidElement, type FC, type ReactNode } from 'react';
+import type { FC } from 'react';
 import { styled } from '@mui/material';
 import type { CreateFeatureStrategySchema } from 'openapi';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { StrategyExecution as LegacyStrategyExecution } from './LegacyStrategyExecution';
-import { ConstraintItem } from './ConstraintItem/ConstraintItem';
+import { ConstraintItem } from 'component/common/ConstraintsList/ConstraintItem/ConstraintItem';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { objectId } from 'utils/objectId';
-import { StrategyEvaluationSeparator } from './StrategyEvaluationSeparator/StrategyEvaluationSeparator';
 import { useCustomStrategyParameters } from './hooks/useCustomStrategyParameters';
 import { useStrategyParameters } from './hooks/useStrategyParameters';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
+import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 
 const FilterContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'grayscale',
 })<{ grayscale: boolean }>(({ grayscale }) =>
     grayscale ? { filter: 'grayscale(1)', opacity: 0.67 } : {},
-);
-
-const StyledList = styled('ul')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    listStyle: 'none',
-    padding: 0,
-    margin: 0,
-    '&.disabled-strategy': {
-        filter: 'grayscale(1)',
-        opacity: 0.67,
-    },
-    gap: theme.spacing(1),
-}));
-
-const StyledListItem = styled('li')(({ theme }) => ({
-    position: 'relative',
-    padding: theme.spacing(2, 3),
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusMedium,
-    background: theme.palette.background.default,
-}));
-
-const List: FC<{ children: ReactNode }> = ({ children }) => {
-    const result: ReactNode[] = [];
-    Children.forEach(children, (child, index) => {
-        if (isValidElement(child)) {
-            result.push(
-                <ListItem key={index}>
-                    {index > 0 ? (
-                        <StrategyEvaluationSeparator key={`${index}-divider`} />
-                    ) : null}
-                    {child}
-                </ListItem>,
-            );
-        }
-    });
-
-    return <StyledList>{result}</StyledList>;
-};
-
-const ListItem: FC<{ children: ReactNode }> = ({ children }) => (
-    <StyledListItem>{children}</StyledListItem>
 );
 
 type StrategyExecutionProps = {
@@ -93,7 +50,7 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
 
     return (
         <FilterContainer grayscale={strategy.disabled === true}>
-            <List>
+            <ConstraintsList>
                 {strategySegments?.map((segment) => (
                     <SegmentItem segment={segment} />
                 ))}
@@ -104,7 +61,7 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
                     />
                 ))}
                 {isCustomStrategy ? customStrategyItems : strategyParameters}
-            </List>
+            </ConstraintsList>
         </FilterContainer>
     );
 };

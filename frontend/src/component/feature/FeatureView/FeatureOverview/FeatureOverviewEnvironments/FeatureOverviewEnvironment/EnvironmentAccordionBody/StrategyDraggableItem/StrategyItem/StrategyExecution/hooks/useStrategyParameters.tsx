@@ -1,10 +1,10 @@
 import { type FC, useMemo } from 'react';
-import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip';
+import { StrategyEvaluationChip } from 'component/common/ConstraintsList/StrategyEvaluationChip/StrategyEvaluationChip';
 import {
     parseParameterNumber,
     parseParameterStrings,
 } from 'utils/parseParameter';
-import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
+import { StrategyEvaluationItem } from 'component/common/ConstraintsList/StrategyEvaluationItem/StrategyEvaluationItem';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import type { CreateFeatureStrategySchema } from 'openapi';
 
@@ -38,7 +38,11 @@ const RolloutParameter: FC<{
                 {hasConstraints ? 'who match constraints ' : ' '}
                 is included.
             </span>
-            {/* TODO: displayGroupId */}
+            {displayGroupId && parameters?.groupId ? (
+                <StrategyEvaluationChip
+                    label={`groupId: ${parameters?.groupId}`}
+                />
+            ) : null}
         </StrategyEvaluationItem>
     );
 };

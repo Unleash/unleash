@@ -34,7 +34,7 @@ interface IStrategyDraggableItemProps {
     onDragEnd?: () => void;
 }
 
-const noop = () => () => {};
+const onDragNoOp = () => () => {};
 
 export const StrategyDraggableItem = ({
     strategy,
@@ -42,9 +42,9 @@ export const StrategyDraggableItem = ({
     environmentName,
     otherEnvironments,
     isDragging,
-    onDragStartRef = noop,
-    onDragOver = noop,
-    onDragEnd = noop,
+    onDragStartRef = onDragNoOp,
+    onDragOver = onDragNoOp,
+    onDragEnd = onDragNoOp,
 }: IStrategyDraggableItemProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');

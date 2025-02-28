@@ -2335,7 +2335,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/plugin-content-docs@npm:3.7.0":
+"@docusaurus/plugin-content-docs@npm:3.7.0, @docusaurus/plugin-content-docs@npm:^3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/plugin-content-docs@npm:3.7.0"
   dependencies:
@@ -2559,7 +2559,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/theme-common@npm:3.7.0":
+"@docusaurus/theme-common@npm:3.7.0, @docusaurus/theme-common@npm:^3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/theme-common@npm:3.7.0"
   dependencies:
@@ -2583,7 +2583,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/theme-mermaid@npm:3.7.0":
+"@docusaurus/theme-mermaid@npm:^3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/theme-mermaid@npm:3.7.0"
   dependencies:
@@ -2668,7 +2668,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/utils-validation@npm:3.7.0":
+"@docusaurus/utils-validation@npm:3.7.0, @docusaurus/utils-validation@npm:^3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/utils-validation@npm:3.7.0"
   dependencies:
@@ -2684,7 +2684,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@docusaurus/utils@npm:3.7.0":
+"@docusaurus/utils@npm:3.7.0, @docusaurus/utils@npm:^3.7.0":
   version: 3.7.0
   resolution: "@docusaurus/utils@npm:3.7.0"
   dependencies:
@@ -6756,7 +6756,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"docusaurus-theme-openapi-docs@npm:^4.2.0":
+"docusaurus-plugin-sass@npm:^0.2.6":
+  version: 0.2.6
+  resolution: "docusaurus-plugin-sass@npm:0.2.6"
+  dependencies:
+    sass-loader: "npm:^16.0.2"
+  peerDependencies:
+    "@docusaurus/core": ^2.0.0-beta || ^3.0.0-alpha
+    sass: ^1.30.0
+  checksum: 10c0/b5448ec386486ee1a49e9ea2a9cc9bf73a084f3150ec71a0203833f73c9ab48d5bbe98b7b95a21d5eeec5bd94fda9e3b06cf6cffa1120f2731174b7f134c38b5
+  languageName: node
+  linkType: hard
+
+"docusaurus-theme-openapi-docs@npm:4.3.5":
   version: 4.3.5
   resolution: "docusaurus-theme-openapi-docs@npm:4.3.5"
   dependencies:
@@ -8643,6 +8655,13 @@ __metadata:
   version: 4.3.7
   resolution: "immutable@npm:4.3.7"
   checksum: 10c0/9b099197081b22f6433003e34929da8ecddbbdc1474cdc8aa3b7669dee4adda349c06143de22def36016d1b6de5322b043eccd7a11db1dad2ca85dad4fff5435
+  languageName: node
+  linkType: hard
+
+"immutable@npm:^5.0.2":
+  version: 5.0.3
+  resolution: "immutable@npm:5.0.3"
+  checksum: 10c0/3269827789e1026cd25c2ea97f0b2c19be852ffd49eda1b674b20178f73d84fa8d945ad6f5ac5bc4545c2b4170af9f6e1f77129bc1cae7974a4bf9b04a9cdfb9
   languageName: node
   linkType: hard
 
@@ -14153,6 +14172,23 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
   languageName: node
   linkType: hard
 
+"sass@npm:^1.85.1":
+  version: 1.85.1
+  resolution: "sass@npm:1.85.1"
+  dependencies:
+    "@parcel/watcher": "npm:^2.4.1"
+    chokidar: "npm:^4.0.0"
+    immutable: "npm:^5.0.2"
+    source-map-js: "npm:>=0.6.2 <2.0.0"
+  dependenciesMeta:
+    "@parcel/watcher":
+      optional: true
+  bin:
+    sass: sass.js
+  checksum: 10c0/f843aa1df1dca2f0e9cb2fb247e4939fd514ae4c182cdd1900a0622c0d71b40dfb1c4225f78b78e165a318287ca137ec597695db3e496408bd16a921a2bc2b3f
+  languageName: node
+  linkType: hard
+
 "sax@npm:^1.2.4":
   version: 1.4.1
   resolution: "sax@npm:1.4.1"
@@ -15974,23 +16010,29 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
     "@docusaurus/core": "npm:^3.7.0"
     "@docusaurus/module-type-aliases": "npm:^3.7.0"
     "@docusaurus/plugin-client-redirects": "npm:^3.7.0"
+    "@docusaurus/plugin-content-docs": "npm:^3.7.0"
     "@docusaurus/plugin-google-analytics": "npm:^3.7.0"
     "@docusaurus/preset-classic": "npm:^3.7.0"
     "@docusaurus/remark-plugin-npm2yarn": "npm:3.7.0"
-    "@docusaurus/theme-mermaid": "npm:3.7.0"
+    "@docusaurus/theme-common": "npm:^3.7.0"
+    "@docusaurus/theme-mermaid": "npm:^3.7.0"
     "@docusaurus/types": "npm:^3.7.0"
+    "@docusaurus/utils": "npm:^3.7.0"
+    "@docusaurus/utils-validation": "npm:^3.7.0"
     "@mdx-js/react": "npm:^3.1.0"
     "@tsconfig/docusaurus": "npm:2.0.3"
     "@types/react": "npm:^18.3.12"
     docusaurus-plugin-openapi-docs: "npm:^4.2.0"
     docusaurus-plugin-remote-content: "npm:^4.0.0"
-    docusaurus-theme-openapi-docs: "npm:^4.2.0"
+    docusaurus-plugin-sass: "npm:^0.2.6"
+    docusaurus-theme-openapi-docs: "npm:4.3.5"
     git-url-parse: "npm:^15.0.0"
     plugin-image-zoom: flexanalytics/plugin-image-zoom
     prism-react-renderer: "npm:^2.4.0"
     prism-svelte: "npm:^0.5.0"
     react: "npm:^18.3.1"
     react-dom: "npm:^18.3.1"
+    sass: "npm:^1.85.1"
     typescript: "npm:5.6.3"
   languageName: unknown
   linkType: soft

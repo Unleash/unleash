@@ -100,7 +100,7 @@ const NewStrategyExecution: FC<StrategyExecutionProps> = ({
 };
 
 export const StrategyExecution: FC<StrategyExecutionProps> = ({ ...props }) => {
-    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign'); // && false;
+    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign'); 
 
     return flagOverviewRedesign ? (
         <NewStrategyExecution {...props} />

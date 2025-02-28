@@ -38,7 +38,11 @@ const RolloutParameter: FC<{
                 {hasConstraints ? 'who match constraints ' : ' '}
                 is included.
             </span>
-            {/* TODO: displayGroupId */}
+            {displayGroupId && parameters?.groupId ? (
+                <StrategyEvaluationChip
+                    label={`groupId: ${parameters?.groupId}`}
+                />
+            ) : null}
         </StrategyEvaluationItem>
     );
 };

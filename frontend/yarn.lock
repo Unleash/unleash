@@ -8378,16 +8378,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dropzone@npm:14.3.5":
-  version: 14.3.5
-  resolution: "react-dropzone@npm:14.3.5"
+"react-dropzone@npm:14.3.8":
+  version: 14.3.8
+  resolution: "react-dropzone@npm:14.3.8"
   dependencies:
     attr-accept: "npm:^2.2.4"
     file-selector: "npm:^2.1.0"
     prop-types: "npm:^15.8.1"
   peerDependencies:
     react: ">= 16.8 || 18.0.0"
-  checksum: 10c0/e3e5dddd3bead7c6410bd3fccc3a87e93086ceac47526a2d35421ef7e11a9e59f47c8af8da5c4600a58ef238a5af87c751a71b6391d5c6f77f1f2857946c07cc
+  checksum: 10c0/e17b1832783cda7b8824fe9370e99185d1abbdd5e4980b2985d6321c5768c8de18ff7b9ad550c809ee9743269dea608ff74d5208062754ce8377ad022897b278
   languageName: node
   linkType: hard
 
@@ -10141,7 +10141,7 @@ __metadata:
     react-chartjs-2: "npm:4.3.1"
     react-confetti: "npm:^6.1.0"
     react-dom: "npm:18.3.1"
-    react-dropzone: "npm:14.3.5"
+    react-dropzone: "npm:14.3.8"
     react-error-boundary: "npm:3.1.4"
     react-github-calendar: "npm:^4.5.1"
     react-hooks-global-state: "npm:2.1.0"

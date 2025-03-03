@@ -1,7 +1,6 @@
 import {
     Button,
     Card,
-    Grid,
     Popover,
     styled,
     Accordion,
@@ -97,15 +96,14 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     borderBottomLeftRadius: theme.shape.borderRadiusMedium,
     borderBottomRightRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(0),
-    [theme.breakpoints.down('md')]: {
-        padding: theme.spacing(2, 1),
-    },
     backgroundColor: theme.palette.background.elevation1,
 }));
 
-const StyledAccordionFooter = styled(Grid)(({ theme }) => ({
+const StyledAccordionFooter = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
-    paddingTop: 0,
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: theme.spacing(3),
     backgroundColor: 'inherit',
     borderRadius: theme.shape.borderRadiusMedium,
 }));

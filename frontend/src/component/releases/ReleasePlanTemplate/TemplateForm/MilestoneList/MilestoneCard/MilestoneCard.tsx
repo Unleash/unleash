@@ -29,6 +29,8 @@ const StyledMilestoneCard = styled(Card, {
     shouldForwardProp: (prop) => prop !== 'hasError',
 })<{ hasError: boolean }>(({ theme, hasError }) => ({
     marginTop: theme.spacing(2),
+    position: 'relative',
+    overflow: 'initial',
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(2, 2),
@@ -109,9 +111,10 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 
 const StyledDragIcon = styled(IconButton)(({ theme }) => ({
     padding: 0,
+    position: 'absolute',
     cursor: 'grab',
+    left: theme.spacing(-4),
     transition: 'color 0.2s ease-in-out',
-    marginRight: theme.spacing(1),
     '& > svg': {
         color: 'action.active',
     },
@@ -341,7 +344,7 @@ export const MilestoneCard = ({
                     }
                     ref={dragItemRef}
                 >
-                    {/* {dragHandle} */}
+                    {dragHandle}
 
                     <FlexContainer>
                         <MilestoneCardName

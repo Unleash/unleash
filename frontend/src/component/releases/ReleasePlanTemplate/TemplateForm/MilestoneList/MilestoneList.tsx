@@ -4,7 +4,7 @@ import Add from '@mui/icons-material/Add';
 import { v4 as uuidv4 } from 'uuid';
 import { useCallback } from 'react';
 import type { OnMoveItem } from 'hooks/useDragItem';
-import { MilestoneCard } from './MilestoneCard/MilestoneCard';
+import { MilestoneCard } from './MilestoneCard/LegacyMilestoneCard';
 
 interface IMilestoneListProps {
     milestones: IReleasePlanMilestonePayload[];

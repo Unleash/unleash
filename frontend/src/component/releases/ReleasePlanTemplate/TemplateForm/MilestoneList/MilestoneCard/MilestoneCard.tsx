@@ -77,6 +77,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     boxShadow: 'none',
     padding: theme.spacing(1.5, 2),
+    paddingLeft: theme.spacing(leftPadding),
     borderRadius: theme.shape.borderRadiusMedium,
     [theme.breakpoints.down(400)]: {
         padding: theme.spacing(1, 2),

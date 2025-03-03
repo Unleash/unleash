@@ -313,6 +313,12 @@ export default class ProjectService {
         }
     }
 
+    async validateProjectEnvironments(environments: string[] | undefined) {
+        if (environments) {
+            await this.validateEnvironmentsExist(environments);
+        }
+    }
+
     async validateProjectLimit() {
         const limit = Math.max(this.resourceLimits.projects, 1);
         const projectCount = await this.projectStore.count();
@@ -353,6 +359,8 @@ export default class ProjectService {
         await this.validateProjectLimit();
 
         const validateData = async () => {
+            await this.validateProjectEnvironments(newProject.environments);
+
             if (!newProject.id?.trim()) {
                 newProject.id = await this.generateProjectId(newProject.name);
                 return await projectSchema.validateAsync(newProject);

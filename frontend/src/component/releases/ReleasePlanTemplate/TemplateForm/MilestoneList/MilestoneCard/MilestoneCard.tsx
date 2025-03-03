@@ -22,6 +22,11 @@ import { ReleasePlanTemplateAddStrategyForm } from '../../MilestoneStrategy/Rele
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { type OnMoveItem, useDragItem } from 'hooks/useDragItem';
 import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
+import {
+    StyledContentList,
+    StyledListItem,
+} from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 
 const leftPadding = 3;
 
@@ -95,13 +100,13 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(2, 1),
     },
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.background.elevation1,
 }));
 
 const StyledAccordionFooter = styled(Grid)(({ theme }) => ({
     padding: theme.spacing(2),
     paddingTop: 0,
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: 'inherit',
     borderRadius: theme.shape.borderRadiusMedium,
 }));
 
@@ -425,7 +430,11 @@ export const MilestoneCard = ({
                 onChange={(e, change) => setExpanded(change)}
             >
                 <StyledAccordionSummary
-                    expandIcon={<ExpandMore titleAccess='Toggle' />}
+                    expandIcon={
+                        <ExpandMore
+                            titleAccess={`${expanded ? 'Hide' : 'Show'} milestone strategies`}
+                        />
+                    }
                     ref={dragItemRef}
                 >
                     {dragHandle}
@@ -437,24 +446,28 @@ export const MilestoneCard = ({
                     />
                 </StyledAccordionSummary>
                 <StyledAccordionDetails>
-                    {milestone.strategies.map((strg, index) => (
-                        <div key={strg.id}>
-                            <MilestoneStrategyDraggableItem
-                                index={index}
-                                onDragEnd={onStrategyDragEnd}
-                                onDragStartRef={onStrategyDragStartRef}
-                                onDragOver={onStrategyDragOver(strg.id)}
-                                onDeleteClick={() =>
-                                    milestoneStrategyDeleted(strg.id)
-                                }
-                                onEditClick={() => {
-                                    openAddUpdateStrategyForm(strg, true);
-                                }}
-                                isDragging={dragItem?.id === strg.id}
-                                strategy={strg}
-                            />
-                        </div>
-                    ))}
+                    <StyledContentList>
+                        {milestone.strategies.map((strg, index) => (
+                            <StyledListItem key={strg.id}>
+                                {index > 0 ? <StrategySeparator /> : null}
+
+                                <MilestoneStrategyDraggableItem
+                                    index={index}
+                                    onDragEnd={onStrategyDragEnd}
+                                    onDragStartRef={onStrategyDragStartRef}
+                                    onDragOver={onStrategyDragOver(strg.id)}
+                                    onDeleteClick={() =>
+                                        milestoneStrategyDeleted(strg.id)
+                                    }
+                                    onEditClick={() => {
+                                        openAddUpdateStrategyForm(strg, true);
+                                    }}
+                                    isDragging={dragItem?.id === strg.id}
+                                    strategy={strg}
+                                />
+                            </StyledListItem>
+                        ))}
+                    </StyledContentList>
                     <StyledAccordionFooter>
                         <StyledAddStrategyButton
                             variant='outlined'

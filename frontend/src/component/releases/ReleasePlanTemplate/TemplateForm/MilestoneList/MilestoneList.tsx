@@ -4,7 +4,9 @@ import Add from '@mui/icons-material/Add';
 import { v4 as uuidv4 } from 'uuid';
 import { useCallback } from 'react';
 import type { OnMoveItem } from 'hooks/useDragItem';
-import { MilestoneCard } from './MilestoneCard/LegacyMilestoneCard';
+import { MilestoneCard as LegacyMilestoneCard } from './MilestoneCard/LegacyMilestoneCard';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { MilestoneCard } from './MilestoneCard/MilestoneCard';
 
 interface IMilestoneListProps {
     milestones: IReleasePlanMilestonePayload[];
@@ -28,6 +30,7 @@ export const MilestoneList = ({
     clearErrors,
     milestoneChanged,
 }: IMilestoneListProps) => {
+    const useNewMilestoneCard = useUiFlag('flagOverviewRedesign');
     const onMoveItem: OnMoveItem = useCallback(
         async (dragIndex: number, dropIndex: number) => {
             if (dragIndex !== dropIndex) {
@@ -54,10 +57,12 @@ export const MilestoneList = ({
         );
     };
 
+    const Card = useNewMilestoneCard ? MilestoneCard : LegacyMilestoneCard;
+
     return (
         <>
             {milestones.map((milestone, index) => (
-                <MilestoneCard
+                <Card
                     key={milestone.id}
                     index={index}
                     onMoveItem={onMoveItem}

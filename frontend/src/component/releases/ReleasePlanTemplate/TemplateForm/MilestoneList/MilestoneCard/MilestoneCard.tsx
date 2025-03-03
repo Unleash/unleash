@@ -469,13 +469,6 @@ export const MilestoneCard = ({
                         ))}
                     </StyledContentList>
                     <StyledAccordionFooter>
-                        <StyledAddStrategyButton
-                            variant='outlined'
-                            color='primary'
-                            onClick={(ev) => setAnchor(ev.currentTarget)}
-                        >
-                            Add strategy
-                        </StyledAddStrategyButton>
                         <Button
                             variant='text'
                             color='primary'
@@ -484,6 +477,13 @@ export const MilestoneCard = ({
                         >
                             <Delete /> Remove milestone
                         </Button>
+                        <StyledAddStrategyButton
+                            variant='outlined'
+                            color='primary'
+                            onClick={(ev) => setAnchor(ev.currentTarget)}
+                        >
+                            Add strategy
+                        </StyledAddStrategyButton>
                         <Popover
                             id={popoverId}
                             open={isPopoverOpen}

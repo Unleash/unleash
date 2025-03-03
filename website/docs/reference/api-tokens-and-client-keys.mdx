@@ -9,7 +9,7 @@ Unleash uses API keys to facilitate communication between consuming clients such
 
 Unleash supports the following types of API tokens:
 - [Client tokens](#client-tokens) for connecting [server-side client SDKs](../reference/sdks#server-side-sdks), [Unleash Edge](../reference/unleash-edge), and [Unleash Proxy](../reference/unleash-proxy) to Unleash.
-- [Frontend tokens](#frontend-tokens) for connecting [client-side SDKs](../reference/sdks#front-end-sdks) to Unleash using the [Frontend API](../reference/front-end-api) or [Unleash Edge](../reference/unleash-edge).
+- [Frontend tokens](#frontend-tokens) for connecting [client-side SDKs](../reference/sdks#client-side-sdks) to Unleash using the [Frontend API](../reference/front-end-api) or [Unleash Edge](../reference/unleash-edge).
 - [Personal access tokens](#personal-access-tokens) for testing and debugging or providing temporary access to an automation tool.
 - [Service account tokens](/reference/service-accounts) for providing API access to integrations or automation tools.
 
@@ -30,7 +30,7 @@ Client tokens cannot be used in frontend SDKs; use [frontend tokens](#frontend-t
 
 ### Frontend tokens
 
-Use frontend tokens for connecting [frontend SDKs](../reference/sdks#front-end-sdks) to Unleash using the [Unleash Frontend API](./front-end-api) or [Unleash Edge](../reference/unleash-edge). They grant the user permission to:
+Use frontend tokens for connecting [frontend SDKs](../reference/sdks#client-side-sdks) to Unleash using the [Unleash Frontend API](./front-end-api) or [Unleash Edge](../reference/unleash-edge). They grant the user permission to:
 -   Reading enabled flags for a given context
 -   Registering applications with the Unleash server
 -   Sending usage metrics
@@ -161,7 +161,7 @@ Unleash Proxy is in maintenance mode. Use [Unleash Edge](../reference/unleash-ed
 
 :::
 
-You can use proxy client keys to connect [frontend SDKs](../reference/sdks#front-end-sdks) to [Unleash Proxy](../reference/unleash-proxy). Proxy client keys are not considered a secret and are safe to expose client-side.
+You can use proxy client keys to connect [frontend SDKs](../reference/sdks#client-side-sdks) to [Unleash Proxy](../reference/unleash-proxy). Proxy client keys are not considered a secret and are safe to expose client-side.
 
 Proxy client keys are arbitrary strings that you provide the Unleash proxy with on startup. They can be any string you choose, and you create them yourself.
 

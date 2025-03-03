@@ -8356,13 +8356,13 @@ __metadata:
   linkType: hard
 
 "react-confetti@npm:^6.1.0":
-  version: 6.2.2
-  resolution: "react-confetti@npm:6.2.2"
+  version: 6.3.0
+  resolution: "react-confetti@npm:6.3.0"
   dependencies:
     tween-functions: "npm:^1.2.0"
   peerDependencies:
     react: ^16.3.0 || ^17.0.1 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/c25250acc18a7e66a2a41aa429fee70a1e56346a73dced7aa64d8c8e87b96b478eb90933b530d1857832785eeb4a5978c5cb30080d187d32bbc68c3c0ef7f0a9
+  checksum: 10c0/fb9c799691525b5cb64a9989be7059f44e5d1f57b3588f9de11167ca98cd7b50287d4127781e3b8dc250ed306d2b6b7414951a5e2d729197021eee0e25708acf
   languageName: node
   linkType: hard
 

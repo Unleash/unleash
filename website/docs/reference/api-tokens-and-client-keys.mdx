@@ -64,7 +64,7 @@ Admin tokens are deprecated. Use other token types:
 
 :::
 
-Admin tokens grant full read and write access to all resources in the Unleash server API. This includes all projects, all environments, and all [root resources](../reference/rbac#core-principles).
+Admin tokens grant full read and write access to all resources in the Unleash server API. This includes all projects, all environments, and all [root resources](../reference/rbac).
 
 
 ## API token permissions
@@ -167,7 +167,7 @@ Proxy client keys are arbitrary strings that you provide the Unleash proxy with 
 
 :::info Creating proxy client keys
 
-To designate a string as a proxy client key, add it to the `clientKeys` list when [starting the proxy](../reference/unleash-proxy#configuration). Connecting clients should then specify the same string as their client key.
+To designate a string as a proxy client key, add it to the `clientKeys` list when [starting the proxy](../reference/unleash-proxy#configuration-options). Connecting clients should then specify the same string as their client key.
 
 :::
 

@@ -315,7 +315,7 @@ export const TOPICS: ITutorialTopic[] = [
                     <>
                         <Description>
                             <a
-                                href='https://docs.getunleash.io/reference/activation-strategies#gradual-rollout'
+                                href='https://docs.getunleash.io/reference/activation-strategies'
                                 target='_blank'
                                 rel='noreferrer'
                             >

@@ -14,5 +14,5 @@ const Chip = styled('div')(({ theme }) => ({
 }));
 
 export const StrategySeparator = () => {
-    return <Chip>OR</Chip>;
+    return <Chip role='separator'>OR</Chip>;
 };

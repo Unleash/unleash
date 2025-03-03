@@ -1,6 +1,8 @@
 import {
+    Box,
     Button,
     Card,
+    Grid,
     Popover,
     styled,
     Accordion,
@@ -21,25 +23,13 @@ import { ReleasePlanTemplateAddStrategyForm } from '../../MilestoneStrategy/Rele
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { type OnMoveItem, useDragItem } from 'hooks/useDragItem';
 import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
-import {
-    StyledContentList,
-    StyledListItem,
-} from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-
-const leftPadding = 3;
 
 const StyledMilestoneCard = styled(Card, {
     shouldForwardProp: (prop) => prop !== 'hasError',
 })<{ hasError: boolean }>(({ theme, hasError }) => ({
     marginTop: theme.spacing(2),
-    position: 'relative',
-    overflow: 'initial',
     display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing(2, 2),
-    paddingLeft: theme.spacing(leftPadding),
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     boxShadow: 'none',
     border: `1px solid ${hasError ? theme.palette.error.border : theme.palette.divider}`,
@@ -51,9 +41,12 @@ const StyledMilestoneCard = styled(Card, {
     backgroundColor: theme.palette.background.default,
 }));
 
-const FlexContainer = styled('div')(({ theme }) => ({
+const StyledMilestoneCardBody = styled(Box)(({ theme }) => ({
+    padding: theme.spacing(2, 2),
+}));
+
+const StyledGridItem = styled(Grid)(({ theme }) => ({
     display: 'flex',
-    flexFlow: 'row',
     alignItems: 'center',
 }));
 
@@ -81,7 +74,6 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     boxShadow: 'none',
     padding: theme.spacing(1.5, 2),
-    paddingLeft: theme.spacing(leftPadding),
     borderRadius: theme.shape.borderRadiusMedium,
     [theme.breakpoints.down(400)]: {
         padding: theme.spacing(1, 2),
@@ -96,16 +88,22 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     borderBottomLeftRadius: theme.shape.borderRadiusMedium,
     borderBottomRightRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(0),
-    backgroundColor: theme.palette.background.elevation1,
+    [theme.breakpoints.down('md')]: {
+        padding: theme.spacing(2, 1),
+    },
+    backgroundColor: theme.palette.neutral.light,
 }));
 
-const StyledAccordionFooter = styled('div')(({ theme }) => ({
+const StyledAccordionFooter = styled(Grid)(({ theme }) => ({
     padding: theme.spacing(2),
+    paddingTop: 0,
+    backgroundColor: theme.palette.background.default,
+    borderRadius: theme.shape.borderRadiusMedium,
+}));
+
+const StyledMilestoneActionGrid = styled(Grid)(({ theme }) => ({
     display: 'flex',
     justifyContent: 'flex-end',
-    gap: theme.spacing(3),
-    backgroundColor: 'inherit',
-    borderRadius: theme.shape.borderRadiusMedium,
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -115,10 +113,9 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 
 const StyledDragIcon = styled(IconButton)(({ theme }) => ({
     padding: 0,
-    position: 'absolute',
     cursor: 'grab',
-    left: theme.spacing(-4),
     transition: 'color 0.2s ease-in-out',
+    marginRight: theme.spacing(1),
     '& > svg': {
         color: 'action.active',
     },
@@ -348,51 +345,59 @@ export const MilestoneCard = ({
                     }
                     ref={dragItemRef}
                 >
-                    {dragHandle}
+                    <StyledMilestoneCardBody>
+                        <Grid container>
+                            <StyledGridItem item xs={6} md={6}>
+                                {dragHandle}
+                                <MilestoneCardName
+                                    milestone={milestone}
+                                    errors={errors}
+                                    clearErrors={clearErrors}
+                                    milestoneNameChanged={milestoneNameChanged}
+                                />
+                            </StyledGridItem>
+                            <StyledMilestoneActionGrid item xs={6} md={6}>
+                                <Button
+                                    variant='outlined'
+                                    color='primary'
+                                    onClick={(ev) =>
+                                        setAnchor(ev.currentTarget)
+                                    }
+                                >
+                                    Add strategy
+                                </Button>
+                                <StyledIconButton
+                                    title='Remove milestone'
+                                    onClick={onDeleteMilestone}
+                                    disabled={!removable}
+                                >
+                                    <Delete />
+                                </StyledIconButton>
 
-                    <FlexContainer>
-                        <MilestoneCardName
-                            milestone={milestone}
-                            errors={errors}
-                            clearErrors={clearErrors}
-                            milestoneNameChanged={milestoneNameChanged}
-                        />
-                    </FlexContainer>
-                    <FlexContainer>
-                        <Button
-                            variant='outlined'
-                            color='primary'
-                            onClick={(ev) => setAnchor(ev.currentTarget)}
-                        >
-                            Add strategy
-                        </Button>
-                        <StyledIconButton
-                            title='Remove milestone'
-                            onClick={onDeleteMilestone}
-                            disabled={!removable}
-                        >
-                            <Delete />
-                        </StyledIconButton>
-
-                        <Popover
-                            id={popoverId}
-                            open={isPopoverOpen}
-                            anchorEl={anchor}
-                            onClose={onClose}
-                            onClick={onClose}
-                            PaperProps={{
-                                sx: (theme) => ({
-                                    paddingBottom: theme.spacing(1),
-                                }),
-                            }}
-                        >
-                            <MilestoneStrategyMenuCards
-                                openEditAddStrategy={(strategy) => {
-                                    openAddUpdateStrategyForm(strategy, false);
-                                }}
-                            />
-                        </Popover>
-                    </FlexContainer>
+                                <Popover
+                                    id={popoverId}
+                                    open={isPopoverOpen}
+                                    anchorEl={anchor}
+                                    onClose={onClose}
+                                    onClick={onClose}
+                                    PaperProps={{
+                                        sx: (theme) => ({
+                                            paddingBottom: theme.spacing(1),
+                                        }),
+                                    }}
+                                >
+                                    <MilestoneStrategyMenuCards
+                                        openEditAddStrategy={(strategy) => {
+                                            openAddUpdateStrategyForm(
+                                                strategy,
+                                                false,
+                                            );
+                                        }}
+                                    />
+                                </Popover>
+                            </StyledMilestoneActionGrid>
+                        </Grid>
+                    </StyledMilestoneCardBody>
                 </StyledMilestoneCard>
 
                 <FormHelperText error={Boolean(errors?.[milestone.id])}>
@@ -428,11 +433,7 @@ export const MilestoneCard = ({
                 onChange={(e, change) => setExpanded(change)}
             >
                 <StyledAccordionSummary
-                    expandIcon={
-                        <ExpandMore
-                            titleAccess={`${expanded ? 'Hide' : 'Show'} milestone strategies`}
-                        />
-                    }
+                    expandIcon={<ExpandMore titleAccess='Toggle' />}
                     ref={dragItemRef}
                 >
                     {dragHandle}
@@ -444,29 +445,32 @@ export const MilestoneCard = ({
                     />
                 </StyledAccordionSummary>
                 <StyledAccordionDetails>
-                    <StyledContentList>
-                        {milestone.strategies.map((strg, index) => (
-                            <StyledListItem key={strg.id}>
-                                {index > 0 ? <StrategySeparator /> : null}
-
-                                <MilestoneStrategyDraggableItem
-                                    index={index}
-                                    onDragEnd={onStrategyDragEnd}
-                                    onDragStartRef={onStrategyDragStartRef}
-                                    onDragOver={onStrategyDragOver(strg.id)}
-                                    onDeleteClick={() =>
-                                        milestoneStrategyDeleted(strg.id)
-                                    }
-                                    onEditClick={() => {
-                                        openAddUpdateStrategyForm(strg, true);
-                                    }}
-                                    isDragging={dragItem?.id === strg.id}
-                                    strategy={strg}
-                                />
-                            </StyledListItem>
-                        ))}
-                    </StyledContentList>
+                    {milestone.strategies.map((strg, index) => (
+                        <div key={strg.id}>
+                            <MilestoneStrategyDraggableItem
+                                index={index}
+                                onDragEnd={onStrategyDragEnd}
+                                onDragStartRef={onStrategyDragStartRef}
+                                onDragOver={onStrategyDragOver(strg.id)}
+                                onDeleteClick={() =>
+                                    milestoneStrategyDeleted(strg.id)
+                                }
+                                onEditClick={() => {
+                                    openAddUpdateStrategyForm(strg, true);
+                                }}
+                                isDragging={dragItem?.id === strg.id}
+                                strategy={strg}
+                            />
+                        </div>
+                    ))}
                     <StyledAccordionFooter>
+                        <StyledAddStrategyButton
+                            variant='outlined'
+                            color='primary'
+                            onClick={(ev) => setAnchor(ev.currentTarget)}
+                        >
+                            Add strategy
+                        </StyledAddStrategyButton>
                         <Button
                             variant='text'
                             color='primary'
@@ -475,13 +479,6 @@ export const MilestoneCard = ({
                         >
                             <Delete /> Remove milestone
                         </Button>
-                        <StyledAddStrategyButton
-                            variant='outlined'
-                            color='primary'
-                            onClick={(ev) => setAnchor(ev.currentTarget)}
-                        >
-                            Add strategy
-                        </StyledAddStrategyButton>
                         <Popover
                             id={popoverId}
                             open={isPopoverOpen}

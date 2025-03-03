@@ -27,7 +27,6 @@ import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemp
 const StyledMilestoneCard = styled(Card, {
     shouldForwardProp: (prop) => prop !== 'hasError',
 })<{ hasError: boolean }>(({ theme, hasError }) => ({
-    background: 'red',
     marginTop: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',

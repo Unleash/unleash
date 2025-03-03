@@ -148,8 +148,26 @@ const ProjectEnvironmentList = () => {
         }
     };
 
-    const envIsDisabled = (projectName: string) => {
-        return isOss() && projectName === 'default';
+    const envIsDisabled = (env: IProjectEnvironment) => {
+        return (
+            (isOss() && env.name === 'default') ||
+            (env.projectVisible && onlyOneEnvEnabled())
+        );
+    };
+
+    const onlyOneEnvEnabled = (): boolean => {
+        return (
+            projectEnvironments.filter((env) => env.projectVisible).length === 1
+        );
+    };
+
+    const buildToolTip = (env: IProjectEnvironment): string => {
+        if (env.projectVisible && onlyOneEnvEnabled()) {
+            return 'Cannot disable, at least one environment must be visible in the project';
+        }
+        return env.projectVisible
+            ? 'Hide environment and disable feature flags'
+            : 'Make it visible';
     };
 
     const COLUMNS = useMemo(
@@ -182,13 +200,9 @@ const ProjectEnvironmentList = () => {
                 Cell: ({ row: { original } }: any) => (
                     <ActionCell>
                         <PermissionSwitch
-                            tooltip={
-                                original.projectVisible
-                                    ? 'Hide environment and disable feature flags'
-                                    : 'Make it visible'
-                            }
+                            tooltip={buildToolTip(original)}
                             size='medium'
-                            disabled={envIsDisabled(original.name)}
+                            disabled={envIsDisabled(original)}
                             projectId={projectId}
                             permission={UPDATE_PROJECT}
                             checked={original.projectVisible}

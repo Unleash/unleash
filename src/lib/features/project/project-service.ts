@@ -315,12 +315,6 @@ export default class ProjectService {
 
     async validateProjectEnvironments(environments: string[] | undefined) {
         if (environments) {
-            if (environments.length === 0) {
-                throw new BadDataError(
-                    'A project must always have at least one environment.',
-                );
-            }
-
             await this.validateEnvironmentsExist(environments);
         }
     }
@@ -383,7 +377,7 @@ export default class ProjectService {
 
         await this.projectStore.create(data);
 
-        const envsToEnable = newProject.environments?.length
+        const envsToEnable = newProject.environments
             ? newProject.environments
             : (
                   await this.environmentStore.getAll({

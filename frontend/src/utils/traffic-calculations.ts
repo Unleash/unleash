@@ -94,7 +94,8 @@ export const calculateOverageCost = (
     }
 
     const overage =
-        Math.floor((dataUsage - includedTraffic) / 1_000_000) * 1_000_000;
+        Math.floor((dataUsage - includedTraffic) / trafficUnitSize) *
+        trafficUnitSize;
     return overage > 0
         ? calculateTrafficDataCost(overage, trafficUnitCost, trafficUnitSize)
         : 0;

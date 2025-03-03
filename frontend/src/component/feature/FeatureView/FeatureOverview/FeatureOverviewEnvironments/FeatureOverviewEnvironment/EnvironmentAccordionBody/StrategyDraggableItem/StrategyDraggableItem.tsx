@@ -23,16 +23,18 @@ interface IStrategyDraggableItemProps {
     index: number;
     otherEnvironments?: IFeatureEnvironment['name'][];
     isDragging?: boolean;
-    onDragStartRef: (
+    onDragStartRef?: (
         ref: RefObject<HTMLDivElement>,
         index: number,
     ) => DragEventHandler<HTMLButtonElement>;
-    onDragOver: (
+    onDragOver?: (
         ref: RefObject<HTMLDivElement>,
         index: number,
     ) => DragEventHandler<HTMLDivElement>;
-    onDragEnd: () => void;
+    onDragEnd?: () => void;
 }
+
+const onDragNoOp = () => () => {};
 
 export const StrategyDraggableItem = ({
     strategy,
@@ -40,9 +42,9 @@ export const StrategyDraggableItem = ({
     environmentName,
     otherEnvironments,
     isDragging,
-    onDragStartRef,
-    onDragOver,
-    onDragEnd,
+    onDragStartRef = onDragNoOp,
+    onDragOver = onDragNoOp,
+    onDragEnd = onDragNoOp,
 }: IStrategyDraggableItemProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');

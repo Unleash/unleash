@@ -5,7 +5,7 @@ import CancelOutlined from '@mui/icons-material/CancelOutlined';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { styled, Typography } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
+import { SegmentItem } from 'component/common/SegmentItem/LegacySegmentItem';
 
 interface ISegmentExecutionProps {
     segments?: PlaygroundSegmentSchema[];

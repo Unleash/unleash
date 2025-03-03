@@ -1,14 +1,7 @@
 import { getFeatureStrategyIcon } from 'utils/strategyNames';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
-import { Link, styled } from '@mui/material';
-import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { Button, styled } from '@mui/material';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { useReleasePlansApi } from 'hooks/api/actions/useReleasePlansApi/useReleasePlansApi';
-import useToast from 'hooks/useToast';
-import { formatUnknownError } from 'utils/formatUnknownError';
-import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
-import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const StyledIcon = styled('div')(({ theme }) => ({
     width: theme.spacing(4),
@@ -25,13 +18,14 @@ const StyledIcon = styled('div')(({ theme }) => ({
 
 const StyledDescription = styled('div')(({ theme }) => ({
     fontSize: theme.fontSizes.smallBody,
+    fontWeight: theme.fontWeight.medium,
 }));
 
 const StyledName = styled(StringTruncator)(({ theme }) => ({
     fontWeight: theme.fontWeight.bold,
 }));
 
-const StyledCard = styled(Link)(({ theme }) => ({
+const StyledCard = styled(Button)(({ theme }) => ({
     display: 'grid',
     gridTemplateColumns: '3rem 1fr',
     width: '20rem',
@@ -43,82 +37,31 @@ const StyledCard = styled(Link)(({ theme }) => ({
     borderStyle: 'solid',
     borderColor: theme.palette.divider,
     borderRadius: theme.spacing(1),
+    textAlign: 'left',
     '&:hover, &:focus': {
         borderColor: theme.palette.primary.main,
     },
 }));
 
 interface IFeatureReleasePlanCardProps {
-    projectId: string;
-    featureId: string;
-    environmentId: string;
-    releasePlanTemplate: IReleasePlanTemplate;
-    setTemplateForChangeRequestDialog: (template: IReleasePlanTemplate) => void;
+    template: IReleasePlanTemplate;
+    onClick: () => void;
 }
 
 export const FeatureReleasePlanCard = ({
-    projectId,
-    featureId,
-    environmentId,
-    releasePlanTemplate,
-    setTemplateForChangeRequestDialog,
+    template: { name, description },
+    onClick,
 }: IFeatureReleasePlanCardProps) => {
     const Icon = getFeatureStrategyIcon('releasePlanTemplate');
-    const { trackEvent } = usePlausibleTracker();
-    const { refetch } = useReleasePlans(projectId, featureId, environmentId);
-    const { addReleasePlanToFeature } = useReleasePlansApi();
-    const { setToastApiError, setToastData } = useToast();
-    const { isChangeRequestConfigured } = useChangeRequestsEnabled(projectId);
-    const releasePlanChangeRequestsEnabled = useUiFlag(
-        'releasePlanChangeRequests',
-    );
-
-    const addReleasePlan = async () => {
-        try {
-            if (
-                releasePlanChangeRequestsEnabled &&
-                isChangeRequestConfigured(environmentId)
-            ) {
-                setTemplateForChangeRequestDialog(releasePlanTemplate);
-            } else {
-                await addReleasePlanToFeature(
-                    featureId,
-                    releasePlanTemplate.id,
-                    projectId,
-                    environmentId,
-                );
-                setToastData({
-                    type: 'success',
-                    text: 'Release plan added',
-                });
-                refetch();
-            }
-
-            trackEvent('release-management', {
-                props: {
-                    eventType: 'add-plan',
-                    plan: releasePlanTemplate.name,
-                },
-            });
-        } catch (error: unknown) {
-            setToastApiError(formatUnknownError(error));
-        }
-    };
 
     return (
-        <StyledCard onClick={addReleasePlan}>
+        <StyledCard onClick={onClick}>
             <StyledIcon>
                 <Icon />
             </StyledIcon>
             <div>
-                <StyledName
-                    text={releasePlanTemplate.name}
-                    maxWidth='200'
-                    maxLength={25}
-                />
-                <StyledDescription>
-                    {releasePlanTemplate.description}
-                </StyledDescription>
+                <StyledName text={name} maxWidth='200' maxLength={25} />
+                <StyledDescription>{description}</StyledDescription>
             </div>
         </StyledCard>
     );

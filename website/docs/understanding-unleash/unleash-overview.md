@@ -1,8 +1,10 @@
 ---
-title: Unleash introductory overview
+title: Unleash architecture
 ---
 
-One of the most important aspects of the Unleash architecture is that feature flags are evaluated directly in the client SDKs that run as part of your application. This makes flag evaluations incredibly fast (we're talking nano-seconds), scalable, and resilient against network disturbances. To achieve this, Unleash incurs a small update-delay when you change your flag configurations until it is fully propagated to your application. This delay is typically a few seconds and is configurable.
+One of the most important aspects of the Unleash architecture is that feature flags are evaluated directly in the client SDKs that run as part of your application. This makes flag evaluations incredibly fast (we're talking nanoseconds), scalable, and resilient against network disturbances. To achieve this, Unleash incurs a small update-delay when you change your flag configurations until it is fully propagated to your application. This delay is typically a few seconds and is configurable.
+
+Since feature flags are evaluated locally within the [client SDKs](/reference/sdks), no user data is shared with the Unleash instance. This ensures complete privacy of your customer data.
 
 If you want more details you can read about [our unique architecture](https://www.getunleash.io/blog/our-unique-architecture).
 

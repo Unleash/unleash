@@ -36,13 +36,13 @@ const StyledAccordionBodyInnerContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledContentList = styled('ol')({
+export const StyledContentList = styled('ol')({
     listStyle: 'none',
     padding: 0,
     margin: 0,
 });
 
-const StyledListItem = styled('li', {
+export const StyledListItem = styled('li', {
     shouldForwardProp: (prop) => prop !== 'type',
 })<{ type?: 'release plan' | 'strategy' }>(({ theme, type }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
@@ -298,12 +298,6 @@ export const EnvironmentAccordionBody = ({
                                                 otherEnvironments={
                                                     otherEnvironments
                                                 }
-                                                isDragging={false}
-                                                onDragStartRef={
-                                                    (() => {}) as any
-                                                }
-                                                onDragOver={(() => {}) as any}
-                                                onDragEnd={(() => {}) as any}
                                             />
                                         </StyledListItem>
                                     ))}

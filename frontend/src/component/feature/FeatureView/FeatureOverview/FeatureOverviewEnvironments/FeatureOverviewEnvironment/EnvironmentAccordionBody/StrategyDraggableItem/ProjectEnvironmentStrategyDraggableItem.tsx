@@ -16,7 +16,7 @@ import { Link } from 'react-router-dom';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem';
 
-interface IStrategyDraggableItemProps {
+type ProjectEnvironmentStrategyDraggableItemProps = {
     strategy: IFeatureStrategy;
     environmentName: string;
     index: number;
@@ -31,7 +31,7 @@ interface IStrategyDraggableItemProps {
         index: number,
     ) => DragEventHandler<HTMLDivElement>;
     onDragEnd?: () => void;
-}
+};
 
 const onDragNoOp = () => () => {};
 
@@ -44,7 +44,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
     onDragStartRef = onDragNoOp,
     onDragOver = onDragNoOp,
     onDragEnd = onDragNoOp,
-}: IStrategyDraggableItemProps) => {
+}: ProjectEnvironmentStrategyDraggableItemProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const ref = useRef<HTMLDivElement>(null);

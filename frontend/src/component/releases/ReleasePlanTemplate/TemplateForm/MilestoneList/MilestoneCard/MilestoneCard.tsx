@@ -458,7 +458,10 @@ export const MilestoneCard = ({
                                     isDragging={dragItem?.id === strg.id}
                                     strategy={{
                                         ...strg,
-                                        name: strg.strategyName || '',
+                                        name:
+                                            strg.name ||
+                                            strg.strategyName ||
+                                            '',
                                     }}
                                     actions={
                                         <>

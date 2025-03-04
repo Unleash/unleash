@@ -90,7 +90,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                         {draftChange && !isSmallScreen ? (
                             <ChangeRequestDraftStatusBadge
                                 sx={{ mr: 1.5 }}
-                                changeAction={'updateStrategy'}
+                                changeAction={draftChange.change.action}
                             />
                         ) : null}
 

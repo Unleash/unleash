@@ -7151,9 +7151,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"docusaurus-plugin-openapi-docs@npm:4.3.4":
-  version: 4.3.4
-  resolution: "docusaurus-plugin-openapi-docs@npm:4.3.4"
+"docusaurus-plugin-openapi-docs@npm:4.3.5":
+  version: 4.3.5
+  resolution: "docusaurus-plugin-openapi-docs@npm:4.3.5"
   dependencies:
     "@apidevtools/json-schema-ref-parser": "npm:^11.5.4"
     "@redocly/openapi-core": "npm:^1.10.5"
@@ -7175,7 +7175,7 @@ __metadata:
     "@docusaurus/utils": ^3.5.0
     "@docusaurus/utils-validation": ^3.5.0
     react: ^16.8.4 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/9bdd9d2d19f9a275d7d91e2a0ed48aa12ca0e740d224248407d5689b3604bbb2f6fefb9d1737cd88c704a762d81d9ec10b56918028265b8d841b2ce6d34599cf
+  checksum: 10c0/7be3a53fd39559058976cf583f1c794bdb99c695090cd824734435684ee9d213ead72152e2ba0d3842a183763247150053bbd625043eaed334dc9c7a9411cdc5
   languageName: node
   linkType: hard
 
@@ -17062,7 +17062,7 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
     "@mdx-js/react": "npm:^3.1.0"
     "@tsconfig/docusaurus": "npm:2.0.3"
     "@types/react": "npm:^18.3.12"
-    docusaurus-plugin-openapi-docs: "npm:4.3.4"
+    docusaurus-plugin-openapi-docs: "npm:4.3.5"
     docusaurus-plugin-remote-content: "npm:^4.0.0"
     docusaurus-plugin-sass: "npm:^0.2.6"
     docusaurus-theme-openapi-docs: "npm:4.3.4"

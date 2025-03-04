@@ -210,6 +210,8 @@ export const RELEASE_PLAN_TEMPLATE_UPDATED =
     'release-plan-template-updated' as const;
 export const RELEASE_PLAN_TEMPLATE_DELETED =
     'release-plan-template-deleted' as const;
+export const RELEASE_PLAN_TEMPLATE_ARCHIVED =
+    'release-plan-template-archived' as const;
 
 export const RELEASE_PLAN_ADDED = 'release-plan-added' as const;
 export const RELEASE_PLAN_REMOVED = 'release-plan-removed' as const;
@@ -370,6 +372,7 @@ export const IEventTypes = [
     RELEASE_PLAN_TEMPLATE_CREATED,
     RELEASE_PLAN_TEMPLATE_UPDATED,
     RELEASE_PLAN_TEMPLATE_DELETED,
+    RELEASE_PLAN_TEMPLATE_ARCHIVED,
     RELEASE_PLAN_ADDED,
     RELEASE_PLAN_REMOVED,
     RELEASE_PLAN_MILESTONE_STARTED,
@@ -2090,6 +2093,20 @@ export class ReleasePlanTemplateDeletedEvent extends BaseEvent {
         auditUser: IAuditUser;
     }) {
         super(RELEASE_PLAN_TEMPLATE_DELETED, eventData.auditUser);
+        this.preData = eventData.preData;
+    }
+}
+
+export class ReleasePlanTemplateArchivedEvent extends BaseEvent {
+    readonly preData: any;
+    readonly data: any;
+    constructor(eventData: {
+        data: any;
+        preData: any;
+        auditUser: IAuditUser;
+    }) {
+        super(RELEASE_PLAN_TEMPLATE_ARCHIVED, eventData.auditUser);
+        this.data = eventData.data;
         this.preData = eventData.preData;
     }
 }

@@ -11,7 +11,7 @@ import { StrategyItem } from './StrategyItem/StrategyItem';
 const onDragNoOp = () => () => {};
 
 type StrategyDraggableItemProps = {
-    actions: ReactNode;
+    headerItemsRight: ReactNode;
     strategy: IFeatureStrategy;
     index: number;
     isDragging?: boolean;
@@ -33,7 +33,7 @@ export const StrategyDraggableItem = ({
     onDragStartRef = onDragNoOp,
     onDragOver = onDragNoOp,
     onDragEnd = onDragNoOp,
-    actions,
+    headerItemsRight,
 }: StrategyDraggableItemProps) => {
     const ref = useRef<HTMLDivElement>(null);
 
@@ -45,7 +45,7 @@ export const StrategyDraggableItem = ({
             sx={{ opacity: isDragging ? '0.5' : '1' }}
         >
             <StrategyItem
-                actions={actions}
+                headerItemsRight={headerItemsRight}
                 strategy={strategy}
                 onDragStart={onDragStartRef(ref, index)}
                 onDragEnd={onDragEnd}

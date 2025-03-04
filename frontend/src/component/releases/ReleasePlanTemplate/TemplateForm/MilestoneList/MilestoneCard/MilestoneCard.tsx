@@ -463,7 +463,7 @@ export const MilestoneCard = ({
                                             strg.strategyName ||
                                             '',
                                     }}
-                                    actions={
+                                    headerItemsRight={
                                         <>
                                             <IconButton
                                                 title='Edit strategy'

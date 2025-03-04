@@ -6,7 +6,7 @@ import { Box } from '@mui/material';
 import { StrategyItemContainer as NewStrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 
 type StrategyItemProps = {
-    actions: ReactNode;
+    headerItemsRight: ReactNode;
     strategy: IFeatureStrategy;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
@@ -16,7 +16,7 @@ export const StrategyItem: FC<StrategyItemProps> = ({
     strategy,
     onDragStart,
     onDragEnd,
-    actions,
+    headerItemsRight: actions,
 }) => {
     return (
         <NewStrategyItemContainer

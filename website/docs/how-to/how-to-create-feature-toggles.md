@@ -97,7 +97,7 @@ Constraints aren't fixed and can be changed later to further narrow your audienc
 
 :::tip API: Add constraints
 
-You can either [add constraints when you add the strategy](/reference/api/legacy/unleash/admin/features-v2#add-strategy) or [PUT](/reference/api/legacy/unleash/admin/features-v2#update-strategy 'PUT an activation strategy') or [PATCH the strategy afterwards](/reference/api/legacy/unleash/admin/features-v2#put-strategy)
+You can either [add constraints when you add the strategy](//reference/api/unleash/add-feature-strategy) or [PUT](/reference/api/unleash/update-feature-strategy) or [PATCH](/reference/api/unleash/patch-feature-strategy) the strategy later.
 
 :::
 
@@ -115,7 +115,7 @@ This can be done after you have created a strategy.
 
 :::tip API: add segments
 
-Use the [API for adding segments to a strategy](/reference/api/legacy/unleash/admin/segments#replace-activation-strategy-segments) to add segments to your strategy.
+Use the [API for adding segments to a strategy](/reference/api/unleash/update-feature-strategy-segments) to add segments to your strategy.
 
 :::
 
@@ -133,7 +133,7 @@ This can be done at any point after you've created your flag.
 
 :::tip API: add variants
 
-Use the [update variants endpoint](/reference/api/legacy/unleash/admin/features-v2#update-variants). The payload should be your desired variant configuration.
+Use the [create variants endpoint](/reference/api/unleash/overwrite-feature-variants) to create or overwrite existing variants in all environments. The payload should be your desired variant configuration.
 
 :::
 

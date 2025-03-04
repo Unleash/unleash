@@ -92,7 +92,7 @@ Often, canary deployments are managed at the load balancer level while feature f
 
 Unleash has a few ways to help manage canary deployments for Ruby apps at scale:
 
--   Using a [gradual rollout](/reference/activation-strategies#gradual-rollout) (which we [implemented in a previous section](#gradual-rollouts-for-ruby-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
+-   Using a [gradual rollout](/reference/activation-strategies) (which we [implemented in a previous section](#gradual-rollouts-for-ruby-apps)) would be a simple use case but would reduce the amount of control you have over who gets the new feature.
 
 -   Using either [constraints](/reference/activation-strategies#constraints) or [segments](/reference/segments) (which are a collection of constraints) for a subset of your users to get the new feature vs. the old feature, for _more_ control than a gradual rollout
 

@@ -78,7 +78,7 @@
     "copy-to-clipboard": "3.3.3",
     "countries-and-timezones": "^3.4.0",
     "css-mediaquery": "^0.1.2",
-    "cypress": "13.17.0",
+    "cypress": "14.1.0",
     "cypress-vite": "^1.4.0",
     "date-fns": "2.30.0",
     "date-fns-tz": "^2.0.0",

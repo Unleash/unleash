@@ -5,10 +5,10 @@ import type {
     PlaygroundRequestSchema,
 } from 'openapi';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
-import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DisabledStrategyExecution } from './StrategyExecution/DisabledStrategyExecution';
+import { StrategyItemContainer } from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
 
 interface IFeatureStrategyItemProps {
     strategy: PlaygroundStrategySchema;

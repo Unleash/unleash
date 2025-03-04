@@ -24,9 +24,9 @@ import {
     StyledListItem,
 } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { StrategyDraggableItemNoEnv } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyDraggableItem';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/DeleteOutlined';
+import { StrategyDraggableItem } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyDraggableItem';
 
 const leftPadding = 3;
 
@@ -450,7 +450,7 @@ export const MilestoneCard = ({
                             <StyledListItem key={strg.id}>
                                 {index > 0 ? <StrategySeparator /> : null}
 
-                                <StrategyDraggableItemNoEnv
+                                <StrategyDraggableItem
                                     index={index}
                                     onDragEnd={onStrategyDragEnd}
                                     onDragStartRef={onStrategyDragStartRef}

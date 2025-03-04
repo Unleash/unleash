@@ -123,6 +123,7 @@ export const FeatureOverviewEnvironment = ({
                         .map(({ name }) => name)
                         .filter((name) => name !== environmentId)}
                 />
+                HEEEEY
                 <Box
                     sx={{
                         display: 'flex', // TODO: refactor styles

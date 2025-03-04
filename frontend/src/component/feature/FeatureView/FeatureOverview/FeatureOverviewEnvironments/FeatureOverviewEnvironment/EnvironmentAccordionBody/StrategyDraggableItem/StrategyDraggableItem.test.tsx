@@ -1,6 +1,6 @@
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
-import { StrategyDraggableItem } from './StrategyDraggableItem';
+import { ProjectEnvironmentStrategyDraggableItem } from './StrategyDraggableItem';
 import { vi } from 'vitest';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { screen } from '@testing-library/react';
@@ -211,7 +211,7 @@ const Component = () => {
                 <Route
                     path={'/projects/:projectId/features/:featureId'}
                     element={
-                        <StrategyDraggableItem
+                        <ProjectEnvironmentStrategyDraggableItem
                             strategy={strategy}
                             environmentName={'production'}
                             index={1}

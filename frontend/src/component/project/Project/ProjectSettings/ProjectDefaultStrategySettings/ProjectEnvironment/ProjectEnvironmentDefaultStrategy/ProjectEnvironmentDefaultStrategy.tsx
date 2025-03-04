@@ -1,5 +1,4 @@
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
-import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
 import { Link } from 'react-router-dom';
 import Edit from '@mui/icons-material/Edit';
@@ -12,6 +11,7 @@ import {
     UPDATE_PROJECT,
 } from '@server/types/permissions';
 import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
+import { StrategyItemContainer } from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
 
 interface ProjectEnvironmentDefaultStrategyProps {
     environment: ProjectEnvironmentType;

@@ -20,9 +20,9 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePlans';
-import { StrategyDraggableItem } from './StrategyDraggableItem/StrategyDraggableItem';
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { ProjectEnvironmentStrategyDraggableItem } from './StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -252,7 +252,7 @@ export const EnvironmentAccordionBody = ({
                                             <StrategySeparator />
                                         ) : null}
 
-                                        <StrategyDraggableItem
+                                        <ProjectEnvironmentStrategyDraggableItem
                                             strategy={strategy}
                                             index={index}
                                             environmentName={
@@ -287,7 +287,7 @@ export const EnvironmentAccordionBody = ({
                                                 <StrategySeparator />
                                             ) : null}
 
-                                            <StrategyDraggableItem
+                                            <ProjectEnvironmentStrategyDraggableItem
                                                 strategy={strategy}
                                                 index={
                                                     index + pageIndex * pageSize

@@ -1,4 +1,4 @@
-import type { DragEventHandler, FC } from 'react';
+import type { DragEventHandler, FC, ReactNode } from 'react';
 import Edit from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
@@ -48,7 +48,6 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
             strategy={strategy}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
-            orderNumber={orderNumber}
             actions={
                 <>
                     {headerChildren}
@@ -85,6 +84,41 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                     />
                 </>
             }
+        >
+            <StrategyExecution strategy={strategy} />
+
+            {strategy.variants &&
+                strategy.variants.length > 0 &&
+                (strategy.disabled ? (
+                    <Box sx={{ opacity: '0.5' }}>
+                        <SplitPreviewSlider variants={strategy.variants} />
+                    </Box>
+                ) : (
+                    <SplitPreviewSlider variants={strategy.variants} />
+                ))}
+        </NewStrategyItemContainer>
+    );
+};
+
+type Props = {
+    actions: ReactNode;
+    strategy: IFeatureStrategy;
+    onDragStart?: DragEventHandler<HTMLButtonElement>;
+    onDragEnd?: DragEventHandler<HTMLButtonElement>;
+};
+
+export const StrategyItemNoProject: FC<Props> = ({
+    strategy,
+    onDragStart,
+    onDragEnd,
+    actions,
+}) => {
+    return (
+        <NewStrategyItemContainer
+            strategy={strategy}
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            actions={actions}
         >
             <StrategyExecution strategy={strategy} />
 

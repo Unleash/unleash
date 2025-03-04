@@ -9,13 +9,11 @@ import {
     IconButton,
     FormHelperText,
 } from '@mui/material';
-import Delete from '@mui/icons-material/DeleteOutlined';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
 import { type DragEventHandler, type RefObject, useRef, useState } from 'react';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { MilestoneCardName } from './MilestoneCardName';
 import { MilestoneStrategyMenuCards } from './MilestoneStrategyMenu/MilestoneStrategyMenuCards';
-import { MilestoneStrategyDraggableItem } from './MilestoneStrategyDraggableItem';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ReleasePlanTemplateAddStrategyForm } from '../../MilestoneStrategy/ReleasePlanTemplateAddStrategyForm';
 import DragIndicator from '@mui/icons-material/DragIndicator';
@@ -26,6 +24,9 @@ import {
     StyledListItem,
 } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { StrategyDraggableItemNoEnv } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyDraggableItem';
+import Edit from '@mui/icons-material/Edit';
+import Delete from '@mui/icons-material/DeleteOutlined';
 
 const leftPadding = 3;
 
@@ -449,19 +450,41 @@ export const MilestoneCard = ({
                             <StyledListItem key={strg.id}>
                                 {index > 0 ? <StrategySeparator /> : null}
 
-                                <MilestoneStrategyDraggableItem
+                                <StrategyDraggableItemNoEnv
                                     index={index}
                                     onDragEnd={onStrategyDragEnd}
                                     onDragStartRef={onStrategyDragStartRef}
                                     onDragOver={onStrategyDragOver(strg.id)}
-                                    onDeleteClick={() =>
-                                        milestoneStrategyDeleted(strg.id)
-                                    }
-                                    onEditClick={() => {
-                                        openAddUpdateStrategyForm(strg, true);
-                                    }}
                                     isDragging={dragItem?.id === strg.id}
-                                    strategy={strg}
+                                    strategy={{
+                                        ...strg,
+                                        name: strg.strategyName || '',
+                                    }}
+                                    actions={
+                                        <>
+                                            <IconButton
+                                                title='Edit strategy'
+                                                onClick={() => {
+                                                    openAddUpdateStrategyForm(
+                                                        strg,
+                                                        true,
+                                                    );
+                                                }}
+                                            >
+                                                <Edit />
+                                            </IconButton>
+                                            <IconButton
+                                                title='Remove strategy'
+                                                onClick={() =>
+                                                    milestoneStrategyDeleted(
+                                                        strg.id,
+                                                    )
+                                                }
+                                            >
+                                                <Delete />
+                                            </IconButton>
+                                        </>
+                                    }
                                 />
                             </StyledListItem>
                         ))}

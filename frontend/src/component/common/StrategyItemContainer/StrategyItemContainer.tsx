@@ -18,7 +18,6 @@ interface IStrategyItemContainerProps {
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
     actions?: ReactNode;
-    orderNumber?: number;
     className?: string;
     style?: React.CSSProperties;
     description?: string;

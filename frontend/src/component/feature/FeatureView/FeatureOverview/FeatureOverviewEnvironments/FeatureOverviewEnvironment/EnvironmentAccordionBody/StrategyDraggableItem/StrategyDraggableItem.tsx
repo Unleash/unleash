@@ -1,4 +1,9 @@
-import { type DragEventHandler, type RefObject, useRef } from 'react';
+import {
+    type DragEventHandler,
+    type RefObject,
+    useRef,
+    type ReactNode,
+} from 'react';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
@@ -15,7 +20,10 @@ import {
     type ScheduledChangeRequestViewModel,
     useScheduledChangeRequestsWithStrategy,
 } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
-import { StrategyItem } from './StrategyItem/StrategyItem';
+import {
+    StrategyItem,
+    StrategyItemNoProject,
+} from './StrategyItem/StrategyItem';
 
 interface IStrategyDraggableItemProps {
     strategy: IFeatureStrategy;
@@ -77,6 +85,50 @@ export const StrategyDraggableItem = ({
                     strategyChangesFromRequest,
                     scheduledChangesUsingStrategy,
                 )}
+            />
+        </Box>
+    );
+};
+
+type Props = {
+    actions: ReactNode;
+    strategy: IFeatureStrategy;
+    index: number;
+    isDragging?: boolean;
+    onDragStartRef?: (
+        ref: RefObject<HTMLDivElement>,
+        index: number,
+    ) => DragEventHandler<HTMLButtonElement>;
+    onDragOver?: (
+        ref: RefObject<HTMLDivElement>,
+        index: number,
+    ) => DragEventHandler<HTMLDivElement>;
+    onDragEnd?: () => void;
+};
+
+export const StrategyDraggableItemNoEnv = ({
+    strategy,
+    index,
+    isDragging,
+    onDragStartRef = onDragNoOp,
+    onDragOver = onDragNoOp,
+    onDragEnd = onDragNoOp,
+    actions,
+}: Props) => {
+    const ref = useRef<HTMLDivElement>(null);
+
+    return (
+        <Box
+            key={strategy.id}
+            ref={ref}
+            onDragOver={onDragOver(ref, index)}
+            sx={{ opacity: isDragging ? '0.5' : '1' }}
+        >
+            <StrategyItemNoProject
+                actions={actions}
+                strategy={strategy}
+                onDragStart={onDragStartRef(ref, index)}
+                onDragEnd={onDragEnd}
             />
         </Box>
     );

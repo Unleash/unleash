@@ -1,18 +1,17 @@
-import { Badge, Box } from '@mui/material';
+import { Badge } from '@mui/material';
 import type { IFeatureChange } from '../changeRequest.types';
 
 export const ChangeRequestDraftStatusBadge = ({
-    change,
+    changeAction,
 }: {
-    change: IFeatureChange | undefined;
+    changeAction: IFeatureChange['action'];
 }) => {
-    return (
-        <Box sx={{ mr: 1.5 }}>
-            {change?.action === 'updateStrategy' ? (
-                <Badge color='warning'>Modified in draft</Badge>
-            ) : change?.action === 'deleteStrategy' ? (
-                <Badge color='error'>Deleted in draft</Badge>
-            ) : null}
-        </Box>
-    );
+    switch (changeAction) {
+        case 'updateStrategy':
+            return <Badge color='warning'>Modified in draft</Badge>;
+        case 'deleteStrategy':
+            return <Badge color='error'>Deleted in draft</Badge>;
+        default:
+            return null;
+    }
 };

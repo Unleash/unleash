@@ -67,7 +67,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                 <>
                     {draftChange ? (
                         <ChangeRequestDraftStatusBadge
-                            change={draftChange.change}
+                            changeAction={draftChange.change.action}
                         />
                     ) : null}
                     {scheduledChanges && scheduledChanges.length > 0 ? (

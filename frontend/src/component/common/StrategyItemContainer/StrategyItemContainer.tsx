@@ -3,10 +3,7 @@ import type { DragEventHandler, FC, ReactNode } from 'react';
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, styled } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import {
-    formatStrategyName,
-    getFeatureStrategyIcon,
-} from 'utils/strategyNames';
+import { formatStrategyName } from 'utils/strategyNames';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { PlaygroundStrategySchema } from 'openapi';
@@ -84,8 +81,6 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
     style = {},
     description,
 }) => {
-    const Icon = getFeatureStrategyIcon(strategy.name);
-
     const StrategyHeaderLink: React.FC<{ children?: React.ReactNode }> =
         'links' in strategy
             ? ({ children }) => <Link to={strategy.links.edit}>{children}</Link>
@@ -116,11 +111,6 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                                 />
                             </DragIcon>
                         )}
-                    />
-                    <Icon
-                        sx={{
-                            fill: (theme) => theme.palette.action.disabled,
-                        }}
                     />
                     <StyledHeaderContainer>
                         <StrategyHeaderLink>

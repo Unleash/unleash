@@ -11,7 +11,7 @@ import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
 import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove';
 import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
-import { Box } from '@mui/material';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
 import { StrategyItemContainer as NewStrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
 import { useStrategyChangesFromRequest } from './useStrategyChangesFromRequest';
@@ -58,6 +58,9 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
         ({ isScheduledChange }) => !isScheduledChange,
     );
 
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
     return (
         <StrategyItemNoProject
             strategy={strategy}
@@ -65,16 +68,20 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
             onDragEnd={onDragEnd}
             actions={
                 <>
-                    {draftChange ? (
+                    {draftChange && !isSmallScreen ? (
                         <ChangeRequestDraftStatusBadge
-                            changeAction={draftChange.change.action}
+                            sx={{ mr: 1.5 }}
+                            changeAction={'updateStrategy'}
                         />
                     ) : null}
-                    {scheduledChanges && scheduledChanges.length > 0 ? (
+
+                    {scheduledChanges &&
+                    scheduledChanges.length > 0 &&
+                    !isSmallScreen ? (
                         <ChangesScheduledBadge
-                            scheduledChangeRequestIds={scheduledChanges.map(
-                                (scheduledChange) => scheduledChange.id,
-                            )}
+                            scheduledChangeRequestIds={(
+                                scheduledChanges ?? []
+                            ).map((scheduledChange) => scheduledChange.id)}
                         />
                     ) : null}
                     {otherEnvironments && otherEnvironments?.length > 0 ? (

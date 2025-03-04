@@ -1,6 +1,5 @@
 import { testServerRoute, testServerSetup } from 'utils/testServer';
 import { render } from 'utils/testRenderer';
-import { ProjectEnvironmentStrategyDraggableItem } from './StrategyDraggableItem';
 import { vi } from 'vitest';
 import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { screen } from '@testing-library/react';
@@ -9,6 +8,7 @@ import type {
     ChangeRequestType,
     ChangeRequestAction,
 } from 'component/changeRequest/changeRequest.types';
+import { ProjectEnvironmentStrategyDraggableItem } from './ProjectEnvironmentStrategyDraggableItem';
 
 const server = testServerSetup();
 

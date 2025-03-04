@@ -10,16 +10,16 @@ import type { PlaygroundStrategySchema } from 'openapi';
 import { Badge } from '../Badge/Badge';
 import { Link } from 'react-router-dom';
 
-interface IStrategyItemContainerProps {
+type StrategyItemContainerProps = {
     strategy: IFeatureStrategy | PlaygroundStrategySchema;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
-    actions?: ReactNode;
+    headerItemsRight?: ReactNode;
     className?: string;
     style?: React.CSSProperties;
     description?: string;
     children?: React.ReactNode;
-}
+};
 
 const DragIcon = styled(IconButton)({
     padding: 0,
@@ -72,11 +72,11 @@ const NewStyledHeader = styled('div', {
     }),
 );
 
-export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
+export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
     strategy,
     onDragStart,
     onDragEnd,
-    actions,
+    headerItemsRight,
     children,
     style = {},
     description,
@@ -156,7 +156,7 @@ export const StrategyItemContainer: FC<IStrategyItemContainerProps> = ({
                             alignItems: 'center',
                         }}
                     >
-                        {actions}
+                        {headerItemsRight}
                     </Box>
                 </NewStyledHeader>
                 <Box sx={{ p: 2, pt: 0 }}>{children}</Box>

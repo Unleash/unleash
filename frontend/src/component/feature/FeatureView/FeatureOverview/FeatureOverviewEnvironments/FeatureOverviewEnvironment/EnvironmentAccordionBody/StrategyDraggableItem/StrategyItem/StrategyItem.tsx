@@ -16,14 +16,14 @@ export const StrategyItem: FC<StrategyItemProps> = ({
     strategy,
     onDragStart,
     onDragEnd,
-    headerItemsRight: actions,
+    headerItemsRight,
 }) => {
     return (
         <NewStrategyItemContainer
             strategy={strategy}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
-            actions={actions}
+            headerItemsRight={headerItemsRight}
         >
             <StrategyExecution strategy={strategy} />
 

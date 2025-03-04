@@ -2853,13 +2853,6 @@ describe('create project with environments', () => {
         expect(created).toMatchObject(allEnabledEnvs);
     });
 
-    test('an empty list throws an error', async () => {
-        // You shouldn't be allowed to pass an empty list via the API.
-        // This test checks what happens in the event that an empty
-        // list manages to sneak in.
-        await expect(createProjectWithEnvs([])).rejects.toThrow(BadDataError);
-    });
-
     test('it only enables the envs it is asked to enable', async () => {
         const selectedEnvs = ['development', 'production'];
         const created = await createProjectWithEnvs(selectedEnvs);

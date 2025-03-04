@@ -278,7 +278,7 @@ const copyButtonsActiveInOtherEnv = async () => {
 
     // production
     const productionStrategyCopyButton = copyButtons[0];
-    expect(productionStrategyCopyButton).toBeDisabled();
+    expect(productionStrategyCopyButton).toBeEnabled();
 
     // custom env
     const customEnvStrategyCopyButton = copyButtons[1];

@@ -95,11 +95,11 @@ export const CopyStrategyIconMenu: VFC<ICopyStrategyIconMenuProps> = ({
         onClose();
     };
 
-    const enabled = environments.some((environment) =>
+    const enabled = [...environments, environmentId].some((environment) =>
         checkAccess(CREATE_FEATURE_STRATEGY, environment),
     );
 
-    const label = `Copy to environment${enabled ? '' : ' (Access denied)'}`;
+    const label = `Copy to environment${enabled ? '' : ` (Access denied, missing ${CREATE_FEATURE_STRATEGY} permission)`}`;
 
     return (
         <div>

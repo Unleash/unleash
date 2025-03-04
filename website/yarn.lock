@@ -6768,7 +6768,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"docusaurus-theme-openapi-docs@npm:4.3.5":
+"docusaurus-theme-openapi-docs@npm:^4.2.0":
   version: 4.3.5
   resolution: "docusaurus-theme-openapi-docs@npm:4.3.5"
   dependencies:
@@ -16025,7 +16025,7 @@ plugin-image-zoom@flexanalytics/plugin-image-zoom:
     docusaurus-plugin-openapi-docs: "npm:^4.2.0"
     docusaurus-plugin-remote-content: "npm:^4.0.0"
     docusaurus-plugin-sass: "npm:^0.2.6"
-    docusaurus-theme-openapi-docs: "npm:4.3.5"
+    docusaurus-theme-openapi-docs: "npm:^4.2.0"
     git-url-parse: "npm:^15.0.0"
     plugin-image-zoom: flexanalytics/plugin-image-zoom
     prism-react-renderer: "npm:^2.4.0"

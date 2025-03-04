@@ -16,11 +16,13 @@ import { useReleasePlanTemplatesApi } from 'hooks/api/actions/useReleasePlanTemp
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
-import { TemplateDeleteDialog } from '../TemplateDeleteDialog';
+import { TemplateArchiveDialog } from '../TemplateArchiveDialog';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Link } from 'react-router-dom';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
+import { RELEASE_PLAN_TEMPLATE_DELETE } from '@server/types/permissions';
+import { useHasRootAccess } from 'hooks/useHasAccess';
 
 const StyledActions = styled('div')(({ theme }) => ({
     margin: theme.spacing(-1),
@@ -39,30 +41,31 @@ export const ReleasePlanTemplateCardActions = ({
     template,
 }: { template: IReleasePlanTemplate }) => {
     const [anchorEl, setAnchorEl] = useState<Element | null>(null);
-    const { deleteReleasePlanTemplate } = useReleasePlanTemplatesApi();
+    const { archiveReleasePlanTemplate } = useReleasePlanTemplatesApi();
     const { refetch } = useReleasePlanTemplates();
     const { setToastData, setToastApiError } = useToast();
     const { trackEvent } = usePlausibleTracker();
-    const [deleteOpen, setDeleteOpen] = useState(false);
-    const deleteReleasePlan = useCallback(async () => {
+    const [archiveOpen, setArchiveOpen] = useState(false);
+    const hasArchivePermission = useHasRootAccess(RELEASE_PLAN_TEMPLATE_DELETE);
+    const archiveReleasePlan = useCallback(async () => {
         try {
-            await deleteReleasePlanTemplate(template.id);
+            await archiveReleasePlanTemplate(template.id);
             refetch();
             setToastData({
                 type: 'success',
-                text: 'Release plan template deleted',
+                text: 'Release plan template archived',
             });
 
             trackEvent('release-management', {
                 props: {
-                    eventType: 'delete-template',
+                    eventType: 'archive-template',
                     template: template.name,
                 },
             });
         } catch (error: unknown) {
             setToastApiError(formatUnknownError(error));
         }
-    }, [setToastApiError, refetch, setToastData, deleteReleasePlanTemplate]);
+    }, [setToastApiError, refetch, setToastData, archiveReleasePlanTemplate]);
 
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -121,26 +124,27 @@ export const ReleasePlanTemplateCardActions = ({
                     </MenuItem>
                     <MenuItem
                         onClick={() => {
-                            setDeleteOpen(true);
+                            setArchiveOpen(true);
                             handleClose();
                         }}
+                        disabled={!hasArchivePermission}
                     >
                         <ListItemIcon>
                             <DeleteIcon />
                         </ListItemIcon>
                         <ListItemText>
                             <Typography variant='body2'>
-                                Delete template
+                                Archive template
                             </Typography>
                         </ListItemText>
                     </MenuItem>
                 </MenuList>
             </StyledPopover>
-            <TemplateDeleteDialog
+            <TemplateArchiveDialog
                 template={template}
-                open={deleteOpen}
-                setOpen={setDeleteOpen}
-                onConfirm={deleteReleasePlan}
+                open={archiveOpen}
+                setOpen={setArchiveOpen}
+                onConfirm={archiveReleasePlan}
             />
         </StyledActions>
     );

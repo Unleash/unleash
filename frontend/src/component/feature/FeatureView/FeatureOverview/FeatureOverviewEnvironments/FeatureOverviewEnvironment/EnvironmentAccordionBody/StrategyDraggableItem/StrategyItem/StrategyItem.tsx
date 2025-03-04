@@ -8,19 +8,21 @@ import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/perm
 import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
 import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove';
 import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
 import { Box } from '@mui/material';
 import { StrategyItemContainer as NewStrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
+import { useScheduledChangeRequestsWithStrategy } from 'hooks/api/getters/useScheduledChangeRequestsWithStrategy/useScheduledChangeRequestsWithStrategy';
+import { useStrategyChangesFromRequest } from './useStrategyChangesFromRequest';
+import { ChangesScheduledBadge } from 'component/changeRequest/ModifiedInChangeRequestStatusBadge/ChangesScheduledBadge';
+import { ChangeRequestDraftStatusBadge } from 'component/changeRequest/ChangeRequestStatusBadge/ChangeRequestDraftStatusBadge';
 interface IStrategyItemProps {
     environmentId: string;
     strategy: IFeatureStrategy;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
     otherEnvironments?: IFeatureEnvironment['name'][];
-    orderNumber?: number;
     headerChildren?: JSX.Element[] | JSX.Element;
 }
 
@@ -30,7 +32,6 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
     onDragStart,
     onDragEnd,
     otherEnvironments,
-    orderNumber,
     headerChildren,
 }) => {
     const projectId = useRequiredPathParam('projectId');
@@ -43,26 +44,46 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
         strategy.id,
     );
 
+    const strategyChangesFromRequest = useStrategyChangesFromRequest(
+        projectId,
+        featureId,
+        environmentId,
+        strategy.id,
+    );
+
+    const { changeRequests: scheduledChanges } =
+        useScheduledChangeRequestsWithStrategy(projectId, strategy.id);
+
+    const draftChange = strategyChangesFromRequest?.find(
+        ({ isScheduledChange }) => !isScheduledChange,
+    );
+
     return (
-        <NewStrategyItemContainer
+        <StrategyItemNoProject
             strategy={strategy}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
             actions={
                 <>
-                    {headerChildren}
-                    <ConditionallyRender
-                        condition={Boolean(
-                            otherEnvironments && otherEnvironments?.length > 0,
-                        )}
-                        show={() => (
-                            <CopyStrategyIconMenu
-                                environmentId={environmentId}
-                                environments={otherEnvironments as string[]}
-                                strategy={strategy}
-                            />
-                        )}
-                    />
+                    {draftChange ? (
+                        <ChangeRequestDraftStatusBadge
+                            change={draftChange.change}
+                        />
+                    ) : null}
+                    {scheduledChanges && scheduledChanges.length > 0 ? (
+                        <ChangesScheduledBadge
+                            scheduledChangeRequestIds={scheduledChanges.map(
+                                (scheduledChange) => scheduledChange.id,
+                            )}
+                        />
+                    ) : null}
+                    {otherEnvironments && otherEnvironments?.length > 0 ? (
+                        <CopyStrategyIconMenu
+                            environmentId={environmentId}
+                            environments={otherEnvironments as string[]}
+                            strategy={strategy}
+                        />
+                    ) : null}
                     <PermissionIconButton
                         permission={UPDATE_FEATURE_STRATEGY}
                         environmentId={environmentId}
@@ -84,19 +105,7 @@ export const StrategyItem: FC<IStrategyItemProps> = ({
                     />
                 </>
             }
-        >
-            <StrategyExecution strategy={strategy} />
-
-            {strategy.variants &&
-                strategy.variants.length > 0 &&
-                (strategy.disabled ? (
-                    <Box sx={{ opacity: '0.5' }}>
-                        <SplitPreviewSlider variants={strategy.variants} />
-                    </Box>
-                ) : (
-                    <SplitPreviewSlider variants={strategy.variants} />
-                ))}
-        </NewStrategyItemContainer>
+        />
     );
 };
 

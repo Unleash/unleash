@@ -80,7 +80,6 @@ export const StrategyDraggableItem = ({
                 otherEnvironments={otherEnvironments}
                 onDragStart={onDragStartRef(ref, index)}
                 onDragEnd={onDragEnd}
-                orderNumber={index + 1}
                 headerChildren={renderHeaderChildren(
                     strategyChangesFromRequest,
                     scheduledChangesUsingStrategy,

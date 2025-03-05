@@ -94,26 +94,36 @@ const StyledFormContent = styled('div', {
         return !['disablePadding', 'compactPadding'].includes(prop.toString());
     },
 })<{ disablePadding?: boolean; compactPadding?: boolean }>(
-    ({ theme, disablePadding, compactPadding }) => ({
-        backgroundColor: theme.palette.background.paper,
-        display: 'flex',
-        flexDirection: 'column',
-        flexGrow: 1,
-        padding: disablePadding
+    ({ theme, disablePadding, compactPadding }) => {
+        const padding = disablePadding
             ? 0
             : compactPadding
               ? theme.spacing(4)
-              : theme.spacing(6),
-        [theme.breakpoints.down('lg')]: {
-            padding: disablePadding ? 0 : theme.spacing(4),
-        },
-        [theme.breakpoints.down(1100)]: {
-            width: '100%',
-        },
-        [theme.breakpoints.down(500)]: {
-            padding: disablePadding ? 0 : theme.spacing(4, 2),
-        },
-    }),
+              : theme.spacing(6);
+
+        const paddingLgDown = disablePadding ? 0 : theme.spacing(4);
+        const padding500Down = disablePadding ? 0 : theme.spacing(4, 2);
+
+        return {
+            '--form-content-padding': padding,
+            backgroundColor: theme.palette.background.paper,
+            display: 'flex',
+            flexDirection: 'column',
+            flexGrow: 1,
+            padding,
+            [theme.breakpoints.down('lg')]: {
+                padding: paddingLgDown,
+                '--form-content-padding': paddingLgDown,
+            },
+            [theme.breakpoints.down(1100)]: {
+                width: '100%',
+            },
+            [theme.breakpoints.down(500)]: {
+                padding: padding500Down,
+                '--form-content-padding': padding500Down,
+            },
+        };
+    },
 );
 
 const StyledFooter = styled('div')(({ theme }) => ({

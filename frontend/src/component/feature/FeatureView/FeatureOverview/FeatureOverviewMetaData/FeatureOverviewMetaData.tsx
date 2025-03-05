@@ -122,9 +122,9 @@ const FeatureOverviewMetaData: FC<FeatureOverviewMetaDataProps> = ({
                             <FeatureLifecycle
                                 feature={feature}
                                 onArchive={() => setArchiveDialogOpen(true)}
-                                onComplete={() => {
-                                    setMarkCompletedDialogueOpen(true);
-                                }}
+                                onComplete={() =>
+                                    setMarkCompletedDialogueOpen(true)
+                                }
                                 onUncomplete={refetchFeature}
                             />
                         </StyledMetaDataItem>

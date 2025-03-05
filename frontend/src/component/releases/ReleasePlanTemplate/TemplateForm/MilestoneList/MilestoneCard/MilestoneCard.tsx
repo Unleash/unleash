@@ -30,6 +30,13 @@ import { StrategyDraggableItem } from 'component/feature/FeatureView/FeatureOver
 
 const leftPadding = 3;
 
+const DraggableCardContainer = styled('div')(({ theme }) => ({
+    '--left-offset': `calc(var(--form-content-padding, ${theme.spacing(4)}) * -1)`,
+    display: 'grid',
+    marginLeft: `var(--left-offset)`,
+    gridTemplateColumns: `var(--left-offset) 1fr`,
+}));
+
 const StyledMilestoneCard = styled(Card, {
     shouldForwardProp: (prop) => prop !== 'hasError',
 })<{ hasError: boolean }>(({ theme, hasError }) => ({
@@ -342,64 +349,66 @@ export const MilestoneCard = ({
     if (!milestone.strategies || milestone.strategies.length === 0) {
         return (
             <>
-                <StyledMilestoneCard
-                    hasError={
-                        Boolean(errors?.[milestone.id]) ||
-                        Boolean(errors?.[`${milestone.id}_name`])
-                    }
-                    ref={dragItemRef}
-                >
+                <DraggableCardContainer>
                     {dragHandle}
-
-                    <FlexContainer>
-                        <MilestoneCardName
-                            milestone={milestone}
-                            errors={errors}
-                            clearErrors={clearErrors}
-                            milestoneNameChanged={milestoneNameChanged}
-                        />
-                    </FlexContainer>
-                    <FlexContainer>
-                        <Button
-                            variant='outlined'
-                            color='primary'
-                            onClick={(ev) => setAnchor(ev.currentTarget)}
-                        >
-                            Add strategy
-                        </Button>
-                        <StyledIconButton
-                            title='Remove milestone'
-                            onClick={onDeleteMilestone}
-                            disabled={!removable}
-                        >
-                            <Delete />
-                        </StyledIconButton>
-
-                        <Popover
-                            id={popoverId}
-                            open={isPopoverOpen}
-                            anchorEl={anchor}
-                            onClose={onClose}
-                            onClick={onClose}
-                            PaperProps={{
-                                sx: (theme) => ({
-                                    paddingBottom: theme.spacing(1),
-                                }),
-                            }}
-                        >
-                            <MilestoneStrategyMenuCards
-                                openEditAddStrategy={(strategy) => {
-                                    openAddUpdateStrategyForm(strategy, false);
-                                }}
+                    <StyledMilestoneCard
+                        hasError={
+                            Boolean(errors?.[milestone.id]) ||
+                            Boolean(errors?.[`${milestone.id}_name`])
+                        }
+                        ref={dragItemRef}
+                    >
+                        <FlexContainer>
+                            <MilestoneCardName
+                                milestone={milestone}
+                                errors={errors}
+                                clearErrors={clearErrors}
+                                milestoneNameChanged={milestoneNameChanged}
                             />
-                        </Popover>
-                    </FlexContainer>
-                </StyledMilestoneCard>
+                        </FlexContainer>
+                        <FlexContainer>
+                            <Button
+                                variant='outlined'
+                                color='primary'
+                                onClick={(ev) => setAnchor(ev.currentTarget)}
+                            >
+                                Add strategy
+                            </Button>
+                            <StyledIconButton
+                                title='Remove milestone'
+                                onClick={onDeleteMilestone}
+                                disabled={!removable}
+                            >
+                                <Delete />
+                            </StyledIconButton>
 
+                            <Popover
+                                id={popoverId}
+                                open={isPopoverOpen}
+                                anchorEl={anchor}
+                                onClose={onClose}
+                                onClick={onClose}
+                                PaperProps={{
+                                    sx: (theme) => ({
+                                        paddingBottom: theme.spacing(1),
+                                    }),
+                                }}
+                            >
+                                <MilestoneStrategyMenuCards
+                                    openEditAddStrategy={(strategy) => {
+                                        openAddUpdateStrategyForm(
+                                            strategy,
+                                            false,
+                                        );
+                                    }}
+                                />
+                            </Popover>
+                        </FlexContainer>
+                    </StyledMilestoneCard>
+                </DraggableCardContainer>
                 <FormHelperText error={Boolean(errors?.[milestone.id])}>
                     {errors?.[milestone.id]}
                 </FormHelperText>
-
                 <SidebarModal
                     label='Add strategy to template milestone'
                     onClose={() => {

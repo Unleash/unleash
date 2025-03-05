@@ -26,7 +26,6 @@ import { InfoSection } from './InfoSection';
 import { EventTimeline } from 'component/events/EventTimeline/EventTimeline';
 import { AccordionContent } from './SharedComponents';
 import { Link } from 'react-router-dom';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 const WelcomeSection = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -277,7 +276,6 @@ export const PersonalDashboard = () => {
     const { splash } = useAuthSplash();
     const { isOss } = useUiConfig();
     const name = user?.name || '';
-    const showTimelinePanel = useUiFlag('frontendHeaderRedesign');
 
     usePageTitle(name ? `Dashboard: ${name}` : 'Dashboard');
 
@@ -324,7 +322,7 @@ export const PersonalDashboard = () => {
                 </ViewKeyConceptsButton>
             </WelcomeSection>
 
-            {showTimelinePanel && <EventTimelinePanel />}
+            <EventTimelinePanel />
 
             <ProjectPanel />
 

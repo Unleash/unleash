@@ -62,7 +62,6 @@ export type IFlagKey =
     | 'etagVariant'
     | 'deltaApi'
     | 'uniqueSdkTracking'
-    | 'frontendHeaderRedesign'
     | 'dataUsageMultiMonthView'
     | 'consumptionModel'
     | 'teamsIntegrationChangeRequests'
@@ -298,10 +297,6 @@ const flags: IFlags = {
     ),
     uniqueSdkTracking: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_UNIQUE_SDK_TRACKING,
-        false,
-    ),
-    frontendHeaderRedesign: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_FRONTEND_HEADER_REDESIGN,
         false,
     ),
     dataUsageMultiMonthView: parseEnvVarBoolean(

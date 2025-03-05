@@ -1,90 +1,29 @@
-import type { DragEventHandler, FC } from 'react';
-import Edit from '@mui/icons-material/Edit';
-import { Link } from 'react-router-dom';
-import type { IFeatureEnvironment } from 'interfaces/featureToggle';
+import type { DragEventHandler, FC, ReactNode } from 'react';
 import type { IFeatureStrategy } from 'interfaces/strategy';
-import PermissionIconButton from 'component/common/PermissionIconButton/PermissionIconButton';
-import { UPDATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { formatEditStrategyPath } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
-import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { CopyStrategyIconMenu } from './CopyStrategyIconMenu/CopyStrategyIconMenu';
-import MenuStrategyRemove from './MenuStrategyRemove/MenuStrategyRemove';
 import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
 import { Box } from '@mui/material';
 import { StrategyItemContainer as NewStrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
-interface IStrategyItemProps {
-    environmentId: string;
+
+type StrategyItemProps = {
+    headerItemsRight: ReactNode;
     strategy: IFeatureStrategy;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
-    otherEnvironments?: IFeatureEnvironment['name'][];
-    orderNumber?: number;
-    headerChildren?: JSX.Element[] | JSX.Element;
-}
+};
 
-export const StrategyItem: FC<IStrategyItemProps> = ({
-    environmentId,
+export const StrategyItem: FC<StrategyItemProps> = ({
     strategy,
     onDragStart,
     onDragEnd,
-    otherEnvironments,
-    orderNumber,
-    headerChildren,
+    headerItemsRight,
 }) => {
-    const projectId = useRequiredPathParam('projectId');
-    const featureId = useRequiredPathParam('featureId');
-
-    const editStrategyPath = formatEditStrategyPath(
-        projectId,
-        featureId,
-        environmentId,
-        strategy.id,
-    );
-
     return (
         <NewStrategyItemContainer
             strategy={strategy}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
-            orderNumber={orderNumber}
-            actions={
-                <>
-                    {headerChildren}
-                    <ConditionallyRender
-                        condition={Boolean(
-                            otherEnvironments && otherEnvironments?.length > 0,
-                        )}
-                        show={() => (
-                            <CopyStrategyIconMenu
-                                environmentId={environmentId}
-                                environments={otherEnvironments as string[]}
-                                strategy={strategy}
-                            />
-                        )}
-                    />
-                    <PermissionIconButton
-                        permission={UPDATE_FEATURE_STRATEGY}
-                        environmentId={environmentId}
-                        projectId={projectId}
-                        component={Link}
-                        to={editStrategyPath}
-                        tooltipProps={{
-                            title: 'Edit strategy',
-                        }}
-                        data-testid={`STRATEGY_EDIT-${strategy.name}`}
-                    >
-                        <Edit />
-                    </PermissionIconButton>
-                    <MenuStrategyRemove
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        strategy={strategy}
-                    />
-                </>
-            }
+            headerItemsRight={headerItemsRight}
         >
             <StrategyExecution strategy={strategy} />
 

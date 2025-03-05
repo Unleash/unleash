@@ -122,28 +122,41 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
 
     return (
         <StretchContainer mode={mode}>
-            <StyledLink to='/' sx={flexRow} aria-label='Home'>
-                <ThemeMode
-                    darkmode={
-                        <ConditionallyRender
-                            condition={celebatoryUnleash}
-                            show={<CelebatoryUnleashLogoWhite />}
-                            elseShow={
-                                <StyledUnleashLogoWhite aria-label='Unleash logo' />
+            <ConditionallyRender
+                condition={mode === 'full'}
+                show={
+                    <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                        <ThemeMode
+                            darkmode={
+                                <ConditionallyRender
+                                    condition={celebatoryUnleash}
+                                    show={<CelebatoryUnleashLogoWhite />}
+                                    elseShow={
+                                        <StyledUnleashLogoWhite aria-label='Unleash logo' />
+                                    }
+                                />
+                            }
+                            lightmode={
+                                <ConditionallyRender
+                                    condition={celebatoryUnleash}
+                                    show={<StyledCelebatoryLogo />}
+                                    elseShow={
+                                        <StyledUnleashLogo aria-label='Unleash logo' />
+                                    }
+                                />
                             }
                         />
-                    }
-                    lightmode={
-                        <ConditionallyRender
-                            condition={celebatoryUnleash}
-                            show={<StyledCelebatoryLogo />}
-                            elseShow={
-                                <StyledUnleashLogo aria-label='Unleash logo' />
-                            }
+                    </StyledLink>
+                }
+                elseShow={
+                    <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                        <ThemeMode
+                            darkmode={<StyledUnleashLogoOnlyWhite />}
+                            lightmode={<StyledUnleashLogoOnly />}
                         />
-                    }
-                />
-            </StyledLink>
+                    </StyledLink>
+                }
+            />
 
             <PrimaryNavigationList
                 mode={mode}

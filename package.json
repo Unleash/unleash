@@ -175,7 +175,7 @@
     "@apidevtools/swagger-parser": "10.1.1",
     "@babel/core": "7.26.9",
     "@biomejs/biome": "^1.9.4",
-    "@cyclonedx/yarn-plugin-cyclonedx": "^1.0.0-rc.7",
+    "@cyclonedx/yarn-plugin-cyclonedx": "^2.0.0",
     "@swc/core": "1.11.1",
     "@swc/jest": "0.2.37",
     "@types/bcryptjs": "2.4.6",

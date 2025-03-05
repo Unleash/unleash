@@ -8,9 +8,9 @@ import {
 import { BILLING_TRAFFIC_BUNDLE_PRICE } from './BillingPlan';
 
 export const useOverageCost = (includedTraffic: number) =>
-    useNewOverageCostCalculation(includedTraffic);
+    useOverageCostCalculation(includedTraffic);
 
-const useNewOverageCostCalculation = (includedTraffic: number) => {
+const useOverageCostCalculation = (includedTraffic: number) => {
     if (!includedTraffic) {
         return 0;
     }

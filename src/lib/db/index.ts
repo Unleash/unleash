@@ -58,6 +58,7 @@ import { UserUnsubscribeStore } from '../features/user-subscriptions/user-unsubs
 import { UserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model';
 import { UniqueConnectionStore } from '../features/unique-connection/unique-connection-store';
 import { UniqueConnectionReadModel } from '../features/unique-connection/unique-connection-read-model';
+import WorkspaceStore from '../features/workspaces/workspaces-store';
 
 export const createStores = (
     config: IUnleashConfig,
@@ -67,6 +68,7 @@ export const createStores = (
     const eventStore = new EventStore(db, getLogger);
 
     return {
+        workspaceStore: new WorkspaceStore(db, getLogger, config.flagResolver),
         eventStore,
         featureToggleStore: new FeatureToggleStore(
             db,

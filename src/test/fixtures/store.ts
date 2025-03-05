@@ -58,6 +58,7 @@ import { FakeUserUnsubscribeStore } from '../../lib/features/user-subscriptions/
 import { FakeUserSubscriptionsReadModel } from '../../lib/features/user-subscriptions/fake-user-subscriptions-read-model';
 import { FakeUniqueConnectionStore } from '../../lib/features/unique-connection/fake-unique-connection-store';
 import { UniqueConnectionReadModel } from '../../lib/features/unique-connection/unique-connection-read-model';
+import FakeWorkspaceStore from '../../lib/features/workspaces/fake-workspace-store';
 
 const db = {
     select: () => ({
@@ -70,6 +71,7 @@ const createStores: () => IUnleashStores = () => {
 
     return {
         db,
+        workspaceStore: new FakeWorkspaceStore(),
         clientApplicationsStore: new FakeClientApplicationsStore(),
         clientMetricsStoreV2: new FakeClientMetricsStoreV2(),
         clientInstanceStore: new FakeClientInstanceStore(),

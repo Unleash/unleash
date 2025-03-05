@@ -60,8 +60,10 @@ import type { PersonalDashboardService } from '../features/personal-dashboard/pe
 import type { ProjectStatusService } from '../features/project-status/project-status-service';
 import type { UserSubscriptionsService } from '../features/user-subscriptions/user-subscriptions-service';
 import type { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
+import type { WorkspacesService } from '../features/workspaces/workspaces-service';
 
 export interface IUnleashServices {
+    workspacesService: WorkspacesService;
     transactionalAccessService: WithTransactional<AccessService>;
     accessService: AccessService;
     accountService: AccountService;

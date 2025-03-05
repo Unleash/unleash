@@ -158,6 +158,11 @@ import {
     createFakeContextService,
 } from '../features/context/createContextService';
 import { UniqueConnectionService } from '../features/unique-connection/unique-connection-service';
+import {
+    createWorkspaceService,
+    createFakeWorkspaceService,
+} from '../features/workspaces/createWorkspaceService';
+import { WorkspacesService } from '../features/workspaces/workspaces-service';
 
 export const createServices = (
     stores: IUnleashStores,
@@ -420,7 +425,12 @@ export const createServices = (
         ? withTransactional(createUserSubscriptionsService(config), db)
         : withFakeTransactional(createFakeUserSubscriptionsService(config));
 
+    const workspacesService = db
+        ? createWorkspaceService(db, config)
+        : createFakeWorkspaceService(config);
+
     return {
+        workspacesService,
         transactionalAccessService,
         accessService,
         accountService,
@@ -493,6 +503,7 @@ export const createServices = (
 };
 
 export {
+    WorkspacesService,
     FeatureTypeService,
     EventService,
     HealthService,

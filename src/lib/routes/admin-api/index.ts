@@ -36,6 +36,7 @@ import { InactiveUsersController } from '../../users/inactive/inactive-users-con
 import { UiObservabilityController } from '../../features/ui-observability-controller/ui-observability-controller';
 import { SearchApi } from './search';
 import PersonalDashboardController from '../../features/personal-dashboard/personal-dashboard-controller';
+import { WorkspacesController } from '../../features/workspaces/workspaces-controller';
 
 export class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -168,6 +169,11 @@ export class AdminApi extends Controller {
         this.app.use(
             '/record-ui-error',
             new UiObservabilityController(config, services).router,
+        );
+
+        this.app.use(
+            '/workspaces',
+            new WorkspacesController(config, services).router,
         );
     }
 }

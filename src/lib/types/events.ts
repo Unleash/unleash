@@ -220,6 +220,10 @@ export const USER_PREFERENCE_UPDATED = 'user-preference-updated' as const;
 export const SCIM_USERS_DELETED = 'scim-users-deleted' as const;
 export const SCIM_GROUPS_DELETED = 'scim-groups-deleted' as const;
 
+export const WORKSPACE_CREATED = 'workspace-created' as const;
+export const WORKSPACE_UPDATED = 'workspace-updated' as const;
+export const WORKSPACE_DELETED = 'workspace-deleted' as const;
+
 export const IEventTypes = [
     APPLICATION_CREATED,
     FEATURE_CREATED,
@@ -376,6 +380,9 @@ export const IEventTypes = [
     USER_PREFERENCE_UPDATED,
     SCIM_USERS_DELETED,
     SCIM_GROUPS_DELETED,
+    WORKSPACE_CREATED,
+    WORKSPACE_UPDATED,
+    WORKSPACE_DELETED,
 ] as const;
 export type IEventType = (typeof IEventTypes)[number];
 
@@ -2185,5 +2192,76 @@ export class UserPreferenceUpdatedEvent extends BaseEvent {
         super(USER_PREFERENCE_UPDATED, eventData.auditUser);
         this.userId = eventData.userId;
         this.data = eventData.data;
+    }
+}
+
+export class WorkspaceCreatedEvent extends BaseEvent {
+    readonly data: {
+        id: number;
+        name: string;
+        description?: string;
+    };
+
+    constructor(eventData: {
+        workspace: {
+            id: number;
+            name: string;
+            description?: string;
+        };
+        auditUser: IAuditUser;
+    }) {
+        super(WORKSPACE_CREATED, eventData.auditUser);
+        this.data = eventData.workspace;
+    }
+}
+
+export class WorkspaceUpdatedEvent extends BaseEvent {
+    readonly data: {
+        id: number;
+        name: string;
+        description?: string;
+    };
+    readonly preData: {
+        id: number;
+        name: string;
+        description?: string;
+    };
+
+    constructor(eventData: {
+        workspace: {
+            id: number;
+            name: string;
+            description?: string;
+        };
+        preWorkspace: {
+            id: number;
+            name: string;
+            description?: string;
+        };
+        auditUser: IAuditUser;
+    }) {
+        super(WORKSPACE_UPDATED, eventData.auditUser);
+        this.data = eventData.workspace;
+        this.preData = eventData.preWorkspace;
+    }
+}
+
+export class WorkspaceDeletedEvent extends BaseEvent {
+    readonly preData: {
+        id: number;
+        name: string;
+        description?: string;
+    };
+
+    constructor(eventData: {
+        workspace: {
+            id: number;
+            name: string;
+            description?: string;
+        };
+        auditUser: IAuditUser;
+    }) {
+        super(WORKSPACE_DELETED, eventData.auditUser);
+        this.preData = eventData.workspace;
     }
 }

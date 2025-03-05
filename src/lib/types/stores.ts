@@ -55,8 +55,9 @@ import type { IUserUnsubscribeStore } from '../features/user-subscriptions/user-
 import type { IUserSubscriptionsReadModel } from '../features/user-subscriptions/user-subscriptions-read-model-type';
 import { IUniqueConnectionStore } from '../features/unique-connection/unique-connection-store-type';
 import { IUniqueConnectionReadModel } from '../features/unique-connection/unique-connection-read-model-type';
-
+import type { IWorkspaceStore } from '../features/workspaces/workspaces-types';
 export interface IUnleashStores {
+    workspaceStore: IWorkspaceStore;
     accessStore: IAccessStore;
     accountStore: IAccountStore;
     addonStore: IAddonStore;
@@ -117,6 +118,7 @@ export interface IUnleashStores {
 }
 
 export {
+    type IWorkspaceStore,
     IAccessStore,
     IAccountStore,
     IAddonStore,

@@ -60,6 +60,7 @@ export * from './create-strategy-variant-schema';
 export * from './create-tag-schema';
 export * from './create-user-response-schema';
 export * from './create-user-schema';
+export * from './create-workspace-schema';
 export * from './date-schema';
 export * from './dependencies-exist-schema';
 export * from './dependent-feature-schema';
@@ -208,6 +209,7 @@ export * from './update-strategy-schema';
 export * from './update-tag-type-schema';
 export * from './update-tags-schema';
 export * from './update-user-schema';
+export * from './update-workspace-schema';
 export * from './upsert-segment-schema';
 export * from './user-schema';
 export * from './users-groups-base-schema';
@@ -222,6 +224,8 @@ export * from './variant-flag-schema';
 export * from './variant-schema';
 export * from './variants-schema';
 export * from './version-schema';
+export * from './workspace-schema';
+export * from './workspaces-schema';
 /**
  * Auto-generated file by update-openapi-spec-list.js. Do not edit.
  * To run it manually execute `yarn schema:update` or `node .husky/update-openapi-spec-list.js`

@@ -1,5 +1,4 @@
 import type { OpenAPIV3 } from 'openapi-types';
-
 import type { IServerOption } from '../types';
 import { mapValues, omitKeys } from '../util';
 import { openApiTags } from './util';
@@ -39,6 +38,7 @@ interface OpenAPIV3DocumentWithServers extends OpenAPIV3.Document {
  * Instead of listing them all maunally, exclude those that are not schemas (maybe they should be moved elsewhere)
  */
 import * as importedSchemas from './spec';
+import Ajv from 'ajv';
 const {
     constraintSchemaBase,
     unknownFeatureEvaluationResult,
@@ -81,6 +81,9 @@ export const createOpenApiSchema = ({
     'paths'
 > => {
     const url = findRootUrl(unleashUrl, baseUriPath);
+
+    const mappedValues = mapValues(schemas, removeJsonSchemaProps);
+    console.log('schemas', mappedValues['workspaceSchema']);
 
     return {
         openapi: '3.0.3',

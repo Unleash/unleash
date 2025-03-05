@@ -15,10 +15,8 @@ import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { DraftBanner } from './DraftBanner/DraftBanner';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
-import { MainLayoutEventTimeline } from './MainLayoutEventTimeline';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash';
-import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -94,7 +92,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
         const { uiConfig } = useUiConfig();
         const projectId = useOptionalPathParam('projectId');
-        const frontendHeaderRedesign = useUiFlag('frontendHeaderRedesign');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
@@ -105,11 +102,6 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
         return (
             <EventTimelineProvider>
                 <SkipNavLink />
-                <ConditionallyRender
-                    condition={!frontendHeaderRedesign}
-                    show={<Header />}
-                />
-
                 <MainLayoutContainer>
                     <MainLayoutContentWrapper>
                         <ConditionallyRender
@@ -123,9 +115,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                         <Box
                             sx={(theme) => ({
                                 display: 'flex',
-                                mt: frontendHeaderRedesign
-                                    ? 0
-                                    : theme.spacing(0.25),
+                                mt: 0,
                             })}
                         >
                             <ConditionallyRender
@@ -145,15 +135,7 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                     minWidth: 0,
                                 }}
                             >
-                                <ConditionallyRender
-                                    condition={frontendHeaderRedesign}
-                                    show={<Header />}
-                                />
-
-                                <ConditionallyRender
-                                    condition={!frontendHeaderRedesign}
-                                    show={<MainLayoutEventTimeline />}
-                                />
+                                <Header />
 
                                 <MainLayoutContent>
                                     <SkipNavTarget />

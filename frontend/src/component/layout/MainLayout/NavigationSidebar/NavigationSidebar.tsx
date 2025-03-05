@@ -103,7 +103,6 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
 }) => {
     const { routes } = useRoutes();
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
-    const frontendHeaderRedesign = useUiFlag('frontendHeaderRedesign');
 
     const [mode, setMode] = useNavigationMode();
     const [expanded, changeExpanded] = useExpanded<'configure' | 'admin'>();
@@ -124,45 +123,38 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
     return (
         <StretchContainer mode={mode}>
             <ConditionallyRender
-                condition={frontendHeaderRedesign}
+                condition={mode === 'full'}
                 show={
-                    <ConditionallyRender
-                        condition={mode === 'full'}
-                        show={
-                            <StyledLink to='/' sx={flexRow} aria-label='Home'>
-                                <ThemeMode
-                                    darkmode={
-                                        <ConditionallyRender
-                                            condition={celebatoryUnleash}
-                                            show={
-                                                <CelebatoryUnleashLogoWhite />
-                                            }
-                                            elseShow={
-                                                <StyledUnleashLogoWhite aria-label='Unleash logo' />
-                                            }
-                                        />
-                                    }
-                                    lightmode={
-                                        <ConditionallyRender
-                                            condition={celebatoryUnleash}
-                                            show={<StyledCelebatoryLogo />}
-                                            elseShow={
-                                                <StyledUnleashLogo aria-label='Unleash logo' />
-                                            }
-                                        />
+                    <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                        <ThemeMode
+                            darkmode={
+                                <ConditionallyRender
+                                    condition={celebatoryUnleash}
+                                    show={<CelebatoryUnleashLogoWhite />}
+                                    elseShow={
+                                        <StyledUnleashLogoWhite aria-label='Unleash logo' />
                                     }
                                 />
-                            </StyledLink>
-                        }
-                        elseShow={
-                            <StyledLink to='/' sx={flexRow} aria-label='Home'>
-                                <ThemeMode
-                                    darkmode={<StyledUnleashLogoOnlyWhite />}
-                                    lightmode={<StyledUnleashLogoOnly />}
+                            }
+                            lightmode={
+                                <ConditionallyRender
+                                    condition={celebatoryUnleash}
+                                    show={<StyledCelebatoryLogo />}
+                                    elseShow={
+                                        <StyledUnleashLogo aria-label='Unleash logo' />
+                                    }
                                 />
-                            </StyledLink>
-                        }
-                    />
+                            }
+                        />
+                    </StyledLink>
+                }
+                elseShow={
+                    <StyledLink to='/' sx={flexRow} aria-label='Home'>
+                        <ThemeMode
+                            darkmode={<StyledUnleashLogoOnlyWhite />}
+                            lightmode={<StyledUnleashLogoOnly />}
+                        />
+                    </StyledLink>
                 }
             />
 

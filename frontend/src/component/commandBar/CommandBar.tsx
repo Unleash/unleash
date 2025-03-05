@@ -50,7 +50,9 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     border: `1px solid ${theme.palette.neutral.border}`,
 }));
 
-const StyledContainer = styled('div')<{
+const StyledContainer = styled('div', {
+    shouldForwardProp: (prop) => prop !== 'active',
+})<{
     active: boolean | undefined;
 }>(({ theme, active }) => ({
     border: `1px solid transparent`,

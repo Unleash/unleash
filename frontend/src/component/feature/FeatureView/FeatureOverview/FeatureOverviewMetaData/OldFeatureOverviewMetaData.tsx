@@ -147,9 +147,13 @@ const OldFeatureOverviewMetaData = () => {
                                 <FeatureLifecycle
                                     feature={feature}
                                     onArchive={() => setShowDelDialog(true)}
-                                    onComplete={() =>
-                                        setShowMarkCompletedDialogue(true)
-                                    }
+                                    onComplete={() => {
+                                        console.log(
+                                            'Triggering. Feature project:',
+                                            feature.project,
+                                        );
+                                        setShowMarkCompletedDialogue(true);
+                                    }}
                                     onUncomplete={refetchFeature}
                                 />
                             </SpacedBodyItem>

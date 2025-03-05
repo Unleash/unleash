@@ -134,6 +134,7 @@ const PermissionButton = React.forwardRef<
         typeof props.projectId !== 'undefined' &&
         typeof props.environmentId !== 'undefined'
     ) {
+        console.log('rendered proj env perm button');
         return (
             <ProjectEnvironmentPermissionButton
                 {...props}
@@ -143,6 +144,7 @@ const PermissionButton = React.forwardRef<
             />
         );
     }
+    console.log('rendered root perm button');
     return <RootPermissionButton {...props} ref={ref} />;
 });
 

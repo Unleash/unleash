@@ -338,3 +338,55 @@ test('Override works correctly when enabling default and disabling prod and dev'
     expect(targetedEnvironment?.enabled).toBe(true);
     expect(allOtherEnvironments.every((x) => !x)).toBe(true);
 });
+
+test('getProjectEnvironments also includes whether or not a given project is visible on a given environment', async () => {
+    const assertContains = (environments, envName, visible) => {
+        console.log(environments);
+        const env = environments.find((e) => e.name === envName);
+        expect(env).toBeDefined();
+        expect(env.visible).toBe(visible);
+    };
+
+    const assertContainsVisible = (environments, envName) => {
+        assertContains(environments, envName, true);
+    };
+
+    const assertContainsNotVisible = (environments, envName) => {
+        assertContains(environments, envName, false);
+    };
+
+    const projectId = 'default';
+    const firstEnvTest = 'some-connected-environment';
+    const secondEnvTest = 'some-also-connected-environment';
+    await db.stores.environmentStore.create({
+        name: firstEnvTest,
+        type: 'production',
+    });
+    await db.stores.environmentStore.create({
+        name: secondEnvTest,
+        type: 'production',
+    });
+
+    await service.addEnvironmentToProject(
+        firstEnvTest,
+        projectId,
+        SYSTEM_USER_AUDIT,
+    );
+    await service.addEnvironmentToProject(
+        secondEnvTest,
+        projectId,
+        SYSTEM_USER_AUDIT,
+    );
+    let environments = await service.getProjectEnvironments(projectId);
+    assertContainsVisible(environments, firstEnvTest);
+    assertContainsVisible(environments, secondEnvTest);
+
+    await service.removeEnvironmentFromProject(
+        firstEnvTest,
+        projectId,
+        SYSTEM_USER_AUDIT,
+    );
+    environments = await service.getProjectEnvironments(projectId);
+    assertContainsNotVisible(environments, firstEnvTest);
+    assertContainsVisible(environments, secondEnvTest);
+});

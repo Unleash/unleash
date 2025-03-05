@@ -9,12 +9,12 @@ import type { PlaygroundConstraintSchema } from './playgroundConstraintSchema';
  * The evaluated result of a segment as used by the Playground.
  */
 export interface PlaygroundSegmentSchema {
-    /** The list of constraints in this segment. */
-    constraints: PlaygroundConstraintSchema[];
     /** The segment's id. */
     id: number;
     /** The name of the segment. */
     name: string;
     /** Whether this was evaluated as true or false. */
     result: boolean;
+    /** The list of constraints in this segment. */
+    constraints: PlaygroundConstraintSchema[];
 }

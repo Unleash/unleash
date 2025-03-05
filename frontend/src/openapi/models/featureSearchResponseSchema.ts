@@ -3,62 +3,65 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSearchResponseSchemaCreatedBy } from './featureSearchResponseSchemaCreatedBy';
 import type { FeatureSearchResponseSchemaDependencyType } from './featureSearchResponseSchemaDependencyType';
 import type { FeatureSearchEnvironmentSchema } from './featureSearchEnvironmentSchema';
-import type { FeatureSearchResponseSchemaLifecycle } from './featureSearchResponseSchemaLifecycle';
+import type { VariantSchema } from './variantSchema';
 import type { FeatureSearchResponseSchemaStrategiesItem } from './featureSearchResponseSchemaStrategiesItem';
 import type { TagSchema } from './tagSchema';
-import type { VariantSchema } from './variantSchema';
+import type { FeatureSearchResponseSchemaLifecycle } from './featureSearchResponseSchemaLifecycle';
+import type { FeatureSearchResponseSchemaCreatedBy } from './featureSearchResponseSchemaCreatedBy';
 
 /**
  * A feature flag definition
  */
 export interface FeatureSearchResponseSchema {
+    /** Unique feature name */
+    name: string;
+    /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
+    type: string;
+    /**
+     * Detailed description of the feature
+     * @nullable
+     */
+    description: string | null;
+    /**
+     * The type of dependency. 'parent' means that the feature is a parent feature, 'child' means that the feature is a child feature.
+     * @nullable
+     */
+    dependencyType: FeatureSearchResponseSchemaDependencyType;
+    /** Name of the project the feature belongs to */
+    project: string;
+    /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */
+    stale: boolean;
+    /** `true` if the feature was favorited, otherwise `false`. */
+    favorite: boolean;
+    /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
+    impressionData: boolean;
+    /**
+     * The date the feature was created
+     * @nullable
+     */
+    createdAt: string | null;
     /**
      * The date the feature was archived
      * @nullable
      */
     archivedAt: string | null;
     /**
-     * The date the feature was created
-     * @nullable
-     */
-    createdAt: string | null;
-    /** User who created the feature flag */
-    createdBy: FeatureSearchResponseSchemaCreatedBy;
-    /**
-     * The type of dependency. 'parent' means that the feature is a parent feature, 'child' means that the feature is a child feature.
-     * @nullable
-     */
-    dependencyType: FeatureSearchResponseSchemaDependencyType;
-    /**
-     * Detailed description of the feature
-     * @nullable
-     */
-    description: string | null;
-    /** The list of environments where the feature can be used */
-    environments: FeatureSearchEnvironmentSchema[];
-    /** `true` if the feature was favorited, otherwise `false`. */
-    favorite: boolean;
-    /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
-    impressionData: boolean;
-    /**
      * The date when metrics where last collected for the feature. This field was deprecated in v5 and will be removed in a future release, use the one in featureEnvironmentSchema
      * @deprecated
      * @nullable
      */
     lastSeenAt?: string | null;
-    /** Current lifecycle stage of the feature */
-    lifecycle?: FeatureSearchResponseSchemaLifecycle;
-    /** Unique feature name */
-    name: string;
-    /** Name of the project the feature belongs to */
-    project: string;
+    /** The list of environments where the feature can be used */
+    environments: FeatureSearchEnvironmentSchema[];
     /** The list of segments the feature is enabled for. */
     segments: string[];
-    /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */
-    stale: boolean;
+    /**
+     * The list of feature variants. This field was deprecated in v5
+     * @deprecated
+     */
+    variants?: VariantSchema[];
     /**
      * This is a legacy field that was deprecated in v5
      * @deprecated
@@ -69,11 +72,8 @@ export interface FeatureSearchResponseSchema {
      * @nullable
      */
     tags?: TagSchema[] | null;
-    /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
-    type: string;
-    /**
-     * The list of feature variants. This field was deprecated in v5
-     * @deprecated
-     */
-    variants?: VariantSchema[];
+    /** Current lifecycle stage of the feature */
+    lifecycle?: FeatureSearchResponseSchemaLifecycle;
+    /** User who created the feature flag */
+    createdBy: FeatureSearchResponseSchemaCreatedBy;
 }

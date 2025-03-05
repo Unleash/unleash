@@ -9,8 +9,8 @@ import type { ArchivedFeatureSchema } from './archivedFeatureSchema';
  * A list of archived features
  */
 export interface ArchivedFeaturesSchema {
-    /** A list of features */
-    features: ArchivedFeatureSchema[];
     /** The version of the feature's schema */
     version: number;
+    /** A list of features */
+    features: ArchivedFeatureSchema[];
 }

@@ -9,12 +9,16 @@ import type { CreateFeatureStrategySchema } from './createFeatureStrategySchema'
  * Describes a project's configuration in a given environment.
  */
 export interface EnvironmentProjectSchema {
-    /** The strategy configuration to add when enabling a feature environment by default */
-    defaultStrategy?: CreateFeatureStrategySchema;
-    /** `true` if the environment is enabled for the project, otherwise `false` */
-    enabled: boolean;
     /** The name of the environment */
     name: string;
+    /** The [type of environment](https://docs.getunleash.io/reference/environments#environment-types). */
+    type: string;
+    /** `true` if the environment is enabled for the project, otherwise `false` */
+    enabled: boolean;
+    /** `true` if the environment is protected, otherwise `false`. A *protected* environment can not be deleted. */
+    protected: boolean;
+    /** Priority of the environment in a list of environments, the lower the value, the higher up in the list the environment will appear */
+    sortOrder: number;
     /**
      * The number of client and front-end API tokens that have access to this project
      * @minimum 0
@@ -25,10 +29,6 @@ export interface EnvironmentProjectSchema {
      * @minimum 0
      */
     projectEnabledToggleCount?: number;
-    /** `true` if the environment is protected, otherwise `false`. A *protected* environment can not be deleted. */
-    protected: boolean;
-    /** Priority of the environment in a list of environments, the lower the value, the higher up in the list the environment will appear */
-    sortOrder: number;
-    /** The [type of environment](https://docs.getunleash.io/reference/environments#environment-types). */
-    type: string;
+    /** The strategy configuration to add when enabling a feature environment by default */
+    defaultStrategy?: CreateFeatureStrategySchema;
 }

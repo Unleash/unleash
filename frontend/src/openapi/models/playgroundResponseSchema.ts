@@ -3,15 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundFeatureSchema } from './playgroundFeatureSchema';
 import type { PlaygroundRequestSchema } from './playgroundRequestSchema';
+import type { PlaygroundFeatureSchema } from './playgroundFeatureSchema';
 
 /**
  * The state of all features given the provided input.
  */
 export interface PlaygroundResponseSchema {
-    /** The list of features that have been evaluated. */
-    features: PlaygroundFeatureSchema[];
     /** The given input used to evaluate the features. */
     input: PlaygroundRequestSchema;
+    /** The list of features that have been evaluated. */
+    features: PlaygroundFeatureSchema[];
 }

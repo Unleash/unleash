@@ -3,29 +3,29 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ActionSetEventSchemaActionSet } from './actionSetEventSchemaActionSet';
-import type { SignalSchema } from './signalSchema';
 import type { ActionSetEventSchemaState } from './actionSetEventSchemaState';
+import type { SignalSchema } from './signalSchema';
+import type { ActionSetEventSchemaActionSet } from './actionSetEventSchemaActionSet';
 
 /**
  * An object describing an action event.
  */
 export interface ActionSetEventSchema {
-    /** The action set this action set event belongs to, where the individual actions are decorated with the respective action states. */
-    actionSet: ActionSetEventSchemaActionSet;
-    /** The ID of the action set that the action set event belongs to. */
-    actionSetId: number;
-    /** The date and time of when the action set event was created. In other words, the date and time of when the action set started executing. */
-    createdAt: string;
     /**
      * The action set event's ID. Action set event IDs are incrementing integers. In other words, a more recently created action set event will always have a higher ID than an older one.
      * @minimum 1
      */
     id: number;
-    /** The signal that triggered this action set event. */
-    signal: SignalSchema;
+    /** The ID of the action set that the action set event belongs to. */
+    actionSetId: number;
     /** The ID of the signal that triggered this action set event. */
     signalId: number;
+    /** The date and time of when the action set event was created. In other words, the date and time of when the action set started executing. */
+    createdAt: string;
     /** The state of the action set event. Can be one of `started`, `success`, or `failed`. */
     state: ActionSetEventSchemaState;
+    /** The signal that triggered this action set event. */
+    signal: SignalSchema;
+    /** The action set this action set event belongs to, where the individual actions are decorated with the respective action states. */
+    actionSet: ActionSetEventSchemaActionSet;
 }

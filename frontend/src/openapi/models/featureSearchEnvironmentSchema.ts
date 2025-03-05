@@ -10,41 +10,41 @@ import type { VariantSchema } from './variantSchema';
  * A detailed description of the feature environment
  */
 export interface FeatureSearchEnvironmentSchema {
-    /** `true` if the feature is enabled for the environment, otherwise `false`. */
-    enabled: boolean;
     /** The name of the environment */
-    environment?: string;
+    name: string;
     /** The name of the feature */
     featureName?: string;
-    /** Whether the feature has any enabled strategies defined. */
-    hasEnabledStrategies?: boolean;
-    /** Whether the feature has any strategies defined. */
-    hasStrategies?: boolean;
+    /** The name of the environment */
+    environment?: string;
+    /** The type of the environment */
+    type: string;
+    /** `true` if the feature is enabled for the environment, otherwise `false`. */
+    enabled: boolean;
+    /** The sort order of the feature environment in the feature environments list */
+    sortOrder?: number;
+    /** The number of defined variants */
+    variantCount?: number;
+    /** A list of activation strategies for the feature environment */
+    strategies?: FeatureStrategySchema[];
+    /** A list of variants for the feature environment */
+    variants?: VariantSchema[];
     /**
      * The date when metrics where last collected for the feature environment
      * @nullable
      */
     lastSeenAt?: string | null;
-    /** The name of the environment */
-    name: string;
-    /**
-     * How many times the toggle evaluated to false in last hour bucket
-     * @minimum 0
-     */
-    no?: number;
-    /** The sort order of the feature environment in the feature environments list */
-    sortOrder?: number;
-    /** A list of activation strategies for the feature environment */
-    strategies?: FeatureStrategySchema[];
-    /** The type of the environment */
-    type: string;
-    /** The number of defined variants */
-    variantCount?: number;
-    /** A list of variants for the feature environment */
-    variants?: VariantSchema[];
+    /** Whether the feature has any strategies defined. */
+    hasStrategies?: boolean;
+    /** Whether the feature has any enabled strategies defined. */
+    hasEnabledStrategies?: boolean;
     /**
      * How many times the toggle evaluated to true in last hour bucket
      * @minimum 0
      */
     yes?: number;
+    /**
+     * How many times the toggle evaluated to false in last hour bucket
+     * @minimum 0
+     */
+    no?: number;
 }

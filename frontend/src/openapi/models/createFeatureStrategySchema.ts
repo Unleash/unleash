@@ -4,33 +4,33 @@
  * See `gen:api` script in package.json
  */
 import type { ConstraintSchema } from './constraintSchema';
-import type { ParametersSchema } from './parametersSchema';
 import type { CreateStrategyVariantSchema } from './createStrategyVariantSchema';
+import type { ParametersSchema } from './parametersSchema';
 
 /**
  * Create a strategy configuration in a feature
  */
 export interface CreateFeatureStrategySchema {
-    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints */
-    constraints?: ConstraintSchema[];
-    /**
-     * A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs
-     * @nullable
-     */
-    disabled?: boolean | null;
     /** The name of the strategy type */
     name: string;
-    /** An object containing the parameters for the strategy */
-    parameters?: ParametersSchema;
-    /** Ids of segments to use for this strategy */
-    segments?: number[];
-    /** The order of the strategy in the list */
-    sortOrder?: number;
     /**
      * A descriptive title for the strategy
      * @nullable
      */
     title?: string | null;
+    /**
+     * A toggle to disable the strategy. defaults to false. Disabled strategies are not evaluated or returned to the SDKs
+     * @nullable
+     */
+    disabled?: boolean | null;
+    /** The order of the strategy in the list */
+    sortOrder?: number;
+    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/activation-strategies#constraints */
+    constraints?: ConstraintSchema[];
     /** Strategy level variants */
     variants?: CreateStrategyVariantSchema[];
+    /** An object containing the parameters for the strategy */
+    parameters?: ParametersSchema;
+    /** Ids of segments to use for this strategy */
+    segments?: number[];
 }

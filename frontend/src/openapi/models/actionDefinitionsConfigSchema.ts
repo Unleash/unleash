@@ -9,8 +9,8 @@ import type { ActionDefinitionSchema } from './actionDefinitionSchema';
  * Configuration of different actions and their parameters.
  */
 export interface ActionDefinitionsConfigSchema {
-    TOGGLE_FEATURE_OFF?: ActionDefinitionSchema;
     TOGGLE_FEATURE_ON?: ActionDefinitionSchema;
-    TOGGLE_FEATURES_OFF_BY_TAG?: ActionDefinitionSchema;
+    TOGGLE_FEATURE_OFF?: ActionDefinitionSchema;
     TOGGLE_FEATURES_ON_BY_TAG?: ActionDefinitionSchema;
+    TOGGLE_FEATURES_OFF_BY_TAG?: ActionDefinitionSchema;
 }

@@ -8,10 +8,10 @@
  * A change request view model, used in the UI to identify change requests in conflict
  */
 export interface ScheduledChangeRequestViewModelSchema {
-    /** The environment of the change request */
-    environment: string;
     /** The change request id */
     id: number;
+    /** The environment of the change request */
+    environment: string;
     /** The change request title */
     title?: string;
 }

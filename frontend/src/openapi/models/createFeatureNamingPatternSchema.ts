@@ -9,18 +9,18 @@
  */
 export interface CreateFeatureNamingPatternSchema {
     /**
-     * A description of the pattern in a human-readable format. Will be shown to users when they create a new feature flag.
+     * A JavaScript regular expression pattern, without the start and end delimiters. Optional flags are not allowed.
      * @nullable
      */
-    description?: string | null;
+    pattern: string | null;
     /**
      * An example of a feature name that matches the pattern. Must itself match the pattern supplied.
      * @nullable
      */
     example?: string | null;
     /**
-     * A JavaScript regular expression pattern, without the start and end delimiters. Optional flags are not allowed.
+     * A description of the pattern in a human-readable format. Will be shown to users when they create a new feature flag.
      * @nullable
      */
-    pattern: string | null;
+    description?: string | null;
 }

@@ -11,18 +11,18 @@ import type { ApplicationUsageSchema } from './applicationUsageSchema';
 export interface ApplicationSchema {
     /** Name of the application */
     appName: string;
-    /** The CSS color that is used to color the application's entry in the application list */
-    color?: string;
-    /** Extra information added about the application reporting the metrics. Only present if added via the Unleash Admin interface */
-    description?: string;
-    /** An URL to an icon file to be used for the applications's entry in the application list */
-    icon?: string;
     /** Which SDK and version the application reporting uses. Typically represented as `<identifier>:<version>` */
     sdkVersion?: string;
     /** Which [strategies](https://docs.getunleash.io/topics/the-anatomy-of-unleash#activation-strategies) the application has loaded. Useful when trying to figure out if your [custom strategy](https://docs.getunleash.io/reference/custom-activation-strategies) has been loaded in the SDK */
     strategies?: string[];
+    /** Extra information added about the application reporting the metrics. Only present if added via the Unleash Admin interface */
+    description?: string;
     /** A link to reference the application reporting the metrics. Could for instance be a GitHub link to the repository of the application */
     url?: string;
+    /** The CSS color that is used to color the application's entry in the application list */
+    color?: string;
+    /** An URL to an icon file to be used for the applications's entry in the application list */
+    icon?: string;
     /** The list of projects the application has been using. */
     usage?: ApplicationUsageSchema[];
 }

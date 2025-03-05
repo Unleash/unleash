@@ -10,8 +10,6 @@ import type { SignalQuerySignalSchemaSource } from './signalQuerySignalSchemaSou
  * An object describing a signal enriched with source data.
  */
 export interface SignalQuerySignalSchema {
-    /** The date and time of when the signal was created. */
-    createdAt: string;
     /**
      * The signal's ID. Signal IDs are incrementing integers. In other words, a more recently created signal will always have a higher ID than an older one.
      * @minimum 1
@@ -19,23 +17,25 @@ export interface SignalQuerySignalSchema {
     id: number;
     /** The payload of the signal. */
     payload?: SignalQuerySignalSchemaPayload;
+    /** The date and time of when the signal was created. */
+    createdAt: string;
     /** The signal source type. Should be used along with `sourceId` to uniquely identify the resource that created this signal. */
     source: SignalQuerySignalSchemaSource;
-    /**
-     * A more detailed description of the source that registered this signal.
-     * @nullable
-     */
-    sourceDescription?: string | null;
     /** The ID of the source that created this signal. Should be used along with `source` to uniquely identify the resource that created this signal. */
     sourceId: number;
+    /**
+     * The name of the token used to register this signal.
+     * @nullable
+     */
+    tokenName?: string | null;
     /**
      * The name of the source that registered this signal.
      * @nullable
      */
     sourceName?: string | null;
     /**
-     * The name of the token used to register this signal.
+     * A more detailed description of the source that registered this signal.
      * @nullable
      */
-    tokenName?: string | null;
+    sourceDescription?: string | null;
 }

@@ -5,8 +5,8 @@
  */
 
 export type TrafficUsageApiDataSchemaDaysItemTrafficTypesItem = {
-    /** The number of requests */
-    count: number;
     /** The traffic group */
     group: string;
+    /** The number of requests */
+    count: number;
 };

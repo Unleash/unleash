@@ -8,8 +8,8 @@
  * Validation details for features archive operation
  */
 export interface ValidateArchiveFeaturesSchema {
-    /** Whether any dependencies will be deleted as part of archive */
-    hasDeletedDependencies: boolean;
     /** List of parent features that would orphan child features that are not part of the archive operation */
     parentsWithChildFeatures: string[];
+    /** Whether any dependencies will be deleted as part of archive */
+    hasDeletedDependencies: boolean;
 }

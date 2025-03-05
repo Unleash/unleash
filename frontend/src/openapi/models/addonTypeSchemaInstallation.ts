@@ -8,10 +8,10 @@
  * The installation configuration for this addon type.
  */
 export type AddonTypeSchemaInstallation = {
-    /** The help text of the installation configuration. This will be displayed to the user when installing addons of this type. */
-    helpText?: string;
-    /** The title of the installation configuration. This will be displayed to the user when installing addons of this type. */
-    title?: string;
     /** A URL to where the addon configuration should redirect to install addons of this type. */
     url: string;
+    /** The title of the installation configuration. This will be displayed to the user when installing addons of this type. */
+    title?: string;
+    /** The help text of the installation configuration. This will be displayed to the user when installing addons of this type. */
+    helpText?: string;
 };

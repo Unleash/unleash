@@ -9,8 +9,8 @@ import type { VariantSchema } from './variantSchema';
  * A versioned collection of feature flag variants.
  */
 export interface FeatureVariantsSchema {
-    /** All variants defined for a specific feature flag. */
-    variants: VariantSchema[];
     /** The version of the feature variants schema. */
     version: number;
+    /** All variants defined for a specific feature flag. */
+    variants: VariantSchema[];
 }

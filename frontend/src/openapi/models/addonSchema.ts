@@ -10,25 +10,25 @@ import type { AddonSchemaParameters } from './addonSchemaParameters';
  */
 export interface AddonSchema {
     /**
+     * The addon's unique identifier.
+     * @minimum 1
+     */
+    id: number;
+    /** The addon provider, such as "webhook" or "slack". */
+    provider: string;
+    /**
      * A description of the addon. `null` if no description exists.
      * @nullable
      */
     description: string | null;
     /** Whether the addon is enabled or not. */
     enabled: boolean;
-    /** The list of environments that this addon listens to events from. An empty list means it listens to events from **all** environments. */
-    environments?: string[];
-    /** The event types that trigger this specific addon. */
-    events: string[];
-    /**
-     * The addon's unique identifier.
-     * @minimum 1
-     */
-    id: number;
     /** Parameters for the addon provider. This object has different required and optional properties depending on the provider you choose. */
     parameters: AddonSchemaParameters;
+    /** The event types that trigger this specific addon. */
+    events: string[];
     /** The projects that this addon listens to events from. An empty list means it listens to events from **all** projects. */
     projects?: string[];
-    /** The addon provider, such as "webhook" or "slack". */
-    provider: string;
+    /** The list of environments that this addon listens to events from. An empty list means it listens to events from **all** environments. */
+    environments?: string[];
 }

@@ -11,39 +11,39 @@ import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema';
  */
 export interface ReleasePlanSchema {
     /**
-     * The ID of the currently active milestone in this release plan.
-     * @nullable
+     * The release plan/template's ID. Release template IDs are ulids.
      */
-    activeMilestoneId?: string | null;
+    id: string;
     /**
-     * The date and time that the release template was created.
+     * A field to distinguish between release plans and release templates.
      */
-    createdAt: string;
-    /**
-     * Release template: The ID of the user who created this template.
-     */
-    createdByUserId: number;
+    discriminator: ReleasePlanSchemaDiscriminator;
+    /** The name of the release template. */
+    name: string;
     /**
      * A description of the release template.
      * @nullable
      */
     description?: string | null;
-    /**
-     * A field to distinguish between release plans and release templates.
-     */
-    discriminator: ReleasePlanSchemaDiscriminator;
-    /** The environment that this release plan is for. */
-    environment: string;
     /** The name of the feature that uses this release plan. */
     featureName: string;
+    /** The environment that this release plan is for. */
+    environment: string;
     /**
-     * The release plan/template's ID. Release template IDs are ulids.
+     * Release template: The ID of the user who created this template.
      */
-    id: string;
+    createdByUserId: number;
+    /**
+     * The date and time that the release template was created.
+     */
+    createdAt: string;
+    /**
+     * The ID of the currently active milestone in this release plan.
+     * @nullable
+     */
+    activeMilestoneId?: string | null;
     /** A list of the milestones in this release template. */
     milestones: ReleasePlanMilestoneSchema[];
-    /** The name of the release template. */
-    name: string;
     /**
      * The ID of the release plan template that this release plan is based on.
      */

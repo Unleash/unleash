@@ -11,20 +11,20 @@ import type { VariantSchema } from './variantSchema';
  * A simplified feature flag model intended for the Unleash playground.
  */
 export interface PlaygroundFeatureSchema {
-    /** Whether the feature has a parent dependency that is not satisfied */
-    hasUnsatisfiedDependency?: boolean;
-    /** Whether this feature is enabled or not in the current environment.
-                          If a feature can't be fully evaluated (that is, `strategies.result` is `unknown`),
-                          this will be `false` to align with how client SDKs treat unresolved feature states. */
-    isEnabled: boolean;
-    /** Whether the feature is active and would be evaluated in the provided environment in a normal SDK context. */
-    isEnabledInCurrentEnvironment: boolean;
     /** The feature's name. */
     name: string;
     /** The ID of the project that contains this feature. */
     projectId: string;
     /** The feature's applicable strategies and cumulative results of the strategies */
     strategies: PlaygroundFeatureSchemaStrategies;
+    /** Whether the feature has a parent dependency that is not satisfied */
+    hasUnsatisfiedDependency?: boolean;
+    /** Whether the feature is active and would be evaluated in the provided environment in a normal SDK context. */
+    isEnabledInCurrentEnvironment: boolean;
+    /** Whether this feature is enabled or not in the current environment.
+                          If a feature can't be fully evaluated (that is, `strategies.result` is `unknown`),
+                          this will be `false` to align with how client SDKs treat unresolved feature states. */
+    isEnabled: boolean;
     /**
    * The feature variant you receive based on the provided context or the _disabled
                           variant_. If a feature is disabled or doesn't have any

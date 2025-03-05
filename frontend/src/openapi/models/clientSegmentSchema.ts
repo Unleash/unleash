@@ -9,10 +9,10 @@ import type { ConstraintSchema } from './constraintSchema';
  * Represents a client API segment of users defined by a set of constraints.
  */
 export interface ClientSegmentSchema {
-    /** List of constraints that determine which users are part of the segment */
-    constraints: ConstraintSchema[];
     /** The segment's id. */
     id: number;
     /** The name of the segment. */
     name?: string;
+    /** List of constraints that determine which users are part of the segment */
+    constraints: ConstraintSchema[];
 }

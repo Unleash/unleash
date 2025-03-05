@@ -8,12 +8,12 @@
  * Data used to create a user that has been invited to Unleash.
  */
 export interface CreateInvitedUserSchema {
+    /** The user's username. Must be unique if provided. */
+    username?: string;
     /** The invited user's email address */
     email: string;
     /** The user's name */
     name: string;
     /** The user's password */
     password: string;
-    /** The user's username. Must be unique if provided. */
-    username?: string;
 }

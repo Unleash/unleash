@@ -10,24 +10,24 @@ import type { ClientMetricsEnvSchemaVariants } from './clientMetricsEnvSchemaVar
  * Used for reporting feature evaluation results from SDKs
  */
 export interface ClientMetricsEnvSchema {
+    /** Name of the feature checked by the SDK */
+    featureName: string;
     /** The name of the application the SDK is being used in */
     appName: string;
     /** Which environment the SDK is being used in */
     environment: string;
-    /** Name of the feature checked by the SDK */
-    featureName: string;
-    /**
-     * How many times the toggle evaluated to false
-     * @minimum 0
-     */
-    no?: number;
     /** The start of the time window these metrics are valid for. The window is 1 hour wide */
     timestamp?: DateSchema;
-    /** How many times each variant was returned */
-    variants?: ClientMetricsEnvSchemaVariants;
     /**
      * How many times the toggle evaluated to true
      * @minimum 0
      */
     yes?: number;
+    /**
+     * How many times the toggle evaluated to false
+     * @minimum 0
+     */
+    no?: number;
+    /** How many times each variant was returned */
+    variants?: ClientMetricsEnvSchemaVariants;
 }

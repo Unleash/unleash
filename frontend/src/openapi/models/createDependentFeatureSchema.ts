@@ -8,10 +8,10 @@
  * Feature dependency on a parent feature in write model
  */
 export interface CreateDependentFeatureSchema {
-    /** Whether the parent feature should be enabled. When `false` variants are ignored. `true` by default. */
-    enabled?: boolean;
     /** The name of the feature we depend on. */
     feature: string;
+    /** Whether the parent feature should be enabled. When `false` variants are ignored. `true` by default. */
+    enabled?: boolean;
     /** The list of variants the parent feature should resolve to. Leave empty when you only want to check the `enabled` status. */
     variants?: string[];
 }

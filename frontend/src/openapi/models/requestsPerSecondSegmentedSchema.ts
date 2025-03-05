@@ -9,6 +9,6 @@ import type { RequestsPerSecondSchema } from './requestsPerSecondSchema';
  * Get usage metrics separated by client and admin paths
  */
 export interface RequestsPerSecondSegmentedSchema {
-    adminMetrics?: RequestsPerSecondSchema;
     clientMetrics?: RequestsPerSecondSchema;
+    adminMetrics?: RequestsPerSecondSchema;
 }

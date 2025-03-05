@@ -10,9 +10,9 @@ import type { ChangeRequestOneOrManyCreateSchemaOneOfSixPayload } from './change
  * Update the enabled state for a feature.
  */
 export type ChangeRequestOneOrManyCreateSchemaOneOfSix = {
-    /** The name of this action. */
-    action: ChangeRequestOneOrManyCreateSchemaOneOfSixAction;
     /** The name of the feature that this change applies to. */
     feature: string;
+    /** The name of this action. */
+    action: ChangeRequestOneOrManyCreateSchemaOneOfSixAction;
     payload: ChangeRequestOneOrManyCreateSchemaOneOfSixPayload;
 };

@@ -3,19 +3,19 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { PlaygroundStrategySchema } from './playgroundStrategySchema';
 import type { AdvancedPlaygroundEnvironmentFeatureSchemaStrategiesResult } from './advancedPlaygroundEnvironmentFeatureSchemaStrategiesResult';
+import type { PlaygroundStrategySchema } from './playgroundStrategySchema';
 
 /**
  * Feature's applicable strategies and cumulative results of the strategies
  */
 export type AdvancedPlaygroundEnvironmentFeatureSchemaStrategies = {
-    /** The strategies that apply to this feature. */
-    data: PlaygroundStrategySchema[];
     /** The cumulative results of all the feature's strategies. Can be `true`,
                                   `false`, or `unknown`.
                                   This property will only be `unknown`
                                   if one or more of the strategies can't be fully evaluated and the rest of the strategies
                                   all resolve to `false`. */
     result: AdvancedPlaygroundEnvironmentFeatureSchemaStrategiesResult;
+    /** The strategies that apply to this feature. */
+    data: PlaygroundStrategySchema[];
 };

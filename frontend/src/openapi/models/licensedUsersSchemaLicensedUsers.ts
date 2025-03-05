@@ -9,11 +9,11 @@ import type { LicensedUserSchema } from './licensedUserSchema';
  * An object containing historical and current licensed user data.
  */
 export type LicensedUsersSchemaLicensedUsers = {
+    /** A monthly history of licensed user counts. */
+    history: LicensedUserSchema[];
     /**
      * The current number of licenses in use.
      * @minimum 0
      */
     current: number;
-    /** A monthly history of licensed user counts. */
-    history: LicensedUserSchema[];
 };

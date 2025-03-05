@@ -9,10 +9,10 @@ import type { CreateFeatureStrategySchema } from './createFeatureStrategySchema'
  * Add an environment to a project, optionally also sets if change requests are enabled for this environment on the project
  */
 export interface ProjectEnvironmentSchema {
+    /** The environment to add to the project */
+    environment: string;
     /** Whether change requests should be enabled or for this environment on the project or not */
     changeRequestsEnabled?: boolean;
     /** A default strategy to create for this environment on the project. */
     defaultStrategy?: CreateFeatureStrategySchema;
-    /** The environment to add to the project */
-    environment: string;
 }

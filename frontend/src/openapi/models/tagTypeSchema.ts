@@ -8,6 +8,8 @@
  * A tag type.
  */
 export interface TagTypeSchema {
+    /** The name of the tag type. */
+    name: string;
     /** The description of the tag type. */
     description?: string;
     /**
@@ -15,6 +17,4 @@ export interface TagTypeSchema {
      * @nullable
      */
     icon?: string | null;
-    /** The name of the tag type. */
-    name: string;
 }

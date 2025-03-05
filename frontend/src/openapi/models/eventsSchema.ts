@@ -3,13 +3,18 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { EventSchema } from './eventSchema';
 import type { EventsSchemaVersion } from './eventsSchemaVersion';
+import type { EventSchema } from './eventSchema';
 
 /**
  * A list of events that has happened in the system
  */
 export interface EventsSchema {
+    /**
+     * The api version of this response. A natural increasing number. Only increases if format changes
+     * @minimum 1
+     */
+    version: EventsSchemaVersion;
     /** The list of events */
     events: EventSchema[];
     /**
@@ -17,9 +22,4 @@ export interface EventsSchema {
      * @minimum 0
      */
     totalEvents?: number;
-    /**
-     * The api version of this response. A natural increasing number. Only increases if format changes
-     * @minimum 1
-     */
-    version: EventsSchemaVersion;
 }

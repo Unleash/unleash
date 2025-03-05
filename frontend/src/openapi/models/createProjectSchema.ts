@@ -3,38 +3,35 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { CreateProjectSchemaChangeRequestEnvironmentsItem } from './createProjectSchemaChangeRequestEnvironmentsItem';
 import type { CreateProjectSchemaMode } from './createProjectSchemaMode';
+import type { CreateProjectSchemaChangeRequestEnvironmentsItem } from './createProjectSchemaChangeRequestEnvironmentsItem';
 
 /**
  * Data used to create a new [project](https://docs.getunleash.io/reference/projects).
  */
 export interface CreateProjectSchema {
-    /** A list of environments that should have change requests enabled. If the list includes environments not in the `environments` list, they will still have change requests enabled. */
-    changeRequestEnvironments?: CreateProjectSchemaChangeRequestEnvironmentsItem[];
-    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
-    defaultStickiness?: string;
-    /**
-     * The project's description.
-     * @nullable
-     */
-    description?: string | null;
-    /**
-     * A list of environments that should be enabled for this project. When provided, the list must contain at least one environment. If this property is missing, Unleash will default to enabling all non-deprecated environments for the project.
-     * @minItems 1
-     */
-    environments?: string[];
     /**
      * The project's identifier. If this property is not present or is an empty string, Unleash will generate the project id automatically. This property is deprecated.
      * @deprecated
      * @pattern [A-Za-z0-9_~.-]*
      */
     id?: string;
-    /** A mode of the project affecting what actions are possible in this project */
-    mode?: CreateProjectSchemaMode;
     /**
      * The project's name. The name must contain at least one non-whitespace character.
      * @pattern ^(?!\s*$).+
      */
     name: string;
+    /**
+     * The project's description.
+     * @nullable
+     */
+    description?: string | null;
+    /** A mode of the project affecting what actions are possible in this project */
+    mode?: CreateProjectSchemaMode;
+    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
+    defaultStickiness?: string;
+    /** A list of environments that should be enabled for this project. If this property is missing, Unleash will default to enabling all non-deprecated environments for the project. An empty list will result in no environment enabled for the project. */
+    environments?: string[];
+    /** A list of environments that should have change requests enabled. If the list includes environments not in the `environments` list, they will still have change requests enabled. */
+    changeRequestEnvironments?: CreateProjectSchemaChangeRequestEnvironmentsItem[];
 }

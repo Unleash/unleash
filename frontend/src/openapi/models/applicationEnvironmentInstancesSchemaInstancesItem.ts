@@ -5,12 +5,15 @@
  */
 
 export type ApplicationEnvironmentInstancesSchemaInstancesItem = {
-    /** An IP address identifying the instance of the application running the SDK */
-    clientIp?: string;
     /** A unique identifier identifying the instance of the application running the SDK. Often changes based on execution environment. For instance: two pods in Kubernetes will have two different instanceIds */
     instanceId: string;
+    /**
+     * An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>"
+     * @nullable
+     */
+    sdkVersion?: string | null;
+    /** An IP address identifying the instance of the application running the SDK */
+    clientIp?: string;
     /** The last time the application environment instance was seen */
     lastSeen?: string;
-    /** An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>" */
-    sdkVersion?: string;
 };

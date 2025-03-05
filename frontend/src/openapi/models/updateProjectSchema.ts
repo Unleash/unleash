@@ -9,15 +9,15 @@ import type { UpdateProjectSchemaMode } from './updateProjectSchemaMode';
  * Data used to update a [project](https://docs.getunleash.io/reference/projects)
  */
 export interface UpdateProjectSchema {
-    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
-    defaultStickiness?: string;
-    /** A new description for the project */
-    description?: string;
-    /** A mode of the project affecting what actions are possible in this project */
-    mode?: UpdateProjectSchemaMode;
     /**
      * The new name of the project. The name must contain at least one non-whitespace character.
      * @pattern ^(?!\s*$).+
      */
     name: string;
+    /** A new description for the project */
+    description?: string;
+    /** A mode of the project affecting what actions are possible in this project */
+    mode?: UpdateProjectSchemaMode;
+    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
+    defaultStickiness?: string;
 }

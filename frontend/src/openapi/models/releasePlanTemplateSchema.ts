@@ -11,28 +11,28 @@ import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema';
  */
 export interface ReleasePlanTemplateSchema {
     /**
-     * The date and time that the release template was created.
+     * The release plan/template's ID. Release template IDs are ulids.
      */
-    createdAt: string;
+    id: string;
     /**
-     * Release template: The ID of the user who created this template.
+     * A field to distinguish between release plans and release templates.
      */
-    createdByUserId: number;
+    discriminator: ReleasePlanTemplateSchemaDiscriminator;
+    /** The name of the release template. */
+    name: string;
     /**
      * A description of the release template.
      * @nullable
      */
     description?: string | null;
     /**
-     * A field to distinguish between release plans and release templates.
+     * Release template: The ID of the user who created this template.
      */
-    discriminator: ReleasePlanTemplateSchemaDiscriminator;
+    createdByUserId: number;
     /**
-     * The release plan/template's ID. Release template IDs are ulids.
+     * The date and time that the release template was created.
      */
-    id: string;
+    createdAt: string;
     /** A list of the milestones in this release template. */
     milestones?: ReleasePlanMilestoneSchema[];
-    /** The name of the release template. */
-    name: string;
 }

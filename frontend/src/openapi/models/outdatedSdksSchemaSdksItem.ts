@@ -5,8 +5,8 @@
  */
 
 export type OutdatedSdksSchemaSdksItem = {
-    /** A list of applications using the SDK version */
-    applications: string[];
     /** An outdated SDK version identifier. Usually formatted as "unleash-client-<language>:<version>" */
     sdkVersion: string;
+    /** A list of applications using the SDK version */
+    applications: string[];
 };

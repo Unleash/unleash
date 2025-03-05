@@ -10,22 +10,22 @@ import type { CreateActionsSchemaMatch } from './createActionsSchemaMatch';
  * An action set defines actions that Unleash performs when a signal is matched.
  */
 export interface CreateActionsSchema {
-    /** The list of actions to execute in sequential order when the action set is triggered */
-    actions: CreateActionSchema[];
-    /**
-     * The id of the service account that will execute the action
-     * @minimum 1
-     */
-    actorId: number;
+    /** The name of the action set */
+    name: string;
     /**
      * The description of the action set
      * @nullable
      */
     description?: string | null;
+    /**
+     * The id of the service account that will execute the action
+     * @minimum 1
+     */
+    actorId: number;
     /** Whether this action set is enabled or not */
     enabled?: boolean;
+    /** The list of actions to execute in sequential order when the action set is triggered */
+    actions: CreateActionSchema[];
     /** Defines a matching rule for the signal that will trigger the action set */
     match: CreateActionsSchemaMatch;
-    /** The name of the action set */
-    name: string;
 }

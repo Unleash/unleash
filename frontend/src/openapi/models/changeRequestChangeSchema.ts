@@ -3,23 +3,23 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ChangeRequestChangeSchemaCreatedBy } from './changeRequestChangeSchemaCreatedBy';
 import type { ChangeRequestChangeSchemaPayload } from './changeRequestChangeSchemaPayload';
+import type { ChangeRequestChangeSchemaCreatedBy } from './changeRequestChangeSchemaCreatedBy';
 
 /**
  * A change request change, containing info about the type of change and the specific changes.
  */
 export interface ChangeRequestChangeSchema {
+    /** The ID of this change. */
+    id: number;
     /** The kind of action that the change contains information about. */
     action: string;
     /** A description of the conflict caused by this change. Only present if there are any conflicts. */
     conflict?: string;
-    /** When this change was suggested */
-    createdAt?: string;
-    /** The user who created this change. */
-    createdBy?: ChangeRequestChangeSchemaCreatedBy;
-    /** The ID of this change. */
-    id: number;
     /** The data required to perform this action. */
     payload: ChangeRequestChangeSchemaPayload;
+    /** The user who created this change. */
+    createdBy?: ChangeRequestChangeSchemaCreatedBy;
+    /** When this change was suggested */
+    createdAt?: string;
 }

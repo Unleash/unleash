@@ -9,12 +9,12 @@ import type { PatchSchemaOp } from './patchSchemaOp';
  * A [JSON patch](https://www.rfc-editor.org/rfc/rfc6902) operation description
  */
 export interface PatchSchema {
-    /** The target to move or copy from, if performing one of those operations */
-    from?: string;
-    /** The kind of operation to perform */
-    op: PatchSchemaOp;
     /** The path to the property to operate on */
     path: string;
+    /** The kind of operation to perform */
+    op: PatchSchemaOp;
+    /** The target to move or copy from, if performing one of those operations */
+    from?: string;
     /** The value to add or replace, if performing one of those operations */
     value?: unknown;
 }

@@ -9,6 +9,8 @@ import type { CreateUserSchemaRootRole } from './createUserSchemaRootRole';
  * The payload must contain at least one of the name and email properties, though which one is up to you. For the user to be able to log in to the system, the user must have an email.
  */
 export interface CreateUserSchema {
+    /** The user's username. Must be provided if email is not provided. */
+    username?: string;
     /** The user's email address. Must be provided if username is not provided. */
     email?: string;
     /** The user's name (not the user's username). */
@@ -19,6 +21,4 @@ export interface CreateUserSchema {
     rootRole: CreateUserSchemaRootRole;
     /** Whether to send a welcome email with a login link to the user or not. Defaults to `true`. */
     sendEmail?: boolean;
-    /** The user's username. Must be provided if email is not provided. */
-    username?: string;
 }

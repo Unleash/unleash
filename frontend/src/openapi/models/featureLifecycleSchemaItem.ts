@@ -9,10 +9,10 @@ import type { FeatureLifecycleSchemaItemStage } from './featureLifecycleSchemaIt
  * The lifecycle stage of the feature
  */
 export type FeatureLifecycleSchemaItem = {
-    /** The date when the feature entered a given stage */
-    enteredStageAt: string;
     /** The name of the lifecycle stage that got recorded for a given feature */
     stage: FeatureLifecycleSchemaItemStage;
     /** The name of the detailed status of a given stage. E.g. completed stage can be kept or discarded. */
     status?: string;
+    /** The date when the feature entered a given stage */
+    enteredStageAt: string;
 };

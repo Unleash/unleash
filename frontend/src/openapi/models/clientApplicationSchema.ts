@@ -11,30 +11,30 @@ import type { ClientApplicationSchemaStarted } from './clientApplicationSchemaSt
 export interface ClientApplicationSchema {
     /** An identifier for the app that uses the sdk, should be static across SDK restarts */
     appName: string;
+    /** A unique identifier identifying the instance of the application running the SDK. Often changes based on execution environment. For instance: two pods in Kubernetes will have two different instanceIds */
+    instanceId?: string;
+    /** An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>" */
+    sdkVersion?: string;
     /**
      * The SDK's configured 'environment' property. This property was deprecated in v5. This property  does **not** control which Unleash environment the SDK gets toggles for. To control Unleash environments, use the SDKs API key.
      * @deprecated
      */
     environment?: string;
-    /** A unique identifier identifying the instance of the application running the SDK. Often changes based on execution environment. For instance: two pods in Kubernetes will have two different instanceIds */
-    instanceId?: string;
+    /** The platform the application is running on. For languages that compile to binaries, this can be omitted */
+    platformName?: string;
+    /** The version of the platform the application is running on. Languages that compile to binaries, this is expected to be the compiler version used to assemble the binary. */
+    platformVersion?: string;
+    /** The semantic version of the Yggdrasil engine used by the client. If the client is using a native engine this can be omitted. */
+    yggdrasilVersion?: string;
+    /** The version of the Unleash client specification the client supports */
+    specVersion?: string;
     /**
      * How often (in seconds) does the client refresh its toggles
      * @minimum 0
      */
     interval: number;
-    /** The platform the application is running on. For languages that compile to binaries, this can be omitted */
-    platformName?: string;
-    /** The version of the platform the application is running on. Languages that compile to binaries, this is expected to be the compiler version used to assemble the binary. */
-    platformVersion?: string;
-    /** An SDK version identifier. Usually formatted as "unleash-client-<language>:<version>" */
-    sdkVersion?: string;
-    /** The version of the Unleash client specification the client supports */
-    specVersion?: string;
     /** Either an RFC-3339 timestamp or a unix timestamp in seconds */
     started: ClientApplicationSchemaStarted;
     /** Which strategies the SDKs runtime knows about */
     strategies: string[];
-    /** The semantic version of the Yggdrasil engine used by the client. If the client is using a native engine this can be omitted. */
-    yggdrasilVersion?: string;
 }

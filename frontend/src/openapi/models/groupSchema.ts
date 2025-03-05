@@ -9,44 +9,44 @@ import type { GroupUserModelSchema } from './groupUserModelSchema';
  * A detailed information about a user group
  */
 export interface GroupSchema {
-    /**
-     * When was this group created
-     * @nullable
-     */
-    createdAt?: string | null;
-    /**
-     * A user who created this group
-     * @nullable
-     */
-    createdBy?: string | null;
+    /** The group id */
+    id?: number;
+    /** The name of the group */
+    name: string;
     /**
      * A custom description of the group
      * @nullable
      */
     description?: string | null;
-    /** The group id */
-    id?: number;
     /** A list of SSO groups that should map to this Unleash group */
     mappingsSSO?: string[];
-    /** The name of the group */
-    name: string;
-    /** A list of projects where this group is used */
-    projects?: string[];
     /**
      * A role id that is used as the root role for all users in this group. This can be either the id of the Viewer, Editor or Admin role.
      * @nullable
      */
     rootRole?: number | null;
     /**
-     * The SCIM ID of the group, only present if managed by SCIM
+     * A user who created this group
      * @nullable
      */
-    scimId?: string | null;
+    createdBy?: string | null;
+    /**
+     * When was this group created
+     * @nullable
+     */
+    createdAt?: string | null;
+    /** A list of users belonging to this group */
+    users?: GroupUserModelSchema[];
+    /** A list of projects where this group is used */
+    projects?: string[];
     /**
      * The number of users that belong to this group
      * @minimum 0
      */
     userCount?: number;
-    /** A list of users belonging to this group */
-    users?: GroupUserModelSchema[];
+    /**
+     * The SCIM ID of the group, only present if managed by SCIM
+     * @nullable
+     */
+    scimId?: string | null;
 }

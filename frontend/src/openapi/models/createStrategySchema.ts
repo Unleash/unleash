@@ -9,16 +9,16 @@ import type { CreateStrategySchemaParametersItem } from './createStrategySchemaP
  * The data required to create a strategy type. Refer to the docs on [custom strategy types](https://docs.getunleash.io/reference/custom-activation-strategies) for more information.
  */
 export interface CreateStrategySchema {
-    /** Whether the strategy type is deprecated or not. Defaults to `false`. */
-    deprecated?: boolean;
+    /** The name of the strategy type. Must be unique. */
+    name: string;
+    /** The title of the strategy */
+    title?: string;
     /** A description of the strategy type. */
     description?: string;
     /** Whether the strategy type is editable or not. Defaults to `true`. */
     editable?: boolean;
-    /** The name of the strategy type. Must be unique. */
-    name: string;
+    /** Whether the strategy type is deprecated or not. Defaults to `false`. */
+    deprecated?: boolean;
     /** The parameter list lets you pass arguments to your custom activation strategy. These will be made available to your custom strategy implementation. */
     parameters: CreateStrategySchemaParametersItem[];
-    /** The title of the strategy */
-    title?: string;
 }

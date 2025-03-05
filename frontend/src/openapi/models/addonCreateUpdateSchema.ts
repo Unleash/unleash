@@ -9,18 +9,6 @@ import type { AddonCreateUpdateSchemaParameters } from './addonCreateUpdateSchem
  * Data required to create or update an [Unleash addon](https://docs.getunleash.io/reference/addons) instance.
  */
 export interface AddonCreateUpdateSchema {
-    /** A description of the addon. */
-    description?: string;
-    /** Whether the addon should be enabled or not. */
-    enabled: boolean;
-    /** The list of environments that this addon will listen to events from. An empty list means it will listen to events from **all** environments. */
-    environments?: string[];
-    /** The event types that will trigger this specific addon. */
-    events: string[];
-    /** Parameters for the addon provider. This object has different required and optional properties depending on the provider you choose. Consult the documentation for details. */
-    parameters: AddonCreateUpdateSchemaParameters;
-    /** The projects that this addon will listen to events from. An empty list means it will listen to events from **all** projects. */
-    projects?: string[];
     /** The addon provider, such as "webhook" or "slack". This string is **case sensitive** and maps to the provider's `name` property.
 
 The list of all supported providers and their parameters for a specific Unleash instance can be found by making a GET request to the `api/admin/addons` endpoint: the `providers` property of that response will contain all available providers.
@@ -34,4 +22,16 @@ The default set of providers can be found in the [addons reference documentation
 The provider you choose for your addon dictates what properties the `parameters` object needs. Refer to the documentation for each provider for more information.
  */
     provider: string;
+    /** A description of the addon. */
+    description?: string;
+    /** Whether the addon should be enabled or not. */
+    enabled: boolean;
+    /** Parameters for the addon provider. This object has different required and optional properties depending on the provider you choose. Consult the documentation for details. */
+    parameters: AddonCreateUpdateSchemaParameters;
+    /** The event types that will trigger this specific addon. */
+    events: string[];
+    /** The projects that this addon will listen to events from. An empty list means it will listen to events from **all** projects. */
+    projects?: string[];
+    /** The list of environments that this addon will listen to events from. An empty list means it will listen to events from **all** environments. */
+    environments?: string[];
 }

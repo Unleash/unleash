@@ -3,6 +3,10 @@
 exports[`order of items in navigation > menu for enterprise plan 1`] = `
 [
   {
+    "icon": null,
+    "text": ".cls-1{fill:#1a4049;}.cls-2{fill:#fff;}.cls-3{fill:#817afe;}",
+  },
+  {
     "icon": "DashboardOutlinedIcon",
     "text": "Dashboard",
   },
@@ -112,6 +116,10 @@ exports[`order of items in navigation > menu for enterprise plan 1`] = `
 exports[`order of items in navigation > menu for open-source 1`] = `
 [
   {
+    "icon": null,
+    "text": ".cls-1{fill:#1a4049;}.cls-2{fill:#fff;}.cls-3{fill:#817afe;}",
+  },
+  {
     "icon": "DashboardOutlinedIcon",
     "text": "Dashboard",
   },
@@ -184,6 +192,10 @@ exports[`order of items in navigation > menu for open-source 1`] = `
 
 exports[`order of items in navigation > menu for pro plan 1`] = `
 [
+  {
+    "icon": null,
+    "text": ".cls-1{fill:#1a4049;}.cls-2{fill:#fff;}.cls-3{fill:#817afe;}",
+  },
   {
     "icon": "DashboardOutlinedIcon",
     "text": "Dashboard",

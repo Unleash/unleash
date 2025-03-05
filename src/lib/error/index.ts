@@ -5,7 +5,6 @@ import FeatureHasTagError from './feature-has-tag-error';
 import IncompatibleProjectError from './incompatible-project-error';
 import InvalidOperationError from './invalid-operation-error';
 import InvalidTokenError from './invalid-token-error';
-import MinimumOneEnvironmentError from './minimum-one-environment-error';
 import NameExistsError from './name-exists-error';
 import PermissionError from './permission-error';
 import { OperationDeniedError } from './operation-denied-error';
@@ -27,7 +26,6 @@ export {
     IncompatibleProjectError,
     InvalidOperationError,
     InvalidTokenError,
-    MinimumOneEnvironmentError,
     NameExistsError,
     PermissionError,
     ForbiddenError,

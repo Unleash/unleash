@@ -341,7 +341,6 @@ test('Override works correctly when enabling default and disabling prod and dev'
 
 test('getProjectEnvironments also includes whether or not a given project is visible on a given environment', async () => {
     const assertContains = (environments, envName, visible) => {
-        console.log(environments);
         const env = environments.find((e) => e.name === envName);
         expect(env).toBeDefined();
         expect(env.visible).toBe(visible);

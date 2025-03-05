@@ -5,7 +5,7 @@ import {
     type IEnvironmentStore,
     type IFeatureEnvironmentStore,
     type IFeatureStrategiesStore,
-    type IProjectEnvironment,
+    type IProjectsAvailableOnEnvironment,
     type ISortOrder,
     type IUnleashConfig,
     type IUnleashStores,
@@ -19,7 +19,6 @@ import NameExistsError from '../../error/name-exists-error';
 import { sortOrderSchema } from '../../services/sort-order-schema';
 import NotFoundError from '../../error/notfound-error';
 import type { IProjectStore } from '../../features/project/project-store-type';
-import MinimumOneEnvironmentError from '../../error/minimum-one-environment-error';
 import type { IFlagResolver } from '../../types/experimental';
 import type { CreateFeatureStrategySchema } from '../../openapi';
 import type EventService from '../events/event-service';
@@ -77,8 +76,24 @@ export default class EnvironmentService {
 
     async getProjectEnvironments(
         projectId: string,
-    ): Promise<IProjectEnvironment[]> {
-        return this.environmentStore.getProjectEnvironments(projectId);
+    ): Promise<IProjectsAvailableOnEnvironment[]> {
+        // This function produces an object for every environment, in that object is a boolean
+        // describing whether or not that environment is enabled - aka not deprecated
+        const environments =
+            await this.projectStore.getEnvironmentsForProject(projectId);
+        const environmentsOnProject = new Set(
+            environments.map((env) => env.environment),
+        );
+
+        const allEnvironments =
+            await this.environmentStore.getProjectEnvironments(projectId);
+
+        return allEnvironments.map((env) => {
+            return {
+                ...env,
+                visible: environmentsOnProject.has(env.name),
+            };
+        });
     }
 
     async updateSortOrder(sortOrder: ISortOrder): Promise<void> {
@@ -254,22 +269,13 @@ export default class EnvironmentService {
         const projectEnvs =
             await this.projectStore.getEnvironmentsForProject(projectId);
 
-        if (projectEnvs.length > 1) {
-            await this.forceRemoveEnvironmentFromProject(
+        await this.forceRemoveEnvironmentFromProject(environment, projectId);
+        await this.eventService.storeEvent(
+            new ProjectEnvironmentRemoved({
+                project: projectId,
                 environment,
-                projectId,
-            );
-            await this.eventService.storeEvent(
-                new ProjectEnvironmentRemoved({
-                    project: projectId,
-                    environment,
-                    auditUser,
-                }),
-            );
-            return;
-        }
-        throw new MinimumOneEnvironmentError(
-            'You must always have one active environment',
+                auditUser,
+            }),
         );
     }
 }

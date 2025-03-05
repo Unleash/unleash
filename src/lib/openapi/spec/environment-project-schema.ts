@@ -61,7 +61,7 @@ export const environmentProjectSchema = {
             type: 'boolean',
             example: true,
             description:
-                'Indicates if the environment is available to be enabled for feature flags in the project',
+                'Indicates whether the environment can be enabled for feature flags in the project',
         },
     },
     components: {

@@ -60,10 +60,25 @@ export const useReleasePlanTemplatesApi = () => {
         return makeRequest(req.caller, req.id);
     };
 
+    const archiveReleasePlanTemplate = async (templateId: string) => {
+        const requestId = 'updateReleasePlanTemplate';
+        const path = `api/admin/release-plan-templates/archive/${templateId}`;
+        const req = createRequest(
+            path,
+            {
+                method: 'POST',
+            },
+            requestId,
+        );
+
+        return makeRequest(req.caller, req.id);
+    };
+
     return {
         deleteReleasePlanTemplate,
         updateReleasePlanTemplate,
         createReleasePlanTemplate,
+        archiveReleasePlanTemplate,
     };
 };
 

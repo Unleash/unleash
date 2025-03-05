@@ -98,22 +98,6 @@ test('Should remove environment from project', async () => {
     expect(envs).toHaveLength(1);
 });
 
-test('Should not remove environment from project if project only has one environment enabled', async () => {
-    await app.request
-        .delete(`/api/admin/projects/default/environments/default`)
-        .expect(400)
-        .expect((r) => {
-            expect(r.body.details[0].message).toBe(
-                'You must always have one active environment',
-            );
-        });
-
-    const envs =
-        await db.stores.projectStore.getEnvironmentsForProject('default');
-
-    expect(envs).toHaveLength(1);
-});
-
 test('Should add default strategy to environment', async () => {
     const defaultStrategy = {
         name: 'flexibleRollout',

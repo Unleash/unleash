@@ -61,8 +61,8 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | **Category: Initialization** |  |  |  |  |  |  |  |  |
 | Async initialization | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | Can block until synchronized | ✅ | ✅ | ✅ | ⭕ | ⭕ | ✅ | ✅ | ⭕ |
-| Default refresh interval | 10s | 15s | 15s | 15s | 15s | 30s | 30s | 15s |
-| Default metrics interval | 60s | 60s | 60s | 60s | 60s | 60s | 30s | 15s |
+| Default refresh interval | 15s | 15s | 15s | 15s | 15s | 15s | 15s | 15s |
+| Default metrics interval | 60s | 60s | 60s | 60s | 60s | 60s | 60s | 15s |
 | Context provider | ✅ | N/A | N/A | N/A | N/A | ✅ | ✅ | N/A |
 | Global fallback function | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ |
 | Flag Query: `namePrefix` | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ✅ | ❌ |
@@ -109,6 +109,12 @@ If you see an item marked with a ❌ that you would find useful, feel free to re
 | Bootstrap from file | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 | Custom Bootstrap implementation | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ⭕ |
 
+### Client-side SDK intervals
+
+| Interval | [Android](/docs/generated/sdks/client-side/android-proxy.md) | [Flutter](/docs/generated/sdks/client-side/flutter.md) | [iOS](/docs/generated/sdks/client-side/ios-proxy.md) | [JavaScript](/docs/generated/sdks/client-side/javascript-browser.md) | [Next.js](/docs/generated/sdks/client-side/next-js.md) | [React](/docs/generated/sdks/client-side/react.md) | [Svelte](/docs/generated/sdks/client-side/svelte.md) | [Vue](/docs/generated/sdks/client-side/vue.md) |
+| --- | :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
+| Default refresh interval | 60s | 30s | 15s | 30s | 30s | 30s | 30s | 30s |
+| Default metrics interval | 60s | 30s | 30s | 60s | 60s | 60s | 60s | 60s |
 
 ## Community SDKs ❤️ {#community-sdks}
 

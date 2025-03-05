@@ -1,10 +1,4 @@
-import {
-    endOfDay,
-    endOfMonth,
-    startOfDay,
-    startOfMonth,
-    subMonths,
-} from 'date-fns';
+import { endOfDay, endOfMonth, startOfDay, startOfMonth } from 'date-fns';
 import type { Db } from '../../db/db';
 import type { Logger, LogProvider } from '../../logger';
 import type {
@@ -147,14 +141,5 @@ export class TrafficDataUsageStore implements ITrafficDataUsageStore {
             startOfMonth(month),
             endOfMonth(month),
         );
-    }
-
-    // @deprecated: remove with flag `dataUsageMultiMonthView`
-    async getTrafficDataForMonthRange(
-        monthsBack: number,
-    ): Promise<IStatMonthlyTrafficUsage[]> {
-        const to = endOfMonth(new Date());
-        const from = startOfMonth(subMonths(to, monthsBack));
-        return this.getMonthlyTrafficDataUsageForPeriod(from, to);
     }
 }

@@ -91,7 +91,6 @@ export type UiFlags = {
     flagOverviewRedesign?: boolean;
     granularAdminPermissions?: boolean;
     frontendHeaderRedesign?: boolean;
-    dataUsageMultiMonthView?: boolean;
     consumptionModel?: boolean;
     edgeObservability?: boolean;
 };

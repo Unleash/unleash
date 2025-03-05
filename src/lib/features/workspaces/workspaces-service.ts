@@ -1,7 +1,7 @@
 import type { Logger } from '../../logger';
 import type { IUnleashConfig } from '../../types/option';
 import type { IUnleashStores } from '../../types/stores';
-import { NameExistsError } from '../../error';
+import { BadDataError, NameExistsError } from '../../error';
 import type EventService from '../events/event-service';
 import type {
     IWorkspaceStore,
@@ -19,7 +19,7 @@ import {
 const WORKSPACE_NAME_SCHEMA = {
     validate: async (name: string) => {
         if (!name.match(/^[a-zA-Z0-9_ -]+$/)) {
-            throw new Error(
+            throw new BadDataError(
                 'Workspace name can only contain letters, numbers, spaces, "_" and "-"',
             );
         }
@@ -53,6 +53,7 @@ class WorkspacesService {
         workspace: IWorkspaceCreate,
         user: IAuditUser,
     ): Promise<IWorkspace> {
+        console.log('CREATING WORKSPACE', workspace);
         await this.validateUniqueName(workspace.name);
         await WORKSPACE_NAME_SCHEMA.validate(workspace.name);
 
@@ -103,7 +104,9 @@ class WorkspacesService {
 
     async delete(id: number, user: IAuditUser): Promise<void> {
         if (id === 1) {
-            throw new Error('Cannot delete the default Unleash workspace');
+            throw new BadDataError(
+                'Cannot delete the default Unleash workspace',
+            );
         }
 
         const workspace = await this.workspaceStore.get(id);

@@ -7,7 +7,6 @@ export interface ISchemaValidationErrors<S = SchemaId> {
     schema: S;
     errors: ErrorObject[];
 }
-console.log('SCHEMAS', schemas['workspaceSchema']);
 const ajv = new Ajv({
     schemas: Object.values(schemas).map((schema) =>
         omitKeys(schema, 'components'),

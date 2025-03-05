@@ -1,9 +1,10 @@
+import { NextFunction } from 'express';
 import dbInit, {
     type ITestDb,
 } from '../../../../test/e2e/helpers/database-init';
 import {
-    type IUnleashTest,
     setupAppWithCustomConfig,
+    type IUnleashTest,
 } from '../../../../test/e2e/helpers/test-helper';
 import getLogger from '../../../../test/fixtures/no-logger';
 import type { IUnleashOptions } from '../../../types/option';
@@ -12,6 +13,8 @@ import type { IWorkspace } from '../workspaces-types';
 let app: IUnleashTest;
 let db: ITestDb;
 
+const TEST_USER_ID = 1;
+
 beforeAll(async () => {
     const config: Partial<IUnleashOptions> = {
         experimental: {
@@ -19,10 +22,37 @@ beforeAll(async () => {
                 strictSchemaValidation: true,
             },
         },
+        preHook: (app: any) => {
+            app.use(
+                '/api/admin/workspaces',
+                (req: Request, res: Response, next: NextFunction) => {
+                    req.user = {
+                        id: TEST_USER_ID,
+                        username: 'test@test.com',
+                        permissions: ['ADMIN'],
+                    };
+                    next();
+                },
+            );
+        },
     };
 
     db = await dbInit('workspaces_api', getLogger, config);
     app = await setupAppWithCustomConfig(db.stores, config, db.rawDatabase);
+
+    // Create a test user with the same ID we use in the middleware
+    await db.stores.userStore.insert({
+        name: 'Test User',
+        username: 'test@test.com',
+    });
+
+    const adminRole = await db.stores.roleStore.getRoleByName('Admin');
+
+    await db.stores.accessStore.addUserToRole(
+        TEST_USER_ID,
+        adminRole.id,
+        'default',
+    );
 });
 
 afterAll(async () => {

@@ -83,7 +83,6 @@ export const createOpenApiSchema = ({
     const url = findRootUrl(unleashUrl, baseUriPath);
 
     const mappedValues = mapValues(schemas, removeJsonSchemaProps);
-    console.log('schemas', mappedValues['workspaceSchema']);
 
     return {
         openapi: '3.0.3',

@@ -17,7 +17,10 @@ import {
     emptyResponse,
     getStandardResponses,
 } from '../../openapi/util/standard-responses';
-import type { WorkspaceSchema } from '../../openapi/spec/workspace-schema';
+import {
+    workspaceSchema,
+    type WorkspaceSchema,
+} from '../../openapi/spec/workspace-schema';
 
 import type { WorkspacesService } from './workspaces-service';
 import type { CreateWorkspaceSchema } from '../../openapi/spec/create-workspace-schema';
@@ -127,6 +130,7 @@ export class WorkspacesController extends Controller {
             path: '/:id',
             handler: this.deleteWorkspace,
             permission: ADMIN,
+            acceptAnyContentType: true,
             middleware: [
                 openApiService.validPath({
                     tags: ['Workspaces'],
@@ -161,7 +165,7 @@ export class WorkspacesController extends Controller {
             this.openApiService.respondWithValidation(
                 200,
                 res,
-                'workspaceSchema',
+                workspaceSchema.$id,
                 serializeDates(workspace),
             );
         } catch (err) {
@@ -173,7 +177,6 @@ export class WorkspacesController extends Controller {
         req: IAuthRequest<void, void, CreateWorkspaceSchema>,
         res: Response<WorkspaceSchema>,
     ): Promise<void> {
-        console.log('HIT');
         const workspace = await this.workspacesService.create(
             req.body,
             req.audit,
@@ -181,7 +184,7 @@ export class WorkspacesController extends Controller {
         this.openApiService.respondWithValidation(
             201,
             res,
-            'workspaceSchema',
+            workspaceSchema.$id,
             serializeDates(workspace),
             { location: `workspaces/${workspace.id}` },
         );

@@ -84,7 +84,11 @@ class WorkspaceStore implements IWorkspaceStore {
     }
 
     async delete(id: number): Promise<void> {
-        await this.db(T.workspaces).where({ id }).del();
+        try {
+            await this.db(T.workspaces).where({ id }).del();
+        } catch (e) {
+            console.log('e', e);
+        }
     }
 
     async exists(id: number): Promise<boolean> {

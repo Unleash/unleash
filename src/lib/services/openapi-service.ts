@@ -35,9 +35,6 @@ export class OpenApiService {
                 basePath: config.server.baseUriPath,
             },
         );
-
-        //console.log('OPENAPI', this.api.schema());
-        validateSchema('workspaceSchema', {});
     }
 
     validPath(op: ApiOperation): RequestHandler {

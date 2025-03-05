@@ -28,4 +28,8 @@ export interface ITrafficDataUsageStore
         from: Date,
         to: Date,
     ): Promise<IStatTrafficUsage[]>;
+    getMonthlyTrafficDataUsageForPeriod(
+        from: Date,
+        to: Date,
+    ): Promise<IStatMonthlyTrafficUsage[]>;
 }

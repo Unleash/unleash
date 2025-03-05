@@ -8,8 +8,8 @@
  * Data about an project that have been used by applications.
  */
 export interface ApplicationUsageSchema {
-    /** Which environments have been accessed in this project. */
-    environments: string[];
     /** Name of the project */
     project: string;
+    /** Which environments have been accessed in this project. */
+    environments: string[];
 }

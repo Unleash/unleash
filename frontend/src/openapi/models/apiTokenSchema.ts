@@ -9,38 +9,38 @@ import type { ApiTokenSchemaType } from './apiTokenSchemaType';
  * An overview of an [Unleash API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys).
  */
 export interface ApiTokenSchema {
-    /**
-     * Alias is no longer in active use and will often be NULL. It's kept around as a way of allowing old proxy tokens created with the old metadata format to keep working.
-     * @nullable
-     */
-    alias?: string | null;
-    /** When the token was created. */
-    createdAt: string;
-    /** The environment the token has access to. `*` if it has access to all environments. */
-    environment?: string;
-    /**
-     * The token's expiration date. NULL if the token doesn't have an expiration set.
-     * @nullable
-     */
-    expiresAt?: string | null;
-    /** The project this token belongs to. */
-    project: string;
-    /** The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as `[*]` */
-    projects: string[];
     /** The token used for authentication. */
     secret: string;
-    /**
-     * When the token was last seen/used to authenticate with. NULL if the token has not yet been used for authentication.
-     * @nullable
-     */
-    seenAt?: string | null;
-    /** A unique name for this particular token */
-    tokenName: string;
-    /** The type of API token */
-    type: ApiTokenSchemaType;
     /**
      * This property was deprecated in Unleash v5. Prefer the `tokenName` property instead.
      * @deprecated
      */
     username?: string;
+    /** A unique name for this particular token */
+    tokenName: string;
+    /** The type of API token */
+    type: ApiTokenSchemaType;
+    /** The environment the token has access to. `*` if it has access to all environments. */
+    environment?: string;
+    /** The project this token belongs to. */
+    project: string;
+    /** The list of projects this token has access to. If the token has access to specific projects they will be listed here. If the token has access to all projects it will be represented as `[*]` */
+    projects: string[];
+    /**
+     * The token's expiration date. NULL if the token doesn't have an expiration set.
+     * @nullable
+     */
+    expiresAt?: string | null;
+    /** When the token was created. */
+    createdAt: string;
+    /**
+     * When the token was last seen/used to authenticate with. NULL if the token has not yet been used for authentication.
+     * @nullable
+     */
+    seenAt?: string | null;
+    /**
+     * Alias is no longer in active use and will often be NULL. It's kept around as a way of allowing old proxy tokens created with the old metadata format to keep working.
+     * @nullable
+     */
+    alias?: string | null;
 }

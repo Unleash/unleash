@@ -10,21 +10,21 @@ import type { ParametersSchema } from './parametersSchema';
  * Update a strategy configuration in a feature
  */
 export interface UpdateFeatureStrategySchema {
-    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/strategy-constraints */
-    constraints?: ConstraintSchema[];
-    /**
-     * A toggle to disable the strategy. defaults to true. Disabled strategies are not evaluated or returned to the SDKs
-     * @nullable
-     */
-    disabled?: boolean | null;
     /** The name of the strategy type */
     name?: string;
-    parameters?: ParametersSchema;
     /** The order of the strategy in the list in feature environment configuration */
     sortOrder?: number;
+    /** A list of the constraints attached to the strategy. See https://docs.getunleash.io/reference/activation-strategies#constraints */
+    constraints?: ConstraintSchema[];
     /**
      * A descriptive title for the strategy
      * @nullable
      */
     title?: string | null;
+    /**
+     * A toggle to disable the strategy. defaults to true. Disabled strategies are not evaluated or returned to the SDKs
+     * @nullable
+     */
+    disabled?: boolean | null;
+    parameters?: ParametersSchema;
 }

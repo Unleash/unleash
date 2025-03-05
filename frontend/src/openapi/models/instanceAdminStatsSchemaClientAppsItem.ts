@@ -9,8 +9,8 @@ import type { InstanceAdminStatsSchemaClientAppsItemRange } from './instanceAdmi
  * An entry describing how many client applications has been observed over the defined range
  */
 export type InstanceAdminStatsSchemaClientAppsItem = {
-    /** The number of client applications that have been observed in this period */
-    count?: number;
     /** A description of a time range */
     range?: InstanceAdminStatsSchemaClientAppsItemRange;
+    /** The number of client applications that have been observed in this period */
+    count?: number;
 };

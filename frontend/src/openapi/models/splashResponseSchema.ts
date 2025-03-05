@@ -8,10 +8,10 @@
  * Data related to a user having seen a splash screen.
  */
 export interface SplashResponseSchema {
-    /** Indicates whether the user has seen the splash screen or not. */
-    seen: boolean;
-    /** The ID of the splash screen that was shown. */
-    splashId: string;
     /** The ID of the user that was shown the splash screen. */
     userId: number;
+    /** The ID of the splash screen that was shown. */
+    splashId: string;
+    /** Indicates whether the user has seen the splash screen or not. */
+    seen: boolean;
 }

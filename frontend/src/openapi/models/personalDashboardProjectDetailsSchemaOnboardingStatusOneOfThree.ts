@@ -6,7 +6,7 @@
 import type { PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOfThreeStatus } from './personalDashboardProjectDetailsSchemaOnboardingStatusOneOfThreeStatus';
 
 export type PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOfThree = {
+    status: PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOfThreeStatus;
     /** The name of the feature flag */
     feature: string;
-    status: PersonalDashboardProjectDetailsSchemaOnboardingStatusOneOfThreeStatus;
 };

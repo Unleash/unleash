@@ -9,8 +9,8 @@ import type { ProjectApplicationSchema } from './projectApplicationSchema';
  * A list of project applications
  */
 export interface ProjectApplicationsSchema {
-    /** All applications defined for a specific project. */
-    applications: ProjectApplicationSchema[];
     /** The total number of project applications. */
     total: number;
+    /** All applications defined for a specific project. */
+    applications: ProjectApplicationSchema[];
 }

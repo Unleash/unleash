@@ -8,8 +8,8 @@
  * Active/inactive users summary
  */
 export type ProjectInsightsSchemaMembers = {
-    /** The change in the number of project members compared to the previous month */
-    change: number;
     /** The number of total project members */
     currentMembers: number;
+    /** The change in the number of project members compared to the previous month */
+    change: number;
 };

@@ -6,28 +6,28 @@
 import type { SamlSettingsSchemaOneOfThreeDefaultRootRole } from './samlSettingsSchemaOneOfThreeDefaultRootRole';
 
 export type SamlSettingsSchemaOneOfThree = {
-    /** Should Unleash create users based on the emails coming back in the authentication reply from the SAML server */
-    autoCreate?: boolean;
-    /** The X509 certificate used to validate requests */
-    certificate?: string;
-    /** Assign this root role to auto created users */
-    defaultRootRole?: SamlSettingsSchemaOneOfThreeDefaultRootRole;
-    /** Assign this root role to auto created users. Should be a role ID and takes precedence over `defaultRootRole`. */
-    defaultRootRoleId?: number;
-    /** A comma separated list of email domains that Unleash will auto create user accounts for. */
-    emailDomains?: string;
     /** Whether to enable or disable SAML 2.0 for this instance */
     enabled?: boolean;
-    /** Should we enable group syncing. Refer to the documentation [Group syncing](https://docs.getunleash.io/how-to/how-to-set-up-group-sso-sync) */
-    enableGroupSyncing?: boolean;
     /** The SAML 2.0 entity ID */
     entityId?: string;
-    /** Specifies the path in the SAML token response from which to read the groups the user belongs to. */
-    groupJsonPath?: string;
     /** Which URL to use for Single Sign On */
     signOnUrl?: string;
+    /** The X509 certificate used to validate requests */
+    certificate?: string;
     /** Which URL to use for Single Sign Out */
     signOutUrl?: string;
     /** Signing certificate for sign out requests */
     spCertificate?: string;
+    /** Should Unleash create users based on the emails coming back in the authentication reply from the SAML server */
+    autoCreate?: boolean;
+    /** A comma separated list of email domains that Unleash will auto create user accounts for. */
+    emailDomains?: string;
+    /** Assign this root role to auto created users */
+    defaultRootRole?: SamlSettingsSchemaOneOfThreeDefaultRootRole;
+    /** Assign this root role to auto created users. Should be a role ID and takes precedence over `defaultRootRole`. */
+    defaultRootRoleId?: number;
+    /** Should we enable group syncing. Refer to the documentation [Group syncing](https://docs.getunleash.io/how-to/how-to-set-up-group-sso-sync) */
+    enableGroupSyncing?: boolean;
+    /** Specifies the path in the SAML token response from which to read the groups the user belongs to. */
+    groupJsonPath?: string;
 };

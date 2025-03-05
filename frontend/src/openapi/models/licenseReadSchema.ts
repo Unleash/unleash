@@ -8,14 +8,24 @@
  * A model representing a license response.
  */
 export interface LicenseReadSchema {
-    /** Name of the customer that owns the license. This is the name of the company that purchased the license. */
-    customer?: string;
-    /** Date when the license expires. */
-    expireAt?: string;
-    /** Name of plan that the license is for. */
-    plan?: string;
-    /** Number of seats in the license. */
-    seats?: number;
     /** The actual license token. */
     token: string;
+    /** Whether the license is valid or not. */
+    isValid?: boolean;
+    /** Name of the customer that owns the license. This is the name of the company that purchased the license. */
+    customer?: string;
+    /** Type of license. */
+    type: string;
+    /** Name of the Unleash instance where this license is valid. */
+    instanceName?: string;
+    /** Identifier of the Unleash instance where this license is valid. */
+    instanceId?: string;
+    /** Name of plan that the license is for. */
+    plan: string;
+    /** Number of seats in the license. */
+    seats: number;
+    /** Date when the license expires. */
+    expireAt?: string;
+    /** Date when the license was issued. */
+    issuedAt?: string;
 }

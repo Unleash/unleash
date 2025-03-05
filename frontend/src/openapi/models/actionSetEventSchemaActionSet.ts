@@ -10,33 +10,33 @@ import type { ActionSetEventSchemaActionSetMatch } from './actionSetEventSchemaA
  * The action set this action set event belongs to, where the individual actions are decorated with the respective action states.
  */
 export type ActionSetEventSchemaActionSet = {
-    /** The list of actions executed in sequential order when the action set was triggered, decorated with the individual action states. */
-    actions: ActionEventSchema[];
-    /**
-     * The id of the service account that will execute the action
-     * @minimum 1
-     */
-    actorId: number;
-    /** The date and time of when the action set was created. */
-    createdAt: string;
-    /** The ID of the user that created this action set. */
-    createdByUserId: number;
-    /**
-     * The description of the action set
-     * @nullable
-     */
-    description?: string | null;
-    /** Whether this action set is enabled or not */
-    enabled?: boolean;
     /**
      * The ID of the action set.
      * @minimum 1
      */
     id: number;
-    /** Defines a matching rule for the signal that will trigger the action set */
-    match: ActionSetEventSchemaActionSetMatch;
-    /** The name of the action set */
-    name: string;
     /** The project that this action set belongs to. */
     project: string;
+    /** The date and time of when the action set was created. */
+    createdAt: string;
+    /** The ID of the user that created this action set. */
+    createdByUserId: number;
+    /** The name of the action set */
+    name: string;
+    /**
+     * The description of the action set
+     * @nullable
+     */
+    description?: string | null;
+    /**
+     * The id of the service account that will execute the action
+     * @minimum 1
+     */
+    actorId: number;
+    /** Whether this action set is enabled or not */
+    enabled?: boolean;
+    /** The list of actions executed in sequential order when the action set was triggered, decorated with the individual action states. */
+    actions: ActionEventSchema[];
+    /** Defines a matching rule for the signal that will trigger the action set */
+    match: ActionSetEventSchemaActionSetMatch;
 };

@@ -5,23 +5,23 @@
  */
 
 export type PersonalDashboardSchemaProjectsItem = {
+    /** The id of the project */
+    id: string;
+    /** The name of the project */
+    name: string;
     /**
-     * The number of features this project has
-     * @minimum 0
-     */
-    featureCount: number;
-    /**
-     * An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100
+     * An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100
      * @minimum 0
      */
     health: number;
-    /** The id of the project */
-    id: string;
     /**
      * The number of members this project has
      * @minimum 0
      */
     memberCount: number;
-    /** The name of the project */
-    name: string;
+    /**
+     * The number of features this project has
+     * @minimum 0
+     */
+    featureCount: number;
 };

@@ -3,15 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { RequestsPerSecondSchemaData } from './requestsPerSecondSchemaData';
 import type { RequestsPerSecondSchemaStatus } from './requestsPerSecondSchemaStatus';
+import type { RequestsPerSecondSchemaData } from './requestsPerSecondSchemaData';
 
 /**
  * Statistics for usage of Unleash, formatted so it can easily be used in a graph
  */
 export interface RequestsPerSecondSchema {
-    /** The query result from prometheus */
-    data?: RequestsPerSecondSchemaData;
     /** Whether the query against prometheus succeeded or failed */
     status?: RequestsPerSecondSchemaStatus;
+    /** The query result from prometheus */
+    data?: RequestsPerSecondSchemaData;
 }

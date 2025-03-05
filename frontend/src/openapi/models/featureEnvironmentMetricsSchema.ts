@@ -10,24 +10,24 @@ import type { FeatureEnvironmentMetricsSchemaVariants } from './featureEnvironme
  * How many times `feautreName` was evaluated to `true` (yes) and `false` (no) for `appName` in `environmnet`
  */
 export interface FeatureEnvironmentMetricsSchema {
+    /** The name of the feature */
+    featureName?: string;
     /** The name of the application the SDK is being used in */
     appName?: string;
     /** Which environment the SDK is being used in */
     environment: string;
-    /** The name of the feature */
-    featureName?: string;
-    /**
-     * How many times the toggle evaluated to false
-     * @minimum 0
-     */
-    no: number;
     /** The start of the time window these metrics are valid for. The window is usually 1 hour wide */
     timestamp: DateSchema;
-    /** How many times each variant was returned */
-    variants?: FeatureEnvironmentMetricsSchemaVariants;
     /**
      * How many times the toggle evaluated to true
      * @minimum 0
      */
     yes: number;
+    /**
+     * How many times the toggle evaluated to false
+     * @minimum 0
+     */
+    no: number;
+    /** How many times each variant was returned */
+    variants?: FeatureEnvironmentMetricsSchemaVariants;
 }

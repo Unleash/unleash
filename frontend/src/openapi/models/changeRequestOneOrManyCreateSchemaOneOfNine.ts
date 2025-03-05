@@ -10,9 +10,9 @@ import type { CreateFeatureStrategySchema } from './createFeatureStrategySchema'
  * Add a strategy to the feature
  */
 export type ChangeRequestOneOrManyCreateSchemaOneOfNine = {
-    /** The name of this action. */
-    action: ChangeRequestOneOrManyCreateSchemaOneOfNineAction;
     /** The name of the feature that this change applies to. */
     feature: string;
+    /** The name of this action. */
+    action: ChangeRequestOneOrManyCreateSchemaOneOfNineAction;
     payload: CreateFeatureStrategySchema;
 };

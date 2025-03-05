@@ -3,58 +3,58 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
-import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
-import type { FeatureSchema } from './featureSchema';
 import type { HealthOverviewSchemaMode } from './healthOverviewSchemaMode';
+import type { ProjectEnvironmentSchema } from './projectEnvironmentSchema';
+import type { FeatureSchema } from './featureSchema';
 import type { ProjectStatsSchema } from './projectStatsSchema';
+import type { CreateFeatureNamingPatternSchema } from './createFeatureNamingPatternSchema';
 
 /**
  * An overview of a project's stats and its health as described in the documentation on [technical debt](https://docs.getunleash.io/reference/technical-debt)
  */
 export interface HealthOverviewSchema {
-    /**
-     * When the project was last updated.
-     * @nullable
-     */
-    createdAt?: string | null;
-    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
-    defaultStickiness: string;
+    /** The project overview version. */
+    version: number;
+    /** The project's name */
+    name: string;
     /**
      * The project's description
      * @nullable
      */
     description?: string | null;
-    /** An array containing the names of all the environments configured for the project. */
-    environments: ProjectEnvironmentSchema[];
-    /** Indicates if the project has been marked as a favorite by the current user requesting the project health overview. */
-    favorite?: boolean;
+    /** A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy */
+    defaultStickiness: string;
+    /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
+    mode: HealthOverviewSchemaMode;
     /**
      * A limit on the number of features allowed in the project. Null if no limit.
      * @nullable
      */
     featureLimit?: number | null;
-    featureNaming?: CreateFeatureNamingPatternSchema;
-    /** An array containing an overview of all the features of the project and their individual status */
-    features: FeatureSchema[];
-    /** The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project. */
-    health: number;
     /**
      * The number of users/members in the project.
      * @minimum 0
      */
     members: number;
-    /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
-    mode: HealthOverviewSchemaMode;
-    /** The project's name */
-    name: string;
-    /** Project statistics */
-    stats?: ProjectStatsSchema;
+    /** The overall [health rating](https://docs.getunleash.io/reference/technical-debt#project-status) of the project. */
+    health: number;
+    /** An array containing the names of all the environments configured for the project. */
+    environments: ProjectEnvironmentSchema[];
+    /** An array containing an overview of all the features of the project and their individual status */
+    features: FeatureSchema[];
     /**
      * When the project was last updated.
      * @nullable
      */
     updatedAt?: string | null;
-    /** The project overview version. */
-    version: number;
+    /**
+     * When the project was last updated.
+     * @nullable
+     */
+    createdAt?: string | null;
+    /** Indicates if the project has been marked as a favorite by the current user requesting the project health overview. */
+    favorite?: boolean;
+    /** Project statistics */
+    stats?: ProjectStatsSchema;
+    featureNaming?: CreateFeatureNamingPatternSchema;
 }

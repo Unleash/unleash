@@ -5,12 +5,12 @@
  */
 
 export type PersonalDashboardSchemaAdminsItem = {
-    email?: string;
     /** The user ID. */
     id: number;
-    imageUrl?: string;
     /** The user's name. */
     name?: string;
     /** The user's username. */
     username?: string;
+    imageUrl?: string;
+    email?: string;
 };

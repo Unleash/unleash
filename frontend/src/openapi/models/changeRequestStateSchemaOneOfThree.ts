@@ -6,10 +6,10 @@
 import type { ChangeRequestStateSchemaOneOfThreeState } from './changeRequestStateSchemaOneOfThreeState';
 
 export type ChangeRequestStateSchemaOneOfThree = {
-    /** Any comments accompanying the state changed. Used when sending a draft to review. */
-    comment?: string;
-    /** The time at which the change request should be applied. */
-    scheduledAt: string;
     /** The new desired state for the change request */
     state: ChangeRequestStateSchemaOneOfThreeState;
+    /** The time at which the change request should be applied. */
+    scheduledAt: string;
+    /** Any comments accompanying the state changed. Used when sending a draft to review. */
+    comment?: string;
 };

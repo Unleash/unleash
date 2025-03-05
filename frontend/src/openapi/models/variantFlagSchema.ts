@@ -9,8 +9,12 @@ import type { VariantFlagSchemaPayload } from './variantFlagSchemaPayload';
  * A representation of an evaluated Unleash feature variant.
  */
 export interface VariantFlagSchema {
+    /** The name of the variant. Will always be disabled if `enabled` is false. */
+    name?: string;
     /** Whether the variant is enabled or not. */
     enabled?: boolean;
+    /** Additional data associated with this variant. */
+    payload?: VariantFlagSchemaPayload;
     /** Whether the feature is enabled or not. */
     feature_enabled?: boolean;
     /**
@@ -18,8 +22,4 @@ export interface VariantFlagSchema {
      * @deprecated
      */
     featureEnabled?: boolean;
-    /** The name of the variant. Will always be disabled if `enabled` is false. */
-    name?: string;
-    /** Additional data associated with this variant. */
-    payload?: VariantFlagSchemaPayload;
 }

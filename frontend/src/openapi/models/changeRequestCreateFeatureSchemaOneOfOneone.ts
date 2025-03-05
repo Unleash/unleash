@@ -9,8 +9,8 @@ import type { ChangeRequestCreateFeatureSchemaOneOfOneoneAction } from './change
  * Archive a feature.
  */
 export type ChangeRequestCreateFeatureSchemaOneOfOneone = {
-    /** The name of this action. */
-    action: ChangeRequestCreateFeatureSchemaOneOfOneoneAction;
     /** The name of the feature that this change applies to. */
     feature: string;
+    /** The name of this action. */
+    action: ChangeRequestCreateFeatureSchemaOneOfOneoneAction;
 };

@@ -5,10 +5,13 @@
  */
 
 export type CreateRoleWithPermissionsSchemaAnyOfFourPermissionsItem = {
-    /** The environments of the permission if the permission is environment specific */
-    environment?: string;
     /** The id of the permission */
     id: number;
     /** The name of the permission */
     name?: string;
+    /**
+     * The environments of the permission if the permission is environment specific
+     * @nullable
+     */
+    environment?: string | null;
 };

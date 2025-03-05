@@ -12,10 +12,15 @@ import type { VersionSchemaLatest } from './versionSchemaLatest';
 export interface VersionSchema {
     /** The current version of Unleash. */
     current: VersionSchemaCurrent;
-    /** The instance identifier of the Unleash instance */
-    instanceId?: string;
-    /** Whether the Unleash server is running the latest release (`true`) or if there are updates available (`false`) */
-    isLatest: boolean;
     /** Information about the latest available Unleash releases. Will be an empty object if no data is available. */
     latest: VersionSchemaLatest;
+    /** Whether the Unleash server is running the latest release (`true`) or if there are updates available (`false`) */
+    isLatest: boolean;
+    /** The instance identifier of the Unleash instance */
+    instanceId?: string;
+    /**
+     * The date and time of when this Unleash instance version was built
+     * @nullable
+     */
+    buildDate?: string | null;
 }

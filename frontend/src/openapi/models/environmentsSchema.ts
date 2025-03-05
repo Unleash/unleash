@@ -9,8 +9,8 @@ import type { EnvironmentSchema } from './environmentSchema';
  * A versioned list of environments
  */
 export interface EnvironmentsSchema {
-    /** List of environments */
-    environments: EnvironmentSchema[];
     /** Version of the environments schema */
     version: number;
+    /** List of environments */
+    environments: EnvironmentSchema[];
 }

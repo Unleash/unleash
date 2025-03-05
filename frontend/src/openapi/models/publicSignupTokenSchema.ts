@@ -3,28 +3,13 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { RoleSchema } from './roleSchema';
 import type { UserSchema } from './userSchema';
+import type { RoleSchema } from './roleSchema';
 
 /**
  * Used for transporting a [public invite link](https://docs.getunleash.io/reference/public-signup#public-sign-up-tokens)
  */
 export interface PublicSignupTokenSchema {
-    /** When the token was created. */
-    createdAt: string;
-    /**
-     * The creator's email or username
-     * @nullable
-     */
-    createdBy: string | null;
-    /** Whether the token is active. This property will always be `false` for a token that has expired. */
-    enabled: boolean;
-    /** The time when the token will expire. */
-    expiresAt: string;
-    /** The token's name. Only for displaying in the UI */
-    name: string;
-    /** Users who sign up using this token will be given this role. */
-    role: RoleSchema;
     /** The actual value of the token. This is the part that is used by Unleash to create an invite link */
     secret: string;
     /**
@@ -32,9 +17,24 @@ export interface PublicSignupTokenSchema {
      * @nullable
      */
     url: string | null;
+    /** The token's name. Only for displaying in the UI */
+    name: string;
+    /** Whether the token is active. This property will always be `false` for a token that has expired. */
+    enabled: boolean;
+    /** The time when the token will expire. */
+    expiresAt: string;
+    /** When the token was created. */
+    createdAt: string;
+    /**
+     * The creator's email or username
+     * @nullable
+     */
+    createdBy: string | null;
     /**
      * Array of users that have signed up using the token.
      * @nullable
      */
     users?: UserSchema[] | null;
+    /** Users who sign up using this token will be given this role. */
+    role: RoleSchema;
 }

@@ -3,34 +3,20 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
+import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
+import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema';
 import type { ChangeRequestApprovalSchema } from './changeRequestApprovalSchema';
 import type { ChangeRequestCommentSchema } from './changeRequestCommentSchema';
 import type { ChangeRequestsSchemaItemOneOfCreatedBy } from './changeRequestsSchemaItemOneOfCreatedBy';
-import type { ChangeRequestFeatureSchema } from './changeRequestFeatureSchema';
-import type { ChangeRequestSegmentChangeSchema } from './changeRequestSegmentChangeSchema';
 import type { ChangeRequestsSchemaItemOneOfState } from './changeRequestsSchemaItemOneOfState';
 
 export type ChangeRequestsSchemaItemOneOf = {
-    /**
-     * A list of approvals that this change request has received.
-     * @deprecated
-     */
-    approvals?: ChangeRequestApprovalSchema[];
-    /**
-     * All comments that have been made on this change request.
-     * @deprecated
-     */
-    comments?: ChangeRequestCommentSchema[];
-    /** When this change request was created. */
-    createdAt: string;
-    /** The user who created this change request. */
-    createdBy: ChangeRequestsSchemaItemOneOfCreatedBy;
-    /** The environment in which the changes should be applied. */
-    environment: string;
-    /** The list of features and their changes that relate to this change request. */
-    features: ChangeRequestFeatureSchema[];
     /** This change requests's ID. */
     id: number;
+    /** A title describing the change request's content. */
+    title?: string;
+    /** The environment in which the changes should be applied. */
+    environment: string;
     /**
      * The minimum number of approvals required before this change request can be applied.
      * @deprecated
@@ -38,15 +24,29 @@ export type ChangeRequestsSchemaItemOneOf = {
     minApprovals: number;
     /** The project this change request belongs to. */
     project: string;
+    /** The list of features and their changes that relate to this change request. */
+    features: ChangeRequestFeatureSchema[];
+    /** The list of segments and their changes that relate to this change request. */
+    segments: ChangeRequestSegmentChangeSchema[];
+    /**
+     * A list of approvals that this change request has received.
+     * @deprecated
+     */
+    approvals?: ChangeRequestApprovalSchema[];
     /**
      * A list of rejections that this change request has received.
      * @deprecated
      */
     rejections?: ChangeRequestApprovalSchema[];
-    /** The list of segments and their changes that relate to this change request. */
-    segments: ChangeRequestSegmentChangeSchema[];
+    /**
+     * All comments that have been made on this change request.
+     * @deprecated
+     */
+    comments?: ChangeRequestCommentSchema[];
+    /** The user who created this change request. */
+    createdBy: ChangeRequestsSchemaItemOneOfCreatedBy;
+    /** When this change request was created. */
+    createdAt: string;
     /** The current state of the change request. */
     state: ChangeRequestsSchemaItemOneOfState;
-    /** A title describing the change request's content. */
-    title?: string;
 };

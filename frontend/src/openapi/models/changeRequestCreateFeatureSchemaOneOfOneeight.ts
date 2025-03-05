@@ -10,9 +10,9 @@ import type { CreateDependentFeatureSchema } from './createDependentFeatureSchem
  * Add a parent feature dependency.
  */
 export type ChangeRequestCreateFeatureSchemaOneOfOneeight = {
-    /** The name of this action. */
-    action: ChangeRequestCreateFeatureSchemaOneOfOneeightAction;
     /** The name of the feature that this change applies to. */
     feature: string;
+    /** The name of this action. */
+    action: ChangeRequestCreateFeatureSchemaOneOfOneeightAction;
     payload: CreateDependentFeatureSchema;
 };

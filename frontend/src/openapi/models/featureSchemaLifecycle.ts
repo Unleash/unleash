@@ -9,8 +9,8 @@ import type { FeatureSchemaLifecycleStage } from './featureSchemaLifecycleStage'
  * Current lifecycle stage of the feature
  */
 export type FeatureSchemaLifecycle = {
-    /** When the feature entered this stage */
-    enteredStageAt: string;
     /** The name of the current lifecycle stage */
     stage: FeatureSchemaLifecycleStage;
+    /** When the feature entered this stage */
+    enteredStageAt: string;
 };

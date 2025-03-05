@@ -6,19 +6,19 @@
 import type { ConstraintSchemaOperator } from './constraintSchemaOperator';
 
 /**
- * A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/reference/strategy-constraints)
+ * A strategy constraint. For more information, refer to [the strategy constraint reference documentation](https://docs.getunleash.io/reference/activation-strategies#constraints)
  */
 export interface ConstraintSchema {
-    /** Whether the operator should be case sensitive or not. Defaults to `false` (being case sensitive). */
-    caseInsensitive?: boolean;
     /** The name of the context field that this constraint should apply to. */
     contextName: string;
+    /** The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/activation-strategies#constraint-operators). */
+    operator: ConstraintSchemaOperator;
+    /** Whether the operator should be case sensitive or not. Defaults to `false` (being case sensitive). */
+    caseInsensitive?: boolean;
     /** Whether the result should be negated or not. If `true`, will turn a `true` result into a `false` result and vice versa. */
     inverted?: boolean;
-    /** The operator to use when evaluating this constraint. For more information about the various operators, refer to [the strategy constraint operator documentation](https://docs.getunleash.io/reference/strategy-constraints#strategy-constraint-operators). */
-    operator: ConstraintSchemaOperator;
-    /** The context value that should be used for constraint evaluation. Use this property instead of `values` for properties that only accept single values. */
-    value?: string;
     /** The context values that should be used for constraint evaluation. Use this property instead of `value` for properties that accept multiple values. */
     values?: string[];
+    /** The context value that should be used for constraint evaluation. Use this property instead of `values` for properties that only accept single values. */
+    value?: string;
 }

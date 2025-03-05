@@ -9,16 +9,16 @@ import type { ChangeRequestScheduleSchemaOneOfThreeStatus } from './changeReques
  * A failed schedule for a change request.
  */
 export type ChangeRequestScheduleSchemaOneOfThree = {
+    /** When Unleash last attempted to apply this change request. */
+    scheduledAt: string;
+    /** The status of the schedule. */
+    status: ChangeRequestScheduleSchemaOneOfThreeStatus;
+    /** The reason the scheduled failed to apply. */
+    reason: string;
     /**
      * The reason the scheduled failed to apply. Deprecated in favor of the `reason` property.
      * @deprecated
      * @nullable
      */
     failureReason?: string | null;
-    /** The reason the scheduled failed to apply. */
-    reason: string;
-    /** When Unleash last attempted to apply this change request. */
-    scheduledAt: string;
-    /** The status of the schedule. */
-    status: ChangeRequestScheduleSchemaOneOfThreeStatus;
 };

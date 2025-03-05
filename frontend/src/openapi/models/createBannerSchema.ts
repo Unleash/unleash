@@ -8,18 +8,14 @@
  * Describes the properties required to create or update a banner.
  */
 export interface CreateBannerSchema {
-    /**
-     * The markdown to display on the dialog. If not specified, no dialog will be displayed.
-     * @nullable
-     */
-    dialog?: string | null;
-    /**
-     * The title to display on the dialog. If not specified, this will be the same as `linkText`.
-     * @nullable
-     */
-    dialogTitle?: string | null;
+    /** The message to display to all users. Supports markdown. */
+    message: string;
     /** Whether the banner should be displayed currently. If not specified, defaults to true. */
     enabled?: boolean;
+    /** The variant of the banner. One of "info", "warning", "error", or "success". If not specified, defaults to "info". */
+    variant?: string;
+    /** Whether the banner should be sticky on the screen. If not specified, defaults to `false`. */
+    sticky?: boolean;
     /**
      * The icon to display on the banner. Can be one of https://fonts.google.com/icons. If not specified, this will be the default icon for the variant. If "none", no icon will be displayed.
      * @nullable
@@ -35,10 +31,14 @@ export interface CreateBannerSchema {
      * @nullable
      */
     linkText?: string | null;
-    /** The message to display to all users. Supports markdown. */
-    message: string;
-    /** Whether the banner should be sticky on the screen. If not specified, defaults to `false`. */
-    sticky?: boolean;
-    /** The variant of the banner. One of "info", "warning", "error", or "success". If not specified, defaults to "info". */
-    variant?: string;
+    /**
+     * The title to display on the dialog. If not specified, this will be the same as `linkText`.
+     * @nullable
+     */
+    dialogTitle?: string | null;
+    /**
+     * The markdown to display on the dialog. If not specified, no dialog will be displayed.
+     * @nullable
+     */
+    dialog?: string | null;
 }

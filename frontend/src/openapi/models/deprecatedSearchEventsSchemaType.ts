@@ -169,4 +169,6 @@ export const DeprecatedSearchEventsSchemaType = {
     'release-plan-removed': 'release-plan-removed',
     'release-plan-milestone-started': 'release-plan-milestone-started',
     'user-preference-updated': 'user-preference-updated',
+    'scim-users-deleted': 'scim-users-deleted',
+    'scim-groups-deleted': 'scim-groups-deleted',
 } as const;

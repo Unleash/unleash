@@ -8,23 +8,23 @@
  * A detailed description of the feature environment
  */
 export interface ProjectFeatureEnvironmentSchema {
+    /** The name of the environment */
+    name: string;
+    /** The type of the environment */
+    type: string;
     /** `true` if the feature is enabled for the environment, otherwise `false`. */
     enabled: boolean;
-    /** Whether the feature has any enabled strategies defined. */
-    hasEnabledStrategies?: boolean;
-    /** Whether the feature has any strategies defined. */
-    hasStrategies?: boolean;
+    /** The sort order of the feature environment in the feature environments list */
+    sortOrder: number;
+    /** The number of defined variants */
+    variantCount: number;
     /**
      * The date when metrics where last collected for the feature environment
      * @nullable
      */
     lastSeenAt: string | null;
-    /** The name of the environment */
-    name: string;
-    /** The sort order of the feature environment in the feature environments list */
-    sortOrder: number;
-    /** The type of the environment */
-    type: string;
-    /** The number of defined variants */
-    variantCount: number;
+    /** Whether the feature has any strategies defined. */
+    hasStrategies?: boolean;
+    /** Whether the feature has any enabled strategies defined. */
+    hasEnabledStrategies?: boolean;
 }

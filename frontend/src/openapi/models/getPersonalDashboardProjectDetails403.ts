@@ -7,8 +7,8 @@
 export type GetPersonalDashboardProjectDetails403 = {
     /** The ID of the error instance */
     id?: string;
-    /** A description of what went wrong. */
-    message?: string;
     /** The name of the error kind */
     name?: string;
+    /** A description of what went wrong. */
+    message?: string;
 };

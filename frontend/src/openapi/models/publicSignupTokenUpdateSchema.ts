@@ -8,8 +8,8 @@
  * Used by Unleash for updating a token's expiration date or, when deleting the invite link, it's status
  */
 export interface PublicSignupTokenUpdateSchema {
-    /** Whether the token is active or not. */
-    enabled?: boolean;
     /** The token's expiration date. */
     expiresAt?: string;
+    /** Whether the token is active or not. */
+    enabled?: boolean;
 }

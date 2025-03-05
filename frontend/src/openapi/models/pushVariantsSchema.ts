@@ -9,8 +9,8 @@ import type { VariantSchema } from './variantSchema';
  * Data used when copying variants into a new environment.
  */
 export interface PushVariantsSchema {
-    /** The enviromnents to write the provided variants to */
-    environments?: string[];
     /** The variants to write to the provided environments */
     variants?: VariantSchema[];
+    /** The enviromnents to write the provided variants to */
+    environments?: string[];
 }

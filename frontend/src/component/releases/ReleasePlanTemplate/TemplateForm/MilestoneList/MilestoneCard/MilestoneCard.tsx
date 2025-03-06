@@ -33,8 +33,10 @@ const leftPadding = 3;
 
 const DraggableCardContainer = styled('div')(({ theme }) => ({
     marginTop: theme.spacing(2),
-    '--drag-column-width': `var(--form-content-padding, ${theme.spacing(4)})`,
-    '--left-offset': `calc(var(--drag-column-width) * -1)`,
+    '--left-padding': `var(--form-content-padding, ${theme.spacing(4)})`,
+    // for accessibility, never make button smaller than 32px
+    '--drag-column-width': `max(var(--left-padding), ${theme.spacing(4)})`,
+    '--left-offset': `calc(var(--left-padding) * -1)`,
     marginLeft: `var(--left-offset)`,
     display: 'grid',
     gridTemplateColumns: `var(--drag-column-width) 1fr`,
@@ -135,7 +137,7 @@ const DragButton = styled('button')(({ theme }) => ({
 }));
 
 const DraggableContent = styled('span')(({ theme }) => ({
-    paddingTop: theme.spacing(2.5),
+    paddingTop: theme.spacing(2.75),
     display: 'block',
     height: '100%',
     width: '100%',

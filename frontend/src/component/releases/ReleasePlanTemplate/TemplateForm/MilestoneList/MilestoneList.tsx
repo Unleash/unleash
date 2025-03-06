@@ -32,7 +32,11 @@ export const MilestoneList = ({
 }: IMilestoneListProps) => {
     const useNewMilestoneCard = useUiFlag('flagOverviewRedesign');
     const onMoveItem: OnMoveItem = useCallback(
-        async (dragIndex: number, dropIndex: number) => {
+        async (dragIndex: number, dropIndex: number, save?: boolean) => {
+            if (useNewMilestoneCard && save) {
+                return; // the user has let go, we should leave the current sort order as it is currently visually displayed
+            }
+
             if (dragIndex !== dropIndex) {
                 const oldMilestones = milestones || [];
                 const newMilestones = [...oldMilestones];

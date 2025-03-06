@@ -27,6 +27,7 @@ import { StrategySeparator } from 'component/common/StrategySeparator/StrategySe
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/DeleteOutlined';
 import { StrategyDraggableItem } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyDraggableItem';
+import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 
 const leftPadding = 3;
 
@@ -82,6 +83,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     '&:before': {
         opacity: '0 !important',
     },
+    overflow: 'hidden',
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -91,6 +93,9 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     [theme.breakpoints.down(400)]: {
         padding: theme.spacing(1, 2),
+    },
+    '&:focus-visible': {
+        background: theme.palette.table.rowHover,
     },
 }));
 
@@ -107,7 +112,6 @@ const StyledAccordionFooter = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
     gap: theme.spacing(3),
     backgroundColor: 'inherit',
-    borderRadius: theme.shape.borderRadiusMedium,
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -115,13 +119,25 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.primary.main,
 }));
 
-const StyledDragIcon = styled(IconButton)(({ theme }) => ({
+const DragButton = styled('button')(({ theme }) => ({
     padding: 0,
     cursor: 'grab',
-    transition: 'color 0.2s ease-in-out',
-    '& > svg': {
-        color: 'action.active',
+    transition: 'background-color 0.2s ease-in-out',
+    backgroundColor: 'inherit',
+    border: 'none',
+    borderRadius: theme.shape.borderRadiusMedium,
+    color: theme.palette.text.secondary,
+    '&:hover, &:focus-visible': {
+        background: theme.palette.table.rowHover,
+        outline: 'none',
     },
+}));
+
+const DraggableContent = styled('span')(({ theme }) => ({
+    paddingTop: theme.spacing(2.5),
+    display: 'block',
+    height: '100%',
+    width: '100%',
 }));
 
 export interface IMilestoneCardProps {
@@ -168,9 +184,17 @@ export const MilestoneCard = ({
     );
 
     const dragHandle = (
-        <StyledDragIcon ref={dragHandleRef} disableRipple size='small'>
-            <DragIndicator titleAccess='Drag to reorder' />
-        </StyledDragIcon>
+        <DragButton
+            type='button'
+            onClick={() => {
+                console.log("draggin'");
+            }}
+        >
+            <DraggableContent ref={dragHandleRef}>
+                <DragIndicator aria-hidden />
+                <ScreenReaderOnly>Drag to reorder</ScreenReaderOnly>
+            </DraggableContent>
+        </DragButton>
     );
 
     const onClose = () => {

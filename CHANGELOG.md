@@ -2,6 +2,154 @@
 
 All notable changes to this project will be documented in this file.
 
+## [6.8.0] - 2025-03-06
+
+### Bug Fixes
+
+- Long flag names push table to overflow and flag descriptions are not truncated ([#9350](https://github.com/Unleash/unleash/issues/9350))
+
+- Update dependency docusaurus-plugin-openapi-docs to v4.3.4 ([#9368](https://github.com/Unleash/unleash/issues/9368))
+
+- Update dependency docusaurus-theme-openapi-docs to v4.3.4 ([#9374](https://github.com/Unleash/unleash/issues/9374))
+
+- Update dependency pg to v8.13.3 ([#9375](https://github.com/Unleash/unleash/issues/9375))
+
+- Get all strategies and check if env to be disabled ([#9357](https://github.com/Unleash/unleash/issues/9357))
+
+- Solve 31 day month issue by using trafficUnitSize and not constant 1_000_000 ([#9404](https://github.com/Unleash/unleash/issues/9404))
+
+- Copy strategy is allowed to copy to self (duplicate) ([#9407](https://github.com/Unleash/unleash/issues/9407))
+
+- Update dependency docusaurus-plugin-openapi-docs to v4.3.5 ([#9423](https://github.com/Unleash/unleash/issues/9423))
+
+- Update dependency docusaurus-theme-openapi-docs to v4.3.5 ([#9424](https://github.com/Unleash/unleash/issues/9424))
+
+- Update dependency compression to v1.8.0 ([#9437](https://github.com/Unleash/unleash/issues/9437))
+
+
+### Documentation
+
+- Entra scim setup now includes SCIM compliance flag ([#9336](https://github.com/Unleash/unleash/issues/9336))
+
+
+### Features
+
+- Show and hide environments ([#9323](https://github.com/Unleash/unleash/issues/9323))
+
+- Show add strategy button when release plan ([#9329](https://github.com/Unleash/unleash/issues/9329))
+
+- Add tests for filterEventsByQuery ([#9338](https://github.com/Unleash/unleash/issues/9338))
+
+- Make env selector filterable ([#9340](https://github.com/Unleash/unleash/issues/9340))
+
+- New environment box ([#9342](https://github.com/Unleash/unleash/issues/9342))
+
+- Now project moving is split into two events ([#9358](https://github.com/Unleash/unleash/issues/9358))
+
+- Ignore events in log when nothing has changed ([#9364](https://github.com/Unleash/unleash/issues/9364))
+
+- Allow command bar navigation to wrap around ([#9370](https://github.com/Unleash/unleash/issues/9370))
+
+- SQL performance optimization to count instances ([#9369](https://github.com/Unleash/unleash/issues/9369))
+
+- Now instances are only shown for last 24 hours ([#9372](https://github.com/Unleash/unleash/issues/9372))
+
+- Backend connections tab ([#9381](https://github.com/Unleash/unleash/issues/9381))
+
+- Frontend traffic tab ([#9385](https://github.com/Unleash/unleash/issues/9385))
+
+- Use new strategy list in release plans ([#9405](https://github.com/Unleash/unleash/issues/9405))
+
+- UI for archiving release templates ([#9415](https://github.com/Unleash/unleash/issues/9415))
+
+- Project environments include visible property ([#9427](https://github.com/Unleash/unleash/issues/9427))
+
+
+### Miscellaneous Tasks
+
+- Await so change requests banner shows up after adding release plans changes ([#9328](https://github.com/Unleash/unleash/issues/9328))
+
+- Visualize connected edges ([#9325](https://github.com/Unleash/unleash/issues/9325))
+
+- Handle narrow windows for the flag header. ([#9321](https://github.com/Unleash/unleash/issues/9321))
+
+- Make Edge instance node width consistent ([#9335](https://github.com/Unleash/unleash/issues/9335))
+
+- Reduce tab sizes on flag page + fix wrapping/overlapping issue with action buttons ([#9339](https://github.com/Unleash/unleash/issues/9339))
+
+- Upgrade vitest to 3.0.6 ([#9337](https://github.com/Unleash/unleash/issues/9337))
+
+- Improve UX in the Edge observability latency table ([#9343](https://github.com/Unleash/unleash/issues/9343))
+
+- Edge observability width fix ([#9345](https://github.com/Unleash/unleash/issues/9345))
+
+- Add file and component names to `styled` output class names in dev ([#9351](https://github.com/Unleash/unleash/issues/9351))
+
+- Fix small UI issues in release templates/plans ([#9341](https://github.com/Unleash/unleash/issues/9341))
+
+- Node sdk version upgrade to support deltas ([#9356](https://github.com/Unleash/unleash/issues/9356))
+
+- Months old version banner ([#9352](https://github.com/Unleash/unleash/issues/9352))
+
+- Deprecate and undeprecate protected environments ([#9360](https://github.com/Unleash/unleash/issues/9360))
+
+- Remove deltaApiStreaming flag ([#9362](https://github.com/Unleash/unleash/issues/9362))
+
+- Remove uiGlobalFontSize flag ([#9331](https://github.com/Unleash/unleash/issues/9331))
+
+- Improve release plan template form validation ([#9371](https://github.com/Unleash/unleash/issues/9371))
+
+- New env strategy containers ([#9361](https://github.com/Unleash/unleash/issues/9361))
+
+- Fix text on last seen instances ([#9376](https://github.com/Unleash/unleash/issues/9376))
+
+- Wrap strategy list in an ordered list ([#9377](https://github.com/Unleash/unleash/issues/9377))
+
+- Consumption model flag ([#9379](https://github.com/Unleash/unleash/issues/9379))
+
+- Handle release plans in new strategy list ([#9380](https://github.com/Unleash/unleash/issues/9380))
+
+- Adjust env dropdown ([#9382](https://github.com/Unleash/unleash/issues/9382))
+
+- Deprecate `envAccordion` colors; update non-legacy components ([#9378](https://github.com/Unleash/unleash/issues/9378))
+
+- Adapt existing tests to new components ([#9396](https://github.com/Unleash/unleash/issues/9396))
+
+- Release template card min height ([#9390](https://github.com/Unleash/unleash/issues/9390))
+
+- New add release plan dialog ([#9389](https://github.com/Unleash/unleash/issues/9389))
+
+- Release plan replacement UI ([#9400](https://github.com/Unleash/unleash/issues/9400))
+
+- Flip UI and backend validation for project env disabling ([#9395](https://github.com/Unleash/unleash/issues/9395))
+
+- Migration for new archive columns on release defintion ([#9412](https://github.com/Unleash/unleash/issues/9412))
+
+- Archive release plan template event ([#9414](https://github.com/Unleash/unleash/issues/9414))
+
+- Remove frontendHeaderRedesign flag ([#9428](https://github.com/Unleash/unleash/issues/9428))
+
+- Remove dataUsageMultiMonthView flag ([#9429](https://github.com/Unleash/unleash/issues/9429))
+
+
+### Refactor
+
+- Rename networkViewEnabled to prometheusAPIAvailable ([#9330](https://github.com/Unleash/unleash/issues/9330))
+
+- Fix deprecation for string truncator ([#9359](https://github.com/Unleash/unleash/issues/9359))
+
+- Makes the drag args optional, defaulting to noops ([#9394](https://github.com/Unleash/unleash/issues/9394))
+
+- New constraints style ([#9363](https://github.com/Unleash/unleash/issues/9363))
+
+- Strategy draggable item is now proj/env agnostic ([#9411](https://github.com/Unleash/unleash/issues/9411))
+
+
+### Testing
+
+- Connection count chart functions ([#9383](https://github.com/Unleash/unleash/issues/9383))
+
+
 ## [6.7.2] - 2025-02-19
 
 ### Bug Fixes

@@ -82,7 +82,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         justifyContent: 'center',
     },
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.palette.background.default,
     '&:before': {
         opacity: '0 !important',
     },
@@ -98,7 +98,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
         padding: theme.spacing(1, 2),
     },
     '&:focus-visible': {
-        background: theme.palette.table.rowHover,
+        background: theme.palette.table.headerHover,
     },
 }));
 
@@ -131,7 +131,7 @@ const DragButton = styled('button')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     color: theme.palette.text.secondary,
     '&:hover, &:focus-visible': {
-        background: theme.palette.table.rowHover,
+        background: theme.palette.table.headerHover,
         outline: 'none',
     },
 }));

@@ -78,11 +78,10 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         justifyContent: 'center',
     },
-    backgroundColor: theme.palette.background.default,
+    backgroundColor: theme.palette.background.paper,
     '&:before': {
         opacity: '0 !important',
     },
-    '&.Mui-expanded': { marginTop: `${theme.spacing(2)} !important` },
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -92,10 +91,6 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     [theme.breakpoints.down(400)]: {
         padding: theme.spacing(1, 2),
-    },
-    '&.Mui-focusVisible': {
-        backgroundColor: theme.palette.background.paper,
-        padding: theme.spacing(0.5, 2, 0.3, 2),
     },
 }));
 

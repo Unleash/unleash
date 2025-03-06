@@ -436,6 +436,8 @@ export const MilestoneCard = ({
                                 titleAccess={`${expanded ? 'Hide' : 'Show'} milestone strategies`}
                             />
                         }
+                        id={`milestone-accordion-summary-${milestone.id}`}
+                        aria-controls={`milestone-accordion-details-${milestone.id}`}
                     >
                         <MilestoneCardName
                             milestone={milestone}

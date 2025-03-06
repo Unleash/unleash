@@ -36,8 +36,6 @@ const DraggableCardContainer = styled('div')(({ theme }) => ({
     marginLeft: `var(--left-offset)`,
     display: 'grid',
     gridTemplateColumns: `var(--drag-column-width) 1fr`,
-    // display: 'flex',
-    // flexFlow: 'row nowrap',
 }));
 
 const StyledMilestoneCard = styled(Card, {

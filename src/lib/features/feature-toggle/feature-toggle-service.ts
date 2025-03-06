@@ -466,8 +466,10 @@ class FeatureToggleService {
     async validateConstraint(input: IConstraint): Promise<IConstraint> {
         const constraint = await constraintSchema.validateAsync(input);
         const { operator } = constraint;
+        // TODO: WORKSPACE HARDCODED
         const contextDefinition = await this.contextFieldStore.get(
             constraint.contextName,
+            1,
         );
 
         if (oneOf(NUM_OPERATORS, operator)) {

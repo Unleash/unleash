@@ -13,8 +13,6 @@ import type { IWorkspace } from '../workspaces-types';
 let app: IUnleashTest;
 let db: ITestDb;
 
-const TEST_USER_ID = 1;
-
 beforeAll(async () => {
     const config: Partial<IUnleashOptions> = {
         experimental: {
@@ -26,8 +24,9 @@ beforeAll(async () => {
             app.use(
                 '/api/admin/workspaces',
                 (req: Request, res: Response, next: NextFunction) => {
+                    // @ts-ignore
                     req.user = {
-                        id: TEST_USER_ID,
+                        id: 1,
                         username: 'test@test.com',
                         permissions: ['ADMIN'],
                     };
@@ -41,18 +40,14 @@ beforeAll(async () => {
     app = await setupAppWithCustomConfig(db.stores, config, db.rawDatabase);
 
     // Create a test user with the same ID we use in the middleware
-    await db.stores.userStore.insert({
+    const user = await db.stores.userStore.insert({
         name: 'Test User',
         username: 'test@test.com',
     });
 
     const adminRole = await db.stores.roleStore.getRoleByName('Admin');
 
-    await db.stores.accessStore.addUserToRole(
-        TEST_USER_ID,
-        adminRole.id,
-        'default',
-    );
+    await db.stores.accessStore.addUserToRole(user.id, adminRole.id, 'default');
 });
 
 afterAll(async () => {
@@ -154,7 +149,7 @@ test('should not delete default workspace', async () => {
 
 test('should validate workspace name', async () => {
     const workspace = {
-        name: 'Invalid Name!@#',
+        name: 'Invalid Name!@# $$$$$!"#!"#!',
         description: 'Invalid workspace name',
     };
 

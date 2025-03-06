@@ -561,7 +561,8 @@ export class InstanceStatsService {
 
     contextFieldCount(): Promise<number> {
         return this.memorize('contextFieldCount', () =>
-            this.contextFieldStore.count(),
+            // TODO: WORKSPACE HARDCODED
+            this.contextFieldStore.count(1),
         );
     }
 

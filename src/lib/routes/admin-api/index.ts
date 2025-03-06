@@ -82,13 +82,34 @@ export class AdminApi extends Controller {
             new PatController(config, services).router,
         );
 
-        this.app.use(
-            '/ui-config',
-            new ConfigController(config, services).router,
-        );
+        // Register routes with the middleware
+        // const contextController = new ContextController(config, services);
+        // this.app.use(
+        //     '/workspaces/:workspaceId/context',
+        //     (req, res, next) => {
+        //         // Forward the workspaceId parameter to the controller's routes
+        //         req.params = {
+        //             ...req.params,
+        //             workspaceId: req.params.workspaceId,
+        //         };
+        //         next();
+        //     },
+        //     contextController.router,
+        // );
+
         this.app.use(
             '/context',
             new ContextController(config, services).router,
+        );
+
+        this.app.use(
+            '/workspaces',
+            new ContextController(config, services).router,
+        );
+
+        this.app.use(
+            '/ui-config',
+            new ConfigController(config, services).router,
         );
         this.app.use(
             '/features-batch',

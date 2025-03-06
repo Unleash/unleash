@@ -44,6 +44,7 @@ import type { WithTransactional } from '../../db/transaction';
 
 interface ContextParam {
     contextField: string;
+    workspaceId?: string;
 }
 
 interface DeleteLegalValueParam extends ContextParam {
@@ -81,8 +82,18 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['Context'],
                     summary: 'Gets configured context fields',
-                    description:
-                        'Returns all configured [Context fields](https://docs.getunleash.io/reference/unleash-context) that have been created.',
+                    description: 'Returns all configured [Context fields]...',
+                    parameters: [
+                        {
+                            in: 'path',
+                            name: 'workspaceId',
+                            schema: {
+                                type: 'string',
+                            },
+                            required: false,
+                            description: 'Optional workspace ID',
+                        },
+                    ],
                     operationId: 'getContextFields',
                     responses: {
                         200: createResponseSchema('contextFieldsSchema'),
@@ -100,6 +111,17 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['Context'],
                     summary: 'Gets context field',
+                    parameters: [
+                        {
+                            in: 'path',
+                            name: 'workspaceId',
+                            schema: {
+                                type: 'string',
+                            },
+                            required: false,
+                            description: 'Optional workspace ID',
+                        },
+                    ],
                     description:
                         'Returns specific [context field](https://docs.getunleash.io/reference/unleash-context) identified by the name in the path',
                     operationId: 'getContextField',
@@ -120,6 +142,17 @@ export class ContextController extends Controller {
                     tags: ['Strategies'],
                     operationId: 'getStrategiesByContextField',
                     summary: 'Get strategies that use a context field',
+                    parameters: [
+                        {
+                            in: 'path',
+                            name: 'workspaceId',
+                            schema: {
+                                type: 'string',
+                            },
+                            required: false,
+                            description: 'Optional workspace ID',
+                        },
+                    ],
                     description:
                         "Retrieves a list of all strategies that use the specified context field. If the context field doesn't exist, returns an empty list of strategies",
                     responses: {
@@ -142,6 +175,17 @@ export class ContextController extends Controller {
                     tags: ['Context'],
                     operationId: 'createContextField',
                     summary: 'Create a context field',
+                    parameters: [
+                        {
+                            in: 'path',
+                            name: 'workspaceId',
+                            schema: {
+                                type: 'string',
+                            },
+                            required: false,
+                            description: 'Optional workspace ID',
+                        },
+                    ],
                     description:
                         'Endpoint that allows creation of [custom context fields](https://docs.getunleash.io/reference/unleash-context#custom-context-fields)',
                     requestBody: createRequestSchema(
@@ -166,6 +210,17 @@ export class ContextController extends Controller {
                     tags: ['Context'],
                     summary: 'Update an existing context field',
                     description: `Endpoint that allows updating a custom context field. Used to toggle stickiness and add/remove legal values for this context field`,
+                    parameters: [
+                        {
+                            in: 'path',
+                            name: 'workspaceId',
+                            schema: {
+                                type: 'string',
+                            },
+                            required: false,
+                            description: 'Optional workspace ID',
+                        },
+                    ],
                     operationId: 'updateContextField',
                     requestBody: createRequestSchema(
                         'updateContextFieldSchema',
@@ -187,6 +242,17 @@ export class ContextController extends Controller {
                     tags: ['Context'],
                     summary: 'Add or update legal value for the context field',
                     description: `Endpoint that allows adding or updating a single custom context field legal value. If the legal value already exists, it will be updated with the new description`,
+                    parameters: [
+                        {
+                            in: 'path',
+                            name: 'workspaceId',
+                            schema: {
+                                type: 'string',
+                            },
+                            required: false,
+                            description: 'Optional workspace ID',
+                        },
+                    ],
                     operationId: 'updateContextFieldLegalValue',
                     requestBody: createRequestSchema('legalValueSchema'),
                     responses: {
@@ -206,6 +272,17 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['Context'],
                     summary: 'Delete legal value for the context field',
+                    parameters: [
+                        {
+                            in: 'path',
+                            name: 'workspaceId',
+                            schema: {
+                                type: 'string',
+                            },
+                            required: false,
+                            description: 'Optional workspace ID',
+                        },
+                    ],
                     description: `Removes the specified custom context field legal value. Does not validate that the legal value is not in use and does not remove usage from constraints that use it.`,
                     operationId: 'deleteContextFieldLegalValue',
                     responses: {
@@ -219,12 +296,24 @@ export class ContextController extends Controller {
             method: 'delete',
             path: '/:contextField',
             handler: this.deleteContextField,
+
             acceptAnyContentType: true,
             permission: DELETE_CONTEXT_FIELD,
             middleware: [
                 openApiService.validPath({
                     tags: ['Context'],
                     summary: 'Delete an existing context field',
+                    parameters: [
+                        {
+                            in: 'path',
+                            name: 'workspaceId',
+                            schema: {
+                                type: 'string',
+                            },
+                            required: false,
+                            description: 'Optional workspace ID',
+                        },
+                    ],
                     description:
                         'Endpoint that allows deletion of a custom context field. Does not validate that context field is not in use, but since context field configuration is stored in a json blob for the strategy, existing strategies are safe.',
                     operationId: 'deleteContextField',
@@ -244,6 +333,17 @@ export class ContextController extends Controller {
                 openApiService.validPath({
                     tags: ['Context'],
                     summary: 'Validate a context field',
+                    parameters: [
+                        {
+                            in: 'path',
+                            name: 'workspaceId',
+                            schema: {
+                                type: 'string',
+                            },
+                            required: false,
+                            description: 'Optional workspace ID',
+                        },
+                    ],
                     description:
                         'Check whether the provided data can be used to create a context field. If the data is not valid, ...?',
                     operationId: 'validate',
@@ -256,13 +356,22 @@ export class ContextController extends Controller {
         });
     }
 
+    private getWorkspaceId(req: Request<{ workspaceId?: string }>): number {
+        const workspaceId = req.params.workspaceId;
+        return workspaceId ? Number(workspaceId) : 1;
+    }
+
     async getContextFields(
-        req: Request,
+        req: Request<{ workspaceId?: string }>,
         res: Response<ContextFieldsSchema>,
     ): Promise<void> {
+        const workspaceId = this.getWorkspaceId(req);
+        console.log('HIT', workspaceId);
         res.status(200)
             .json(
-                serializeDates(await this.transactionalContextService.getAll()),
+                serializeDates(
+                    await this.transactionalContextService.getAll(workspaceId),
+                ),
             )
             .end();
     }
@@ -273,8 +382,12 @@ export class ContextController extends Controller {
     ): Promise<void> {
         try {
             const name = req.params.contextField;
+            const workspaceId = this.getWorkspaceId(req);
             const contextField =
-                await this.transactionalContextService.getContextField(name);
+                await this.transactionalContextService.getContextField(
+                    name,
+                    workspaceId,
+                );
             this.openApiService.respondWithValidation(
                 200,
                 res,
@@ -287,13 +400,19 @@ export class ContextController extends Controller {
     }
 
     async createContextField(
-        req: IAuthRequest<void, void, CreateContextFieldSchema>,
+        req: IAuthRequest<
+            { workspaceId?: string },
+            void,
+            CreateContextFieldSchema
+        >,
         res: Response<ContextFieldSchema>,
     ): Promise<void> {
         const value = req.body;
+        const workspaceId = this.getWorkspaceId(req);
 
         const result = await this.transactionalContextService.transactional(
-            (service) => service.createContextField(value, req.audit),
+            (service) =>
+                service.createContextField(value, req.audit, workspaceId),
         );
 
         this.openApiService.respondWithValidation(
@@ -311,9 +430,14 @@ export class ContextController extends Controller {
     ): Promise<void> {
         const name = req.params.contextField;
         const contextField = req.body;
+        const workspaceId = this.getWorkspaceId(req);
 
         await this.transactionalContextService.transactional((service) =>
-            service.updateContextField({ ...contextField, name }, req.audit),
+            service.updateContextField(
+                { ...contextField, name },
+                req.audit,
+                workspaceId,
+            ),
         );
         res.status(200).end();
     }
@@ -324,9 +448,14 @@ export class ContextController extends Controller {
     ): Promise<void> {
         const name = req.params.contextField;
         const legalValue = req.body;
+        const workspaceId = this.getWorkspaceId(req);
 
         await this.transactionalContextService.transactional((service) =>
-            service.updateLegalValue({ name, legalValue }, req.audit),
+            service.updateLegalValue(
+                { name, legalValue },
+                req.audit,
+                workspaceId,
+            ),
         );
         res.status(200).end();
     }
@@ -337,9 +466,14 @@ export class ContextController extends Controller {
     ): Promise<void> {
         const name = req.params.contextField;
         const legalValue = req.params.legalValue;
+        const workspaceId = this.getWorkspaceId(req);
 
         await this.transactionalContextService.transactional((service) =>
-            service.deleteLegalValue({ name, legalValue }, req.audit),
+            service.deleteLegalValue(
+                { name, legalValue },
+                req.audit,
+                workspaceId,
+            ),
         );
         res.status(200).end();
     }
@@ -349,33 +483,38 @@ export class ContextController extends Controller {
         res: Response,
     ): Promise<void> {
         const name = req.params.contextField;
+        const workspaceId = this.getWorkspaceId(req);
 
         await this.transactionalContextService.transactional((service) =>
-            service.deleteContextField(name, req.audit),
+            service.deleteContextField(name, req.audit, workspaceId),
         );
         res.status(200).end();
     }
 
     async validate(
-        req: Request<void, void, NameSchema>,
+        req: Request<{ workspaceId?: string }, void, NameSchema>,
         res: Response,
     ): Promise<void> {
         const { name } = req.body;
+        const workspaceId = this.getWorkspaceId(req);
 
-        await this.transactionalContextService.validateName(name);
+        await this.transactionalContextService.validateName(name, workspaceId);
         res.status(200).end();
     }
 
     async getStrategiesByContextField(
-        req: IAuthRequest<{ contextField: string }>,
+        req: IAuthRequest<{ contextField: string; workspaceId?: string }>,
         res: Response<ContextFieldStrategiesSchema>,
     ): Promise<void> {
         const { contextField } = req.params;
         const { user } = req;
+        const workspaceId = this.getWorkspaceId(req);
+
         const contextFields =
             await this.transactionalContextService.getStrategiesByContextField(
                 contextField,
                 extractUserIdFromUser(user),
+                workspaceId,
             );
 
         this.openApiService.respondWithValidation(

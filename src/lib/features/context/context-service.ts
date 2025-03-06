@@ -21,11 +21,11 @@ import {
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type EventService from '../events/event-service';
 import { contextSchema, legalValueSchema } from '../../services/context-schema';
-import { NameExistsError } from '../../error';
+import { NameExistsError, NotFoundError } from '../../error';
 import { nameSchema } from '../../schema/feature-schema';
 import type { LegalValueSchema } from '../../openapi';
 
-class ContextService {
+export class ContextService {
     private eventService: EventService;
 
     private contextFieldStore: IContextFieldStore;
@@ -58,17 +58,29 @@ class ContextService {
         this.logger = getLogger('services/context-service.js');
     }
 
-    async getAll(): Promise<IContextField[]> {
-        return this.contextFieldStore.getAll();
+    async getAll(workspaceId: number): Promise<IContextField[]> {
+        return this.contextFieldStore.getAll(workspaceId);
     }
 
-    async getContextField(name: string): Promise<IContextField> {
-        return this.contextFieldStore.get(name);
+    async getContextField(
+        name: string,
+        workspaceId: number,
+    ): Promise<IContextField> {
+        const contextField = await this.contextFieldStore.get(
+            name,
+            workspaceId,
+        );
+        if (!contextField) {
+            throw new NotFoundError('Could not find context field');
+        }
+        return contextField;
     }
 
+    // TODO: Feature strategy store needs to be updated to support workspaceId
     async getStrategiesByContextField(
         name: string,
         userId: number,
+        workspaceId: number,
     ): Promise<ContextFieldStrategiesSchema> {
         const strategies =
             await this.featureStrategiesStore.getStrategiesByContextField(name);
@@ -100,19 +112,21 @@ class ContextService {
     async createContextField(
         value: IContextFieldDto,
         auditUser: IAuditUser,
+        workspaceId: number,
     ): Promise<IContextField> {
-        // validations
-        await this.validateUniqueName(value);
+        await this.validateUniqueName(value, workspaceId);
         const contextField = await contextSchema.validateAsync(value);
 
-        // creations
-        const createdField = await this.contextFieldStore.create(value);
+        const createdField = await this.contextFieldStore.create(
+            value,
+            workspaceId,
+        );
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_CREATED,
             createdBy: auditUser.username,
             createdByUserId: auditUser.id,
             ip: auditUser.ip,
-            data: contextField,
+            data: { ...contextField, workspaceId },
         });
 
         return createdField;
@@ -121,13 +135,15 @@ class ContextService {
     async updateContextField(
         updatedContextField: IContextFieldDto,
         auditUser: IAuditUser,
+        workspaceId: number,
     ): Promise<void> {
-        const contextField = await this.contextFieldStore.get(
+        const contextField = await this.getContextField(
             updatedContextField.name,
+            workspaceId,
         );
         const value = await contextSchema.validateAsync(updatedContextField);
 
-        await this.contextFieldStore.update(value);
+        await this.contextFieldStore.update(value, workspaceId);
 
         const { createdAt, sortOrder, ...previousContextField } = contextField;
         await this.eventService.storeEvent({
@@ -136,16 +152,18 @@ class ContextService {
             createdByUserId: auditUser.id,
             ip: auditUser.ip,
             preData: previousContextField,
-            data: value,
+            data: { ...value, workspaceId },
         });
     }
 
     async updateLegalValue(
         contextFieldLegalValue: { name: string; legalValue: LegalValueSchema },
         auditUser: IAuditUser,
+        workspaceId: number,
     ): Promise<void> {
-        const contextField = await this.contextFieldStore.get(
+        const contextField = await this.getContextField(
             contextFieldLegalValue.name,
+            workspaceId,
         );
         const validatedLegalValue = await legalValueSchema.validateAsync(
             contextFieldLegalValue.legalValue,
@@ -167,7 +185,7 @@ class ContextService {
 
         const newContextField = { ...contextField, legalValues };
 
-        await this.contextFieldStore.update(newContextField);
+        await this.contextFieldStore.update(newContextField, workspaceId);
 
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
@@ -175,16 +193,18 @@ class ContextService {
             createdByUserId: auditUser.id,
             ip: auditUser.ip,
             preData: contextField,
-            data: newContextField,
+            data: { ...newContextField, workspaceId },
         });
     }
 
     async deleteLegalValue(
         contextFieldLegalValue: { name: string; legalValue: string },
         auditUser: IAuditUser,
+        workspaceId: number,
     ): Promise<void> {
-        const contextField = await this.contextFieldStore.get(
+        const contextField = await this.getContextField(
             contextFieldLegalValue.name,
+            workspaceId,
         );
 
         const newContextField = {
@@ -195,7 +215,7 @@ class ContextService {
             ),
         };
 
-        await this.contextFieldStore.update(newContextField);
+        await this.contextFieldStore.update(newContextField, workspaceId);
 
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_UPDATED,
@@ -203,33 +223,34 @@ class ContextService {
             createdByUserId: auditUser.id,
             ip: auditUser.ip,
             preData: contextField,
-            data: newContextField,
+            data: { ...newContextField, workspaceId },
         });
     }
 
     async deleteContextField(
         name: string,
         auditUser: IAuditUser,
+        workspaceId: number,
     ): Promise<void> {
-        const contextField = await this.contextFieldStore.get(name);
+        const contextField = await this.getContextField(name, workspaceId);
 
-        // delete
-        await this.contextFieldStore.delete(name);
+        await this.contextFieldStore.delete(name, workspaceId);
         await this.eventService.storeEvent({
             type: CONTEXT_FIELD_DELETED,
             createdBy: auditUser.username,
             createdByUserId: auditUser.id,
             ip: auditUser.ip,
-            preData: contextField,
+            preData: { ...contextField, workspaceId },
         });
     }
 
-    async validateUniqueName({
-        name,
-    }: Pick<IContextFieldDto, 'name'>): Promise<void> {
+    async validateUniqueName(
+        { name }: Pick<IContextFieldDto, 'name'>,
+        workspaceId: number,
+    ): Promise<void> {
         let msg: string | undefined;
         try {
-            await this.contextFieldStore.get(name);
+            await this.contextFieldStore.get(name, workspaceId);
             msg = 'A context field with that name already exist';
         } catch (error) {
             // No conflict, everything ok!
@@ -240,10 +261,11 @@ class ContextService {
         throw new NameExistsError(msg);
     }
 
-    async validateName(name: string): Promise<void> {
+    async validateName(name: string, workspaceId: number): Promise<void> {
         await nameSchema.validateAsync({ name });
-        await this.validateUniqueName({ name });
+        await this.validateUniqueName({ name }, workspaceId);
     }
 }
+
 export default ContextService;
 module.exports = ContextService;

@@ -19,8 +19,16 @@ export interface IContextField extends IContextFieldDto {
     createdAt: Date;
 }
 
-export interface IContextFieldStore extends Store<IContextField, string> {
-    create(data: IContextFieldDto): Promise<IContextField>;
-    update(data: IContextFieldDto): Promise<IContextField>;
-    count(): Promise<number>;
+export interface IContextFieldStore
+    extends Omit<
+        Store<IContextField, string>,
+        'get' | 'getAll' | 'exists' | 'delete'
+    > {
+    get(name: string, workspaceId: number): Promise<IContextField>;
+    getAll(workspaceId: number): Promise<IContextField[]>;
+    exists(name: string, workspaceId: number): Promise<boolean>;
+    delete(name: string, workspaceId: number): Promise<void>;
+    create(data: IContextFieldDto, workspaceId: number): Promise<IContextField>;
+    update(data: IContextFieldDto, workspaceId: number): Promise<IContextField>;
+    count(workspaceId: number): Promise<number>;
 }

@@ -468,6 +468,8 @@ export default class ExportImportService
                         stickiness: contextField.stickiness,
                     },
                     auditUser,
+                    // TODO: WORKSPACE HARDCODED
+                    1,
                 ),
             ),
         );
@@ -783,7 +785,8 @@ export default class ExportImportService
     };
 
     private async getUnsupportedContextFields(dto: ImportTogglesSchema) {
-        const availableContextFields = await this.contextService.getAll();
+        // TODO: WORKSPACE HARDCODED
+        const availableContextFields = await this.contextService.getAll(1);
 
         return dto.data.contextFields?.filter(
             (contextField) =>
@@ -832,7 +835,8 @@ export default class ExportImportService
     }
 
     private async getNewContextFields(dto: ImportTogglesSchema) {
-        const availableContextFields = await this.contextService.getAll();
+        // TODO: WORKSPACE HARDCODED
+        const availableContextFields = await this.contextService.getAll(1);
 
         return dto.data.contextFields?.filter(
             (contextField) =>
@@ -883,7 +887,8 @@ export default class ExportImportService
                 query.environment,
             ),
             this.segmentReadModel.getAllFeatureStrategySegments(),
-            this.contextFieldStore.getAll(),
+            // TODO: WORKSPACE HARDCODED
+            this.contextFieldStore.getAll(1),
             this.featureTagStore.getAllByFeatures(featureNames),
             this.segmentReadModel.getAll(),
             this.tagTypeStore.getAll(),

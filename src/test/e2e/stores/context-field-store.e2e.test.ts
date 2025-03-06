@@ -45,7 +45,7 @@ test('creating an arbitrary context field should return the created context fiel
         fc
             .asyncProperty(contextFieldDto(), async (input) => {
                 const { createdAt, ...storedData } =
-                    await stores.contextFieldStore.create(input);
+                    await stores.contextFieldStore.create(input, 1);
 
                 Object.entries(input).forEach(([key, value]) => {
                     expect(storedData[key]).toStrictEqual(value);
@@ -62,13 +62,16 @@ test('updating a context field should update the specified fields and leave ever
                 contextFieldDto(),
                 contextFieldDto(),
                 async (original, { name, ...updateData }) => {
-                    await stores.contextFieldStore.create(original);
+                    await stores.contextFieldStore.create(original, 1);
 
                     const { createdAt, ...updatedData } =
-                        await stores.contextFieldStore.update({
-                            name: original.name,
-                            ...updateData,
-                        });
+                        await stores.contextFieldStore.update(
+                            {
+                                name: original.name,
+                                ...updateData,
+                            },
+                            1,
+                        );
 
                     const allKeys = [
                         'sortOrder',

@@ -46,7 +46,8 @@ export class ImportPermissionsService {
     private async getNewContextFields(
         dto: ImportTogglesSchema,
     ): Promise<ContextFieldSchema[]> {
-        const availableContextFields = await this.contextService.getAll();
+        // TODO: WORKSPACE HARDCODED
+        const availableContextFields = await this.contextService.getAll(1);
 
         return dto.data.contextFields?.filter(
             (contextField) =>

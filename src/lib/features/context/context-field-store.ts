@@ -16,6 +16,7 @@ const COLUMNS = [
     'sort_order',
     'legal_values',
     'created_at',
+    'workspace_id',
 ];
 const T = {
     contextFields: 'context_fields',
@@ -31,6 +32,7 @@ type ContextFieldDB = {
     used_in_features?: number;
     legal_values: ILegalValue[];
     created_at: Date;
+    workspace_id: number;
 };
 
 const mapRow = (row: ContextFieldDB): IContextField => ({
@@ -54,6 +56,7 @@ interface ICreateContextField {
     stickiness: boolean;
     sort_order: number;
     legal_values?: string;
+    workspace_id: number;
     updated_at: Date;
 }
 
@@ -76,17 +79,19 @@ class ContextFieldStore implements IContextFieldStore {
 
     fieldToRow(
         data: IContextFieldDto,
+        workspaceId: number,
     ): Omit<ICreateContextField, 'updated_at'> {
         return {
             name: data.name,
-            description: data.description,
-            stickiness: data.stickiness,
-            sort_order: data.sortOrder, // eslint-disable-line
+            description: data.description || '',
+            stickiness: data.stickiness || false,
+            sort_order: data.sortOrder || 0,
             legal_values: JSON.stringify(data.legalValues || []),
+            workspace_id: workspaceId,
         };
     }
 
-    async getAll(): Promise<IContextField[]> {
+    async getAll(workspaceId: number): Promise<IContextField[]> {
         const rows = await this.db
             .select(
                 this.prefixColumns(),
@@ -100,6 +105,7 @@ class ContextFieldStore implements IContextFieldStore {
                 `${T.featureStrategies}.feature_name AS used_in_features`,
             )
             .from(T.contextFields)
+            .where(`${T.contextFields}.workspace_id`, '=', workspaceId)
             .joinRaw(
                 `LEFT JOIN ${T.featureStrategies} ON EXISTS (
                         SELECT 1
@@ -116,14 +122,14 @@ class ContextFieldStore implements IContextFieldStore {
         return rows.map(mapRow);
     }
 
-    async get(key: string): Promise<IContextField> {
-        const row = await this.db
-            .first(COLUMNS)
-            .from(T.contextFields)
-            .where({ name: key });
+    async get(key: string, workspaceId: number): Promise<IContextField> {
+        const row = await this.db.first(COLUMNS).from(T.contextFields).where({
+            name: key,
+            workspace_id: workspaceId,
+        });
         if (!row) {
             throw new NotFoundError(
-                `Could not find Context field with name ${key}`,
+                `Could not find Context field with name ${key} in workspace ${workspaceId}`,
             );
         }
         return mapRow(row);
@@ -135,39 +141,54 @@ class ContextFieldStore implements IContextFieldStore {
 
     destroy(): void {}
 
-    async exists(key: string): Promise<boolean> {
+    async exists(key: string, workspaceId: number): Promise<boolean> {
         const result = await this.db.raw(
-            `SELECT EXISTS (SELECT 1 FROM ${T.contextFields} WHERE name = ?) AS present`,
-            [key],
+            `SELECT EXISTS (SELECT 1 FROM ${T.contextFields} WHERE name = ? AND workspace_id = ?) AS present`,
+            [key, workspaceId],
         );
         const { present } = result.rows[0];
         return present;
     }
 
     // TODO: write tests for the changes you made here?
-    async create(contextField: IContextFieldDto): Promise<IContextField> {
+    async create(
+        contextField: IContextFieldDto,
+        workspaceId: number,
+    ): Promise<IContextField> {
         const [row] = await this.db(T.contextFields)
-            .insert(this.fieldToRow(contextField))
+            .insert(this.fieldToRow(contextField, workspaceId))
             .returning('*');
 
         return mapRow(row);
     }
 
-    async update(data: IContextFieldDto): Promise<IContextField> {
+    async update(
+        data: IContextFieldDto,
+        workspaceId: number,
+    ): Promise<IContextField> {
         const [row] = await this.db(T.contextFields)
-            .where({ name: data.name })
-            .update(this.fieldToRow(data))
+            .where({
+                name: data.name,
+                workspace_id: workspaceId,
+            })
+            .update(this.fieldToRow(data, workspaceId))
             .returning('*');
 
         return mapRow(row);
     }
 
-    async delete(name: string): Promise<void> {
-        return this.db(T.contextFields).where({ name }).del();
+    async delete(name: string, workspaceId: number): Promise<void> {
+        await this.db(T.contextFields)
+            .where({
+                name,
+                workspace_id: workspaceId,
+            })
+            .del();
     }
 
-    async count(): Promise<number> {
+    async count(workspaceId: number): Promise<number> {
         return this.db(T.contextFields)
+            .where({ workspace_id: workspaceId })
             .count('*')
             .then((res) => Number(res[0].count));
     }

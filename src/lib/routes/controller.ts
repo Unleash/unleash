@@ -94,7 +94,7 @@ export default class Controller {
         this.ownLogger = config.getLogger(
             `controller/${this.constructor.name}`,
         );
-        this.app = Router();
+        this.app = Router({ mergeParams: true });
         this.config = config;
     }
 

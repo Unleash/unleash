@@ -32,6 +32,7 @@ import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReader
 const leftPadding = 3;
 
 const DraggableCardContainer = styled('div')(({ theme }) => ({
+    marginTop: theme.spacing(2),
     '--drag-column-width': `var(--form-content-padding, ${theme.spacing(4)})`,
     '--left-offset': `calc(var(--drag-column-width) * -1)`,
     marginLeft: `var(--left-offset)`,
@@ -184,13 +185,8 @@ export const MilestoneCard = ({
     );
 
     const dragHandle = (
-        <DragButton
-            type='button'
-            onClick={() => {
-                console.log("draggin'");
-            }}
-        >
-            <DraggableContent ref={dragHandleRef}>
+        <DragButton type='button'>
+            <DraggableContent>
                 <DragIndicator aria-hidden />
                 <ScreenReaderOnly>Drag to reorder</ScreenReaderOnly>
             </DraggableContent>

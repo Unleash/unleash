@@ -102,7 +102,8 @@ const StyledFormContent = styled('div', {
               : theme.spacing(6);
 
         const paddingLgDown = disablePadding ? 0 : theme.spacing(4);
-        const padding500Down = disablePadding ? 0 : theme.spacing(4, 2);
+        const padding500DownInline = disablePadding ? 0 : theme.spacing(2);
+        const padding500DownBlock = disablePadding ? 0 : theme.spacing(4);
 
         return {
             '--form-content-padding': padding,
@@ -119,8 +120,9 @@ const StyledFormContent = styled('div', {
                 width: '100%',
             },
             [theme.breakpoints.down(500)]: {
-                padding: padding500Down,
-                '--form-content-padding': padding500Down,
+                paddingInline: padding500DownInline,
+                paddingBlock: padding500DownBlock,
+                '--form-content-padding': padding500DownInline,
             },
         };
     },

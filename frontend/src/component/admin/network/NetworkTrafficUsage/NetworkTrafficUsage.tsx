@@ -57,6 +57,7 @@ const NetworkTrafficUsage: FC = () => {
 
     const showOverageCalculations =
         chartDataSelection.grouping === 'daily' &&
+        chartDataSelection.month === currentMonth &&
         includedTraffic > 0 &&
         usageTotal - includedTraffic > 0 &&
         estimateTrafficDataCost;

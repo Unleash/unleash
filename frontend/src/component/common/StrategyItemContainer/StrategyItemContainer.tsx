@@ -49,7 +49,7 @@ const StyledHeaderContainer = styled('hgroup')(({ theme }) => ({
     flexFlow: 'row',
     columnGap: '1ch',
     fontSize: theme.typography.body1.fontSize,
-    '*:first-child': {
+    '.strategy-name': {
         fontWeight: 'bold',
     },
 }));
@@ -118,7 +118,7 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                         <StyledHeaderContainer>
                             {strategy.title ? (
                                 <>
-                                    <p>
+                                    <p className='strategy-name'>
                                         {formatStrategyName(
                                             String(strategy.name),
                                         )}
@@ -132,6 +132,7 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                                 </>
                             ) : (
                                 <Typography
+                                    className='strategy-name'
                                     component={`h${strategyHeaderLevel}`}
                                 >
                                     {formatStrategyName(String(strategy.name))}

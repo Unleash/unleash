@@ -10,6 +10,7 @@ type StrategyItemProps = {
     strategy: IFeatureStrategy;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
+    strategyHeaderLevel?: 1 | 2 | 3 | 4 | 5 | 6;
 };
 
 export const StrategyItem: FC<StrategyItemProps> = ({
@@ -17,9 +18,11 @@ export const StrategyItem: FC<StrategyItemProps> = ({
     onDragStart,
     onDragEnd,
     headerItemsRight,
+    strategyHeaderLevel,
 }) => {
     return (
         <NewStrategyItemContainer
+            strategyHeaderLevel={strategyHeaderLevel}
             strategy={strategy}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}

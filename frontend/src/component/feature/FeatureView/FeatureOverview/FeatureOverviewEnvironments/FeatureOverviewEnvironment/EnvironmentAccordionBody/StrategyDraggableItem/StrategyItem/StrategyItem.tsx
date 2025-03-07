@@ -6,7 +6,7 @@ import { Box } from '@mui/material';
 import { StrategyItemContainer as NewStrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 
 type StrategyItemProps = {
-    headerItemsRight: ReactNode;
+    headerItemsRight?: ReactNode;
     strategy: IFeatureStrategy;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;

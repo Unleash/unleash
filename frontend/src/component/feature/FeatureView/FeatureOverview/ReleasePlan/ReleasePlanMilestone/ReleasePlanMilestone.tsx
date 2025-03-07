@@ -6,14 +6,17 @@ import {
     styled,
 } from '@mui/material';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ReleasePlanMilestoneStrategy } from './ReleasePlanMilestoneStrategy';
-import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import {
     ReleasePlanMilestoneStatus,
     type MilestoneStatus,
 } from './ReleasePlanMilestoneStatus';
 import { useState } from 'react';
+import {
+    StyledContentList,
+    StyledListItem,
+} from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status',
@@ -54,6 +57,7 @@ const StyledSecondaryLabel = styled('span')(({ theme }) => ({
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
     borderBottomRightRadius: theme.shape.borderRadiusLarge,
+    padding: 0,
 }));
 
 interface IReleasePlanMilestoneProps {
@@ -114,15 +118,23 @@ export const ReleasePlanMilestone = ({
                 </StyledSecondaryLabel>
             </StyledAccordionSummary>
             <StyledAccordionDetails>
-                {milestone.strategies.map((strategy, index) => (
-                    <div key={strategy.id}>
-                        <ConditionallyRender
-                            condition={index > 0}
-                            show={<StrategySeparator text='OR' />}
-                        />
-                        <ReleasePlanMilestoneStrategy strategy={strategy} />
-                    </div>
-                ))}
+                <StyledContentList>
+                    {milestone.strategies.map((strategy, index) => (
+                        <StyledListItem key={strategy.id}>
+                            {index > 0 ? <StrategySeparator /> : null}
+
+                            <StrategyItem
+                                strategy={{
+                                    ...strategy,
+                                    name:
+                                        strategy.name ||
+                                        strategy.strategyName ||
+                                        '',
+                                }}
+                            />
+                        </StyledListItem>
+                    ))}
+                </StyledContentList>
             </StyledAccordionDetails>
         </StyledAccordion>
     );

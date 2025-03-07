@@ -52,7 +52,7 @@ export const StyledContentList = styled('ol')(({ theme }) => ({
     },
     '& > li:has(> ol)': {
         // nested lists add their own padding to their list items, so we don't want to double it up.
-        paddingTop: 0,
+        paddingBlock: 0,
     },
 }));
 

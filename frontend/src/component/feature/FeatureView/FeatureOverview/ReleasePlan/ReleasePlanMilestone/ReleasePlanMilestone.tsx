@@ -123,6 +123,7 @@ export const ReleasePlanMilestone = ({
                             {index > 0 ? <StrategySeparator /> : null}
 
                             <StrategyItem
+                                strategyHeaderLevel={4}
                                 strategy={{
                                     ...strategy,
                                     name:

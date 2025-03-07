@@ -42,7 +42,7 @@ test('should render strategy name, custom title and description', async () => {
         />,
     );
 
-    expect(screen.getByText('strategy name')).toBeInTheDocument();
+    expect(screen.getByText('strategy name:')).toBeInTheDocument();
     expect(screen.getByText('description')).toBeInTheDocument();
     await screen.findByText('custom title'); // behind async flag
 });

@@ -22,6 +22,7 @@ const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status',
 })<{ status: MilestoneStatus }>(({ theme, status }) => ({
     border: `1px solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
+    overflow: 'hidden',
     boxShadow: 'none',
     margin: 0,
     backgroundColor: theme.palette.background.paper,

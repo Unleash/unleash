@@ -72,7 +72,7 @@ export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 const flags: IFlags = {
     accessLogs: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ACCESS_LOGS,
-        true,
+        false,
     ),
     anonymiseEventLog: false,
     enableLicense: false,

@@ -1,16 +1,16 @@
 import type React from 'react';
 import type { DragEventHandler, FC, ReactNode } from 'react';
 import DragIndicator from '@mui/icons-material/DragIndicator';
-import { Box, IconButton, styled } from '@mui/material';
+import { Box, IconButton, Typography, styled } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { formatStrategyName } from 'utils/strategyNames';
-import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { PlaygroundStrategySchema } from 'openapi';
 import { Badge } from '../Badge/Badge';
 import { Link } from 'react-router-dom';
 
 type StrategyItemContainerProps = {
+    strategyHeaderLevel?: 1 | 2 | 3 | 4 | 5 | 6;
     strategy: IFeatureStrategy | PlaygroundStrategySchema;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
@@ -44,15 +44,17 @@ const StyledCustomTitle = styled('div')(({ theme }) => ({
         display: 'block',
     },
 }));
-const StyledHeaderContainer = styled('div')({
-    flexDirection: 'column',
-    justifyContent: 'center',
-    verticalAlign: 'middle',
-});
+const StyledHeaderContainer = styled('hgroup')(({ theme }) => ({
+    display: 'flex',
+    flexFlow: 'row',
+    columnGap: '1ch',
+    fontSize: theme.typography.body1.fontSize,
+    '*:first-child': {
+        fontWeight: 'bold',
+    },
+}));
 
-const NewStyledContainer = styled(Box, {
-    shouldForwardProp: (prop) => prop !== 'disabled',
-})({
+const StyledContainer = styled('article')({
     background: 'inherit',
 });
 
@@ -64,7 +66,6 @@ const NewStyledHeader = styled('div', {
         display: 'flex',
         gap: theme.spacing(1),
         alignItems: 'center',
-        fontWeight: theme.typography.fontWeightMedium,
         paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
         color: disabled
             ? theme.palette.text.secondary
@@ -77,18 +78,19 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
     onDragStart,
     onDragEnd,
     headerItemsRight,
+    strategyHeaderLevel = 3,
     children,
     style = {},
     description,
 }) => {
     const StrategyHeaderLink: React.FC<{ children?: React.ReactNode }> =
-        'links' in strategy
+        'links' in strategy // todo: revisit this when we get to playground, related to flag `flagOverviewRedesign`
             ? ({ children }) => <Link to={strategy.links.edit}>{children}</Link>
             : ({ children }) => <> {children} </>;
 
     return (
         <Box sx={{ position: 'relative' }}>
-            <NewStyledContainer style={style}>
+            <StyledContainer style={style}>
                 <NewStyledHeader
                     draggable={Boolean(onDragStart)}
                     disabled={Boolean(strategy?.disabled)}
@@ -112,33 +114,41 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                             </DragIcon>
                         )}
                     />
-                    <StyledHeaderContainer>
-                        <StrategyHeaderLink>
-                            <StringTruncator
-                                maxWidth='400'
-                                maxLength={15}
-                                text={formatStrategyName(String(strategy.name))}
-                            />
-                            <ConditionallyRender
-                                condition={Boolean(strategy.title)}
-                                show={
-                                    <StyledCustomTitle>
+                    <StrategyHeaderLink>
+                        <StyledHeaderContainer>
+                            {strategy.title ? (
+                                <>
+                                    <p>
+                                        {formatStrategyName(
+                                            String(strategy.name),
+                                        )}
+                                        :
+                                    </p>
+                                    <Typography
+                                        component={`h${strategyHeaderLevel}`}
+                                    >
                                         {formatStrategyName(
                                             String(strategy.title),
                                         )}
-                                    </StyledCustomTitle>
+                                    </Typography>
+                                </>
+                            ) : (
+                                <Typography
+                                    component={`h${strategyHeaderLevel}`}
+                                >
+                                    {formatStrategyName(String(strategy.name))}
+                                </Typography>
+                            )}
+                            <ConditionallyRender
+                                condition={Boolean(description)}
+                                show={
+                                    <StyledDescription>
+                                        {description}
+                                    </StyledDescription>
                                 }
                             />
-                        </StrategyHeaderLink>
-                        <ConditionallyRender
-                            condition={Boolean(description)}
-                            show={
-                                <StyledDescription>
-                                    {description}
-                                </StyledDescription>
-                            }
-                        />
-                    </StyledHeaderContainer>
+                        </StyledHeaderContainer>
+                    </StrategyHeaderLink>
 
                     <ConditionallyRender
                         condition={Boolean(strategy?.disabled)}
@@ -160,7 +170,7 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                     </Box>
                 </NewStyledHeader>
                 <Box sx={{ p: 2, pt: 0 }}>{children}</Box>
-            </NewStyledContainer>
+            </StyledContainer>
         </Box>
     );
 };

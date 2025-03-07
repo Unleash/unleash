@@ -56,8 +56,6 @@ const StyledSecondaryLabel = styled('span')(({ theme }) => ({
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    borderBottomLeftRadius: theme.shape.borderRadiusLarge,
-    borderBottomRightRadius: theme.shape.borderRadiusLarge,
     padding: 0,
 }));
 

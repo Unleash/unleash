@@ -127,9 +127,7 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                                     <Typography
                                         component={`h${strategyHeaderLevel}`}
                                     >
-                                        {formatStrategyName(
-                                            String(strategy.title),
-                                        )}
+                                        {strategy.title}
                                     </Typography>
                                 </>
                             ) : (

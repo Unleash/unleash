@@ -50,6 +50,10 @@ export const StyledContentList = styled('ol')(({ theme }) => ({
         // within other lists.
         paddingTop: theme.spacing(1),
     },
+    '& > li:has(> ol)': {
+        // nested lists add their own padding to their list items, so we don't want to double it up.
+        paddingTop: 0,
+    },
 }));
 
 export const StyledListItem = styled('li', {

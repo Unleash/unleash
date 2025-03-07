@@ -38,6 +38,22 @@ export const MilestoneList = ({
             }
 
             if (dragIndex !== dropIndex) {
+                // todo! See if there's a way to make this snippet to stabilize dragging before removing flag `flagOverviewRedesign`
+                // We don't have a reference to `ref` or `event` here, but maybe we can make it work? Somehow?
+
+                // const { top, bottom } = ref.current.getBoundingClientRect();
+                // const overTargetTop = event.clientY - top < dragItem.height;
+                // const overTargetBottom =
+                //     bottom - event.clientY < dragItem.height;
+                // const draggingUp = dragItem.index > targetIndex;
+
+                // // prevent oscillating by only reordering if there is sufficient space
+                // if (
+                //     (overTargetTop && draggingUp) ||
+                //     (overTargetBottom && !draggingUp)
+                // ) {
+                //     // reorder here
+                // }
                 const oldMilestones = milestones || [];
                 const newMilestones = [...oldMilestones];
                 const movedMilestone = newMilestones.splice(dragIndex, 1)[0];

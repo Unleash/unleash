@@ -1,3 +1,4 @@
+// deprecated; remove with `flagOverviewRedesign` flag
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import {
     Accordion,
@@ -6,23 +7,19 @@ import {
     styled,
 } from '@mui/material';
 import type { IReleasePlanMilestone } from 'interfaces/releasePlans';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { ReleasePlanMilestoneStrategy } from './ReleasePlanMilestoneStrategy';
+import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import {
     ReleasePlanMilestoneStatus,
     type MilestoneStatus,
 } from './ReleasePlanMilestoneStatus';
 import { useState } from 'react';
-import {
-    StyledContentList,
-    StyledListItem,
-} from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status',
 })<{ status: MilestoneStatus }>(({ theme, status }) => ({
     border: `1px solid ${status === 'active' ? theme.palette.success.border : theme.palette.divider}`,
-    overflow: 'hidden',
     boxShadow: 'none',
     margin: 0,
     backgroundColor: theme.palette.background.paper,
@@ -56,7 +53,8 @@ const StyledSecondaryLabel = styled('span')(({ theme }) => ({
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    padding: 0,
+    borderBottomLeftRadius: theme.shape.borderRadiusLarge,
+    borderBottomRightRadius: theme.shape.borderRadiusLarge,
 }));
 
 interface IReleasePlanMilestoneProps {
@@ -117,23 +115,15 @@ export const ReleasePlanMilestone = ({
                 </StyledSecondaryLabel>
             </StyledAccordionSummary>
             <StyledAccordionDetails>
-                <StyledContentList>
-                    {milestone.strategies.map((strategy, index) => (
-                        <StyledListItem key={strategy.id}>
-                            {index > 0 ? <StrategySeparator /> : null}
-
-                            <StrategyItem
-                                strategy={{
-                                    ...strategy,
-                                    name:
-                                        strategy.name ||
-                                        strategy.strategyName ||
-                                        '',
-                                }}
-                            />
-                        </StyledListItem>
-                    ))}
-                </StyledContentList>
+                {milestone.strategies.map((strategy, index) => (
+                    <div key={strategy.id}>
+                        <ConditionallyRender
+                            condition={index > 0}
+                            show={<StrategySeparator text='OR' />}
+                        />
+                        <ReleasePlanMilestoneStrategy strategy={strategy} />
+                    </div>
+                ))}
             </StyledAccordionDetails>
         </StyledAccordion>
     );

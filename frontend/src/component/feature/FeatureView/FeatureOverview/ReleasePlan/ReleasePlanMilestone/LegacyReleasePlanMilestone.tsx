@@ -1,3 +1,4 @@
+// deprecated; remove with `flagOverviewRedesign` flag
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import {
     Accordion,

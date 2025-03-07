@@ -13,7 +13,7 @@ import type {
 import { useState } from 'react';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ReleasePlanRemoveDialog } from './ReleasePlanRemoveDialog';
-import { ReleasePlanMilestone } from './ReleasePlanMilestone/ReleasePlanMilestone';
+import { ReleasePlanMilestone } from './ReleasePlanMilestone/LegacyReleasePlanMilestone';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { useUiFlag } from 'hooks/useUiFlag';

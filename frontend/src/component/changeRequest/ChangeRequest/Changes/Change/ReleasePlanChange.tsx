@@ -12,7 +12,7 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { TooltipLink } from 'component/common/TooltipLink/TooltipLink';
 import EventDiff from 'component/events/EventDiff/EventDiff';
 import { ReleasePlan } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlan';
-import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/ReleasePlanMilestone';
+import { ReleasePlanMilestone } from 'component/feature/FeatureView/FeatureOverview/ReleasePlan/ReleasePlanMilestone/LegacyReleasePlanMilestone';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 
 export const ChangeItemWrapper = styled(Box)({

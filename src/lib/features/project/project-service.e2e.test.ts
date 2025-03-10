@@ -934,7 +934,7 @@ test('should add admin users to the project', async () => {
     await isProjectUser(adminUsers[2].id, project.id, true);
 });
 
-test('add user should fail if user already have access', async () => {
+test('add user do nothing if user already has access', async () => {
     const project = {
         id: 'add-users-twice',
         name: 'New project',
@@ -958,18 +958,18 @@ test('add user should fail if user already have access', async () => {
         [projectMember1.id],
         auditUser,
     );
-    await expect(
-        async () =>
-            await projectService.addAccess(
-                project.id,
-                [memberRole.id],
-                [], // no groups
-                [projectMember1.id],
-                auditUser,
-            ),
-    ).rejects.toThrow(
-        new Error('User already has access to project=add-users-twice'),
+    const access = await projectService.getAccessToProject(project.id);
+    expect(access.users).toHaveLength(2);
+
+    await projectService.addAccess(
+        project.id,
+        [memberRole.id],
+        [], // no groups
+        [projectMember1.id],
+        auditUser,
     );
+    const accessAfter = await projectService.getAccessToProject(project.id);
+    expect(accessAfter.users).toHaveLength(2);
 });
 
 test('should remove user from the project', async () => {
@@ -1460,9 +1460,9 @@ test('should change a users role in the project', async () => {
 
     await projectService.addAccess(
         project.id,
-        [projectUser.id],
-        [], // no groups
         [member.id],
+        [], // no groups
+        [projectUser.id],
         auditUser,
     );
     const { users } = await projectService.getAccessToProject(project.id);
@@ -2331,7 +2331,7 @@ test('should get correct amount of project members for current and past window',
 
     const result = await projectService.getStatusUpdates(project.id);
     expect(result.updates.projectMembersAddedCurrentWindow).toBe(6); // 5 members + 1 owner
-    expect(result.updates.projectActivityCurrentWindow).toBe(6);
+    expect(result.updates.projectActivityCurrentWindow).toBe(2);
     expect(result.updates.projectActivityPastWindow).toBe(0);
 });
 

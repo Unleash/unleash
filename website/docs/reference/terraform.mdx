@@ -12,7 +12,7 @@ description: "Set up and configure your Unleash instance using infastructure as 
 
 ## Overview
 
-The [Unleash Terraform provider](https://github.com/Unleash/terraform-provider-unleash) enables you to manage and configure Unleash programmatically, leveraging infrastructure as code (IaC) for automated and scalable configuration. 
+The [Unleash Terraform provider](https://github.com/Unleash/terraform-provider-unleash) enables you to manage and configure Unleash programmatically, leveraging infrastructure as code (IaC) for automated and scalable configuration.
 
 This provider is designed to help you with the **initial setup and configuration** of an instance. The provider does not support managing feature flags through Terraform. Since most [feature flags are short-lived](/topics/feature-flags/feature-flag-best-practices#3-make-flags-short-lived), we recommend managing them through the Unleash Admin UI.
 
@@ -42,10 +42,15 @@ resource "unleash_api_token" "client_token" {
 }
 ```
 
+### Environments
+
+- `unleash_environment` Create and manage environments.
+
 ### Projects
 
 - `unleash_project`: Create and manage projects.
 - `unleash_project_access`: Assign access roles and users to specific project resources.
+- `unleash_project_environment`: Enable environments on projects and configure change requests.
 
 ### Users and roles
 
@@ -62,15 +67,22 @@ resource "unleash_api_token" "client_token" {
 - `unleash_oidc`: Manage your [OpenID Connect configuration](../how-to/how-to-add-sso-open-id-connect).
 - `unleash_saml`: Manage your [SAML configuration](../how-to/sso).
 
-For example usage and schemas, visit the resources documentation of the [Unleash Terraform provider](https://github.com/Unleash/terraform-provider-unleash/tree/main/docs/resources).
+### Context fields
+
+- `unleash_context_field`: Create and manage context fields.
+
+For example usage and schemas, visit the resources documentation of the [Unleash Terraform provider](https://github.com/Unleash/terraform`-provider-unleash/tree/main/docs/resources).
 
 ## Data sources
 
 You can use the following data sources to fetch resources from Unleash:
 
+- `unleash_environment`
 - `unleash_project`
+- `unleash_project_environment`
 - `unleash_user`
 - `unleash_role`
 - `unleash_permission`
+- `unleash_context_field`
 
 For example usage and schemas, visit the data sources documentation of the [Unleash Terraform provider](https://github.com/Unleash/terraform-provider-unleash/tree/main/docs/data-sources).

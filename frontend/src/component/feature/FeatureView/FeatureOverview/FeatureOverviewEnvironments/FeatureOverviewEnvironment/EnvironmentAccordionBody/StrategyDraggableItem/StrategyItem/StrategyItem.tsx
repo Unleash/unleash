@@ -3,14 +3,15 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import SplitPreviewSlider from 'component/feature/StrategyTypes/SplitPreviewSlider/SplitPreviewSlider';
 import { Box } from '@mui/material';
-import { StrategyItemContainer as NewStrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
+import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 
 type StrategyItemProps = {
     headerItemsRight?: ReactNode;
-    strategy: IFeatureStrategy;
+    strategy: Omit<IFeatureStrategy, 'id'>;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
     strategyHeaderLevel?: 1 | 2 | 3 | 4 | 5 | 6;
+    description?: string;
 };
 
 export const StrategyItem: FC<StrategyItemProps> = ({
@@ -19,14 +20,16 @@ export const StrategyItem: FC<StrategyItemProps> = ({
     onDragEnd,
     headerItemsRight,
     strategyHeaderLevel,
+    description,
 }) => {
     return (
-        <NewStrategyItemContainer
+        <StrategyItemContainer
             strategyHeaderLevel={strategyHeaderLevel}
             strategy={strategy}
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
             headerItemsRight={headerItemsRight}
+            description={description}
         >
             <StrategyExecution strategy={strategy} />
 
@@ -39,6 +42,6 @@ export const StrategyItem: FC<StrategyItemProps> = ({
                 ) : (
                     <SplitPreviewSlider variants={strategy.variants} />
                 ))}
-        </NewStrategyItemContainer>
+        </StrategyItemContainer>
     );
 };

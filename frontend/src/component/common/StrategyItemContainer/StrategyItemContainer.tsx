@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 type StrategyItemContainerProps = {
     strategyHeaderLevel?: 1 | 2 | 3 | 4 | 5 | 6;
-    strategy: IFeatureStrategy | PlaygroundStrategySchema;
+    strategy: Omit<IFeatureStrategy, 'id'> | PlaygroundStrategySchema;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
     headerItemsRight?: ReactNode;
@@ -58,7 +58,7 @@ const StyledContainer = styled('article')({
     background: 'inherit',
 });
 
-const NewStyledHeader = styled('div', {
+const StyledHeader = styled('div', {
     shouldForwardProp: (prop) => prop !== 'draggable' && prop !== 'disabled',
 })<{ draggable: boolean; disabled: boolean }>(
     ({ theme, draggable, disabled }) => ({
@@ -91,7 +91,7 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
     return (
         <Box sx={{ position: 'relative' }}>
             <StyledContainer style={style}>
-                <NewStyledHeader
+                <StyledHeader
                     draggable={Boolean(onDragStart)}
                     disabled={Boolean(strategy?.disabled)}
                 >
@@ -167,7 +167,7 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                     >
                         {headerItemsRight}
                     </Box>
-                </NewStyledHeader>
+                </StyledHeader>
                 <Box sx={{ p: 2, pt: 0 }}>{children}</Box>
             </StyledContainer>
         </Box>

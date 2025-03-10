@@ -25,7 +25,7 @@ beforeAll(async () => {
         },
         db.rawDatabase,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureX',
@@ -34,7 +34,7 @@ beforeAll(async () => {
         },
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureY',
@@ -43,7 +43,7 @@ beforeAll(async () => {
         TEST_AUDIT_USER,
     );
 
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureZ',
@@ -51,7 +51,7 @@ beforeAll(async () => {
         },
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureArchivedX',
@@ -66,13 +66,13 @@ beforeAll(async () => {
         TEST_AUDIT_USER,
     );
 
-    await app.services.featureToggleServiceV2.archiveToggle(
+    await app.services.featureToggleService.archiveToggle(
         'featureArchivedX',
         testUser,
         TEST_AUDIT_USER,
     );
 
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureArchivedY',
@@ -81,12 +81,12 @@ beforeAll(async () => {
         TEST_AUDIT_USER,
     );
 
-    await app.services.featureToggleServiceV2.archiveToggle(
+    await app.services.featureToggleService.archiveToggle(
         'featureArchivedY',
         testUser,
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'featureArchivedZ',
@@ -94,12 +94,12 @@ beforeAll(async () => {
         },
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.archiveToggle(
+    await app.services.featureToggleService.archiveToggle(
         'featureArchivedZ',
         testUser,
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.createFeatureToggle(
+    await app.services.featureToggleService.createFeatureToggle(
         'default',
         {
             name: 'feature.with.variants',
@@ -107,7 +107,7 @@ beforeAll(async () => {
         },
         TEST_AUDIT_USER,
     );
-    await app.services.featureToggleServiceV2.saveVariants(
+    await app.services.featureToggleService.saveVariants(
         'feature.with.variants',
         'default',
         [

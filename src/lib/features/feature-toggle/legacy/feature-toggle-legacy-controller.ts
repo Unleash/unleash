@@ -37,17 +37,17 @@ class FeatureController extends Controller {
         config: IUnleashConfig,
         {
             featureTagService,
-            featureToggleServiceV2,
+            featureToggleService,
             openApiService,
         }: Pick<
             IUnleashServices,
-            'featureTagService' | 'featureToggleServiceV2' | 'openApiService'
+            'featureTagService' | 'featureToggleService' | 'openApiService'
         >,
     ) {
         super(config);
         this.tagService = featureTagService;
         this.openApiService = openApiService;
-        this.service = featureToggleServiceV2;
+        this.service = featureToggleService;
 
         this.route({
             method: 'post',

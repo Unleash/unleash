@@ -32,7 +32,7 @@ type Stores = Pick<IUnleashStores, 'segmentReadModel'>;
 
 type Services = Pick<
     IUnleashServices,
-    'featureToggleServiceV2' | 'configurationRevisionService'
+    'featureToggleService' | 'configurationRevisionService'
 >;
 
 // TODO: remove after finished migration to global frontend api cache
@@ -170,7 +170,7 @@ export class ProxyRepository
     private async featuresForToken(): Promise<FeatureInterface[]> {
         const start = Date.now();
         const mappedFeatures = await mapFeaturesForClient(
-            await this.services.featureToggleServiceV2.getClientFeatures({
+            await this.services.featureToggleService.getClientFeatures({
                 project: this.token.projects,
                 environment: this.environmentNameForToken(),
             }),

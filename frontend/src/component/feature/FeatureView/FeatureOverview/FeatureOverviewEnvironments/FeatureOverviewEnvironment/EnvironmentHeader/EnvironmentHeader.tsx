@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { useId } from 'hooks/useId';
 
 const StyledAccordionSummary = styled(AccordionSummary, {
     shouldForwardProp: (prop) => prop !== 'expandable',
@@ -47,7 +48,7 @@ const StyledHeaderTitleLabel = styled('p')(({ theme }) => ({
 }));
 
 const StyledTruncator = styled(Truncator)(({ theme }) => ({
-    fontSize: theme.typography.body1.fontSize,
+    fontSize: theme.typography.h2.fontSize,
     fontWeight: theme.typography.fontWeightMedium,
 }));
 
@@ -59,6 +60,7 @@ type EnvironmentHeaderProps = {
 export const EnvironmentHeader: FC<
     PropsWithChildren<EnvironmentHeaderProps>
 > = ({ environmentId, children, expandable = true, ...props }) => {
+    const id = useId();
     return (
         <StyledAccordionSummary
             {...props}
@@ -67,6 +69,8 @@ export const EnvironmentHeader: FC<
                     sx={{ visibility: expandable ? 'visible' : 'hidden' }}
                 />
             }
+            id={id}
+            aria-controls={`environment-accordion-${id}-content`}
             expandable={expandable}
         >
             <StyledHeader data-loading>

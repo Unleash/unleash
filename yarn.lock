@@ -4470,6 +4470,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"formidable@npm:^3.5.2":
+  version: 3.5.2
+  resolution: "formidable@npm:3.5.2"
+  dependencies:
+    dezalgo: "npm:^1.0.4"
+    hexoid: "npm:^2.0.0"
+    once: "npm:^1.4.0"
+  checksum: 10c0/c26d89ba84d392f0e68ba1aca9f779e0f2e94db053d95df562c730782956f302e3f069c07ab96f991415af915ac7b8771f4c813d298df43577fdf439e1e8741e
+  languageName: node
+  linkType: hard
+
 "forwarded@npm:0.2.0":
   version: 0.2.0
   resolution: "forwarded@npm:0.2.0"
@@ -4837,6 +4848,13 @@ __metadata:
   version: 1.0.0
   resolution: "hexoid@npm:1.0.0"
   checksum: 10c0/9c45e8ba676b9eb88455631ebceec4c829a8374a583410dc735472ab9808bf11339fcd074633c3fa30e420901b894d8a92ffd5e2e21eddd41149546e05a91f69
+  languageName: node
+  linkType: hard
+
+"hexoid@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "hexoid@npm:2.0.0"
+  checksum: 10c0/a9d5e6f4adeaefcb4a53803dd48bf0a242d92e8ec699555aea616c4bf8f91788f03093595085976f63d6830815dd080c063503540fabc7e854ebfb11161687c6
   languageName: node
   linkType: hard
 
@@ -8818,7 +8836,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"superagent@npm:9.0.2, superagent@npm:^9.0.1":
+"superagent@npm:10.1.1":
+  version: 10.1.1
+  resolution: "superagent@npm:10.1.1"
+  dependencies:
+    component-emitter: "npm:^1.3.0"
+    cookiejar: "npm:^2.1.4"
+    debug: "npm:^4.3.4"
+    fast-safe-stringify: "npm:^2.1.1"
+    form-data: "npm:^4.0.0"
+    formidable: "npm:^3.5.2"
+    methods: "npm:^1.1.2"
+    mime: "npm:2.6.0"
+    qs: "npm:^6.11.0"
+  checksum: 10c0/d5709840347030afd7367157363e620c8fed6f436060ebe13f0d2b61254c39426eb7a395c255ede019cd153a14c6ee752d3d29cf151de1cc1c24efb02f99e398
+  languageName: node
+  linkType: hard
+
+"superagent@npm:^9.0.1":
   version: 9.0.2
   resolution: "superagent@npm:9.0.2"
   dependencies:
@@ -9380,7 +9415,7 @@ __metadata:
     slug: "npm:^9.0.0"
     source-map-support: "npm:0.5.21"
     stoppable: "npm:^1.1.0"
-    superagent: "npm:9.0.2"
+    superagent: "npm:10.1.1"
     supertest: "npm:7.0.0"
     ts-node: "npm:10.9.2"
     ts-toolbelt: "npm:^9.6.0"

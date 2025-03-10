@@ -1,3 +1,4 @@
+import { useWorkspaceContext } from 'contexts/WorkspaceContext';
 import useAPI from '../useApi/useApi';
 
 const useContextsApi = () => {
@@ -5,7 +6,11 @@ const useContextsApi = () => {
         propagateErrors: true,
     });
 
-    const URI = 'api/admin/context';
+    const { currentWorkspaceId } = useWorkspaceContext();
+
+    const URI = currentWorkspaceId
+        ? `api/admin/workspaces/${currentWorkspaceId}/context`
+        : 'api/admin/context';
 
     const validateContextName = async (name: string) => {
         const path = `${URI}/validate`;

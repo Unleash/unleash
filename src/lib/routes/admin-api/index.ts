@@ -37,6 +37,7 @@ import { UiObservabilityController } from '../../features/ui-observability-contr
 import { SearchApi } from './search';
 import PersonalDashboardController from '../../features/personal-dashboard/personal-dashboard-controller';
 import { WorkspacesController } from '../../features/workspaces/workspaces-controller';
+import { ContextWorkspaceController } from '../../features/workspaces/controllers/context-workspace-controller';
 
 export class AdminApi extends Controller {
     constructor(config: IUnleashConfig, services: IUnleashServices, db: Db) {
@@ -82,28 +83,13 @@ export class AdminApi extends Controller {
             new PatController(config, services).router,
         );
 
-        // Register routes with the middleware
-        // const contextController = new ContextController(config, services);
-        // this.app.use(
-        //     '/workspaces/:workspaceId/context',
-        //     (req, res, next) => {
-        //         // Forward the workspaceId parameter to the controller's routes
-        //         req.params = {
-        //             ...req.params,
-        //             workspaceId: req.params.workspaceId,
-        //         };
-        //         next();
-        //     },
-        //     contextController.router,
-        // );
-
         this.app.use(
-            '/context',
-            new ContextController(config, services).router,
+            '/',
+            new ContextWorkspaceController(config, services).router,
         );
 
         this.app.use(
-            '/workspaces',
+            '/context',
             new ContextController(config, services).router,
         );
 

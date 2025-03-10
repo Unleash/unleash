@@ -22,6 +22,7 @@ import { Error as LayoutError } from './component/layout/Error/Error';
 import { ErrorBoundary } from 'react-error-boundary';
 import { useRecordUIErrorApi } from 'hooks/api/actions/useRecordUIErrorApi/useRecordUiErrorApi';
 import { HighlightProvider } from 'component/common/Highlight/HighlightProvider';
+import { WorkspaceProvider } from 'contexts/WorkspaceContext';
 
 window.global ||= window;
 
@@ -58,10 +59,12 @@ const ApplicationRoot = () => {
                                             <FeedbackCESProvider>
                                                 <StickyProvider>
                                                     <HighlightProvider>
-                                                        <InstanceStatus>
-                                                            <ScrollTop />
-                                                            <App />
-                                                        </InstanceStatus>
+                                                        <WorkspaceProvider>
+                                                            <InstanceStatus>
+                                                                <ScrollTop />
+                                                                <App />
+                                                            </InstanceStatus>
+                                                        </WorkspaceProvider>
                                                     </HighlightProvider>
                                                 </StickyProvider>
                                             </FeedbackCESProvider>

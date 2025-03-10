@@ -27,6 +27,7 @@ import { ReactComponent as LogoOnlyWhite } from 'assets/img/logo.svg';
 import { ReactComponent as LogoOnly } from 'assets/img/logoDark.svg';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { Link } from 'react-router-dom';
+import { WorkspaceSelector } from 'component/common/WorkspaceSelector/WorkspaceSelector';
 
 export const MobileNavigationSidebar: FC<{
     onClick: () => void;
@@ -165,12 +166,17 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                     />
                 }
             />
+            <ConditionallyRender
+                condition={mode === 'full'}
+                show={<WorkspaceSelector />}
+            />
 
             <PrimaryNavigationList
                 mode={mode}
                 onClick={setActiveItem}
                 activeItem={activeItem}
             />
+
             <SecondaryNavigation
                 expanded={expanded.includes('configure')}
                 onExpandChange={(expand) => {
@@ -186,6 +192,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                     activeItem={activeItem}
                 />
             </SecondaryNavigation>
+
             {mode === 'full' && (
                 <SecondaryNavigation
                     expanded={expanded.includes('admin')}

@@ -25,7 +25,7 @@ import { NameExistsError, NotFoundError } from '../../error';
 import { nameSchema } from '../../schema/feature-schema';
 import type { LegalValueSchema } from '../../openapi';
 
-export class ContextService {
+class ContextService {
     private eventService: EventService;
 
     private contextFieldStore: IContextFieldStore;

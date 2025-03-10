@@ -9,22 +9,18 @@ interface IProjectEnvironmentProps {
 }
 
 const StyledProjectEnvironmentOverview = styled('div')(({ theme }) => ({
-    borderRadius: theme.shape.borderRadiusLarge,
     marginBottom: theme.spacing(2),
-    backgroundColor: theme.palette.background.paper,
 }));
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     boxShadow: 'none',
     border: `1px solid ${theme.palette.divider}`,
-    backgroundColor: theme.palette.background.paper,
+    overflow: 'hidden',
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: 0,
     background: theme.palette.background.elevation1,
-    borderBottomLeftRadius: theme.shape.borderRadiusLarge,
-    borderBottomRightRadius: theme.shape.borderRadiusLarge,
 }));
 
 export const ProjectEnvironment = ({

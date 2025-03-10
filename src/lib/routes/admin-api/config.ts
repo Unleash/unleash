@@ -110,7 +110,7 @@ class ConfigController extends Controller {
                     tags: ['Admin UI'],
                     summary: 'Set UI configuration',
                     description:
-                        'Sets the UI configuration for this Unleash instance.',
+                        'Deprecated. Use `./cors` instead. Sets the UI configuration for this Unleash instance.',
                     operationId: 'setUiConfig',
                     requestBody: createRequestSchema('setUiConfigSchema'),
                     responses: { 200: emptyResponse },

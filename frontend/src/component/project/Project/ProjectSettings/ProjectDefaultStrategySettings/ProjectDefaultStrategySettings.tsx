@@ -10,7 +10,7 @@ import {
     UPDATE_PROJECT,
 } from 'component/providers/AccessProvider/permissions';
 import { Alert, styled } from '@mui/material';
-import ProjectEnvironment from './ProjectEnvironment/ProjectEnvironment';
+import ProjectEnvironment from './ProjectEnvironment/LegacyProjectEnvironment';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import EditDefaultStrategy from './ProjectEnvironment/ProjectEnvironmentDefaultStrategy/EditDefaultStrategy';

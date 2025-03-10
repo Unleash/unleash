@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { FC, PropsWithChildren } from 'react';
 import {
     AccordionSummary,
     type AccordionSummaryProps,
@@ -53,16 +53,12 @@ const StyledTruncator = styled(Truncator)(({ theme }) => ({
 
 type EnvironmentHeaderProps = {
     environmentId: string;
-    children: ReactNode;
     expandable?: boolean;
 } & AccordionSummaryProps;
 
-export const EnvironmentHeader: FC<EnvironmentHeaderProps> = ({
-    environmentId,
-    children,
-    expandable = true,
-    ...props
-}) => {
+export const EnvironmentHeader: FC<
+    PropsWithChildren<EnvironmentHeaderProps>
+> = ({ environmentId, children, expandable = true, ...props }) => {
     return (
         <StyledAccordionSummary
             {...props}

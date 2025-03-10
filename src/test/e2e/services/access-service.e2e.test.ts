@@ -684,10 +684,11 @@ test('Should be denied access to delete a role that is in use', async () => {
         },
     ]);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        customRole.id,
-        projectMember.id,
+        [customRole.id],
+        [], // no groups
+        [projectMember.id],
         SYSTEM_USER_AUDIT,
     );
 

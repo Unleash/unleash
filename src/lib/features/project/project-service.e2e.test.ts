@@ -476,16 +476,11 @@ test('should add a member user to the project', async () => {
 
     const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        memberRole.id,
-        projectMember1.id,
-        auditUser,
-    );
-    await projectService.addUser(
-        project.id,
-        memberRole.id,
-        projectMember2.id,
+        [memberRole.id],
+        [], // no groups
+        [projectMember1.id, projectMember2.id],
         auditUser,
     );
 
@@ -917,16 +912,11 @@ test('should add admin users to the project', async () => {
 
     const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        ownerRole.id,
-        projectAdmin1.id,
-        auditUser,
-    );
-    await projectService.addUser(
-        project.id,
-        ownerRole.id,
-        projectAdmin2.id,
+        [ownerRole.id],
+        [], // no groups
+        [projectAdmin1.id, projectAdmin2.id],
         auditUser,
     );
 
@@ -961,20 +951,22 @@ test('add user should fail if user already have access', async () => {
 
     const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        memberRole.id,
-        projectMember1.id,
+        [memberRole.id],
+        [], // no groups
+        [projectMember1.id],
         auditUser,
     );
-
-    await expect(async () =>
-        projectService.addUser(
-            project.id,
-            memberRole.id,
-            projectMember1.id,
-            auditUser,
-        ),
+    await expect(
+        async () =>
+            await projectService.addAccess(
+                project.id,
+                [memberRole.id],
+                [], // no groups
+                [projectMember1.id],
+                auditUser,
+            ),
     ).rejects.toThrow(
         new Error('User already has access to project=add-users-twice'),
     );
@@ -997,10 +989,11 @@ test('should remove user from the project', async () => {
 
     const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        memberRole.id,
-        projectMember1.id,
+        [memberRole.id],
+        [], // no groups
+        [projectMember1.id],
         auditUser,
     );
     await projectService.removeUser(
@@ -1360,10 +1353,11 @@ test('should add a user to the project with a custom role', async () => {
         SYSTEM_USER_AUDIT,
     );
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        customRole.id,
-        projectMember1.id,
+        [customRole.id],
+        [], // no groups
+        [projectMember1.id],
         auditUser,
     );
 
@@ -1414,16 +1408,11 @@ test('should delete role entries when deleting project', async () => {
         SYSTEM_USER_AUDIT,
     );
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        customRole.id,
-        user1.id,
-        auditUser,
-    );
-    await projectService.addUser(
-        project.id,
-        customRole.id,
-        user2.id,
+        [customRole.id],
+        [], // no groups
+        [user1.id, user2.id],
         auditUser,
     );
 
@@ -1469,10 +1458,11 @@ test('should change a users role in the project', async () => {
     );
     const member = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        member.id,
-        projectUser.id,
+        [projectUser.id],
+        [], // no groups
+        [member.id],
         auditUser,
     );
     const { users } = await projectService.getAccessToProject(project.id);
@@ -1487,13 +1477,13 @@ test('should change a users role in the project', async () => {
         projectUser.id,
         auditUser,
     );
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        customRole.id,
-        projectUser.id,
+        [customRole.id],
+        [], // no groups
+        [projectUser.id],
         auditUser,
     );
-
     const { users: updatedUsers } = await projectService.getAccessToProject(
         project.id,
     );
@@ -1522,10 +1512,11 @@ test('should update role for user on project', async () => {
     const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
     const ownerRole = await stores.roleStore.getRoleByName(RoleName.OWNER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        memberRole.id,
-        projectMember1.id,
+        [memberRole.id],
+        [], // no groups
+        [projectMember1.id],
         auditUser,
     );
     await projectService.changeRole(
@@ -1566,10 +1557,11 @@ test('should able to assign role without existing members', async () => {
 
     const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await projectService.addUser(
+    await projectService.addAccess(
         project.id,
-        memberRole.id,
-        projectMember1.id,
+        [memberRole.id],
+        [], // no groups
+        [projectMember1.id],
         auditUser,
     );
     await projectService.changeRole(
@@ -1680,10 +1672,11 @@ describe('ensure project has at least one owner', () => {
             RoleName.MEMBER,
         );
 
-        await projectService.addUser(
+        await projectService.addAccess(
             project.id,
-            memberRole.id,
-            projectMember1.id,
+            [memberRole.id],
+            [], // no groups
+            [projectMember1.id],
             auditUser,
         );
 
@@ -2328,15 +2321,12 @@ test('should get correct amount of project members for current and past window',
     );
     const memberRole = await stores.roleStore.getRoleByName(RoleName.MEMBER);
 
-    await Promise.all(
-        createdUsers.map((createdUser) =>
-            projectService.addUser(
-                project.id,
-                memberRole.id,
-                createdUser.id,
-                auditUser,
-            ),
-        ),
+    await projectService.addAccess(
+        project.id,
+        [memberRole.id],
+        [], // no groups
+        createdUsers.map((u) => u.id),
+        auditUser,
     );
 
     const result = await projectService.getStatusUpdates(project.id);

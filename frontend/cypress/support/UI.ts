@@ -60,7 +60,7 @@ export const createFeature_UI = (
 
     cy.wait(5_000);
 
-    cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click(uiOpts);
+    cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').first().click(uiOpts);
 
     cy.intercept('POST', `/api/admin/projects/${projectName}/features`).as(
         'createFeature',
@@ -72,10 +72,14 @@ export const createFeature_UI = (
     cy.get("[data-testid='FORM_DESCRIPTION_INPUT'] textarea")
         .first()
         .type('hello-world', uiOpts);
-    if (!shouldWait)
-        return cy.get("[data-testid='FORM_CREATE_BUTTON']").click(uiOpts);
-    else cy.get("[data-testid='FORM_CREATE_BUTTON']").click(uiOpts);
-    return cy.wait('@createFeature');
+    const clicked = cy
+        .get("[data-testid='FORM_CREATE_BUTTON']")
+        .first()
+        .click(uiOpts);
+    if (shouldWait) {
+        return cy.wait('@createFeature');
+    }
+    return clicked;
 };
 
 export const createProject_UI = (

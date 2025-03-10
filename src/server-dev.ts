@@ -53,7 +53,6 @@ process.nextTick(async () => {
                         releasePlanChangeRequests: false,
                         showUserDeviceCount: true,
                         flagOverviewRedesign: true,
-                        granularAdminPermissions: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
                         filterExistingFlagNames: true,

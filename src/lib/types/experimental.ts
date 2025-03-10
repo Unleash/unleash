@@ -57,7 +57,6 @@ export type IFlagKey =
     | 'flagOverviewRedesign'
     | 'showUserDeviceCount'
     | 'memorizeStats'
-    | 'granularAdminPermissions'
     | 'streaming'
     | 'etagVariant'
     | 'deltaApi'
@@ -275,10 +274,6 @@ const flags: IFlags = {
     ),
     flagOverviewRedesign: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_FLAG_OVERVIEW_REDESIGN,
-        false,
-    ),
-    granularAdminPermissions: parseEnvVarBoolean(
-        process.env.UNLEASH_EXPERIMENTAL_GRANULAR_ADMIN_PERMISSIONS,
         false,
     ),
     streaming: parseEnvVarBoolean(

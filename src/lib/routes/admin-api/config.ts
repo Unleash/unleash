@@ -100,7 +100,6 @@ class ConfigController extends Controller {
             ],
         });
 
-        // TODO: deprecate when removing `granularAdminPermissions` flag
         this.route({
             method: 'post',
             path: '',
@@ -111,10 +110,11 @@ class ConfigController extends Controller {
                     tags: ['Admin UI'],
                     summary: 'Set UI configuration',
                     description:
-                        'Sets the UI configuration for this Unleash instance.',
+                        'Deprecated. Use `./cors` instead. Sets the UI configuration for this Unleash instance.',
                     operationId: 'setUiConfig',
                     requestBody: createRequestSchema('setUiConfigSchema'),
                     responses: { 200: emptyResponse },
+                    deprecated: true,
                 }),
             ],
         });
@@ -222,14 +222,6 @@ class ConfigController extends Controller {
         req: IAuthRequest<void, void, SetCorsSchema>,
         res: Response<string>,
     ): Promise<void> {
-        const granularAdminPermissions = this.flagResolver.isEnabled(
-            'granularAdminPermissions',
-        );
-
-        if (!granularAdminPermissions) {
-            throw new NotFoundError();
-        }
-
         if (req.body.frontendApiOrigins) {
             await this.frontendApiService.setFrontendCorsSettings(
                 req.body.frontendApiOrigins,

@@ -8437,14 +8437,14 @@ __metadata:
   linkType: hard
 
 "react-github-calendar@npm:^4.5.1":
-  version: 4.5.5
-  resolution: "react-github-calendar@npm:4.5.5"
+  version: 4.5.6
+  resolution: "react-github-calendar@npm:4.5.6"
   dependencies:
     react-activity-calendar: "npm:^2.7.8"
     react-error-boundary: "npm:^5.0.0"
   peerDependencies:
     react: ^18.0.0 || ^19.0.0
-  checksum: 10c0/e2d8dfba3781e1664065d7646e746e3c456c19f56787ae0d648dbff8eb3be6a098cefd6d92fc612e7df28632b2a2a0b9c4307b368c525e9cb0fbf6854936188f
+  checksum: 10c0/74e995a528a3cf2a4ac4634415b614a0f6ad170f066d2d58142f15b815e8855de8b2ecf426ea054dd5d29143185dedc9a4ec7a8fa4dea4cbad6b7ef0f4411b5a
   languageName: node
   linkType: hard
 

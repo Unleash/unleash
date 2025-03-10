@@ -27,23 +27,6 @@ const DragIcon = styled(IconButton)({
     transition: 'color 0.2s ease-in-out',
 });
 
-const StyledDescription = styled('div')(({ theme }) => ({
-    fontSize: theme.typography.fontSize,
-    fontWeight: 'normal',
-    color: theme.palette.text.secondary,
-    display: 'none',
-    top: theme.spacing(2.5),
-    [theme.breakpoints.up('md')]: {
-        display: 'block',
-    },
-}));
-const StyledCustomTitle = styled('div')(({ theme }) => ({
-    fontWeight: 'normal',
-    display: 'none',
-    [theme.breakpoints.up('md')]: {
-        display: 'block',
-    },
-}));
 const StyledHeaderContainer = styled('hgroup')(({ theme }) => ({
     display: 'flex',
     flexFlow: 'row',
@@ -138,25 +121,12 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                                     {formatStrategyName(String(strategy.name))}
                                 </Typography>
                             )}
-                            <ConditionallyRender
-                                condition={Boolean(description)}
-                                show={
-                                    <StyledDescription>
-                                        {description}
-                                    </StyledDescription>
-                                }
-                            />
                         </StyledHeaderContainer>
                     </StrategyHeaderLink>
 
-                    <ConditionallyRender
-                        condition={Boolean(strategy?.disabled)}
-                        show={() => (
-                            <>
-                                <Badge color='disabled'>Disabled</Badge>
-                            </>
-                        )}
-                    />
+                    {strategy.disabled ? (
+                        <Badge color='disabled'>Disabled</Badge>
+                    ) : null}
                     <Box
                         sx={{
                             marginLeft: 'auto',

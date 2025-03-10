@@ -9,7 +9,10 @@ import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { PROJECT_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import type { ProjectEnvironmentType } from '../../../../../../interfaces/environments';
-import ProjectEnvironmentDefaultStrategy from './ProjectEnvironmentDefaultStrategy/LegacyProjectEnvironmentDefaultStrategy';
+import LegacyProjectEnvironmentDefaultStrategy from './ProjectEnvironmentDefaultStrategy/LegacyProjectEnvironmentDefaultStrategy';
+
+import { useUiFlag } from 'hooks/useUiFlag';
+import { ProjectEnvironmentDefaultStrategy } from './ProjectEnvironmentDefaultStrategy/ProjectEnvironmentDefaultStrategy';
 
 interface IProjectEnvironmentProps {
     environment: ProjectEnvironmentType;
@@ -39,9 +42,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     },
 }));
 
-const StyledAccordionDetails = styled(AccordionDetails, {
-    shouldForwardProp: (prop) => prop !== 'enabled',
-})<{ enabled: boolean }>(({ theme }) => ({
+const LegacyStyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: theme.spacing(3),
     background: theme.palette.envAccordion.expanded,
     borderBottomLeftRadius: theme.shape.borderRadiusLarge,
@@ -51,6 +52,14 @@ const StyledAccordionDetails = styled(AccordionDetails, {
     [theme.breakpoints.down('md')]: {
         padding: theme.spacing(2, 1),
     },
+}));
+
+const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
+    padding: 0,
+    background: theme.palette.envAccordion.expanded,
+    borderBottomLeftRadius: theme.shape.borderRadiusLarge,
+    borderBottomRightRadius: theme.shape.borderRadiusLarge,
+    boxShadow: theme.boxShadows.accordionFooter,
 }));
 
 const StyledAccordionBody = styled('div')(({ theme }) => ({
@@ -103,6 +112,8 @@ const ProjectEnvironment = ({ environment }: IProjectEnvironmentProps) => {
     const description = `Default strategy configuration in the ${name} environment`;
     const theme = useTheme();
     const enabled = false;
+    const useNewStrategyDesign = useUiFlag('flagOverviewRedesign');
+
     return (
         <StyledProjectEnvironmentOverview enabled={false}>
             <StyledAccordion
@@ -132,16 +143,25 @@ const ProjectEnvironment = ({ environment }: IProjectEnvironmentProps) => {
                     </StyledHeader>
                 </StyledAccordionSummary>
 
-                <StyledAccordionDetails enabled>
-                    <StyledAccordionBody>
-                        <StyledAccordionBodyInnerContainer>
-                            <ProjectEnvironmentDefaultStrategy
-                                environment={environment}
-                                description={description}
-                            />
-                        </StyledAccordionBodyInnerContainer>
-                    </StyledAccordionBody>
-                </StyledAccordionDetails>
+                {useNewStrategyDesign ? (
+                    <StyledAccordionDetails>
+                        <ProjectEnvironmentDefaultStrategy
+                            environment={environment}
+                            description={description}
+                        />
+                    </StyledAccordionDetails>
+                ) : (
+                    <LegacyStyledAccordionDetails>
+                        <StyledAccordionBody>
+                            <StyledAccordionBodyInnerContainer>
+                                <LegacyProjectEnvironmentDefaultStrategy
+                                    environment={environment}
+                                    description={description}
+                                />
+                            </StyledAccordionBodyInnerContainer>
+                        </StyledAccordionBody>
+                    </LegacyStyledAccordionDetails>
+                )}
             </StyledAccordion>
         </StyledProjectEnvironmentOverview>
     );

@@ -148,14 +148,9 @@ export const ProjectFeatureToggles = ({
         'hide-setup' | 'show-setup'
     >(`onboarding-state:v1-${projectId}`, 'hide-setup');
 
-    const notOnboarding =
-        project.onboardingStatus.status === 'onboarded' ||
-        onboardingFlow === 'closed';
     const isOnboarding =
         project.onboardingStatus.status !== 'onboarded' &&
         onboardingFlow === 'visible';
-    const noFeaturesExistInProject = project.featureTypeCounts?.length === 0;
-    const showFeaturesTable = !noFeaturesExistInProject || notOnboarding;
 
     const trackOnboardingFinish = (sdkName: string) => {
         if (!isOnboarding) {
@@ -495,128 +490,113 @@ export const ProjectFeatureToggles = ({
                     />
                 }
             />
-            <ConditionallyRender
-                condition={showFeaturesTable}
-                show={
-                    <PageContent
-                        disableLoading
-                        disablePadding
-                        header={
-                            <ProjectFeatureTogglesHeader
-                                isLoading={initialLoad}
-                                totalItems={total}
-                                searchQuery={tableState.query || ''}
-                                onChangeSearchQuery={(query) => {
-                                    setTableState({ query });
-                                }}
-                                dataToExport={data}
-                                environmentsToExport={environments}
-                                actions={
-                                    <ColumnsMenu
-                                        columns={[
-                                            {
-                                                header: 'Name',
-                                                id: 'name',
-                                                isVisible:
-                                                    columnVisibility.name,
-                                                isStatic: true,
-                                            },
-                                            {
-                                                header: 'Created',
-                                                id: 'createdAt',
-                                                isVisible:
-                                                    columnVisibility.createdAt,
-                                            },
-                                            {
-                                                header: 'By',
-                                                id: 'createdBy',
-                                                isVisible:
-                                                    columnVisibility.createdBy,
-                                            },
-                                            {
-                                                header: 'Last seen',
-                                                id: 'lastSeenAt',
-                                                isVisible:
-                                                    columnVisibility.lastSeenAt,
-                                            },
-                                            {
-                                                header: 'Lifecycle',
-                                                id: 'lifecycle',
-                                                isVisible:
-                                                    columnVisibility.lifecycle,
-                                            },
-                                            {
-                                                id: 'divider',
-                                            },
-                                            ...environments.map(
-                                                (environment) => ({
-                                                    header: environment,
-                                                    id: formatEnvironmentColumnId(
-                                                        environment,
-                                                    ),
-                                                    isVisible:
-                                                        columnVisibility[
-                                                            formatEnvironmentColumnId(
-                                                                environment,
-                                                            )
-                                                        ],
-                                                }),
-                                            ),
-                                        ]}
-                                        onToggle={onToggleColumnVisibility}
-                                    />
-                                }
+            <PageContent
+                disableLoading
+                disablePadding
+                header={
+                    <ProjectFeatureTogglesHeader
+                        isLoading={initialLoad}
+                        totalItems={total}
+                        searchQuery={tableState.query || ''}
+                        onChangeSearchQuery={(query) => {
+                            setTableState({ query });
+                        }}
+                        dataToExport={data}
+                        environmentsToExport={environments}
+                        actions={
+                            <ColumnsMenu
+                                columns={[
+                                    {
+                                        header: 'Name',
+                                        id: 'name',
+                                        isVisible: columnVisibility.name,
+                                        isStatic: true,
+                                    },
+                                    {
+                                        header: 'Created',
+                                        id: 'createdAt',
+                                        isVisible: columnVisibility.createdAt,
+                                    },
+                                    {
+                                        header: 'By',
+                                        id: 'createdBy',
+                                        isVisible: columnVisibility.createdBy,
+                                    },
+                                    {
+                                        header: 'Last seen',
+                                        id: 'lastSeenAt',
+                                        isVisible: columnVisibility.lastSeenAt,
+                                    },
+                                    {
+                                        header: 'Lifecycle',
+                                        id: 'lifecycle',
+                                        isVisible: columnVisibility.lifecycle,
+                                    },
+                                    {
+                                        id: 'divider',
+                                    },
+                                    ...environments.map((environment) => ({
+                                        header: environment,
+                                        id: formatEnvironmentColumnId(
+                                            environment,
+                                        ),
+                                        isVisible:
+                                            columnVisibility[
+                                                formatEnvironmentColumnId(
+                                                    environment,
+                                                )
+                                            ],
+                                    })),
+                                ]}
+                                onToggle={onToggleColumnVisibility}
                             />
                         }
-                        bodyClass='noop'
-                        style={{ cursor: 'inherit' }}
-                    >
-                        <div
-                            ref={bodyLoadingRef}
-                            aria-busy={isPlaceholder}
-                            aria-live='polite'
-                        >
-                            <FilterRow>
-                                <ProjectOverviewFilters
-                                    project={projectId}
-                                    onChange={setTableState}
-                                    state={filterState}
-                                />
-                                <ButtonGroup>
-                                    <PermissionIconButton
-                                        permission={UPDATE_FEATURE}
-                                        projectId={projectId}
-                                        onClick={() => setModalOpen(true)}
-                                        tooltipProps={{ title: 'Import' }}
-                                        data-testid={IMPORT_BUTTON}
-                                        data-loading-project
-                                    >
-                                        <ImportSvg />
-                                    </PermissionIconButton>
-                                </ButtonGroup>
-                            </FilterRow>
-                            <SearchHighlightProvider
-                                value={tableState.query || ''}
-                            >
-                                <PaginatedTable
-                                    tableInstance={table}
-                                    totalItems={total}
-                                />
-                            </SearchHighlightProvider>
-                            <ConditionallyRender
-                                condition={!data.length && !isPlaceholder}
-                                show={
-                                    <TableEmptyState
-                                        query={tableState.query || ''}
-                                    />
-                                }
-                            />
-                            {rowActionsDialogs}
-                            {featureToggleModals}
-                        </div>
-                    </PageContent>
+                    />
                 }
-            />
+                bodyClass='noop'
+                style={{ cursor: 'inherit' }}
+            >
+                <div
+                    ref={bodyLoadingRef}
+                    aria-busy={isPlaceholder}
+                    aria-live='polite'
+                >
+                    <FilterRow>
+                        <ProjectOverviewFilters
+                            project={projectId}
+                            onChange={setTableState}
+                            state={filterState}
+                        />
+                        <ButtonGroup>
+                            <PermissionIconButton
+                                permission={UPDATE_FEATURE}
+                                projectId={projectId}
+                                onClick={() => setModalOpen(true)}
+                                tooltipProps={{ title: 'Import' }}
+                                data-testid={IMPORT_BUTTON}
+                                data-loading-project
+                            >
+                                <ImportSvg />
+                            </PermissionIconButton>
+                        </ButtonGroup>
+                    </FilterRow>
+                    <SearchHighlightProvider value={tableState.query || ''}>
+                        <PaginatedTable
+                            tableInstance={table}
+                            totalItems={total}
+                        />
+                    </SearchHighlightProvider>
+                    <ConditionallyRender
+                        condition={!data.length && !isPlaceholder}
+                        show={
+                            <TableEmptyState query={tableState.query || ''} />
+                        }
+                    />
+                    {rowActionsDialogs}
+                    {featureToggleModals}
+                </div>
+            </PageContent>
+
             <ConnectSdkDialog
                 open={connectSdkOpen}
                 onClose={() => {

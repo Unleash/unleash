@@ -1000,12 +1000,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cyclonedx/yarn-plugin-cyclonedx@npm:^1.0.0-rc.7":
-  version: 1.1.0
-  resolution: "@cyclonedx/yarn-plugin-cyclonedx@npm:1.1.0"
+"@cyclonedx/yarn-plugin-cyclonedx@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@cyclonedx/yarn-plugin-cyclonedx@npm:2.0.0"
   bin:
     cyclonedx-yarn: bin/cyclonedx-yarn-cli.js
-  checksum: 10c0/fdd517c6f882d79a09326ad27e16b1b07d7a633b75313e8998d39df821f6a1a51c6af3e4e92b5a07ff541d40f394f05bffe0e6ebee1f5c66a930a05f01635022
+  checksum: 10c0/74c523b0e7651977662d664f40aec385bd3b0ab9d6b8b31e13baa9f8d5046be4d3cb88a95d7c393d1f7f1fd6dad7cd2b196aa9b21ea2e7a753f87bacd53b230a
   languageName: node
   linkType: hard
 
@@ -2596,25 +2596,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.6.1":
-  version: 1.7.5
-  resolution: "axios@npm:1.7.5"
+"axios@npm:^1.6.1, axios@npm:^1.7.8":
+  version: 1.8.2
+  resolution: "axios@npm:1.8.2"
   dependencies:
     follow-redirects: "npm:^1.15.6"
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/1d5daeb28b3d1bb2a7b9f0743433c4bfbeaddc15461e50ebde487eec6c009af2515749d5261096dd430c90cd891bd310bcba5ec3967bae2033c4a307f58a6ad3
-  languageName: node
-  linkType: hard
-
-"axios@npm:^1.7.8":
-  version: 1.7.9
-  resolution: "axios@npm:1.7.9"
-  dependencies:
-    follow-redirects: "npm:^1.15.6"
-    form-data: "npm:^4.0.0"
-    proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/b7a41e24b59fee5f0f26c1fc844b45b17442832eb3a0fb42dd4f1430eb4abc571fe168e67913e8a1d91c993232bd1d1ab03e20e4d1fee8c6147649b576fc1b0b
+  checksum: 10c0/d8c2969e4642dc6d39555ac58effe06c051ba7aac2bd40cad7a9011c019fb2f16ee011c5a6906cb25b8a4f87258c359314eb981f852e60ad445ecaeb793c7aa2
   languageName: node
   linkType: hard
 
@@ -4304,19 +4293,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fetch-mock@npm:^11.1.3":
-  version: 11.1.5
-  resolution: "fetch-mock@npm:11.1.5"
+"fetch-mock@npm:^12.0.0":
+  version: 12.5.2
+  resolution: "fetch-mock@npm:12.5.2"
   dependencies:
     "@types/glob-to-regexp": "npm:^0.4.4"
     dequal: "npm:^2.0.3"
     glob-to-regexp: "npm:^0.4.1"
-    is-subset: "npm:^0.1.1"
     regexparam: "npm:^3.0.0"
-  peerDependenciesMeta:
-    node-fetch:
-      optional: true
-  checksum: 10c0/f32f1d7879b654a3fab7c3576901193ddd4c63cb9aeae2ed66ff42062400c0937d4696b1a5171e739d5f62470e6554e190f14816789f5e3b2bf1ad90208222e6
+  checksum: 10c0/015ca2c7eba304beb0df06e15399c50ed0f3e167a2b1ea218a8505c468ddeae0cfab1e5d4efcdee2a62aa17c9c8a1d8ccb5e1683b00a55e7a93bb5b31b183688
   languageName: node
   linkType: hard
 
@@ -5261,13 +5246,6 @@ __metadata:
   version: 3.0.0
   resolution: "is-stream@npm:3.0.0"
   checksum: 10c0/eb2f7127af02ee9aa2a0237b730e47ac2de0d4e76a4a905a50a11557f2339df5765eaea4ceb8029f1efa978586abe776908720bfcb1900c20c6ec5145f6f29d8
-  languageName: node
-  linkType: hard
-
-"is-subset@npm:^0.1.1":
-  version: 0.1.1
-  resolution: "is-subset@npm:0.1.1"
-  checksum: 10c0/d8125598ab9077a76684e18726fb915f5cea7a7358ed0c6ff723f4484d71a0a9981ee5aae06c44de99cfdef0fefce37438c6257ab129e53c82045ea0c2acdebf
   languageName: node
   linkType: hard
 
@@ -9304,7 +9282,7 @@ __metadata:
     "@apidevtools/swagger-parser": "npm:10.1.1"
     "@babel/core": "npm:7.26.9"
     "@biomejs/biome": "npm:^1.9.4"
-    "@cyclonedx/yarn-plugin-cyclonedx": "npm:^1.0.0-rc.7"
+    "@cyclonedx/yarn-plugin-cyclonedx": "npm:^2.0.0"
     "@slack/web-api": "npm:^7.3.4"
     "@swc/core": "npm:1.11.1"
     "@swc/jest": "npm:0.2.37"
@@ -9358,7 +9336,7 @@ __metadata:
     faker: "npm:5.5.3"
     fast-check: "npm:3.23.2"
     fast-json-patch: "npm:^3.1.0"
-    fetch-mock: "npm:^11.1.3"
+    fetch-mock: "npm:^12.0.0"
     hash-sum: "npm:^2.0.0"
     helmet: "npm:^6.0.0"
     http-errors: "npm:^2.0.0"

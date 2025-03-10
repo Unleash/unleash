@@ -12,6 +12,10 @@
       "internalChecksFilter": "strict"
     }
   ],
-  "ignoreDeps": ["react-router-dom"],
+  "ignoreDeps": [
+    "react-router-dom",
+    "docusaurus-plugin-openapi-docs",
+    "docusaurus-theme-openapi-docs"
+  ],
   "labels": ["dependencies"]
 }

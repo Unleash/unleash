@@ -212,6 +212,10 @@ export interface IProjectEnvironment extends IEnvironment {
     defaultStrategy?: CreateFeatureStrategySchema;
 }
 
+export interface IProjectsAvailableOnEnvironment extends IProjectEnvironment {
+    visible: boolean;
+}
+
 export interface IEnvironmentCreate {
     name: string;
     type: string;

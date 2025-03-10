@@ -8,7 +8,6 @@ import { Alert, Pagination, styled } from '@mui/material';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
-import { StrategyDraggableItem } from '../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyDraggableItem';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
@@ -24,6 +23,7 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { ReleasePlan } from '../ReleasePlan/ReleasePlan';
 import { SectionSeparator } from '../FeatureOverviewEnvironments/FeatureOverviewEnvironment/SectionSeparator/SectionSeparator';
 import { Badge } from 'component/common/Badge/Badge';
+import { ProjectEnvironmentStrategyDraggableItem } from '../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -256,7 +256,7 @@ export const FeatureOverviewEnvironmentBody = ({
                         !manyStrategiesPagination ? (
                             <>
                                 {strategiesToDisplay.map((strategy, index) => (
-                                    <StrategyDraggableItem
+                                    <ProjectEnvironmentStrategyDraggableItem
                                         key={strategy.id}
                                         strategy={strategy}
                                         index={index}
@@ -283,7 +283,7 @@ export const FeatureOverviewEnvironmentBody = ({
                                 </Alert>
                                 <br />
                                 {page.map((strategy, index) => (
-                                    <StrategyDraggableItem
+                                    <ProjectEnvironmentStrategyDraggableItem
                                         key={strategy.id}
                                         strategy={strategy}
                                         index={index + pageIndex * pageSize}

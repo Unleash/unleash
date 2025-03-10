@@ -1,4 +1,9 @@
-import { differenceInCalendarMonths, subMonths } from 'date-fns';
+import {
+    differenceInCalendarMonths,
+    endOfMonth,
+    startOfMonth,
+    subMonths,
+} from 'date-fns';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import getLogger from '../../../test/fixtures/no-logger';
 import type { ITrafficDataUsageStore, IUnleashStores } from '../../types';
@@ -234,8 +239,13 @@ test('can query for monthly aggregation of data for a specified range', async ()
     }
 
     for (const monthsBack of [3, 6, 12]) {
+        const to = endOfMonth(now);
+        const from = subMonths(startOfMonth(now), monthsBack);
         const result =
-            await trafficDataUsageStore.getTrafficDataForMonthRange(monthsBack);
+            await trafficDataUsageStore.getMonthlyTrafficDataUsageForPeriod(
+                from,
+                to,
+            );
 
         // should have the current month and the preceding n months (one entry per group)
         expect(result.length).toBe((monthsBack + 1) * 2);

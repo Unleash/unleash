@@ -56,8 +56,6 @@ process.nextTick(async () => {
                         granularAdminPermissions: true,
                         deltaApi: true,
                         uniqueSdkTracking: true,
-                        frontendHeaderRedesign: true,
-                        dataUsageMultiMonthView: true,
                         filterExistingFlagNames: true,
                         teamsIntegrationChangeRequests: true,
                         simplifyDisableFeature: true,

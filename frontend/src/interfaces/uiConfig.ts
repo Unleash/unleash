@@ -90,8 +90,6 @@ export type UiFlags = {
     showUserDeviceCount?: boolean;
     flagOverviewRedesign?: boolean;
     granularAdminPermissions?: boolean;
-    frontendHeaderRedesign?: boolean;
-    dataUsageMultiMonthView?: boolean;
     consumptionModel?: boolean;
     edgeObservability?: boolean;
 };

@@ -9,7 +9,6 @@ import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFe
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
-import { FeatureStrategyEmpty } from 'component/feature/FeatureStrategy/FeatureStrategyEmpty/FeatureStrategyEmpty';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useChangeRequestApi } from 'hooks/api/actions/useChangeRequestApi/useChangeRequestApi';
@@ -239,103 +238,85 @@ export const EnvironmentAccordionBody = ({
         );
     };
 
+    const Strategies = () => {
+        return strategies.length < 50 || !manyStrategiesPagination ? (
+            <StyledContentList>
+                {strategies.map((strategy, index) => (
+                    <StyledListItem key={strategy.id}>
+                        {index > 0 ? <StrategySeparator /> : null}
+
+                        <ProjectEnvironmentStrategyDraggableItem
+                            strategy={strategy}
+                            index={index}
+                            environmentName={featureEnvironment.name}
+                            otherEnvironments={otherEnvironments}
+                            isDragging={dragItem?.id === strategy.id}
+                            onDragStartRef={onDragStartRef}
+                            onDragOver={onDragOver(strategy.id)}
+                            onDragEnd={onDragEnd}
+                        />
+                    </StyledListItem>
+                ))}
+            </StyledContentList>
+        ) : (
+            <PaginatedStrategyContainer>
+                <StyledAlert severity='warning'>
+                    We noticed you're using a high number of activation
+                    strategies. To ensure a more targeted approach, consider
+                    leveraging constraints or segments.
+                </StyledAlert>
+                <StyledContentList>
+                    {page.map((strategy, index) => (
+                        <StyledListItem key={strategy.id}>
+                            {index > 0 ? <StrategySeparator /> : null}
+
+                            <ProjectEnvironmentStrategyDraggableItem
+                                strategy={strategy}
+                                index={index + pageIndex * pageSize}
+                                environmentName={featureEnvironment.name}
+                                otherEnvironments={otherEnvironments}
+                            />
+                        </StyledListItem>
+                    ))}
+                </StyledContentList>
+                <Pagination
+                    count={pages.length}
+                    shape='rounded'
+                    page={pageIndex + 1}
+                    onChange={(_, page) => setPageIndex(page - 1)}
+                />
+            </PaginatedStrategyContainer>
+        );
+    };
+
     return (
         <div>
             <StyledAccordionBodyInnerContainer>
-                {releasePlans.length > 0 || strategies.length > 0 ? (
-                    <StyledContentList>
-                        {releasePlans.map((plan) => (
-                            <StyledListItem type='release plan' key={plan.id}>
-                                <ReleasePlan
-                                    plan={plan}
-                                    environmentIsDisabled={isDisabled}
-                                />
-                            </StyledListItem>
-                        ))}
-                        <li>
-                            {releasePlans.length > 0 ? (
-                                <StrategySeparator />
-                            ) : null}
-                            {strategies.length < 50 ||
-                            !manyStrategiesPagination ? (
-                                <StyledContentList>
-                                    {strategies.map((strategy, index) => (
-                                        <StyledListItem key={strategy.id}>
-                                            {index > 0 ? (
-                                                <StrategySeparator />
-                                            ) : null}
-
-                                            <ProjectEnvironmentStrategyDraggableItem
-                                                strategy={strategy}
-                                                index={index}
-                                                environmentName={
-                                                    featureEnvironment.name
-                                                }
-                                                otherEnvironments={
-                                                    otherEnvironments
-                                                }
-                                                isDragging={
-                                                    dragItem?.id === strategy.id
-                                                }
-                                                onDragStartRef={onDragStartRef}
-                                                onDragOver={onDragOver(
-                                                    strategy.id,
-                                                )}
-                                                onDragEnd={onDragEnd}
-                                            />
-                                        </StyledListItem>
-                                    ))}
-                                </StyledContentList>
-                            ) : (
-                                <PaginatedStrategyContainer>
-                                    <StyledAlert severity='warning'>
-                                        We noticed you're using a high number of
-                                        activation strategies. To ensure a more
-                                        targeted approach, consider leveraging
-                                        constraints or segments.
-                                    </StyledAlert>
-                                    <StyledContentList>
-                                        {page.map((strategy, index) => (
-                                            <StyledListItem key={strategy.id}>
-                                                {index > 0 ? (
-                                                    <StrategySeparator />
-                                                ) : null}
-
-                                                <ProjectEnvironmentStrategyDraggableItem
-                                                    strategy={strategy}
-                                                    index={
-                                                        index +
-                                                        pageIndex * pageSize
-                                                    }
-                                                    environmentName={
-                                                        featureEnvironment.name
-                                                    }
-                                                    otherEnvironments={
-                                                        otherEnvironments
-                                                    }
-                                                />
-                                            </StyledListItem>
-                                        ))}
-                                    </StyledContentList>
-                                    <Pagination
-                                        count={pages.length}
-                                        shape='rounded'
-                                        page={pageIndex + 1}
-                                        onChange={(_, page) =>
-                                            setPageIndex(page - 1)
-                                        }
+                <StyledContentList>
+                    {releasePlans.length > 0 ? (
+                        <>
+                            {releasePlans.map((plan) => (
+                                <StyledListItem
+                                    type='release plan'
+                                    key={plan.id}
+                                >
+                                    <ReleasePlan
+                                        plan={plan}
+                                        environmentIsDisabled={isDisabled}
                                     />
-                                </PaginatedStrategyContainer>
-                            )}
-                        </li>
-                    </StyledContentList>
-                ) : (
-                    <FeatureStrategyEmpty
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={featureEnvironment.name}
-                    />
-                )}
+                                </StyledListItem>
+                            ))}
+                            {strategies.length > 0 ? (
+                                <li>
+                                    <StrategySeparator />
+                                    <Strategies />
+                                </li>
+                            ) : null}
+                        </>
+                    ) : strategies.length > 0 ? (
+                        <Strategies />
+                    ) : null}
+                </StyledContentList>
             </StyledAccordionBodyInnerContainer>
         </div>
     );

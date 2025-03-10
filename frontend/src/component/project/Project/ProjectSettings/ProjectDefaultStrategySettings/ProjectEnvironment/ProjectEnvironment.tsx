@@ -9,7 +9,7 @@ import EnvironmentIcon from 'component/common/EnvironmentIcon/EnvironmentIcon';
 import StringTruncator from 'component/common/StringTruncator/StringTruncator';
 import { PROJECT_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import type { ProjectEnvironmentType } from '../../../../../../interfaces/environments';
-import ProjectEnvironmentDefaultStrategy from './ProjectEnvironmentDefaultStrategy/ProjectEnvironmentDefaultStrategy';
+import ProjectEnvironmentDefaultStrategy from './ProjectEnvironmentDefaultStrategy/LegacyProjectEnvironmentDefaultStrategy';
 
 interface IProjectEnvironmentProps {
     environment: ProjectEnvironmentType;

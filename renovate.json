@@ -1,22 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
+  "extends": ["config:recommended"],
   "timezone": "Europe/Madrid",
-  "schedule": [
-    "after 7pm every weekday",
-    "before 5am every weekday"
-  ],
+  "schedule": ["after 7pm every weekday", "before 5am every weekday"],
   "packageRules": [
     {
-      "matchUpdateTypes": [
-        "minor",
-        "patch"
-      ],
-      "matchPackageNames": [
-        "*"
-      ],
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchPackageNames": ["*"],
       "automerge": true,
       "minimumReleaseAge": "7 days",
       "internalChecksFilter": "strict"
@@ -27,7 +17,5 @@
     "docusaurus-plugin-openapi-docs",
     "docusaurus-theme-openapi-docs"
   ],
-  "labels": [
-    "dependencies"
-  ]
+  "labels": ["dependencies"]
 }

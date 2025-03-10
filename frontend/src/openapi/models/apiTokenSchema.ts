@@ -38,9 +38,4 @@ export interface ApiTokenSchema {
     tokenName: string;
     /** The type of API token */
     type: ApiTokenSchemaType;
-    /**
-     * This property was deprecated in Unleash v5. Prefer the `tokenName` property instead.
-     * @deprecated
-     */
-    username?: string;
 }

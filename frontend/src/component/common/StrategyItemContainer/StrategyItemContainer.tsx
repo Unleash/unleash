@@ -8,6 +8,7 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import type { PlaygroundStrategySchema } from 'openapi';
 import { Badge } from '../Badge/Badge';
 import { Link } from 'react-router-dom';
+import { Truncator } from '../Truncator/Truncator';
 
 type StrategyItemContainerProps = {
     strategyHeaderLevel?: 1 | 2 | 3 | 4 | 5 | 6;
@@ -28,17 +29,24 @@ const DragIcon = styled(IconButton)({
 
 const StyledHeaderContainer = styled('hgroup')(({ theme }) => ({
     display: 'flex',
-    flexFlow: 'row',
+    flexFlow: 'row nowrap',
     columnGap: '1ch',
     fontSize: theme.typography.body1.fontSize,
     '.strategy-name': {
         fontWeight: 'bold',
+        whiteSpace: 'nowrap',
     },
 }));
 
 const StyledContainer = styled('article')({
     background: 'inherit',
 });
+
+const StyledTruncator = styled(Truncator)(({ theme }) => ({
+    fontSize: theme.typography.body1.fontSize,
+    fontWeight: 'normal',
+    margin: 0,
+}));
 
 const StyledHeader = styled('div', {
     shouldForwardProp: (prop) => prop !== 'draggable' && prop !== 'disabled',
@@ -105,11 +113,11 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                                         )}
                                         :
                                     </p>
-                                    <Typography
+                                    <StyledTruncator
                                         component={`h${strategyHeaderLevel}`}
                                     >
                                         {strategy.title}
-                                    </Typography>
+                                    </StyledTruncator>
                                 </>
                             ) : (
                                 <Typography

@@ -271,7 +271,7 @@ export const ServiceAccountModal = ({
                 modal
                 title={editing ? 'Edit service account' : 'New service account'}
                 description='A service account is a special type of account that can only be used to authenticate with the Unleash API. Service accounts can be used to automate tasks.'
-                documentationLink='https://docs.getunleash.io'
+                documentationLink='https://docs.getunleash.io/reference/service-accounts'
                 documentationLinkLabel='Service accounts documentation'
                 formatApiCode={formatApiCode}
             >

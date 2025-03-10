@@ -14,7 +14,6 @@ import type { IFeatureStrategy } from 'interfaces/strategy';
 
 interface ProjectEnvironmentDefaultStrategyProps {
     environment: ProjectEnvironmentType;
-    description: string;
 }
 
 export const formatEditProjectEnvironmentStrategyPath = (
@@ -40,7 +39,6 @@ const DEFAULT_STRATEGY: CreateFeatureStrategySchema = {
 
 export const ProjectEnvironmentDefaultStrategy = ({
     environment,
-    description,
 }: ProjectEnvironmentDefaultStrategyProps) => {
     const projectId = useRequiredPathParam('projectId');
     const { environment: environmentId, defaultStrategy } = environment;
@@ -66,7 +64,6 @@ export const ProjectEnvironmentDefaultStrategy = ({
     return (
         <StrategyItem
             strategy={strategy}
-            description={description}
             headerItemsRight={
                 <>
                     <PermissionIconButton

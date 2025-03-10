@@ -17,7 +17,6 @@ type StrategyItemContainerProps = {
     headerItemsRight?: ReactNode;
     className?: string;
     style?: React.CSSProperties;
-    description?: string;
     children?: React.ReactNode;
 };
 
@@ -64,7 +63,6 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
     strategyHeaderLevel = 3,
     children,
     style = {},
-    description,
 }) => {
     const StrategyHeaderLink: React.FC<{ children?: React.ReactNode }> =
         'links' in strategy // todo: revisit this when we get to playground, related to flag `flagOverviewRedesign`

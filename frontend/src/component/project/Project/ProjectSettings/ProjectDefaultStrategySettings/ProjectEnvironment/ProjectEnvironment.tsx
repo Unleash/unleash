@@ -147,7 +147,6 @@ const ProjectEnvironment = ({ environment }: IProjectEnvironmentProps) => {
                     <StyledAccordionDetails>
                         <ProjectEnvironmentDefaultStrategy
                             environment={environment}
-                            description={description}
                         />
                     </StyledAccordionDetails>
                 ) : (

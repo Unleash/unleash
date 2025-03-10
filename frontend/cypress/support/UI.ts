@@ -60,7 +60,9 @@ export const createFeature_UI = (
 
     cy.wait(5_000);
 
-    cy.get('[data-testid=NAVIGATE_TO_CREATE_FEATURE').click(uiOpts);
+    cy.get(
+        '[data-testid=NAVIGATE_TO_CREATE_FEATURE]:contains("New feature flag")',
+    ).click(uiOpts);
 
     cy.intercept('POST', `/api/admin/projects/${projectName}/features`).as(
         'createFeature',

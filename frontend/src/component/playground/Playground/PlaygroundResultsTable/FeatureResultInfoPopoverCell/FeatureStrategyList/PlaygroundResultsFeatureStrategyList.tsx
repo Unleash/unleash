@@ -2,7 +2,6 @@ import {
     PlaygroundResultStrategyLists,
     WrappedPlaygroundResultStrategyList,
 } from './StrategyList/playgroundResultStrategyLists';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert } from '@mui/material';
 
@@ -24,54 +23,45 @@ export const PlaygroundResultFeatureStrategyList = ({
 
     const showDisabledStrategies = disabledStrategies?.length > 0;
 
-    return (
-        <>
-            <ConditionallyRender
-                condition={feature?.strategies?.data?.length === 0}
-                show={
-                    <Alert severity='warning' sx={{ mt: 2 }}>
-                        There are no strategies added to this feature flag in
-                        selected environment.
-                    </Alert>
-                }
+    if ((feature?.strategies?.data.length ?? 0) === 0) {
+        return (
+            <Alert severity='warning' sx={{ mt: 2 }}>
+                There are no strategies added to this feature flag in the
+                selected environment.
+            </Alert>
+        );
+    }
+
+    if (
+        (feature.hasUnsatisfiedDependency ||
+            !feature.isEnabledInCurrentEnvironment) &&
+        Boolean(feature?.strategies?.data)
+    ) {
+        return (
+            <WrappedPlaygroundResultStrategyList
+                feature={feature}
+                input={input}
             />
-            <ConditionallyRender
-                condition={
-                    (feature.hasUnsatisfiedDependency ||
-                        !feature.isEnabledInCurrentEnvironment) &&
-                    Boolean(feature?.strategies?.data)
-                }
-                show={
-                    <WrappedPlaygroundResultStrategyList
-                        feature={feature}
+        );
+    } else {
+        return (
+            <>
+                <PlaygroundResultStrategyLists
+                    strategies={enabledStrategies || []}
+                    input={input}
+                    titlePrefix={showDisabledStrategies ? 'Enabled' : ''}
+                />
+                {showDisabledStrategies ? (
+                    <PlaygroundResultStrategyLists
+                        strategies={disabledStrategies}
                         input={input}
+                        titlePrefix={'Disabled'}
+                        infoText={
+                            'Disabled strategies are not evaluated for the overall result.'
+                        }
                     />
-                }
-                elseShow={
-                    <>
-                        <PlaygroundResultStrategyLists
-                            strategies={enabledStrategies || []}
-                            input={input}
-                            titlePrefix={
-                                showDisabledStrategies ? 'Enabled' : ''
-                            }
-                        />
-                        <ConditionallyRender
-                            condition={showDisabledStrategies}
-                            show={
-                                <PlaygroundResultStrategyLists
-                                    strategies={disabledStrategies}
-                                    input={input}
-                                    titlePrefix={'Disabled'}
-                                    infoText={
-                                        'Disabled strategies are not evaluated for the overall result.'
-                                    }
-                                />
-                            }
-                        />
-                    </>
-                }
-            />
-        </>
-    );
+                ) : null}
+            </>
+        );
+    }
 };

@@ -114,14 +114,6 @@ export default class EventSearchController extends Controller {
         return events.map((event) => {
             const { label, text: summary } = this.msgFormatter.format(event);
 
-            if (this.config.isEnterprise) {
-                return {
-                    ...event,
-                    label,
-                    summary,
-                };
-            }
-
             return {
                 ...event,
                 label,

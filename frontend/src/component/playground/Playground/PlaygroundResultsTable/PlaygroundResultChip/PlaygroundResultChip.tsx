@@ -11,12 +11,14 @@ interface IResultChipProps {
     label: string;
     // Result icon - defaults to true
     showIcon?: boolean;
+    tabindex?: number;
 }
 
 export const PlaygroundResultChip: VFC<IResultChipProps> = ({
     enabled,
     label,
     showIcon = true,
+    tabindex,
 }) => {
     const theme = useTheme();
     const icon = (
@@ -28,12 +30,14 @@ export const PlaygroundResultChip: VFC<IResultChipProps> = ({
                     condition={typeof enabled === 'boolean' && Boolean(enabled)}
                     show={
                         <FeatureEnabledIcon
+                            aria-hidden
                             color={theme.palette.success.main}
                             strokeWidth='0.25'
                         />
                     }
                     elseShow={
                         <FeatureDisabledIcon
+                            aria-hidden
                             color={theme.palette.error.main}
                             strokeWidth='0.25'
                         />
@@ -56,6 +60,7 @@ export const PlaygroundResultChip: VFC<IResultChipProps> = ({
                     condition={typeof enabled === 'boolean' && Boolean(enabled)}
                     show={
                         <Badge
+                            tabIndex={tabindex}
                             color='success'
                             icon={showIcon ? icon : undefined}
                         >
@@ -63,7 +68,11 @@ export const PlaygroundResultChip: VFC<IResultChipProps> = ({
                         </Badge>
                     }
                     elseShow={
-                        <Badge color='error' icon={showIcon ? icon : undefined}>
+                        <Badge
+                            color='error'
+                            icon={showIcon ? icon : undefined}
+                            tabIndex={tabindex}
+                        >
                             {label}
                         </Badge>
                     }

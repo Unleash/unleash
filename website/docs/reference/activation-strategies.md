@@ -50,7 +50,7 @@ For example, if you have two constraints: one where the user email must have the
 
 A constraint has three parts:
 - A **context field**: The [context field](/reference/unleash-context) to use for evaluation.
-- An **operator**: One of the [constraint operators](#strategy-constraint-operators).
+- An **operator**: One of the [constraint operators](#constraint-operators).
 - **Values**: A value or list of values to use in the evaluation of the constraint.
 
 These parts turn the constraint into an expression that evaluates to true or false. Here are a few example constraints:
@@ -63,7 +63,7 @@ These parts turn the constraint into an expression that evaluates to true or fal
 
 #### Constraint operators
 
-Constraint operators help you define the conditional statements that get evaluated as part of the constraint. [Basic operators](#basic-operators) are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](/reference/sdks#strategy-constraints).
+Constraint operators help you define the conditional statements that get evaluated as part of the constraint. [Basic operators](#basic-operators) are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](/reference/sdks#server-side-sdk-compatibility-table).
 
 All constraints can be negated. For example: 
 
@@ -130,7 +130,7 @@ The value must start with and contain at least major, minor, and patch versions.
 
 Server-side SDKs fetch the full feature flag configuration associated with your API key from Unleash. You can use API keys scoped to specific projects or environments to optimize payload size.
 
-However, every value that you add to your feature flag constraints, increases the payload size. We recommend avoiding large constraint value lists. For example, instead of adding many user IDs or emails to the constraint value list, consider what properties those users share. This typically helps define and use a [custom context field](/reference/unleash-context#custom-context-field) instead.
+However, every value that you add to your feature flag constraints, increases the payload size. We recommend avoiding large constraint value lists. For example, instead of adding many user IDs or emails to the constraint value list, consider what properties those users share. This typically helps define and use a [custom context field](/reference/unleash-context#custom-context-fields) instead.
 
 
 ## Add an activation strategy with a constraint
@@ -149,7 +149,7 @@ To add an activation strategy with a constraint to a feature flag, do the follow
 
 Activation strategies are defined on the server but implemented client-side. The client determines whether a feature should be enabled based on the activation strategies.
 
-All [server-side client SDKs](../reference/sdks#server-side-sdks) and [Unleash Edge](../reference/unleash-edge) implement the default activation strategy. The [front-end client SDKs](../reference/sdks#front-end-sdks) do not perform evaluations themselves. Instead, they rely on [Unleash Edge](../reference/unleash-edge) to handle the implementation and evaluation.
+All [server-side client SDKs](../reference/sdks#server-side-sdks) and [Unleash Edge](../reference/unleash-edge) implement the default activation strategy. The [front-end client SDKs](../reference/sdks#client-side-sdks) do not perform evaluations themselves. Instead, they rely on [Unleash Edge](../reference/unleash-edge) to handle the implementation and evaluation.
 
 When using strategies with constraints, the client must provide the current [Unleash context](unleash-context) to the flag evaluation function for the evaluation to be done correctly. All official Unleash client SDKs support the option to pass dynamic context values to the `isEnabled()` function (or the SDK's equivalent).
 

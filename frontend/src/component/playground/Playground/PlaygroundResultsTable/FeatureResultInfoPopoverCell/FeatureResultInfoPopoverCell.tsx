@@ -2,8 +2,11 @@ import { useRef, useState } from 'react';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { IconButton, Popover, styled } from '@mui/material';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
+import { FeatureDetails as LegacyFeatureDetails } from './FeatureDetails/LegacyFeatureDetails';
+import { PlaygroundResultFeatureStrategyList as LegacyPlaygroundResultFeatureStrategyList } from './FeatureStrategyList/LegacyPlaygroundResultFeatureStrategyList';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureDetails } from './FeatureDetails/FeatureDetails';
-import { PlaygroundResultFeatureStrategyList } from './FeatureStrategyList/PlaygroundResultFeatureStrategyList';
+import { PlaygroundResultFeatureStrategyList } from './FeatureStrategyList/PlaygroundResultsFeatureStrategyList';
 
 interface FeatureResultInfoPopoverCellProps {
     feature: PlaygroundFeatureSchema;
@@ -21,6 +24,7 @@ export const FeatureResultInfoPopoverCell = ({
 }: FeatureResultInfoPopoverCellProps) => {
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
+    const useNewStrategyDesign = useUiFlag('flagOverviewRedesign');
 
     const togglePopover = () => {
         setOpen(!open);
@@ -43,7 +47,7 @@ export const FeatureResultInfoPopoverCell = ({
                     sx: (theme) => ({
                         display: 'flex',
                         flexDirection: 'column',
-                        padding: theme.spacing(6),
+                        padding: theme.spacing(useNewStrategyDesign ? 4 : 6),
                         width: 728,
                         maxWidth: '100%',
                         height: 'auto',
@@ -61,15 +65,31 @@ export const FeatureResultInfoPopoverCell = ({
                     horizontal: 'left',
                 }}
             >
-                <FeatureDetails
-                    feature={feature}
-                    input={input}
-                    onClose={() => setOpen(false)}
-                />
-                <PlaygroundResultFeatureStrategyList
-                    feature={feature}
-                    input={input}
-                />
+                {useNewStrategyDesign ? (
+                    <>
+                        <FeatureDetails
+                            feature={feature}
+                            input={input}
+                            onClose={() => setOpen(false)}
+                        />
+                        <PlaygroundResultFeatureStrategyList
+                            feature={feature}
+                            input={input}
+                        />
+                    </>
+                ) : (
+                    <>
+                        <LegacyFeatureDetails
+                            feature={feature}
+                            input={input}
+                            onClose={() => setOpen(false)}
+                        />
+                        <LegacyPlaygroundResultFeatureStrategyList
+                            feature={feature}
+                            input={input}
+                        />
+                    </>
+                )}
             </Popover>
         </FeatureResultPopoverWrapper>
     );

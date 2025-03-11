@@ -70,13 +70,13 @@ You can also manually change the state on a feature flag's page by going to **Ov
 
 Marking a flag as stale helps you deprecate a feature flag without removing the active configuration for connected applications.
 
-You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [project status dashboard](./technical-debt#project-health).
+You can use this to signal to your team to stop using the feature in your applications. Stale flags will show as stale in the [project status dashboard](./technical-debt#project-status).
 
 Marking a flag as stale generates the `feature-stale-on` [event](/reference/events#feature-stale-on). You can use [an integration](/reference/integrations) to trigger automated workflows, such as posting notifications in a Slack channel, breaking project builds if the code contains stale flags, or automatically opening pull requests to remove stale flags from the code.
 
 ### Configure expected lifetime
 
-Each [feature flag type](#feature-flag-type) has a default expected lifetime.
+Each [feature flag type](#feature-flag-types) has a default expected lifetime.
 With Admin access, you can configure these values. In the Admin UI, go to **Configure > Feature flag types** and edit the flag type you'd like to change.
 
 ## Feature flag lifecycle

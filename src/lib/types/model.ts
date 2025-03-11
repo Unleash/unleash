@@ -125,12 +125,6 @@ export interface FeatureToggleView extends FeatureToggleWithEnvironment {
     collaborators?: { users: Collaborator[] };
 }
 
-// @deprecated
-export interface FeatureToggleLegacy extends FeatureToggle {
-    strategies: IStrategyConfig[];
-    enabled: boolean;
-}
-
 export interface IEnvironmentDetail extends IEnvironmentBase {
     strategies: IStrategyConfig[];
     variants: IVariant[];

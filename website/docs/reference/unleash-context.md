@@ -24,7 +24,7 @@ The following table gives an overview of the fields' intended usage, their lifet
 | `sessionId`       | `string`              | dynamic  | The identifier of the current session.                                                                                                               |
 | `remoteAddress`   | `string`              | dynamic  | The application's IP address.                                                                                                                                |
 | `properties`      | `Map<string, string>` | dynamic  | A key-value store for additional data.                                                                                                              |
-| `currentTime` | `DateTime`/`string`   | dynamic  | A `DateTime` (or similar) data class instance or a string in an RFC-3339 format. **Defaults to the current time** if not set by the user; requires [SDK compatibility](../reference/sdks#strategy-constraints-advanced-support). |
+| `currentTime` | `DateTime`/`string`   | dynamic  | A `DateTime` (or similar) data class instance or a string in an RFC-3339 format. **Defaults to the current time** if not set by the user; requires [SDK compatibility](../reference/sdks#server-side-sdk-compatibility-table). |
 
 
 ### The `properties` field
@@ -45,7 +45,7 @@ For operators that work on non-string types, such as numeric and datetime operat
 
 :::
 
-Custom context fields allow you to extend the Unleash Context with custom data. Each context field definition consists of a name and an optional description. Additionally, you can define a set of [_legal values_](#legal-values "legal values for custom context fields"), and define if the context field can be used in [custom stickiness calculations](../reference/stickiness#custom-stickiness) for the [gradual rollout strategy](activation-strategies#customize-stickiness-beta) and for [feature flag variants](../reference/feature-toggle-variants).
+Custom context fields allow you to extend the Unleash Context with custom data. Each context field definition consists of a name and an optional description. Additionally, you can define a set of [_legal values_](#legal-values "legal values for custom context fields"), and define if the context field can be used in [custom stickiness calculations](../reference/stickiness#custom-stickiness) for the [gradual rollout strategy](../reference/activation-strategies) and for [feature flag variants](../reference/feature-toggle-variants).
 
 When interacting with custom context fields in code, they must be accessed via the Unleash Context's `properties` map, using the context field's name as the key.
 

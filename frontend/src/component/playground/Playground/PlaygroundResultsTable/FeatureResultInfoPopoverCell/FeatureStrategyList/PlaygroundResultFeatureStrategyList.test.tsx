@@ -1,8 +1,9 @@
 import { screen } from '@testing-library/react';
 import { render } from 'utils/testRenderer';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
-import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultFeatureStrategyList';
+import { PlaygroundResultFeatureStrategyList as LegacyPlaygroundResultFeatureStrategyList } from './LegacyPlaygroundResultFeatureStrategyList';
 import { vi } from 'vitest';
+import { PlaygroundResultFeatureStrategyList } from './PlaygroundResultsFeatureStrategyList';
 
 const testCases = [
     {
@@ -133,6 +134,21 @@ vi.mock('../../../../../../hooks/useUiFlag', () => ({
 
 afterAll(() => {
     vi.clearAllMocks();
+});
+
+testCases.forEach(({ name, feature, expectedText }) => {
+    test(`${name} (legacy)`, async () => {
+        render(
+            <LegacyPlaygroundResultFeatureStrategyList
+                feature={feature}
+                input={
+                    { environment: 'development' } as PlaygroundRequestSchema
+                }
+            />,
+        );
+
+        await screen.findByText(expectedText);
+    });
 });
 
 testCases.forEach(({ name, feature, expectedText }) => {

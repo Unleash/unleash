@@ -62,7 +62,6 @@ import type {
 } from '../../types/stores/access-store';
 import type FeatureToggleService from '../feature-toggle/feature-toggle-service';
 import IncompatibleProjectError from '../../error/incompatible-project-error';
-import ProjectWithoutOwnerError from '../../error/project-without-owner-error';
 import { arraysHaveSameItems } from '../../util';
 import type { GroupService } from '../../services/group-service';
 import type { IGroupRole } from '../../types/group';
@@ -665,8 +664,6 @@ export default class ProjectService {
     ): Promise<void> {
         const role = await this.findProjectRole(projectId, roleId);
 
-        await this.validateAtLeastOneOwner(projectId, role);
-
         await this.accessService.removeUserFromRole(userId, role.id, projectId);
 
         const user = await this.accountStore.get(userId);
@@ -695,14 +692,6 @@ export default class ProjectService {
             userId,
         );
 
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-
-        if (existingRoles.includes(ownerRole.id)) {
-            await this.validateAtLeastOneOwner(projectId, ownerRole);
-        }
-
         await this.accessService.removeUserAccess(projectId, userId);
 
         await this.eventService.storeEvent(
@@ -726,14 +715,6 @@ export default class ProjectService {
             projectId,
             groupId,
         );
-
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-
-        if (existingRoles.includes(ownerRole.id)) {
-            await this.validateAtLeastOneOwner(projectId, ownerRole);
-        }
 
         await this.accessService.removeGroupAccess(projectId, groupId);
 
@@ -803,8 +784,6 @@ export default class ProjectService {
                 [],
                 undefined,
             );
-
-        await this.validateAtLeastOneOwner(projectId, role);
 
         await this.accessService.removeGroupFromRole(
             group.id,
@@ -967,15 +946,6 @@ export default class ProjectService {
             projectId,
             userId,
         );
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-
-        const hasOwnerRole = includes(currentRoles, ownerRole);
-        const isRemovingOwnerRole = !includes(newRoles, ownerRole);
-        if (hasOwnerRole && isRemovingOwnerRole) {
-            await this.validateAtLeastOneOwner(projectId, ownerRole);
-        }
         const isAllowedToAssignRoles = await this.isAllowedToAddAccess(
             auditUser,
             projectId,
@@ -1019,14 +989,6 @@ export default class ProjectService {
             groupId,
         );
 
-        const ownerRole = await this.accessService.getRoleByName(
-            RoleName.OWNER,
-        );
-        const hasOwnerRole = includes(currentRoles, ownerRole);
-        const isRemovingOwnerRole = !includes(newRoles, ownerRole);
-        if (hasOwnerRole && isRemovingOwnerRole) {
-            await this.validateAtLeastOneOwner(projectId, ownerRole);
-        }
         const isAllowedToAssignRoles = await this.isAllowedToAddAccess(
             auditUser,
             projectId,
@@ -1086,25 +1048,6 @@ export default class ProjectService {
             );
         }
         return role;
-    }
-
-    async validateAtLeastOneOwner(
-        projectId: string,
-        currentRole: IRoleDescriptor,
-    ): Promise<void> {
-        if (currentRole.name === RoleName.OWNER) {
-            const users = await this.accessService.getProjectUsersForRole(
-                currentRole.id,
-                projectId,
-            );
-            const groups = await this.groupService.getProjectGroups(projectId);
-            const roleGroups = groups.filter((g) =>
-                g.roles?.includes(currentRole.id),
-            );
-            if (users.length + roleGroups.length < 2) {
-                throw new ProjectWithoutOwnerError();
-            }
-        }
     }
 
     /** @deprecated use projectInsightsService instead */
@@ -1180,7 +1123,6 @@ export default class ProjectService {
             // Nothing to do....
             return;
         }
-        await this.validateAtLeastOneOwner(projectId, currentRole);
 
         await this.accessService.updateUserProjectRole(
             userId,
@@ -1233,7 +1175,6 @@ export default class ProjectService {
             // Nothing to do....
             return;
         }
-        await this.validateAtLeastOneOwner(projectId, currentRole);
 
         await this.accessService.updateGroupProjectRole(
             userId,

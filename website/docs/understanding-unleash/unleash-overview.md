@@ -27,7 +27,7 @@ A web interface for managing feature flags, defining activation strategies, view
 
 Unleash provides both [server-side](/reference/sdks#server-side-sdks) and [client-side SDKs](/reference/sdks#client-side-sdks) for integrating feature flagging into your applications. SDKs fetch feature configurations from the Unleash API to check which features are enabled and what activation strategy to use for each feature.
 
-Server-side SDKs run in backend applications and retrieve feature flag configurations via the [Client API](#client-api). Supported languages include: [Node.js](reference/sdks/node), [Go](/reference/sdks/go), [Java](reference/sdks/java), [Python](reference/sdks/python), [.NET](/reference/sdks/dotnet), [PHP](/reference/sdks/php), and more.
+Server-side SDKs run in backend applications and retrieve feature flag configurations via the [Client API](#client-api). Supported languages include: [Node.js](/reference/sdks/node), [Go](/reference/sdks/go), [Java](/reference/sdks/java), [Python](/reference/sdks/python), [.NET](/reference/sdks/dotnet), [PHP](/reference/sdks/php), and more.
 
 Client-side SDKs are used in frontend and mobile applications. They communicate with Unleash through the [Frontend API](#frontend-api). Supported platforms include: [JavaScript](/reference/sdks/javascript-browser), [React](/reference/sdks/react), [iOS](/reference/sdks/ios-proxy), [Android](/reference/sdks/android-proxy), and more.
 

@@ -10,7 +10,7 @@ import {
     StyledListItem,
 } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { StrategyItem } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem';
+import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
 
 const StyledAlertWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -70,7 +70,7 @@ export const PlaygroundResultStrategyLists = ({
                     {strategies?.map((strategy, index) => (
                         <StyledListItem key={strategy.id}>
                             {index > 0 ? <StrategySeparator /> : ''}
-                            <StrategyItem
+                            <FeatureStrategyItem
                                 key={strategy.id}
                                 strategy={strategy}
                                 index={index}

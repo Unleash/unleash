@@ -68,3 +68,8 @@ Cypress.Commands.overwrite('visit', (originalFn, url, options = {}) => {
 
     return originalFn(url, options);
 });
+
+Cypress.Commands.overwrite('click', (originalFn, x, y, options = {}) => {
+    options.waitForAnimations = false;
+    return originalFn(x, y, options);
+});

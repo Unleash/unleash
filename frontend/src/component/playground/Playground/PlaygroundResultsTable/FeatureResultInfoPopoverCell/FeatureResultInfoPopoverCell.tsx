@@ -4,6 +4,7 @@ import { IconButton, Popover, styled } from '@mui/material';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import { FeatureDetails } from './FeatureDetails/FeatureDetails';
 import { PlaygroundResultFeatureStrategyList } from './FeatureStrategyList/PlaygroundResultFeatureStrategyList';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface FeatureResultInfoPopoverCellProps {
     feature: PlaygroundFeatureSchema;
@@ -21,6 +22,7 @@ export const FeatureResultInfoPopoverCell = ({
 }: FeatureResultInfoPopoverCellProps) => {
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
+    const useNewStrategyDesign = useUiFlag('flagOverviewRedesign');
 
     const togglePopover = () => {
         setOpen(!open);
@@ -43,7 +45,7 @@ export const FeatureResultInfoPopoverCell = ({
                     sx: (theme) => ({
                         display: 'flex',
                         flexDirection: 'column',
-                        padding: theme.spacing(6),
+                        padding: theme.spacing(useNewStrategyDesign ? 4 : 6),
                         width: 728,
                         maxWidth: '100%',
                         height: 'auto',

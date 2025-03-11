@@ -43,25 +43,25 @@ export const PlaygroundResultFeatureStrategyList = ({
                 input={input}
             />
         );
-    } else {
-        return (
-            <>
-                <PlaygroundResultStrategyLists
-                    strategies={enabledStrategies || []}
-                    input={input}
-                    titlePrefix={showDisabledStrategies ? 'Enabled' : ''}
-                />
-                {showDisabledStrategies ? (
-                    <PlaygroundResultStrategyLists
-                        strategies={disabledStrategies}
-                        input={input}
-                        titlePrefix={'Disabled'}
-                        infoText={
-                            'Disabled strategies are not evaluated for the overall result.'
-                        }
-                    />
-                ) : null}
-            </>
-        );
     }
+
+    return (
+        <>
+            <PlaygroundResultStrategyLists
+                strategies={enabledStrategies || []}
+                input={input}
+                titlePrefix={showDisabledStrategies ? 'Enabled' : ''}
+            />
+            {showDisabledStrategies ? (
+                <PlaygroundResultStrategyLists
+                    strategies={disabledStrategies}
+                    input={input}
+                    titlePrefix={'Disabled'}
+                    infoText={
+                        'Disabled strategies are not evaluated for the overall result.'
+                    }
+                />
+            ) : null}
+        </>
+    );
 };

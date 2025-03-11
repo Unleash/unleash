@@ -3,9 +3,10 @@ import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { IconButton, Popover, styled } from '@mui/material';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import { FeatureDetails as LegacyFeatureDetails } from './FeatureDetails/LegacyFeatureDetails';
-import { PlaygroundResultFeatureStrategyList } from './FeatureStrategyList/LegacyPlaygroundResultFeatureStrategyList';
+import { PlaygroundResultFeatureStrategyList as LegacyPlaygroundResultFeatureStrategyList } from './FeatureStrategyList/LegacyPlaygroundResultFeatureStrategyList';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureDetails } from './FeatureDetails/FeatureDetails';
+import { PlaygroundResultFeatureStrategyList } from './FeatureStrategyList/PlaygroundResultsFeatureStrategyList';
 
 interface FeatureResultInfoPopoverCellProps {
     feature: PlaygroundFeatureSchema;
@@ -83,7 +84,7 @@ export const FeatureResultInfoPopoverCell = ({
                             input={input}
                             onClose={() => setOpen(false)}
                         />
-                        <PlaygroundResultFeatureStrategyList
+                        <LegacyPlaygroundResultFeatureStrategyList
                             feature={feature}
                             input={input}
                         />

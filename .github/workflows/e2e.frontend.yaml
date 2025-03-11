@@ -1,9 +1,33 @@
 name: e2e:frontend
-on: [deployment_status]
+on:
+  pull_request:
+    # paths:
+    #   - 'frontend/**'
 jobs:
   e2e:
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success' && contains(github.event.deployment_status.target_url, 'unleash-monorepo-frontend')
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres
+        env:
+          POSTGRES_USER: unleash_user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: unleash_test
+          POSTGRES_INITDB_ARGS: "--no-sync"
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      unleashEnterprise:
+        image: 726824350591.dkr.ecr.eu-central-1.amazonaws.com/unleash-enterprise:latest
+        credentials:
+          username: AWS
+          password: ${{ secrets.ECR_ENTERPRISE_TOKEN }}
+        env:
+          DATABASE_URL: "postgres://postgres:unleash@localhost/unleash"
+          UNLEASH_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
+
+
     strategy:
       matrix:
         test:

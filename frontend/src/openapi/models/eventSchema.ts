@@ -42,6 +42,11 @@ export interface EventSchema {
      */
     id: number;
     /**
+     * The IP address of the user that created the event. Only available in Enterprise.
+     * @nullable
+     */
+    ip?: string | null;
+    /**
      * The concise, human-readable name of the event.
      * @nullable
      */

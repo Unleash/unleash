@@ -1,6 +1,5 @@
 # This docker compose setup configures:
-# - the Unleash server instance + the necessary backing Postgres database
-# - the Unleash proxy
+# - the Unleash enterprise server instance + the necessary backing Postgres database
 #
 # To learn more about all the parts of Unleash, visit
 # https://docs.getunleash.io

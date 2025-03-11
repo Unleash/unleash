@@ -13,7 +13,7 @@ jobs:
       - name: Get Token
         id: get-token
         run: |
-          echo "::set-output name=token::$(curl https://app.unleash-hosted.com/docker-login/token/${{ secrets.ECR_ENTERPRISE_TOKEN }})"
+          echo "token=$(curl https://app.unleash-hosted.com/docker-login/token/${{ secrets.ECR_ENTERPRISE_TOKEN }})" >> $GITHUB_OUTPUT
 
   e2e:
     runs-on: ubuntu-latest
@@ -60,6 +60,6 @@ jobs:
         with:
           working-directory: frontend
           env: AUTH_USER=admin,AUTH_PASSWORD=unleash4all
-          config: baseUrl=${{ github.event.deployment_status.target_url }}
+          config: baseUrl=http://localhost:4242
           spec: cypress/integration/${{ matrix.test }}
           install-command: yarn --immutable

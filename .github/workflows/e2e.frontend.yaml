@@ -4,8 +4,20 @@ on:
     # paths:
     #   - 'frontend/**'
 jobs:
+  get-token:
+    runs-on: ubuntu-latest
+    outputs:
+      token: ${{ steps.get-token.outputs.token }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get Token
+        id: get-token
+        run: |
+          echo "::set-output name=token::$(curl https://app.unleash-hosted.com/docker-login/token/${{ secrets.ECR_ENTERPRISE_TOKEN }})"
+
   e2e:
     runs-on: ubuntu-latest
+    needs: get-token
     services:
       db:
         image: postgres
@@ -22,7 +34,7 @@ jobs:
         image: 726824350591.dkr.ecr.eu-central-1.amazonaws.com/unleash-enterprise:latest
         credentials:
           username: AWS
-          password: ${{ secrets.ECR_ENTERPRISE_TOKEN }}
+          password: ${{ needs.get-token.outputs.token }}
         env:
           DATABASE_URL: "postgres://postgres:unleash@localhost/unleash"
           UNLEASH_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}

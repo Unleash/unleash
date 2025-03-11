@@ -165,7 +165,10 @@ export const addFlexibleRolloutStrategyToFeature_UI = (
         cy.get('[data-testid=ADD_CONSTRAINT_ID]').click();
         cy.get('[data-testid=DIALOGUE_CONFIRM_ID]').click();
     }
-    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
+    // this one needs to wait until the dropdown selector of stickiness is set, that's why waitForAnimations: true
+    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`)
+        .first()
+        .click({ waitForAnimations: true });
     return cy.wait('@addStrategyToFeature');
 };
 
@@ -213,7 +216,10 @@ export const updateFlexibleRolloutStrategy_UI = (
         },
     ).as('updateStrategy');
 
-    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
+    // this one needs to wait until the dropdown selector of stickiness is set, that's why waitForAnimations: true
+    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`)
+        .first()
+        .click({ waitForAnimations: true });
     return cy.wait('@updateStrategy');
 };
 
@@ -288,7 +294,10 @@ export const addUserIdStrategyToFeature_UI = (
         },
     ).as('addStrategyToFeature');
 
-    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`).first().click();
+    // this one needs to wait until the dropdown selector of stickiness is set, that's why waitForAnimations: true
+    cy.get(`[data-testid=STRATEGY_FORM_SUBMIT_ID]`)
+        .first()
+        .click({ waitForAnimations: true });
     return cy.wait('@addStrategyToFeature');
 };
 

@@ -97,7 +97,7 @@ Constraints aren't fixed and can be changed later to further narrow your audienc
 
 :::tip API: Add constraints
 
-You can either [add constraints when you add the strategy](//reference/api/unleash/add-feature-strategy) or [PUT](/reference/api/unleash/update-feature-strategy) or [PATCH](/reference/api/unleash/patch-feature-strategy) the strategy later.
+You can either [add constraints when you add the strategy](/reference/api/unleash/add-feature-strategy) or [PUT](/reference/api/unleash/update-feature-strategy) or [PATCH](/reference/api/unleash/patch-feature-strategy) the strategy later.
 
 :::
 

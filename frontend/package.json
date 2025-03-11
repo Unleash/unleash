@@ -109,7 +109,7 @@
     "react-github-calendar": "^4.5.1",
     "react-hooks-global-state": "2.1.0",
     "react-joyride": "^2.5.3",
-    "react-markdown": "^8.0.4",
+    "react-markdown": "^10.0.0",
     "react-router-dom": "6.16.0",
     "react-table": "7.8.0",
     "react-test-renderer": "18.3.1",

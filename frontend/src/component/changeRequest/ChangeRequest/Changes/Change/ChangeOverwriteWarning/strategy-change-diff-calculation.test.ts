@@ -274,7 +274,7 @@ describe('Strategy change conflict detection', () => {
                     name: 'variant1',
                     weight: 1000,
                     payload: {
-                        type: 'string',
+                        type: 'string' as const,
                         value: 'beaty',
                     },
                     stickiness: 'userId',

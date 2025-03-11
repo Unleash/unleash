@@ -2,7 +2,6 @@ import { styled } from '@mui/material';
 import { StrategyEvaluationChip } from 'component/common/ConstraintsList/StrategyEvaluationChip/StrategyEvaluationChip';
 import { StrategyEvaluationItem } from 'component/common/ConstraintsList/StrategyEvaluationItem/StrategyEvaluationItem';
 import { HtmlTooltip } from 'component/common/HtmlTooltip/HtmlTooltip';
-import { useThemeMode } from 'hooks/useThemeMode';
 import type { StrategyVariantSchema } from 'openapi';
 import type { FC } from 'react';
 
@@ -31,7 +30,6 @@ export const RolloutVariants: FC<{
     if (!variants?.length) {
         return null;
     }
-    const { themeMode } = useThemeMode();
 
     return (
         <StrategyEvaluationItem type={`Variants (${variants.length})`}>

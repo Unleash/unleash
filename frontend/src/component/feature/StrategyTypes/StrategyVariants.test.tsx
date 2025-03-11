@@ -19,7 +19,7 @@ test('should render variants', async () => {
                 weight: 1000,
                 weightType: 'variable' as const,
                 payload: {
-                    type: 'string',
+                    type: 'string' as const,
                     value: 'variantValue',
                 },
             },

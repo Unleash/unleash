@@ -19,7 +19,7 @@ export interface IFeatureStrategy {
 }
 
 export interface IFeatureStrategyParameters {
-    [key: string]: string;
+    [key: string]: string | number | undefined;
 }
 
 /**

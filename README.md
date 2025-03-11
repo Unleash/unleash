@@ -27,7 +27,7 @@ Unleash is the most popular open-source solution for feature flagging on GitHub.
 
 ### Set up Unleash
 
-To get started with Unleash, you can either explore [Unleash Enterprise](#set-up-unleash-enterprise) with a free trial or [get started locally](#set-up-unleash-locally) with our open-source solution.
+To get started with Unleash, you can either explore [Unleash Enterprise](#unleash-enterprise) with a free trial or [get started locally](#unleash-open-source) with our open-source solution.
 
 #### Unleash Enterprise
 

@@ -110,11 +110,13 @@ export const EditReleasePlanTemplate = () => {
             formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}
             loading={loading}
+            archived={!!template.archivedAt}
         >
             <StyledButtonContainer>
                 <UpdateButton
                     name='template'
                     permission={RELEASE_PLAN_TEMPLATE_UPDATE}
+                    disabled={!!template.archivedAt}
                 >
                     Save changes
                 </UpdateButton>

@@ -15,6 +15,7 @@ export interface IReleasePlanTemplate {
     createdAt: string;
     createdByUserId: number;
     milestones: IReleasePlanMilestonePayload[];
+    archivedAt?: string;
 }
 
 export interface IReleasePlan {

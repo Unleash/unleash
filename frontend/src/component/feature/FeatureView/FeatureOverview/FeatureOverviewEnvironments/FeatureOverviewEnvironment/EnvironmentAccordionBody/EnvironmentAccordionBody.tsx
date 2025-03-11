@@ -30,9 +30,7 @@ interface IEnvironmentAccordionBodyProps {
 }
 
 const StyledAccordionBodyInnerContainer = styled('div')(({ theme }) => ({
-    [theme.breakpoints.down(400)]: {
-        padding: theme.spacing(1),
-    },
+    borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 export const StyledContentList = styled('ol')(({ theme }) => ({
@@ -58,7 +56,9 @@ export const StyledContentList = styled('ol')(({ theme }) => ({
 export const StyledListItem = styled('li', {
     shouldForwardProp: (prop) => prop !== 'type',
 })<{ type?: 'release plan' | 'strategy' }>(({ theme, type }) => ({
-    borderBottom: `1px solid ${theme.palette.divider}`,
+    '& + &': {
+        borderTop: `1px solid ${theme.palette.divider}`,
+    },
     background:
         type === 'release plan'
             ? theme.palette.background.elevation2
@@ -290,34 +290,29 @@ export const EnvironmentAccordionBody = ({
     };
 
     return (
-        <div>
-            <StyledAccordionBodyInnerContainer>
-                <StyledContentList>
-                    {releasePlans.length > 0 ? (
-                        <>
-                            {releasePlans.map((plan) => (
-                                <StyledListItem
-                                    type='release plan'
-                                    key={plan.id}
-                                >
-                                    <ReleasePlan
-                                        plan={plan}
-                                        environmentIsDisabled={isDisabled}
-                                    />
-                                </StyledListItem>
-                            ))}
-                            {strategies.length > 0 ? (
-                                <li>
-                                    <StrategySeparator />
-                                    <Strategies />
-                                </li>
-                            ) : null}
-                        </>
-                    ) : strategies.length > 0 ? (
-                        <Strategies />
-                    ) : null}
-                </StyledContentList>
-            </StyledAccordionBodyInnerContainer>
-        </div>
+        <StyledAccordionBodyInnerContainer>
+            <StyledContentList>
+                {releasePlans.length > 0 ? (
+                    <>
+                        {releasePlans.map((plan) => (
+                            <StyledListItem type='release plan' key={plan.id}>
+                                <ReleasePlan
+                                    plan={plan}
+                                    environmentIsDisabled={isDisabled}
+                                />
+                            </StyledListItem>
+                        ))}
+                        {strategies.length > 0 ? (
+                            <li>
+                                <StrategySeparator />
+                                <Strategies />
+                            </li>
+                        ) : null}
+                    </>
+                ) : strategies.length > 0 ? (
+                    <Strategies />
+                ) : null}
+            </StyledContentList>
+        </StyledAccordionBodyInnerContainer>
     );
 };

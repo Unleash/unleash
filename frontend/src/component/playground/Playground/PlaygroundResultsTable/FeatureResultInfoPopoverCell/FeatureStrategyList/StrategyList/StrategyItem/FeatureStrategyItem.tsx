@@ -8,7 +8,7 @@ import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DisabledStrategyExecution } from './StrategyExecution/DisabledStrategyExecution';
-import { StrategyItemContainer } from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
+import { StrategyItem } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem';
 
 interface IFeatureStrategyItemProps {
     strategy: PlaygroundStrategySchema;
@@ -32,7 +32,7 @@ export const FeatureStrategyItem = ({
               : 'False';
 
     return (
-        <StrategyItemContainer
+        <StrategyItem
             style={{
                 borderColor:
                     result.enabled && result.evaluationStatus === 'complete'
@@ -40,9 +40,9 @@ export const FeatureStrategyItem = ({
                         : 'none',
             }}
             strategy={{ ...strategy, id: `${objectId(strategy)}` }}
-            orderNumber={index + 1}
-            actions={
+            headerRightItems={
                 <PlaygroundResultChip
+                    tabindex={-1}
                     showIcon={false}
                     enabled={result.enabled}
                     label={label}
@@ -65,6 +65,6 @@ export const FeatureStrategyItem = ({
                     />
                 }
             />
-        </StrategyItemContainer>
+        </StrategyItem>
     );
 };

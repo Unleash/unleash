@@ -18,33 +18,6 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     needs: get-token
-    services:
-      db:
-        image: postgres
-        env:
-          POSTGRES_USER: unleash_user
-          POSTGRES_PASSWORD: password
-          POSTGRES_DB: unleash_test
-          POSTGRES_INITDB_ARGS: "--no-sync"
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-      unleashEnterprise:
-        image: 726824350591.dkr.ecr.eu-central-1.amazonaws.com/unleash-enterprise:latest
-        credentials:
-          username: AWS
-          password: ${{ needs.get-token.outputs.token }}
-        env:
-          DATABASE_URL: "postgres://postgres:unleash@localhost/unleash"
-          UNLEASH_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
-        options: >-
-          --health-cmd "wget --no-verbose --tries=1 --spider http://localhost:4242/health || exit 1" 
-          --health-interval 10s 
-          --health-timeout 5s 
-          --health-retries 5
-
-
     strategy:
       matrix:
         test:
@@ -60,6 +33,12 @@ jobs:
           echo "$GITHUB_CONTEXT"
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Start Unleash test instance
+        run: |
+          echo ${{ needs.get-token.outputs.token }} | docker login --username AWS --password-stdin 726824350591.dkr.ecr.eu-central-1.amazonaws.com
+          docker compose up -f .github/docker-compose.test.yml -d --wait -t 90
+        env:
+          FRONTEND_TEST_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
       - name: Run Cypress
         uses: cypress-io/github-action@v6
         with:

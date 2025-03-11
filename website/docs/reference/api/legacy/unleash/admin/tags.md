@@ -155,7 +155,7 @@ Used to register a new tag type. This endpoint should be used to inform the serv
 
 **Notes:**
 
-- if `name` is not unique, will return 409 CONFLICT, if you'd like to update an existing tag through admin-api look at [Update tag type](#Update-tag-type).
+- if `name` is not unique, will return 409 CONFLICT, if you'd like to update an existing tag through admin-api look at [Update tag type](#update-tag-type).
 
 Returns 201-CREATED if the tag type was created successfully
 

@@ -37,7 +37,7 @@ The client needs to point to the correct API endpoint. The Frontend API is avail
 
 ### API token
 
-The client needs a frontend [token](../reference/api-tokens-and-client-keys.mdx#front-end-tokens) to interact with the Frontend API.
+The client needs a frontend [token](../reference/api-tokens-and-client-keys.mdx#frontend-tokens) to interact with the Frontend API.
 
 ### Refresh interval for tokens
 

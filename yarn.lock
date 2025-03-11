@@ -4837,10 +4837,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"helmet@npm:^6.0.0":
-  version: 6.2.0
-  resolution: "helmet@npm:6.2.0"
-  checksum: 10c0/52d97adfdb151ebdc08e5d78eb93eebfb7e8e3e0563e68664828138dc6ab2d9d512b4ae71e1f8c6fcf8ddc38f87908325971d95dcabaafd4fde1f5b0faabeb8c
+"helmet@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "helmet@npm:8.0.0"
+  checksum: 10c0/c3d273df206cbb4e5e830ea68afdbd3d0f8e055b2707f67f651ebb4b679c7fd4d6ac77ce6188a2cee32e853d4e24aa00548f787989bbe6e5f98ebfb703855d09
   languageName: node
   linkType: hard
 
@@ -9373,7 +9373,7 @@ __metadata:
     fast-json-patch: "npm:^3.1.0"
     fetch-mock: "npm:^12.0.0"
     hash-sum: "npm:^2.0.0"
-    helmet: "npm:^6.0.0"
+    helmet: "npm:^8.0.0"
     http-errors: "npm:^2.0.0"
     husky: "npm:^9.0.11"
     hyperloglog-lite: "npm:^1.0.2"

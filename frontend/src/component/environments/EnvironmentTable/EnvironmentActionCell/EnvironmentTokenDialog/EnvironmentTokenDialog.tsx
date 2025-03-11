@@ -29,7 +29,7 @@ export const EnvironmentTokenDialog = ({
             Your new token has been created successfully.
         </Typography>
         <Typography variant='body1'>
-            You can also find it as "<strong>{token?.username}</strong>" in the{' '}
+            You can also find it as "<strong>{token?.tokenName}</strong>" in the{' '}
             <Link to='/admin/api'>API access page</Link>.
         </Typography>
         <UserToken token={token?.secret || ''} />

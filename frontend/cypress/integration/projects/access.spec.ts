@@ -150,7 +150,10 @@ describe('project-access', () => {
     });
 
     it('can remove access', () => {
-        cy.get(`[data-testid='${PA_REMOVE_BUTTON_ID}']`).first().click();
+        cy.get(`[data-testid='${PA_REMOVE_BUTTON_ID}']`)
+            .filter(':not(:disabled)')
+            .first()
+            .click();
 
         cy.intercept(
             'DELETE',

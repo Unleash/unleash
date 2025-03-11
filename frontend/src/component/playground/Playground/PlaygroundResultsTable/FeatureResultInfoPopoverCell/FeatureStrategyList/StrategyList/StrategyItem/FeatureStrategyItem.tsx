@@ -8,18 +8,16 @@ import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DisabledStrategyExecution } from './StrategyExecution/DisabledStrategyExecution';
-import { StrategyItem } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem';
+import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
 
 interface IFeatureStrategyItemProps {
     strategy: PlaygroundStrategySchema;
-    index: number;
     input?: PlaygroundRequestSchema;
 }
 
 export const FeatureStrategyItem = ({
     strategy,
     input,
-    index,
 }: IFeatureStrategyItemProps) => {
     const { result } = strategy;
     const theme = useTheme();
@@ -32,15 +30,10 @@ export const FeatureStrategyItem = ({
               : 'False';
 
     return (
-        <StrategyItem
-            style={{
-                borderColor:
-                    result.enabled && result.evaluationStatus === 'complete'
-                        ? theme.palette.success.main
-                        : 'none',
-            }}
+        <StrategyItemContainer
             strategy={{ ...strategy, id: `${objectId(strategy)}` }}
-            headerRightItems={
+            strategyHeaderLevel={4}
+            headerItemsRight={
                 <PlaygroundResultChip
                     tabindex={-1}
                     showIcon={false}
@@ -65,6 +58,6 @@ export const FeatureStrategyItem = ({
                     />
                 }
             />
-        </StrategyItem>
+        </StrategyItemContainer>
     );
 };

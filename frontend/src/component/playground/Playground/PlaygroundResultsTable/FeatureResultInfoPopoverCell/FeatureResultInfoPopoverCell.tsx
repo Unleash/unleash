@@ -20,6 +20,7 @@ const FeatureResultPopoverWrapper = styled('div')(({ theme }) => ({
 
 const DetailsPadding = styled('div')(({ theme }) => ({
     paddingInline: theme.spacing(4),
+    paddingTop: theme.spacing(2.5),
 }));
 
 export const FeatureResultInfoPopoverCell = ({
@@ -43,7 +44,6 @@ export const FeatureResultInfoPopoverCell = ({
               sx: (theme) => ({
                   display: 'flex',
                   flexDirection: 'column',
-                  paddingBlock: theme.spacing(4),
                   width: 728,
                   maxWidth: '100%',
                   height: 'auto',

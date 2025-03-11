@@ -71,30 +71,12 @@ export const PlaygroundResultStrategyLists = ({
                         <StyledListItem key={strategy.id}>
                             {index > 0 ? <StrategySeparator /> : ''}
                             <FeatureStrategyItem
-                                key={strategy.id}
                                 strategy={strategy}
-                                index={index}
                                 input={input}
                             />
                         </StyledListItem>
                     ))}
                 </StyledContentList>
-                {/* <Box sx={{ width: '100%' }}>
-                    {strategies?.map((strategy, index) => (
-                        <Fragment key={strategy.id}>
-                            <ConditionallyRender
-                                condition={index > 0}
-                                show={<StrategySeparator text='OR' />}
-                            />
-                            <FeatureStrategyItem
-                                key={strategy.id}
-                                strategy={strategy}
-                                index={index}
-                                input={input}
-                            />
-                        </Fragment>
-                    ))}
-                </Box> */}
             </>
         }
     />

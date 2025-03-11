@@ -9,12 +9,6 @@ import {
     hasOnlyCustomStrategies,
 } from './helpers';
 
-const Container = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1),
-}));
-
 const HeaderRow = styled('div')({
     display: 'flex',
     justifyContent: 'space-between',
@@ -116,7 +110,7 @@ export const FeatureDetails = ({
         });
 
     return (
-        <Container>
+        <>
             <HeaderRow>
                 <HeaderGroup>
                     <StyledTypographyName>{feature.name}</StyledTypographyName>
@@ -154,6 +148,6 @@ export const FeatureDetails = ({
                     {customStrategiesTxt}
                 </Alert>
             ) : null}
-        </Container>
+        </>
     );
 };

@@ -16,6 +16,7 @@ type StrategyItemContainerProps = {
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
     headerItemsRight?: ReactNode;
+    headerItemsLeft?: ReactNode;
     className?: string;
     style?: React.CSSProperties;
     children?: React.ReactNode;
@@ -68,12 +69,13 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
     onDragStart,
     onDragEnd,
     headerItemsRight,
+    headerItemsLeft,
     strategyHeaderLevel = 3,
     children,
     style = {},
 }) => {
     const StrategyHeaderLink: React.FC<{ children?: React.ReactNode }> =
-        'links' in strategy // todo: revisit this when we get to playground, related to flag `flagOverviewRedesign`
+        'links' in strategy
             ? ({ children }) => <Link to={strategy.links.edit}>{children}</Link>
             : ({ children }) => <> {children} </>;
 
@@ -133,11 +135,11 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                     {strategy.disabled ? (
                         <Badge color='disabled'>Disabled</Badge>
                     ) : null}
+                    {headerItemsLeft}
                     <Box
                         sx={{
                             marginLeft: 'auto',
                             display: 'flex',
-                            minHeight: (theme) => theme.spacing(6),
                             alignItems: 'center',
                         }}
                     >

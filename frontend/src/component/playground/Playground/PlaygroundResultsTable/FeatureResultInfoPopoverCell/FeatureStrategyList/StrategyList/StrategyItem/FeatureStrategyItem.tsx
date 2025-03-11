@@ -33,7 +33,7 @@ export const FeatureStrategyItem = ({
         <StrategyItemContainer
             strategy={{ ...strategy, id: `${objectId(strategy)}` }}
             strategyHeaderLevel={4}
-            headerItemsRight={
+            headerItemsLeft={
                 <PlaygroundResultChip
                     tabindex={-1}
                     showIcon={false}
@@ -42,6 +42,7 @@ export const FeatureStrategyItem = ({
                 />
             }
         >
+            {/* todo: use new strategy execution components */}
             <ConditionallyRender
                 condition={Boolean(strategy.disabled)}
                 show={

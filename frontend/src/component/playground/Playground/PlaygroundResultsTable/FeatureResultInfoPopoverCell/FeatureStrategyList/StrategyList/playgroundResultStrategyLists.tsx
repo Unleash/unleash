@@ -1,13 +1,16 @@
-import { Fragment } from 'react';
-import { Alert, Box, styled, Typography } from '@mui/material';
+import { Alert, styled, Typography } from '@mui/material';
 import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
     PlaygroundFeatureSchema,
 } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
-import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
+import {
+    StyledContentList,
+    StyledListItem,
+} from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
+import { StrategyItem } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem';
 
 const StyledAlertWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -31,7 +34,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 interface PlaygroundResultStrategyListProps {
     strategies: PlaygroundStrategySchema[];
     input?: PlaygroundRequestSchema;
-    titlePrefix?: string;
+    titlePrefix?: 'Enabled' | 'Disabled';
     infoText?: string;
 }
 
@@ -63,7 +66,20 @@ export const PlaygroundResultStrategyLists = ({
                         </StyledSubtitle>
                     }
                 />
-                <Box sx={{ width: '100%' }}>
+                <StyledContentList>
+                    {strategies?.map((strategy, index) => (
+                        <StyledListItem key={strategy.id}>
+                            {index > 0 ? <StrategySeparator /> : ''}
+                            <StrategyItem
+                                key={strategy.id}
+                                strategy={strategy}
+                                index={index}
+                                input={input}
+                            />
+                        </StyledListItem>
+                    ))}
+                </StyledContentList>
+                {/* <Box sx={{ width: '100%' }}>
                     {strategies?.map((strategy, index) => (
                         <Fragment key={strategy.id}>
                             <ConditionallyRender
@@ -78,7 +94,7 @@ export const PlaygroundResultStrategyLists = ({
                             />
                         </Fragment>
                     ))}
-                </Box>
+                </Box> */}
             </>
         }
     />
@@ -94,13 +110,13 @@ const resolveHintText = (feature: PlaygroundFeatureSchema) => {
         feature.hasUnsatisfiedDependency &&
         !feature.isEnabledInCurrentEnvironment
     ) {
-        return 'If environment was enabled and parent dependencies were satisfied';
+        return 'If the environment was enabled and parent dependencies were satisfied';
     }
     if (feature.hasUnsatisfiedDependency) {
         return 'If parent dependencies were satisfied';
     }
     if (!feature.isEnabledInCurrentEnvironment) {
-        return 'If environment was enabled';
+        return 'If the environment was enabled';
     }
     return '';
 };
@@ -123,7 +139,7 @@ export const WrappedPlaygroundResultStrategyList = ({
             <StyledAlert severity={'info'} color={'warning'}>
                 {resolveHintText(feature)}, then this feature flag would be{' '}
                 {feature.strategies?.result ? 'TRUE' : 'FALSE'} with strategies
-                evaluated like so:{' '}
+                evaluated like this:{' '}
             </StyledAlert>
             <StyledListWrapper sx={{ p: 2.5 }}>
                 <PlaygroundResultStrategyLists

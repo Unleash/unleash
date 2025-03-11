@@ -18,6 +18,10 @@ const FeatureResultPopoverWrapper = styled('div')(({ theme }) => ({
     color: theme.palette.divider,
 }));
 
+const DetailsPadding = styled('div')(({ theme }) => ({
+    paddingInline: theme.spacing(4),
+}));
+
 export const FeatureResultInfoPopoverCell = ({
     feature,
     input,
@@ -34,6 +38,34 @@ export const FeatureResultInfoPopoverCell = ({
         return null;
     }
 
+    const paperProps = useNewStrategyDesign
+        ? {
+              sx: (theme) => ({
+                  display: 'flex',
+                  flexDirection: 'column',
+                  paddingBlock: theme.spacing(4),
+                  width: 728,
+                  maxWidth: '100%',
+                  height: 'auto',
+                  overflowY: 'auto',
+                  backgroundColor: theme.palette.background.elevation1,
+                  borderRadius: theme.shape.borderRadius,
+              }),
+          }
+        : {
+              sx: (theme) => ({
+                  display: 'flex',
+                  flexDirection: 'column',
+                  padding: theme.spacing(6),
+                  width: 728,
+                  maxWidth: '100%',
+                  height: 'auto',
+                  overflowY: 'auto',
+                  backgroundColor: theme.palette.background.elevation2,
+                  borderRadius: theme.shape.borderRadius,
+              }),
+          };
+
     return (
         <FeatureResultPopoverWrapper>
             <IconButton onClick={togglePopover}>
@@ -43,19 +75,7 @@ export const FeatureResultInfoPopoverCell = ({
                 open={open}
                 onClose={() => setOpen(false)}
                 anchorEl={ref.current}
-                PaperProps={{
-                    sx: (theme) => ({
-                        display: 'flex',
-                        flexDirection: 'column',
-                        padding: theme.spacing(useNewStrategyDesign ? 4 : 6),
-                        width: 728,
-                        maxWidth: '100%',
-                        height: 'auto',
-                        overflowY: 'auto',
-                        backgroundColor: theme.palette.background.elevation2,
-                        borderRadius: theme.shape.borderRadius,
-                    }),
-                }}
+                PaperProps={paperProps}
                 anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
@@ -67,11 +87,13 @@ export const FeatureResultInfoPopoverCell = ({
             >
                 {useNewStrategyDesign ? (
                     <>
-                        <FeatureDetails
-                            feature={feature}
-                            input={input}
-                            onClose={() => setOpen(false)}
-                        />
+                        <DetailsPadding>
+                            <FeatureDetails
+                                feature={feature}
+                                input={input}
+                                onClose={() => setOpen(false)}
+                            />
+                        </DetailsPadding>
                         <PlaygroundResultFeatureStrategyList
                             feature={feature}
                             input={input}

@@ -2,7 +2,7 @@
 title: Unleash architecture
 ---
 
-Unleash is designed for privacy, speed, and resilience, enabling feature flag evaluations to happen locally within your applications. This architecture provides:
+Unleash is designed for privacy, speed, and resilience, enabling feature flag evaluations to happen locally within your applications. The architecture provides:
 - **Fast feature flag evaluations**: Feature flags are evaluated within the [SDKs](/reference/sdks) running in your application, making evaluations incredibly fast (nanoseconds).
 - **High reliability**: There is no dependency on network calls during evaluation, providing high reliability.
 - **Privacy and security**: No user data is shared with the Unleash instance, ensuring [privacy and security](/understanding-unleash/data-collection).

@@ -92,7 +92,7 @@ You can assign the following root permissions:
 |---------------------|------------------------------------|
 | Change instance banners | Change instance [banners](./banners). |
 | Change maintenance mode state | Change [maintenance mode](./maintenance-mode) state. |
-| Update CORS settings | Update [CORS settings](./front-end-api#cors). |
+| Update CORS settings | Update [CORS settings](./front-end-api#configure-cross-origin-resource-sharing-cors). |
 | Read instance logs and login history | Read instance logs and [login history](./login-history.md). |
 
 #### Integration permissions

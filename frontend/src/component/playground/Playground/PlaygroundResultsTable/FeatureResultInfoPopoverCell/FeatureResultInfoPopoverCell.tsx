@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { IconButton, Popover, styled } from '@mui/material';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
-import { FeatureDetails } from './FeatureDetails/FeatureDetails';
+import { FeatureDetails } from './FeatureDetails/LegacyFeatureDetails';
 import { PlaygroundResultFeatureStrategyList } from './FeatureStrategyList/PlaygroundResultFeatureStrategyList';
 import { useUiFlag } from 'hooks/useUiFlag';
 

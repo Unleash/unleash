@@ -12,7 +12,7 @@ import {
 const Container = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(0.5),
+    gap: theme.spacing(1),
 }));
 
 const HeaderRow = styled('div')({
@@ -142,17 +142,12 @@ export const FeatureDetails = ({
                 </IconButton>
             </HeaderRow>
             <p>
-                <Typography variant='body1' component='span'>
-                    {description}
-                </Typography>
-                <Typography variant='subtitle1' color={color} component='span'>
+                {description}
+                <Typography color={color} component='span'>
                     {reason}
                 </Typography>
-                <Typography variant='body1' component='span'>
-                    .
-                </Typography>
+                .
             </p>
-
             {noValueTxt ? <Alert color={'info'}>{noValueTxt}</Alert> : null}
             {customStrategiesTxt ? (
                 <Alert severity='warning' color='info'>

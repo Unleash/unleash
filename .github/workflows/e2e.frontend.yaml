@@ -38,6 +38,11 @@ jobs:
         env:
           DATABASE_URL: "postgres://postgres:unleash@localhost/unleash"
           UNLEASH_LICENSE: ${{ secrets.FRONTEND_TEST_LICENSE }}
+        options: >-
+          --health-cmd "wget --no-verbose --tries=1 --spider http://localhost:4242/health || exit 1" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
 
 
     strategy:

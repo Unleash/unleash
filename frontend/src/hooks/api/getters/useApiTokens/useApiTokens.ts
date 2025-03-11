@@ -5,7 +5,7 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 
 export interface IApiToken {
     createdAt: Date;
-    username: string;
+    tokenName: string;
     secret: string;
     type: string;
     project?: string;

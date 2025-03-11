@@ -384,7 +384,11 @@ class EventStore implements IEventStore {
             .offset(Number(params.offset) ?? 0);
 
         try {
-            return (await query).map(this.rowToEvent);
+            return (await query).map((row) =>
+                options?.withIp
+                    ? { ...this.rowToEvent(row), ip: row.ip }
+                    : this.rowToEvent(row),
+            );
         } catch (err) {
             return [];
         }

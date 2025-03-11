@@ -522,7 +522,6 @@ class EventStore implements IEventStore {
             featureName: row.feature_name,
             project: row.project,
             environment: row.environment,
-            ip: row.ip,
         };
     }
 

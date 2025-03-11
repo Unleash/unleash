@@ -99,6 +99,9 @@ export interface IFeatureEnvironmentWithCrEnabled extends IFeatureEnvironment {
     crEnabled?: boolean;
 }
 
+/**
+ * @deprecated use `StrategyVariantSchema` from openapi
+ */
 export interface IFeatureVariant {
     name: string;
     stickiness: string;
@@ -114,7 +117,7 @@ export interface IOverride {
 }
 
 export interface IPayload {
-    type: string;
+    type: 'string' | 'number' | 'json' | 'csv';
     value: string;
 }
 

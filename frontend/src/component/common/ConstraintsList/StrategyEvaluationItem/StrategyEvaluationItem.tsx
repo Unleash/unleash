@@ -12,11 +12,19 @@ const StyledContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     alignItems: 'center',
     fontSize: theme.typography.body2.fontSize,
-    padding: theme.spacing(2, 3),
+    margin: theme.spacing(2, 3),
+}));
+
+const StyledContent = styled('div')(({ theme }) => ({
+    display: 'flex',
+    gap: theme.spacing(1),
+    flexWrap: 'wrap',
+    alignItems: 'center',
 }));
 
 const StyledType = styled('span')(({ theme }) => ({
     display: 'block',
+    flexShrink: 0,
     fontSize: theme.fontSizes.smallerBody,
     fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.secondary,
@@ -46,13 +54,15 @@ export const StrategyEvaluationItem: FC<StrategyItemProps> = ({
 }) => (
     <StyledContainer>
         <StyledType>{type}</StyledType>
-        {children}
-        {values && values?.length > 0 ? (
-            <StyledValuesGroup>
-                {values?.map((value, index) => (
-                    <StyledValue key={`${value}#${index}`} label={value} />
-                ))}
-            </StyledValuesGroup>
-        ) : null}
+        <StyledContent>
+            {children}
+            {values && values?.length > 0 ? (
+                <StyledValuesGroup>
+                    {values?.map((value, index) => (
+                        <StyledValue key={`${value}#${index}`} label={value} />
+                    ))}
+                </StyledValuesGroup>
+            ) : null}
+        </StyledContent>
     </StyledContainer>
 );

@@ -2,31 +2,63 @@
 title: Unleash architecture
 ---
 
-One of the most important aspects of the Unleash architecture is that feature flags are evaluated directly in the client SDKs that run as part of your application. This makes flag evaluations incredibly fast (we're talking nanoseconds), scalable, and resilient against network disturbances. To achieve this, Unleash incurs a small update-delay when you change your flag configurations until it is fully propagated to your application. This delay is typically a few seconds and is configurable.
+Unleash is designed for privacy, speed, and resilience, enabling feature flag evaluations to happen locally within your applications. This architecture provides:
+- **Fast feature flag evaluations**: Feature flags are evaluated within the [SDKs](/reference/sdks) running in your application, making evaluations incredibly fast (nanoseconds).
+- **High reliability**: There is no dependency on network calls during evaluation, providing high reliability.
+- **Privacy and security**: No user data is shared with the Unleash instance, ensuring [privacy and security](/understanding-unleash/data-collection).
 
-Since feature flags are evaluated locally within the [client SDKs](/reference/sdks), no user data is shared with the Unleash instance. This ensures complete privacy of your customer data.
+## System Overview
 
-If you want more details you can read about [our unique architecture](https://www.getunleash.io/blog/our-unique-architecture).
+The Unleash system consists of several key components.
 
-### Unleash Server {#unleash-server}
+![A visual overview of an Unleash system as described in the following paragraph.](/img/unleash-architecture-edge.png)
 
-Before you can connect your application to Unleash you need a Unleash server. You have a few options available:
+### The Unleash API
 
-1. **Unleash Open-Source**
-   - [Docker](../using-unleash/deploy/getting-started)
-   - [Helm Chart](https://github.com/unleash/helm-charts/)
-   - [GitLab](https://docs.gitlab.com/ee/operations/feature_flags.html#choose-a-client-library)
-2. **Unleash Enterprise**
-   - [Hosted Plans](https://www.getunleash.io/plans)
-   - [Self-hosted](https://www.getunleash.io/blog/self-host-your-feature-toggle-system)
+The Unleash API (or Unleash server) is the core service for managing feature flags, configurations, and related concepts. SDKs retrieve [feature flag](/reference/feature-toggles) configurations from the API, determining which flags are enabled and what [activation strategies](/reference/activation-strategies) apply.
 
-### System Overview {#system-overview}
+### The Unleash Admin UI
 
-![A visual overview of an Unleash system as described in the following paragraph.](/img/unleash-architecture-edge.png 'System Overview')
+A web interface for managing feature flags, defining activation strategies, viewing analytics, configuring access roles, generating API tokens, and more.
 
-- [**Unleash API**](/reference/api/unleash) - The Unleash instance. This is where you create feature flags, configure activation strategies, and parameters, etc. The service that contains all feature flags and their configurations. Configurations declare which activation strategies to use and which parameters they should get.
-- **Unleash Admin UI** - The bundled web interface for interacting with the Unleash instance. Manage flags, define strategies, look at metrics, and much more. Use the UI to [create feature flags](/how-to-create-feature-flag), [manage project access roles](../how-to/how-to-create-and-assign-custom-project-roles), [create API tokens](/reference/api-tokens-and-client-keys#create-an-api-token), and more.
-- [**Unleash SDKs**](../reference/sdks) - Unleash SDKs integrate into your applications and get feature configurations from the Unleash API. Use them to check whether features are enabled or disabled and to send metrics to the Unleash API. [See all our SDKs](../reference/sdks)
-- [**Unleash Edge**](../reference/unleash-edge) - The Unleash Edge sits between front-end and native applications on one side and the Unleash API on the other. It can also sit between server-side SDKs and the Unleash API as well. You can scale it independently of the Unleash API to handle large request rates without causing issues for the Unleash API. Edge has all endpoints for the client API, frontend API, and proxy API. 
+![A visual overview of an Unleash system as described in the following paragraph.](/img/unleash-admin-ui.png)
 
-To be super fast (_we're talking nano-seconds_), the [client SDK](../reference/sdks) caches all feature flags and their current configuration in memory. The activation strategies are also implemented in the SDK. This makes it really fast to check if a flag is on or off because it is just a simple function operating on local state, without the need to poll data from the database.
+### Unleash SDKs
+
+Unleash provides both [server-side](/reference/sdks#server-side-sdks) and [client-side SDKs](/reference/sdks#client-side-sdks) for integrating feature flagging into your applications. SDKs fetch feature configurations from the Unleash API to check which features are enabled and what activation strategy to use for each feature.
+
+Server-side SDKs run in backend applications and retrieve feature flag configurations via the [Client API](#client-api). Supported languages include: [Node.js](reference/sdks/node), [Go](/reference/sdks/go), [Java](reference/sdks/java), [Python](reference/sdks/python), [.NET](/reference/sdks/dotnet), [PHP](/reference/sdks/php), and more.
+
+Client-side SDKs are used in frontend and mobile applications. They communicate with Unleash through the [Frontend API](#frontend-api). Supported platforms include: [JavaScript](/reference/sdks/javascript-browser), [React](/reference/sdks/react), [iOS](/reference/sdks/ios-proxy), [Android](/reference/sdks/android-proxy), and more.
+
+SDKs cache all feature flag data in memory, applying activation strategies locally. This makes flag evaluation incredibly fast, as it is a simple function operating on local state, without the need to poll data from the database. This architecture results in a small delay (typically a few seconds, but configurable) when propagating configuration changes to your applications.
+
+### Unleash Edge
+
+Unleash Edge is a lightweight caching layer designed to improve scalability, performance, and resilience. It sits between your SDKs and the Unleash API and handles thousands of connected SDKs without increasing the number of requests you make to your Unleash instance.
+
+### Unleash APIs
+
+#### Client API
+
+The [Client API](/reference/api/unleash/client) is the API used by server-side SDKs to fetch feature flag configurations and send usage metrics to Unleash.
+
+#### Frontend API
+The [Frontend API](/reference/api/unleash/frontend-api) is the API used by client-side SDKs to retrieve feature flag configurations and send usage metrics to Unleash.
+
+#### Admin API
+The [Admin API](/reference/api/unleash) is an API layer for managing all aspects of your Unleash instance, including creating, updating, and deleting resources, such as feature flags, activation strategies, and environments. This API is used by the [Unleash Admin UI](#the-unleash-admin-ui) and other tools and [integrations](/reference/integrations).
+
+
+## Get started with Unleash
+
+To integrate Unleash, you first need an [Unleash server](#the-unleash-api). You can choose from:
+- Unleash Enterprise:
+  - [Cloud-hosted plans](https://www.getunleash.io/pricing)
+  - [Self-hosted plans](https://www.getunleash.io/pricing)
+- Open-source deployment options:
+  - [Docker](../using-unleash/deploy/getting-started)
+  - [Helm Chart](https://github.com/unleash/helm-charts/)
+  - [GitLab](https://docs.gitlab.com/ee/operations/feature_flags.html#choose-a-client-library)
+
+For a deeper dive into Unleash’s architecture, check out this [blog post](https://www.getunleash.io/blog/our-unique-architecture).

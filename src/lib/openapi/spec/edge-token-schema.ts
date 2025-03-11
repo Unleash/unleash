@@ -7,7 +7,7 @@ export const edgeTokenSchema = {
     additionalProperties: false,
     required: ['token', 'projects', 'type'],
     description:
-        'A representation of a client token, limiting access to [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens) (used by serverside SDKs) or [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens) (used by proxy SDKs)',
+        'A representation of a client token, limiting access to [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens) (used by serverside SDKs) or [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#frontend-tokens) (used by proxy SDKs)',
     properties: {
         projects: {
             description:
@@ -19,7 +19,7 @@ export const edgeTokenSchema = {
             example: ['developerexperience', 'enterprisegrowth'],
         },
         type: {
-            description: `The [API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys#api-tokens)'s **type**. Unleash supports three different types of API tokens ([ADMIN](https://docs.getunleash.io/reference/api-tokens-and-client-keys#admin-tokens), [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens), [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#front-end-tokens)). They all have varying access, so when validating a token it's important to know what kind you're dealing with`,
+            description: `The [API token](https://docs.getunleash.io/reference/api-tokens-and-client-keys)'s **type**. Unleash supports three different types of API tokens ([ADMIN](https://docs.getunleash.io/reference/api-tokens-and-client-keys#admin-tokens), [CLIENT](https://docs.getunleash.io/reference/api-tokens-and-client-keys#client-tokens), [FRONTEND](https://docs.getunleash.io/reference/api-tokens-and-client-keys#frontend-tokens)). They all have varying access, so when validating a token it's important to know what kind you're dealing with`,
             type: 'string',
             enum: Object.values(ApiTokenType),
             example: 'client',

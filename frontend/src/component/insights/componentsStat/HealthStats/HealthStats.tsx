@@ -99,7 +99,7 @@ export const HealthStats: FC<IHealthStatsProps> = ({
             </StyledStatsRow>
             <ExplanationRow>
                 <Link
-                    href='https://docs.getunleash.io/reference/technical-debt'
+                    href='https://docs.getunleash.io/reference/insights#health'
                     target='_blank'
                     rel='noreferrer'
                 >

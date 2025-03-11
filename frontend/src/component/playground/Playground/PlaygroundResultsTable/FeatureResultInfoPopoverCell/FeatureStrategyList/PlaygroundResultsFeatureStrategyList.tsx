@@ -1,7 +1,7 @@
 import {
     PlaygroundResultStrategyLists,
     WrappedPlaygroundResultStrategyList,
-} from './StrategyList/playgroundResultStrategyLists';
+} from './StrategyList/LegacyPlaygroundResultStrategyLists';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert } from '@mui/material';
 

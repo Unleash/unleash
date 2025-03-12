@@ -3,8 +3,8 @@ title: Unleash architecture
 ---
 
 Unleash is designed for privacy, speed, and resilience, enabling feature flag evaluations to happen locally within your applications. The architecture provides:
-- **Fast feature flag evaluations**: Feature flags are evaluated within the [SDKs](/reference/sdks) running in your application, making evaluations incredibly fast (nanoseconds).
-- **High reliability**: There is no dependency on network calls during evaluation, providing high reliability.
+- **Fast feature flag evaluations**: Feature flags are evaluated within the [SDKs](#unleash-sdks) or [Unleash Edge](#unleash-edge), making evaluations incredibly fast (nanoseconds).
+- **High reliability**: With server-side SDKs, there is no dependency on network calls during evaluation, providing high reliability.
 - **Privacy and security**: No user data is shared with the Unleash instance, ensuring [privacy and security](/understanding-unleash/data-collection).
 
 ## System Overview
@@ -27,30 +27,56 @@ A web interface for managing feature flags, defining activation strategies, view
 
 Unleash provides both [server-side](/reference/sdks#server-side-sdks) and [client-side SDKs](/reference/sdks#client-side-sdks) for integrating feature flagging into your applications. SDKs fetch feature configurations from the Unleash API to check which features are enabled and what activation strategy to use for each feature.
 
-Server-side SDKs run in backend applications and retrieve feature flag configurations via the [Client API](#client-api). Supported languages include: [Node.js](/reference/sdks/node), [Go](/reference/sdks/go), [Java](/reference/sdks/java), [Python](/reference/sdks/python), [.NET](/reference/sdks/dotnet), [PHP](/reference/sdks/php), and more.
-
-Client-side SDKs are used in frontend and mobile applications. They communicate with Unleash through the [Frontend API](#frontend-api). Supported platforms include: [JavaScript](/reference/sdks/javascript-browser), [React](/reference/sdks/react), [iOS](/reference/sdks/ios-proxy), [Android](/reference/sdks/android-proxy), and more.
-
-For improved performance and scalability, SDKs can connect to the [Unleash service](#the-unleash-api) through [Unleash Edge](#unleash-edge) instead of directly using the Frontend and Client APIs.
-
 SDKs cache all feature flag data in memory, applying activation strategies locally. This makes flag evaluation incredibly fast, as it is a simple function operating on local state, without the need to poll data from the database. This architecture results in a small delay (typically a few seconds, but configurable) when propagating configuration changes to your applications.
+
+#### Server-side SDKs
+
+Server-side SDKs run in backend applications and retrieve feature flag configurations via the [Client API](#client-api) or [Unleash Edge](#unleash-edge). Server-side SDKs perform the flag evaluation locally, meaning no user data is shared with the Unleash instance.
+
+Supported languages include: [Node.js](/reference/sdks/node), [Go](/reference/sdks/go), [Java](/reference/sdks/java), [Python](/reference/sdks/python), [.NET](/reference/sdks/dotnet), [PHP](/reference/sdks/php), and more.
+
+#### Client-side SDKs
+
+Client-side SDKs are used in frontend and mobile applications. They communicate with Unleash through the [Frontend API](#frontend-api) or [Unleash Edge](#unleash-edge). Supported platforms include: [JavaScript](/reference/sdks/javascript-browser), [React](/reference/sdks/react), [iOS](/reference/sdks/ios-proxy), [Android](/reference/sdks/android-proxy), and more.
+
+Client-side SDKs do not perform the flag evaluation locally, instead, they fetch all enabled feature flags for a given [Unleash Context](/reference/context). The flag evaluation happens inside [Unleash Edge](#unleash-edge) (when using Edge), or directly within your Unleash server, when using the [Frontend API](#frontend-api).
+
+The following table outlines where flag evaluation happens with different SDK setups.
+
+| SDK setup                          | Feature flag evaluation                                      |
+|------------------------------------|--------------------------------------------------|
+| Server-side SDK + Client API  | Performed **locally** within the SDK. |
+| Server-side SDK + Unleash Edge | Performed **locally** within the SDK. |
+| Client-side SDK + Frontend API | Performed by the **Unleash server**. |
+| Client-side SDK + Unleash Edge | Performed by **Unleash Edge**. |
+
+Flag evaluation relies on the [Unleash Context](/reference/context) and may involve user data. With server-side SDKs, user data remains within your application and is never shared with the Unleash server, whether you use the cloud or self-hosted version.
+
+For client-side SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/understanding-unleash/proxy-hosting#you-host-everything), or [self-hosting Unleash Edge](/understanding-unleash/proxy-hosting#unleash-hosts-the-api-you-host-edge).
 
 ### Unleash Edge
 
 Unleash Edge is a lightweight caching layer designed to improve scalability, performance, and resilience. It sits between your SDKs and the Unleash API and handles thousands of connected SDKs without increasing the number of requests you make to your Unleash instance.
 
+Beyond scalability, Unleash Edge also offers privacy and security benefits for client-side SDKs by performing flag evaluations without exposing sensitive data to end-users or to Unleash. 
+
 ### Unleash APIs
 
 #### Client API
 
-The [Client API](/reference/api/unleash/client) is the API used by server-side SDKs to fetch feature flag configurations and send usage metrics to Unleash.
+The [Client API](/reference/api/unleash/client) is the API used by server-side SDKs to fetch feature flag configurations and send SDK usage metrics to Unleash.
 
 #### Frontend API
-The [Frontend API](/reference/api/unleash/frontend-api) is the API used by client-side SDKs to retrieve feature flag configurations and send usage metrics to Unleash.
+The [Frontend API](/reference/api/unleash/frontend-api) is the API used by client-side SDKs to retrieve all enabled feature flags for a given [Unleash Context](/reference/context) and send SDK usage metrics to Unleash.
 
 #### Admin API
 The [Admin API](/reference/api/unleash) is an API layer for managing all aspects of your Unleash instance, including creating, updating, and deleting resources, such as feature flags, activation strategies, and environments. This API is used by the [Unleash Admin UI](#the-unleash-admin-ui) and other tools and [integrations](/reference/integrations).
 
+| API            | Used by | Available endpoints |
+|---------------|---------|---|
+| Client API | Server-side SDKs | Get all enabled feature flags for a given context, register an SDK, send SDK usage metrics. |
+| Frontend API | Client-side SDKs | Get a feature flag by name, get all feature flags, register an SDK, send SDK usage metrics. |
+| Admin API | Admin UI, internal tooling, third-party integrations | Access and manage all resources within Unleash, such as context, environments, events, metrics, and users.
 
 ## Get started with Unleash
 

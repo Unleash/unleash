@@ -11,6 +11,11 @@ import type { ReleasePlanMilestoneSchema } from './releasePlanMilestoneSchema';
  */
 export interface ReleasePlanTemplateSchema {
     /**
+     * The date and time that the release template was archived.
+     * @nullable
+     */
+    archivedAt?: string | null;
+    /**
      * The date and time that the release template was created.
      */
     createdAt: string;

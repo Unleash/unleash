@@ -5,11 +5,11 @@
  */
 
 /**
- * Representation of a [tag](https://docs.getunleash.io/reference/tags)
+ * Representation of a [tag](https://docs.getunleash.io/reference/feature-toggles#tags)
  */
 export interface TagSchema {
     /**
-     * The [type](https://docs.getunleash.io/reference/tags#tag-types) of the tag
+     * The [type](https://docs.getunleash.io/reference/feature-toggles#tags) of the tag
      * @minLength 2
      * @maxLength 50
      */

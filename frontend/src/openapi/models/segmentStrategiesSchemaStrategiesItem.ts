@@ -5,14 +5,14 @@
  */
 
 export type SegmentStrategiesSchemaStrategiesItem = {
-    /** The ID of the environment that the strategy belongs to. */
-    environment: string;
-    /** The name of the feature flag that this strategy belongs to. */
-    featureName: string;
     /** The ID of the strategy */
     id: string;
+    /** The name of the feature flag that this strategy belongs to. */
+    featureName: string;
     /** The ID of the project that the strategy belongs to. */
     projectId: string;
+    /** The ID of the environment that the strategy belongs to. */
+    environment: string;
     /** The name of the strategy's type. */
     strategyName: string;
 };

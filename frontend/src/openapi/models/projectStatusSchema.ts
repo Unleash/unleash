@@ -5,9 +5,9 @@
  */
 import type { ProjectActivitySchema } from './projectActivitySchema';
 import type { ProjectStatusSchemaHealth } from './projectStatusSchemaHealth';
-import type { ProjectStatusSchemaLifecycleSummary } from './projectStatusSchemaLifecycleSummary';
 import type { ProjectStatusSchemaResources } from './projectStatusSchemaResources';
 import type { ProjectStatusSchemaStaleFlags } from './projectStatusSchemaStaleFlags';
+import type { ProjectStatusSchemaLifecycleSummary } from './projectStatusSchemaLifecycleSummary';
 
 /**
  * Schema representing the overall status of a project, including an array of activity records. Each record in the activity array contains a date and a count, providing a snapshot of the project’s activity level over time.
@@ -17,10 +17,10 @@ export interface ProjectStatusSchema {
     activityCountByDate: ProjectActivitySchema;
     /** Information about the project's health rating */
     health: ProjectStatusSchemaHealth;
-    /** Feature flag lifecycle statistics for this project. */
-    lifecycleSummary: ProjectStatusSchemaLifecycleSummary;
     /** Key resources within the project */
     resources: ProjectStatusSchemaResources;
     /** Information on stale and potentially stale flags in this project. */
     staleFlags: ProjectStatusSchemaStaleFlags;
+    /** Feature flag lifecycle statistics for this project. */
+    lifecycleSummary: ProjectStatusSchemaLifecycleSummary;
 }

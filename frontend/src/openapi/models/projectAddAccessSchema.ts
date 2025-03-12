@@ -8,10 +8,10 @@
  * An object containing a collection of roles, a collection of groups and a collection of users.
  */
 export interface ProjectAddAccessSchema {
-    /** A list of group IDs */
-    groups: number[];
     /** A list of role IDs */
     roles: number[];
+    /** A list of group IDs */
+    groups: number[];
     /** A list of user IDs */
     users: number[];
 }

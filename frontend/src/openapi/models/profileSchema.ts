@@ -3,18 +3,18 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { FeatureSchema } from './featureSchema';
 import type { RoleSchema } from './roleSchema';
+import type { FeatureSchema } from './featureSchema';
 
 /**
  * User profile overview
  */
 export interface ProfileSchema {
-    /** Deprecated, always returns empty array */
-    features: FeatureSchema[];
+    rootRole: RoleSchema;
     /** Which projects this user is a member of */
     projects: string[];
-    rootRole: RoleSchema;
     /** Which email subscriptions this user is subscribed to */
     subscriptions: string[];
+    /** Deprecated, always returns empty array */
+    features: FeatureSchema[];
 }

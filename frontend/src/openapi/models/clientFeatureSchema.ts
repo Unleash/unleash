@@ -3,16 +3,18 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { DependentFeatureSchema } from './dependentFeatureSchema';
 import type { FeatureStrategySchema } from './featureStrategySchema';
 import type { VariantSchema } from './variantSchema';
+import type { DependentFeatureSchema } from './dependentFeatureSchema';
 
 /**
  * Feature flag configuration used by SDKs to evaluate state of a flag
  */
 export interface ClientFeatureSchema {
-    /** Feature dependencies for this flag */
-    dependencies?: DependentFeatureSchema[];
+    /** The unique name of a feature flag. Is validated to be URL safe on creation */
+    name: string;
+    /** What kind of feature flag is this. Refer to the documentation on [feature flag types](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types) for more information */
+    type?: string;
     /**
      * A description of the flag
      * @nullable
@@ -20,24 +22,22 @@ export interface ClientFeatureSchema {
     description?: string | null;
     /** Whether the feature flag is enabled for the current API key or not. This is ANDed with the evaluation results of the strategies list, so if this is false, the evaluation result will always be false */
     enabled: boolean;
+    /** If this is true Unleash believes this feature flag has been active longer than Unleash expects a flag of this type to be active */
+    stale?: boolean;
     /**
      * Set to true if SDKs should trigger [impression events](https://docs.getunleash.io/reference/impression-data) when this flag is evaluated
      * @nullable
      */
     impressionData?: boolean | null;
-    /** The unique name of a feature flag. Is validated to be URL safe on creation */
-    name: string;
     /** Which project this feature flag belongs to */
     project?: string;
-    /** If this is true Unleash believes this feature flag has been active longer than Unleash expects a flag of this type to be active */
-    stale?: boolean;
     /** Evaluation strategies for this flag. Each entry in this list will be evaluated and ORed together */
     strategies?: FeatureStrategySchema[];
-    /** What kind of feature flag is this. Refer to the documentation on [feature flag types](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types) for more information */
-    type?: string;
     /**
      * [Variants](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) configured for this flag
      * @nullable
      */
     variants?: VariantSchema[] | null;
+    /** Feature dependencies for this flag */
+    dependencies?: DependentFeatureSchema[];
 }

@@ -3,15 +3,15 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { RequestsPerSecondSchemaDataResultItem } from './requestsPerSecondSchemaDataResultItem';
 import type { RequestsPerSecondSchemaDataResultType } from './requestsPerSecondSchemaDataResultType';
+import type { RequestsPerSecondSchemaDataResultItem } from './requestsPerSecondSchemaDataResultItem';
 
 /**
  * The query result from prometheus
  */
 export type RequestsPerSecondSchemaData = {
-    /** An array of values per metric. Each one represents a line in the graph labeled by its metric name */
-    result?: RequestsPerSecondSchemaDataResultItem[];
     /** Prometheus compatible result type. */
     resultType?: RequestsPerSecondSchemaDataResultType;
+    /** An array of values per metric. Each one represents a line in the graph labeled by its metric name */
+    result?: RequestsPerSecondSchemaDataResultItem[];
 };

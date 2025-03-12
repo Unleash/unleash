@@ -8,35 +8,38 @@
  * A map of resource names and their limits.
  */
 export interface ResourceLimitsSchema {
+    /** The maximum number of values per segment allowed. */
+    segmentValues: number;
+    /** The maximum number of strategy segments allowed. */
+    strategySegments: number;
     /** The maximum number of actions per action set allowed. */
     actionSetActions: number;
+    /** The maximum number of action set definitions per project allowed. */
+    actionSetsPerProject: number;
     /** The maximum number of filters per action set allowed. */
     actionSetFilters: number;
     /** The maximum number of filter values inside an action set allowed. */
     actionSetFilterValues: number;
-    /** The maximum number of action set definitions per project allowed. */
-    actionSetsPerProject: number;
-    /**
-     * The maximum number of SDK and admin API tokens you can have at the same time. This limit applies only to server-side and client-side SDK tokens and to admin tokens. Personal access tokens are not subject to this limit. The limit applies to the total number of tokens across all projects in your organization.
-     * @minimum 0
-     */
-    apiTokens: number;
-    /** The maximum number of constraints in a single strategy. */
-    constraints: number;
+    /** The maximum number of signal endpoints allowed. */
+    signalEndpoints: number;
+    /** The maximum number of signal tokens per endpoint allowed. */
+    signalTokensPerEndpoint: number;
+    /** The maximum number of feature environment strategies allowed. */
+    featureEnvironmentStrategies: number;
     /** The maximum number of values for a single constraint. */
     constraintValues: number;
+    /** The maximum number of constraints in a single strategy. */
+    constraints: number;
     /**
      * The maximum number of environments allowed.
      * @minimum 1
      */
     environments: number;
-    /** The maximum number of feature environment strategies allowed. */
-    featureEnvironmentStrategies: number;
     /**
-     * The maximum number of feature flags you can have at the same time. Archived flags do not count towards this limit.
-     * @minimum 1
+     * The maximum number of SDK and admin API tokens you can have at the same time. This limit applies only to server-side and client-side SDK tokens and to admin tokens. Personal access tokens are not subject to this limit. The limit applies to the total number of tokens across all projects in your organization.
+     * @minimum 0
      */
-    featureFlags: number;
+    apiTokens: number;
     /**
      * The maximum number of projects allowed.
      * @minimum 1
@@ -44,12 +47,9 @@ export interface ResourceLimitsSchema {
     projects: number;
     /** The maximum number of segments allowed. */
     segments: number;
-    /** The maximum number of values per segment allowed. */
-    segmentValues: number;
-    /** The maximum number of signal endpoints allowed. */
-    signalEndpoints: number;
-    /** The maximum number of signal tokens per endpoint allowed. */
-    signalTokensPerEndpoint: number;
-    /** The maximum number of strategy segments allowed. */
-    strategySegments: number;
+    /**
+     * The maximum number of feature flags you can have at the same time. Archived flags do not count towards this limit.
+     * @minimum 1
+     */
+    featureFlags: number;
 }

@@ -9,13 +9,13 @@ import type { FeatureEnvironmentMetricsSchema } from './featureEnvironmentMetric
  * A batch of feature metrics
  */
 export interface FeatureMetricsSchema {
-    /** Metrics gathered per environment */
-    data: FeatureEnvironmentMetricsSchema[];
-    /** The maturity level of this API (alpha, beta, stable, deprecated) */
-    maturity: string;
     /**
      * The version of this schema
      * @minimum 1
      */
     version: number;
+    /** The maturity level of this API (alpha, beta, stable, deprecated) */
+    maturity: string;
+    /** Metrics gathered per environment */
+    data: FeatureEnvironmentMetricsSchema[];
 }

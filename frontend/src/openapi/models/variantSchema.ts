@@ -3,9 +3,9 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { OverrideSchema } from './overrideSchema';
-import type { VariantSchemaPayload } from './variantSchemaPayload';
 import type { VariantSchemaWeightType } from './variantSchemaWeightType';
+import type { VariantSchemaPayload } from './variantSchemaPayload';
+import type { OverrideSchema } from './overrideSchema';
 
 /**
  * A variant allows for further separation of users into segments. See [our excellent documentation](https://docs.getunleash.io/reference/feature-toggle-variants#what-are-variants) for a more detailed description
@@ -13,12 +13,6 @@ import type { VariantSchemaWeightType } from './variantSchemaWeightType';
 export interface VariantSchema {
     /** The variants name. Is unique for this feature flag */
     name: string;
-    /** Overrides assigning specific variants to specific users. The weighting system automatically assigns users to specific groups for you, but any overrides in this list will take precedence. */
-    overrides?: OverrideSchema[];
-    /** Extra data configured for this variant */
-    payload?: VariantSchemaPayload;
-    /** [Stickiness](https://docs.getunleash.io/reference/feature-toggle-variants#variant-stickiness) is how Unleash guarantees that the same user gets the same variant every time */
-    stickiness?: string;
     /**
      * The weight is the likelihood of any one user getting this variant. It is a number between 0 and 1000. See the section on [variant weights](https://docs.getunleash.io/reference/feature-toggle-variants#variant-weight) for more information
      * @minimum 0
@@ -27,4 +21,10 @@ export interface VariantSchema {
     weight: number;
     /** Set to fix if this variant must have exactly the weight allocated to it. If the type is variable, the weight will adjust so that the total weight of all variants adds up to 1000 */
     weightType?: VariantSchemaWeightType;
+    /** [Stickiness](https://docs.getunleash.io/reference/feature-toggle-variants#variant-stickiness) is how Unleash guarantees that the same user gets the same variant every time */
+    stickiness?: string;
+    /** Extra data configured for this variant */
+    payload?: VariantSchemaPayload;
+    /** Overrides assigning specific variants to specific users. The weighting system automatically assigns users to specific groups for you, but any overrides in this list will take precedence. */
+    overrides?: OverrideSchema[];
 }

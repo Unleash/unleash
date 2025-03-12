@@ -6,8 +6,8 @@
 import type { AddonTypeSchemaAlertsItemType } from './addonTypeSchemaAlertsItemType';
 
 export type AddonTypeSchemaAlertsItem = {
-    /** The text of the alert. This is what will be displayed to the user. */
-    text: string;
     /** The type of alert. This determines the color of the alert. */
     type: AddonTypeSchemaAlertsItemType;
+    /** The text of the alert. This is what will be displayed to the user. */
+    text: string;
 };

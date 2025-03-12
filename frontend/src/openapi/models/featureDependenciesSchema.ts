@@ -9,8 +9,8 @@ import type { DependentFeatureSchema } from './dependentFeatureSchema';
  * Feature dependency connection between a child feature and its dependencies
  */
 export interface FeatureDependenciesSchema {
-    /** List of parent features for the child feature */
-    dependencies: DependentFeatureSchema[];
     /** The name of the child feature. */
     feature: string;
+    /** List of parent features for the child feature */
+    dependencies: DependentFeatureSchema[];
 }

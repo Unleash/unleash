@@ -8,10 +8,10 @@
  * Describes the properties required to create a new service account
  */
 export interface CreateServiceAccountSchema {
+    /** The username of the service account */
+    username: string;
     /** The name of the service account */
     name: string;
     /** The id of the root role for the service account */
     rootRole: number;
-    /** The username of the service account */
-    username: string;
 }

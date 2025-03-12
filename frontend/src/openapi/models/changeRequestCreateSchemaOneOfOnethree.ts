@@ -10,9 +10,9 @@ import type { ChangeRequestCreateSchemaOneOfOnethreePayload } from './changeRequ
  * Delete a strategy from this feature.
  */
 export type ChangeRequestCreateSchemaOneOfOnethree = {
-    /** The name of this action. */
-    action: ChangeRequestCreateSchemaOneOfOnethreeAction;
     /** The name of the feature that this change applies to. */
     feature: string;
+    /** The name of this action. */
+    action: ChangeRequestCreateSchemaOneOfOnethreeAction;
     payload: ChangeRequestCreateSchemaOneOfOnethreePayload;
 };

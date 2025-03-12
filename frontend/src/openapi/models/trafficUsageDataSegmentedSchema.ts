@@ -9,8 +9,8 @@ import type { TrafficUsageApiDataSchema } from './trafficUsageApiDataSchema';
  * Contains the recorded data usage for each API path, segmented by day and type of traffic
  */
 export interface TrafficUsageDataSegmentedSchema {
-    /** Contains the recorded daily data usage for each API path */
-    apiData: TrafficUsageApiDataSchema[];
     /** The year-month period for which the data usage is counted */
     period: string;
+    /** Contains the recorded daily data usage for each API path */
+    apiData: TrafficUsageApiDataSchema[];
 }

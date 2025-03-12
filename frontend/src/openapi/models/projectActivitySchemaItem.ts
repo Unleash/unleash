@@ -5,11 +5,11 @@
  */
 
 export type ProjectActivitySchemaItem = {
+    /** Activity date */
+    date: string;
     /**
      * Activity count
      * @minimum 0
      */
     count: number;
-    /** Activity date */
-    date: string;
 };

@@ -9,12 +9,12 @@ import type { FrontendApiFeatureSchemaVariant } from './frontendApiFeatureSchema
  * Frontend API feature
  */
 export interface FrontendApiFeatureSchema {
+    /** Unique feature name. */
+    name: string;
     /** Always set to `true`. */
     enabled: boolean;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData: boolean;
-    /** Unique feature name. */
-    name: string;
     /** Variant details */
     variant?: FrontendApiFeatureSchemaVariant;
 }

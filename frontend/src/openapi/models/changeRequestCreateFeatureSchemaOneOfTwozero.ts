@@ -9,8 +9,8 @@ import type { ChangeRequestCreateFeatureSchemaOneOfTwozeroAction } from './chang
  * Remove a parent feature dependency or all dependencies if no payload.
  */
 export type ChangeRequestCreateFeatureSchemaOneOfTwozero = {
-    /** The name of this action. */
-    action: ChangeRequestCreateFeatureSchemaOneOfTwozeroAction;
     /** The name of the feature that this change applies to. */
     feature: string;
+    /** The name of this action. */
+    action: ChangeRequestCreateFeatureSchemaOneOfTwozeroAction;
 };

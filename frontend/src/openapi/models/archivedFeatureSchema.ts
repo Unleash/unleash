@@ -9,34 +9,34 @@ import type { ArchivedFeatureSchemaEnvironmentsItem } from './archivedFeatureSch
  * An archived project feature flag definition
  */
 export interface ArchivedFeatureSchema {
-    /** The date the feature was archived */
-    archivedAt?: string;
-    /** The date the feature was created */
-    createdAt?: string;
+    /** Unique feature name */
+    name: string;
+    /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
+    type?: string;
     /**
      * Detailed description of the feature
      * @nullable
      */
     description?: string | null;
-    /**
-     * The list of environments where the feature can be used
-     * @deprecated
-     */
-    environments?: ArchivedFeatureSchemaEnvironmentsItem[];
+    /** Name of the project the feature belongs to */
+    project: string;
+    /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */
+    stale?: boolean;
     /** `true` if the impression data collection is enabled for the feature, otherwise `false`. */
     impressionData?: boolean;
+    /** The date the feature was created */
+    createdAt?: string;
+    /** The date the feature was archived */
+    archivedAt?: string;
     /**
      * The date when metrics where last collected for the feature. This field was deprecated in v5, use the one in featureEnvironmentSchema
      * @deprecated
      * @nullable
      */
     lastSeenAt?: string | null;
-    /** Unique feature name */
-    name: string;
-    /** Name of the project the feature belongs to */
-    project: string;
-    /** `true` if the feature is stale based on the age and feature type, otherwise `false`. */
-    stale?: boolean;
-    /** Type of the flag e.g. experiment, kill-switch, release, operational, permission */
-    type?: string;
+    /**
+     * The list of environments where the feature can be used
+     * @deprecated
+     */
+    environments?: ArchivedFeatureSchemaEnvironmentsItem[];
 }

@@ -9,12 +9,12 @@ import type { ProjectApplicationSdkSchema } from './projectApplicationSdkSchema'
  * A project application instance.
  */
 export interface ProjectApplicationSchema {
+    /** Name of the application that is using the SDK. This is the same as the appName in the SDK configuration. */
+    name: string;
     /** The environments that the application is using. This is the same as the environment in the SDK configuration. */
     environments: string[];
     /** The instances of the application that are using the SDK. */
     instances: string[];
-    /** Name of the application that is using the SDK. This is the same as the appName in the SDK configuration. */
-    name: string;
     /** The SDKs that the application is using. */
     sdks: ProjectApplicationSdkSchema[];
 }

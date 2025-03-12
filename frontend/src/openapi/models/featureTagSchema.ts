@@ -8,19 +8,14 @@
  * Describes a tag applied to a feature
  */
 export interface FeatureTagSchema {
-    /**
-     * The id of the user who created this tag
-     * @nullable
-     */
-    createdByUserId?: number | null;
     /** The name of the feature this tag is applied to */
     featureName: string;
-    /** The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag */
+    /** The [type](https://docs.getunleash.io/reference/feature-toggles#tags tag types) of the tag */
     tagType?: string;
     /** The value of the tag */
     tagValue: string;
     /**
-     * The [type](https://docs.getunleash.io/reference/tags#tag-types tag types) of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagType` property.
+     * The [type](https://docs.getunleash.io/reference/feature-toggles#tags tag types) of the tag. This property is deprecated and will be removed in a future version of Unleash. Superseded by the `tagType` property.
      * @deprecated
      */
     type?: string;
@@ -29,4 +24,9 @@ export interface FeatureTagSchema {
      * @deprecated
      */
     value?: string;
+    /**
+     * The id of the user who created this tag
+     * @nullable
+     */
+    createdByUserId?: number | null;
 }

@@ -11,11 +11,11 @@ import type { CreateActionSchemaExecutionParams } from './createActionSchemaExec
 export interface CreateActionSchema {
     /** The name of the action to execute */
     action: string;
-    /** A map of parameters to pass to the action */
-    executionParams?: CreateActionSchemaExecutionParams;
     /**
      * The order in which the action should be executed
      * @minimum 1
      */
     sortOrder: number;
+    /** A map of parameters to pass to the action */
+    executionParams?: CreateActionSchemaExecutionParams;
 }

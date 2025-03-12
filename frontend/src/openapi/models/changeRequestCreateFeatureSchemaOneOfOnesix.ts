@@ -10,9 +10,9 @@ import type { SetStrategySortOrderSchema } from './setStrategySortOrderSchema';
  * Reorder strategies for this feature
  */
 export type ChangeRequestCreateFeatureSchemaOneOfOnesix = {
-    /** The name of this action. */
-    action: ChangeRequestCreateFeatureSchemaOneOfOnesixAction;
     /** The name of the feature that this change applies to. */
     feature: string;
+    /** The name of this action. */
+    action: ChangeRequestCreateFeatureSchemaOneOfOnesixAction;
     payload: SetStrategySortOrderSchema;
 };

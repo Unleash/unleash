@@ -8,10 +8,10 @@
  * Input data required for the action
  */
 export interface ToggleFeatureActionSchema {
+    /** The project where the feature is located */
+    project: string;
     /** The environment we want to target */
     environment: string;
     /** The name of the feature we want to target */
     featureName: string;
-    /** The project where the feature is located */
-    project: string;
 }

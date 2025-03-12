@@ -5,8 +5,8 @@
  */
 
 export type StrategySchemaParametersItem = {
-    description?: string;
     name?: string;
-    required?: boolean;
     type?: string;
+    description?: string;
+    required?: boolean;
 };

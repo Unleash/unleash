@@ -10,19 +10,19 @@ import type { CreateReleasePlanMilestoneSchema } from './createReleasePlanMilest
  */
 export interface UpdateReleasePlanTemplateSchema {
     /**
+     * The release plan/template's ID. Release template IDs are ulids.
+     */
+    id: string;
+    /** The name of the release template. */
+    name: string;
+    /**
      * A description of the release template.
      * @nullable
      */
     description?: string | null;
     /**
-     * The release plan/template's ID. Release template IDs are ulids.
-     */
-    id: string;
-    /**
      * A list of the milestones in this release template.
      * @nullable
      */
     milestones?: CreateReleasePlanMilestoneSchema[] | null;
-    /** The name of the release template. */
-    name: string;
 }

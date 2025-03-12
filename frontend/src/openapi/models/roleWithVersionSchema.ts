@@ -9,11 +9,11 @@ import type { RoleSchema } from './roleSchema';
  * A single user role received after creation or update of a role
  */
 export interface RoleWithVersionSchema {
-    /** A single role */
-    roles: RoleSchema;
     /**
      * The version of this schema
      * @minimum 1
      */
     version: number;
+    /** A single role */
+    roles: RoleSchema;
 }

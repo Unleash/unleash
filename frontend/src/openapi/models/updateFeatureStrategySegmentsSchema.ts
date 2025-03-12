@@ -8,12 +8,12 @@
  * Data required to update segments for a strategy.
  */
 export interface UpdateFeatureStrategySegmentsSchema {
-    /** The ID of the strategy environment. */
-    environmentId: string;
     /** The ID of the project that the strategy belongs to. */
     projectId: string;
-    /** The new list of segments (IDs) to use for this strategy. Any segments not in this list will be removed from the strategy. */
-    segmentIds: number[];
     /** The ID of the strategy to update segments for. */
     strategyId: string;
+    /** The ID of the strategy environment. */
+    environmentId: string;
+    /** The new list of segments (IDs) to use for this strategy. Any segments not in this list will be removed from the strategy. */
+    segmentIds: number[];
 }

@@ -12,8 +12,14 @@ import type { DeprecatedSearchEventsSchemaType } from './deprecatedSearchEventsS
     
  */
 export interface DeprecatedSearchEventsSchema {
+    /** Find events by event type (case-sensitive). */
+    type?: DeprecatedSearchEventsSchemaType;
+    /** Find events by project ID (case-sensitive). */
+    project?: string;
     /** Find events by feature flag name (case-sensitive). */
     feature?: string;
+    /** Find events by a free-text search query. The query will be matched against the event type, the username or email that created the event (if any), and the event data payload (if any). */
+    query?: string;
     /**
      * The maximum amount of events to return in the search result
      * @minimum 1
@@ -25,10 +31,4 @@ export interface DeprecatedSearchEventsSchema {
      * @minimum 0
      */
     offset?: number;
-    /** Find events by project ID (case-sensitive). */
-    project?: string;
-    /** Find events by a free-text search query. The query will be matched against the event type, the username or email that created the event (if any), and the event data payload (if any). */
-    query?: string;
-    /** Find events by event type (case-sensitive). */
-    type?: DeprecatedSearchEventsSchemaType;
 }

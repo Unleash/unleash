@@ -5,10 +5,10 @@
  */
 
 export type ExportQuerySchemaAnyOf = {
-    /** Whether to return a downloadable file */
-    downloadFile?: boolean;
     /** The environment to export from */
     environment: string;
+    /** Whether to return a downloadable file */
+    downloadFile?: boolean;
     /** Selects features to export by name. If the list is empty all features are returned. */
     features: string[];
 };

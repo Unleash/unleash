@@ -3,18 +3,18 @@
  * Do not edit manually.
  * See `gen:api` script in package.json
  */
-import type { AdvancedPlaygroundFeatureSchema } from './advancedPlaygroundFeatureSchema';
 import type { AdvancedPlaygroundRequestSchema } from './advancedPlaygroundRequestSchema';
+import type { AdvancedPlaygroundFeatureSchema } from './advancedPlaygroundFeatureSchema';
 import type { AdvancedPlaygroundResponseSchemaWarnings } from './advancedPlaygroundResponseSchemaWarnings';
 
 /**
  * The state of all features given the provided input.
  */
 export interface AdvancedPlaygroundResponseSchema {
-    /** The list of features that have been evaluated. */
-    features: AdvancedPlaygroundFeatureSchema[];
     /** The given input used to evaluate the features. */
     input: AdvancedPlaygroundRequestSchema;
+    /** The list of features that have been evaluated. */
+    features: AdvancedPlaygroundFeatureSchema[];
     /** Warnings that occurred during evaluation. */
     warnings?: AdvancedPlaygroundResponseSchemaWarnings;
 }

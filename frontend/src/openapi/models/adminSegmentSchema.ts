@@ -9,20 +9,6 @@ import type { ConstraintSchema } from './constraintSchema';
  * A description of a [segment](https://docs.getunleash.io/reference/segments)
  */
 export interface AdminSegmentSchema {
-    /** The list of constraints that are used in this segment */
-    constraints: ConstraintSchema[];
-    /** When the segment was created */
-    createdAt: string;
-    /**
-     * The creator's email or username
-     * @nullable
-     */
-    createdBy?: string | null;
-    /**
-     * The description for this segment
-     * @nullable
-     */
-    description?: string | null;
     /**
      * The ID of this segment
      * @minimum 0
@@ -31,10 +17,12 @@ export interface AdminSegmentSchema {
     /** The name of this segment */
     name: string;
     /**
-     * The project the segment belongs to. Only present if the segment is a project-specific segment.
+     * The description for this segment
      * @nullable
      */
-    project?: string | null;
+    description?: string | null;
+    /** The list of constraints that are used in this segment */
+    constraints: ConstraintSchema[];
     /**
      * The number of feature flags that use this segment. The number also includes the any flags with pending change requests that would add this segment.
      * @minimum 0
@@ -47,4 +35,16 @@ export interface AdminSegmentSchema {
      * @nullable
      */
     usedInProjects?: number | null;
+    /**
+     * The project the segment belongs to. Only present if the segment is a project-specific segment.
+     * @nullable
+     */
+    project?: string | null;
+    /**
+     * The creator's email or username
+     * @nullable
+     */
+    createdBy?: string | null;
+    /** When the segment was created */
+    createdAt: string;
 }

@@ -9,20 +9,22 @@ import type { PatSchema } from './patSchema';
  * Represents a [service account](https://docs.getunleash.io/reference/service-accounts). Service accounts are used to let systems interact with the Unleash API.
  */
 export interface ServiceAccountSchema {
-    /** The service account creation date */
-    createdAt?: string;
+    /** The service account id */
+    id: number;
+    /**
+     * Deprecated: for internal use only, should not be exposed through the API
+     * @deprecated
+     */
+    isAPI?: boolean;
+    /** The name of the service account */
+    name?: string;
     /**
      * Deprecated: service accounts don't have emails associated with them
      * @deprecated
      */
     email?: string;
-    /**
-     * Deprecated: internal use only
-     * @deprecated
-     */
-    emailSent?: boolean;
-    /** The service account id */
-    id: number;
+    /** The service account username */
+    username?: string;
     /** The service account image url */
     imageUrl?: string;
     /**
@@ -31,17 +33,15 @@ export interface ServiceAccountSchema {
      */
     inviteLink?: string;
     /**
-     * Deprecated: for internal use only, should not be exposed through the API
-     * @deprecated
-     */
-    isAPI?: boolean;
-    /**
      * Deprecated: service accounts cannot log in to Unleash
      * @deprecated
      */
     loginAttempts?: number;
-    /** The name of the service account */
-    name?: string;
+    /**
+     * Deprecated: internal use only
+     * @deprecated
+     */
+    emailSent?: boolean;
     /** The root role id associated with the service account */
     rootRole?: number;
     /**
@@ -50,8 +50,8 @@ export interface ServiceAccountSchema {
      * @nullable
      */
     seenAt?: string | null;
+    /** The service account creation date */
+    createdAt?: string;
     /** The list of tokens associated with the service account */
     tokens?: PatSchema[];
-    /** The service account username */
-    username?: string;
 }

@@ -5,13 +5,13 @@
  */
 
 export type ArchivedFeatureSchemaEnvironmentsItem = {
-    /** `true` if the feature is enabled for the environment, otherwise `false`. */
-    enabled?: boolean;
+    /** The name of the environment */
+    name?: string;
     /**
      * The date when metrics where last collected for the feature environment
      * @nullable
      */
     lastSeenAt?: string | null;
-    /** The name of the environment */
-    name?: string;
+    /** `true` if the feature is enabled for the environment, otherwise `false`. */
+    enabled?: boolean;
 };

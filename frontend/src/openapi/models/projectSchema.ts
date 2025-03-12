@@ -10,69 +10,69 @@ import type { ProjectSchemaOwners } from './projectSchemaOwners';
  * A definition of the project used for projects listing purposes
  */
 export interface ProjectSchema {
-    /**
-     * When this project was archived.
-     * @nullable
-     */
-    archivedAt?: string | null;
-    /**
-     * The average time from when a feature was created to when it was enabled in the "production" environment during the current window
-     * @deprecated
-     */
-    avgTimeToProduction?: number;
-    /** When this project was created. */
-    createdAt?: string;
-    /**
-     * A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy
-     * @deprecated
-     */
-    defaultStickiness?: string;
+    /** The id of this project */
+    id: string;
+    /** The name of this project */
+    name: string;
     /**
      * Additional information about the project
      * @deprecated
      * @nullable
      */
     description?: string | null;
-    /** `true` if the project was favorited, otherwise `false`. */
-    favorite?: boolean;
+    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100 */
+    health?: number;
     /** The number of features this project has */
     featureCount?: number;
-    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */
-    health?: number;
-    /** The id of this project */
-    id: string;
-    /**
-     * Across all flags in your project this is the last time usage metrics where reported from connected applications.
-     * @nullable
-     */
-    lastReportedFlagUsage?: string | null;
-    /**
-     * When this project was last updated.
-     * @nullable
-     */
-    lastUpdatedAt?: string | null;
-    /** The number of members this project has */
-    memberCount?: number;
-    /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
-    mode?: ProjectSchemaMode;
-    /** The name of this project */
-    name: string;
-    /** The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead. */
-    owners?: ProjectSchemaOwners;
-    /**
-     * The number of potentially stale features this project has
-     * @deprecated
-     */
-    potentiallyStaleFeatureCount?: number;
     /**
      * The number of stale features this project has
      * @deprecated
      */
     staleFeatureCount?: number;
     /**
+     * The number of potentially stale features this project has
+     * @deprecated
+     */
+    potentiallyStaleFeatureCount?: number;
+    /** The number of members this project has */
+    memberCount?: number;
+    /** When this project was created. */
+    createdAt?: string;
+    /**
      * When this project was last updated.
      * @deprecated
      * @nullable
      */
     updatedAt?: string | null;
+    /**
+     * When this project was last updated.
+     * @nullable
+     */
+    lastUpdatedAt?: string | null;
+    /**
+     * When this project was archived.
+     * @nullable
+     */
+    archivedAt?: string | null;
+    /** `true` if the project was favorited, otherwise `false`. */
+    favorite?: boolean;
+    /** The project's [collaboration mode](https://docs.getunleash.io/reference/project-collaboration-mode). Determines whether non-project members can submit change requests or not. */
+    mode?: ProjectSchemaMode;
+    /**
+     * A default stickiness for the project affecting the default stickiness value for variants and Gradual Rollout strategy
+     * @deprecated
+     */
+    defaultStickiness?: string;
+    /**
+     * The average time from when a feature was created to when it was enabled in the "production" environment during the current window
+     * @deprecated
+     */
+    avgTimeToProduction?: number;
+    /**
+     * Across all flags in your project this is the last time usage metrics where reported from connected applications.
+     * @nullable
+     */
+    lastReportedFlagUsage?: string | null;
+    /** The users and/or groups that have the "owner" role in this project. If no such users or groups exist, the list will contain the "system" owner instead. */
+    owners?: ProjectSchemaOwners;
 }

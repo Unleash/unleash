@@ -11,12 +11,12 @@ import type { LegalValueSchema } from './legalValueSchema';
 export interface CreateContextFieldSchema {
     /** A description of the context field */
     description?: string;
+    /** `true` if this field should be available for use with [custom stickiness](https://docs.getunleash.io/reference/stickiness#custom-stickiness), otherwise `false` */
+    stickiness?: boolean;
+    /** How this context field should be sorted if no other sort order is selected */
+    sortOrder?: number;
     /** A list of allowed values for this context field */
     legalValues?: LegalValueSchema[];
     /** The name of the context field. */
     name: string;
-    /** How this context field should be sorted if no other sort order is selected */
-    sortOrder?: number;
-    /** `true` if this field should be available for use with [custom stickiness](https://docs.getunleash.io/reference/stickiness#custom-stickiness), otherwise `false` */
-    stickiness?: boolean;
 }

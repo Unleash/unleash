@@ -59,7 +59,6 @@ const StyledTruncator = styled(Truncator)(({ theme }) => ({
 const StyledHeader = styled('div', {
     shouldForwardProp: (prop) => prop !== 'disabled',
 })<{ draggable: boolean; disabled: boolean }>(({ theme, disabled }) => ({
-    position: 'relative',
     display: 'flex',
     alignItems: 'center',
     color: disabled ? theme.palette.text.secondary : theme.palette.text.primary,

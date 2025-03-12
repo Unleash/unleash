@@ -116,6 +116,8 @@ It was noted in [the previous section](#configure-role-based-access-control-for-
 
 From an architectural perspective, we implement this by allowing Unleash users to define cross-origin resource sharing (CORS) policies to prevent unwarranted access to your feature flag system. From a compliance perspective, this demonstrates that your organization leverages a feature flag system that takes a multi-faceted approach to security.
 
+![An image of a CORS section in Unleash Admin UI for adding domains that can connect to Unleash Frontend API.](/img/use-case-security-cors.png)
+
 In the Unleash Admin UI, we have a cross-origin resource sharing (CORS) section with a form so you can list domains that will be allowed to call our Frontend API. This is an access control mechanism that gives you control over which domains interact with Unleash. Different CORS policies can be applied to the development, staging/test, and production environments you configure.
 
 By default, this CORS origin list includes an asterisk (\*), which means that all services that call the Frontend API will be allowed access. You can edit this form to include only your specific domains.
@@ -207,6 +209,8 @@ Yes, absolutely! Unleash, known to the auditors of the world as Bricks Software 
 To protect our systems and data, we have implemented a comprehensive security framework. This includes regular risk assessments, penetration testing, and security policies that we review regularly.
 
 When you engage with Unleash, you will get access to our Trust Center, which houses a complete list of annual SOC 2 and other reports, security policies, and controls, as well as a list of data sub-processors that are regularly reviewed by our compliance team and engineering leadership. These measures demonstrate Unleash’s commitment to maintaining a robust security posture, which supports our ability to pass the most rigorous enterprise security audits.
+
+![An image of Unleash security & compliance review on Vanta Trust Center](/img/use-case-vanta-trust-center.png)
 
 ## Best practices and recommendations
 

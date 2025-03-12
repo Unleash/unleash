@@ -165,6 +165,23 @@ Highly regulated industries like finance and healthcare typically require extens
 
 In the Unleash Admin UI navigation, go to **Event Logs** to see chronological events with metadata and change diffs. You can use the filter or the search bar to narrow down specific events you may be looking for. And not only are your events visible in Unleash, they’re also reportable. You can export your events as a CSV or JSON file to send to analytics tools.
 
+## Protect PII for data privacy
+
+Let’s explore Unleash's architectural layers that address data privacy. Our guide on [11 principles for building and scaling feature flag systems](/topics/feature-flags/feature-flag-best-practices), covers best practices for feature flag system implementations, such as protecting personally identifiable information (PII) by implementing the principle of least privilege. And using a flag evaluation service in between a feature flag control service and your client-side applications to avoid exposing sensitive data.
+
+Protecting data is critical within any software tool. It’s a security best practice that is ideally implemented across your tech stack where user data is handled. While completely safeguarding your systems from attacks is not foolproof, it’s better to err on the side of risk prevention and mitigation. Unleash is architecturally designed to protect organizations and their end users by keeping data private and limiting the scope of data that is evaluated and stored. Think about the types of sensitive data that could be exposed if you use a feature flag system that isn’t designed to protect data. When feature flags are evaluated, here are examples of what could be at risk:
+
+-   API keys
+-   User IDs
+-   Email addresses
+-   Flag data
+-   Flag configurations
+-   User geographical locations
+
+This is a potential attack surface area that you wouldn’t want to be the root of data breaches or unauthorized access in your system. That’s why Unleash was built in a way where integrating feature flags into your services won’t be a weak link in your organization’s ability to ship software safely. When using our [Frontend API](/reference/api/unleash/frontend-api), Unleash only stores these details in its short-term runtime cache. This is practical for development practices and applications that don’t have a lot of traffic, like internal dashboards.
+
+With Unleash, you can architect your feature flagging solution in a way that all user data stays within your applications. When using server-side SDKs, user data remains within your application and is never shared with the Unleash server regardless of your setup. For client-side SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/understanding-unleash/proxy-hosting#you-host-everything), or [self-hosting Unleash Edge](/understanding-unleash/proxy-hosting#unleash-hosts-the-api-you-host-edge). Read more on the [Unleash architecture here](/understanding-unleash/unleash-overview).
+
 ### Integrate SIEM for advanced audit compliance
 
 For more advanced implementations, integrate Unleash audit logs directly into broader Security Information and Event Management (SIEM) systems. This setup enables real-time monitoring and creates a holistic view of system interactions across multiple platforms. By mapping Unleash audit data to other enterprise security logs, organizations can detect subtle patterns and potential security anomalies that might go unnoticed in isolated systems. You can send your logs to tools like [Datadog](/reference/integrations/datadog), [Sentry](https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/integrations/unleash/), Splunk, S3, and Microsoft Sentinel. SIEM integrations take audit logging to the next level to capture more value out of the data that Unleash provides you.

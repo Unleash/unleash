@@ -248,12 +248,13 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return Promise.resolve(variants);
     }
 
-    getVariantsForEnv(
+    async getVariantsForEnv(
         featureName: string,
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         environment_name: string,
     ): Promise<IVariant[]> {
-        return this.getVariants(featureName);
+        const feature = await this.get(featureName);
+        // there's no way to filter by environment in the fake store
+        return feature.variants as IVariant[];
     }
 
     async saveVariants(

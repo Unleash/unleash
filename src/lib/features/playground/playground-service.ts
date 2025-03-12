@@ -82,17 +82,17 @@ export class PlaygroundService {
     constructor(
         config: IUnleashConfig,
         {
-            featureToggleServiceV2,
+            featureToggleService,
             privateProjectChecker,
         }: Pick<
             IUnleashServices,
-            'featureToggleServiceV2' | 'privateProjectChecker'
+            'featureToggleService' | 'privateProjectChecker'
         >,
         segmentReadModel: ISegmentReadModel,
     ) {
         this.logger = config.getLogger('services/playground-service.ts');
         this.flagResolver = config.flagResolver;
-        this.featureToggleService = featureToggleServiceV2;
+        this.featureToggleService = featureToggleService;
         this.privateProjectChecker = privateProjectChecker;
         this.segmentReadModel = segmentReadModel;
     }

@@ -38,7 +38,7 @@ export type Stores = Pick<IUnleashStores, 'segmentReadModel'>;
 
 export type Services = Pick<
     IUnleashServices,
-    | 'featureToggleServiceV2'
+    | 'featureToggleService'
     | 'clientMetricsServiceV2'
     | 'settingService'
     | 'configurationRevisionService'

@@ -13,7 +13,7 @@ exports.up = function (db, callback) {
                           AND e.created_at =
                               (SELECT Max(created_at) date
                                FROM   events
-                               WHERE  type = 'feature-archived'
+                               WHERE  e.type = 'feature-archived'
                                       AND e.feature_name = f.NAME)) res
         WHERE  res.NAME = f.NAME;
         UPDATE features

@@ -17,8 +17,6 @@ There are several steps to ensuring your feature flag implementation is audit-pr
 4. [Set up access controls for network security](#set-up-access-controls-for-network-security)
 5. [Use a change management workflow for auditing](#use-a-change-management-workflow-for-auditing)
 6. [Audit manual and automated events in Unleash](#audit-manual-and-automated-events-in-unleash)
-    - [Integrate SIEM for advanced audit compliance](#integrate-siem-for-advanced-audit-compliance)
-    - [Access logs for broader auditing](#leverage-access-logs-for-broader-auditing)
 7. [Learn how Unleash as a software product passes rigorous security audits and penetration testing](#can-unleash-itself-pass-a-security-audit)
 8. [Implement best practices and recommendations](#best-practices-and-recommendations)
 
@@ -62,7 +60,7 @@ Let’s consider another scenario. You are not setting up feature flag access fo
 
 User management at scale is difficult without automation. It’s also costly to manually track and change all user permissions over time.
 
-To solve this, Unleash uses [SCIM protocols (System for Cross-domain Identity Management)](https://scim.cloud/) to help you automatically provision and de-provision user accounts. When an employee joins or leaves your organization, their feature flag access can be automatically adjusted without manual changes. You won’t have to consider all the security implications of user accounts as your teams evolve. 
+To solve this, Unleash uses [SCIM protocols (System for Cross-domain Identity Management)](https://scim.cloud/) to help you automatically provision and de-provision user accounts. When an employee joins or leaves your organization, their feature flag access can be automatically adjusted without manual changes. You won’t have to consider all the security implications of user accounts as your teams evolve.
 
 By enabling SCIM in Unleash, you can:
 
@@ -94,7 +92,13 @@ Unleash is built with many mechanisms in place to handle all of these scenarios.
 
 Let’s look at how Unleash gives you complete control over user roles and permissions. At a high level, there are multiple [predefined roles](/reference/rbac#predefined-roles) in Unleash for you to get started with. The diagram below breaks down the root roles and their respective permissions. Think of them as very specific responsibilities only certain users have in Unleash that are defined by default.
 
-> **Note:** One of the key responsibilities of the _admin role_ is assigning users as project owners and members. _Editor roles_ can be designated as project owners to manage projects. _Viewer roles_ can be designated as project members to observe projects. If viewers are not assigned a project member role, they can only observe the actions taken in a project.
+:::note
+
+One of the key responsibilities of the _admin role_ is assigning users as project owners and members.
+_Editor roles_ can be designated as project owners to manage projects.
+_Viewer roles_ can be designated as project members to observe projects. If viewers are not assigned a project member role, they can only observe the actions taken in a project.
+
+:::
 
 To create your _new roles_, create [custom root roles](/how-to/how-to-create-and-assign-custom-root-roles) and [custom project roles](/how-to/how-to-create-and-assign-custom-project-roles), where you can define the privileges and limitations beyond the predefined roles we have built into Unleash. For more recommendations on setting up permissions for users, read our guide on [using feature flags at scale](/topics/feature-flags/best-practices-using-feature-flags-at-scale).
 
@@ -138,7 +142,7 @@ Imagine a developer working at a large banking platform who wants to modify a fe
 4. Final sign-off from technical leadership
 
 With Unleash, you can create a change request workflow to reflect these exact requirements.
-And from a security perspective, you'll always want an auditable trail of changes that occur in your feature flag system. We record all changes like these in the event logs. These are the configuration management practices required by compliance frameworks like SOC 2, FedRAMP, and ISO 27001. We’ll explore [event logs] more in a later section, but it’s important to note throughout this tutorial since it’s relevant to many features in Unleash that align with security and compliance standards.
+And from a security perspective, you'll always want an auditable trail of changes that occur in your feature flag system. We record all changes like these in the event logs. These are the configuration management practices required by compliance frameworks like SOC 2, FedRAMP, and ISO 27001. We’ll explore [event logs](#audit-manual-and-automated-events-in-unleash) more in a later section, but it’s important to note throughout this tutorial since it’s relevant to many features in Unleash that align with security and compliance standards.
 
 > **Note:** Anyone with project access can create a change request; however, only users with specific permissions can approve, apply, or skip them. None of the [predefined roles](/reference/rbac#predefined-roles) have any change request permissions, so you must create [custom project roles](/reference/rbac#predefined-roles).
 
@@ -193,6 +197,7 @@ Protecting data is critical within any software tool. It’s a security best pra
 This is a potential attack surface area that you wouldn’t want to be the root of data breaches or unauthorized access in your system. That’s why Unleash was built in a way where integrating feature flags into your services won’t be a weak link in your organization’s ability to ship software safely. When using our [Frontend API](/reference/api/unleash/frontend-api), Unleash only stores these details in its short-term runtime cache. This is practical for development practices and applications that don’t have a lot of traffic, like internal dashboards.
 
 With Unleash, you can architect your feature flagging solution in a way that all user data stays within your applications. When using server-side SDKs, user data remains within your application and is never shared with the Unleash server regardless of your setup. For client-side SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/understanding-unleash/proxy-hosting#you-host-everything), or [self-hosting Unleash Edge](/understanding-unleash/proxy-hosting#unleash-hosts-the-api-you-host-edge). Read more on the [Unleash architecture here](/understanding-unleash/unleash-overview).
+
 The tutorial so far has focused on how you can use the features of Unleash to improve your application's security posture, making sure that feature flags are not the weak link. But what about Unleash itself, as a company and SaaS service? You might be asking…
 
 ## Can Unleash itself pass a security audit?

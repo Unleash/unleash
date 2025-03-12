@@ -31,6 +31,8 @@ Server-side SDKs run in backend applications and retrieve feature flag configura
 
 Client-side SDKs are used in frontend and mobile applications. They communicate with Unleash through the [Frontend API](#frontend-api). Supported platforms include: [JavaScript](/reference/sdks/javascript-browser), [React](/reference/sdks/react), [iOS](/reference/sdks/ios-proxy), [Android](/reference/sdks/android-proxy), and more.
 
+For improved performance and scalability, SDKs can connect to the [Unleash service](#the-unleash-api) through [Unleash Edge](#unleash-edge) instead of directly using the Frontend and Client APIs.
+
 SDKs cache all feature flag data in memory, applying activation strategies locally. This makes flag evaluation incredibly fast, as it is a simple function operating on local state, without the need to poll data from the database. This architecture results in a small delay (typically a few seconds, but configurable) when propagating configuration changes to your applications.
 
 ### Unleash Edge

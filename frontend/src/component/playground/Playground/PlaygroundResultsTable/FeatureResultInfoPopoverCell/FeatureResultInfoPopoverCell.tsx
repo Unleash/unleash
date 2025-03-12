@@ -19,7 +19,7 @@ const FeatureResultPopoverWrapper = styled('div')(({ theme }) => ({
 }));
 
 const DetailsPadding = styled('div')(({ theme }) => ({
-    paddingInline: theme.spacing(4),
+    paddingInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
     paddingTop: theme.spacing(2.5),
 }));
 
@@ -42,11 +42,13 @@ export const FeatureResultInfoPopoverCell = ({
     const paperProps = useNewStrategyDesign
         ? {
               sx: (theme) => ({
+                  '--popover-inline-padding': theme.spacing(4),
                   display: 'flex',
                   flexDirection: 'column',
                   width: 728,
                   maxWidth: '100%',
                   height: 'auto',
+                  gap: theme.spacing(3),
                   overflowY: 'auto',
                   backgroundColor: theme.palette.background.elevation1,
                   borderRadius: theme.shape.borderRadius,

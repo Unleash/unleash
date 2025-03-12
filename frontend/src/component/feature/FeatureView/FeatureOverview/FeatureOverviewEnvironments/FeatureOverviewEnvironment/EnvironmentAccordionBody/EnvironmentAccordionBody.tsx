@@ -56,7 +56,7 @@ export const StyledContentList = styled('ol')(({ theme }) => ({
 export const StyledListItem = styled('li', {
     shouldForwardProp: (prop) => prop !== 'type',
 })<{ type?: 'release plan' | 'strategy' }>(({ theme, type }) => ({
-    '& + &': {
+    '& + &, li > ol > &:first-of-type': {
         borderTop: `1px solid ${theme.palette.divider}`,
     },
     background:

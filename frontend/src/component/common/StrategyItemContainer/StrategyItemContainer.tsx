@@ -4,7 +4,6 @@ import DragIndicator from '@mui/icons-material/DragIndicator';
 import { Box, IconButton, Typography, styled } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { formatStrategyName } from 'utils/strategyNames';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import type { PlaygroundStrategySchema } from 'openapi';
 import { Badge } from '../Badge/Badge';
 import { Link } from 'react-router-dom';
@@ -22,11 +21,14 @@ type StrategyItemContainerProps = {
     children?: React.ReactNode;
 };
 
-const DragIcon = styled(IconButton)({
+const inlinePadding = 3;
+
+const DragIcon = styled(IconButton)(({ theme }) => ({
+    marginLeft: theme.spacing(-inlinePadding),
     padding: 0,
     cursor: 'inherit',
     transition: 'color 0.2s ease-in-out',
-});
+}));
 
 const StyledHeaderContainer = styled('hgroup')(({ theme }) => ({
     display: 'flex',
@@ -39,9 +41,14 @@ const StyledHeaderContainer = styled('hgroup')(({ theme }) => ({
     },
 }));
 
-const StyledContainer = styled('article')({
+const StyledContainer = styled('article')(({ theme }) => ({
     background: 'inherit',
-});
+    padding: theme.spacing(inlinePadding),
+    paddingTop: theme.spacing(0.5),
+    display: 'flex',
+    flexDirection: 'column',
+    rowGap: theme.spacing(0.5),
+}));
 
 const StyledTruncator = styled(Truncator)(({ theme }) => ({
     fontSize: theme.typography.body1.fontSize,
@@ -50,19 +57,19 @@ const StyledTruncator = styled(Truncator)(({ theme }) => ({
 }));
 
 const StyledHeader = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'draggable' && prop !== 'disabled',
-})<{ draggable: boolean; disabled: boolean }>(
-    ({ theme, draggable, disabled }) => ({
-        padding: theme.spacing(0.5, 2),
-        display: 'flex',
-        gap: theme.spacing(1),
-        alignItems: 'center',
-        paddingLeft: draggable ? theme.spacing(1) : theme.spacing(2),
-        color: disabled
-            ? theme.palette.text.secondary
-            : theme.palette.text.primary,
-    }),
-);
+    shouldForwardProp: (prop) => prop !== 'disabled',
+})<{ draggable: boolean; disabled: boolean }>(({ theme, disabled }) => ({
+    position: 'relative',
+    display: 'flex',
+    alignItems: 'center',
+    color: disabled ? theme.palette.text.secondary : theme.palette.text.primary,
+}));
+
+const StyledHeaderInner = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+}));
 
 export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
     strategy,
@@ -73,6 +80,7 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
     strategyHeaderLevel = 3,
     children,
     style = {},
+    className,
 }) => {
     const StrategyHeaderLink: React.FC<{ children?: React.ReactNode }> =
         'links' in strategy
@@ -81,61 +89,59 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
 
     return (
         <Box sx={{ position: 'relative' }}>
-            <StyledContainer style={style}>
-                <StyledHeader
-                    draggable={Boolean(onDragStart)}
-                    disabled={Boolean(strategy?.disabled)}
-                >
-                    <ConditionallyRender
-                        condition={Boolean(onDragStart)}
-                        show={() => (
-                            <DragIcon
-                                draggable
-                                disableRipple
-                                size='small'
-                                onDragStart={onDragStart}
-                                onDragEnd={onDragEnd}
-                                sx={{ cursor: 'move' }}
-                            >
-                                <DragIndicator
-                                    titleAccess='Drag to reorder'
-                                    cursor='grab'
-                                    sx={{ color: 'action.active' }}
-                                />
-                            </DragIcon>
-                        )}
-                    />
-                    <StrategyHeaderLink>
-                        <StyledHeaderContainer>
-                            {strategy.title ? (
-                                <>
-                                    <p className='strategy-name'>
+            <StyledContainer style={style} className={className}>
+                <StyledHeader disabled={Boolean(strategy?.disabled)}>
+                    {onDragStart ? (
+                        <DragIcon
+                            draggable
+                            disableRipple
+                            size='small'
+                            onDragStart={onDragStart}
+                            onDragEnd={onDragEnd}
+                            sx={{ cursor: 'move' }}
+                        >
+                            <DragIndicator
+                                titleAccess='Drag to reorder'
+                                cursor='grab'
+                                sx={{ color: 'action.active' }}
+                            />
+                        </DragIcon>
+                    ) : null}
+                    <StyledHeaderInner>
+                        <StrategyHeaderLink>
+                            <StyledHeaderContainer>
+                                {strategy.title ? (
+                                    <>
+                                        <p className='strategy-name'>
+                                            {formatStrategyName(
+                                                String(strategy.name),
+                                            )}
+                                            :
+                                        </p>
+                                        <StyledTruncator
+                                            component={`h${strategyHeaderLevel}`}
+                                        >
+                                            {strategy.title}
+                                        </StyledTruncator>
+                                    </>
+                                ) : (
+                                    <Typography
+                                        className='strategy-name'
+                                        component={`h${strategyHeaderLevel}`}
+                                    >
                                         {formatStrategyName(
                                             String(strategy.name),
                                         )}
-                                        :
-                                    </p>
-                                    <StyledTruncator
-                                        component={`h${strategyHeaderLevel}`}
-                                    >
-                                        {strategy.title}
-                                    </StyledTruncator>
-                                </>
-                            ) : (
-                                <Typography
-                                    className='strategy-name'
-                                    component={`h${strategyHeaderLevel}`}
-                                >
-                                    {formatStrategyName(String(strategy.name))}
-                                </Typography>
-                            )}
-                        </StyledHeaderContainer>
-                    </StrategyHeaderLink>
+                                    </Typography>
+                                )}
+                            </StyledHeaderContainer>
+                        </StrategyHeaderLink>
 
-                    {strategy.disabled ? (
-                        <Badge color='disabled'>Disabled</Badge>
-                    ) : null}
-                    {headerItemsLeft}
+                        {strategy.disabled ? (
+                            <Badge color='disabled'>Disabled</Badge>
+                        ) : null}
+                        {headerItemsLeft}
+                    </StyledHeaderInner>
                     <Box
                         sx={{
                             marginLeft: 'auto',
@@ -146,7 +152,7 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                         {headerItemsRight}
                     </Box>
                 </StyledHeader>
-                <Box sx={{ p: 2, pt: 0 }}>{children}</Box>
+                <Box sx={{ p: 0 }}>{children}</Box>
             </StyledContainer>
         </Box>
     );

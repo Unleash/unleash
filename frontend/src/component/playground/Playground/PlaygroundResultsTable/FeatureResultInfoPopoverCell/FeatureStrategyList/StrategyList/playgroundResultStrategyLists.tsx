@@ -1,4 +1,4 @@
-import { Alert, styled, Typography } from '@mui/material';
+import { Alert, styled } from '@mui/material';
 import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
@@ -37,10 +37,25 @@ interface PlaygroundResultStrategyListProps {
     titlePrefix?: 'Enabled' | 'Disabled';
     infoText?: string;
 }
+const StyledHeaderGroup = styled('hgroup')(({ theme }) => ({
+    paddingInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
+    paddingBottom: theme.spacing(2),
+    borderBottom: `1px solid ${theme.palette.divider}`,
+}));
 
-const StyledSubtitle = styled(Typography)(({ theme }) => ({
-    margin: theme.spacing(2, 1, 2, 0),
-    color: 'text.secondary',
+const StyledListTitle = styled('h4')(({ theme }) => ({
+    fontWeight: 'normal',
+    fontSize: theme.typography.body1.fontSize,
+    margin: 0,
+}));
+
+const StyledListTitleDescription = styled('p')(({ theme }) => ({
+    fontWeight: 'bold',
+    fontSize: theme.typography.body2.fontSize,
+}));
+
+const StyledFeatureStrategyItem = styled(FeatureStrategyItem)(({ theme }) => ({
+    paddingInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
 }));
 
 export const PlaygroundResultStrategyLists = ({
@@ -48,39 +63,39 @@ export const PlaygroundResultStrategyLists = ({
     input,
     titlePrefix,
     infoText,
-}: PlaygroundResultStrategyListProps) => (
-    <ConditionallyRender
-        condition={strategies.length > 0}
-        show={
-            <>
-                <StyledSubtitle variant={'subtitle1'}>{`${
+}: PlaygroundResultStrategyListProps) => {
+    if (strategies.length === 0) {
+        return null;
+    }
+
+    return (
+        <div>
+            <StyledHeaderGroup>
+                <StyledListTitle variant={'subtitle1'}>{`${
                     titlePrefix
                         ? titlePrefix.concat(' strategies')
                         : 'Strategies'
-                } (${strategies?.length})`}</StyledSubtitle>
-                <ConditionallyRender
-                    condition={Boolean(infoText)}
-                    show={
-                        <StyledSubtitle variant={'subtitle2'}>
-                            {infoText}
-                        </StyledSubtitle>
-                    }
-                />
-                <StyledContentList>
-                    {strategies?.map((strategy, index) => (
-                        <StyledListItem key={strategy.id}>
-                            {index > 0 ? <StrategySeparator /> : ''}
-                            <FeatureStrategyItem
-                                strategy={strategy}
-                                input={input}
-                            />
-                        </StyledListItem>
-                    ))}
-                </StyledContentList>
-            </>
-        }
-    />
-);
+                } (${strategies?.length})`}</StyledListTitle>
+                {infoText ? (
+                    <StyledListTitleDescription>
+                        {infoText}
+                    </StyledListTitleDescription>
+                ) : null}
+            </StyledHeaderGroup>
+            <StyledContentList>
+                {strategies?.map((strategy, index) => (
+                    <StyledListItem key={strategy.id}>
+                        {index > 0 ? <StrategySeparator /> : ''}
+                        <StyledFeatureStrategyItem
+                            strategy={strategy}
+                            input={input}
+                        />
+                    </StyledListItem>
+                ))}
+            </StyledContentList>
+        </div>
+    );
+};
 
 interface IWrappedPlaygroundResultStrategyListProps {
     feature: PlaygroundFeatureSchema;

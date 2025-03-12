@@ -13,11 +13,13 @@ import { StrategyItemContainer } from 'component/common/StrategyItemContainer/St
 interface IFeatureStrategyItemProps {
     strategy: PlaygroundStrategySchema;
     input?: PlaygroundRequestSchema;
+    className?: string;
 }
 
 export const FeatureStrategyItem = ({
     strategy,
     input,
+    className,
 }: IFeatureStrategyItemProps) => {
     const { result } = strategy;
     const theme = useTheme();
@@ -33,6 +35,7 @@ export const FeatureStrategyItem = ({
         <StrategyItemContainer
             strategy={{ ...strategy, id: `${objectId(strategy)}` }}
             strategyHeaderLevel={4}
+            className={className}
             headerItemsLeft={
                 <PlaygroundResultChip
                     tabindex={-1}

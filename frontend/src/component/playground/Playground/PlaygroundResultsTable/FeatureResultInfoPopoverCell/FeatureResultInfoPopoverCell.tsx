@@ -18,55 +18,16 @@ const FeatureResultPopoverWrapper = styled('div')(({ theme }) => ({
     color: theme.palette.divider,
 }));
 
-const DetailsPadding = styled('div')(({ theme }) => ({
-    paddingInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
-    paddingTop: theme.spacing(2.5),
-}));
-
-export const FeatureResultInfoPopoverCell = ({
+const LegacyFeatureResultInfoPopoverCell = ({
     feature,
     input,
 }: FeatureResultInfoPopoverCellProps) => {
     const [open, setOpen] = useState(false);
     const ref = useRef(null);
-    const useNewStrategyDesign = useUiFlag('flagOverviewRedesign');
 
     const togglePopover = () => {
         setOpen(!open);
     };
-
-    if (!feature) {
-        return null;
-    }
-
-    const paperProps = useNewStrategyDesign
-        ? {
-              sx: (theme) => ({
-                  '--popover-inline-padding': theme.spacing(4),
-                  display: 'flex',
-                  flexDirection: 'column',
-                  width: 728,
-                  maxWidth: '100%',
-                  height: 'auto',
-                  gap: theme.spacing(3),
-                  overflowY: 'auto',
-                  backgroundColor: theme.palette.background.elevation1,
-                  borderRadius: theme.shape.borderRadius,
-              }),
-          }
-        : {
-              sx: (theme) => ({
-                  display: 'flex',
-                  flexDirection: 'column',
-                  padding: theme.spacing(6),
-                  width: 728,
-                  maxWidth: '100%',
-                  height: 'auto',
-                  overflowY: 'auto',
-                  backgroundColor: theme.palette.background.elevation2,
-                  borderRadius: theme.shape.borderRadius,
-              }),
-          };
 
     return (
         <FeatureResultPopoverWrapper>
@@ -77,7 +38,19 @@ export const FeatureResultInfoPopoverCell = ({
                 open={open}
                 onClose={() => setOpen(false)}
                 anchorEl={ref.current}
-                PaperProps={paperProps}
+                PaperProps={{
+                    sx: (theme) => ({
+                        display: 'flex',
+                        flexDirection: 'column',
+                        padding: theme.spacing(6),
+                        width: 728,
+                        maxWidth: '100%',
+                        height: 'auto',
+                        overflowY: 'auto',
+                        backgroundColor: theme.palette.background.elevation2,
+                        borderRadius: theme.shape.borderRadius,
+                    }),
+                }}
                 anchorOrigin={{
                     vertical: 'top',
                     horizontal: 'right',
@@ -87,34 +60,96 @@ export const FeatureResultInfoPopoverCell = ({
                     horizontal: 'left',
                 }}
             >
-                {useNewStrategyDesign ? (
-                    <>
-                        <DetailsPadding>
-                            <FeatureDetails
-                                feature={feature}
-                                input={input}
-                                onClose={() => setOpen(false)}
-                            />
-                        </DetailsPadding>
-                        <PlaygroundResultFeatureStrategyList
-                            feature={feature}
-                            input={input}
-                        />
-                    </>
-                ) : (
-                    <>
-                        <LegacyFeatureDetails
-                            feature={feature}
-                            input={input}
-                            onClose={() => setOpen(false)}
-                        />
-                        <LegacyPlaygroundResultFeatureStrategyList
-                            feature={feature}
-                            input={input}
-                        />
-                    </>
-                )}
+                <LegacyFeatureDetails
+                    feature={feature}
+                    input={input}
+                    onClose={() => setOpen(false)}
+                />
+                <LegacyPlaygroundResultFeatureStrategyList
+                    feature={feature}
+                    input={input}
+                />
             </Popover>
         </FeatureResultPopoverWrapper>
+    );
+};
+
+const DetailsPadding = styled('div')(({ theme }) => ({
+    paddingInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
+    paddingTop: theme.spacing(2.5),
+}));
+
+export const NewFeatureResultInfoPopoverCell = ({
+    feature,
+    input,
+}: FeatureResultInfoPopoverCellProps) => {
+    const [open, setOpen] = useState(false);
+    const ref = useRef(null);
+
+    const togglePopover = () => {
+        setOpen(!open);
+    };
+
+    return (
+        <FeatureResultPopoverWrapper>
+            <IconButton onClick={togglePopover}>
+                <InfoOutlined ref={ref} />
+            </IconButton>
+            <Popover
+                open={open}
+                onClose={() => setOpen(false)}
+                anchorEl={ref.current}
+                PaperProps={{
+                    sx: (theme) => ({
+                        '--popover-inline-padding': theme.spacing(4),
+                        display: 'flex',
+                        flexDirection: 'column',
+                        width: 728,
+                        maxWidth: '100%',
+                        height: 'auto',
+                        gap: theme.spacing(3),
+                        overflowY: 'auto',
+                        backgroundColor: theme.palette.background.elevation1,
+                        borderRadius: theme.shape.borderRadius,
+                    }),
+                }}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                }}
+                transformOrigin={{
+                    vertical: 'center',
+                    horizontal: 'left',
+                }}
+            >
+                <DetailsPadding>
+                    <FeatureDetails
+                        feature={feature}
+                        input={input}
+                        onClose={() => setOpen(false)}
+                    />
+                </DetailsPadding>
+                <PlaygroundResultFeatureStrategyList
+                    feature={feature}
+                    input={input}
+                />
+            </Popover>
+        </FeatureResultPopoverWrapper>
+    );
+};
+
+export const FeatureResultInfoPopoverCell = (
+    props: FeatureResultInfoPopoverCellProps,
+) => {
+    const useNewStrategyDesign = useUiFlag('flagOverviewRedesign');
+
+    if (!props.feature) {
+        return null;
+    }
+
+    return useNewStrategyDesign ? (
+        <NewFeatureResultInfoPopoverCell {...props} />
+    ) : (
+        <LegacyFeatureResultInfoPopoverCell {...props} />
     );
 };

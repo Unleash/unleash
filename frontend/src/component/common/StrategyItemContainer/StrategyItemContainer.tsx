@@ -151,7 +151,7 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                         {headerItemsRight}
                     </Box>
                 </StyledHeader>
-                <Box sx={{ p: 0 }}>{children}</Box>
+                <Box>{children}</Box>
             </StyledContainer>
         </Box>
     );

@@ -13,7 +13,7 @@ import {
 } from 'utils/traffic-calculations';
 import { BILLING_TRAFFIC_BUNDLE_PRICE } from '../../../billing/BillingDashboard/BillingPlan/BillingPlan';
 import { averageTrafficPreviousMonths } from '../average-traffic-previous-months';
-import { useConnectionsConsumption } from '../../../../../hooks/api/getters/useConnectionsConsumption/useConnectionsConsumption';
+import { useConnectionsConsumption } from 'hooks/api/getters/useConnectionsConsumption/useConnectionsConsumption';
 
 export const useTrafficStats = (
     includedTraffic: number,

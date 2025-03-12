@@ -248,11 +248,13 @@ export default class FakeFeatureToggleStore implements IFeatureToggleStore {
         return Promise.resolve(variants);
     }
 
-    getVariantsForEnv(
+    async getVariantsForEnv(
         featureName: string,
         environment_name: string,
     ): Promise<IVariant[]> {
-        return this.getVariantsForEnv(featureName, environment_name);
+        const feature = await this.get(featureName);
+        // there's no way to filter by environment in the fake store
+        return feature.variants as IVariant[];
     }
 
     async saveVariants(

@@ -5,9 +5,9 @@ slug: /feature-flag-tutorials/use-cases/security-and-compliance
 
 Security and compliance are important aspects of building and managing complex software in large enterprises. For software architects, engineering leaders, and technical decision-makers, every tool in your tech stack needs to pass security reviews. The weakest link in your software bill of materials, known as the SBOM, can be the one that compromises your security, so every dependency and integration must meet strict standards. Security isn't just about individual components—it’s about the entire system working together without introducing risk.
 
-In the modern security landscape, compliance frameworks like FedRamp, SOC2, and ISO 27001 set strict standards for proving good security posture in your software tool implementations. Feature flag management systems are no exception.
+In the modern security landscape, compliance frameworks like FedRAMP, SOC 2, and ISO 27001 set strict standards for proving good security posture in your software tool implementations. Feature flag management systems are no exception.
 
-It’s easy to think, “_Feature flags are just if statements_,” but managing them at scale is far more complex—especially when security and compliance are on the line. What happens if an unauthorized user turns a flag on or off in production, even if by accident? Will that jeopardize your SOC2 certification? A homegrown feature flag solution, often built for convenience, rarely has the robust access controls, audit logs, and data protection measures of a purpose-built system with contributions from thousands of developers and security experts. When compliance and security are requirements, not afterthoughts, the right tooling makes all the difference.
+It’s easy to think, “_Feature flags are just if statements_,” but managing them at scale is far more complex—especially when security and compliance are on the line. What happens if an unauthorized user turns a flag on or off in production, even if by accident? Will that jeopardize your SOC 2 certification? A homegrown feature flag solution, often built for convenience, rarely has the robust access controls, audit logs, and data protection measures of a purpose-built system with contributions from thousands of developers and security experts. When compliance and security are requirements, not afterthoughts, the right tooling makes all the difference.
 
 There are several steps to ensuring your feature flag implementation is audit-proof. In this guide, we will walk through how Unleash Enterprise features can be combined to demonstrate good security posture and compliance for your organization. You will:
 
@@ -38,7 +38,7 @@ Refer to our [security and compliance overview](/using-unleash/compliance/compli
 
 The first step to securely administering your feature flag system is to consider the authentication process. When you’re using Unleash, how should your team members access the platform UI? We have multiple ways for users to log into the platform, including traditional, password-based login. But when you’re considering the best approach to using feature flags in your development process, you need to consider how every access point to your projects, data, and development processes could pose a security risk for your organization. To demonstrate that your tools are configured with security and compliance in mind, we recommend you enable enterprise-grade authentication controls as your first line of defense.
 
-Your developers and other stakeholders need to securely access platforms used to build and ship software to production. At Unleash, we have a multi-layered authentication architecture that supports single sign-on (SSO) and SCIM protocols. These authentication controls are the de facto ways for you to integrate enterprise-grade security measures easily. Let’s take a closer look at each authentication option to use.
+Your developers and other stakeholders need to securely access platforms used to build and ship software to production. At Unleash, we have a multi-layered authentication architecture that supports [single sign-on](/reference/sso) (SSO) and [SCIM](/reference/scim) protocols. These authentication controls are the de facto ways for you to integrate enterprise-grade security measures easily. Let’s take a closer look at each authentication option to use.
 
 ### Use SSO authentication for feature flags
 
@@ -62,7 +62,7 @@ Let’s consider another scenario. You are not setting up feature flag access fo
 
 User management at scale is difficult without automation. It’s also costly to manually track and change all user permissions over time.
 
-To solve this, Unleash uses [SCIM protocols (System for Cross-domain Identity Management)](https://scim.cloud/) to help you automatically provision and de-provision user accounts. When an employee joins or leaves your organization, their feature flag access can be automatically adjusted without manual changes. You won’t have to consider all the security implications of user accounts as your teams evolve. Unleash handles that for you. Take a look at this diagram of how Unleash automates user management at scale by enabling the SCIM integration.
+To solve this, Unleash uses [SCIM protocols (System for Cross-domain Identity Management)](https://scim.cloud/) to help you automatically provision and de-provision user accounts. When an employee joins or leaves your organization, their feature flag access can be automatically adjusted without manual changes. You won’t have to consider all the security implications of user accounts as your teams evolve. 
 
 By enabling SCIM in Unleash, you can:
 
@@ -148,7 +148,7 @@ To get the most out of this functionality, we recommend you use change requests 
 
 Let’s say a project owner wants to update a rollout strategy so that a new feature will increase from 50% exposure to 100% of your end user base. The change is approved by other team members, but the project owner will need to hold off applying the update in production until components from another team are ready to be released. Since the project owner’s changes are ready ahead of time, they’ll need to delay the change. In this case, we recommend [scheduling change requests](/reference/change-requests#scheduled-change-requests) to allow teams to plan and queue feature flag modifications with precise timing, which gives you more control and predictability in a release process.
 
-> **Note:** Scheduling change requests is different from directly updating a strategy constraint in a project because when you have a change request workflow configured, you’ll have to go through a whole new change request process just to update the constraint. Since the change request has already been approved in this case, it’s easier and faster to simply adjust the date of when the change will be applied.
+> **Note:** Scheduling change requests is different from directly updating a strategy constraint in a project. When you have a change request workflow configured, you’ll have to go through a whole new change request process just to update the constraint. Since the change request has already been approved in this case, it’s easier and faster to simply adjust the date of when the change will be applied.
 
 For more recommendations, read our section on [change management workflow](/topics/feature-flags/best-practices-using-feature-flags-at-scale#6-implement-flag-approval-workflows-early) from _Using Feature Flags at Scale_.
 
@@ -217,7 +217,7 @@ By using Unleash with security and compliance in mind, you've learned how to tra
 
 -   Establish change management workflows: implement the four-eyes principle for all production flag changes through change requests to ensure that critical modifications are properly reviewed and approved before implementation.
 
--   Leverage audit logging: maintain comprehensive event logs and integrate with your SIEM systems to create a chain of evidence for all feature flag activities, which supports your compliance with SOC2, FedRAMP, and ISO 27001 requirements.
+-   Leverage audit logging: maintain comprehensive event logs and integrate with your SIEM systems to create a chain of evidence for all feature flag activities, which supports your compliance with SOC 2, FedRAMP, and ISO 27001 requirements.
 
 -   Utilize project isolation for sensitive workloads: separate feature flags by projects to maintain clear boundaries between different business units and sensitive initiatives.
 

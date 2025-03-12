@@ -9,8 +9,6 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import { PermissionHOC } from 'component/common/PermissionHOC/PermissionHOC';
-import { ADMIN } from 'component/providers/AccessProvider/permissions';
 import { useState } from 'react';
 
 const StyledActions = styled('div')(({ theme }) => ({
@@ -83,15 +81,11 @@ export const UsersActionsCell = ({
                 disableScrollLock={true}
             >
                 <MenuList aria-labelledby={id}>
-                    <UserAction
-                        onClick={onEdit}
-                        permission={ADMIN}
-                        isScimUser={isScimUser}
-                    >
+                    <UserAction onClick={onEdit} isScimUser={isScimUser}>
                         Edit user
                     </UserAction>
                     {onViewAccess && (
-                        <UserAction onClick={onViewAccess} permission={ADMIN}>
+                        <UserAction onClick={onViewAccess}>
                             Access overview
                         </UserAction>
                     )}
@@ -100,7 +94,6 @@ export const UsersActionsCell = ({
                             onChangePassword();
                             handleClose();
                         }}
-                        permission={ADMIN}
                         isScimUser={isScimUser}
                     >
                         Change password
@@ -110,7 +103,6 @@ export const UsersActionsCell = ({
                             onResetPassword();
                             handleClose();
                         }}
-                        permission={ADMIN}
                         isScimUser={isScimUser}
                     >
                         Reset password
@@ -120,7 +112,6 @@ export const UsersActionsCell = ({
                             onDelete();
                             handleClose();
                         }}
-                        permission={ADMIN}
                     >
                         Remove user
                     </UserAction>
@@ -132,42 +123,23 @@ export const UsersActionsCell = ({
 
 interface IUserActionProps {
     onClick: () => void;
-    permission: string;
     isScimUser?: boolean;
     children: React.ReactNode;
 }
 
-const UserAction = ({
-    onClick,
-    permission,
-    isScimUser,
-    children,
-}: IUserActionProps) => {
+const UserAction = ({ onClick, isScimUser, children }: IUserActionProps) => {
     const scimTooltip =
         'This user is managed by your SCIM provider and cannot be changed manually';
 
     return (
-        <PermissionHOC permission={permission}>
-            {({ hasAccess }) => (
-                <Tooltip
-                    title={isScimUser ? scimTooltip : ''}
-                    arrow
-                    placement='left'
-                >
-                    <div>
-                        <MenuItem
-                            onClick={onClick}
-                            disabled={!hasAccess || isScimUser}
-                        >
-                            <ListItemText>
-                                <Typography variant='body2'>
-                                    {children}
-                                </Typography>
-                            </ListItemText>
-                        </MenuItem>
-                    </div>
-                </Tooltip>
-            )}
-        </PermissionHOC>
+        <Tooltip title={isScimUser ? scimTooltip : ''} arrow placement='left'>
+            <div>
+                <MenuItem onClick={onClick} disabled={isScimUser}>
+                    <ListItemText>
+                        <Typography variant='body2'>{children}</Typography>
+                    </ListItemText>
+                </MenuItem>
+            </div>
+        </Tooltip>
     );
 };

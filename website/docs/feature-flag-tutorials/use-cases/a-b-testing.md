@@ -17,7 +17,7 @@ In this tutorial, you will learn how to set up and run an A/B test using feature
 2. [Target specific users for each test variant](#target-users-for-ab-testing)
 3. [Manage cross-session visibility of test variants](#manage-user-session-behavior)
 4. [Connect feature flag impression data to conversion outcomes](#track-ab-testing-for-your-key-performance-metrics)
-5. [Roll out the winning variant to all users](#rollout-the-winning-variant-to-all-users)
+5. [Roll out the winning variant to all users](#roll-out-the-winning-variant-to-all-users)
 
 You will also learn about how to [automate advanced A/B testing strategies](#multi-arm-bandit-tests-to-find-the-winning-variant) such as multi-arm bandit testing using feature flags.
 

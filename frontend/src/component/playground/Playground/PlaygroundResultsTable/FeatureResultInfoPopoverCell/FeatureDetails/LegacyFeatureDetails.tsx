@@ -1,31 +1,44 @@
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
-import { Alert, Typography, useTheme, styled, IconButton } from '@mui/material';
+import { Alert, IconButton, Typography, useTheme, styled } from '@mui/material';
 import { PlaygroundResultChip } from '../../PlaygroundResultChip/PlaygroundResultChip';
 import CloseOutlined from '@mui/icons-material/CloseOutlined';
 import type React from 'react';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     checkForEmptyValues,
     hasCustomStrategies,
     hasOnlyCustomStrategies,
 } from './helpers';
 
-const HeaderRow = styled('div')({
+const StyledDivWrapper = styled('div')({
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%',
 });
 
-const HeaderGroup = styled('hgroup')(({ theme }) => ({
+const StyledDivTitleRow = styled('div')(({ theme }) => ({
     display: 'inline-flex',
     alignItems: 'center',
     gap: theme.spacing(1.5),
+    marginTop: theme.spacing(1.5),
 }));
 
-const StyledTypographyName = styled('h3')(({ theme }) => ({
-    fontWeight: 'bold',
-    fontSize: theme.typography.subtitle1.fontSize,
-    margin: 0,
+const StyledDivAlertRow = styled('div')(({ theme }) => ({
+    margin: theme.spacing(1, 0),
 }));
+
+const StyledDivDescriptionRow = styled('div')(({ theme }) => ({
+    margin: theme.spacing(1, 0.5),
+}));
+
+const StyledTypographyName = styled(Typography)(({ theme }) => ({
+    fontWeight: 600,
+    padding: theme.spacing(0.5),
+}));
+
+const StyledIconButton = styled(IconButton)({
+    textAlign: 'right',
+});
 
 interface PlaygroundFeatureResultDetailsProps {
     feature: PlaygroundFeatureSchema;
@@ -44,7 +57,7 @@ export const FeatureDetails = ({
             return [
                 `This feature flag is True in ${input?.environment} because `,
                 'at least one strategy is True',
-                theme.palette.success.contrastText,
+                theme.palette.success.main,
             ];
 
         if (
@@ -54,7 +67,7 @@ export const FeatureDetails = ({
             return [
                 `This feature flag is False in ${input?.environment} because `,
                 'parent dependency is not satisfied and the environment is disabled',
-                theme.palette.error.contrastText,
+                theme.palette.error.main,
             ];
         }
 
@@ -62,35 +75,35 @@ export const FeatureDetails = ({
             return [
                 `This feature flag is False in ${input?.environment} because `,
                 'the environment is disabled',
-                theme.palette.error.contrastText,
+                theme.palette.error.main,
             ];
 
         if (hasOnlyCustomStrategies(feature))
             return [
                 `This feature flag is Unknown in ${input?.environment} because `,
                 'no strategies could be fully evaluated',
-                theme.palette.warning.contrastText,
+                theme.palette.warning.main,
             ];
 
         if (hasCustomStrategies(feature))
             return [
                 `This feature flag is Unknown in ${input?.environment} because `,
                 'not all strategies could be fully evaluated',
-                theme.palette.warning.contrastText,
+                theme.palette.warning.main,
             ];
 
         if (feature.hasUnsatisfiedDependency) {
             return [
                 `This feature flag is False in ${input?.environment} because `,
                 'parent dependency is not satisfied',
-                theme.palette.error.contrastText,
+                theme.palette.error.main,
             ];
         }
 
         return [
             `This feature flag is False in ${input?.environment} because `,
             'all strategies are either False or could not be fully evaluated',
-            theme.palette.error.contrastText,
+            theme.palette.error.main,
         ];
     })();
 
@@ -111,43 +124,61 @@ export const FeatureDetails = ({
 
     return (
         <>
-            <HeaderRow>
-                <HeaderGroup>
-                    <StyledTypographyName>{feature.name}</StyledTypographyName>
-                    <p>
-                        {feature?.strategies?.result !== 'unknown' ? (
+            <StyledDivWrapper>
+                <StyledDivTitleRow>
+                    <StyledTypographyName variant={'subtitle1'}>
+                        {feature.name}
+                    </StyledTypographyName>
+                    <ConditionallyRender
+                        condition={feature?.strategies?.result !== 'unknown'}
+                        show={() => (
                             <PlaygroundResultChip
-                                tabindex={-1}
                                 enabled={feature.isEnabled}
                                 label={feature.isEnabled ? 'True' : 'False'}
                             />
-                        ) : (
+                        )}
+                        elseShow={() => (
                             <PlaygroundResultChip
-                                tabindex={-1}
                                 enabled='unknown'
                                 label={'Unknown'}
                                 showIcon={false}
                             />
                         )}
-                    </p>
-                </HeaderGroup>
-                <IconButton aria-label='Close' onClick={onCloseClick}>
+                    />
+                </StyledDivTitleRow>
+                <StyledIconButton onClick={onCloseClick}>
                     <CloseOutlined />
-                </IconButton>
-            </HeaderRow>
-            <p>
-                {description}
-                <Typography color={color} component='span'>
+                </StyledIconButton>
+            </StyledDivWrapper>
+            <StyledDivDescriptionRow>
+                <Typography variant='body1' component='span'>
+                    {description}
+                </Typography>
+                <Typography variant='subtitle1' color={color} component='span'>
                     {reason}
                 </Typography>
-                .
-            </p>
-            {noValueTxt ? <Alert color={'info'}>{noValueTxt}</Alert> : null}
-            {customStrategiesTxt ? (
-                <Alert severity='warning' color='info'>
-                    {customStrategiesTxt}
-                </Alert>
-            ) : null}
+                <Typography variant='body1' component='span'>
+                    .
+                </Typography>
+            </StyledDivDescriptionRow>
+            <ConditionallyRender
+                condition={Boolean(noValueTxt)}
+                show={
+                    <StyledDivAlertRow>
+                        <Alert color={'info'}>{noValueTxt}</Alert>
+                    </StyledDivAlertRow>
+                }
+            />
+            <ConditionallyRender
+                condition={Boolean(customStrategiesTxt)}
+                show={
+                    <StyledDivAlertRow>
+                        <Alert severity='warning' color='info'>
+                            {customStrategiesTxt}
+                        </Alert>
+                    </StyledDivAlertRow>
+                }
+            />
         </>
     );
 };

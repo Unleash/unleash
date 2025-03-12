@@ -31,12 +31,6 @@ export interface IGetAllFeatures {
     userId?: number;
 }
 
-export interface IGetAdminFeatures {
-    featureQuery?: IFeatureToggleQuery;
-    archived?: boolean;
-    userId?: number;
-}
-
 export default class FeatureToggleClientStore
     implements IFeatureToggleClientStore
 {
@@ -367,19 +361,6 @@ export default class FeatureToggleClientStore
             featureQuery,
             archived: false,
             requestType: 'playground',
-        });
-    }
-
-    async getAdmin({
-        featureQuery,
-        userId,
-        archived,
-    }: IGetAdminFeatures): Promise<IFeatureToggleClient[]> {
-        return this.getAll({
-            featureQuery,
-            archived: Boolean(archived),
-            requestType: 'admin',
-            userId,
         });
     }
 }

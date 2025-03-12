@@ -172,7 +172,7 @@ export function registerPrometheusMetrics(
     const clientRegistrationTotal = createCounter({
         name: 'client_registration_total',
         help: 'Number of times a an application have registered',
-        labelNames: ['appName', 'environment'],
+        labelNames: ['appName', 'environment', 'interval'],
     });
 
     dbMetrics.registerGaugeDbMetric({
@@ -812,9 +812,14 @@ export function registerPrometheusMetrics(
         clientDeltaMemory.reset();
         clientDeltaMemory.set(event.memory);
     });
-    eventBus.on(events.CLIENT_REGISTERED, ({ appName, environment }) => {
-        clientRegistrationTotal.labels({ appName, environment }).inc();
-    });
+    eventBus.on(
+        events.CLIENT_REGISTERED,
+        ({ appName, environment, interval }) => {
+            clientRegistrationTotal
+                .labels({ appName, environment, interval })
+                .inc();
+        },
+    );
 
     events.onMetricEvent(
         eventBus,

@@ -27,7 +27,7 @@ Unleash is the most popular open-source solution for feature flagging on GitHub.
 
 ### Set up Unleash
 
-To get started with Unleash, you can either explore [Unleash Enterprise](#set-up-unleash-enterprise) with a free trial or [get started locally](#set-up-unleash-locally) with our open-source solution.
+To get started with Unleash, you can either explore [Unleash Enterprise](#unleash-enterprise) with a free trial or [get started locally](#unleash-open-source) with our open-source solution.
 
 #### Unleash Enterprise
 
@@ -137,7 +137,7 @@ Check out [the CONTRIBUTING.md file](./CONTRIBUTING.md) for contribution guideli
 
 - Get an overview of all feature flags across all your environments, applications and services
 - Targeted releases using [activation strategies](https://docs.getunleash.io/reference/activation-strategies) to enable and disable features for certain users or segments without having to redeploy your application.
-- [Canary releases / gradual rollouts](https://docs.getunleash.io/reference/activation-strategies#gradual-rollout)
+- [Canary releases / gradual rollouts](https://docs.getunleash.io/reference/activation-strategies)
 - [Kill switches](https://docs.getunleash.io/reference/feature-toggles#feature-flag-types)
 - [A/B testing](https://docs.getunleash.io/feature-flag-tutorials/use-cases/a-b-testing)
 - 2 [environments](https://docs.getunleash.io/reference/environments)

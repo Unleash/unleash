@@ -115,7 +115,7 @@
     "react-test-renderer": "18.3.1",
     "sass": "1.85.1",
     "semver": "7.7.1",
-    "swr": "2.3.2",
+    "swr": "2.3.3",
     "tss-react": "4.9.15",
     "typescript": "5.4.5",
     "use-query-params": "^2.2.1",
@@ -124,7 +124,7 @@
     "vite-plugin-env-compatible": "2.0.1",
     "vite-plugin-svgr": "3.3.0",
     "vite-tsconfig-paths": "4.3.2",
-    "vitest": "3.0.7",
+    "vitest": "3.0.8",
     "whatwg-fetch": "3.6.20"
   },
   "resolutions": {

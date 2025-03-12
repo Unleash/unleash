@@ -53,7 +53,7 @@ Hosting Edge requires a little more setup than the Unleash-hosted Frontend API d
 Unleash no longer hosts instances of the proxy, but makes the [Frontend API](../reference/front-end-api) available to all [Pro](/availability#plans) and [Enterprise](https://www.getunleash.io/pricing) customers. The API is backed by an Amazon RDS database. Your applications can connect to the frontend API from your own cloud or from other hosting solutions.
 
 In order to access the frontend API you'll need:
-- A [Frontend API key](../reference/api-tokens-and-client-keys#front-end-tokens) for the environment you'd like to use.
+- A [Frontend API key](../reference/api-tokens-and-client-keys#frontend-tokens) for the environment you'd like to use.
 - The Frontend API URL. This will be your Unleash instance's URL followed by `/api/frontend`.
 
 This is the simplest, but also most limited (by far) way to use Unleash client SDKs. In this setup, Unleash hosts both the Unleash API and the Unleash frontend API. With Unleash hosting, you'll only need to worry about the Frontend API keys and the URL to access the endpoint.
@@ -170,7 +170,7 @@ For the proxy, configure:
 
 -   The Unleash API url. This is your Unleash instance URL followed by `/api`.
 -   A [client API token](../reference/api-tokens-and-client-keys#client-tokens).
--   One or more [proxy client keys](../reference/api-tokens-and-client-keys#proxy-client-keys). Refer to the [configuration section of the proxy document](../reference/unleash-proxy#configuration) for more details.
+-   One or more [proxy client keys](../reference/api-tokens-and-client-keys#proxy-client-keys). Refer to the [configuration section of the proxy document](../reference/unleash-proxy#configuration-options) for more details.
 
 For the proxy client SDK, configure:
 

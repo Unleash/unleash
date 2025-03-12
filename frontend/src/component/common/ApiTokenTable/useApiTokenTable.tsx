@@ -39,7 +39,7 @@ export const useApiTokenTable = (
             },
             {
                 Header: 'Token name',
-                accessor: 'username',
+                accessor: 'tokenName',
                 Cell: HighlightCell,
                 minWidth: 35,
             },

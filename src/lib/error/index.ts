@@ -10,7 +10,6 @@ import PermissionError from './permission-error';
 import { OperationDeniedError } from './operation-denied-error';
 import UserTokenError from './used-token-error';
 import RoleInUseError from './role-in-use-error';
-import ProjectWithoutOwnerError from './project-without-owner-error';
 import PasswordUndefinedError from './password-undefined';
 import PasswordMismatchError from './password-mismatch';
 import PatternError from './pattern-error';
@@ -32,7 +31,6 @@ export {
     OperationDeniedError,
     UserTokenError,
     RoleInUseError,
-    ProjectWithoutOwnerError,
     PasswordUndefinedError,
     PatternError,
     PasswordMismatchError,

@@ -6,17 +6,22 @@ import type { StrategyVariantSchema } from 'openapi';
 import type { FC } from 'react';
 
 const StyledVariantChip = styled(StrategyEvaluationChip)<{ order: number }>(
-    ({ theme, order }) => ({
-        borderRadius: theme.shape.borderRadiusExtraLarge,
-        border: 'none',
-        background:
-            theme.palette.variants[order % theme.palette.variants.length],
-        color:
-            theme.mode === 'dark'
-                ? theme.palette.neutral.light
-                : theme.palette.text.primary,
-        fontWeight: theme.typography.fontWeightRegular,
-    }),
+    ({ theme, order }) => {
+        const variantColor =
+            theme.palette.variants[order % theme.palette.variants.length];
+
+        return {
+            borderRadius: theme.shape.borderRadiusExtraLarge,
+            border: 'none',
+            color: theme.palette.text.primary,
+            background:
+                // TODO: adjust theme.palette.variants
+                theme.mode === 'dark'
+                    ? `hsl(from ${variantColor} h calc(s - 30) calc(l - 45))`
+                    : `hsl(from ${variantColor} h s calc(l + 5))`,
+            fontWeight: theme.typography.fontWeightRegular,
+        };
+    },
 );
 
 const StyledPayloadHeader = styled('div')(({ theme }) => ({

@@ -55,7 +55,7 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
         <FilterContainer grayscale={strategy.disabled === true}>
             <ConstraintsList>
                 {strategySegments?.map((segment) => (
-                    <SegmentItem segment={segment} />
+                    <SegmentItem segment={segment} key={segment.id} />
                 ))}
                 {constraints?.map((constraint, index) => (
                     <ConstraintItem

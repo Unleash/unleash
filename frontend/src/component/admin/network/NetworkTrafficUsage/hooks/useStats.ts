@@ -72,9 +72,7 @@ export const useTrafficStats = (
     return results;
 };
 
-export const useBackendConsumption = (
-    chartDataSelection: ChartDataSelection,
-) => {
+export const useConsumptionStats = (chartDataSelection: ChartDataSelection) => {
     const { result } = useConnectionsConsumption(
         chartDataSelection.grouping,
         toDateRange(chartDataSelection, currentDate),

@@ -9,7 +9,6 @@ import {
     addMonths,
     differenceInCalendarDays,
     differenceInCalendarMonths,
-    parseISO,
 } from 'date-fns';
 import { formatDay, formatMonth } from './dates';
 import type { ChartDataSelection } from './chart-data-selection';
@@ -53,7 +52,6 @@ export const toConnectionChartData = (
     const datasets = traffic.apiData.map((item) => {
         const record = newRecord();
         for (const dataPoint of Object.values(item.dataPoints)) {
-            const date = parseISO(dataPoint.period);
             const requestCount = dataPoint.connections;
             record[dataPoint.period] = requestCount;
         }

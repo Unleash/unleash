@@ -7,7 +7,7 @@ import { PeriodSelector } from './PeriodSelector';
 import { Bar } from 'react-chartjs-2';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { getChartLabel } from './chart-functions';
-import { useBackendConsumption } from './hooks/useStats';
+import { useConsumptionStats } from './hooks/useStats';
 import { StyledBox, TopRow } from './SharedComponents';
 import {
     BarElement,
@@ -30,7 +30,7 @@ export const BackendConnections: FC = () => {
     const { chartDataSelection, setChartDataSelection, options } =
         useChartDataSelection();
 
-    const { chartData } = useBackendConsumption(chartDataSelection);
+    const { chartData } = useConsumptionStats(chartDataSelection);
 
     return (
         <ConditionallyRender

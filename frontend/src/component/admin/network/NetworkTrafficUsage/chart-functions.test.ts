@@ -1,4 +1,7 @@
-import type { TrafficUsageDataSegmentedCombinedSchema } from 'openapi';
+import type {
+    MeteredConnectionsSchema,
+    TrafficUsageDataSegmentedCombinedSchema,
+} from 'openapi';
 import {
     toConnectionChartData,
     toTrafficUsageChartData,
@@ -152,9 +155,9 @@ describe('toTrafficUsageChartData', () => {
 });
 
 describe('toConnectionChartData', () => {
-    const dataPoint = (period: string, count: number) => ({
+    const dataPoint = (period: string, connections: number) => ({
         period,
-        trafficTypes: [{ count, group: 'successful-requests' }],
+        connections,
     });
 
     const fromEndpointInfo = (endpoint: keyof typeof endpointsInfo) => {
@@ -167,7 +170,7 @@ describe('toConnectionChartData', () => {
     };
 
     test('monthly data conversion', () => {
-        const input: TrafficUsageDataSegmentedCombinedSchema = {
+        const input: MeteredConnectionsSchema = {
             grouping: 'monthly',
             dateRange: {
                 from: '2025-01-01',
@@ -175,16 +178,12 @@ describe('toConnectionChartData', () => {
             },
             apiData: [
                 {
-                    apiPath: '/api/admin', // filter out
-                    dataPoints: [dataPoint('2025-06', 5)],
-                },
-                {
-                    apiPath: '/api/client',
+                    meteredGroup: 'default',
                     dataPoints: [
-                        dataPoint('2025-06', 10 * 5 * 60 * 24 * 30),
-                        dataPoint('2025-01', 7 * 5 * 60 * 24 * 31),
-                        dataPoint('2025-03', 11 * 5 * 60 * 24 * 31),
-                        dataPoint('2025-04', 13 * 5 * 60 * 24 * 30),
+                        dataPoint('2025-06', 10),
+                        dataPoint('2025-01', 7),
+                        dataPoint('2025-03', 11),
+                        dataPoint('2025-04', 13),
                     ],
                 },
             ],
@@ -194,7 +193,9 @@ describe('toConnectionChartData', () => {
             datasets: [
                 {
                     data: [7, 0, 11, 13, 0, 10],
-                    ...fromEndpointInfo('/api/client'),
+                    hoverBackgroundColor: '#6D66D9',
+                    label: 'Connections',
+                    backgroundColor: '#6D66D9',
                 },
             ],
             labels: [
@@ -211,7 +212,7 @@ describe('toConnectionChartData', () => {
     });
 
     test('daily data conversion', () => {
-        const input: TrafficUsageDataSegmentedCombinedSchema = {
+        const input: MeteredConnectionsSchema = {
             grouping: 'daily',
             dateRange: {
                 from: '2025-01-01',
@@ -219,16 +220,12 @@ describe('toConnectionChartData', () => {
             },
             apiData: [
                 {
-                    apiPath: '/api/admin', // filter out
-                    dataPoints: [dataPoint('2025-01-01', 5)],
-                },
-                {
-                    apiPath: '/api/client',
+                    meteredGroup: 'default',
                     dataPoints: [
-                        dataPoint('2025-01-02', 2 * 5 * 60 * 24),
-                        dataPoint('2025-01-17', 6 * 5 * 60 * 24),
-                        dataPoint('2025-01-19', 4 * 5 * 60 * 24),
-                        dataPoint('2025-01-06', 8 * 5 * 60 * 24),
+                        dataPoint('2025-01-02', 2),
+                        dataPoint('2025-01-17', 6),
+                        dataPoint('2025-01-19', 4),
+                        dataPoint('2025-01-06', 8),
                     ],
                 },
             ],
@@ -241,7 +238,9 @@ describe('toConnectionChartData', () => {
                         0, 2, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 4,
                         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                     ],
-                    ...fromEndpointInfo('/api/client'),
+                    hoverBackgroundColor: '#6D66D9',
+                    label: 'Connections',
+                    backgroundColor: '#6D66D9',
                 },
             ],
             labels: Array.from({ length: 31 }).map((_, index) =>

@@ -7,7 +7,7 @@ import { PeriodSelector } from './PeriodSelector';
 import { Bar } from 'react-chartjs-2';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { getChartLabel } from './chart-functions';
-import { useConsumptionStats } from './hooks/useStats';
+import { useBackendConsumption } from './hooks/useStats';
 import { StyledBox, TopRow } from './SharedComponents';
 import {
     BarElement,
@@ -21,6 +21,7 @@ import {
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { useChartDataSelection } from './hooks/useChartDataSelection';
 
+// TODO: consider renaming to Connection Consumption
 export const BackendConnections: FC = () => {
     usePageTitle('Network - Backend Connections');
 
@@ -29,7 +30,7 @@ export const BackendConnections: FC = () => {
     const { chartDataSelection, setChartDataSelection, options } =
         useChartDataSelection();
 
-    const { chartData } = useConsumptionStats(chartDataSelection);
+    const { chartData } = useBackendConsumption(chartDataSelection);
 
     return (
         <ConditionallyRender

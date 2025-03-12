@@ -13,6 +13,7 @@ import {
 } from 'utils/traffic-calculations';
 import { BILLING_TRAFFIC_BUNDLE_PRICE } from '../../../billing/BillingDashboard/BillingPlan/BillingPlan';
 import { averageTrafficPreviousMonths } from '../average-traffic-previous-months';
+import { useConnectionsConsumption } from '../../../../../hooks/api/getters/useConnectionsConsumption/useConnectionsConsumption';
 
 export const useTrafficStats = (
     includedTraffic: number,
@@ -71,8 +72,10 @@ export const useTrafficStats = (
     return results;
 };
 
-export const useConsumptionStats = (chartDataSelection: ChartDataSelection) => {
-    const { result } = useTrafficSearch(
+export const useBackendConsumption = (
+    chartDataSelection: ChartDataSelection,
+) => {
+    const { result } = useConnectionsConsumption(
         chartDataSelection.grouping,
         toDateRange(chartDataSelection, currentDate),
     );
@@ -80,10 +83,6 @@ export const useConsumptionStats = (chartDataSelection: ChartDataSelection) => {
         if (result.state !== 'success') {
             return {
                 chartData: { datasets: [], labels: [] },
-                usageTotal: 0,
-                overageCost: 0,
-                estimatedMonthlyCost: 0,
-                requestSummaryUsage: 0,
             };
         }
         const traffic = result.data;

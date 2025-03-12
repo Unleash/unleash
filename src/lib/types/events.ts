@@ -400,6 +400,7 @@ export interface IBaseEvent {
 export interface IEvent extends Omit<IBaseEvent, 'ip'> {
     id: number;
     createdAt: Date;
+    ip?: string;
 }
 
 export interface IEnrichedEvent extends IEvent {

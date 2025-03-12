@@ -89,6 +89,12 @@ const EventCard = ({ entry }: IEventCardProps) => {
                 <dd>{entry.type}</dd>
                 <StyledDefinitionTerm>Changed by:</StyledDefinitionTerm>
                 <dd title={entry.createdBy}>{entry.createdBy}</dd>
+                {entry.ip && (
+                    <>
+                        <StyledDefinitionTerm>IP:</StyledDefinitionTerm>
+                        <dd title={entry.ip}>{entry.ip}</dd>
+                    </>
+                )}
                 <ConditionallyRender
                     condition={Boolean(entry.project)}
                     show={

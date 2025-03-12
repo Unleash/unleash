@@ -32,12 +32,18 @@ export default class EventService {
 
     private eventBus: EventEmitter;
 
+    private isEnterprise: boolean;
+
     constructor(
         {
             eventStore,
             featureTagStore,
         }: Pick<IUnleashStores, 'eventStore' | 'featureTagStore'>,
-        { getLogger, eventBus }: Pick<IUnleashConfig, 'getLogger' | 'eventBus'>,
+        {
+            getLogger,
+            eventBus,
+            isEnterprise,
+        }: Pick<IUnleashConfig, 'getLogger' | 'eventBus' | 'isEnterprise'>,
         privateProjectChecker: IPrivateProjectChecker,
         accessReadModel: IAccessReadModel,
     ) {
@@ -46,6 +52,7 @@ export default class EventService {
         this.privateProjectChecker = privateProjectChecker;
         this.featureTagStore = featureTagStore;
         this.eventBus = eventBus;
+        this.isEnterprise = isEnterprise;
         this.accessReadModel = accessReadModel;
     }
 
@@ -101,6 +108,9 @@ export default class EventService {
                 query: search.query,
             },
             queryParams,
+            {
+                withIp: this.isEnterprise,
+            },
         );
         return {
             events,

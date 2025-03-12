@@ -39,7 +39,7 @@ export interface HealthReportSchema {
     featureNaming?: CreateFeatureNamingPatternSchema;
     /** An array containing an overview of all the features of the project and their individual status */
     features: FeatureSchema[];
-    /** The overall [health rating](https://docs.getunleash.io/reference/technical-debt#health-rating) of the project. */
+    /** The overall [health rating](https://docs.getunleash.io/reference/technical-debt#project-status) of the project. */
     health: number;
     /**
      * The number of users/members in the project.

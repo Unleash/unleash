@@ -165,8 +165,11 @@ export const EventSchemaType = {
     'release-plan-template-created': 'release-plan-template-created',
     'release-plan-template-updated': 'release-plan-template-updated',
     'release-plan-template-deleted': 'release-plan-template-deleted',
+    'release-plan-template-archived': 'release-plan-template-archived',
     'release-plan-added': 'release-plan-added',
     'release-plan-removed': 'release-plan-removed',
     'release-plan-milestone-started': 'release-plan-milestone-started',
     'user-preference-updated': 'user-preference-updated',
+    'scim-users-deleted': 'scim-users-deleted',
+    'scim-groups-deleted': 'scim-groups-deleted',
 } as const;

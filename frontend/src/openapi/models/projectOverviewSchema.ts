@@ -43,7 +43,7 @@ export interface ProjectOverviewSchema {
     featureNaming?: CreateFeatureNamingPatternSchema;
     /** The number of features of each type that are in this project */
     featureTypeCounts?: FeatureTypeCountSchema[];
-    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#health-rating) on a scale from 0 to 100 */
+    /** An indicator of the [project's health](https://docs.getunleash.io/reference/technical-debt#project-status) on a scale from 0 to 100 */
     health?: number;
     /** The number of members this project has */
     members?: number;

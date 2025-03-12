@@ -48,7 +48,6 @@ import {
     ProjectGroupUpdateRoleEvent,
     ProjectRevivedEvent,
     ProjectUpdatedEvent,
-    ProjectUserAddedEvent,
     ProjectUserRemovedEvent,
     ProjectUserUpdateRoleEvent,
     RoleName,
@@ -653,47 +652,6 @@ export default class ProjectService {
     // RBAC methods
     async getAccessToProject(projectId: string): Promise<AccessWithRoles> {
         return this.accessService.getProjectRoleAccess(projectId);
-    }
-
-    /**
-     * @deprecated see addAccess instead.
-     */
-    async addUser(
-        projectId: string,
-        roleId: number,
-        userId: number,
-        auditUser: IAuditUser,
-    ): Promise<void> {
-        const { roles, users } =
-            await this.accessService.getProjectRoleAccess(projectId);
-        const user = await this.accountStore.get(userId);
-
-        const role = roles.find((r) => r.id === roleId);
-        if (!role) {
-            throw new NotFoundError(
-                `Could not find roleId=${roleId} on project=${projectId}`,
-            );
-        }
-
-        const alreadyHasAccess = users.some((u) => u.id === userId);
-        if (alreadyHasAccess) {
-            throw new Error(`User already has access to project=${projectId}`);
-        }
-
-        await this.accessService.addUserToRole(userId, role.id, projectId);
-
-        await this.eventService.storeEvent(
-            new ProjectUserAddedEvent({
-                project: projectId,
-                auditUser,
-                data: {
-                    roleId,
-                    userId,
-                    roleName: role.name,
-                    email: user.email,
-                },
-            }),
-        );
     }
 
     /**

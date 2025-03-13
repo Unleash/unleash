@@ -2,7 +2,6 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUserInfo from 'hooks/api/getters/useUserInfo/useUserInfo';
-import { AccessOverviewTable } from './AccessOverviewTable';
 import { styled, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
@@ -12,6 +11,7 @@ import { StringParam, useQueryParams } from 'use-query-params';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { AccessOverviewSelect } from './AccessOverviewSelect';
 import { useUserAccessOverview } from 'hooks/api/getters/useUserAccessOverview/useUserAccessOverview';
+import { AccessOverviewAccordion } from './AccessOverviewAccordion';
 
 const StyledActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -24,8 +24,10 @@ const StyledActionsContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledTitle = styled('h2')(({ theme }) => ({
-    margin: theme.spacing(2, 0),
+const StyledAccessOverviewContainer = styled('div')(({ theme }) => ({
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
 }));
 
 export const AccessOverview = () => {
@@ -104,19 +106,22 @@ export const AccessOverview = () => {
                 </PageHeader>
             }
         >
-            <StyledTitle>
-                Root permissions for role {rootRole?.name}
-            </StyledTitle>
-            <AccessOverviewTable permissions={overview?.root ?? []} />
-            <StyledTitle>
-                Project permissions for project {project} with project roles [
-                {projectRoles?.map((role: any) => role.name).join(', ')}]
-            </StyledTitle>
-            <AccessOverviewTable permissions={overview?.project ?? []} />
-            <StyledTitle>
-                Environment permissions for environment {environment}
-            </StyledTitle>
-            <AccessOverviewTable permissions={overview?.environment ?? []} />
+            <StyledAccessOverviewContainer>
+                <AccessOverviewAccordion permissions={overview?.root ?? []}>
+                    Root permissions for role {rootRole?.name}
+                </AccessOverviewAccordion>
+                <AccessOverviewAccordion permissions={overview?.project ?? []}>
+                    Project permissions for project {project} with project roles
+                    [{projectRoles?.map((role: any) => role.name).join(', ')}]
+                </AccessOverviewAccordion>
+                {environment && (
+                    <AccessOverviewAccordion
+                        permissions={overview?.environment ?? []}
+                    >
+                        Environment permissions for environment {environment}
+                    </AccessOverviewAccordion>
+                )}
+            </StyledAccessOverviewContainer>
         </PageContent>
     );
 };

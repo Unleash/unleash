@@ -4,6 +4,7 @@ import { subMonths } from 'date-fns';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { FC } from 'react';
 import type { ChartDataSelection } from './chart-data-selection';
+import { parseMonthString } from './dates';
 
 type Props = {
     period: ChartDataSelection;
@@ -62,7 +63,7 @@ const incomingRequestsText = (period: ChartDataSelection): string => {
         return `Average requests from ${formatMonth(fromMonth)} to ${formatMonth(toMonth)}`;
     }
 
-    return `Incoming requests in ${formatMonth(new Date(period.month))}`;
+    return `Incoming requests in ${formatMonth(parseMonthString(period.month))}`;
 };
 
 export const RequestSummary: FC<Props> = ({

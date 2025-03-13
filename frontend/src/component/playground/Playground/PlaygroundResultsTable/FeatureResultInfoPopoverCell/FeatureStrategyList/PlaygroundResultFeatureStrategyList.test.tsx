@@ -24,7 +24,7 @@ const testCases = [
             hasUnsatisfiedDependency: true,
         } as PlaygroundFeatureSchema,
         expectedText:
-            'If environment was enabled and parent dependencies were satisfied, then this feature flag would be TRUE with strategies evaluated like so:',
+            'If the environment was enabled and parent dependencies were satisfied, then this feature flag would be TRUE with strategies evaluated like this:',
     },
     {
         name: 'Environment enabled and parent dependency not satisfied',
@@ -44,7 +44,7 @@ const testCases = [
             hasUnsatisfiedDependency: true,
         } as PlaygroundFeatureSchema,
         expectedText:
-            'If parent dependencies were satisfied, then this feature flag would be TRUE with strategies evaluated like so:',
+            'If parent dependencies were satisfied, then this feature flag would be TRUE with strategies evaluated like this:',
     },
     {
         name: 'Environment not enabled and parent dependency satisfied',
@@ -64,7 +64,7 @@ const testCases = [
             hasUnsatisfiedDependency: false,
         } as PlaygroundFeatureSchema,
         expectedText:
-            'If environment was enabled, then this feature flag would be TRUE with strategies evaluated like so:',
+            'If the environment was enabled, then this feature flag would be TRUE with strategies evaluated like this:',
     },
     {
         name: 'Has disabled strategies and is enabled in environment',

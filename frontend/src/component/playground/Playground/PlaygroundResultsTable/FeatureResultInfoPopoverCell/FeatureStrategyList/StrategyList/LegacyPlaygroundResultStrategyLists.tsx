@@ -1,16 +1,13 @@
-import { Alert, styled } from '@mui/material';
+import { Fragment } from 'react';
+import { Alert, Box, styled, Typography } from '@mui/material';
 import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
     PlaygroundFeatureSchema,
 } from 'openapi';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import {
-    StyledContentList,
-    StyledListItem,
-} from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
-import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
+import { FeatureStrategyItem } from './StrategyItem/LegacyFeatureStrategyItem';
+import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 
 const StyledAlertWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -34,28 +31,13 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 interface PlaygroundResultStrategyListProps {
     strategies: PlaygroundStrategySchema[];
     input?: PlaygroundRequestSchema;
-    titlePrefix?: 'Enabled' | 'Disabled';
+    titlePrefix?: string;
     infoText?: string;
 }
-const StyledHeaderGroup = styled('hgroup')(({ theme }) => ({
-    paddingInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
-    paddingBottom: theme.spacing(2),
-    borderBottom: `1px solid ${theme.palette.divider}`,
-}));
 
-const StyledListTitle = styled('h4')(({ theme }) => ({
-    fontWeight: 'normal',
-    fontSize: theme.typography.body1.fontSize,
-    margin: 0,
-}));
-
-const StyledListTitleDescription = styled('p')(({ theme }) => ({
-    fontWeight: 'bold',
-    fontSize: theme.typography.body2.fontSize,
-}));
-
-const StyledFeatureStrategyItem = styled(FeatureStrategyItem)(({ theme }) => ({
-    paddingInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
+const StyledSubtitle = styled(Typography)(({ theme }) => ({
+    margin: theme.spacing(2, 1, 2, 0),
+    color: 'text.secondary',
 }));
 
 export const PlaygroundResultStrategyLists = ({
@@ -63,39 +45,44 @@ export const PlaygroundResultStrategyLists = ({
     input,
     titlePrefix,
     infoText,
-}: PlaygroundResultStrategyListProps) => {
-    if (strategies.length === 0) {
-        return null;
-    }
-
-    return (
-        <div>
-            <StyledHeaderGroup>
-                <StyledListTitle>{`${
+}: PlaygroundResultStrategyListProps) => (
+    <ConditionallyRender
+        condition={strategies.length > 0}
+        show={
+            <>
+                <StyledSubtitle variant={'subtitle1'}>{`${
                     titlePrefix
                         ? titlePrefix.concat(' strategies')
                         : 'Strategies'
-                } (${strategies?.length})`}</StyledListTitle>
-                {infoText ? (
-                    <StyledListTitleDescription>
-                        {infoText}
-                    </StyledListTitleDescription>
-                ) : null}
-            </StyledHeaderGroup>
-            <StyledContentList>
-                {strategies?.map((strategy, index) => (
-                    <StyledListItem key={strategy.id}>
-                        {index > 0 ? <StrategySeparator /> : ''}
-                        <StyledFeatureStrategyItem
-                            strategy={strategy}
-                            input={input}
-                        />
-                    </StyledListItem>
-                ))}
-            </StyledContentList>
-        </div>
-    );
-};
+                } (${strategies?.length})`}</StyledSubtitle>
+                <ConditionallyRender
+                    condition={Boolean(infoText)}
+                    show={
+                        <StyledSubtitle variant={'subtitle2'}>
+                            {infoText}
+                        </StyledSubtitle>
+                    }
+                />
+                <Box sx={{ width: '100%' }}>
+                    {strategies?.map((strategy, index) => (
+                        <Fragment key={strategy.id}>
+                            <ConditionallyRender
+                                condition={index > 0}
+                                show={<StrategySeparator text='OR' />}
+                            />
+                            <FeatureStrategyItem
+                                key={strategy.id}
+                                strategy={strategy}
+                                index={index}
+                                input={input}
+                            />
+                        </Fragment>
+                    ))}
+                </Box>
+            </>
+        }
+    />
+);
 
 interface IWrappedPlaygroundResultStrategyListProps {
     feature: PlaygroundFeatureSchema;
@@ -138,17 +125,17 @@ export const WrappedPlaygroundResultStrategyList = ({
                 {feature.strategies?.result ? 'TRUE' : 'FALSE'} with strategies
                 evaluated like this:{' '}
             </StyledAlert>
-            <StyledListWrapper>
+            <StyledListWrapper sx={{ p: 2.5 }}>
                 <PlaygroundResultStrategyLists
                     strategies={enabledStrategies || []}
                     input={input}
-                    titlePrefix={showDisabledStrategies ? 'Enabled' : undefined}
+                    titlePrefix={showDisabledStrategies ? 'Enabled' : ''}
                 />
             </StyledListWrapper>
             <ConditionallyRender
                 condition={showDisabledStrategies}
                 show={
-                    <StyledListWrapper>
+                    <StyledListWrapper sx={{ p: 2.5 }}>
                         <PlaygroundResultStrategyLists
                             strategies={disabledStrategies}
                             input={input}

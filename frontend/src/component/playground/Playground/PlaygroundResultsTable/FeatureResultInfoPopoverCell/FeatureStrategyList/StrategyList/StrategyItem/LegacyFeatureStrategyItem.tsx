@@ -8,18 +8,18 @@ import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { objectId } from 'utils/objectId';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DisabledStrategyExecution } from './StrategyExecution/DisabledStrategyExecution';
-import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
+import { StrategyItemContainer } from 'component/common/StrategyItemContainer/LegacyStrategyItemContainer';
 
 interface IFeatureStrategyItemProps {
     strategy: PlaygroundStrategySchema;
+    index: number;
     input?: PlaygroundRequestSchema;
-    className?: string;
 }
 
 export const FeatureStrategyItem = ({
     strategy,
     input,
-    className,
+    index,
 }: IFeatureStrategyItemProps) => {
     const { result } = strategy;
     const theme = useTheme();
@@ -33,19 +33,22 @@ export const FeatureStrategyItem = ({
 
     return (
         <StrategyItemContainer
+            style={{
+                borderColor:
+                    result.enabled && result.evaluationStatus === 'complete'
+                        ? theme.palette.success.main
+                        : 'none',
+            }}
             strategy={{ ...strategy, id: `${objectId(strategy)}` }}
-            strategyHeaderLevel={4}
-            className={className}
-            headerItemsLeft={
+            orderNumber={index + 1}
+            actions={
                 <PlaygroundResultChip
-                    tabindex={-1}
                     showIcon={false}
                     enabled={result.enabled}
                     label={label}
                 />
             }
         >
-            {/* todo: use new strategy execution components */}
             <ConditionallyRender
                 condition={Boolean(strategy.disabled)}
                 show={

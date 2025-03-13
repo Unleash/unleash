@@ -50,7 +50,7 @@ export const PlaygroundResultFeatureStrategyList = ({
             <PlaygroundResultStrategyLists
                 strategies={enabledStrategies || []}
                 input={input}
-                titlePrefix={showDisabledStrategies ? 'Enabled' : ''}
+                titlePrefix={showDisabledStrategies ? 'Enabled' : undefined}
             />
             {showDisabledStrategies ? (
                 <PlaygroundResultStrategyLists

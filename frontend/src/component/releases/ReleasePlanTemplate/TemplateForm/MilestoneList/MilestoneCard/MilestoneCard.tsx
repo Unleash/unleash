@@ -325,12 +325,11 @@ export const MilestoneCard = ({
                 height: ref.current?.offsetHeight || 0,
             });
 
-            if (ref?.current) {
-                event.dataTransfer.effectAllowed = 'move';
-                event.dataTransfer.setData('text/html', ref.current.outerHTML);
-                event.dataTransfer.setDragImage(ref.current, 20, 20);
-            }
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/html', ref.current.outerHTML);
+            event.dataTransfer.setDragImage(ref.current, 20, 20);
         };
+
     const onStrategyDragEnd = () => {
         setDragItem(null);
         onReOrderStrategies();

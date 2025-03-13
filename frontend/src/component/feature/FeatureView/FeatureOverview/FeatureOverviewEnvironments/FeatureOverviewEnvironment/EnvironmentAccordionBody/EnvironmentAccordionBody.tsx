@@ -180,6 +180,7 @@ export const EnvironmentAccordionBody = ({
             index: number,
         ): DragEventHandler<HTMLButtonElement> =>
         (event) => {
+            console.log('onDragStartRef', index);
             setDragItem({
                 id: strategies[index].id,
                 index,
@@ -200,6 +201,7 @@ export const EnvironmentAccordionBody = ({
             targetIndex: number,
         ): DragEventHandler<HTMLDivElement> =>
         (event) => {
+            console.log('dragging over', targetId, targetIndex);
             if (dragItem === null || ref.current === null) return;
             if (dragItem.index === targetIndex || targetId === dragItem.id)
                 return;
@@ -229,6 +231,7 @@ export const EnvironmentAccordionBody = ({
         };
 
     const onDragEnd = () => {
+        console.log('onDragEnd');
         setDragItem(null);
         onStrategyReorder(
             strategies.map((strategy, sortOrder) => ({
@@ -237,6 +240,7 @@ export const EnvironmentAccordionBody = ({
             })),
         );
     };
+    console.log(dragItem);
 
     const Strategies = () => {
         return strategies.length < 50 || !manyStrategiesPagination ? (

@@ -94,13 +94,13 @@ const resolveHintText = (feature: PlaygroundFeatureSchema) => {
         feature.hasUnsatisfiedDependency &&
         !feature.isEnabledInCurrentEnvironment
     ) {
-        return 'If environment was enabled and parent dependencies were satisfied';
+        return 'If the environment was enabled and parent dependencies were satisfied';
     }
     if (feature.hasUnsatisfiedDependency) {
         return 'If parent dependencies were satisfied';
     }
     if (!feature.isEnabledInCurrentEnvironment) {
-        return 'If environment was enabled';
+        return 'If the environment was enabled';
     }
     return '';
 };
@@ -123,7 +123,7 @@ export const WrappedPlaygroundResultStrategyList = ({
             <StyledAlert severity={'info'} color={'warning'}>
                 {resolveHintText(feature)}, then this feature flag would be{' '}
                 {feature.strategies?.result ? 'TRUE' : 'FALSE'} with strategies
-                evaluated like so:{' '}
+                evaluated like this:{' '}
             </StyledAlert>
             <StyledListWrapper sx={{ p: 2.5 }}>
                 <PlaygroundResultStrategyLists

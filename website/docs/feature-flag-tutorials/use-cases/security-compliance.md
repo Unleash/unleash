@@ -62,7 +62,7 @@ Let’s consider another scenario. You are not setting up feature flag access fo
 
 User management at scale is difficult without automation. It’s also costly to manually track and change all user permissions over time.
 
-To solve this, Unleash uses [SCIM protocols (System for Cross-domain Identity Management)](https://scim.cloud/) to help you automatically provision and de-provision user accounts. When an employee joins or leaves your organization, their feature flag access can be automatically adjusted without manual changes. You won’t have to consider all the security implications of user accounts as your teams evolve.
+To solve this, Unleash uses [SCIM protocols (System for Cross-domain Identity Management)](https://scim.cloud/) to help you automatically provision and de-provision user accounts. When an employee joins or leaves your organization, their feature flag access can be automatically adjusted without manual changes. You won’t have to consider all the security implications of user accounts as your teams evolve. Unleash handles that for you.
 
 By enabling SCIM in Unleash, you can:
 

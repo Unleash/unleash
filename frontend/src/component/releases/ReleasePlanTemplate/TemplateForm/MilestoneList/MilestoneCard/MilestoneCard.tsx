@@ -55,7 +55,7 @@ const StyledMilestoneCard = styled(Card, {
     justifyContent: 'space-between',
     boxShadow: 'none',
     border: `1px solid ${hasError ? theme.palette.error.border : theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusMedium,
+    borderRadius: theme.shape.borderRadius,
     [theme.breakpoints.down('sm')]: {
         justifyContent: 'center',
     },
@@ -78,7 +78,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
     border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadiusMedium,
+    borderRadius: theme.shape.borderRadius,
     [theme.breakpoints.down('sm')]: {
         justifyContent: 'center',
     },
@@ -93,7 +93,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     boxShadow: 'none',
     padding: theme.spacing(1.5, 2),
     paddingLeft: theme.spacing(leftPadding),
-    borderRadius: theme.shape.borderRadiusMedium,
+    borderRadius: theme.shape.borderRadius,
     [theme.breakpoints.down(400)]: {
         padding: theme.spacing(1, 2),
     },
@@ -103,8 +103,8 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    borderBottomLeftRadius: theme.shape.borderRadiusMedium,
-    borderBottomRightRadius: theme.shape.borderRadiusMedium,
+    borderBottomLeftRadius: theme.shape.borderRadius,
+    borderBottomRightRadius: theme.shape.borderRadius,
     padding: theme.spacing(0),
     backgroundColor: theme.palette.background.elevation1,
 }));
@@ -115,6 +115,7 @@ const StyledAccordionFooter = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
     gap: theme.spacing(3),
     backgroundColor: 'inherit',
+    borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -128,7 +129,7 @@ const DragButton = styled('button')(({ theme }) => ({
     transition: 'background-color 0.2s ease-in-out',
     backgroundColor: 'inherit',
     border: 'none',
-    borderRadius: theme.shape.borderRadiusMedium,
+    borderRadius: theme.shape.borderRadius,
     color: theme.palette.text.secondary,
     '&:hover, &:focus-visible': {
         background: theme.palette.table.headerHover,

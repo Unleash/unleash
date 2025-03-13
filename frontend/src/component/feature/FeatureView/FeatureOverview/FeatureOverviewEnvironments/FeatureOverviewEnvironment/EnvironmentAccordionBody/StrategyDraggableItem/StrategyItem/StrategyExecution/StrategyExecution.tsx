@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { styled } from '@mui/material';
-import type { CreateFeatureStrategySchema } from 'openapi';
+import type { FeatureStrategySchema } from 'openapi';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { StrategyExecution as LegacyStrategyExecution } from './LegacyStrategyExecution';
@@ -20,7 +20,7 @@ const FilterContainer = styled('div', {
 );
 
 type StrategyExecutionProps = {
-    strategy: IFeatureStrategyPayload | CreateFeatureStrategySchema;
+    strategy: IFeatureStrategyPayload | FeatureStrategySchema;
     displayGroupId?: boolean;
 };
 
@@ -32,7 +32,10 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
     const { segments } = useSegments();
     const { isCustomStrategy, customStrategyParameters: customStrategyItems } =
         useCustomStrategyParameters(strategy, strategies);
-    const strategyParameters = useStrategyParameters(strategy, displayGroupId);
+    const strategyParameters = useStrategyParameters(
+        strategy as FeatureStrategySchema,
+        displayGroupId,
+    );
     const { constraints } = strategy;
     const strategySegments = segments?.filter((segment) =>
         strategy.segments?.includes(segment.id),
@@ -52,7 +55,7 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
         <FilterContainer grayscale={strategy.disabled === true}>
             <ConstraintsList>
                 {strategySegments?.map((segment) => (
-                    <SegmentItem segment={segment} />
+                    <SegmentItem segment={segment} key={segment.id} />
                 ))}
                 {constraints?.map((constraint, index) => (
                     <ConstraintItem

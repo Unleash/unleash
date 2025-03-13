@@ -11,7 +11,7 @@ import { StringParam, useQueryParams } from 'use-query-params';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { AccessOverviewSelect } from './AccessOverviewSelect';
 import { useUserAccessOverview } from 'hooks/api/getters/useUserAccessOverview/useUserAccessOverview';
-import { AccessOverviewAccordion } from './AccessOverviewAccordion';
+import { AccessOverviewAccordion } from './AccessOverviewAccordion/AccessOverviewAccordion';
 
 const StyledActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -111,8 +111,10 @@ export const AccessOverview = () => {
                     Root permissions for role {rootRole?.name}
                 </AccessOverviewAccordion>
                 <AccessOverviewAccordion permissions={overview?.project ?? []}>
-                    Project permissions for project {project} with project roles
-                    [{projectRoles?.map((role: any) => role.name).join(', ')}]
+                    Project permissions
+                    {project
+                        ? ` for project ${project}${projectRoles?.length ? ` with project role${projectRoles.length !== 1 ? 's' : ''} ${projectRoles?.map((role: any) => role.name).join(', ')}` : ''}`
+                        : ''}
                 </AccessOverviewAccordion>
                 {environment && (
                     <AccessOverviewAccordion

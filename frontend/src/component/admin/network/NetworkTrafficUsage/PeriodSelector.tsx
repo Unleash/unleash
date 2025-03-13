@@ -5,6 +5,7 @@ import { useRef, useState, type FC } from 'react';
 import { format } from 'date-fns';
 import type { ChartDataSelection } from './chart-data-selection';
 import { selectablePeriods } from './selectable-periods';
+import { parseMonthString } from './dates';
 
 const dropdownWidth = '15rem';
 const dropdownInlinePadding = (theme: Theme) => theme.spacing(3);
@@ -148,10 +149,13 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
         selectedPeriod.grouping === 'daily'
             ? selectedPeriod.month === format(new Date(), 'yyyy-MM')
                 ? 'Current month'
-                : new Date(selectedPeriod.month).toLocaleDateString('en-US', {
-                      month: 'long',
-                      year: 'numeric',
-                  })
+                : parseMonthString(selectedPeriod.month).toLocaleDateString(
+                      'en-US',
+                      {
+                          month: 'long',
+                          year: 'numeric',
+                      },
+                  )
             : `Last ${selectedPeriod.monthsBack} months`;
 
     return (

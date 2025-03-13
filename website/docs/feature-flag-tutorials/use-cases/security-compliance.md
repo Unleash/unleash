@@ -44,6 +44,8 @@ To use single sign-on in Unleash, your users can authenticate themselves through
 
 We have integration options with enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak. Connect these identity providers through either OpenID Connect or SAML 2.0 protocol. For a step-by-step guide, read our [how-to guide for single sign-on](/how-to/sso).
 
+![A diagram showing how Unleash integrates with authentication providers and identity providers.](/img/use-case-security-sso.png)
+
 Another major benefit to using SSO is that when you connect Unleash to your identity provider, you will be able to synchronize your user groups out of the box. That way, your group configuration reflects organizational-level changes automatically. Follow our step-by-step guide to set up [user group syncing](/how-to/how-to-set-up-group-sso-sync). With SSO integration, groups defined in your identity provider are directly mapped to Unleash access groups. This means:
 
 -   New team members are automatically assigned correct permissions.

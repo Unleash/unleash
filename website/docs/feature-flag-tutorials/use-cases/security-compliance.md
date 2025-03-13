@@ -7,7 +7,7 @@ Security and compliance are important aspects of building and managing complex s
 
 In the modern security landscape, compliance frameworks like FedRAMP, SOC 2, and ISO 27001 set strict standards for proving good security posture in your software tool implementations. Feature flag management systems are no exception.
 
-It’s easy to think, “_Feature flags are just if statements_,” but managing them at scale is far more complex—especially when security and compliance are on the line. What happens if an unauthorized user turns a flag on or off in production, even if by accident? Will that jeopardize your SOC 2 certification? A homegrown feature flag solution, often built for convenience, rarely has the robust access controls, audit logs, and data protection measures of a purpose-built system with contributions from thousands of developers and security experts. When compliance and security are requirements, not afterthoughts, the right tooling makes all the difference.
+It’s easy to think, “_Feature flags are just if statements_,” but managing them at scale is far more complex—especially when security and compliance are on the line. What happens if an unauthorized user turns a flag on or off in production, even if by accident? Will that jeopardize your SOC 2 certification? A homegrown feature flag solution, often built for convenience, rarely has the robust access controls, audit logs, and data protection measures of a purpose-built system with contributions from hundreds of developers and security experts. When compliance and security are requirements, not afterthoughts, the right tooling makes all the difference.
 
 There are several steps to ensuring your feature flag implementation is audit-proof. In this guide, we will walk through how Unleash Enterprise features can be combined to demonstrate good security posture and compliance for your organization. You will:
 
@@ -90,7 +90,7 @@ Unleash is built with many mechanisms in place to handle all of these scenarios.
 -   You can set up [approval guardrails](#use-a-change-management-workflow-for-auditing) for feature flag updates.
 -   [Project isolation](/reference/project-collaboration-mode) ensures sensitive projects remain hidden from unauthorized users, while teams can only access projects relevant to their work, maintaining clear boundaries between different business units' feature flags.
 
-Let’s look at how Unleash gives you complete control over user roles and permissions. At a high level, there are multiple [predefined roles](/reference/rbac#predefined-roles) in Unleash for you to get started with. The diagram below breaks down the root roles and their respective permissions. Think of them as very specific responsibilities only certain users have in Unleash that are defined by default.
+Let’s look at how Unleash gives you complete control over user roles and permissions. At a high level, there are multiple [predefined roles](/reference/rbac#predefined-roles) in Unleash for you to get started with. Root roles are meant to control permissions to top-level resources, spanning across all projects. Project roles, on the other hand, control permissions for a project, the feature flags, and individual configurations per environment. The diagrams below break down the root roles, project roles, and their respective permissions. Think of them as very specific responsibilities only certain users have in Unleash that are defined by default.
 
 :::note
 
@@ -120,7 +120,7 @@ From an architectural perspective, we implement this by allowing Unleash users t
 
 In the Unleash Admin UI, we have a cross-origin resource sharing (CORS) section with a form so you can list domains that will be allowed to call our Frontend API. This is an access control mechanism that gives you control over which domains interact with Unleash. Different CORS policies can be applied to the development, staging/test, and production environments you configure.
 
-By default, this CORS origin list includes an asterisk (\*), which means that all services that call the Frontend API will be allowed access. You can edit this form to include only your specific domains.
+By default, this CORS origin list includes an asterisk (\*), meaning that any domain can access your Unleash Frontend API. You can edit this form to include only _your_ specific domains.
 
 ### Set up IP allow lists for enhanced security
 
@@ -173,7 +173,7 @@ In the Unleash Admin UI navigation, go to **Event Logs** to see chronological ev
 
 ### Integrate SIEM for advanced audit compliance
 
-For more advanced implementations, integrate Unleash audit logs directly into broader Security Information and Event Management (SIEM) systems. This setup enables real-time monitoring and creates a holistic view of system interactions across multiple platforms. By mapping Unleash audit data to other enterprise security logs, organizations can detect subtle patterns and potential security anomalies that might go unnoticed in isolated systems. You can send your logs to tools like [Datadog](/reference/integrations/datadog), [Sentry](https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/integrations/unleash/), Splunk, S3, and Microsoft Sentinel. SIEM integrations take audit logging to the next level to capture more value out of the data that Unleash provides you.
+For more advanced implementations, integrate Unleash event logs directly into broader Security Information and Event Management (SIEM) systems. This setup enables real-time monitoring and creates a holistic view of system interactions across multiple platforms. By mapping Unleash audit data to other enterprise security logs, organizations can detect subtle patterns and potential security anomalies that might go unnoticed in isolated systems. You can send your logs to tools like [Datadog](/reference/integrations/datadog), [Sentry](https://docs.sentry.io/platforms/javascript/guides/nextjs/configuration/integrations/unleash/), Splunk, S3, and Microsoft Sentinel. SIEM integrations take audit logging to the next level to capture more value out of the data that Unleash provides you.
 
 ### Leverage access logs for broader auditing
 
@@ -196,7 +196,7 @@ Protecting data is critical within any software tool. It’s a security best pra
 -   Flag configurations
 -   User geographical locations
 
-This is a potential attack surface area that you wouldn’t want to be the root of data breaches or unauthorized access in your system. That’s why Unleash was built in a way where integrating feature flags into your services won’t be a weak link in your organization’s ability to ship software safely. When using our [Frontend API](/reference/api/unleash/frontend-api), Unleash only stores these details in its short-term runtime cache. This is practical for development practices and applications that don’t have a lot of traffic, like internal dashboards.
+This is a potential attack surface area that you wouldn’t want to be the root of data breaches or unauthorized access in your system. That’s why Unleash was built in a way where integrating feature flags into your services won’t be a weak link in your organization’s ability to ship software safely. When using our [Frontend API](/reference/api/unleash/frontend-api), Unleash evaluates these details in its short-term runtime cache, without storing it. This is practical for development practices and applications that don’t have a lot of traffic, like internal dashboards.
 
 With Unleash, you can architect your feature flagging solution in a way that all user data stays within your applications. When using server-side SDKs, user data remains within your application and is never shared with the Unleash server regardless of your setup. For client-side SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/understanding-unleash/proxy-hosting#you-host-everything), or [self-hosting Unleash Edge](/understanding-unleash/proxy-hosting#unleash-hosts-the-api-you-host-edge). Read more on the [Unleash architecture here](/understanding-unleash/unleash-overview).
 

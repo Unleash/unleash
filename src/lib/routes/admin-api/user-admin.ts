@@ -741,7 +741,7 @@ export default class UserAdminController extends Controller {
                 ),
             );
         }
-        const matrix = await this.accessService.permissionsMatrixForUser(
+        const overview = await this.accessService.getAccessOverviewForUser(
             user,
             project,
             environment,
@@ -749,7 +749,7 @@ export default class UserAdminController extends Controller {
 
         // TODO add response validation based on the schema
         res.status(200).json({
-            matrix,
+            overview,
             user,
             rootRole,
             projectRoles,

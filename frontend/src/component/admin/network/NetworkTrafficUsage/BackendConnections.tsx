@@ -21,6 +21,7 @@ import {
 import annotationPlugin from 'chartjs-plugin-annotation';
 import { useChartDataSelection } from './hooks/useChartDataSelection';
 
+// TODO: consider renaming to Connection Consumption
 export const BackendConnections: FC = () => {
     usePageTitle('Network - Backend Connections');
 

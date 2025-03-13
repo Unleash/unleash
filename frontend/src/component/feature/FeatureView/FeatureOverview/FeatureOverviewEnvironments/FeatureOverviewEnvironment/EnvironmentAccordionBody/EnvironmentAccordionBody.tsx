@@ -42,6 +42,9 @@ export const StyledContentList = styled('ol')(({ theme }) => ({
         paddingBlock: theme.spacing(2.5),
         position: 'relative',
     },
+    '& > li + li': {
+        borderTop: `1px solid ${theme.palette.divider}`,
+    },
     '&:not(li > &) > li:first-of-type': {
         // select first list elements in lists that are not directly nested
         // within other lists.
@@ -50,15 +53,13 @@ export const StyledContentList = styled('ol')(({ theme }) => ({
     '& > li:has(> ol)': {
         // nested lists add their own padding to their list items, so we don't want to double it up.
         paddingBlock: 0,
+        borderTop: `1px solid ${theme.palette.divider}`,
     },
 }));
 
 export const StyledListItem = styled('li', {
     shouldForwardProp: (prop) => prop !== 'type',
 })<{ type?: 'release plan' | 'strategy' }>(({ theme, type }) => ({
-    '& + &, li > ol > &:first-of-type': {
-        borderTop: `1px solid ${theme.palette.divider}`,
-    },
     background:
         type === 'release plan'
             ? theme.palette.background.elevation2

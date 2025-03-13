@@ -8,6 +8,7 @@ import type {
 const StyledConstraintErrorDiv = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
+    marginTop: theme.spacing(1),
     color: theme.palette.error.main,
 }));
 

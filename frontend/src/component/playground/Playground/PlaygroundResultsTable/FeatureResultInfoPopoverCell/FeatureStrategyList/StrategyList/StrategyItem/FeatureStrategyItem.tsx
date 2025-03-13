@@ -6,7 +6,7 @@ import type {
 } from 'openapi';
 import { objectId } from 'utils/objectId';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
-import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
+import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 
 interface IFeatureStrategyItemProps {
     strategy: PlaygroundStrategySchema;
@@ -43,7 +43,7 @@ export const FeatureStrategyItem = ({
                 />
             }
         >
-            <StrategyExecution strategy={strategy} input={input} />
+            <StrategyExecution strategyResult={strategy} input={input} />
         </StrategyItemContainer>
     );
 };

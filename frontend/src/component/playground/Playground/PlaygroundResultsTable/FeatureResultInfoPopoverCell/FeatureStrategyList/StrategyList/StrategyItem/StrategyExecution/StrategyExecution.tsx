@@ -1,6 +1,4 @@
-import { Fragment, type VFC } from 'react';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
+import type { VFC } from 'react';
 import { styled } from '@mui/material';
 import type {
     PlaygroundRequestSchema,
@@ -13,6 +11,8 @@ import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParam
 import { formattedStrategyNames } from 'utils/strategyNames';
 import { StyledBoxSummary } from './StrategyExecution.styles';
 import { Badge } from 'component/common/Badge/Badge';
+import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
+import { objectId } from 'utils/objectId';
 
 interface IStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;
@@ -45,9 +45,15 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
 
     const items = [
         hasSegments && <SegmentExecution segments={segments} input={input} />,
-        hasConstraints && (
-            <ConstraintExecution constraints={constraints} input={input} />
-        ),
+        ...(hasConstraints
+            ? constraints.map((constraint) => (
+                  <ConstraintExecution
+                      key={objectId(constraint)}
+                      constraint={constraint}
+                      input={input}
+                  />
+              ))
+            : []),
         hasExecutionParameters && (
             <PlaygroundResultStrategyExecutionParameters
                 parameters={parameters}
@@ -66,22 +72,5 @@ export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
         ),
     ].filter(Boolean);
 
-    return (
-        <StyledStrategyExecutionWrapper>
-            {items.map((item, index) => (
-                <Fragment key={index}>
-                    <ConditionallyRender
-                        condition={
-                            index > 0 &&
-                            (strategyResult.name === 'flexibleRollout'
-                                ? index < items.length
-                                : index < items.length - 1)
-                        }
-                        show={<StrategySeparator text='AND' />}
-                    />
-                    {item}
-                </Fragment>
-            ))}
-        </StyledStrategyExecutionWrapper>
-    );
+    return <ConstraintsList>{items}</ConstraintsList>;
 };

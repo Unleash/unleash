@@ -6,7 +6,7 @@ import type {
     PlaygroundRequestSchema,
     PlaygroundStrategySchema,
 } from 'openapi';
-import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
+import { ConstraintExecution } from './ConstraintExecution/LegacyConstraintExecution';
 import { SegmentExecution } from './SegmentExecution/SegmentExecution';
 import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters';
 import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParams';

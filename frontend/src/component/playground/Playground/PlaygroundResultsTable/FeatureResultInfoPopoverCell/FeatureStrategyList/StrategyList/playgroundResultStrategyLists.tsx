@@ -138,7 +138,7 @@ export const WrappedPlaygroundResultStrategyList = ({
                 {feature.strategies?.result ? 'TRUE' : 'FALSE'} with strategies
                 evaluated like this:{' '}
             </StyledAlert>
-            <StyledListWrapper sx={{ p: 2.5 }}>
+            <StyledListWrapper>
                 <PlaygroundResultStrategyLists
                     strategies={enabledStrategies || []}
                     input={input}
@@ -148,7 +148,7 @@ export const WrappedPlaygroundResultStrategyList = ({
             <ConditionallyRender
                 condition={showDisabledStrategies}
                 show={
-                    <StyledListWrapper sx={{ p: 2.5 }}>
+                    <StyledListWrapper>
                         <PlaygroundResultStrategyLists
                             strategies={disabledStrategies}
                             input={input}

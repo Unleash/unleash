@@ -90,7 +90,9 @@ Unleash is built with many mechanisms in place to handle all of these scenarios.
 -   You can set up [approval guardrails](#use-a-change-management-workflow-for-auditing) for feature flag updates.
 -   [Project isolation](/reference/project-collaboration-mode) ensures sensitive projects remain hidden from unauthorized users, while teams can only access projects relevant to their work, maintaining clear boundaries between different business units' feature flags.
 
-Let’s look at how Unleash gives you complete control over user roles and permissions. At a high level, there are multiple [predefined roles](/reference/rbac#predefined-roles) in Unleash for you to get started with. Root roles are meant to control permissions to top-level resources, spanning across all projects. Project roles, on the other hand, control permissions for a project, the feature flags, and individual configurations per environment. The diagrams below break down the root roles, project roles, and their respective permissions. Think of them as very specific responsibilities only certain users have in Unleash that are defined by default.
+Let’s look at how Unleash gives you complete control over user roles and permissions. At a high level, there are multiple [predefined roles](/reference/rbac#predefined-roles) in Unleash for you to get started with. Root roles are meant to control permissions to top-level resources, spanning across all projects. Project roles, on the other hand, control permissions for a project, the feature flags, and individual configurations per environment. The diagram below breaks down the root roles, project roles, and their respective permissions. Think of them as very specific responsibilities only certain users have in Unleash that are defined by default.
+
+![The diagram showing the relationship between root roles and project roles in Unleash.](/img/root-and-project-roles.png)
 
 :::note
 

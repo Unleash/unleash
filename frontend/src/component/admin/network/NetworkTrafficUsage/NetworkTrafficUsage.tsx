@@ -22,11 +22,13 @@ import { useTrafficLimit } from './hooks/useTrafficLimit';
 import { PeriodSelector } from './PeriodSelector';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { OverageInfo, RequestSummary } from './RequestSummary';
-import { currentMonth } from './dates';
+import { currentDate, currentMonth } from './dates';
 import { getChartLabel } from './chart-functions';
 import { useTrafficStats } from './hooks/useStats';
 import { BoldText, StyledBox, TopRow } from './SharedComponents';
 import { useChartDataSelection } from './hooks/useChartDataSelection';
+import { toDateRange } from './chart-data-selection';
+import { useTrafficSearch } from 'hooks/api/getters/useInstanceTrafficMetrics/useInstanceTrafficMetrics';
 
 const TrafficInfoBoxes = styled('div')(({ theme }) => ({
     display: 'grid',
@@ -68,6 +70,10 @@ const NetworkTrafficUsage: FC = () => {
         includedTraffic > 0 &&
         overageCost > 0;
 
+    const { result } = useTrafficSearch(
+        chartDataSelection.grouping,
+        toDateRange(chartDataSelection, currentDate),
+    );
     return (
         <ConditionallyRender
             condition={isOss()}

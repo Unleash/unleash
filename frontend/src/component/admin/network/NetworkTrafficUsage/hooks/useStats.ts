@@ -3,8 +3,8 @@ import { useTrafficSearch } from 'hooks/api/getters/useInstanceTrafficMetrics/us
 import { currentDate } from '../dates';
 import { useMemo } from 'react';
 import {
-    toTrafficUsageChartData as newToChartData,
     toConnectionChartData,
+    toTrafficUsageChartData,
 } from '../chart-functions';
 import {
     calculateEstimatedMonthlyCost,
@@ -35,7 +35,7 @@ export const useTrafficStats = (
         }
         const traffic = result.data;
 
-        const chartData = newToChartData(traffic, filter);
+        const chartData = toTrafficUsageChartData(traffic, filter);
         const usageTotal = calculateTotalUsage(traffic);
         const overageCost = calculateOverageCost(
             usageTotal,

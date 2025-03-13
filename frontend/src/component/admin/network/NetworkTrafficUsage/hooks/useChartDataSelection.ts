@@ -4,6 +4,7 @@ import { periodsRecord, selectablePeriods } from '../selectable-periods';
 import { createBarChartOptions } from '../bar-chart-options';
 import useTheme from '@mui/material/styles/useTheme';
 import { useLocationSettings } from 'hooks/useLocationSettings';
+import { parseMonthString } from '../dates';
 
 export const useChartDataSelection = (includedTraffic?: number) => {
     const theme = useTheme();
@@ -35,11 +36,11 @@ export const useChartDataSelection = (includedTraffic?: number) => {
                         },
                     );
                 } else {
-                    const timestamp = Date.parse(tooltipItems[0].label);
-                    if (Number.isNaN(timestamp)) {
+                    const month = parseMonthString(tooltipItems[0].label);
+                    if (Number.isNaN(month.getTime())) {
                         return 'Current month to date';
                     }
-                    return new Date(timestamp).toLocaleDateString(
+                    return month.toLocaleDateString(
                         locationSettings?.locale ?? 'en-US',
                         {
                             month: 'long',

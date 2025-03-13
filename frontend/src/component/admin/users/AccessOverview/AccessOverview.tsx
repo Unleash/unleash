@@ -2,7 +2,7 @@ import { PageContent } from 'component/common/PageContent/PageContent';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUserInfo from 'hooks/api/getters/useUserInfo/useUserInfo';
-import { PermissionsTable } from './PermissionsTable';
+import { AccessOverviewTable } from './AccessOverviewTable';
 import { styled, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
@@ -10,8 +10,8 @@ import { ConditionallyRender } from 'component/common/ConditionallyRender/Condit
 import theme from 'themes/theme';
 import { StringParam, useQueryParams } from 'use-query-params';
 import useProjects from 'hooks/api/getters/useProjects/useProjects';
-import { AccessMatrixSelect } from './AccessMatrixSelect';
-import { useUserAccessMatrix } from 'hooks/api/getters/useUserAccessMatrix/useUserAccessMatrix';
+import { AccessOverviewSelect } from './AccessOverviewSelect';
+import { useUserAccessOverview } from 'hooks/api/getters/useUserAccessOverview/useUserAccessOverview';
 
 const StyledActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -28,7 +28,7 @@ const StyledTitle = styled('h2')(({ theme }) => ({
     margin: theme.spacing(2, 0),
 }));
 
-export const AccessMatrix = () => {
+export const AccessOverview = () => {
     const id = useRequiredPathParam('id');
     const [query, setQuery] = useQueryParams({
         project: StringParam,
@@ -45,7 +45,7 @@ export const AccessMatrix = () => {
         query.environment ?? undefined,
     );
 
-    const { matrix, rootRole, projectRoles } = useUserAccessMatrix(
+    const { overview, rootRole, projectRoles } = useUserAccessOverview(
         id,
         project,
         environment,
@@ -63,14 +63,14 @@ export const AccessMatrix = () => {
 
     const AccessActions = (
         <StyledActionsContainer>
-            <AccessMatrixSelect
+            <AccessOverviewSelect
                 label='Project'
                 options={projects}
                 getOptionLabel={(option) => option?.name ?? ''}
                 value={projects.find(({ id }) => id === project)}
                 setValue={(value) => setProject(value?.id ?? '')}
             />
-            <AccessMatrixSelect
+            <AccessOverviewSelect
                 label='Environment'
                 options={environments}
                 getOptionLabel={(option) =>
@@ -89,7 +89,7 @@ export const AccessMatrix = () => {
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Access for ${user.name ?? user.username}`}
+                    title={`Access overview for ${user.name ?? user.username}`}
                     actions={
                         <ConditionallyRender
                             condition={!isSmallScreen}
@@ -107,16 +107,16 @@ export const AccessMatrix = () => {
             <StyledTitle>
                 Root permissions for role {rootRole?.name}
             </StyledTitle>
-            <PermissionsTable permissions={matrix?.root ?? []} />
+            <AccessOverviewTable permissions={overview?.root ?? []} />
             <StyledTitle>
                 Project permissions for project {project} with project roles [
                 {projectRoles?.map((role: any) => role.name).join(', ')}]
             </StyledTitle>
-            <PermissionsTable permissions={matrix?.project ?? []} />
+            <AccessOverviewTable permissions={overview?.project ?? []} />
             <StyledTitle>
                 Environment permissions for environment {environment}
             </StyledTitle>
-            <PermissionsTable permissions={matrix?.environment ?? []} />
+            <AccessOverviewTable permissions={overview?.environment ?? []} />
         </PageContent>
     );
 };

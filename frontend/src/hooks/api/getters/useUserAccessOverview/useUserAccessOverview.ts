@@ -4,45 +4,46 @@ import handleErrorResponses from '../httpErrorResponseHandler';
 import useSWR from 'swr';
 import type { IRole } from 'interfaces/role';
 import type { IUser } from 'interfaces/user';
-import type { IMatrixPermission } from 'interfaces/permissions';
+import type { IAccessOverviewPermission } from 'interfaces/permissions';
 
-interface IUserAccessMatrix {
-    root: IMatrixPermission[];
-    project: IMatrixPermission[];
-    environment: IMatrixPermission[];
+interface IUserAccessOverview {
+    root: IAccessOverviewPermission[];
+    project: IAccessOverviewPermission[];
+    environment: IAccessOverviewPermission[];
 }
 
-interface IUserAccessMatrixResponse {
-    matrix: IUserAccessMatrix;
+interface IUserAccessOverviewResponse {
+    overview: IUserAccessOverview;
     projectRoles: IRole[];
     rootRole: IRole;
     user: IUser;
 }
 
-interface IUserAccessMatrixOutput extends Partial<IUserAccessMatrixResponse> {
+interface IUserAccessOverviewOutput
+    extends Partial<IUserAccessOverviewResponse> {
     loading: boolean;
     refetch: () => void;
     error?: Error;
 }
 
-export const useUserAccessMatrix = (
+export const useUserAccessOverview = (
     id: string,
     project?: string,
     environment?: string,
-): IUserAccessMatrixOutput => {
+): IUserAccessOverviewOutput => {
     const queryParams = `${project ? `?project=${project}` : ''}${
         environment ? `${project ? '&' : '?'}environment=${environment}` : ''
     }`;
     const url = `api/admin/user-admin/${id}/permissions${queryParams}`;
 
-    const { data, error, mutate } = useSWR<IUserAccessMatrixResponse>(
+    const { data, error, mutate } = useSWR<IUserAccessOverviewResponse>(
         formatApiPath(url),
         fetcher,
     );
 
     return useMemo(
         () => ({
-            matrix: data?.matrix,
+            overview: data?.overview,
             projectRoles: data?.projectRoles,
             rootRole: data?.rootRole,
             user: data?.user,

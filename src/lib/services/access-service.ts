@@ -63,13 +63,13 @@ const PROJECT_ADMIN = [
 export type IdPermissionRef = Pick<IPermission, 'id' | 'environment'>;
 export type NamePermissionRef = Pick<IPermission, 'name' | 'environment'>;
 export type PermissionRef = IdPermissionRef | NamePermissionRef;
-type MatrixPermission = IPermission & {
+type AccessOverviewPermission = IPermission & {
     hasPermission: boolean;
 };
-type PermissionMatrix = {
-    root: MatrixPermission[];
-    project: MatrixPermission[];
-    environment: MatrixPermission[];
+type AccessOverview = {
+    root: AccessOverviewPermission[];
+    project: AccessOverviewPermission[];
+    environment: AccessOverviewPermission[];
 };
 
 type APIUser = Pick<IUser, 'id' | 'permissions'> & { isAPI: true };
@@ -244,14 +244,14 @@ export class AccessService {
      * Provided a project, project permissions will be checked against that project.
      * Provided an environment, environment permissions will be checked against that environment (and project).
      */
-    async permissionsMatrixForUser(
+    async getAccessOverviewForUser(
         user: APIUser | NonAPIUser,
         projectId?: string,
         environment?: string,
-    ): Promise<PermissionMatrix> {
+    ): Promise<AccessOverview> {
         const permissions = await this.getPermissions();
         const userP = await this.getPermissionsForUser(user);
-        const matrix: PermissionMatrix = {
+        const overview: AccessOverview = {
             root: permissions.root.map((p) => ({
                 ...p,
                 hasPermission: this.meetsAllPermissions(userP, [p.name]),
@@ -278,7 +278,7 @@ export class AccessService {
                     })) ?? [],
         };
 
-        return matrix;
+        return overview;
     }
 
     async getPermissionsForUser(

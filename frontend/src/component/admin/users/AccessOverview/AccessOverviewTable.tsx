@@ -7,12 +7,12 @@ import { IconCell } from 'component/common/Table/cells/IconCell/IconCell';
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import { Box } from '@mui/material';
-import type { IMatrixPermission } from 'interfaces/permissions';
+import type { IAccessOverviewPermission } from 'interfaces/permissions';
 
-export const PermissionsTable = ({
+export const AccessOverviewTable = ({
     permissions,
 }: {
-    permissions: IMatrixPermission[];
+    permissions: IAccessOverviewPermission[];
 }) => {
     const columns = useMemo(
         () => [

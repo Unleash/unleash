@@ -21,10 +21,8 @@ import { ReactComponent as CelebatoryUnleashLogo } from 'assets/img/unleashHolid
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
-import {} from 'component/menu/routes';
 import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
-import {} from 'component/common/util';
 import { useThemeMode } from 'hooks/useThemeMode';
 import { Notifications } from 'component/common/Notifications/Notifications';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';

@@ -15,6 +15,10 @@ const StyledListItem = styled('li')(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     background: theme.palette.background.default,
+    padding: theme.spacing(2, 3),
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(4),
 }));
 
 const StyledAnd = styled('div')(({ theme }) => ({

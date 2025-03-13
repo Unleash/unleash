@@ -4,11 +4,9 @@ import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
 } from 'openapi';
-import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { objectId } from 'utils/objectId';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { DisabledStrategyExecution } from './StrategyExecution/DisabledStrategyExecution';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
+import { StrategyExecution } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/StrategyExecution';
 
 interface IFeatureStrategyItemProps {
     strategy: PlaygroundStrategySchema;
@@ -45,23 +43,7 @@ export const FeatureStrategyItem = ({
                 />
             }
         >
-            {/* todo: use new strategy execution components */}
-            <ConditionallyRender
-                condition={Boolean(strategy.disabled)}
-                show={
-                    <DisabledStrategyExecution
-                        strategyResult={strategy}
-                        input={input}
-                    />
-                }
-                elseShow={
-                    <StrategyExecution
-                        strategyResult={strategy}
-                        input={input}
-                        percentageFill={theme.palette.background.elevation2}
-                    />
-                }
-            />
+            <StrategyExecution strategy={strategy} input={input} />
         </StrategyItemContainer>
     );
 };

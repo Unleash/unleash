@@ -7,15 +7,11 @@ import {
 } from 'utils/parseParameter';
 import { StrategyEvaluationItem } from 'component/common/ConstraintsList/StrategyEvaluationItem/StrategyEvaluationItem';
 import { StrategyEvaluationChip } from 'component/common/ConstraintsList/StrategyEvaluationChip/StrategyEvaluationChip';
-import type {
-    CreateFeatureStrategySchema,
-    StrategySchema,
-    StrategySchemaParametersItem,
-} from 'openapi';
-import type { IFeatureStrategyPayload } from 'interfaces/strategy';
+import type { StrategySchema, StrategySchemaParametersItem } from 'openapi';
+import type { StrategyExecutionStrategy } from '../StrategyExecution';
 
 export const useCustomStrategyParameters = (
-    strategy: CreateFeatureStrategySchema | IFeatureStrategyPayload,
+    strategy: StrategyExecutionStrategy,
     strategies: StrategySchema[],
 ) => {
     const { parameters } = strategy;

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { styled } from '@mui/material';
-import type { FeatureStrategySchema } from 'openapi';
+import type { FeatureStrategySchema, PlaygroundStrategySchema } from 'openapi';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { StrategyExecution as LegacyStrategyExecution } from './LegacyStrategyExecution';
@@ -19,8 +19,13 @@ const FilterContainer = styled('div', {
     grayscale ? { filter: 'grayscale(1)', opacity: 0.67 } : {},
 );
 
+export type StrategyExecutionStrategy =
+    | IFeatureStrategyPayload
+    | FeatureStrategySchema
+    | PlaygroundStrategySchema;
+
 type StrategyExecutionProps = {
-    strategy: IFeatureStrategyPayload | FeatureStrategySchema;
+    strategy: StrategyExecutionStrategy;
     displayGroupId?: boolean;
 };
 

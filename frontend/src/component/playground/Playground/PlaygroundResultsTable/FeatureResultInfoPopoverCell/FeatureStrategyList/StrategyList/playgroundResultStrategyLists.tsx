@@ -71,7 +71,7 @@ export const PlaygroundResultStrategyLists = ({
     return (
         <div>
             <StyledHeaderGroup>
-                <StyledListTitle variant={'subtitle1'}>{`${
+                <StyledListTitle>{`${
                     titlePrefix
                         ? titlePrefix.concat(' strategies')
                         : 'Strategies'
@@ -142,7 +142,7 @@ export const WrappedPlaygroundResultStrategyList = ({
                 <PlaygroundResultStrategyLists
                     strategies={enabledStrategies || []}
                     input={input}
-                    titlePrefix={showDisabledStrategies ? 'Enabled' : ''}
+                    titlePrefix={showDisabledStrategies ? 'Enabled' : undefined}
                 />
             </StyledListWrapper>
             <ConditionallyRender

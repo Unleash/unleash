@@ -52,7 +52,7 @@ Another major benefit to using SSO is that when you connect Unleash to your iden
 
 By integrating Unleash with these systems, your organization can prove that every engineer accessing feature flags undergoes a centralized, unified authentication process.
 
-How do you translate this into something verifiable and auditable for security reviews? What’s great is that every authentication event in Unleash is logged with detailed metadata including timestamp, IP address, user agent, and authentication method used, providing audit trails when you undergo security reviews. This shows you have a transparent, auditable system where every access can be traced, logged, and validated. So not only are you meeting compliance standards with authentication controls in place, but Unleash also automatically maintains a record for you that proves it.
+How do you translate this into something verifiable and auditable for security reviews? What’s great is that every authentication event in Unleash is logged with detailed metadata including timestamp, IP address, and authentication method used, providing audit trails when you undergo security reviews. This shows you have a transparent, auditable system where every access can be traced, logged, and validated. So not only are you meeting compliance standards with authentication controls in place, but Unleash also automatically maintains a record for you that proves it.
 
 ### Use SCIM to automate user management at scale
 
@@ -66,7 +66,7 @@ By enabling SCIM in Unleash, you can:
 
 -   [Provision and de-provision users](/reference/scim) (team members) as they are joining or leaving your organization.
 -   Automatically create and delete user groups.
--   Sync group membership in real-time.
+-   Sync group membership.
 -   Ensure consistent access across multiple platforms.
 
 To unlock these benefits, set up [SCIM for automatic provisioning using our how-to guides](/how-to/provisioning).
@@ -75,7 +75,7 @@ To unlock these benefits, set up [SCIM for automatic provisioning using our how-
 
 Now that you understand how Unleash handles authentication securely, let’s explore what needs to happen once your teams have access to the platform. When enterprise auditors evaluate software tools and development practices, they focus intensely on access control mechanisms.
 
-Consider this scenario: a Fortune 500 company is undergoing its annual security audit, and the auditors are specifically examining how feature flags are managed across their software development lifecycle. Without role-based access controls (RBAC), this company would face significant compliance risks and potential security vulnerabilities.
+Consider this scenario: your company is undergoing its annual security audit, and the auditors are specifically examining how feature flags are managed across their software development lifecycle. Without role-based access controls (RBAC), this company would face significant compliance risks and potential security vulnerabilities.
 
 [Role-based access control](/reference/rbac) allows for fine-grained permission management so team members can only access and modify feature flags relevant to their specific roles and responsibilities. During an audit, you'll most likely face questions about your access control systems and security measures. Here’s what auditors will want to see:
 
@@ -130,11 +130,11 @@ Next, we’ll explore change management as an important tool to further enhance 
 
 ## Use a change management workflow for auditing
 
-Engineers typically go through a development workflow where they write code, submit their code changes for review, get explicit approval from other engineers, and merge their approved changes into the main branch. This occurs in a version control system like Git/Github. In the context of feature flag management, this approach is similar to how you can submit [change requests](/reference/change-requests) in Unleash to make updates to resources in your projects across your environments.
+Engineers typically go through a development workflow where they write code, submit their code changes for review, get explicit approval from other engineers, and merge their approved changes into the main branch. This occurs in a version control system like Git/Github. In the context of feature flag management, this approach is similar to how you can submit [change requests](/reference/change-requests) in Unleash to make updates to resources in your projects across your environments. To get the most out of this functionality, we recommend you use change requests for your production environment to require explicit approval from at least one approver on your team. This is known as the [four-eyes principle](https://www.unido.org/overview-member-states-change-management-faq/what-four-eyes-principle). However, you can add up to 10 approvers to a submitted change request if multiple stakeholders are involved.
 
 Think of change requests as _more_ than just a tool to sign off on what’s happening in your feature flag system. It’s a way to ensure multiple layers of security for your teams.
 
-For large organizations in highly regulated industries, it’s important to keep track of changes in your feature flag system. When your team members are using Unleash, consider that while some users have permission to modify flags, you can still put guardrails in place to approve or deny the changes.
+For large organizations in highly regulated industries, it’s important to have a second pair of eyes validating a change. When your team members are using Unleash, consider that while some users have permission to modify flags, you can still put guardrails in place to approve or deny the changes.
 
 Imagine a developer working at a large banking platform who wants to modify a feature flag controlling a new authentication method. Instead of making an immediate change, the [change request](/reference/change-requests) workflow could require:
 
@@ -149,8 +149,6 @@ And from a security perspective, you'll always want an auditable trail of change
 > **Note:** Anyone with project access can create a change request; however, only users with specific permissions can approve, apply, or skip them. None of the [predefined roles](/reference/rbac#predefined-roles) have any change request permissions, so you must create [custom project roles](/reference/rbac#predefined-roles).
 
 ![This GIF shows how to quickly make changes to your feature flag, request the change, approve it, and apply the changes.](/img/use-case-user-mgmt-cr.gif)
-
-To get the most out of this functionality, we recommend you use change requests for your production environment to require explicit approval from at least one approver on your team. This is known as the [four-eyes principle](https://www.unido.org/overview-member-states-change-management-faq/what-four-eyes-principle). However, you can add up to 10 approvers to a submitted change request if multiple stakeholders are involved.
 
 Let’s say a project owner wants to update a rollout strategy so that a new feature will increase from 50% exposure to 100% of your end user base. The change is approved by other team members, but the project owner will need to hold off applying the update in production until components from another team are ready to be released. Since the project owner’s changes are ready ahead of time, they’ll need to delay the change. In this case, we recommend [scheduling change requests](/reference/change-requests#scheduled-change-requests) to allow teams to plan and queue feature flag modifications with precise timing, which gives you more control and predictability in a release process.
 
@@ -192,11 +190,10 @@ Protecting data is critical within any software tool. It’s a security best pra
 -   API keys
 -   User IDs
 -   Email addresses
--   Flag data
--   Flag configurations
+-   Flag data/configurations
 -   User geographical locations
 
-This is a potential attack surface area that you wouldn’t want to be the root of data breaches or unauthorized access in your system. That’s why Unleash was built in a way where integrating feature flags into your services won’t be a weak link in your organization’s ability to ship software safely. When using our [Frontend API](/reference/api/unleash/frontend-api), Unleash evaluates these details in its short-term runtime cache, without storing it. This is practical for development practices and applications that don’t have a lot of traffic, like internal dashboards.
+This is a potential attack surface area that you wouldn’t want to be the root of data breaches or unauthorized access in your system. That’s why Unleash was built in a way where integrating feature flags into your services won’t be a weak link in your organization’s ability to ship software safely. When using our [Frontend API](/reference/api/unleash/frontend-api), Unleash only uses user-provided data for feature evaluation and never stores that information. While the Frontend API can tolerate a lot of traffic, we recommend using Unleash Edge for scalability.
 
 With Unleash, you can architect your feature flagging solution in a way that all user data stays within your applications. When using server-side SDKs, user data remains within your application and is never shared with the Unleash server regardless of your setup. For client-side SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/understanding-unleash/proxy-hosting#you-host-everything), or [self-hosting Unleash Edge](/understanding-unleash/proxy-hosting#unleash-hosts-the-api-you-host-edge). Read more on the [Unleash architecture here](/understanding-unleash/unleash-overview).
 

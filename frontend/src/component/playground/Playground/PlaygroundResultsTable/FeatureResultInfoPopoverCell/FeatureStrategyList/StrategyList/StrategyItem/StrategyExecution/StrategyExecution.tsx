@@ -1,5 +1,3 @@
-import type { VFC } from 'react';
-import { styled } from '@mui/material';
 import type {
     PlaygroundRequestSchema,
     PlaygroundStrategySchema,
@@ -19,10 +17,6 @@ interface IStrategyExecutionProps {
     percentageFill?: string;
     input?: PlaygroundRequestSchema;
 }
-
-const StyledStrategyExecutionWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0),
-}));
 
 export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     strategyResult,

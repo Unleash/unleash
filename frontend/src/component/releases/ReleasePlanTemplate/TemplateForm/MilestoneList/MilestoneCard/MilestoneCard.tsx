@@ -189,7 +189,7 @@ export const MilestoneCard = ({
 
     const dragHandle = (
         <DragButton type='button'>
-            <DraggableContent>
+            <DraggableContent ref={dragItemRef}>
                 <DragIndicator aria-hidden />
                 <ScreenReaderOnly>Drag to reorder</ScreenReaderOnly>
             </DraggableContent>
@@ -363,7 +363,7 @@ export const MilestoneCard = ({
     if (!milestone.strategies || milestone.strategies.length === 0) {
         return (
             <>
-                <DraggableCardContainer ref={dragItemRef}>
+                <DraggableCardContainer>
                     {dragHandle}
                     <StyledMilestoneCard
                         hasError={

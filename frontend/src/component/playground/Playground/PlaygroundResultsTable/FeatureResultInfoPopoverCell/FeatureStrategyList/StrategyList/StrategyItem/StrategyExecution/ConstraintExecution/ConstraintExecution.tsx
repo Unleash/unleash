@@ -40,27 +40,11 @@ const ConstraintOk = () => {
     );
 };
 
-export const ConstraintError = ({
-    constraint,
-    input,
-}: {
-    constraint: PlaygroundConstraintSchema;
-    input?: PlaygroundRequestSchema;
-}) => {
-    const formatText = () => {
-        const value = input?.context[constraint.contextName];
-
-        if (value) {
-            return `Constraint not met – the value in the context: { ${value} } is not ${constraint.operator} ${constraint.contextName}`;
-        }
-
-        return `Constraint not met – no value was specified for ${constraint.contextName}`;
-    };
-
+export const ConstraintError = ({ text }: { text: string }) => {
     return (
         <StyledContainer variant='error'>
             <Cancel aria-hidden='true' />
-            <p>{formatText()}</p>
+            <p>{text}</p>
         </StyledContainer>
     );
 };
@@ -71,13 +55,23 @@ export const ConstraintExecution: FC<IConstraintExecutionProps> = ({
 }) => {
     if (!constraint) return null;
 
+    const errorText = () => {
+        const value = input?.context[constraint.contextName];
+
+        if (value) {
+            return `Constraint not met – the value in the context: { ${value} } is not ${constraint.operator} ${constraint.contextName}`;
+        }
+
+        return `Constraint not met – no value was specified for ${constraint.contextName}`;
+    };
+
     return (
         <>
             <ConstraintItem {...constraint} />
             {constraint.result ? (
                 <ConstraintOk />
             ) : (
-                <ConstraintError input={input} constraint={constraint} />
+                <ConstraintError text={errorText()} />
             )}
         </>
     );

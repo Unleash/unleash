@@ -42,7 +42,7 @@ Your developers and other stakeholders need to securely access platforms used to
 
 To use single sign-on in Unleash, your users can authenticate themselves through OpenID Connect (OIDC) or SAML 2.0 protocols.
 
-We have integration options with enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak. Connect these identity providers through either OpenID Connect or SAML 2.0 protocol. For a step-by-step guide, read our [how-to guide for single sign-on](/how-to/sso).
+We have integration guides to connect Unleash to enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak, but you can use any identity provider that uses OIDC or SAML 2.0 protocol. For a step-by-step guide, read our [how-to guide for single sign-on](/how-to/sso).
 
 ![A diagram showing how Unleash integrates with authentication providers and identity providers.](/img/use-case-security-sso.png)
 

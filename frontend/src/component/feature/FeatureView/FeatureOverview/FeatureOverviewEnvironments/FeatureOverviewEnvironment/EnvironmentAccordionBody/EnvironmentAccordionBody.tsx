@@ -242,8 +242,8 @@ export const EnvironmentAccordionBody = ({
     };
     console.log(dragItem);
 
-    const Strategies = () => {
-        return strategies.length < 50 || !manyStrategiesPagination ? (
+    const strategyList =
+        strategies.length < 50 || !manyStrategiesPagination ? (
             <StyledContentList>
                 {strategies.map((strategy, index) => (
                     <StyledListItem key={strategy.id}>
@@ -291,7 +291,6 @@ export const EnvironmentAccordionBody = ({
                 />
             </PaginatedStrategyContainer>
         );
-    };
 
     return (
         <StyledAccordionBodyInnerContainer>
@@ -309,12 +308,12 @@ export const EnvironmentAccordionBody = ({
                         {strategies.length > 0 ? (
                             <li>
                                 <StrategySeparator />
-                                <Strategies />
+                                {strategyList}
                             </li>
                         ) : null}
                     </>
                 ) : strategies.length > 0 ? (
-                    <Strategies />
+                    strategyList
                 ) : null}
             </StyledContentList>
         </StyledAccordionBodyInnerContainer>

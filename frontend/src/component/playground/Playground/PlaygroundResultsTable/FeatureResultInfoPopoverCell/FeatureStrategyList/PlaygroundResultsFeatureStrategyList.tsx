@@ -1,14 +1,46 @@
-import {
-    PlaygroundResultStrategyLists,
-    WrappedPlaygroundResultStrategyList,
-} from './StrategyList/playgroundResultStrategyLists';
+import { PlaygroundResultStrategyLists } from './StrategyList/PlaygroundResultStrategyLists';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
-import { Alert } from '@mui/material';
+import { Alert, styled } from '@mui/material';
+import type { FC } from 'react';
 
 interface PlaygroundResultFeatureStrategyListProps {
     feature: PlaygroundFeatureSchema;
     input?: PlaygroundRequestSchema;
 }
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
+}));
+
+const UnevaluatedUnsatisfiedInfo: FC<{ feature: PlaygroundFeatureSchema }> = ({
+    feature,
+}) => {
+    if (!feature?.strategies?.data) {
+        return null;
+    }
+
+    const text =
+        feature.hasUnsatisfiedDependency &&
+        !feature.isEnabledInCurrentEnvironment
+            ? 'If the environment was enabled and parent dependencies were satisfied'
+            : feature.hasUnsatisfiedDependency
+              ? 'If parent dependencies were satisfied'
+              : !feature.isEnabledInCurrentEnvironment
+                ? 'If the environment was enabled'
+                : '';
+
+    if (!text) {
+        return null;
+    }
+
+    return (
+        <StyledAlert severity={'info'} color={'info'}>
+            {text}, then this feature flag would be{' '}
+            {feature.strategies?.result ? 'TRUE' : 'FALSE'} with strategies
+            evaluated like this:
+        </StyledAlert>
+    );
+};
 
 export const PlaygroundResultFeatureStrategyList = ({
     feature,
@@ -32,21 +64,9 @@ export const PlaygroundResultFeatureStrategyList = ({
         );
     }
 
-    if (
-        (feature.hasUnsatisfiedDependency ||
-            !feature.isEnabledInCurrentEnvironment) &&
-        Boolean(feature?.strategies?.data)
-    ) {
-        return (
-            <WrappedPlaygroundResultStrategyList
-                feature={feature}
-                input={input}
-            />
-        );
-    }
-
     return (
         <>
+            <UnevaluatedUnsatisfiedInfo feature={feature} />
             <PlaygroundResultStrategyLists
                 strategies={enabledStrategies || []}
                 input={input}

@@ -42,19 +42,15 @@ Your developers and other stakeholders need to securely access platforms used to
 
 To use single sign-on in Unleash, your users can authenticate themselves through OpenID Connect (OIDC) or SAML 2.0 protocols.
 
-We have integration guides to connect Unleash to enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak, but you can use any identity provider that uses OIDC or SAML 2.0 protocol. For a step-by-step guide, read our [how-to guide for single sign-on](/how-to/sso).
+We have integration guides to connect Unleash to enterprise identity providers like Okta, Microsoft Entra ID, and Keycloak, but you can use any identity provider that uses OIDC or SAML 2.0 protocol. Read our [how-to guide for single sign-on](/how-to/sso).
 
 ![A diagram showing how Unleash integrates with authentication providers and identity providers.](/img/use-case-security-sso.png)
 
-Another major benefit to using SSO is that when you connect Unleash to your identity provider, you will be able to synchronize your user groups out of the box. That way, your group configuration reflects organizational-level changes automatically. Follow our step-by-step guide to set up [user group syncing](/how-to/how-to-set-up-group-sso-sync). With SSO integration, groups defined in your identity provider are directly mapped to Unleash access groups. This means:
+For larger teams, we [recommend you use SCIM](#use-scim-to-automate-user-management-at-scale) instead of relying solely on SSO because it offers additional flexibility and scalability.
 
--   New team members are automatically assigned correct permissions.
--   Organizational restructures are reflected immediately.
--   Consistent access controls are enabled across all enterprise systems.
+By using SSO with Unleash, your organization can prove that every engineer accessing feature flags undergoes a centralized, unified authentication process.
 
-By integrating Unleash with these systems, your organization can prove that every engineer accessing feature flags undergoes a centralized, unified authentication process.
-
-How do you translate this into something verifiable and auditable for security reviews? What’s great is that every authentication event in Unleash is logged with detailed metadata including timestamp, IP address, and authentication method used, providing audit trails when you undergo security reviews. This shows you have a transparent, auditable system where every access can be traced, logged, and validated. So not only are you meeting compliance standards with authentication controls in place, but Unleash also automatically maintains a record for you that proves it.
+How do you translate this into something verifiable and auditable for security reviews? What’s great is that [every authentication event in Unleash is logged](#leverage-access-logs-for-broader-auditing) with detailed metadata including timestamp, IP address, and authentication method used, providing audit trails when you undergo security reviews. This shows you have a transparent, auditable system where every access can be traced, logged, and validated. So not only are you meeting compliance standards with authentication controls in place, but Unleash also automatically maintains a record for you that proves it.
 
 ### Use SCIM to automate user management at scale
 

@@ -12,6 +12,12 @@ import useProjects from 'hooks/api/getters/useProjects/useProjects';
 import { AccessOverviewSelect } from './AccessOverviewSelect';
 import { useUserAccessOverview } from 'hooks/api/getters/useUserAccessOverview/useUserAccessOverview';
 import { AccessOverviewAccordion } from './AccessOverviewAccordion/AccessOverviewAccordion';
+import {
+    getCategorizedProjectPermissions,
+    getCategorizedRootPermissions,
+} from 'utils/permissions';
+import type { IAccessOverviewPermissionCategory } from './AccessOverviewAccordion/AccessOverviewList';
+import { createProjectPermissionsStructure } from 'component/admin/roles/RoleForm/RolePermissionCategories/createProjectPermissionsStructure';
 
 const StyledActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -86,6 +92,21 @@ export const AccessOverview = () => {
         </StyledActionsContainer>
     );
 
+    const rootCategories = getCategorizedRootPermissions(
+        overview?.root ?? [],
+    ) as IAccessOverviewPermissionCategory[];
+
+    const projectCategories = createProjectPermissionsStructure(
+        overview?.project ?? [],
+    ).map(({ label, permissions }) => ({
+        label,
+        permissions: permissions.map(([permission]) => permission),
+    })) as IAccessOverviewPermissionCategory[];
+
+    const environmentCategories = getCategorizedProjectPermissions(
+        overview?.environment ?? [],
+    ) as IAccessOverviewPermissionCategory[];
+
     return (
         <PageContent
             isLoading={loading}
@@ -107,19 +128,17 @@ export const AccessOverview = () => {
             }
         >
             <StyledAccessOverviewContainer>
-                <AccessOverviewAccordion permissions={overview?.root ?? []}>
+                <AccessOverviewAccordion categories={rootCategories}>
                     Root permissions for role {rootRole?.name}
                 </AccessOverviewAccordion>
-                <AccessOverviewAccordion permissions={overview?.project ?? []}>
+                <AccessOverviewAccordion categories={projectCategories}>
                     Project permissions
                     {project
                         ? ` for project ${project}${projectRoles?.length ? ` with project role${projectRoles.length !== 1 ? 's' : ''} ${projectRoles?.map((role: any) => role.name).join(', ')}` : ''}`
                         : ''}
                 </AccessOverviewAccordion>
                 {environment && (
-                    <AccessOverviewAccordion
-                        permissions={overview?.environment ?? []}
-                    >
+                    <AccessOverviewAccordion categories={environmentCategories}>
                         Environment permissions for {environment}
                     </AccessOverviewAccordion>
                 )}

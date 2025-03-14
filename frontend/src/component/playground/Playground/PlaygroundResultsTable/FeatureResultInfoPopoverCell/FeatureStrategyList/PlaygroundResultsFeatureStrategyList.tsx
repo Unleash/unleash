@@ -1,14 +1,47 @@
-import {
-    PlaygroundResultStrategyLists,
-    WrappedPlaygroundResultStrategyList,
-} from './StrategyList/playgroundResultStrategyLists';
+import { PlaygroundResultStrategyLists } from './StrategyList/PlaygroundResultStrategyLists';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
-import { Alert } from '@mui/material';
+import { Alert, styled } from '@mui/material';
 
 interface PlaygroundResultFeatureStrategyListProps {
     feature: PlaygroundFeatureSchema;
     input?: PlaygroundRequestSchema;
 }
+
+const StyledAlert = styled(Alert)(({ theme }) => ({
+    marginInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
+}));
+
+const DisabledInfo = ({ feature }: { feature: PlaygroundFeatureSchema }) => {
+    const resolveHintText = (feature: PlaygroundFeatureSchema) => {
+        if (
+            feature.hasUnsatisfiedDependency &&
+            !feature.isEnabledInCurrentEnvironment
+        ) {
+            return 'If the environment was enabled and parent dependencies were satisfied';
+        }
+        if (feature.hasUnsatisfiedDependency) {
+            return 'If parent dependencies were satisfied';
+        }
+        if (!feature.isEnabledInCurrentEnvironment) {
+            return 'If the environment was enabled';
+        }
+        return '';
+    };
+
+    const text = resolveHintText(feature);
+
+    if (!text) {
+        return null;
+    }
+
+    return (
+        <StyledAlert severity={'info'} color={'info'}>
+            {resolveHintText(feature)}, then this feature flag would be{' '}
+            {feature.strategies?.result ? 'TRUE' : 'FALSE'} with strategies
+            evaluated like this:{' '}
+        </StyledAlert>
+    );
+};
 
 export const PlaygroundResultFeatureStrategyList = ({
     feature,
@@ -32,21 +65,9 @@ export const PlaygroundResultFeatureStrategyList = ({
         );
     }
 
-    if (
-        (feature.hasUnsatisfiedDependency ||
-            !feature.isEnabledInCurrentEnvironment) &&
-        Boolean(feature?.strategies?.data)
-    ) {
-        return (
-            <WrappedPlaygroundResultStrategyList
-                feature={feature}
-                input={input}
-            />
-        );
-    }
-
     return (
         <>
+            <DisabledInfo feature={feature} />
             <PlaygroundResultStrategyLists
                 strategies={enabledStrategies || []}
                 input={input}

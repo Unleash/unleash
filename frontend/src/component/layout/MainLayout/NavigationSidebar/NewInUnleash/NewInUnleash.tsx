@@ -170,6 +170,7 @@ export const NewInUnleash = ({
             preview: <ReleaseManagementPreview />,
             onCheckItOut: () => navigate('/release-management'),
             show: isEnterprise() && releasePlansEnabled,
+            beta: true,
             longDescription: (
                 <>
                     <p>

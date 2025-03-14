@@ -82,7 +82,7 @@ Consider this scenario: your company is undergoing its annual security audit, an
 -   An approval chain is in place to change critical features.
 -   Sensitive projects remain visible only to appropriate teams and/or project owners.
 
-Unleash is built with many mechanisms in place to handle all of these scenarios. Our systems enforce strict separation of duties, for example, where developers can create and test flags in development environments, while only senior engineers can promote changes to staging.
+Unleash is built with many mechanisms in place to handle all of these scenarios. Our systems enforce strict separation of duties, for example, where developers can create and test flags in development environments, while only senior engineers can promote changes to staging and production.
 
 -   We leave audit trails, automatically [logging every permission change](#audit-manual-and-automated-events-in-unleash) with detailed user information and timestamps.
 -   You can set up [approval guardrails](#use-a-change-management-workflow-for-auditing) for feature flag updates.

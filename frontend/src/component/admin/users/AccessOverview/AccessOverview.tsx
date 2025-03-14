@@ -120,7 +120,7 @@ export const AccessOverview = () => {
                     <AccessOverviewAccordion
                         permissions={overview?.environment ?? []}
                     >
-                        Environment permissions for environment {environment}
+                        Environment permissions for {environment}
                     </AccessOverviewAccordion>
                 )}
             </StyledAccessOverviewContainer>

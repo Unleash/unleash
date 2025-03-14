@@ -1,6 +1,8 @@
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import { Box, styled } from '@mui/material';
+import { Highlighter } from 'component/common/Highlighter/Highlighter';
+import { useSearchHighlightContext } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 import type {
     IAccessOverviewPermission,
     IPermissionCategory,
@@ -53,29 +55,37 @@ export const AccessOverviewList = ({
     categories,
 }: {
     categories: IAccessOverviewPermissionCategory[];
-}) => (
-    <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
-        <StyledList>
-            {categories.map((category) => (
-                <>
-                    <li key={category.label}>
-                        <strong>{category.label}</strong>
-                    </li>
-                    <StyledList>
-                        {category.permissions.map((permission) => (
-                            <li key={permission.name}>
-                                <div>{permission.displayName}</div>
-                                <PermissionStatus
-                                    hasPermission={permission.hasPermission}
-                                />
-                            </li>
-                        ))}
-                    </StyledList>
-                </>
-            ))}
-        </StyledList>
-    </Box>
-);
+}) => {
+    const { searchQuery } = useSearchHighlightContext();
+
+    return (
+        <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
+            <StyledList>
+                {categories.map((category) => (
+                    <>
+                        <li key={category.label}>
+                            <strong>{category.label}</strong>
+                        </li>
+                        <StyledList>
+                            {category.permissions.map((permission) => (
+                                <li key={permission.name}>
+                                    <div>
+                                        <Highlighter search={searchQuery}>
+                                            {permission.displayName}
+                                        </Highlighter>
+                                    </div>
+                                    <PermissionStatus
+                                        hasPermission={permission.hasPermission}
+                                    />
+                                </li>
+                            ))}
+                        </StyledList>
+                    </>
+                ))}
+            </StyledList>
+        </Box>
+    );
+};
 
 const PermissionStatus = ({ hasPermission }: { hasPermission: boolean }) => (
     <StyledPermissionStatus hasPermission={hasPermission}>

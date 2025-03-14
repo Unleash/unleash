@@ -92,7 +92,7 @@ Unleash is built with many mechanisms in place to handle all of these scenarios.
 -   You can set up [approval guardrails](#use-a-change-management-workflow-for-auditing) for feature flag updates.
 -   [Project isolation](/reference/project-collaboration-mode) ensures sensitive projects remain hidden from unauthorized users, while teams can only access projects relevant to their work, maintaining clear boundaries between different business units' feature flags.
 
-Let’s look at how Unleash gives you complete control over user roles and permissions. At a high level, there are multiple [predefined roles](/reference/rbac#predefined-roles) in Unleash for you to get started with. Root roles are meant to control permissions to top-level resources, spanning across all projects. Project roles, on the other hand, control permissions for a project, the feature flags, and individual configurations per environment. The diagram below breaks down the root roles, project roles, and their respective permissions. Think of them as very specific responsibilities only certain users have in Unleash that are defined by default.
+Let’s look at how Unleash gives you complete control over user roles and permissions. At a high level, there are multiple [predefined roles](/reference/rbac#predefined-roles) in Unleash for you to get started with. Root roles are meant to control permissions to top-level resources, spanning across all projects. Project roles, on the other hand, control permissions for a project, the feature flags, and individual configurations per environment. The following diagram breaks down the root roles, project roles, and example permissions that the roles grant.
 
 ![The diagram showing the relationship between root roles and project roles in Unleash.](/img/root-and-project-roles.png)
 
@@ -219,21 +219,21 @@ Throughout this tutorial, we've explored how to use Unleash Enterprise as a secu
 
 By using Unleash with security and compliance in mind, you've learned how to transform what could be a potential security liability into an asset that strengthens your overall security posture. Here are key recommendations to make sure your feature flag implementation meets enterprise security and compliance standards:
 
--   Implement SSO and SCIM integration: leverage identity provider integration through OpenID Connect or SAML 2.0 to centralize authentication and automate user management at scale, ensuring secure and efficient onboarding and offboarding processes.
+-   **Implement SSO and SCIM integration**: leverage identity provider integration through OpenID Connect or SAML 2.0 to centralize authentication and automate user management at scale, ensuring secure and efficient onboarding and offboarding processes.
 
--   Use role-based access control: create custom root and project roles that follow the principle of least privilege, ensuring that team members can only access and modify feature flags relevant to their specific responsibilities.
+-   **Use role-based access control**: create custom root and project roles that follow the principle of least privilege, ensuring that team members can only access and modify feature flags relevant to their specific responsibilities.
 
--   Configure network security controls: restrict API access with CORS policies and IP allow lists to create multiple layers of defense around your feature flag system, limiting potential attack vectors to your production environments.
+-   **Configure network security controls**: restrict API access with CORS policies and IP allow lists to create multiple layers of defense around your feature flag system, limiting potential attack vectors to your production environments.
 
--   Establish change management workflows: implement the four-eyes principle for all production flag changes through change requests to ensure that critical modifications are properly reviewed and approved before implementation.
+-   **Establish change management workflows**: implement the four-eyes principle for all production flag changes through change requests to ensure that critical modifications are properly reviewed and approved before implementation.
 
--   Leverage audit logging: maintain comprehensive event logs and integrate with your SIEM systems to create a chain of evidence for all feature flag activities, which supports your compliance with SOC 2, FedRAMP, and ISO 27001 requirements.
+-   **Leverage audit logging**: maintain comprehensive event logs and integrate with your SIEM systems to create a chain of evidence for all feature flag activities, which supports your compliance with SOC 2, FedRAMP, and ISO 27001 requirements.
 
--   Utilize project isolation for sensitive workloads: separate feature flags by projects to maintain clear boundaries between different business units and sensitive initiatives.
+-   **Utilize project isolation for sensitive workloads**: separate feature flags by projects to maintain clear boundaries between different business units and sensitive initiatives.
 
--   Conduct regular access reviews: periodically audit user access and permissions to ensure alignment with current organizational roles and responsibilities, removing unnecessary access rights.
+-   **Conduct regular access reviews**: periodically audit user access and permissions to ensure alignment with current organizational roles and responsibilities, removing unnecessary access rights.
 
--   Integrate with existing security tools: connect Unleash's logging capabilities with your existing security monitoring infrastructure to create a more unified view of security events across your tech stack.
+-   **Integrate with existing security tools**: connect Unleash's logging capabilities with your existing security monitoring infrastructure to create a more unified view of security events across your tech stack.
 
 By following these practices, you're not only implementing feature flags as a technical capability but doing so in a way that aligns with your organization's commitment to security and compliance. Unleash Enterprise gives you the capabilities needed to navigate complex regulatory requirements while still reaping the benefits of modern feature management practices.
 

@@ -1,20 +1,34 @@
 import Check from '@mui/icons-material/Check';
 import Close from '@mui/icons-material/Close';
 import { Box, styled } from '@mui/material';
-import type { IAccessOverviewPermission } from 'interfaces/permissions';
+import type {
+    IAccessOverviewPermission,
+    IPermissionCategory,
+} from 'interfaces/permissions';
+
+export type IAccessOverviewPermissionCategory = Omit<
+    IPermissionCategory,
+    'permissions'
+> & {
+    permissions: IAccessOverviewPermission[];
+};
 
 const StyledList = styled('ul')(({ theme }) => ({
     listStyle: 'none',
     padding: 0,
     margin: 0,
     fontSize: theme.fontSizes.smallBody,
-    '& li': {
+    '& > li': {
         display: 'flex',
         justifyContent: 'space-between',
         padding: theme.spacing(2),
-        '&:not(:last-child)': {
-            borderBottom: `1px solid ${theme.palette.divider}`,
-        },
+        borderBottom: `1px solid ${theme.palette.divider}`,
+    },
+    '& ul li': {
+        paddingLeft: theme.spacing(4),
+    },
+    '& ul:last-of-type > li:last-child': {
+        borderBottom: 'none',
     },
 }));
 
@@ -36,25 +50,32 @@ const StyledPermissionStatus = styled('div', {
 }));
 
 export const AccessOverviewList = ({
-    permissions,
+    categories,
 }: {
-    permissions: IAccessOverviewPermission[];
-}) => {
-    return (
-        <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
-            <StyledList>
-                {permissions.map((permission) => (
-                    <li key={permission.name}>
-                        <div>{permission.displayName}</div>
-                        <PermissionStatus
-                            hasPermission={permission.hasPermission}
-                        />
+    categories: IAccessOverviewPermissionCategory[];
+}) => (
+    <Box sx={{ maxHeight: 500, overflow: 'auto' }}>
+        <StyledList>
+            {categories.map((category) => (
+                <>
+                    <li key={category.label}>
+                        <strong>{category.label}</strong>
                     </li>
-                ))}
-            </StyledList>
-        </Box>
-    );
-};
+                    <StyledList>
+                        {category.permissions.map((permission) => (
+                            <li key={permission.name}>
+                                <div>{permission.displayName}</div>
+                                <PermissionStatus
+                                    hasPermission={permission.hasPermission}
+                                />
+                            </li>
+                        ))}
+                    </StyledList>
+                </>
+            ))}
+        </StyledList>
+    </Box>
+);
 
 const PermissionStatus = ({ hasPermission }: { hasPermission: boolean }) => (
     <StyledPermissionStatus hasPermission={hasPermission}>

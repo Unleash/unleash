@@ -1,17 +1,18 @@
+import { Fragment, type VFC } from 'react';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
+import { styled } from '@mui/material';
 import type {
     PlaygroundRequestSchema,
     PlaygroundStrategySchema,
 } from 'openapi';
-import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
+import { ConstraintExecution } from './ConstraintExecution/LegacyConstraintExecution';
 import { SegmentExecution } from './SegmentExecution/SegmentExecution';
 import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters';
 import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParams';
 import { formattedStrategyNames } from 'utils/strategyNames';
 import { StyledBoxSummary } from './StrategyExecution.styles';
 import { Badge } from 'component/common/Badge/Badge';
-import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
-import { objectId } from 'utils/objectId';
-import type { FC } from 'react';
 
 interface IStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;
@@ -19,7 +20,11 @@ interface IStrategyExecutionProps {
     input?: PlaygroundRequestSchema;
 }
 
-export const StrategyExecution: FC<IStrategyExecutionProps> = ({
+const StyledStrategyExecutionWrapper = styled('div')(({ theme }) => ({
+    padding: theme.spacing(0),
+}));
+
+export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
     strategyResult,
     input,
 }) => {
@@ -40,15 +45,9 @@ export const StrategyExecution: FC<IStrategyExecutionProps> = ({
 
     const items = [
         hasSegments && <SegmentExecution segments={segments} input={input} />,
-        ...(hasConstraints
-            ? constraints.map((constraint) => (
-                  <ConstraintExecution
-                      key={objectId(constraint)}
-                      constraint={constraint}
-                      input={input}
-                  />
-              ))
-            : []),
+        hasConstraints && (
+            <ConstraintExecution constraints={constraints} input={input} />
+        ),
         hasExecutionParameters && (
             <PlaygroundResultStrategyExecutionParameters
                 parameters={parameters}
@@ -67,5 +66,22 @@ export const StrategyExecution: FC<IStrategyExecutionProps> = ({
         ),
     ].filter(Boolean);
 
-    return <ConstraintsList>{items}</ConstraintsList>;
+    return (
+        <StyledStrategyExecutionWrapper>
+            {items.map((item, index) => (
+                <Fragment key={index}>
+                    <ConditionallyRender
+                        condition={
+                            index > 0 &&
+                            (strategyResult.name === 'flexibleRollout'
+                                ? index < items.length
+                                : index < items.length - 1)
+                        }
+                        show={<StrategySeparator text='AND' />}
+                    />
+                    {item}
+                </Fragment>
+            ))}
+        </StyledStrategyExecutionWrapper>
+    );
 };

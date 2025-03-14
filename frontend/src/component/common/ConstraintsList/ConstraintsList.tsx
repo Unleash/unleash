@@ -18,7 +18,7 @@ const StyledListItem = styled('li')(({ theme }) => ({
     padding: theme.spacing(2, 3),
     display: 'flex',
     flexFlow: 'column',
-    gap: theme.spacing(2),
+    gap: theme.spacing(1),
 }));
 
 const StyledAnd = styled('div')(({ theme }) => ({

@@ -19,6 +19,7 @@ const StyledContainer = styled('div', {
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
+    paddingInline: theme.spacing(0.25),
     color:
         variant === 'ok'
             ? theme.palette.success.dark

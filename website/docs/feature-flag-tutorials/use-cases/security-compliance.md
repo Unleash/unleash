@@ -92,17 +92,13 @@ Unleash is built with many mechanisms in place to handle all of these scenarios.
 -   You can set up [approval guardrails](#use-a-change-management-workflow-for-auditing) for feature flag updates.
 -   [Project isolation](/reference/project-collaboration-mode) ensures sensitive projects remain hidden from unauthorized users, while teams can only access projects relevant to their work, maintaining clear boundaries between different business units' feature flags.
 
-Let’s look at how Unleash gives you complete control over user roles and permissions. At a high level, there are multiple [predefined roles](/reference/rbac#predefined-roles) in Unleash for you to get started with. Root roles are meant to control permissions to top-level resources, spanning across all projects. Project roles, on the other hand, control permissions for a project, the feature flags, and individual configurations per environment. The following diagram breaks down the root roles, project roles, and example permissions that the roles grant.
-
-![The diagram showing the relationship between root roles and project roles in Unleash.](/img/root-and-project-roles.png)
-
-:::note
+Let’s look at how Unleash gives you complete control over user roles and permissions. At a high level, there are multiple [predefined roles](/reference/rbac#predefined-roles) in Unleash for you to get started with. Root roles are meant to control permissions to top-level resources, spanning across all projects. Project roles, on the other hand, control permissions for a project, the feature flags, and individual configurations per environment.
 
 One of the key responsibilities of the _admin role_ is assigning users as project owners and members.
 _Editor roles_ can be designated as project owners to manage projects.
 _Viewer roles_ can be designated as project members to observe projects. If viewers are not assigned a project member role, they can only observe the actions taken in a project.
 
-:::
+We recommend you make all users **viewers** and then have specific permissions on a per-project level, following the least privilege principle.
 
 To create your _new roles_, create [custom root roles](/how-to/how-to-create-and-assign-custom-root-roles) and [custom project roles](/how-to/how-to-create-and-assign-custom-project-roles), where you can define the privileges and limitations beyond the predefined roles we have built into Unleash. For more recommendations on setting up permissions for users, read our guide on [using feature flags at scale](/topics/feature-flags/best-practices-using-feature-flags-at-scale).
 
@@ -112,7 +108,9 @@ Next, we’ll explore how to extend access controls in Unleash for network secur
 
 ## Set up access controls for network security
 
-Securing your network layer is non-negotiable for building and using software systems. It’s foundational knowledge and good practice for any organization with engineering teams deploying software. Now that you understand how to set up and manage users at scale in Unleash, you can begin configuring Unleash in your applications and services [using our SDKs](/reference/sdks#official-sdks). Using the admin UI is an easy, direct way to make changes to your feature flags, projects, rollout strategies, and more. But when you’re making calls to our frontend API from your services, you can update cross-origin resource sharing (CORS) settings to control application access to Unleash. You can also set up IP allow lists to restrict access to Unleash.
+Securing your network layer is non-negotiable for building and using software systems. It’s foundational knowledge and good practice for any organization with engineering teams deploying software. Now that you understand how to set up and manage users at scale in Unleash, you can begin configuring Unleash in your applications and services [using our SDKs](/reference/sdks#official-sdks).
+
+Using the admin UI is an easy, direct way to make changes to your feature flags, projects, rollout strategies, and more. But when you’re making calls to our frontend API from your services, you can update cross-origin resource sharing (CORS) settings to control application access to Unleash. You can also set up IP allow lists to restrict access to Unleash.
 
 ### Set up CORS policies for Frontend API security
 

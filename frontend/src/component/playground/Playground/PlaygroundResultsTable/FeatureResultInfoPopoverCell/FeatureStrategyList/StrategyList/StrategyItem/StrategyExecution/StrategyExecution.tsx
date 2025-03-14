@@ -11,6 +11,7 @@ import { StyledBoxSummary } from './StrategyExecution.styles';
 import { Badge } from 'component/common/Badge/Badge';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { objectId } from 'utils/objectId';
+import type { FC } from 'react';
 
 interface IStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;
@@ -18,7 +19,7 @@ interface IStrategyExecutionProps {
     input?: PlaygroundRequestSchema;
 }
 
-export const StrategyExecution: VFC<IStrategyExecutionProps> = ({
+export const StrategyExecution: FC<IStrategyExecutionProps> = ({
     strategyResult,
     input,
 }) => {

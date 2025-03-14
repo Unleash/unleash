@@ -64,7 +64,8 @@ export type IFlagKey =
     | 'consumptionModel'
     | 'teamsIntegrationChangeRequests'
     | 'edgeObservability'
-    | 'simplifyDisableFeature';
+    | 'simplifyDisableFeature'
+    | 'adminNavUI';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -307,6 +308,10 @@ const flags: IFlags = {
     ),
     simplifyDisableFeature: parseEnvVarBoolean(
         process.env.EXPERIMENTAL_SIMPLIFY_DISABLE_FEATURE,
+        false,
+    ),
+    adminNavUI: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_ADMIN_NAV_UI,
         false,
     ),
 };

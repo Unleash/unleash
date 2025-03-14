@@ -188,7 +188,7 @@ export const PeriodSelector: FC<Props> = ({ selectedPeriod, setPeriod }) => {
                             <p>Last 12 months</p>
                         </MonthSelectorHeaderGroup>
                         <MonthGrid>
-                            {selectablePeriods.map((period, index) => (
+                            {selectablePeriods.map((period) => (
                                 <li key={period.label}>
                                     <GridButton
                                         selected={

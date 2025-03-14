@@ -58,6 +58,7 @@ process.nextTick(async () => {
                         filterExistingFlagNames: true,
                         teamsIntegrationChangeRequests: true,
                         simplifyDisableFeature: true,
+                        adminNavUI: true,
                     },
                 },
                 authentication: {

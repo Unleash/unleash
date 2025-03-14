@@ -21,13 +21,10 @@ import { ReactComponent as CelebatoryUnleashLogo } from 'assets/img/unleashHolid
 import { DrawerMenu } from './DrawerMenu/DrawerMenu';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { focusable } from 'themes/themeStyles';
-import { getCondensedRoutes, getRoutes } from 'component/menu/routes';
 import DarkModeOutlined from '@mui/icons-material/DarkModeOutlined';
 import LightModeOutlined from '@mui/icons-material/LightModeOutlined';
-import { filterByConfig, mapRouteLink } from 'component/common/util';
 import { useThemeMode } from 'hooks/useThemeMode';
 import { Notifications } from 'component/common/Notifications/Notifications';
-import { useAdminRoutes } from 'component/admin/useAdminRoutes';
 import InviteLinkButton from './InviteLink/InviteLinkButton/InviteLinkButton';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { CommandBar } from 'component/commandBar/CommandBar';
@@ -105,19 +102,6 @@ const Header = () => {
     const toggleDrawer = () => setOpenDrawer((prev) => !prev);
     const celebatoryUnleash = useUiFlag('celebrateUnleash');
 
-    const routes = getRoutes();
-    const adminRoutes = useAdminRoutes();
-
-    const filteredMainRoutes = {
-        mainNavRoutes: getCondensedRoutes(routes.mainNavRoutes)
-            .filter(filterByConfig(uiConfig))
-            .map(mapRouteLink),
-        mobileRoutes: getCondensedRoutes(routes.mobileRoutes)
-            .filter(filterByConfig(uiConfig))
-            .map(mapRouteLink),
-        adminRoutes,
-    };
-
     if (smallScreen) {
         return (
             <HeaderComponent position='static'>
@@ -139,7 +123,6 @@ const Header = () => {
                         links={uiConfig.links}
                         open={openDrawer}
                         toggleDrawer={toggleDrawer}
-                        routes={filteredMainRoutes}
                     />
                     <StyledUserContainer>
                         <UserProfile />

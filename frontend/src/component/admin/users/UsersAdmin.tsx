@@ -5,7 +5,7 @@ import { Route, Routes } from 'react-router-dom';
 import EditUser from './EditUser/EditUser';
 import NotFound from 'component/common/NotFound/NotFound';
 import { InactiveUsersList } from './InactiveUsersList/InactiveUsersList';
-import { AccessMatrix } from './AccessMatrix/AccessMatrix';
+import { AccessOverview } from './AccessOverview/AccessOverview';
 import { PremiumFeature } from '../../common/PremiumFeature/PremiumFeature';
 import { ConditionallyRender } from '../../common/ConditionallyRender/ConditionallyRender';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -25,7 +25,7 @@ export const UsersAdmin = () => {
                         }
                     />
                     <Route path=':id/edit' element={<EditUser />} />
-                    <Route path=':id/access' element={<AccessMatrix />} />
+                    <Route path=':id/access' element={<AccessOverview />} />
                     <Route
                         path='inactive'
                         element={

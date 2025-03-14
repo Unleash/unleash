@@ -12,9 +12,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "menu": {
-      "mobile": true,
-    },
+    "menu": {},
     "path": "/personal",
     "title": "Dashboard",
     "type": "protected",
@@ -92,9 +90,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "menu": {
-      "mobile": true,
-    },
+    "menu": {},
     "path": "/projects",
     "title": "Projects",
     "type": "protected",
@@ -108,9 +104,7 @@ exports[`returns all baseRoutes 1`] = `
   },
   {
     "component": [Function],
-    "menu": {
-      "mobile": true,
-    },
+    "menu": {},
     "path": "/search",
     "title": "Search",
     "type": "protected",
@@ -125,9 +119,7 @@ exports[`returns all baseRoutes 1`] = `
       },
     },
     "hidden": false,
-    "menu": {
-      "mobile": true,
-    },
+    "menu": {},
     "path": "/playground",
     "title": "Playground",
     "type": "protected",
@@ -135,9 +127,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "enterprise": true,
-    "menu": {
-      "mobile": true,
-    },
+    "menu": {},
     "path": "/insights",
     "title": "Insights",
     "type": "protected",
@@ -153,8 +143,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/applications",
     "title": "Applications",
@@ -179,8 +168,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/context",
     "title": "Context fields",
@@ -189,8 +177,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/feature-toggle-type/*",
     "title": "Feature flag types",
@@ -223,8 +210,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/strategies",
     "title": "Strategy types",
@@ -249,8 +235,7 @@ exports[`returns all baseRoutes 1`] = `
     "component": [Function],
     "enterprise": true,
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/environments",
     "title": "Environments",
@@ -268,7 +253,7 @@ exports[`returns all baseRoutes 1`] = `
     "component": [Function],
     "flag": "releasePlans",
     "menu": {
-      "advanced": true,
+      "main": true,
       "mode": [
         "enterprise",
       ],
@@ -324,8 +309,7 @@ exports[`returns all baseRoutes 1`] = `
   {
     "component": [Function],
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/tag-types",
     "title": "Tag types",
@@ -383,8 +367,7 @@ exports[`returns all baseRoutes 1`] = `
     "component": [Function],
     "hidden": false,
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/integrations",
     "title": "Integrations",
@@ -412,8 +395,7 @@ exports[`returns all baseRoutes 1`] = `
     "component": [Function],
     "hidden": false,
     "menu": {
-      "advanced": true,
-      "mobile": true,
+      "main": true,
     },
     "path": "/segments",
     "title": "Segments",

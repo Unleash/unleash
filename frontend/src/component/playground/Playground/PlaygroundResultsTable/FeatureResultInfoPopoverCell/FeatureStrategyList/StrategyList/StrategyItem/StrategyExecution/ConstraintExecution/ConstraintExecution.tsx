@@ -4,7 +4,7 @@ import type {
     PlaygroundRequestSchema,
 } from 'openapi';
 import { ConstraintError } from './ConstraintError/ConstraintError';
-import { ConstraintOk } from './ConstraintOk/ConstraintOk'; // TODO: ask if this is needed
+import { ConstraintOk } from './ConstraintOk/LegacyConstraintOk';
 import { ConstraintItem } from 'component/common/ConstraintsList/ConstraintItem/ConstraintItem';
 
 interface IConstraintExecutionProps {

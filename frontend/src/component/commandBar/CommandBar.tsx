@@ -37,7 +37,7 @@ export const CommandResultsPaper = styled(Paper)(({ theme }) => ({
     width: '100%',
     left: 0,
     top: '39px',
-    zIndex: 4,
+    zIndex: theme.zIndex.drawer,
     borderTop: theme.spacing(0),
     padding: theme.spacing(1.5, 0, 1.5),
     borderRadius: 0,

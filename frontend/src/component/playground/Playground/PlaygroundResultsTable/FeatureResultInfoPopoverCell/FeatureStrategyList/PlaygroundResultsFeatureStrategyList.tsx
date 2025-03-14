@@ -1,6 +1,7 @@
 import { PlaygroundResultStrategyLists } from './StrategyList/PlaygroundResultStrategyLists';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
 import { Alert, styled } from '@mui/material';
+import type { FC } from 'react';
 
 interface PlaygroundResultFeatureStrategyListProps {
     feature: PlaygroundFeatureSchema;
@@ -11,7 +12,13 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     marginInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
 }));
 
-const DisabledEnvInfo = ({ feature }: { feature: PlaygroundFeatureSchema }) => {
+const UnevaluatedUnsatisfiedInfo: FC<{ feature: PlaygroundFeatureSchema }> = ({
+    feature,
+}) => {
+    if (!feature?.strategies?.data) {
+        return null;
+    }
+
     const text =
         feature.hasUnsatisfiedDependency &&
         !feature.isEnabledInCurrentEnvironment
@@ -59,7 +66,7 @@ export const PlaygroundResultFeatureStrategyList = ({
 
     return (
         <>
-            <DisabledEnvInfo feature={feature} />
+            <UnevaluatedUnsatisfiedInfo feature={feature} />
             <PlaygroundResultStrategyLists
                 strategies={enabledStrategies || []}
                 input={input}

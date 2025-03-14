@@ -55,7 +55,7 @@ const StyledMilestoneCard = styled(Card, {
     justifyContent: 'space-between',
     boxShadow: 'none',
     border: `1px solid ${hasError ? theme.palette.error.border : theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadiusMedium,
     [theme.breakpoints.down('sm')]: {
         justifyContent: 'center',
     },
@@ -78,7 +78,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
     border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadiusMedium,
     [theme.breakpoints.down('sm')]: {
         justifyContent: 'center',
     },
@@ -93,7 +93,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     boxShadow: 'none',
     padding: theme.spacing(1.5, 2),
     paddingLeft: theme.spacing(leftPadding),
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadiusMedium,
     [theme.breakpoints.down(400)]: {
         padding: theme.spacing(1, 2),
     },
@@ -103,8 +103,8 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    borderBottomLeftRadius: theme.shape.borderRadius,
-    borderBottomRightRadius: theme.shape.borderRadius,
+    borderBottomLeftRadius: theme.shape.borderRadiusMedium,
+    borderBottomRightRadius: theme.shape.borderRadiusMedium,
     padding: theme.spacing(0),
     backgroundColor: theme.palette.background.elevation1,
 }));
@@ -129,7 +129,7 @@ const DragButton = styled('button')(({ theme }) => ({
     transition: 'background-color 0.2s ease-in-out',
     backgroundColor: 'inherit',
     border: 'none',
-    borderRadius: theme.shape.borderRadius,
+    borderRadius: theme.shape.borderRadiusMedium,
     color: theme.palette.text.secondary,
     '&:hover, &:focus-visible': {
         background: theme.palette.table.headerHover,
@@ -325,11 +325,12 @@ export const MilestoneCard = ({
                 height: ref.current?.offsetHeight || 0,
             });
 
-            event.dataTransfer.effectAllowed = 'move';
-            event.dataTransfer.setData('text/html', ref.current.outerHTML);
-            event.dataTransfer.setDragImage(ref.current, 20, 20);
+            if (ref?.current) {
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('text/html', ref.current.outerHTML);
+                event.dataTransfer.setDragImage(ref.current, 20, 20);
+            }
         };
-
     const onStrategyDragEnd = () => {
         setDragItem(null);
         onReOrderStrategies();

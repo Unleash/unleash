@@ -2,6 +2,7 @@ import { start } from './lib/server-impl';
 import { createConfig } from './lib/create-config';
 import { LogLevel } from './lib/logger';
 import { ApiTokenType } from './lib/types/models/api-token';
+import { parseEnvVarNumber, parseEnvVarBoolean } from './lib/util';
 
 process.nextTick(async () => {
     try {
@@ -10,15 +11,23 @@ process.nextTick(async () => {
                 db: process.env.DATABASE_URL
                     ? undefined
                     : {
-                          user: 'unleash_user',
-                          password: 'password',
-                          host: 'localhost',
-                          port: 5432,
-                          database:
-                              process.env.UNLEASH_DATABASE_NAME || 'unleash',
-                          schema: process.env.UNLEASH_DATABASE_SCHEMA,
+                          user: process.env.DATABASE_USERNAME || 'unleash_user',
+                          password: process.env.DATABASE_PASSWORD || 'password',
+                          host: process.env.DATABASE_HOST || 'localhost',
+                          port: parseEnvVarNumber(
+                              process.env.DATABASE_PORT,
+                              5432,
+                          ),
+                          database: process.env.DATBASE_NAME || 'unleash',
+                          schema: process.env.DATABASE_SCHEMA,
                           ssl: false,
-                          applicationName: 'unleash',
+                          applicationName:
+                              process.env.DATABASE_APPLICATION_NAME ||
+                              'unleash',
+                          disableMigration: parseEnvVarBoolean(
+                              process.env.DATABASE_DISABLE_MIGRATION,
+                              false,
+                          ),
                       },
                 server: {
                     enableRequestLogger: true,

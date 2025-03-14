@@ -68,16 +68,27 @@ const StyledContainer = styled('div', {
     },
 }));
 
-const StyledSearch = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: theme.palette.background.paper,
-    border: `1px solid ${theme.palette.neutral.border}`,
-    borderRadius: theme.shape.borderRadiusExtraLarge,
-    padding: '3px 5px 3px 12px',
-    width: '100%',
-    zIndex: 3,
-}));
+const StyledSearch = styled('div')<{ isOpen?: boolean }>(
+    ({ theme, isOpen }) => ({
+        display: 'flex',
+        alignItems: 'center',
+        backgroundColor: theme.palette.background.paper,
+        border: `1px solid ${theme.palette.neutral.border}`,
+        borderRadius: theme.shape.borderRadiusExtraLarge,
+        padding: '3px 5px 3px 12px',
+        width: '100%',
+        zIndex: 3,
+        ...(isOpen
+            ? {
+                  borderBottomLeftRadius: 0,
+                  borderBottomRightRadius: 0,
+                  borderBottom: '0px',
+                  paddingTop: theme.spacing(0.5),
+                  paddingBottom: theme.spacing(0.5),
+              }
+            : {}),
+    }),
+);
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
     width: '100%',
@@ -302,22 +313,7 @@ export const CommandBar = () => {
     return (
         <StyledContainer ref={searchContainerRef} active={showSuggestions}>
             <RecentlyVisitedRecorder />
-            <StyledSearch
-                sx={{
-                    borderBottomLeftRadius: (theme) =>
-                        showSuggestions
-                            ? 0
-                            : theme.shape.borderRadiusExtraLarge,
-                    borderBottomRightRadius: (theme) =>
-                        showSuggestions
-                            ? 0
-                            : theme.shape.borderRadiusExtraLarge,
-                    borderBottom: (theme) =>
-                        showSuggestions
-                            ? '0px'
-                            : `1px solid ${theme.palette.neutral.border}`,
-                }}
-            >
+            <StyledSearch isOpen={showSuggestions}>
                 <SearchIcon
                     sx={{
                         mr: 1,

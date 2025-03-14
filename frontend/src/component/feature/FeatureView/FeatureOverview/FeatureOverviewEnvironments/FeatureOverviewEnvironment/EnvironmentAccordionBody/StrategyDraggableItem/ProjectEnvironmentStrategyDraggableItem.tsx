@@ -85,6 +85,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                 onDragStartRef={onDragStartRef}
                 onDragOver={onDragOver}
                 index={index}
+                isDragging={isDragging}
                 headerItemsRight={
                     <>
                         {draftChange && !isSmallScreen ? (

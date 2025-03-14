@@ -11,24 +11,16 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     marginInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
 }));
 
-const DisabledInfo = ({ feature }: { feature: PlaygroundFeatureSchema }) => {
-    const resolveHintText = (feature: PlaygroundFeatureSchema) => {
-        if (
-            feature.hasUnsatisfiedDependency &&
-            !feature.isEnabledInCurrentEnvironment
-        ) {
-            return 'If the environment was enabled and parent dependencies were satisfied';
-        }
-        if (feature.hasUnsatisfiedDependency) {
-            return 'If parent dependencies were satisfied';
-        }
-        if (!feature.isEnabledInCurrentEnvironment) {
-            return 'If the environment was enabled';
-        }
-        return '';
-    };
-
-    const text = resolveHintText(feature);
+const DisabledEnvInfo = ({ feature }: { feature: PlaygroundFeatureSchema }) => {
+    const text =
+        feature.hasUnsatisfiedDependency &&
+        !feature.isEnabledInCurrentEnvironment
+            ? 'If the environment was enabled and parent dependencies were satisfied'
+            : feature.hasUnsatisfiedDependency
+              ? 'If parent dependencies were satisfied'
+              : !feature.isEnabledInCurrentEnvironment
+                ? 'If the environment was enabled'
+                : '';
 
     if (!text) {
         return null;
@@ -36,9 +28,9 @@ const DisabledInfo = ({ feature }: { feature: PlaygroundFeatureSchema }) => {
 
     return (
         <StyledAlert severity={'info'} color={'info'}>
-            {resolveHintText(feature)}, then this feature flag would be{' '}
+            {text}, then this feature flag would be{' '}
             {feature.strategies?.result ? 'TRUE' : 'FALSE'} with strategies
-            evaluated like this:{' '}
+            evaluated like this:
         </StyledAlert>
     );
 };
@@ -67,7 +59,7 @@ export const PlaygroundResultFeatureStrategyList = ({
 
     return (
         <>
-            <DisabledInfo feature={feature} />
+            <DisabledEnvInfo feature={feature} />
             <PlaygroundResultStrategyLists
                 strategies={enabledStrategies || []}
                 input={input}

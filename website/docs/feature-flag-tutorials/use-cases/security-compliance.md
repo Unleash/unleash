@@ -36,7 +36,7 @@ Refer to our [security and compliance overview](/using-unleash/compliance/compli
 
 The first step to securely administering your feature flag system is to consider the authentication process. When you’re using Unleash, how should your team members access the platform UI? We have multiple ways for users to log into the platform, including traditional, password-based login. But when you’re considering the best approach to using feature flags in your development process, you need to consider how every access point to your projects, data, and development processes could pose a security risk for your organization. To demonstrate that your tools are configured with security and compliance in mind, we recommend you enable enterprise-grade authentication controls as your first line of defense.
 
-Your developers and other stakeholders need to securely access platforms used to build and ship software to production. At Unleash, we have a multi-layered authentication architecture that supports [single sign-on](/reference/sso) (SSO) and [SCIM](/reference/scim) protocols. These authentication controls are the de facto ways for you to integrate enterprise-grade security measures easily. Let’s take a closer look at each authentication option to use.
+Your developers and other stakeholders need to securely access platforms used to build and ship software to production. At Unleash, we support industry-standard authentication methods such as [single sign-on](/reference/sso) (SSO) and [SCIM](/reference/scim) protocols. These authentication controls are the de facto ways for you to integrate enterprise-grade security measures easily. Let’s take a closer look at each authentication option to use.
 
 ### Use SSO authentication for feature flags
 
@@ -118,7 +118,7 @@ Securing your network layer is non-negotiable for building and using software sy
 
 It was noted in [the previous section](#configure-role-based-access-control-for-administrators-and-developers) that access controls are about security measures in place at every entry point to your systems. This means they go beyond just user management. Extend these controls to [Frontend APIs](/reference/api/unleash/frontend-api) to prevent security risks across your stack.
 
-From an architectural perspective, we implement this by allowing Unleash users to define cross-origin resource sharing (CORS) policies to prevent unwarranted access to your feature flag system. From a compliance perspective, this demonstrates that your organization leverages a feature flag system that takes a multi-faceted approach to security.
+Most modern browsers enforce cross-origin resource sharing (CORS) restrictions, preventing connections to other domains unless explicitly allowed. In Unleash, you can define cross-origin resource sharing (CORS) policies to prevent unwarranted access to your feature flag system. This not only ensures compliance with browser security requirements but also reinforces a multi-layered security approach within your organization.
 
 ![An image of a CORS section in Unleash Admin UI for adding domains that can connect to Unleash Frontend API.](/img/use-case-security-cors.png)
 
@@ -179,7 +179,7 @@ For more advanced implementations, integrate Unleash event logs directly into br
 
 ### Leverage access logs for broader auditing
 
-Let’s think back to the importance of user management that we covered earlier. Developers and other stakeholders go through onboarding to use the platform. Authentication protocols and user provisioning ensure these processes are secure, unified, and automated. During this process, access logs keep track of who has access to Unleash for your organization’s audit compliance. You can export these logs to S3 buckets for long-term data storage. This is valuable if you need to preserve data for complying with legal or regulatory compliance, storing critical backups for disaster recovery, and archiving.
+Let’s think back to the importance of user management that we covered earlier. Developers and other stakeholders go through onboarding to use the platform. Authentication protocols and user provisioning ensure these processes are secure, unified, and automated. During this process, access logs keep track of what users and systems accessed Unleash and what actions they performed, including [Unleash API interactions](/reference/api/unleash) from your services and applications. You can export these logs to S3 buckets for long-term data storage. This is valuable if you need to preserve data for complying with legal or regulatory compliance, storing critical backups for disaster recovery, and archiving.
 
 Auditing your feature flag system is made simple for traceability and reportability with Unleash’s event logs and access logs. We recommend leveraging these features as data sources for third-party services that make your data a valuable asset for security reviews, meeting compliance standards, and overall risk mitigation.
 

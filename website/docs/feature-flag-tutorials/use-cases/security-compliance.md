@@ -148,6 +148,8 @@ Projects in Unleash have an open [collaboration mode](/reference/project-collabo
 
 Let’s say a project owner wants to update a rollout strategy so that a new feature will increase from 50% exposure to 100% of your end user base. The change is approved by other team members, but the project owner will need to hold off applying the update in production until components from another team are ready to be released. This is a great use case for [scheduling change requests](/reference/change-requests#scheduled-change-requests), as it allows teams to plan and queue feature flag modifications with precise timing, giving you more control and predictability in a release process.
 
+You could also schedule changes by using the [date and time operators](/reference/activation-strategies#date-and-time-operators) in [strategy constraints](/reference/activation-strategies#constraints). However, when you have change requests configured in the project, we recommend using the schedule feature in change requests, as it is a faster and simpler approach.
+
 For more recommendations, read our section on [change management workflow](/topics/feature-flags/best-practices-using-feature-flags-at-scale#6-implement-flag-approval-workflows-early) from _Using Feature Flags at Scale_.
 
 Now that we covered change requests as a practical tool for both feature management oversight and good security posture, let’s explore Unleash event logs as an audit logging system for your organization.

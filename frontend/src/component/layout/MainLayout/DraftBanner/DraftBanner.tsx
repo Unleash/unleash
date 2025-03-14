@@ -97,7 +97,6 @@ const DraftBannerContent: FC<{
 };
 
 const StickyBanner = styled(Sticky)(({ theme }) => ({
-    borderTop: `1px solid ${theme.palette.warning.border}`,
     borderBottom: `1px solid ${theme.palette.warning.border}`,
     color: theme.palette.warning.contrastText,
     backgroundColor: theme.palette.warning.light,

@@ -46,7 +46,7 @@ We have integration guides to connect Unleash to enterprise identity providers l
 
 ![A diagram showing how Unleash integrates with authentication providers and identity providers.](/img/use-case-security-sso.png)
 
-For larger teams, we [recommend you use SCIM](#use-scim-to-automate-user-management-at-scale) instead of relying solely on SSO because it offers additional flexibility and scalability.
+You can synchronize your user groups to reflect organizational-level changes automatically by following our [user group syncing](/how-to/how-to-set-up-group-sso-sync) guide. But we [recommend you use SCIM](#use-scim-to-automate-user-management-at-scale) instead of relying solely on SSO because it offers additional flexibility and scalability.
 
 By using SSO with Unleash, your organization can prove that every engineer accessing feature flags undergoes a centralized, unified authentication process.
 

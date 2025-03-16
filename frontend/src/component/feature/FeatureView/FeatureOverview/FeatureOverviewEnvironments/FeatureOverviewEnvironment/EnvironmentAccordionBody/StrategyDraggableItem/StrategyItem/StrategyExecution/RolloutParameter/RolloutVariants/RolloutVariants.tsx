@@ -31,13 +31,14 @@ const StyledPayloadHeader = styled('div')(({ theme }) => ({
 
 export const RolloutVariants: FC<{
     variants?: StrategyVariantSchema[];
-}> = ({ variants }) => {
+    reduceMargin?: boolean;
+}> = ({ variants, reduceMargin }) => {
     if (!variants?.length) {
         return null;
     }
 
     return (
-        <StrategyEvaluationItem type={`Variants (${variants.length})`}>
+        <StrategyEvaluationItem type={`Variants (${variants.length})`} reduceMargin={reduceMargin}>
             {variants.map((variant, i) => (
                 <HtmlTooltip
                     arrow

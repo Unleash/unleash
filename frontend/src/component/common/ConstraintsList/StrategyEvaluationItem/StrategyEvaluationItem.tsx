@@ -5,14 +5,17 @@ type StrategyItemProps = {
     type?: ReactNode;
     children?: ReactNode;
     values?: string[];
+    reduceMargin?: boolean;
 };
 
-const StyledContainer = styled('div')(({ theme }) => ({
+const StyledContainer = styled('div', {
+    shouldForwardProp: prop => prop !== 'reduceMargin',
+})<{ reduceMargin: boolean }>(({ theme, reduceMargin }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'center',
     fontSize: theme.typography.body2.fontSize,
-    margin: theme.spacing(2, 3),
+    margin: reduceMargin ? 0 : theme.spacing(2, 3),
 }));
 
 const StyledContent = styled('div')(({ theme }) => ({
@@ -51,8 +54,9 @@ export const StrategyEvaluationItem: FC<StrategyItemProps> = ({
     type,
     children,
     values,
+    reduceMargin = false,
 }) => (
-    <StyledContainer>
+    <StyledContainer reduceMargin={reduceMargin}>
         <StyledType>{type}</StyledType>
         <StyledContent>
             {children}

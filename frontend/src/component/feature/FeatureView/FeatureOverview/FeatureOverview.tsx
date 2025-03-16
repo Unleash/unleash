@@ -15,6 +15,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
 import { default as LegacyFleatureOverview } from './LegacyFeatureOverview';
 import { useEnvironmentVisibility } from './FeatureOverviewMetaData/EnvironmentVisibilityMenu/hooks/useEnvironmentVisibility';
+import { CollapsedStrategiesProvider } from './FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/CollapseStrategyIcon/hooks/useCollapsedStrategies';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -62,9 +63,11 @@ export const FeatureOverview = () => {
                 />
             </div>
             <StyledMainContent>
-                <FeatureOverviewEnvironments
-                    hiddenEnvironments={hiddenEnvironments}
-                />
+                <CollapsedStrategiesProvider>
+                    <FeatureOverviewEnvironments
+                        hiddenEnvironments={hiddenEnvironments}
+                    />
+                </CollapsedStrategiesProvider>
             </StyledMainContent>
             <Routes>
                 <Route

@@ -22,7 +22,6 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { ProjectEnvironmentStrategyDraggableItem } from './StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem';
-import { CollapsedStrategiesProvider } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/CollapseStrategyIcon/hooks/useCollapsedStrategies';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -292,28 +291,26 @@ export const EnvironmentAccordionBody = ({
     return (
         <StyledAccordionBodyInnerContainer>
             <StyledContentList>
-                <CollapsedStrategiesProvider>
-                    {releasePlans.length > 0 ? (
-                        <>
-                            {releasePlans.map((plan) => (
-                                <StyledListItem type='release plan' key={plan.id}>
-                                    <ReleasePlan
-                                        plan={plan}
-                                        environmentIsDisabled={isDisabled}
-                                    />
-                                </StyledListItem>
-                            ))}
-                            {strategies.length > 0 ? (
-                                <li>
-                                    <StrategySeparator />
-                                        {strategyList}
-                                </li>
-                            ) : null}
-                        </>
-                    ) : strategies.length > 0 ? (
-                        strategyList
-                    ) : null}
-                </CollapsedStrategiesProvider>
+                {releasePlans.length > 0 ? (
+                    <>
+                        {releasePlans.map((plan) => (
+                            <StyledListItem type='release plan' key={plan.id}>
+                                <ReleasePlan
+                                    plan={plan}
+                                    environmentIsDisabled={isDisabled}
+                                />
+                            </StyledListItem>
+                        ))}
+                        {strategies.length > 0 ? (
+                            <li>
+                                <StrategySeparator />
+                                    {strategyList}
+                            </li>
+                        ) : null}
+                    </>
+                ) : strategies.length > 0 ? (
+                    strategyList
+                ) : null}
             </StyledContentList>
         </StyledAccordionBodyInnerContainer>
     );

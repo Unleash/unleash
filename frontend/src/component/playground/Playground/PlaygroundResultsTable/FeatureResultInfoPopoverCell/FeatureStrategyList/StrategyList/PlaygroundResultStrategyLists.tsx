@@ -2,9 +2,7 @@ import { Alert, styled } from '@mui/material';
 import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
-    PlaygroundFeatureSchema,
 } from 'openapi';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import {
     StyledContentList,
     StyledListItem,
@@ -94,72 +92,5 @@ export const PlaygroundResultStrategyLists = ({
                 ))}
             </StyledContentList>
         </div>
-    );
-};
-
-interface IWrappedPlaygroundResultStrategyListProps {
-    feature: PlaygroundFeatureSchema;
-    input?: PlaygroundRequestSchema;
-}
-
-const resolveHintText = (feature: PlaygroundFeatureSchema) => {
-    if (
-        feature.hasUnsatisfiedDependency &&
-        !feature.isEnabledInCurrentEnvironment
-    ) {
-        return 'If the environment was enabled and parent dependencies were satisfied';
-    }
-    if (feature.hasUnsatisfiedDependency) {
-        return 'If parent dependencies were satisfied';
-    }
-    if (!feature.isEnabledInCurrentEnvironment) {
-        return 'If the environment was enabled';
-    }
-    return '';
-};
-
-export const WrappedPlaygroundResultStrategyList = ({
-    feature,
-    input,
-}: IWrappedPlaygroundResultStrategyListProps) => {
-    const enabledStrategies = feature.strategies?.data?.filter(
-        (strategy) => !strategy.disabled,
-    );
-    const disabledStrategies = feature.strategies?.data?.filter(
-        (strategy) => strategy.disabled,
-    );
-
-    const showDisabledStrategies = disabledStrategies?.length > 0;
-
-    return (
-        <StyledAlertWrapper sx={{ pb: 1, mt: 2 }}>
-            <StyledAlert severity={'info'} color={'warning'}>
-                {resolveHintText(feature)}, then this feature flag would be{' '}
-                {feature.strategies?.result ? 'TRUE' : 'FALSE'} with strategies
-                evaluated like this:{' '}
-            </StyledAlert>
-            <StyledListWrapper>
-                <PlaygroundResultStrategyLists
-                    strategies={enabledStrategies || []}
-                    input={input}
-                    titlePrefix={showDisabledStrategies ? 'Enabled' : undefined}
-                />
-            </StyledListWrapper>
-            <ConditionallyRender
-                condition={showDisabledStrategies}
-                show={
-                    <StyledListWrapper>
-                        <PlaygroundResultStrategyLists
-                            strategies={disabledStrategies}
-                            input={input}
-                            titlePrefix={'Disabled'}
-                            infoText={
-                                'Disabled strategies are not evaluated for the overall result.'
-                            }
-                        />
-                    </StyledListWrapper>
-                }
-            />
-        </StyledAlertWrapper>
     );
 };

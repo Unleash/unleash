@@ -16,6 +16,7 @@ interface IConstraintExecutionProps {
 const StyledContainer = styled('div', {
     shouldForwardProp: (prop) => prop !== 'variant',
 })<{ variant: 'ok' | 'error' }>(({ theme, variant }) => ({
+    '--font-size': theme.typography.body2.fontSize,
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
@@ -25,10 +26,9 @@ const StyledContainer = styled('div', {
             ? theme.palette.success.dark
             : theme.palette.error.dark,
 
-    fontSize: theme.typography.body2.fontSize,
+    fontSize: 'var(--font-size)',
     svg: {
-        // todo: how best to size this?
-        fontSize: `calc(${theme.typography.body1.fontSize} * 1.1)`,
+        fontSize: `calc(var(--font-size) * 1.25)`,
     },
 }));
 

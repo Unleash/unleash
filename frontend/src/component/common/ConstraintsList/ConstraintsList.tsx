@@ -15,6 +15,16 @@ const StyledListItem = styled('li')(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     background: theme.palette.background.default,
+    padding: theme.spacing(2, 3),
+    display: 'flex',
+    flexFlow: 'column',
+    gap: theme.spacing(1),
+    '&:has(>.MuiAccordion-root)': {
+        // todo: look at this later. MUI accordions rely heavily on their
+        // padding, but it doesn't collapse with the surrounding padding here,
+        // so they become super chunky otherwise.
+        paddingBlock: 0,
+    },
 }));
 
 const StyledAnd = styled('div')(({ theme }) => ({

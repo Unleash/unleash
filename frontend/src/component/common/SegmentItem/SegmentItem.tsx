@@ -26,14 +26,14 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     boxShadow: 'none',
     margin: 0,
     padding: 0,
+    '::before': {
+        display: 'none',
+    },
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     padding: 0,
     fontSize: theme.typography.body2.fontSize,
-    '.MuiAccordionSummary-content, .Mui-expanded.MuiAccordionSummary-content': {
-        margin: 0,
-    },
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({

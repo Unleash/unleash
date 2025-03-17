@@ -5,8 +5,10 @@ import {
     AccordionSummary,
     styled,
 } from '@mui/material';
-import type { IAccessOverviewPermission } from 'interfaces/permissions';
-import { AccessOverviewList } from './AccessOverviewList';
+import {
+    AccessOverviewList,
+    type IAccessOverviewPermissionCategory,
+} from './AccessOverviewList';
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     border: `1px solid ${theme.palette.divider}`,
@@ -50,29 +52,33 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 }));
 
 interface IAccessAccordionProps {
-    permissions: IAccessOverviewPermission[];
+    categories: IAccessOverviewPermissionCategory[];
     children: React.ReactNode;
 }
 
 export const AccessOverviewAccordion = ({
-    permissions,
+    categories,
     children,
-}: IAccessAccordionProps) => (
-    <StyledAccordion>
-        <StyledAccordionSummary expandIcon={<ExpandMore />}>
-            <StyledTitleContainer>
-                <StyledTitle>{children}</StyledTitle>
-            </StyledTitleContainer>
-            <StyledSecondaryLabel>
-                {
-                    permissions.filter(({ hasPermission }) => hasPermission)
-                        .length
-                }
-                /{permissions.length} permissions
-            </StyledSecondaryLabel>
-        </StyledAccordionSummary>
-        <StyledAccordionDetails>
-            <AccessOverviewList permissions={permissions} />
-        </StyledAccordionDetails>
-    </StyledAccordion>
-);
+}: IAccessAccordionProps) => {
+    const permissions = categories.flatMap(({ permissions }) => permissions);
+
+    return (
+        <StyledAccordion>
+            <StyledAccordionSummary expandIcon={<ExpandMore />}>
+                <StyledTitleContainer>
+                    <StyledTitle>{children}</StyledTitle>
+                </StyledTitleContainer>
+                <StyledSecondaryLabel>
+                    {
+                        permissions.filter(({ hasPermission }) => hasPermission)
+                            .length
+                    }
+                    /{permissions.length} permissions
+                </StyledSecondaryLabel>
+            </StyledAccordionSummary>
+            <StyledAccordionDetails>
+                <AccessOverviewList categories={categories} />
+            </StyledAccordionDetails>
+        </StyledAccordion>
+    );
+};

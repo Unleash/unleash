@@ -19,18 +19,20 @@ const UnevaluatedUnsatisfiedInfo: FC<{ feature: PlaygroundFeatureSchema }> = ({
         return null;
     }
 
-    const text =
+    let text: string | undefined;
+
+    if (
         feature.hasUnsatisfiedDependency &&
         !feature.isEnabledInCurrentEnvironment
-            ? 'If the environment was enabled and parent dependencies were satisfied'
-            : feature.hasUnsatisfiedDependency
-              ? 'If parent dependencies were satisfied'
-              : !feature.isEnabledInCurrentEnvironment
-                ? 'If the environment was enabled'
-                : '';
-
-    if (!text) {
-        return null;
+    ) {
+        text =
+            'If the environment was enabled and parent dependencies were satisfied';
+    } else if (feature.hasUnsatisfiedDependency) {
+        text = 'If parent dependencies were satisfied';
+    } else if (!feature.isEnabledInCurrentEnvironment) {
+        text = 'If the environment was enabled';
+    } else {
+        return;
     }
 
     return (

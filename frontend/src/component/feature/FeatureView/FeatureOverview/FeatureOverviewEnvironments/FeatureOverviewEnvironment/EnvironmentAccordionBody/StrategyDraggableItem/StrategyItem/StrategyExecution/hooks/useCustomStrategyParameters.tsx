@@ -8,14 +8,16 @@ import {
 import { StrategyEvaluationItem } from 'component/common/ConstraintsList/StrategyEvaluationItem/StrategyEvaluationItem';
 import { StrategyEvaluationChip } from 'component/common/ConstraintsList/StrategyEvaluationChip/StrategyEvaluationChip';
 import type {
-    CreateFeatureStrategySchema,
+    FeatureStrategySchema,
     StrategySchema,
     StrategySchemaParametersItem,
 } from 'openapi';
-import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 
 export const useCustomStrategyParameters = (
-    strategy: CreateFeatureStrategySchema | IFeatureStrategyPayload,
+    strategy: {
+        name: FeatureStrategySchema['name'];
+        parameters: FeatureStrategySchema['parameters'];
+    },
     strategies: StrategySchema[],
 ) => {
     const { parameters } = strategy;

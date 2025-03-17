@@ -5,7 +5,11 @@ import type { FeatureStrategySchema } from 'openapi';
 import { RolloutParameter } from '../RolloutParameter/RolloutParameter';
 
 export const useStrategyParameters = (
-    strategy: Partial<FeatureStrategySchema>,
+    strategy: Partial<{
+        constraints: FeatureStrategySchema['constraints'];
+        variants: FeatureStrategySchema['variants'];
+        parameters: FeatureStrategySchema['parameters'];
+    }>,
     displayGroupId?: boolean,
 ) => {
     const { constraints, variants } = strategy;

@@ -7,7 +7,7 @@ export default class FakeFavoriteProjectsStore
 {
     addFavoriteProject(
         favorite: IFavoriteProjectKey,
-    ): Promise<IFavoriteProject> {
+    ): Promise<IFavoriteProject | undefined> {
         return Promise.resolve(undefined);
     }
 
@@ -25,7 +25,7 @@ export default class FakeFavoriteProjectsStore
         return Promise.resolve(false);
     }
 
-    get(key: IFavoriteProjectKey): Promise<IFavoriteProject> {
+    get(key: IFavoriteProjectKey): Promise<IFavoriteProject | undefined> {
         return Promise.resolve(undefined);
     }
 

@@ -127,7 +127,7 @@ export class ApiTokenService {
         }
     }
 
-    async getToken(secret: string): Promise<IApiToken> {
+    async getToken(secret: string): Promise<IApiToken | undefined> {
         return this.store.get(secret);
     }
 
@@ -245,7 +245,7 @@ export class ApiTokenService {
         auditUser: IAuditUser,
     ): Promise<IApiToken> {
         const previous = (await this.store.get(secret))!;
-        const token = await this.store.setExpiry(secret, expiresAt);
+        const token = (await this.store.setExpiry(secret, expiresAt))!;
         await this.eventService.storeEvent(
             new ApiTokenUpdatedEvent({
                 auditUser,
@@ -258,7 +258,7 @@ export class ApiTokenService {
 
     public async delete(secret: string, auditUser: IAuditUser): Promise<void> {
         if (await this.store.exists(secret)) {
-            const token = await this.store.get(secret);
+            const token = (await this.store.get(secret))!;
             await this.store.delete(secret);
             await this.eventService.storeEvent(
                 new ApiTokenDeletedEvent({

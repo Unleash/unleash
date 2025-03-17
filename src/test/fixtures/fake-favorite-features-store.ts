@@ -7,7 +7,7 @@ export default class FakeFavoriteFeaturesStore
 {
     addFavoriteFeature(
         favorite: IFavoriteFeatureKey,
-    ): Promise<IFavoriteFeature> {
+    ): Promise<IFavoriteFeature | undefined> {
         return Promise.resolve(undefined);
     }
 
@@ -25,7 +25,7 @@ export default class FakeFavoriteFeaturesStore
         return Promise.resolve(false);
     }
 
-    get(key: IFavoriteFeatureKey): Promise<IFavoriteFeature> {
+    get(key: IFavoriteFeatureKey): Promise<IFavoriteFeature | undefined> {
         return Promise.resolve(undefined);
     }
 

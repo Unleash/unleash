@@ -37,10 +37,10 @@ test('get token returns the token when exists', async () => {
     });
     const foundToken = await stores.apiTokenStore.get('abcde321');
     expect(foundToken).toBeDefined();
-    expect(foundToken.secret).toBe(newToken.secret);
-    expect(foundToken.environment).toBe(newToken.environment);
-    expect(foundToken.tokenName).toBe(newToken.tokenName);
-    expect(foundToken.type).toBe(newToken.type);
+    expect(foundToken!.secret).toBe(newToken.secret);
+    expect(foundToken!.environment).toBe(newToken.environment);
+    expect(foundToken!.tokenName).toBe(newToken.tokenName);
+    expect(foundToken!.type).toBe(newToken.type);
 });
 
 describe('count deprecated tokens', () => {

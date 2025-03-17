@@ -1,5 +1,6 @@
 import Joi, { ValidationError } from 'joi';
 import type { IUser } from './user';
+import { SYSTEM_USER_AUDIT } from './core';
 
 export interface IGroup {
     id: number;
@@ -60,7 +61,7 @@ export interface IGroupModelWithAddedAt extends IGroupModel {
 export default class Group implements IGroup {
     type: string;
 
-    createdAt: Date;
+    createdAt?: Date;
 
     createdBy: string;
 
@@ -95,9 +96,9 @@ export default class Group implements IGroup {
         this.id = id;
         this.name = name;
         this.rootRole = rootRole;
-        this.description = description;
-        this.mappingsSSO = mappingsSSO;
-        this.createdBy = createdBy;
+        this.description = description || '';
+        this.mappingsSSO = mappingsSSO || [];
+        this.createdBy = createdBy || SYSTEM_USER_AUDIT.username;
         this.createdAt = createdAt;
         this.scimId = scimId;
     }

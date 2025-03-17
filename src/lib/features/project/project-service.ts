@@ -261,7 +261,11 @@ export default class ProjectService {
     }
 
     async getProject(id: string): Promise<IProject> {
-        return this.projectStore.get(id);
+        const project = await this.projectStore.get(id);
+        if (project === undefined) {
+            throw new NotFoundError(`Could not find project with id ${id}`);
+        }
+        return Promise.resolve(project);
     }
 
     private validateAndProcessFeatureNamingPattern = (
@@ -503,7 +507,9 @@ export default class ProjectService {
         auditUser: IAuditUser,
     ): Promise<any> {
         const feature = await this.featureToggleStore.get(featureName);
-
+        if (feature === undefined) {
+            throw new NotFoundError(`Could not find feature ${featureName}`);
+        }
         if (feature.project !== currentProjectId) {
             throw new PermissionError(MOVE_FEATURE_TOGGLE);
         }
@@ -676,7 +682,7 @@ export default class ProjectService {
                     roleId,
                     userId,
                     roleName: role.name,
-                    email: user.email,
+                    email: user?.email,
                 },
             }),
         );
@@ -1374,7 +1380,11 @@ export default class ProjectService {
                 : Promise.resolve(false),
             this.projectStatsStore.getProjectStats(projectId),
         ]);
-
+        if (project === undefined) {
+            throw new NotFoundError(
+                `Could not find project with id ${projectId}`,
+            );
+        }
         return {
             stats: projectStats,
             name: project.name,
@@ -1425,6 +1435,12 @@ export default class ProjectService {
             this.projectStatsStore.getProjectStats(projectId),
             this.onboardingReadModel.getOnboardingStatusForProject(projectId),
         ]);
+
+        if (project === undefined) {
+            throw new NotFoundError(
+                `Could not find project with id: ${projectId}`,
+            );
+        }
 
         return {
             stats: projectStats,

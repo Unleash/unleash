@@ -2,15 +2,16 @@ import ClientInstanceService from '../instance/instance-service';
 import type { IClientApp } from '../../../types/model';
 import { secondsToMilliseconds } from 'date-fns';
 import { createTestConfig } from '../../../../test/config/test-config';
-import type { IUnleashConfig, IUnleashStores } from '../../../types';
+import {
+    APPLICATION_CREATED,
+    type IUnleashConfig,
+    type IUnleashStores,
+} from '../../../types';
 import { FakePrivateProjectChecker } from '../../private-project/fakePrivateProjectChecker';
 import type { ITestDb } from '../../../../test/e2e/helpers/database-init';
-
-const faker = require('faker');
-const dbInit = require('../../../../test/e2e/helpers/database-init');
-const getLogger = require('../../../../test/fixtures/no-logger');
-const { APPLICATION_CREATED } = require('../../../types/events');
-
+import dbInit from '../../../../test/e2e/helpers/database-init';
+import { noLoggerProvider as getLogger } from '../../../../test/fixtures/no-logger';
+import faker from 'faker';
 let stores: IUnleashStores;
 let db: ITestDb;
 let clientInstanceService: ClientInstanceService;

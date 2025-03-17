@@ -825,6 +825,7 @@ export function registerPrometheusMetrics(
         eventBus,
         events.REQUEST_ORIGIN,
         ({ type, method, source }) => {
+            // @ts-expect-error typescript doesn't trust that we've found the source here. based on our types this should always be a string
             requestOriginCounter.increment({ type, method, source });
         },
     );

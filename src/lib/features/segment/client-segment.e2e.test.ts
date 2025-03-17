@@ -355,7 +355,9 @@ test('should inline segment constraints into features by default', async () => {
 
     const clientFeatures = await fetchClientFeatures();
     const clientStrategies = clientFeatures.flatMap((f) => f.strategies);
-    const clientConstraints = clientStrategies.flatMap((s) => s.constraints);
+    const clientConstraints = clientStrategies.flatMap(
+        (s) => s.constraints || [],
+    );
     const clientValues = clientConstraints.flatMap((c) => c.values);
     const uniqueValues = [...new Set(clientValues)];
 

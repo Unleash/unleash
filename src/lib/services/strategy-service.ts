@@ -16,16 +16,8 @@ import {
     StrategyReactivatedEvent,
     StrategyUpdatedEvent,
 } from '../types';
-
-const strategySchema = require('./strategy-schema');
-const NameExistsError = require('../error/name-exists-error');
-const {
-    STRATEGY_CREATED,
-    STRATEGY_DELETED,
-    STRATEGY_DEPRECATED,
-    STRATEGY_REACTIVATED,
-    STRATEGY_UPDATED,
-} = require('../types/events');
+import strategySchema from './strategy-schema';
+import { NameExistsError } from '../error';
 
 class StrategyService {
     private logger: Logger;
@@ -48,7 +40,7 @@ class StrategyService {
         return this.strategyStore.getAll();
     }
 
-    async getStrategy(name: string): Promise<IStrategy> {
+    async getStrategy(name: string): Promise<IStrategy | undefined> {
         return this.strategyStore.get(name);
     }
 
@@ -110,7 +102,7 @@ class StrategyService {
     async createStrategy(
         value: IMinimalStrategy,
         auditUser: IAuditUser,
-    ): Promise<IStrategy> {
+    ): Promise<IStrategy | undefined> {
         const strategy = await strategySchema.validateAsync(value);
         strategy.deprecated = false;
         await this._validateStrategyName(strategy);
@@ -158,9 +150,9 @@ class StrategyService {
     }
 
     // This check belongs in the store.
-    _validateEditable(strategy: IStrategy): void {
-        if (!strategy.editable) {
-            throw new Error(`Cannot edit strategy ${strategy.name}`);
+    _validateEditable(strategy: IStrategy | undefined): void {
+        if (!strategy?.editable) {
+            throw new Error(`Cannot edit strategy ${strategy?.name}`);
         }
     }
 }

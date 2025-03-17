@@ -5,6 +5,7 @@ import type { IAccountStore, IUnleashStores } from '../types/stores';
 import type { AccessService } from './access-service';
 import { RoleName } from '../types/model';
 import type { IAdminCount } from '../types/stores/account-store';
+import { NotFoundError } from '../error';
 
 interface IUserWithRole extends IUser {
     rootRole: number;
@@ -46,7 +47,12 @@ export class AccountService {
     }
 
     async getAccountByPersonalAccessToken(secret: string): Promise<IUser> {
-        return this.store.getAccountByPersonalAccessToken(secret);
+        const account =
+            await this.store.getAccountByPersonalAccessToken(secret);
+        if (account === undefined) {
+            throw new NotFoundError();
+        }
+        return account;
     }
 
     async getAdminCount(): Promise<IAdminCount> {

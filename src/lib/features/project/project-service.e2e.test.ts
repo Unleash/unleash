@@ -2472,7 +2472,7 @@ test('should not delete project-bound api tokens still bound to project', async 
     await projectService.deleteProject(project1, user, auditUser);
     const fetchedToken = await apiTokenService.getToken(token.secret);
     expect(fetchedToken).not.toBeUndefined();
-    expect(fetchedToken.project).toBe(project2);
+    expect(fetchedToken!.project).toBe(project2);
 });
 
 test('should delete project-bound api tokens when all projects they belong to are deleted', async () => {

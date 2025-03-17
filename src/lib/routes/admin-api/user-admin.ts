@@ -55,6 +55,10 @@ import {
     type CreateUserResponseSchema,
 } from '../../openapi/spec/create-user-response-schema';
 import type { IRoleWithPermissions } from '../../types/stores/access-store';
+import {
+    type UserAccessOverviewSchema,
+    userAccessOverviewSchema,
+} from '../../openapi';
 
 export default class UserAdminController extends Controller {
     private flagResolver: IFlagResolver;
@@ -260,7 +264,7 @@ export default class UserAdminController extends Controller {
             handler: this.getPermissions,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Auth'],
+                    tags: ['Unstable'],
                     operationId: 'getUserPermissions',
                     summary: 'Returns the list of permissions for the user',
                     description:
@@ -293,7 +297,7 @@ export default class UserAdminController extends Controller {
                         },
                     ],
                     responses: {
-                        200: emptyResponse, // TODO define schema
+                        200: createResponseSchema(userAccessOverviewSchema.$id),
                         ...getStandardResponses(401, 403, 415),
                     },
                 }),
@@ -722,7 +726,7 @@ export default class UserAdminController extends Controller {
             unknown,
             { project?: string; environment?: string }
         >,
-        res: Response,
+        res: Response<UserAccessOverviewSchema>,
     ): Promise<void> {
         const { project, environment } = req.query;
         const user = await this.userService.getUser(req.params.id);
@@ -747,13 +751,17 @@ export default class UserAdminController extends Controller {
             environment,
         );
 
-        // TODO add response validation based on the schema
-        res.status(200).json({
-            overview,
-            user,
-            rootRole,
-            projectRoles,
-        });
+        this.openApiService.respondWithValidation(
+            200,
+            res,
+            userAccessOverviewSchema.$id,
+            {
+                overview,
+                user: serializeDates(user),
+                rootRole,
+                projectRoles,
+            },
+        );
     }
 
     async throwIfScimUser({

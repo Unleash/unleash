@@ -135,7 +135,7 @@ const sidebars: SidebarsConfig = {
                                     type: 'doc',
                                     label: 'Security and Compliance',
                                     id: 'feature-flag-tutorials/use-cases/security-compliance',
-                                }
+                                },
                             ],
                         },
                         {

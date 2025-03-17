@@ -379,7 +379,7 @@ const sidebars: SidebarsConfig = {
                                 'reference/segments',
                                 'reference/unleash-context',
                                 'reference/stickiness',
-                                'reference/release-management'
+                                'reference/release-management',
                             ],
                         },
                         {

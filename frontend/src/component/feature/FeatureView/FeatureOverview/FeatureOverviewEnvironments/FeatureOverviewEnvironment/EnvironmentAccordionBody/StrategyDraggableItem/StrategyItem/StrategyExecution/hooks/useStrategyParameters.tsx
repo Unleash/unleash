@@ -6,6 +6,7 @@ import { RolloutParameter } from '../RolloutParameter/RolloutParameter';
 
 export const useStrategyParameters = (
     strategy: Partial<{
+        name: FeatureStrategySchema['name'];
         constraints: FeatureStrategySchema['constraints'];
         variants: FeatureStrategySchema['variants'];
         parameters: FeatureStrategySchema['parameters'];

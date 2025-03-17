@@ -16,7 +16,7 @@ import type {
 export const useCustomStrategyParameters = (
     strategy: {
         name: FeatureStrategySchema['name'];
-        parameters: FeatureStrategySchema['parameters'];
+        parameters?: FeatureStrategySchema['parameters'];
     },
     strategies: StrategySchema[],
 ) => {

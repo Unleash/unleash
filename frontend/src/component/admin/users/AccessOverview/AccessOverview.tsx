@@ -3,7 +3,7 @@ import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import useUserInfo from 'hooks/api/getters/useUserInfo/useUserInfo';
 import { styled, useMediaQuery } from '@mui/material';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useEnvironments } from 'hooks/api/getters/useEnvironments/useEnvironments';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import theme from 'themes/theme';
@@ -18,15 +18,20 @@ import {
 } from 'utils/permissions';
 import type { IAccessOverviewPermissionCategory } from './AccessOverviewAccordion/AccessOverviewList';
 import { createProjectPermissionsStructure } from 'component/admin/roles/RoleForm/RolePermissionCategories/createProjectPermissionsStructure';
+import { Search } from 'component/common/Search/Search';
+import { SearchHighlightProvider } from 'component/common/Table/SearchHighlightContext/SearchHighlightContext';
 
 const StyledActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     flex: 1,
     gap: theme.spacing(1),
-    maxWidth: 600,
+    maxWidth: 800,
     [theme.breakpoints.down('md')]: {
         flexDirection: 'column',
         maxWidth: '100%',
+    },
+    '& > div': {
+        width: '100%',
     },
 }));
 
@@ -35,6 +40,20 @@ const StyledAccessOverviewContainer = styled('div')(({ theme }) => ({
     flexDirection: 'column',
     gap: theme.spacing(2),
 }));
+
+const filterCategory = (
+    category: IAccessOverviewPermissionCategory,
+    search: string,
+): IAccessOverviewPermissionCategory | undefined => {
+    const searchLower = search.toLowerCase();
+    const filteredPermissions = category.permissions.filter(({ displayName }) =>
+        displayName.toLowerCase().includes(searchLower),
+    );
+
+    if (filteredPermissions.length) {
+        return { ...category, permissions: filteredPermissions };
+    }
+};
 
 export const AccessOverview = () => {
     const id = useRequiredPathParam('id');
@@ -48,6 +67,7 @@ export const AccessOverview = () => {
 
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
+    const [searchValue, setSearchValue] = useState('');
     const [project, setProject] = useState(query.project ?? '');
     const [environment, setEnvironment] = useState(
         query.environment ?? undefined,
@@ -71,6 +91,7 @@ export const AccessOverview = () => {
 
     const AccessActions = (
         <StyledActionsContainer>
+            <Search initialValue={searchValue} onChange={setSearchValue} />
             <AccessOverviewSelect
                 label='Project'
                 options={projects}
@@ -92,20 +113,40 @@ export const AccessOverview = () => {
         </StyledActionsContainer>
     );
 
-    const rootCategories = getCategorizedRootPermissions(
-        overview?.root ?? [],
-    ) as IAccessOverviewPermissionCategory[];
+    const rootCategories = useMemo(() => {
+        const categories = getCategorizedRootPermissions(
+            overview?.root ?? [],
+        ) as IAccessOverviewPermissionCategory[];
 
-    const projectCategories = createProjectPermissionsStructure(
-        overview?.project ?? [],
-    ).map(({ label, permissions }) => ({
-        label,
-        permissions: permissions.map(([permission]) => permission),
-    })) as IAccessOverviewPermissionCategory[];
+        if (!searchValue) return categories;
 
-    const environmentCategories = getCategorizedProjectPermissions(
-        overview?.environment ?? [],
-    ) as IAccessOverviewPermissionCategory[];
+        return categories
+            .map((category) => filterCategory(category, searchValue))
+            .filter(Boolean) as IAccessOverviewPermissionCategory[];
+    }, [overview?.root, searchValue]);
+
+    const projectCategories = useMemo(() => {
+        const categories = createProjectPermissionsStructure(
+            overview?.project ?? [],
+        ).map(({ label, permissions }) => ({
+            label,
+            permissions: permissions.map(([permission]) => permission),
+        })) as IAccessOverviewPermissionCategory[];
+
+        return categories
+            .map((category) => filterCategory(category, searchValue))
+            .filter(Boolean) as IAccessOverviewPermissionCategory[];
+    }, [overview?.project, searchValue]);
+
+    const environmentCategories = useMemo(() => {
+        const categories = getCategorizedProjectPermissions(
+            overview?.environment ?? [],
+        ) as IAccessOverviewPermissionCategory[];
+
+        return categories
+            .map((category) => filterCategory(category, searchValue))
+            .filter(Boolean) as IAccessOverviewPermissionCategory[];
+    }, [overview?.environment, searchValue]);
 
     return (
         <PageContent
@@ -128,20 +169,24 @@ export const AccessOverview = () => {
             }
         >
             <StyledAccessOverviewContainer>
-                <AccessOverviewAccordion categories={rootCategories}>
-                    Root permissions for role {rootRole?.name}
-                </AccessOverviewAccordion>
-                <AccessOverviewAccordion categories={projectCategories}>
-                    Project permissions
-                    {project
-                        ? ` for project ${project}${projectRoles?.length ? ` with project role${projectRoles.length !== 1 ? 's' : ''} ${projectRoles?.map((role: any) => role.name).join(', ')}` : ''}`
-                        : ''}
-                </AccessOverviewAccordion>
-                {environment && (
-                    <AccessOverviewAccordion categories={environmentCategories}>
-                        Environment permissions for {environment}
+                <SearchHighlightProvider value={searchValue}>
+                    <AccessOverviewAccordion categories={rootCategories}>
+                        Root permissions for role {rootRole?.name}
                     </AccessOverviewAccordion>
-                )}
+                    <AccessOverviewAccordion categories={projectCategories}>
+                        Project permissions
+                        {project
+                            ? ` for project ${project}${projectRoles?.length ? ` with project role${projectRoles.length !== 1 ? 's' : ''} ${projectRoles?.map((role: any) => role.name).join(', ')}` : ''}`
+                            : ''}
+                    </AccessOverviewAccordion>
+                    {environment && (
+                        <AccessOverviewAccordion
+                            categories={environmentCategories}
+                        >
+                            Environment permissions for {environment}
+                        </AccessOverviewAccordion>
+                    )}
+                </SearchHighlightProvider>
             </StyledAccessOverviewContainer>
         </PageContent>
     );

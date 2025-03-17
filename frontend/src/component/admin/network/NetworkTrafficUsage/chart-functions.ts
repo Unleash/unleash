@@ -1,6 +1,7 @@
 import type { ChartDataset } from 'chart.js';
 import type {
     MeteredConnectionsSchema,
+    MeteredRequestsSchema,
     TrafficUsageDataSegmentedCombinedSchema,
 } from 'openapi';
 import { endpointsInfo } from './endpoint-info';
@@ -59,6 +60,34 @@ export const toConnectionChartData = (
         const epInfo = {
             label: 'Connections',
             color: '#6D66D9',
+            order: 1,
+        };
+
+        return {
+            label: epInfo.label,
+            data: Object.values(record),
+            backgroundColor: epInfo.color,
+            hoverBackgroundColor: epInfo.color,
+        };
+    });
+
+    return { datasets, labels };
+};
+
+export const toRequestChartData = (
+    traffic: MeteredRequestsSchema,
+): { datasets: ChartDatasetType[]; labels: string[] } => {
+    const { newRecord, labels } = getLabelsAndRecords(traffic);
+    const datasets = traffic.apiData.map((item) => {
+        const record = newRecord();
+        for (const dataPoint of Object.values(item.dataPoints)) {
+            const requestCount = dataPoint.requests;
+            record[dataPoint.period] = requestCount;
+        }
+
+        const epInfo = {
+            label: 'Frontend requests',
+            color: '#A39EFF',
             order: 1,
         };
 

@@ -264,7 +264,7 @@ export default class UserAdminController extends Controller {
             handler: this.getPermissions,
             middleware: [
                 openApiService.validPath({
-                    tags: ['Auth'],
+                    tags: ['Unstable'],
                     operationId: 'getUserPermissions',
                     summary: 'Returns the list of permissions for the user',
                     description:

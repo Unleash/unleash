@@ -14,14 +14,13 @@ import { useStrategyParameters } from 'component/feature/FeatureView/FeatureOver
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { useCustomStrategyParameters } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/hooks/useCustomStrategyParameters';
 
-
-interface IStrategyExecutionProps {
+type StrategyExecutionProps = {
     strategyResult: PlaygroundStrategySchema;
     percentageFill?: string;
     input?: PlaygroundRequestSchema;
-}
+};
 
-export const StrategyExecution: FC<IStrategyExecutionProps> = ({
+export const StrategyExecution: FC<StrategyExecutionProps> = ({
     strategyResult,
     input,
 }) => {

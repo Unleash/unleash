@@ -41,6 +41,6 @@ export const useRequestsConsumption = (
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Metered Requests Metrics'))
+        .then(handleErrorResponses('Consumption Requests Metrics'))
         .then((res) => res.json());
 };

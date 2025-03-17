@@ -304,7 +304,7 @@ export const EnvironmentAccordionBody = ({
                         {strategies.length > 0 ? (
                             <li>
                                 <StrategySeparator />
-                                {strategyList}
+                                    {strategyList}
                             </li>
                         ) : null}
                     </>

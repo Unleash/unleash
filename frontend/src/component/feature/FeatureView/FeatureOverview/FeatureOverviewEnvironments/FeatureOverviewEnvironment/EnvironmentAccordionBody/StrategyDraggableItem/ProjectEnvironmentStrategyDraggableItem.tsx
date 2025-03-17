@@ -15,6 +15,7 @@ import MenuStrategyRemove from './StrategyItem/MenuStrategyRemove/MenuStrategyRe
 import { Link } from 'react-router-dom';
 import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem';
+import { CollapseStrategyIcon } from './StrategyItem/CollapseStrategyIcon';
 
 type ProjectEnvironmentStrategyDraggableItemProps = {
     strategy: IFeatureStrategy;
@@ -104,6 +105,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
                                 ).map((scheduledChange) => scheduledChange.id)}
                             />
                         ) : null}
+                        <CollapseStrategyIcon strategy={strategy} />
                         {otherEnvironments && otherEnvironments?.length > 0 ? (
                             <CopyStrategyIconMenu
                                 environmentId={environmentName}

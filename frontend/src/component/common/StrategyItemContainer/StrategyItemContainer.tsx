@@ -1,13 +1,15 @@
 import type React from 'react';
 import type { DragEventHandler, FC, ReactNode } from 'react';
 import DragIndicator from '@mui/icons-material/DragIndicator';
-import { Box, IconButton, Typography, styled } from '@mui/material';
+import { Box, Chip, IconButton, Typography, styled } from '@mui/material';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { formatStrategyName } from 'utils/strategyNames';
 import type { PlaygroundStrategySchema } from 'openapi';
 import { Badge } from '../Badge/Badge';
 import { Link } from 'react-router-dom';
 import { Truncator } from '../Truncator/Truncator';
+import { StrategyEvaluationChip } from '../ConstraintsList/StrategyEvaluationChip/StrategyEvaluationChip';
+import { RolloutVariants } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/RolloutParameter/RolloutVariants/RolloutVariants';
 
 type StrategyItemContainerProps = {
     strategyHeaderLevel?: 1 | 2 | 3 | 4 | 5 | 6;
@@ -19,6 +21,7 @@ type StrategyItemContainerProps = {
     className?: string;
     style?: React.CSSProperties;
     children?: React.ReactNode;
+    isCollapsed?: boolean;
 };
 
 const inlinePadding = 3;
@@ -41,10 +44,13 @@ const StyledHeaderContainer = styled('hgroup')(({ theme }) => ({
     },
 }));
 
-const StyledContainer = styled('article')(({ theme }) => ({
+const StyledContainer = styled('article', {
+    shouldForwardProp: prop => prop !== 'collapsed',
+})<{ collapsed: boolean }>(({ theme, collapsed }) => ({
     background: 'inherit',
     padding: theme.spacing(inlinePadding),
     paddingTop: theme.spacing(0.5),
+    paddingBottom: collapsed ? theme.spacing(0.5) : undefined,
     display: 'flex',
     flexDirection: 'column',
     rowGap: theme.spacing(0.5),
@@ -80,15 +86,16 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
     children,
     style = {},
     className,
+    isCollapsed = false,
 }) => {
     const StrategyHeaderLink: React.FC<{ children?: React.ReactNode }> =
         'links' in strategy
             ? ({ children }) => <Link to={strategy.links.edit}>{children}</Link>
             : ({ children }) => <> {children} </>;
-
+    
     return (
         <Box sx={{ position: 'relative' }}>
-            <StyledContainer style={style} className={className}>
+            <StyledContainer style={style} className={className} collapsed={isCollapsed}>
                 <StyledHeader disabled={Boolean(strategy?.disabled)}>
                     {onDragStart ? (
                         <DragIcon
@@ -139,6 +146,9 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                         {strategy.disabled ? (
                             <Badge color='disabled'>Disabled</Badge>
                         ) : null}
+                        {isCollapsed && strategy.parameters.rollout ? (
+                            <StrategyEvaluationChip label={`${strategy.parameters.rollout}% Rollout`} />
+                        ) : null}
                         {headerItemsLeft}
                     </StyledHeaderInner>
                     <Box
@@ -151,6 +161,9 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                         {headerItemsRight}
                     </Box>
                 </StyledHeader>
+                {isCollapsed && 'variants' in strategy ? (
+                    <RolloutVariants variants={strategy.variants} reduceMargin />
+                ) : null}
                 <Box>{children}</Box>
             </StyledContainer>
         </Box>

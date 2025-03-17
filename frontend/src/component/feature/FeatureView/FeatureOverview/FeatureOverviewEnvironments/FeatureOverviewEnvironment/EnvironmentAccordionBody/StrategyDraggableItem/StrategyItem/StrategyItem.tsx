@@ -2,10 +2,11 @@ import type { DragEventHandler, FC, ReactNode } from 'react';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { StrategyExecution } from './StrategyExecution/StrategyExecution';
 import { StrategyItemContainer } from 'component/common/StrategyItemContainer/StrategyItemContainer';
+import { useIsCollapsed } from './CollapseStrategyIcon';
 
 type StrategyItemProps = {
     headerItemsRight?: ReactNode;
-    strategy: Omit<IFeatureStrategy, 'id'>;
+    strategy: IFeatureStrategy;
     onDragStart?: DragEventHandler<HTMLButtonElement>;
     onDragEnd?: DragEventHandler<HTMLButtonElement>;
     strategyHeaderLevel?: 1 | 2 | 3 | 4 | 5 | 6;
@@ -18,6 +19,8 @@ export const StrategyItem: FC<StrategyItemProps> = ({
     headerItemsRight,
     strategyHeaderLevel,
 }) => {
+    const isCollapsed = useIsCollapsed(strategy.id);
+
     return (
         <StrategyItemContainer
             strategyHeaderLevel={strategyHeaderLevel}
@@ -25,8 +28,9 @@ export const StrategyItem: FC<StrategyItemProps> = ({
             onDragStart={onDragStart}
             onDragEnd={onDragEnd}
             headerItemsRight={headerItemsRight}
+            isCollapsed={isCollapsed}
         >
-            <StrategyExecution strategy={strategy} />
+            {!isCollapsed && <StrategyExecution strategy={strategy} />}
         </StrategyItemContainer>
     );
 };

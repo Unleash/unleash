@@ -3,8 +3,9 @@ import { useTrafficSearch } from 'hooks/api/getters/useInstanceTrafficMetrics/us
 import { currentDate } from '../dates';
 import { useMemo } from 'react';
 import {
-    toTrafficUsageChartData as newToChartData,
     toConnectionChartData,
+    toRequestChartData,
+    toTrafficUsageChartData,
 } from '../chart-functions';
 import {
     calculateEstimatedMonthlyCost,
@@ -14,6 +15,7 @@ import {
 import { BILLING_TRAFFIC_BUNDLE_PRICE } from '../../../billing/BillingDashboard/BillingPlan/BillingPlan';
 import { averageTrafficPreviousMonths } from '../average-traffic-previous-months';
 import { useConnectionsConsumption } from 'hooks/api/getters/useConnectionsConsumption/useConnectionsConsumption';
+import { useRequestsConsumption } from 'hooks/api/getters/useRequestsConsumption/useRequestsConsumption';
 
 export const useTrafficStats = (
     includedTraffic: number,
@@ -36,7 +38,7 @@ export const useTrafficStats = (
         }
         const traffic = result.data;
 
-        const chartData = newToChartData(traffic, filter);
+        const chartData = toTrafficUsageChartData(traffic, filter);
         const usageTotal = calculateTotalUsage(traffic);
         const overageCost = calculateOverageCost(
             usageTotal,
@@ -86,6 +88,29 @@ export const useConsumptionStats = (chartDataSelection: ChartDataSelection) => {
         const traffic = result.data;
 
         const chartData = toConnectionChartData(traffic);
+
+        return {
+            chartData,
+        };
+    }, [JSON.stringify(result), JSON.stringify(chartDataSelection)]);
+
+    return results;
+};
+
+export const useRequestsStats = (chartDataSelection: ChartDataSelection) => {
+    const { result } = useRequestsConsumption(
+        chartDataSelection.grouping,
+        toDateRange(chartDataSelection, currentDate),
+    );
+    const results = useMemo(() => {
+        if (result.state !== 'success') {
+            return {
+                chartData: { datasets: [], labels: [] },
+            };
+        }
+        const traffic = result.data;
+
+        const chartData = toRequestChartData(traffic);
 
         return {
             chartData,

@@ -5,7 +5,6 @@ import { usePageTitle } from 'hooks/usePageTitle';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
 import Add from '@mui/icons-material/Add';
 import ResponsiveButton from 'component/common/ResponsiveButton/ResponsiveButton';
-import { CREATE_RELEASE_TEMPLATE } from 'component/providers/AccessProvider/permissions';
 import { useNavigate } from 'react-router-dom';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { EmptyTemplatesListMessage } from './EmptyTemplatesListMessage';
@@ -13,6 +12,7 @@ import { ReleasePlanTemplateList } from './ReleasePlanTemplateList';
 import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
 
 export const ReleaseManagement = () => {
     usePageTitle('Release management');
@@ -44,7 +44,7 @@ export const ReleaseManagement = () => {
                                     );
                                 }}
                                 maxWidth='700px'
-                                permission={CREATE_RELEASE_TEMPLATE}
+                                permission={RELEASE_PLAN_TEMPLATE_CREATE}
                                 disabled={!isEnterprise()}
                             >
                                 New template

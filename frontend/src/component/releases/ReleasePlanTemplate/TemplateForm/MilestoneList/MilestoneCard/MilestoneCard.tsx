@@ -115,6 +115,7 @@ const StyledAccordionFooter = styled('div')(({ theme }) => ({
     justifyContent: 'flex-end',
     gap: theme.spacing(3),
     backgroundColor: 'inherit',
+    borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -188,7 +189,7 @@ export const MilestoneCard = ({
 
     const dragHandle = (
         <DragButton type='button'>
-            <DraggableContent>
+            <DraggableContent ref={dragItemRef}>
                 <DragIndicator aria-hidden />
                 <ScreenReaderOnly>Drag to reorder</ScreenReaderOnly>
             </DraggableContent>
@@ -324,12 +325,11 @@ export const MilestoneCard = ({
                 height: ref.current?.offsetHeight || 0,
             });
 
-            if (ref?.current) {
-                event.dataTransfer.effectAllowed = 'move';
-                event.dataTransfer.setData('text/html', ref.current.outerHTML);
-                event.dataTransfer.setDragImage(ref.current, 20, 20);
-            }
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text/html', ref.current.outerHTML);
+            event.dataTransfer.setDragImage(ref.current, 20, 20);
         };
+
     const onStrategyDragEnd = () => {
         setDragItem(null);
         onReOrderStrategies();
@@ -363,7 +363,7 @@ export const MilestoneCard = ({
     if (!milestone.strategies || milestone.strategies.length === 0) {
         return (
             <>
-                <DraggableCardContainer ref={dragItemRef}>
+                <DraggableCardContainer>
                     {dragHandle}
                     <StyledMilestoneCard
                         hasError={

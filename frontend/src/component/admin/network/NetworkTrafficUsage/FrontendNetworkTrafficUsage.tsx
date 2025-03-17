@@ -18,7 +18,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 import { customHighlightPlugin } from 'component/common/Chart/customHighlightPlugin';
 import { PeriodSelector } from './PeriodSelector';
 import { getChartLabel } from './chart-functions';
-import { useTrafficStats } from './hooks/useStats';
+import { useRequestsStats } from './hooks/useStats';
 import { StyledBox, TopRow } from './SharedComponents';
 import { useChartDataSelection } from './hooks/useChartDataSelection';
 
@@ -30,12 +30,7 @@ const FrontendNetworkTrafficUsage: FC = () => {
     const { chartDataSelection, setChartDataSelection, options } =
         useChartDataSelection();
 
-    const includedTraffic = 0;
-    const { chartData } = useTrafficStats(
-        includedTraffic,
-        chartDataSelection,
-        '/api/frontend',
-    );
+    const { chartData } = useRequestsStats(chartDataSelection);
 
     return (
         <ConditionallyRender

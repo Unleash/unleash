@@ -3,49 +3,49 @@ import { formatApiPath } from 'utils/formatPath';
 import handleErrorResponses from '../httpErrorResponseHandler';
 import type { IRole } from 'interfaces/role';
 import type { IServiceAccount } from 'interfaces/service-account';
-import type { IMatrixPermission } from 'interfaces/permissions';
+import type { IAccessOverviewPermission } from 'interfaces/permissions';
 import type { IPermission } from 'interfaces/user';
 import { useConditionalSWR } from '../useConditionalSWR/useConditionalSWR';
 
-interface IServiceAccountAccessMatrix {
-    root: IMatrixPermission[];
-    project: IMatrixPermission[];
-    environment: IMatrixPermission[];
+interface IServiceAccountAccessOverview {
+    root: IAccessOverviewPermission[];
+    project: IAccessOverviewPermission[];
+    environment: IAccessOverviewPermission[];
 }
 
-interface IServiceAccountAccessMatrixResponse {
-    matrix: IServiceAccountAccessMatrix;
+interface IServiceAccountAccessOverviewResponse {
+    overview: IServiceAccountAccessOverview;
     projectRoles: IRole[];
     rootRole: IRole;
     serviceAccount: IServiceAccount;
     permissions: IPermission[];
 }
 
-interface IServiceAccountAccessMatrixOutput
-    extends Partial<IServiceAccountAccessMatrixResponse> {
+interface IServiceAccountAccessOverviewOutput
+    extends Partial<IServiceAccountAccessOverviewResponse> {
     permissions: IPermission[];
     loading: boolean;
     refetch: () => void;
     error?: Error;
 }
 
-export const useServiceAccountAccessMatrix = (
+export const useServiceAccountAccessOverview = (
     id?: number,
     project?: string,
     environment?: string,
-): IServiceAccountAccessMatrixOutput => {
+): IServiceAccountAccessOverviewOutput => {
     const queryParams = `${project ? `?project=${project}` : ''}${
         environment ? `${project ? '&' : '?'}environment=${environment}` : ''
     }`;
     const url = `api/admin/service-account/${id}/permissions${queryParams}`;
 
     const { data, error, mutate } = useConditionalSWR<
-        IServiceAccountAccessMatrixResponse | undefined
+        IServiceAccountAccessOverviewResponse | undefined
     >(Boolean(id), undefined, formatApiPath(url), fetcher);
 
     return useMemo(
         () => ({
-            matrix: data?.matrix,
+            overview: data?.overview,
             projectRoles: data?.projectRoles,
             rootRole: data?.rootRole,
             serviceAccount: data?.serviceAccount,
@@ -60,6 +60,6 @@ export const useServiceAccountAccessMatrix = (
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Service account access matrix'))
+        .then(handleErrorResponses('Service account access overview'))
         .then((res) => res.json());
 };

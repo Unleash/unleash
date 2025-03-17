@@ -14,6 +14,7 @@ import { useStrategyParameters } from 'component/feature/FeatureView/FeatureOver
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { useCustomStrategyParameters } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyExecution/hooks/useCustomStrategyParameters';
 
+
 interface IStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;
     percentageFill?: string;

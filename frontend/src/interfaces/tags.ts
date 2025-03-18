@@ -13,4 +13,5 @@ export interface ITagType {
 export interface ITagPayload {
     name: string;
     description: string;
+    color?: string;
 }

@@ -1,6 +1,5 @@
-import React from 'react';
-import { styled, Typography, Box } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import type { FC } from 'react';
+import { styled, Typography, Box, useTheme } from '@mui/material';
 
 interface IColorPickerProps {
     selectedColor: string;
@@ -35,7 +34,9 @@ const StyledColorCircle = styled('button')<{
     borderRadius: '50%',
     border: $selected
         ? `2px solid ${theme.palette.primary.main}`
-        : `1px solid ${theme.palette.divider}`,
+        : $color === '#FFFFFF'
+          ? `1px solid ${theme.palette.divider}`
+          : `1px solid ${$color}`,
     backgroundColor: $color,
     cursor: 'pointer',
     padding: 0,
@@ -44,7 +45,7 @@ const StyledColorCircle = styled('button')<{
     },
 }));
 
-export const ColorPicker: React.FC<IColorPickerProps> = ({
+export const ColorPicker: FC<IColorPickerProps> = ({
     selectedColor,
     onChange,
 }) => {
@@ -82,9 +83,6 @@ export const ColorPicker: React.FC<IColorPickerProps> = ({
 
     return (
         <StyledColorContainer>
-            <Typography variant='body2' fontWeight='bold'>
-                Tag color
-            </Typography>
             <StyledColorsWrapper>
                 {colorOptions.map((color) => (
                     <Box

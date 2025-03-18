@@ -1,9 +1,10 @@
 import Input from 'component/common/Input/Input';
-import { TextField, Button, styled } from '@mui/material';
-import { ColorPicker } from 'component/common/ColorPicker/ColorPicker';
+import { TextField, Button, styled, Typography } from '@mui/material';
+import { ColorPicker } from './ColorPicker';
 import type React from 'react';
 import { trim } from 'component/common/util';
 import { EDIT } from 'constants/misc';
+import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 
 interface ITagTypeForm {
     tagName: string;
@@ -101,20 +102,20 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
                     value={tagDesc}
                     onChange={(e) => setTagDesc(e.target.value)}
                 />
-
-                {isTagTypeColorEnabled && (
-                    <>
-                        <StyledInputDescription>
-                            Choose a color for this tag type
-                        </StyledInputDescription>
-                        <ColorPicker
-                            value={color}
-                            onChange={setColor}
-                            error={Boolean(errors.color)}
-                            errorText={errors.color}
-                        />
-                    </>
-                )}
+                <ConditionallyRender
+                    condition={isTagTypeColorEnabled}
+                    show={
+                        <>
+                            <Typography variant='body2'>
+                                Tag color
+                                <ColorPicker
+                                    selectedColor={color}
+                                    onChange={setColor}
+                                />
+                            </Typography>
+                        </>
+                    }
+                />
             </StyledContainer>
             <StyledButtonContainer>
                 {children}

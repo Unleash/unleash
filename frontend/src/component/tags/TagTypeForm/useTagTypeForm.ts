@@ -6,7 +6,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 const useTagTypeForm = (
     initialTagName = '',
     initialTagDesc = '',
-    initialColor = '',
+    initialColor = '#FFFFFF',
 ) => {
     const [tagName, setTagName] = useState(initialTagName);
     const [tagDesc, setTagDesc] = useState(initialTagDesc);

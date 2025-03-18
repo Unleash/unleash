@@ -149,7 +149,6 @@ test('Can update a tag types description and icon', async () => {
 });
 
 test('Can update a tag type color', async () => {
-    // Create a tag type first
     await app.request
         .post('/api/admin/tag-types')
         .send({
@@ -159,7 +158,6 @@ test('Can update a tag type color', async () => {
         })
         .expect(201);
 
-    // Now update the color
     await app.request
         .put('/api/admin/tag-types/color-update-tag')
         .send({
@@ -167,7 +165,6 @@ test('Can update a tag type color', async () => {
         })
         .expect(200);
 
-    // Verify the color was updated
     return app.request
         .get('/api/admin/tag-types/color-update-tag')
         .expect('Content-Type', /json/)

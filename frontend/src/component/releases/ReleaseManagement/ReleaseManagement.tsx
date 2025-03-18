@@ -15,7 +15,7 @@ import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
 
 export const ReleaseManagement = () => {
-    usePageTitle('Release management');
+    usePageTitle('Release templates');
     const navigate = useNavigate();
     const data = useReleasePlanTemplates();
 

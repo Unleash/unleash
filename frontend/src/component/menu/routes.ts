@@ -284,7 +284,7 @@ export const routes: IRoute[] = [
     // Release management/plans
     {
         path: '/release-management',
-        title: 'Release management',
+        title: 'Release templates',
         component: ReleaseManagement,
         type: 'protected',
         menu: { main: true, mode: ['enterprise'] },

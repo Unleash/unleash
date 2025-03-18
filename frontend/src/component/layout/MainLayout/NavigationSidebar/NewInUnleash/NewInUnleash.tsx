@@ -164,7 +164,7 @@ export const NewInUnleash = ({
             ),
         },
         {
-            label: 'Release management',
+            label: 'Release templates',
             summary: 'Save time with release plans',
             icon: <StyledReleaseManagementIcon />,
             preview: <ReleaseManagementPreview />,

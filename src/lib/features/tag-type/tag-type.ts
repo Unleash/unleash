@@ -212,11 +212,19 @@ class TagTypeController extends Controller {
         req: IAuthRequest<{ name: string }, unknown, UpdateTagTypeSchema>,
         res: Response,
     ): Promise<void> {
-        const { description, icon } = req.body;
+        const { description, icon, color } = req.body;
         const { name } = req.params;
 
         await this.tagTypeService.transactional((service) =>
-            service.updateTagType({ name, description, icon }, req.audit),
+            service.updateTagType(
+                {
+                    name,
+                    description,
+                    icon,
+                    color: color as string | null | undefined,
+                },
+                req.audit,
+            ),
         );
         res.status(200).end();
     }

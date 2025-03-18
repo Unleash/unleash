@@ -9,11 +9,13 @@ test('tagTypesSchema', () => {
                 name: 'simple',
                 description: 'Used to simplify filtering of features',
                 icon: '#',
+                color: '#FF0000',
             },
             {
                 name: 'hashtag',
                 description: '',
                 icon: null,
+                color: null,
             },
         ],
     };

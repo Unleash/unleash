@@ -36,9 +36,7 @@ interface PlaygroundResultStrategyListProps {
     infoText?: string;
 }
 const StyledHeaderGroup = styled('hgroup')(({ theme }) => ({
-    paddingInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
     paddingBottom: theme.spacing(2),
-    borderBottom: `1px solid ${theme.palette.divider}`,
 }));
 
 const StyledListTitle = styled('h4')(({ theme }) => ({
@@ -52,8 +50,9 @@ const StyledListTitleDescription = styled('p')(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
 }));
 
-const StyledFeatureStrategyItem = styled(FeatureStrategyItem)(({ theme }) => ({
-    paddingInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
+const RestyledContentList = styled(StyledContentList)(({ theme }) => ({
+    marginInline: `calc(var(--popover-inline-padding) * -1)`,
+    borderTop: `1px solid ${theme.palette.divider}`,
 }));
 
 export const PlaygroundResultStrategyLists = ({
@@ -80,17 +79,17 @@ export const PlaygroundResultStrategyLists = ({
                     </StyledListTitleDescription>
                 ) : null}
             </StyledHeaderGroup>
-            <StyledContentList>
+            <RestyledContentList>
                 {strategies?.map((strategy, index) => (
                     <StyledListItem key={strategy.id}>
                         {index > 0 ? <StrategySeparator /> : ''}
-                        <StyledFeatureStrategyItem
+                        <FeatureStrategyItem
                             strategy={strategy}
                             input={input}
                         />
                     </StyledListItem>
                 ))}
-            </StyledContentList>
+            </RestyledContentList>
         </div>
     );
 };

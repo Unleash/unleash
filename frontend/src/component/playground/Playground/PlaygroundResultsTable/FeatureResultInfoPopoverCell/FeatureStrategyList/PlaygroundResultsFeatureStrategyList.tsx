@@ -59,10 +59,10 @@ export const PlaygroundResultFeatureStrategyList = ({
 
     if ((feature?.strategies?.data.length ?? 0) === 0) {
         return (
-            <Alert severity='warning' sx={{ mt: 2 }}>
+            <StyledAlert severity='info'>
                 There are no strategies added to this feature flag in the
                 selected environment.
-            </Alert>
+            </StyledAlert>
         );
     }
 

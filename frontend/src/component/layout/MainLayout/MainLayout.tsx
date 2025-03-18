@@ -102,9 +102,10 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
 
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
-        const hideAdmin =
+        const showOnlyAdminMenu =
             newAdminUIEnabled && location.pathname.indexOf('/admin') === 0;
-        const showRegularNavigationSideBar = !isSmallScreen && !hideAdmin;
+        const showRegularNavigationSideBar =
+            !isSmallScreen && !showOnlyAdminMenu;
 
         return (
             <EventTimelineProvider>

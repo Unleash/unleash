@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { styled } from '@mui/material';
 import type { FeatureStrategySchema } from 'openapi';
+import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { StrategyExecution as LegacyStrategyExecution } from './LegacyStrategyExecution';
 import { ConstraintItem } from 'component/common/ConstraintsList/ConstraintItem/ConstraintItem';
@@ -19,7 +20,7 @@ const FilterContainer = styled('div', {
 );
 
 type StrategyExecutionProps = {
-    strategy: FeatureStrategySchema;
+    strategy: IFeatureStrategyPayload | FeatureStrategySchema;
     displayGroupId?: boolean;
 };
 

@@ -145,7 +145,6 @@ function httpApis(
             const url = `${base}/api/admin/projects/${project}/features/${featureName}/environments/${envName}/strategies`;
             return request.post(url).send(postData).expect(expectStatusCode);
         },
-        // @ts-expect-error we don't care about description here
         createFeature: (
             feature: string | FeatureToggleDTO,
             project: string = DEFAULT_PROJECT,

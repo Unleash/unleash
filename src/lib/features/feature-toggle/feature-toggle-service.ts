@@ -1189,7 +1189,7 @@ class FeatureToggleService {
                 type,
                 enabled,
                 project,
-                stale,
+                stale: stale || false,
                 strategies,
                 variants,
                 description,

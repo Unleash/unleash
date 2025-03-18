@@ -309,7 +309,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
         const result = await query;
         return result.map((row) => ({
-            type: row.type,
+            type: row.type!,
             count: Number(row.count),
         }));
     }
@@ -449,11 +449,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             description: row.description,
             type: row.type,
             project: row.project,
-            stale: row.stale,
+            stale: row.stale || false,
             createdAt: row.created_at,
             lastSeenAt: row.last_seen_at,
-            impressionData: row.impression_data,
-            archivedAt: row.archived_at,
+            impressionData: row.impression_data || false,
+            archivedAt: row.archived_at || undefined,
             archived: row.archived_at != null,
         };
     }

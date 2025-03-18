@@ -205,7 +205,7 @@ export default class FakeFeatureStrategiesStore
             ...t,
             enabled: true,
             strategies: [],
-            description: t.description,
+            description: t.description || undefined,
             type: t.type || 'Release',
             stale: t.stale || false,
             variants: [],

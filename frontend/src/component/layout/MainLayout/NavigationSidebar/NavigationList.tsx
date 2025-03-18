@@ -272,39 +272,38 @@ export const AdminSettingsNavigation: FC<{
     mode,
 }) => {
     const newAdminUIEnabled = useUiFlag('adminNavUI');
+
+    if (newAdminUIEnabled) {
+        return <AdminSettingsLink mode={mode} onClick={onClick} />;
+    }
+
     return (
         <>
-            {!newAdminUIEnabled ? (
-                <>
-                    {mode === 'full' && (
-                        <SecondaryNavigation
-                            expanded={expanded}
-                            onExpandChange={(expand) => {
-                                onExpandChange(expand);
-                            }}
-                            mode={mode}
-                            title='Admin'
-                        >
-                            <SecondaryNavigationList
-                                routes={routes}
-                                mode={mode}
-                                onClick={onClick}
-                                activeItem={activeItem}
-                            />
-                        </SecondaryNavigation>
-                    )}
+            {mode === 'full' && (
+                <SecondaryNavigation
+                    expanded={expanded}
+                    onExpandChange={(expand) => {
+                        onExpandChange(expand);
+                    }}
+                    mode={mode}
+                    title='Admin'
+                >
+                    <SecondaryNavigationList
+                        routes={routes}
+                        mode={mode}
+                        onClick={onClick}
+                        activeItem={activeItem}
+                    />
+                </SecondaryNavigation>
+            )}
 
-                    {mode === 'mini' && (
-                        <ShowAdmin
-                            onChange={() => {
-                                onExpandChange(true);
-                                onSetFullMode();
-                            }}
-                        />
-                    )}
-                </>
-            ) : (
-                <AdminSettingsLink mode={mode} onClick={onClick} />
+            {mode === 'mini' && (
+                <ShowAdmin
+                    onChange={() => {
+                        onExpandChange(true);
+                        onSetFullMode();
+                    }}
+                />
             )}
         </>
     );

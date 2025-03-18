@@ -1,5 +1,5 @@
 ---
-title: Release management
+title: Release templates
 ---
 
 :::note Availability
@@ -13,7 +13,7 @@ title: Release management
 
   We're currently gathering feedback for release templates and release plans.
   
-  To provide feedback using the Admin UI, go to **Configure > Release management**, and click **Share your feedback**.
+  To provide feedback using the Admin UI, go to **Configure > Release templates**, and click **Share your feedback**.
 
   Future iterations of the feature may include:
     - An overview of ongoing releases and currently running milestones
@@ -48,9 +48,11 @@ An instance of a [release template](#release-template) applied to a specific fea
 
 ## Create a release template
 
+> Note: For this action, you must be an Admin or have a custom root rote with [release templates permissions](/reference/rbac#release-template-permissions).
+
 To create a release template, do the following:
 
-1. In the Admin UI, go to **Configure > Release management**, and click **New template**.
+1. In the Admin UI, go to **Configure > Release templates**, and click **New template**.
 2. Enter the template name and an optional description.
 3. For the first milestone, click **Add strategy**.
 4. Choose a strategy type and configure your [rollout percentage](/reference/activation-strategies#rollout-percentage), [targeting](/reference/activation-strategies#targeting), and [variants](/reference/strategy-variants).

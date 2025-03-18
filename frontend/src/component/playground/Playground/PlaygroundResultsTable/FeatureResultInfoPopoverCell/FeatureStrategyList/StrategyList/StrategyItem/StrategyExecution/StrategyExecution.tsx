@@ -42,7 +42,7 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
     }
 
     const items = [
-        hasSegments
+        ...(hasSegments
             ? segments.map((segment) => (
                   <SegmentExecution
                       key={objectId(segment)}
@@ -50,7 +50,7 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
                       input={input}
                   />
               ))
-            : [],
+            : []),
         ...(hasConstraints
             ? constraints.map((constraint) => (
                   <ConstraintExecution

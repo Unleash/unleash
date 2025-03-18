@@ -2,6 +2,7 @@ import type React from 'react';
 import { type FC, useCallback } from 'react';
 import type { INavigationMenuItem } from 'interfaces/route';
 import type { NavigationMode } from './NavigationMode';
+import { ShowAdmin } from './ShowHide';
 import {
     ExternalFullListItem,
     FullListItem,
@@ -9,6 +10,7 @@ import {
     SignOutItem,
 } from './ListItems';
 import { Box, List, styled, Tooltip, Typography } from '@mui/material';
+import { useUiFlag } from 'hooks/useUiFlag';
 import { IconRenderer } from './IconRenderer';
 import { EnterpriseBadge } from 'component/common/EnterpriseBadge/EnterpriseBadge';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
@@ -22,8 +24,9 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FlagIcon from '@mui/icons-material/OutlinedFlag';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import SettingsIcon from '@mui/icons-material/Settings';
+import useProjectOverview from 'hooks/api/getters/useProjectOverview/useProjectOverview';
 
 const StyledBadgeContainer = styled('div')(({ theme }) => ({
     paddingLeft: theme.spacing(2),
@@ -248,6 +251,81 @@ export const SecondaryNavigation: FC<{
             {mode === 'full' && <AccordionHeader>{title}</AccordionHeader>}
             <AccordionDetails sx={{ p: 0 }}>{children}</AccordionDetails>
         </Accordion>
+    );
+};
+
+export const AdminSettingsNavigation: FC<{
+    onClick: (activeItem: string) => void;
+    onSetFullMode: () => void;
+    expanded: boolean;
+    routes: INavigationMenuItem[];
+    onExpandChange: (expanded: boolean) => void;
+    activeItem: string;
+    mode: NavigationMode;
+}> = ({
+    onClick,
+    onSetFullMode,
+    expanded,
+    routes,
+    onExpandChange,
+    activeItem,
+    mode,
+}) => {
+    const newAdminUIEnabled = useUiFlag('adminNavUI');
+
+    if (newAdminUIEnabled) {
+        return <AdminSettingsLink mode={mode} onClick={onClick} />;
+    }
+
+    return (
+        <>
+            {mode === 'full' && (
+                <SecondaryNavigation
+                    expanded={expanded}
+                    onExpandChange={(expand) => {
+                        onExpandChange(expand);
+                    }}
+                    mode={mode}
+                    title='Admin'
+                >
+                    <SecondaryNavigationList
+                        routes={routes}
+                        mode={mode}
+                        onClick={onClick}
+                        activeItem={activeItem}
+                    />
+                </SecondaryNavigation>
+            )}
+
+            {mode === 'mini' && (
+                <ShowAdmin
+                    onChange={() => {
+                        onExpandChange(true);
+                        onSetFullMode();
+                    }}
+                />
+            )}
+        </>
+    );
+};
+
+export const AdminSettingsLink: FC<{
+    mode: NavigationMode;
+    onClick: (activeItem: string) => void;
+}> = ({ mode, onClick }) => {
+    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
+    return (
+        <Box>
+            <List>
+                <DynamicListItem
+                    href='/admin'
+                    text='Admin settings'
+                    onClick={() => onClick('/admin')}
+                >
+                    <SettingsIcon />
+                </DynamicListItem>
+            </List>
+        </Box>
     );
 };
 

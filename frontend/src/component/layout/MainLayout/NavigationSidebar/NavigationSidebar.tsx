@@ -1,7 +1,7 @@
 import { Box, styled } from '@mui/material';
 import { type FC, useState, useEffect } from 'react';
 import { useNavigationMode } from './useNavigationMode';
-import { ShowAdmin, ShowHide } from './ShowHide';
+import { ShowHide } from './ShowHide';
 import { useRoutes } from './useRoutes';
 import { useExpanded } from './useExpanded';
 import {
@@ -11,7 +11,9 @@ import {
     RecentProjectsNavigation,
     SecondaryNavigation,
     SecondaryNavigationList,
+    AdminSettingsNavigation,
 } from './NavigationList';
+import { FullListItem, MiniListItem } from './ListItems';
 import { useInitialPathname } from './useInitialPathname';
 import { useLastViewedProject } from 'hooks/useLastViewedProject';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
@@ -115,6 +117,7 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
 
     const { lastViewed: lastViewedFlags } = useLastViewedFlags();
     const showRecentFlags = mode === 'full' && lastViewedFlags.length > 0;
+    const DynamicListItem = mode === 'mini' ? MiniListItem : FullListItem;
 
     useEffect(() => {
         setActiveItem(initialPathname);
@@ -178,32 +181,18 @@ export const NavigationSidebar: FC<{ NewInUnleash?: typeof NewInUnleash }> = ({
                     activeItem={activeItem}
                 />
             </SecondaryNavigation>
-            {mode === 'full' && (
-                <SecondaryNavigation
-                    expanded={expanded.includes('admin')}
-                    onExpandChange={(expand) => {
-                        changeExpanded('admin', expand);
-                    }}
-                    mode={mode}
-                    title='Admin'
-                >
-                    <SecondaryNavigationList
-                        routes={routes.adminRoutes}
-                        mode={mode}
-                        onClick={setActiveItem}
-                        activeItem={activeItem}
-                    />
-                </SecondaryNavigation>
-            )}
 
-            {mode === 'mini' && (
-                <ShowAdmin
-                    onChange={() => {
-                        changeExpanded('admin', true);
-                        setMode('full');
-                    }}
-                />
-            )}
+            <AdminSettingsNavigation
+                onClick={setActiveItem}
+                mode={mode}
+                onSetFullMode={() => setMode('full')}
+                activeItem={activeItem}
+                onExpandChange={(expand) => {
+                    changeExpanded('admin', expand);
+                }}
+                expanded={expanded.includes('admin')}
+                routes={routes.adminRoutes}
+            />
 
             {showRecentProject && (
                 <RecentProjectsNavigation

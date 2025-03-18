@@ -7,7 +7,6 @@ import {
     AccordionSummary,
     Button,
     styled,
-    Typography,
 } from '@mui/material';
 import { StrategyEvaluationItem } from 'component/common/ConstraintsList/StrategyEvaluationItem/StrategyEvaluationItem';
 import { ConstraintItem } from 'component/common/ConstraintsList/ConstraintItem/ConstraintItem';
@@ -64,6 +63,11 @@ const StyledButton = styled(Button)(({ theme }) => ({
     fontSize: theme.typography.body2.fontSize,
 }));
 
+const StyledNoConstraintsText = styled('p')(({ theme }) => ({
+    fontSize: theme.typography.body2.fontSize,
+    color: theme.palette.text.secondary,
+}));
+
 export const SegmentItem: FC<SegmentItemProps> = ({
     segment,
     isExpanded,
@@ -90,7 +94,11 @@ export const SegmentItem: FC<SegmentItemProps> = ({
             );
         }
 
-        return <Typography>This segment has no constraints.</Typography>;
+        return (
+            <StyledNoConstraintsText>
+                This segment has no constraints.
+            </StyledNoConstraintsText>
+        );
     }, [constraintList, segment.constraints]);
 
     return (

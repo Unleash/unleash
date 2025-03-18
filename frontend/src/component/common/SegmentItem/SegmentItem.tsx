@@ -27,6 +27,7 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
     margin: 0,
     padding: 0,
     '::before': {
+        // MUI separator between accordions
         display: 'none',
     },
 }));
@@ -34,10 +35,14 @@ const StyledAccordion = styled(Accordion)(({ theme }) => ({
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
     padding: 0,
     fontSize: theme.typography.body2.fontSize,
+    minHeight: 'unset',
+    '.MuiAccordionSummary-content, .MuiAccordionSummary-content.Mui-expanded': {
+        margin: 0,
+    },
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    padding: theme.spacing(0, 2, 3),
+    padding: theme.spacing(2, 0, 1),
 }));
 
 const StyledLink = styled(Link)({
@@ -51,7 +56,8 @@ const StyledActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     marginLeft: 'auto',
-    marginRight: theme.spacing(2),
+    marginTop: theme.spacing(-0.5),
+    marginBottom: theme.spacing(-0.5),
 }));
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -88,7 +94,7 @@ export const SegmentItem: FC<SegmentItemProps> = ({
     }, [constraintList, segment.constraints]);
 
     return (
-        <StyledAccordion expanded={isOpen}>
+        <StyledAccordion expanded={isOpen} disableGutters>
             <StyledAccordionSummary id={`segment-accordion-${segment.id}`}>
                 <StrategyEvaluationItem type='Segment'>
                     <StyledLink to={`/segments/edit/${segment.id}`}>

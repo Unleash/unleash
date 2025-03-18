@@ -15,7 +15,10 @@ import type {
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 
 export const useCustomStrategyParameters = (
-    strategy: CreateFeatureStrategySchema | IFeatureStrategyPayload,
+    strategy: Pick<
+        CreateFeatureStrategySchema | IFeatureStrategyPayload,
+        'parameters' | 'name'
+    >,
     strategies: StrategySchema[],
 ) => {
     const { parameters } = strategy;

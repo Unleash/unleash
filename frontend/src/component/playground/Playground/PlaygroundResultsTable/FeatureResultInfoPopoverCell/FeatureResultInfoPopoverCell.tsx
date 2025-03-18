@@ -97,7 +97,8 @@ export const NewFeatureResultInfoPopoverCell = ({
                 PaperProps={{
                     sx: (theme) => ({
                         '--popover-inline-padding': theme.spacing(4),
-                        padding: 'var(--popover-inline-padding)',
+                        paddingInline: 'var(--popover-inline-padding)',
+                        paddingBlock: theme.spacing(3),
                         display: 'flex',
                         flexDirection: 'column',
                         width: 728,

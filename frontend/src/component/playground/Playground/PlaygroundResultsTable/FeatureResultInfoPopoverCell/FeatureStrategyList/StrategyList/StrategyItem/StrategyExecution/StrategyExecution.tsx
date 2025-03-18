@@ -27,11 +27,9 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
     const { name, constraints, segments, parameters } = strategyResult;
     const params = useStrategyParameters(strategyResult);
 
-    const strategyNoSegments = { ...strategyResult, segments: [] };
-
     const { strategies } = useStrategies();
     const { isCustomStrategy, customStrategyParameters: customStrategyItems } =
-        useCustomStrategyParameters(strategyNoSegments, strategies);
+        useCustomStrategyParameters(strategyResult, strategies);
 
     const hasSegments = Boolean(segments && segments.length > 0);
     const hasConstraints = Boolean(constraints && constraints?.length > 0);

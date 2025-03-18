@@ -77,6 +77,9 @@ const LegacyFeatureResultInfoPopoverCell = ({
 const DetailsPadding = styled('div')(({ theme }) => ({
     paddingInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
     paddingTop: theme.spacing(2.5),
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(2),
 }));
 
 export const NewFeatureResultInfoPopoverCell = ({

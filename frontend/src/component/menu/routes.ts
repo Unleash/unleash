@@ -68,7 +68,7 @@ export const routes: IRoute[] = [
         title: 'Dashboard',
         component: PersonalDashboard,
         type: 'protected',
-        menu: {},
+        menu: { primary: true },
     },
 
     // Project
@@ -127,7 +127,7 @@ export const routes: IRoute[] = [
         title: 'Projects',
         component: ProjectList,
         type: 'protected',
-        menu: {},
+        menu: { primary: true },
     },
     {
         path: '/projects-archive',
@@ -143,7 +143,7 @@ export const routes: IRoute[] = [
         title: 'Search',
         component: FeatureToggleListTable,
         type: 'protected',
-        menu: {},
+        menu: { primary: true },
     },
 
     // Playground
@@ -153,7 +153,7 @@ export const routes: IRoute[] = [
         component: LazyPlayground,
         hidden: false,
         type: 'protected',
-        menu: {},
+        menu: { primary: true },
     },
 
     // Insights
@@ -162,7 +162,7 @@ export const routes: IRoute[] = [
         title: 'Insights',
         component: Insights,
         type: 'protected',
-        menu: {},
+        menu: { primary: true },
         enterprise: true,
     },
 
@@ -535,4 +535,7 @@ const getCondensedRoutes = (routes: IRoute[]): INavigationMenuItem[] => {
 export const baseRoutes = routes.filter((route) => !route.hidden);
 export const getNavRoutes = () => {
     return getCondensedRoutes(baseRoutes.filter((route) => route.menu.main));
+};
+export const getPrimaryRoutes = () => {
+    return getCondensedRoutes(baseRoutes.filter((route) => route.menu.primary));
 };

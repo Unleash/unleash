@@ -14,20 +14,23 @@ export const SegmentExecution: FC<SegmentExecutionProps> = ({
     segment,
     input,
 }) => {
+    const constraintList =
+        segment.constraints.length > 0 ? (
+            <ConstraintsList>
+                {segment.constraints.map((constraint) => (
+                    <ConstraintExecution
+                        key={objectId(constraint)}
+                        constraint={constraint}
+                        input={input}
+                    />
+                ))}
+            </ConstraintsList>
+        ) : undefined;
+
     return (
         <SegmentItem
             segment={segment}
-            constraintList={
-                <ConstraintsList>
-                    {segment.constraints.map((constraint) => (
-                        <ConstraintExecution
-                            key={objectId(constraint)}
-                            constraint={constraint}
-                            input={input}
-                        />
-                    ))}
-                </ConstraintsList>
-            }
+            constraintList={constraintList}
             isExpanded
         />
     );

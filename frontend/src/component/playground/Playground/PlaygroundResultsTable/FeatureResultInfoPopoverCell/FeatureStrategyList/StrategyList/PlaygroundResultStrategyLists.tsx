@@ -53,6 +53,9 @@ const StyledListTitleDescription = styled('p')(({ theme }) => ({
 const RestyledContentList = styled(StyledContentList)(({ theme }) => ({
     marginInline: `calc(var(--popover-inline-padding) * -1)`,
     borderTop: `1px solid ${theme.palette.divider}`,
+    '> li:last-of-type': {
+        paddingBottom: 0,
+    },
 }));
 
 export const PlaygroundResultStrategyLists = ({

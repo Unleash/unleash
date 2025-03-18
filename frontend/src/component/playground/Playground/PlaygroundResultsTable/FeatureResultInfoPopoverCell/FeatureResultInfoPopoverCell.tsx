@@ -103,7 +103,6 @@ export const NewFeatureResultInfoPopoverCell = ({
                     sx: (theme) => ({
                         '--popover-inline-padding': theme.spacing(4),
                         padding: 'var(--popover-inline-padding)',
-                        paddingBottom: 0,
                         display: 'flex',
                         flexDirection: 'column',
                         width: 728,

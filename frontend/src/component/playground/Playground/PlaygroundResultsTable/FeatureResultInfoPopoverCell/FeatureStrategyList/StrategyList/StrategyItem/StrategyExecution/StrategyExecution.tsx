@@ -3,7 +3,6 @@ import type {
     PlaygroundStrategySchema,
 } from 'openapi';
 import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
-import { SegmentExecution } from './SegmentExecution/LegacySegmentExecution';
 import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters';
 import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParams';
 import { formattedStrategyNames } from 'utils/strategyNames';
@@ -12,6 +11,7 @@ import { Badge } from 'component/common/Badge/Badge';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
 import { objectId } from 'utils/objectId';
 import type { FC } from 'react';
+import { SegmentExecution } from './SegmentExecution/SegmentExecution';
 
 interface IStrategyExecutionProps {
     strategyResult: PlaygroundStrategySchema;
@@ -39,7 +39,15 @@ export const StrategyExecution: FC<IStrategyExecutionProps> = ({
     }
 
     const items = [
-        hasSegments && <SegmentExecution segments={segments} input={input} />,
+        hasSegments
+            ? segments.map((segment) => (
+                  <SegmentExecution
+                      key={objectId(segment)}
+                      segment={segment}
+                      input={input}
+                  />
+              ))
+            : [],
         ...(hasConstraints
             ? constraints.map((constraint) => (
                   <ConstraintExecution

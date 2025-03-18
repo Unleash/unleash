@@ -126,7 +126,11 @@ export const CommandBar = () => {
     const [value, setValue] = useState<string>('');
     const { routes } = useRoutes();
     const allRoutes: Record<string, IPageRouteInfo> = {};
-    for (const route of [...routes.mainNavRoutes, ...routes.adminRoutes]) {
+    for (const route of [
+        ...routes.mainNavRoutes,
+        ...routes.adminRoutes,
+        ...routes.primaryRoutes,
+    ]) {
         allRoutes[route.path] = {
             path: route.path,
             route: route.route,

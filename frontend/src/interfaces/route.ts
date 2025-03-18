@@ -30,6 +30,7 @@ export interface INavigationMenuItem {
 
 interface IRouteMenu {
     main?: boolean;
+    primary?: boolean;
     adminSettings?: boolean;
     mode?: Array<'pro' | 'enterprise'>;
     billing?: boolean;

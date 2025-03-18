@@ -3,7 +3,7 @@ import type {
     PlaygroundStrategySchema,
 } from 'openapi';
 import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
-import { SegmentExecution } from './SegmentExecution/SegmentExecution';
+import { SegmentExecution } from './SegmentExecution/LegacySegmentExecution';
 import { PlaygroundResultStrategyExecutionParameters } from './StrategyExecutionParameters/StrategyExecutionParameters';
 import { CustomStrategyParams } from './CustomStrategyParams/CustomStrategyParams';
 import { formattedStrategyNames } from 'utils/strategyNames';

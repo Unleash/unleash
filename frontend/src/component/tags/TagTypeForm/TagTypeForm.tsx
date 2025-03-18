@@ -1,6 +1,6 @@
 import Input from 'component/common/Input/Input';
 import { TextField, Button, styled } from '@mui/material';
-
+import { ColorPicker } from 'component/common/ColorPicker/ColorPicker';
 import type React from 'react';
 import { trim } from 'component/common/util';
 import { EDIT } from 'constants/misc';
@@ -8,14 +8,17 @@ import { EDIT } from 'constants/misc';
 interface ITagTypeForm {
     tagName: string;
     tagDesc: string;
+    color: string;
     setTagName: React.Dispatch<React.SetStateAction<string>>;
     setTagDesc: React.Dispatch<React.SetStateAction<string>>;
+    setColor: React.Dispatch<React.SetStateAction<string>>;
     handleSubmit: (e: any) => void;
     handleCancel: () => void;
     errors: { [key: string]: string };
     mode: 'Create' | 'Edit';
     clearErrors: () => void;
     validateNameUniqueness?: () => void;
+    isTagTypeColorEnabled: boolean;
     children?: React.ReactNode;
 }
 
@@ -59,12 +62,15 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
     handleCancel,
     tagName,
     tagDesc,
+    color,
     setTagName,
     setTagDesc,
+    setColor,
     errors,
     mode,
     validateNameUniqueness,
     clearErrors,
+    isTagTypeColorEnabled,
 }) => {
     return (
         <StyledForm onSubmit={handleSubmit}>
@@ -95,6 +101,20 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
                     value={tagDesc}
                     onChange={(e) => setTagDesc(e.target.value)}
                 />
+
+                {isTagTypeColorEnabled && (
+                    <>
+                        <StyledInputDescription>
+                            Choose a color for this tag type
+                        </StyledInputDescription>
+                        <ColorPicker
+                            value={color}
+                            onChange={setColor}
+                            error={Boolean(errors.color)}
+                            errorText={errors.color}
+                        />
+                    </>
+                )}
             </StyledContainer>
             <StyledButtonContainer>
                 {children}

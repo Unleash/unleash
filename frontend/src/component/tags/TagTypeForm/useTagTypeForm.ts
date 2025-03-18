@@ -1,12 +1,19 @@
 import { useEffect, useState } from 'react';
 import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
+import { useUiFlag } from 'hooks/useUiFlag';
 
-const useTagTypeForm = (initialTagName = '', initialTagDesc = '') => {
+const useTagTypeForm = (
+    initialTagName = '',
+    initialTagDesc = '',
+    initialColor = '',
+) => {
     const [tagName, setTagName] = useState(initialTagName);
     const [tagDesc, setTagDesc] = useState(initialTagDesc);
+    const [color, setColor] = useState(initialColor);
     const [errors, setErrors] = useState({});
     const { validateTagName } = useTagTypesApi();
+    const isTagTypeColorEnabled = Boolean(useUiFlag('tagTypeColor'));
 
     useEffect(() => {
         setTagName(initialTagName);
@@ -16,11 +23,21 @@ const useTagTypeForm = (initialTagName = '', initialTagDesc = '') => {
         setTagDesc(initialTagDesc);
     }, [initialTagDesc]);
 
+    useEffect(() => {
+        setColor(initialColor);
+    }, [initialColor]);
+
     const getTagPayload = () => {
-        return {
+        const payload: any = {
             name: tagName,
             description: tagDesc,
         };
+
+        if (isTagTypeColorEnabled && color) {
+            payload.color = color;
+        }
+
+        return payload;
     };
 
     const validateNameUniqueness = async () => {
@@ -54,12 +71,15 @@ const useTagTypeForm = (initialTagName = '', initialTagDesc = '') => {
     return {
         tagName,
         tagDesc,
+        color,
         setTagName,
         setTagDesc,
+        setColor,
         getTagPayload,
         clearErrors,
         validateNameUniqueness,
         errors,
+        isTagTypeColorEnabled,
     };
 };
 

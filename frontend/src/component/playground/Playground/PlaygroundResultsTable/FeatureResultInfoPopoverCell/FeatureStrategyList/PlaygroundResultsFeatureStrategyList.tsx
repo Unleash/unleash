@@ -1,16 +1,12 @@
+import { Alert } from '@mui/material';
 import { PlaygroundResultStrategyLists } from './StrategyList/PlaygroundResultStrategyLists';
 import type { PlaygroundFeatureSchema, PlaygroundRequestSchema } from 'openapi';
-import { Alert, styled } from '@mui/material';
 import type { FC } from 'react';
 
 interface PlaygroundResultFeatureStrategyListProps {
     feature: PlaygroundFeatureSchema;
     input?: PlaygroundRequestSchema;
 }
-
-const StyledAlert = styled(Alert)(({ theme }) => ({
-    marginInline: `var(--popover-inline-padding, ${theme.spacing(4)})`,
-}));
 
 const UnevaluatedUnsatisfiedInfo: FC<{ feature: PlaygroundFeatureSchema }> = ({
     feature,
@@ -36,11 +32,11 @@ const UnevaluatedUnsatisfiedInfo: FC<{ feature: PlaygroundFeatureSchema }> = ({
     }
 
     return (
-        <StyledAlert severity={'info'} color={'info'}>
+        <Alert severity={'info'} color={'info'}>
             {text}, then this feature flag would be{' '}
             {feature.strategies?.result ? 'TRUE' : 'FALSE'} with strategies
             evaluated like this:
-        </StyledAlert>
+        </Alert>
     );
 };
 
@@ -59,7 +55,7 @@ export const PlaygroundResultFeatureStrategyList = ({
 
     if ((feature?.strategies?.data.length ?? 0) === 0) {
         return (
-            <Alert severity='warning' sx={{ mt: 2 }}>
+            <Alert severity='info'>
                 There are no strategies added to this feature flag in the
                 selected environment.
             </Alert>

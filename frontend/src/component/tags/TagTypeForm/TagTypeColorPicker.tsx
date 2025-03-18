@@ -55,26 +55,26 @@ export const TagTypeColorPicker: FC<ITagTypeColorPickerProps> = ({
         color || '#FFFFFF';
 
     const colorOptions: IColorOption[] = [
-        { name: 'Common white', value: theme.palette.common.white },
+        { name: 'White', value: theme.palette.common.white },
         {
-            name: 'Success border',
+            name: 'Green',
             value: getColorWithFallback(theme.palette.success.border),
         },
         {
-            name: 'Warning border',
+            name: 'Yellow',
             value: getColorWithFallback(theme.palette.warning.border),
         },
-        { name: 'Error main', value: theme.palette.error.main },
+        { name: 'Red', value: theme.palette.error.main },
         {
-            name: 'Info border',
+            name: 'Blue',
             value: getColorWithFallback(theme.palette.info.border),
         },
         {
-            name: 'Secondary border',
+            name: 'Purple',
             value: getColorWithFallback(theme.palette.secondary.border),
         },
         {
-            name: 'Neutral border',
+            name: 'Gray',
             value: getColorWithFallback(theme.palette.neutral.border),
         },
     ];

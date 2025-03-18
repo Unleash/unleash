@@ -1,6 +1,6 @@
 import Input from 'component/common/Input/Input';
 import { TextField, Button, styled, Typography } from '@mui/material';
-import { ColorPicker } from './ColorPicker';
+import { TagTypeColorPicker } from './TagTypeColorPicker';
 import type React from 'react';
 import { trim } from 'component/common/util';
 import { EDIT } from 'constants/misc';
@@ -108,7 +108,7 @@ const TagTypeForm: React.FC<ITagTypeForm> = ({
                         <>
                             <Typography variant='body2'>
                                 Tag color
-                                <ColorPicker
+                                <TagTypeColorPicker
                                     selectedColor={color}
                                     onChange={setColor}
                                 />

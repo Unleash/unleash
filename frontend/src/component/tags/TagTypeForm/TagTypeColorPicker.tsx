@@ -1,8 +1,7 @@
-import React from 'react';
-import { styled, Typography, Box } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
+import type { FC } from 'react';
+import { styled, Box, useTheme } from '@mui/material';
 
-interface IColorPickerProps {
+interface ITagTypeColorPickerProps {
     selectedColor: string;
     onChange: (color: string) => void;
 }
@@ -35,7 +34,9 @@ const StyledColorCircle = styled('button')<{
     borderRadius: '50%',
     border: $selected
         ? `2px solid ${theme.palette.primary.main}`
-        : `1px solid ${theme.palette.divider}`,
+        : $color === '#FFFFFF'
+          ? `1px solid ${theme.palette.divider}`
+          : `1px solid ${$color}`,
     backgroundColor: $color,
     cursor: 'pointer',
     padding: 0,
@@ -44,17 +45,15 @@ const StyledColorCircle = styled('button')<{
     },
 }));
 
-export const ColorPicker: React.FC<IColorPickerProps> = ({
+export const TagTypeColorPicker: FC<ITagTypeColorPickerProps> = ({
     selectedColor,
     onChange,
 }) => {
     const theme = useTheme();
 
-    // Define fallback colors in case theme properties are undefined
     const getColorWithFallback = (color: string | undefined): string =>
         color || '#FFFFFF';
 
-    // Use the requested colors from the material UI theme
     const colorOptions: IColorOption[] = [
         { name: 'Common white', value: theme.palette.common.white },
         {
@@ -82,9 +81,6 @@ export const ColorPicker: React.FC<IColorPickerProps> = ({
 
     return (
         <StyledColorContainer>
-            <Typography variant='body2' fontWeight='bold'>
-                Tag color
-            </Typography>
             <StyledColorsWrapper>
                 {colorOptions.map((color) => (
                     <Box

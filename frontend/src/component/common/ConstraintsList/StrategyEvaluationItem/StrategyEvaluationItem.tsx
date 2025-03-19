@@ -1,4 +1,5 @@
-import { Chip, type ChipProps, styled } from '@mui/material';
+import { styled } from '@mui/material';
+import { disabledStrategyClassName } from 'component/common/StrategyItemContainer/disabled-strategy-utils';
 import type { FC, ReactNode } from 'react';
 
 type StrategyItemProps = {
@@ -19,6 +20,10 @@ const StyledContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     flexWrap: 'wrap',
     alignItems: 'center',
+    [`.${disabledStrategyClassName} &`]: {
+        filter: 'grayscale(1)',
+        color: theme.palette.text.secondary,
+    },
 }));
 
 const StyledType = styled('span')(({ theme }) => ({
@@ -30,17 +35,23 @@ const StyledType = styled('span')(({ theme }) => ({
     width: theme.spacing(10),
 }));
 
-const StyledValuesGroup = styled('div')(({ theme }) => ({
+const StyledValuesGroup = styled('ul')(({ theme }) => ({
     display: 'flex',
+    flexFlow: 'row wrap',
     alignItems: 'center',
     gap: theme.spacing(0.5),
+    listStyle: 'none',
+    padding: 0,
 }));
 
-const StyledValue = styled(({ ...props }: ChipProps) => (
-    <Chip size='small' {...props} />
-))(({ theme }) => ({
-    padding: theme.spacing(0.5),
-    background: theme.palette.background.elevation1,
+const StyledValue = styled('li')(({ theme }) => ({
+    [`.${disabledStrategyClassName} &`]: {
+        filter: 'grayscale(1)',
+        color: theme.palette.text.secondary,
+    },
+    ':not(&:last-of-type)::after': {
+        content: '", "',
+    },
 }));
 
 /**
@@ -58,7 +69,9 @@ export const StrategyEvaluationItem: FC<StrategyItemProps> = ({
             {values && values?.length > 0 ? (
                 <StyledValuesGroup>
                     {values?.map((value, index) => (
-                        <StyledValue key={`${value}#${index}`} label={value} />
+                        <StyledValue key={`${value}#${index}`}>
+                            {value}
+                        </StyledValue>
                     ))}
                 </StyledValuesGroup>
             ) : null}

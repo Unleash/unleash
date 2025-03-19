@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { styled } from '@mui/material';
 import type { FeatureStrategySchema } from 'openapi';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -12,12 +11,6 @@ import { useStrategyParameters } from './hooks/useStrategyParameters';
 import { useSegments } from 'hooks/api/getters/useSegments/useSegments';
 import { SegmentItem } from 'component/common/SegmentItem/SegmentItem';
 import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
-
-const FilterContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'grayscale',
-})<{ grayscale: boolean }>(({ grayscale }) =>
-    grayscale ? { filter: 'grayscale(1)', opacity: 0.67 } : {},
-);
 
 type StrategyExecutionProps = {
     strategy: IFeatureStrategyPayload | FeatureStrategySchema;
@@ -52,19 +45,17 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
     }
 
     return (
-        <FilterContainer grayscale={strategy.disabled === true}>
-            <ConstraintsList>
-                {strategySegments?.map((segment) => (
-                    <SegmentItem segment={segment} key={segment.id} />
-                ))}
-                {constraints?.map((constraint, index) => (
-                    <ConstraintItem
-                        key={`${objectId(constraint)}-${index}`}
-                        {...constraint}
-                    />
-                ))}
-                {isCustomStrategy ? customStrategyItems : strategyParameters}
-            </ConstraintsList>
-        </FilterContainer>
+        <ConstraintsList>
+            {strategySegments?.map((segment) => (
+                <SegmentItem segment={segment} key={segment.id} />
+            ))}
+            {constraints?.map((constraint, index) => (
+                <ConstraintItem
+                    key={`${objectId(constraint)}-${index}`}
+                    {...constraint}
+                />
+            ))}
+            {isCustomStrategy ? customStrategyItems : strategyParameters}
+        </ConstraintsList>
     );
 };

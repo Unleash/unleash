@@ -22,6 +22,7 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { ProjectEnvironmentStrategyDraggableItem } from './StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem';
+import { disabledStrategyClassName } from 'component/common/StrategyItemContainer/disabled-strategy-utils';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -75,6 +76,13 @@ const PaginatedStrategyContainer = styled('div')(({ theme }) => ({
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginInline: theme.spacing(2), // should consider finding a variable here
+}));
+
+const StyledStrategySeparator = styled(StrategySeparator)(({ theme }) => ({
+    [`&:has(+ *:not(ol) .${disabledStrategyClassName}), &:has(+ ol > li:first-of-type .${disabledStrategyClassName})`]:
+        {
+            filter: 'grayscale(1)',
+        },
 }));
 
 export const EnvironmentAccordionBody = ({
@@ -243,7 +251,7 @@ export const EnvironmentAccordionBody = ({
             <StyledContentList>
                 {strategies.map((strategy, index) => (
                     <StyledListItem key={strategy.id}>
-                        {index > 0 ? <StrategySeparator /> : null}
+                        {index > 0 ? <StyledStrategySeparator /> : null}
 
                         <ProjectEnvironmentStrategyDraggableItem
                             strategy={strategy}
@@ -268,7 +276,7 @@ export const EnvironmentAccordionBody = ({
                 <StyledContentList>
                     {page.map((strategy, index) => (
                         <StyledListItem key={strategy.id}>
-                            {index > 0 ? <StrategySeparator /> : null}
+                            {index > 0 ? <StyledStrategySeparator /> : null}
 
                             <ProjectEnvironmentStrategyDraggableItem
                                 strategy={strategy}
@@ -303,7 +311,7 @@ export const EnvironmentAccordionBody = ({
                         ))}
                         {strategies.length > 0 ? (
                             <li>
-                                <StrategySeparator />
+                                <StyledStrategySeparator />
                                 {strategyList}
                             </li>
                         ) : null}

@@ -37,6 +37,7 @@ const StyledType = styled('span')(({ theme }) => ({
 
 const StyledValuesGroup = styled('ul')(({ theme }) => ({
     display: 'flex',
+    flexFlow: 'row wrap',
     alignItems: 'center',
     gap: theme.spacing(0.5),
     listStyle: 'none',

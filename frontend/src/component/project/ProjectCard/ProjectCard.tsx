@@ -8,7 +8,7 @@ import { ProjectCardFooter } from './ProjectCardFooter/ProjectCardFooter';
 import { ProjectModeBadge } from './ProjectModeBadge/ProjectModeBadge';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
 import { FavoriteAction } from './FavoriteAction/FavoriteAction';
-import { Box, styled, Chip, type ChipProps } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import { flexColumn } from 'themes/themeStyles';
 import { TimeAgo } from 'component/common/TimeAgo/TimeAgo';
 import { ProjectLastSeen } from './ProjectLastSeen/ProjectLastSeen';
@@ -18,7 +18,6 @@ import { ProjectMembers } from './ProjectCardFooter/ProjectMembers/ProjectMember
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { DEFAULT_PROJECT_ID } from 'hooks/api/getters/useDefaultProject/useDefaultProjectId';
 import type { ProjectSchema } from 'openapi';
-import type { ITag } from 'interfaces/tags';
 
 const StyledUpdated = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -46,30 +45,7 @@ const StyledHeader = styled('div')(({ theme }) => ({
     alignItems: 'center',
 }));
 
-const StyledTags = styled('div')(({ theme }) => ({
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: theme.spacing(0.5),
-    marginTop: theme.spacing(1),
-}));
-
-interface StyledTagProps extends ChipProps {
-    tagColor?: string;
-}
-
-const StyledTag = styled(Chip)<StyledTagProps>(({ theme, tagColor }) => ({
-    backgroundColor: tagColor || theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
-    '& .MuiChip-label': {
-        padding: theme.spacing(0.5, 1),
-        fontSize: theme.fontSizes.smallerBody,
-    },
-}));
-
-interface ProjectCardProps extends ProjectSchema {
-    onHover?: () => void;
-    tags?: ITag[];
-}
+type ProjectCardProps = ProjectSchema & { onHover?: () => void };
 
 export const ProjectCard = ({
     name,
@@ -84,7 +60,6 @@ export const ProjectCard = ({
     createdAt,
     lastUpdatedAt,
     lastReportedFlagUsage,
-    tags = [],
 }: ProjectCardProps) => {
     const { searchQuery } = useSearchHighlightContext();
 
@@ -128,21 +103,6 @@ export const ProjectCard = ({
                         <ProjectLastSeen date={lastReportedFlagUsage} />
                     </div>
                 </StyledInfo>
-                <ConditionallyRender
-                    condition={tags.length > 0}
-                    show={
-                        <StyledTags>
-                            {tags.map((tag: ITag) => (
-                                <StyledTag
-                                    key={`${tag.type}-${tag.value}`}
-                                    label={tag.value}
-                                    tagColor={tag.color}
-                                    size='small'
-                                />
-                            ))}
-                        </StyledTags>
-                    }
-                />
             </StyledProjectCardBody>
             <ProjectCardFooter id={id} owners={owners}>
                 <ConditionallyRender

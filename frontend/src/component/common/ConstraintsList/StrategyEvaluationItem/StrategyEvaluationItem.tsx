@@ -19,6 +19,10 @@ const StyledContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     flexWrap: 'wrap',
     alignItems: 'center',
+    '.strategy-disabled &': {
+        filter: 'grayscale(1)',
+        color: theme.palette.text.secondary,
+    },
 }));
 
 const StyledType = styled('span')(({ theme }) => ({

@@ -22,6 +22,7 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { ProjectEnvironmentStrategyDraggableItem } from './StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem';
+import { disabledStrategyClassName } from 'component/common/StrategyItemContainer/disabled-strategy-utils';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -78,7 +79,7 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
 }));
 
 const StyledStrategySeparator = styled(StrategySeparator)(({ theme }) => ({
-    '&:has(+ .strategy-disabled), &:has(+ ol>li:first-of-type>.strategy-disabled)':
+    [`&:has(+ *:not(ol) .${disabledStrategyClassName}), &:has(+ ol > li:first-of-type .${disabledStrategyClassName})`]:
         {
             filter: 'grayscale(1)',
         },
@@ -253,9 +254,6 @@ export const EnvironmentAccordionBody = ({
                         {index > 0 ? <StyledStrategySeparator /> : null}
 
                         <ProjectEnvironmentStrategyDraggableItem
-                            className={
-                                strategy.disabled ? 'strategy-disabled' : ''
-                            }
                             strategy={strategy}
                             index={index}
                             environmentName={featureEnvironment.name}
@@ -281,9 +279,6 @@ export const EnvironmentAccordionBody = ({
                             {index > 0 ? <StyledStrategySeparator /> : null}
 
                             <ProjectEnvironmentStrategyDraggableItem
-                                className={
-                                    strategy.disabled ? 'strategy-disabled' : ''
-                                }
                                 strategy={strategy}
                                 index={index + pageIndex * pageSize}
                                 environmentName={featureEnvironment.name}

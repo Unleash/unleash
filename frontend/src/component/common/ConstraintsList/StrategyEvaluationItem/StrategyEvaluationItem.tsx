@@ -1,4 +1,5 @@
 import { styled } from '@mui/material';
+import { disabledStrategyClassName } from 'component/common/StrategyItemContainer/disabled-strategy-utils';
 import type { FC, ReactNode } from 'react';
 
 type StrategyItemProps = {
@@ -19,7 +20,7 @@ const StyledContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     flexWrap: 'wrap',
     alignItems: 'center',
-    '.strategy-disabled &': {
+    [`.${disabledStrategyClassName} &`]: {
         filter: 'grayscale(1)',
         color: theme.palette.text.secondary,
     },
@@ -43,7 +44,7 @@ const StyledValuesGroup = styled('ul')(({ theme }) => ({
 }));
 
 const StyledValue = styled('li')(({ theme }) => ({
-    '.strategy-disabled &': {
+    [`.${disabledStrategyClassName} &`]: {
         filter: 'grayscale(1)',
         color: theme.palette.text.secondary,
     },

@@ -8,6 +8,7 @@ import type { PlaygroundStrategySchema } from 'openapi';
 import { Badge } from '../Badge/Badge';
 import { Link } from 'react-router-dom';
 import { Truncator } from '../Truncator/Truncator';
+import { disabledStrategyClassName } from './disabled-strategy-utils';
 
 type StrategyItemContainerProps = {
     strategyHeaderLevel?: 1 | 2 | 3 | 4 | 5 | 6;
@@ -87,7 +88,10 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
             : ({ children }) => <> {children} </>;
 
     return (
-        <Box sx={{ position: 'relative' }}>
+        <Box
+            className={strategy.disabled ? disabledStrategyClassName : ''}
+            sx={{ position: 'relative' }}
+        >
             <StyledContainer style={style} className={className}>
                 <StyledHeader disabled={Boolean(strategy?.disabled)}>
                     {onDragStart ? (

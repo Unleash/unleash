@@ -1,6 +1,6 @@
 import type { FC, ReactElement } from 'react';
 import type { FeatureSearchResponseSchema } from '../../../../../openapi';
-import { Box, IconButton, styled } from '@mui/material';
+import { Box, IconButton, styled, Chip } from '@mui/material';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
 import { useSearchHighlightContext } from '../../SearchHighlightContext/SearchHighlightContext';
@@ -54,20 +54,13 @@ const CustomTagButton = styled('button')(({ theme }) => ({
     color: 'inherit',
 }));
 
-const StyledTag = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    marginRight: theme.spacing(0.5),
-    border: `1px solid ${theme.palette.divider}`,
-    borderRadius: theme.shape.borderRadius,
-    fontSize: theme.fontSizes.smallerBody,
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    textWrap: 'nowrap',
-    maxWidth: '250px',
-    padding: theme.spacing(0.25, 0.5),
-    cursor: 'pointer',
+const StyledTag = styled(Chip)(({ theme }) => ({
+    overflowWrap: 'anywhere',
+    lineHeight: theme.typography.body1.lineHeight,
     backgroundColor: theme.palette.neutral.light,
+    color: theme.palette.text.primary,
+    padding: theme.spacing(0.25),
+    height: theme.spacing(3.5),
 }));
 
 const CappedDescription: FC<{ text: string; searchQuery: string }> = ({
@@ -164,11 +157,10 @@ const ArchivedFeatureName: FC<{
     );
 };
 
-const RestTags: FC<{
-    tags: ITag[];
-    onClick: (tag: string) => void;
-    isTagTypeColorEnabled: boolean;
-}> = ({ tags, onClick, isTagTypeColorEnabled }) => {
+const RestTags: FC<{ tags: ITag[]; onClick: (tag: string) => void }> = ({
+    tags,
+    onClick,
+}) => {
     return (
         <HtmlTooltip
             title={tags.map((tag) => (
@@ -211,9 +203,9 @@ const Tags: FC<{
         onClick(`${tag.type}:${tag.value}`);
     };
 
-    const renderCappedTag = (tag: ITag) => {
+    const renderTag = (tag: ITag) => {
         const tagFullText = `${tag.type}:${tag.value}`;
-        const needsTooltip = tagFullText.length > 30;
+        const isOverflowing = tagFullText.length > 30;
 
         if (isTagTypeColorEnabled) {
             const tagComponent = (
@@ -225,44 +217,43 @@ const Tags: FC<{
                 </Box>
             );
 
-            return needsTooltip ? (
-                <HtmlTooltip key={tagFullText} title={tagFullText}>
-                    {tagComponent}
-                </HtmlTooltip>
-            ) : (
-                <Box key={tagFullText}>{tagComponent}</Box>
-            );
-        } else {
-            // Fallback to simple tag rendering without color
             return (
                 <HtmlTooltip
                     key={tagFullText}
-                    title={needsTooltip ? tagFullText : ''}
+                    title={isOverflowing ? tagFullText : ''}
+                    arrow
                 >
-                    <StyledTag onClick={() => handleTagClick(tag)}>
-                        {tagFullText.length > 25
-                            ? `${tagFullText.substring(0, 25)}…`
-                            : tagFullText}
-                    </StyledTag>
+                    <span>{tagComponent}</span>
                 </HtmlTooltip>
             );
         }
+
+        return (
+            <StyledTag
+                key={tagFullText}
+                label={
+                    <HtmlTooltip title={isOverflowing ? tagFullText : ''} arrow>
+                        <span>
+                            {tagFullText.substring(0, 30)}
+                            {isOverflowing ? '...' : ''}
+                        </span>
+                    </HtmlTooltip>
+                }
+                size='small'
+                onClick={() => handleTagClick(tag)}
+                sx={{ cursor: 'pointer' }}
+            />
+        );
     };
 
     return (
         <TagsContainer>
-            {tag1 && renderCappedTag(tag1)}
-            {tag2 && renderCappedTag(tag2)}
-            {tag3 && renderCappedTag(tag3)}
+            {tag1 && renderTag(tag1)}
+            {tag2 && renderTag(tag2)}
+            {tag3 && renderTag(tag3)}
             <ConditionallyRender
                 condition={restTags.length > 0}
-                show={
-                    <RestTags
-                        tags={restTags}
-                        onClick={onClick}
-                        isTagTypeColorEnabled={isTagTypeColorEnabled}
-                    />
-                }
+                show={<RestTags tags={restTags} onClick={onClick} />}
             />
         </TagsContainer>
     );

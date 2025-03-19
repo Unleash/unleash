@@ -6,7 +6,7 @@ import type { ReactElement } from 'react';
 const StyledChip = styled(Chip)<{ $color?: string }>(({ theme, $color }) => ({
     borderRadius: theme.spacing(2),
     border: `1px solid ${theme.palette.divider}`,
-    backgroundColor: theme.palette.common.white,
+    backgroundColor: theme.palette.background.paper,
     color: theme.palette.text.primary,
     height: '26px',
     '& .MuiChip-label': {

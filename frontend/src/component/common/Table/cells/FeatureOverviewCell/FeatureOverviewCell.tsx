@@ -157,10 +157,11 @@ const ArchivedFeatureName: FC<{
     );
 };
 
-const RestTags: FC<{ tags: ITag[]; onClick: (tag: string) => void }> = ({
-    tags,
-    onClick,
-}) => {
+const RestTags: FC<{
+    tags: ITag[];
+    onClick: (tag: string) => void;
+    isTagTypeColorEnabled: boolean;
+}> = ({ tags, onClick, isTagTypeColorEnabled }) => {
     return (
         <HtmlTooltip
             title={tags.map((tag) => (
@@ -169,7 +170,11 @@ const RestTags: FC<{ tags: ITag[]; onClick: (tag: string) => void }> = ({
                     onClick={() => onClick(`${tag.type}:${tag.value}`)}
                     key={`${tag.type}:${tag.value}`}
                 >
-                    {`${tag.type}:${tag.value}`}
+                    {isTagTypeColorEnabled ? (
+                        <Tag tag={tag} />
+                    ) : (
+                        `${tag.type}:${tag.value}`
+                    )}
                 </Box>
             ))}
         >
@@ -208,12 +213,26 @@ const Tags: FC<{
         const isOverflowing = tagFullText.length > 30;
 
         if (isTagTypeColorEnabled) {
+            // Create a tag object with truncated display value but keeping original values
+            const displayTag = {
+                ...tag,
+                displayValue: isOverflowing
+                    ? `${tag.value.substring(0, Math.max(0, 30 - tag.type.length - 1))}...`
+                    : tag.value,
+            };
+
             const tagComponent = (
                 <Box
                     onClick={() => handleTagClick(tag)}
                     sx={{ cursor: 'pointer' }}
                 >
-                    <Tag tag={tag} />
+                    <Tag
+                        tag={{
+                            type: tag.type,
+                            value: displayTag.displayValue,
+                            color: tag.color,
+                        }}
+                    />
                 </Box>
             );
 
@@ -253,7 +272,13 @@ const Tags: FC<{
             {tag3 && renderTag(tag3)}
             <ConditionallyRender
                 condition={restTags.length > 0}
-                show={<RestTags tags={restTags} onClick={onClick} />}
+                show={
+                    <RestTags
+                        tags={restTags}
+                        onClick={onClick}
+                        isTagTypeColorEnabled={isTagTypeColorEnabled}
+                    />
+                }
             />
         </TagsContainer>
     );

@@ -33,10 +33,6 @@ const StyledAnd = styled('div')(({ theme }) => ({
     background: theme.palette.background.application,
     borderRadius: theme.shape.borderRadiusLarge,
     zIndex: theme.zIndex.fab,
-    '.strategy-disabled &': {
-        color: theme.palette.text.secondary,
-        filter: 'contrast(107%)',
-    },
 }));
 
 export const ConstraintsList: FC<{ children: ReactNode }> = ({ children }) => {

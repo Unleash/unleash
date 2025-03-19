@@ -8345,13 +8345,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-chartjs-2@npm:4.3.1":
-  version: 4.3.1
-  resolution: "react-chartjs-2@npm:4.3.1"
+"react-chartjs-2@npm:5.3.0":
+  version: 5.3.0
+  resolution: "react-chartjs-2@npm:5.3.0"
   peerDependencies:
-    chart.js: ^3.5.0
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10c0/cac2500751e812c972d405eeeda9c94bd78a5190c09c4b922d9d888b7d71c0f5a55e3a4f807ce3fed8b32b8d5ccc4cf6f09f402cf64f82fb024e56970226686d
+    chart.js: ^4.1.1
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/4415d40217c084a49f9a936fbd30f67e0e705148e6f8359bec65601033d1076f31085c45793839fc29ec833e6c427b0bf9861a0c54c432c08d35bc9590ffa41a
   languageName: node
   linkType: hard
 
@@ -10138,7 +10138,7 @@ __metadata:
     prop-types: "npm:15.8.1"
     react: "npm:18.3.1"
     react-archer: "npm:4.4.0"
-    react-chartjs-2: "npm:4.3.1"
+    react-chartjs-2: "npm:5.3.0"
     react-confetti: "npm:^6.1.0"
     react-dom: "npm:18.3.1"
     react-dropzone: "npm:14.3.8"

@@ -4,6 +4,7 @@ import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHead
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 import { styled } from '@mui/system';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IConstraintAccordionViewHeaderProps {
     constraint: IConstraint;
@@ -38,6 +39,7 @@ export const ConstraintAccordionViewHeader = ({
     disabled,
 }: IConstraintAccordionViewHeaderProps) => {
     const { context } = useUnleashContext();
+    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
     const { contextName } = constraint;
 
     const disableEdit = !context
@@ -46,7 +48,9 @@ export const ConstraintAccordionViewHeader = ({
 
     return (
         <StyledContainer>
-            <ConstraintIcon compact={compact} disabled={disabled} />
+            {!flagOverviewRedesign ? (
+                <ConstraintIcon compact={compact} disabled={disabled} />
+            ) : null}
             <ConstraintAccordionViewHeaderInfo
                 constraint={constraint}
                 singleValue={singleValue}

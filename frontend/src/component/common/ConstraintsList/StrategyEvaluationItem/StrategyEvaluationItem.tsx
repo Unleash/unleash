@@ -1,11 +1,15 @@
-import { Chip, type ChipProps, styled } from '@mui/material';
+import { styled } from '@mui/material';
+import {
+    Truncator,
+    type TruncatorProps,
+} from 'component/common/Truncator/Truncator';
 import type { FC, ReactNode } from 'react';
 
-type StrategyItemProps = {
+export type StrategyEvaluationItemProps = {
     type?: ReactNode;
     children?: ReactNode;
     values?: string[];
-};
+} & Pick<TruncatorProps, 'onSetTruncated'>;
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -17,7 +21,6 @@ const StyledContainer = styled('div')(({ theme }) => ({
 const StyledContent = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
-    flexWrap: 'wrap',
     alignItems: 'center',
 }));
 
@@ -30,37 +33,33 @@ const StyledType = styled('span')(({ theme }) => ({
     width: theme.spacing(10),
 }));
 
-const StyledValuesGroup = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.5),
-}));
-
-const StyledValue = styled(({ ...props }: ChipProps) => (
-    <Chip size='small' {...props} />
-))(({ theme }) => ({
-    padding: theme.spacing(0.5),
-    background: theme.palette.background.elevation1,
-}));
-
 /**
  * Abstract building block for a list of constraints, segments and other items inside a strategy
  */
-export const StrategyEvaluationItem: FC<StrategyItemProps> = ({
+export const StrategyEvaluationItem: FC<StrategyEvaluationItemProps> = ({
     type,
     children,
     values,
+    onSetTruncated,
 }) => (
     <StyledContainer>
         <StyledType>{type}</StyledType>
         <StyledContent>
             {children}
-            {values && values?.length > 0 ? (
-                <StyledValuesGroup>
-                    {values?.map((value, index) => (
-                        <StyledValue key={`${value}#${index}`} label={value} />
-                    ))}
-                </StyledValuesGroup>
+            {values && values?.length === 1 ? (
+                <Truncator
+                    title={values[0]}
+                    arrow
+                    lines={2}
+                    onSetTruncated={() => onSetTruncated?.(false)}
+                >
+                    {values[0]}
+                </Truncator>
+            ) : null}
+            {values && values?.length > 1 ? (
+                <Truncator title='' lines={2} onSetTruncated={onSetTruncated}>
+                    {values.join(', ')}
+                </Truncator>
             ) : null}
         </StyledContent>
     </StyledContainer>

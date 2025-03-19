@@ -711,7 +711,7 @@ const applyMultiQueryParams = (
                 (Array.isArray(fields)
                     ? val!.split(/:(.+)/).filter(Boolean)
                     : [val]
-                ).map((s) => s.trim()),
+                ).map((s) => s?.trim() || ''),
             );
         const baseSubQuery = createBaseQuery(values);
 

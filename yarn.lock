@@ -8451,12 +8451,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"slug@npm:^9.0.0":
-  version: 9.1.0
-  resolution: "slug@npm:9.1.0"
+"slug@npm:^10.0.0":
+  version: 10.0.0
+  resolution: "slug@npm:10.0.0"
   bin:
     slug: cli.js
-  checksum: 10c0/edc3e957de63e2d78d3809e0bf217da34ccb6ca313a83e2c1598ede2bd001644978d15eb69650a7b238c84adacbbab7318c4601c082aa433a3a2fd5e39523c2d
+  checksum: 10c0/330f7657dd44e526412417cb3225faf88fe5190ebbf1d9345b572d8e84358efa7b25412447aa445f84102e763d9ce1bbe79331aa0e2162ddf0324ae02cb6d3e4
   languageName: node
   linkType: hard
 
@@ -9396,7 +9396,7 @@ __metadata:
     sanitize-filename: "npm:^1.6.3"
     semver: "npm:^7.6.3"
     serve-favicon: "npm:^2.5.0"
-    slug: "npm:^9.0.0"
+    slug: "npm:^10.0.0"
     source-map-support: "npm:0.5.21"
     stoppable: "npm:^1.1.0"
     superagent: "npm:10.1.1"

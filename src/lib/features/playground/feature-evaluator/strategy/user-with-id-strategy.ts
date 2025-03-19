@@ -10,6 +10,8 @@ export default class UserWithIdStrategy extends Strategy {
         const userIdList = parameters.userIds
             ? parameters.userIds.split(/\s*,\s*/)
             : [];
-        return userIdList.includes(context.userId);
+        return (
+            context.userId !== undefined && userIdList.includes(context.userId)
+        );
     }
 }

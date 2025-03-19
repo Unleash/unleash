@@ -4,7 +4,7 @@ export interface IResetTokenCreate {
     reset_token: string;
     user_id: number;
     expires_at: Date;
-    created_by?: string;
+    created_by: string;
 }
 
 export interface IResetToken {

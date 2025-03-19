@@ -65,6 +65,9 @@ class FeatureTagService {
         auditUser: IAuditUser,
     ): Promise<ITag> {
         const featureToggle = await this.featureToggleStore.get(featureName);
+        if (featureToggle === undefined) {
+            throw new NotFoundError();
+        }
         const validatedTag = await tagSchema.validateAsync(tag);
         await this.createTagIfNeeded(validatedTag, auditUser);
         await this.featureTagStore.tagFeature(
@@ -180,6 +183,10 @@ class FeatureTagService {
         auditUser: IAuditUser,
     ): Promise<void> {
         const featureToggle = await this.featureToggleStore.get(featureName);
+        if (featureToggle === undefined) {
+            /// No toggle, so no point in removing tags
+            return;
+        }
         const tags =
             await this.featureTagStore.getAllTagsForFeature(featureName);
         await this.featureTagStore.untagFeature(featureName, tag);

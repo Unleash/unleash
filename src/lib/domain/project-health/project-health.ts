@@ -22,7 +22,9 @@ const getPotentiallyStaleCount = (
     const today = new Date().valueOf();
 
     return features.filter((feature) => {
-        const diff = today - feature.createdAt?.valueOf();
+        const diff = feature.createdAt
+            ? today - feature.createdAt.valueOf()
+            : 0;
         const featureTypeExpectedLifetime = featureTypes.find(
             (t) => t.id === feature.type,
         )?.lifetimeDays;
@@ -30,6 +32,7 @@ const getPotentiallyStaleCount = (
         return (
             !feature.stale &&
             featureTypeExpectedLifetime !== null &&
+            featureTypeExpectedLifetime !== undefined &&
             diff >= featureTypeExpectedLifetime * hoursToMilliseconds(24)
         );
     }).length;

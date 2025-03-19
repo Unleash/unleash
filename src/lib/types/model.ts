@@ -61,7 +61,7 @@ export interface IFeatureStrategy {
 
 export interface FeatureToggleDTO {
     name: string;
-    description?: string;
+    description?: string | null;
     type?: string;
     stale?: boolean;
     archived?: boolean;
@@ -91,7 +91,7 @@ export interface IFeatureToggleListItem extends FeatureToggle {
 
 export interface IFeatureToggleClient {
     name: string;
-    description: string;
+    description: string | undefined | null;
     type: string;
     project: string;
     stale: boolean;

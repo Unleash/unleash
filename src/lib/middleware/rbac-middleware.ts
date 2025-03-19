@@ -125,8 +125,11 @@ const rbacMiddleware = (
                 params.id
             ) {
                 const { id } = params;
-                const { project } = await segmentStore.get(id);
-                projectId = project;
+                const segment = await segmentStore.get(id);
+                if (segment === undefined) {
+                    return false;
+                }
+                projectId = segment.project;
             }
 
             return accessService.hasPermission(

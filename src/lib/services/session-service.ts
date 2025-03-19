@@ -35,7 +35,7 @@ export default class SessionService {
         return this.sessionStore.getSessionsForUser(userId);
     }
 
-    async getSession(sid: string): Promise<ISession> {
+    async getSession(sid: string): Promise<ISession | undefined> {
         return this.sessionStore.get(sid);
     }
 

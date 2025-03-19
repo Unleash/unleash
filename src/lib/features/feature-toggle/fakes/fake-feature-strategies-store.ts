@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { randomUUID } from 'node:crypto';
 import type {
     FeatureToggleWithEnvironment,
     IFeatureOverview,
@@ -67,7 +67,7 @@ export default class FakeFeatureStrategiesStore
         return this.featureStrategies.some((s) => s.id === id);
     }
 
-    async get(id: string): Promise<IFeatureStrategy> {
+    async get(id: string): Promise<IFeatureStrategy | undefined> {
         return this.featureStrategies.find((s) => s.id === id);
     }
 
@@ -180,8 +180,8 @@ export default class FakeFeatureStrategiesStore
         archived: boolean = false,
     ): Promise<IFeatureToggleClient[]> {
         const rows = this.featureToggles.filter((toggle) => {
-            if (featureQuery.namePrefix) {
-                if (featureQuery.project) {
+            if (featureQuery?.namePrefix) {
+                if (featureQuery?.project) {
                     return (
                         (toggle.name.startsWith(featureQuery.namePrefix) &&
                             featureQuery.project.some((project) =>
@@ -192,7 +192,7 @@ export default class FakeFeatureStrategiesStore
                 }
                 return toggle.name.startsWith(featureQuery.namePrefix);
             }
-            if (featureQuery.project) {
+            if (featureQuery?.project) {
                 return (
                     featureQuery.project.some((project) =>
                         project.includes(toggle.project),
@@ -205,7 +205,7 @@ export default class FakeFeatureStrategiesStore
             ...t,
             enabled: true,
             strategies: [],
-            description: t.description || '',
+            description: t.description || undefined,
             type: t.type || 'Release',
             stale: t.stale || false,
             variants: [],
@@ -233,7 +233,7 @@ export default class FakeFeatureStrategiesStore
             this.environmentAndFeature.set(environment, []);
         }
         this.environmentAndFeature
-            .get(environment)
+            .get(environment)!
             .push({ feature: feature_name, enabled });
         return Promise.resolve();
     }
@@ -245,7 +245,7 @@ export default class FakeFeatureStrategiesStore
         this.environmentAndFeature.set(
             environment,
             this.environmentAndFeature
-                .get(environment)
+                .get(environment)!
                 .filter((e) => e.featureName !== feature_name),
         );
         return Promise.resolve();
@@ -271,7 +271,9 @@ export default class FakeFeatureStrategiesStore
             }
             return f;
         });
-        return Promise.resolve(this.featureStrategies.find((f) => f.id === id));
+        return Promise.resolve(
+            this.featureStrategies.find((f) => f.id === id)!,
+        );
     }
 
     async deleteConfigurationsForProjectAndEnvironment(

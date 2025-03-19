@@ -46,8 +46,8 @@ test('should tag feature', async () => {
     });
     expect(featureTags).toHaveLength(1);
     expect(featureTags[0]).toStrictEqual(tag);
-    expect(featureTag.featureName).toBe(featureName);
-    expect(featureTag.tagValue).toBe(tag.value);
+    expect(featureTag!.featureName).toBe(featureName);
+    expect(featureTag!.tagValue).toBe(tag.value);
 });
 
 test('feature tag exists', async () => {

@@ -44,15 +44,15 @@ const FEATURE_COLUMNS = [
 
 export interface FeaturesTable {
     name: string;
-    description: string;
-    type: string;
-    stale: boolean;
+    description: string | null;
+    type?: string;
+    stale?: boolean | null;
     project: string;
     last_seen_at?: Date;
     created_at?: Date;
-    impression_data: boolean;
+    impression_data?: boolean | null;
     archived?: boolean;
-    archived_at?: Date;
+    archived_at?: Date | null;
     created_by_user_id?: number;
 }
 
@@ -309,7 +309,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
 
         const result = await query;
         return result.map((row) => ({
-            type: row.type,
+            type: row.type!,
             count: Number(row.count),
         }));
     }
@@ -449,11 +449,11 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
             description: row.description,
             type: row.type,
             project: row.project,
-            stale: row.stale,
+            stale: row.stale || false,
             createdAt: row.created_at,
             lastSeenAt: row.last_seen_at,
-            impressionData: row.impression_data,
-            archivedAt: row.archived_at,
+            impressionData: row.impression_data || false,
+            archivedAt: row.archived_at || undefined,
             archived: row.archived_at != null,
         };
     }
@@ -472,13 +472,13 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     insertToRow(project: string, data: FeatureToggleInsert): FeaturesTable {
         const row = {
             name: data.name,
-            description: data.description,
+            description: data.description || null,
             type: data.type,
             project,
             archived_at: data.archived ? new Date() : null,
-            stale: data.stale,
+            stale: data.stale || false,
             created_at: data.createdAt,
-            impression_data: data.impressionData,
+            impression_data: data.impressionData || false,
             created_by_user_id: data.createdByUserId,
         };
         if (!row.created_at) {
@@ -494,7 +494,7 @@ export default class FeatureToggleStore implements IFeatureToggleStore {
     ): Omit<FeaturesTable, 'created_by_user_id'> {
         const row = {
             name: data.name,
-            description: data.description,
+            description: data.description || null,
             type: data.type,
             project,
             archived_at: data.archived ? new Date() : null,

@@ -154,7 +154,10 @@ export class GlobalFrontendApiCache extends EventEmitter {
             Object.fromEntries(
                 Object.entries(value).map(([innerKey, innerValue]) => [
                     innerKey,
-                    mapFeatureForClient(innerValue),
+                    mapFeatureForClient({
+                        ...innerValue,
+                        stale: innerValue.stale || false,
+                    }),
                 ]),
             ),
         ]);

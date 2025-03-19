@@ -43,7 +43,7 @@ test('Should always return token type in lowercase', async () => {
     });
 
     const storedToken = await apiTokenStore.get('some-secret');
-    expect(storedToken.type).toBe('frontend');
+    expect(storedToken!.type).toBe('frontend');
 
     const { body } = await app.request
         .get('/api/admin/projects/default/api-tokens')

@@ -1,4 +1,4 @@
-import { Chip, type ChipProps, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import type { FC, ReactNode } from 'react';
 
 type StrategyItemProps = {
@@ -34,20 +34,21 @@ const StyledType = styled('span')(({ theme }) => ({
     width: theme.spacing(10),
 }));
 
-const StyledValuesGroup = styled('div')(({ theme }) => ({
+const StyledValuesGroup = styled('ul')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(0.5),
+    listStyle: 'none',
+    padding: 0,
 }));
 
-const StyledValue = styled(({ ...props }: ChipProps) => (
-    <Chip size='small' {...props} />
-))(({ theme }) => ({
-    padding: theme.spacing(0.5),
-    background: theme.palette.background.elevation1,
+const StyledValue = styled('li')(({ theme }) => ({
     '.strategy-disabled &': {
         filter: 'grayscale(1)',
         color: theme.palette.text.secondary,
+    },
+    ':not(&:last-of-type)::after': {
+        content: '", "',
     },
 }));
 
@@ -66,7 +67,9 @@ export const StrategyEvaluationItem: FC<StrategyItemProps> = ({
             {values && values?.length > 0 ? (
                 <StyledValuesGroup>
                     {values?.map((value, index) => (
-                        <StyledValue key={`${value}#${index}`} label={value} />
+                        <StyledValue key={`${value}#${index}`}>
+                            {value}
+                        </StyledValue>
                     ))}
                 </StyledValuesGroup>
             ) : null}

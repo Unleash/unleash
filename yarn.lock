@@ -1918,10 +1918,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/faker@npm:5.5.9":
-  version: 5.5.9
-  resolution: "@types/faker@npm:5.5.9"
-  checksum: 10c0/2c1e2de0709a9eab249904a3fdf69ad2b2a8233187b9547ee1a081ae25867382bae5f47bbc6fc80929fd8464564783b783e77d1196d0111cc3773e0343005c66
+"@types/faker@npm:6.6.11":
+  version: 6.6.11
+  resolution: "@types/faker@npm:6.6.11"
+  dependencies:
+    faker: "npm:*"
+  checksum: 10c0/8db4090741b550feb6ef8a99859b9fd145798751c208e473d50b81718e5b4339de697873ad17d9b1e1171a98c3fd23b6f4b3d6ba1ef2f451cb6de02d5df70dfb
   languageName: node
   linkType: hard
 
@@ -4202,10 +4204,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"faker@npm:5.5.3":
-  version: 5.5.3
-  resolution: "faker@npm:5.5.3"
-  checksum: 10c0/55ee2fb6425df717253f237b4e952c94efe33da23a5826ca41c6ecb31ccfb49d06c5de64b82b6994ca9c76c05eab4dbf779cea047455fff6e62cc9d585c7d460
+"faker@npm:*, faker@npm:6.6.6":
+  version: 6.6.6
+  resolution: "faker@npm:6.6.6"
+  checksum: 10c0/21f6a57adc921ffb61e5ff767024a699a414047264ff4bbb080bd4994ec5a8061e1828aae9a4be812f6f356f1b6fd082bc2d54df7c37163b943a421a8f7f7079
   languageName: node
   linkType: hard
 
@@ -9309,7 +9311,7 @@ __metadata:
     "@types/cors": "npm:2.8.17"
     "@types/express": "npm:4.17.21"
     "@types/express-session": "npm:1.18.1"
-    "@types/faker": "npm:5.5.9"
+    "@types/faker": "npm:6.6.11"
     "@types/hash-sum": "npm:^1.0.0"
     "@types/jest": "npm:29.5.14"
     "@types/js-yaml": "npm:4.0.9"
@@ -9352,7 +9354,7 @@ __metadata:
     express: "npm:^4.21.2"
     express-rate-limit: "npm:^7.3.1"
     express-session: "npm:^1.17.3"
-    faker: "npm:5.5.3"
+    faker: "npm:6.6.6"
     fast-check: "npm:3.23.2"
     fast-json-patch: "npm:^3.1.0"
     fetch-mock: "npm:^12.0.0"

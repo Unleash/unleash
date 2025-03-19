@@ -2383,6 +2383,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ajv-formats@npm:^3.0.0":
+  version: 3.0.1
+  resolution: "ajv-formats@npm:3.0.1"
+  dependencies:
+    ajv: "npm:^8.0.0"
+  peerDependencies:
+    ajv: ^8.0.0
+  peerDependenciesMeta:
+    ajv:
+      optional: true
+  checksum: 10c0/168d6bca1ea9f163b41c8147bae537e67bd963357a5488a1eaf3abe8baa8eec806d4e45f15b10767e6020679315c7e1e5e6803088dfb84efa2b4e9353b83dd0a
+  languageName: node
+  linkType: hard
+
 "ajv-keywords@npm:^5.1.0":
   version: 5.1.0
   resolution: "ajv-keywords@npm:5.1.0"
@@ -9330,7 +9344,7 @@ __metadata:
     "@types/uuid": "npm:9.0.8"
     "@wesleytodd/openapi": "npm:^1.1.0"
     ajv: "npm:^8.12.0"
-    ajv-formats: "npm:^2.1.1"
+    ajv-formats: "npm:^3.0.0"
     async: "npm:^3.2.4"
     bcryptjs: "npm:^2.4.3"
     compression: "npm:^1.7.4"

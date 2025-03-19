@@ -13,6 +13,10 @@ const Chip = styled('div')(({ theme }) => ({
     left: theme.spacing(4),
 }));
 
-export const StrategySeparator = () => {
-    return <Chip role='separator'>OR</Chip>;
+export const StrategySeparator = ({ className }: { className?: string }) => {
+    return (
+        <Chip role='separator' className={className}>
+            OR
+        </Chip>
+    );
 };

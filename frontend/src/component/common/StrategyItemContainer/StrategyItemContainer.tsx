@@ -136,9 +136,6 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                             </StyledHeaderContainer>
                         </StrategyHeaderLink>
 
-                        {strategy.disabled ? (
-                            <Badge color='disabled'>Disabled</Badge>
-                        ) : null}
                         {headerItemsLeft}
                     </StyledHeaderInner>
                     <Box
@@ -148,6 +145,9 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                             alignItems: 'center',
                         }}
                     >
+                        {strategy.disabled ? (
+                            <Badge color='warning'>Strategy disabled</Badge>
+                        ) : null}
                         {headerItemsRight}
                     </Box>
                 </StyledHeader>

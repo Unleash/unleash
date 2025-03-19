@@ -77,6 +77,13 @@ const StyledAlert = styled(Alert)(({ theme }) => ({
     marginInline: theme.spacing(2), // should consider finding a variable here
 }));
 
+const StyledStrategySeparator = styled(StrategySeparator)(({ theme }) => ({
+    '&:has(+ .strategy-disabled), &:has(+ ol>li:first-of-type>.strategy-disabled)':
+        {
+            filter: 'grayscale(1)',
+        },
+}));
+
 export const EnvironmentAccordionBody = ({
     featureEnvironment,
     isDisabled,
@@ -243,9 +250,12 @@ export const EnvironmentAccordionBody = ({
             <StyledContentList>
                 {strategies.map((strategy, index) => (
                     <StyledListItem key={strategy.id}>
-                        {index > 0 ? <StrategySeparator /> : null}
+                        {index > 0 ? <StyledStrategySeparator /> : null}
 
                         <ProjectEnvironmentStrategyDraggableItem
+                            className={
+                                strategy.disabled ? 'strategy-disabled' : ''
+                            }
                             strategy={strategy}
                             index={index}
                             environmentName={featureEnvironment.name}
@@ -268,9 +278,12 @@ export const EnvironmentAccordionBody = ({
                 <StyledContentList>
                     {page.map((strategy, index) => (
                         <StyledListItem key={strategy.id}>
-                            {index > 0 ? <StrategySeparator /> : null}
+                            {index > 0 ? <StyledStrategySeparator /> : null}
 
                             <ProjectEnvironmentStrategyDraggableItem
+                                className={
+                                    strategy.disabled ? 'strategy-disabled' : ''
+                                }
                                 strategy={strategy}
                                 index={index + pageIndex * pageSize}
                                 environmentName={featureEnvironment.name}
@@ -303,7 +316,7 @@ export const EnvironmentAccordionBody = ({
                         ))}
                         {strategies.length > 0 ? (
                             <li>
-                                <StrategySeparator />
+                                <StyledStrategySeparator />
                                 {strategyList}
                             </li>
                         ) : null}

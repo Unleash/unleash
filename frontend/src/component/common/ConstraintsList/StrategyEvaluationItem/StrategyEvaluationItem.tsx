@@ -45,6 +45,10 @@ const StyledValue = styled(({ ...props }: ChipProps) => (
 ))(({ theme }) => ({
     padding: theme.spacing(0.5),
     background: theme.palette.background.elevation1,
+    '.strategy-disabled &': {
+        filter: 'grayscale(1)',
+        color: theme.palette.text.secondary,
+    },
 }));
 
 /**

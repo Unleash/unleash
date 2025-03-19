@@ -123,7 +123,7 @@
     "vite": "5.4.14",
     "vite-plugin-env-compatible": "2.0.1",
     "vite-plugin-svgr": "3.3.0",
-    "vite-tsconfig-paths": "4.3.2",
+    "vite-tsconfig-paths": "5.1.4",
     "vitest": "3.0.8",
     "whatwg-fetch": "3.6.20"
   },

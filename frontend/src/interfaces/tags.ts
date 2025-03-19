@@ -1,6 +1,7 @@
 export interface ITag {
     value: string;
     type: string;
+    color?: string;
 }
 
 export interface ITagType {

@@ -24,6 +24,13 @@ export const tagSchema = {
                 'The [type](https://docs.getunleash.io/reference/feature-toggles#tags) of the tag',
             example: 'simple',
         },
+        color: {
+            type: 'string',
+            description: 'The hexadecimal color code for the tag type.',
+            example: '#FFFFFF',
+            pattern: '^#[0-9A-Fa-f]{6}$',
+            nullable: true,
+        },
     },
     components: {},
 } as const;

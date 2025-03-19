@@ -1,6 +1,6 @@
 import type { IFeatureToggle } from 'interfaces/featureToggle';
 import { useContext, useState } from 'react';
-import { Button, Chip, Divider, styled } from '@mui/material';
+import { Button, Divider, styled } from '@mui/material';
 import useFeatureTags from 'hooks/api/getters/useFeatureTags/useFeatureTags';
 import Add from '@mui/icons-material/Add';
 import Cancel from '@mui/icons-material/Cancel';
@@ -13,6 +13,7 @@ import useFeatureApi from 'hooks/api/actions/useFeatureApi/useFeatureApi';
 import useToast from 'hooks/useToast';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
+import { Tag } from 'component/common/Tag/Tag';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -24,10 +25,6 @@ const StyledTagContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     flexWrap: 'wrap',
-}));
-
-const StyledChip = styled(Chip)(({ theme }) => ({
-    fontSize: theme.fontSizes.smallBody,
 }));
 
 const StyledDivider = styled(Divider)(({ theme }) => ({
@@ -82,24 +79,21 @@ export const FeatureOverviewSidePanelTags = ({
         <StyledContainer>
             {header}
             <StyledTagContainer>
-                {tags.map((tag) => {
-                    const tagLabel = `${tag.type}:${tag.value}`;
-                    return (
-                        <StyledChip
-                            key={tagLabel}
-                            label={tagLabel}
-                            deleteIcon={<Cancel titleAccess='Remove' />}
-                            onDelete={
-                                canUpdateTags
-                                    ? () => {
-                                          setShowDelDialog(true);
-                                          setSelectedTag(tag);
-                                      }
-                                    : undefined
-                            }
-                        />
-                    );
-                })}
+                {tags.map((tag) => (
+                    <Tag
+                        key={`${tag.type}:${tag.value}`}
+                        tag={tag}
+                        onDelete={
+                            canUpdateTags
+                                ? () => {
+                                      setShowDelDialog(true);
+                                      setSelectedTag(tag);
+                                  }
+                                : undefined
+                        }
+                        deleteIcon={<Cancel titleAccess='Remove' />}
+                    />
+                ))}
             </StyledTagContainer>
             <ConditionallyRender
                 condition={canUpdateTags}
@@ -123,18 +117,18 @@ export const FeatureOverviewSidePanelTags = ({
             <ManageTagsDialog open={openTagDialog} setOpen={setOpenTagDialog} />
             <Dialogue
                 open={showDelDialog}
-                primaryButtonText='Delete tag'
+                primaryButtonText='Delete'
                 secondaryButtonText='Cancel'
-                onClose={() => {
-                    setShowDelDialog(false);
-                    setSelectedTag(undefined);
-                }}
                 onClick={() => {
                     setShowDelDialog(false);
                     handleDelete();
                     setSelectedTag(undefined);
                 }}
-                title='Delete tag?'
+                onClose={() => {
+                    setShowDelDialog(false);
+                    setSelectedTag(undefined);
+                }}
+                title='Delete tag'
             >
                 You are about to delete tag:{' '}
                 <strong>

@@ -253,6 +253,7 @@ export interface IFeatureOverview {
     lastSeenAt: Date;
     environments: IEnvironmentOverview[];
     lifecycle?: IFeatureLifecycleStage;
+    tags?: ITag[];
 }
 
 export type IFeatureSearchOverview = Exclude<
@@ -353,6 +354,7 @@ export interface IFeatureToggleDeltaQuery extends IFeatureToggleQuery {
 export interface ITag {
     value: string;
     type: string;
+    color?: string | null;
 }
 
 export interface IAddonParameterDefinition {

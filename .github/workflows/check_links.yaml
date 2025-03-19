@@ -43,7 +43,7 @@ jobs:
       # Permissions (issues: write)
       - name: 'Create a new issue, or update an existing one'
         if: ${{ failure() }}
-        uses: peter-evans/create-issue-from-file@v4
+        uses: peter-evans/create-issue-from-file@v5
         with:
           title: 'docs: Broken links found'
           content-filepath: ${{ env.issue-content }}

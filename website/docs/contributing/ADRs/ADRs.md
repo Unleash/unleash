@@ -15,6 +15,8 @@ These ADRs describe decisions that concern the entire codebase. They apply to ba
 
 * [Domain language](./overarching/domain-language.md)
 * [Separation of request and response schemas](./overarching/separation-request-response-schemas.md)
+* [Error Logging stack traces](./overarching/logging.md)
+* [Logging levels](./overarching/logging-levels.md)
 
 ## Back-end ADRs
 

@@ -13,6 +13,7 @@ import { projectEnvironmentSchema } from './project-environment-schema';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
+import { tagSchema } from './tag-schema';
 
 export const deprecatedProjectOverviewSchema = {
     $id: '#/components/schemas/deprecatedProjectOverviewSchema',
@@ -136,6 +137,7 @@ export const deprecatedProjectOverviewSchema = {
             createStrategyVariantSchema,
             constraintSchema,
             featureSchema,
+            tagSchema,
             featureEnvironmentSchema,
             overrideSchema,
             parametersSchema,

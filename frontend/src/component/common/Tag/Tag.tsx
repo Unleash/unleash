@@ -8,6 +8,7 @@ const StyledChip = styled(Chip)<{ $color?: string }>(({ theme, $color }) => ({
     border: `1px solid ${theme.palette.divider}`,
     backgroundColor: theme.palette.common.white,
     color: theme.palette.text.primary,
+    height: '26px',
     '& .MuiChip-label': {
         display: 'flex',
         alignItems: 'center',

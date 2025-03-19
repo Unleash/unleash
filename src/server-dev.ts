@@ -59,7 +59,7 @@ process.nextTick(async () => {
                         teamsIntegrationChangeRequests: true,
                         simplifyDisableFeature: true,
                         adminNavUI: false,
-                        tagTypeColor: true,
+                        tagTypeColor: false,
                     },
                 },
                 authentication: {

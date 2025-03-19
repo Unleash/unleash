@@ -21,6 +21,7 @@ import { flexRow } from 'themes/themeStyles';
 import { EnvironmentVariantsTable } from 'component/feature/FeatureView/FeatureVariants/FeatureEnvironmentVariants/EnvironmentVariantsCard/EnvironmentVariantsTable/EnvironmentVariantsTable';
 import { ChangeOverwriteWarning } from './ChangeOverwriteWarning/ChangeOverwriteWarning';
 import type { IFeatureStrategy } from 'interfaces/strategy';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export const ChangeItemWrapper = styled(Box)({
     display: 'flex',
@@ -271,6 +272,7 @@ const AddStrategy: FC<{
     change: IChangeRequestAddStrategy;
     actions?: ReactNode;
 }> = ({ change, actions }) => {
+    const showOldStrategyVariants = !useUiFlag('flagOverviewRedesign');
     return (
         <>
             <ChangeItemCreateEditDeleteWrapper>
@@ -303,16 +305,18 @@ const AddStrategy: FC<{
                 <div>{actions}</div>
             </ChangeItemCreateEditDeleteWrapper>
             <StrategyExecution strategy={change.payload} />
-            {change.payload.variants && change.payload.variants.length > 0 && (
-                <StyledBox>
-                    <StyledTypography>
-                        Setting strategy variants to:
-                    </StyledTypography>
-                    <EnvironmentVariantsTable
-                        variants={change.payload.variants}
-                    />
-                </StyledBox>
-            )}
+            {showOldStrategyVariants &&
+                change.payload.variants &&
+                change.payload.variants.length > 0 && (
+                    <StyledBox>
+                        <StyledTypography>
+                            Setting strategy variants to:
+                        </StyledTypography>
+                        <EnvironmentVariantsTable
+                            variants={change.payload.variants}
+                        />
+                    </StyledBox>
+                )}
         </>
     );
 };

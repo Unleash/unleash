@@ -16,7 +16,7 @@ We should agree on the semantic information carried in each level, and which lev
 
 Current suggestion
 
-| Log level | Frequency in healthy application | Standard Availability                     | Configurable                |   
+| Log level | Frequency in healthy application | Standard Availability                     | Configurable                |  
 |-----------|----------------------------------|-------------------------------------------|-----------------------------|
 | ERROR     | 0                                | All environments                          | NO                          |
 | WARN      | 1-10                             | All environments                          | NO                          |
@@ -33,3 +33,43 @@ Previously we might've logged an ERROR for a self-healable issue, this should ch
 
 The only things that should be logged at ERROR are exceptional behaviour that we need to fix immediately, 
 everything else should be downgraded to WARN. In order to reduce WARN cardinality, this might mean that some messages at WARN today should be downgraded to INFO.
+
+
+### Examples
+[traffic-data-service in enterprise](https://github.com/bricks-software/unleash-enterprise/blob/293304a5d67231d584c3fa4c28589af23fb395e3/src/traffic-data/traffic-data-usage-service.ts#L69)
+#### Previous
+```typescript
+await Promise.all(promises)
+            .then(() => {
+                this.logger.debug('Traffic data usage saved');
+            })
+            .catch((err) => {
+                this.logger.error('Failed to save traffic data usage', err);
+            });
+```
+
+#### Recommended
+Since there's nothing for an SRE to do here if it fails to save, this is an excellent candidate for downgrading to WARN
+```typescript
+await Promise.all(promises)
+            .then(() => {
+                this.logger.debug('Traffic data usage saved');
+            })
+            .catch((err) => {
+                this.logger.warn('Failed to save traffic data usage', err); 
+            });
+```
+[markSeen#account-store in unleash](https://github.com/Unleash/unleash/blob/038c10f6125c4cce200a0bf49f38c7bddada7093/src/lib/db/account-store.ts#L164)
+```typescript
+async markSeenAt(secrets: string[]): Promise<void> {
+        const now = new Date();
+        try {
+            await this.db('personal_access_tokens')
+                .whereIn('secret', secrets)
+                .update({ seen_at: now });
+        } catch (err) {
+            this.logger.error('Could not update lastSeen, error: ', err);
+        }
+    }
+```
+Not being able to update lastSeen is not something we can anything about as on-calls, so this is also a good candidate for downgrading to warn

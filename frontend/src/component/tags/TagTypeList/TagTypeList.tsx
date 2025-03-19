@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box } from '@mui/material';
+import { Box, styled } from '@mui/material';
 import {
     Table,
     SortableTableHeader,
@@ -31,6 +31,22 @@ import { LinkCell } from 'component/common/Table/cells/LinkCell/LinkCell';
 import { sortTypes } from 'utils/sortTypes';
 import { AddTagTypeButton } from './AddTagTypeButton/AddTagTypeButton';
 import { Search } from 'component/common/Search/Search';
+import { useUiFlag } from 'hooks/useUiFlag';
+
+const StyledColorDot = styled('div')<{ $color: string }>(
+    ({ theme, $color }) => ({
+        width: '12px',
+        height: '12px',
+        borderRadius: '50%',
+        backgroundColor: $color,
+        marginRight: theme.spacing(0.2),
+        marginLeft: theme.spacing(1.5),
+        border:
+            $color === '#FFFFFF'
+                ? `1px solid ${theme.palette.divider}`
+                : `1px solid ${$color}`,
+    }),
+);
 
 export const TagTypeList = () => {
     const [deletion, setDeletion] = useState<{
@@ -41,6 +57,7 @@ export const TagTypeList = () => {
     const { deleteTagType } = useTagTypesApi();
     const { tagTypes, refetch, loading } = useTagTypes();
     const { setToastData, setToastApiError } = useToast();
+    const isTagTypeColorEnabled = Boolean(useUiFlag('tagTypeColor'));
 
     const data = useMemo(() => {
         if (loading) {
@@ -50,9 +67,10 @@ export const TagTypeList = () => {
             });
         }
 
-        return tagTypes.map(({ name, description }) => ({
+        return tagTypes.map(({ name, description, color }) => ({
             name,
             description,
+            color,
         }));
     }, [tagTypes, loading]);
 
@@ -81,15 +99,23 @@ export const TagTypeList = () => {
                 width: '90%',
                 Cell: ({
                     row: {
-                        original: { name, description },
+                        original: { name, description, color },
                     },
                 }: any) => {
                     return (
-                        <LinkCell
-                            data-loading
-                            title={name}
-                            subtitle={description}
-                        />
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <ConditionallyRender
+                                condition={
+                                    isTagTypeColorEnabled && Boolean(color)
+                                }
+                                show={<StyledColorDot $color={color} />}
+                            />
+                            <LinkCell
+                                data-loading
+                                title={name}
+                                subtitle={description}
+                            />
+                        </Box>
                     );
                 },
                 sortType: 'alphanumeric',
@@ -136,7 +162,7 @@ export const TagTypeList = () => {
                 disableSortBy: true,
             },
         ],
-        [navigate],
+        [navigate, isTagTypeColorEnabled],
     );
 
     const initialState = useMemo(

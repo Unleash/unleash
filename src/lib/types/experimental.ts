@@ -65,7 +65,8 @@ export type IFlagKey =
     | 'teamsIntegrationChangeRequests'
     | 'edgeObservability'
     | 'simplifyDisableFeature'
-    | 'adminNavUI';
+    | 'adminNavUI'
+    | 'tagTypeColor';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -312,6 +313,10 @@ const flags: IFlags = {
     ),
     adminNavUI: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_ADMIN_NAV_UI,
+        false,
+    ),
+    tagTypeColor: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_TAG_TYPE_COLOR,
         false,
     ),
 };

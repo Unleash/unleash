@@ -12,7 +12,6 @@ export const defaultValue: IUiConfig = {
         T: false,
         UNLEASH_CLOUD: false,
         UG: false,
-        tagTypeColor: false,
     },
     links: [
         {

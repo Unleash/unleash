@@ -3,6 +3,12 @@ import useTagTypesApi from 'hooks/api/actions/useTagTypesApi/useTagTypesApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
 
+interface TagTypePayload {
+    name: string;
+    description: string;
+    color?: string;
+}
+
 const useTagTypeForm = (
     initialTagName = '',
     initialTagDesc = '',
@@ -28,7 +34,7 @@ const useTagTypeForm = (
     }, [initialColor]);
 
     const getTagPayload = () => {
-        const payload: any = {
+        const payload: TagTypePayload = {
             name: tagName,
             description: tagDesc,
         };

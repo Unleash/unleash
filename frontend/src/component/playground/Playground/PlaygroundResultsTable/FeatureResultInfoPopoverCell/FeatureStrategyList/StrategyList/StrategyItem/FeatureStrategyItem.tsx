@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material';
 import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/PlaygroundResultChip';
 import type {
     PlaygroundStrategySchema,
@@ -20,7 +19,6 @@ export const FeatureStrategyItem = ({
     className,
 }: IFeatureStrategyItemProps) => {
     const { result } = strategy;
-    const theme = useTheme();
     const label =
         result.evaluationStatus === 'incomplete' ||
         result.evaluationStatus === 'unevaluated'

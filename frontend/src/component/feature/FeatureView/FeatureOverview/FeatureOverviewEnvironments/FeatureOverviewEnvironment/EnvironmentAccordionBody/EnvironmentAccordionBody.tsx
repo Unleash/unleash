@@ -74,10 +74,12 @@ const AlertContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledStrategySeparator = styled(StrategySeparator)({
-    [`&:has(+ * .${disabledStrategyClassName})`]: {
-        filter: 'grayscale(1)',
-    },
+// todo: consider exporting this into a shared thing or move it into the separator itself (either as a disabled prop or using the css here)
+export const StyledStrategySeparator = styled(StrategySeparator)({
+    [`&:has(+ * .${disabledStrategyClassName}, + .${disabledStrategyClassName})`]:
+        {
+            filter: 'grayscale(1)',
+        },
 });
 
 export const EnvironmentAccordionBody = ({

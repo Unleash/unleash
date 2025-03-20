@@ -244,46 +244,6 @@ export const EnvironmentAccordionBody = ({
     const paginateStrategies =
         strategies.length >= 50 && manyStrategiesPagination;
 
-    const strategyList = paginateStrategies ? (
-        <>
-            {page.map((strategy, index) => (
-                <StyledListItem key={strategy.id}>
-                    {index > 0 || releasePlans.length > 0 ? (
-                        <StyledStrategySeparator />
-                    ) : null}
-
-                    <ProjectEnvironmentStrategyDraggableItem
-                        strategy={strategy}
-                        index={index + pageIndex * pageSize}
-                        environmentName={featureEnvironment.name}
-                        otherEnvironments={otherEnvironments}
-                    />
-                </StyledListItem>
-            ))}
-        </>
-    ) : (
-        <>
-            {strategies.map((strategy, index) => (
-                <StyledListItem key={strategy.id}>
-                    {index > 0 || releasePlans.length > 0 ? (
-                        <StyledStrategySeparator />
-                    ) : null}
-
-                    <ProjectEnvironmentStrategyDraggableItem
-                        strategy={strategy}
-                        index={index}
-                        environmentName={featureEnvironment.name}
-                        otherEnvironments={otherEnvironments}
-                        isDragging={dragItem?.id === strategy.id}
-                        onDragStartRef={onDragStartRef}
-                        onDragOver={onDragOver(strategy.id)}
-                        onDragEnd={onDragEnd}
-                    />
-                </StyledListItem>
-            ))}
-        </>
-    );
-
     return (
         <StyledAccordionBodyInnerContainer>
             {paginateStrategies ? (
@@ -304,9 +264,46 @@ export const EnvironmentAccordionBody = ({
                         />
                     </StyledListItem>
                 ))}
-                {strategyList}
-            </StyledContentList>
+                {paginateStrategies ? (
+                    <>
+                        {page.map((strategy, index) => (
+                            <StyledListItem key={strategy.id}>
+                                {index > 0 || releasePlans.length > 0 ? (
+                                    <StyledStrategySeparator />
+                                ) : null}
 
+                                <ProjectEnvironmentStrategyDraggableItem
+                                    strategy={strategy}
+                                    index={index + pageIndex * pageSize}
+                                    environmentName={featureEnvironment.name}
+                                    otherEnvironments={otherEnvironments}
+                                />
+                            </StyledListItem>
+                        ))}
+                    </>
+                ) : (
+                    <>
+                        {strategies.map((strategy, index) => (
+                            <StyledListItem key={strategy.id}>
+                                {index > 0 || releasePlans.length > 0 ? (
+                                    <StyledStrategySeparator />
+                                ) : null}
+
+                                <ProjectEnvironmentStrategyDraggableItem
+                                    strategy={strategy}
+                                    index={index}
+                                    environmentName={featureEnvironment.name}
+                                    otherEnvironments={otherEnvironments}
+                                    isDragging={dragItem?.id === strategy.id}
+                                    onDragStartRef={onDragStartRef}
+                                    onDragOver={onDragOver(strategy.id)}
+                                    onDragEnd={onDragEnd}
+                                />
+                            </StyledListItem>
+                        ))}
+                    </>
+                )}
+            </StyledContentList>
             {paginateStrategies ? (
                 <Pagination
                     count={pages.length}

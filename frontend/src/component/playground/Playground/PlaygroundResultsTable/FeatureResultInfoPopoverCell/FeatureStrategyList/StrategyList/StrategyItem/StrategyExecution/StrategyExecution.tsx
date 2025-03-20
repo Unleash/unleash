@@ -6,7 +6,10 @@ import { ConstraintExecution } from './ConstraintExecution/ConstraintExecution';
 import { formattedStrategyNames } from 'utils/strategyNames';
 import { StyledBoxSummary } from './StrategyExecution.styles';
 import { Badge } from 'component/common/Badge/Badge';
-import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
+import {
+    ConstraintListItem,
+    ConstraintsList,
+} from 'component/common/ConstraintsList/ConstraintsList';
 import { objectId } from 'utils/objectId';
 import type { FC } from 'react';
 import { SegmentExecution } from './SegmentExecution/SegmentExecution';
@@ -60,8 +63,14 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
                   />
               ))
             : []),
-        hasExecutionParameters && params,
-        isCustomStrategy && customStrategyItems,
+        hasExecutionParameters &&
+            params.map((param, index) => (
+                <ConstraintListItem key={index}>{param}</ConstraintListItem>
+            )),
+        isCustomStrategy &&
+            customStrategyItems.map((param, index) => (
+                <ConstraintListItem key={index}>{param}</ConstraintListItem>
+            )),
         name === 'default' && (
             <StyledBoxSummary sx={{ width: '100%' }}>
                 The standard strategy is <Badge color='success'>ON</Badge> for

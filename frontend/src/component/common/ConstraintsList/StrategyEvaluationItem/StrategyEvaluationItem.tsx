@@ -1,24 +1,28 @@
 import { styled } from '@mui/material';
+import {
+    Truncator,
+    type TruncatorProps,
+} from 'component/common/Truncator/Truncator';
 import { disabledStrategyClassName } from 'component/common/StrategyItemContainer/disabled-strategy-utils';
 import type { FC, ReactNode } from 'react';
 
-type StrategyItemProps = {
+export type StrategyEvaluationItemProps = {
     type?: ReactNode;
     children?: ReactNode;
     values?: string[];
-};
+} & Pick<TruncatorProps, 'onSetTruncated'>;
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'center',
     fontSize: theme.typography.body2.fontSize,
+    minHeight: theme.spacing(4),
 }));
 
 const StyledContent = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
-    flexWrap: 'wrap',
     alignItems: 'center',
     [`.${disabledStrategyClassName} &`]: {
         filter: 'grayscale(1)',
@@ -35,45 +39,33 @@ const StyledType = styled('span')(({ theme }) => ({
     width: theme.spacing(10),
 }));
 
-const StyledValuesGroup = styled('ul')(({ theme }) => ({
-    display: 'flex',
-    flexFlow: 'row wrap',
-    alignItems: 'center',
-    gap: theme.spacing(0.5),
-    listStyle: 'none',
-    padding: 0,
-}));
-
-const StyledValue = styled('li')(({ theme }) => ({
-    [`.${disabledStrategyClassName} &`]: {
-        filter: 'grayscale(1)',
-        color: theme.palette.text.secondary,
-    },
-    ':not(&:last-of-type)::after': {
-        content: '", "',
-    },
-}));
-
 /**
  * Abstract building block for a list of constraints, segments and other items inside a strategy
  */
-export const StrategyEvaluationItem: FC<StrategyItemProps> = ({
+export const StrategyEvaluationItem: FC<StrategyEvaluationItemProps> = ({
     type,
     children,
     values,
+    onSetTruncated,
 }) => (
     <StyledContainer>
         <StyledType>{type}</StyledType>
         <StyledContent>
             {children}
-            {values && values?.length > 0 ? (
-                <StyledValuesGroup>
-                    {values?.map((value, index) => (
-                        <StyledValue key={`${value}#${index}`}>
-                            {value}
-                        </StyledValue>
-                    ))}
-                </StyledValuesGroup>
+            {values && values?.length === 1 ? (
+                <Truncator
+                    title={values[0]}
+                    arrow
+                    lines={2}
+                    onSetTruncated={() => onSetTruncated?.(false)}
+                >
+                    {values[0]}
+                </Truncator>
+            ) : null}
+            {values && values?.length > 1 ? (
+                <Truncator title='' lines={2} onSetTruncated={onSetTruncated}>
+                    {values.join(', ')}
+                </Truncator>
             ) : null}
         </StyledContent>
     </StyledContainer>

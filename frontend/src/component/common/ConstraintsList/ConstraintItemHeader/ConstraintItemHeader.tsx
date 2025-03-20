@@ -1,5 +1,8 @@
 import type { FC } from 'react';
-import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
+import {
+    StrategyEvaluationItem,
+    type StrategyEvaluationItemProps,
+} from '../StrategyEvaluationItem/StrategyEvaluationItem';
 import type { ConstraintSchema } from 'openapi';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
 import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip';
@@ -29,18 +32,25 @@ const StyledOperatorGroup = styled('div')(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
-export const ConstraintItem: FC<ConstraintSchema> = ({
+export const ConstraintItemHeader: FC<
+    ConstraintSchema & Pick<StrategyEvaluationItemProps, 'onSetTruncated'>
+> = ({
     caseInsensitive,
     contextName,
     inverted,
     operator,
     value,
     values,
+    onSetTruncated,
 }) => {
     const items = value ? [value, ...(values || [])] : values || [];
 
     return (
-        <StrategyEvaluationItem type='Constraint' values={items}>
+        <StrategyEvaluationItem
+            type='Constraint'
+            values={items}
+            onSetTruncated={onSetTruncated}
+        >
             {contextName}
             <StyledOperatorGroup>
                 {inverted ? <Inverted /> : null}

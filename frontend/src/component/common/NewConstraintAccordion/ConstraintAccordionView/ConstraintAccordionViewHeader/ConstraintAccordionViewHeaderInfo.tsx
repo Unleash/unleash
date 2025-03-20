@@ -1,29 +1,9 @@
-import { styled, Tooltip } from '@mui/material';
-import { ConstraintViewHeaderOperator } from './ConstraintViewHeaderOperator';
-import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { ConstraintAccordionViewHeaderSingleValue } from './ConstraintAccordionViewHeaderSingleValue';
-import { ConstraintAccordionViewHeaderMultipleValues } from './ConstraintAccordionViewHeaderMultipleValues';
+import { IconButton, styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
-
-const StyledHeaderText = styled('span')(({ theme }) => ({
-    display: '-webkit-box',
-    WebkitLineClamp: 3,
-    WebkitBoxOrient: 'vertical',
-    overflow: 'hidden',
-    maxWidth: '100px',
-    minWidth: '100px',
-    marginRight: '10px',
-    marginTop: 'auto',
-    marginBottom: 'auto',
-    wordBreak: 'break-word',
-    fontSize: theme.fontSizes.smallBody,
-    [theme.breakpoints.down(710)]: {
-        textAlign: 'center',
-        padding: theme.spacing(1, 0),
-        marginRight: 'inherit',
-        maxWidth: 'inherit',
-    },
-}));
+import { ConstraintItemHeader } from 'component/common/ConstraintsList/ConstraintItemHeader/ConstraintItemHeader';
+import { useState } from 'react';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const StyledHeaderWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -55,49 +35,26 @@ interface ConstraintAccordionViewHeaderMetaInfoProps {
 
 export const ConstraintAccordionViewHeaderInfo = ({
     constraint,
-    singleValue,
     allowExpand,
     expanded,
-    disabled = false,
-    maxLength = 112, //The max number of characters in the values text for NOT allowing expansion
 }: ConstraintAccordionViewHeaderMetaInfoProps) => {
+    const [expandable, setExpandable] = useState(false);
+
     return (
         <StyledHeaderWrapper>
             <StyledHeaderMetaInfo>
-                <Tooltip title={constraint.contextName} arrow>
-                    <StyledHeaderText
-                        sx={(theme) => ({
-                            color: disabled
-                                ? theme.palette.text.secondary
-                                : 'inherit',
-                        })}
-                    >
-                        {constraint.contextName}
-                    </StyledHeaderText>
-                </Tooltip>
-                <ConstraintViewHeaderOperator
-                    constraint={constraint}
-                    disabled={disabled}
+                <ConstraintItemHeader
+                    {...constraint}
+                    onSetTruncated={(state: boolean) => {
+                        setExpandable(state);
+                        allowExpand(state);
+                    }}
                 />
-                <ConditionallyRender
-                    condition={singleValue}
-                    show={
-                        <ConstraintAccordionViewHeaderSingleValue
-                            constraint={constraint}
-                            allowExpand={allowExpand}
-                            disabled={disabled}
-                        />
-                    }
-                    elseShow={
-                        <ConstraintAccordionViewHeaderMultipleValues
-                            constraint={constraint}
-                            expanded={expanded}
-                            allowExpand={allowExpand}
-                            maxLength={maxLength}
-                            disabled={disabled}
-                        />
-                    }
-                />
+                {expandable ? (
+                    <IconButton type='button'>
+                        {expanded ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                    </IconButton>
+                ) : null}
             </StyledHeaderMetaInfo>
         </StyledHeaderWrapper>
     );

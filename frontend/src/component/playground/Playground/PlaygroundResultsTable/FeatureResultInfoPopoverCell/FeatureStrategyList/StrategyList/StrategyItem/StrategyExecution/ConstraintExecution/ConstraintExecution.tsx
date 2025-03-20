@@ -3,10 +3,11 @@ import type {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
 } from 'openapi';
-import { ConstraintItem } from 'component/common/ConstraintsList/ConstraintItem/ConstraintItem';
+import { ConstraintItemHeader } from 'component/common/ConstraintsList/ConstraintItemHeader/ConstraintItemHeader';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import { styled } from '@mui/material';
 import Cancel from '@mui/icons-material/Cancel';
+import { ConstraintListItem } from 'component/common/ConstraintsList/ConstraintsList';
 
 interface IConstraintExecutionProps {
     constraint?: PlaygroundConstraintSchema;
@@ -20,7 +21,7 @@ const StyledContainer = styled('div', {
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(1),
-    paddingInline: theme.spacing(0.25),
+    padding: theme.spacing(0.5, 0.25),
     color:
         variant === 'ok'
             ? theme.palette.success.dark
@@ -67,13 +68,15 @@ export const ConstraintExecution: FC<IConstraintExecutionProps> = ({
     };
 
     return (
-        <>
-            <ConstraintItem {...constraint} />
-            {constraint.result ? (
-                <ConstraintOk />
-            ) : (
-                <ConstraintError text={errorText()} />
-            )}
-        </>
+        <ConstraintListItem>
+            <div>
+                <ConstraintItemHeader {...constraint} />
+                {constraint.result ? (
+                    <ConstraintOk />
+                ) : (
+                    <ConstraintError text={errorText()} />
+                )}
+            </div>
+        </ConstraintListItem>
     );
 };

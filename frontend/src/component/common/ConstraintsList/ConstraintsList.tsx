@@ -10,16 +10,20 @@ const StyledList = styled('ul')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
-const StyledListItem = styled('li')(({ theme }) => ({
+export const ConstraintListItem = styled('div')(({ theme }) => ({
     position: 'relative',
     border: `1px solid ${theme.palette.divider}`,
     borderRadius: theme.shape.borderRadiusMedium,
     background: theme.palette.background.default,
-    padding: theme.spacing(2, 3),
+    padding: theme.spacing(1.5, 3),
     display: 'flex',
     flexFlow: 'column',
-    gap: theme.spacing(2),
+    gap: theme.spacing(1),
 }));
+
+const StyledListItem = styled('li')({
+    position: 'relative',
+});
 
 const StyledAnd = styled('div')(({ theme }) => ({
     position: 'absolute',

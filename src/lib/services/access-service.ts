@@ -457,8 +457,9 @@ export class AccessService {
     async getRootRoleForUser(userId: number): Promise<IRole> {
         const rootRole = await this.store.getRootRoleForUser(userId);
         if (!rootRole) {
-            const defaultRole = await this.getPredefinedRole(RoleName.VIEWER);
-            return defaultRole;
+            // this should never happen, but before breaking we want to know if it does.
+            this.logger.warn(`Could not find root role for user=${userId}.`);
+            return this.getPredefinedRole(RoleName.VIEWER);
         }
         return rootRole;
     }

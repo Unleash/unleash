@@ -1,6 +1,6 @@
 import { Alert, Grid, styled } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
-import { InstanceState, InstancePlan } from 'interfaces/instance';
+import { InstanceState } from 'interfaces/instance';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { trialHasExpired, isTrialInstance } from 'utils/instanceTrial';
 import { GridRow } from 'component/common/GridRow/GridRow';
@@ -9,16 +9,14 @@ import { Badge } from 'component/common/Badge/Badge';
 import { BillingDetails } from './BillingDetails';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
 
-export const BILLING_PLAN_PRICES: Record<string, number> = {
-    [InstancePlan.PRO]: 80,
-};
+export const BILLING_PRO_BASE_PRICE = 80;
+export const BILLING_PRO_SEAT_PRICE = 15;
+export const BILLING_PAYG_SEAT_PRICE = 75;
+export const BILLING_TRAFFIC_PRICE = 5;
 
-export const BILLING_PAYG_USER_PRICE = 75;
 export const BILLING_PAYG_DEFAULT_MINIMUM_SEATS = 5;
-export const BILLING_PRO_USER_PRICE = 15;
 export const BILLING_PRO_DEFAULT_INCLUDED_SEATS = 5;
 export const BILLING_INCLUDED_REQUESTS = 53_000_000;
-export const BILLING_TRAFFIC_BUNDLE_PRICE = 5;
 
 const StyledPlanBox = styled('aside')(({ theme }) => ({
     padding: theme.spacing(2.5),
@@ -77,7 +75,8 @@ export const BillingPlan = () => {
         );
 
     const expired = trialHasExpired(instanceStatus);
-    const planPrice = BILLING_PLAN_PRICES[instanceStatus.plan] ?? 0;
+    const baseProPrice =
+        instanceStatus.prices?.pro?.base ?? BILLING_PRO_BASE_PRICE;
     const plan = `${instanceStatus.plan}${isPAYG ? ' Pay-as-You-Go' : ''}`;
     const inactive = instanceStatus.state !== InstanceState.ACTIVE;
 
@@ -131,10 +130,10 @@ export const BillingPlan = () => {
                         </GridCol>
                         <GridCol>
                             <ConditionallyRender
-                                condition={planPrice > 0}
+                                condition={!isPAYG && baseProPrice > 0}
                                 show={
                                     <StyledPriceSpan>
-                                        ${planPrice.toFixed(2)}
+                                        ${baseProPrice.toFixed(2)}
                                     </StyledPriceSpan>
                                 }
                             />

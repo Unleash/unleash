@@ -6,11 +6,10 @@ import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useUiFlag } from 'hooks/useUiFlag';
 import {
     BILLING_PAYG_DEFAULT_MINIMUM_SEATS,
-    BILLING_PAYG_USER_PRICE,
-    BILLING_PLAN_PRICES,
+    BILLING_PAYG_SEAT_PRICE,
+    BILLING_PRO_BASE_PRICE,
     BILLING_PRO_DEFAULT_INCLUDED_SEATS,
 } from 'component/admin/billing/BillingDashboard/BillingPlan/BillingPlan';
-import { InstancePlan } from 'interfaces/instance';
 
 const StyledDemoDialog = styled(DemoDialog)(({ theme }) => ({
     '& .MuiDialog-paper': {
@@ -139,7 +138,7 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                         </Typography>
                         <div>
                             <Typography variant='h6' fontWeight='normal'>
-                                ${BILLING_PAYG_USER_PRICE} per user/month
+                                ${BILLING_PAYG_SEAT_PRICE} per user/month
                             </Typography>
                             <Typography variant='body2'>
                                 {BILLING_PAYG_DEFAULT_MINIMUM_SEATS} users
@@ -174,7 +173,7 @@ export const DemoDialogPlans = ({ open, onClose }: IDemoDialogPlansProps) => {
                         </Typography>
                         <div>
                             <Typography variant='h6' fontWeight='normal'>
-                                ${BILLING_PLAN_PRICES[InstancePlan.PRO]}/month
+                                ${BILLING_PRO_BASE_PRICE}/month
                             </Typography>
                             <Typography variant='body2'>
                                 includes {BILLING_PRO_DEFAULT_INCLUDED_SEATS}{' '}

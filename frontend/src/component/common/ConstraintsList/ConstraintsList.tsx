@@ -18,7 +18,7 @@ export const ConstraintListItem = styled('div')(({ theme }) => ({
     padding: theme.spacing(1.5, 3),
     display: 'flex',
     flexFlow: 'column',
-    gap: theme.spacing(2),
+    gap: theme.spacing(1),
 }));
 
 const StyledListItem = styled('li')({

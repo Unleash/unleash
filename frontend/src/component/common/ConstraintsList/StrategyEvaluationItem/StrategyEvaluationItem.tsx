@@ -3,6 +3,7 @@ import {
     Truncator,
     type TruncatorProps,
 } from 'component/common/Truncator/Truncator';
+import { disabledStrategyClassName } from 'component/common/StrategyItemContainer/disabled-strategy-utils';
 import type { FC, ReactNode } from 'react';
 
 export type StrategyEvaluationItemProps = {
@@ -23,6 +24,10 @@ const StyledContent = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
     alignItems: 'center',
+    [`.${disabledStrategyClassName} &`]: {
+        filter: 'grayscale(1)',
+        color: theme.palette.text.secondary,
+    },
 }));
 
 const StyledType = styled('span')(({ theme }) => ({

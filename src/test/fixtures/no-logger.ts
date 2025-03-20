@@ -3,7 +3,7 @@ import type { Logger } from '../../lib/logger';
 
 let muteError = false;
 let verbose = false;
-function noLoggerProvider(): Logger {
+export function noLoggerProvider(): Logger {
     // do something with the name
     return {
         debug: verbose ? console.log : () => {},

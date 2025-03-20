@@ -153,6 +153,7 @@ export class PublicSignupTokenStore implements IPublicSignupTokenStore {
         newToken: IPublicSignupTokenCreate,
     ): Promise<PublicSignupTokenSchema> {
         const response = await this.db<ITokenRow>(TABLE).insert(
+            // @ts-expect-error - knex expects us to return a DbRecordArr<OurType>, we return OurType, which works fine.
             toRow(newToken),
             ['secret'],
         );

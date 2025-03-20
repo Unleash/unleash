@@ -1,5 +1,5 @@
 export const snakeCase = (input: string): string => {
-    const result = [];
+    const result: string[] = [];
     const splitString = input.split('');
     for (let i = 0; i < splitString.length; i++) {
         const char = splitString[i];

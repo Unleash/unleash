@@ -52,8 +52,8 @@ describe('update lifetimes', () => {
             );
 
             expect(updated?.lifetimeDays).toBe(newLifetime);
-
-            expect(updated).toMatchObject(await featureTypeStore.get(type.id));
+            const fromStore = await featureTypeStore.get(type.id);
+            expect(updated).toMatchObject(fromStore!);
         }
     });
 

@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import { styled } from '@mui/material';
 import type { FeatureStrategySchema } from 'openapi';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useUiFlag } from 'hooks/useUiFlag';
@@ -15,12 +14,6 @@ import {
     ConstraintListItem,
     ConstraintsList,
 } from 'component/common/ConstraintsList/ConstraintsList';
-
-const FilterContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'grayscale',
-})<{ grayscale: boolean }>(({ grayscale }) =>
-    grayscale ? { filter: 'grayscale(1)', opacity: 0.67 } : {},
-);
 
 type StrategyExecutionProps = {
     strategy: IFeatureStrategyPayload | FeatureStrategySchema;
@@ -55,26 +48,21 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
     }
 
     return (
-        <FilterContainer grayscale={strategy.disabled === true}>
-            <ConstraintsList>
-                {strategySegments?.map((segment) => (
-                    <SegmentItem segment={segment} key={segment.id} />
-                ))}
-                {constraints?.map((constraint, index) => (
-                    <ConstraintListItem
-                        key={`${objectId(constraint)}-${index}`}
-                    >
-                        {/* FIXME: use constraint accordion */}
-                        <ConstraintItemHeader {...constraint} />
-                    </ConstraintListItem>
-                ))}
-                {(isCustomStrategy
-                    ? customStrategyItems
-                    : strategyParameters
-                ).map((item, index) => (
+        <ConstraintsList>
+            {strategySegments?.map((segment) => (
+                <SegmentItem segment={segment} key={segment.id} />
+            ))}
+            {constraints?.map((constraint, index) => (
+                <ConstraintListItem key={`${objectId(constraint)}-${index}`}>
+                    {/* FIXME: use constraint accordion */}
+                    <ConstraintItemHeader {...constraint} />
+                </ConstraintListItem>
+            ))}
+            {(isCustomStrategy ? customStrategyItems : strategyParameters).map(
+                (item, index) => (
                     <ConstraintListItem key={index}>{item}</ConstraintListItem>
-                ))}
-            </ConstraintsList>
-        </FilterContainer>
+                ),
+            )}
+        </ConstraintsList>
     );
 };

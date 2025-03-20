@@ -34,7 +34,7 @@ interface ISlackAppAddonParameters {
 export default class SlackAppAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    flagResolver: IFlagResolver;
+    declare flagResolver: IFlagResolver;
 
     private accessToken?: string;
 

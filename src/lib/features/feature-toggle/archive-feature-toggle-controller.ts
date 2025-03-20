@@ -150,11 +150,23 @@ export default class ArchiveController extends Controller {
             true,
             extractUserIdFromUser(user),
         );
+
         this.openApiService.respondWithValidation(
             200,
             res,
             archivedFeaturesSchema.$id,
-            { version: 2, features: serializeDates(features) },
+            {
+                version: 2,
+                features: serializeDates(
+                    features.map((feature) => {
+                        return {
+                            ...feature,
+                            stale: feature.stale || false,
+                            archivedAt: feature.archivedAt!,
+                        };
+                    }),
+                ),
+            },
         );
     }
 

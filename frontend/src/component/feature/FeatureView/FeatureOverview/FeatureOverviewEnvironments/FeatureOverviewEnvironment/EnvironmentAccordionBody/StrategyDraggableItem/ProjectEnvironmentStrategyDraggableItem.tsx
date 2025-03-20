@@ -17,6 +17,7 @@ import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem';
 
 type ProjectEnvironmentStrategyDraggableItemProps = {
+    className?: string;
     strategy: IFeatureStrategy;
     environmentName: string;
     index: number;
@@ -36,6 +37,7 @@ type ProjectEnvironmentStrategyDraggableItemProps = {
 const onDragNoOp = () => () => {};
 
 export const ProjectEnvironmentStrategyDraggableItem = ({
+    className,
     strategy,
     index,
     environmentName,
@@ -74,6 +76,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
 
     return (
         <Box
+            className={className}
             key={strategy.id}
             ref={ref}
             onDragOver={onDragOver(ref, index)}

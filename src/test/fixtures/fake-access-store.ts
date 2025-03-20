@@ -313,7 +313,7 @@ export class FakeAccessStore implements IAccessStore {
     getUserAccessOverview(): Promise<IUserAccessOverview[]> {
         throw new Error('Method not implemented.');
     }
-    getRootRoleForUser(userId: number): Promise<IRole> {
+    getRootRoleForUser(userId: number): Promise<IRole | undefined> {
         const roleId = this.userToRoleMap.get(userId);
         if (roleId !== undefined) {
             return Promise.resolve(this.fakeRolesStore.get(roleId));

@@ -32,7 +32,7 @@ const StyledOperatorGroup = styled('div')(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
-export const ConstraintItem: FC<
+export const ConstraintItemHeader: FC<
     ConstraintSchema & Pick<StrategyEvaluationItemProps, 'onSetTruncated'>
 > = ({
     caseInsensitive,

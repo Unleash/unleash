@@ -1,6 +1,6 @@
 import { IconButton, styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
-import { ConstraintItem } from 'component/common/ConstraintsList/ConstraintItem/ConstraintItem';
+import { ConstraintItemHeader } from 'component/common/ConstraintsList/ConstraintItemHeader/ConstraintItemHeader';
 import { useState } from 'react';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -43,7 +43,7 @@ export const ConstraintAccordionViewHeaderInfo = ({
     return (
         <StyledHeaderWrapper>
             <StyledHeaderMetaInfo>
-                <ConstraintItem
+                <ConstraintItemHeader
                     {...constraint}
                     onSetTruncated={(state: boolean) => {
                         setExpandable(state);

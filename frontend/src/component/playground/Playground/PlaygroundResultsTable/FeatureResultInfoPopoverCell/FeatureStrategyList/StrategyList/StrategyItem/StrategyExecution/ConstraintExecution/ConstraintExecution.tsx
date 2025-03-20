@@ -3,7 +3,7 @@ import type {
     PlaygroundConstraintSchema,
     PlaygroundRequestSchema,
 } from 'openapi';
-import { ConstraintItem } from 'component/common/ConstraintsList/ConstraintItem/ConstraintItem';
+import { ConstraintItemHeader } from 'component/common/ConstraintsList/ConstraintItemHeader/ConstraintItemHeader';
 import CheckCircle from '@mui/icons-material/CheckCircle';
 import { styled } from '@mui/material';
 import Cancel from '@mui/icons-material/Cancel';
@@ -68,7 +68,7 @@ export const ConstraintExecution: FC<IConstraintExecutionProps> = ({
 
     return (
         <>
-            <ConstraintItem {...constraint} />
+            <ConstraintItemHeader {...constraint} />
             {constraint.result ? (
                 <ConstraintOk />
             ) : (

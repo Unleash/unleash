@@ -16,6 +16,7 @@ const StyledContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     alignItems: 'center',
     fontSize: theme.typography.body2.fontSize,
+    minHeight: theme.spacing(4),
 }));
 
 const StyledContent = styled('div')(({ theme }) => ({

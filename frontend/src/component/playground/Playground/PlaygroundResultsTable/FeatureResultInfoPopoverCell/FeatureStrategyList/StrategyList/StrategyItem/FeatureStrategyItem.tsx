@@ -1,4 +1,4 @@
-import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/PlaygroundResultChip';
+import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/LegacyPlaygroundResultChip';
 import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,

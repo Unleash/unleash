@@ -8,7 +8,7 @@ import {
     useTheme,
 } from '@mui/material';
 import { flexRow } from '../../../../../themes/themeStyles';
-import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundResultChip/PlaygroundResultChip';
+import { PlaygroundResultChip } from '../../PlaygroundResultsTable/PlaygroundResultChip/LegacyPlaygroundResultChip';
 import InfoOutlined from '@mui/icons-material/InfoOutlined';
 import type React from 'react';
 import { useState } from 'react';

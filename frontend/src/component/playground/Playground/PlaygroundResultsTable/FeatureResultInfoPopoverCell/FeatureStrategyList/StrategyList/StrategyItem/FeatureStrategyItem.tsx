@@ -1,4 +1,4 @@
-import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/LegacyPlaygroundResultChip';
+import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/PlaygroundResultChip';
 import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
@@ -35,7 +35,6 @@ export const FeatureStrategyItem = ({
             headerItemsLeft={
                 strategy.disabled ? null : (
                     <PlaygroundResultChip
-                        tabindex={-1}
                         showIcon={false}
                         enabled={result.enabled}
                         label={label}

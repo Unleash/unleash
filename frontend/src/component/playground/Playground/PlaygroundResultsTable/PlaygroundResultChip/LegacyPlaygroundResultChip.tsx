@@ -1,3 +1,4 @@
+// deprecated; remove with 'flagOverviewRedesign' flag
 import type { VFC } from 'react';
 import { useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
@@ -5,6 +6,8 @@ import { ReactComponent as FeatureEnabledIcon } from 'assets/icons/isenabled-tru
 import { ReactComponent as FeatureDisabledIcon } from 'assets/icons/isenabled-false.svg';
 import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import { Badge } from 'component/common/Badge/Badge';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { PlaygroundResultChip as NewPlaygroundResultChip } from './PlaygroundResultChip';
 
 interface IResultChipProps {
     enabled: boolean | 'unevaluated' | 'unknown';
@@ -21,6 +24,16 @@ export const PlaygroundResultChip: VFC<IResultChipProps> = ({
     tabindex,
 }) => {
     const theme = useTheme();
+    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
+    if (flagOverviewRedesign) {
+        return (
+            <NewPlaygroundResultChip
+                enabled={enabled}
+                label={label}
+                showIcon={showIcon}
+            />
+        );
+    }
     const icon = (
         <ConditionallyRender
             condition={enabled === 'unknown' || enabled === 'unevaluated'}

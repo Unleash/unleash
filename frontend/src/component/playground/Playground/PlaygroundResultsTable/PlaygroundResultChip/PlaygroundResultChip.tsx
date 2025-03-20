@@ -3,8 +3,8 @@ import { useTheme } from '@mui/material';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { ReactComponent as FeatureEnabledIcon } from 'assets/icons/isenabled-true.svg';
 import { ReactComponent as FeatureDisabledIcon } from 'assets/icons/isenabled-false.svg';
-import WarningOutlined from '@mui/icons-material/WarningOutlined';
 import { Badge } from 'component/common/Badge/Badge';
+import InfoOutlined from '@mui/icons-material/InfoOutlined';
 
 interface IResultChipProps {
     enabled: boolean | 'unevaluated' | 'unknown';
@@ -24,7 +24,7 @@ export const PlaygroundResultChip: VFC<IResultChipProps> = ({
     const icon = (
         <ConditionallyRender
             condition={enabled === 'unknown' || enabled === 'unevaluated'}
-            show={<WarningOutlined color={'warning'} fontSize='inherit' />}
+            show={<InfoOutlined color={'info'} fontSize='inherit' />}
             elseShow={
                 <ConditionallyRender
                     condition={typeof enabled === 'boolean' && Boolean(enabled)}
@@ -51,7 +51,7 @@ export const PlaygroundResultChip: VFC<IResultChipProps> = ({
         <ConditionallyRender
             condition={enabled === 'unknown' || enabled === 'unevaluated'}
             show={
-                <Badge icon={showIcon ? icon : undefined} color='warning'>
+                <Badge icon={showIcon ? icon : undefined} color='info'>
                     {label}
                 </Badge>
             }

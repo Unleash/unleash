@@ -130,7 +130,7 @@ export const BillingPlan = () => {
                         </GridCol>
                         <GridCol>
                             <ConditionallyRender
-                                condition={!isPAYG && baseProPrice > 0}
+                                condition={!isPAYG}
                                 show={
                                     <StyledPriceSpan>
                                         ${baseProPrice.toFixed(2)}

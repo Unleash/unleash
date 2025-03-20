@@ -14,6 +14,7 @@ WHERE u.id > 0 AND u.deleted_at IS NULL AND NOT EXISTS (
     );
 };
 
-exports.down = function (db, cb) {
+exports.down = function (db, callback) {
     // No rollback
+    callback();
 };

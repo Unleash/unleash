@@ -87,8 +87,6 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
             ? ({ children }) => <Link to={strategy.links.edit}>{children}</Link>
             : ({ children }) => <> {children} </>;
 
-    console.log('ondragstart', onDragStart);
-
     return (
         <Box
             className={strategy.disabled ? disabledStrategyClassName : ''}

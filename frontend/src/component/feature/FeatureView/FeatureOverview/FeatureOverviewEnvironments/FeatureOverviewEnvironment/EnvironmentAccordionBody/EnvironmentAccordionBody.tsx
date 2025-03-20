@@ -246,80 +246,74 @@ export const EnvironmentAccordionBody = ({
         );
     };
 
-    const strategyList =
-        strategies.length < 50 || !manyStrategiesPagination ? (
-            <StyledContentList>
-                {strategies.map((strategy, index) => (
-                    <StyledListItem key={strategy.id}>
-                        {index > 0 ? <StyledStrategySeparator /> : null}
+    const paginateStrategies =
+        strategies.length >= 50 && manyStrategiesPagination;
 
-                        <ProjectEnvironmentStrategyDraggableItem
-                            strategy={strategy}
-                            index={index}
-                            environmentName={featureEnvironment.name}
-                            otherEnvironments={otherEnvironments}
-                            isDragging={dragItem?.id === strategy.id}
-                            onDragStartRef={onDragStartRef}
-                            onDragOver={onDragOver(strategy.id)}
-                            onDragEnd={onDragEnd}
-                        />
-                    </StyledListItem>
-                ))}
-            </StyledContentList>
-        ) : (
-            <PaginatedStrategyContainer>
+    const strategyList = paginateStrategies ? (
+        <>
+            {page.map((strategy, index) => (
+                <StyledListItem key={strategy.id}>
+                    {index > 0 ? <StyledStrategySeparator /> : null}
+
+                    <ProjectEnvironmentStrategyDraggableItem
+                        strategy={strategy}
+                        index={index + pageIndex * pageSize}
+                        environmentName={featureEnvironment.name}
+                        otherEnvironments={otherEnvironments}
+                    />
+                </StyledListItem>
+            ))}
+        </>
+    ) : (
+        <>
+            {strategies.map((strategy, index) => (
+                <StyledListItem key={strategy.id}>
+                    {index > 0 ? <StyledStrategySeparator /> : null}
+
+                    <ProjectEnvironmentStrategyDraggableItem
+                        strategy={strategy}
+                        index={index}
+                        environmentName={featureEnvironment.name}
+                        otherEnvironments={otherEnvironments}
+                        isDragging={dragItem?.id === strategy.id}
+                        onDragStartRef={onDragStartRef}
+                        onDragOver={onDragOver(strategy.id)}
+                        onDragEnd={onDragEnd}
+                    />
+                </StyledListItem>
+            ))}
+        </>
+    );
+
+    return (
+        <StyledAccordionBodyInnerContainer>
+            {paginateStrategies ? (
                 <StyledAlert severity='warning'>
                     We noticed you're using a high number of activation
                     strategies. To ensure a more targeted approach, consider
                     leveraging constraints or segments.
                 </StyledAlert>
-                <StyledContentList>
-                    {page.map((strategy, index) => (
-                        <StyledListItem key={strategy.id}>
-                            {index > 0 ? <StyledStrategySeparator /> : null}
+            ) : null}
+            <StyledContentList>
+                {releasePlans.map((plan) => (
+                    <StyledListItem type='release plan' key={plan.id}>
+                        <ReleasePlan
+                            plan={plan}
+                            environmentIsDisabled={isDisabled}
+                        />
+                    </StyledListItem>
+                ))}
+                {strategyList}
+            </StyledContentList>
 
-                            <ProjectEnvironmentStrategyDraggableItem
-                                strategy={strategy}
-                                index={index + pageIndex * pageSize}
-                                environmentName={featureEnvironment.name}
-                                otherEnvironments={otherEnvironments}
-                            />
-                        </StyledListItem>
-                    ))}
-                </StyledContentList>
+            {paginateStrategies ? (
                 <Pagination
                     count={pages.length}
                     shape='rounded'
                     page={pageIndex + 1}
                     onChange={(_, page) => setPageIndex(page - 1)}
                 />
-            </PaginatedStrategyContainer>
-        );
-
-    return (
-        <StyledAccordionBodyInnerContainer>
-            <StyledContentList>
-                {releasePlans.length > 0 ? (
-                    <>
-                        {releasePlans.map((plan) => (
-                            <StyledListItem type='release plan' key={plan.id}>
-                                <ReleasePlan
-                                    plan={plan}
-                                    environmentIsDisabled={isDisabled}
-                                />
-                            </StyledListItem>
-                        ))}
-                        {strategies.length > 0 ? (
-                            <li>
-                                <StyledStrategySeparator />
-                                {strategyList}
-                            </li>
-                        ) : null}
-                    </>
-                ) : strategies.length > 0 ? (
-                    strategyList
-                ) : null}
-            </StyledContentList>
+            ) : null}
         </StyledAccordionBodyInnerContainer>
     );
 };

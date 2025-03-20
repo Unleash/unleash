@@ -34,8 +34,6 @@ type ProjectEnvironmentStrategyDraggableItemProps = {
     onDragEnd?: () => void;
 };
 
-const onDragNoOp = () => () => {};
-
 export const ProjectEnvironmentStrategyDraggableItem = ({
     className,
     strategy,
@@ -43,9 +41,9 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
     environmentName,
     otherEnvironments,
     isDragging,
-    onDragStartRef = onDragNoOp,
-    onDragOver = onDragNoOp,
-    onDragEnd = onDragNoOp,
+    onDragStartRef,
+    onDragOver,
+    onDragEnd,
 }: ProjectEnvironmentStrategyDraggableItemProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -79,7 +77,7 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
             className={className}
             key={strategy.id}
             ref={ref}
-            onDragOver={onDragOver(ref, index)}
+            onDragOver={onDragOver?.(ref, index)}
             sx={{ opacity: isDragging ? '0.5' : '1' }}
         >
             <StrategyDraggableItem

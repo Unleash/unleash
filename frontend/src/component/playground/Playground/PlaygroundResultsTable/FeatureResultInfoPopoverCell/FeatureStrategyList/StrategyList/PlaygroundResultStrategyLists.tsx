@@ -1,4 +1,4 @@
-import { Alert, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import type {
     PlaygroundStrategySchema,
     PlaygroundRequestSchema,
@@ -6,28 +6,9 @@ import type {
 import {
     StyledContentList,
     StyledListItem,
+    StyledStrategySeparator,
 } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
-import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
-
-const StyledAlertWrapper = styled('div')(({ theme }) => ({
-    display: 'flex',
-    padding: `0, 4px`,
-    flexDirection: 'column',
-    borderRadius: theme.shape.borderRadiusMedium,
-    border: `1px solid ${theme.palette.warning.border}`,
-}));
-
-const StyledListWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1, 0.5),
-}));
-
-const StyledAlert = styled(Alert)(({ theme }) => ({
-    border: '0!important',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
-    borderBottom: `1px solid ${theme.palette.warning.border}!important`,
-}));
 
 interface PlaygroundResultStrategyListProps {
     strategies: PlaygroundStrategySchema[];
@@ -85,7 +66,7 @@ export const PlaygroundResultStrategyLists = ({
             <RestyledContentList>
                 {strategies?.map((strategy, index) => (
                     <StyledListItem key={strategy.id}>
-                        {index > 0 ? <StrategySeparator /> : ''}
+                        {index > 0 ? <StyledStrategySeparator /> : ''}
                         <FeatureStrategyItem
                             strategy={strategy}
                             input={input}

@@ -1,6 +1,7 @@
 import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
 import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
+import { ConstraintAccordionViewHeaderInfo as LegacyConstraintAccordionViewHeaderInfo } from './LegacyConstraintAccordionViewHeaderInfo';
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';
 import { styled } from '@mui/system';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
@@ -51,13 +52,23 @@ export const ConstraintAccordionViewHeader = ({
             {!flagOverviewRedesign ? (
                 <ConstraintIcon compact={compact} disabled={disabled} />
             ) : null}
-            <ConstraintAccordionViewHeaderInfo
-                constraint={constraint}
-                singleValue={singleValue}
-                allowExpand={allowExpand}
-                expanded={expanded}
-                disabled={disabled}
-            />
+            {flagOverviewRedesign ? (
+                <ConstraintAccordionViewHeaderInfo
+                    constraint={constraint}
+                    singleValue={singleValue}
+                    allowExpand={allowExpand}
+                    expanded={expanded}
+                    disabled={disabled}
+                />
+            ) : (
+                <LegacyConstraintAccordionViewHeaderInfo
+                    constraint={constraint}
+                    singleValue={singleValue}
+                    allowExpand={allowExpand}
+                    expanded={expanded}
+                    disabled={disabled}
+                />
+            )}
             <ConstraintAccordionHeaderActions
                 onEdit={onEdit}
                 onDelete={onDelete}

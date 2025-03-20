@@ -4,7 +4,7 @@ import {
     useEffect,
     useState,
 } from 'react';
-import { Alert, Pagination, styled } from '@mui/material';
+import { Alert, Pagination, type Theme, styled } from '@mui/material';
 import useFeatureStrategyApi from 'hooks/api/actions/useFeatureStrategyApi/useFeatureStrategyApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import useToast from 'hooks/useToast';
@@ -57,25 +57,27 @@ export const StyledContentList = styled('ol')(({ theme }) => ({
     },
 }));
 
-export const StyledListItem = styled('li', {
-    shouldForwardProp: (prop) => prop !== 'type',
-})<{ type?: 'release plan' | 'strategy' }>(({ theme, type }) => ({
+const releasePlanBackground = (theme: Theme) =>
+    theme.palette.background.elevation2;
+const strategyBackground = (theme: Theme) =>
+    theme.palette.background.elevation1;
+
+export const StyledListItem = styled('li')<{
+    'data-type'?: 'release-plan' | 'strategy';
+}>(({ theme, ...props }) => ({
     background:
-        type === 'release plan'
-            ? theme.palette.background.elevation2
-            : theme.palette.background.elevation1,
+        props['data-type'] === 'release-plan'
+            ? releasePlanBackground(theme)
+            : strategyBackground(theme),
 }));
 
-const PaginatedStrategyContainer = styled('div')(({ theme }) => ({
-    paddingTop: theme.spacing(2.5),
-    position: 'relative',
-    display: 'flex',
-    flexFlow: 'column nowrap',
-    gap: theme.spacing(2),
-}));
-
-const StyledAlert = styled(Alert)(({ theme }) => ({
-    marginInline: theme.spacing(2), // should consider finding a variable here
+const AlertContainer = styled('div')(({ theme }) => ({
+    padding: theme.spacing(2),
+    paddingBottom: theme.spacing(0),
+    backgroundColor: strategyBackground(theme),
+    ':has(+ ol>li[data-type="release-plan"])': {
+        backgroundColor: releasePlanBackground(theme),
+    },
 }));
 
 const StyledStrategySeparator = styled(StrategySeparator)(({ theme }) => ({
@@ -288,15 +290,17 @@ export const EnvironmentAccordionBody = ({
     return (
         <StyledAccordionBodyInnerContainer>
             {paginateStrategies ? (
-                <StyledAlert severity='warning'>
-                    We noticed you're using a high number of activation
-                    strategies. To ensure a more targeted approach, consider
-                    leveraging constraints or segments.
-                </StyledAlert>
+                <AlertContainer>
+                    <Alert severity='warning'>
+                        We noticed you're using a high number of activation
+                        strategies. To ensure a more targeted approach, consider
+                        leveraging constraints or segments.
+                    </Alert>
+                </AlertContainer>
             ) : null}
             <StyledContentList>
                 {releasePlans.map((plan) => (
-                    <StyledListItem type='release plan' key={plan.id}>
+                    <StyledListItem data-type='release-plan' key={plan.id}>
                         <ReleasePlan
                             plan={plan}
                             environmentIsDisabled={isDisabled}

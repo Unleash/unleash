@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { parseParameterStrings } from 'utils/parseParameter';
 import { StrategyEvaluationItem } from 'component/common/ConstraintsList/StrategyEvaluationItem/StrategyEvaluationItem';
 import type { FeatureStrategySchema } from 'openapi';
 import { RolloutParameter } from '../RolloutParameter/RolloutParameter';
@@ -39,7 +38,7 @@ export const useStrategyParameters = (
                 <StrategyEvaluationItem
                     key={key}
                     type={key}
-                    values={parseParameterStrings(value)}
+                    // values={parseParameterStrings(value)} // FIXME: values
                 />
             );
         }

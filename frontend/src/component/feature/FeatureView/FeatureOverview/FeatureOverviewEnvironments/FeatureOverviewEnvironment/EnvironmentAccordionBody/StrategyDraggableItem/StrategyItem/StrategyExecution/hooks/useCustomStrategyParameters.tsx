@@ -51,7 +51,7 @@ export const useCustomStrategyParameters = (
                     <StrategyEvaluationItem
                         key={key}
                         type={typeItem}
-                        values={values}
+                        // values={values} // FIXME: values
                     >
                         {values.length === 1
                             ? 'has 1 item:'
@@ -85,7 +85,7 @@ export const useCustomStrategyParameters = (
                     <StrategyEvaluationItem
                         key={key}
                         type={typeItem}
-                        values={value === '' ? undefined : [value]}
+                        // values={value === '' ? undefined : [value]} // FIXME: values
                     >
                         {value === '' ? 'is an empty string' : 'is set to'}
                     </StrategyEvaluationItem>
@@ -98,7 +98,7 @@ export const useCustomStrategyParameters = (
                     <StrategyEvaluationItem
                         key={key}
                         type={typeItem}
-                        values={[`${value}`]}
+                        // values={[`${value}`]} // FIXME: values
                     >
                         is a number set to
                     </StrategyEvaluationItem>

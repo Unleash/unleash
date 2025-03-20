@@ -66,7 +66,7 @@ export const FeatureOverviewEnvironment = ({
     metrics = { yes: 0, no: 0 },
     otherEnvironments = [],
 }: FeatureOverviewEnvironmentProps) => {
-    const [isOpen, setIsOopen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { isOss } = useUiConfig();
@@ -83,9 +83,10 @@ export const FeatureOverviewEnvironment = ({
                 data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${environment.name}`}
                 expanded={isOpen && hasActivations}
                 disabled={!hasActivations}
-                onChange={() => setIsOopen(isOpen ? !isOpen : hasActivations)}
+                onChange={() => setIsOpen(isOpen ? !isOpen : hasActivations)}
             >
                 <EnvironmentHeader
+                    strategyCount={environment.strategies?.length}
                     environmentId={environment.name}
                     expandable={hasActivations}
                 >

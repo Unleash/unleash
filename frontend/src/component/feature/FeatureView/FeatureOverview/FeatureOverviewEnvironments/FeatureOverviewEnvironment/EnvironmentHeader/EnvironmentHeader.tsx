@@ -36,15 +36,17 @@ const StyledHeader = styled('header')(({ theme }) => ({
 }));
 
 const StyledHeaderTitle = styled('hgroup')(({ theme }) => ({
-    display: 'flex',
+    display: 'grid',
+    gridTemplateColumns: 'auto 1fr',
     flexDirection: 'column',
     flex: 1,
+    columnGap: theme.spacing(1),
 }));
 
 const StyledHeaderTitleLabel = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
     color: theme.palette.text.secondary,
-    margin: 0,
+    gridColumn: '1/-1',
 }));
 
 const StyledTruncator = styled(Truncator)(({ theme }) => ({
@@ -52,14 +54,37 @@ const StyledTruncator = styled(Truncator)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightMedium,
 }));
 
+const StyledStrategyCount = styled('p', {
+    shouldForwardProp: (prop) => prop !== 'count',
+})<{ count: number }>(({ theme, count }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color:
+        count > 0
+            ? theme.palette.info.contrastText
+            : theme.palette.text.secondary,
+    backgroundColor:
+        count > 0 ? theme.palette.info.light : theme.palette.neutral.light,
+    whiteSpace: 'nowrap',
+    width: 'min-content',
+    borderRadius: theme.shape.borderRadiusExtraLarge,
+    padding: theme.spacing(0.5, 1),
+}));
+
 type EnvironmentHeaderProps = {
     environmentId: string;
     expandable?: boolean;
+    strategyCount?: number;
 } & AccordionSummaryProps;
 
 export const EnvironmentHeader: FC<
     PropsWithChildren<EnvironmentHeaderProps>
-> = ({ environmentId, children, expandable = true, ...props }) => {
+> = ({
+    environmentId,
+    children,
+    expandable = true,
+    strategyCount,
+    ...props
+}) => {
     const id = useId();
     return (
         <StyledAccordionSummary
@@ -79,6 +104,11 @@ export const EnvironmentHeader: FC<
                     <StyledTruncator component='h2'>
                         {environmentId}
                     </StyledTruncator>
+                    {typeof strategyCount === 'number' ? (
+                        <StyledStrategyCount count={strategyCount}>
+                            {strategyCount} strategies added
+                        </StyledStrategyCount>
+                    ) : null}
                 </StyledHeaderTitle>
                 {children}
             </StyledHeader>

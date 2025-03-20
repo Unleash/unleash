@@ -46,14 +46,8 @@ export const StyledContentList = styled('ol')(({ theme }) => ({
     '& > li + li': {
         borderTop: `1px solid ${theme.palette.divider}`,
     },
-    '&:not(li > &) > li:first-of-type': {
-        // select first list elements in lists that are not directly nested
-        // within other lists.
+    '& > li:first-of-type': {
         paddingTop: theme.spacing(1),
-    },
-    '& > li:has(> ol)': {
-        // nested lists add their own padding to their list items, so we don't want to double it up.
-        paddingBlock: 0,
     },
 }));
 
@@ -80,12 +74,11 @@ const AlertContainer = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledStrategySeparator = styled(StrategySeparator)(({ theme }) => ({
-    [`&:has(+ *:not(ol) .${disabledStrategyClassName}), &:has(+ ol > li:first-of-type .${disabledStrategyClassName})`]:
-        {
-            filter: 'grayscale(1)',
-        },
-}));
+const StyledStrategySeparator = styled(StrategySeparator)({
+    [`&:has(+ * .${disabledStrategyClassName})`]: {
+        filter: 'grayscale(1)',
+    },
+});
 
 export const EnvironmentAccordionBody = ({
     featureEnvironment,
@@ -255,7 +248,9 @@ export const EnvironmentAccordionBody = ({
         <>
             {page.map((strategy, index) => (
                 <StyledListItem key={strategy.id}>
-                    {index > 0 ? <StyledStrategySeparator /> : null}
+                    {index > 0 || releasePlans.length > 0 ? (
+                        <StyledStrategySeparator />
+                    ) : null}
 
                     <ProjectEnvironmentStrategyDraggableItem
                         strategy={strategy}
@@ -270,7 +265,9 @@ export const EnvironmentAccordionBody = ({
         <>
             {strategies.map((strategy, index) => (
                 <StyledListItem key={strategy.id}>
-                    {index > 0 ? <StyledStrategySeparator /> : null}
+                    {index > 0 || releasePlans.length > 0 ? (
+                        <StyledStrategySeparator />
+                    ) : null}
 
                     <ProjectEnvironmentStrategyDraggableItem
                         strategy={strategy}

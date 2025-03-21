@@ -86,7 +86,10 @@ export const FeatureOverviewEnvironment = ({
                 onChange={() => setIsOpen(isOpen ? !isOpen : hasActivations)}
             >
                 <EnvironmentHeader
-                    strategyCount={environment.strategies?.length}
+                    environmentMetadata={{
+                        strategyCount: environment.strategies?.length ?? 0,
+                        releasePlanCount: environment.releasePlans?.length ?? 0,
+                    }}
                     environmentId={environment.name}
                     expandable={hasActivations}
                 >

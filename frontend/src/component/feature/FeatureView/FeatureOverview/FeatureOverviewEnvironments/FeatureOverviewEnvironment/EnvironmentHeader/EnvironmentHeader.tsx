@@ -54,27 +54,58 @@ const StyledTruncator = styled(Truncator)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightMedium,
 }));
 
-const StyledStrategyCount = styled('p', {
-    shouldForwardProp: (prop) => prop !== 'count',
-})<{ count: number }>(({ theme, count }) => ({
+const StyledStrategyCount = styled('p')(({ theme }) => ({
     fontSize: theme.fontSizes.smallerBody,
-    color:
-        count > 0
-            ? theme.palette.info.contrastText
-            : theme.palette.text.secondary,
-    backgroundColor:
-        count > 0 ? theme.palette.info.light : theme.palette.neutral.light,
+    color: theme.palette.info.contrastText,
+    backgroundColor: theme.palette.info.light,
     whiteSpace: 'nowrap',
     width: 'min-content',
     borderRadius: theme.shape.borderRadiusExtraLarge,
     padding: theme.spacing(0.5, 1),
 }));
 
+const NeutralStrategyCount = styled(StyledStrategyCount)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallerBody,
+    color: theme.palette.text.secondary,
+    backgroundColor: theme.palette.neutral.light,
+}));
+
+type EnvironmentMetadata = {
+    strategyCount: number;
+    releasePlanCount: number;
+};
+
 type EnvironmentHeaderProps = {
     environmentId: string;
     expandable?: boolean;
-    strategyCount?: number;
+    environmentMetadata: EnvironmentMetadata;
 } & AccordionSummaryProps;
+
+const StrategyCount = ({
+    strategyCount,
+    releasePlanCount,
+}: EnvironmentMetadata) => {
+    if (strategyCount === 0 && releasePlanCount === 0) {
+        return <NeutralStrategyCount>0 strategies added</NeutralStrategyCount>;
+    }
+
+    const releasePlanText = releasePlanCount > 0 ? 'Release plan' : undefined;
+
+    const strategyText = () => {
+        switch (strategyCount) {
+            case 0:
+                return undefined;
+            case 1:
+                return `1 strategy`;
+            default:
+                return `${strategyCount} strategies`;
+        }
+    };
+
+    const text = `${[releasePlanText, strategyText()].filter(Boolean).join(', ')} added`;
+
+    return <StyledStrategyCount>{text}</StyledStrategyCount>;
+};
 
 export const EnvironmentHeader: FC<
     PropsWithChildren<EnvironmentHeaderProps>
@@ -82,7 +113,7 @@ export const EnvironmentHeader: FC<
     environmentId,
     children,
     expandable = true,
-    strategyCount,
+    environmentMetadata,
     ...props
 }) => {
     const id = useId();
@@ -104,10 +135,8 @@ export const EnvironmentHeader: FC<
                     <StyledTruncator component='h2'>
                         {environmentId}
                     </StyledTruncator>
-                    {typeof strategyCount === 'number' ? (
-                        <StyledStrategyCount count={strategyCount}>
-                            {strategyCount} strategies added
-                        </StyledStrategyCount>
+                    {environmentMetadata ? (
+                        <StrategyCount {...environmentMetadata} />
                     ) : null}
                 </StyledHeaderTitle>
                 {children}

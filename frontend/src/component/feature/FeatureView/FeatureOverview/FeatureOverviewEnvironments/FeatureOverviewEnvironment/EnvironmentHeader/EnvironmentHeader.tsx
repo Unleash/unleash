@@ -78,7 +78,7 @@ type EnvironmentMetadata = {
 type EnvironmentHeaderProps = {
     environmentId: string;
     expandable?: boolean;
-    environmentMetadata: EnvironmentMetadata;
+    environmentMetadata?: EnvironmentMetadata;
 } & AccordionSummaryProps;
 
 const MetadataChip = ({

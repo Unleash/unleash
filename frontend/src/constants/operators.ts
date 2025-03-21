@@ -31,6 +31,12 @@ export const SEMVER_EQ = 'SEMVER_EQ';
 export const SEMVER_GT = 'SEMVER_GT';
 export const SEMVER_LT = 'SEMVER_LT';
 
+export const caseAffectedOperators: Operator[] = [
+    STR_CONTAINS,
+    STR_STARTS_WITH,
+    STR_ENDS_WITH,
+];
+
 export const allOperators: Operator[] = [
     IN,
     NOT_IN,

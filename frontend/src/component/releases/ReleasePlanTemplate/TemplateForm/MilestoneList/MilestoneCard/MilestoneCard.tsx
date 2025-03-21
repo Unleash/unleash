@@ -19,15 +19,14 @@ import { ReleasePlanTemplateAddStrategyForm } from '../../MilestoneStrategy/Rele
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { type OnMoveItem, useDragItem } from 'hooks/useDragItem';
 import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
-import {
-    StyledContentList,
-    StyledListItem,
-} from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
+
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/DeleteOutlined';
 import { StrategyDraggableItem } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyDraggableItem';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
+import { StrategyList } from 'component/common/StrategyList/StrategyList';
+import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
 
 const leftPadding = 3;
 
@@ -469,9 +468,9 @@ export const MilestoneCard = ({
                         />
                     </StyledAccordionSummary>
                     <StyledAccordionDetails>
-                        <StyledContentList>
+                        <StrategyList>
                             {milestone.strategies.map((strg, index) => (
-                                <StyledListItem key={strg.id}>
+                                <StrategyListItem key={strg.id}>
                                     {index > 0 ? <StrategySeparator /> : null}
 
                                     <StrategyDraggableItem
@@ -513,9 +512,9 @@ export const MilestoneCard = ({
                                             </>
                                         }
                                     />
-                                </StyledListItem>
+                                </StrategyListItem>
                             ))}
-                        </StyledContentList>
+                        </StrategyList>
                         <StyledAccordionFooter>
                             <Button
                                 variant='text'

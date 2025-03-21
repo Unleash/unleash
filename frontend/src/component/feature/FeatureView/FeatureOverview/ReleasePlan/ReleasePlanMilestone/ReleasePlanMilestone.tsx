@@ -11,12 +11,11 @@ import {
     type MilestoneStatus,
 } from './ReleasePlanMilestoneStatus';
 import { useState } from 'react';
-import {
-    StyledContentList,
-    StyledListItem,
-} from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
+
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { StrategyItem } from '../../FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyItem/StrategyItem';
+import { StrategyList } from 'component/common/StrategyList/StrategyList';
+import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
 
 const StyledAccordion = styled(Accordion, {
     shouldForwardProp: (prop) => prop !== 'status',
@@ -117,9 +116,9 @@ export const ReleasePlanMilestone = ({
                 </StyledSecondaryLabel>
             </StyledAccordionSummary>
             <StyledAccordionDetails>
-                <StyledContentList>
+                <StrategyList>
                     {milestone.strategies.map((strategy, index) => (
-                        <StyledListItem key={strategy.id}>
+                        <StrategyListItem key={strategy.id}>
                             {index > 0 ? <StrategySeparator /> : null}
 
                             <StrategyItem
@@ -132,9 +131,9 @@ export const ReleasePlanMilestone = ({
                                         '',
                                 }}
                             />
-                        </StyledListItem>
+                        </StrategyListItem>
                     ))}
-                </StyledContentList>
+                </StrategyList>
             </StyledAccordionDetails>
         </StyledAccordion>
     );

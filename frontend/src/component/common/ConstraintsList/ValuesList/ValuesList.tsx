@@ -45,17 +45,18 @@ export const ValuesList: FC<ValuesListProps> = ({
                     lines={2}
                     onSetTruncated={() => onSetTruncated?.(false)}
                 >
-                    {values[0]}
+                    <Tooltip title={tooltips?.[values[0]] || ''}>
+                        <span>{values[0]}</span>
+                    </Tooltip>
                 </Truncator>
             </StyledSingleValue>
         ) : null}
         {values && values?.length > 1 ? (
             <Truncator title='' lines={2} onSetTruncated={onSetTruncated}>
                 {values.map((value) => (
-                    <Tooltip title={tooltips?.[value] || ''} arrow key={value}>
+                    <Tooltip title={tooltips?.[value] || ''} key={value}>
                         <StyledValueItem>
                             <span>{value}</span>
-                            {tooltips?.[value]}
                         </StyledValueItem>
                     </Tooltip>
                 ))}

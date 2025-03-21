@@ -1,4 +1,4 @@
-import { useMemo, type ComponentProps, type FC } from 'react';
+import type { ComponentProps, FC } from 'react';
 import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
 import type { ConstraintSchema } from 'openapi';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
@@ -8,7 +8,7 @@ import { Truncator } from 'component/common/Truncator/Truncator';
 import { ValuesList } from '../ValuesList/ValuesList';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { formatConstraintValue } from 'utils/formatConstraintValue';
-import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
+import { useConstraintTooltips } from './hooks/useConstraintTooltips';
 
 const Inverted: FC = () => (
     <Tooltip title='NOT (operator is negated)' arrow>
@@ -45,7 +45,6 @@ export const ConstraintItemHeader: FC<
 > = ({ onSetTruncated, ...constraint }) => {
     const { caseInsensitive, contextName, inverted, operator, value, values } =
         constraint;
-    const { context } = useUnleashContext();
     const { locationSettings } = useLocationSettings();
     const items = value
         ? [
@@ -54,17 +53,7 @@ export const ConstraintItemHeader: FC<
           ]
         : values || [];
 
-    const tooltips = useMemo(
-        () =>
-            // FIXME: tooltips
-            Object.fromEntries(
-                values?.map((value) => [
-                    value,
-                    context.find(({ name }) => name === value)?.description,
-                ]) || [],
-            ),
-        [context, values],
-    );
+    const tooltips = useConstraintTooltips(contextName, values || []);
 
     return (
         <StrategyEvaluationItem type='Constraint'>

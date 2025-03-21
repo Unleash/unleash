@@ -6,9 +6,9 @@ import type {
 import {
     StyledContentList,
     StyledListItem,
-    StyledStrategySeparator,
 } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/EnvironmentAccordionBody';
 import { FeatureStrategyItem } from './StrategyItem/FeatureStrategyItem';
+import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 
 interface PlaygroundResultStrategyListProps {
     strategies: PlaygroundStrategySchema[];
@@ -66,7 +66,7 @@ export const PlaygroundResultStrategyLists = ({
             <RestyledContentList>
                 {strategies?.map((strategy, index) => (
                     <StyledListItem key={strategy.id}>
-                        {index > 0 ? <StyledStrategySeparator /> : ''}
+                        {index > 0 ? <StrategySeparator /> : ''}
                         <FeatureStrategyItem
                             strategy={strategy}
                             input={input}

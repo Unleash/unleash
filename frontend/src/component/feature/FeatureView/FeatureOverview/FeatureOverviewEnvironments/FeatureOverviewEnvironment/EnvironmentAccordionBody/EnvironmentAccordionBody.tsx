@@ -22,7 +22,6 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { ReleasePlan } from '../../../ReleasePlan/ReleasePlan';
 import { StrategySeparator } from 'component/common/StrategySeparator/StrategySeparator';
 import { ProjectEnvironmentStrategyDraggableItem } from './StrategyDraggableItem/ProjectEnvironmentStrategyDraggableItem';
-import { disabledStrategyClassName } from 'component/common/StrategyItemContainer/disabled-strategy-utils';
 
 interface IEnvironmentAccordionBodyProps {
     isDisabled: boolean;
@@ -73,14 +72,6 @@ const AlertContainer = styled('div')(({ theme }) => ({
         backgroundColor: releasePlanBackground(theme),
     },
 }));
-
-// todo: consider exporting this into a shared thing or move it into the separator itself (either as a disabled prop or using the css here)
-export const StyledStrategySeparator = styled(StrategySeparator)({
-    [`&:has(+ * .${disabledStrategyClassName}, + .${disabledStrategyClassName})`]:
-        {
-            filter: 'grayscale(1)',
-        },
-});
 
 export const EnvironmentAccordionBody = ({
     featureEnvironment,
@@ -271,7 +262,7 @@ export const EnvironmentAccordionBody = ({
                         {page.map((strategy, index) => (
                             <StyledListItem key={strategy.id}>
                                 {index > 0 || releasePlans.length > 0 ? (
-                                    <StyledStrategySeparator />
+                                    <StrategySeparator />
                                 ) : null}
 
                                 <ProjectEnvironmentStrategyDraggableItem
@@ -288,7 +279,7 @@ export const EnvironmentAccordionBody = ({
                         {strategies.map((strategy, index) => (
                             <StyledListItem key={strategy.id}>
                                 {index > 0 || releasePlans.length > 0 ? (
-                                    <StyledStrategySeparator />
+                                    <StrategySeparator />
                                 ) : null}
 
                                 <ProjectEnvironmentStrategyDraggableItem

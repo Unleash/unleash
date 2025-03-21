@@ -1,6 +1,9 @@
 import type { Operator } from 'constants/operators';
 
-export const formatOperatorDescription = (operator: Operator): string => {
+export const formatOperatorDescription = (
+    operator: Operator,
+    inverted?: boolean,
+): string => {
     return constraintOperatorDescriptions[operator];
 };
 

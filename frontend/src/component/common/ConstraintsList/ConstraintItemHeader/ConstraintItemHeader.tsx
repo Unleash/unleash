@@ -8,15 +8,14 @@ import { formatOperatorDescription } from 'component/common/ConstraintAccordion/
 import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip';
 import { styled, Tooltip } from '@mui/material';
 
-const Inverted: FC = () => (
-    <Tooltip title='NOT (operator is negated)' arrow>
-        <StrategyEvaluationChip label='≠' />
-    </Tooltip>
-);
-
-const Operator: FC<{ label: ConstraintSchema['operator'] }> = ({ label }) => (
+const Operator: FC<{
+    label: ConstraintSchema['operator'];
+    inverted?: boolean;
+}> = ({ label, inverted }) => (
     <Tooltip title={label} arrow>
-        <StrategyEvaluationChip label={formatOperatorDescription(label)} />
+        <StrategyEvaluationChip
+            label={formatOperatorDescription(label, inverted)}
+        />
     </Tooltip>
 );
 
@@ -53,8 +52,7 @@ export const ConstraintItemHeader: FC<
         >
             {contextName}
             <StyledOperatorGroup>
-                {inverted ? <Inverted /> : null}
-                <Operator label={operator} />
+                <Operator label={operator} inverted={inverted} />
                 {caseInsensitive ? <CaseInsensitive /> : null}
             </StyledOperatorGroup>
         </StrategyEvaluationItem>

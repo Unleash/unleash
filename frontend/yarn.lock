@@ -3097,12 +3097,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^20.12.12":
-  version: 20.17.24
-  resolution: "@types/node@npm:20.17.24"
+"@types/node@npm:^22.0.0":
+  version: 22.13.11
+  resolution: "@types/node@npm:22.13.11"
   dependencies:
-    undici-types: "npm:~6.19.2"
-  checksum: 10c0/2a39ce4c4cd4588a05b2a485cc0a1407cbea608dd1ab03e36add59d61712718d95c84b492ca5190753f0be2bce748aeeb0f2a1412e712775462befe3820b3ff9
+    undici-types: "npm:~6.20.0"
+  checksum: 10c0/f6ee33d36372242535c38640fe7550a6640d8a775ec19b55bfc11775b521cba072d892ca92a912332ce01b317293d645c1bf767f3f882ec719f2404a3d2a5b96
   languageName: node
   linkType: hard
 
@@ -9953,13 +9953,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~6.19.2":
-  version: 6.19.6
-  resolution: "undici-types@npm:6.19.6"
-  checksum: 10c0/9b2264c5700e7169c6c62c643aac56cd8984c5fd7e18ed31ff11780260e137f6340dee8317a2e6e0ae3c49f5e5ef6fa577ea07193cbaa535265cba76a267cae9
-  languageName: node
-  linkType: hard
-
 "undici-types@npm:~6.20.0":
   version: 6.20.0
   resolution: "undici-types@npm:6.20.0"
@@ -10095,7 +10088,7 @@ __metadata:
     "@types/lodash.isequal": "npm:^4.5.8"
     "@types/lodash.mapvalues": "npm:^4.6.9"
     "@types/lodash.omit": "npm:4.5.9"
-    "@types/node": "npm:^20.12.12"
+    "@types/node": "npm:^22.0.0"
     "@types/react": "npm:18.3.18"
     "@types/react-dom": "npm:18.3.5"
     "@types/react-router-dom": "npm:5.3.3"

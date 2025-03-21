@@ -7,24 +7,44 @@ import type { ConstraintSchema } from 'openapi';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
 import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip';
 import { styled, Tooltip } from '@mui/material';
+import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
+import { isCaseSensitive } from './isCaseSensitive';
 
-const Inverted: FC = () => (
-    <Tooltip title='NOT (operator is negated)' arrow>
-        <StrategyEvaluationChip label='≠' />
+const Operator: FC<{
+    label: ConstraintSchema['operator'];
+    inverted?: boolean;
+}> = ({ label, inverted }) => (
+    <Tooltip title={inverted ? `Not ${label}` : label} arrow>
+        <StrategyEvaluationChip
+            label={formatOperatorDescription(label, inverted)}
+        />
     </Tooltip>
 );
 
-const Operator: FC<{ label: ConstraintSchema['operator'] }> = ({ label }) => (
-    <Tooltip title={label} arrow>
-        <StrategyEvaluationChip label={formatOperatorDescription(label)} />
-    </Tooltip>
+const StrategyEvalChipLessInlinePadding = styled(StrategyEvaluationChip)(
+    ({ theme }) => ({
+        '> span': {
+            paddingInline: theme.spacing(0.5),
+        },
+    }),
 );
 
-const CaseInsensitive: FC = () => (
-    <Tooltip title='Case sensitive' arrow>
-        <StrategyEvaluationChip label={<s>Aa</s>} />
-    </Tooltip>
-);
+const CaseSensitive: FC = () => {
+    return (
+        <Tooltip title='The match is case sensitive' arrow>
+            <StrategyEvalChipLessInlinePadding
+                aria-label='The match is case sensitive'
+                label={
+                    <CaseSensitiveIcon
+                        style={{ verticalAlign: 'middle' }}
+                        fill='currentColor'
+                        aria-hidden={true}
+                    />
+                }
+            />
+        </Tooltip>
+    );
+};
 
 const StyledOperatorGroup = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -53,9 +73,10 @@ export const ConstraintItemHeader: FC<
         >
             {contextName}
             <StyledOperatorGroup>
-                {inverted ? <Inverted /> : null}
-                <Operator label={operator} />
-                {caseInsensitive ? <CaseInsensitive /> : null}
+                <Operator label={operator} inverted={inverted} />
+                {isCaseSensitive(operator, caseInsensitive) ? (
+                    <CaseSensitive />
+                ) : null}
             </StyledOperatorGroup>
         </StrategyEvaluationItem>
     );

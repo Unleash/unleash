@@ -81,7 +81,7 @@ type EnvironmentHeaderProps = {
     environmentMetadata: EnvironmentMetadata;
 } & AccordionSummaryProps;
 
-const StrategyCount = ({
+const MetadataChip = ({
     strategyCount,
     releasePlanCount,
 }: EnvironmentMetadata) => {
@@ -136,7 +136,7 @@ export const EnvironmentHeader: FC<
                         {environmentId}
                     </StyledTruncator>
                     {environmentMetadata ? (
-                        <StrategyCount {...environmentMetadata} />
+                        <MetadataChip {...environmentMetadata} />
                     ) : null}
                 </StyledHeaderTitle>
                 {children}

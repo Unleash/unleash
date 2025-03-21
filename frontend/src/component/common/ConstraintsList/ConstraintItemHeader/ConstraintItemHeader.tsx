@@ -33,11 +33,12 @@ const CaseSensitive: FC = () => {
     return (
         <Tooltip title='The match is case sensitive' arrow>
             <StrategyEvalChipLessInlinePadding
-                aria-hidden
+                aria-label='The match is case sensitive'
                 label={
                     <CaseSensitiveIcon
                         style={{ verticalAlign: 'middle' }}
                         fill='currentColor'
+                        aria-hidden={true}
                     />
                 }
             />

@@ -1,5 +1,5 @@
 import { type DragEventHandler, type RefObject, useRef } from 'react';
-import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { useMediaQuery, useTheme } from '@mui/material';
 import type { IFeatureEnvironment } from 'interfaces/featureToggle';
 import type { IFeatureStrategy } from 'interfaces/strategy';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
@@ -34,8 +34,6 @@ type ProjectEnvironmentStrategyDraggableItemProps = {
     onDragEnd?: () => void;
 };
 
-const onDragNoOp = () => () => {};
-
 export const ProjectEnvironmentStrategyDraggableItem = ({
     className,
     strategy,
@@ -43,9 +41,9 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
     environmentName,
     otherEnvironments,
     isDragging,
-    onDragStartRef = onDragNoOp,
-    onDragOver = onDragNoOp,
-    onDragEnd = onDragNoOp,
+    onDragStartRef,
+    onDragOver,
+    onDragEnd,
 }: ProjectEnvironmentStrategyDraggableItemProps) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
@@ -75,67 +73,59 @@ export const ProjectEnvironmentStrategyDraggableItem = ({
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     return (
-        <Box
-            className={className}
-            key={strategy.id}
-            ref={ref}
-            onDragOver={onDragOver(ref, index)}
-            sx={{ opacity: isDragging ? '0.5' : '1' }}
-        >
-            <StrategyDraggableItem
-                strategy={strategy}
-                onDragEnd={onDragEnd}
-                onDragStartRef={onDragStartRef}
-                onDragOver={onDragOver}
-                index={index}
-                isDragging={isDragging}
-                headerItemsRight={
-                    <>
-                        {draftChange && !isSmallScreen ? (
-                            <ChangeRequestDraftStatusBadge
-                                sx={{ mr: 1.5 }}
-                                changeAction={draftChange.change.action}
-                            />
-                        ) : null}
+        <StrategyDraggableItem
+            strategy={strategy}
+            onDragEnd={onDragEnd}
+            onDragStartRef={onDragStartRef}
+            onDragOver={onDragOver}
+            index={index}
+            isDragging={isDragging}
+            headerItemsRight={
+                <>
+                    {draftChange && !isSmallScreen ? (
+                        <ChangeRequestDraftStatusBadge
+                            sx={{ mr: 1.5 }}
+                            changeAction={draftChange.change.action}
+                        />
+                    ) : null}
 
-                        {scheduledChanges &&
-                        scheduledChanges.length > 0 &&
-                        !isSmallScreen ? (
-                            <ChangesScheduledBadge
-                                scheduledChangeRequestIds={(
-                                    scheduledChanges ?? []
-                                ).map((scheduledChange) => scheduledChange.id)}
-                            />
-                        ) : null}
-                        {otherEnvironments && otherEnvironments?.length > 0 ? (
-                            <CopyStrategyIconMenu
-                                environmentId={environmentName}
-                                environments={otherEnvironments as string[]}
-                                strategy={strategy}
-                            />
-                        ) : null}
-                        <PermissionIconButton
-                            permission={UPDATE_FEATURE_STRATEGY}
+                    {scheduledChanges &&
+                    scheduledChanges.length > 0 &&
+                    !isSmallScreen ? (
+                        <ChangesScheduledBadge
+                            scheduledChangeRequestIds={(
+                                scheduledChanges ?? []
+                            ).map((scheduledChange) => scheduledChange.id)}
+                        />
+                    ) : null}
+                    {otherEnvironments && otherEnvironments?.length > 0 ? (
+                        <CopyStrategyIconMenu
                             environmentId={environmentName}
-                            projectId={projectId}
-                            component={Link}
-                            to={editStrategyPath}
-                            tooltipProps={{
-                                title: 'Edit strategy',
-                            }}
-                            data-testid={`STRATEGY_EDIT-${strategy.name}`}
-                        >
-                            <Edit />
-                        </PermissionIconButton>
-                        <MenuStrategyRemove
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={environmentName}
+                            environments={otherEnvironments as string[]}
                             strategy={strategy}
                         />
-                    </>
-                }
-            />
-        </Box>
+                    ) : null}
+                    <PermissionIconButton
+                        permission={UPDATE_FEATURE_STRATEGY}
+                        environmentId={environmentName}
+                        projectId={projectId}
+                        component={Link}
+                        to={editStrategyPath}
+                        tooltipProps={{
+                            title: 'Edit strategy',
+                        }}
+                        data-testid={`STRATEGY_EDIT-${strategy.name}`}
+                    >
+                        <Edit />
+                    </PermissionIconButton>
+                    <MenuStrategyRemove
+                        projectId={projectId}
+                        featureId={featureId}
+                        environmentId={environmentName}
+                        strategy={strategy}
+                    />
+                </>
+            }
+        />
     );
 };

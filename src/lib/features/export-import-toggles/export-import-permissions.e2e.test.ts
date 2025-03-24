@@ -262,7 +262,7 @@ beforeAll(async () => {
     contextFieldStore = db.stores.contextFieldStore;
 
     const roles = await accessService.getRootRoles();
-    adminRole = roles.find((role) => role.name === RoleName.ADMIN);
+    adminRole = roles.find((role) => role.name === RoleName.ADMIN)!;
 
     await createUserEditorAccess(
         regularUserName,

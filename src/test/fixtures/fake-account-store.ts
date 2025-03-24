@@ -42,7 +42,7 @@ export class FakeAccountStore implements IAccountStore {
         return this.data.length;
     }
 
-    async get(key: number): Promise<IUser> {
+    async get(key: number): Promise<IUser | undefined> {
         return this.data.find((u) => u.id === key);
     }
 
@@ -85,7 +85,9 @@ export class FakeAccountStore implements IAccountStore {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    getAccountByPersonalAccessToken(secret: string): Promise<IUser> {
+    getAccountByPersonalAccessToken(
+        secret: string,
+    ): Promise<IUser | undefined> {
         return Promise.resolve(undefined);
     }
 

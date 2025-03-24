@@ -38,7 +38,7 @@ interface ITeamsParameters {
 export default class TeamsAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    flagResolver: IFlagResolver;
+    declare flagResolver: IFlagResolver;
 
     constructor(args: IAddonConfig) {
         if (args.flagResolver.isEnabled('teamsIntegrationChangeRequests')) {

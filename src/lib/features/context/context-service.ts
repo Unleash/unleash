@@ -21,7 +21,7 @@ import {
 import type { IPrivateProjectChecker } from '../private-project/privateProjectCheckerType';
 import type EventService from '../events/event-service';
 import { contextSchema, legalValueSchema } from '../../services/context-schema';
-import { NameExistsError } from '../../error';
+import { NameExistsError, NotFoundError } from '../../error';
 import { nameSchema } from '../../schema/feature-schema';
 import type { LegalValueSchema } from '../../openapi';
 
@@ -63,7 +63,13 @@ class ContextService {
     }
 
     async getContextField(name: string): Promise<IContextField> {
-        return this.contextFieldStore.get(name);
+        const field = await this.contextFieldStore.get(name);
+        if (field === undefined) {
+            throw new NotFoundError(
+                `Could not find context field with name ${name}`,
+            );
+        }
+        return field;
     }
 
     async getStrategiesByContextField(
@@ -125,6 +131,11 @@ class ContextService {
         const contextField = await this.contextFieldStore.get(
             updatedContextField.name,
         );
+        if (contextField === undefined) {
+            throw new NotFoundError(
+                `Could not find context field with name: ${updatedContextField.name}`,
+            );
+        }
         const value = await contextSchema.validateAsync(updatedContextField);
 
         await this.contextFieldStore.update(value);
@@ -147,6 +158,11 @@ class ContextService {
         const contextField = await this.contextFieldStore.get(
             contextFieldLegalValue.name,
         );
+        if (contextField === undefined) {
+            throw new NotFoundError(
+                `Context field with name ${contextFieldLegalValue.name} was not found`,
+            );
+        }
         const validatedLegalValue = await legalValueSchema.validateAsync(
             contextFieldLegalValue.legalValue,
         );
@@ -186,6 +202,11 @@ class ContextService {
         const contextField = await this.contextFieldStore.get(
             contextFieldLegalValue.name,
         );
+        if (contextField === undefined) {
+            throw new NotFoundError(
+                `Could not find context field with name ${contextFieldLegalValue.name}`,
+            );
+        }
 
         const newContextField = {
             ...contextField,

@@ -40,7 +40,7 @@ export const ReleaseManagement = () => {
                                 Icon={Add}
                                 onClick={() => {
                                     navigate(
-                                        '/release-management/create-template',
+                                        '/release-templates/create-template',
                                     );
                                 }}
                                 maxWidth='700px'

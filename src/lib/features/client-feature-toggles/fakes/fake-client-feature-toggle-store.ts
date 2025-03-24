@@ -38,7 +38,7 @@ export default class FakeClientFeatureToggleStore
             ...t,
             enabled: true,
             strategies: [],
-            description: t.description || '',
+            description: t.description,
             type: t.type || 'Release',
             stale: t.stale || false,
             variants: [],

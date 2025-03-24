@@ -1,4 +1,4 @@
-import crypto from 'crypto';
+import crypto from 'node:crypto';
 import type { Logger } from '../logger';
 import {
     type IAuditUser,
@@ -23,6 +23,7 @@ import type { IUser } from '../types/user';
 import { URL } from 'url';
 import { add } from 'date-fns';
 import type EventService from '../features/events/event-service';
+import { NotFoundError } from '../error';
 
 export class PublicSignupTokenService {
     private store: IPublicSignupTokenStore;
@@ -63,7 +64,11 @@ export class PublicSignupTokenService {
     }
 
     public async get(secret: string): Promise<PublicSignupTokenSchema> {
-        return this.store.get(secret);
+        const token = await this.store.get(secret);
+        if (token === undefined) {
+            throw new NotFoundError('Could not find token with that secret');
+        }
+        return token;
     }
 
     public async getAllTokens(): Promise<PublicSignupTokenSchema[]> {
@@ -95,6 +100,9 @@ export class PublicSignupTokenService {
         auditUser: IAuditUser,
     ): Promise<IUser> {
         const token = await this.get(secret);
+        if (token === undefined) {
+            throw new NotFoundError('Could not find token with that secret');
+        }
         const user = await this.userService.createUser(
             {
                 ...createUser,

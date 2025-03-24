@@ -10,5 +10,5 @@ export interface IFavoriteProjectsStore
     extends Store<IFavoriteProject, IFavoriteProjectKey> {
     addFavoriteProject(
         favorite: IFavoriteProjectKey,
-    ): Promise<IFavoriteProject>;
+    ): Promise<IFavoriteProject | undefined>;
 }

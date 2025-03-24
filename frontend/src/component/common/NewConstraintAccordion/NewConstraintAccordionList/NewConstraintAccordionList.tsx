@@ -1,7 +1,6 @@
 import type React from 'react';
 import { forwardRef, Fragment, useImperativeHandle } from 'react';
-import { styled, Tooltip } from '@mui/material';
-import HelpOutline from '@mui/icons-material/HelpOutline';
+import { styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
@@ -42,30 +41,6 @@ const StyledContainer = styled('div')({
     display: 'flex',
     flexDirection: 'column',
 });
-
-const StyledHelpWrapper = styled(Tooltip)(({ theme }) => ({
-    marginLeft: theme.spacing(0.75),
-    height: theme.spacing(1.5),
-}));
-
-const StyledHelp = styled(HelpOutline)(({ theme }) => ({
-    fill: theme.palette.action.active,
-    [theme.breakpoints.down(860)]: {
-        display: 'none',
-    },
-}));
-
-const StyledConstraintLabel = styled('p')(({ theme }) => ({
-    marginBottom: theme.spacing(1),
-    color: theme.palette.text.secondary,
-}));
-
-const StyledAddCustomLabel = styled('div')(({ theme }) => ({
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1),
-    color: theme.palette.text.primary,
-    display: 'flex',
-}));
 
 export const useConstraintAccordionList = (
     setConstraints:

@@ -120,7 +120,7 @@ const seedSegmentsDatabase = async (
     assert(segments.length === spec.segmentsPerFeature);
 
     const addSegment = (feature: IFeatureToggleClient, segment: ISegment) => {
-        return addSegmentToStrategy(app, segment.id, feature.strategies[0].id);
+        return addSegmentToStrategy(app, segment.id, feature.strategies[0].id!);
     };
 
     for (const feature of features) {

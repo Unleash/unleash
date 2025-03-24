@@ -1,10 +1,10 @@
-import { Chip, type ChipProps, styled } from '@mui/material';
 import type { FC, ReactNode } from 'react';
+import { styled } from '@mui/material';
+import { disabledStrategyClassName } from 'component/common/StrategyItemContainer/disabled-strategy-utils';
 
-type StrategyItemProps = {
+export type StrategyEvaluationItemProps = {
     type?: ReactNode;
     children?: ReactNode;
-    values?: string[];
 };
 
 const StyledContainer = styled('div')(({ theme }) => ({
@@ -12,13 +12,17 @@ const StyledContainer = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
     alignItems: 'center',
     fontSize: theme.typography.body2.fontSize,
+    minHeight: theme.spacing(4),
 }));
 
 const StyledContent = styled('div')(({ theme }) => ({
     display: 'flex',
     gap: theme.spacing(1),
-    flexWrap: 'wrap',
     alignItems: 'center',
+    [`.${disabledStrategyClassName} &`]: {
+        filter: 'grayscale(1)',
+        color: theme.palette.text.secondary,
+    },
 }));
 
 const StyledType = styled('span')(({ theme }) => ({
@@ -29,39 +33,17 @@ const StyledType = styled('span')(({ theme }) => ({
     color: theme.palette.text.secondary,
     width: theme.spacing(10),
 }));
-
-const StyledValuesGroup = styled('div')(({ theme }) => ({
-    display: 'flex',
-    alignItems: 'center',
-    gap: theme.spacing(0.5),
-}));
-
-const StyledValue = styled(({ ...props }: ChipProps) => (
-    <Chip size='small' {...props} />
-))(({ theme }) => ({
-    padding: theme.spacing(0.5),
-    background: theme.palette.background.elevation1,
-}));
-
 /**
  * Abstract building block for a list of constraints, segments and other items inside a strategy
  */
-export const StrategyEvaluationItem: FC<StrategyItemProps> = ({
+export const StrategyEvaluationItem: FC<StrategyEvaluationItemProps> = ({
     type,
     children,
-    values,
-}) => (
-    <StyledContainer>
-        <StyledType>{type}</StyledType>
-        <StyledContent>
-            {children}
-            {values && values?.length > 0 ? (
-                <StyledValuesGroup>
-                    {values?.map((value, index) => (
-                        <StyledValue key={`${value}#${index}`} label={value} />
-                    ))}
-                </StyledValuesGroup>
-            ) : null}
-        </StyledContent>
-    </StyledContainer>
-);
+}) => {
+    return (
+        <StyledContainer>
+            <StyledType>{type}</StyledType>
+            <StyledContent>{children}</StyledContent>
+        </StyledContainer>
+    );
+};

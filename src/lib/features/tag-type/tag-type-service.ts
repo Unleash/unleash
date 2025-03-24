@@ -14,6 +14,7 @@ import type { ITagType, ITagTypeStore } from './tag-type-store-type';
 import type { IUnleashConfig } from '../../types/option';
 import type EventService from '../events/event-service';
 import type { IAuditUser } from '../../types';
+import { NotFoundError } from '../../error';
 
 export default class TagTypeService {
     private tagTypeStore: ITagTypeStore;
@@ -37,7 +38,11 @@ export default class TagTypeService {
     }
 
     async getTagType(name: string): Promise<ITagType> {
-        return this.tagTypeStore.get(name);
+        const tagType = await this.tagTypeStore.get(name);
+        if (tagType === undefined) {
+            throw new NotFoundError(`Tagtype ${name} could not be found`);
+        }
+        return tagType;
     }
 
     async createTagType(

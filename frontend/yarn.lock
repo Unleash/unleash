@@ -3291,9 +3291,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-extensions-basic-setup@npm:4.23.9":
-  version: 4.23.9
-  resolution: "@uiw/codemirror-extensions-basic-setup@npm:4.23.9"
+"@uiw/codemirror-extensions-basic-setup@npm:4.23.10":
+  version: 4.23.10
+  resolution: "@uiw/codemirror-extensions-basic-setup@npm:4.23.10"
   dependencies:
     "@codemirror/autocomplete": "npm:^6.0.0"
     "@codemirror/commands": "npm:^6.0.0"
@@ -3310,22 +3310,22 @@ __metadata:
     "@codemirror/search": ">=6.0.0"
     "@codemirror/state": ">=6.0.0"
     "@codemirror/view": ">=6.0.0"
-  checksum: 10c0/5a121526ad575192bdea6f7ea42e55fa60e251fa6e898dcbbe3e4043a781696506c2eb35a7f1249739e795cb772868b59ede6f42833d6b072789eeac470124bd
+  checksum: 10c0/64c233857b1bf878bf630297b1d4b3df14e13761ff38ceccf7a1fa21d521be288311333b7cbff927889f9a899848f4fccefd975ea5fa8d626ea4aef088f13ee8
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-theme-duotone@npm:4.23.9":
-  version: 4.23.9
-  resolution: "@uiw/codemirror-theme-duotone@npm:4.23.9"
+"@uiw/codemirror-theme-duotone@npm:4.23.10":
+  version: 4.23.10
+  resolution: "@uiw/codemirror-theme-duotone@npm:4.23.10"
   dependencies:
-    "@uiw/codemirror-themes": "npm:4.23.9"
-  checksum: 10c0/fded307cd6a64ad85b2dea92524ff84d2dbf76bc68f5a7eba3e10729a203d294af7183d557101cdf4c84c86c612b878e71eb880bad03a6080110cecbb7f1fdbe
+    "@uiw/codemirror-themes": "npm:4.23.10"
+  checksum: 10c0/058fe2ec927fb7d9fdd7a040c1fa52ed52b2b786e2917ae981a687b1aafeac26022900aac625c2018288c9bd7ab9e056854d6628eaaea46a4251b0022693df7c
   languageName: node
   linkType: hard
 
-"@uiw/codemirror-themes@npm:4.23.9":
-  version: 4.23.9
-  resolution: "@uiw/codemirror-themes@npm:4.23.9"
+"@uiw/codemirror-themes@npm:4.23.10":
+  version: 4.23.10
+  resolution: "@uiw/codemirror-themes@npm:4.23.10"
   dependencies:
     "@codemirror/language": "npm:^6.0.0"
     "@codemirror/state": "npm:^6.0.0"
@@ -3334,19 +3334,19 @@ __metadata:
     "@codemirror/language": ">=6.0.0"
     "@codemirror/state": ">=6.0.0"
     "@codemirror/view": ">=6.0.0"
-  checksum: 10c0/e9688a6deb0a42347cabe8e471df8f09e9ad8ee7bcfa1871a1dd664da042b4d6b042b725a6c3e3b941843d2490340f6950b535c6cbcfdc134c19b160625a6247
+  checksum: 10c0/29f980789a535ae021ca8d8bec3ecee4dda8cb11c5451729c04481310cc04cd7c00ddb3011137f5cc305d565bc0a3464ebd88fdde9359e296d8f0a6cf6477811
   languageName: node
   linkType: hard
 
-"@uiw/react-codemirror@npm:4.23.9":
-  version: 4.23.9
-  resolution: "@uiw/react-codemirror@npm:4.23.9"
+"@uiw/react-codemirror@npm:4.23.10":
+  version: 4.23.10
+  resolution: "@uiw/react-codemirror@npm:4.23.10"
   dependencies:
     "@babel/runtime": "npm:^7.18.6"
     "@codemirror/commands": "npm:^6.1.0"
     "@codemirror/state": "npm:^6.1.1"
     "@codemirror/theme-one-dark": "npm:^6.0.0"
-    "@uiw/codemirror-extensions-basic-setup": "npm:4.23.9"
+    "@uiw/codemirror-extensions-basic-setup": "npm:4.23.10"
     codemirror: "npm:^6.0.0"
   peerDependencies:
     "@babel/runtime": ">=7.11.0"
@@ -3356,7 +3356,7 @@ __metadata:
     codemirror: ">=6.0.0"
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: 10c0/97d3d992a72fba62c9a0a29d719dd86db75b94cff94d6e7c3a049e01492c330d1e24e018853e4bf187b89bfbad5a5ce745c74d8d817934da5fc3019a7d23c871
+  checksum: 10c0/cbcb928c84df2a6a03fd7789a3db317f6358961fd96197d2a3edb3ffbb00deff1cfa05fa1494c849393784bb89ae3f41425982f609f73bad0855a5e6522c328d
   languageName: node
   linkType: hard
 
@@ -8347,13 +8347,13 @@ __metadata:
   linkType: hard
 
 "react-confetti@npm:^6.1.0":
-  version: 6.3.0
-  resolution: "react-confetti@npm:6.3.0"
+  version: 6.4.0
+  resolution: "react-confetti@npm:6.4.0"
   dependencies:
     tween-functions: "npm:^1.2.0"
   peerDependencies:
     react: ^16.3.0 || ^17.0.1 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/fb9c799691525b5cb64a9989be7059f44e5d1f57b3588f9de11167ca98cd7b50287d4127781e3b8dc250ed306d2b6b7414951a5e2d729197021eee0e25708acf
+  checksum: 10c0/a0e1bfc826cc086e13c18f2f8997e1825025be8ea80f5b1ffdd4871babe89a6876eac99f43525d4d4cbf141fab2a9372f5d51d19fa5995b64e77e6717ac4b286
   languageName: node
   linkType: hard
 
@@ -10094,8 +10094,8 @@ __metadata:
     "@types/react-test-renderer": "npm:18.3.1"
     "@types/semver": "npm:7.5.8"
     "@types/uuid": "npm:^9.0.0"
-    "@uiw/codemirror-theme-duotone": "npm:4.23.9"
-    "@uiw/react-codemirror": "npm:4.23.9"
+    "@uiw/codemirror-theme-duotone": "npm:4.23.10"
+    "@uiw/react-codemirror": "npm:4.23.10"
     "@vitejs/plugin-react": "npm:4.3.4"
     cartesian: "npm:^1.0.1"
     chart.js: "npm:3.9.1"

@@ -825,7 +825,11 @@ export function registerPrometheusMetrics(
         eventBus,
         events.REQUEST_ORIGIN,
         ({ type, method, source }) => {
-            requestOriginCounter.increment({ type, method, source });
+            requestOriginCounter.increment({
+                type,
+                method,
+                source: source || 'unknown',
+            });
         },
     );
 

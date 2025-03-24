@@ -110,7 +110,7 @@ class UserFeedbackController extends Controller {
             feedbackId: req.params.id,
             userId: req.user.id,
             neverShow: req.body.neverShow || false,
-            given: req.body.given && parseISO(req.body.given),
+            given: (req.body.given && parseISO(req.body.given)) || new Date(),
         });
 
         this.openApiService.respondWithValidation(

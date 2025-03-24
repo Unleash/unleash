@@ -48,6 +48,7 @@ import {
     RoleUpdatedEvent,
 } from '../types';
 import type EventService from '../features/events/event-service';
+import { NotFoundError } from '../error';
 
 const { ADMIN } = permissions;
 
@@ -456,8 +457,9 @@ export class AccessService {
     async getRootRoleForUser(userId: number): Promise<IRole> {
         const rootRole = await this.store.getRootRoleForUser(userId);
         if (!rootRole) {
-            const defaultRole = await this.getPredefinedRole(RoleName.VIEWER);
-            return defaultRole;
+            // this should never happen, but before breaking we want to know if it does.
+            this.logger.warn(`Could not find root role for user=${userId}.`);
+            return this.getPredefinedRole(RoleName.VIEWER);
         }
         return rootRole;
     }
@@ -536,6 +538,9 @@ export class AccessService {
 
     async getRole(id: number): Promise<IRoleWithPermissions> {
         const role = await this.store.get(id);
+        if (role === undefined) {
+            throw new NotFoundError(`Could not find role with id ${id}`);
+        }
         const rolePermissions = await this.store.getPermissionsForRole(role.id);
         return {
             ...role,
@@ -549,6 +554,9 @@ export class AccessService {
             this.store.getPermissionsForRole(roleId),
             this.getUsersForRole(roleId),
         ]);
+        if (role === undefined) {
+            throw new NotFoundError(`Could not find role with id ${roleId}`);
+        }
         return { role, permissions: rolePerms, users };
     }
 
@@ -873,6 +881,11 @@ export class AccessService {
 
     async validateRoleIsNotBuiltIn(roleId: number): Promise<void> {
         const role = await this.store.get(roleId);
+        if (role === undefined) {
+            throw new InvalidOperationError(
+                'You cannot change a non-existing role',
+            );
+        }
         if (
             role.type !== CUSTOM_PROJECT_ROLE_TYPE &&
             role.type !== CUSTOM_ROOT_ROLE_TYPE

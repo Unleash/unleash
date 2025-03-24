@@ -153,7 +153,7 @@ export const AccessOverview = () => {
             isLoading={loading}
             header={
                 <PageHeader
-                    title={`Access overview for ${user.name ?? user.username}`}
+                    title={`Access overview for ${user.name || user.email || user.username}`}
                     actions={
                         <ConditionallyRender
                             condition={!isSmallScreen}

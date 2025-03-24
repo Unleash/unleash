@@ -253,7 +253,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
 
                 const rankingSql = this.buildRankingSql(
                     favoritesFirst,
-                    sortBy,
+                    sortBy || '',
                     validatedSortOrder,
                     lastSeenQuery,
                 );
@@ -705,12 +705,14 @@ const applyMultiQueryParams = (
     ) => (dbSubQuery: Knex.QueryBuilder) => Knex.QueryBuilder,
 ): void => {
     queryParams.forEach((param) => {
-        const values = param.values.map((val) =>
-            (Array.isArray(fields)
-                ? val.split(/:(.+)/).filter(Boolean)
-                : [val]
-            ).map((s) => s.trim()),
-        );
+        const values = param.values
+            .filter((v) => typeof v === 'string')
+            .map((val) =>
+                (Array.isArray(fields)
+                    ? val!.split(/:(.+)/).filter(Boolean)
+                    : [val]
+                ).map((s) => s?.trim() || ''),
+            );
         const baseSubQuery = createBaseQuery(values);
 
         switch (param.operator) {

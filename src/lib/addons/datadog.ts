@@ -32,7 +32,7 @@ interface DDRequestBody {
 export default class DatadogAddon extends Addon {
     private msgFormatter: FeatureEventFormatter;
 
-    flagResolver: IFlagResolver;
+    declare flagResolver: IFlagResolver;
 
     constructor(config: IAddonConfig) {
         super(definition, config);

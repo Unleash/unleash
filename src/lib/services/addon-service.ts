@@ -27,6 +27,7 @@ import type { IAddonDefinition } from '../types/model';
 import { minutesToMilliseconds } from 'date-fns';
 import type EventService from '../features/events/event-service';
 import { omitKeys } from '../util';
+import { NotFoundError } from '../error';
 
 const SUPPORTED_EVENTS = Object.keys(events).map((k) => events[k]);
 
@@ -110,7 +111,7 @@ export default class AddonService {
         );
         return providerDefinitions.reduce((obj, definition) => {
             const sensitiveParams = definition.parameters
-                .filter((p) => p.sensitive)
+                ?.filter((p) => p.sensitive)
                 .map((p) => p.name);
 
             const o = { ...obj };
@@ -183,6 +184,9 @@ export default class AddonService {
 
     async getAddon(id: number): Promise<IAddon> {
         const addonConfig = await this.addonStore.get(id);
+        if (addonConfig === undefined) {
+            throw new NotFoundError();
+        }
         return this.filterSensitiveFields(addonConfig);
     }
 
@@ -240,7 +244,10 @@ export default class AddonService {
         data: IAddonDto,
         auditUser: IAuditUser,
     ): Promise<IAddon> {
-        const existingConfig = await this.addonStore.get(id); // because getting an early 404 here makes more sense
+        const existingConfig = await this.addonStore.get(id);
+        if (existingConfig === undefined) {
+            throw new NotFoundError();
+        } // because getting an early 404 here makes more sense
         const addonConfig = await addonSchema.validateAsync(data);
         await this.validateKnownProvider(addonConfig);
         await this.validateRequiredParameters(addonConfig);
@@ -272,6 +279,10 @@ export default class AddonService {
 
     async removeAddon(id: number, auditUser: IAuditUser): Promise<void> {
         const existingConfig = await this.addonStore.get(id);
+        if (existingConfig === undefined) {
+            /// No config, no need to delete
+            return;
+        }
         await this.addonStore.delete(id);
         await this.eventService.storeEvent(
             new AddonConfigDeletedEvent({
@@ -310,13 +321,14 @@ export default class AddonService {
     }): Promise<boolean> {
         const providerDefinition = this.addonProviders[provider].definition;
 
-        const requiredParamsMissing = providerDefinition.parameters
-            .filter((p) => p.required)
-            .map((p) => p.name)
-            .filter(
-                (requiredParam) =>
-                    !Object.keys(parameters).includes(requiredParam),
-            );
+        const requiredParamsMissing =
+            providerDefinition.parameters
+                ?.filter((p) => p.required)
+                .map((p) => p.name)
+                .filter(
+                    (requiredParam) =>
+                        !Object.keys(parameters).includes(requiredParam),
+                ) || [];
         if (requiredParamsMissing.length > 0) {
             throw new ValidationError(
                 `Missing required parameters: ${requiredParamsMissing.join(

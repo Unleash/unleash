@@ -352,12 +352,12 @@ test('Should get metric', async () => {
         },
     ];
     await clientMetricsStore.batchInsertMetrics(metrics);
-    const metric = await clientMetricsStore.get({
+    const metric = (await clientMetricsStore.get({
         featureName: 'demo4',
         timestamp: twoDaysAgo,
         appName: 'backend-api',
         environment: 'dev',
-    });
+    }))!;
 
     expect(metric.featureName).toBe('demo4');
     expect(metric.yes).toBe(41);

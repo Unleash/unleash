@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material';
 import { PlaygroundResultChip } from '../../../../PlaygroundResultChip/PlaygroundResultChip';
 import type {
     PlaygroundStrategySchema,
@@ -20,11 +19,10 @@ export const FeatureStrategyItem = ({
     className,
 }: IFeatureStrategyItemProps) => {
     const { result } = strategy;
-    const theme = useTheme();
     const label =
         result.evaluationStatus === 'incomplete' ||
         result.evaluationStatus === 'unevaluated'
-            ? 'Unevaluated'
+            ? 'Not evaluated'
             : result.enabled
               ? 'True'
               : 'False';
@@ -35,12 +33,13 @@ export const FeatureStrategyItem = ({
             strategyHeaderLevel={4}
             className={className}
             headerItemsLeft={
-                <PlaygroundResultChip
-                    tabindex={-1}
-                    showIcon={false}
-                    enabled={result.enabled}
-                    label={label}
-                />
+                strategy.disabled ? null : (
+                    <PlaygroundResultChip
+                        showIcon={false}
+                        enabled={result.enabled}
+                        label={label}
+                    />
+                )
             }
         >
             <StrategyExecution strategyResult={strategy} input={input} />

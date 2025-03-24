@@ -53,7 +53,7 @@ export const EditReleasePlanTemplate = () => {
     );
 
     const handleCancel = () => {
-        navigate('/release-management');
+        navigate('/release-templates');
     };
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -68,7 +68,7 @@ export const EditReleasePlanTemplate = () => {
                 await refetch();
                 setToastData({
                     type: 'success',
-                    text: 'Release plan template updated',
+                    text: 'Release template updated',
                 });
 
                 trackEvent('release-management', {
@@ -78,7 +78,7 @@ export const EditReleasePlanTemplate = () => {
                     },
                 });
 
-                navigate('/release-management');
+                navigate('/release-templates');
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }

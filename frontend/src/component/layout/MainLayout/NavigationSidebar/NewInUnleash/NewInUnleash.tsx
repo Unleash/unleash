@@ -168,7 +168,7 @@ export const NewInUnleash = ({
             summary: 'Save time with release plans',
             icon: <StyledReleaseManagementIcon />,
             preview: <ReleaseManagementPreview />,
-            onCheckItOut: () => navigate('/release-management'),
+            onCheckItOut: () => navigate('/release-templates'),
             show: isEnterprise() && releasePlansEnabled,
             beta: true,
             longDescription: (

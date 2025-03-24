@@ -16,7 +16,6 @@ import { MilestoneCardName } from './MilestoneCardName';
 import { MilestoneStrategyMenuCards } from './MilestoneStrategyMenu/MilestoneStrategyMenuCards';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import { ReleasePlanTemplateAddStrategyForm } from '../../MilestoneStrategy/ReleasePlanTemplateAddStrategyForm';
-import DragIndicator from '@mui/icons-material/DragIndicator';
 import { type OnMoveItem, useDragItem } from 'hooks/useDragItem';
 import type { IExtendedMilestonePayload } from 'component/releases/hooks/useTemplateForm';
 
@@ -24,9 +23,9 @@ import { StrategySeparator } from 'component/common/StrategySeparator/StrategySe
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/DeleteOutlined';
 import { StrategyDraggableItem } from 'component/feature/FeatureView/FeatureOverview/FeatureOverviewEnvironments/FeatureOverviewEnvironment/EnvironmentAccordionBody/StrategyDraggableItem/StrategyDraggableItem';
-import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
 import { StrategyList } from 'component/common/StrategyList/StrategyList';
 import { StrategyListItem } from 'component/common/StrategyList/StrategyListItem';
+import { MilestoneCardDragHandle } from './MilestoneCardDragHandle';
 
 const leftPadding = 3;
 
@@ -122,38 +121,6 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.primary.main,
 }));
 
-const DragButton = styled('button')(({ theme }) => ({
-    padding: 0,
-    cursor: 'grab',
-    transition: 'background-color 0.2s ease-in-out',
-    backgroundColor: 'inherit',
-    border: 'none',
-    borderRadius: theme.shape.borderRadiusMedium,
-    color: theme.palette.text.secondary,
-    ':hover, :focus-visible': {
-        '.draggable-hover-indicator': {
-            background: theme.palette.table.headerHover,
-        },
-    },
-}));
-
-const DraggableContent = styled('span')(({ theme }) => ({
-    paddingTop: theme.spacing(2),
-    paddingInline: theme.spacing(0.5),
-    display: 'block',
-    height: '100%',
-    width: '100%',
-}));
-
-const DraggableHoverIndicator = styled('span')(({ theme }) => ({
-    display: 'block',
-    paddingBlock: theme.spacing(0.75),
-    borderRadius: theme.shape.borderRadiusMedium,
-    '> svg': {
-        verticalAlign: 'bottom',
-    },
-}));
-
 export interface IMilestoneCardProps {
     milestone: IExtendedMilestonePayload;
     milestoneChanged: (milestone: IExtendedMilestonePayload) => void;
@@ -195,17 +162,6 @@ export const MilestoneCard = ({
         index,
         onMoveItem,
         dragHandleRef,
-    );
-
-    const dragHandle = (
-        <DragButton type='button'>
-            <DraggableContent ref={dragItemRef}>
-                <DraggableHoverIndicator className='draggable-hover-indicator'>
-                    <DragIndicator aria-hidden />
-                </DraggableHoverIndicator>
-                <ScreenReaderOnly>Drag to reorder</ScreenReaderOnly>
-            </DraggableContent>
-        </DragButton>
     );
 
     const onClose = () => {
@@ -376,7 +332,7 @@ export const MilestoneCard = ({
         return (
             <>
                 <DraggableCardContainer>
-                    {dragHandle}
+                    <MilestoneCardDragHandle dragItemRef={dragItemRef} />
                     <StyledMilestoneCard
                         hasError={
                             Boolean(errors?.[milestone.id]) ||
@@ -459,7 +415,7 @@ export const MilestoneCard = ({
     return (
         <>
             <DraggableCardContainer ref={dragItemRef}>
-                {dragHandle}
+                <MilestoneCardDragHandle dragItemRef={dragItemRef} />
                 <StyledAccordion
                     expanded={expanded}
                     onChange={(e, change) => setExpanded(change)}

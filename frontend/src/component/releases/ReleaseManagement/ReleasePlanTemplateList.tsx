@@ -1,6 +1,7 @@
 import { Grid, styled } from '@mui/material';
 import { ReleasePlanTemplateCard } from './ReleasePlanTemplateCard/ReleasePlanTemplateCard';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
+import { ReleasesFeedback } from '../ReleasesFeedback/ReleasesFeedback';
 
 const StyledGridItem = styled(Grid)({
     minHeight: '180px',
@@ -20,6 +21,11 @@ export const ReleasePlanTemplateList: React.FC<ITemplateList> = ({
                     <ReleasePlanTemplateCard template={template} />
                 </StyledGridItem>
             ))}
+            {templates.length > 0 && (
+                <StyledGridItem key='feedback' item xs={6} md={4}>
+                    <ReleasesFeedback />
+                </StyledGridItem>
+            )}
         </>
     );
 };

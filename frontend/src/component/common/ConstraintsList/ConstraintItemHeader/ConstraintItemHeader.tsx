@@ -56,6 +56,8 @@ const StyledOperatorGroup = styled('div')(({ theme }) => ({
 
 const StyledConstraintName = styled('div')(({ theme }) => ({
     maxWidth: '150px',
+    // flexGrow: '1',
+    // flexShrink: '0',
     paddingRight: theme.spacing(0.5),
     overflow: 'hidden',
 }));
@@ -83,24 +85,33 @@ export const ConstraintItemHeader: FC<ConstraintItemHeaderProps> = ({
 
     return (
         <StrategyEvaluationItem type='Constraint'>
-            <StyledConstraintName>
-                <Truncator lines={2} title={contextName} arrow>
-                    {contextName}
-                </Truncator>
-            </StyledConstraintName>
-            <StyledOperatorGroup>
-                <Operator label={operator} inverted={inverted} />
-                {isCaseSensitive(operator, caseInsensitive) ? (
-                    <CaseSensitive />
-                ) : null}
-            </StyledOperatorGroup>
-            <div>
-                <ValuesList
-                    values={items}
-                    onSetTruncated={onSetTruncated}
-                    tooltips={tooltips}
-                />
-                {viewMore}
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, auto)',
+                    gap: '8px',
+                    placeItems: 'center',
+                }}
+            >
+                <StyledConstraintName>
+                    <Truncator lines={1} title={contextName} arrow>
+                        {contextName}
+                    </Truncator>
+                </StyledConstraintName>
+                <StyledOperatorGroup>
+                    <Operator label={operator} inverted={inverted} />
+                    {isCaseSensitive(operator, caseInsensitive) ? (
+                        <CaseSensitive />
+                    ) : null}
+                </StyledOperatorGroup>
+                <div>
+                    <ValuesList
+                        values={items}
+                        onSetTruncated={onSetTruncated}
+                        tooltips={tooltips}
+                    />
+                    {viewMore}
+                </div>
             </div>
         </StrategyEvaluationItem>
     );

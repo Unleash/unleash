@@ -54,8 +54,8 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
             ))}
             {constraints?.map((constraint, index) => (
                 <ConstraintAccordionView
-                    constraint={constraint}
                     key={`${objectId(constraint)}-${index}`}
+                    constraint={constraint}
                 />
             ))}
             {(isCustomStrategy ? customStrategyItems : strategyParameters).map(

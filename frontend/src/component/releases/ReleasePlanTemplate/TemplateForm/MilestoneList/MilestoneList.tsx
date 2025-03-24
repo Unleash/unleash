@@ -57,8 +57,8 @@ export const MilestoneList = ({
 
                 // prevent oscillating by only reordering if there is sufficient space
                 if (
-                    (overTargetTop && draggingUp) ||
-                    (overTargetBottom && !draggingUp)
+                    (draggingUp && overTargetTop) ||
+                    (!draggingUp && overTargetBottom)
                 ) {
                     // reorder here
                     const oldMilestones = milestones || [];

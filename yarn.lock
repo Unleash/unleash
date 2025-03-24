@@ -1609,14 +1609,14 @@ __metadata:
   linkType: hard
 
 "@slack/web-api@npm:^7.3.4":
-  version: 7.8.0
-  resolution: "@slack/web-api@npm:7.8.0"
+  version: 7.9.0
+  resolution: "@slack/web-api@npm:7.9.0"
   dependencies:
     "@slack/logger": "npm:^4.0.0"
     "@slack/types": "npm:^2.9.0"
     "@types/node": "npm:>=18.0.0"
     "@types/retry": "npm:0.12.0"
-    axios: "npm:^1.7.8"
+    axios: "npm:^1.8.3"
     eventemitter3: "npm:^5.0.1"
     form-data: "npm:^4.0.0"
     is-electron: "npm:2.2.2"
@@ -1624,7 +1624,7 @@ __metadata:
     p-queue: "npm:^6"
     p-retry: "npm:^4"
     retry: "npm:^0.13.1"
-  checksum: 10c0/25e3d9f9427993de11d9314fc98bbd6389bf2405981c44e1cf91a07074717daa3184445c7ce650d65fc41d28781a7ea19a8cbbda172be6b14c9b25c0d5c3739f
+  checksum: 10c0/10960a65bddac7abc980264610face6287da3e3ffb59ce17c69b010102292560e05978a94ef0940f3478ba7e7c65c29609f17a8bc26cf3f59be23d83a61c77ab
   languageName: node
   linkType: hard
 
@@ -2608,17 +2608,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:^1.7.8":
-  version: 1.8.2
-  resolution: "axios@npm:1.8.2"
-  dependencies:
-    follow-redirects: "npm:^1.15.6"
-    form-data: "npm:^4.0.0"
-    proxy-from-env: "npm:^1.1.0"
-  checksum: 10c0/d8c2969e4642dc6d39555ac58effe06c051ba7aac2bd40cad7a9011c019fb2f16ee011c5a6906cb25b8a4f87258c359314eb981f852e60ad445ecaeb793c7aa2
-  languageName: node
-  linkType: hard
-
 "axios@npm:^1.8.2":
   version: 1.8.3
   resolution: "axios@npm:1.8.3"
@@ -2627,6 +2616,17 @@ __metadata:
     form-data: "npm:^4.0.0"
     proxy-from-env: "npm:^1.1.0"
   checksum: 10c0/de75da9859adf0a6481d4af2b687db357a054d20f0d69b99d502b71dae3578326b1fdc0951dabaef769827484941cda93d3f89150bf9e04f05f6615fb8316780
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.8.3":
+  version: 1.8.4
+  resolution: "axios@npm:1.8.4"
+  dependencies:
+    follow-redirects: "npm:^1.15.6"
+    form-data: "npm:^4.0.0"
+    proxy-from-env: "npm:^1.1.0"
+  checksum: 10c0/450993c2ba975ffccaf0d480b68839a3b2435a5469a71fa2fb0b8a55cdb2c2ae47e609360b9c1e2b2534b73dfd69e2733a1cf9f8215bee0bcd729b72f801b0ce
   languageName: node
   linkType: hard
 

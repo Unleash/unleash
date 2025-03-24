@@ -19,12 +19,20 @@ import NotFound from 'component/common/NotFound/NotFound';
 import { AdminIndex } from './AdminIndex';
 import { Banners } from './banners/Banners';
 import { License } from './license/License';
+import { useUiFlag } from 'hooks/useUiFlag';
+import { AdminHome } from './AdminHome';
 
 export const Admin = () => {
+    const newAdminUIEnabled = useUiFlag('adminNavUI');
+
     return (
         <>
             <Routes>
-                <Route index element={<AdminIndex />} />
+                {newAdminUIEnabled ? (
+                    <Route index element={<AdminHome />} />
+                ) : (
+                    <Route index element={<AdminIndex />} />
+                )}
                 <Route path='users/*' element={<UsersAdmin />} />
                 <Route path='api' element={<ApiTokenPage />} />
                 <Route path='api/create-token' element={<CreateApiToken />} />

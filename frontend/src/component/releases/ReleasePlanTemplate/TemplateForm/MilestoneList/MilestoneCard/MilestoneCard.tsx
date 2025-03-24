@@ -10,7 +10,7 @@ import {
     FormHelperText,
 } from '@mui/material';
 import type { IReleasePlanMilestoneStrategy } from 'interfaces/releasePlans';
-import { type DragEventHandler, type RefObject, useRef, useState } from 'react';
+import { type DragEventHandler, type RefObject, useState } from 'react';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { MilestoneCardName } from './MilestoneCardName';
 import { MilestoneStrategyMenuCards } from './MilestoneStrategyMenu/MilestoneStrategyMenuCards';
@@ -156,13 +156,7 @@ export const MilestoneCard = ({
         ? 'MilestoneStrategyMenuPopover'
         : undefined;
 
-    const dragHandleRef = useRef(null);
-
-    const dragItemRef = useDragItem<HTMLSpanElement>(
-        index,
-        onMoveItem,
-        dragHandleRef,
-    );
+    const dragItemRef = useDragItem<HTMLSpanElement>(index, onMoveItem);
 
     const onClose = () => {
         setAnchor(undefined);
@@ -414,7 +408,7 @@ export const MilestoneCard = ({
 
     return (
         <>
-            <DraggableCardContainer ref={dragItemRef}>
+            <DraggableCardContainer>
                 <MilestoneCardDragHandle dragItemRef={dragItemRef} />
                 <StyledAccordion
                     expanded={expanded}

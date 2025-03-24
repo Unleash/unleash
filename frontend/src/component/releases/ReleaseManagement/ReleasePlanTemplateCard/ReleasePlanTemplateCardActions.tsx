@@ -53,7 +53,7 @@ export const ReleasePlanTemplateCardActions = ({
             refetch();
             setToastData({
                 type: 'success',
-                text: 'Release plan template archived',
+                text: 'Release template archived',
             });
 
             trackEvent('release-management', {
@@ -85,7 +85,7 @@ export const ReleasePlanTemplateCardActions = ({
                 e.stopPropagation();
             }}
         >
-            <Tooltip title='Release plan template actions' arrow describeChild>
+            <Tooltip title='Release template actions' arrow describeChild>
                 <IconButton
                     id={id}
                     aria-controls={open ? 'actions-menu' : undefined}
@@ -111,7 +111,7 @@ export const ReleasePlanTemplateCardActions = ({
                     <MenuItem
                         onClick={handleClose}
                         component={Link}
-                        to={`/release-management/edit/${template.id}`}
+                        to={`/release-templates/edit/${template.id}`}
                     >
                         <ListItemIcon>
                             <EditIcon />

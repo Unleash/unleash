@@ -34,6 +34,6 @@ export const useReleasePlanTemplates = () => {
 
 const fetcher = (path: string) => {
     return fetch(path)
-        .then(handleErrorResponses('Release plan templates'))
+        .then(handleErrorResponses('Release templates'))
         .then((res) => res.json());
 };

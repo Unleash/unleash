@@ -31,7 +31,7 @@ export const CreateReleasePlanTemplate = () => {
     const navigate = useNavigate();
     const { createReleasePlanTemplate } = useReleasePlanTemplatesApi();
     const { trackEvent } = usePlausibleTracker();
-    usePageTitle('Create release plan template');
+    usePageTitle('Create release template');
     const {
         name,
         setName,
@@ -61,7 +61,7 @@ export const CreateReleasePlanTemplate = () => {
                 scrollToTop();
                 setToastData({
                     type: 'success',
-                    text: 'Release plan template created',
+                    text: 'Release template created',
                 });
 
                 trackEvent('release-management', {
@@ -71,7 +71,7 @@ export const CreateReleasePlanTemplate = () => {
                     },
                 });
 
-                navigate('/release-management');
+                navigate('/release-templates');
             } catch (error: unknown) {
                 setToastApiError(formatUnknownError(error));
             }
@@ -99,7 +99,7 @@ export const CreateReleasePlanTemplate = () => {
             setMilestones={setMilestones}
             errors={errors}
             clearErrors={clearErrors}
-            formTitle='Create release plan template'
+            formTitle='Create release template'
             formatApiCode={formatApiCode}
             handleSubmit={handleSubmit}
         >

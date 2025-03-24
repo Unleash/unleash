@@ -4,7 +4,7 @@ import {
     createGetProductionChanges,
     type GetProductionChanges,
 } from './getProductionChanges';
-import subDays from 'date-fns/subDays';
+import { subDays } from 'date-fns';
 let db: ITestDb;
 let getProductionChanges: GetProductionChanges;
 

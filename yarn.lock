@@ -3198,23 +3198,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"concurrently@npm:^8.0.1":
-  version: 8.2.2
-  resolution: "concurrently@npm:8.2.2"
+"concurrently@npm:^9.0.0":
+  version: 9.1.2
+  resolution: "concurrently@npm:9.1.2"
   dependencies:
     chalk: "npm:^4.1.2"
-    date-fns: "npm:^2.30.0"
     lodash: "npm:^4.17.21"
     rxjs: "npm:^7.8.1"
     shell-quote: "npm:^1.8.1"
-    spawn-command: "npm:0.0.2"
     supports-color: "npm:^8.1.1"
     tree-kill: "npm:^1.2.2"
     yargs: "npm:^17.7.2"
   bin:
     conc: dist/bin/concurrently.js
     concurrently: dist/bin/concurrently.js
-  checksum: 10c0/0e9683196fe9c071d944345d21d8f34aa6c0cc50c0dd897e95619f2f1c9eb4871dca851b2569da17888235b7335b4c821ca19deed35bebcd9a131ee5d247f34c
+  checksum: 10c0/88e00269366aa885ca2b97fd53b04e7af2b0f31774d991bfc0e88c0de61cdebdf115ddacc9c897fbd1f1b90369014637fa77045a171d072a75693332b36dcc70
   languageName: node
   linkType: hard
 
@@ -3446,7 +3444,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.25.0, date-fns@npm:^2.30.0":
+"date-fns@npm:^2.25.0":
   version: 2.30.0
   resolution: "date-fns@npm:2.30.0"
   dependencies:
@@ -8556,13 +8554,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"spawn-command@npm:0.0.2":
-  version: 0.0.2
-  resolution: "spawn-command@npm:0.0.2"
-  checksum: 10c0/b22f2d71239e6e628a400831861ba747750bbb40c0a53323754cf7b84330b73d81e40ff1f9055e6d1971818679510208a9302e13d9ff3b32feb67e74d7a1b3ef
-  languageName: node
-  linkType: hard
-
 "spdx-correct@npm:^3.0.0":
   version: 3.1.1
   resolution: "spdx-correct@npm:3.1.1"
@@ -9375,7 +9366,7 @@ __metadata:
     async: "npm:^3.2.4"
     bcryptjs: "npm:^2.4.3"
     compression: "npm:^1.7.4"
-    concurrently: "npm:^8.0.1"
+    concurrently: "npm:^9.0.0"
     connect-session-knex: "npm:^5.0.0"
     cookie-parser: "npm:^1.4.6"
     cookie-session: "npm:^2.0.0-rc.1"

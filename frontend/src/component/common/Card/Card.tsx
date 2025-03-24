@@ -1,4 +1,4 @@
-import { styled, Card as MUICard, Box } from '@mui/material';
+import { styled, Card as MUICard, Box, type CardProps } from '@mui/material';
 
 const StyledCard = styled(MUICard)(({ theme }) => ({
     display: 'flex',
@@ -77,7 +77,7 @@ const StyledCardFooter = styled(Box)(({ theme }) => ({
     textWrap: 'nowrap',
 }));
 
-interface ICardProps {
+interface ICardProps extends Omit<CardProps, 'title'> {
     icon?: React.ReactNode;
     title?: React.ReactNode;
     headerActions?: React.ReactNode;
@@ -91,8 +91,9 @@ export const Card = ({
     headerActions,
     footer,
     children,
+    ...props
 }: ICardProps) => (
-    <StyledCard>
+    <StyledCard {...props}>
         <StyledCardBody>
             <StyledCardBodyHeader>
                 {icon && (

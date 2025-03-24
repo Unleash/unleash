@@ -32,38 +32,49 @@ export const MilestoneList = ({
 }: IMilestoneListProps) => {
     const useNewMilestoneCard = useUiFlag('flagOverviewRedesign');
     const onMoveItem: OnMoveItem = useCallback(
-        async (dragIndex: number, dropIndex: number, save?: boolean) => {
-            if (useNewMilestoneCard && save) {
+        async (
+            dragIndex: number,
+            dropIndex: number,
+            save: boolean,
+            event: DragEvent,
+            draggedElement: HTMLElement,
+        ) => {
+            if (useNewMilestoneCard && (save || event.type === 'drop')) {
                 return; // the user has let go, we should leave the current sort order as it is currently visually displayed
             }
+            if (event.type === 'dragenter' && dragIndex !== dropIndex) {
+                const target = event.target as HTMLElement;
 
-            if (dragIndex !== dropIndex) {
-                // todo! See if there's a way to make this snippet to stabilize dragging before removing flag `flagOverviewRedesign`
-                // We don't have a reference to `ref` or `event` here, but maybe we can make it work? Somehow?
+                const draggedElementHeight =
+                    draggedElement.getBoundingClientRect().height;
 
-                // const { top, bottom } = ref.current.getBoundingClientRect();
-                // const overTargetTop = event.clientY - top < dragItem.height;
-                // const overTargetBottom =
-                //     bottom - event.clientY < dragItem.height;
-                // const draggingUp = dragItem.index > targetIndex;
+                const { top, bottom } = target.getBoundingClientRect();
+                const overTargetTop =
+                    event.clientY - top < draggedElementHeight;
+                const overTargetBottom =
+                    bottom - event.clientY < draggedElementHeight;
+                const draggingUp = dragIndex > dropIndex;
 
-                // // prevent oscillating by only reordering if there is sufficient space
-                // if (
-                //     (overTargetTop && draggingUp) ||
-                //     (overTargetBottom && !draggingUp)
-                // ) {
-                //     // reorder here
-                // }
-                const oldMilestones = milestones || [];
-                const newMilestones = [...oldMilestones];
-                const movedMilestone = newMilestones.splice(dragIndex, 1)[0];
-                newMilestones.splice(dropIndex, 0, movedMilestone);
+                // prevent oscillating by only reordering if there is sufficient space
+                if (
+                    (overTargetTop && draggingUp) ||
+                    (overTargetBottom && !draggingUp)
+                ) {
+                    // reorder here
+                    const oldMilestones = milestones || [];
+                    const newMilestones = [...oldMilestones];
+                    const movedMilestone = newMilestones.splice(
+                        dragIndex,
+                        1,
+                    )[0];
+                    newMilestones.splice(dropIndex, 0, movedMilestone);
 
-                newMilestones.forEach((milestone, index) => {
-                    milestone.sortOrder = index;
-                });
+                    newMilestones.forEach((milestone, index) => {
+                        milestone.sortOrder = index;
+                    });
 
-                setMilestones(newMilestones);
+                    setMilestones(newMilestones);
+                }
             }
         },
         [milestones],

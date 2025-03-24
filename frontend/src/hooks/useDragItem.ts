@@ -3,7 +3,9 @@ import { useRef, useEffect, type RefObject } from 'react';
 export type OnMoveItem = (
     dragIndex: number,
     dropIndex: number,
-    save?: boolean,
+    save: boolean,
+    event: DragEvent,
+    draggedElement: HTMLElement,
 ) => void;
 
 // The element being dragged in the browser.
@@ -37,11 +39,11 @@ const addEventListeners = (
 ): (() => void) => {
     const handleEl = handle ?? el;
 
-    const moveDraggedElement = (save: boolean) => {
+    const moveDraggedElement = (save: boolean, event: DragEvent) => {
         if (globalDraggedElement) {
             const fromIndex = Number(globalDraggedElement.dataset.index);
             const toIndex = Number(el.dataset.index);
-            onMoveItem(fromIndex, toIndex, save);
+            onMoveItem(fromIndex, toIndex, save, event, globalDraggedElement);
         }
     };
 
@@ -60,16 +62,16 @@ const addEventListeners = (
         globalDraggedElement = el;
     };
 
-    const onDragEnter = () => {
-        moveDraggedElement(false);
+    const onDragEnter = (event: DragEvent) => {
+        moveDraggedElement(false, event);
     };
 
     const onDragOver = (event: DragEvent) => {
         event.preventDefault();
     };
 
-    const onDrop = () => {
-        moveDraggedElement(true);
+    const onDrop = (event: DragEvent) => {
+        moveDraggedElement(true, event);
         globalDraggedElement = null;
     };
 

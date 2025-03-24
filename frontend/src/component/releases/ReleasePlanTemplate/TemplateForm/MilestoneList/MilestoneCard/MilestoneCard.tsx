@@ -130,17 +130,28 @@ const DragButton = styled('button')(({ theme }) => ({
     border: 'none',
     borderRadius: theme.shape.borderRadiusMedium,
     color: theme.palette.text.secondary,
-    '&:hover, &:focus-visible': {
-        background: theme.palette.table.headerHover,
-        outline: 'none',
+    ':hover, :focus-visible': {
+        '.draggable-hover-indicator': {
+            background: theme.palette.table.headerHover,
+        },
     },
 }));
 
 const DraggableContent = styled('span')(({ theme }) => ({
-    paddingTop: theme.spacing(2.75),
+    paddingTop: theme.spacing(2),
+    paddingInline: theme.spacing(0.5),
     display: 'block',
     height: '100%',
     width: '100%',
+}));
+
+const DraggableHoverIndicator = styled('span')(({ theme }) => ({
+    display: 'block',
+    paddingBlock: theme.spacing(0.75),
+    borderRadius: theme.shape.borderRadiusMedium,
+    '> svg': {
+        verticalAlign: 'bottom',
+    },
 }));
 
 export interface IMilestoneCardProps {
@@ -189,7 +200,9 @@ export const MilestoneCard = ({
     const dragHandle = (
         <DragButton type='button'>
             <DraggableContent ref={dragItemRef}>
-                <DragIndicator aria-hidden />
+                <DraggableHoverIndicator className='draggable-hover-indicator'>
+                    <DragIndicator aria-hidden />
+                </DraggableHoverIndicator>
                 <ScreenReaderOnly>Drag to reorder</ScreenReaderOnly>
             </DraggableContent>
         </DragButton>

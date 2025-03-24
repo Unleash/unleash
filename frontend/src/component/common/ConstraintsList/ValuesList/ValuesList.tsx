@@ -1,9 +1,10 @@
 import type { FC } from 'react';
-import { styled, Tooltip } from '@mui/material';
+import { styled } from '@mui/material';
 import {
     Truncator,
     type TruncatorProps,
 } from 'component/common/Truncator/Truncator';
+import { TooltipResolver } from 'component/common/TooltipResolver/TooltipResolver';
 
 export type ValuesListProps = {
     values?: string[];
@@ -14,7 +15,11 @@ const StyledValuesContainer = styled('div')({
     flex: '1 1 0',
 });
 
-const StyledValueItem = styled('span')(({ theme }) => ({
+const StyledTruncator = styled(Truncator)({
+    padding: 0,
+});
+
+const StyledValueItem = styled('li')(({ theme }) => ({
     padding: theme.spacing(0.25),
     display: 'inline-block',
     span: {
@@ -45,22 +50,30 @@ export const ValuesList: FC<ValuesListProps> = ({
                     lines={2}
                     onSetTruncated={() => onSetTruncated?.(false)}
                 >
-                    <Tooltip title={tooltips?.[values[0]] || ''}>
+                    <TooltipResolver title={tooltips?.[values[0]] || ''}>
                         <span>{values[0]}</span>
-                    </Tooltip>
+                    </TooltipResolver>
                 </Truncator>
             </StyledSingleValue>
         ) : null}
         {values && values?.length > 1 ? (
-            <Truncator title='' lines={2} onSetTruncated={onSetTruncated}>
+            <StyledTruncator
+                title=''
+                lines={2}
+                onSetTruncated={onSetTruncated}
+                component='ul'
+            >
                 {values.map((value) => (
-                    <Tooltip title={tooltips?.[value] || ''} key={value}>
+                    <TooltipResolver
+                        title={tooltips?.[value] || ''}
+                        key={value}
+                    >
                         <StyledValueItem>
                             <span>{value}</span>
                         </StyledValueItem>
-                    </Tooltip>
+                    </TooltipResolver>
                 ))}
-            </Truncator>
+            </StyledTruncator>
         ) : null}
     </StyledValuesContainer>
 );

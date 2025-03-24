@@ -1,9 +1,7 @@
-import { IconButton, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintItemHeader } from 'component/common/ConstraintsList/ConstraintItemHeader/ConstraintItemHeader';
 import { useState } from 'react';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const StyledHeaderWrapper = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -26,7 +24,6 @@ const StyledHeaderMetaInfo = styled('div')(({ theme }) => ({
 
 interface ConstraintAccordionViewHeaderMetaInfoProps {
     constraint: IConstraint;
-    singleValue: boolean;
     expanded: boolean;
     allowExpand: (shouldExpand: boolean) => void;
     disabled?: boolean;
@@ -49,12 +46,12 @@ export const ConstraintAccordionViewHeaderInfo = ({
                         setExpandable(state);
                         allowExpand(state);
                     }}
+                    viewMore={
+                        expandable ? (
+                            <>{expanded ? 'close' : 'view all'}</>
+                        ) : null
+                    }
                 />
-                {expandable ? (
-                    <IconButton type='button'>
-                        {expanded ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                    </IconButton>
-                ) : null}
             </StyledHeaderMetaInfo>
         </StyledHeaderWrapper>
     );

@@ -3,7 +3,7 @@ import type { FeatureStrategySchema } from 'openapi';
 import type { IFeatureStrategyPayload } from 'interfaces/strategy';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { StrategyExecution as LegacyStrategyExecution } from './LegacyStrategyExecution';
-import { ConstraintItemHeader } from 'component/common/ConstraintsList/ConstraintItemHeader/ConstraintItemHeader';
+import { ConstraintAccordionView } from 'component/common/NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionView';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { objectId } from 'utils/objectId';
 import { useCustomStrategyParameters } from './hooks/useCustomStrategyParameters';
@@ -53,10 +53,10 @@ export const StrategyExecution: FC<StrategyExecutionProps> = ({
                 <SegmentItem segment={segment} key={segment.id} />
             ))}
             {constraints?.map((constraint, index) => (
-                <ConstraintListItem key={`${objectId(constraint)}-${index}`}>
-                    {/* FIXME: use constraint accordion */}
-                    <ConstraintItemHeader {...constraint} />
-                </ConstraintListItem>
+                <ConstraintAccordionView
+                    constraint={constraint}
+                    key={`${objectId(constraint)}-${index}`}
+                />
             ))}
             {(isCustomStrategy ? customStrategyItems : strategyParameters).map(
                 (item, index) => (

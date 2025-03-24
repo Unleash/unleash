@@ -1,4 +1,4 @@
-import type { ComponentProps, FC } from 'react';
+import type { ComponentProps, FC, ReactNode } from 'react';
 import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
 import type { ConstraintSchema } from 'openapi';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
@@ -60,9 +60,15 @@ const StyledConstraintName = styled('div')(({ theme }) => ({
     overflow: 'hidden',
 }));
 
-export const ConstraintItemHeader: FC<
-    ConstraintSchema & Pick<ComponentProps<typeof ValuesList>, 'onSetTruncated'>
-> = ({ onSetTruncated, ...constraint }) => {
+type ConstraintItemHeaderProps = ConstraintSchema & {
+    viewMore?: ReactNode;
+} & Pick<ComponentProps<typeof ValuesList>, 'onSetTruncated'>;
+
+export const ConstraintItemHeader: FC<ConstraintItemHeaderProps> = ({
+    onSetTruncated,
+    viewMore,
+    ...constraint
+}) => {
     const { caseInsensitive, contextName, inverted, operator, value, values } =
         constraint;
     const { locationSettings } = useLocationSettings();
@@ -88,11 +94,14 @@ export const ConstraintItemHeader: FC<
                     <CaseSensitive />
                 ) : null}
             </StyledOperatorGroup>
-            <ValuesList
-                values={items}
-                onSetTruncated={onSetTruncated}
-                tooltips={tooltips}
-            />
+            <div>
+                <ValuesList
+                    values={items}
+                    onSetTruncated={onSetTruncated}
+                    tooltips={tooltips}
+                />
+                {viewMore}
+            </div>
         </StrategyEvaluationItem>
     );
 };

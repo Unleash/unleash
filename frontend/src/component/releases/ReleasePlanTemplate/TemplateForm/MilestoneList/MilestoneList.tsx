@@ -55,11 +55,12 @@ export const MilestoneList = ({
                     bottom - event.clientY < draggedElementHeight;
                 const draggingUp = dragIndex > dropIndex;
 
+                const shouldReorder = draggingUp
+                    ? overTargetTop
+                    : overTargetBottom;
+
                 // prevent oscillating by only reordering if there is sufficient space
-                if (
-                    (draggingUp && overTargetTop) ||
-                    (!draggingUp && overTargetBottom)
-                ) {
+                if (shouldReorder) {
                     // reorder here
                     const oldMilestones = milestones || [];
                     const newMilestones = [...oldMilestones];

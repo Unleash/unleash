@@ -17,9 +17,6 @@ const StyledAccordionSummary = styled(AccordionSummary, {
     padding: theme.spacing(0.5, 3, 0.5, 2),
     display: 'flex',
     alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-        fontWeight: 'bold',
-    },
     '&&&': {
         cursor: expandable ? 'pointer' : 'default',
     },
@@ -33,6 +30,7 @@ const StyledHeader = styled('header')(({ theme }) => ({
     color: theme.palette.text.primary,
     alignItems: 'center',
     minHeight: theme.spacing(8),
+    containerType: 'inline-size',
 }));
 
 const StyledHeaderTitle = styled('hgroup')(({ theme }) => ({
@@ -41,6 +39,9 @@ const StyledHeaderTitle = styled('hgroup')(({ theme }) => ({
     flexDirection: 'column',
     flex: 1,
     columnGap: theme.spacing(1),
+    '@container (max-width: 500px)': {
+        gridTemplateColumns: '1fr',
+    },
 }));
 
 const StyledHeaderTitleLabel = styled('p')(({ theme }) => ({

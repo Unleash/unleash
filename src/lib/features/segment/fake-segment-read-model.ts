@@ -23,7 +23,7 @@ export class FakeSegmentReadModel implements ISegmentReadModel {
         return [];
     }
 
-    async getAllForClientIds(ids?: number[]): Promise<IClientSegment[]> {
+    async getAllForClientIds(ids: number[]): Promise<IClientSegment[]> {
         return [];
     }
 }

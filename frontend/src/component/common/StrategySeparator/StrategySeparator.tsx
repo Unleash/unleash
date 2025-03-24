@@ -16,7 +16,7 @@ const Chip = styled('div')(({ theme }) => ({
     // if the strategy it's applying to is disabled
     [`&:has(+ * .${disabledStrategyClassName}, + .${disabledStrategyClassName})`]:
         {
-            filter: 'grayscale(1)',
+            filter: 'grayscale(.8)',
         },
 }));
 

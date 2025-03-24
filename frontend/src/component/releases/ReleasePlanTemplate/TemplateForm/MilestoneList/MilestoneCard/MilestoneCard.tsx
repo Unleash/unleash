@@ -158,7 +158,7 @@ export const MilestoneCard = ({
 
     const dragHandleRef = useRef(null);
 
-    const dragItemRef = useDragItem<HTMLTableRowElement>(
+    const dragItemRef = useDragItem<HTMLSpanElement>(
         index,
         onMoveItem,
         dragHandleRef,

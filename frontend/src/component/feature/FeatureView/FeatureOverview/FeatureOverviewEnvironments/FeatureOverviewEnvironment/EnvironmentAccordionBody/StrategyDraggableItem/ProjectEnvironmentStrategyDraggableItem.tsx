@@ -17,7 +17,6 @@ import { UPDATE_FEATURE_STRATEGY } from '@server/types/permissions';
 import { StrategyDraggableItem } from './StrategyDraggableItem';
 
 type ProjectEnvironmentStrategyDraggableItemProps = {
-    className?: string;
     strategy: IFeatureStrategy;
     environmentName: string;
     index: number;
@@ -35,7 +34,6 @@ type ProjectEnvironmentStrategyDraggableItemProps = {
 };
 
 export const ProjectEnvironmentStrategyDraggableItem = ({
-    className,
     strategy,
     index,
     environmentName,

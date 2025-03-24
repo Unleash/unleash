@@ -20,10 +20,10 @@ export const ConstraintValueSearch = ({
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
                     placeholder='Filter values'
-                    style={{
+                    sx={(theme) => ({
                         width: '100%',
-                        margin: '1rem 0',
-                    }}
+                        margin: theme.spacing(1, 0, 2),
+                    })}
                     variant='outlined'
                     size='small'
                     InputProps={{

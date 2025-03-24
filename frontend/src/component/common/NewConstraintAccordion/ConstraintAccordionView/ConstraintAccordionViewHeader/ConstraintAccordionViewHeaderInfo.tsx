@@ -22,6 +22,12 @@ const StyledHeaderMetaInfo = styled('div')(({ theme }) => ({
     },
 }));
 
+const StyledExpandItem = styled('div')(({ theme }) => ({
+    color: theme.palette.text.secondary,
+    margin: theme.spacing(0.25, 0, 0, 0.75),
+    fontSize: theme.fontSizes.smallerBody,
+}));
+
 interface ConstraintAccordionViewHeaderMetaInfoProps {
     constraint: IConstraint;
     expanded: boolean;
@@ -48,7 +54,11 @@ export const ConstraintAccordionViewHeaderInfo = ({
                     }}
                     viewMore={
                         expandable ? (
-                            <>{expanded ? 'close' : 'view all'}</>
+                            <StyledExpandItem>
+                                {expanded
+                                    ? 'View less'
+                                    : `View all (${constraint.values?.length})`}
+                            </StyledExpandItem>
                         ) : null
                     }
                 />

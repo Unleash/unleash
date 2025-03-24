@@ -17,6 +17,7 @@ const StyledValuesContainer = styled('div')({
 
 const StyledTruncator = styled(Truncator)({
     padding: 0,
+    margin: 0,
 });
 
 const StyledValueItem = styled('li')(({ theme }) => ({

@@ -48,6 +48,13 @@ const CaseSensitive: FC = () => {
     );
 };
 
+const StyledConstraintContainer = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, auto)',
+    gap: theme.spacing(2),
+    placeItems: 'center',
+}));
+
 const StyledOperatorGroup = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -56,8 +63,6 @@ const StyledOperatorGroup = styled('div')(({ theme }) => ({
 
 const StyledConstraintName = styled('div')(({ theme }) => ({
     maxWidth: '150px',
-    // flexGrow: '1',
-    // flexShrink: '0',
     paddingRight: theme.spacing(0.5),
     overflow: 'hidden',
 }));
@@ -85,16 +90,9 @@ export const ConstraintItemHeader: FC<ConstraintItemHeaderProps> = ({
 
     return (
         <StrategyEvaluationItem type='Constraint'>
-            <div
-                style={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(3, auto)',
-                    gap: '8px',
-                    placeItems: 'center',
-                }}
-            >
+            <StyledConstraintContainer>
                 <StyledConstraintName>
-                    <Truncator lines={1} title={contextName} arrow>
+                    <Truncator title={contextName} arrow>
                         {contextName}
                     </Truncator>
                 </StyledConstraintName>
@@ -105,14 +103,16 @@ export const ConstraintItemHeader: FC<ConstraintItemHeaderProps> = ({
                     ) : null}
                 </StyledOperatorGroup>
                 <div>
-                    <ValuesList
-                        values={items}
-                        onSetTruncated={onSetTruncated}
-                        tooltips={tooltips}
-                    />
-                    {viewMore}
+                    <div>
+                        <ValuesList
+                            values={items}
+                            onSetTruncated={onSetTruncated}
+                            tooltips={tooltips}
+                        />
+                        {viewMore}
+                    </div>
                 </div>
-            </div>
+            </StyledConstraintContainer>
         </StrategyEvaluationItem>
     );
 };

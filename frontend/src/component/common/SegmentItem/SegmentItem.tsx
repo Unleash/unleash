@@ -45,8 +45,7 @@ const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
 }));
 
 const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
-    borderTop: `1px dashed ${theme.palette.divider}`,
-    padding: theme.spacing(1.5, 3, 2.5),
+    padding: theme.spacing(0.5, 3, 2.5),
 }));
 
 const StyledLink = styled(Link)({

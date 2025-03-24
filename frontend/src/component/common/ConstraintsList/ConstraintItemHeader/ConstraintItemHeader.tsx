@@ -1,12 +1,14 @@
-import type { FC } from 'react';
-import {
-    StrategyEvaluationItem,
-    type StrategyEvaluationItemProps,
-} from '../StrategyEvaluationItem/StrategyEvaluationItem';
+import type { ComponentProps, FC } from 'react';
+import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
 import type { ConstraintSchema } from 'openapi';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
 import { StrategyEvaluationChip } from '../StrategyEvaluationChip/StrategyEvaluationChip';
 import { styled, Tooltip } from '@mui/material';
+import { Truncator } from 'component/common/Truncator/Truncator';
+import { ValuesList } from '../ValuesList/ValuesList';
+import { useLocationSettings } from 'hooks/useLocationSettings';
+import { formatConstraintValue } from 'utils/formatConstraintValue';
+import { useConstraintTooltips } from './hooks/useConstraintTooltips';
 import { ReactComponent as CaseSensitiveIcon } from 'assets/icons/case-sensitive.svg';
 import { isCaseSensitive } from './isCaseSensitive';
 
@@ -52,32 +54,45 @@ const StyledOperatorGroup = styled('div')(({ theme }) => ({
     gap: theme.spacing(0.5),
 }));
 
+const StyledConstraintName = styled('div')(({ theme }) => ({
+    maxWidth: '150px',
+    paddingRight: theme.spacing(0.5),
+    overflow: 'hidden',
+}));
+
 export const ConstraintItemHeader: FC<
-    ConstraintSchema & Pick<StrategyEvaluationItemProps, 'onSetTruncated'>
-> = ({
-    caseInsensitive,
-    contextName,
-    inverted,
-    operator,
-    value,
-    values,
-    onSetTruncated,
-}) => {
-    const items = value ? [value, ...(values || [])] : values || [];
+    ConstraintSchema & Pick<ComponentProps<typeof ValuesList>, 'onSetTruncated'>
+> = ({ onSetTruncated, ...constraint }) => {
+    const { caseInsensitive, contextName, inverted, operator, value, values } =
+        constraint;
+    const { locationSettings } = useLocationSettings();
+    const items = value
+        ? [
+              formatConstraintValue(constraint, locationSettings) || '',
+              ...(values || []),
+          ]
+        : values || [];
+
+    const tooltips = useConstraintTooltips(contextName, values || []);
 
     return (
-        <StrategyEvaluationItem
-            type='Constraint'
-            values={items}
-            onSetTruncated={onSetTruncated}
-        >
-            {contextName}
+        <StrategyEvaluationItem type='Constraint'>
+            <StyledConstraintName>
+                <Truncator lines={2} title={contextName} arrow>
+                    {contextName}
+                </Truncator>
+            </StyledConstraintName>
             <StyledOperatorGroup>
                 <Operator label={operator} inverted={inverted} />
                 {isCaseSensitive(operator, caseInsensitive) ? (
                     <CaseSensitive />
                 ) : null}
             </StyledOperatorGroup>
+            <ValuesList
+                values={items}
+                onSetTruncated={onSetTruncated}
+                tooltips={tooltips}
+            />
         </StrategyEvaluationItem>
     );
 };

@@ -4,7 +4,6 @@ import { createTestConfig } from '../../../../test/config/test-config';
 import { clientMetricsSchema } from '../shared/schema';
 import { createServices } from '../../../services';
 import {
-    CLIENT_METRICS_ADDED,
     IAuthType,
     IUnleashConfig,
     type IUnleashOptions,
@@ -14,7 +13,7 @@ import {
 import dbInit, {
     type ITestDb,
 } from '../../../../test/e2e/helpers/database-init';
-import { roundToNearestMinutes, startOfHour, subMinutes } from 'date-fns';
+import { startOfHour } from 'date-fns';
 import { ApiTokenType } from '../../../types/models/api-token';
 import type TestAgent from 'supertest/lib/agent';
 

@@ -12,7 +12,7 @@ import NotFoundError from '../../error/notfound-error';
 import type { IEnvironmentStore } from './environment-store-type';
 import { snakeCaseKeys } from '../../util/snakeCase';
 import type { CreateFeatureStrategySchema } from '../../openapi';
-import type { IUnleashConfig } from '../../types';
+import type { IFlagResolver, IUnleashConfig } from '../../types';
 
 interface IEnvironmentsTable {
     name: string;
@@ -43,7 +43,6 @@ const COLUMNS = [
     'sort_order',
     'enabled',
     'protected',
-    'required_approvals',
 ];
 
 function mapRow(row: IEnvironmentsTable): IEnvironment {
@@ -107,6 +106,8 @@ const TABLE = 'environments';
 export default class EnvironmentStore implements IEnvironmentStore {
     private logger: Logger;
 
+    private flagResolver: IFlagResolver;
+
     private db: Db;
 
     private isOss: boolean;
@@ -116,11 +117,16 @@ export default class EnvironmentStore implements IEnvironmentStore {
     constructor(
         db: Db,
         eventBus: EventEmitter,
-        { getLogger, isOss }: Pick<IUnleashConfig, 'getLogger' | 'isOss'>,
+        {
+            getLogger,
+            isOss,
+            flagResolver,
+        }: Pick<IUnleashConfig, 'getLogger' | 'isOss' | 'flagResolver'>,
     ) {
         this.db = db;
         this.logger = getLogger('db/environment-store.ts');
         this.isOss = isOss;
+        this.flagResolver = flagResolver;
         this.timer = (action) =>
             metricsHelper.wrapTimer(eventBus, DB_TIME, {
                 store: 'environment',
@@ -128,12 +134,18 @@ export default class EnvironmentStore implements IEnvironmentStore {
             });
     }
 
+    private allColumns() {
+        return this.flagResolver.isEnabled('globalChangeRequestConfig')
+            ? [...COLUMNS, 'required_approvals']
+            : COLUMNS;
+    }
+
     async importEnvironments(
         environments: IEnvironment[],
     ): Promise<IEnvironment[]> {
         const rows = await this.db(TABLE)
             .insert(environments.map(fieldToRow))
-            .returning(COLUMNS)
+            .returning(this.allColumns())
             .onConflict('name')
             .ignore();
 
@@ -328,7 +340,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
         const updatedEnv = await this.db<IEnvironmentsTable>(TABLE)
             .update(snakeCaseKeys(env))
             .where({ name, protected: false })
-            .returning<IEnvironmentsTable>(COLUMNS);
+            .returning<IEnvironmentsTable>(this.allColumns());
 
         return mapRow(updatedEnv[0]);
     }
@@ -336,7 +348,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
     async create(env: IEnvironmentCreate): Promise<IEnvironment> {
         const row = await this.db<IEnvironmentsTable>(TABLE)
             .insert(snakeCaseKeys(env))
-            .returning<IEnvironmentsTable>(COLUMNS);
+            .returning<IEnvironmentsTable>(this.allColumns());
 
         return mapRow(row[0]);
     }

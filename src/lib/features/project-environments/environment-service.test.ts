@@ -17,7 +17,9 @@ let service: EnvironmentService;
 let eventService: EventService;
 
 beforeAll(async () => {
-    const config = createTestConfig();
+    const config = createTestConfig({
+        experimental: { flags: { globalChangeRequestConfig: true } },
+    });
     db = await dbInit('environment_service_serial', config.getLogger, {
         dbInitMethod: 'legacy' as const,
     });

@@ -201,7 +201,6 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             return;
         }
         const rows = collapseHourlyMetrics(metrics).map(toRow);
-        console.log('ROWS', rows);
 
         // Sort the rows to avoid deadlocks
         const sortedRows = rows.sort(
@@ -244,8 +243,6 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
         featureName: string,
         hoursBack: number = 24,
     ): Promise<IClientMetricsEnv[]> {
-        console.log('featureName', featureName);
-        console.log('hoursBack', hoursBack);
         const rows = await this.db<ClientMetricsEnvTable>(HOURLY_TABLE)
             .select([`${HOURLY_TABLE}.*`, 'variant', 'count'])
             .leftJoin(HOURLY_TABLE_VARIANTS, function () {
@@ -270,8 +267,6 @@ export class ClientMetricsStoreV2 implements IClientMetricsStoreV2 {
             .andWhereRaw(
                 `${HOURLY_TABLE}.timestamp >= NOW() - INTERVAL '${hoursBack} hours'`,
             );
-
-        console.log('rows', rows);
 
         const tokens = rows.reduce(variantRowReducer, {});
         return Object.values(tokens);

@@ -138,7 +138,6 @@ export default async function init(
         const client = new Client(getDbConfig());
         await client.connect();
 
-        console.log('Creating new DB', testDbName);
         await client.query(
             `CREATE DATABASE ${testDbName} TEMPLATE ${testDBTemplateName}`,
         );

@@ -45,7 +45,7 @@ test('should tag feature', async () => {
         createdByUserId: TESTUSERID,
     });
     expect(featureTags).toHaveLength(1);
-    expect(featureTags[0]).toStrictEqual(tag);
+    expect(featureTags[0]).toStrictEqual({ ...tag, color: '#FFFFFF' });
     expect(featureTag!.featureName).toBe(featureName);
     expect(featureTag!.tagValue).toBe(tag.value);
 });

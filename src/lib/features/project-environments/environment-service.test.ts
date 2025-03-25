@@ -3,6 +3,7 @@ import { createTestConfig } from '../../../test/config/test-config';
 import dbInit, { type ITestDb } from '../../../test/e2e/helpers/database-init';
 import NotFoundError from '../../error/notfound-error';
 import {
+    type IExperimentalOptions,
     type IUnleashStores,
     SYSTEM_USER,
     SYSTEM_USER_AUDIT,
@@ -17,11 +18,15 @@ let service: EnvironmentService;
 let eventService: EventService;
 
 beforeAll(async () => {
+    const flags: Partial<IExperimentalOptions> = {
+        flags: { globalChangeRequestConfig: true },
+    };
     const config = createTestConfig({
-        experimental: { flags: { globalChangeRequestConfig: true } },
+        experimental: flags,
     });
     db = await dbInit('environment_service_serial', config.getLogger, {
         dbInitMethod: 'legacy' as const,
+        experimental: flags,
     });
     stores = db.stores;
     eventService = createEventsService(db.rawDatabase, config);

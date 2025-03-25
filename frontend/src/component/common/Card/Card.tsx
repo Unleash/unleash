@@ -155,8 +155,8 @@ export const Card = ({
     title,
     headerActions,
     footer,
-    children,
     cardVariant = 'primary',
+    children,
     ...props
 }: ICardProps) => (
     <StyledCard cardVariant={cardVariant} {...props}>

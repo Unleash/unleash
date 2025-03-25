@@ -12,7 +12,7 @@ exports.up = function (db, callback) {
 exports.down = function (db, callback) {
     db.runSql(
         `
-            ALTER TABLE change_request_settings DROP COLUMN IF EXISTS required_approvals;
+            ALTER TABLE environments DROP COLUMN IF EXISTS required_approvals;
         `,
         callback,
     );

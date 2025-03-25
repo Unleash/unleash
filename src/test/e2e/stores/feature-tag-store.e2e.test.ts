@@ -13,6 +13,7 @@ let featureToggleStore: IFeatureToggleStore;
 const featureName = 'test-tag';
 const tag = { type: 'simple', value: 'test' };
 const TESTUSERID = 3333;
+const DEFAULT_TAG_COLOR = '#FFFFFF';
 
 beforeAll(async () => {
     db = await dbInit('feature_tag_store_serial', getLogger);
@@ -45,7 +46,7 @@ test('should tag feature', async () => {
         createdByUserId: TESTUSERID,
     });
     expect(featureTags).toHaveLength(1);
-    expect(featureTags[0]).toStrictEqual(tag);
+    expect(featureTags[0]).toStrictEqual({ ...tag, color: DEFAULT_TAG_COLOR });
     expect(featureTag!.featureName).toBe(featureName);
     expect(featureTag!.tagValue).toBe(tag.value);
 });

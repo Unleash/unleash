@@ -157,8 +157,9 @@ export const Card = ({
     footer,
     children,
     cardVariant = 'primary',
+    ...props
 }: ICardProps) => (
-    <StyledCard cardVariant={cardVariant}>
+    <StyledCard cardVariant={cardVariant} {...props}>
         <StyledCardBody cardVariant={cardVariant}>
             <StyledCardBodyHeader cardVariant={cardVariant}>
                 {icon && (

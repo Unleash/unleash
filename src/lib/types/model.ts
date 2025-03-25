@@ -198,6 +198,7 @@ export interface IEnvironment {
     projectCount?: number;
     apiTokenCount?: number;
     enabledToggleCount?: number;
+    requiredApprovals?: number;
 }
 
 export interface IProjectEnvironment extends IEnvironment {
@@ -215,6 +216,7 @@ export interface IEnvironmentCreate {
     type: string;
     sortOrder?: number;
     enabled?: boolean;
+    requiredApprovals?: number;
 }
 
 export interface IEnvironmentClone {

@@ -8,14 +8,13 @@ import {
 } from '@mui/material';
 
 type CardVariant = 'primary' | 'secondary';
+type CardComponent = 'card' | 'header' | 'body' | 'footer';
 type VariantProps = {
     [key in CardVariant]: {
-        card(theme: Theme): CSSObject;
-        header(theme: Theme): CSSObject;
-        body(theme: Theme): CSSObject;
-        footer(theme: Theme): CSSObject;
+        [key in CardComponent]: (theme: Theme) => CSSObject;
     };
 };
+
 const variants: VariantProps = {
     primary: {
         card: (theme: Theme): CSSObject => ({

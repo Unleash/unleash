@@ -35,7 +35,7 @@ export const MilestoneList = ({
         async (
             dragIndex: number,
             dropIndex: number,
-            save: boolean,
+            _save: boolean,
             event: DragEvent,
             draggedElement: HTMLElement,
         ) => {

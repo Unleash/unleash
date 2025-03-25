@@ -1260,8 +1260,6 @@ test('should return tags with color information from tag type', async () => {
         .put('/api/admin/tag-types/simple')
         .send({
             name: 'simple',
-            description: 'Simple tag type',
-            icon: 'tag',
             color: '#FF0000',
         })
         .expect(200);

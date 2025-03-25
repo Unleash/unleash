@@ -226,9 +226,10 @@ test('backward compatibility: the API should return invalid tag names if they ex
 
 test('should include tag color information when getting feature tags', async () => {
     const featureName = 'test.feature.with.color';
+    const tagType = 'simple';
     const tag = {
         value: 'TeamRed',
-        type: 'simple',
+        type: tagType,
     };
 
     await app.request.post('/api/admin/projects/default/features').send({
@@ -239,11 +240,9 @@ test('should include tag color information when getting feature tags', async () 
     });
 
     await app.request
-        .put('/api/admin/tag-types/simple')
+        .put(`/api/admin/tag-types/${tagType}`)
         .send({
-            name: 'simple',
-            description: 'Simple tag type',
-            icon: 'tag',
+            name: tagType,
             color: '#FF0000',
         })
         .expect(200);

@@ -1,7 +1,7 @@
 import DragIndicator from '@mui/icons-material/DragIndicator';
 import { styled } from '@mui/material';
 import { ScreenReaderOnly } from 'component/common/ScreenReaderOnly/ScreenReaderOnly';
-import { useId, type FC } from 'react';
+import type { FC } from 'react';
 
 const DragButton = styled('button')(({ theme }) => ({
     padding: 0,
@@ -40,10 +40,9 @@ type Props = {
 };
 
 export const MilestoneCardDragHandle: FC<Props> = ({ dragItemRef }) => {
-    const id = useId();
     return (
         <DragButton type='button'>
-            <DraggableContent className={id} id={id} ref={dragItemRef}>
+            <DraggableContent ref={dragItemRef}>
                 <DraggableHoverIndicator className='draggable-hover-indicator'>
                     <DragIndicator aria-hidden />
                 </DraggableHoverIndicator>

@@ -1252,3 +1252,39 @@ test('should return archived when query param set', async () => {
         ],
     });
 });
+
+test('should return tags with color information from tag type', async () => {
+    await app.createFeature('my_feature_a');
+
+    await app.request
+        .put('/api/admin/tag-types/simple')
+        .send({
+            name: 'simple',
+            description: 'Simple tag type',
+            icon: 'tag',
+            color: '#FF0000',
+        })
+        .expect(200);
+
+    await app.addTag('my_feature_a', {
+        type: 'simple',
+        value: 'my_tag',
+    });
+
+    const { body } = await searchFeatures({});
+
+    expect(body).toMatchObject({
+        features: [
+            {
+                name: 'my_feature_a',
+                tags: [
+                    {
+                        type: 'simple',
+                        value: 'my_tag',
+                        color: '#FF0000',
+                    },
+                ],
+            },
+        ],
+    });
+});

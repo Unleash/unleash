@@ -10,13 +10,17 @@ let db: ITestDb;
 
 beforeAll(async () => {
     db = await dbInit('tag_api_serial', getLogger);
-    app = await setupAppWithCustomConfig(db.stores, {
-        experimental: {
-            flags: {
-                strictSchemaValidation: true,
+    app = await setupAppWithCustomConfig(
+        db.stores,
+        {
+            experimental: {
+                flags: {
+                    strictSchemaValidation: true,
+                },
             },
         },
-    });
+        db.rawDatabase,
+    );
 });
 
 afterAll(async () => {
@@ -218,4 +222,49 @@ test('backward compatibility: the API should return invalid tag names if they ex
     await db.stores.tagStore.createTag(tag);
     const { body } = await app.request.get('/api/admin/tags').expect(200);
     expect(body.tags).toContainEqual(tag);
+});
+
+test('should include tag color information when getting feature tags', async () => {
+    const featureName = 'test.feature.with.color';
+    const tag = {
+        value: 'TeamRed',
+        type: 'simple',
+    };
+
+    await app.request.post('/api/admin/projects/default/features').send({
+        name: featureName,
+        type: 'kill-switch',
+        enabled: true,
+        strategies: [{ name: 'default' }],
+    });
+
+    await app.request
+        .put('/api/admin/tag-types/simple')
+        .send({
+            name: 'simple',
+            description: 'Simple tag type',
+            icon: 'tag',
+            color: '#FF0000',
+        })
+        .expect(200);
+
+    await app.request
+        .put(`/api/admin/features/${featureName}/tags`)
+        .send({ addedTags: [tag], removedTags: [] })
+        .expect(200);
+
+    const { body } = await app.request
+        .get(`/api/admin/features/${featureName}/tags`)
+        .expect('Content-Type', /json/)
+        .expect(200);
+
+    expect(body).toMatchObject({
+        tags: [
+            {
+                value: 'TeamRed',
+                type: 'simple',
+                color: '#FF0000',
+            },
+        ],
+    });
 });

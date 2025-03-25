@@ -119,7 +119,8 @@ export const AdminListItem: FC<{
     badge?: ReactNode;
     selected?: boolean;
     children?: React.ReactNode;
-}> = ({ href, text, badge, selected, children }) => {
+    onClick: () => void;
+}> = ({ href, text, badge, selected, children, onClick }) => {
     return (
         <ListItem disablePadding>
             <ListItemButton
@@ -128,6 +129,7 @@ export const AdminListItem: FC<{
                 to={href}
                 sx={listItemButtonStyle}
                 selected={selected}
+                onClick={onClick}
             >
                 <StyledListItemIcon>{children}</StyledListItemIcon>
                 <StyledListItemText>
@@ -145,7 +147,8 @@ export const AdminSubListItem: FC<{
     badge?: ReactNode;
     selected?: boolean;
     children?: React.ReactNode;
-}> = ({ href, text, badge, selected, children }) => {
+    onClick: () => void;
+}> = ({ href, text, badge, selected, children, onClick }) => {
     return (
         <ListItem disablePadding>
             <ListItemButton
@@ -154,6 +157,7 @@ export const AdminSubListItem: FC<{
                 to={href}
                 sx={subListItemButtonStyle}
                 selected={selected}
+                onClick={onClick}
             >
                 <StyledListItemIcon>{children}</StyledListItemIcon>
                 <StyledListItemText>

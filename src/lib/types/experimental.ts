@@ -66,7 +66,8 @@ export type IFlagKey =
     | 'edgeObservability'
     | 'simplifyDisableFeature'
     | 'adminNavUI'
-    | 'tagTypeColor';
+    | 'tagTypeColor'
+    | 'globalChangeRequestConfig';
 
 export type IFlags = Partial<{ [key in IFlagKey]: boolean | Variant }>;
 
@@ -317,6 +318,10 @@ const flags: IFlags = {
     ),
     tagTypeColor: parseEnvVarBoolean(
         process.env.UNLEASH_EXPERIMENTAL_TAG_TYPE_COLOR,
+        false,
+    ),
+    globalChangeRequestConfig: parseEnvVarBoolean(
+        process.env.UNLEASH_EXPERIMENTAL_GLOBAL_CHANGE_REQUEST_CONFIG,
         false,
     ),
 };

@@ -23,7 +23,11 @@ export const ReleasesFeedback: React.FC<{
             cardVariant='secondary'
             title={title}
             footer={
-                <StyledCardLink to={feedbackLink} target='_blank' rel='noreferrer'>
+                <StyledCardLink
+                    to={feedbackLink}
+                    target='_blank'
+                    rel='noreferrer'
+                >
                     Give feedback
                 </StyledCardLink>
             }

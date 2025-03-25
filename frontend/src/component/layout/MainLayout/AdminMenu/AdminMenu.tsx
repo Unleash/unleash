@@ -1,4 +1,13 @@
-import { Grid, styled, Paper, Typography, Button, List } from '@mui/material';
+import {
+    Grid,
+    styled,
+    Paper,
+    Typography,
+    Button,
+    List,
+    useMediaQuery,
+    useTheme,
+} from '@mui/material';
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { ReactNode } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -106,10 +115,14 @@ interface IWrapIfAdminSubpageProps {
 
 export const WrapIfAdminSubpage = ({ children }: IWrapIfAdminSubpageProps) => {
     const newAdminUIEnabled = useUiFlag('adminNavUI');
-    const showOnlyAdminMenu =
-        newAdminUIEnabled && location.pathname.indexOf('/admin') === 0;
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
+    const showAdminMenu =
+        !isSmallScreen &&
+        newAdminUIEnabled &&
+        location.pathname.indexOf('/admin') === 0;
 
-    if (showOnlyAdminMenu) {
+    if (showAdminMenu) {
         return <AdminMenu>{children}</AdminMenu>;
     }
 
@@ -136,6 +149,8 @@ interface IAdminMenuProps {
 
 export const AdminMenu = ({ children }: IAdminMenuProps) => {
     const isActiveItem = (item: string) => location.pathname === item;
+    const theme = useTheme();
+    const isBreakpoint = useMediaQuery(theme.breakpoints.down(1350));
     const onClick = () => {
         scrollTo({
             top: 0,
@@ -280,7 +295,7 @@ export const AdminMenu = ({ children }: IAdminMenuProps) => {
                         </StyledMenuPaper>
                     </StickyContainer>
                 </Grid>
-                <Grid item md={9}>
+                <Grid item md={isBreakpoint ? true : 9}>
                     {children}
                 </Grid>
             </StyledAdminMainGrid>

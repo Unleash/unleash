@@ -71,13 +71,10 @@ export const FeatureStrategyMenu = ({
         usePendingChangeRequests(projectId);
     const { refetch } = useReleasePlans(projectId, featureId, environmentId);
     const { addReleasePlanToFeature } = useReleasePlansApi();
-    const releasePlanChangeRequestsEnabled = useUiFlag(
-        'releasePlanChangeRequests',
-    );
+    const releasePlansEnabled = useUiFlag('releasePlans');
 
     const crProtected =
-        releasePlanChangeRequestsEnabled &&
-        isChangeRequestConfigured(environmentId);
+        releasePlansEnabled && isChangeRequestConfigured(environmentId);
 
     const onClose = () => {
         setAnchor(undefined);

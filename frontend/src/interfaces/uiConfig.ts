@@ -84,7 +84,6 @@ export type UiFlags = {
     enableLegacyVariants?: boolean;
     flagCreator?: boolean;
     releasePlans?: boolean;
-    releasePlanChangeRequests?: boolean;
     'enterprise-payg'?: boolean;
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;

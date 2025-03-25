@@ -72,4 +72,4 @@ async markSeenAt(secrets: string[]): Promise<void> {
         }
     }
 ```
-Not being able to update lastSeen is not something we can anything about as on-calls, so this is also a good candidate for downgrading to warn
+Not being able to update lastSeen is not something we can do anything about as on-calls, so this is also a good candidate for downgrading to WARN.

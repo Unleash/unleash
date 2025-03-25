@@ -9,7 +9,7 @@ export interface IEnvironmentStore extends Store<IEnvironment, string> {
     exists(name: string): Promise<boolean>;
     create(env: IEnvironmentCreate): Promise<IEnvironment>;
     update(
-        env: Pick<IEnvironment, 'type' | 'protected'>,
+        env: Pick<IEnvironment, 'type' | 'protected' | 'requiredApprovals'>,
         name: string,
     ): Promise<IEnvironment>;
     updateProperty(

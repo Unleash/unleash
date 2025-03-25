@@ -10,7 +10,7 @@ interface IConstraintAccordionViewBodyProps {
 }
 
 const StyledValueContainer = styled('div')(({ theme }) => ({
-    padding: theme.spacing(2, 0),
+    padding: theme.spacing(1, 0),
     maxHeight: '400px',
     overflowY: 'auto',
 }));

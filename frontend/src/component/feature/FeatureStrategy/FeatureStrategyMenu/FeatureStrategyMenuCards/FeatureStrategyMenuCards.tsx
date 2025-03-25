@@ -10,6 +10,7 @@ interface IFeatureStrategyMenuCardsProps {
     projectId: string;
     featureId: string;
     environmentId: string;
+    onlyReleasePlans: boolean;
     onAddReleasePlan: (template: IReleasePlanTemplate) => void;
 }
 
@@ -22,10 +23,12 @@ export const FeatureStrategyMenuCards = ({
     projectId,
     featureId,
     environmentId,
+    onlyReleasePlans,
     onAddReleasePlan,
 }: IFeatureStrategyMenuCardsProps) => {
     const { strategies } = useStrategies();
     const { templates } = useReleasePlanTemplates();
+    const allStrategies = !onlyReleasePlans;
 
     const preDefinedStrategies = strategies.filter(
         (strategy) => !strategy.deprecated && !strategy.editable,
@@ -43,20 +46,22 @@ export const FeatureStrategyMenuCards = ({
     };
     return (
         <List dense>
-            <>
-                <StyledTypography color='textSecondary'>
-                    Default strategy for {environmentId} environment
-                </StyledTypography>
-                <ListItem key={defaultStrategy.name}>
-                    <FeatureStrategyMenuCard
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        strategy={defaultStrategy}
-                        defaultStrategy={true}
-                    />
-                </ListItem>
-            </>
+            {allStrategies ? (
+                <>
+                    <StyledTypography color='textSecondary'>
+                        Default strategy for {environmentId} environment
+                    </StyledTypography>
+                    <ListItem key={defaultStrategy.name}>
+                        <FeatureStrategyMenuCard
+                            projectId={projectId}
+                            featureId={featureId}
+                            environmentId={environmentId}
+                            strategy={defaultStrategy}
+                            defaultStrategy={true}
+                        />
+                    </ListItem>
+                </>
+            ) : null}
             <ConditionallyRender
                 condition={templates.length > 0}
                 show={
@@ -75,39 +80,43 @@ export const FeatureStrategyMenuCards = ({
                     </>
                 }
             />
-            <StyledTypography color='textSecondary'>
-                Predefined strategy types
-            </StyledTypography>
-            {preDefinedStrategies.map((strategy) => (
-                <ListItem key={strategy.name}>
-                    <FeatureStrategyMenuCard
-                        projectId={projectId}
-                        featureId={featureId}
-                        environmentId={environmentId}
-                        strategy={strategy}
+            {allStrategies ? (
+                <>
+                    <StyledTypography color='textSecondary'>
+                        Predefined strategy types
+                    </StyledTypography>
+                    {preDefinedStrategies.map((strategy) => (
+                        <ListItem key={strategy.name}>
+                            <FeatureStrategyMenuCard
+                                projectId={projectId}
+                                featureId={featureId}
+                                environmentId={environmentId}
+                                strategy={strategy}
+                            />
+                        </ListItem>
+                    ))}
+                    <ConditionallyRender
+                        condition={customStrategies.length > 0}
+                        show={
+                            <>
+                                <StyledTypography color='textSecondary'>
+                                    Custom strategies
+                                </StyledTypography>
+                                {customStrategies.map((strategy) => (
+                                    <ListItem key={strategy.name}>
+                                        <FeatureStrategyMenuCard
+                                            projectId={projectId}
+                                            featureId={featureId}
+                                            environmentId={environmentId}
+                                            strategy={strategy}
+                                        />
+                                    </ListItem>
+                                ))}
+                            </>
+                        }
                     />
-                </ListItem>
-            ))}
-            <ConditionallyRender
-                condition={customStrategies.length > 0}
-                show={
-                    <>
-                        <StyledTypography color='textSecondary'>
-                            Custom strategies
-                        </StyledTypography>
-                        {customStrategies.map((strategy) => (
-                            <ListItem key={strategy.name}>
-                                <FeatureStrategyMenuCard
-                                    projectId={projectId}
-                                    featureId={featureId}
-                                    environmentId={environmentId}
-                                    strategy={strategy}
-                                />
-                            </ListItem>
-                        ))}
-                    </>
-                }
-            />
+                </>
+            ) : null}
         </List>
     );
 };

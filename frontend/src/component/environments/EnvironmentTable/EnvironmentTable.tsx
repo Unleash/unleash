@@ -39,7 +39,7 @@ export const EnvironmentTable = () => {
     const isFeatureEnabled = useUiFlag('EEA');
 
     const onMoveItem: OnMoveItem = useCallback(
-        async (dragIndex: number, dropIndex: number, save = false) => {
+        async ({ dragIndex, dropIndex, save }) => {
             const oldEnvironments = environments || [];
             const newEnvironments = [...oldEnvironments];
             const movedEnvironment = newEnvironments.splice(dragIndex, 1)[0];

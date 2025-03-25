@@ -58,6 +58,14 @@ export const environmentSchema = {
             description:
                 'The number of enabled toggles for the project environment',
         },
+        requiredApprovals: {
+            type: 'integer',
+            nullable: true,
+            description:
+                'Experimental field. The number of approvals required before a change request can be applied in this environment.',
+            minimum: 1,
+            example: 3,
+        },
     },
     components: {},
 } as const;

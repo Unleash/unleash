@@ -1,4 +1,4 @@
-import type { ComponentProps, FC } from 'react';
+import type { ComponentProps, FC, ReactNode } from 'react';
 import { StrategyEvaluationItem } from '../StrategyEvaluationItem/StrategyEvaluationItem';
 import type { ConstraintSchema } from 'openapi';
 import { formatOperatorDescription } from 'component/common/ConstraintAccordion/ConstraintOperator/formatOperatorDescription';
@@ -48,6 +48,13 @@ const CaseSensitive: FC = () => {
     );
 };
 
+const StyledConstraintContainer = styled('div')(({ theme }) => ({
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, auto)',
+    gap: theme.spacing(2),
+    placeItems: 'center',
+}));
+
 const StyledOperatorGroup = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
@@ -60,9 +67,15 @@ const StyledConstraintName = styled('div')(({ theme }) => ({
     overflow: 'hidden',
 }));
 
-export const ConstraintItemHeader: FC<
-    ConstraintSchema & Pick<ComponentProps<typeof ValuesList>, 'onSetTruncated'>
-> = ({ onSetTruncated, ...constraint }) => {
+type ConstraintItemHeaderProps = ConstraintSchema & {
+    viewMore?: ReactNode;
+} & Pick<ComponentProps<typeof ValuesList>, 'onSetTruncated'>;
+
+export const ConstraintItemHeader: FC<ConstraintItemHeaderProps> = ({
+    onSetTruncated,
+    viewMore,
+    ...constraint
+}) => {
     const { caseInsensitive, contextName, inverted, operator, value, values } =
         constraint;
     const { locationSettings } = useLocationSettings();
@@ -77,22 +90,29 @@ export const ConstraintItemHeader: FC<
 
     return (
         <StrategyEvaluationItem type='Constraint'>
-            <StyledConstraintName>
-                <Truncator lines={2} title={contextName} arrow>
-                    {contextName}
-                </Truncator>
-            </StyledConstraintName>
-            <StyledOperatorGroup>
-                <Operator label={operator} inverted={inverted} />
-                {isCaseSensitive(operator, caseInsensitive) ? (
-                    <CaseSensitive />
-                ) : null}
-            </StyledOperatorGroup>
-            <ValuesList
-                values={items}
-                onSetTruncated={onSetTruncated}
-                tooltips={tooltips}
-            />
+            <StyledConstraintContainer>
+                <StyledConstraintName>
+                    <Truncator title={contextName} arrow>
+                        {contextName}
+                    </Truncator>
+                </StyledConstraintName>
+                <StyledOperatorGroup>
+                    <Operator label={operator} inverted={inverted} />
+                    {isCaseSensitive(operator, caseInsensitive) ? (
+                        <CaseSensitive />
+                    ) : null}
+                </StyledOperatorGroup>
+                <div>
+                    <div>
+                        <ValuesList
+                            values={items}
+                            onSetTruncated={onSetTruncated}
+                            tooltips={tooltips}
+                        />
+                        {viewMore}
+                    </div>
+                </div>
+            </StyledConstraintContainer>
         </StrategyEvaluationItem>
     );
 };

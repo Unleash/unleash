@@ -229,6 +229,7 @@ export default class ClientMetricsServiceV2 {
             const copy = [...this.unsavedMetrics];
             this.unsavedMetrics = [];
             await this.clientMetricsStoreV2.batchInsertMetrics(copy);
+            console.log('STORED', copy);
             this.config.eventBus.emit(CLIENT_METRICS_ADDED, copy);
         }
     }

@@ -11,38 +11,24 @@ const StyledCardLink = styled(Link)(({ theme }) => ({
     },
 }));
 
-const StyledCardTitle = styled('h3')(({ theme }) => ({
-    margin: 0,
-    marginRight: 'auto',
-    fontWeight: theme.typography.fontWeightBold,
-    fontSize: theme.typography.body1.fontSize,
-    lineHeight: '1.2',
-    color: theme.typography.h3.color,
-}));
-
-const StyledCard = styled(Card)(({ theme }) => ({
-    backgroundColor: theme.palette.secondary.light,
-    '&:hover': {
-        backgroundColor: theme.palette.secondary.light,
-    },
-    borderColor: theme.palette.secondary.border,
-    color: theme.palette.text.secondary,
-}));
+const feedbackLink =
+    'https://docs.google.com/forms/d/1ElbScYxbAhFcjQWgRinifoymYHeuXzqIoQXfpUVYGR8/preview';
 
 export const ReleasesFeedback: React.FC<{
     title: string;
     children?: React.ReactNode;
 }> = ({ title, children }: { title: string; children?: React.ReactNode }) => {
     return (
-        <StyledCard
-            title={<StyledCardTitle>{title}</StyledCardTitle>}
+        <Card
+            cardVariant='secondary'
+            title={title}
             footer={
-                <StyledCardLink to='https://docs.google.com/forms/d/1ElbScYxbAhFcjQWgRinifoymYHeuXzqIoQXfpUVYGR8/preview'>
+                <StyledCardLink to={feedbackLink} target='_blank'>
                     Give feedback
                 </StyledCardLink>
             }
         >
             {children}
-        </StyledCard>
+        </Card>
     );
 };

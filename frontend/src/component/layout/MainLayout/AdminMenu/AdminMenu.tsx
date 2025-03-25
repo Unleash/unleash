@@ -144,9 +144,9 @@ export const AdminMenu = ({ children }: IAdminMenuProps) => {
 
     const ssoItems = [
         { href: '/admin/auth', text: 'OpenID Connect' },
-        { href: '/admin/auth', text: 'SAML 2.0' },
-        { href: '/admin/auth', text: 'Password' },
-        { href: '/admin/auth', text: 'SCIM' },
+        { href: '/admin/auth/saml', text: 'SAML 2.0' },
+        { href: '/admin/auth/password', text: 'Password' },
+        { href: '/admin/auth/scim', text: 'SCIM' },
     ];
 
     const networkItems = [

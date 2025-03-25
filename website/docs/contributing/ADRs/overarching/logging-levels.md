@@ -12,7 +12,7 @@ This ADR aims to solidify an understanding that levels are important to use corr
 
 ## Decision
 
-We should agree on the semantic information carried in each level, and which levels it is ok to ignore while scanning logs from running applications.
+We should agree on the semantic information carried in each level, and which levels are ok to ignore while scanning logs from running applications.
 
 Current suggestion
 

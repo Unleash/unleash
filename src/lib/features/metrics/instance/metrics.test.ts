@@ -5,7 +5,7 @@ import { clientMetricsSchema } from '../shared/schema';
 import { createServices } from '../../../services';
 import {
     IAuthType,
-    IUnleashConfig,
+    type IUnleashConfig,
     type IUnleashOptions,
     type IUnleashServices,
     type IUnleashStores,

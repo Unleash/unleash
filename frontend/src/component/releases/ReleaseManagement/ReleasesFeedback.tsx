@@ -16,7 +16,7 @@ const feedbackLink =
 
 export const ReleasesFeedback: React.FC<{
     title: string;
-    children?: React.ReactNode;
+    children: React.ReactNode;
 }> = ({ title, children }: { title: string; children?: React.ReactNode }) => {
     return (
         <Card

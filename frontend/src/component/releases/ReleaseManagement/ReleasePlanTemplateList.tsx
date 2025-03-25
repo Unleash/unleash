@@ -1,7 +1,7 @@
 import { Grid, styled } from '@mui/material';
 import { ReleasePlanTemplateCard } from './ReleasePlanTemplateCard/ReleasePlanTemplateCard';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
-import { ReleasesFeedback } from '../ReleasesFeedback/ReleasesFeedback';
+import { ReleasesFeedback } from './ReleasesFeedback';
 
 const StyledGridItem = styled(Grid)({
     minHeight: '180px',

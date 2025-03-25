@@ -25,6 +25,9 @@ const StyledPrefixIconWrapper = styled(StyledIconWrapperBase)(({ theme }) => ({
     borderBottomRightRadius: 0,
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const StyledIconWrapper = forwardRef<
     HTMLDivElement,
     { isPrefix?: boolean; children?: ReactNode }

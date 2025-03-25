@@ -7,6 +7,9 @@ interface IConstraintIconProps {
     disabled?: boolean;
 }
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintIcon: VFC<IConstraintIconProps> = ({
     compact,
     disabled,

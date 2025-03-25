@@ -21,6 +21,9 @@ const StyledWrapper = styled('div')(({ theme }) => ({
     gap: theme.spacing(1),
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const DateSingleValue = ({
     setValue,
     value,

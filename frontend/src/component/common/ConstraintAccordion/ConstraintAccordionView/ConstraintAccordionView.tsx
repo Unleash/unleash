@@ -63,6 +63,9 @@ const StyledWrapper = styled('div')({
     width: '100%',
 });
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintAccordionView = ({
     constraint,
     onEdit,

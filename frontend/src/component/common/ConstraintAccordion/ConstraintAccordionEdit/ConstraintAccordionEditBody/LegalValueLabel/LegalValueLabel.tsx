@@ -29,6 +29,9 @@ export const LegalValueLabel = ({ legal, control }: ILegalValueTextProps) => {
     );
 };
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const filterLegalValues = (
     legalValues: ILegalValue[],
     filter: string,

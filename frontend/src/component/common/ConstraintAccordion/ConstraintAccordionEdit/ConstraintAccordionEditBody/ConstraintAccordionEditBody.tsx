@@ -41,6 +41,9 @@ const StyledRightButton = styled(Button)(({ theme }) => ({
     minWidth: '125px',
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintAccordionEditBody: React.FC<
     IConstraintAccordionBody
 > = ({ localConstraint, children, triggerTransition, setAction, onSubmit }) => {

@@ -27,6 +27,9 @@ const StyledContainer = styled('div')(({ theme }) => ({
     },
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintAccordionViewHeader = ({
     constraint,
     onEdit,

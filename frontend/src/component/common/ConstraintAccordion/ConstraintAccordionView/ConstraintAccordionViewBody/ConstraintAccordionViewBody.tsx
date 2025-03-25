@@ -15,6 +15,9 @@ const StyledValueContainer = styled('div')(({ theme }) => ({
     overflowY: 'auto',
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintAccordionViewBody = ({
     constraint,
 }: IConstraintAccordionViewBodyProps) => {

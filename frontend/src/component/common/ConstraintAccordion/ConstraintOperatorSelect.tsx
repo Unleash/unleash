@@ -74,6 +74,9 @@ const StyledOptionContainer = styled('div')(({ theme }) => ({
     lineHeight: 1.2,
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintOperatorSelect = ({
     options,
     value,

@@ -18,6 +18,9 @@ const useStyles = makeStyles()((theme) => ({
     },
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const SingleValue = ({
     setValue,
     value,

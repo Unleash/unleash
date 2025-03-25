@@ -89,6 +89,9 @@ const StyledHeaderText = styled('p')(({ theme }) => ({
     },
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintAccordionEditHeader = ({
     compact,
     localConstraint,

@@ -13,6 +13,9 @@ interface InvertedOperatorButtonProps {
     setInvertedOperator: () => void;
 }
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const InvertedOperatorButton = ({
     localConstraint,
     setInvertedOperator,

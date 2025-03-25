@@ -14,6 +14,9 @@ interface IConstraintAccordionProps {
     onSave?: (constraint: IConstraint) => void;
 }
 
+/**
+ * @deprecated use `component/common/NewConstraintAccordion/NewConstraintAccordion`
+ */
 export const ConstraintAccordion = ({
     constraint,
     compact = false,

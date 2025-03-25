@@ -53,6 +53,9 @@ interface ConstraintAccordionViewHeaderMetaInfoProps {
     maxLength?: number;
 }
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintAccordionViewHeaderInfo = ({
     constraint,
     singleValue,

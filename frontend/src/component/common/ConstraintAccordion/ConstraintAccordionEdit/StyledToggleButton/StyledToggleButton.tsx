@@ -1,6 +1,9 @@
 import { styled } from '@mui/system';
 import { IconButton } from '@mui/material';
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const StyledToggleButtonOff = styled(IconButton)(({ theme }) => ({
     width: '28px',
     minWidth: '28px',
@@ -19,6 +22,9 @@ export const StyledToggleButtonOff = styled(IconButton)(({ theme }) => ({
     },
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const StyledToggleButtonOn = styled(IconButton)(({ theme }) => ({
     width: '28px',
     minWidth: '28px',

@@ -13,6 +13,9 @@ interface CaseSensitiveButtonProps {
     setCaseInsensitive: () => void;
 }
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const CaseSensitiveButton = ({
     localConstraint,
     setCaseInsensitive,

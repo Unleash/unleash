@@ -19,6 +19,9 @@ const StyledHeaderActions = styled('div')(({ theme }) => ({
     },
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintAccordionHeaderActions = ({
     onEdit,
     onDelete,

@@ -64,6 +64,9 @@ type Validator =
     | 'STRING_ARRAY_VALIDATOR'
     | 'DATE_VALIDATOR';
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const useConstraintInput = ({
     contextDefinition,
     localConstraint,

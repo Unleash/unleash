@@ -6,6 +6,9 @@ interface IConstraintValueSearchProps {
     setFilter: React.Dispatch<React.SetStateAction<string>>;
 }
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintValueSearch = ({
     filter,
     setFilter,

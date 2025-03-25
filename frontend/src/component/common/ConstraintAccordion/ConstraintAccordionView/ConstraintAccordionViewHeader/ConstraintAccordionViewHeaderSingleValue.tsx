@@ -24,6 +24,9 @@ const StyledHeaderValuesContainerWrapper = styled('div')(({ theme }) => ({
     margin: 'auto 0',
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintAccordionViewHeaderSingleValue = ({
     constraint,
     allowExpand,

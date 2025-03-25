@@ -61,6 +61,9 @@ const resolveLegalValues = (
     };
 };
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ResolveInput = ({
     input,
     contextDefinition,

@@ -51,6 +51,9 @@ const StyledHeaderValuesExpand = styled('p')(({ theme }) => ({
     },
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintAccordionViewHeaderMultipleValues = ({
     constraint,
     expanded,

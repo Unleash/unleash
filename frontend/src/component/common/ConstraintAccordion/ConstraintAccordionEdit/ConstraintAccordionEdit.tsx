@@ -77,6 +77,9 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: 0,
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintAccordionEdit = ({
     constraint,
     compact,

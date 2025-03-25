@@ -24,6 +24,9 @@ const StyledChip = styled(Chip)(({ theme }) => ({
     margin: theme.spacing(0, 1, 1, 0),
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const SingleValue = ({ value, operator }: ISingleValueProps) => {
     if (!value) return null;
 

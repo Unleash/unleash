@@ -28,6 +28,9 @@ const StyledHeaderConstraintContainer = styled('div')(({ theme }) => ({
     },
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintViewHeaderOperator = ({
     constraint,
     disabled = false,

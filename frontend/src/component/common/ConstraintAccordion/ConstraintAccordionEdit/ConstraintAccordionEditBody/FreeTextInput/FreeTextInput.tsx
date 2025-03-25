@@ -53,6 +53,9 @@ const useStyles = makeStyles()((theme) => ({
 
 const ENTER = 'Enter';
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const FreeTextInput = ({
     values,
     removeValue,

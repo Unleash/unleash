@@ -60,6 +60,9 @@ const StyledValuesContainer = styled('div')(({ theme }) => ({
     overflow: 'auto',
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const RestrictiveLegalValues = ({
     data,
     values,

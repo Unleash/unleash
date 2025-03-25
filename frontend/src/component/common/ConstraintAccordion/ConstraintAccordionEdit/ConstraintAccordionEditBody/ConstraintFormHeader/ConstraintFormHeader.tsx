@@ -8,6 +8,9 @@ const StyledHeader = styled('h3')(({ theme }) => ({
     marginBottom: theme.spacing(0.5),
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintFormHeader: React.FC<
     React.HTMLAttributes<HTMLDivElement>
 > = ({ children, ...rest }) => {

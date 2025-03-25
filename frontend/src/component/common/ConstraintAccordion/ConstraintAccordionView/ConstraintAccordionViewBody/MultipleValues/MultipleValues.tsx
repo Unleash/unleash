@@ -16,6 +16,9 @@ const StyledChip = styled(Chip)(({ theme }) => ({
     margin: theme.spacing(0, 1, 1, 0),
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const MultipleValues = ({ values }: IMultipleValuesProps) => {
     const [filter, setFilter] = useState('');
 

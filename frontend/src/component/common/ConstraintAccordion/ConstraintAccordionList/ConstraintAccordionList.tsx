@@ -104,6 +104,9 @@ export const useConstraintAccordionList = (
     return { onAdd, state, context };
 };
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintAccordionList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintAccordionListProps
@@ -183,6 +186,9 @@ interface IConstraintList {
     state: IUseWeakMap<IConstraint, IConstraintAccordionListItemState>;
 }
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintList = forwardRef<
     IConstraintAccordionListRef | undefined,
     IConstraintList

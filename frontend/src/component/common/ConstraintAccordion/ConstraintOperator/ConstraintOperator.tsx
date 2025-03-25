@@ -30,6 +30,9 @@ const StyledText = styled('p', {
     color: disabled ? theme.palette.text.secondary : theme.palette.neutral.main,
 }));
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const ConstraintOperator = ({
     constraint,
     hasPrefix,

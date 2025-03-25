@@ -26,6 +26,9 @@ interface ISingleLegalValueProps {
     constraintValue: string;
 }
 
+/**
+ * @deprecated use NewConstraintAccordion components
+ */
 export const SingleLegalValue = ({
     setValue,
     value,

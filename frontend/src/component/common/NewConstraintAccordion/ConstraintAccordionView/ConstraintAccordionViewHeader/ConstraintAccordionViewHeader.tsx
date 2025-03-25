@@ -55,7 +55,6 @@ export const ConstraintAccordionViewHeader = ({
             {flagOverviewRedesign ? (
                 <ConstraintAccordionViewHeaderInfo
                     constraint={constraint}
-                    singleValue={singleValue}
                     allowExpand={allowExpand}
                     expanded={expanded}
                     disabled={disabled}

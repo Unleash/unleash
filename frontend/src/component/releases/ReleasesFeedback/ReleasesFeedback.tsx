@@ -7,7 +7,7 @@ const StyledCardLink = styled(Link)(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.links,
     '&:hover, &:focus': {
-        textDecoration: 'none',
+        textDecoration: 'underline',
     },
 }));
 
@@ -23,7 +23,7 @@ export const ReleasesFeedback: React.FC<{
             cardVariant='secondary'
             title={title}
             footer={
-                <StyledCardLink to={feedbackLink} target='_blank'>
+                <StyledCardLink to={feedbackLink} target='_blank' rel='noreferrer'>
                     Give feedback
                 </StyledCardLink>
             }

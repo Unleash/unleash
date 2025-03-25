@@ -12,6 +12,7 @@ const DragButton = styled('button')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusMedium,
     color: theme.palette.text.secondary,
     ':hover, :focus-visible': {
+        outline: 'none',
         '.draggable-hover-indicator': {
             background: theme.palette.table.headerHover,
         },
@@ -41,7 +42,7 @@ type Props = {
 
 export const MilestoneCardDragHandle: FC<Props> = ({ dragItemRef }) => {
     return (
-        <DragButton type='button'>
+        <DragButton tabIndex={-1} type='button'>
             <DraggableContent ref={dragItemRef}>
                 <DraggableHoverIndicator className='draggable-hover-indicator'>
                     <DragIndicator aria-hidden />

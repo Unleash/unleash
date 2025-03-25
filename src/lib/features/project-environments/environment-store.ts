@@ -21,6 +21,7 @@ interface IEnvironmentsTable {
     sort_order: number;
     enabled: boolean;
     protected: boolean;
+    required_approvals?: number;
 }
 
 interface IEnvironmentsWithCountsTable extends IEnvironmentsTable {
@@ -42,6 +43,7 @@ const COLUMNS = [
     'sort_order',
     'enabled',
     'protected',
+    'required_approvals',
 ];
 
 function mapRow(row: IEnvironmentsTable): IEnvironment {
@@ -51,6 +53,7 @@ function mapRow(row: IEnvironmentsTable): IEnvironment {
         sortOrder: row.sort_order,
         enabled: row.enabled,
         protected: row.protected,
+        requiredApprovals: row.required_approvals,
     };
 }
 
@@ -95,6 +98,7 @@ function fieldToRow(env: IEnvironment): IEnvironmentsTable {
         sort_order: env.sortOrder,
         enabled: env.enabled,
         protected: env.protected,
+        required_approvals: env.requiredApprovals,
     };
 }
 
@@ -318,7 +322,7 @@ export default class EnvironmentStore implements IEnvironmentStore {
     }
 
     async update(
-        env: Pick<IEnvironment, 'type' | 'protected'>,
+        env: Pick<IEnvironment, 'type' | 'protected' | 'requiredApprovals'>,
         name: string,
     ): Promise<IEnvironment> {
         const updatedEnv = await this.db<IEnvironmentsTable>(TABLE)

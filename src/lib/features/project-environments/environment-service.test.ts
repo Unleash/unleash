@@ -49,6 +49,34 @@ test('Can get all', async () => {
     expect(environments).toHaveLength(3); // the one we created plus 'default'
 });
 
+test('Can manage required approvals', async () => {
+    const created = await db.stores.environmentStore.create({
+        name: 'approval_env',
+        type: 'production',
+        requiredApprovals: 1,
+    });
+
+    const retrieved = await service.get('approval_env');
+
+    await db.stores.environmentStore.update(
+        {
+            type: 'production',
+            protected: false,
+            requiredApprovals: 2,
+        },
+        'approval_env',
+    );
+
+    const updated = await service.get('approval_env');
+    const groupRetrieved = (await service.getAll()).find(
+        (env) => env.name === 'approval_env',
+    );
+
+    expect(retrieved).toEqual(created);
+    expect(updated).toEqual({ ...created, requiredApprovals: 2 });
+    expect(groupRetrieved).toMatchObject({ ...created, requiredApprovals: 2 });
+});
+
 test('Can connect environment to project', async () => {
     await db.stores.environmentStore.create({
         name: 'test-connection',

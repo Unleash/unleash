@@ -39,9 +39,10 @@ export const MilestoneList = ({
             event: DragEvent,
             draggedElement: HTMLElement,
         ) => {
-            if (useNewMilestoneCard && (save || event.type === 'drop')) {
+            if (useNewMilestoneCard && event.type === 'drop') {
                 return; // the user has let go, we should leave the current sort order as it is currently visually displayed
             }
+
             if (event.type === 'dragenter' && dragIndex !== dropIndex) {
                 const target = event.target as HTMLElement;
 
@@ -55,13 +56,12 @@ export const MilestoneList = ({
                     bottom - event.clientY < draggedElementHeight;
                 const draggingUp = dragIndex > dropIndex;
 
+                // prevent oscillating by only reordering if there is sufficient space
                 const shouldReorder = draggingUp
                     ? overTargetTop
                     : overTargetBottom;
 
-                // prevent oscillating by only reordering if there is sufficient space
                 if (shouldReorder) {
-                    // reorder here
                     const oldMilestones = milestones || [];
                     const newMilestones = [...oldMilestones];
                     const movedMilestone = newMilestones.splice(

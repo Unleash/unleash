@@ -48,12 +48,13 @@ const StyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
     padding: theme.spacing(0.5, 3, 2.5),
 }));
 
-const StyledLink = styled(Link)({
+const StyledLink = styled(Link)(({ theme }) => ({
     textDecoration: 'none',
+    paddingRight: theme.spacing(0.5),
     '&:hover': {
         textDecoration: 'underline',
     },
-});
+}));
 
 const StyledActionsContainer = styled('div')(({ theme }) => ({
     display: 'flex',

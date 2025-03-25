@@ -17,13 +17,12 @@ const StyledHeaderMetaInfo = styled('div')(({ theme }) => ({
     [theme.breakpoints.down('sm')]: {
         marginLeft: 0,
         flexDirection: 'column',
-        alignItems: 'center',
         width: '100%',
     },
 }));
 
 const StyledExpandItem = styled('div')(({ theme }) => ({
-    color: theme.palette.text.secondary,
+    color: theme.palette.secondary.main,
     margin: theme.spacing(0.25, 0, 0, 0.75),
     fontSize: theme.fontSizes.smallerBody,
 }));

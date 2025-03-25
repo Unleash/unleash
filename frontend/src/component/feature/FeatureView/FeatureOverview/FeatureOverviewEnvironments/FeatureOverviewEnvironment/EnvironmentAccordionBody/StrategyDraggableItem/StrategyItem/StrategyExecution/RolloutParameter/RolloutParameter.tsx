@@ -28,17 +28,19 @@ export const RolloutParameter: FC<{
     return (
         <>
             <StrategyEvaluationItem type='Rollout %'>
-                <StrategyEvaluationChip label={`${percentage}%`} /> of your base{' '}
-                {stickiness}
-                <span>
-                    {hasConstraints ? 'who match constraints ' : ' '}
-                    is included.
-                </span>
-                {displayGroupId && parameters?.groupId ? (
-                    <StrategyEvaluationChip
-                        label={`groupId: ${parameters?.groupId}`}
-                    />
-                ) : null}
+                <StrategyEvaluationChip label={`${percentage}%`} />
+                <div>
+                    of your base {stickiness}{' '}
+                    <span>
+                        {hasConstraints ? 'who match constraints ' : ' '}
+                        is included.
+                    </span>
+                    {displayGroupId && parameters?.groupId ? (
+                        <StrategyEvaluationChip
+                            label={`groupId: ${parameters?.groupId}`}
+                        />
+                    ) : null}
+                </div>
             </StrategyEvaluationItem>
             <RolloutVariants variants={variants} />
         </>

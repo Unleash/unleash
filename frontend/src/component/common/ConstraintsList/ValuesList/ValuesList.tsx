@@ -11,9 +11,13 @@ export type ValuesListProps = {
     tooltips?: Record<string, string | undefined>;
 } & Pick<TruncatorProps, 'onSetTruncated'>;
 
-const StyledValuesContainer = styled('div')({
+const StyledValuesContainer = styled('div')(({ theme }) => ({
     flex: '1 1 0',
-});
+    [theme.breakpoints.down('sm')]: {
+        display: 'block',
+        float: 'left',
+    },
+}));
 
 const StyledTruncator = styled(Truncator)({
     padding: 0,

@@ -13,6 +13,9 @@ const StyledContainer = styled('div')(({ theme }) => ({
     alignItems: 'center',
     fontSize: theme.typography.body2.fontSize,
     minHeight: theme.spacing(4),
+    [theme.breakpoints.down('sm')]: {
+        flexDirection: 'column',
+    },
 }));
 
 const StyledContent = styled('div')(({ theme }) => ({
@@ -23,6 +26,9 @@ const StyledContent = styled('div')(({ theme }) => ({
         filter: 'grayscale(1)',
         color: theme.palette.text.secondary,
     },
+    [theme.breakpoints.down('sm')]: {
+        width: '100%',
+    },
 }));
 
 const StyledType = styled('span')(({ theme }) => ({
@@ -32,7 +38,11 @@ const StyledType = styled('span')(({ theme }) => ({
     fontWeight: theme.typography.fontWeightBold,
     color: theme.palette.text.secondary,
     width: theme.spacing(10),
+    [theme.breakpoints.down('sm')]: {
+        width: '100%',
+    },
 }));
+
 /**
  * Abstract building block for a list of constraints, segments and other items inside a strategy
  */

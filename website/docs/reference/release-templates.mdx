@@ -48,14 +48,14 @@ An instance of a [release template](#release-template) applied to a specific fea
 
 ## Create a release template
 
-> Note: For this action, you must be an Admin or have a custom root rote with [release templates permissions](/reference/rbac#release-template-permissions).
+> Note: For this action, you must be an Editor or have a custom root rote with [release templates permissions](/reference/rbac#release-template-permissions).
 
 To create a release template, do the following:
 
 1. In the Admin UI, go to **Configure > Release templates**, and click **New template**.
 2. Enter the template name and an optional description.
 3. For the first milestone, click **Add strategy**.
-4. Choose a strategy type and configure your [rollout percentage](/reference/activation-strategies#rollout-percentage), [targeting](/reference/activation-strategies#targeting), and [variants](/reference/strategy-variants).
+4. Choose a strategy type and configure your [strategy](/reference/activation-strategies).
 5. Click **Add strategy**.
 6. Optional: Add, rename or reorder milestones as needed.
 7. Click **Create template**.
@@ -81,7 +81,7 @@ The configuration would look something like this:
 To apply a release template to a feature flag, do the following:
 
 1. In the Admin UI, open a feature flag and select your target environment.
-2. Click **More strategies** (triple-dot icon) and select one of the available release templates.
+2. Click **Use template** and select one of the available release templates.
 3. Click **Add release plan**.
 
 If the environment is enabled, the first milestone starts automatically.

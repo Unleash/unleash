@@ -3,7 +3,7 @@
 exports.up = function (db, callback) {
     db.runSql(
         `
-            ALTER TABLE environments ADD COLUMN required_approvals integer;
+            ALTER TABLE environments ADD COLUMN required_approvals INTEGER;
         `,
         callback,
     );

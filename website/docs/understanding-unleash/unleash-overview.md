@@ -50,7 +50,7 @@ The following table outlines where flag evaluation happens with different SDK se
 | Client-side SDK + Frontend API | Performed by the **Unleash server**. |
 | Client-side SDK + Unleash Edge | Performed by **Unleash Edge**. |
 
-Flag evaluation relies on the [Unleash Context](/reference/context) and may involve user data. Since server-side SDKs always perform local evaluation, your user data remains within your application and is never shared with the Unleash server.
+Flag evaluation relies on the [Unleash Context](/reference/unleash-context) and may involve user data. Since server-side SDKs always perform local evaluation, your user data remains within your application and is never shared with the Unleash server.
 
 For client-side SDKs, you can use Unleash Edge for flag evaluation to ensure that user data is not shared with the Unleash instance. You have different hosting options for both [Unleash](/understanding-unleash/proxy-hosting#you-host-everything) and [Unleash Edge](/understanding-unleash/proxy-hosting#unleash-hosts-the-api-you-host-edge) allowing you to meet any privacy requirements.
 
@@ -67,7 +67,7 @@ Beyond scalability, Unleash Edge also offers privacy and security benefits for c
 The [Client API](/reference/api/unleash/client) is the API used by server-side SDKs to fetch feature flag configurations and send SDK usage metrics to Unleash.
 
 #### Frontend API
-The [Frontend API](/reference/api/unleash/frontend-api) is the API used by client-side SDKs to retrieve all enabled feature flags for a given [Unleash Context](/reference/context) and send SDK usage metrics to Unleash.
+The [Frontend API](/reference/api/unleash/frontend-api) is the API used by client-side SDKs to retrieve all enabled feature flags for a given [Unleash Context](/reference/unleash-context) and send SDK usage metrics to Unleash.
 
 #### Admin API
 The [Admin API](/reference/api/unleash) is an API layer for managing all aspects of your Unleash instance, including creating, updating, and deleting resources, such as feature flags, activation strategies, and environments. This API is used by the [Unleash Admin UI](#the-unleash-admin-ui) and other tools and [integrations](/reference/integrations).

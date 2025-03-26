@@ -36,9 +36,24 @@ export const Tag = ({ tag, onDelete, deleteIcon }: ITagProps) => {
     const showColorDot = tag.color && tag.color !== '#FFFFFF';
 
     const labelContent = (
-        <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <span
+            style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                width: '100%',
+            }}
+        >
             {showColorDot && <ColorDot $color={tag.color!} />}
-            <span>{label}</span>
+            <span
+                style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap',
+                }}
+            >
+                {label}
+            </span>
         </span>
     ) as ReactElement;
 

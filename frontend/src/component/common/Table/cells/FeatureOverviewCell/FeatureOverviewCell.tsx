@@ -168,11 +168,65 @@ const ArchivedFeatureName: FC<{
     );
 };
 
+interface ITagItemProps {
+    tag: TagSchema;
+    onClick: (tag: TagSchema) => void;
+}
+
+const TagItem: FC<ITagItemProps> = ({ tag, onClick }) => {
+    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
+    const tagFullText = `${tag.type}:${tag.value}`;
+    const isOverflowing = tagFullText.length > 30;
+
+    if (isTagTypeColorEnabled) {
+        const displayTag = {
+            ...tag,
+            value: isOverflowing
+                ? `${tag.value.substring(0, Math.max(0, 30 - tag.type.length - 1))}...`
+                : tag.value,
+        };
+
+        const tagComponent = (
+            <Box onClick={() => onClick(tag)} sx={{ cursor: 'pointer' }}>
+                <Tag tag={displayTag} />
+            </Box>
+        );
+
+        return (
+            <HtmlTooltip
+                key={tagFullText}
+                title={isOverflowing ? tagFullText : ''}
+                arrow
+            >
+                <span>{tagComponent}</span>
+            </HtmlTooltip>
+        );
+    }
+
+    return (
+        <StyledTag
+            key={tagFullText}
+            label={
+                <HtmlTooltip title={isOverflowing ? tagFullText : ''} arrow>
+                    <span>
+                        {tagFullText.substring(0, 30)}
+                        {isOverflowing ? '...' : ''}
+                    </span>
+                </HtmlTooltip>
+            }
+            size='small'
+            onClick={() => onClick(tag)}
+            sx={{ cursor: 'pointer' }}
+        />
+    );
+};
+
 const RestTags: FC<{
     tags: TagSchema[];
     onClick: (tag: string) => void;
-    isTagTypeColorEnabled: boolean;
-}> = ({ tags, onClick, isTagTypeColorEnabled }) => {
+}> = ({ tags, onClick }) => {
+    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
+
     return (
         <HtmlTooltip
             title={tags.map((tag) => (
@@ -189,7 +243,14 @@ const RestTags: FC<{
                 </Box>
             ))}
         >
-            <CustomTagButton sx={{ cursor: 'initial' }}>
+            <CustomTagButton
+                sx={{
+                    cursor: 'initial',
+                    ...(isTagTypeColorEnabled && {
+                        borderRadius: (theme) => theme.spacing(2),
+                    }),
+                }}
+            >
                 {tags.length} more...
             </CustomTagButton>
         </HtmlTooltip>
@@ -200,8 +261,6 @@ const Tags: FC<{
     tags: FeatureSearchResponseSchema['tags'];
     onClick: (tag: string) => void;
 }> = ({ tags, onClick }) => {
-    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
-
     if (!tags || tags.length === 0) {
         return null;
     }
@@ -212,70 +271,14 @@ const Tags: FC<{
         onClick(`${tag.type}:${tag.value}`);
     };
 
-    const renderTag = (tag: TagSchema) => {
-        const tagFullText = `${tag.type}:${tag.value}`;
-        const isOverflowing = tagFullText.length > 30;
-
-        if (isTagTypeColorEnabled) {
-            const displayTag = {
-                ...tag,
-                value: isOverflowing
-                    ? `${tag.value.substring(0, Math.max(0, 30 - tag.type.length - 1))}...`
-                    : tag.value,
-            };
-
-            const tagComponent = (
-                <Box
-                    onClick={() => handleTagClick(tag)}
-                    sx={{ cursor: 'pointer' }}
-                >
-                    <Tag tag={displayTag} />
-                </Box>
-            );
-
-            return (
-                <HtmlTooltip
-                    key={tagFullText}
-                    title={isOverflowing ? tagFullText : ''}
-                    arrow
-                >
-                    <span>{tagComponent}</span>
-                </HtmlTooltip>
-            );
-        }
-
-        return (
-            <StyledTag
-                key={tagFullText}
-                label={
-                    <HtmlTooltip title={isOverflowing ? tagFullText : ''} arrow>
-                        <span>
-                            {tagFullText.substring(0, 30)}
-                            {isOverflowing ? '...' : ''}
-                        </span>
-                    </HtmlTooltip>
-                }
-                size='small'
-                onClick={() => handleTagClick(tag)}
-                sx={{ cursor: 'pointer' }}
-            />
-        );
-    };
-
     return (
         <TagsContainer>
-            {tag1 && renderTag(tag1)}
-            {tag2 && renderTag(tag2)}
-            {tag3 && renderTag(tag3)}
+            {tag1 && <TagItem tag={tag1} onClick={handleTagClick} />}
+            {tag2 && <TagItem tag={tag2} onClick={handleTagClick} />}
+            {tag3 && <TagItem tag={tag3} onClick={handleTagClick} />}
             <ConditionallyRender
                 condition={restTags.length > 0}
-                show={
-                    <RestTags
-                        tags={restTags}
-                        onClick={onClick}
-                        isTagTypeColorEnabled={isTagTypeColorEnabled}
-                    />
-                }
+                show={<RestTags tags={restTags} onClick={onClick} />}
             />
         </TagsContainer>
     );

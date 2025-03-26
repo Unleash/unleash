@@ -105,11 +105,12 @@ export const FeatureOverviewEnvironment = ({
                             variant='outlined'
                             size='small'
                         />
-                    ) : null}
-                    <FeatureOverviewEnvironmentMetrics
-                        environmentMetric={metrics}
-                        collapsed={!hasActivations}
-                    />
+                    ) : (
+                        <FeatureOverviewEnvironmentMetrics
+                            environmentMetric={metrics}
+                            collapsed={!hasActivations}
+                        />
+                    )}
                 </EnvironmentHeader>
                 <NewStyledAccordionDetails>
                     <StyledEnvironmentAccordionContainer>

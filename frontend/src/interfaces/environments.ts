@@ -12,6 +12,7 @@ export interface IEnvironment {
     apiTokenCount?: number;
     enabledToggleCount?: number;
     lastSeenAt: string;
+    requiredApprovals?: number;
 }
 
 export interface IProjectEnvironment extends IEnvironment {

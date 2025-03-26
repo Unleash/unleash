@@ -24,7 +24,7 @@ The following table gives an overview of the fields' intended usage, their lifet
 | `sessionId`       | `string`              | dynamic  | The identifier of the current session.                                                                                                               |
 | `remoteAddress`   | `string`              | dynamic  | The application's IP address.                                                                                                                                |
 | `properties`      | `Map<string, string>` | dynamic  | A key-value store for additional data.                                                                                                              |
-| `currentTime` | `DateTime`/`string`   | dynamic  | A `DateTime` (or similar) data class instance or a string in an RFC-3339 format. **Defaults to the current time** if not set by the user; requires [SDK compatibility](../reference/sdks#server-side-sdk-compatibility-table). |
+| `currentTime` | `DateTime`/`string`   | dynamic  | A `DateTime` (or similar) data class instance or a string in an RFC-3339 format. **Defaults to the current time** if not set by the user; requires [SDK compatibility](../reference/sdks#feature-compatibility-in-server-side-sdks). |
 
 
 ### The `properties` field
@@ -74,7 +74,7 @@ Using a custom context field called _region_ as an example: if you define the fi
 
 :::note SDK compatibility
 
-Custom stickiness is supported by all SDKs except for the Rust SDK. Refer to the [SDK compatibility table](../reference/sdks#server-side-sdk-compatibility-table) for more information.
+Custom stickiness is supported by all SDKs except for the Rust SDK. Refer to the [SDK compatibility table](../reference/sdks#feature-compatibility-in-server-side-sdks) for more information.
 
 :::
 

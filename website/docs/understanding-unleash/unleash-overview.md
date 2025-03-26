@@ -4,8 +4,8 @@ title: Unleash architecture
 
 Unleash is designed for privacy, speed, and resilience, enabling feature flag evaluations to happen locally within your applications. The architecture provides:
 - **Fast feature flag evaluations**: Feature flags are evaluated within the [SDKs](#unleash-sdks) or [Unleash Edge](#unleash-edge), making evaluations incredibly fast (nanoseconds).
-- **High reliability**: With server-side SDKs, there is no dependency on network calls during evaluation, providing high reliability.
 - **Privacy and security**: No user data is shared with the Unleash instance, ensuring [privacy and security](/understanding-unleash/data-collection).
+- **High reliability**: SDKs cache feature flag configuration in memory, providing high reliability.
 
 ## System Overview
 
@@ -31,7 +31,7 @@ SDKs cache all feature flag data in memory, applying activation strategies local
 
 #### Server-side SDKs
 
-Server-side SDKs run in backend applications and retrieve feature flag configurations via the [Client API](#client-api) or [Unleash Edge](#unleash-edge). Server-side SDKs perform the flag evaluation locally, meaning no user data is shared with the Unleash instance.
+Server-side SDKs run in backend applications and retrieve feature flag configurations using the [Client API](#client-api) or [Unleash Edge](#unleash-edge). Server-side SDKs perform the flag evaluation locally, meaning all user data is retained within the SDK.
 
 Supported languages include: [Node.js](/reference/sdks/node), [Go](/reference/sdks/go), [Java](/reference/sdks/java), [Python](/reference/sdks/python), [.NET](/reference/sdks/dotnet), [PHP](/reference/sdks/php), and more.
 
@@ -39,7 +39,7 @@ Supported languages include: [Node.js](/reference/sdks/node), [Go](/reference/sd
 
 Client-side SDKs are used in frontend and mobile applications. They communicate with Unleash through the [Frontend API](#frontend-api) or [Unleash Edge](#unleash-edge). Supported platforms include: [JavaScript](/reference/sdks/javascript-browser), [React](/reference/sdks/react), [iOS](/reference/sdks/ios-proxy), [Android](/reference/sdks/android-proxy), and more.
 
-Client-side SDKs do not perform the flag evaluation locally, instead, they fetch all enabled feature flags for a given [Unleash Context](/reference/context). The flag evaluation happens inside [Unleash Edge](#unleash-edge) (when using Edge), or directly within your Unleash server, when using the [Frontend API](#frontend-api).
+Client-side SDKs do not perform the flag evaluation locally, instead, they fetch all enabled feature flags for a given [Unleash Context](/reference/unleash-context). The flag evaluation happens inside [Unleash Edge](#unleash-edge) (when using Edge), or directly within your Unleash server, when using the [Frontend API](#frontend-api).
 
 The following table outlines where flag evaluation happens with different SDK setups.
 
@@ -50,9 +50,9 @@ The following table outlines where flag evaluation happens with different SDK se
 | Client-side SDK + Frontend API | Performed by the **Unleash server**. |
 | Client-side SDK + Unleash Edge | Performed by **Unleash Edge**. |
 
-Flag evaluation relies on the [Unleash Context](/reference/context) and may involve user data. With server-side SDKs, user data remains within your application and is never shared with the Unleash server, whether you use the cloud or self-hosted version.
+Flag evaluation relies on the [Unleash Context](/reference/context) and may involve user data. Since server-side SDKs always perform local evaluation, your user data remains within your application and is never shared with the Unleash server.
 
-For client-side SDKs, you can retain all user data within your applications by either [self-hosting Unleash](/understanding-unleash/proxy-hosting#you-host-everything), or [self-hosting Unleash Edge](/understanding-unleash/proxy-hosting#unleash-hosts-the-api-you-host-edge).
+For client-side SDKs, you can use Unleash Edge for flag evaluation to ensure that user data is not shared with the Unleash instance. You have different hosting options for both [Unleash](/understanding-unleash/proxy-hosting#you-host-everything) and [Unleash Edge](/understanding-unleash/proxy-hosting#unleash-hosts-the-api-you-host-edge) allowing you to meet any privacy requirements.
 
 ### Unleash Edge
 

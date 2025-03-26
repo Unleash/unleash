@@ -72,14 +72,15 @@ All constraints can be negated. For example:
 | `STR_ENDS_WITH`  | "@user.com" | "hello@user.com" | true |
 | NOT `STR_ENDS_WITH`  | "@user.com" | "hello@user.com" | false |
 
-##### Basic operators
+#### Basic operators
 
 | Operator      | Description
 |-----------|--------------------------------------------------------------------------------|
 | `IN`  | The context field is equal to any of the provided values; case sensitive. |
 | `NOT_IN`  | The context field is not equal to any of the values provided; case sensitive. |
 
-#### Numeric operators
+#### Advanced operators
+##### Numberic operators
 
 Numeric operators compare the numeric value of context fields with the provided value. Numeric operators only accept single values.
 

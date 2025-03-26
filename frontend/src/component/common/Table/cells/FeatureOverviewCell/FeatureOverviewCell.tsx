@@ -1,5 +1,8 @@
-import type { FC, ReactElement } from 'react';
-import type { FeatureSearchResponseSchema } from '../../../../../openapi';
+import type { FC } from 'react';
+import type {
+    FeatureSearchResponseSchema,
+    TagSchema,
+} from '../../../../../openapi';
 import { Box, IconButton, styled, Chip } from '@mui/material';
 import useFeatureTypes from 'hooks/api/getters/useFeatureTypes/useFeatureTypes';
 import { getFeatureTypeIcons } from 'utils/getFeatureTypeIcons';
@@ -14,7 +17,6 @@ import { useFeature } from 'hooks/api/getters/useFeature/useFeature';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import { getLocalizedDateString } from '../../../util';
 import { Tag } from 'component/common/Tag/Tag';
-import type { ITag } from 'interfaces/tags';
 import { useUiFlag } from 'hooks/useUiFlag';
 
 interface IFeatureNameCellProps {
@@ -57,10 +59,19 @@ const CustomTagButton = styled('button')(({ theme }) => ({
 const StyledTag = styled(Chip)(({ theme }) => ({
     overflowWrap: 'anywhere',
     lineHeight: theme.typography.body1.lineHeight,
-    backgroundColor: theme.palette.neutral.light,
+    backgroundColor: theme.palette.background.paper,
     color: theme.palette.text.primary,
-    padding: theme.spacing(0.25),
-    height: theme.spacing(3.5),
+    padding: theme.spacing(0.25, 0.5),
+    height: 'auto',
+    fontSize: theme.fontSizes.smallerBody,
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    '&:hover': {
+        backgroundColor: theme.palette.background.paper,
+    },
+    '& .MuiChip-label': {
+        padding: 0,
+    },
 }));
 
 const CappedDescription: FC<{ text: string; searchQuery: string }> = ({
@@ -158,7 +169,7 @@ const ArchivedFeatureName: FC<{
 };
 
 const RestTags: FC<{
-    tags: ITag[];
+    tags: TagSchema[];
     onClick: (tag: string) => void;
     isTagTypeColorEnabled: boolean;
 }> = ({ tags, onClick, isTagTypeColorEnabled }) => {
@@ -195,28 +206,20 @@ const Tags: FC<{
         return null;
     }
 
-    // Convert TagSchema to ITag for the Tag component
-    const tagsAsITag: ITag[] = tags.map((tag) => ({
-        type: tag.type,
-        value: tag.value,
-        color: (tag as ITag).color, // Cast to ITag to get the color if available
-    }));
+    const [tag1, tag2, tag3, ...restTags] = tags;
 
-    const [tag1, tag2, tag3, ...restTags] = tagsAsITag;
-
-    const handleTagClick = (tag: ITag) => {
+    const handleTagClick = (tag: TagSchema) => {
         onClick(`${tag.type}:${tag.value}`);
     };
 
-    const renderTag = (tag: ITag) => {
+    const renderTag = (tag: TagSchema) => {
         const tagFullText = `${tag.type}:${tag.value}`;
         const isOverflowing = tagFullText.length > 30;
 
         if (isTagTypeColorEnabled) {
-            // Create a tag object with truncated display value but keeping original values
             const displayTag = {
                 ...tag,
-                displayValue: isOverflowing
+                value: isOverflowing
                     ? `${tag.value.substring(0, Math.max(0, 30 - tag.type.length - 1))}...`
                     : tag.value,
             };
@@ -226,13 +229,7 @@ const Tags: FC<{
                     onClick={() => handleTagClick(tag)}
                     sx={{ cursor: 'pointer' }}
                 >
-                    <Tag
-                        tag={{
-                            type: tag.type,
-                            value: displayTag.displayValue,
-                            color: tag.color,
-                        }}
-                    />
+                    <Tag tag={displayTag} />
                 </Box>
             );
 

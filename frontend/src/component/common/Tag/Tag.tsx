@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 import { Chip } from '@mui/material';
-import type { ITag } from 'interfaces/tags';
+import type { TagSchema } from 'openapi';
 import type { ReactElement } from 'react';
 
 const StyledChip = styled(Chip)<{ $color?: string }>(({ theme, $color }) => ({
@@ -26,7 +26,7 @@ const ColorDot = styled('div')<{ $color: string }>(({ theme, $color }) => ({
 }));
 
 interface ITagProps {
-    tag: ITag;
+    tag: TagSchema;
     onDelete?: () => void;
     deleteIcon?: ReactElement;
 }

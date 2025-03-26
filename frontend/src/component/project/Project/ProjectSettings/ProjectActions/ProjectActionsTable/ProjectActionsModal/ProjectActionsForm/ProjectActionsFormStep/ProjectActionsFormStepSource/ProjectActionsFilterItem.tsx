@@ -9,7 +9,7 @@ import type { ActionsFilterState } from '../../useProjectActionsForm';
 import Delete from '@mui/icons-material/Delete';
 import Input from 'component/common/Input/Input';
 import { ProjectActionsFormItem } from '../ProjectActionsFormItem';
-import { ConstraintOperatorSelect } from 'component/common/ConstraintAccordion/ConstraintOperatorSelect';
+import { ConstraintOperatorSelect } from 'component/common/NewConstraintAccordion/ConstraintOperatorSelect';
 import {
     type Operator,
     allOperators,

@@ -2,7 +2,7 @@ import type React from 'react';
 import { useState } from 'react';
 import { ConstraintFormHeader } from '../ConstraintFormHeader/ConstraintFormHeader';
 import { FormControl, RadioGroup, Radio, Alert } from '@mui/material';
-import { ConstraintValueSearch } from 'component/common/ConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
+import { ConstraintValueSearch } from 'component/common/LegacyConstraintAccordion/ConstraintValueSearch/ConstraintValueSearch';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useThemeStyles } from 'themes/themeStyles';
 import type { ILegalValue } from 'interfaces/context';

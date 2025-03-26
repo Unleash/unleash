@@ -8,12 +8,12 @@ import {
 import { Button, styled, Tooltip } from '@mui/material';
 import HelpOutline from '@mui/icons-material/HelpOutline';
 import type { IConstraint } from 'interfaces/strategy';
-import { ConstraintAccordion } from 'component/common/ConstraintAccordion/ConstraintAccordion';
+import { ConstraintAccordion } from 'component/common/LegacyConstraintAccordion/ConstraintAccordion';
 import produce from 'immer';
 import useUnleashContext from 'hooks/api/getters/useUnleashContext/useUnleashContext';
 import { type IUseWeakMap, useWeakMap } from 'hooks/useWeakMap';
 import { objectId } from 'utils/objectId';
-import { createEmptyConstraint } from 'component/common/ConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
+import { createEmptyConstraint } from 'component/common/LegacyConstraintAccordion/ConstraintAccordionList/createEmptyConstraint';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 

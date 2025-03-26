@@ -1,4 +1,4 @@
-import { ConstraintIcon } from 'component/common/ConstraintAccordion/ConstraintIcon';
+import { ConstraintIcon } from 'component/common/LegacyConstraintAccordion/ConstraintIcon';
 import type { IConstraint } from 'interfaces/strategy';
 import { ConstraintAccordionViewHeaderInfo } from './ConstraintAccordionViewHeaderInfo';
 import { ConstraintAccordionHeaderActions } from '../../ConstraintAccordionHeaderActions/ConstraintAccordionHeaderActions';

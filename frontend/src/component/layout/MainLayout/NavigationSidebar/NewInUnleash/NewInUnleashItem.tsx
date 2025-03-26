@@ -13,6 +13,7 @@ import { NewInUnleashTooltip } from './NewInUnleashTooltip';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { Badge } from 'component/common/Badge/Badge';
 import { Truncator } from 'component/common/Truncator/Truncator';
+import { NewInUnleashDialog } from './NewInUnleashDialog';
 
 export type NewInUnleashItemDetails = {
     label: string;
@@ -21,9 +22,10 @@ export type NewInUnleashItemDetails = {
     onCheckItOut?: () => void;
     docsLink?: string;
     show: boolean;
-    longDescription: ReactNode;
+    longDescription?: ReactNode;
     preview?: ReactNode;
     beta?: boolean;
+    popout?: boolean;
 };
 
 const StyledItemButton = styled(ListItemButton)(({ theme }) => ({
@@ -88,6 +90,7 @@ export const NewInUnleashItem = ({
     preview,
     summary,
     beta,
+    popout,
 }: INewInUnleashItemProps) => {
     const { open, handleTooltipOpen, handleTooltipClose } = useTooltip();
 
@@ -104,43 +107,91 @@ export const NewInUnleashItem = ({
                 handleTooltipOpen();
             }}
         >
-            <NewInUnleashTooltip
-                open={open}
-                onClose={handleTooltipClose}
-                title={label}
-                longDescription={longDescription}
-                onCheckItOut={onCheckItOut}
-                docsLink={docsLink}
-                preview={preview}
-                beta={beta}
-            >
-                <StyledItemButton>
-                    {icon}
-                    <LabelWithSummary>
-                        <StyledItemTitle>
-                            <Typography fontWeight='bold' fontSize='small'>
-                                <Truncator title={label} arrow>
-                                    {label}
-                                </Truncator>
-                            </Typography>
-                            <ConditionallyRender
-                                condition={beta}
-                                show={<Badge color='secondary'>Beta</Badge>}
-                            />
-                        </StyledItemTitle>
-                        <Typography fontSize='small'>{summary}</Typography>
-                    </LabelWithSummary>
-                    <Tooltip title='Dismiss' arrow sx={{ marginLeft: 'auto' }}>
-                        <StyledItemButtonClose
-                            aria-label='dismiss'
-                            onClick={onDismissClick}
-                            size='small'
+            {popout ? (
+                <NewInUnleashDialog
+                    open={open}
+                    onClose={handleTooltipClose}
+                    title={label}
+                    longDescription={longDescription}
+                    onCheckItOut={onCheckItOut}
+                    docsLink={docsLink}
+                    preview={preview}
+                    beta={beta}
+                >
+                    <StyledItemButton>
+                        {icon}
+                        <LabelWithSummary>
+                            <StyledItemTitle>
+                                <Typography fontWeight='bold' fontSize='small'>
+                                    <Truncator title={label} arrow>
+                                        {label}
+                                    </Truncator>
+                                </Typography>
+                                <ConditionallyRender
+                                    condition={beta}
+                                    show={<Badge color='secondary'>Beta</Badge>}
+                                />
+                            </StyledItemTitle>
+                            <Typography fontSize='small'>{summary}</Typography>
+                        </LabelWithSummary>
+                        <Tooltip
+                            title='Dismiss'
+                            arrow
+                            sx={{ marginLeft: 'auto' }}
                         >
-                            <Close fontSize='inherit' />
-                        </StyledItemButtonClose>
-                    </Tooltip>
-                </StyledItemButton>
-            </NewInUnleashTooltip>
+                            <StyledItemButtonClose
+                                aria-label='dismiss'
+                                onClick={onDismissClick}
+                                size='small'
+                            >
+                                <Close fontSize='inherit' />
+                            </StyledItemButtonClose>
+                        </Tooltip>
+                    </StyledItemButton>
+                </NewInUnleashDialog>
+            ) : (
+                <NewInUnleashTooltip
+                    open={open}
+                    onClose={handleTooltipClose}
+                    title={label}
+                    longDescription={longDescription}
+                    onCheckItOut={onCheckItOut}
+                    docsLink={docsLink}
+                    preview={preview}
+                    beta={beta}
+                >
+                    <StyledItemButton>
+                        {icon}
+                        <LabelWithSummary>
+                            <StyledItemTitle>
+                                <Typography fontWeight='bold' fontSize='small'>
+                                    <Truncator title={label} arrow>
+                                        {label}
+                                    </Truncator>
+                                </Typography>
+                                <ConditionallyRender
+                                    condition={beta}
+                                    show={<Badge color='secondary'>Beta</Badge>}
+                                />
+                            </StyledItemTitle>
+                            <Typography fontSize='small'>{summary}</Typography>
+                        </LabelWithSummary>
+                        <Tooltip
+                            title='Dismiss'
+                            arrow
+                            sx={{ marginLeft: 'auto' }}
+                        >
+                            <StyledItemButtonClose
+                                aria-label='dismiss'
+                                onClick={onDismissClick}
+                                size='small'
+                            >
+                                <Close fontSize='inherit' />
+                            </StyledItemButtonClose>
+                        </Tooltip>
+                    </StyledItemButton>
+                </NewInUnleashTooltip>
+            )}
         </ListItem>
     );
 };

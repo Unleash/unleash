@@ -11,24 +11,28 @@ import {
 import { useUiFlag } from 'hooks/useUiFlag';
 import type { ReactNode } from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import HomeIcon from '@mui/icons-material/Home';
-import LaptopIcon from '@mui/icons-material/Laptop';
 import StopRoundedIcon from '@mui/icons-material/StopRounded';
-import EventNoteIcon from '@mui/icons-material/EventNote';
-import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
-import KeyRoundedIcon from '@mui/icons-material/KeyRounded';
-import CloudIcon from '@mui/icons-material/Cloud';
-import HubOutlinedIcon from '@mui/icons-material/HubOutlined';
-import BuildOutlinedIcon from '@mui/icons-material/BuildOutlined';
-import BillingIcon from '@mui/icons-material/CreditCardOutlined';
 import { AdminListItem, AdminSubListItem, MenuGroup } from './AdminListItem';
 import { useLocation } from 'react-router-dom';
 import { Sticky } from 'component/common/Sticky/Sticky';
-import { adminRoutes } from 'component/admin/adminRoutes';
+import { adminRoutes, adminGroups } from 'component/admin/adminRoutes';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { filterByConfig } from 'component/common/util';
 import { filterAdminRoutes } from 'component/admin/filterAdminRoutes';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
+import { IconRenderer } from './AdminMenuIcons';
+
+interface IMenuLinkItem {
+    href: string;
+    text: string;
+    icon: ReactNode;
+}
+
+interface IMenuItem {
+    href: string;
+    text: string;
+    items?: IMenuLinkItem[];
+}
 
 const StyledAdminMainGrid = styled(Grid)(({ theme }) => ({
     minWidth: 0, // this is a fix for overflowing flex
@@ -40,8 +44,8 @@ const StyledAdminMainGrid = styled(Grid)(({ theme }) => ({
         width: '100%',
     },
     [theme.breakpoints.down(2156)]: {
-        marginLeft: theme.spacing(7),
-        marginRight: theme.spacing(7),
+        marginLeft: 0,
+        marginRight: 0,
     },
     [theme.breakpoints.down('lg')]: {
         maxWidth: '1550px',
@@ -89,28 +93,6 @@ const StyledStopRoundedIcon = styled(StopRoundedIcon)(({ theme }) => ({
     color: theme.palette.primary.main,
 }));
 
-const StyledPeopleOutlineRoundedIcon = styled(PeopleOutlineRoundedIcon)(
-    ({ theme }) => ({
-        color: theme.palette.primary.main,
-    }),
-);
-
-const StyledKeyRoundedIcon = styled(KeyRoundedIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
-}));
-
-const StyledCloudIcon = styled(CloudIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
-}));
-
-const StyledHubOutlinedIcon = styled(HubOutlinedIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
-}));
-
-const StyledBuildOutlinedIcon = styled(BuildOutlinedIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
-}));
-
 interface IWrapIfAdminSubpageProps {
     children: ReactNode;
 }
@@ -145,20 +127,6 @@ const DashboardLink = () => {
     );
 };
 
-interface IMenuLinkItem {
-    href: string;
-    text: string;
-    icon: ReactNode;
-}
-
-interface IMenuItem {
-    href?: string;
-    text: string;
-    icon: ReactNode;
-    activeIcon?: ReactNode;
-    items?: IMenuLinkItem[];
-}
-
 interface IAdminMenuProps {
     children: ReactNode;
 }
@@ -187,72 +155,32 @@ export const AdminMenu = ({ children }: IAdminMenuProps) => {
             }),
         );
 
-    const template: Record<string, IMenuItem> = {
-        '/admin': { href: '/admin', text: 'Admin home', icon: <HomeIcon /> },
-        users: {
-            text: 'User administration',
-            icon: <PeopleOutlineRoundedIcon />,
-            activeIcon: <StyledPeopleOutlineRoundedIcon />,
-            items: [],
-        },
-        '/admin/service-accounts': {
-            href: '/admin/service-accounts',
-            text: 'Service accounts',
-            icon: <LaptopIcon />,
-        },
-        access: {
-            text: 'Access control',
-            icon: <KeyRoundedIcon />,
-            activeIcon: <StyledKeyRoundedIcon />,
-            items: [],
-        },
-        sso: {
-            text: 'Single sign-on',
-            icon: <CloudIcon />,
-            activeIcon: <StyledCloudIcon />,
-            items: [],
-        },
-        network: {
-            text: 'Network',
-            icon: <HubOutlinedIcon />,
-            activeIcon: <StyledHubOutlinedIcon />,
-            items: [],
-        },
-        instance: {
-            text: 'Instance configuration',
-            icon: <BuildOutlinedIcon />,
-            activeIcon: <StyledBuildOutlinedIcon />,
-            items: [],
-        },
-        '/admin/billing': {
-            href: '/admin/billing',
-            text: 'Billing & licensing',
-            icon: <BillingIcon />,
-        },
-        '/history': {
-            href: '/history',
-            text: 'Event log',
-            icon: <EventNoteIcon />,
-        },
-    };
-
-    const menuStructure: Record<string, IMenuItem> = {};
-
-    for (const route of routes) {
-        if (route.group && template[route.group]) {
-            if (!menuStructure[route.group]) {
-                menuStructure[route.group] = template[route.group];
+    const menuStructure = routes.reduce(
+        (acc: Record<string, IMenuItem>, route) => {
+            if (route.group && adminGroups[route.group]) {
+                if (!acc[route.group]) {
+                    acc[route.group] = {
+                        href: route.group,
+                        text: adminGroups[route.group],
+                        items: [],
+                    };
+                }
+                acc[route.group].items?.push({
+                    href: route.path,
+                    text: route.title,
+                    icon: <StopRoundedIcon />,
+                });
             }
-            menuStructure[route.group].items?.push({
-                href: route.path,
-                text: route.title,
-                icon: <StopRoundedIcon />,
-            });
-        }
-        if (!route.group && template[route.path]) {
-            menuStructure[route.path] = template[route.path];
-        }
-    }
+            if (!route.group) {
+                acc[route.path] = {
+                    href: route.path,
+                    text: route.title,
+                };
+            }
+            return acc;
+        },
+        {},
+    );
 
     const items = Object.values(menuStructure);
 
@@ -273,8 +201,18 @@ export const AdminMenu = ({ children }: IAdminMenuProps) => {
                                         return (
                                             <MenuGroup
                                                 title={item.text}
-                                                icon={item.icon}
-                                                activeIcon={item.activeIcon}
+                                                icon={
+                                                    <IconRenderer
+                                                        path={item.href}
+                                                        active={false}
+                                                    />
+                                                }
+                                                activeIcon={
+                                                    <IconRenderer
+                                                        path={item.href}
+                                                        active={true}
+                                                    />
+                                                }
                                                 isActiveMenu={Boolean(
                                                     isActiveMenu,
                                                 )}
@@ -296,9 +234,6 @@ export const AdminMenu = ({ children }: IAdminMenuProps) => {
                                             </MenuGroup>
                                         );
                                     }
-                                    if (!item.href) {
-                                        return null;
-                                    }
                                     return (
                                         <AdminListItem
                                             href={item.href}
@@ -307,7 +242,10 @@ export const AdminMenu = ({ children }: IAdminMenuProps) => {
                                             onClick={onClick}
                                             key={item.href}
                                         >
-                                            {item.icon}
+                                            <IconRenderer
+                                                path={item.href}
+                                                active={false}
+                                            />
                                         </AdminListItem>
                                     );
                                 })}

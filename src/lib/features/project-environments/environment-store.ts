@@ -21,7 +21,7 @@ interface IEnvironmentsTable {
     sort_order: number;
     enabled: boolean;
     protected: boolean;
-    required_approvals?: number;
+    required_approvals?: number | null;
 }
 
 interface IEnvironmentsWithCountsTable extends IEnvironmentsTable {

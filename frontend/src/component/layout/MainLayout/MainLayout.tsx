@@ -19,6 +19,7 @@ import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash';
 import { useUiFlag } from 'hooks/useUiFlag';
+import { WrapIfAdminSubpage } from './AdminMenu/AdminMenu';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -145,14 +146,18 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                             >
                                 <Header />
 
-                                <MainLayoutContent>
-                                    <SkipNavTarget />
-                                    <MainLayoutContentContainer ref={ref}>
-                                        <BreadcrumbNav />
-                                        <Proclamation toast={uiConfig.toast} />
-                                        {children}
-                                    </MainLayoutContentContainer>
-                                </MainLayoutContent>
+                                <WrapIfAdminSubpage>
+                                    <MainLayoutContent>
+                                        <SkipNavTarget />
+                                        <MainLayoutContentContainer ref={ref}>
+                                            <BreadcrumbNav />
+                                            <Proclamation
+                                                toast={uiConfig.toast}
+                                            />
+                                            {children}
+                                        </MainLayoutContentContainer>
+                                    </MainLayoutContent>
+                                </WrapIfAdminSubpage>
                             </Box>
                         </Box>
 

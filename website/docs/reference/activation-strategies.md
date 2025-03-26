@@ -63,7 +63,7 @@ These parts turn the constraint into an expression that evaluates to true or fal
 
 #### Constraint operators
 
-Constraint operators help you define the conditional statements that get evaluated as part of the constraint. [Basic operators](#basic-operators) are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](/reference/sdks#server-side-sdk-compatibility-table).
+Constraint operators help you define the conditional statements that get evaluated as part of the constraint. [Basic operators](#basic-operators) are available in all versions and SDKs. All other operators require Unleash version 4.9+ and [SDK compatibility](/reference/sdks#feature-compatibility-in-server-side-sdks).
 
 All constraints can be negated. For example: 
 
@@ -72,14 +72,15 @@ All constraints can be negated. For example:
 | `STR_ENDS_WITH`  | "@user.com" | "hello@user.com" | true |
 | NOT `STR_ENDS_WITH`  | "@user.com" | "hello@user.com" | false |
 
-##### Basic operators
+#### Basic operators
 
 | Operator      | Description
 |-----------|--------------------------------------------------------------------------------|
 | `IN`  | The context field is equal to any of the provided values; case sensitive. |
 | `NOT_IN`  | The context field is not equal to any of the values provided; case sensitive. |
 
-#### Numeric operators
+#### Advanced operators
+##### Numeric operators
 
 Numeric operators compare the numeric value of context fields with the provided value. Numeric operators only accept single values.
 

@@ -176,47 +176,35 @@ interface ITagItemProps {
 const TagItem: FC<ITagItemProps> = ({ tag, onClick }) => {
     const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
     const tagFullText = `${tag.type}:${tag.value}`;
-    const isOverflowing = tagFullText.length > 30;
 
     if (isTagTypeColorEnabled) {
-        const displayTag = {
-            ...tag,
-            value: isOverflowing
-                ? `${tag.value.substring(0, Math.max(0, 30 - tag.type.length - 1))}...`
-                : tag.value,
-        };
-
         const tagComponent = (
             <Box onClick={() => onClick(tag)} sx={{ cursor: 'pointer' }}>
-                <Tag tag={displayTag} />
+                <Tag tag={tag} maxLength={30} />
             </Box>
         );
 
         return (
-            <HtmlTooltip
-                key={tagFullText}
-                title={isOverflowing ? tagFullText : ''}
-                arrow
-            >
+            <HtmlTooltip key={tagFullText} title={tagFullText} arrow>
                 <span>{tagComponent}</span>
             </HtmlTooltip>
         );
     }
 
+    // For non-color tags, use the StyledTag approach
+    const isOverflowing = tagFullText.length > 30;
+    const displayText = isOverflowing
+        ? `${tagFullText.substring(0, 30)}...`
+        : tagFullText;
+
     return (
         <StyledTag
             key={tagFullText}
-            label={
-                <HtmlTooltip title={isOverflowing ? tagFullText : ''} arrow>
-                    <span>
-                        {tagFullText.substring(0, 30)}
-                        {isOverflowing ? '...' : ''}
-                    </span>
-                </HtmlTooltip>
-            }
+            label={displayText}
             size='small'
             onClick={() => onClick(tag)}
             sx={{ cursor: 'pointer' }}
+            title={isOverflowing ? tagFullText : undefined}
         />
     );
 };
@@ -236,7 +224,7 @@ const RestTags: FC<{
                     key={`${tag.type}:${tag.value}`}
                 >
                     {isTagTypeColorEnabled ? (
-                        <Tag tag={tag} />
+                        <Tag tag={tag} maxLength={30} />
                     ) : (
                         `${tag.type}:${tag.value}`
                     )}

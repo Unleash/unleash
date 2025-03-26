@@ -13,6 +13,11 @@ const StyledChip = styled(Chip)<{ $color?: string }>(({ theme, $color }) => ({
         display: 'flex',
         alignItems: 'center',
         gap: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    '& .MuiChip-deleteIcon': {
+        marginLeft: theme.spacing(0.5),
+        marginRight: theme.spacing(0.5),
     },
 }));
 
@@ -29,11 +34,25 @@ interface ITagProps {
     tag: TagSchema;
     onDelete?: () => void;
     deleteIcon?: ReactElement;
+    maxLength?: number;
 }
 
-export const Tag = ({ tag, onDelete, deleteIcon }: ITagProps) => {
-    const label = `${tag.type}:${tag.value}`;
+export const Tag = ({
+    tag,
+    onDelete,
+    deleteIcon,
+    maxLength = 30,
+}: ITagProps) => {
+    const fullLabel = `${tag.type}:${tag.value}`;
+    const isOverflowing = fullLabel.length > maxLength;
     const showColorDot = tag.color && tag.color !== '#FFFFFF';
+
+    let displayValue = tag.value;
+    if (isOverflowing) {
+        // Calculate how much of the value we can show
+        const maxValueLength = Math.max(0, maxLength - tag.type.length - 1); // -1 for the colon
+        displayValue = `${tag.value.substring(0, maxValueLength)}...`;
+    }
 
     const labelContent = (
         <span
@@ -52,7 +71,7 @@ export const Tag = ({ tag, onDelete, deleteIcon }: ITagProps) => {
                     whiteSpace: 'nowrap',
                 }}
             >
-                {label}
+                {`${tag.type}:${displayValue}`}
             </span>
         </span>
     ) as ReactElement;
@@ -62,6 +81,7 @@ export const Tag = ({ tag, onDelete, deleteIcon }: ITagProps) => {
             label={labelContent}
             onDelete={onDelete}
             deleteIcon={deleteIcon}
+            title={isOverflowing ? fullLabel : undefined}
         />
     );
 };

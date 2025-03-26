@@ -185,78 +185,74 @@ export const AdminMenu = ({ children }: IAdminMenuProps) => {
     const items = Object.values(menuStructure);
 
     return (
-        <>
-            <StyledAdminMainGrid container spacing={1}>
-                <Grid item>
-                    <StickyContainer>
-                        <StyledMenuPaper>
-                            <SettingsHeader>Admin settings</SettingsHeader>
-                            <DashboardLink />
-                            <List>
-                                {items.map((item) => {
-                                    if (item.items) {
-                                        const isActiveMenu = item.items.find(
-                                            (itm) => isActiveItem(itm.href),
-                                        );
-                                        return (
-                                            <MenuGroup
-                                                title={item.text}
-                                                icon={
-                                                    <IconRenderer
-                                                        path={item.href}
-                                                        active={false}
-                                                    />
-                                                }
-                                                activeIcon={
-                                                    <IconRenderer
-                                                        path={item.href}
-                                                        active={true}
-                                                    />
-                                                }
-                                                isActiveMenu={Boolean(
-                                                    isActiveMenu,
-                                                )}
-                                                key={item.text}
-                                            >
-                                                {item.items.map((subItem) => (
-                                                    <AdminSubListItem
-                                                        href={subItem.href}
-                                                        text={subItem.text}
-                                                        selected={isActiveItem(
-                                                            subItem.href,
-                                                        )}
-                                                        onClick={onClick}
-                                                        key={subItem.href}
-                                                    >
-                                                        <StyledStopRoundedIcon />
-                                                    </AdminSubListItem>
-                                                ))}
-                                            </MenuGroup>
-                                        );
-                                    }
-                                    return (
-                                        <AdminListItem
-                                            href={item.href}
-                                            text={item.text}
-                                            selected={isActiveItem(item.href)}
-                                            onClick={onClick}
-                                            key={item.href}
-                                        >
-                                            <IconRenderer
-                                                path={item.href}
-                                                active={false}
-                                            />
-                                        </AdminListItem>
+        <StyledAdminMainGrid container spacing={1}>
+            <Grid item>
+                <StickyContainer>
+                    <StyledMenuPaper>
+                        <SettingsHeader>Admin settings</SettingsHeader>
+                        <DashboardLink />
+                        <List>
+                            {items.map((item) => {
+                                if (item.items) {
+                                    const isActiveMenu = item.items.find(
+                                        (itm) => isActiveItem(itm.href),
                                     );
-                                })}
-                            </List>
-                        </StyledMenuPaper>
-                    </StickyContainer>
-                </Grid>
-                <Grid item md={isBreakpoint ? true : 9}>
-                    {children}
-                </Grid>
-            </StyledAdminMainGrid>
-        </>
+                                    return (
+                                        <MenuGroup
+                                            title={item.text}
+                                            icon={
+                                                <IconRenderer
+                                                    path={item.href}
+                                                    active={false}
+                                                />
+                                            }
+                                            activeIcon={
+                                                <IconRenderer
+                                                    path={item.href}
+                                                    active={true}
+                                                />
+                                            }
+                                            isActiveMenu={Boolean(isActiveMenu)}
+                                            key={item.text}
+                                        >
+                                            {item.items.map((subItem) => (
+                                                <AdminSubListItem
+                                                    href={subItem.href}
+                                                    text={subItem.text}
+                                                    selected={isActiveItem(
+                                                        subItem.href,
+                                                    )}
+                                                    onClick={onClick}
+                                                    key={subItem.href}
+                                                >
+                                                    <StyledStopRoundedIcon />
+                                                </AdminSubListItem>
+                                            ))}
+                                        </MenuGroup>
+                                    );
+                                }
+                                return (
+                                    <AdminListItem
+                                        href={item.href}
+                                        text={item.text}
+                                        selected={isActiveItem(item.href)}
+                                        onClick={onClick}
+                                        key={item.href}
+                                    >
+                                        <IconRenderer
+                                            path={item.href}
+                                            active={false}
+                                        />
+                                    </AdminListItem>
+                                );
+                            })}
+                        </List>
+                    </StyledMenuPaper>
+                </StickyContainer>
+            </Grid>
+            <Grid item md={isBreakpoint ? true : 9}>
+                {children}
+            </Grid>
+        </StyledAdminMainGrid>
     );
 };

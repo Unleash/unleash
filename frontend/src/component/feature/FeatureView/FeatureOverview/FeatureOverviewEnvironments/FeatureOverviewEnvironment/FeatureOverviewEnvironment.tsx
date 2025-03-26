@@ -108,7 +108,6 @@ export const FeatureOverviewEnvironment = ({
                     ) : (
                         <FeatureOverviewEnvironmentMetrics
                             environmentMetric={metrics}
-                            collapsed={!hasActivations}
                         />
                     )}
                 </EnvironmentHeader>

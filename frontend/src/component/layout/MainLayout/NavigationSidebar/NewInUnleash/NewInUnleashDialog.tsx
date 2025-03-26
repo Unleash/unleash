@@ -129,7 +129,6 @@ const StyledItemButtonClose = styled(IconButton)(({ theme }) => ({
 }));
 
 export const NewInUnleashDialog: FC<{
-    children: React.ReactElement<any, any>;
     title: string;
     longDescription: ReactNode;
     docsLink?: string;
@@ -139,7 +138,6 @@ export const NewInUnleashDialog: FC<{
     onClose: () => void;
     beta: boolean;
 }> = ({
-    children,
     title,
     longDescription,
     onCheckItOut,
@@ -149,79 +147,76 @@ export const NewInUnleashDialog: FC<{
     onClose,
     beta,
 }) => (
-    <>
-        {children}
-        <StyledDialog open={open} onClose={onClose} maxWidth='lg' fullWidth>
-            <ClickAwayListener onClickAway={onClose}>
-                <DialogCard>
-                    <Tooltip title='Dismiss' arrow sx={{ marginLeft: 'auto' }}>
-                        <StyledItemButtonClose
-                            aria-label='dismiss'
-                            onClick={(e) => {
-                                onClose();
-                                e.stopPropagation();
-                            }}
-                            size='small'
-                        >
-                            <Close fontSize='inherit' />
-                        </StyledItemButtonClose>
-                    </Tooltip>
+    <StyledDialog open={open} onClose={onClose} maxWidth='lg' fullWidth>
+        <ClickAwayListener onClickAway={onClose}>
+            <DialogCard>
+                <Tooltip title='Dismiss' arrow sx={{ marginLeft: 'auto' }}>
+                    <StyledItemButtonClose
+                        aria-label='dismiss'
+                        onClick={(e) => {
+                            onClose();
+                            e.stopPropagation();
+                        }}
+                        size='small'
+                    >
+                        <Close fontSize='inherit' />
+                    </StyledItemButtonClose>
+                </Tooltip>
 
-                    <StyledPreHeader>New in Unleash</StyledPreHeader>
+                <StyledPreHeader>New in Unleash</StyledPreHeader>
 
-                    <StyledMainTitle>
-                        <StyledLargeHeader>{title}</StyledLargeHeader>
-                        <ConditionallyRender
-                            condition={beta}
-                            show={<Badge color='secondary'>Beta</Badge>}
-                        />
-                    </StyledMainTitle>
-
-                    <LongDescription>{longDescription}</LongDescription>
-
+                <StyledMainTitle>
+                    <StyledLargeHeader>{title}</StyledLargeHeader>
                     <ConditionallyRender
-                        condition={Boolean(preview)}
-                        show={<CenteredPreview>{preview}</CenteredPreview>}
+                        condition={beta}
+                        show={<Badge color='secondary'>Beta</Badge>}
+                    />
+                </StyledMainTitle>
+
+                <LongDescription>{longDescription}</LongDescription>
+
+                <ConditionallyRender
+                    condition={Boolean(preview)}
+                    show={<CenteredPreview>{preview}</CenteredPreview>}
+                />
+
+                <BottomActions>
+                    <ConditionallyRender
+                        condition={Boolean(docsLink)}
+                        show={
+                            <ReadMore>
+                                <StyledLink
+                                    component='a'
+                                    href={docsLink}
+                                    underline='hover'
+                                    rel='noopener noreferrer'
+                                    target='_blank'
+                                >
+                                    <StyledOpenInNew />
+                                    Read more in our documentation
+                                </StyledLink>
+                            </ReadMore>
+                        }
                     />
 
-                    <BottomActions>
-                        <ConditionallyRender
-                            condition={Boolean(docsLink)}
-                            show={
-                                <ReadMore>
-                                    <StyledLink
-                                        component='a'
-                                        href={docsLink}
-                                        underline='hover'
-                                        rel='noopener noreferrer'
-                                        target='_blank'
-                                    >
-                                        <StyledOpenInNew />
-                                        Read more in our documentation
-                                    </StyledLink>
-                                </ReadMore>
-                            }
-                        />
-
-                        <ConditionallyRender
-                            condition={Boolean(onCheckItOut)}
-                            show={
-                                <StyledCheckItOutButton
-                                    variant='contained'
-                                    color='primary'
-                                    onClick={(event) => {
-                                        event.stopPropagation();
-                                        onClose();
-                                        onCheckItOut?.();
-                                    }}
-                                >
-                                    Get Started
-                                </StyledCheckItOutButton>
-                            }
-                        />
-                    </BottomActions>
-                </DialogCard>
-            </ClickAwayListener>
-        </StyledDialog>
-    </>
+                    <ConditionallyRender
+                        condition={Boolean(onCheckItOut)}
+                        show={
+                            <StyledCheckItOutButton
+                                variant='contained'
+                                color='primary'
+                                onClick={(event) => {
+                                    event.stopPropagation();
+                                    onClose();
+                                    onCheckItOut?.();
+                                }}
+                            >
+                                Get Started
+                            </StyledCheckItOutButton>
+                        }
+                    />
+                </BottomActions>
+            </DialogCard>
+        </ClickAwayListener>
+    </StyledDialog>
 );

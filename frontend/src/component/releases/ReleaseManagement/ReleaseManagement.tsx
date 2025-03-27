@@ -14,8 +14,10 @@ import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
 import { ReactComponent as HowToApplyReleaseTemplates } from 'assets/img/howToApplyReleaseTemplates.svg';
+import { ReactComponent as HowToApplyReleaseTemplatesDark } from 'assets/img/howToApplyReleaseTemplatesDark.svg';
 import type { Link as RouterLink } from 'react-router-dom';
 import MenuBook from '@mui/icons-material/MenuBook';
+import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 
 const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
     display: 'flex',
@@ -98,7 +100,10 @@ export const ReleaseManagement = () => {
             {data.templates.length === 0 ? (
                 <>
                     <CenteredHowTo>
-                        <HowToApplyReleaseTemplates />
+                        <ThemeMode
+                            darkmode={<HowToApplyReleaseTemplatesDark />}
+                            lightmode={<HowToApplyReleaseTemplates />}
+                        />
                     </CenteredHowTo>
                     <StyledLink
                         component='a'

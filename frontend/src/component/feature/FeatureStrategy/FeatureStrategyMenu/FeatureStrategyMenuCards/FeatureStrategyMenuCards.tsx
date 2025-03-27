@@ -97,13 +97,18 @@ export const FeatureStrategyMenuCards = ({
                                 padding: (theme) => theme.spacing(1, 2, 0, 2),
                             }}
                         >
-                            No templates created. Go to&nbsp;
-                            <StyledLink
-                                onClick={() => navigate('/release-templates')}
-                            >
-                                Release templates
-                            </StyledLink>
-                            &nbsp;to get started
+                            <p>No templates created.</p>
+                            <p>
+                                Go to&nbsp;
+                                <StyledLink
+                                    onClick={() =>
+                                        navigate('/release-templates')
+                                    }
+                                >
+                                    Release templates
+                                </StyledLink>
+                                &nbsp;to get started
+                            </p>
                         </StyledTypography>
                     </>
                 }

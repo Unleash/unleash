@@ -88,10 +88,7 @@ export const AdminMenu = ({ children }: IAdminMenuProps) => {
             <Grid item>
                 <StickyContainer>
                     <StyledMenuPaper>
-                        <AdminMenuNavigation
-                            menuGroups='accordion'
-                            onClick={onClick}
-                        />
+                        <AdminMenuNavigation onClick={onClick} />
                     </StyledMenuPaper>
                 </StickyContainer>
             </Grid>

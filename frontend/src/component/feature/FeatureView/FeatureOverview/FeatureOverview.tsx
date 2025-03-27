@@ -81,10 +81,6 @@ export const FeatureOverview = () => {
                 />
             </div>
             <StyledMainContent>
-                <StrategyDragTooltip
-                    show={showTooltip}
-                    onClose={onTooltipClose}
-                />
                 <FeatureOverviewEnvironments
                     onToggleEnvOpen={toggleShowTooltip}
                     hiddenEnvironments={hiddenEnvironments}
@@ -116,6 +112,8 @@ export const FeatureOverview = () => {
                     }
                 />
             </Routes>
+
+            <StrategyDragTooltip show={showTooltip} onClose={onTooltipClose} />
         </StyledContainer>
     );
 };

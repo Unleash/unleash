@@ -15,7 +15,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
 import { default as LegacyFleatureOverview } from './LegacyFeatureOverview';
 import { useEnvironmentVisibility } from './FeatureOverviewMetaData/EnvironmentVisibilityMenu/hooks/useEnvironmentVisibility';
-import Joyride, { ACTIONS } from 'react-joyride';
+import Joyride from 'react-joyride';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 
@@ -57,6 +57,8 @@ export const FeatureOverview = () => {
 
     const showStrategyDragTooltip = !splash?.[dragTooltipSplashId];
 
+    console.log(splash, showStrategyDragTooltip);
+
     const [run, setRun] = useState(false);
 
     if (!flagOverviewRedesign) {
@@ -64,10 +66,12 @@ export const FeatureOverview = () => {
     }
 
     const toggleRun = (isOpen: boolean) => {
-        if (isOpen && showStrategyDragTooltip) {
-            setRun(isOpen);
-        }
-        setRun(false);
+        setRun(isOpen);
+        console.log(isOpen, showStrategyDragTooltip);
+        // if (isOpen && showStrategyDragTooltip) {
+        //     setRun(true);
+        // }
+        // setRun(false);
     };
 
     return (
@@ -85,13 +89,10 @@ export const FeatureOverview = () => {
                     RUN!
                 </button>
                 <Joyride
-                    callback={(state) => {
-                        console.log(state);
-                        if (
-                            state.action === ACTIONS.CLOSE ||
-                            state.action === ACTIONS.NEXT
-                        ) {
-                            console.log('Joyride finished');
+                    callback={({ action }) => {
+                        console.log(action);
+                        if (action === 'close') {
+                            setSplashSeen(dragTooltipSplashId);
                         }
                     }}
                     debug

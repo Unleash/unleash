@@ -27,6 +27,8 @@ const CreateEnvironment = () => {
         setName,
         type,
         setType,
+        requiredApprovals,
+        setRequiredApprovals,
         getEnvPayload,
         validateEnvironmentName,
         clearErrors,
@@ -91,6 +93,8 @@ const CreateEnvironment = () => {
                 type={type}
                 setName={setName}
                 setType={setType}
+                requiredApprovals={requiredApprovals}
+                setRequiredApprovals={setRequiredApprovals}
                 mode='Create'
                 clearErrors={clearErrors}
                 Limit={

@@ -198,6 +198,7 @@ export interface IEnvironment {
     projectCount?: number;
     apiTokenCount?: number;
     enabledToggleCount?: number;
+    requiredApprovals?: number | null;
 }
 
 export interface IProjectEnvironment extends IEnvironment {
@@ -215,6 +216,7 @@ export interface IEnvironmentCreate {
     type: string;
     sortOrder?: number;
     enabled?: boolean;
+    requiredApprovals?: number | null;
 }
 
 export interface IEnvironmentClone {
@@ -353,6 +355,7 @@ export interface IFeatureToggleDeltaQuery extends IFeatureToggleQuery {
 export interface ITag {
     value: string;
     type: string;
+    color?: string | null;
 }
 
 export interface IAddonParameterDefinition {

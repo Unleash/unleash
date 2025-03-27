@@ -84,7 +84,6 @@ export type UiFlags = {
     enableLegacyVariants?: boolean;
     flagCreator?: boolean;
     releasePlans?: boolean;
-    releasePlanChangeRequests?: boolean;
     'enterprise-payg'?: boolean;
     productivityReportEmail?: boolean;
     showUserDeviceCount?: boolean;
@@ -93,6 +92,7 @@ export type UiFlags = {
     edgeObservability?: boolean;
     adminNavUI?: boolean;
     tagTypeColor?: boolean;
+    globalChangeRequestConfig?: boolean;
 };
 
 export interface IVersionInfo {

@@ -44,6 +44,7 @@ test('Can list all existing environments', async () => {
                 sortOrder: 1,
                 type: 'production',
                 protected: true,
+                requiredApprovals: null,
                 projectCount: 1,
                 apiTokenCount: 0,
                 enabledToggleCount: 0,

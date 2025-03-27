@@ -1,5 +1,4 @@
 import FeatureOverviewMetaData from './FeatureOverviewMetaData/FeatureOverviewMetaData';
-import Close from '@mui/icons-material/Close';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import { SidebarModal } from 'component/common/SidebarModal/SidebarModal';
 import {
@@ -8,7 +7,7 @@ import {
 } from 'component/feature/FeatureStrategy/FeatureStrategyEdit/FeatureStrategyEdit';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
-import { Box, Button, IconButton, styled } from '@mui/material';
+import { styled } from '@mui/material';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
 import { useEffect, useState } from 'react';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
@@ -16,9 +15,9 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
 import { default as LegacyFleatureOverview } from './LegacyFeatureOverview';
 import { useEnvironmentVisibility } from './FeatureOverviewMetaData/EnvironmentVisibilityMenu/hooks/useEnvironmentVisibility';
-import Joyride, { type TooltipRenderProps } from 'react-joyride';
 import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
 import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
+import { StrategyDragTooltip } from './StrategyDragTooltip';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -36,65 +35,6 @@ const StyledMainContent = styled('div')(({ theme }) => ({
     gap: theme.spacing(2),
 }));
 
-const StyledTooltip = styled(Box)(({ theme }) => ({
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing(1),
-    maxWidth: '300px',
-    background: '#201e42',
-    borderRadius: theme.shape.borderRadiusMedium,
-    color: theme.palette.common.white,
-    padding: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-    fontSize: theme.typography.body2.fontSize,
-}));
-
-const OkButton = styled(Button)(({ theme }) => ({
-    color: theme.palette.secondary.border,
-    alignSelf: 'start',
-    marginLeft: theme.spacing(-1),
-}));
-
-const StyledCloseButton = styled(IconButton)(({ theme }) => ({
-    color: theme.palette.common.white,
-    background: 'none',
-    border: 'none',
-    position: 'absolute',
-    top: theme.spacing(1),
-    right: theme.spacing(1),
-    svg: {
-        width: theme.spacing(2),
-        height: theme.spacing(2),
-    },
-}));
-
-const StyledHeader = styled('p')(({ theme }) => ({
-    fontSize: theme.typography.body1.fontSize,
-    fontWeight: 'bold',
-}));
-
-const CustomTooltip = ({ closeProps }: TooltipRenderProps) => {
-    return (
-        <StyledTooltip component='article'>
-            <StyledCloseButton type='button' {...closeProps}>
-                <Close />
-            </StyledCloseButton>
-            <StyledHeader>Decide the order evaluation</StyledHeader>
-            <p>
-                Strategies are evaluated in the order presented here. Drag and
-                rearrange the strategies to get the order you prefer.
-            </p>
-            <OkButton
-                type='button'
-                data-action={closeProps['data-action']}
-                onClick={closeProps.onClick}
-            >
-                Ok, got it!
-            </OkButton>
-        </StyledTooltip>
-    );
-};
-
 export const FeatureOverview = () => {
     const navigate = useNavigate();
     const projectId = useRequiredPathParam('projectId');
@@ -110,18 +50,22 @@ export const FeatureOverview = () => {
     }, [featureId]);
     const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
 
+    if (!flagOverviewRedesign) {
+        return <LegacyFleatureOverview />;
+    }
+
     const { setSplashSeen } = useSplashApi();
     const { splash } = useAuthSplash();
     const dragTooltipSplashId = 'strategy-drag-tooltip';
     const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
     const [showTooltip, setShowTooltip] = useState(false);
-
-    if (!flagOverviewRedesign) {
-        return <LegacyFleatureOverview />;
-    }
-
+    const [hasClosed, setHasClosed] = useState(false);
     const toggleRun = (isOpen: boolean) => {
-        setShowTooltip(shouldShowStrategyDragTooltip && isOpen);
+        setShowTooltip(!hasClosed && shouldShowStrategyDragTooltip && isOpen);
+    };
+    const onTooltipClose = () => {
+        setHasClosed(true);
+        setSplashSeen(dragTooltipSplashId);
     };
 
     return (
@@ -135,33 +79,9 @@ export const FeatureOverview = () => {
                 />
             </div>
             <StyledMainContent>
-                <Joyride
-                    callback={({ action }) => {
-                        if (action === 'close') {
-                            setSplashSeen(dragTooltipSplashId);
-                        }
-                    }}
-                    floaterProps={{
-                        styles: {
-                            arrow: {
-                                color: '#201e42',
-                                spread: 16,
-                                length: 10,
-                            },
-                        },
-                    }}
-                    run={showTooltip}
-                    disableOverlay
-                    disableScrolling
-                    tooltipComponent={CustomTooltip}
-                    steps={[
-                        {
-                            disableBeacon: true,
-                            offset: 0,
-                            target: '.strategy-drag-handle',
-                            content: <></>,
-                        },
-                    ]}
+                <StrategyDragTooltip
+                    show={showTooltip}
+                    onClose={onTooltipClose}
                 />
                 <FeatureOverviewEnvironments
                     onEnvOpen={toggleRun}

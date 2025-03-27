@@ -242,6 +242,10 @@ export const FeatureStrategyMenu = ({
                 anchorEl={anchor}
                 onClose={onClose}
                 onClick={onClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
                 PaperProps={{
                     sx: (theme) => ({
                         paddingBottom: theme.spacing(1),

@@ -1,5 +1,5 @@
 import { PageContent } from 'component/common/PageContent/PageContent';
-import { Grid } from '@mui/material';
+import { Box, Grid, Link, styled } from '@mui/material';
 import { styles as themeStyles } from 'component/common';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { PageHeader } from 'component/common/PageHeader/PageHeader';
@@ -13,6 +13,36 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
+import { ReactComponent as HowToApplyReleaseTemplates } from 'assets/img/howToApplyReleaseTemplates.svg';
+import type { Link as RouterLink } from 'react-router-dom';
+import MenuBook from '@mui/icons-material/MenuBook';
+
+const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    padding: 0,
+    color: theme.palette.links,
+    fontWeight: theme.fontWeight.medium,
+    '&:hover, &:focus': {
+        textDecoration: 'underline',
+    },
+}));
+
+const StyledMenuBook = styled(MenuBook)(({ theme }) => ({
+    fontSize: theme.spacing(2.25),
+}));
+
+const CenteredHowTo = styled(Box)(({ theme }) => ({
+    margin: theme.spacing(3, 0),
+    display: 'flex',
+    borderRadius: theme.shape.borderRadiusLarge,
+    backgroundColor: theme.palette.background.elevation1,
+    boxShadow: 'none',
+    justifyContent: 'center',
+    alignItems: 'center',
+    '> svg': { display: 'block', width: '100%', height: 'auto' },
+}));
 
 export const ReleaseManagement = () => {
     usePageTitle('Release templates');
@@ -64,6 +94,23 @@ export const ReleaseManagement = () => {
                     </div>
                 )}
             </PageContent>
+
+            {data.templates.length === 0 ? (
+                <>
+                    <CenteredHowTo>
+                        <HowToApplyReleaseTemplates />
+                    </CenteredHowTo>
+                    <StyledLink
+                        component='a'
+                        href='https://docs.getunleash.io/reference/release-templates'
+                        underline='hover'
+                        rel='noopener noreferrer'
+                        target='_blank'
+                    >
+                        <StyledMenuBook /> Read more in our documentation
+                    </StyledLink>
+                </>
+            ) : null}
         </>
     );
 };

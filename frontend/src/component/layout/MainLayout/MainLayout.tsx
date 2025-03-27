@@ -42,34 +42,6 @@ const MainLayoutContentWrapper = styled('div')(({ theme }) => ({
     position: 'relative',
 }));
 
-const MainLayoutContent = styled(Grid)(({ theme }) => ({
-    minWidth: 0, // this is a fix for overflowing flex
-    maxWidth: '1512px',
-    margin: '0 auto',
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    [theme.breakpoints.up(1856)]: {
-        width: '100%',
-    },
-    [theme.breakpoints.down(1856)]: {
-        marginLeft: theme.spacing(7),
-        marginRight: theme.spacing(7),
-    },
-    [theme.breakpoints.down('lg')]: {
-        maxWidth: '1250px',
-        paddingLeft: theme.spacing(1),
-        paddingRight: theme.spacing(1),
-    },
-    [theme.breakpoints.down(1024)]: {
-        marginLeft: 0,
-        marginRight: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-        minWidth: '100%',
-    },
-    minHeight: '94vh',
-}));
-
 const StyledImg = styled('img')(() => ({
     display: 'block',
     position: 'fixed',
@@ -147,16 +119,12 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 <Header />
 
                                 <WrapIfAdminSubpage>
-                                    <MainLayoutContent>
-                                        <SkipNavTarget />
-                                        <MainLayoutContentContainer ref={ref}>
-                                            <BreadcrumbNav />
-                                            <Proclamation
-                                                toast={uiConfig.toast}
-                                            />
-                                            {children}
-                                        </MainLayoutContentContainer>
-                                    </MainLayoutContent>
+                                    <SkipNavTarget />
+                                    <MainLayoutContentContainer ref={ref}>
+                                        <BreadcrumbNav />
+                                        <Proclamation toast={uiConfig.toast} />
+                                        {children}
+                                    </MainLayoutContentContainer>
                                 </WrapIfAdminSubpage>
                             </Box>
                         </Box>

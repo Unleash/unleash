@@ -4,6 +4,62 @@ import type { ReactNode } from 'react';
 import { Sticky } from 'component/common/Sticky/Sticky';
 import { AdminMenuNavigation } from './AdminNavigationItems';
 
+const MainLayoutContent = styled(Grid)(({ theme }) => ({
+    minWidth: 0, // this is a fix for overflowing flex
+    maxWidth: '1512px',
+    margin: '0 auto',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.up(1856)]: {
+        width: '100%',
+    },
+    [theme.breakpoints.down(1856)]: {
+        marginLeft: theme.spacing(7),
+        marginRight: theme.spacing(7),
+    },
+    [theme.breakpoints.down('lg')]: {
+        maxWidth: '1250px',
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    [theme.breakpoints.down(1024)]: {
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '100%',
+    },
+    minHeight: '94vh',
+}));
+
+const AdminMainLayoutContent = styled(Grid)(({ theme }) => ({
+    minWidth: 0, // this is a fix for overflowing flex
+    maxWidth: '1512px',
+    margin: '0 auto',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.up(1856)]: {
+        width: '100%',
+    },
+    [theme.breakpoints.down(1856)]: {
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('lg')]: {
+        maxWidth: '1250px',
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    [theme.breakpoints.down(1024)]: {
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '100%',
+    },
+    minHeight: '94vh',
+}));
+
 const StyledAdminMainGrid = styled(Grid)(({ theme }) => ({
     minWidth: 0, // this is a fix for overflowing flex
     maxWidth: '1812px',
@@ -63,10 +119,14 @@ export const WrapIfAdminSubpage = ({ children }: IWrapIfAdminSubpageProps) => {
         location.pathname.indexOf('/admin') === 0;
 
     if (showAdminMenu) {
-        return <AdminMenu>{children}</AdminMenu>;
+        return (
+            <AdminMenu>
+                <AdminMainLayoutContent>{children}</AdminMainLayoutContent>
+            </AdminMenu>
+        );
     }
 
-    return <>{children}</>;
+    return <MainLayoutContent>{children}</MainLayoutContent>;
 };
 
 interface IAdminMenuProps {

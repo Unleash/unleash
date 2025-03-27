@@ -84,7 +84,7 @@ export const FeatureOverview = () => {
                     onClose={onTooltipClose}
                 />
                 <FeatureOverviewEnvironments
-                    onEnvOpen={toggleRun}
+                    onToggleEnvOpen={toggleRun}
                     hiddenEnvironments={hiddenEnvironments}
                 />
             </StyledMainContent>

@@ -28,6 +28,7 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IEnvironment } from 'interfaces/environments';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+import useUiConfig from '../../../hooks/api/getters/useUiConfig/useUiConfig';
 
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
@@ -41,6 +42,7 @@ export const EnvironmentTable = () => {
     const globalChangeRequestConfigEnabled = useUiFlag(
         'globalChangeRequestConfig',
     );
+    const { isEnterprise } = useUiConfig();
 
     const onMoveItem: OnMoveItem = useCallback(
         async ({ dragIndex, dropIndex, save }) => {
@@ -66,7 +68,7 @@ export const EnvironmentTable = () => {
 
     const columnsWithActions = useMemo(() => {
         const baseColumns = [...COLUMNS];
-        if (globalChangeRequestConfigEnabled) {
+        if (globalChangeRequestConfigEnabled && isEnterprise()) {
             baseColumns.splice(2, 0, {
                 Header: 'Change request',
                 accessor: (row: IEnvironment) =>

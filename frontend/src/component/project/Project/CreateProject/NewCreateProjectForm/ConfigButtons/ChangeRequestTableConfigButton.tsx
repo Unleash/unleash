@@ -26,6 +26,7 @@ type ChangeRequestTableConfigButtonProps = Pick<
     activeEnvironments: {
         name: string;
         type: string;
+        configurable: boolean;
     }[];
     projectChangeRequestConfiguration: Record<
         string,
@@ -56,9 +57,10 @@ export const ChangeRequestTableConfigButton: FC<
 
     const tableEnvs = useMemo(
         () =>
-            activeEnvironments.map(({ name, type }) => ({
+            activeEnvironments.map(({ name, type, configurable }) => ({
                 name,
                 type,
+                configurable,
                 ...(configured[name] ?? { changeRequestEnabled: false }),
             })),
         [configured, activeEnvironments],

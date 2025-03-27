@@ -76,7 +76,7 @@ export const NewInUnleashItem = ({
                         docsLink={docsLink}
                         preview={preview}
                         beta={beta}
-                    ></NewInUnleashDialog>
+                    />
                     <NewInUnleashSideBarItem
                         label={label}
                         summary={summary}

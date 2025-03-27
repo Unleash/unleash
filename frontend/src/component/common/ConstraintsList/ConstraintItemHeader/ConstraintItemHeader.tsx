@@ -19,6 +19,7 @@ const Operator: FC<{
     <Tooltip title={inverted ? `Not ${label}` : label} arrow>
         <StrategyEvaluationChip
             label={formatOperatorDescription(label, inverted)}
+            multiline
         />
     </Tooltip>
 );
@@ -49,10 +50,15 @@ const CaseSensitive: FC = () => {
 };
 
 const StyledConstraintContainer = styled('div')(({ theme }) => ({
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, auto)',
-    gap: theme.spacing(2),
-    placeItems: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    gap: theme.spacing(1),
+    [theme.breakpoints.up('sm')]: {
+        gap: theme.spacing(2),
+        display: 'grid',
+        gridTemplateColumns: 'repeat(3, auto)',
+        placeItems: 'center',
+    },
 }));
 
 const StyledOperatorGroup = styled('div')(({ theme }) => ({
@@ -65,6 +71,9 @@ const StyledConstraintName = styled('div')(({ theme }) => ({
     maxWidth: '150px',
     paddingRight: theme.spacing(0.5),
     overflow: 'hidden',
+    [theme.breakpoints.down('sm')]: {
+        maxWidth: 'unset',
+    },
 }));
 
 type ConstraintItemHeaderProps = ConstraintSchema & {

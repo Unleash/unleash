@@ -59,12 +59,14 @@ type FeatureOverviewEnvironmentProps = {
     };
     metrics?: Pick<IFeatureEnvironmentMetrics, 'yes' | 'no'>;
     otherEnvironments?: string[];
+    onOpen?: (isOpen: boolean) => void;
 };
 
 export const FeatureOverviewEnvironment = ({
     environment,
     metrics = { yes: 0, no: 0 },
     otherEnvironments = [],
+    onOpen = () => {},
 }: FeatureOverviewEnvironmentProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const projectId = useRequiredPathParam('projectId');
@@ -83,7 +85,15 @@ export const FeatureOverviewEnvironment = ({
                 data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${environment.name}`}
                 expanded={isOpen && hasActivations}
                 disabled={!hasActivations}
-                onChange={() => setIsOpen(isOpen ? !isOpen : hasActivations)}
+                onChange={() => {
+                    if (isOpen) {
+                        onOpen(false);
+                        setIsOpen(false);
+                    } else if (hasActivations) {
+                        onOpen(true);
+                        setIsOpen(true);
+                    }
+                }}
             >
                 <EnvironmentHeader
                     environmentMetadata={{

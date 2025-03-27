@@ -9,12 +9,15 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { styled } from '@mui/material';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
 import { default as LegacyFleatureOverview } from './LegacyFeatureOverview';
 import { useEnvironmentVisibility } from './FeatureOverviewMetaData/EnvironmentVisibilityMenu/hooks/useEnvironmentVisibility';
+import Joyride, { ACTIONS } from 'react-joyride';
+import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
+import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -47,9 +50,25 @@ export const FeatureOverview = () => {
     }, [featureId]);
     const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
 
+    const { setSplashSeen } = useSplashApi();
+    const { splash } = useAuthSplash();
+
+    const dragTooltipSplashId = 'strategy-drag-tooltip';
+
+    const showStrategyDragTooltip = !splash?.[dragTooltipSplashId];
+
+    const [run, setRun] = useState(false);
+
     if (!flagOverviewRedesign) {
         return <LegacyFleatureOverview />;
     }
+
+    const toggleRun = (isOpen: boolean) => {
+        if (isOpen && showStrategyDragTooltip) {
+            setRun(isOpen);
+        }
+        setRun(false);
+    };
 
     return (
         <StyledContainer>
@@ -62,7 +81,33 @@ export const FeatureOverview = () => {
                 />
             </div>
             <StyledMainContent>
+                <button type='button' onClick={() => toggleRun(true)}>
+                    RUN!
+                </button>
+                <Joyride
+                    callback={(state) => {
+                        console.log(state);
+                        if (
+                            state.action === ACTIONS.CLOSE ||
+                            state.action === ACTIONS.NEXT
+                        ) {
+                            console.log('Joyride finished');
+                        }
+                    }}
+                    debug
+                    run={run}
+                    disableOverlay
+                    disableScrolling
+                    steps={[
+                        {
+                            disableBeacon: true,
+                            target: '.strategy-drag-handle',
+                            content: 'Welcome to the Feature Overview!',
+                        },
+                    ]}
+                />
                 <FeatureOverviewEnvironments
+                    onEnvOpen={toggleRun}
                     hiddenEnvironments={hiddenEnvironments}
                 />
             </StyledMainContent>

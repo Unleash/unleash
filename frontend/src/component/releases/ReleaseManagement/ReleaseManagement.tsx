@@ -97,25 +97,21 @@ export const ReleaseManagement = () => {
                 )}
             </PageContent>
 
-            {data.templates.length === 0 ? (
-                <>
-                    <CenteredHowTo>
-                        <ThemeMode
-                            darkmode={<HowToApplyReleaseTemplatesDark />}
-                            lightmode={<HowToApplyReleaseTemplates />}
-                        />
-                    </CenteredHowTo>
-                    <StyledLink
-                        component='a'
-                        href='https://docs.getunleash.io/reference/release-templates'
-                        underline='hover'
-                        rel='noopener noreferrer'
-                        target='_blank'
-                    >
-                        <StyledMenuBook /> Read more in our documentation
-                    </StyledLink>
-                </>
-            ) : null}
+            <CenteredHowTo>
+                <ThemeMode
+                    darkmode={<HowToApplyReleaseTemplatesDark />}
+                    lightmode={<HowToApplyReleaseTemplates />}
+                />
+            </CenteredHowTo>
+            <StyledLink
+                component='a'
+                href='https://docs.getunleash.io/reference/release-templates'
+                underline='hover'
+                rel='noopener noreferrer'
+                target='_blank'
+            >
+                <StyledMenuBook /> Read more in our documentation
+            </StyledLink>
         </>
     );
 };

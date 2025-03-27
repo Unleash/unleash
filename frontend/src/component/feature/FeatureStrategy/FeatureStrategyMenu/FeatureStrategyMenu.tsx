@@ -33,17 +33,16 @@ interface IFeatureStrategyMenuProps {
     matchWidth?: boolean;
     size?: IPermissionButtonProps['size'];
     disableReason?: string;
+    allowReleasePlanFeedback?: boolean;
 }
 
 const StyledStrategyMenu = styled('div')(({ theme }) => ({
     flexShrink: 0,
     display: 'flex',
-    width: '100%',
     flexFlow: 'row',
+    flex: 1,
+    justifyContent: 'flex-end',
     gap: theme.spacing(1),
-    '& > :nth-child(2)': {
-        marginLeft: 'auto',
-    },
 }));
 
 const StyledAdditionalMenuButton = styled(PermissionButton)(({ theme }) => ({
@@ -62,6 +61,10 @@ const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
     textDecoration: 'none',
 }));
 
+const Spacer = styled('div')(({ theme }) => ({
+    flex: 1,
+}));
+
 export const FeatureStrategyMenu = ({
     label,
     projectId,
@@ -71,6 +74,7 @@ export const FeatureStrategyMenu = ({
     size,
     matchWidth,
     disableReason,
+    allowReleasePlanFeedback = false,
 }: IFeatureStrategyMenuProps) => {
     const [anchor, setAnchor] = useState<Element>();
     const [onlyReleasePlans, setOnlyReleasePlans] = useState<boolean>(false);
@@ -177,15 +181,20 @@ export const FeatureStrategyMenu = ({
         <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
             {displayReleasePlanButton ? (
                 <>
-                    <StyledLink
-                        component='a'
-                        href={RELEASE_TEMPLATE_FEEDBACK}
-                        underline='hover'
-                        rel='noopener noreferrer'
-                        target='_blank'
-                    >
-                        Give feedback to release templates
-                    </StyledLink>
+                    {allowReleasePlanFeedback ? (
+                        <>
+                            <StyledLink
+                                component='a'
+                                href={RELEASE_TEMPLATE_FEEDBACK}
+                                underline='hover'
+                                rel='noopener noreferrer'
+                                target='_blank'
+                            >
+                                Give feedback to release templates
+                            </StyledLink>
+                            <Spacer />
+                        </>
+                    ) : null}
                     <PermissionButton
                         data-testid='ADD_TEMPLATE_BUTTON'
                         permission={CREATE_FEATURE_STRATEGY}

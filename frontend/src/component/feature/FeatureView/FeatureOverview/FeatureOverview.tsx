@@ -39,12 +39,11 @@ const StyledMainContent = styled('div')(({ theme }) => ({
 const StyledTooltip = styled(Box)(({ theme }) => ({
     display: 'flex',
     flexDirection: 'column',
-    gap: theme.spacing(2),
+    gap: theme.spacing(1),
     maxWidth: '300px',
     background: '#201e42',
     borderRadius: theme.shape.borderRadiusMedium,
     color: theme.palette.common.white,
-    transform: 'translateX(35%)',
     padding: theme.spacing(2),
     paddingRight: theme.spacing(1),
     fontSize: theme.typography.body2.fontSize,
@@ -56,13 +55,6 @@ const OkButton = styled(Button)(({ theme }) => ({
     marginLeft: theme.spacing(-1),
 }));
 
-// const TopRow = styled('div')(({ theme }) => ({
-//     fontSize: theme.typography.body1.fontSize,
-//     display: 'flex',
-//     flexDirection: 'row',
-//     alignItems: 'top',
-// }));
-//
 const StyledCloseButton = styled(IconButton)(({ theme }) => ({
     color: theme.palette.common.white,
     background: 'none',
@@ -158,7 +150,6 @@ export const FeatureOverview = () => {
                             },
                         },
                     }}
-                    debug
                     run={showTooltip}
                     disableOverlay
                     disableScrolling

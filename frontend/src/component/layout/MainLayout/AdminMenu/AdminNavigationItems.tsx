@@ -44,15 +44,13 @@ const StyledStopRoundedIcon = styled(StopRoundedIcon)(({ theme }) => ({
 
 export const DashboardLink = () => {
     return (
-        <>
-            <StyledButton
-                href='/personal'
-                rel='noreferrer'
-                startIcon={<ArrowBackIcon />}
-            >
-                Back to Unleash
-            </StyledButton>
-        </>
+        <StyledButton
+            href='/personal'
+            rel='noreferrer'
+            startIcon={<ArrowBackIcon />}
+        >
+            Back to Unleash
+        </StyledButton>
     );
 };
 
@@ -137,59 +135,51 @@ export const AdminNavigationItems = ({
 
     const items = Object.values(menuStructure);
     return (
-        <>
-            <List>
-                {items.map((item) => {
-                    if (item.items) {
-                        const isActiveMenu = item.items.find((itm) =>
-                            isActiveItem(itm.href),
-                        );
-                        return (
-                            <MenuGroup
-                                title={item.text}
-                                icon={
-                                    <IconRenderer
-                                        path={item.href}
-                                        active={false}
-                                    />
-                                }
-                                activeIcon={
-                                    <IconRenderer
-                                        path={item.href}
-                                        active={true}
-                                    />
-                                }
-                                isActiveMenu={Boolean(isActiveMenu)}
-                                key={item.text}
-                                staticExpanded={staticExpanded}
-                            >
-                                {item.items.map((subItem) => (
-                                    <AdminSubListItem
-                                        href={subItem.href}
-                                        text={subItem.text}
-                                        selected={isActiveItem(subItem.href)}
-                                        onClick={onClick}
-                                        key={subItem.href}
-                                    >
-                                        <StyledStopRoundedIcon />
-                                    </AdminSubListItem>
-                                ))}
-                            </MenuGroup>
-                        );
-                    }
-                    return (
-                        <AdminListItem
-                            href={item.href}
-                            text={item.text}
-                            selected={isActiveItem(item.href)}
-                            onClick={onClick}
-                            key={item.href}
-                        >
-                            <IconRenderer path={item.href} active={false} />
-                        </AdminListItem>
+        <List>
+            {items.map((item) => {
+                if (item.items) {
+                    const isActiveMenu = item.items.find((itm) =>
+                        isActiveItem(itm.href),
                     );
-                })}
-            </List>
-        </>
+                    return (
+                        <MenuGroup
+                            title={item.text}
+                            icon={
+                                <IconRenderer path={item.href} active={false} />
+                            }
+                            activeIcon={
+                                <IconRenderer path={item.href} active={true} />
+                            }
+                            isActiveMenu={Boolean(isActiveMenu)}
+                            key={item.text}
+                            staticExpanded={staticExpanded}
+                        >
+                            {item.items.map((subItem) => (
+                                <AdminSubListItem
+                                    href={subItem.href}
+                                    text={subItem.text}
+                                    selected={isActiveItem(subItem.href)}
+                                    onClick={onClick}
+                                    key={subItem.href}
+                                >
+                                    <StyledStopRoundedIcon />
+                                </AdminSubListItem>
+                            ))}
+                        </MenuGroup>
+                    );
+                }
+                return (
+                    <AdminListItem
+                        href={item.href}
+                        text={item.text}
+                        selected={isActiveItem(item.href)}
+                        onClick={onClick}
+                        key={item.href}
+                    >
+                        <IconRenderer path={item.href} active={false} />
+                    </AdminListItem>
+                );
+            })}
+        </List>
     );
 };

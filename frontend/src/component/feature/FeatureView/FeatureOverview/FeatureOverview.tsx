@@ -52,21 +52,16 @@ export const FeatureOverview = () => {
 
     const { setSplashSeen } = useSplashApi();
     const { splash } = useAuthSplash();
-
     const dragTooltipSplashId = 'strategy-drag-tooltip';
-
-    const showStrategyDragTooltip = !splash?.[dragTooltipSplashId];
-
-    console.log(splash, showStrategyDragTooltip);
-
-    const [run, setRun] = useState(false);
+    const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
+    const [showTooltip, setShowTooltip] = useState(false);
 
     if (!flagOverviewRedesign) {
         return <LegacyFleatureOverview />;
     }
 
     const toggleRun = (isOpen: boolean) => {
-        setRun(showStrategyDragTooltip && isOpen);
+        setShowTooltip(shouldShowStrategyDragTooltip && isOpen);
     };
 
     return (
@@ -80,9 +75,6 @@ export const FeatureOverview = () => {
                 />
             </div>
             <StyledMainContent>
-                <button type='button' onClick={() => toggleRun(true)}>
-                    RUN!
-                </button>
                 <Joyride
                     callback={({ action }) => {
                         if (action === 'close') {
@@ -90,7 +82,7 @@ export const FeatureOverview = () => {
                         }
                     }}
                     debug
-                    run={run}
+                    run={showTooltip}
                     disableOverlay
                     disableScrolling
                     steps={[

@@ -43,8 +43,8 @@ const NewStyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 const StyledAccordionFooter = styled('footer')(({ theme }) => ({
     padding: theme.spacing(2, 3, 3),
     display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'end',
     gap: theme.spacing(2),
 }));
 
@@ -131,6 +131,7 @@ export const FeatureOverviewEnvironment = ({
                             projectId={projectId}
                             featureId={featureId}
                             environmentId={environment.name}
+                            allowReleasePlanFeedback={true}
                         />
                         {isOss() && environment?.type === 'production' ? (
                             <UpgradeChangeRequests />

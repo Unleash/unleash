@@ -118,11 +118,7 @@ const Header = () => {
                             <MenuIcon />
                         </IconButton>
                     </Tooltip>
-                    <DrawerMenu
-                        links={uiConfig.links}
-                        open={openDrawer}
-                        toggleDrawer={toggleDrawer}
-                    />
+                    <DrawerMenu open={openDrawer} toggleDrawer={toggleDrawer} />
                     <StyledUserContainer>
                         <UserProfile />
                     </StyledUserContainer>

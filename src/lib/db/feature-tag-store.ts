@@ -102,11 +102,18 @@ class FeatureTagStore implements IFeatureTagStore {
         const stopTimer = this.timer('getAllForFeature');
         if (await this.featureExists(featureName)) {
             const rows = await this.db
-                .select(COLUMNS)
+                .select([...COLUMNS, 'tag_types.color as color'])
                 .from<FeatureTagTable>(TABLE)
+                .leftJoin('tag_types', 'tag_types.name', 'feature_tag.tag_type')
                 .where({ feature_name: featureName });
+
             stopTimer();
-            return rows.map(this.featureTagRowToTag);
+
+            return rows.map((row) => ({
+                type: row.tag_type,
+                value: row.tag_value,
+                color: row.color,
+            }));
         } else {
             throw new NotFoundError(
                 `Could not find feature with name ${featureName}`,

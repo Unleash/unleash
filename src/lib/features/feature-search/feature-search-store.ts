@@ -134,6 +134,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                     'environments.sort_order as environment_sort_order',
                     'ft.tag_value as tag_value',
                     'ft.tag_type as tag_type',
+                    'tag_types.color as tag_type_color',
                     'segments.name as segment_name',
                     'users.id as user_id',
                     'users.name as user_name',
@@ -207,6 +208,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
                         'ft.feature_name',
                         'features.name',
                     )
+                    .leftJoin('tag_types', 'tag_types.name', 'ft.tag_type')
                     .leftJoin(
                         'feature_strategies',
                         'feature_strategies.feature_name',
@@ -548,6 +550,7 @@ class FeatureSearchStore implements IFeatureSearchStore {
         return {
             value: r.tag_value,
             type: r.tag_type,
+            color: r.tag_type_color,
         };
     }
 

@@ -1,10 +1,11 @@
-import { List, ListItem, styled, Typography } from '@mui/material';
+import { Link, List, ListItem, styled, Typography } from '@mui/material';
 import { useStrategies } from 'hooks/api/getters/useStrategies/useStrategies';
 import { FeatureStrategyMenuCard } from '../FeatureStrategyMenuCard/FeatureStrategyMenuCard';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { useReleasePlanTemplates } from 'hooks/api/getters/useReleasePlanTemplates/useReleasePlanTemplates';
 import { FeatureReleasePlanCard } from '../FeatureReleasePlanCard/FeatureReleasePlanCard';
 import type { IReleasePlanTemplate } from 'interfaces/releasePlans';
+import { useNavigate } from 'react-router-dom';
 
 interface IFeatureStrategyMenuCardsProps {
     projectId: string;
@@ -19,6 +20,11 @@ const StyledTypography = styled(Typography)(({ theme }) => ({
     padding: theme.spacing(1, 2),
 }));
 
+const StyledLink = styled(Link)(({ theme }) => ({
+    fontSize: theme.fontSizes.smallBody,
+    cursor: 'pointer',
+})) as typeof Link;
+
 export const FeatureStrategyMenuCards = ({
     projectId,
     featureId,
@@ -28,6 +34,7 @@ export const FeatureStrategyMenuCards = ({
 }: IFeatureStrategyMenuCardsProps) => {
     const { strategies } = useStrategies();
     const { templates } = useReleasePlanTemplates();
+    const navigate = useNavigate();
     const allStrategies = !onlyReleasePlans;
 
     const preDefinedStrategies = strategies.filter(
@@ -77,6 +84,27 @@ export const FeatureStrategyMenuCards = ({
                                 />
                             </ListItem>
                         ))}
+                    </>
+                }
+            />
+            <ConditionallyRender
+                condition={templates.length === 0 && onlyReleasePlans}
+                show={
+                    <>
+                        <StyledTypography
+                            color='textSecondary'
+                            sx={{
+                                padding: (theme) => theme.spacing(1, 2, 0, 2),
+                            }}
+                        >
+                            No templates created. Go to&nbsp;
+                            <StyledLink
+                                onClick={() => navigate('/release-templates')}
+                            >
+                                Release templates
+                            </StyledLink>
+                            &nbsp;to get started
+                        </StyledTypography>
                     </>
                 }
             />

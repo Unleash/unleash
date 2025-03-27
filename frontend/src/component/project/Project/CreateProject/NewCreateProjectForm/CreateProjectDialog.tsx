@@ -11,7 +11,7 @@ import useProjectForm, {
     DEFAULT_PROJECT_STICKINESS,
 } from '../../hooks/useProjectForm';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
-import { type ReactNode, useState, type FormEvent } from 'react';
+import { type ReactNode, useState, type FormEvent, useEffect } from 'react';
 import { useAuthUser } from 'hooks/api/getters/useAuth/useAuthUser';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useNavigate } from 'react-router-dom';
@@ -27,6 +27,7 @@ import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton';
 import { StyledDefinitionList } from './CreateProjectDialog.styles';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface ICreateProjectDialogProps {
     open: boolean;
@@ -208,6 +209,21 @@ export const CreateProjectDialog = ({
     const { environments: allEnvironments } = useEnvironments();
     const activeEnvironments = allEnvironments.filter((env) => env.enabled);
     const stickinessOptions = useStickinessOptions(projectStickiness);
+
+    const globalChangeRequestConfigEnabled = useUiFlag(
+        'globalChangeRequestConfig',
+    );
+    useEffect(() => {
+        if (!globalChangeRequestConfigEnabled) return;
+        activeEnvironments.forEach((environment) => {
+            if (Number.isInteger(environment.requiredApprovals)) {
+                updateProjectChangeRequestConfig.enableChangeRequests(
+                    environment.name,
+                    Number(environment.requiredApprovals),
+                );
+            }
+        });
+    }, [JSON.stringify(activeEnvironments)]);
 
     const numberOfConfiguredChangeRequestEnvironments = Object.keys(
         projectChangeRequestConfiguration,

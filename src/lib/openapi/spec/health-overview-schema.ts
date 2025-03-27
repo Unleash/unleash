@@ -13,6 +13,7 @@ import { projectEnvironmentSchema } from './project-environment-schema';
 import { createStrategyVariantSchema } from './create-strategy-variant-schema';
 import { strategyVariantSchema } from './strategy-variant-schema';
 import { createFeatureNamingPatternSchema } from './create-feature-naming-pattern-schema';
+import { tagSchema } from './tag-schema';
 
 export const healthOverviewSchema = {
     $id: '#/components/schemas/healthOverviewSchema',
@@ -138,6 +139,7 @@ export const healthOverviewSchema = {
             variantSchema,
             projectStatsSchema,
             createFeatureNamingPatternSchema,
+            tagSchema,
         },
     },
 } as const;

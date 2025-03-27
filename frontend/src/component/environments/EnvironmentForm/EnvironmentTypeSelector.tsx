@@ -21,7 +21,7 @@ const StyledRadioButtonGroup = styled('div')({
     flexDirection: 'column',
 });
 
-const EnvironmentTypeSelector = ({
+export const EnvironmentTypeSelector = ({
     onChange,
     value,
 }: IEnvironmentTypeSelectorProps) => {
@@ -56,5 +56,3 @@ const EnvironmentTypeSelector = ({
         </FormControl>
     );
 };
-
-export default EnvironmentTypeSelector;

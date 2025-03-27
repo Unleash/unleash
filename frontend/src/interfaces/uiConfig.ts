@@ -92,6 +92,7 @@ export type UiFlags = {
     edgeObservability?: boolean;
     adminNavUI?: boolean;
     tagTypeColor?: boolean;
+    globalChangeRequestConfig?: boolean;
 };
 
 export interface IVersionInfo {

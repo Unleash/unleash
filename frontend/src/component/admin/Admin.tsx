@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { ApiTokenPage } from './apiToken/ApiTokenPage/ApiTokenPage';
 import { CreateApiToken } from './apiToken/CreateApiToken/CreateApiToken';
 import { AuthSettings } from './auth/AuthSettings';
+import { OldAuthSettings } from './auth/OldAuthSettings';
 import { Billing } from './billing/Billing';
 import FlaggedBillingRedirect from './billing/FlaggedBillingRedirect/FlaggedBillingRedirect';
 import { CorsAdmin } from './cors';
@@ -47,7 +48,11 @@ export const Admin = () => {
                 <Route path='banners' element={<Banners />} />
                 <Route path='license' element={<License />} />
                 <Route path='cors' element={<CorsAdmin />} />
-                <Route path='auth' element={<AuthSettings />} />
+                {newAdminUIEnabled ? (
+                    <Route path='auth/*' element={<AuthSettings />} />
+                ) : (
+                    <Route path='auth' element={<OldAuthSettings />} />
+                )}
                 <Route
                     path='admin-invoices'
                     element={<FlaggedBillingRedirect />}

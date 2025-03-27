@@ -23,7 +23,7 @@ import MonitorHeartIcon from '@mui/icons-material/MonitorHeartOutlined';
 import { useNavigate } from 'react-router-dom';
 import { formatAssetPath } from 'utils/formatPath';
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
-import { ReactComponent as ReleaseManagementPreview } from 'assets/img/releaseManagementPreview.svg';
+import { ReactComponent as ReleaseManagementPreview } from 'assets/img/releaseTemplatePreview.svg';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0, 1, 0),
@@ -165,25 +165,14 @@ export const NewInUnleash = ({
         },
         {
             label: 'Release templates',
-            summary: 'Save time with release plans',
+            summary: 'Save time and optimize your process',
             icon: <StyledReleaseManagementIcon />,
             preview: <ReleaseManagementPreview />,
             onCheckItOut: () => navigate('/release-templates'),
+            docsLink: 'https://docs.getunleash.io/reference/release-templates',
             show: isEnterprise() && releasePlansEnabled,
-            beta: true,
-            longDescription: (
-                <>
-                    <p>
-                        Instead of having to set up the same strategies again
-                        and again, you can now create templates with milestones
-                        of how you want to rollout features to your users.
-                    </p>
-                    <p>
-                        Once you have set it up, just apply your release plan to
-                        a flag, and you are ready to rollout!
-                    </p>
-                </>
-            ),
+            beta: false,
+            popout: true,
         },
     ];
 
@@ -229,6 +218,7 @@ export const NewInUnleash = ({
                         preview,
                         summary,
                         beta = false,
+                        popout = false,
                     }) => (
                         <NewInUnleashItem
                             key={label}
@@ -255,6 +245,7 @@ export const NewInUnleash = ({
                             docsLink={docsLink}
                             summary={summary}
                             beta={beta}
+                            popout={popout}
                         />
                     ),
                 )}

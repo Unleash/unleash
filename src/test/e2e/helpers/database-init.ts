@@ -141,6 +141,8 @@ export default async function init(
         await client.query(
             `CREATE DATABASE ${testDbName} TEMPLATE ${testDBTemplateName}`,
         );
+        await client.query(`ALTER DATABASE ${testDbName} SET TIMEZONE TO UTC`);
+
         await client.end();
     } else {
         const db = createDb(config);

@@ -3,25 +3,24 @@ import type { INavigationMenuItem } from 'interfaces/route';
 export const adminGroups: Record<string, string> = {
     users: 'User administration',
     access: 'Access control',
+    sso: 'Single sign-on',
+    network: 'Network',
     instance: 'Instance configuration',
-    log: 'Logs',
-    other: 'Other',
 };
 
 export const adminRoutes: INavigationMenuItem[] = [
+    // Admin home
+    {
+        path: '/admin',
+        title: 'Admin home',
+        menu: {},
+    },
+
+    // Users
     {
         path: '/admin/users',
         title: 'Users',
         menu: { adminSettings: true },
-        group: 'users',
-    },
-    {
-        path: '/admin/service-accounts',
-        title: 'Service accounts',
-        menu: {
-            adminSettings: true,
-            mode: ['enterprise'],
-        },
         group: 'users',
     },
     {
@@ -34,14 +33,44 @@ export const adminRoutes: INavigationMenuItem[] = [
         group: 'users',
     },
     {
-        path: '/admin/roles/*',
-        title: 'Roles',
+        path: '/admin/roles',
+        title: 'Root roles',
         menu: {
             adminSettings: true,
             mode: ['enterprise'],
         },
         group: 'users',
     },
+    {
+        path: '/admin/roles/project-roles',
+        title: 'Project roles',
+        menu: {
+            adminSettings: true,
+            mode: ['enterprise'],
+        },
+        group: 'users',
+    },
+    {
+        path: '/admin/logins',
+        title: 'Login history',
+        menu: {
+            adminSettings: true,
+            mode: ['enterprise'],
+        },
+        group: 'users',
+    },
+
+    // Service accounts
+    {
+        path: '/admin/service-accounts',
+        title: 'Service accounts',
+        menu: {
+            adminSettings: true,
+            mode: ['enterprise'],
+        },
+    },
+
+    // Access control
     {
         path: '/admin/api',
         title: 'API access',
@@ -55,18 +84,73 @@ export const adminRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true },
         group: 'access',
     },
+
+    // Single sign-on/login
     {
         path: '/admin/auth',
-        title: 'Single sign-on',
+        title: 'Open ID Connect',
         menu: { adminSettings: true, mode: ['enterprise'] },
-        group: 'access',
+        group: 'sso',
     },
     {
-        path: '/admin/network/*',
-        title: 'Network',
-        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
-        group: 'instance',
+        path: '/admin/auth/saml',
+        title: 'SAML 2.0',
+        menu: { adminSettings: true, mode: ['enterprise'] },
+        group: 'sso',
     },
+    {
+        path: '/admin/auth/password',
+        title: 'Password login',
+        menu: { adminSettings: true, mode: ['enterprise'] },
+        group: 'sso',
+    },
+    {
+        path: '/admin/auth/google',
+        title: 'Google',
+        menu: { adminSettings: true, mode: ['enterprise'] },
+        flag: 'googleAuthEnabled',
+        group: 'sso',
+    },
+    {
+        path: '/admin/auth/scim',
+        title: 'SCIM',
+        menu: { adminSettings: true, mode: ['enterprise'] },
+        group: 'sso',
+    },
+
+    // Network
+    {
+        path: '/admin/network',
+        title: 'Overview',
+        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
+        group: 'network',
+    },
+    {
+        path: '/admin/network/traffic',
+        title: 'Traffic',
+        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
+        group: 'network',
+    },
+    {
+        path: '/admin/network/connected-edges',
+        title: 'Connected edges',
+        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
+        group: 'network',
+    },
+    {
+        path: '/admin/network/backend-connections',
+        title: 'Backend connections',
+        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
+        group: 'network',
+    },
+    {
+        path: '/admin/network/frontend-data-usage',
+        title: 'Frontend data usage',
+        menu: { adminSettings: true, mode: ['pro', 'enterprise'] },
+        group: 'network',
+    },
+
+    // Instance configuration
     {
         path: '/admin/maintenance',
         title: 'Maintenance',
@@ -80,16 +164,16 @@ export const adminRoutes: INavigationMenuItem[] = [
         group: 'instance',
     },
     {
-        path: '/admin/instance',
-        title: 'Instance stats',
-        menu: { adminSettings: true },
-        group: 'instance',
-    },
-    {
         path: '/admin/license',
         title: 'License',
         menu: { adminSettings: true, mode: ['enterprise'] },
         flag: 'enableLicense',
+        group: 'instance',
+    },
+    {
+        path: '/admin/instance',
+        title: 'Instance stats',
+        menu: { adminSettings: true },
         group: 'instance',
     },
     {
@@ -98,25 +182,18 @@ export const adminRoutes: INavigationMenuItem[] = [
         menu: { adminSettings: true },
         group: 'instance',
     },
+
+    // Billing
     {
-        path: '/admin/admin-invoices',
+        path: '/admin/billing',
         title: 'Billing & invoices',
         menu: { adminSettings: true, billing: true },
-        group: 'instance',
     },
-    {
-        path: '/admin/logins',
-        title: 'Login history',
-        menu: {
-            adminSettings: true,
-            mode: ['enterprise'],
-        },
-        group: 'log',
-    },
+
+    // Event log
     {
         path: '/history',
         title: 'Event log',
         menu: { adminSettings: true },
-        group: 'log',
     },
 ];

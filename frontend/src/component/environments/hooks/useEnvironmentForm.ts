@@ -2,9 +2,16 @@ import { useEffect, useState } from 'react';
 import useEnvironmentApi from 'hooks/api/actions/useEnvironmentApi/useEnvironmentApi';
 import { formatUnknownError } from 'utils/formatUnknownError';
 
-const useEnvironmentForm = (initialName = '', initialType = 'development') => {
+const useEnvironmentForm = (
+    initialName = '',
+    initialType = 'development',
+    initialRequiredApprovals: number | null = null,
+) => {
     const [name, setName] = useState(initialName);
     const [type, setType] = useState(initialType);
+    const [requiredApprovals, setRequiredApprovals] = useState(
+        initialRequiredApprovals,
+    );
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
@@ -15,12 +22,17 @@ const useEnvironmentForm = (initialName = '', initialType = 'development') => {
         setType(initialType);
     }, [initialType]);
 
+    useEffect(() => {
+        setRequiredApprovals(initialRequiredApprovals);
+    }, [initialRequiredApprovals]);
+
     const { validateEnvName } = useEnvironmentApi();
 
     const getEnvPayload = () => {
         return {
             name,
             type,
+            ...(requiredApprovals ? { requiredApprovals } : {}),
         };
     };
 
@@ -51,6 +63,8 @@ const useEnvironmentForm = (initialName = '', initialType = 'development') => {
         setName,
         type,
         setType,
+        requiredApprovals,
+        setRequiredApprovals,
         getEnvPayload,
         validateEnvironmentName,
         clearErrors,

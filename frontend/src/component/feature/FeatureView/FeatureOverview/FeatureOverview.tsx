@@ -66,12 +66,7 @@ export const FeatureOverview = () => {
     }
 
     const toggleRun = (isOpen: boolean) => {
-        setRun(isOpen);
-        console.log(isOpen, showStrategyDragTooltip);
-        // if (isOpen && showStrategyDragTooltip) {
-        //     setRun(true);
-        // }
-        // setRun(false);
+        setRun(showStrategyDragTooltip && isOpen);
     };
 
     return (
@@ -90,7 +85,6 @@ export const FeatureOverview = () => {
                 </button>
                 <Joyride
                     callback={({ action }) => {
-                        console.log(action);
                         if (action === 'close') {
                             setSplashSeen(dragTooltipSplashId);
                         }

@@ -20,7 +20,7 @@ This is an example of a feature that is only available to Enterprise customers w
 
 ## Beta features
 
-Some new Unleash features are tagged as `BETA` in the documentation. This means that the feature may be subject to change or discontinuation. Unleash may decide to enable such features for a select number of customers only. If you're interested in trying out a beta feature, please reach out to Customer Success at customersuccess@getunleash.io.
+Some new Unleash features are tagged as `BETA` in the documentation. This means that the feature may be subject to change or discontinuation. Unleash may decide to enable such features for a select number of customers only. If you're interested in trying out a beta feature, please reach out to Customer Success at beta@getunleash.io.
 
 ## Versioning
 

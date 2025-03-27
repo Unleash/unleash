@@ -10,6 +10,7 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 
 type FeatureOverviewEnvironmentsProps = {
     hiddenEnvironments?: string[];
+    onToggleEnvOpen?: (isOpen: boolean) => void;
 };
 
 const FeatureOverviewWithReleasePlans: FC<
@@ -33,7 +34,7 @@ const FeatureOverviewWithReleasePlans: FC<
 
 export const FeatureOverviewEnvironments: FC<
     FeatureOverviewEnvironmentsProps
-> = ({ hiddenEnvironments = [] }) => {
+> = ({ hiddenEnvironments = [], onToggleEnvOpen }) => {
     const projectId = useRequiredPathParam('projectId');
     const featureId = useRequiredPathParam('featureId');
     const { feature } = useFeature(projectId, featureId);
@@ -60,6 +61,7 @@ export const FeatureOverviewEnvironments: FC<
         ?.filter((env) => !hiddenEnvironments.includes(env.name))
         .map((env) => (
             <FeatureOverviewWithReleasePlans
+                onToggleEnvOpen={onToggleEnvOpen}
                 environment={env}
                 key={env.name}
                 metrics={featureMetrics.find(

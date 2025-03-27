@@ -9,12 +9,15 @@ import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { usePageTitle } from 'hooks/usePageTitle';
 import { styled } from '@mui/material';
 import { FeatureStrategyCreate } from 'component/feature/FeatureStrategy/FeatureStrategyCreate/FeatureStrategyCreate';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useLastViewedFlags } from 'hooks/useLastViewedFlags';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { FeatureOverviewEnvironments } from './FeatureOverviewEnvironments/FeatureOverviewEnvironments';
 import { default as LegacyFleatureOverview } from './LegacyFeatureOverview';
 import { useEnvironmentVisibility } from './FeatureOverviewMetaData/EnvironmentVisibilityMenu/hooks/useEnvironmentVisibility';
+import useSplashApi from 'hooks/api/actions/useSplashApi/useSplashApi';
+import { useAuthSplash } from 'hooks/api/getters/useAuth/useAuthSplash';
+import { StrategyDragTooltip } from './StrategyDragTooltip';
 
 const StyledContainer = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -51,6 +54,22 @@ export const FeatureOverview = () => {
         return <LegacyFleatureOverview />;
     }
 
+    const { setSplashSeen } = useSplashApi();
+    const { splash } = useAuthSplash();
+    const dragTooltipSplashId = 'strategy-drag-tooltip';
+    const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
+    const [showTooltip, setShowTooltip] = useState(false);
+    const [hasClosedTooltip, setHasClosedTooltip] = useState(false);
+    const toggleShowTooltip = (envIsOpen: boolean) => {
+        setShowTooltip(
+            !hasClosedTooltip && shouldShowStrategyDragTooltip && envIsOpen,
+        );
+    };
+    const onTooltipClose = () => {
+        setHasClosedTooltip(true);
+        setSplashSeen(dragTooltipSplashId);
+    };
+
     return (
         <StyledContainer>
             <div>
@@ -63,6 +82,7 @@ export const FeatureOverview = () => {
             </div>
             <StyledMainContent>
                 <FeatureOverviewEnvironments
+                    onToggleEnvOpen={toggleShowTooltip}
                     hiddenEnvironments={hiddenEnvironments}
                 />
             </StyledMainContent>
@@ -92,6 +112,8 @@ export const FeatureOverview = () => {
                     }
                 />
             </Routes>
+
+            <StrategyDragTooltip show={showTooltip} onClose={onTooltipClose} />
         </StyledContainer>
     );
 };

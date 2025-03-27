@@ -96,6 +96,7 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                 <StyledHeader disabled={Boolean(strategy?.disabled)}>
                     {onDragStart ? (
                         <DragIcon
+                            className='strategy-drag-handle'
                             draggable
                             disableRipple
                             size='small'

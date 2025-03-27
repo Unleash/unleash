@@ -28,6 +28,7 @@ import { TextCell } from 'component/common/Table/cells/TextCell/TextCell';
 import type { IEnvironment } from 'interfaces/environments';
 import { useUiFlag } from 'hooks/useUiFlag';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
+
 const StyledAlert = styled(Alert)(({ theme }) => ({
     marginBottom: theme.spacing(4),
 }));
@@ -37,6 +38,9 @@ export const EnvironmentTable = () => {
     const { setToastApiError } = useToast();
     const { environments, mutateEnvironments } = useEnvironments();
     const isFeatureEnabled = useUiFlag('EEA');
+    const globalChangeRequestConfigEnabled = useUiFlag(
+        'globalChangeRequestConfig',
+    );
 
     const onMoveItem: OnMoveItem = useCallback(
         async ({ dragIndex, dropIndex, save }) => {
@@ -61,26 +65,32 @@ export const EnvironmentTable = () => {
     );
 
     const columnsWithActions = useMemo(() => {
+        const baseColumns = [...COLUMNS];
+        if (globalChangeRequestConfigEnabled) {
+            baseColumns.splice(2, 0, {
+                Header: 'Change request',
+                accessor: (row: IEnvironment) =>
+                    Number.isInteger(row.requiredApprovals) ? 'yes' : 'no',
+                Cell: TextCell,
+            });
+        }
         if (isFeatureEnabled) {
-            return [
-                ...COLUMNS,
-                {
-                    Header: 'Actions',
-                    id: 'Actions',
-                    align: 'center',
-                    width: '1%',
-                    Cell: ({
-                        row: { original },
-                    }: { row: { original: IEnvironment } }) => (
-                        <EnvironmentActionCell environment={original} />
-                    ),
-                    disableGlobalFilter: true,
-                },
-            ];
+            baseColumns.push({
+                Header: 'Actions',
+                id: 'Actions',
+                align: 'center',
+                width: '1%',
+                Cell: ({
+                    row: { original },
+                }: { row: { original: IEnvironment } }) => (
+                    <EnvironmentActionCell environment={original} />
+                ),
+                disableGlobalFilter: true,
+            });
         }
 
-        return COLUMNS;
-    }, [isFeatureEnabled]);
+        return baseColumns;
+    }, [isFeatureEnabled, globalChangeRequestConfigEnabled]);
 
     const {
         getTableProps,

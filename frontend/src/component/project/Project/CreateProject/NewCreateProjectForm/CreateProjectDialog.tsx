@@ -234,6 +234,9 @@ export const CreateProjectDialog = ({
         name,
         type,
         requiredApprovals,
+        configurable: globalChangeRequestConfigEnabled
+            ? !Number.isInteger(requiredApprovals)
+            : true,
     }));
 
     useEffect(() => {

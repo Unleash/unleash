@@ -27,7 +27,7 @@ import { useStickinessOptions } from 'hooks/useStickinessOptions';
 import { ChangeRequestTableConfigButton } from './ConfigButtons/ChangeRequestTableConfigButton';
 import { StyledDefinitionList } from './CreateProjectDialog.styles';
 import { ProjectIcon } from 'component/common/ProjectIcon/ProjectIcon';
-import { useUiFlag } from '../../../../../hooks/useUiFlag';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 interface ICreateProjectDialogProps {
     open: boolean;

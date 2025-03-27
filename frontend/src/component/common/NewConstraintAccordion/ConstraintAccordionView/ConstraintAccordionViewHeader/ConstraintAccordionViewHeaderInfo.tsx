@@ -13,7 +13,6 @@ const StyledHeaderWrapper = styled('div')(({ theme }) => ({
 const StyledHeaderMetaInfo = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'stretch',
-    marginLeft: theme.spacing(1),
     [theme.breakpoints.down('sm')]: {
         marginLeft: 0,
         flexDirection: 'column',

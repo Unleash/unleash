@@ -9,12 +9,12 @@ import {
     styled,
 } from '@mui/material';
 import { StrategyEvaluationItem } from 'component/common/ConstraintsList/StrategyEvaluationItem/StrategyEvaluationItem';
-import { ConstraintItemHeader } from 'component/common/ConstraintsList/ConstraintItemHeader/ConstraintItemHeader';
 import { objectId } from 'utils/objectId';
 import {
     ConstraintListItem,
     ConstraintsList,
 } from 'component/common/ConstraintsList/ConstraintsList';
+import { ConstraintAccordionViewHeaderInfo } from '../NewConstraintAccordion/ConstraintAccordionView/ConstraintAccordionViewHeader/ConstraintAccordionViewHeaderInfo';
 
 type SegmentItemProps = {
     segment: Partial<ISegment>;
@@ -39,7 +39,6 @@ const StyledAccordion = styled(Accordion)(() => ({
 }));
 
 const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
-    padding: theme.spacing(0, 3),
     fontSize: theme.typography.body2.fontSize,
     minHeight: 'unset',
 }));
@@ -91,8 +90,13 @@ export const SegmentItem: FC<SegmentItemProps> = ({
                         <ConstraintListItem
                             key={`${objectId(constraint)}-${index}`}
                         >
-                            {/* FIXME: use accordion */}
-                            <ConstraintItemHeader {...constraint} />
+                            <ConstraintAccordionViewHeaderInfo
+                                constraint={constraint}
+                                expanded={isOpen}
+                                allowExpand={(shouldExpand) =>
+                                    setIsOpen(shouldExpand)
+                                }
+                            />
                         </ConstraintListItem>
                     ))}
                 </ConstraintsList>
@@ -108,7 +112,11 @@ export const SegmentItem: FC<SegmentItemProps> = ({
 
     return (
         <StyledConstraintListItem>
-            <StyledAccordion expanded={isOpen} disableGutters>
+            <StyledAccordion
+                expanded={isOpen}
+                disableGutters
+                TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
+            >
                 <StyledAccordionSummary id={`segment-accordion-${segment.id}`}>
                     <StrategyEvaluationItem type='Segment'>
                         <StyledLink to={`/segments/edit/${segment.id}`}>

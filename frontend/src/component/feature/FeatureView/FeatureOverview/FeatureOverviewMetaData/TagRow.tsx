@@ -59,8 +59,6 @@ interface IFeatureOverviewSidePanelTagsProps {
 export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
     const { tags, refetch } = useFeatureTags(feature.name);
     const { deleteTagFromFeature } = useFeatureApi();
-    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
-
     const [manageTagsOpen, setManageTagsOpen] = useState(false);
     const [removeTagOpen, setRemoveTagOpen] = useState(false);
     const [selectedTag, setSelectedTag] = useState<ITag>();
@@ -91,19 +89,6 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
         }
     };
 
-    const renderTag = (tag: ITag) => (
-        <TagItem
-            key={`${tag.type}:${tag.value}`}
-            tag={tag}
-            isTagTypeColorEnabled={isTagTypeColorEnabled}
-            canUpdateTags={canUpdateTags}
-            onTagRemove={(tag) => {
-                setRemoveTagOpen(true);
-                setSelectedTag(tag);
-            }}
-        />
-    );
-
     return (
         <>
             {!tags.length ? (
@@ -120,7 +105,17 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
                 <StyledTagRow>
                     <StyledLabel>Tags:</StyledLabel>
                     <StyledTagContainer>
-                        {tags.map(renderTag)}
+                        {tags.map((tag) => (
+                            <TagItem
+                                key={`${tag.type}:${tag.value}`}
+                                tag={tag}
+                                canUpdateTags={canUpdateTags}
+                                onTagRemove={(tag) => {
+                                    setRemoveTagOpen(true);
+                                    setSelectedTag(tag);
+                                }}
+                            />
+                        ))}
                         {canUpdateTags ? (
                             <AddTagButton
                                 project={feature.project}
@@ -161,17 +156,12 @@ export const TagRow = ({ feature }: IFeatureOverviewSidePanelTagsProps) => {
 
 interface ITagItemProps {
     tag: ITag;
-    isTagTypeColorEnabled: boolean;
     canUpdateTags: boolean;
     onTagRemove: (tag: ITag) => void;
 }
 
-const TagItem = ({
-    tag,
-    isTagTypeColorEnabled,
-    canUpdateTags,
-    onTagRemove,
-}: ITagItemProps) => {
+const TagItem = ({ tag, canUpdateTags, onTagRemove }: ITagItemProps) => {
+    const isTagTypeColorEnabled = useUiFlag('tagTypeColor');
     const tagLabel = `${tag.type}:${tag.value}`;
     const isOverflowing = tagLabel.length > 25;
     const deleteIcon = (

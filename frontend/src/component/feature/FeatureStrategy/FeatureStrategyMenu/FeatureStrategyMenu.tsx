@@ -5,7 +5,7 @@ import PermissionButton, {
     type IPermissionButtonProps,
 } from 'component/common/PermissionButton/PermissionButton';
 import { CREATE_FEATURE_STRATEGY } from 'component/providers/AccessProvider/permissions';
-import { Popover, styled } from '@mui/material';
+import { Popover, styled, Link } from '@mui/material';
 import { FeatureStrategyMenuCards } from './FeatureStrategyMenuCards/FeatureStrategyMenuCards';
 import { formatCreateStrategyPath } from '../FeatureStrategyCreate/FeatureStrategyCreate';
 import MoreVert from '@mui/icons-material/MoreVert';
@@ -20,7 +20,9 @@ import { useReleasePlans } from 'hooks/api/getters/useReleasePlans/useReleasePla
 import { useChangeRequestsEnabled } from 'hooks/useChangeRequestsEnabled';
 import { formatUnknownError } from 'utils/formatUnknownError';
 import { useUiFlag } from 'hooks/useUiFlag';
+import type { Link as RouterLink } from 'react-router-dom';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
+import { RELEASE_TEMPLATE_FEEDBACK } from 'constants/links';
 
 interface IFeatureStrategyMenuProps {
     label: string;
@@ -36,8 +38,12 @@ interface IFeatureStrategyMenuProps {
 const StyledStrategyMenu = styled('div')(({ theme }) => ({
     flexShrink: 0,
     display: 'flex',
+    width: '100%',
     flexFlow: 'row',
     gap: theme.spacing(1),
+    '& > :nth-child(2)': {
+        marginLeft: 'auto',
+    },
 }));
 
 const StyledAdditionalMenuButton = styled(PermissionButton)(({ theme }) => ({
@@ -45,6 +51,15 @@ const StyledAdditionalMenuButton = styled(PermissionButton)(({ theme }) => ({
     width: theme.spacing(4.5),
     alignSelf: 'stretch',
     paddingBlock: 0,
+}));
+
+const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    gap: theme.spacing(1),
+    color: theme.palette.links,
+    fontWeight: theme.typography.fontWeightMedium,
+    textDecoration: 'none',
 }));
 
 export const FeatureStrategyMenu = ({
@@ -162,6 +177,15 @@ export const FeatureStrategyMenu = ({
         <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
             {displayReleasePlanButton ? (
                 <>
+                    <StyledLink
+                        component='a'
+                        href={RELEASE_TEMPLATE_FEEDBACK}
+                        underline='hover'
+                        rel='noopener noreferrer'
+                        target='_blank'
+                    >
+                        Give feedback to release templates
+                    </StyledLink>
                     <PermissionButton
                         data-testid='ADD_TEMPLATE_BUTTON'
                         permission={CREATE_FEATURE_STRATEGY}

@@ -67,27 +67,31 @@ export const EnvironmentTable = () => {
     );
 
     const columnsWithActions = useMemo(() => {
-        const baseColumns = [...COLUMNS];
+        const baseColumns = [
+            ...COLUMNS,
+            ...(isFeatureEnabled
+                ? [
+                      {
+                          Header: 'Actions',
+                          id: 'Actions',
+                          align: 'center',
+                          width: '1%',
+                          Cell: ({
+                              row: { original },
+                          }: { row: { original: IEnvironment } }) => (
+                              <EnvironmentActionCell environment={original} />
+                          ),
+                          disableGlobalFilter: true,
+                      },
+                  ]
+                : []),
+        ];
         if (globalChangeRequestConfigEnabled && isEnterprise()) {
             baseColumns.splice(2, 0, {
                 Header: 'Change request',
                 accessor: (row: IEnvironment) =>
                     Number.isInteger(row.requiredApprovals) ? 'yes' : 'no',
                 Cell: TextCell,
-            });
-        }
-        if (isFeatureEnabled) {
-            baseColumns.push({
-                Header: 'Actions',
-                id: 'Actions',
-                align: 'center',
-                width: '1%',
-                Cell: ({
-                    row: { original },
-                }: { row: { original: IEnvironment } }) => (
-                    <EnvironmentActionCell environment={original} />
-                ),
-                disableGlobalFilter: true,
             });
         }
 

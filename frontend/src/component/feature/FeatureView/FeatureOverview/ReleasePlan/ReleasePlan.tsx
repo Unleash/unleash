@@ -24,9 +24,7 @@ import { StartMilestoneChangeRequestDialog } from './ChangeRequest/StartMileston
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { Truncator } from 'component/common/Truncator/Truncator';
 
-const StyledContainer = styled('div', {
-    shouldForwardProp: (prop) => prop !== 'readonly',
-})<{ readonly?: boolean }>(({ theme, readonly }) => ({
+const StyledContainer = styled('div')(({ theme }) => ({
     padding: theme.spacing(2),
     paddingTop: theme.spacing(0),
     background: 'inherit',
@@ -235,7 +233,7 @@ export const ReleasePlan = ({
     );
 
     return (
-        <StyledContainer readonly={readonly}>
+        <StyledContainer>
             <StyledHeader>
                 <StyledHeaderGroup>
                     <StyledHeaderTitleLabel>

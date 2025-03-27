@@ -20,6 +20,17 @@ const StyledAccordionSummary = styled(AccordionSummary, {
     '&&&': {
         cursor: expandable ? 'pointer' : 'default',
     },
+
+    borderRadius: theme.shape.borderRadiusLarge,
+    pointerEvents: 'auto',
+    opacity: 1,
+
+    ':focus-visible': {
+        background: theme.palette.table.headerHover,
+    },
+    ':focus-within': {
+        background: 'none',
+    },
 }));
 
 const StyledHeader = styled('header')(({ theme }) => ({

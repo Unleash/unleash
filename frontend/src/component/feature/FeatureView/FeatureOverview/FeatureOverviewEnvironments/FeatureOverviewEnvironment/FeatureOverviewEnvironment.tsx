@@ -23,13 +23,7 @@ const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     boxShadow: 'none',
-    background: 'none',
-    '&&& .MuiAccordionSummary-root': {
-        borderRadius: theme.shape.borderRadiusLarge,
-        pointerEvents: 'auto',
-        opacity: 1,
-        backgroundColor: theme.palette.background.paper,
-    },
+    background: 'transparent',
 }));
 
 const NewStyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({

@@ -59,12 +59,14 @@ export const FeatureOverview = () => {
     const dragTooltipSplashId = 'strategy-drag-tooltip';
     const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
     const [showTooltip, setShowTooltip] = useState(false);
-    const [hasClosed, setHasClosed] = useState(false);
-    const toggleRun = (isOpen: boolean) => {
-        setShowTooltip(!hasClosed && shouldShowStrategyDragTooltip && isOpen);
+    const [hasClosedTooltip, setHasClosedTooltip] = useState(false);
+    const toggleShowTooltip = (envIsOpen: boolean) => {
+        setShowTooltip(
+            !hasClosedTooltip && shouldShowStrategyDragTooltip && envIsOpen,
+        );
     };
     const onTooltipClose = () => {
-        setHasClosed(true);
+        setHasClosedTooltip(true);
         setSplashSeen(dragTooltipSplashId);
     };
 
@@ -84,7 +86,7 @@ export const FeatureOverview = () => {
                     onClose={onTooltipClose}
                 />
                 <FeatureOverviewEnvironments
-                    onToggleEnvOpen={toggleRun}
+                    onToggleEnvOpen={toggleShowTooltip}
                     hiddenEnvironments={hiddenEnvironments}
                 />
             </StyledMainContent>

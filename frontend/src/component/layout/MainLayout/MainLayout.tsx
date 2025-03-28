@@ -1,6 +1,5 @@
 import { forwardRef, type ReactNode } from 'react';
 import { Box, Grid, styled, useMediaQuery, useTheme } from '@mui/material';
-import { useLocation } from 'react-router-dom';
 import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
 import Proclamation from 'component/common/Proclamation/Proclamation';
@@ -18,8 +17,9 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash';
-import { useUiFlag } from 'hooks/useUiFlag';
+
 import { WrapIfAdminSubpage } from './AdminMenu/AdminMenu';
+import { useNewAdminMenu } from '../../../hooks/useNewAdminMenu';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -65,18 +65,15 @@ const MainLayoutContentContainer = styled('main')(({ theme }) => ({
 
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
-        const newAdminUIEnabled = useUiFlag('adminNavUI');
+        const showOnlyAdminMenu = useNewAdminMenu();
         const { uiConfig } = useUiConfig();
-        const location = useLocation();
         const projectId = useOptionalPathParam('projectId');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
-
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
-        const showOnlyAdminMenu =
-            newAdminUIEnabled && location.pathname.indexOf('/admin') === 0;
+
         const showRegularNavigationSideBar =
             !isSmallScreen && !showOnlyAdminMenu;
 

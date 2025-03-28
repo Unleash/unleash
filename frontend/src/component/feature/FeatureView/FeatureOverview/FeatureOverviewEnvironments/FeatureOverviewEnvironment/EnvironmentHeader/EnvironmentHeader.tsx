@@ -20,7 +20,6 @@ const StyledAccordionSummary = styled(AccordionSummary, {
     borderRadius: theme.shape.borderRadiusLarge,
     pointerEvents: 'auto',
     opacity: 1,
-    border: `1px solid #0000`,
     '&&&': {
         cursor: expandable ? 'pointer' : 'default',
     },

@@ -41,6 +41,16 @@ const ProjectContainer = styled('ul')(({ theme }) => ({
     alignItems: 'center',
     gap: theme.spacing(2),
     alignSelf: 'stretch',
+    listStyle: 'none',
+}));
+
+const StyledBadgeLink = styled(Link)(({ theme }) => ({
+    ':hover,:focus-visible': {
+        outline: 'none',
+        '> *': {
+            outline: `1px solid ${theme.palette.primary.main}`,
+        },
+    },
 }));
 
 const ApplicationHeader = styled('div')(({ theme }) => ({
@@ -90,27 +100,29 @@ const ApplicationOverview = () => {
 
     return (
         <ConditionallyRender
-            condition={!loading && data.environments.length === 0}
+            condition={false}
             show={<Alert severity='warning'>No data available.</Alert>}
             elseShow={
                 <ApplicationContainer>
                     <ApplicationHeader>
                         <ProjectContainer>
-                            {/* todo: check this */}
                             Application is connected to these projects:
-                            {data.projects.map((project) => (
-                                <li key={project}>
-                                    <Link to={`/projects/${project}`}>
-                                        <Badge
-                                            sx={{ cursor: 'pointer' }}
-                                            color='secondary'
-                                            icon={<TopicOutlinedIcon />}
+                            {['project1', 'project2', 'project3'].map(
+                                (project) => (
+                                    <li key={project}>
+                                        <StyledBadgeLink
+                                            to={`/projects/${project}`}
                                         >
-                                            {project}
-                                        </Badge>
-                                    </Link>
-                                </li>
-                            ))}
+                                            <Badge
+                                                color='secondary'
+                                                icon={<TopicOutlinedIcon />}
+                                            >
+                                                {project}
+                                            </Badge>
+                                        </StyledBadgeLink>
+                                    </li>
+                                ),
+                            )}
                         </ProjectContainer>
                         <Button
                             startIcon={<ReviewsOutlined />}

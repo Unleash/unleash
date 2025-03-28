@@ -8,7 +8,10 @@ import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { UpgradeChangeRequests } from './UpgradeChangeRequests/UpgradeChangeRequests';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { EnvironmentHeader } from './EnvironmentHeader/EnvironmentHeader';
+import {
+    environmentAccordionSummaryClassName,
+    EnvironmentHeader,
+} from './EnvironmentHeader/EnvironmentHeader';
 import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle';
 import { useState } from 'react';
@@ -22,8 +25,12 @@ const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
 }));
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
+    '--focus-background-color': theme.palette.table.headerHover,
     boxShadow: 'none',
     background: 'transparent',
+    [`&:has(.${environmentAccordionSummaryClassName}:focus-visible)`]: {
+        background: 'var(--focus-background-color)',
+    },
 }));
 
 const NewStyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({

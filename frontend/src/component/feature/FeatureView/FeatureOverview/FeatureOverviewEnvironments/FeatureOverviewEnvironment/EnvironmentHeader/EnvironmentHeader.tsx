@@ -28,7 +28,7 @@ const StyledAccordionSummary = styled(AccordionSummary, {
         background: 'none',
     },
     ':focus-visible': {
-        background: theme.palette.table.headerHover,
+        background: 'var(--focus-background-color)',
     },
 }));
 
@@ -118,6 +118,9 @@ const MetadataChip = ({
     return <StyledStrategyCount>{text}</StyledStrategyCount>;
 };
 
+export const environmentAccordionSummaryClassName =
+    'environment-accordion-summary';
+
 export const EnvironmentHeader: FC<
     PropsWithChildren<EnvironmentHeaderProps>
 > = ({
@@ -139,6 +142,7 @@ export const EnvironmentHeader: FC<
             id={id}
             aria-controls={`environment-accordion-${id}-content`}
             expandable={expandable}
+            className={environmentAccordionSummaryClassName}
         >
             <StyledHeader data-loading>
                 <StyledHeaderTitle>

@@ -100,29 +100,27 @@ const ApplicationOverview = () => {
 
     return (
         <ConditionallyRender
-            condition={false}
+            condition={!loading && data.environments.length === 0}
             show={<Alert severity='warning'>No data available.</Alert>}
             elseShow={
                 <ApplicationContainer>
                     <ApplicationHeader>
                         <ProjectContainer>
                             Application is connected to these projects:
-                            {['project1', 'project2', 'project3'].map(
-                                (project) => (
-                                    <li key={project}>
-                                        <StyledBadgeLink
-                                            to={`/projects/${project}`}
+                            {data.projects.map((project) => (
+                                <li key={project}>
+                                    <StyledBadgeLink
+                                        to={`/projects/${project}`}
+                                    >
+                                        <Badge
+                                            color='secondary'
+                                            icon={<TopicOutlinedIcon />}
                                         >
-                                            <Badge
-                                                color='secondary'
-                                                icon={<TopicOutlinedIcon />}
-                                            >
-                                                {project}
-                                            </Badge>
-                                        </StyledBadgeLink>
-                                    </li>
-                                ),
-                            )}
+                                            {project}
+                                        </Badge>
+                                    </StyledBadgeLink>
+                                </li>
+                            ))}
                         </ProjectContainer>
                         <Button
                             startIcon={<ReviewsOutlined />}

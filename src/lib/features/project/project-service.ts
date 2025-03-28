@@ -346,6 +346,27 @@ export default class ProjectService {
         return generateUniqueId();
     }
 
+    async getAllChangeRequestEnvironments(
+        newProject: CreateProject,
+    ): Promise<CreateProject['changeRequestEnvironments']> {
+        const predefinedChangeRequestEnvironments =
+            await this.environmentStore.getChangeRequestEnvironments(
+                newProject.environments || [],
+            );
+        const userSelectedChangeRequestEnvironments =
+            newProject.changeRequestEnvironments || [];
+        const allChangeRequestEnvironments = [
+            ...userSelectedChangeRequestEnvironments.filter(
+                (userEnv) =>
+                    !predefinedChangeRequestEnvironments.find(
+                        (predefinedEnv) => predefinedEnv.name === userEnv.name,
+                    ),
+            ),
+            ...predefinedChangeRequestEnvironments,
+        ];
+        return allChangeRequestEnvironments;
+    }
+
     async createProject(
         newProject: CreateProject,
         user: IUser,
@@ -401,22 +422,8 @@ export default class ProjectService {
                 const globalChangeRequestConfigEnabled =
                     this.flagResolver.isEnabled('globalChangeRequestConfig');
                 if (globalChangeRequestConfigEnabled) {
-                    const predefinedChangeRequestEnvironments =
-                        await this.environmentStore.getChangeRequestEnvironments(
-                            newProject.environments || [],
-                        );
-                    const userSelectedChangeRequestEnvironments =
-                        newProject.changeRequestEnvironments;
-                    const allChangeRequestEnvironments = [
-                        ...userSelectedChangeRequestEnvironments.filter(
-                            (userEnv) =>
-                                !predefinedChangeRequestEnvironments.find(
-                                    (predefinedEnv) =>
-                                        predefinedEnv.name === userEnv.name,
-                                ),
-                        ),
-                        ...predefinedChangeRequestEnvironments,
-                    ];
+                    const allChangeRequestEnvironments =
+                        await this.getAllChangeRequestEnvironments(newProject);
                     const changeRequestEnvironments =
                         await enableChangeRequestsForSpecifiedEnvironments(
                             allChangeRequestEnvironments,

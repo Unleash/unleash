@@ -17,19 +17,18 @@ const StyledAccordionSummary = styled(AccordionSummary, {
     padding: theme.spacing(0.5, 3, 0.5, 2),
     display: 'flex',
     alignItems: 'center',
+    borderRadius: theme.shape.borderRadiusLarge,
+    pointerEvents: 'auto',
+    opacity: 1,
     '&&&': {
         cursor: expandable ? 'pointer' : 'default',
     },
 
-    borderRadius: theme.shape.borderRadiusLarge,
-    pointerEvents: 'auto',
-    opacity: 1,
-
-    ':focus-visible': {
-        background: theme.palette.table.headerHover,
-    },
     ':focus-within': {
         background: 'none',
+    },
+    ':focus-visible': {
+        background: theme.palette.table.headerHover,
     },
 }));
 

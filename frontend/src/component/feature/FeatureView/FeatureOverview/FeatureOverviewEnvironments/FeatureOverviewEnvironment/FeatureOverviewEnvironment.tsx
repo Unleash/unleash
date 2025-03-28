@@ -14,6 +14,8 @@ import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOve
 import { useState } from 'react';
 import type { IReleasePlan } from 'interfaces/releasePlans';
 import { EnvironmentAccordionBody as NewEnvironmentAccordionBody } from './EnvironmentAccordionBody/EnvironmentAccordionBody';
+import { Box } from '@mui/material';
+import { ReleaseTemplatesFeedback } from 'component/feature/FeatureStrategy/FeatureStrategyMenu/ReleaseTemplatesFeedback/ReleaseTemplatesFeedback';
 
 const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
     borderRadius: theme.shape.borderRadiusLarge,
@@ -43,8 +45,7 @@ const NewStyledAccordionDetails = styled(AccordionDetails)(({ theme }) => ({
 const StyledAccordionFooter = styled('footer')(({ theme }) => ({
     padding: theme.spacing(2, 3, 3),
     display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'end',
+    flexDirection: 'column',
     gap: theme.spacing(2),
 }));
 
@@ -126,13 +127,17 @@ export const FeatureOverviewEnvironment = ({
                         />
                     </StyledEnvironmentAccordionContainer>
                     <StyledAccordionFooter>
-                        <FeatureStrategyMenu
-                            label='Add strategy'
-                            projectId={projectId}
-                            featureId={featureId}
-                            environmentId={environment.name}
-                            allowReleasePlanFeedback={true}
-                        />
+                        <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                            <ReleaseTemplatesFeedback />
+                            <Box ml='auto'>
+                                <FeatureStrategyMenu
+                                    label='Add strategy'
+                                    projectId={projectId}
+                                    featureId={featureId}
+                                    environmentId={environment.name}
+                                />
+                            </Box>
+                        </Box>
                         {isOss() && environment?.type === 'production' ? (
                             <UpgradeChangeRequests />
                         ) : null}

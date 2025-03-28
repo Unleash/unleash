@@ -3,6 +3,7 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import type { ReactNode } from 'react';
 import { Sticky } from 'component/common/Sticky/Sticky';
 import { AdminMenuNavigation } from './AdminNavigationItems';
+import { useLocation } from 'react-router-dom';
 
 const StyledAdminMainGrid = styled(Grid)(({ theme }) => ({
     minWidth: 0, // this is a fix for overflowing flex
@@ -56,6 +57,7 @@ interface IWrapIfAdminSubpageProps {
 export const WrapIfAdminSubpage = ({ children }: IWrapIfAdminSubpageProps) => {
     const newAdminUIEnabled = useUiFlag('adminNavUI');
     const theme = useTheme();
+    const location = useLocation();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
     const showAdminMenu =
         !isSmallScreen &&

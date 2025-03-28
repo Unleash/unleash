@@ -1,5 +1,5 @@
 import type { VFC } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Divider, Drawer, styled } from '@mui/material';
 import { ReactComponent as UnleashLogo } from 'assets/img/logoDarkWithText.svg';
 import { ReactComponent as UnleashLogoWhite } from 'assets/img/logoWithWhiteText.svg';
@@ -34,6 +34,7 @@ export const DrawerMenu: VFC<IDrawerMenuProps> = ({
     toggleDrawer,
 }) => {
     const newAdminUIEnabled = useUiFlag('adminNavUI');
+    const location = useLocation();
     const showOnlyAdminMenu =
         newAdminUIEnabled && location.pathname.indexOf('/admin') === 0;
     const onClick = () => {

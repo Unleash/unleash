@@ -97,14 +97,12 @@ export const Badge: FC<IBadgeProps> = forwardRef(
             className,
             sx,
             children,
-            tabIndex = 0,
             ...props
         }: IBadgeProps,
         ref: ForwardedRef<HTMLDivElement>,
     ) => (
         <StyledBadge
             as={as}
-            tabIndex={tabIndex}
             color={color}
             icon={icon}
             className={className}

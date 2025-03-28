@@ -32,7 +32,6 @@ export const PlaygroundResultChip: FC<ResultChipProps> = ({
 
     return (
         <Badge
-            tabIndex={-1}
             color={color}
             icon={
                 showIcon ? (

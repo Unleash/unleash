@@ -342,7 +342,9 @@ export const PrimaryFeatureInfo: FC<{
             />
             {archivedAt && (
                 <HtmlTooltip arrow title={archivedDate} describeChild>
-                    <Badge color='neutral'>Archived</Badge>
+                    <Badge tabIndex={0} color='neutral'>
+                        Archived
+                    </Badge>
                 </HtmlTooltip>
             )}
         </FeatureNameAndType>

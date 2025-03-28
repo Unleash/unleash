@@ -15,7 +15,7 @@ import { useProfile } from 'hooks/api/getters/useProfile/useProfile';
 import { useLocationSettings } from 'hooks/useLocationSettings';
 import type { IUser } from 'interfaces/user';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PageContent } from 'component/common/PageContent/PageContent';
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { RoleBadge } from 'component/common/RoleBadge/RoleBadge';
@@ -56,6 +56,7 @@ const StyledSectionLabel = styled(Typography)(({ theme }) => ({
 const StyledAccess = styled('div')(({ theme }) => ({
     display: 'flex',
     flexDirection: 'row',
+    gap: theme.spacing(2),
     '& > div > p': {
         marginBottom: theme.spacing(1.5),
     },
@@ -63,7 +64,15 @@ const StyledAccess = styled('div')(({ theme }) => ({
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
     cursor: 'pointer',
-    marginRight: theme.spacing(1),
+    ':focus > &': {
+        outline: `20px solid ${theme.palette.primary.main}`,
+    },
+}));
+
+const StyledBadgeLink = styled(Link)(({ theme }) => ({
+    ':focus-visible': {
+        outline: 'none',
+    },
 }));
 
 const StyledDivider = styled('div')(({ theme }) => ({
@@ -85,6 +94,14 @@ const StyledInputLabel = styled(InputLabel)(({ theme }) => ({
 interface IProfileTabProps {
     user: IUser;
 }
+
+const ProjectList = styled('ul')(({ theme }) => ({
+    listStyle: 'none',
+    padding: 0,
+    display: 'flex',
+    flexFlow: 'row wrap',
+    gap: theme.spacing(1),
+}));
 
 export const ProfileTab = ({ user }: IProfileTabProps) => {
     const { profile, refetchProfile } = useProfile();
@@ -158,33 +175,40 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                         <Typography variant='body2'>Projects</Typography>
                         <ConditionallyRender
                             condition={Boolean(profile?.projects.length)}
-                            show={profile?.projects.map((project) => (
-                                <Tooltip
-                                    key={project}
-                                    title='View project'
-                                    arrow
-                                    placement='bottom-end'
-                                    describeChild
-                                >
-                                    <StyledBadge
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            navigate(`/projects/${project}`);
-                                        }}
-                                        color='secondary'
-                                        icon={<TopicOutlinedIcon />}
-                                    >
-                                        {project}
-                                    </StyledBadge>
-                                </Tooltip>
-                            ))}
+                            show={
+                                <ProjectList>
+                                    {profile?.projects.map((project) => (
+                                        <li key={project}>
+                                            <Tooltip
+                                                title='View project'
+                                                arrow
+                                                placement='bottom-end'
+                                                describeChild
+                                            >
+                                                <StyledBadgeLink
+                                                    to={`/projects/${project}`}
+                                                >
+                                                    <StyledBadge
+                                                        color='secondary'
+                                                        icon={
+                                                            <TopicOutlinedIcon />
+                                                        }
+                                                    >
+                                                        {project}
+                                                    </StyledBadge>
+                                                </StyledBadgeLink>
+                                            </Tooltip>
+                                        </li>
+                                    ))}
+                                </ProjectList>
+                            }
                             elseShow={
                                 <Tooltip
                                     title='You are not assigned to any projects'
                                     arrow
                                     describeChild
                                 >
-                                    <Badge>No projects</Badge>
+                                    <Badge tabIndex={0}>No projects</Badge>
                                 </Tooltip>
                             }
                         />

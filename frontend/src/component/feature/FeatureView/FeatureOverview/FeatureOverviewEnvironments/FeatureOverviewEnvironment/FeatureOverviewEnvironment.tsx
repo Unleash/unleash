@@ -25,11 +25,10 @@ const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
 }));
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
-    '--focus-background-color': theme.palette.table.headerHover,
     boxShadow: 'none',
     background: 'transparent',
     [`&:has(.${environmentAccordionSummaryClassName}:focus-visible)`]: {
-        background: 'var(--focus-background-color)',
+        background: theme.palette.table.headerHover,
     },
 }));
 

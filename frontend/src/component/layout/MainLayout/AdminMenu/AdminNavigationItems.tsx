@@ -6,7 +6,7 @@ import { AdminListItem, AdminSubListItem, MenuGroup } from './AdminListItem';
 import { IconRenderer } from './AdminMenuIcons';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { filterByConfig } from 'component/common/util';
 import { filterAdminRoutes } from 'component/admin/filterAdminRoutes';
 import { adminGroups, adminRoutes } from 'component/admin/adminRoutes';
@@ -43,9 +43,12 @@ const StyledStopRoundedIcon = styled(StopRoundedIcon)(({ theme }) => ({
 }));
 
 export const DashboardLink = () => {
+    const navigate = useNavigate();
     return (
         <StyledButton
-            href='/personal'
+            onClick={() => {
+                navigate(`/personal`);
+            }}
             rel='noreferrer'
             startIcon={<ArrowBackIcon />}
         >

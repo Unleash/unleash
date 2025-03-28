@@ -66,7 +66,7 @@ const StyledBadgeLink = styled(Link)(({ theme }) => ({
     ':hover,:focus-visible': {
         outline: 'none',
         '> *': {
-            outline: `1px solid ${theme.palette.primary.main}`,
+            outline: `2px solid ${theme.palette.primary.main}`,
         },
     },
 }));

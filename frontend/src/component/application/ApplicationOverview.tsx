@@ -14,7 +14,7 @@ import { ApplicationIssues } from './ApplicationIssues/ApplicationIssues';
 import { ApplicationChart } from './ApplicationChart';
 import TopicOutlinedIcon from '@mui/icons-material/TopicOutlined';
 import { Badge } from '../common/Badge/Badge';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { usePlausibleTracker } from 'hooks/usePlausibleTracker';
 import { useEffect } from 'react';
 import { useFeedback } from '../feedbackNew/useFeedback';
@@ -35,7 +35,8 @@ const ApplicationContainer = styled(Box)(({ theme }) => ({
     alignSelf: 'stretch',
 }));
 
-const ProjectContainer = styled(Box)(({ theme }) => ({
+const ProjectContainer = styled('ul')(({ theme }) => ({
+    padding: 0,
     display: 'flex',
     alignItems: 'center',
     gap: theme.spacing(2),
@@ -95,20 +96,20 @@ const ApplicationOverview = () => {
                 <ApplicationContainer>
                     <ApplicationHeader>
                         <ProjectContainer>
+                            {/* todo: check this */}
                             Application is connected to these projects:
                             {data.projects.map((project) => (
-                                <Badge
-                                    sx={{ cursor: 'pointer' }}
-                                    key={project}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        navigate(`/projects/${project}`);
-                                    }}
-                                    color='secondary'
-                                    icon={<TopicOutlinedIcon />}
-                                >
-                                    {project}
-                                </Badge>
+                                <li key={project}>
+                                    <Link to={`/projects/${project}`}>
+                                        <Badge
+                                            sx={{ cursor: 'pointer' }}
+                                            color='secondary'
+                                            icon={<TopicOutlinedIcon />}
+                                        >
+                                            {project}
+                                        </Badge>
+                                    </Link>
+                                </li>
                             ))}
                         </ProjectContainer>
                         <Button

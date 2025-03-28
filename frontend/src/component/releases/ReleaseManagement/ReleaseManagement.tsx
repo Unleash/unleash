@@ -13,11 +13,12 @@ import { useUiFlag } from 'hooks/useUiFlag';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
 import { PremiumFeature } from 'component/common/PremiumFeature/PremiumFeature';
 import { RELEASE_PLAN_TEMPLATE_CREATE } from '@server/types/permissions';
-import { ReactComponent as HowToApplyReleaseTemplates } from 'assets/img/howToApplyReleaseTemplates.svg';
-import { ReactComponent as HowToApplyReleaseTemplatesDark } from 'assets/img/howToApplyReleaseTemplatesDark.svg';
+import HowToApplyReleaseTemplatesImage from 'assets/img/howToApplyReleaseTemplates.png';
+import HowToApplyReleaseTemplatesDarkImage from 'assets/img/howToApplyReleaseTemplatesDark.png';
 import type { Link as RouterLink } from 'react-router-dom';
 import MenuBook from '@mui/icons-material/MenuBook';
 import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
+import { formatAssetPath } from 'utils/formatPath';
 
 const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
     display: 'flex',
@@ -33,6 +34,10 @@ const StyledLink = styled(Link<typeof RouterLink | 'a'>)(({ theme }) => ({
 
 const StyledMenuBook = styled(MenuBook)(({ theme }) => ({
     fontSize: theme.spacing(2.25),
+}));
+
+const StyledImg = styled('img')(() => ({
+    maxWidth: '100%',
 }));
 
 const CenteredHowTo = styled(Box)(({ theme }) => ({
@@ -99,8 +104,22 @@ export const ReleaseManagement = () => {
 
             <CenteredHowTo>
                 <ThemeMode
-                    darkmode={<HowToApplyReleaseTemplatesDark />}
-                    lightmode={<HowToApplyReleaseTemplates />}
+                    darkmode={
+                        <StyledImg
+                            src={formatAssetPath(
+                                HowToApplyReleaseTemplatesDarkImage,
+                            )}
+                            alt='How to setup release templates'
+                        />
+                    }
+                    lightmode={
+                        <StyledImg
+                            src={formatAssetPath(
+                                HowToApplyReleaseTemplatesImage,
+                            )}
+                            alt='How to setup release templates'
+                        />
+                    }
                 />
             </CenteredHowTo>
             <StyledLink

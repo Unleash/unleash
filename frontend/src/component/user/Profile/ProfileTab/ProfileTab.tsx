@@ -62,16 +62,12 @@ const StyledAccess = styled('div')(({ theme }) => ({
     },
 }));
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
-    cursor: 'pointer',
-    ':focus > &': {
-        outline: `20px solid ${theme.palette.primary.main}`,
-    },
-}));
-
 const StyledBadgeLink = styled(Link)(({ theme }) => ({
-    ':focus-visible': {
+    ':hover,:focus-visible': {
         outline: 'none',
+        '> *': {
+            outline: `1px solid ${theme.palette.primary.main}`,
+        },
     },
 }));
 
@@ -188,14 +184,14 @@ export const ProfileTab = ({ user }: IProfileTabProps) => {
                                                 <StyledBadgeLink
                                                     to={`/projects/${project}`}
                                                 >
-                                                    <StyledBadge
+                                                    <Badge
                                                         color='secondary'
                                                         icon={
                                                             <TopicOutlinedIcon />
                                                         }
                                                     >
                                                         {project}
-                                                    </StyledBadge>
+                                                    </Badge>
                                                 </StyledBadgeLink>
                                             </Tooltip>
                                         </li>

@@ -1,9 +1,8 @@
 import { Grid, styled, Paper, useMediaQuery, useTheme } from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
 import type { ReactNode } from 'react';
 import { Sticky } from 'component/common/Sticky/Sticky';
 import { AdminMenuNavigation } from './AdminNavigationItems';
-import { useLocation } from 'react-router-dom';
+import { useNewAdminMenu } from '../../../../hooks/useNewAdminMenu';
 
 const breakpointLgMinusPadding = 1250;
 const breakpointLgMinusPaddingAdmin = 1550;
@@ -118,14 +117,10 @@ interface IWrapIfAdminSubpageProps {
 }
 
 export const WrapIfAdminSubpage = ({ children }: IWrapIfAdminSubpageProps) => {
-    const newAdminUIEnabled = useUiFlag('adminNavUI');
+    const showOnlyAdminMenu = useNewAdminMenu();
     const theme = useTheme();
-    const location = useLocation();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
-    const showAdminMenu =
-        !isSmallScreen &&
-        newAdminUIEnabled &&
-        location.pathname.indexOf('/admin') === 0;
+    const showAdminMenu = !isSmallScreen && showOnlyAdminMenu;
 
     if (showAdminMenu) {
         return (

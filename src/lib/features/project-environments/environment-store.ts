@@ -237,6 +237,21 @@ export default class EnvironmentStore implements IEnvironmentStore {
         return rows.map(mapRowWithCounts);
     }
 
+    async getChangeRequestEnvironments(
+        environments: string[],
+    ): Promise<{ name: string; requiredApprovals: number }[]> {
+        const stopTimer = this.timer('getChangeRequestEnvironments');
+        const rows = await this.db<IEnvironmentsTable>(TABLE)
+            .select('name', 'required_approvals')
+            .whereIn('name', environments)
+            .andWhere('required_approvals', '>', 0);
+        stopTimer();
+        return rows.map((row) => ({
+            name: row.name,
+            requiredApprovals: row.required_approvals || 1,
+        }));
+    }
+
     async getProjectEnvironments(
         projectId: string,
         query?: Object,

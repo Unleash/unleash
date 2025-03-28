@@ -26,7 +26,7 @@ const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
 
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     boxShadow: 'none',
-    background: 'transparent',
+    background: 'none',
     [`&:has(.${environmentAccordionSummaryClassName}:focus-visible)`]: {
         background: theme.palette.table.headerHover,
     },

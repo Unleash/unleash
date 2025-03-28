@@ -398,30 +398,39 @@ export default class ProjectService {
                 await this.validateEnvironmentsExist(
                     newProject.changeRequestEnvironments.map((env) => env.name),
                 );
-                const predefinedChangeRequestEnvironments =
-                    await this.environmentStore.getChangeRequestEnvironments(
-                        newProject.environments || [],
-                    );
-                const userSelectedChangeRequestEnvironments =
-                    newProject.changeRequestEnvironments;
-                const allChangeRequestEnvironments = [
-                    ...userSelectedChangeRequestEnvironments.filter(
-                        (userEnv) =>
-                            !predefinedChangeRequestEnvironments.find(
-                                (predefinedEnv) =>
-                                    predefinedEnv.name === userEnv.name,
-                            ),
-                    ),
-                    ...predefinedChangeRequestEnvironments,
-                ];
-                const changeRequestEnvironments =
-                    await enableChangeRequestsForSpecifiedEnvironments(
-                        this.flagResolver.isEnabled('globalChangeRequestConfig')
-                            ? allChangeRequestEnvironments
-                            : userSelectedChangeRequestEnvironments,
-                    );
+                const globalChangeRequestConfigEnabled =
+                    this.flagResolver.isEnabled('globalChangeRequestConfig');
+                if (globalChangeRequestConfigEnabled) {
+                    const predefinedChangeRequestEnvironments =
+                        await this.environmentStore.getChangeRequestEnvironments(
+                            newProject.environments || [],
+                        );
+                    const userSelectedChangeRequestEnvironments =
+                        newProject.changeRequestEnvironments;
+                    const allChangeRequestEnvironments = [
+                        ...userSelectedChangeRequestEnvironments.filter(
+                            (userEnv) =>
+                                !predefinedChangeRequestEnvironments.find(
+                                    (predefinedEnv) =>
+                                        predefinedEnv.name === userEnv.name,
+                                ),
+                        ),
+                        ...predefinedChangeRequestEnvironments,
+                    ];
+                    const changeRequestEnvironments =
+                        await enableChangeRequestsForSpecifiedEnvironments(
+                            allChangeRequestEnvironments,
+                        );
 
-                data.changeRequestEnvironments = changeRequestEnvironments;
+                    data.changeRequestEnvironments = changeRequestEnvironments;
+                } else {
+                    const changeRequestEnvironments =
+                        await enableChangeRequestsForSpecifiedEnvironments(
+                            newProject.changeRequestEnvironments,
+                        );
+
+                    data.changeRequestEnvironments = changeRequestEnvironments;
+                }
             } else {
                 data.changeRequestEnvironments = [];
             }

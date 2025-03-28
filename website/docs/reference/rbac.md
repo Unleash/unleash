@@ -109,6 +109,14 @@ You can assign the following root permissions:
 |-----------------|--------------------------------|
 | Create projects | Create [projects](./projects). |
 
+#### Release template permissions
+
+| Permission Name | Description               |
+|-----------------|---------------------------|
+| Create release plan template      | Create [release template](./release-templates). |
+| Update release plan template      | Update [release template](./release-templates). |
+| Delete release plan template      | Delete [release template](./release-templates). |
+
 #### Role permissions
 
 | Permission Name | Description               |

@@ -24,7 +24,7 @@ There are several steps to ensuring your feature flag implementation is audit-pr
 
 Unleash is designed to support critical enterprise compliance standards. In this tutorial, we reference three frameworks that organizations in highly regulated industries are most likely to be audited against:
 
-[FedRAMP](/using-unleash/compliance/fedramp): A U.S. government program that standardizes how federal agencies assess, authorize, and monitor cloud services. For organizations listing their software on the [FedRAMP](https://www.fedramp.gov/program-basics/) marketplace, Unleash's security controls are designed to meet these rigorous requirements.
+[FedRAMP](/using-unleash/compliance/fedramp): A U.S. government program that standardizes how federal agencies assess, authorize, and monitor cloud services. For organizations listing their software on the [FedRAMP](https://www.fedramp.gov) marketplace, Unleash's security controls are designed to meet these rigorous requirements.
 
 [SOC 2 Type II](/using-unleash/compliance/soc2): A cybersecurity framework that assesses how organizations protect customer data. Our architecture provides the necessary controls and audit trails to meet stringent SOC 2 requirements, ensuring your feature flag management processes are transparent, secure, and verifiable.
 

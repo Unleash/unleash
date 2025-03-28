@@ -1,6 +1,5 @@
 import { forwardRef, type ReactNode } from 'react';
 import { Box, Grid, styled, useMediaQuery, useTheme } from '@mui/material';
-import { useLocation } from 'react-router-dom';
 import Header from 'component/menu/Header/Header';
 import Footer from 'component/menu/Footer/Footer';
 import Proclamation from 'component/common/Proclamation/Proclamation';
@@ -18,8 +17,9 @@ import { ThemeMode } from 'component/common/ThemeMode/ThemeMode';
 import { NavigationSidebar } from './NavigationSidebar/NavigationSidebar';
 import { EventTimelineProvider } from 'component/events/EventTimeline/EventTimelineProvider';
 import { NewInUnleash } from './NavigationSidebar/NewInUnleash/NewInUnleash';
-import { useUiFlag } from 'hooks/useUiFlag';
+
 import { WrapIfAdminSubpage } from './AdminMenu/AdminMenu';
+import { useNewAdminMenu } from '../../../hooks/useNewAdminMenu';
 
 interface IMainLayoutProps {
     children: ReactNode;
@@ -40,34 +40,6 @@ const MainLayoutContentWrapper = styled('div')(({ theme }) => ({
     width: '100%',
     backgroundColor: theme.palette.background.application,
     position: 'relative',
-}));
-
-const MainLayoutContent = styled(Grid)(({ theme }) => ({
-    minWidth: 0, // this is a fix for overflowing flex
-    maxWidth: '1512px',
-    margin: '0 auto',
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    [theme.breakpoints.up(1856)]: {
-        width: '100%',
-    },
-    [theme.breakpoints.down(1856)]: {
-        marginLeft: theme.spacing(7),
-        marginRight: theme.spacing(7),
-    },
-    [theme.breakpoints.down('lg')]: {
-        maxWidth: '1250px',
-        paddingLeft: theme.spacing(1),
-        paddingRight: theme.spacing(1),
-    },
-    [theme.breakpoints.down(1024)]: {
-        marginLeft: 0,
-        marginRight: 0,
-    },
-    [theme.breakpoints.down('sm')]: {
-        minWidth: '100%',
-    },
-    minHeight: '94vh',
 }));
 
 const StyledImg = styled('img')(() => ({
@@ -93,18 +65,15 @@ const MainLayoutContentContainer = styled('main')(({ theme }) => ({
 
 export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
     ({ children }, ref) => {
-        const newAdminUIEnabled = useUiFlag('adminNavUI');
+        const showOnlyAdminMenu = useNewAdminMenu();
         const { uiConfig } = useUiConfig();
-        const location = useLocation();
         const projectId = useOptionalPathParam('projectId');
         const { isChangeRequestConfiguredInAnyEnv } = useChangeRequestsEnabled(
             projectId || '',
         );
-
         const theme = useTheme();
         const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
-        const showOnlyAdminMenu =
-            newAdminUIEnabled && location.pathname.indexOf('/admin') === 0;
+
         const showRegularNavigationSideBar =
             !isSmallScreen && !showOnlyAdminMenu;
 
@@ -147,16 +116,12 @@ export const MainLayout = forwardRef<HTMLDivElement, IMainLayoutProps>(
                                 <Header />
 
                                 <WrapIfAdminSubpage>
-                                    <MainLayoutContent>
-                                        <SkipNavTarget />
-                                        <MainLayoutContentContainer ref={ref}>
-                                            <BreadcrumbNav />
-                                            <Proclamation
-                                                toast={uiConfig.toast}
-                                            />
-                                            {children}
-                                        </MainLayoutContentContainer>
-                                    </MainLayoutContent>
+                                    <SkipNavTarget />
+                                    <MainLayoutContentContainer ref={ref}>
+                                        <BreadcrumbNav />
+                                        <Proclamation toast={uiConfig.toast} />
+                                        {children}
+                                    </MainLayoutContentContainer>
                                 </WrapIfAdminSubpage>
                             </Box>
                         </Box>

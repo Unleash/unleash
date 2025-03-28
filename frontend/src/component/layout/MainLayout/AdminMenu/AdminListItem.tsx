@@ -72,6 +72,7 @@ interface IMenuGroupProps {
     icon: ReactNode;
     activeIcon: ReactNode;
     isActiveMenu: boolean;
+    staticExpanded?: true | undefined;
 }
 
 export const MenuGroup = ({
@@ -80,10 +81,12 @@ export const MenuGroup = ({
     icon,
     activeIcon,
     isActiveMenu,
+    staticExpanded,
 }: IMenuGroupProps) => {
     return (
         <StyledAccordion
             disableGutters={true}
+            expanded={staticExpanded}
             sx={{
                 boxShadow: 'none',
                 '&:before': {
@@ -92,7 +95,7 @@ export const MenuGroup = ({
             }}
         >
             <StyledAccordionSummary
-                expandIcon={<ExpandMoreIcon />}
+                expandIcon={staticExpanded ? null : <ExpandMoreIcon />}
                 aria-controls='configure-content'
                 id='configure-header'
                 sx={listItemButtonStyle}

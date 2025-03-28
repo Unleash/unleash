@@ -12,6 +12,8 @@ import {
 import { ConditionallyRender } from 'component/common/ConditionallyRender/ConditionallyRender';
 import { StrategySeparator } from 'component/common/StrategySeparator/LegacyStrategySeparator';
 import { NewConstraintAccordion } from 'component/common/NewConstraintAccordion/NewConstraintAccordion';
+import { ConstraintsList } from 'component/common/ConstraintsList/ConstraintsList';
+import { useUiFlag } from 'hooks/useUiFlag';
 
 export interface IConstraintAccordionListProps {
     constraints: IConstraint[];
@@ -83,6 +85,7 @@ export const NewConstraintAccordionList = forwardRef<
     IConstraintList
 >(({ constraints, setConstraints, state }, ref) => {
     const { context } = useUnleashContext();
+    const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
 
     const onEdit =
         setConstraints &&
@@ -137,6 +140,28 @@ export const NewConstraintAccordionList = forwardRef<
 
     if (context.length === 0) {
         return null;
+    }
+
+    if (flagOverviewRedesign) {
+        return (
+            <StyledContainer id={constraintAccordionListId}>
+                <ConstraintsList>
+                    {constraints.map((constraint, index) => (
+                        <NewConstraintAccordion
+                            key={constraint[constraintId]}
+                            constraint={constraint}
+                            onEdit={onEdit?.bind(null, constraint)}
+                            onCancel={onCancel.bind(null, index)}
+                            onDelete={onRemove?.bind(null, index)}
+                            onSave={onSave?.bind(null, index)}
+                            onAutoSave={onAutoSave?.(constraint[constraintId])}
+                            editing={Boolean(state.get(constraint)?.editing)}
+                            compact
+                        />
+                    ))}
+                </ConstraintsList>
+            </StyledContainer>
+        );
     }
 
     return (

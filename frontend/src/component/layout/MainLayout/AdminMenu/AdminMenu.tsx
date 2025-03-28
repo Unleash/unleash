@@ -1,54 +1,87 @@
-import {
-    Grid,
-    styled,
-    Paper,
-    Typography,
-    Button,
-    List,
-    useMediaQuery,
-    useTheme,
-} from '@mui/material';
-import { useUiFlag } from 'hooks/useUiFlag';
+import { Grid, styled, Paper, useMediaQuery, useTheme } from '@mui/material';
 import type { ReactNode } from 'react';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import StopRoundedIcon from '@mui/icons-material/StopRounded';
-import { AdminListItem, AdminSubListItem, MenuGroup } from './AdminListItem';
-import { useLocation } from 'react-router-dom';
 import { Sticky } from 'component/common/Sticky/Sticky';
-import { adminRoutes, adminGroups } from 'component/admin/adminRoutes';
-import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { filterByConfig } from 'component/common/util';
-import { filterAdminRoutes } from 'component/admin/filterAdminRoutes';
-import { useInstanceStatus } from 'hooks/api/getters/useInstanceStatus/useInstanceStatus';
-import { IconRenderer } from './AdminMenuIcons';
+import { AdminMenuNavigation } from './AdminNavigationItems';
+import { useNewAdminMenu } from '../../../../hooks/useNewAdminMenu';
 
-interface IMenuLinkItem {
-    href: string;
-    text: string;
-    icon: ReactNode;
-}
+const breakpointLgMinusPadding = 1250;
+const breakpointLgMinusPaddingAdmin = 1550;
+const breakpointXlMinusPadding = 1512;
+const breakpointXlAdmin = 1812;
+const breakpointXxl = 1856;
+const breakpointXxlAdmin = 2156;
 
-interface IMenuItem {
-    href: string;
-    text: string;
-    items?: IMenuLinkItem[];
-}
-
-const StyledAdminMainGrid = styled(Grid)(({ theme }) => ({
+const MainLayoutContent = styled(Grid)(({ theme }) => ({
     minWidth: 0, // this is a fix for overflowing flex
-    maxWidth: '1812px',
+    maxWidth: `${breakpointXlMinusPadding}px`,
     margin: '0 auto',
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
-    [theme.breakpoints.up(2156)]: {
+    [theme.breakpoints.up(breakpointXxl)]: {
         width: '100%',
     },
-    [theme.breakpoints.down(2156)]: {
+    [theme.breakpoints.down(breakpointXxl)]: {
+        marginLeft: theme.spacing(7),
+        marginRight: theme.spacing(7),
+    },
+    [theme.breakpoints.down('lg')]: {
+        maxWidth: `${breakpointLgMinusPadding}px`,
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    [theme.breakpoints.down(1024)]: {
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '100%',
+    },
+    minHeight: '94vh',
+}));
+
+const AdminMainLayoutContent = styled(Grid)(({ theme }) => ({
+    minWidth: 0, // this is a fix for overflowing flex
+    maxWidth: `${breakpointXlMinusPadding}px`,
+    margin: '0 auto',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.up(breakpointXxl)]: {
+        width: '100%',
+    },
+    [theme.breakpoints.down(breakpointXxl)]: {
         marginLeft: 0,
         marginRight: 0,
     },
     [theme.breakpoints.down('lg')]: {
-        maxWidth: '1550px',
+        maxWidth: `${breakpointLgMinusPadding}px`,
+        paddingLeft: theme.spacing(1),
+        paddingRight: theme.spacing(1),
+    },
+    [theme.breakpoints.down(1024)]: {
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('sm')]: {
+        minWidth: '100%',
+    },
+    minHeight: '94vh',
+}));
+
+const StyledAdminMainGrid = styled(Grid)(({ theme }) => ({
+    minWidth: 0, // this is a fix for overflowing flex
+    maxWidth: `${breakpointXlAdmin}px`,
+    margin: '0 auto',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    [theme.breakpoints.up(breakpointXxlAdmin)]: {
+        width: '100%',
+    },
+    [theme.breakpoints.down(breakpointXxlAdmin)]: {
+        marginLeft: 0,
+        marginRight: 0,
+    },
+    [theme.breakpoints.down('lg')]: {
+        maxWidth: `${breakpointLgMinusPaddingAdmin}px`,
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(1),
     },
@@ -79,52 +112,25 @@ const StickyContainer = styled(Sticky)(({ theme }) => ({
     transition: 'padding 0.3s ease',
 }));
 
-const SettingsHeader = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.mainHeader,
-    fontWeight: theme.fontWeight.bold,
-}));
-
-const StyledButton = styled(Button)(({ theme }) => ({
-    paddingLeft: theme.spacing(0),
-    marginBottom: theme.spacing(3),
-}));
-
-const StyledStopRoundedIcon = styled(StopRoundedIcon)(({ theme }) => ({
-    color: theme.palette.primary.main,
-}));
-
 interface IWrapIfAdminSubpageProps {
     children: ReactNode;
 }
 
 export const WrapIfAdminSubpage = ({ children }: IWrapIfAdminSubpageProps) => {
-    const newAdminUIEnabled = useUiFlag('adminNavUI');
+    const showOnlyAdminMenu = useNewAdminMenu();
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('lg'));
-    const showAdminMenu =
-        !isSmallScreen &&
-        newAdminUIEnabled &&
-        location.pathname.indexOf('/admin') === 0;
+    const showAdminMenu = !isSmallScreen && showOnlyAdminMenu;
 
     if (showAdminMenu) {
-        return <AdminMenu>{children}</AdminMenu>;
+        return (
+            <AdminMenu>
+                <AdminMainLayoutContent>{children}</AdminMainLayoutContent>
+            </AdminMenu>
+        );
     }
 
-    return <>{children}</>;
-};
-
-const DashboardLink = () => {
-    return (
-        <>
-            <StyledButton
-                href='/personal'
-                rel='noreferrer'
-                startIcon={<ArrowBackIcon />}
-            >
-                Back to Unleash
-            </StyledButton>
-        </>
-    );
+    return <MainLayoutContent>{children}</MainLayoutContent>;
 };
 
 interface IAdminMenuProps {
@@ -132,125 +138,26 @@ interface IAdminMenuProps {
 }
 
 export const AdminMenu = ({ children }: IAdminMenuProps) => {
-    const { uiConfig, isPro, isEnterprise } = useUiConfig();
-    const { isBilling } = useInstanceStatus();
-    const isActiveItem = (item?: string) =>
-        item !== undefined && location.pathname === item;
     const theme = useTheme();
-    const isBreakpoint = useMediaQuery(theme.breakpoints.down(1350));
+    const isBreakpoint = useMediaQuery(theme.breakpoints.down(1352));
+    const breakpointedSize = isBreakpoint ? 8 : 9;
     const onClick = () => {
         scrollTo({
             top: 0,
             behavior: 'smooth',
         });
     };
-    const location = useLocation();
-    const routes = adminRoutes
-        .filter(filterByConfig(uiConfig))
-        .filter((route) =>
-            filterAdminRoutes(route?.menu, {
-                enterprise: isEnterprise(),
-                pro: isPro(),
-                billing: isBilling,
-            }),
-        );
-
-    const menuStructure = routes.reduce(
-        (acc: Record<string, IMenuItem>, route) => {
-            if (route.group && adminGroups[route.group]) {
-                if (!acc[route.group]) {
-                    acc[route.group] = {
-                        href: route.group,
-                        text: adminGroups[route.group],
-                        items: [],
-                    };
-                }
-                acc[route.group].items?.push({
-                    href: route.path,
-                    text: route.title,
-                    icon: <StopRoundedIcon />,
-                });
-            }
-            if (!route.group) {
-                acc[route.path] = {
-                    href: route.path,
-                    text: route.title,
-                };
-            }
-            return acc;
-        },
-        {},
-    );
-
-    const items = Object.values(menuStructure);
 
     return (
         <StyledAdminMainGrid container spacing={1}>
             <Grid item>
                 <StickyContainer>
                     <StyledMenuPaper>
-                        <SettingsHeader>Admin settings</SettingsHeader>
-                        <DashboardLink />
-                        <List>
-                            {items.map((item) => {
-                                if (item.items) {
-                                    const isActiveMenu = item.items.find(
-                                        (itm) => isActiveItem(itm.href),
-                                    );
-                                    return (
-                                        <MenuGroup
-                                            title={item.text}
-                                            icon={
-                                                <IconRenderer
-                                                    path={item.href}
-                                                    active={false}
-                                                />
-                                            }
-                                            activeIcon={
-                                                <IconRenderer
-                                                    path={item.href}
-                                                    active={true}
-                                                />
-                                            }
-                                            isActiveMenu={Boolean(isActiveMenu)}
-                                            key={item.text}
-                                        >
-                                            {item.items.map((subItem) => (
-                                                <AdminSubListItem
-                                                    href={subItem.href}
-                                                    text={subItem.text}
-                                                    selected={isActiveItem(
-                                                        subItem.href,
-                                                    )}
-                                                    onClick={onClick}
-                                                    key={subItem.href}
-                                                >
-                                                    <StyledStopRoundedIcon />
-                                                </AdminSubListItem>
-                                            ))}
-                                        </MenuGroup>
-                                    );
-                                }
-                                return (
-                                    <AdminListItem
-                                        href={item.href}
-                                        text={item.text}
-                                        selected={isActiveItem(item.href)}
-                                        onClick={onClick}
-                                        key={item.href}
-                                    >
-                                        <IconRenderer
-                                            path={item.href}
-                                            active={false}
-                                        />
-                                    </AdminListItem>
-                                );
-                            })}
-                        </List>
+                        <AdminMenuNavigation onClick={onClick} />
                     </StyledMenuPaper>
                 </StickyContainer>
             </Grid>
-            <Grid item md={isBreakpoint ? true : 9}>
+            <Grid item md={breakpointedSize}>
                 {children}
             </Grid>
         </StyledAdminMainGrid>

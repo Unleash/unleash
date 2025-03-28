@@ -84,7 +84,6 @@ export const FeatureOverviewEnvironment = ({
                 TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
                 data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${environment.name}`}
                 expanded={isOpen && hasActivations}
-                disabled={!hasActivations}
                 onChange={() => {
                     const state = isOpen ? !isOpen : hasActivations;
                     onToggleEnvOpen(state);

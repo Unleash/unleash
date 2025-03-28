@@ -139,6 +139,7 @@ export const EnvironmentHeader: FC<
             id={id}
             aria-controls={`environment-accordion-${id}-content`}
             expandable={expandable}
+            tabIndex={expandable ? 0 : -1}
             className={environmentAccordionSummaryClassName}
         >
             <StyledHeader data-loading>

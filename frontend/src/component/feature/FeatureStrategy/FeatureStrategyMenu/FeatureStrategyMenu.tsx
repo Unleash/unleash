@@ -47,10 +47,6 @@ const StyledAdditionalMenuButton = styled(PermissionButton)(({ theme }) => ({
     paddingBlock: 0,
 }));
 
-const Spacer = styled('div')(({ theme }) => ({
-    flex: 1,
-}));
-
 export const FeatureStrategyMenu = ({
     label,
     projectId,

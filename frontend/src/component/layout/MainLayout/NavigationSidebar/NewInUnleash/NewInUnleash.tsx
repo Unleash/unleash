@@ -23,7 +23,7 @@ import MonitorHeartIcon from '@mui/icons-material/MonitorHeartOutlined';
 import { useNavigate } from 'react-router-dom';
 import { formatAssetPath } from 'utils/formatPath';
 import FactCheckOutlinedIcon from '@mui/icons-material/FactCheckOutlined';
-import { ReactComponent as ReleaseManagementPreview } from 'assets/img/releaseTemplatePreview.svg';
+import ReleaseTemplatePreviewImage from 'assets/img/releaseTemplatePreview.png';
 
 const StyledNewInUnleash = styled('div')(({ theme }) => ({
     margin: theme.spacing(2, 0, 1, 0),
@@ -167,7 +167,12 @@ export const NewInUnleash = ({
             label: 'Release templates',
             summary: 'Save time and optimize your process',
             icon: <StyledReleaseManagementIcon />,
-            preview: <ReleaseManagementPreview />,
+            preview: (
+                <StyledImg
+                    src={formatAssetPath(ReleaseTemplatePreviewImage)}
+                    alt='Release templates preview'
+                />
+            ),
             onCheckItOut: () => navigate('/release-templates'),
             docsLink: 'https://docs.getunleash.io/reference/release-templates',
             show: isEnterprise() && releasePlansEnabled,

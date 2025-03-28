@@ -156,9 +156,7 @@ export const createProjectService = (
     );
 };
 
-export const createFakeProjectService = (
-    config: IUnleashConfig,
-): ProjectService => {
+export const createFakeProjectService = (config: IUnleashConfig) => {
     const { getLogger } = config;
     const eventStore = new FakeEventStore();
     const projectOwnersReadModel = new FakeProjectOwnersReadModel();
@@ -201,7 +199,7 @@ export const createFakeProjectService = (
 
     const onboardingReadModel = createFakeOnboardingReadModel();
 
-    return new ProjectService(
+    const projectService = new ProjectService(
         {
             projectStore,
             projectOwnersReadModel,
@@ -224,4 +222,11 @@ export const createFakeProjectService = (
         privateProjectChecker,
         apiTokenService,
     );
+    return {
+        projectService,
+        environmentStore,
+        accessService,
+        eventService,
+        projectStore,
+    };
 };

@@ -8,7 +8,10 @@ import { FEATURE_ENVIRONMENT_ACCORDION } from 'utils/testIds';
 import { useRequiredPathParam } from 'hooks/useRequiredPathParam';
 import { UpgradeChangeRequests } from './UpgradeChangeRequests/UpgradeChangeRequests';
 import useUiConfig from 'hooks/api/getters/useUiConfig/useUiConfig';
-import { EnvironmentHeader } from './EnvironmentHeader/EnvironmentHeader';
+import {
+    environmentAccordionSummaryClassName,
+    EnvironmentHeader,
+} from './EnvironmentHeader/EnvironmentHeader';
 import FeatureOverviewEnvironmentMetrics from './EnvironmentHeader/FeatureOverviewEnvironmentMetrics/FeatureOverviewEnvironmentMetrics';
 import { FeatureOverviewEnvironmentToggle } from './EnvironmentHeader/FeatureOverviewEnvironmentToggle/FeatureOverviewEnvironmentToggle';
 import { useState } from 'react';
@@ -26,11 +29,8 @@ const StyledFeatureOverviewEnvironment = styled('div')(({ theme }) => ({
 const StyledAccordion = styled(Accordion)(({ theme }) => ({
     boxShadow: 'none',
     background: 'none',
-    '&&& .MuiAccordionSummary-root': {
-        borderRadius: theme.shape.borderRadiusLarge,
-        pointerEvents: 'auto',
-        opacity: 1,
-        backgroundColor: theme.palette.background.paper,
+    [`&:has(.${environmentAccordionSummaryClassName}:focus-visible)`]: {
+        background: theme.palette.table.headerHover,
     },
 }));
 
@@ -85,7 +85,6 @@ export const FeatureOverviewEnvironment = ({
                 TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
                 data-testid={`${FEATURE_ENVIRONMENT_ACCORDION}_${environment.name}`}
                 expanded={isOpen && hasActivations}
-                disabled={!hasActivations}
                 onChange={() => {
                     const state = isOpen ? !isOpen : hasActivations;
                     onToggleEnvOpen(state);

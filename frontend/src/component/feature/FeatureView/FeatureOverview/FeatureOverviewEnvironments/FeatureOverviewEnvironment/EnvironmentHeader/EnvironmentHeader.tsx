@@ -17,8 +17,15 @@ const StyledAccordionSummary = styled(AccordionSummary, {
     padding: theme.spacing(0.5, 3, 0.5, 2),
     display: 'flex',
     alignItems: 'center',
+    borderRadius: theme.shape.borderRadiusLarge,
+    pointerEvents: 'auto',
+    opacity: 1,
     '&&&': {
         cursor: expandable ? 'pointer' : 'default',
+    },
+
+    ':focus-within': {
+        background: 'none',
     },
 }));
 
@@ -108,6 +115,9 @@ const MetadataChip = ({
     return <StyledStrategyCount>{text}</StyledStrategyCount>;
 };
 
+export const environmentAccordionSummaryClassName =
+    'environment-accordion-summary';
+
 export const EnvironmentHeader: FC<
     PropsWithChildren<EnvironmentHeaderProps>
 > = ({
@@ -129,6 +139,8 @@ export const EnvironmentHeader: FC<
             id={id}
             aria-controls={`environment-accordion-${id}-content`}
             expandable={expandable}
+            tabIndex={expandable ? 0 : -1}
+            className={environmentAccordionSummaryClassName}
         >
             <StyledHeader data-loading>
                 <StyledHeaderTitle>

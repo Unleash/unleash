@@ -40,7 +40,7 @@ describe('enterprise extension: enable change requests', () => {
 
     test('it calls the change request enablement function on enterprise after creating the project', async () => {
         expect.assertions(1);
-        const { service, projectStore, pr } = createService();
+        const { service, projectStore } = createService();
 
         const projectId = 'fake-project-id';
         await service.createProject(

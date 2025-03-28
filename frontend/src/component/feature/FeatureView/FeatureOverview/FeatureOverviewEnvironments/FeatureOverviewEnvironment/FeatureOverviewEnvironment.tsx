@@ -46,7 +46,6 @@ const StyledAccordionFooter = styled('footer')(({ theme }) => ({
     padding: theme.spacing(2, 3, 3),
     display: 'flex',
     flexDirection: 'column',
-    // justifyContent: 'end',
     gap: theme.spacing(2),
 }));
 

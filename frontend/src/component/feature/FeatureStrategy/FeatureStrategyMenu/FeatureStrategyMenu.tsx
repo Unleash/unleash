@@ -31,7 +31,6 @@ interface IFeatureStrategyMenuProps {
     matchWidth?: boolean;
     size?: IPermissionButtonProps['size'];
     disableReason?: string;
-    allowReleasePlanFeedback?: boolean;
 }
 
 const StyledStrategyMenu = styled('div')(({ theme }) => ({
@@ -61,7 +60,6 @@ export const FeatureStrategyMenu = ({
     size,
     matchWidth,
     disableReason,
-    allowReleasePlanFeedback = false,
 }: IFeatureStrategyMenuProps) => {
     const [anchor, setAnchor] = useState<Element>();
     const [onlyReleasePlans, setOnlyReleasePlans] = useState<boolean>(false);
@@ -165,10 +163,7 @@ export const FeatureStrategyMenu = ({
     );
 
     return (
-        <StyledStrategyMenu
-            onClick={(event) => event.stopPropagation()}
-            data-testid='????'
-        >
+        <StyledStrategyMenu onClick={(event) => event.stopPropagation()}>
             {displayReleasePlanButton ? (
                 <PermissionButton
                     data-testid='ADD_TEMPLATE_BUTTON'

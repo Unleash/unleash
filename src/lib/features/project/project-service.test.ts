@@ -1,6 +1,11 @@
 import { createTestConfig } from '../../../test/config/test-config';
 import { BadDataError } from '../../error';
-import { type IFlagResolver, RoleName, TEST_AUDIT_USER } from '../../types';
+import {
+    type IFlagResolver,
+    type ProjectCreated,
+    RoleName,
+    TEST_AUDIT_USER,
+} from '../../types';
 import { createFakeProjectService } from './createProjectService';
 
 describe('enterprise extension: enable change requests', () => {
@@ -223,7 +228,7 @@ describe('enterprise extension: enable change requests', () => {
                 isAPI: false,
             },
             TEST_AUDIT_USER,
-            async (envs) => envs,
+            async (envs) => envs as ProjectCreated['changeRequestEnvironments'],
         );
 
         const { events } = await eventService.getEvents();

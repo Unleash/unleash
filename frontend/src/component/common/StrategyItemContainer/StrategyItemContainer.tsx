@@ -152,7 +152,9 @@ export const StrategyItemContainer: FC<StrategyItemContainerProps> = ({
                         }}
                     >
                         {strategy.disabled ? (
-                            <Badge color='warning'>Strategy disabled</Badge>
+                            <Badge tabIndex={-1} color='warning'>
+                                Strategy disabled
+                            </Badge>
                         ) : null}
                         {headerItemsRight}
                     </Box>

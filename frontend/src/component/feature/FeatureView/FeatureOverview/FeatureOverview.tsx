@@ -49,17 +49,17 @@ export const FeatureOverview = () => {
         setLastViewed({ featureId, projectId });
     }, [featureId]);
     const flagOverviewRedesign = useUiFlag('flagOverviewRedesign');
+    const { setSplashSeen } = useSplashApi();
+    const { splash } = useAuthSplash();
+    const [showTooltip, setShowTooltip] = useState(false);
+    const [hasClosedTooltip, setHasClosedTooltip] = useState(false);
 
     if (!flagOverviewRedesign) {
         return <LegacyFleatureOverview />;
     }
 
-    const { setSplashSeen } = useSplashApi();
-    const { splash } = useAuthSplash();
     const dragTooltipSplashId = 'strategy-drag-tooltip';
     const shouldShowStrategyDragTooltip = !splash?.[dragTooltipSplashId];
-    const [showTooltip, setShowTooltip] = useState(false);
-    const [hasClosedTooltip, setHasClosedTooltip] = useState(false);
     const toggleShowTooltip = (envIsOpen: boolean) => {
         setShowTooltip(
             !hasClosedTooltip && shouldShowStrategyDragTooltip && envIsOpen,

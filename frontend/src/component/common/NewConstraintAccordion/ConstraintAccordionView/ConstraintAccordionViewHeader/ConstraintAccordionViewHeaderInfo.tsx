@@ -29,12 +29,14 @@ const StyledExpandItem = styled('div')(({ theme }) => ({
 interface ConstraintAccordionViewHeaderMetaInfoProps {
     constraint: IConstraint;
     expanded: boolean;
+    allowExpand: (shouldExpand: boolean) => void;
     disabled?: boolean;
     maxLength?: number;
 }
 
 export const ConstraintAccordionViewHeaderInfo = ({
     constraint,
+    allowExpand,
     expanded,
 }: ConstraintAccordionViewHeaderMetaInfoProps) => {
     const [expandable, setExpandable] = useState(false);
@@ -46,6 +48,7 @@ export const ConstraintAccordionViewHeaderInfo = ({
                     {...constraint}
                     onSetTruncated={(state: boolean) => {
                         setExpandable(state);
+                        allowExpand(state);
                     }}
                     viewMore={
                         expandable ? (

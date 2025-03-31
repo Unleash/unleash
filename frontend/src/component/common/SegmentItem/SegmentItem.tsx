@@ -26,6 +26,7 @@ type SegmentItemProps = {
 
 const StyledConstraintListItem = styled(ConstraintListItem)(() => ({
     padding: 0,
+    overflow: 'hidden',
 }));
 
 const StyledAccordion = styled(Accordion)(() => ({

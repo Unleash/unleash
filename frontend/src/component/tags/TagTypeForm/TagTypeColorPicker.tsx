@@ -9,6 +9,7 @@ interface ITagTypeColorPickerProps {
 interface IColorOption {
     name: string;
     value: string;
+    themePath: string;
 }
 
 const StyledColorContainer = styled('div')(({ theme }) => ({
@@ -34,9 +35,7 @@ const StyledColorCircle = styled('button')<{
     borderRadius: '50%',
     border: $selected
         ? `2px solid ${theme.palette.primary.main}`
-        : $color === '#FFFFFF'
-          ? `1px solid ${theme.palette.divider}`
-          : `1px solid ${$color}`,
+        : `1px solid ${theme.palette.divider}`,
     backgroundColor: $color,
     cursor: 'pointer',
     padding: 0,
@@ -51,32 +50,25 @@ export const TagTypeColorPicker: FC<ITagTypeColorPickerProps> = ({
 }) => {
     const theme = useTheme();
 
-    const getColorWithFallback = (color: string | undefined): string =>
-        color || '#FFFFFF';
+    const getThemeColor = (path: string): string => {
+        const [paletteKey, colorKey] = path.split('.');
+        return theme.palette[paletteKey as keyof typeof theme.palette][
+            colorKey as keyof (typeof theme.palette)[keyof typeof theme.palette]
+        ];
+    };
 
     const colorOptions: IColorOption[] = [
-        { name: 'White', value: theme.palette.common.white },
-        {
-            name: 'Green',
-            value: getColorWithFallback(theme.palette.success.border),
-        },
-        {
-            name: 'Yellow',
-            value: getColorWithFallback(theme.palette.warning.border),
-        },
-        { name: 'Red', value: theme.palette.error.main },
-        {
-            name: 'Blue',
-            value: getColorWithFallback(theme.palette.info.border),
-        },
+        { name: 'White', value: 'common.white', themePath: 'common.white' },
+        { name: 'Green', value: 'success.main', themePath: 'success.main' },
+        { name: 'Yellow', value: 'warning.main', themePath: 'warning.main' },
+        { name: 'Red', value: 'error.main', themePath: 'error.main' },
+        { name: 'Blue', value: 'info.main', themePath: 'info.main' },
         {
             name: 'Purple',
-            value: getColorWithFallback(theme.palette.secondary.border),
+            value: 'secondary.main',
+            themePath: 'secondary.main',
         },
-        {
-            name: 'Gray',
-            value: getColorWithFallback(theme.palette.neutral.border),
-        },
+        { name: 'Gray', value: 'neutral.main', themePath: 'neutral.main' },
     ];
 
     return (
@@ -89,7 +81,7 @@ export const TagTypeColorPicker: FC<ITagTypeColorPickerProps> = ({
                         sx={{ display: 'flex', alignItems: 'center' }}
                     >
                         <StyledColorCircle
-                            $color={color.value}
+                            $color={getThemeColor(color.themePath)}
                             $selected={selectedColor === color.value}
                             onClick={() => onChange(color.value)}
                             type='button'

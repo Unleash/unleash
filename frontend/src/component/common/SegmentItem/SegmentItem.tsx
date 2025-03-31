@@ -93,9 +93,6 @@ export const SegmentItem: FC<SegmentItemProps> = ({
                             <ConstraintAccordionViewHeaderInfo
                                 constraint={constraint}
                                 expanded={isOpen}
-                                allowExpand={(shouldExpand) =>
-                                    setIsOpen(shouldExpand)
-                                }
                             />
                         </ConstraintListItem>
                     ))}

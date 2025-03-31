@@ -74,7 +74,6 @@ export type UiFlags = {
     feedbackComments?: Variant;
     showInactiveUsers?: boolean;
     feedbackPosting?: boolean;
-    userAccessUIEnabled?: boolean;
     outdatedSdksBanner?: boolean;
     estimateTrafficDataCost?: boolean;
     disableShowContextFieldSelectionValues?: boolean;

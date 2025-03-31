@@ -40,7 +40,6 @@ process.nextTick(async () => {
                         embedProxyFrontend: true,
                         anonymiseEventLog: false,
                         responseTimeWithAppNameKillSwitch: false,
-                        userAccessUIEnabled: true,
                         outdatedSdksBanner: true,
                         disableShowContextFieldSelectionValues: false,
                         feedbackPosting: true,
